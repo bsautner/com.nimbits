@@ -29,7 +29,7 @@ import java.util.List;
 
 public class CategoryModelImpl implements Serializable, Category {
 
-    private static final long serialVersionUID = 8l;
+    private static long serialVersionUID = 9l;
 
     private int entityType = EntityType.category.getCode();
 
@@ -160,5 +160,16 @@ public class CategoryModelImpl implements Serializable, Category {
         this.host = host;
     }
 
+    public int getEntityType() {
+        return entityType;
+    }
 
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 }

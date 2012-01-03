@@ -13,25 +13,19 @@
 
 package com.nimbits.client.model.point;
 
-import com.nimbits.client.enums.AlertType;
-import com.nimbits.client.enums.ClientType;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.intelligence.Intelligence;
-import com.nimbits.client.model.intelligence.IntelligenceModelFactory;
-import com.nimbits.client.model.value.Value;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.intelligence.*;
+import com.nimbits.client.model.value.*;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 
 public class PointModel implements Serializable, Point {
-    private static final long serialVersionUID = Const.DEFAULT_SERIAL_VERSION;
+    private static  long serialVersionUID = 10L;
 
-    private int entityType = EntityType.point.getCode();
+    private static  int entityType = EntityType.point.getCode();
 
     private long id;
 

@@ -1,0 +1,642 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta charset="utf-8">
+<title>nimbits.com</title>
+<meta name="description" content="">
+<meta name="author" content="">
+
+<!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+<!--[if lt IE 9]>
+<script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+<![endif]-->
+<script type="text/javascript"
+        src="assets/danvk-dygraphs-0842b24/dygraph-combined.js"></script>
+<!-- Le styles -->
+<link rel="stylesheet" href="http://www.nimbits.com/assets/css/bootstrap.css">
+<link href="http://www.nimbits.com/assets/css/docs.css" rel="stylesheet">
+<link href="http://www.nimbits.com/assets/js/google-code-prettify/prettify.css" rel="stylesheet">
+
+<!-- Le javascript -->
+<script src="http://code.jquery.com/jquery-1.5.2.min.js" type="text/javascript"></script>
+<script src="http://autobahn.tablesorter.com/jquery.tablesorter.min.js" type="text/javascript"></script>
+<script src="http://www.nimbits.com/assets/js/google-code-prettify/prettify.js" type="text/javascript"></script>
+<!--<script src="assets/js/application.js"></script>-->
+<script src="http://www.nimbits.com/assets/js/util.js" type="text/javascript"></script>
+
+
+<!-- Le javascript -->
+<script src="http://code.jquery.com/jquery-1.5.2.min.js" type="text/javascript"></script>
+<script src="http://autobahn.tablesorter.com/jquery.tablesorter.min.js" type="text/javascript"></script>
+
+<!--<script src="assets/js/nimbits-3.3.0.js" type="text/javascript"></script>-->
+
+<script type="text/javascript">
+
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-11739682-6']);
+_gaq.push(['_trackPageview']);
+
+(function () {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+})();
+
+
+var invocation = new XMLHttpRequest();
+var graph;
+var url = "/service/authtest";
+var seriesService = "/service/series";
+var pointService = "/service/point";
+var uuid = getParameterByName("uuid");
+var count = getParameterByName("count");
+var responseObject;
+var hist = getParameterByName("hist");
+var android = (getParameterByName("client") == "android");
+
+if (count == "") {
+    count = 25;
+}
+
+
+var server = "http://" + window.location.host;
+//  alert(server);
+getPoint(callback, server, uuid, count, null, null);
+
+var alertState = ["Low", "High", "Idle", "OK"];
+
+
+var alertLabel = ["label notice", "label important", "label warning", "label success"];
+var values;
+
+function refreshDate() {
+
+    var s = document.getElementById("startDate").value;
+    var e = document.getElementById("endDate").value;
+    var d1 = new Date(s);
+    var d2 = new Date(s);
+
+    getPoint(callback, server, uuid, null, s, e);
+}
+function set(_element, _val) {
+    document.getElementById(_element).value = _val;
+
+}
+function refreshCount() {
+
+    var c = document.getElementById("count").value;
+
+
+    getPoint(callback, server, uuid, c, null, null);
+}
+
+function getPoint(_callback, _base, _uuid, _count, _start, _end) {
+
+
+    var params = "uuid=" + _uuid + "&format=json";
+    if (_count != null) {
+        params += "&count=" + _count;
+    }
+    else if (_start != null && _end != null) {
+        params += "&sd=" + encodeURIComponent(_start) + "&ed=" + encodeURIComponent(_end) + "&offset=" + new Date().getTimezoneOffset();
+    }
+
+    var g = _base + pointService + "?" + params;
+
+    invocation.open('GET', g, true);
+
+    invocation.onreadystatechange = pointHandler;
+    invocation.send(null);
+
+    function pointHandler() {
+        if (invocation.readyState == 4 && invocation.status == 200) {
+
+            var obj = (eval('(' + invocation.responseText + ')'));
+
+            if (obj.entityType == 1) {
+
+                var current = (eval('(' + obj.value + ')'));
+                var values = (eval(obj.values));
+                obj.value = current;
+                obj.values = values;
+            }
+            else if (obj.entityType == 2) {
+
+                var points = obj.points;
+                var i;
+
+
+                var pointArray = new Array();
+
+                for (i = 0; i < points.length; i++) {
+
+                    var point = (eval('(' + points[i] + ')'));
+                    pointArray[i] = point;
+
+                }
+                obj.points = pointArray;
+
+            }
+            _callback(obj);
+
+        }
+
+
+    }
+
+}
+
+function loadGraph(data, labels, pointNames, obj) {
+    var lines = [];
+    var xline;
+    graph = new Dygraph(
+            document.getElementById("div_g"),
+            data, {
+
+                connectSeparatedPoints:true,
+                //  labels:labels,
+                //showRangeSelector:true,
+                labelsDiv:"labels",
+                highlightCallback:function (e, x, pts) {
+                    for (var i = 0; i < pts.length; i++) {
+                        var y = pts[i].canvasy;
+                        lines[i].style.display = "";
+                        lines[i].style.top = y + "px";
+                        if (i == 0) xline.style.left = pts[i].canvasx + "px";
+                    }
+
+                    var fixed = document.getElementById("labels").innerHTML;
+
+                    for (var ix = 0; ix <= labels.length; ix++) {
+
+                        var rp = "Y" + ix;
+
+                        fixed = fixed.replace(rp, pointNames[ix - 1]);
+                    }
+
+                    document.getElementById("labelsF").innerHTML = fixed;
+                    xline.style.display = "";
+                },
+
+                unhighlightCallback:function (e) {
+                    for (var i = 0; i < 2; i++) {
+                        lines[i].style.display = "none";
+                    }
+                    xline.style.display = "none";
+                }
+
+
+            }
+    );
+
+    for (var i = 0; i < 2; i++) {
+        var line = document.createElement("div");
+        line.style.display = "none";
+        line.style.width = "100%";
+        line.style.height = "1px";
+        line.style.backgroundColor = "black";
+        line.style.position = "absolute";
+        document.getElementById("div_g").appendChild(line);
+        lines.push(line);
+    }
+
+    xline = document.createElement("div");
+    xline.style.display = "none";
+    xline.style.width = "1px";
+    xline.style.height = "100%";
+    xline.style.top = "0px";
+    xline.style.backgroundColor = "black";
+    xline.style.position = "absolute";
+    document.getElementById("div_g").appendChild(xline);
+
+    if (obj.entityType == 2 && document.getElementById("yOption").checked) {
+        setY();
+    }
+    setStep();
+
+    return i;
+}
+function callback(obj) {
+    var data = [];
+    var labels = [];
+    var pointNames = [];
+
+
+    responseObject = obj;
+    document.getElementById("all").style.display = "block";
+    document.getElementById("loading").style.display = "none";
+
+
+    if (android) {
+
+        document.getElementById("helperRow").style.display = "none";
+        document.getElementById("detailsRow").style.display = "none";
+        detailsRow
+    }
+    else {
+        document.getElementById("name").innerHTML = obj.name;
+        document.getElementById("desc").innerHTML = obj.description;
+        document.getElementById("uuid").innerHTML = "<a href='report.html?uuid=" + obj.uuid + "'>" + obj.uuid + "</a>";
+
+        document.getElementById("QR").src = "https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl=" +
+                obj.host + "?uuid=" + obj.uuid;
+        //"&choe=UTF-8";
+
+        document.getElementById("s1").innerHTML = obj.host + "/service/point?format=json&uuid=" + obj.uuid;
+        document.getElementById("a1").href = obj.host + "/service/point?format=json&uuid=" + obj.uuid;
+
+        document.getElementById("s2").innerHTML = obj.host + "/service/point?count=100&uuid=" + obj.uuid;
+        document.getElementById("a2").href = obj.host + "/service/point?count=20&uuid=" + obj.uuid;
+
+    }
+
+
+    if (hist != "") {
+        document.getElementById("back").innerHTML = "<span><a href='report.html?uuid=" + hist + "'>back</a> </span>";
+        // alert(hist);
+    }
+
+
+    var start;
+    var end;
+    var yAxis = "";
+
+    if (obj.entityType == 1) {
+
+        document.getElementById("data").style.display = "block";
+
+        document.getElementById("yOption").checked = false;
+        document.getElementById("yOption").disabled = true;
+        document.getElementById("s3").innerHTML = obj.host + "/service/currentvalue?uuid=" + obj.uuid;
+        document.getElementById("a3").href = obj.host + "/service/currentvalue?uuid=" + obj.uuid;
+
+        document.getElementById("s4").innerHTML = obj.host + "/service/currentvalue?uuid=" + obj.uuid;
+        document.getElementById("a4").href = obj.host + "/service/currentvalue?format=json&uuid=" + obj.uuid;
+        labels.push("Date");
+        labels.push(obj.name);
+        pointNames.push(obj.name);
+        values = obj.values;
+        document.getElementById("count").value = values.length;
+        var current = obj.value;
+
+        // document.getElementById("current").innerHTML = current.d + obj.unit + "  " + current.note;
+        //  document.getElementById("state").innerHTML = alertState[current.alertState];
+        // document.getElementById("state").className = alertLabel[current.alertState];
+        var unit = obj.unit != null ? obj.unit : "";
+        document.getElementById("status").innerHTML =
+                "<span class='" + alertLabel[current.alertState] + "'>"
+                        + obj.name + ": "
+                        + current.d + unit + "  " + current.note
+                        + alertState[current.alertState]
+                        + "</span><br />";
+
+        document.getElementById("dataText").value = current.data;
+
+        document.getElementById("meter").style.display = "block";
+        document.getElementById("meter").src = "meter.html";
+
+        for (i = 0; i < values.length; i++) {
+
+            var value = (eval('(' + values[i] + ')'));
+            var date = new Date(value.timestamp);
+            if (start == null) {
+                start = date;
+            }
+            else if (date < start) {
+                start = date;
+            }
+            if (end == null) {
+                end = date;
+            }
+            else if (date > end) {
+                end = date;
+            }
+            data.push([date, value.d]);
+
+        }
+
+
+    }
+    else if (obj.entityType == 2) {
+        document.getElementById("meter").style.display = "none";
+        document.getElementById("data").style.display = "none";
+
+        document.getElementById("yOption").disabled = false;
+        var count = 0;
+        document.getElementById("status").innerHTML = "";
+        labels.push("Date");
+
+        for (var idx = 0; idx < obj.points.length; idx++) {
+            var px = obj.points[idx];
+            labels.push("Y" + idx);
+            pointNames.push(px.name);
+            var current = px.value;
+            var unit = px.unit != null ? px.unit : "";
+
+            document.getElementById("status").innerHTML +=
+                    "<span class='" + alertLabel[current.alertState] + "'>"
+                            + "<a href=\"report.html?uuid=" + px.uuid + "&hist=" + obj.uuid + "\">"
+                            + px.name + ": "
+                            + current.d + unit + "  " + current.note
+                            + alertState[current.alertState]
+                            + "</a></span><br />";
+
+
+            var c = 0;
+
+            for (var v = 0; v < px.values.length; v++) {
+                var vx = px.values[v];
+                c++;
+
+
+                var date2 = new Date(vx.timestamp);
+                if (start == null) {
+                    start = date2;
+                }
+                else if (date2 < start) {
+                    start = date2;
+                }
+                if (end == null) {
+                    end = date2;
+                }
+                else if (date2 > end) {
+                    end = date2;
+                }
+
+                var item = [];
+                item.push(date2);
+                for (var r = 0; r < idx; r++) {
+                    item.push(undefined);
+                }
+                item.push(vx.d);
+                for (var r1 = idx; r1 < obj.points.length; r1++) {
+                    item.push(undefined);
+                }
+                data.push(item);
+            }
+            if (c > count) {
+                count = c;
+            }
+        }
+        document.getElementById("count").value = count;
+
+    }
+
+    var fs = "";
+    var fm = "";
+    var fh = "";
+    if (start != null) {
+        if (start.getSeconds() < 10) {
+            fs = 0;
+        }
+        if (start.getMinutes() < 10) {
+            fm = 0;
+        }
+        if (start.getHours() < 10) {
+            fh = 0;
+        }
+
+        if (document.getElementById("startDate").value == "") {
+            document.getElementById("startDate").value = (start.getMonth() + 1) + "/" + start.getDate() + "/" + start.getFullYear() + " " + fh + start.getHours() + ":" + fm + start.getMinutes() + ":" + fs + start.getSeconds();
+        }
+    }
+    if (end != null) {
+        fs = "";
+        fm = "";
+        fh = "";
+        if (end.getSeconds() < 10) {
+            fs = 0;
+        }
+        if (end.getMinutes() < 10) {
+            fm = 0;
+        }
+        if (end.getHours() < 10) {
+            fh = 0;
+        }
+        if (document.getElementById("endDate").value == "") {
+            document.getElementById("endDate").value = (end.getMonth() + 1) + "/" + end.getDate() + "/" + end.getFullYear() + " " + fh + end.getHours() + ":" + fm + end.getMinutes() + ":" + fs + end.getSeconds();
+        }
+    }
+
+//        document.getElementById("startTime").value = fh + start.getHours() + ":" + fm + start.getMinutes() + ":" + fs + start.getSeconds();
+
+//        document.getElementById("endTime").value = fh + end.getHours() + ":" + fm + end.getMinutes() + ":" + fs + end.getSeconds();
+    var i = loadGraph(data, labels, pointNames, obj);
+}
+
+function setY() {
+
+
+    if (document.getElementById("yOption").checked) {
+        if (responseObject.points.length > 1) {
+            graph.updateOptions({
+                'Y1':{axis:{}}
+            });
+        }
+        if (responseObject.points.length > 2) {
+            graph.updateOptions({
+                'Y2':{axis:{}}
+            });
+        }
+        if (responseObject.points.length > 3) {
+            graph.updateOptions({
+                'Y3':{axis:{}}
+            });
+        }
+        if (responseObject.points.length > 4) {
+            graph.updateOptions({
+                'Y4':{axis:{}}
+            });
+        }
+    }
+    else {
+        refreshDate();
+    }
+
+
+}
+function setStep() {
+
+    graph.updateOptions({
+        stepPlot:document.getElementById("stepOption").checked
+    });
+}
+
+</script>
+</head>
+<body>
+
+<div id="all" style="display: none;">
+    <div class="container">
+
+        <h5><a href="http://www.nimbits.com">nimbits.com</a> report</h5>
+
+        <div id="detailsRow" class="row">
+            <div class="span3">
+                <img id="QR" width="100" height="100" alt="QR" src=""/>
+                <br/>
+
+                <div id="meter"></div>
+
+            </div>
+            <div class="span6">
+
+                <h6>Name</h6>
+
+                <p id="name"></p>
+                <h6>Description</h6>
+
+                <p id="desc"></p>
+                <h6>URL</h6>
+
+                <p id="uuid"></p>
+
+            </div>
+            <div class="span3">
+                <h6>Status </h6>
+
+                <div id="back"></div>
+
+                <p><span id="status"></span></p>
+
+                <div id="data">
+                    <h6 id="dataHeader">Data Channel</h6>
+
+                    <div class="input" id="dataBody">
+                        <textarea class="xlarge" name="textarea" id="dataText" rows="3" disabled></textarea>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div id="labels" style="display: none"></div>
+        </div>
+        <div class="row">
+            <div class="span1">
+                &nbsp;
+            </div>
+            <div class="span15">
+                <div id="labelsF"></div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div id="div_g" style="width:930px; height:300px; position:relative;border-left-width: 10px">
+            </div>
+        </div>
+        <div class="row">
+            <div class="span1">
+                &nbsp;
+            </div>
+            <div class="span4">
+                <div class="input">
+                    <div class="input-prepend">
+                        <span class="help-block">Start</span>
+                        <span class="add-on"><img align="right" alt="refresh"
+                                                  src="./resources/images/default/grid/refresh.gif"
+                                                  onclick="refreshDate()"/></span>
+                        <input class="medium" id="startDate" name="prependedInput3" size="12" type="text"/>
+                        <br>
+                        <span style="font-size: xx-small;"> <a onclick="set('startDate', '-60s');">-60s</a></span>
+                        <span style="font-size: xx-small;">  <a onclick="set('startDate', '-5m');">-5m</a></span>
+                        <span style="font-size: xx-small;">  <a onclick="set('startDate', '-8h');">-8h</a></span>
+                    </div>
+
+                </div>
+            </div>
+            <div class="span4">
+                <div class="input">
+                    <div class="input-prepend">
+                        <span class="help-block">End</span>
+                        <span class="add-on"><img align="right" alt="refresh"
+                                                  src="./resources/images/default/grid/refresh.gif"
+                                                  onclick="refreshDate()"/></span>
+                        <input class="medium" id="endDate" name="prependedInput2" size="12" type="text"/>
+                        <br/>
+                        <span style="font-size: xx-small;"> <a onclick="set('endDate', '*');">now()</a></span>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="span3">
+                <div class="input">
+                    <div class="input-prepend">
+                        <span class="help-block">Count</span>
+                        <span class="add-on"><img align="right" alt="refresh"
+                                                  src="./resources/images/default/grid/refresh.gif"
+                                                  onclick="refreshCount()"/></span>
+                        <input class="small" id="count" name="prependedInput2" size="8" type="text"/>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="span3">
+                <ul class="inputs-list">
+                    <li>
+
+                        <label>
+                            <input type="checkbox" id="yOption" value="option1" onclick="setY(); "/>
+                            <span>Multiple Y Axis</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <input type="checkbox" id="stepOption" onclick="setStep();" value="option2"/>
+                            <span>Step Chart</span>
+                        </label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+
+        <BR/>
+
+        <div id="helperRow" class="row">
+            <div class="span1">
+                <p></p>
+            </div>
+            <div class="span14">
+                <div class="alert-message block-message warning">
+                    <p>Available Services:</p>
+
+                    <ul>
+                        <LI>Point Service: <a id="a1" href="#" target="_blank"><span id="s1"></span></a></LI>
+                        <LI>Point Service With Data: <a id="a2" href="#" target="_blank"><span id="s2"></span></a></LI>
+                        <LI>Current Number Value: <a id="a3" href="#" target="_blank"><span id="s3"></span></a></LI>
+                        <LI>Current Value as JSON: <a id="a4" href="#" target="_blank"><span id="s4"></span></a></LI>
+                    </ul>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div style="margin-top: 200px" id="loading" align="center">
+    <div class="loading-indicator">
+        <img alt="loading" src="resources/images/default/shared/blue-loading.gif" width="32" height="32"/>
+
+    </div>
+</div>
+
+
+</body>
+</html>

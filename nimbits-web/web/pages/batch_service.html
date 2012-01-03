@@ -1,0 +1,33 @@
+<h2>Current Value</h2>
+<p>
+    <a href="#" onclick="getContent('pages/web_service_primer.html')">Please read the web service primer</A> to
+    understand how to provide proper authentication parameters.
+    For simplicity, authentication parameters are now shown here.
+
+</p>
+
+<p><strong>com.nimbits.server.service.BatchService</strong></p>
+
+
+<p>A highly efficient service for loading many values at once in a single post.
+    Accepts up to 100 new values for points in one post.
+</p>
+<ul>
+    <li>p1 - the name of the point</li>
+
+    <li>v1 - the new value belonging to p1.</li>
+
+    <li>t1 - optional - the timestamp as a long, <a href="http://en.wikipedia.org/wiki/Unix_time" target="_blank">
+
+        unix epoch time</a> <strong>in milliseconds</strong>. Can also be in scientific notation i.e 1.3190148e+12</li>
+
+</ul>
+
+<h4>Sample - records multiple values up to p100 and v100 </h4>
+
+<pre class="prettyprint">
+        /service/batch?p1=point1&v1=2.3&p2=point2&v2=3.24....
+
+        /service/batch?p1=point1&v1=2.3&t1=1297655407000&p2=point2&v2=3.24....
+</pre>
+

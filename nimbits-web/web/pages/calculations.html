@@ -1,0 +1,51 @@
+<h2>Calculations</h2>
+<p>
+    When a DataPoint is written to with a new value, the event of recording a value can trigger a calculation.
+</p>
+
+<p>
+    The formulas basic arithmetic will be executed and the resulting value will be recorded into the target point – all
+    compression, alerts and other functionality will then be applied to the new value as if it was a newly recorded
+    value.
+</p>
+<p>
+    A DataPoint can be a trigger, parameter or target for a formula.
+</p>
+<p>
+    If a point is a trigger and a new value is written to it the formula assigned to that data point will be executed.
+</p>
+<p>
+    After the formula executes successfully, the resulting double value is stored in the target point and all Record
+    Value settings are processed (Such as Alerts, Compression etc)
+</p>
+
+<h3>Example</h3>
+<p>
+    To setup a calculation you need to create at least two DataPoint channels in Nimbits. A Trigger point contains the
+    formula to be executed whenever that point received a new value. A target point receives the result of the
+    calculation. You can also setup up to three parameter points. They will have their current values inserted into the
+    calculation at variables x, y and z. Typically, the trigger point is also the x variable, causing the current value
+    of the trigger (the newly recorded value) to be inserted into a formula and recorded to the target point.
+</p>
+
+<p>
+    After creating your data points, log into Nimbits (app.nimbits.com) and double click the trigger point. You do not
+    have to do anything to the target point. Select the point properties from the main menu and activate the calculation
+    tab:
+</P>
+
+<p>
+    Here, you can select the target point and points that should be the x, y and z values in the formula if you need
+    them. Again, typically the target point is used as an x variable in the formula.
+</p>
+<p>
+    Enter a formula, ensuring the x, y and z are lower case. Click test to ensure everything is working.
+</p>
+<p>
+    Supported symbols are: , +, -, , /, ^, %, cos, sin, tan, acos, asin, atan, sqrt, sqr, log, min, max, ceil, floor,
+    abs, neg, rndr.
+
+    x + y | add the points stored in the x and y settings together and recored the result in the target
+    sqrt(x) | Take the square root of x and store in the target.
+
+</p>

@@ -1,0 +1,32 @@
+<h5>Python Example</h5>
+
+
+<p>Here is a user contributed code snippet that shows how to post to the
+    <a href="#" onclick="getContent('pages/current_value_service.html')">current value REST API Web Service</a>
+    using the Python programing language</p>
+
+
+<pre class="prettyprint">
+import requests
+import random
+import time
+
+while 1:
+
+    # generate random data value
+    value = random.random() * 10
+
+    # create dictionary
+    data = {"email":"email@email.com",
+            "secret":"1234567890-1234567890",
+            "point":"My_Test_Stream",
+            "value":value}
+
+    # use requests library to post to nimbits
+    r = requests.post("http://app.nimbits.com/service/currentvalue", data=data)
+
+    # sleep for a minute
+    time.sleep(60)
+
+
+ </pre>

@@ -1,0 +1,137 @@
+<h5>Nimbits Tutorial: Two devices communicating with each other with intelligence integration</h5>
+
+<p>
+    Nimbits data points can be configured to communicate with you using Instant Messaging protocol XMPP - this
+    is the same way Google Talk, Jabber and other IM Clients communicate. Nimbits let's you give your devices, things
+    and
+    software the same ability to be online and present to other things connected to the cloud. Your devices can update
+    their
+    status of busy or available and send and receive data between themselves.
+
+
+</p>
+<p>
+    Nimbits also enables you to add Intelligence to your data communications by integrating into the Computational
+    Knowledge engine
+    <a href="http://www.wolframalpha.com">WolframAlpha</a>. You can configure a data point to take information coming in
+    as party of a
+    query that returns real world data, which can be saved into another data point for further processing.
+
+</p>
+<p>
+    This is a fun example of how you can log information into a Nimbits Data Point, have that information interpreted
+    intelligently and the result relayed to another data point.
+    For programmers, we also demonstrate how two devices can use XMPP to communicate with each other.
+</p>
+
+<p>
+    In this example, a refrigerator is able to identify what food is being taken out of it and eaten and it's going to
+    calculate the calories and send that information to an evil
+    treadmill just waiting for you to break your diet so it can pre-program an exercise routine to keep you looking
+    good.
+
+</p>
+
+<h5>
+    Creating Data Points
+
+</h5>
+
+
+<p>
+    We're going to need a data point to record the food being eaten (how much in grams and what type), which will also
+    be setup to calculate the calories. A second point will be the recipient of
+    the calorie count which the treadmill is online and connected to.
+
+</p>
+<img src="./images/screen2.png"/>
+
+<p>
+    Now let's configure data point <b>Food</b> to save the calorie count of every recorded value (written to it's number
+    value
+    and note fields) and store the result in the <b>Calories</b> data point.
+    In the screen shot below, you can see the input is a formula Wolfram Alpha would understand if it was entered into
+    <a href="http://wolframalpha.com">wolframalpha.com</a> as text i.e. <strong>calories in 100 grams of peanut
+    butter</strong>
+    but instead of the number <b>100</b> and the text <b>peanut butter</b>, we're putting in food.value and food.note -
+    so when
+    processed the current value of those two items will go in.
+
+
+</p>
+<p>
+    You can also see the result, which I got when I clicked the <strong>Test Intelligence</strong> button. Note the
+    result isn't a number, it's the full string. The result will
+    be saved in calorie's data field exactly as presented here.
+
+</p>
+<img src="./images/screen-wa3.png" alt="">
+
+<h5>Setting up alerts</h5>
+
+<p>
+    Ok, now let's configure the calories data point to send any data it receives to any machine listening to that point.
+    We want to tell nimbits to make the instant message machine readable
+    that is, it'll send the data out as JSON since it knows a machine will handle the text message, not a human. We can
+    configure the point to send any new data out, or just when the value
+    is above a threshold. At this point, you're good to go and you can use this data any way you wish - the values can
+    be accessed by any system using the web services, SDK or portal server.
+    The below code samples will show how simple it is using the Java SDK to write a program that sends food data and to
+    have another machine listening for the target point.
+
+</p>
+<img src="./images/screen-wa4.png" alt="">
+
+
+<h5> M2M</h5>
+
+<p>Here is the sample code that would send some food data, presumably from our very smart refrigerator:</p>
+
+<pre class="prettyprint">
+
+        GoogleUser user = UserFactory.createGoogleUser("test@example.com", "pa$$word");
+        NimbitsClient client = NimbitsClientFactory.getInstance(user, "http://nimbits1.appspot.com");
+        XMPPClient xmpp = XMPPClientFactory.getInstance(client, "nimbits1");
+        PointName pointName = CommonFactoryLocator.getInstance().createPointName("food");
+        //record 200 grams of salmon were eaten
+        Value value = ValueModelFactory.createValueModel(0.0, 0.0, 200, new Date(), 0, "salmon");
+        boolean connected =  xmpp.connect();
+
+        xmpp.sendValue(pointName, value);
+        System.out.println("sent");
+
+        xmpp.disconnect();
+
+ </pre>
+
+<p>When the nimbits server receives this information, it processes it and triggers the process of finding out how many
+    calories are
+    in that food, and then recording that data into the calories data point. The following code shows how to have a
+    listener
+    monitor the calorie data point and take an action when it recieves a new value. In our case, the evil treadmill
+    could take this even
+    further, determining your current exercise needs and how much you'd have to run to burn those calories</p>
+<pre class="prettyprint">
+
+        GoogleUser user = UserFactory.createGoogleUser("test@example.com", "pa$$word");
+        final NimbitsClient client = NimbitsClientFactory.getInstance(user, "http://nimbits1.appspot.com");
+        final XMPPClient xmpp = XMPPClientFactory.getInstance(client, "nimbits1");
+        final String myPointName = "calories";
+        xmpp.connect();
+        xmpp.addMessageReceivedListeners(new XMPPClientImpl.MessageReceivedListener() {
+            @Override
+            public void onMessageReceived(Point receivedDataPoint) {
+                System.out.println("Received Point: " + receivedDataPoint.getName().getValue());
+                 if (receivedDataPoint.getName().getValue().equals(myPointName)) {
+                        System.out.print("This is my Point! Doing stuff with it");
+                        String calorieData =  receivedDataPoint.getValue().getData();
+                        System.out.println(calorieData);
+                 }
+
+            }
+        });
+        System.out.println("Listening..");
+        System.in.read(); //keep the program from exiting.
+
+
+</pre>

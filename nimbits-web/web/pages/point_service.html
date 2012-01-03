@@ -1,0 +1,90 @@
+<h2>Point Service</h2>
+<p>
+    <a href="#" onclick="getContent('pages/web_service_primer.html')">Please read the web service primer</A> to
+    understand how to provide proper authentication parameters.
+    For simplicity, authentication parameters are now shown here.
+
+</p>
+<p><strong>com.nimbits.server.service.PointService</strong></p>
+
+
+<p>Based on the parameters, returns a list of Points in JSON format for a given category, including all of their
+    available properties (such as
+    description, the points fixed GPS location, etc) or a Single Point if the name= or point= parameter is provided.
+
+    Note – all points have a category, but when a new point is created it is assigned a special hidden blank category
+    called “Nimbits_Unsorted?” that is not show in the UI
+
+    Listing points always required authentication. Therefore the sample here will not load unless the secret parameters
+    is corrected.
+</p>
+
+
+<h4>GET - returns a point, or a collection of points in JSON format</h4>
+<ul>
+    <li>
+        category - optional - the name of the category the points you requested belong to
+    </li>
+    <li>
+
+        name - DEPRECATED - the name of the point you are requesting.
+    </li>
+    <li>
+        point - the name of the point you are requesting.
+    </li>
+    <li>
+        uuid - optional - the uuid of the point you are requesting. This will return any point on the system if
+        it is set to public.
+    </li>
+    <li>
+        format - the output format. The default is json.
+    </li>
+    <li>
+        count - how many recorded value records to return as a json array in the point being returned, or in the chart
+        if a report is requested.
+    </li>
+    <li>
+        sd - optional, the start date of a series of values to include in the returned points values collection. See <a
+            href="#" onclick="getContent('pages/timespan.html')">Understanding Date/Time Ranges</a>
+    </li>
+
+    <li>
+        ed - optional, the end date of a series of values to include in the returned points values collection. See <a
+            href="#" onclick="getContent('pages/timespan.html')">Understanding Date/Time Ranges</a>
+    </li>
+    <li>
+        offset - optional. If you are providing a date string that is the current time local to you, you can
+        provide a timezone offset, which is your timezone's different to UTC time in minutes. i.e 300 for EST (UTC -5)
+        This will allow nimbits to adjust to your timezone as all dates are assumed to be UTC.
+    </li>
+
+
+</ul>
+
+<h4>Sample</h4>
+<pre class="prettyprint">
+          http://app.nimbits.com/service/point?email=bsautner@gmail.com&secret=server_or_user_secret&catagory=test
+ </pre>
+<pre class="prettyprint">
+          //returns a point that is set to public, so no authentication is needed.
+          http://app.nimbits.com/service/point?uuid=3123-2131-12dsfsd-421123
+          //this one will include 10 values of that point's data history
+          http://app.nimbits.com/service/point?uuid=3123-2131-12dsfsd-421123&count=10
+
+ </pre>
+
+Result - In this example, one point in a JSON list containing all of the properties of that point:
+<pre class="prettyprint">
+[ {"id":1765036,"uuid":"95bf09ff-40fb-4cff-9f38-5cf2b9e09afc","LastChecked?":"2010-11-17T15:57:41 +0000","ownerEmail":null,"host":"nimbits1.appspot.com","catID":1801011,"isSystemPoint":false,"userFK":54001,"name":"Radon1","createDate":null,"X":null,"Y":null,"Z":null,"target":null,"formula":null,"highAlarm":4.0,"expire":90,"unit":"pCi/L","compression":0.1,"lowAlarm":0.0,"highAlarmOn":true,"lowAlarmOn":false,"alarmDelay":1,"LastAlarmSent?":0,"description":null,"isPublic":true,"postToFacebook":false,"alarmToFacebook":false,"sendIM":false,"sendAlarmIM":false,"sendTweet":false,"sendAlarmTweet":false,"tag":null,"lowestRecordedValue":0.0,"highestRecordedValue":1.1,"lastRecordedTimestamp":"2010-07-22T23:27:09 +0000","lastNote":null,"lat":40.050039,"lng":-75.45629000000001,"sourceURL":null,"fetchSourceURLMethod":null,"postSourceURLMethod":null,"postTargetURL":null,"TargetValue?":null,"jsonPointDataArray":null,"values":null,"value":null,"map":null,"allowNestedValues":true} ]
+</pre>
+
+
+<h4>POST</h4>
+Create a point, returns the resulting JSON
+<ul>
+    <li>category - optional - the name of the category the point should be added to. If not provided, the default empty
+        category is used.
+    </li>
+    <li>name - required the name of the new point. Must be unique to the user.</li>
+    <li>action - optional delete / create to specify if you want to delete the point. Default is create</li>
+</ul>

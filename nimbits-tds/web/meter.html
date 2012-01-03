@@ -1,0 +1,69 @@
+<html>
+<head>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <!--<script type="text/javascript" src="http://app.nimbits.com/assets/js/nimbits-3.3.0.js"></script>-->
+    <script type="text/javascript">
+        google.load("visualization", "1", {packages:["corechart"]});
+        google.setOnLoadCallback(start);
+
+        var pointCurrentValue = "/service/currentvalue";
+        var invocation = new XMLHttpRequest();
+        function getcurrentValue(_callback, _base, _uuid) {
+
+
+            var params = "uuid=" + _uuid + "&format=json";
+
+            var g = _base + pointCurrentValue + "?" + params;
+
+            invocation.open('GET', g, true);
+            alert(1);
+            invocation.onreadystatechange = handler;
+            invocation.send(null);
+
+            function handler() {
+                if (invocation.readyState == 4 && invocation.status == 200) {
+
+
+                    var value = (eval('(' + invocation.responseText + ')'));
+
+                    _callback(value);
+
+                }
+
+
+            }
+        }
+
+
+        function start() {
+            // drawChart(null);
+            getcurrentValue(drawChart, 'http://app.nimbits.com', '96c55c29-d60f-42a1-82a9-98d8a76960bd')
+        }
+
+        function drawChart(_value) {
+
+            alert(_value.d);
+//            var data = new google.visualization.DataTable();
+//            data.addColumn('string', 'Year');
+//            data.addColumn('number', _point.name);
+//            var values = _point.values;
+//            for (i = 0; i < values.length; i++) {
+//                var value = (eval('(' + values[i] + ')'));
+//                var date = new Date(value.timestamp);
+//                var ds = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+//                data.addRow([ds, value.d]);
+//            }
+//            var options = {
+//                width: 100, height: 100,
+//                title: 'Nimbits Rocks!'
+//            };
+//
+//            var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+//            chart.draw(data, options);
+        }
+    </script>
+</head>
+<body>
+<div id="chart_div"></div>
+</body>
+</html>

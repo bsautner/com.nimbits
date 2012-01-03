@@ -1,0 +1,45 @@
+<h2>Category Service</h2>
+<p>
+    <a href="#" onclick="getContent('pages/web_service_primer.html')">Please read the web service primer</A> to
+    understand how to provide proper authentication parameters.
+    For simplicity, authentication parameters are now shown here.
+
+</p>
+
+
+<p><strong>com.nimbits.server.service.CategoryService</strong></p>
+
+<P>Creates new point categories on post, returns all categories belonging to a user on get or a single category.</P>
+
+<P>Optionally returns points that belong to each category as a JSON collection</P>
+
+<H4>GET</h4>
+
+
+<ul>
+    <li>includepoints : instructs nimbits to include a json string in the JsonPointCollection property of each category
+        returned that is an array of data points belonging to that category
+    </li>
+    <li>name -optional - if included, returns the single category instead of a list of all of them</li>
+</ul>
+
+
+<h4>POST</h4>
+Create/Delete a category
+<ul>
+    <li>name - the name of the new category if creating, or the category to be deleted if deleting.</li>
+
+    <li>action - options: create, delete – specify if you want to create or delete the category.
+        Delete will also delete all child points and their date. Default is create.
+    </li>
+
+
+</ul>
+
+<h4>Sample</h4>
+<pre>
+    Create a new category:
+    /service/category?name=newcat
+    Delete a category, and all of it's points along with their data
+    /service/category?name=newcat&action=delete /service/category?name=newcat&includepoints=true
+</pre>

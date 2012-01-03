@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title></title>
+
+
+
+    <meta charset="utf-8">
+    <title>nimbits.com</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link rel="stylesheet" href="assets/css/bootstrap.css">
+    <link href="assets/css/docs.css" rel="stylesheet">
+    <link href="assets/js/google-code-prettify/prettify.css" rel="stylesheet">
+
+    <!-- Le javascript -->
+    <script src="http://code.jquery.com/jquery-1.5.2.min.js"></script>
+    <script src="http://autobahn.tablesorter.com/jquery.tablesorter.min.js"></script>
+    <script src="assets/js/google-code-prettify/prettify.js"></script>
+    <!--<script src="assets/js/application.js"></script>-->
+    <script src="assets/js/util.js"></script>
+    <script type="text/javascript"
+            src="assets/danvk-dygraphs-0842b24/dygraph-combined.js"></script>
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+
+
+    <script type="text/javascript" language="javascript">
+        var invocation = new XMLHttpRequest();
+        function doSearch() {
+            var q = getParameterByName('q');
+
+
+            var g = 'http://www.nimbits.com:8080/core/search?format=html&search=' + q;
+
+            invocation.open('GET', g, true);
+            invocation.onreadystatechange = pointHandler;
+            invocation.send(null);
+
+            function pointHandler()  {
+                if (invocation.readyState == 4 && invocation.status == 200)  {
+
+
+                    callback(invocation.responseText);
+
+                }
+                else {
+
+                }
+
+            }
+
+        }
+        function callback(_response) {
+            document.getElementById("status").innerHTML = "Results:"
+            document.getElementById("results").innerHTML = _response;
+
+
+        }
+    </script>
+
+
+</head>
+
+<body style="padding-top: 40px;" onload="doSearch();">
+<div class="topbar">
+    <div class="topbar-inner">
+        <div class="container">
+<ul class="nav">
+    <li><a href="http://www.nimbits.com">Home</a></li>
+     <li><a href="http://www.nimbits.com?content=store">Store</a></li>
+    <li><a href="#forum" onclick="popUp('http://groups.google.com/group/nimbits')">Forum</a></li>
+
+
+    <li><a href="http://www.nimbits.com?content=support')">Services</a></li>
+    <li><a href="http://app.nimbits.com" target="_blank">Login</a></li>
+</ul>
+    </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+
+
+
+
+
+    <div   class="span16">
+
+        <a href ="http://www.nimbits.com" target="_self" style="border:0px">
+            <img id="logo" src="images/nimbits_transparent_logo.png" align="left" alt="logo"
+             style="margin-right: 10px"/>                </a>
+
+        <div class="row">
+        <div class="input">
+
+            <p style="margin-top: 25px"></p>
+            <form action="search_results.html" id="cse-search-box">
+                <div >
+                    <input type="hidden" name="cx" value="partner-pub-6491049122047226:5289700289" />
+                    <input type="hidden" name="cof" value="FORID:10" />
+                    <input type="hidden" name="ie" value="UTF-8" />
+                    <input type="text" name="q" size="55" />
+                    <input class="btn primary" type="submit" name="sa" value="Search" />
+                </div>
+            </form>
+            <script type="text/javascript">
+                var googleSearchIframeName = "cse-search-results";
+                var googleSearchFormName = "cse-search-box";
+                var googleSearchFrameWidth = 800;
+                var googleSearchDomain = "www.google.com";
+                var googleSearchPath = "/cse";
+            </script>
+            <script type="text/javascript" src="http://www.google.com/afsonline/show_afs_search.js"></script>
+        </div>
+            <div class="row">
+
+            </div>
+    </div>
+       </div>
+
+    </div>
+    </div>
+
+<div class="container">
+
+    <p id="status">Loading....</p>
+    <div id="results"></div>
+
+</div>
+
+
+<div class="container">
+<div id="cse-search-results"></div>
+<script type="text/javascript">
+    var googleSearchIframeName = "cse-search-results";
+    var googleSearchFormName = "cse-search-box";
+    var googleSearchFrameWidth = 800;
+    var googleSearchDomain = "www.google.com";
+    var googleSearchPath = "/cse";
+</script>
+<script type="text/javascript" src="http://www.google.com/afsonline/show_afs_search.js"></script>
+</div>
+
+</body>
+</html>

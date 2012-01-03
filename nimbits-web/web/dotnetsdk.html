@@ -1,0 +1,37 @@
+<h3>Using the Nimbits SDK from .net</h3>
+
+<p>
+    You can use the Nimbits SDK from a .net project. There is a utility you can use to convert Java JARS to .NET DLLs
+    and add the use the DLL in your project.
+
+</p>
+
+<p>
+<UL>
+    <LI>Download the Java JAR File from the <a href="#download" onclick="getContent('pages/download.html')">downloads
+        page.</a></LI>
+    <li>Next, <a href="http://www.ikvm.net/" target="_blank"> download IKVM.</a> IKVM is a utility that converts Java
+        JARs to .Net Assemblies.
+    </li>
+    <li>Run this command:
+        <pre class="prettyprint">ikvmc -target:library [path to nimbits java jar]\nimbits.jar</pre>
+    </li>
+    <li>You now have a nimbits_sdk.dll! You need to add it, and the dll assemblies in the IKVM Downloads BIN Directory
+        as refrences in your .net project.
+    </li>
+</UL>
+<pre class="prettyprint">
+   class Program
+    {
+        static void main(string[] args)
+        {
+        EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress("test@example.com");
+        NimbitsUser user = UserFactory.createNimbitsUser(emailAddress, "pas$$word");
+        NimbitsClient client = NimbitsClientFactory.getInstance(user, "http://mynimbitsserver.domain.com");
+        PointName pointName = CommonFactoryLocator.getInstance().createPointName("MyDataPoint");
+        Value currentValue = client.getCurrentRecordedValue(pointName);
+
+        }
+    }
+</pre>
+

@@ -1,0 +1,31 @@
+<h5>Post with CURL</h5>
+<blockquote>
+    <p>
+        curl is a command line tool for transferring data with URL syntax, supporting DICT, FILE, FTP, FTPS, GOPHER,
+        HTTP, HTTPS,
+        IMAP, IMAPS, LDAP, LDAPS, POP3, POP3S, RTMP, RTSP, SCP, SFTP, SMTP, SMTPS, TELNET and TFTP.
+        curl supports SSL certificates, HTTP POST, HTTP PUT, FTP uploading,
+        HTTP form based upload, proxies, cookies, user+password authentication
+        (Basic, Digest, NTLM, Negotiate, kerberos...), file transfer resume, proxy tunneling and a busload of other
+        useful tricks.
+        <small><a href="http://curl.haxx.se/">http://curl.haxx.se/</a></small>
+</blockquote>
+
+<pre class="prettyprint">
+&lt;?php
+//
+// records a value to a nimbits data point
+//
+
+$ch = curl_init();
+
+curl_setopt($ch, CURLOPT_URL,"http://app.nimbits.com/service/currentvalue");
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS,
+            "email=example@test.com&secret=1312-3432-324231-123&point=testpoint&value=42.0&note=helloworld");
+
+curl_exec ($ch);
+curl_close ($ch);
+?&gt
+
+</pre>

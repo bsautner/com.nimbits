@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.nimbits.android"
+          android:versionCode="133" android:versionName="3.3.12">
+
+
+    <uses-permission android:name="android.permission.READ_OWNER_DATA"></uses-permission>
+
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"></uses-permission>
+    <uses-permission android:name="android.permission.USE_CREDENTIALS"></uses-permission>
+
+
+    <uses-permission android:name="android.permission.BATTERY_STATS"></uses-permission>
+
+    <application android:icon="@drawable/logo" android:label="nimbits" android:debuggable="true">
+
+
+        <activity android:name=".activity.StartActivity" android:launchMode="singleInstance"
+                  android:icon="@drawable/logo" android:label="Nimbits">
+            <intent-filter android:icon="@drawable/logo" android:label="Nimbits">
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".activity.PointActivity" android:launchMode="standard" android:screenOrientation="user">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".activity.DiagramActivity" android:launchMode="standard"
+                  android:screenOrientation="user">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+
+
+        <activity android:name=".activity.ChartActivity" android:screenOrientation="landscape"></activity>
+    </application>
+    <uses-sdk android:minSdkVersion="8"/>
+
+
+</manifest>

@@ -1,0 +1,106 @@
+<h5> Creating Dynamic charts with Nimbits Data</h5>
+
+
+<p>If you're not familiar with the   <a href="#" onclick="getContent('pages/javascript.html')">Javascript Library</a> then check out the tutorial on
+that before continuing. Also, you can generate static image charts easily using the <a href="#" onclick="getContent('pages/chart.html')">chart service.</a></p>
+
+<p>
+    By combining the Javascript library we provide for downloading nimbits data as JSON objects, and the
+    <a href="http://code.google.com/apis/chart/">Google Chart Tool</a>, you can add live
+    charts to your web site with your sensor readings in them.
+</p>
+
+
+  <h5>Creating a chart with live data</h5>
+<p>Consider this example code from the
+    <a href="http://code.google.com/apis/chart/interactive/docs/gallery/linechart.html" target="_blank">Line Chart Tutorial on Google.</a> which produces a
+chart like this one: </p><iframe src="/pages/chart.html" style="border: 0" scrolling="no" width="300" height="200" > </iframe>
+
+       <pre class="prettyprint">
+         &lt;html&gt
+         &lt;head&gt
+             &lt;script type="text/javascript" src="https://www.google.com/jsapi"&gt&lt;/script&gt
+             &lt;script type="text/javascript"&gt
+                 google.load("visualization", "1", {packages:["corechart"]});
+                 google.setOnLoadCallback(drawChart);
+                 function drawChart() {
+                     var data = new google.visualization.DataTable();
+                     data.addColumn('string', 'Year');
+                     data.addColumn('number', 'Sales');
+                     data.addColumn('number', 'Expenses');
+                     data.addRows([
+                         ['2004', 1000, 400],
+                         ['2005', 1170, 460],
+                         ['2006',  860, 580],
+                         ['2007', 1030, 540]
+                     ]);
+
+                     var options = {
+                         width: 400, height: 240,
+                         title: 'Company Performance'
+                     };
+
+                     var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+                     chart.draw(data, options);
+                 }
+             &lt;/script&gt
+         &lt;/head&gt
+         &lt;body&gt
+         &lt;div id="chart_div"&gt&lt;/div&gt
+         &lt;/body&gt
+         &lt;/html&gt
+
+       </pre>
+
+        <p>Ok, let's modify it so instead it makes a call to nimbits first, gets the data and puts in in the chart. One note you should make is that
+        the nimbits timestamps are coming back at UNIX Epoch millisecond timestamps - so we're doing some javascript here to make it into a nice format
+        the api uses. Notice the newly included nimbits.js file, and how now we're making two callbacks. "start" is called when the google api is
+        done loading and at that point, instead of loading the chart right away we are calling getPoint and the callback to draw the chart after
+        we have our data.</p>
+
+        <pre class="prettyprint">
+          &lt;html&gt
+          &lt;head&gt
+              &lt;script type="text/javascript" src="https://www.google.com/jsapi"&gt&lt;/script&gt
+              &lt;script type="text/javascript" src="http://app.nimbits.com/assets/js/nimbits-3.3.0.js"&gt&lt;/script&gt
+              &lt;script type="text/javascript"&gt
+                  google.load("visualization", "1", {packages:["corechart"]});
+                  google.setOnLoadCallback(start);
+
+                  function start() {
+                      // drawChart(null);
+                      getPoint(drawChart, 'http://app.nimbits.com', '96c55c29-d60f-42a1-82a9-98d8a76960bd', 10)
+                  }
+
+                  function drawChart(_point) {
+                      var data = new google.visualization.DataTable();
+                      data.addColumn('string', 'Year');
+                      data.addColumn('number', _point.name);
+                      var values = _point.values;
+                      for (i = 0; i &lt; values.length; i++) {
+                          var value = (eval('(' + values[i] + ')'));
+                          var date = new Date(value.timestamp);
+                          var ds = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+                          data.addRow([ds, value.d]);
+                      }
+                      var options = {
+                          width: 400, height: 240,
+                          title: 'Nimbits Rocks!'
+                      };
+
+                      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+                      chart.draw(data, options);
+                  }
+              &lt;/script&gt
+          &lt;/head&gt
+          &lt;body&gt
+          &lt;div id="chart_div"&gt&lt;/div&gt
+          &lt;/body&gt
+          &lt;/html&gt
+
+
+
+        </pre>
+         <p>voila - live nimbits data.</p>
+
+         <img src="./images/chartdemo1.png" alt="">

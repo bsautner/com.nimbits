@@ -1,0 +1,155 @@
+/*
+ * Copyright (c) 2010 Tonic Solutions LLC.
+ *
+ * http://www.nimbits.com
+ *
+ *
+ * Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.gnu.org/licenses/gpl.html
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+ */
+
+package com.nimbits.server.http;
+
+
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.Const;
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+
+/**
+ * Created by Benjamin Sautner
+ * User: benjamin
+ * Date: 3/28/11
+ * Time: 2:21 PM
+ */
+public class HttpCommonImpl implements HttpCommon {
+
+
+    @Override
+    public String doPost(final String postUrl, final String params, final String authCookie) throws NimbitsException {
+        String retVal = "";
+        // String postParams = params;
+        try {
+            final URL url = new URL(postUrl);
+            final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoOutput(true);
+            connection.setRequestMethod(Const.METHOD_POST);
+            connection.setReadTimeout(Const.DEFAULT_HTTP_TIMEOUT);
+
+            if (StringUtils.isNotEmpty(authCookie)) {
+                connection.addRequestProperty(Const.WORD_COOKIE, authCookie);
+            }
+
+
+            final OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+            writer.write(params);
+            writer.close();
+            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    retVal += line;
+                }
+                reader.close();
+            }
+        } catch (MalformedURLException e) {
+            throw new NimbitsException(e);
+        } catch (IOException e) {
+            throw new NimbitsException(e);
+        }
+        return retVal;
+
+    }
+
+    @Override
+    public String doGet(final String postUrl, final String params) {
+        try {
+            return doGet(postUrl, params, null);
+        } catch (NimbitsException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public String doPost(final String postUrl, final String params) {
+        try {
+            return doPost(postUrl, params, null);
+        } catch (NimbitsException e) {
+            return e.getMessage();
+        }
+    }
+
+    public byte[] doGetBytes(final String postUrl, final String params, final String authCookie) throws IOException {
+
+        int c;
+        final URL url = new URL(postUrl + "?" + params);
+        final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setDoOutput(true);
+        connection.setRequestMethod(Const.METHOD_GET);
+        //  connection.setReadTimeout(Const.DEFAULT_HTTP_TIMEOUT);
+        if (StringUtils.isNotEmpty(authCookie)) {
+            connection.addRequestProperty(Const.WORD_COOKIE, authCookie);
+        }
+
+        final DataInputStream in = new DataInputStream(connection.getInputStream());
+        final ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
+        while ((c = in.read()) != -1) {
+            byteArrayOut.write(c);
+        }
+        byteArrayOut.flush();
+
+        in.close();
+        return byteArrayOut.toByteArray();
+
+    }
+
+    public String doGet(final String postUrl, final String params, final String authCookie) throws NimbitsException {
+        final StringBuilder sb = new StringBuilder();
+
+
+        try {
+
+            // final String paramsWithAuth = params + getAuthParams();
+            final URL url = new URL(postUrl + "?" + params);
+            //  InetAddress address = InetAddress.getByName(postUrl);
+            final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoOutput(true);
+            connection.setRequestMethod(Const.METHOD_GET);
+            // connection.setReadTimeout(Const.DEFAULT_HTTP_TIMEOUT);
+            if (StringUtils.isNotEmpty(authCookie)) {
+                connection.addRequestProperty(Const.WORD_COOKIE, authCookie);
+            }
+            //  connection.addRequestProperty("Host", postUrl);
+            final BufferedReader reader = new BufferedReader(new InputStreamReader(
+                    connection.getInputStream()));
+
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+            reader.close();
+
+        } catch (MalformedURLException e) {
+            throw new NimbitsException(e);
+        } catch (ProtocolException e) {
+            throw new NimbitsException(e);
+        } catch (IOException e) {
+            throw new NimbitsException(e);
+        }
+
+
+        return sb.toString();
+
+    }
+
+
+}

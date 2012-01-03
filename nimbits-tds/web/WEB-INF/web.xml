@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2010 Tonic Solutions LLC.
+  ~
+  ~ http://www.nimbits.com
+  ~
+  ~
+  ~ Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.gnu.org/licenses/gpl.html
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+  -->
+
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+		  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5">
+
+    <filter>
+        <filter-name>appstats</filter-name>
+        <filter-class>com.google.appengine.tools.appstats.AppstatsFilter</filter-class>
+        <init-param>
+            <param-name>logMessage</param-name>
+            <param-value>Appstats available: /appstats/details?time={ID}</param-value>
+        </init-param>
+    </filter>
+    <!--<filter-mapping>-->
+    <!--<filter-name>appstats</filter-name>-->
+    <!--<url-pattern>/*</url-pattern>-->
+    <!--</filter-mapping>-->
+    <!--<servlet>-->
+    <!--<servlet-name>appstats</servlet-name>-->
+    <!--<servlet-class>com.google.appengine.tools.appstats.AppstatsServlet</servlet-class>-->
+    <!--</servlet>-->
+    <!--<servlet-mapping>-->
+    <!--<servlet-name>appstats</servlet-name>-->
+    <!--<url-pattern>/appstats/*</url-pattern>-->
+    <!--</servlet-mapping>-->
+
+    <servlet>
+        <servlet-name>loginService</servlet-name>
+        <servlet-class>com.nimbits.server.login.LoginServiceImpl</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>pointService</servlet-name>
+        <servlet-class>com.nimbits.server.point.PointServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>userService</servlet-name>
+        <servlet-class>com.nimbits.server.user.UserServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>IMService</servlet-name>
+        <servlet-class>com.nimbits.server.instantmessage.IMServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>xmppreceiver</servlet-name>
+        <servlet-class>com.nimbits.server.instantmessage.XMPPReceiverServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>xmppreceiver</servlet-name>
+        <url-pattern>/_ah/xmpp/message/chat/</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet-mapping>
+        <servlet-name>loginService</servlet-name>
+        <url-pattern>/nimbits/login</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>pointService</servlet-name>
+        <url-pattern>/nimbits/point</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>dataService</servlet-name>
+        <servlet-class>com.nimbits.server.recordedvalue.RecordedValueServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dataService</servlet-name>
+        <url-pattern>/nimbits/data</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>channelService</servlet-name>
+        <servlet-class>com.nimbits.server.channel.ChannelApiServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>channelService</servlet-name>
+        <url-pattern>/nimbits/channel</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>settingsService</servlet-name>
+        <servlet-class>com.nimbits.server.settings.SettingServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>settingsService</servlet-name>
+        <url-pattern>/nimbits/settings</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>diagramService</servlet-name>
+        <servlet-class>com.nimbits.server.diagram.DiagramServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>diagramService</servlet-name>
+        <url-pattern>/nimbits/diagram</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet-mapping>
+        <servlet-name>userService</servlet-name>
+        <url-pattern>/nimbits/user</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet-mapping>
+        <servlet-name>IMService</servlet-name>
+        <url-pattern>/nimbits/xmpp</url-pattern>
+    </servlet-mapping>
+
+    <!--
+    <servlet>
+        <servlet-name>remote_api</servlet-name>
+        <servlet-class>com.google.apphosting.utils.remoteapi.RemoteApiServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>remote_api</servlet-name>
+        <url-pattern>/remote_api</url-pattern>
+    </servlet-mapping>
+    -->
+
+    <servlet>
+        <servlet-name>mailhandler</servlet-name>
+        <servlet-class>com.nimbits.server.email.MailHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>mailhandler</servlet-name>
+        <url-pattern>/_ah/mail/*</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>NimbitsStats</servlet-name>
+        <servlet-class>com.nimbits.server.cron.NimbitsStats</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>NimbitsStats</servlet-name>
+        <url-pattern>/cron/NimbitsStats</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>PointMaint</servlet-name>
+        <servlet-class>com.nimbits.server.cron.PointMaint</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PointMaint</servlet-name>
+        <url-pattern>/cron/PointMaint</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>SessionMaint</servlet-name>
+        <servlet-class>com.nimbits.server.cron.SessionMaint</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SessionMaint</servlet-name>
+        <url-pattern>/cron/SessionMaint</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UserMaint</servlet-name>
+        <servlet-class>com.nimbits.server.cron.UserMaint</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserMaint</servlet-name>
+        <url-pattern>/cron/UserMaint</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DataScrubberCron</servlet-name>
+        <servlet-class>com.nimbits.server.cron.DataScrubberCron</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DataScrubberCron</servlet-name>
+        <url-pattern>/cron/DataScrubberCron</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>SystemMaint</servlet-name>
+        <servlet-class>com.nimbits.server.cron.SystemMaint</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SystemMaint</servlet-name>
+        <url-pattern>/cron/SystemMaint</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>com.nimbits.server.cron.IdlePointCron</servlet-name>
+        <servlet-class>com.nimbits.server.cron.IdlePointCron</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>com.nimbits.server.cron.IdlePointCron</servlet-name>
+        <url-pattern>/cron/idle</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>SystemMaint</servlet-name>
+        <url-pattern>/cron/systemmaint</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>RecordValueTask</servlet-name>
+        <servlet-class>com.nimbits.server.task.RecordValueTask</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RecordValueTask</servlet-name>
+        <url-pattern>/task/recordvaluetask</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>MoveCachedValuesToStoreTask</servlet-name>
+        <servlet-class>com.nimbits.server.task.MoveCachedValuesToStoreTask</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MoveCachedValuesToStoreTask</servlet-name>
+        <url-pattern>/task/move</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>MoveRecordedValuesToStoreCron</servlet-name>
+        <servlet-class>com.nimbits.server.cron.MoveRecordedValuesToStoreCron</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MoveRecordedValuesToStoreCron</servlet-name>
+        <url-pattern>/cron/move</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>com.nimbits.server.task.UpdatePointStatsTask</servlet-name>
+        <servlet-class>com.nimbits.server.task.UpdatePointStatsTask</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>com.nimbits.server.task.UpdatePointStatsTask</servlet-name>
+        <url-pattern>/task/updatepointstats</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>ProcessBatchTask</servlet-name>
+        <servlet-class>com.nimbits.server.task.ProcessBatchTask</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ProcessBatchTask</servlet-name>
+        <url-pattern>/task/processbatchtask</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>IncomingMailTask</servlet-name>
+        <servlet-class>com.nimbits.server.email.IncomingMailTask</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>IncomingMailTask</servlet-name>
+        <url-pattern>/task/incommingmail</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>PointMaintTask</servlet-name>
+        <servlet-class>com.nimbits.server.task.PointMaintTask</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PointMaintTask</servlet-name>
+        <url-pattern>/task/pointmaint</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CategoryMaintTask</servlet-name>
+        <servlet-class>com.nimbits.server.task.CategoryMaintTask</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CategoryMaintTask</servlet-name>
+        <url-pattern>/task/categorymaint</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DeleteRecordedValuesTask</servlet-name>
+        <servlet-class>com.nimbits.server.task.DeleteRecordedValuesTask</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DeleteRecordedValuesTask</servlet-name>
+        <url-pattern>/task/DeleteRecordedValuesTask</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>currentValueServlet</servlet-name>
+        <servlet-class>com.nimbits.server.service.CurrentValueService</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>currentValueServlet</servlet-name>
+        <url-pattern>/service/currentvalue</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>categoryServlet</servlet-name>
+        <servlet-class>com.nimbits.server.pointcategory.CategoryWebService</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>categoryServlet</servlet-name>
+        <url-pattern>/service/catagory</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>categoryServlet</servlet-name>
+        <url-pattern>/service/category</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>pointServlet</servlet-name>
+        <servlet-class>com.nimbits.server.point.PointWebService</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>pointServlet</servlet-name>
+        <url-pattern>/service/point</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>seriesServlet</servlet-name>
+        <servlet-class>com.nimbits.server.service.impl.SeriesServletImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>seriesServlet</servlet-name>
+        <url-pattern>/service/series</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>chartApiValueServlet</servlet-name>
+        <servlet-class>com.nimbits.server.service.ChartAPIValueService</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>chartApiValueServlet</servlet-name>
+        <url-pattern>/service/textimage</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>exportServlet</servlet-name>
+        <servlet-class>com.nimbits.server.service.ExportService</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>exportServlet</servlet-name>
+        <url-pattern>/nimbits/export</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>chartApiServlet</servlet-name>
+        <servlet-class>com.nimbits.server.service.impl.ChartApiServletImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>chartApiServlet</servlet-name>
+        <url-pattern>/service/chartapi</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>authTestServlet</servlet-name>
+        <servlet-class>com.nimbits.server.service.impl.AuthTestServletImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>authTestServlet</servlet-name>
+        <url-pattern>/service/authtest</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>diagramServlet</servlet-name>
+        <servlet-class>com.nimbits.server.diagram.DiagramServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>diagramServlet</servlet-name>
+        <url-pattern>/service/diagram</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>batchServlet</servlet-name>
+        <servlet-class>com.nimbits.server.service.BatchService</servlet-class>
+    </servlet>
+
+
+    <servlet>
+        <servlet-name>com.nimbits.nimbits CategoryService</servlet-name>
+        <servlet-class>com.nimbits.server.pointcategory.CategoryServiceImpl</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>com.nimbits.nimbits FacebookService</servlet-name>
+        <servlet-class>com.nimbits.server.facebook.FacebookImpl</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>com.nimbits.nimbits TwitterService</servlet-name>
+        <servlet-class>com.nimbits.server.twitter.TwitterImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>batchServlet</servlet-name>
+        <url-pattern>/service/batch</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>com.nimbits.nimbits TimespanService</servlet-name>
+        <servlet-class>com.nimbits.server.timespan.TimespanServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>com.nimbits.nimbits CategoryService</servlet-name>
+        <url-pattern>/nimbits/category</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>com.nimbits.nimbits FacebookService</servlet-name>
+        <url-pattern>/nimbits/facebook</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>com.nimbits.nimbits TwitterService</servlet-name>
+        <url-pattern>/nimbits/twitter</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>com.nimbits.nimbits TimespanService</servlet-name>
+        <url-pattern>/nimbits/timespan</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>com.nimbits.nimbits UserWebService</servlet-name>
+        <servlet-class>com.nimbits.server.user.UserWebService</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>com.nimbits.nimbits UserWebService</servlet-name>
+        <url-pattern>/admin/user</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>com.nimbits.nimbits UserReportService</servlet-name>
+        <servlet-class>com.nimbits.server.user.UserReportService</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>com.nimbits.nimbits UserReportService</servlet-name>
+        <url-pattern>/admin/user_report</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>com.nimbits.nimbits OAuth2Servlet</servlet-name>
+        <servlet-class>com.nimbits.server.google.OAuth2Servlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>com.nimbits.nimbits IntelligenceService</servlet-name>
+        <servlet-class>com.nimbits.server.intelligence.IntelligenceServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>com.nimbits.nimbits OAuth2Servlet</servlet-name>
+        <url-pattern>/OAuth2Servlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>com.nimbits.nimbits IntelligenceService</servlet-name>
+        <url-pattern>/nimbits/intel</url-pattern>
+    </servlet-mapping>
+
+
+    <security-constraint>
+        <web-resource-collection>
+            <url-pattern>/cron/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <security-constraint>
+        <web-resource-collection>
+            <url-pattern>/admin/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+
+    <security-constraint>
+        <web-resource-collection>
+            <url-pattern>/task/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <security-constraint>
+        <web-resource-collection>
+            <url-pattern>/appstats/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+</web-app>

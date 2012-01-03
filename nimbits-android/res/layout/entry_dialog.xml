@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical">
+
+    <TextView android:id="@+id/text"
+              android:layout_width="wrap_content"
+              android:textColor="#FFF"
+              android:text="Enter a number value and/or text to record to this data point. Click on the sparkline for a chart."
+              android:layout_height="wrap_content"/>
+
+    <TextView android:id="@+id/text"
+              android:layout_width="wrap_content"
+              android:textColor="#FFF"
+              android:text="New Number value:" android:layout_height="wrap_content"/>
+
+
+    <EditText android:id="@+id/EditText01" android:layout_height="wrap_content" android:text=""
+              android:layout_width="fill_parent"/>
+
+
+    <TextView android:id="@+id/text"
+              android:layout_width="wrap_content"
+              android:textColor="#FFF"
+              android:text="Text Note:" android:layout_height="wrap_content"/>
+
+
+    <EditText android:id="@+id/EditText02" android:layout_height="wrap_content" android:text=""
+              android:layout_width="fill_parent"/>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="fill_parent"
+                  android:layout_height="75px"
+                  android:orientation="horizontal">
+        <Button android:id="@+id/Button02" android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight=".50" android:text="Save and Close"/>
+
+        <Button android:id="@+id/Button01" android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight=".50" android:text="Cancel"/>
+    </LinearLayout>
+
+
+    <ImageView android:layout_height="fill_parent"
+               android:layout_width="fill_parent"
+               android:id="@+id/chart_image"
+               android:clickable="true"
+
+            />
+
+</LinearLayout>

@@ -167,6 +167,7 @@ public class PointMemCacheImpl implements PointTransactions {
 
     @Override
     public Point addPoint(final PointName pointName, final Category c) throws NimbitsException {
+
         final Point retObj = PointTransactionsFactory.getDaoInstance(u).addPoint(pointName, c);
         purgeMemCache(retObj);
         updateMap(retObj);
@@ -205,7 +206,7 @@ public class PointMemCacheImpl implements PointTransactions {
     }
 
     @Override
-    public Point checkPoint(final HttpServletRequest req, final EmailAddress email, final Point point) {
+    public Point checkPoint(final HttpServletRequest req, final EmailAddress email, final Point point) throws NimbitsException {
         return PointTransactionsFactory.getDaoInstance(u).checkPoint(req, email, point);
     }
 

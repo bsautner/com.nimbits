@@ -13,18 +13,16 @@
 
 package com.nimbits.client.panels;
 
-import com.extjs.gxt.ui.client.Style.LayoutRegion;
-import com.extjs.gxt.ui.client.Style.Orientation;
-import com.extjs.gxt.ui.client.util.Margins;
-import com.extjs.gxt.ui.client.widget.ContentPanel;
-import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
-import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
-import com.extjs.gxt.ui.client.widget.layout.FillLayout;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.LoginInfo;
-import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.diagram.Diagram;
-import com.nimbits.client.model.email.EmailAddress;
+import com.extjs.gxt.ui.client.Style.*;
+import com.extjs.gxt.ui.client.util.*;
+import com.extjs.gxt.ui.client.widget.*;
+import com.extjs.gxt.ui.client.widget.layout.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.category.*;
+import com.nimbits.client.model.diagram.*;
+import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.point.Point;
 
 public class MainPanel extends NavigationEventProvider {
@@ -33,8 +31,8 @@ public class MainPanel extends NavigationEventProvider {
     private EmailAddress emailAddress;
 
 
-    final NavigationPanel createNavigationPanel(boolean doAndroid) {
-        final NavigationPanel navTree = new NavigationPanel(emailAddress, false, doAndroid);
+    final NavigationPanel createNavigationPanel(ClientType clientType) {
+        final NavigationPanel navTree = new NavigationPanel(emailAddress, false, clientType);
 
 
         navTree.addCategoryClickedListeners(new CategoryClickedListener() {
@@ -116,7 +114,7 @@ public class MainPanel extends NavigationEventProvider {
 
 
         final ContentPanel west = new ContentPanel();
-        final NavigationPanel navigationPanel = createNavigationPanel(true);
+        final NavigationPanel navigationPanel = createNavigationPanel(ClientType.android);
         navigationPanel.setLayout(new FillLayout());
         navigationPanel.setHeight(400);
         west.setHeaderVisible(false);
@@ -129,14 +127,14 @@ public class MainPanel extends NavigationEventProvider {
 
     }
 
-    private void loadBorderLayout(LoginInfo loginInfo, boolean loadConnections) throws NimbitsException {
+    private void loadBorderLayout(final LoginInfo loginInfo,final boolean loadConnections) throws NimbitsException {
         final BorderLayout layout = new BorderLayout();
         this.emailAddress = loginInfo.getEmailAddress();
         setLayout(layout);
 
 
         final ContentPanel west = new ContentPanel();
-        final NavigationPanel navigationPanel = createNavigationPanel(false);
+        final NavigationPanel navigationPanel = createNavigationPanel(ClientType.other);
         navigationPanel.setLayout(new FillLayout());
         west.add(navigationPanel);
         west.setHeight("100%");

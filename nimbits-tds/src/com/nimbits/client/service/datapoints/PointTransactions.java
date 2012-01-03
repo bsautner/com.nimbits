@@ -38,7 +38,7 @@ public interface PointTransactions {
 
     List<Point> getPointsByCategory(final Category c);
 
-    Point checkPoint(final HttpServletRequest req, final EmailAddress email, final Point point);
+    Point checkPoint(final HttpServletRequest req, final EmailAddress email, final Point point) throws NimbitsException;
 
     Point publishPoint(Point p) throws NimbitsException;
 

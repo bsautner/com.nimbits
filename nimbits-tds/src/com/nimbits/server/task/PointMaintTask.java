@@ -16,6 +16,7 @@ package com.nimbits.server.task;
 import com.google.gson.Gson;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.point.PointModel;
@@ -62,7 +63,11 @@ public class PointMaintTask extends HttpServlet {
 
 
         if (n != null) {
-            PointTransactionsFactory.getInstance(null).checkPoint(req, n.getEmail(), p);
+            try {
+                PointTransactionsFactory.getInstance(null).checkPoint(req, n.getEmail(), p);
+            } catch (NimbitsException e) {
+                log.severe(e.getMessage());
+            }
 
             log.info("reporting point to core:" + p.getName().getValue());
             String url = ServerInfoImpl.getFullServerURL(req);
@@ -76,13 +81,7 @@ public class PointMaintTask extends HttpServlet {
             }
 
         } else {
-//            try {
-//                // delete me context.addTrace("Deleting point" + p.getName().getValue());
-//
-//            //    PointServiceFactory.getInstance().deletePoint(p);
-//            } catch (NimbitsException e) {
-//                log.severe(e.getMessage());
-//            }
+
             log.severe("Point Maint Task could not find user - would like to delete point :" + p.getName().getValue());
 
 

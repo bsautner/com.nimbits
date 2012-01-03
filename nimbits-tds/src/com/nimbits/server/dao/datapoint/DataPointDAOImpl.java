@@ -340,13 +340,16 @@ public class DataPointDAOImpl implements PointTransactions {
 
                 if (pp == null) {
 
-                    final DataPoint jdoPoint = new DataPoint(u.getId(), pointName, targetCategory.getId(), UUID.randomUUID().toString());
+                    final DataPoint jdoPoint = new DataPoint(
+                            u.getId(),
+                            pointName,
+                            targetCategory.getId(),
+                            UUID.randomUUID().toString());
+
                     jdoPoint.setPublic(true);
                     jdoPoint.setCompression(0.1);
                     jdoPoint.setExpire(90);
                     jdoPoint.setLastChecked(new Date());
-
-
                     pm.makePersistent(jdoPoint);
 
                     retObj = PointModelFactory.createPointModel(jdoPoint);
@@ -471,7 +474,7 @@ public class DataPointDAOImpl implements PointTransactions {
 
 
     @Override
-    public Point checkPoint(final HttpServletRequest req, final EmailAddress email, final Point point) {
+    public Point checkPoint(final HttpServletRequest req, final EmailAddress email, final Point point) throws NimbitsException {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final Transaction tx = pm.currentTransaction();
@@ -503,6 +506,9 @@ public class DataPointDAOImpl implements PointTransactions {
 
             tx.commit();
             return retObj;
+        }catch (Exception ex) {
+            log.severe(ex.getMessage());
+            throw new NimbitsException(ex.getMessage());
         } finally {
             pm.close();
         }

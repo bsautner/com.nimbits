@@ -25,6 +25,7 @@ import com.extjs.gxt.ui.client.widget.layout.FlowLayout;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.GxtUserModel;
@@ -138,7 +139,7 @@ class UserListPanel extends NavigationEventProvider {
 
     final NavigationPanel createNavigationPanel(final EmailAddress selectedEmail) {
 
-        final NavigationPanel navTree = new NavigationPanel(selectedEmail, true, false);
+        final NavigationPanel navTree = new NavigationPanel(selectedEmail, true, ClientType.other);
 
         //  navTree.loadAuthTree();
 

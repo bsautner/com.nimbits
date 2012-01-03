@@ -11,7 +11,11 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server.dao.diagram;
+package com.nimbits.server.diagram;
+
+import com.nimbits.client.model.user.*;
+import com.nimbits.server.dao.diagram.*;
+import com.nimbits.server.memcache.diagram.*;
 
 /**
  * Created by bsautner
@@ -20,17 +24,16 @@ package com.nimbits.server.dao.diagram;
  * Time: 4:14 PM
  *
  */
-public class DiagramDaoFactory {
-     private static DiagramDao instance;
+public class DiagramTransactionFactory {
 
-    protected DiagramDaoFactory() {
+    protected DiagramTransactionFactory() {
     }
 
-    public static DiagramDao getInstance() {
-        if (instance == null) {
-            instance = new DiagramDaoImpl();
-        }
-        return instance;
+    public static DiagramTransaction getInstance(User user) {
+        return new DiagramMemCacheImpl(user);
+    }
 
+    public static DiagramTransaction getDaoInstance(User user) {
+        return new DiagramDaoImpl(user);
     }
 }

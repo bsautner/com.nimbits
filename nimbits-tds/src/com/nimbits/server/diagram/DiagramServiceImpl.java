@@ -23,18 +23,15 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.exceptions.DiagramNotFoundException;
 import com.nimbits.client.exceptions.ObjectProtectionException;
 import com.nimbits.client.model.Const;
-import com.nimbits.client.model.category.CategoryName;
+import com.nimbits.client.model.category.*;
 import com.nimbits.client.model.diagram.Diagram;
 import com.nimbits.client.model.diagram.DiagramName;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.diagram.DiagramService;
-import com.nimbits.server.dao.diagram.DiagramDaoFactory;
 import com.nimbits.server.user.UserServiceFactory;
 import com.nimbits.server.user.UserTransactionFactory;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by bsautner
@@ -63,14 +60,14 @@ public class DiagramServiceImpl extends RemoteServiceServlet implements
     @Override
     public void moveDiagram(final DiagramName diagramName, final CategoryName newCategoryName) throws NimbitsException {
         User u = UserServiceFactory.getServerInstance().getHttpRequestUser(this.getThreadLocalRequest());
-        DiagramDaoFactory.getInstance().moveDiagram(u, diagramName, newCategoryName);
+        DiagramTransactionFactory.getInstance(u).moveDiagram(diagramName, newCategoryName);
 
     }
 
     @Override
-    public void deleteDiagram(Diagram diagram) {
-
-        DiagramDaoFactory.getInstance().deleteDiagram(diagram);
+    public void deleteDiagram(Diagram diagram) throws NimbitsException {
+        User u = UserServiceFactory.getServerInstance().getHttpRequestUser(this.getThreadLocalRequest());
+        DiagramTransactionFactory.getInstance(u).deleteDiagram(diagram);
     }
 
     @Override
@@ -82,7 +79,7 @@ public class DiagramServiceImpl extends RemoteServiceServlet implements
         Map<DiagramName, Diagram> retObj = new HashMap<DiagramName, Diagram>();
         for (DiagramName name : names) {
 
-            Diagram d = DiagramDaoFactory.getInstance().getDiagramByName(diagramOwner, name);
+            Diagram d = DiagramTransactionFactory.getInstance(diagramOwner).getDiagramByName(name);
             if (d != null && checkDiagramProtection(loggedInUser, diagramOwner, d)) {
                 retObj.put(name, d);
             }
@@ -100,13 +97,18 @@ public class DiagramServiceImpl extends RemoteServiceServlet implements
         return d != null && (loggedInUserId == diagramOwner.getId() || d.getProtectionLevel() >= 2 || d.getProtectionLevel() == 1 && diagramOwner.getConnections().contains(loggedInUserId));
     }
 
+    @Override
+    public List<Diagram> getDiagramsByCategory(User u, Category c) {
+       return DiagramTransactionFactory.getInstance(u).getDiagramsByCategory(c);
+    }
+
 
     @Override
     public Diagram updateDiagram(Diagram diagram) throws NimbitsException {
         User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
                 this.getThreadLocalRequest());
 
-        return DiagramDaoFactory.getInstance().updateDiagram(u.getId(), diagram);  //To change body of implemented methods use File | Settings | File Templates.
+        return DiagramTransactionFactory.getInstance(u).updateDiagram(diagram);  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -114,7 +116,7 @@ public class DiagramServiceImpl extends RemoteServiceServlet implements
         User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
                 this.getThreadLocalRequest());
 
-        Diagram d = DiagramDaoFactory.getInstance().getDiagramByUuid(uuid);
+        Diagram d = DiagramTransactionFactory.getInstance(u).getDiagramByUuid(uuid);
 
         if (d != null) {
             User diagramOwner = UserTransactionFactory.getInstance().getNimbitsUserByID(d.getUserFk());

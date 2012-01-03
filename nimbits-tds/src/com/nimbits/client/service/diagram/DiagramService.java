@@ -13,19 +13,15 @@
 
 package com.nimbits.client.service.diagram;
 
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.exceptions.DiagramNotFoundException;
-import com.nimbits.client.exceptions.ObjectProtectionException;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.category.CategoryName;
-import com.nimbits.client.model.diagram.Diagram;
-import com.nimbits.client.model.diagram.DiagramName;
-import com.nimbits.client.model.user.User;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.exceptions.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.category.*;
+import com.nimbits.client.model.diagram.*;
+import com.nimbits.client.model.user.*;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by bsautner
@@ -39,7 +35,7 @@ public interface DiagramService extends RemoteService {
 
     void moveDiagram(final DiagramName diagramName, final CategoryName targetCategoryName) throws NimbitsException;
 
-    void deleteDiagram(final Diagram diagram);
+    void deleteDiagram(final Diagram diagram) throws NimbitsException;
 
     Map<DiagramName, Diagram> getDiagramsByName(final long diagramOwnerId, final Set<DiagramName> names) throws NimbitsException;
 
@@ -48,4 +44,8 @@ public interface DiagramService extends RemoteService {
     Diagram getDiagramByUuid(final String diagramUUID) throws ObjectProtectionException, DiagramNotFoundException, NimbitsException;
 
     boolean checkDiagramProtection(final User loggedInUser, final User diagramOwner, final Diagram d);
+
+    List<Diagram> getDiagramsByCategory(final User u, final Category c);
+
+
 }

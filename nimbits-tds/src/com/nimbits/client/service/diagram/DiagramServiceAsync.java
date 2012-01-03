@@ -17,20 +17,19 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.exceptions.DiagramNotFoundException;
 import com.nimbits.client.exceptions.ObjectProtectionException;
-import com.nimbits.client.model.category.CategoryName;
+import com.nimbits.client.model.category.*;
 import com.nimbits.client.model.diagram.Diagram;
 import com.nimbits.client.model.diagram.DiagramName;
 import com.nimbits.client.model.user.User;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public interface DiagramServiceAsync {
     void getBlobStoreUrl(final String url, final AsyncCallback<String> async);
 
     void moveDiagram(final DiagramName diagramName, final CategoryName targetCategoryName, final AsyncCallback<Void> asyncCallback) throws NimbitsException;
 
-    void deleteDiagram(final Diagram diagram, final AsyncCallback<Void> asyncCallback);
+    void deleteDiagram(final Diagram diagram, final AsyncCallback<Void> asyncCallback) throws NimbitsException;
 
     void getDiagramsByName(final long diagramOwnerId, final Set<DiagramName> names, final AsyncCallback<Map<DiagramName, Diagram>> async) throws NimbitsException;
 
@@ -39,4 +38,8 @@ public interface DiagramServiceAsync {
     void getDiagramByUuid(final String diagram, final AsyncCallback<Diagram> asyncCallback) throws ObjectProtectionException, DiagramNotFoundException, NimbitsException;
 
     void checkDiagramProtection(final User loggedInUser, final User diagramOwner, final Diagram d, final AsyncCallback<Boolean> async);
+
+    void getDiagramsByCategory(final User u, final Category c, AsyncCallback<List<Diagram>> async);
+
+
 }

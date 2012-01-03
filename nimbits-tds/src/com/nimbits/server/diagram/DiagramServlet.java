@@ -22,7 +22,6 @@ import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.diagram.DiagramName;
 import com.nimbits.client.model.user.User;
-import com.nimbits.server.dao.diagram.DiagramDaoFactory;
 import com.nimbits.server.user.UserServiceFactory;
 
 import javax.servlet.ServletException;
@@ -57,10 +56,11 @@ public class DiagramServlet extends HttpServlet {
             final DiagramName diagramName = CommonFactoryLocator.getInstance().createDiagramName(diagramNameParam);
 
             if (uploadType.equals(UploadType.newFile.name())) {
-                DiagramDaoFactory.getInstance().addDiagram(u, blobKey, diagramName);
+
+                DiagramTransactionFactory.getInstance(u).addDiagram(blobKey, diagramName);
             } else if (uploadType.equals(UploadType.updatedFile.name()) && diagramId != null) {
                 long id = Long.valueOf(diagramId);
-                DiagramDaoFactory.getInstance().updateDiagram(u, blobKey, diagramName, id);
+                DiagramTransactionFactory.getInstance(u).updateDiagram(blobKey, diagramName, id);
             }
         } catch (NimbitsException ignored) {
 

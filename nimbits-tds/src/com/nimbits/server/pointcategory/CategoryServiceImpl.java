@@ -14,33 +14,27 @@
 package com.nimbits.server.pointcategory;
 
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.CategoryName;
-import com.nimbits.client.model.diagram.Diagram;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.service.category.CategoryService;
-import com.nimbits.server.common.ServerInfoImpl;
-import com.nimbits.server.core.CoreFactory;
-import com.nimbits.server.dao.diagram.DiagramDaoFactory;
-import com.nimbits.server.diagram.DiagramServiceFactory;
-import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.point.PointServiceFactory;
-import com.nimbits.server.recordedvalue.RecordedValueServiceFactory;
-import com.nimbits.server.user.UserServiceFactory;
-import com.nimbits.server.user.UserTransactionFactory;
-import com.nimbits.shared.Utils;
+import com.google.gwt.user.server.rpc.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.category.*;
+import com.nimbits.client.model.diagram.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.client.service.category.*;
+import com.nimbits.server.common.*;
+import com.nimbits.server.core.*;
+import com.nimbits.server.diagram.*;
+import com.nimbits.server.gson.*;
+import com.nimbits.server.point.*;
+import com.nimbits.server.recordedvalue.*;
+import com.nimbits.server.user.*;
+import com.nimbits.shared.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.logging.Logger;
+import java.util.*;
+import java.util.logging.*;
 
 public class CategoryServiceImpl extends RemoteServiceServlet implements CategoryService
 
@@ -143,7 +137,7 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
         }
 
         if (includeDiagrams) {
-            final List<Diagram> diagrams = DiagramDaoFactory.getInstance().getDiagramsByCategory(c, u);
+            final List<Diagram> diagrams = DiagramServiceFactory.getInstance().getDiagramsByCategory(u,c);
             c.setDiagrams(diagrams);
         }
         return c;

@@ -185,16 +185,23 @@ public class PointWebService extends HttpServlet {
         final String startParam = req.getParameter(Const.PARAM_START_DATE);
         final String endParam = req.getParameter(Const.PARAM_END_DATE);
         final String offsetParam = req.getParameter(Const.PARAM_OFFSET);
+
+
         Common.addResponseHeaders(resp, ExportType.plain);
 
         if (Utils.isEmptyString(pointNameParam)) {
             pointNameParam = req.getParameter(Const.PARAM_POINT);
         }
-
+        User u;
+        try {
+            u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
+        } catch (NimbitsException e) {
+            u = null;
+        }
 
         try {
             final PrintWriter out = resp.getWriter();
-            final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
+
             final String host = ServerInfoImpl.getFullServerURL(req);
             if (Utils.isEmptyString(uuidParam)) {
                 getPointObjects(req, categoryNameParam, pointNameParam, out);
@@ -206,11 +213,21 @@ public class PointWebService extends HttpServlet {
                     final Category category = CategoryServiceFactory.getInstance().getCategoryByUUID(uuidParam);
                     if (category != null) {
                         if (okToReport(u, category)) {
+                            if (u == null) {
+                                u = UserServiceFactory.getServerInstance().getUserByID(category.getUserFK());
+                                u.setRestricted(true);
+                            }
+
                             final List<Point> points = PointServiceFactory.getInstance().getPointsByCategory(u, category);
+
+                            //todo remove point from list if private
                             for (final Point p : points) {
-                                p.setValues(getRecordedValues(countParam, startParam, endParam, offsetParam, p).getValues());
-                                p.setValue(RecordedValueServiceFactory.getInstance().getCurrentValue(p));
-                                p.setHost(host);
+                                if (okToReport(u, p)) {
+                                    p.setValues(getRecordedValues(countParam, startParam, endParam, offsetParam, p).getValues());
+                                    p.setValue(RecordedValueServiceFactory.getInstance().getCurrentValue(p));
+                                    p.setHost(host);
+                                }
+
                             }
                             category.setPoints(points);
                             category.setHost(host);
@@ -292,24 +309,12 @@ public class PointWebService extends HttpServlet {
     }
 
     private boolean okToReport(User u, Point point) throws NimbitsException {
-        if (!point.isPublic()) {
-
-            return !(u == null || u.isRestricted());
-
-        } else {
-            return true;
-        }
+        return point.isPublic() || !(u == null || u.isRestricted());
     }
 
     //todo make ok for connections
     private boolean okToReport(User u, Category c) throws NimbitsException {
-        if (!c.getProtectionLevel().equals(ProtectionLevel.everyone)) {
-
-            return !(u == null || u.isRestricted());
-
-        } else {
-            return true;
-        }
+        return c.getProtectionLevel().equals(ProtectionLevel.everyone) || !(u == null || u.isRestricted());
     }
 
     private void getPointObjects(HttpServletRequest req, String categoryNameParam, String pointNameParam, PrintWriter out) throws NimbitsException {

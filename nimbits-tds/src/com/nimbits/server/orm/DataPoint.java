@@ -693,6 +693,11 @@ public class DataPoint implements Point {
     }
 
     @Override
+    public int getEntityType() {
+        return 0;
+    }
+
+    @Override
     public void setCalculation(Calculation calculation) {
         this.calculationEntity = new CalculationEntity(calculation);
 

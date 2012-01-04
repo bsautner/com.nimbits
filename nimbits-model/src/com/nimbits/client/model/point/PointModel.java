@@ -25,7 +25,7 @@ import java.util.*;
 public class PointModel implements Serializable, Point {
     private static  long serialVersionUID = 10L;
 
-    private static  int entityType = EntityType.point.getCode();
+    private int entityType = EntityType.point.getCode();
 
     private long id;
 
@@ -681,5 +681,7 @@ public class PointModel implements Serializable, Point {
         this.idleAlarmSent = idleAlarmSent;
     }
 
-
+    public int getEntityType() {
+        return entityType;
+    }
 }

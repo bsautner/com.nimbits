@@ -89,9 +89,16 @@ public class SeriesServletImpl extends HttpServlet {
             segStr = "0";
         }
 
+        User u;
+        try {
+            u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
+        } catch (NimbitsException e) {
+            u = null;
+        }
+
         try {
             final PrintWriter out = resp.getWriter();
-            final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
+
             if (Utils.isEmptyString(pointNameParam)) {
                 out.println("point name not specified");
             } else {

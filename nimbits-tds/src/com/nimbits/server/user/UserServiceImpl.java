@@ -154,6 +154,11 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
+    public User getUserByID(long id) throws NimbitsException {
+        return UserTransactionFactory.getInstance().getNimbitsUserByID(id);
+    }
+
+    @Override
     public User getAppUserUsingGoogleAuth() throws NimbitsException {
         com.google.appengine.api.users.UserService u = UserServiceFactory.getUserService();
         //u.getCurrentUser().

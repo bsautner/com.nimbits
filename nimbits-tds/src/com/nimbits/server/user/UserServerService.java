@@ -26,4 +26,5 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface UserServerService {
     User getHttpRequestUser(HttpServletRequest req) throws NimbitsException;
+    User getUserByID(long id) throws NimbitsException;
 }

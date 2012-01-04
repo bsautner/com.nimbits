@@ -38,4 +38,6 @@ public interface UserService extends RemoteService {
     User getAppUserUsingGoogleAuth() throws NimbitsException;
 
     String getSecret() throws NimbitsException;
+
+
 }

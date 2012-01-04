@@ -44,7 +44,7 @@ public class PointMemCacheImpl implements PointTransactions {
     private final User u;
     private final String pointListKey;
 
-    public PointMemCacheImpl(User user) {
+    public PointMemCacheImpl(final User user) {
         this.u = user;
         if (user != null) {
             //must be the same namespace categorymemcache uses
@@ -57,7 +57,7 @@ public class PointMemCacheImpl implements PointTransactions {
 
     }
 
-    public void purgeMemCache(Point p) throws NimbitsException {
+    public void purgeMemCache(final Point p) throws NimbitsException {
         if (cache.contains(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + p.getId())) {
             cache.delete(Const.CONST_SERVER_VERSION +  Const.CACHE_KEY_POINT_PREFIX + p.getId());
         }
@@ -75,7 +75,7 @@ public class PointMemCacheImpl implements PointTransactions {
 
     }
 
-    private void updateMap(Point p) throws NimbitsException {
+    private void updateMap(final Point p) throws NimbitsException {
         if (p != null) {
             purgeMemCache(p);
             cache.put(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + p.getUUID(), p);
@@ -84,7 +84,7 @@ public class PointMemCacheImpl implements PointTransactions {
         }
     }
 
-    private Point getPointFromMap(PointName name) {
+    private Point getPointFromMap(final PointName name) {
         try {
             if (cache.contains(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + name.getValue())) {
                 return (Point) cache.get(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + name.getValue());
@@ -98,7 +98,7 @@ public class PointMemCacheImpl implements PointTransactions {
         }
     }
 
-    private Point getPointFromMap(long id) {
+    private Point getPointFromMap(final long id) {
         try {
             if (cache.contains(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + id)) {
                 return (Point) cache.get(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + id);
@@ -236,7 +236,7 @@ public class PointMemCacheImpl implements PointTransactions {
 
     //these should not use the cache, since we don't know the user
     @Override
-    public Point getPointByUUID(String uuid) throws NimbitsException {
+    public Point getPointByUUID(final String uuid) throws NimbitsException {
         return PointTransactionsFactory.getDaoInstance(u).getPointByUUID(uuid);
     }
 

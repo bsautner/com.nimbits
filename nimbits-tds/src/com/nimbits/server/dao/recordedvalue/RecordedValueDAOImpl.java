@@ -221,7 +221,7 @@ public class RecordedValueDAOImpl implements RecordedValueTransactions {
     public void recordValues(final List<Value> values) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final List<RecordedValue> jdoVals = new ArrayList<RecordedValue>();
-        for (Value v : values) {
+        for (final Value v : values) {
             jdoVals.add(new RecordedValue(point, v));
         }
         try {

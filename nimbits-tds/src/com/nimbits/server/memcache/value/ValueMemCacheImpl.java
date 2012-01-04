@@ -22,14 +22,14 @@ import java.util.*;
 public class ValueMemCacheImpl implements RecordedValueTransactions {
 
     MemcacheService cache;
-    MemcacheService systemCache;
+   // MemcacheService systemCache;
     // private PointName pointName;
     private final Point p;
 
     public ValueMemCacheImpl(final Point point) {
         this.p = point;
         cache = MemcacheServiceFactory.getMemcacheService(point.getUUID());
-        systemCache = MemcacheServiceFactory.getMemcacheService(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_SYSTEM + Const.CONST_SERVER_VERSION);
+   //     systemCache = MemcacheServiceFactory.getMemcacheService(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_SYSTEM + Const.CONST_SERVER_VERSION);
     }
 
     private String currentValueCacheKey(String uuid) {
@@ -83,25 +83,23 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
 
     @Override
     public Value recordValue(final Value v) throws NimbitsException {
-
-
-        // final Value retObj = RecordedValueTransactionFactory.getDaoInstance().recordValue(point, v);
+         // final Value retObj = RecordedValueTransactionFactory.getDaoInstance().recordValue(point, v);
         final String k = currentValueCacheKey(p.getUUID());
         final String b = cacheKey(p.getUUID());
 
-        List<Long> activityLog;
-        if (systemCache.contains(Const.PARAM_POINTS)) {
-            activityLog = (List<Long>) systemCache.get(Const.PARAM_POINTS);
-            if (!activityLog.contains(p.getId())) {
-                activityLog.add(p.getId());
-                systemCache.delete(Const.PARAM_POINTS);
-                systemCache.put(Const.PARAM_POINTS, activityLog);
+//        List<Long> activityLog;
+//        if (systemCache.contains(Const.PARAM_POINTS)) {
+//            activityLog = (List<Long>) systemCache.get(Const.PARAM_POINTS);
+//            if (!activityLog.contains(p.getId())) {
+//                activityLog.add(p.getId());
+//                systemCache.delete(Const.PARAM_POINTS);
+//                systemCache.put(Const.PARAM_POINTS, activityLog);
+//
+//            }
+//        }
 
-            }
-        }
 
-
-        List<Long> stored;
+        final List<Long> stored;
         if (cache.contains(b)) {
             stored = (List<Long>) cache.get(b);
             stored.add(v.getTimestamp().getTime());
@@ -214,6 +212,7 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
     public void moveValuesFromCacheToStore() {
 
         final String b = cacheKey(p.getUUID());
+
         if (cache.contains(b)) {
             final List<Long> x = (List<Long>) cache.get(b);
             if (x != null && x.size() > 0) {
@@ -221,7 +220,7 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
                 final Map<Long, Object> valueMap = cache.getAll(x);
                 cache.deleteAll(x);
                 final List<Value> values = new ArrayList<Value>();
-
+                int count = values.size();
                 for (final Long ts : valueMap.keySet()) {
                     values.add((Value) valueMap.get(ts));
                 }

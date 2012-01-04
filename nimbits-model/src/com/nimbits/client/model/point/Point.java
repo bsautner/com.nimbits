@@ -13,8 +13,7 @@
 
 package com.nimbits.client.model.point;
 
-import com.nimbits.client.enums.AlertType;
-import com.nimbits.client.enums.ClientType;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.model.intelligence.Intelligence;
 import com.nimbits.client.model.value.Value;
 
@@ -215,5 +214,5 @@ public interface Point extends Serializable {
 
     Calculation getCalculation();
 
-    public int getEntityType();
+    public EntityType getEntityType();
 }

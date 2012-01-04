@@ -14,7 +14,7 @@
 package com.nimbits.server.pointcategory;
 
 import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.impl.CategoryModelImpl;
+import com.nimbits.client.model.category.impl.CategoryModel;
 
 /**
  * Created by Benjamin Sautner
@@ -24,8 +24,8 @@ import com.nimbits.client.model.category.impl.CategoryModelImpl;
  */
 public class PointCategoryModelFactory {
 
-    public static CategoryModelImpl createPointCategoryModel(final Category c) {
-        return new CategoryModelImpl(c);
+    public static CategoryModel createPointCategoryModel(final Category c) {
+        return new CategoryModel(c);
     }
 
 }

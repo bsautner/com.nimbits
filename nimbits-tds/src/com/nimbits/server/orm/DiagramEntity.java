@@ -15,7 +15,7 @@ package com.nimbits.server.orm;
 
 
 import com.google.appengine.api.blobstore.BlobKey;
-import com.nimbits.client.enums.ClientType;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.diagram.Diagram;
@@ -57,6 +57,10 @@ public class DiagramEntity implements Diagram {
     @Persistent
     private String uuid;
 
+    @NotPersistent
+    private int entityType = EntityType.diagram.getCode();
+
+
     public void setName(DiagramName name) {
         this.name = name.getValue();
     }
@@ -94,6 +98,11 @@ public class DiagramEntity implements Diagram {
     @Override
     public ClientType getClientType() {
         return null;
+    }
+
+    @Override
+    public EntityType getEntityType() {
+        return EntityType.get(this.entityType);
     }
 
     public Date getDateCreated() {

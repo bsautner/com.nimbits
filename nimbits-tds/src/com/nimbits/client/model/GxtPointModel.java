@@ -32,7 +32,7 @@ public class GxtPointModel extends BaseModelData {
     private PointName name;
     private final boolean readOnly;
     private boolean isDirty;
-    private Value value;
+
 
     public void setAlertState(AlertType alertState) {
         this.alertState = alertState;
@@ -54,7 +54,7 @@ public class GxtPointModel extends BaseModelData {
         }
         set(Const.PARAM_ICON, Const.PARAM_POINT);
         set(Const.PARAM_VALUE, 0.0);
-        // set(Const.PARAM_NOTE, lastNote);
+        set(Const.PARAM_ENTITY_TYPE, point.getEntityType().getCode());
     }
 
     public long getId() {
@@ -90,7 +90,7 @@ public class GxtPointModel extends BaseModelData {
 
     public void setValue(Value value) {
         if (value != null) {
-            this.value = value;
+           // this.value = value;
             set(Const.PARAM_VALUE, value.getNumberValue());
         }
 

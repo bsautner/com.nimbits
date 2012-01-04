@@ -3,7 +3,7 @@ import com.nimbits.client.enums.IntelligenceResultTarget;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.category.CategoryName;
 import com.nimbits.client.model.category.CategoryModelFactory;
-import com.nimbits.client.model.category.impl.CategoryModelImpl;
+import com.nimbits.client.model.category.impl.CategoryModel;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.intelligence.Intelligence;
 import com.nimbits.client.model.intelligence.IntelligenceModelFactory;
@@ -84,7 +84,7 @@ public class GsonTest {
 
 
         String json = g.toJson(c);
-        Category result = g.fromJson(json, CategoryModelImpl.class);
+        Category result = g.fromJson(json, CategoryModel.class);
         assertNotNull(result.getPoints());
 
     }

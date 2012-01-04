@@ -19,10 +19,14 @@ public class EntityTree<ModelData extends com.extjs.gxt.ui.client.data.ModelData
 
     }
 
-
-
     @Override
     protected boolean hasChildren(com.extjs.gxt.ui.client.data.ModelData model) {
+//        final String entityTypeVal = model.get(Const.PARAM_ENTITY_TYPE);
+//
+//        final EntityType entityType = EntityType.get (Integer.valueOf(entityTypeVal));
+//
+//        return entityType.equals(EntityType.category) ||  super.hasChildren((ModelData) model);
+
         return model instanceof GxtPointCategoryModel ||
                 !(model instanceof GxtPointModel)
                         && super.hasChildren((ModelData) model);

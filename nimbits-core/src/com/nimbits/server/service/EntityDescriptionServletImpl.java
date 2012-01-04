@@ -5,7 +5,7 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.impl.CategoryModelImpl;
+import com.nimbits.client.model.category.impl.CategoryModel;
 import com.nimbits.client.model.entity.EntityDescription;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.point.Point;
@@ -64,7 +64,7 @@ public class EntityDescriptionServletImpl extends HttpServlet {
                 isPublic = point.isPublic();
 
             } else if (type.equals(EntityType.category)) {
-                final Category category = GsonFactory.getInstance().fromJson(json, CategoryModelImpl.class);
+                final Category category = GsonFactory.getInstance().fromJson(json, CategoryModel.class);
                 final String desc = StringUtils.isEmpty(category.getDescription()) ? category.getName().getValue() : category.getDescription();
                 entityDescription =
                         EntityModelFactory.createEntityDescription(

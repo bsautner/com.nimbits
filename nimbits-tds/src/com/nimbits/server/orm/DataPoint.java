@@ -13,8 +13,7 @@
 
 package com.nimbits.server.orm;
 
-import com.nimbits.client.enums.AlertType;
-import com.nimbits.client.enums.ClientType;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.intelligence.Intelligence;
 import com.nimbits.client.model.intelligence.IntelligenceModelFactory;
@@ -134,6 +133,9 @@ public class DataPoint implements Point {
 
     @NotPersistent
     private AlertType alertState;
+
+    @NotPersistent
+    private int entityType = EntityType.point.getCode();
 
     @Override
     public boolean isIdleAlarmOn() {
@@ -693,8 +695,8 @@ public class DataPoint implements Point {
     }
 
     @Override
-    public int getEntityType() {
-        return 0;
+    public EntityType getEntityType() {
+        return EntityType.get(this.entityType);
     }
 
     @Override

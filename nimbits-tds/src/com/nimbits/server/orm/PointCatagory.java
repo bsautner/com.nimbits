@@ -13,7 +13,7 @@
 
 package com.nimbits.server.orm;
 
-import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.category.CategoryName;
 import com.nimbits.client.model.common.CommonFactoryLocator;
@@ -56,7 +56,6 @@ public class PointCatagory implements Category {
         this.description = description;
     }
 
-
     @NotPersistent
     private List<Point> _points;
 
@@ -83,6 +82,9 @@ public class PointCatagory implements Category {
 
     @NotPersistent
     String host;
+
+    @NotPersistent
+    private int entityType = EntityType.category.getCode();
 
     @Override
     public List<Point> getPoints() {
@@ -170,6 +172,11 @@ public class PointCatagory implements Category {
     @Override
     public void setHost(String host) {
         this.host = host;
+    }
+
+    @Override
+    public EntityType getEntityType() {
+      return EntityType.get(entityType);
     }
 
 

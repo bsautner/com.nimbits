@@ -13,7 +13,7 @@
 
 package com.nimbits.client.model.category;
 
-import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.model.diagram.Diagram;
 import com.nimbits.client.model.point.Point;
 
@@ -65,5 +65,7 @@ public interface Category extends Serializable {
     String getHost();
 
     void setHost(final String host);
+
+    EntityType getEntityType();
 
 }

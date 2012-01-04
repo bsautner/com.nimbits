@@ -165,8 +165,6 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
                                                   final EmailAddress email) throws NimbitsException {
 
         final User connectionUser = UserTransactionFactory.getInstance().getNimbitsUser(email);
-
-
         final User loggedInUser = UserServiceFactory.getServerInstance().getHttpRequestUser(
                 this.getThreadLocalRequest());
         if (connectionUser != null && loggedInUser != null) {

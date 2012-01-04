@@ -1,33 +1,28 @@
 package com.nimbits.client.panels;
 
-import com.extjs.gxt.ui.client.Style;
-import com.extjs.gxt.ui.client.event.ButtonEvent;
-import com.extjs.gxt.ui.client.event.SelectionListener;
-import com.extjs.gxt.ui.client.store.ListStore;
+import com.extjs.gxt.ui.client.*;
+import com.extjs.gxt.ui.client.data.*;
+import com.extjs.gxt.ui.client.event.*;
+import com.extjs.gxt.ui.client.store.*;
 import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.form.DateField;
-import com.extjs.gxt.ui.client.widget.form.NumberField;
-import com.extjs.gxt.ui.client.widget.form.TextField;
+import com.extjs.gxt.ui.client.widget.form.*;
 import com.extjs.gxt.ui.client.widget.grid.*;
-import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.i18n.client.NumberFormat;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.nimbits.client.icons.Icons;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.GxtPointModel;
-import com.nimbits.client.model.point.Point;
+import com.extjs.gxt.ui.client.widget.grid.Grid;
+import com.extjs.gxt.ui.client.widget.treegrid.*;
+import com.google.gwt.i18n.client.*;
+import com.google.gwt.user.client.*;
+import com.google.gwt.user.client.ui.*;
+import com.nimbits.client.icons.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.point.*;
 
-import java.util.List;
+import java.util.*;
 
 public class ColumnConfigs {
-    private final PointGridPanel pointGridPanel;
 
-    public ColumnConfigs(PointGridPanel pointGridPanel) {
-        this.pointGridPanel = pointGridPanel;
-    }
 
-    public void addTimestampColumn(final List<ColumnConfig> configs) {
+
+    public ColumnConfig timestampColumn() {
         final DateField dateField = new DateField();
         dateField.getPropertyEditor().setFormat(
                 DateTimeFormat.getFormat(Const.FORMAT_DATE_TIME));
@@ -40,11 +35,11 @@ public class ColumnConfigs {
         columnTime.setDateTimeFormat(DateTimeFormat
                 .getFormat(Const.FORMAT_DATE_TIME));
         columnTime.setEditor(new CellEditor(dateField));
-        // column.setDateTimeFormat(DateTimeFormat.getShortDateTimeFormat());
-        configs.add(columnTime);
+
+        return columnTime;
     }
 
-    public void addNoteColumn(final List<ColumnConfig> configs) {
+    public ColumnConfig noteColumn( ) {
         final ColumnConfig columnNote = new ColumnConfig();
         columnNote.setId(Const.PARAM_NOTE);
         columnNote.setHeader(Const.WORD_ANNOTATION);
@@ -54,10 +49,10 @@ public class ColumnConfigs {
         noteText.setAllowBlank(true);
         columnNote.setEditor(new CellEditor(noteText));
         columnNote.setAlignment(Style.HorizontalAlignment.LEFT);
-        configs.add(columnNote);
+        return (columnNote);
     }
 
-    public void addDataColumn(final List<ColumnConfig> configs) {
+    public ColumnConfig addDataColumn( ) {
         final ColumnConfig columnData = new ColumnConfig();
         columnData.setId(Const.PARAM_DATA);
         columnData.setHeader(Const.WORD_DATA);
@@ -67,10 +62,10 @@ public class ColumnConfigs {
         dataText.setAllowBlank(true);
         columnData.setEditor(new CellEditor(dataText));
         columnData.setAlignment(Style.HorizontalAlignment.LEFT);
-        configs.add(columnData);
+        return (columnData);
     }
 
-    public void addCurrentValueColumn(final List<ColumnConfig> configs) {
+    public ColumnConfig currentValueColumn() {
         final NumberField n = new NumberField();
         n.getPropertyEditor().setFormat(NumberFormat.getDecimalFormat());
         n.setSelectOnFocus(true);
@@ -85,25 +80,28 @@ public class ColumnConfigs {
         CellEditor ce = new CellEditor(n);
         columnValue.setEditor(ce);
 
-        configs.add(columnValue);
+        return (columnValue);
     }
 
-    public void addPointNameColumn(final List<ColumnConfig> configs) {
-        final ColumnConfig nameColumn = new ColumnConfig();
+    public ColumnConfig pointNameColumn(boolean useRenderer) {
+        final ColumnConfig nameColumn =  new ColumnConfig(Const.PARAM_NAME, Const.MESSAGE_DATA_POINT, 150);
         nameColumn.setId(Const.PARAM_NAME);
         nameColumn.setHeader(Const.MESSAGE_DATA_POINT);
         nameColumn.setAlignment(Style.HorizontalAlignment.LEFT);
-
-        nameColumn.setWidth(250);
-
+        nameColumn.setWidth(150);
+        if (useRenderer) {
+        nameColumn.setRenderer(new TreeGridCellRenderer<ModelData>());
+        }
         TextField<String> nameText = new TextField<String>();
         nameText.setAllowBlank(false);
         nameText.setSelectOnFocus(true);
-        configs.add(nameColumn);
+        return nameColumn;
+
     }
 
 
-    public void addAlertColumn(final List<ColumnConfig> configs) {
+    public ColumnConfig alertColumn(final Map<PointName, Point> points) {
+
         final GridCellRenderer<GxtPointModel> propertyButtonRenderer = new GridCellRenderer<GxtPointModel>() {
 
             public Object render(final GxtPointModel model, final String property, final ColumnData config, final int rowIndex,
@@ -112,7 +110,7 @@ public class ColumnConfigs {
                 final Button b = new Button((String) model.get(property), new SelectionListener<ButtonEvent>() {
                     @Override
                     public void componentSelected(final ButtonEvent ce) {
-                        final Point p = pointGridPanel.getPoints().get(model.getName());
+                        final Point p = points.get(model.getName());
                         String u = Window.Location.getHref()
                                 + "?uuid=" + p.getUUID()
                                 + "&count=10";
@@ -145,14 +143,13 @@ public class ColumnConfigs {
             }
         };
 
-
-        final ColumnConfig propertyColumn = new ColumnConfig();
-        propertyColumn.setId(Const.PARAM_STATE);
-        propertyColumn.setHeader("state");
-        propertyColumn.setWidth(35);
-        propertyColumn.setAlignment(Style.HorizontalAlignment.LEFT);
-        propertyColumn.setRenderer(propertyButtonRenderer);
-        configs.add(propertyColumn);
+        final ColumnConfig c = new ColumnConfig();
+        c.setId(Const.PARAM_STATE);
+        c.setHeader("state");
+        c.setWidth(35);
+        c.setAlignment(Style.HorizontalAlignment.LEFT);
+        c.setRenderer(propertyButtonRenderer);
+        return (c);
     }
 
 

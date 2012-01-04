@@ -6,7 +6,7 @@
 
 package com.nimbits.client.model.category;
 
-import com.nimbits.client.model.category.impl.CategoryModelImpl;
+import com.nimbits.client.model.category.impl.CategoryModel;
 
 /**
  * Created by bsautner
@@ -18,13 +18,13 @@ public class CategoryModelFactory {
 
     public static Category createCategoryModel(final Category c) {
 
-        return new CategoryModelImpl(c);
+        return new CategoryModel(c);
 
     }
 
     public static Category createCategoryModel(CategoryName categoryName) {
 
-        return new CategoryModelImpl(categoryName);
+        return new CategoryModel(categoryName);
 
     }
 

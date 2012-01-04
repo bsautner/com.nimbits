@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.nimbits.client.model.Const;
-import com.nimbits.client.model.category.impl.CategoryModelImpl;
+import com.nimbits.client.model.category.impl.CategoryModel;
 import com.nimbits.client.model.diagram.Diagram;
 import com.nimbits.client.model.diagram.DiagramModel;
 import com.nimbits.client.model.entity.EntityDescriptionModel;
@@ -27,7 +27,7 @@ import java.util.List;
  */
 public class GsonFactory {
     private static Gson instance;
-    public final static Type categoryListType = new TypeToken<List<CategoryModelImpl>>() {
+    public final static Type categoryListType = new TypeToken<List<CategoryModel>>() {
     }.getType();
     public final static Type pointListType = new TypeToken<List<PointModel>>() {
     }.getType();

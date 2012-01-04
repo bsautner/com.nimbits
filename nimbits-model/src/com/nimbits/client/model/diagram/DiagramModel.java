@@ -14,11 +14,10 @@
 package com.nimbits.client.model.diagram;
 
 
-import com.nimbits.client.enums.ClientType;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.model.common.*;
 
-import java.io.Serializable;
+import java.io.*;
 
 /**
  * Created by bsautner
@@ -37,7 +36,10 @@ public class DiagramModel implements Serializable, Diagram {
     private long userFk;
     private String blobKey;
     private String name;
-    private static final long serialVersionUID = Const.DEFAULT_SERIAL_VERSION;
+
+    private static long serialVersionUID = 10l;
+
+    public int entityType = EntityType.diagram.getCode();
 
     public ClientType getClientType() {
         return clientType;
@@ -139,6 +141,12 @@ public class DiagramModel implements Serializable, Diagram {
 
     }
 
+    @Override
+    public EntityType getEntityType() {
+        return EntityType.get(this.entityType);
+    }
+
+    @Override
     public boolean isReadOnly() {
         return readOnly;
     }

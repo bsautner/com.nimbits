@@ -62,7 +62,7 @@ public class GxtPointCategoryModel extends BaseTreeModel implements Serializable
         }
         set(Const.PARAM_ICON, Const.PARAM_CATEGORY);
         set(Const.PARAM_TYPE, Const.PARAM_FOLDER);
-
+        set(Const.PARAM_ENTITY_TYPE, c.getEntityType().getCode());
 
     }
 

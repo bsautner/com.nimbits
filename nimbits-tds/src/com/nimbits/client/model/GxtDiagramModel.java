@@ -32,6 +32,7 @@ public class GxtDiagramModel extends GxtBaseModel {
         set(Const.PARAM_ID, this.id);
         set(Const.PARAM_NAME, this.name.getValue());
         set(Const.PARAM_ICON, Const.PARAM_DIAGRAM);
+        set(Const.PARAM_ENTITY_TYPE, diagram.getEntityType().getCode());
     }
 
     public long getId() {

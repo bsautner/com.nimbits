@@ -536,11 +536,6 @@ public class PointModel implements Serializable, Point {
         this.tag = tag;
     }
 
-//    @Override
-//    public void setTarget(final long long1) {
-//        this.target = long1;
-//    }
-
     @Override
     public void setUnit(final String unit) {
         this.unit = unit;
@@ -681,7 +676,7 @@ public class PointModel implements Serializable, Point {
         this.idleAlarmSent = idleAlarmSent;
     }
 
-    public int getEntityType() {
-        return entityType;
+    public EntityType getEntityType() {
+        return EntityType.get(this.entityType);
     }
 }

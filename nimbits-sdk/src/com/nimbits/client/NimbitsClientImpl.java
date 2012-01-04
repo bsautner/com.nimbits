@@ -7,7 +7,7 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.category.CategoryName;
-import com.nimbits.client.model.category.impl.CategoryModelImpl;
+import com.nimbits.client.model.category.impl.CategoryModel;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.point.Point;
@@ -248,7 +248,7 @@ public class NimbitsClientImpl implements NimbitsClient {
         final String u = host + Const.PATH_CATEGORY_SERVICE;
         final String params = "name=" + URLEncoder.encode(categoryName.getValue(), Const.CONST_ENCODING);
         final String result = doGPost(u, params);
-        return gson.fromJson(result, CategoryModelImpl.class);
+        return gson.fromJson(result, CategoryModel.class);
 
 
     }
@@ -398,7 +398,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
         final String json = doGGet(u, params);
 
-        c = gson.fromJson(json, CategoryModelImpl.class);
+        c = gson.fromJson(json, CategoryModel.class);
         //  if (!(json.trim().length() == 0)) {
 
 

@@ -263,10 +263,9 @@
 
     </div>
     <div class="span7">
-        <div id="graphdiv4"
-             style="width:350px; height:200px;border: 1px">
+        <div id="graphdiv4"  style="width:350px; height:200px;border: 1px">
             <script type="text/javascript">
-                //            20070101,94.0946841239929,10,92.7865064144135,20
+
                 var chartData = "Date,Series1,Series2\n";
                 var now = new Date().getTime();
                 now = now - (10 * 1000 * 60);
@@ -277,7 +276,7 @@
 
                     var date = new Date(now);
                     now += 60000;
-                    var ds = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+                    var ds = date.getFullYear() + "-" + date.getMonth()+1 + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
                     chartData += ds + "," + value1 + ",10," + value2 + ",20" + "\n";
 
 
@@ -295,6 +294,7 @@
                             drawYAxis:false
                         }
                 );
+                alert(chartData);
             </script>
         </div>
         <p><a href="#" onclick="getContent('pages/javascript_chart.html')">Graph your data on your own web site with

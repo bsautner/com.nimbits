@@ -14,7 +14,7 @@
 package com.nimbits.client.model.diagram;
 
 
-import com.nimbits.client.enums.ClientType;
+import com.nimbits.client.enums.*;
 
 import java.io.Serializable;
 
@@ -55,4 +55,6 @@ public interface Diagram extends Serializable {
     void setClientType(final ClientType clientType);
 
     ClientType getClientType();
+
+    EntityType getEntityType();
 }

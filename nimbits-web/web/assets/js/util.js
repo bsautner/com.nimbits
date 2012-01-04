@@ -104,6 +104,7 @@ function getHTTPObject() {
 }
 function getContent(page) {
 
+    if (! page.sets)
     _gaq.push(['_trackEvent', page, 'load'])
     request = getHTTPObject();
     request.onreadystatechange = sendData;

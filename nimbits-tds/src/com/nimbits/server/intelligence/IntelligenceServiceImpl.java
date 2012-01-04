@@ -305,7 +305,13 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
             }
         }
         if (point.getIntelligence().getResultTarget().equals(IntelligenceResultTarget.value)) {
-            v = Double.valueOf(result);
+            try {
+                v = Double.valueOf(result);
+            } catch (NumberFormatException e) {
+                v =0.0;
+                data = result;
+
+            }
         } else {
             data = result;
         }

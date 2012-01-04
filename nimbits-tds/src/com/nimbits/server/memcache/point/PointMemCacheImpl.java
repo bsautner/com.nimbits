@@ -40,20 +40,19 @@ import java.util.List;
  */
 public class PointMemCacheImpl implements PointTransactions {
 
-
     private final MemcacheService cache;
     private final User u;
-    private final String lk;
+    private final String pointListKey;
 
     public PointMemCacheImpl(User user) {
         this.u = user;
         if (user != null) {
             //must be the same namespace categorymemcache uses
-            cache = MemcacheServiceFactory.getMemcacheService(u.getUuid());
-            lk = MemCacheHelper.pointListKey(u);
+            cache = MemcacheServiceFactory.getMemcacheService(Const.CONST_SERVER_VERSION + u.getUuid());
+            pointListKey = MemCacheHelper.pointListKey(u);
         } else {
             cache = MemcacheServiceFactory.getMemcacheService();
-            lk = "default";
+            pointListKey = Const.CONST_SERVER_VERSION + "default";
         }
 
     }
@@ -68,8 +67,8 @@ public class PointMemCacheImpl implements PointTransactions {
         if (cache.contains(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + p.getName().getValue())) {
             cache.delete(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + p.getName().getValue());
         }
-        if (cache.contains(lk)) {
-            cache.delete(lk);
+        if (cache.contains(pointListKey)) {
+            cache.delete(pointListKey);
         }
         CategoryTransactionFactory.getInstance(u).purgeMemCache();
 
@@ -85,16 +84,58 @@ public class PointMemCacheImpl implements PointTransactions {
         }
     }
 
+    private Point getPointFromMap(PointName name) {
+        try {
+            if (cache.contains(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + name.getValue())) {
+                return (Point) cache.get(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + name.getValue());
+            }
+            else {
+                return null;
+            }
+        } catch (com.google.appengine.api.memcache.InvalidValueException e) {
+
+            return null;
+        }
+    }
+
+    private Point getPointFromMap(long id) {
+        try {
+            if (cache.contains(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + id)) {
+                return (Point) cache.get(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + id);
+            }
+            else {
+                return null;
+            }
+        } catch (com.google.appengine.api.memcache.InvalidValueException e) {
+
+            return null;
+        }
+    }
+
+    private  List<Point> getPointListFromCache() {
+        List<Point> retObj;
+        try {
+            if (cache.contains(pointListKey)) {
+                retObj = (List<Point>) cache.get(pointListKey);
+            }
+            else {
+                retObj= null;
+            }
+        } catch (com.google.appengine.api.memcache.InvalidValueException e) {
+            cache.delete(pointListKey);
+            retObj= null;
+        }
+        return retObj;
+    }
 
     @Override
     public List<Point> getPoints() throws NimbitsException {
-        List<Point> retObj;
-        if (cache.contains(lk)) {
-            retObj = (List<Point>) cache.get(lk);
+        List<Point> retObj = getPointListFromCache();
+        if (retObj != null) {
             return retObj;
         } else {
             retObj = PointTransactionsFactory.getDaoInstance(u).getPoints();
-            cache.put(lk, retObj);
+            cache.put(pointListKey, retObj);
             return retObj;
         }
 
@@ -102,9 +143,9 @@ public class PointMemCacheImpl implements PointTransactions {
 
     @Override
     public Point getPointByID(final long id) throws NimbitsException {
-
-        if (cache.contains(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + id)) {
-            return (Point) cache.get(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + id);
+        Point retObj = getPointFromMap(id);
+        if (retObj != null) {
+            return retObj;
         } else {
             Point p = PointTransactionsFactory.getDaoInstance(u).getPointByID(id);
 
@@ -127,8 +168,11 @@ public class PointMemCacheImpl implements PointTransactions {
 
     @Override
     public Point getPointByName(final PointName name) throws NimbitsException {
-        if (cache.contains(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + name.getValue())) {
-            return (Point) cache.get(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + name.getValue());
+        Point point = getPointFromMap(name);
+
+        if (point != null) {
+            return  point;
+
         } else {
             Point p = PointTransactionsFactory.getDaoInstance(u).getPointByName(name);
             if (p != null) {

@@ -161,15 +161,14 @@ public class DataPointDAOImpl implements PointTransactions {
                 retObj = PointModelFactory.createPointModel(original);
 
             }
+            return retObj;
+        }
 
-        } catch (Exception e) {
-            log.severe("update point error " + e.getMessage());
-
-        } finally {
+        finally {
             pm.close();
 
         }
-        return retObj;
+
 
 
     }

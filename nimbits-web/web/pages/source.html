@@ -1,0 +1,44 @@
+<h5>Open Source Initiative</h5>
+
+
+    <div class="row">
+
+    <div class="span-two-thirds">
+        <p>The source code to Nimbits Server, SDK, Core Framework, this web site, and
+        Android App are all distributed under the GNU 3 General Public Licence.
+        We believe in open and social code and un-restrictive software.</p>
+
+        <p>Nimbits also used several open source components including:</p>
+        <ul>
+            <li>Sencha GWT </li>
+            <li>GSON</li>
+            <li>Google Web Toolkit</li>
+            <li>Google App Engine</li>
+            <li>Twitter Bootstrap</li>
+            <li>Vectomatic</li>
+        </ul>
+
+    </div>
+
+
+    <div class="span-one-third">
+        <p><a target="_blank" href="https://github.com/bsautner/com.nimbits" class="btn primary">Nimbits on GitHub &raquo;</a></p>
+    </div>
+
+    </div>
+
+    <p>Using the Nimbits code means complying with the licence as well as the licences in these projects
+    respectively.</p>
+
+    <p>The code follows a very robust and expandable architecture</p>
+      <UL>
+          <li><strong>nimbits-model</strong> contains all of the base model objects and interfaces such as Value, Point, Category etc. The models
+          are Serializable Data transfer objects.</li>
+          <li><strong><a href="#" onclick="getContent('pages/sdk')">nimbits-sdk</a></strong> compiles as a runnable JAR and inherits <strong>nimbits-model</strong>. It contains many helper functions that access the
+              <a href="#" onclick="getContent('pages/web_service_primer')">REST APIs</a> hosted on a <strong>nimbits-tds</strong>. One might use the SDK to call GetCurrentValue() in the SDK to get a Point's current Value;
+          objects defined in nimbits-model. If one was to just call the
+              <a href="#" onclick="getContent('pages/current_value_service')">/service/currentvalue</a> REST service directly on nimbits server you
+          would get the JSON data of a Value Object.  The SDK simply helps authenticate and de-serialize the object for you.</li>
+          <li><strong>nimbits-tds</strong></li> is the nimbits server which contains the com.nimbits.client namespace which is the UI and Async interfaces
+          to the web services and com.nimbits.server which houses the ORM, DAO, Servlets, REST APU and so on.
+      </UL>

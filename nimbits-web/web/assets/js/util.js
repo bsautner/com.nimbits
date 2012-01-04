@@ -103,11 +103,13 @@ function getHTTPObject() {
     return xhr;
 }
 function getContent(page) {
+
     _gaq.push(['_trackEvent', page, 'load'])
     request = getHTTPObject();
     request.onreadystatechange = sendData;
     request.open("POST", page, true);
     request.send(null);
+
 }
 
 function sendData() {
@@ -117,7 +119,7 @@ function sendData() {
         prettyPrint();
     }
     else if (request.readyState == 1) {
-        // dC.innerHTML = "Requesting content..."
+       dC.innerHTML = "Requesting content..."
     }
 }
 

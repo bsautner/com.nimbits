@@ -21,7 +21,7 @@
     <script src="http://autobahn.tablesorter.com/jquery.tablesorter.min.js"></script>
     <script src="assets/js/google-code-prettify/prettify.js"></script>
     <!--<script src="assets/js/application.js"></script>-->
-    <script src="assets/js/util.js"></script>
+    <script src="./assets/js/util.js"></script>
     <script type="text/javascript"
             src="assets/danvk-dygraphs-0842b24/dygraph-combined.js"></script>
     <!-- Le fav and touch icons -->
@@ -44,13 +44,11 @@
 
 
             <ul class="nav">
-
-
-                <li><a href="#store" onclick="getContent('store.html')">Store</a></li>
+                <li><a href="#store" onclick="getContent('pages/store.html')">Store</a></li>
                 <li><a href="#forum" onclick="popUp('http://groups.google.com/group/nimbits')">Forum</a></li>
                 <li><a href="#terms" onclick="getContent('pages/terms.html')">Terms</a></li>
-
                 <li><a href="#service" onclick="getContent('pages/support.html')">Services</a></li>
+                <li><a href="#terms" onclick="getContent('pages/source.html')">Source</a></li>
                 <li><a href="http://app.nimbits.com" target="_blank">Login</a></li>
             </ul>
 
@@ -294,7 +292,7 @@
                             drawYAxis:false
                         }
                 );
-                alert(chartData);
+
             </script>
         </div>
         <p><a href="#" onclick="getContent('pages/javascript_chart.html')">Graph your data on your own web site with

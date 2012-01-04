@@ -16,6 +16,7 @@ package com.nimbits.server.memcache.point;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.Const;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.category.CategoryName;
 import com.nimbits.client.model.email.EmailAddress;
@@ -58,14 +59,14 @@ public class PointMemCacheImpl implements PointTransactions {
     }
 
     public void purgeMemCache(Point p) throws NimbitsException {
-        if (cache.contains(p.getId())) {
-            cache.delete(p.getId());
+        if (cache.contains(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + p.getId())) {
+            cache.delete(Const.CONST_SERVER_VERSION +  Const.CACHE_KEY_POINT_PREFIX + p.getId());
         }
-        if (cache.contains(p.getUUID())) {
-            cache.delete(p.getUUID());
+        if (cache.contains(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + p.getUUID())) {
+            cache.delete(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + p.getUUID());
         }
-        if (cache.contains(p.getName())) {
-            cache.delete(p.getName());
+        if (cache.contains(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + p.getName().getValue())) {
+            cache.delete(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + p.getName().getValue());
         }
         if (cache.contains(lk)) {
             cache.delete(lk);
@@ -78,9 +79,9 @@ public class PointMemCacheImpl implements PointTransactions {
     private void updateMap(Point p) throws NimbitsException {
         if (p != null) {
             purgeMemCache(p);
-            cache.put(p.getUUID(), p);
-            cache.put(p.getId(), p);
-            cache.put(p.getName(), p);
+            cache.put(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + p.getUUID(), p);
+            cache.put(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + p.getId(), p);
+            cache.put(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + p.getName().getValue(), p);
         }
     }
 
@@ -100,10 +101,10 @@ public class PointMemCacheImpl implements PointTransactions {
     }
 
     @Override
-    public Point getPointByID(long id) throws NimbitsException {
+    public Point getPointByID(final long id) throws NimbitsException {
 
-        if (cache.contains(id)) {
-            return (Point) cache.get(id);
+        if (cache.contains(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + id)) {
+            return (Point) cache.get(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + id);
         } else {
             Point p = PointTransactionsFactory.getDaoInstance(u).getPointByID(id);
 
@@ -115,7 +116,7 @@ public class PointMemCacheImpl implements PointTransactions {
     }
 
     @Override
-    public Point updatePoint(Point point) throws NimbitsException {
+    public Point updatePoint(final Point point) throws NimbitsException {
         // final User u = UserTransactionFactory.getInstance().getNimbitsUserByID(point.getUserFK());
         purgeMemCache(point);
         Point retObj = PointTransactionsFactory.getDaoInstance(u).updatePoint(point);
@@ -125,9 +126,9 @@ public class PointMemCacheImpl implements PointTransactions {
     }
 
     @Override
-    public Point getPointByName(PointName name) throws NimbitsException {
-        if (cache.contains(name)) {
-            return (Point) cache.get(name);
+    public Point getPointByName(final PointName name) throws NimbitsException {
+        if (cache.contains(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + name.getValue())) {
+            return (Point) cache.get(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + name.getValue());
         } else {
             Point p = PointTransactionsFactory.getDaoInstance(u).getPointByName(name);
             if (p != null) {
@@ -176,12 +177,12 @@ public class PointMemCacheImpl implements PointTransactions {
 
 
     @Override
-    public List<Point> getPointsByCategory(Category c) {
+    public List<Point> getPointsByCategory(final Category c) {
         return PointTransactionsFactory.getDaoInstance(u).getPointsByCategory(c);
     }
 
     @Override
-    public Point publishPoint(Point p) throws NimbitsException {
+    public Point publishPoint(final Point p) throws NimbitsException {
         purgeMemCache(p);
         Point retObj = PointTransactionsFactory.getDaoInstance(u).publishPoint(p);
         updateMap(p);

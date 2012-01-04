@@ -28,8 +28,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Created by bsautner
@@ -39,19 +42,21 @@ import java.util.Map;
  */
 public class DiagramServlet extends HttpServlet {
     private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-
+    private static final Logger log = Logger.getLogger(DiagramServlet.class.getName());
     public void doPost(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
-        final Map<String, BlobKey> blobs = blobstoreService.getUploadedBlobs(req);
-        final BlobKey blobKey = blobs.get(Const.PARAM_MY_FILE);
+        final Map<String,List<BlobKey>> blobs = blobstoreService.getUploads(req);
+        final BlobKey blobKey = blobs.get(Const.PARAM_MY_FILE).get(0);
         final String diagramNameParam = req.getParameter(Const.PARAM_NAME);
         final String diagramId = req.getParameter(Const.PARAM_DIAGRAM_ID);
         final String uploadType = req.getParameter(Const.PARAM_UPLOAD_TYPE_HIDDEN_FIELD);
-
-
+        final String email = req.getParameter(Const.PARAM_EMAIL_HIDDEN_FIELD);
+        final HttpSession session = req.getSession();
+        session.setAttribute(Const.PARAM_EMAIL, CommonFactoryLocator.getInstance().createEmailAddress(email));
         final User u;
         try {
             u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
+
 
             final DiagramName diagramName = CommonFactoryLocator.getInstance().createDiagramName(diagramNameParam);
 
@@ -60,11 +65,14 @@ public class DiagramServlet extends HttpServlet {
                 DiagramTransactionFactory.getInstance(u).addDiagram(blobKey, diagramName);
             } else if (uploadType.equals(UploadType.updatedFile.name()) && diagramId != null) {
                 long id = Long.valueOf(diagramId);
-                DiagramTransactionFactory.getInstance(u).updateDiagram(blobKey, diagramName, id);
-            }
-        } catch (NimbitsException ignored) {
 
+                    DiagramTransactionFactory.getInstance(u).updateDiagram(blobKey, diagramName, id);
+
+            }
+        } catch (NimbitsException e) {
+            log.severe(e.getMessage());
         }
+
     }
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {

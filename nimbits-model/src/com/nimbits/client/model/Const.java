@@ -22,7 +22,7 @@ import com.nimbits.client.model.email.EmailAddress;
  * Time: 10:35 AM
  */
 public class Const {
-    public static final String CONST_SERVER_VERSION = "3.3.1.10";
+    public static final String CONST_SERVER_VERSION = "3.3.1.11";
     public static final long DEFAULT_SERIAL_VERSION = 12L;
     public static final String CACHE_KEY_PREFIX = CONST_SERVER_VERSION + DEFAULT_SERIAL_VERSION;
     public static final String PATH_NIMBITS_CORE_SERVERS_URL = "http://nimbits.com:8080/core/servers";
@@ -184,7 +184,7 @@ public class Const {
     public static final String PATH_TASK_PROCESS_BATCH = "/task/processbatchtask";
     public static final String PATH_TASK_UPDATE_POINT_STATS = "/task/updatepointstats";
     public static final String PATH_USER_SERVICE = "/admin/user";
-    public static final String PATH_WELCOME_URL = "./welcome.html";
+
     public static final String PATH_WA_URL = "./wa.html";
     public static final String Path_CHART_API = "/service/chartapi";
     public static final String QUEUE_DELETE_DATA = "deletedata";
@@ -196,7 +196,7 @@ public class Const {
     //  public static final String RESPONSE_CATEGORY_NOT_FOUND = "Category does not exist";
     public static final String RESPONSE_ERROR_SAVING_VALUE = "Error Saving Value";
     public static final String RESPONSE_MISSING_POINT_PARAM = "missing point parameter";
-    public static final String RESPONSE_NO_POINTS = "No Points";
+
     public static final String RESPONSE_PERMISSION_DENIED = "Permission Denied";
     public static final String RESPONSE_POINT_EXISTS = "Point Exists";
     public static final String RESPONSE_POINT_NOT_FOUND_UUID = "could not find point using uuid ";
@@ -231,6 +231,7 @@ public class Const {
     public static final String PARAM_MY_FILE = "myFile";
     public static final String PARAM_DIAGRAM_ID = "diagramId";
     public static final String PARAM_UPLOAD_TYPE_HIDDEN_FIELD = "uploadTypeHiddenField";
+    public static final String PARAM_EMAIL_HIDDEN_FIELD = "emailHiddenField";
     public static final String PARAM_GENKEY = "genkey";
     public static final String PARAM_OUT = "out";
     public static final String PARAM_I = "i";
@@ -319,6 +320,7 @@ public class Const {
             "dependent=true";
     public static final String PARAM_CHANNEL = "channel";
     public static final String CACHE_KEY_SYSTEM = "SYSTEM_CACHE";
+    public static final String CACHE_KEY_POINT_PREFIX = "POINT_CACHE";
 
     public static String getConnectionInviteEmail(final EmailAddress email) {
         return "<P STYLE=\"margin-bottom: 0in\"> " + email.getValue() +

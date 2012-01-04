@@ -134,14 +134,16 @@ public class CategoryDAOImpl implements CategoryTransactions {
 
 
         Map<Long, List<Point>> retObj = null;
-
+        final List<Point> points;
         List<Long> ids = new ArrayList<Long>();
         for (Category c : categories) {
             ids.add(c.getId());
         }
         try {
             final Query q = pm.newQuery(DataPoint.class, ":p.contains(catID)");
-            final List<Point> points = (List<Point>) q.execute(ids);
+            if (ids.size() > 0) {
+                points = (List<Point>) q.execute(ids);
+
 
             List<Point> models = PointModelFactory.createPointModels(points);
             retObj = new HashMap<Long, List<Point>>();
@@ -150,6 +152,7 @@ public class CategoryDAOImpl implements CategoryTransactions {
                     retObj.put(p.getCatID(), new ArrayList<Point>());
                 }
                 retObj.get(p.getCatID()).add(p);
+            }
             }
         } finally {
             pm.close();

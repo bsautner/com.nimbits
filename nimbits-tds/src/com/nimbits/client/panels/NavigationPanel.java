@@ -14,44 +14,64 @@
 package com.nimbits.client.panels;
 
 import com.extjs.gxt.ui.client.Style.Scroll;
-import com.extjs.gxt.ui.client.data.*;
-import com.extjs.gxt.ui.client.dnd.DND.*;
-import com.extjs.gxt.ui.client.dnd.*;
+import com.extjs.gxt.ui.client.data.ModelData;
+import com.extjs.gxt.ui.client.data.ModelIconProvider;
+import com.extjs.gxt.ui.client.dnd.DND.Feedback;
+import com.extjs.gxt.ui.client.dnd.TreeGridDragSource;
+import com.extjs.gxt.ui.client.dnd.TreeGridDropTarget;
 import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.store.*;
-import com.extjs.gxt.ui.client.util.*;
-import com.extjs.gxt.ui.client.widget.*;
+import com.extjs.gxt.ui.client.store.TreeStore;
+import com.extjs.gxt.ui.client.util.Format;
+import com.extjs.gxt.ui.client.util.Params;
+import com.extjs.gxt.ui.client.widget.ContentPanel;
+import com.extjs.gxt.ui.client.widget.Info;
+import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.Window;
 import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.form.*;
-import com.extjs.gxt.ui.client.widget.grid.*;
-import com.extjs.gxt.ui.client.widget.layout.*;
-import com.extjs.gxt.ui.client.widget.menu.*;
+import com.extjs.gxt.ui.client.widget.form.NumberField;
+import com.extjs.gxt.ui.client.widget.grid.CellEditor;
+import com.extjs.gxt.ui.client.widget.grid.ColumnConfig;
+import com.extjs.gxt.ui.client.widget.grid.ColumnModel;
+import com.extjs.gxt.ui.client.widget.grid.EditorGrid;
+import com.extjs.gxt.ui.client.widget.layout.FillLayout;
+import com.extjs.gxt.ui.client.widget.menu.Menu;
 import com.extjs.gxt.ui.client.widget.menu.MenuItem;
-import com.extjs.gxt.ui.client.widget.toolbar.*;
-import com.extjs.gxt.ui.client.widget.treegrid.*;
-import com.google.gwt.core.client.*;
+import com.extjs.gxt.ui.client.widget.toolbar.SeparatorToolItem;
+import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
+import com.extjs.gxt.ui.client.widget.treegrid.EditorTreeGrid;
+import com.extjs.gxt.ui.client.widget.treegrid.TreeGridCellRenderer;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
-import com.nimbits.client.controls.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.exceptions.*;
-import com.nimbits.client.icons.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.category.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.diagram.*;
-import com.nimbits.client.model.email.*;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.nimbits.client.enums.ClientType;
+import com.nimbits.client.enums.UploadType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.exceptions.PointExistsException;
+import com.nimbits.client.icons.Icons;
+import com.nimbits.client.model.Const;
+import com.nimbits.client.model.GxtDiagramModel;
+import com.nimbits.client.model.GxtPointCategoryModel;
+import com.nimbits.client.model.GxtPointModel;
+import com.nimbits.client.model.category.Category;
+import com.nimbits.client.model.category.CategoryName;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.diagram.Diagram;
+import com.nimbits.client.model.diagram.DiagramName;
+import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.client.service.category.*;
-import com.nimbits.client.service.datapoints.*;
-import com.nimbits.client.service.diagram.*;
-import com.nimbits.client.service.recordedvalues.*;
-import com.nimbits.shared.*;
+import com.nimbits.client.model.point.PointName;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.client.service.category.CategoryService;
+import com.nimbits.client.service.category.CategoryServiceAsync;
+import com.nimbits.client.service.datapoints.PointService;
+import com.nimbits.client.service.datapoints.PointServiceAsync;
+import com.nimbits.client.service.diagram.DiagramService;
+import com.nimbits.client.service.diagram.DiagramServiceAsync;
+import com.nimbits.client.service.recordedvalues.RecordedValueService;
+import com.nimbits.client.service.recordedvalues.RecordedValueServiceAsync;
+import com.nimbits.shared.Utils;
 
 import java.util.*;
 
@@ -61,34 +81,35 @@ class NavigationPanel extends NavigationEventProvider {
     private GxtDiagramModel diagramModelToDelete;
     private GxtPointCategoryModel categoryModelToDelete;
     private GxtPointModel pointModelToDelete;
-    private final Map<PointName, Point> pointMap;
-    private final Map<CategoryName, Category> categoryMap;
-    private final Map<DiagramName, Diagram> diagramMap;
+    private final Map<PointName, Point> pointMap = new HashMap<PointName, Point>();
+    private final Map<CategoryName, Category> categoryMap = new HashMap<CategoryName, Category>();
+    private final Map<DiagramName, Diagram> diagramMap = new HashMap<DiagramName, Diagram>();
     private Point pointToBeCopied;
-    private EntityTree<ModelData> tree;
+
+    private EditorTreeGrid<ModelData> tree;
     private TreeStore<ModelData> store;
     private final boolean isConnectionPanel;
     private final EmailAddress email;
     private Timer updater;
-    private final ClientType clientType;
-    private boolean showingWelcome;
 
-    public NavigationPanel(final EmailAddress anEmailAddress, final boolean isConnection, final ClientType clientType) {
+    ClientType clientType;
+
+
+    public NavigationPanel(final EmailAddress anEmailAddress, final boolean isConnection, ClientType clientType) {
         mainPanel = new ContentPanel();
         mainPanel.setHeaderVisible(false);
         mainPanel.setFrame(false);
         mainPanel.setBodyBorder(false);
+        //  mainPanel.setHeight("100%");
         mainPanel.setScrollMode(Scroll.AUTOY);
         mainPanel.setLayout(new FillLayout());
+        this.clientType = clientType;
         this.isConnectionPanel = isConnection;
         this.email = anEmailAddress;
-        this.clientType = clientType;
-        pointMap = new HashMap<PointName, Point>();
-        categoryMap = new HashMap<CategoryName, Category>();
-        diagramMap = new HashMap<DiagramName, Diagram>();
-        store = new TreeStore<ModelData>();
+
         try {
             if (isConnectionPanel) {
+              //  mainPanel.setHeight(600);
                 loadConnectionTree();
             } else {
                 mainPanel.setTopComponent(treeToolBar());
@@ -124,42 +145,26 @@ class NavigationPanel extends NavigationEventProvider {
     }
 
     private void decideWhatViewToLoad(final List<Category> result) {
-        if (result.size() == 1) {
-            if (result.get(0).getDiagrams().size() == 0 && result.get(0).getPoints().size() == 0) {
-                showEmptyView();
-                showingWelcome = true;
-            } else {
-                showingWelcome=false;
-                createTree();
-                treeStoreBuilder(result);
-
-            }
-        } else if (result.size() == 0) {
-            showingWelcome = true;
-            showEmptyView();
-        } else {
-            showingWelcome = false;
-            createTree();
-            treeStoreBuilder(result);
-        }
+//        if (result.size() == 1) {
+//            if (result.get(0).getDiagrams().size() == 0 && result.get(0).getPoints().size() == 0) {
+//                showEmptyView();
+//            } else {
+//
+//            }
+//        } else if (result.size() == 0) {
+//            showEmptyView();
+//        } else {
+//            createTree(result);
+//        }
+        createTree(result);
         setVisible(true);
         add(mainPanel);
         doLayout();
     }
 
-    private void showEmptyView() {
-        if (this.isConnectionPanel) {
-            mainPanel.addText(Const.RESPONSE_NO_POINTS);
-        } else {
-            mainPanel.setUrl(Const.PATH_WELCOME_URL);
-        }
-        store = null;
-    }
 
-
-
-    private void createTree() {
-
+    private void createTree(final List<Category> result) {
+        store = new TreeStore<ModelData>();
 
         ColumnConfig name = new ColumnConfig(Const.PARAM_NAME, "Name", 150);
         name.setRenderer(new TreeGridCellRenderer<ModelData>());
@@ -177,7 +182,12 @@ class NavigationPanel extends NavigationEventProvider {
         ColumnModel cm = new ColumnModel(Arrays.asList(name, value));
 
 
-        tree = new EntityTree<ModelData>(store, cm);
+        tree = new EditorTreeGrid<ModelData>(store, cm) {
+            @Override
+            protected boolean hasChildren(ModelData model) {
+                return model instanceof GxtPointCategoryModel || !(model instanceof GxtPointModel) && super.hasChildren(model);
+            }
+        };
 
         tree.addListener(Events.AfterEdit, new Listener<GridEvent>() {
 
@@ -214,15 +224,18 @@ class NavigationPanel extends NavigationEventProvider {
                             }
                         });
                     } catch (NimbitsException e) {
-                        GWT.log(e.getMessage());
+                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                     }
 
                 }
             }
         });
 
-        treePropertyBuilder();
 
+        //tree.setAutoHeight(true);
+        // tree.setHeight(800);
+        treePropertyBuilder();
+        treeStoreBuilder(result);
         setBorders(false);
         setScrollMode(Scroll.NONE);
         treeDNDBuilder();
@@ -340,17 +353,61 @@ class NavigationPanel extends NavigationEventProvider {
                 });
     }
 
-    private void reloadTree() throws NimbitsException {
-        try {
-            if (isConnectionPanel) {
-                loadConnectionTree();
-             } else {
-                loadAuthTree();
+
+
+    private Listener<MessageBoxEvent> copyPointListener() {
+        return new Listener<MessageBoxEvent>() {
+            private String newPointName;
+
+            @Override
+            public void handleEvent(MessageBoxEvent be) {
+                newPointName = be.getValue();
+                if (!Utils.isEmptyString(newPointName)) {
+                    final MessageBox box = MessageBox.wait("Progress",
+                            "Creating your data point channel into the cloud", "Creating: " + newPointName);
+                    box.show();
+                    PointServiceAsync pointService = GWT.create(PointService.class);
+
+
+                    PointName pointName = CommonFactoryLocator.getInstance().createPointName(newPointName);
+
+                    pointService.copyPoint(pointToBeCopied, pointName,
+                            new AsyncCallback<Point>() {
+                                @Override
+                                public void onFailure(Throwable caught) {
+                                    Info.display("Could not create "
+                                            + newPointName,
+                                            caught.getMessage());
+                                    box.close();
+                                }
+
+                                @Override
+                                public void onSuccess(Point result) {
+                                    try {
+                                        reloadTree();
+                                    } catch (NimbitsException e) {
+                                        GWT.log(e.getMessage(), e);
+                                    }
+                                    box.close();
+                                }
+                            });
+                }
             }
-        } catch (NimbitsException e) {
-            GWT.log(e.getMessage());
+        };
+    }
+
+    private void reloadTree() throws NimbitsException {
+        if (isConnectionPanel) {
+            try {
+                loadConnectionTree();
+            } catch (NimbitsException ignored) {
+            }
+        } else {
+            loadAuthTree();
         }
     }
+
+
 
     private void createPointPropertyWindow(Point p) throws NimbitsException {
         final Window window = new Window();
@@ -396,7 +453,7 @@ class NavigationPanel extends NavigationEventProvider {
         categoryMap.clear();
 
 
-        for (final Category c : result) {
+        for (Category c : result) {
             GxtPointCategoryModel gxtPointCategoryModel = new GxtPointCategoryModel(c, clientType);//  PointCategoryModelFactory.createPointCategoryModel(c);
 
             if (!categoryMap.containsKey(c.getName())) {
@@ -563,22 +620,110 @@ class NavigationPanel extends NavigationEventProvider {
                 });
     }
 
-    private void addNewlyCreatedPointToTree(final Point result) throws NimbitsException {
-        pointMap.put(result.getName(), result);
-        if (showingWelcome) {
-            loadAuthTree();
-        }
-        else {
-            if (tree != null && tree.getStore() != null) {
-                GxtPointModel model = new GxtPointModel(result, clientType);
-                store = tree.getTreeStore();
-                store.add(model, true);
-                tree.setExpanded(model, true);
+    private Button addNewPointButton() {
+        final Button newPoint = new Button("");
+        newPoint.setText("New Data Point");
+        newPoint.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.addNew()));
+        newPoint.setToolTip(Const.MESSAGE_NEW_POINT);
 
-            } else {
+        newPoint.addListener(Events.OnClick, new Listener<BaseEvent>() {
+            @Override
+            public void handleEvent(BaseEvent be) {
+                final MessageBox box = MessageBox.prompt(
+                        Const.MESSAGE_NEW_POINT,
+                        Const.MESSAGE_NEW_POINT_PROMPT);
+                box.addCallback(createNewPointListener());
+            }
+
+            private Listener<MessageBoxEvent> createNewPointListener() {
+                return new Listener<MessageBoxEvent>() {
+                    private String newPointName;
+
+                    @Override
+                    public void handleEvent(MessageBoxEvent be) {
+                        newPointName = be.getValue();
+                        if (!Utils.isEmptyString(newPointName)) {
+                            final MessageBox box = MessageBox.wait("Progress",
+                                    "Creating your data point channel into the cloud", "Creating: " + newPointName);
+                            box.show();
+                            PointServiceAsync pointService = GWT.create(PointService.class);
+
+
+                            PointName pointName = CommonFactoryLocator.getInstance().createPointName(newPointName);
+
+                            try {
+                                pointService.addPoint(pointName, new AsyncCallback<Point>() {
+                                    @Override
+                                    public void onFailure(Throwable caught) {
+                                        Info.display("Could not create "
+                                                + newPointName,
+                                                caught.getMessage());
+                                        box.close();
+                                    }
+
+                                    @Override
+                                    public void onSuccess(Point result) {
+                                        addNewlyCreatedPointToTree(result);
+                                        box.close();
+                                    }
+                                });
+                            } catch (NimbitsException e) {
+                                box.close();
+                                GWT.log(e.getMessage());
+                            } catch (PointExistsException e) {
+                                box.close();
+                                Info.display("Could not create "
+                                        + newPointName,
+                                        e.getMessage());
+                            }
+                        }
+                    }
+                };
+            }
+        });
+        return newPoint;
+    }
+
+    private void addNewlyCreatedPointToTree(final Point result) {
+        pointMap.put(result.getName(), result);
+        if (tree != null && tree.getStore() != null) {
+            GxtPointModel model = new GxtPointModel(result, clientType);
+            store = tree.getTreeStore();
+            store.add(model, true);
+            tree.setExpanded(model, true);
+
+        } else {
+            try {
                 loadAuthTree();
+            } catch (NimbitsException e) {
+                Info.display(Const.WORD_ERROR, e.getMessage());
             }
         }
+    }
+
+
+    @Override
+    protected void afterRender() {
+        super.afterRender();
+        layout(true);
+    }
+
+    @Override
+    protected void onAttach() {
+        updater = new Timer() {
+            @Override
+            public void run() {
+                try {
+                    updateValues();
+                } catch (NimbitsException e) {
+                    GWT.log(e.getMessage(), e);
+                }
+            }
+        };
+        // updater.schedule(1000);
+        updater.scheduleRepeating(Const.DEFAULT_TIMER_UPDATE_SPEED);
+        updater.run();
+        super.onAttach();
     }
 
     private void updateValues() throws NimbitsException {
@@ -642,190 +787,96 @@ class NavigationPanel extends NavigationEventProvider {
         tree.setExpanded(model, true);
     }
 
-    //Listeners
 
-    private final Listener<MessageBoxEvent> deleteCategoryListener = new Listener<MessageBoxEvent>() {
-        public void handleEvent(MessageBoxEvent ce) {
-            Button btn = ce.getButtonClicked();
-            final CategoryServiceAsync categoryService = GWT.create(CategoryService.class);
+    //toolbars
 
-            if (btn.getText().equals(Const.WORD_YES)) {
-                Category categoryToDelete = categoryMap.get(categoryModelToDelete.getName());
-                try {
-                    categoryService.deleteCategory(categoryToDelete, new AsyncCallback<Void>() {
-                        @Override
-                        public void onFailure(Throwable e) {
-                            GWT.log(e.getMessage(), e);
-                        }
-
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            for (ModelData modelData : categoryModelToDelete.getChildren()) {
-                                GxtPointModel pointModel = (GxtPointModel) modelData;
-                                Point point = pointMap.get(pointModel.getName());
-                                try {
-                                    notifyPointDeletedListener(point);
-                                } catch (NimbitsException e) {
-                                    GWT.log(e.getMessage(), e);
-                                }
-                            }
-
-                            tree.getStore().remove(categoryModelToDelete);
-                        }
-                    });
-                } catch (NimbitsException ex) {
-                    GWT.log(ex.getMessage());
-                }
-            }
-        }
-    };
-
-    private final Listener<MessageBoxEvent> deletePointListener = new Listener<MessageBoxEvent>() {
-        public void handleEvent(MessageBoxEvent ce) {
-            Button btn = ce.getButtonClicked();
-            final PointServiceAsync service = GWT.create(PointService.class);
-
-            if (btn.getText().equals(Const.WORD_YES)) {
-                final Point pointToDelete = pointMap.get(pointModelToDelete.getName());
-                try {
-                    service.deletePoint(pointToDelete, new AsyncCallback<Void>() {
-                        @Override
-                        public void onFailure(Throwable e) {
-                            GWT.log(e.getMessage(), e);
-                        }
-
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            try {
-                                notifyPointDeletedListener(pointToDelete);
-                                GWT.log("Deleted " + pointToDelete.getName().getValue());
-                            } catch (NimbitsException e) {
-                                GWT.log(e.getMessage(), e);
-                            }
-
-                            tree.getStore().remove(pointModelToDelete);
-                        }
-                    });
-                } catch (NimbitsException e) {
-                    GWT.log(e.getMessage(), e);
-                }
-            }
-        }
-    };
-
-    private final Listener<MessageBoxEvent> deleteDiagramListener = new Listener<MessageBoxEvent>() {
-        public void handleEvent(MessageBoxEvent ce) {
-            Button btn = ce.getButtonClicked();
-            final DiagramServiceAsync service = GWT.create(DiagramService.class);
-
-            if (btn.getText().equals(Const.WORD_YES)) {
-                final Diagram diagramToDelete = diagramMap.get(diagramModelToDelete.getName());
-                try {
-                    service.deleteDiagram(diagramToDelete, new AsyncCallback<Void>() {
-                        @Override
-                        public void onFailure(Throwable e) {
-                            GWT.log(e.getMessage(), e);
-                        }
-
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            try {
-                                notifyDiagramDeletedListener(diagramToDelete, false);
-                                GWT.log("Deleted " + diagramToDelete.getName());
-                            } catch (NimbitsException e) {
-                                GWT.log(e.getMessage(), e);
-                            }
-
-                            tree.getStore().remove(diagramModelToDelete);
-                        }
-                    });
-                } catch (NimbitsException e) {
-                    GWT.log(e.getMessage());
-                }
-            }
-        }
-    };
-
-    private Listener<BaseEvent> addDiagramListener() {
-        return new Listener<BaseEvent>() {
-            @Override
-            public void handleEvent(final BaseEvent be) {
-                final Window w = new Window();
-                w.setAutoWidth(true);
-                w.setHeading(Const.MESSAGE_UPLOAD_SVG);
-                DiagramUploadPanel p = new DiagramUploadPanel(UploadType.newFile);
-                p.addDiagramAddedListeners(new DiagramUploadPanel.DiagramAddedListener() {
-                    @Override
-                    public void onDiagramAdded() throws NimbitsException {
-                        w.hide();
-                        reloadTree();
-                    }
-                });
-
-                w.add(p);
-                w.show();
-            }
-        };
-    }
-
-    private Listener<MessageBoxEvent> copyPointListener() {
-        return new Listener<MessageBoxEvent>() {
-            private String newPointName;
-
-            @Override
-            public void handleEvent(MessageBoxEvent be) {
-                newPointName = be.getValue();
-                if (!Utils.isEmptyString(newPointName)) {
-                    final MessageBox box = MessageBox.wait("Progress",
-                            "Creating your data point channel into the cloud", "Creating: " + newPointName);
-                    box.show();
-                    PointServiceAsync pointService = GWT.create(PointService.class);
-
-
-                    PointName pointName = CommonFactoryLocator.getInstance().createPointName(newPointName);
-
-                    pointService.copyPoint(pointToBeCopied, pointName,
-                            new AsyncCallback<Point>() {
-                                @Override
-                                public void onFailure(Throwable caught) {
-                                    Info.display("Could not create "
-                                            + newPointName,
-                                            caught.getMessage());
-                                    box.close();
-                                }
-
-                                @Override
-                                public void onSuccess(Point result) {
-                                    try {
-                                        reloadTree();
-                                    } catch (NimbitsException e) {
-                                        GWT.log(e.getMessage(), e);
-                                    }
-                                    box.close();
-                                }
-                            });
-                }
-            }
-        };
-    }
-
-    //Toolbars and menus
     private ToolBar treeToolBar() {
         final ToolBar toolBar = new ToolBar();
         toolBar.add(addNewPointButton());
 
         toolBar.add(new SeparatorToolItem());
 
-        if (clientType.equals(ClientType.android)) {
+        if (! clientType.equals(ClientType.android)) {
             toolBar.add(addNewDiagramButton());
             toolBar.add(addNewCategoryButton());
-        } else {
-            //  toggle = new ToggleButton("Data Entry Mode");
-            //   toggle.toggle(true);
-            //  toolBar.add(toggle);
         }
 
         return toolBar;
+    }
+    private Button addNewDiagramButton() {
+        Button newDiagram = new Button();
+        newDiagram.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.diagram()));
+        newDiagram.setToolTip("Upload an SVG process diagram");
+
+        newDiagram.addListener(Events.OnClick, addDiagramListener());
+        return newDiagram;
+    }
+    private Button addNewCategoryButton() {
+        final Button newCategory = new Button();
+        newCategory.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.category()));
+        newCategory.setToolTip(Const.MESSAGE_ADD_CATEGORY);
+        newCategory.addListener(Events.OnClick, new Listener<BaseEvent>() {
+            @Override
+            public void handleEvent(final BaseEvent be) {
+                final MessageBox box = MessageBox.prompt(Const.MESSAGE_NEW_CATEGORY,
+                        Const.MESSAGE_NEW_CATEGORY_PROMPT);
+                box.addCallback(new Listener<MessageBoxEvent>() {
+                    @Override
+                    public void handleEvent(final MessageBoxEvent be) {
+                        final String newCategoryName = be.getValue();
+                        final CategoryName categoryName = CommonFactoryLocator.getInstance().createCategoryName(newCategoryName);
+
+                        final CategoryServiceAsync categoryService = GWT.create(CategoryService.class);
+                        try {
+                            categoryService.addCategory(categoryName,
+                                    new AsyncCallback<Category>() {
+                                        @Override
+                                        public void onFailure(Throwable caught) {
+                                            Info.display(Const.WORD_ERROR,
+                                                    caught.getMessage());
+                                        }
+
+                                        @Override
+                                        public void onSuccess(final Category c) {
+                                            final GxtPointCategoryModel m = new GxtPointCategoryModel(c, clientType);// PointCategoryModelFactory.createPointCategoryModel(c);
+                                            categoryMap.put(c.getName(), c);
+
+                                            if (store != null) {
+                                                store = tree.getTreeStore();
+                                                store.add(m, true);
+
+                                                tree.setExpanded(m, true);
+                                                final String v = Format.ellipse(
+                                                        newCategoryName, 80);
+                                                Info.display(Const.WORD_SUCCESS,
+                                                        "New Category added: '{0}'",
+                                                        new Params(v));
+                                                layout(true);
+                                                try {
+                                                    if (!isConnectionPanel) {
+                                                        loadAuthTree();
+                                                    } else {
+                                                        loadConnectionTree();
+                                                    }
+                                                } catch (NimbitsException ignored) {
+                                                }
+                                            } else {
+                                                try {
+                                                    loadAuthTree();
+                                                } catch (NimbitsException e) {
+                                                    Info.display(Const.WORD_ERROR, e.getMessage());
+                                                }
+                                            }
+                                        }
+                                    });
+                        } catch (NimbitsException e) {
+                            Info.display(Const.WORD_ERROR, e.getMessage());
+                        }
+                    }
+                });
+            }
+        });
+        return newCategory;
     }
 
     private MenuItem deleteContext() {
@@ -858,6 +909,59 @@ class NavigationPanel extends NavigationEventProvider {
         return retObj;
     }
 
+    private MenuItem propertyContext() {
+        MenuItem retObj = new MenuItem();
+
+        retObj.setText(Const.WORD_PROPERTIES);
+        retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.edit()));
+        retObj.addSelectionListener(new SelectionListener<MenuEvent>() {
+            public void componentSelected(MenuEvent ce) {
+                ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
+                if (selectedModel.get(Const.PARAM_ICON).equals(Const.PARAM_CATEGORY)) {
+
+                    GxtPointCategoryModel model = (GxtPointCategoryModel) selectedModel;
+                    Category c = categoryMap.get(model.getName());
+                    CategoryPropertyPanel dp = new CategoryPropertyPanel(c, c.isReadOnly());
+                    dp.addCategoryDeletedListeners(new CategoryDeletedListener() {
+                        @Override
+                        public void onCategoryDeleted(Category c, boolean readOnly) throws NimbitsException {
+                            categoryMap.remove(c.getName());
+                        }
+                    });
+
+                    final Window w = new Window();
+                    w.setWidth(500);
+                    w.setHeight(400);
+                    w.setHeading(c.getName() + " " + Const.WORD_PROPERTIES);
+                    w.add(dp);
+                    w.show();
+                } else if (selectedModel.get(Const.PARAM_ICON).equals(Const.PARAM_POINT)) {
+
+                    GxtPointModel model = ((GxtPointModel) selectedModel);
+                    Point p = pointMap.get(model.getName());
+                    try {
+                        createPointPropertyWindow(p);
+                    } catch (NimbitsException e) {
+                        GWT.log(e.getMessage());
+                    }
+
+
+                } else if (selectedModel.get(Const.PARAM_ICON).equals(Const.PARAM_DIAGRAM)) {
+                    GxtDiagramModel diagramModel = (GxtDiagramModel) selectedModel;
+                    Diagram diagram = diagramMap.get(diagramModel.getName());
+
+                    DiagramPropertyPanel dp = new DiagramPropertyPanel(diagram, diagram.isReadOnly());
+                    final Window w = new Window();
+                    w.setWidth(500);
+                    w.setHeight(400);
+                    w.setHeading(diagram.getName() + " " + Const.WORD_PROPERTIES);
+                    w.add(dp);
+                    w.show();
+                }
+            }
+        });
+        return retObj;
+    }
     private Menu createContextMenu() {
         Menu contextMenu = new Menu();
         contextMenu.add(publishContext());
@@ -989,229 +1093,131 @@ class NavigationPanel extends NavigationEventProvider {
 
         return retObj;
     }
+    //listeners
 
-    private MenuItem propertyContext() {
-        MenuItem retObj = new MenuItem();
+    private final Listener<MessageBoxEvent> deleteCategoryListener = new Listener<MessageBoxEvent>() {
+        public void handleEvent(MessageBoxEvent ce) {
+            Button btn = ce.getButtonClicked();
+            final CategoryServiceAsync categoryService = GWT.create(CategoryService.class);
 
-        retObj.setText(Const.WORD_PROPERTIES);
-        retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.edit()));
-        retObj.addSelectionListener(new SelectionListener<MenuEvent>() {
-            public void componentSelected(MenuEvent ce) {
-                ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
-                if (selectedModel.get(Const.PARAM_ICON).equals(Const.PARAM_CATEGORY)) {
-
-                    GxtPointCategoryModel model = (GxtPointCategoryModel) selectedModel;
-                    Category c = categoryMap.get(model.getName());
-                    CategoryPropertyPanel dp = new CategoryPropertyPanel(c, c.isReadOnly());
-                    dp.addCategoryDeletedListeners(new CategoryDeletedListener() {
+            if (btn.getText().equals(Const.WORD_YES)) {
+                Category categoryToDelete = categoryMap.get(categoryModelToDelete.getName());
+                try {
+                    categoryService.deleteCategory(categoryToDelete, new AsyncCallback<Void>() {
                         @Override
-                        public void onCategoryDeleted(Category c, boolean readOnly) throws NimbitsException {
-                            categoryMap.remove(c.getName());
+                        public void onFailure(Throwable e) {
+                            GWT.log(e.getMessage(), e);
+                        }
+
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            for (ModelData modelData : categoryModelToDelete.getChildren()) {
+                                GxtPointModel pointModel = (GxtPointModel) modelData;
+                                Point point = pointMap.get(pointModel.getName());
+                                try {
+                                    notifyPointDeletedListener(point);
+                                } catch (NimbitsException e) {
+                                    GWT.log(e.getMessage(), e);
+                                }
+                            }
+
+                            tree.getStore().remove(categoryModelToDelete);
                         }
                     });
-
-                    final Window w = new Window();
-                    w.setWidth(500);
-                    w.setHeight(400);
-                    w.setHeading(c.getName() + " " + Const.WORD_PROPERTIES);
-                    w.add(dp);
-                    w.show();
-                } else if (selectedModel.get(Const.PARAM_ICON).equals(Const.PARAM_POINT)) {
-
-                    GxtPointModel model = ((GxtPointModel) selectedModel);
-                    Point p = pointMap.get(model.getName());
-                    try {
-                        createPointPropertyWindow(p);
-                    } catch (NimbitsException e) {
-                        GWT.log(e.getMessage());
-                    }
-
-
-                } else if (selectedModel.get(Const.PARAM_ICON).equals(Const.PARAM_DIAGRAM)) {
-                    GxtDiagramModel diagramModel = (GxtDiagramModel) selectedModel;
-                    Diagram diagram = diagramMap.get(diagramModel.getName());
-
-                    DiagramPropertyPanel dp = new DiagramPropertyPanel(diagram, diagram.isReadOnly());
-                    final Window w = new Window();
-                    w.setWidth(500);
-                    w.setHeight(400);
-                    w.setHeading(diagram.getName() + " " + Const.WORD_PROPERTIES);
-                    w.add(dp);
-                    w.show();
+                } catch (NimbitsException ex) {
+                    GWT.log(ex.getMessage());
                 }
             }
-        });
-        return retObj;
-    }
+        }
+    };
 
-    //buttons
-    private Button addNewDiagramButton() {
-        Button newDiagram = new Button();
-        newDiagram.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.diagram()));
-        newDiagram.setToolTip("Upload an SVG process diagram");
+    private final Listener<MessageBoxEvent> deletePointListener = new Listener<MessageBoxEvent>() {
+        public void handleEvent(MessageBoxEvent ce) {
+            Button btn = ce.getButtonClicked();
+            final PointServiceAsync service = GWT.create(PointService.class);
 
-        newDiagram.addListener(Events.OnClick, addDiagramListener());
-        return newDiagram;
-    }
-
-    private Button addNewCategoryButton() {
-        final Button newCategory = new Button();
-        newCategory.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.category()));
-        newCategory.setToolTip(Const.MESSAGE_ADD_CATEGORY);
-        newCategory.addListener(Events.OnClick, new Listener<BaseEvent>() {
-            @Override
-            public void handleEvent(final BaseEvent be) {
-                final MessageBox box = MessageBox.prompt(Const.MESSAGE_NEW_CATEGORY,
-                        Const.MESSAGE_NEW_CATEGORY_PROMPT);
-                box.addCallback(new Listener<MessageBoxEvent>() {
-                    @Override
-                    public void handleEvent(final MessageBoxEvent be) {
-                        final String newCategoryName = be.getValue();
-                        final CategoryName categoryName = CommonFactoryLocator.getInstance().createCategoryName(newCategoryName);
-
-                        final CategoryServiceAsync categoryService = GWT.create(CategoryService.class);
-                        try {
-                            categoryService.addCategory(categoryName,
-                                    new AsyncCallback<Category>() {
-                                        @Override
-                                        public void onFailure(Throwable caught) {
-                                            Info.display(Const.WORD_ERROR,
-                                                    caught.getMessage());
-                                        }
-
-                                        @Override
-                                        public void onSuccess(final Category c) {
-                                            final GxtPointCategoryModel m = new GxtPointCategoryModel(c, clientType);// PointCategoryModelFactory.createPointCategoryModel(c);
-                                            categoryMap.put(c.getName(), c);
-
-                                            if (store != null) {
-                                                store = tree.getTreeStore();
-                                                store.add(m, true);
-
-                                                tree.setExpanded(m, true);
-                                                final String v = Format.ellipse(
-                                                        newCategoryName, 80);
-                                                Info.display(Const.WORD_SUCCESS,
-                                                        "New Category added: '{0}'",
-                                                        new Params(v));
-                                                layout(true);
-                                                try {
-                                                    if (!isConnectionPanel) {
-                                                        loadAuthTree();
-                                                    } else {
-                                                        loadConnectionTree();
-                                                    }
-                                                } catch (NimbitsException ignored) {
-                                                }
-                                            } else {
-                                                try {
-                                                    loadAuthTree();
-                                                } catch (NimbitsException e) {
-                                                    Info.display(Const.WORD_ERROR, e.getMessage());
-                                                }
-                                            }
-                                        }
-                                    });
-                        } catch (NimbitsException e) {
-                            Info.display(Const.WORD_ERROR, e.getMessage());
-                        }
-                    }
-                });
-            }
-        });
-        return newCategory;
-    }
-
-    private Button addNewPointButton() {
-        final Button newPoint = new Button("");
-        newPoint.setText("New Data Point");
-        newPoint.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.addNew()));
-        newPoint.setToolTip(Const.MESSAGE_NEW_POINT);
-
-        newPoint.addListener(Events.OnClick, new Listener<BaseEvent>() {
-            @Override
-            public void handleEvent(BaseEvent be) {
-                final MessageBox box = MessageBox.prompt(
-                        Const.MESSAGE_NEW_POINT,
-                        Const.MESSAGE_NEW_POINT_PROMPT);
-                box.addCallback(createNewPointListener());
-            }
-
-            private Listener<MessageBoxEvent> createNewPointListener() {
-                return new Listener<MessageBoxEvent>() {
-                    private String newPointName;
-
-                    @Override
-                    public void handleEvent(MessageBoxEvent be) {
-                        newPointName = be.getValue();
-                        if (!Utils.isEmptyString(newPointName)) {
-                            final MessageBox box = MessageBox.wait("Progress",
-                                    "Creating your data point channel into the cloud", "Creating: " + newPointName);
-                            box.show();
-                            PointServiceAsync pointService = GWT.create(PointService.class);
-
-
-                            PointName pointName = CommonFactoryLocator.getInstance().createPointName(newPointName);
-
-                            try {
-                                pointService.addPoint(pointName, new AsyncCallback<Point>() {
-                                    @Override
-                                    public void onFailure(Throwable caught) {
-                                        Info.display("Could not create "
-                                                + newPointName,
-                                                caught.getMessage());
-                                        box.close();
-                                    }
-
-                                    @Override
-                                    public void onSuccess(Point result) {
-                                        try {
-                                            addNewlyCreatedPointToTree(result);
-                                        } catch (NimbitsException e) {
-                                            box.close();                                        }
-                                        box.close();
-                                    }
-                                });
-                            } catch (NimbitsException e) {
-                                box.close();
-                                GWT.log(e.getMessage());
-                            } catch (PointExistsException e) {
-                                GWT.log(e.getMessage());
-                                box.close();
-                                Info.display("Could not create "
-                                        + newPointName,
-                                        e.getMessage());
-                            }
-                        }
-                    }
-                };
-            }
-        });
-        return newPoint;
-    }
-
-    //Overrides
-    @Override
-    protected void afterRender() {
-        super.afterRender();
-        layout(true);
-    }
-
-    @Override
-    protected void onAttach() {
-        updater = new Timer() {
-            @Override
-            public void run() {
+            if (btn.getText().equals(Const.WORD_YES)) {
+                final Point pointToDelete = pointMap.get(pointModelToDelete.getName());
                 try {
-                    updateValues();
+                    service.deletePoint(pointToDelete, new AsyncCallback<Void>() {
+                        @Override
+                        public void onFailure(Throwable e) {
+                            GWT.log(e.getMessage(), e);
+                        }
+
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            try {
+                                notifyPointDeletedListener(pointToDelete);
+                                GWT.log("Deleted " + pointToDelete.getName().getValue());
+                            } catch (NimbitsException e) {
+                                GWT.log(e.getMessage(), e);
+                            }
+
+                            tree.getStore().remove(pointModelToDelete);
+                        }
+                    });
                 } catch (NimbitsException e) {
                     GWT.log(e.getMessage(), e);
                 }
             }
+        }
+    };
+
+    private final Listener<MessageBoxEvent> deleteDiagramListener = new Listener<MessageBoxEvent>() {
+        public void handleEvent(MessageBoxEvent ce) {
+            Button btn = ce.getButtonClicked();
+            final DiagramServiceAsync service = GWT.create(DiagramService.class);
+
+            if (btn.getText().equals(Const.WORD_YES)) {
+                final Diagram diagramToDelete = diagramMap.get(diagramModelToDelete.getName());
+                try {
+                    service.deleteDiagram(diagramToDelete, new AsyncCallback<Void>() {
+                        @Override
+                        public void onFailure(Throwable e) {
+                            GWT.log(e.getMessage(), e);
+                        }
+
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            try {
+                                notifyDiagramDeletedListener(diagramToDelete, false);
+                                GWT.log("Deleted " + diagramToDelete.getName());
+                            } catch (NimbitsException e) {
+                                GWT.log(e.getMessage(), e);
+                            }
+
+                            tree.getStore().remove(diagramModelToDelete);
+                        }
+                    });
+                } catch (NimbitsException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
+            }
+        }
+    };
+
+
+    private Listener<BaseEvent> addDiagramListener() {
+        return new Listener<BaseEvent>() {
+            @Override
+            public void handleEvent(final BaseEvent be) {
+                final Window w = new Window();
+                w.setAutoWidth(true);
+                w.setHeading(Const.MESSAGE_UPLOAD_SVG);
+                DiagramUploadPanel p = new DiagramUploadPanel(UploadType.newFile);
+                p.addDiagramAddedListeners(new DiagramUploadPanel.DiagramAddedListener() {
+                    @Override
+                    public void onDiagramAdded() throws NimbitsException {
+                        w.hide();
+                        reloadTree();
+                    }
+                });
+
+                w.add(p);
+                w.show();
+            }
         };
-        // updater.schedule(1000);
-        updater.scheduleRepeating(Const.DEFAULT_TIMER_UPDATE_SPEED);
-        updater.run();
-        super.onAttach();
     }
+
 }

@@ -29,7 +29,11 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.nimbits.client.enums.UploadType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
+import com.nimbits.client.model.LoginInfo;
 import com.nimbits.client.model.diagram.Diagram;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.service.LoginService;
+import com.nimbits.client.service.LoginServiceAsync;
 import com.nimbits.client.service.diagram.DiagramService;
 import com.nimbits.client.service.diagram.DiagramServiceAsync;
 
@@ -48,6 +52,7 @@ public class DiagramUploadPanel extends LayoutContainer {
 
     private final List<DiagramAddedListener> DiagramAddedListeners = new ArrayList<DiagramAddedListener>();
     private Diagram diagram;
+    private EmailAddress email;
 
     public DiagramUploadPanel(UploadType uploadType) {
         this.uploadType = uploadType;
@@ -83,6 +88,8 @@ public class DiagramUploadPanel extends LayoutContainer {
         super.onRender(parent, index);
         setStyleAttribute("margin", "10px");
 
+
+
         final FormPanel panel = new FormPanel();
         panel.addListener(Events.Submit, new Listener<FormEvent>() {
 
@@ -104,7 +111,7 @@ public class DiagramUploadPanel extends LayoutContainer {
         diagramService.getBlobStoreUrl("/service/diagram", new AsyncCallback<String>() {
             @Override
             public void onFailure(Throwable throwable) {
-
+                GWT.log(throwable.getMessage());
             }
 
             @Override
@@ -132,6 +139,30 @@ public class DiagramUploadPanel extends LayoutContainer {
         file.setFieldLabel("File");
         panel.add(file);
 
+        final HiddenField<String> emailAddressHiddenField=new HiddenField<String>();
+        LoginServiceAsync loginService = GWT.create(LoginService.class);
+        emailAddressHiddenField.setName(Const.PARAM_EMAIL_HIDDEN_FIELD);
+
+        panel.add(emailAddressHiddenField);
+        try {
+            loginService.login(GWT.getHostPageBaseURL(),
+                    new AsyncCallback<LoginInfo>() {
+                        @Override
+                        public void onFailure(Throwable error) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(LoginInfo result) {
+
+                            email = result.getEmailAddress();
+                            emailAddressHiddenField.setValue(email.getValue());
+                        }
+
+                    });
+        } catch (NimbitsException e) {
+            GWT.log(e.getMessage());
+        }
 
         final HiddenField<UploadType> uploadTypeHiddenField = new HiddenField<UploadType>();
         uploadTypeHiddenField.setName(Const.PARAM_UPLOAD_TYPE_HIDDEN_FIELD);

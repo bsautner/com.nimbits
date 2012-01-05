@@ -27,9 +27,9 @@ public class CategoryMemCacheImpl implements CategoryTransactions {
     public CategoryMemCacheImpl(final User u) {
         user = u;
         if (u != null) {
-            cache = MemcacheServiceFactory.getMemcacheService(u.getUuid());
+            cache = MemcacheServiceFactory.getMemcacheService(Const.CONST_SERVER_VERSION + u.getUuid());
         } else {
-            cache = MemcacheServiceFactory.getMemcacheService(Const.DEAULT_CACHE_NAMESPACE);
+            cache = MemcacheServiceFactory.getMemcacheService(MemCacheHelper.DEFAULT_CACHE_NAMESPACE);
         }
 
     }

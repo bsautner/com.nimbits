@@ -51,7 +51,7 @@ public class PointMemCacheImpl implements PointTransactions {
             cache = MemcacheServiceFactory.getMemcacheService(Const.CONST_SERVER_VERSION + u.getUuid());
             pointListKey = MemCacheHelper.pointListKey(u);
         } else {
-            cache = MemcacheServiceFactory.getMemcacheService();
+            cache = MemcacheServiceFactory.getMemcacheService(MemCacheHelper.DEFAULT_CACHE_NAMESPACE);
             pointListKey = MemCacheHelper.defaultPointCache();
         }
 

@@ -29,20 +29,16 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
 
     public ValueMemCacheImpl(final Point point) {
         this.p = point;
-        cache = MemcacheServiceFactory.getMemcacheService(point.getUUID());
-   //     systemCache = MemcacheServiceFactory.getMemcacheService(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_SYSTEM + Const.CONST_SERVER_VERSION);
-    }
+        cache = MemcacheServiceFactory.getMemcacheService(MemCacheHelper.valueMemCacheNamespace(point));
+     }
 
-    private String currentValueCacheKey(String uuid) {
-        return Const.CONST_SERVER_VERSION + Const.CACHE_KEY_PREFIX + "MOST_RECENT_VALUE_CACHE" + uuid;
-    }
 
 
 
     @Override
     public Value getRecordedValuePrecedingTimestamp(final Date timestamp) {
         Value retObj;
-        final String key = currentValueCacheKey(p.getUUID());
+        final String key =MemCacheHelper.currentValueCacheKey(p.getUUID());
 
         try {
             if (cache.contains(key)) {
@@ -83,34 +79,39 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
     @Override
     public Value recordValue(final Value v) throws NimbitsException {
 
-        final String k = currentValueCacheKey(p.getUUID());
+        final String k = MemCacheHelper.currentValueCacheKey(p.getUUID());
         final String b = MemCacheHelper.valueBufferCacheKey(p);
 
-        final List<Long> stored;
-        if (cache.contains(b)) {
-            stored = (List<Long>) cache.get(b);
-            stored.add(v.getTimestamp().getTime());
-            cache.delete(stored);
-            cache.put(b, stored);
-        } else {
-            stored = new ArrayList<Long>();
-            stored.add(v.getTimestamp().getTime());
-            cache.put(b, stored);
-        }
-        cache.put(v.getTimestamp().getTime(), v);
-        if (stored.size() > Const.CONST_MAX_CACHED_VALUE_SIZE) {
-            TaskFactoryLocator.getInstance().startMoveCachedValuesToStoreTask(p);
-        }
+        try {
+            final List<Long> stored;
+            if (cache.contains(b)) {
+                stored = (List<Long>) cache.get(b);
+                stored.add(v.getTimestamp().getTime());
+                cache.delete(stored);
+                cache.put(b, stored);
+            } else {
+                stored = new ArrayList<Long>();
+                stored.add(v.getTimestamp().getTime());
+                cache.put(b, stored);
+            }
+            cache.put(v.getTimestamp().getTime(), v);
+            if (stored.size() > Const.CONST_MAX_CACHED_VALUE_SIZE) {
+                TaskFactoryLocator.getInstance().startMoveCachedValuesToStoreTask(p);
+            }
 
-        if (cache.contains(k)) {
-            final Value mostRecentCache = (Value) cache.get(k);
+            if (cache.contains(k)) {
+                final Value mostRecentCache = (Value) cache.get(k);
 
-            if (mostRecentCache == null || (v.getTimestamp().getTime() > mostRecentCache.getTimestamp().getTime())) {
-                cache.delete(k);
+                if (mostRecentCache == null || (v.getTimestamp().getTime() > mostRecentCache.getTimestamp().getTime())) {
+                    cache.delete(k);
+                    cache.put(k, v);
+                }
+            } else {
                 cache.put(k, v);
             }
-        } else {
-            cache.put(k, v);
+        } catch (Exception e) {
+            cache.delete(k);
+            cache.delete(b);
         }
 
         return v;
@@ -181,16 +182,20 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
     public List<Value> getCache() {
         final String b = MemCacheHelper.valueBufferCacheKey(p);
         List<Value> retObj = new ArrayList<Value>();
-        List<Long> x;
-        if (cache.contains(b)) {
-            x = (List<Long>) cache.get(b);
-            Map<Long, Object> valueMap = cache.getAll(x);
-            ValueComparator bvc = new ValueComparator(valueMap);
-            TreeMap<Long, Object> sorted_map = new TreeMap(bvc);
-            sorted_map.putAll(valueMap);
-            for (Long ts : sorted_map.keySet()) {
-                retObj.add((Value) sorted_map.get(ts));
+        try {
+            List<Long> x;
+            if (cache.contains(b)) {
+                x = (List<Long>) cache.get(b);
+                Map<Long, Object> valueMap = cache.getAll(x);
+                ValueComparator bvc = new ValueComparator(valueMap);
+                TreeMap<Long, Object> sorted_map = new TreeMap(bvc);
+                sorted_map.putAll(valueMap);
+                for (Long ts : sorted_map.keySet()) {
+                    retObj.add((Value) sorted_map.get(ts));
+                }
             }
+        } catch (Exception e) {
+            cache.delete(b);
         }
 
         return retObj;
@@ -201,20 +206,24 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
 
         final String b = MemCacheHelper.valueBufferCacheKey(p);
 
-        if (cache.contains(b)) {
-            final List<Long> x = (List<Long>) cache.get(b);
-            if (x != null && x.size() > 0) {
-                cache.delete(b);
-                final Map<Long, Object> valueMap = cache.getAll(x);
-                cache.deleteAll(x);
-                final List<Value> values = new ArrayList<Value>();
-                int count = values.size();
-                for (final Long ts : valueMap.keySet()) {
-                    values.add((Value) valueMap.get(ts));
+        try {
+            if (cache.contains(b)) {
+                final List<Long> x = (List<Long>) cache.get(b);
+                if (x != null && x.size() > 0) {
+                    cache.delete(b);
+                    final Map<Long, Object> valueMap = cache.getAll(x);
+                    cache.deleteAll(x);
+                    final List<Value> values = new ArrayList<Value>();
+                    int count = values.size();
+                    for (final Long ts : valueMap.keySet()) {
+                        values.add((Value) valueMap.get(ts));
+                    }
+                    RecordedValueTransactionFactory.getDaoInstance(p).recordValues(values);
                 }
-                RecordedValueTransactionFactory.getDaoInstance(p).recordValues(values);
-            }
 
+            }
+        } catch (Exception e) {
+            cache.delete(b);
         }
 
 

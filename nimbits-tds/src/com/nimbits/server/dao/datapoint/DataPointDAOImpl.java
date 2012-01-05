@@ -26,7 +26,7 @@ import com.nimbits.client.model.point.PointName;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.datapoints.PointTransactions;
 import com.nimbits.server.orm.DataPoint;
-import com.nimbits.server.point.PointServiceFactory;
+import com.nimbits.server.point.*;
 import com.nimbits.server.pointcategory.CategoryServiceFactory;
 import com.nimbits.server.task.TaskFactoryLocator;
 
@@ -227,6 +227,20 @@ public class DataPointDAOImpl implements PointTransactions {
         }
 
         return retObj;
+    }
+
+    @Override
+    public List<Point> getAllPoints() {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+
+        try {
+            final Query q = pm.newQuery(DataPoint.class);
+            List<Point> result = (List<Point>) q.execute();
+            return PointModelFactory.createPointModels(result);
+
+        } finally {
+            pm.close();
+        }
     }
 
 

@@ -229,7 +229,6 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     @Override
     public Point addPoint(final PointName pointName) throws NimbitsException, PointExistsException {
 
-
         final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
                 this.getThreadLocalRequest());
         final CategoryName categoryName = CommonFactoryLocator.getInstance().createCategoryName(Const.CONST_HIDDEN_CATEGORY);
@@ -244,7 +243,6 @@ public class PointServiceImpl extends RemoteServiceServlet implements
             TaskFactoryLocator.getInstance().startPointMaintTask(result);
         }
         return result;
-
 
     }
 
@@ -343,6 +341,11 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     @Override
     public List<Point> getAllPoints(int start, int end) {
         return PointTransactionsFactory.getInstance(null).getAllPoints(start, end);
+    }
+
+    @Override
+    public List<Point> getAllPoints() {
+        return PointTransactionsFactory.getInstance(null).getAllPoints();
     }
 
     @Override

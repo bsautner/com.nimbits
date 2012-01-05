@@ -40,7 +40,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     private static final long serialVersionUID = 1L;
     private static final Logger log = Logger.getLogger(UserServiceImpl.class.getName());
 
-    private ShardedCounter getOrCreateCounter(EmailAddress email) {
+    private ShardedCounter getOrCreateCounter(final EmailAddress email) {
         CounterFactory factory = new CounterFactory();
         ShardedCounter counter = factory.getCounter(email.getValue());
         if (counter == null) {

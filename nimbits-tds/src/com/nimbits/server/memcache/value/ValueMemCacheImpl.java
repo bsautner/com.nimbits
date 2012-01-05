@@ -7,6 +7,7 @@ import com.nimbits.client.model.Const;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.server.memcache.*;
 import com.nimbits.server.recordedvalue.RecordedValueTransactionFactory;
 import com.nimbits.server.recordedvalue.RecordedValueTransactions;
 import com.nimbits.server.task.TaskFactoryLocator;
@@ -36,9 +37,7 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
         return Const.CONST_SERVER_VERSION + Const.CACHE_KEY_PREFIX + "MOST_RECENT_VALUE_CACHE" + uuid;
     }
 
-    private String cacheKey(String uuid) {
-        return Const.CONST_SERVER_VERSION + Const.CACHE_KEY_PREFIX + "BUFFERMEM" + uuid;
-    }
+
 
     @Override
     public Value getRecordedValuePrecedingTimestamp(final Date timestamp) {
@@ -83,21 +82,9 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
 
     @Override
     public Value recordValue(final Value v) throws NimbitsException {
-         // final Value retObj = RecordedValueTransactionFactory.getDaoInstance().recordValue(point, v);
+
         final String k = currentValueCacheKey(p.getUUID());
-        final String b = cacheKey(p.getUUID());
-
-//        List<Long> activityLog;
-//        if (systemCache.contains(Const.PARAM_POINTS)) {
-//            activityLog = (List<Long>) systemCache.get(Const.PARAM_POINTS);
-//            if (!activityLog.contains(p.getId())) {
-//                activityLog.add(p.getId());
-//                systemCache.delete(Const.PARAM_POINTS);
-//                systemCache.put(Const.PARAM_POINTS, activityLog);
-//
-//            }
-//        }
-
+        final String b = MemCacheHelper.valueBufferCacheKey(p);
 
         final List<Long> stored;
         if (cache.contains(b)) {
@@ -172,7 +159,7 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
     }
 
     public List<Value> getCache(final Timespan timespan) {
-        final String b = cacheKey(p.getUUID());
+        final String b = MemCacheHelper.valueBufferCacheKey(p);
         List<Value> retObj = new ArrayList<Value>();
         List<Long> x;
         if (cache.contains(b)) {
@@ -192,7 +179,7 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
     }
 
     public List<Value> getCache() {
-        final String b = cacheKey(p.getUUID());
+        final String b = MemCacheHelper.valueBufferCacheKey(p);
         List<Value> retObj = new ArrayList<Value>();
         List<Long> x;
         if (cache.contains(b)) {
@@ -209,9 +196,10 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
         return retObj;
     }
 
+    //TODO need to do a big refactor to make a point's uuid they pk - then do key only queries
     public void moveValuesFromCacheToStore() {
 
-        final String b = cacheKey(p.getUUID());
+        final String b = MemCacheHelper.valueBufferCacheKey(p);
 
         if (cache.contains(b)) {
             final List<Long> x = (List<Long>) cache.get(b);

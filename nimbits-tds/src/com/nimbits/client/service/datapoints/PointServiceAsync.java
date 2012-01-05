@@ -77,7 +77,7 @@ public interface PointServiceAsync {
 
     void getAllPoints(final int start, final int end, AsyncCallback<List<Point>> async);
 
-    void getIdlePoints(AsyncCallback<List<Point>> async);
+    void getIdlePoints(final AsyncCallback<List<Point>> async);
 
     void addPoint(final PointName pointName, final Category c, final User u, AsyncCallback<Point> async);
 
@@ -93,5 +93,7 @@ public interface PointServiceAsync {
 
     void getPointsByCategory(final User u, final Category c, AsyncCallback<List<Point>> async);
 
-    void publishPoint(User u, Point p, AsyncCallback<Point> async);
+    void publishPoint(final User u, final Point p, final AsyncCallback<Point> async);
+
+    void getAllPoints(final AsyncCallback<List<Point>> async);
 }

@@ -34,9 +34,7 @@ public interface PointTransactions {
 
     Point addPoint(final PointName pointName, final Category c) throws NimbitsException;
 
-    // Point updatePointStats(final User u, final Point point, final Value v, boolean alarmSent) throws NimbitsException;
-
-    List<Point> getPointsByCategory(final Category c);
+     List<Point> getPointsByCategory(final Category c);
 
     Point checkPoint(final HttpServletRequest req, final EmailAddress email, final Point point) throws NimbitsException;
 
@@ -48,5 +46,5 @@ public interface PointTransactions {
 
     Point getPointByUUID(final String uuid) throws NimbitsException;
 
-
+    List<Point> getAllPoints();
 }

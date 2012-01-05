@@ -294,7 +294,7 @@ public class Const {
     public static final String PARAM_SEARCH = "search";
     public static final String REGEX_SPECIAL_CHARS = "[!@#$%^&*()]";
     public static final int CONST_QUERY_CHUNK_SIZE = 100;
-    public static final int CONST_MAX_CACHED_VALUE_SIZE = 20;
+    public static final int CONST_MAX_CACHED_VALUE_SIZE = 200;
     public static final String PARAM_TIME = "time";
     public static final String PARAM_OFFSET = "offset";
     public static final String ACTION_RECORD = "record";

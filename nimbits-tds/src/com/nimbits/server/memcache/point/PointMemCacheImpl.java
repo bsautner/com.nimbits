@@ -52,7 +52,7 @@ public class PointMemCacheImpl implements PointTransactions {
             pointListKey = MemCacheHelper.pointListKey(u);
         } else {
             cache = MemcacheServiceFactory.getMemcacheService();
-            pointListKey = Const.CONST_SERVER_VERSION + "default";
+            pointListKey = MemCacheHelper.defaultPointCache();
         }
 
     }
@@ -69,6 +69,9 @@ public class PointMemCacheImpl implements PointTransactions {
         }
         if (cache.contains(pointListKey)) {
             cache.delete(pointListKey);
+        }
+        if (cache.contains(MemCacheHelper.defaultPointCache())) {
+            cache.delete(MemCacheHelper.defaultPointCache());
         }
         CategoryTransactionFactory.getInstance(u).purgeMemCache();
 
@@ -231,7 +234,6 @@ public class PointMemCacheImpl implements PointTransactions {
         Point retObj = PointTransactionsFactory.getDaoInstance(u).publishPoint(p);
         updateMap(p);
         return retObj;
-
     }
 
     //these should not use the cache, since we don't know the user
@@ -241,12 +243,29 @@ public class PointMemCacheImpl implements PointTransactions {
     }
 
     @Override
-    public List<Point> getAllPoints(int start, int end) {
+    public List<Point> getAllPoints() {
+        List<Point> retObj = getPointListFromCache();
+        if (retObj == null) {
+            retObj = PointTransactionsFactory.getDaoInstance(u).getAllPoints();
+
+            if (retObj != null && retObj.size() > 0) {
+                cache.put(pointListKey, retObj);
+            }
+        }
+        return retObj;
+
+    }
+
+    @Override
+    public List<Point> getAllPoints(final int start,final  int end) {
+
         return PointTransactionsFactory.getDaoInstance(u).getAllPoints(start, end);
+
     }
 
     @Override
     public List<Point> getIdlePoints() {
+
         return PointTransactionsFactory.getDaoInstance(u).getIdlePoints();
     }
 
@@ -254,5 +273,7 @@ public class PointMemCacheImpl implements PointTransactions {
     public Point checkPoint(final HttpServletRequest req, final EmailAddress email, final Point point) throws NimbitsException {
         return PointTransactionsFactory.getDaoInstance(u).checkPoint(req, email, point);
     }
+
+
 
 }

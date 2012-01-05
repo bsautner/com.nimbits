@@ -2,6 +2,7 @@ package com.nimbits.server.memcache;
 
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 
 /**
@@ -11,6 +12,13 @@ import com.nimbits.client.model.user.*;
  * Time: 12:19 PM
  */
 public class MemCacheHelper {
+    public static String valueBufferCacheKey(Point point) {
+        return Const.CONST_SERVER_VERSION + Const.CACHE_KEY_PREFIX + "BUFFERMEM" + point.getUUID();
+    }
+
+    public static String defaultPointCache() {
+        return Const.CONST_SERVER_VERSION + "DEFAULT_POINT_NAMESPACE";
+    }
 
     public static String pointKey(final User u) {
         return Const.CACHE_KEY_USER_PREFIX + "Point" + Const.CONST_SERVER_VERSION + u.getEmail().getValue();

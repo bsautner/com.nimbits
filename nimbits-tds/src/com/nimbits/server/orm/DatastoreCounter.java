@@ -28,12 +28,12 @@ public class DatastoreCounter {
     @Persistent
     private Integer numShards;
 
-    public DatastoreCounter(String counterName) {
+    public DatastoreCounter(final String counterName) {
         this.counterName = counterName;
         this.numShards = Integer.valueOf(0);
     }
 
-    public DatastoreCounter(String counterName, Integer numShards) {
+    public DatastoreCounter(final String counterName, final Integer numShards) {
         this.counterName = counterName;
         this.numShards = numShards;
     }
@@ -50,7 +50,9 @@ public class DatastoreCounter {
         return numShards;
     }
 
-    public void setShardCount(int count) {
+    public void setShardCount(final int count) {
         this.numShards = Integer.valueOf(count);
     }
+
+
 }

@@ -34,6 +34,9 @@ public class DatastoreCounterShard {
     @Persistent
     private Integer count;
 
+    @Persistent
+    private Integer wolframApiCount;
+
     public DatastoreCounterShard(String counterName, int shardNumber) {
         this(counterName, shardNumber, 0);
     }
@@ -67,5 +70,16 @@ public class DatastoreCounterShard {
 
     public void increment(int amount) {
         count = Integer.valueOf(count.intValue() + amount);
+    }
+
+    public void incrementWolframAlpha(int amount) {
+        count = Integer.valueOf(count.intValue() + amount);
+    }
+    public int getWolframApiCount() {
+        return wolframApiCount;
+    }
+
+    public void setWolframApiCount(int wolframApiCount) {
+        this.wolframApiCount = wolframApiCount;
     }
 }

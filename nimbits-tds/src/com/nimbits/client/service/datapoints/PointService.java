@@ -89,4 +89,6 @@ public interface PointService extends RemoteService {
     Point publishPoint(Point p) throws NimbitsException;
 
     Point publishPoint(User u, Point p) throws NimbitsException;
+
+    List<Point> getAllPoints();
 }

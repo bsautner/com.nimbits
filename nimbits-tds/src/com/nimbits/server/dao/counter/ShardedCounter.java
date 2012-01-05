@@ -1,16 +1,11 @@
 package com.nimbits.server.dao.counter;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-
 import com.nimbits.*;
 import com.nimbits.server.orm.*;
-import net.sf.jsr107cache.Cache;
-import net.sf.jsr107cache.CacheException;
-import net.sf.jsr107cache.CacheManager;
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
+import net.sf.jsr107cache.*;
+
+import javax.jdo.*;
+import java.util.*;
 
 /**
  * A counter which can be incremented rapidly.
@@ -29,7 +24,8 @@ import javax.jdo.Query;
 public class ShardedCounter {
     private String counterName;
     private Cache cache;
-
+    private final String COUNT = "count";
+    private final String SHARDS = "shards";
     public ShardedCounter(String counterName) {
         this.counterName = counterName;
         cache = null;
@@ -72,7 +68,7 @@ public class ShardedCounter {
 
     public int getCount() {
         if (cache != null) {
-            Integer cachedCount = (Integer) cache.get("count" + counterName);
+            Integer cachedCount = (Integer) cache.get(COUNT + counterName);
             if (cachedCount != null) {
                 return cachedCount.intValue();
             }
@@ -97,7 +93,7 @@ public class ShardedCounter {
         }
 
         if (cache != null) {
-            cache.put("count" + counterName, Integer.valueOf(sum));
+            cache.put(COUNT + counterName, Integer.valueOf(sum));
         }
 
         return sum;
@@ -105,7 +101,7 @@ public class ShardedCounter {
 
     public int getNumShards() {
         if (cache != null) {
-            Integer cachedCount = (Integer) cache.get("shards" + counterName);
+            Integer cachedCount = (Integer) cache.get(SHARDS + counterName);
             if (cachedCount != null) {
                 return cachedCount.intValue();
             }
@@ -123,7 +119,7 @@ public class ShardedCounter {
         }
 
         if (cache != null) {
-            cache.put("shards" + counterName, Integer.valueOf(numShards));
+            cache.put(SHARDS + counterName, Integer.valueOf(numShards));
         }
 
         return numShards;
@@ -133,14 +129,14 @@ public class ShardedCounter {
         return addShards(1);
     }
 
-    public int addShards(int count) {
+    public int addShards(int totalCount) {
         int numShards = 0;
         PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
             DatastoreCounter current = getThisCounter(pm);
             if (current != null) {
                 numShards = current.getShardCount().intValue();
-                current.setShardCount(numShards + count);
+                current.setShardCount(numShards + totalCount);
                 pm.makePersistent(current);
             }
         } finally {
@@ -149,7 +145,7 @@ public class ShardedCounter {
 
         pm = PMF.get().getPersistenceManager();
         try {
-            for (int i = 0; i < count; i++) {
+            for (int i = 0; i < totalCount; i++) {
                 DatastoreCounterShard newShard = new DatastoreCounterShard(
                         getCounterName(), numShards);
                 pm.makePersistent(newShard);
@@ -160,7 +156,7 @@ public class ShardedCounter {
         }
 
         if (cache != null) {
-            cache.put("shards" + counterName, Integer.valueOf(numShards));
+            cache.put(SHARDS + counterName, Integer.valueOf(numShards));
         }
 
         return numShards;
@@ -170,12 +166,12 @@ public class ShardedCounter {
         increment(1);
     }
 
-    public void increment(int count) {
+    public void increment(final int totalCount) {
         if (cache != null) {
-            Integer cachedCount = (Integer) cache.get("count" + counterName);
+            Integer cachedCount = (Integer) cache.get(COUNT + counterName);
             if (cachedCount != null) {
-                cache.put("count" + counterName,
-                        Integer.valueOf(count + cachedCount.intValue()));
+                cache.put(COUNT + counterName,
+                        Integer.valueOf(totalCount + cachedCount.intValue()));
             }
         }
 
@@ -202,7 +198,7 @@ public class ShardedCounter {
                             counterName, shardNum);
             if (shards != null && !shards.isEmpty()) {
                 DatastoreCounterShard shard = shards.get(0);
-                shard.increment(count);
+                shard.increment(totalCount);
                 pm.makePersistent(shard);
             }
         } finally {

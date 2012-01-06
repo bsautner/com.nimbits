@@ -1143,7 +1143,7 @@ class PointPanel extends LayoutContainer {
 
         h.setHtml("<P>Enter the number of minutes needed to elapse for a point to be considered idle if it does not recieve a value. </P>" +
                 "<BR><P>If a point does not record a value in the elapsed number of minutes, an email alert will be sent to you. </P>" +
-                "<BR><P>Please note: Regardless of the idle setting, you may not got an alert for 1 to 30 minutes after the elapsed time passes, depending on system load.</P><BR><BR>");
+                "<BR><P>Please note: Regardless of the idle setting, you may not get an alert for 1 to 10 minutes after the elapsed time passes, depending on system load.</P><BR><BR>");
 
 
         simple.add(h);

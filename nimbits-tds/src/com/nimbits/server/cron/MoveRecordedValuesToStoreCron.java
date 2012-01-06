@@ -27,9 +27,10 @@ public class MoveRecordedValuesToStoreCron extends HttpServlet {
         PrintWriter out = resp.getWriter();
         int count = 0;
         final List<Point> points = PointServiceFactory.getInstance().getAllPoints();
-        count++;
+
         StringBuilder sb = new StringBuilder();
         for (final Point point : points) {
+            count++;
            sb.append("<p>" + point.getName() + "</p>");
             TaskFactoryLocator.getInstance().startMoveCachedValuesToStoreTask(point);
         }

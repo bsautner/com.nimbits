@@ -87,7 +87,10 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
             log.severe(e.getMessage());
         } catch (IOException e) {
             log.severe(e.getMessage());
+        } catch (NullPointerException e) {
+            log.info(e.getMessage());
         }
+
         return retVal;
     }
 

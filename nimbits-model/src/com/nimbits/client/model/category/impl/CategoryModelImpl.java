@@ -160,8 +160,8 @@ public class CategoryModelImpl implements Serializable, Category {
         this.host = host;
     }
 
-    public int getEntityType() {
-        return entityType;
+    public EntityType getEntityType() {
+        return EntityType.get(entityType);
     }
 
 

@@ -23,6 +23,9 @@ public interface Icons extends ClientBundle {
 
     static final Icons INSTANCE = GWT.create(Icons.class);
 
+    @Source("expand.png")
+    ImageResource expand();
+
     @Source("PublishToWebHS.png")
     ImageResource publish();
 

@@ -73,11 +73,14 @@ public class PointMaintTask extends HttpServlet {
             String url = ServerInfoImpl.getFullServerURL(req);
             CoreFactory.getInstance().reportUpdateToCore(url, pointJson, EntityType.point);
             Category category = CategoryServiceFactory.getInstance().getCategory(n, p.getCatID());
-
-            if (category.getProtectionLevel() != null && category.getProtectionLevel().equals(ProtectionLevel.everyone)) {
-                String j = GsonFactory.getInstance().toJson(category);
-                CoreFactory.getInstance().reportUpdateToCore(url, j, EntityType.category);
-
+            if (category != null) {
+                if (category.getProtectionLevel() != null && category.getProtectionLevel().equals(ProtectionLevel.everyone)) {
+                    String j = GsonFactory.getInstance().toJson(category);
+                    CoreFactory.getInstance().reportUpdateToCore(url, j, EntityType.category);
+                }
+                else {
+                    log.severe("Point Maint Task could not find point's category - would like to delete point :" + p.getName().getValue());
+                }
             }
 
         } else {

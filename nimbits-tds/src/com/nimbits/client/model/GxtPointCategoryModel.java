@@ -56,7 +56,9 @@ public class GxtPointCategoryModel extends BaseTreeModel implements Serializable
 
         this.points = c.getPoints();
         if (clientType.equals(ClientType.android)) {
-            set(Const.PARAM_NAME, "<A href = \"report.html?client=" + clientType.name() + "&uuid=" + c.getUUID() + "\">" + this.name.getValue() + "</a>");
+            final String url = "report.html?client=" + clientType.name() + "&uuid=" + c.getUUID();
+
+            set(Const.PARAM_NAME, "<a href = \"" + url +"\">" + this.name.getValue() + "</a>");
         } else {
             set(Const.PARAM_NAME, this.name.getValue());
         }

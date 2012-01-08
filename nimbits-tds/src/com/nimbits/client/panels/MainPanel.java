@@ -115,8 +115,9 @@ public class MainPanel extends NavigationEventProvider {
 
         final ContentPanel west = new ContentPanel();
         final NavigationPanel navigationPanel = createNavigationPanel(ClientType.android);
-        navigationPanel.setLayout(new FillLayout());
-        navigationPanel.setHeight(400);
+       navigationPanel.setLayout(new FillLayout());
+       navigationPanel.setHeight(1280);
+    //  navigationPanel.setAutoHeight(true);
         west.setHeaderVisible(false);
         west.add(navigationPanel);
         west.setHeight("100%");

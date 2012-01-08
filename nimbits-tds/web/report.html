@@ -57,7 +57,7 @@ var uuid = getParameterByName("uuid");
 var count = getParameterByName("count");
 var responseObject;
 var hist = getParameterByName("hist");
-var android = (getParameterByName("client") == "android");
+
 
 if (count == "") {
     count = 25;
@@ -234,13 +234,7 @@ function callback(obj) {
     document.getElementById("loading").style.display = "none";
 
 
-    if (android) {
 
-        document.getElementById("helperRow").style.display = "none";
-        document.getElementById("detailsRow").style.display = "none";
-        detailsRow
-    }
-    else {
         document.getElementById("name").innerHTML = obj.name;
         document.getElementById("desc").innerHTML = obj.description;
         document.getElementById("uuid").innerHTML = "<a href='report.html?uuid=" + obj.uuid + "'>" + obj.uuid + "</a>";
@@ -255,7 +249,6 @@ function callback(obj) {
         document.getElementById("s2").innerHTML = obj.host + "/service/point?count=100&uuid=" + obj.uuid;
         document.getElementById("a2").href = obj.host + "/service/point?count=20&uuid=" + obj.uuid;
 
-    }
 
 
     if (hist != "") {

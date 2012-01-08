@@ -21,6 +21,7 @@ import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
 import com.extjs.gxt.ui.client.widget.layout.FillLayout;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -62,6 +63,7 @@ public class nimbits implements EntryPoint {
     private LoginInfo loginInfo = null;
     private Viewport viewport;
     private final static String heading = (Const.CONST_SERVER_NAME + " " + Const.CONST_SERVER_VERSION);
+    private ClientType clientType;
 
 
     private void loadLayout(final LoginInfo loginInfo, final boolean doAndroid,
@@ -86,7 +88,8 @@ public class nimbits implements EntryPoint {
             contentPanel.setHeaderVisible(false);
             contentPanel.setLayout(new FillLayout());
             viewport.add(contentPanel);
-        } else {
+        }
+        else {
             viewport.setLayout(new BorderLayout());
             viewport.setBorders(false);
 
@@ -282,20 +285,22 @@ public class nimbits implements EntryPoint {
         final boolean doTwitterFinish = ((tw != null) && (oauth_token != null));
         final boolean doDiagram = (diagramUUID != null);
 
-        final ClientType clientType;
+
 
         final boolean doDebug = (debug != null);
 
-
-        if (!Utils.isEmptyString(clientTypeParam) && clientTypeParam.equals(Const.WORD_ANDROID)) {
+        if (Cookies.getCookieNames().contains(Const.PARAM_CLIENT) && Utils.isEmptyString(clientTypeParam)) {
+            clientType = ClientType.valueOf(Cookies.getCookie(Const.PARAM_CLIENT));
+        }
+        else if (!Utils.isEmptyString(clientTypeParam) && clientTypeParam.equals(Const.WORD_ANDROID)) {
             clientType = ClientType.android;
             doAndroid = true;
         } else {
             clientType = ClientType.other;
 
         }
-        //   doAndroid = true;
 
+        Cookies.setCookie(Const.PARAM_CLIENT, clientType.name());
         if (doDiagram) {
             processDiagramRequest(diagramUUID, clientType);
         } else {

@@ -13,15 +13,13 @@
 
 package com.nimbits.client.service.intelligence;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.client.enums.IntelligenceResultTarget;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointName;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
 
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by bsautner
@@ -37,7 +35,7 @@ public interface IntelligenceServiceAsync {
                       final IntelligenceResultTarget intelligenceResultTarget,
                       final PointName targetPointName,
                       final boolean getPlainText,
-                      final AsyncCallback<String> async) throws NimbitsException;
+                      final AsyncCallback<String> async);
 
 
     void processInput(final Point point, final Point targetPoint, final String processedInput, AsyncCallback<Value> async);

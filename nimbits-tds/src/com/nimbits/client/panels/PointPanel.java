@@ -299,23 +299,19 @@ class PointPanel extends LayoutContainer {
                 Button btn = ce.getButtonClicked();
 
                 if (btn.getText().equals("Yes")) {
-                    try {
-                        pointService.deletePoint(point, new AsyncCallback<Void>() {
-                            @Override
-                            public void onFailure(Throwable caught) {
+                    pointService.deletePoint(point, new AsyncCallback<Void>() {
+                        @Override
+                        public void onFailure(Throwable caught) {
 
 
-                            }
+                        }
 
-                            @Override
-                            public void onSuccess(Void result) {
-                                notifyPointDeletedListener(point);
-                                Window.alert(Const.MESSAGE_POINT_DELETED);
-                            }
-                        });
-                    } catch (NimbitsException e) {
-                        GWT.log(e.getMessage(), e);
-                    }
+                        @Override
+                        public void onSuccess(Void result) {
+                            notifyPointDeletedListener(point);
+                            Window.alert(Const.MESSAGE_POINT_DELETED);
+                        }
+                    });
                 }
             }
         };
@@ -581,39 +577,35 @@ class PointPanel extends LayoutContainer {
         testPoint.setCalculation(calculation);
 
 
-        try {
-            dataService.solveEquation(testPoint, new AsyncCallback<Double>() {
-                @Override
-                public void onFailure(Throwable caught) {
-                    if (showFeedback) {
-                        final Dialog simple = new Dialog();
-                        simple.setHeading("formula Error");
-                        simple.setButtons(Dialog.OK);
-                        simple.setBodyStyleName("pad-text");
-                        simple.addText(caught.getMessage());
-                        simple.setScrollMode(Scroll.AUTO);
-                        simple.setHideOnButtonClick(true);
-                        simple.show();
-                    }
+        dataService.solveEquation(testPoint, new AsyncCallback<Double>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                if (showFeedback) {
+                    final Dialog simple = new Dialog();
+                    simple.setHeading("formula Error");
+                    simple.setButtons(Dialog.OK);
+                    simple.setBodyStyleName("pad-text");
+                    simple.addText(caught.getMessage());
+                    simple.setScrollMode(Scroll.AUTO);
+                    simple.setHideOnButtonClick(true);
+                    simple.show();
                 }
+            }
 
-                @Override
-                public void onSuccess(Double result) {
-                    if (showFeedback) {
-                        final Dialog d = new Dialog();
-                        d.setHeading("formula Success");
-                        d.setButtons(Dialog.OK);
-                        d.setBodyStyleName("pad-text");
-                        d.addText("Result: " + result);
-                        d.setScrollMode(Scroll.AUTO);
-                        d.setHideOnButtonClick(true);
-                        d.show();
-                    }
+            @Override
+            public void onSuccess(Double result) {
+                if (showFeedback) {
+                    final Dialog d = new Dialog();
+                    d.setHeading("formula Success");
+                    d.setButtons(Dialog.OK);
+                    d.setBodyStyleName("pad-text");
+                    d.addText("Result: " + result);
+                    d.setScrollMode(Scroll.AUTO);
+                    d.setHideOnButtonClick(true);
+                    d.show();
                 }
-            });
-        } catch (NimbitsException e) {
-            GWT.log(e.getMessage());
-        }
+            }
+        });
         return true;
     }
 
@@ -701,21 +693,17 @@ class PointPanel extends LayoutContainer {
             intelFormula.setValue(i.getInput());
             intelNodeId.setValue(i.getNodeId());
 
-            try {
-                pointService.getPointByID(i.getTargetPointId(), new AsyncCallback<Point>() {
-                    @Override
-                    public void onFailure(Throwable throwable) {
-                        intelTargetPoint.setValue("");
-                    }
+            pointService.getPointByID(i.getTargetPointId(), new AsyncCallback<Point>() {
+                @Override
+                public void onFailure(Throwable throwable) {
+                    intelTargetPoint.setValue("");
+                }
 
-                    @Override
-                    public void onSuccess(Point point) {
-                        intelTargetPoint.setValue(point.getName().getValue());
-                    }
-                });
-            } catch (NimbitsException e) {
-                intelTargetPoint.setValue("");
-            }
+                @Override
+                public void onSuccess(Point point) {
+                    intelTargetPoint.setValue(point.getName().getValue());
+                }
+            });
         }
 
 
@@ -744,70 +732,65 @@ class PointPanel extends LayoutContainer {
 
                 final IntelligenceServiceAsync service;
                 service = GWT.create(IntelligenceService.class);
-                try {
-                    final IntelligenceResultTarget intelligenceResultTarget;
-                    if (intelTargetRadioData.getValue()) {
-                        intelligenceResultTarget = IntelligenceResultTarget.data;
-                    } else {
-                        intelligenceResultTarget = IntelligenceResultTarget.value;
-                    }
-                    if (!Utils.isEmptyString(intelTargetPoint.getValue())) {
+                final IntelligenceResultTarget intelligenceResultTarget;
+                if (intelTargetRadioData.getValue()) {
+                    intelligenceResultTarget = IntelligenceResultTarget.data;
+                } else {
+                    intelligenceResultTarget = IntelligenceResultTarget.value;
+                }
+                if (!Utils.isEmptyString(intelTargetPoint.getValue())) {
 
 
-                        PointName targetPointName = CommonFactoryLocator.getInstance().createPointName(intelTargetPoint.getValue());
-                        boolean getPlainText = intelPlainText.getValue();
+                    PointName targetPointName = CommonFactoryLocator.getInstance().createPointName(intelTargetPoint.getValue());
+                    boolean getPlainText = intelPlainText.getValue();
 
-                        service.processInput(point, intelFormula.getValue(), intelNodeId.getValue(), intelligenceResultTarget, targetPointName, getPlainText, new AsyncCallback<String>() {
-                            @Override
-                            public void onFailure(Throwable throwable) {
-                                final MessageBox box = MessageBox.alert("Error", throwable.getMessage(), null);
+                    service.processInput(point, intelFormula.getValue(), intelNodeId.getValue(), intelligenceResultTarget, targetPointName, getPlainText, new AsyncCallback<String>() {
+                        @Override
+                        public void onFailure(Throwable throwable) {
+                            final MessageBox box = MessageBox.alert("Error", throwable.getMessage(), null);
+                            box.show();
+                        }
+
+                        @Override
+                        public void onSuccess(String s) {
+                            if (s.length() < 100) {
+                                final MessageBox box = MessageBox.info("Your result", "[" + s + "]", null);
                                 box.show();
-                            }
+                            } else if (Utils.isEmptyString(s)) {
+                                final MessageBox box = MessageBox.alert("Error", "The results were empty, this may have been due to an error in the input or a timeout on the server" +
+                                        ". If you see this error frequently, please report it.", null);
+                                box.show();
+                            } else {
+                                com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
 
-                            @Override
-                            public void onSuccess(String s) {
-                                if (s.length() < 100) {
-                                    final MessageBox box = MessageBox.info("Your result", "[" + s + "]", null);
-                                    box.show();
-                                } else if (Utils.isEmptyString(s)) {
-                                    final MessageBox box = MessageBox.alert("Error", "The results were empty, this may have been due to an error in the input or a timeout on the server" +
-                                            ". If you see this error frequently, please report it.", null);
-                                    box.show();
-                                } else {
-                                    com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
-
-                                    s = s.replaceAll("<", "\n &#60;");
-                                    s = s.replaceAll(">", "&#62;");
-                                    Label xml = new HTML("<pre>" + s + "</pre>", false);
-                                    xml.setStyleName(XML_LABEL_STYLE);
-                                    ContentPanel contentPanel = new ContentPanel();
-                                    contentPanel.setFrame(true);
-                                    contentPanel.setScrollMode(Scroll.AUTOY);
+                                s = s.replaceAll("<", "\n &#60;");
+                                s = s.replaceAll(">", "&#62;");
+                                Label xml = new HTML("<pre>" + s + "</pre>", false);
+                                xml.setStyleName(XML_LABEL_STYLE);
+                                ContentPanel contentPanel = new ContentPanel();
+                                contentPanel.setFrame(true);
+                                contentPanel.setScrollMode(Scroll.AUTOY);
 
 
-                                    final FlowPanel panel = new FlowPanel();
+                                final FlowPanel panel = new FlowPanel();
 
-                                    panel.add(xml);
-                                    contentPanel.add(panel);
+                                panel.add(xml);
+                                contentPanel.add(panel);
 
-                                    //  Html h = new Html(s);
-                                    w.setHeading("XML Results");
-                                    w.setWidth(800);
-                                    w.setHeight(700);
-                                    w.add(contentPanel);
-                                    w.show();
-
-                                }
-
+                                //  Html h = new Html(s);
+                                w.setHeading("XML Results");
+                                w.setWidth(800);
+                                w.setHeight(700);
+                                w.add(contentPanel);
+                                w.show();
 
                             }
-                        });
-                    } else {
-                        final MessageBox box = MessageBox.info("Error", "Please enter the name of an existing data point values will be saved to.", null);
-                        box.show();
-                    }
-                } catch (NimbitsException e) {
-                    final MessageBox box = MessageBox.alert("Error", e.getMessage(), null);
+
+
+                        }
+                    });
+                } else {
+                    final MessageBox box = MessageBox.info("Error", "Please enter the name of an existing data point values will be saved to.", null);
                     box.show();
                 }
 

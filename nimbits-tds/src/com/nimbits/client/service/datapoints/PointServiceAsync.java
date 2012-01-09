@@ -14,53 +14,46 @@
 package com.nimbits.client.service.datapoints;
 
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.client.enums.AlertType;
-import com.nimbits.client.enums.ExportType;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.exceptions.PointExistsException;
-import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.CategoryName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointName;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.model.category.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public interface PointServiceAsync {
 
 
-    void addPoint(final PointName pointName, final Category category, final AsyncCallback<Point> async) throws NimbitsException, PointExistsException;
+    void addPoint(final PointName pointName, final Category category, final AsyncCallback<Point> async);
 
-    void addPoint(final PointName pointName, final AsyncCallback<Point> async) throws NimbitsException, PointExistsException;
+    void addPoint(final PointName pointName, final AsyncCallback<Point> async);
 
     void getPointsByCategory(final Category category,
-                             final AsyncCallback<List<Point>> asyncCallback) throws NimbitsException;
+                             final AsyncCallback<List<Point>> asyncCallback);
 
-    void getPoints(final AsyncCallback<List<Point>> asyncCallback) throws NimbitsException;
+    void getPoints(final AsyncCallback<List<Point>> asyncCallback);
 
-    void updatePoint(final Point point, final AsyncCallback<Point> asyncCallback) throws NimbitsException;
+    void updatePoint(final Point point, final AsyncCallback<Point> asyncCallback);
 
     void getPointByName(final User pointOwner, final PointName name,
-                        final AsyncCallback<Point> asyncCallback) throws NimbitsException;
+                        final AsyncCallback<Point> asyncCallback);
 
-    void getPointByID(final long id, final AsyncCallback<Point> asyncCallback) throws NimbitsException;
+    void getPointByID(final long id, final AsyncCallback<Point> asyncCallback);
 
-    void deletePoint(final Point p, final AsyncCallback<Void> async) throws NimbitsException;
+    void deletePoint(final Point p, final AsyncCallback<Void> async);
 
     //public void getPointCount(AsyncCallback<Integer> async);
 
     void movePoint(final PointName pointName, final CategoryName targetCategoryName,
-                   final AsyncCallback<Point> async) throws NimbitsException;
+                   final AsyncCallback<Point> async);
 
-    void getPoints(final User u, final AsyncCallback<List<Point>> callback) throws NimbitsException;
+    void getPoints(final User u, final AsyncCallback<List<Point>> callback);
 
-    void getPointByUUID(final String uuid, final AsyncCallback<Point> asyncCallback) throws NimbitsException;
+    void getPointByUUID(final String uuid, final AsyncCallback<Point> asyncCallback);
 
-    void getPointsByName(final long pointOwnerId, final Set<PointName> names, final AsyncCallback<Map<PointName, Point>> async) throws NimbitsException;
+    void getPointsByName(final long pointOwnerId, final Set<PointName> names, final AsyncCallback<Map<PointName, Point>> async);
 
     void checkPointProtection(final User loggedInUser, final User pointOwner, final Point p, final AsyncCallback<Boolean> async);
 
@@ -73,7 +66,7 @@ public interface PointServiceAsync {
     void getPointByID(final User u, final long id, final AsyncCallback<Point> async);
 
 
-    void exportData(final Map<PointName, Point> points, ExportType exportType, AsyncCallback<String> async) throws NimbitsException;
+    void exportData(final Map<PointName, Point> points, ExportType exportType, AsyncCallback<String> async);
 
     void getAllPoints(final int start, final int end, AsyncCallback<List<Point>> async);
 
@@ -85,11 +78,11 @@ public interface PointServiceAsync {
 
     void movePoint(final User u, final PointName pointName, final CategoryName categoryName, AsyncCallback<Point> async);
 
-    void publishPoint(Point p, AsyncCallback<Point> asyncCallback) throws NimbitsException;
+    void publishPoint(Point p, AsyncCallback<Point> asyncCallback);
 
     void updatePoint(final User u, final Point point, AsyncCallback<Point> async);
 
-    void deletePoint(final User u, final Point p, AsyncCallback<Void> async) throws NimbitsException;
+    void deletePoint(final User u, final Point p, AsyncCallback<Void> async);
 
     void getPointsByCategory(final User u, final Category c, AsyncCallback<List<Point>> async);
 

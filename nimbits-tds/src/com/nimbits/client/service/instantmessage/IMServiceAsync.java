@@ -18,7 +18,7 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.email.EmailAddress;
 
 public interface IMServiceAsync {
-    void sendInvite(AsyncCallback<Void> asyncCallback) throws NimbitsException;
+    void sendInvite(AsyncCallback<Void> asyncCallback);
 
     void sendMessage(String msgBody, EmailAddress email, AsyncCallback<Void> callback);
 }

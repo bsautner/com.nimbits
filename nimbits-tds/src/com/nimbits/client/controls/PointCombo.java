@@ -13,19 +13,16 @@
 
 package com.nimbits.client.controls;
 
-import com.extjs.gxt.ui.client.store.ListStore;
-import com.extjs.gxt.ui.client.widget.form.ComboBox;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.client.enums.ClientType;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.GxtPointModel;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.service.datapoints.PointService;
-import com.nimbits.client.service.datapoints.PointServiceAsync;
+import com.extjs.gxt.ui.client.store.*;
+import com.extjs.gxt.ui.client.widget.form.*;
+import com.google.gwt.core.client.*;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.service.datapoints.*;
 
-import java.util.List;
+import java.util.*;
 
 public class PointCombo extends ComboBox<GxtPointModel> {
 
@@ -57,32 +54,28 @@ public class PointCombo extends ComboBox<GxtPointModel> {
 
         PointServiceAsync pointService = GWT.create(PointService.class);
 
-        try {
-            pointService.getPoints(new AsyncCallback<List<Point>>() {
+        pointService.getPoints(new AsyncCallback<List<Point>>() {
 
-                @Override
-                public void onFailure(Throwable caught) {
+            @Override
+            public void onFailure(Throwable caught) {
 
-                    GWT.log(caught.getMessage());
-                }
+                GWT.log(caught.getMessage());
+            }
 
-                @Override
-                public void onSuccess(List<Point> result) {
+            @Override
+            public void onSuccess(List<Point> result) {
 
-                    setEmptyText(Const.MESSAGE_SELECT_POINT);
+                setEmptyText(Const.MESSAGE_SELECT_POINT);
 
-                    for (Point p : result) {
-                        GxtPointModel model = new GxtPointModel(p, ClientType.other);
-                        cbStore.add(model);
-
-                    }
+                for (Point p : result) {
+                    GxtPointModel model = new GxtPointModel(p, ClientType.other);
+                    cbStore.add(model);
 
                 }
 
-            });
-        } catch (NimbitsException e) {
-            GWT.log(e.getMessage());
-        }
+            }
+
+        });
 
     }
 }

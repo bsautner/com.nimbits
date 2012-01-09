@@ -1,24 +1,17 @@
 package com.nimbits.client.panels;
 
-import com.extjs.gxt.ui.client.Style;
-import com.extjs.gxt.ui.client.event.ButtonEvent;
-import com.extjs.gxt.ui.client.event.SelectionListener;
-import com.extjs.gxt.ui.client.widget.VerticalPanel;
-import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.form.FormButtonBinding;
-import com.extjs.gxt.ui.client.widget.form.FormPanel;
-import com.extjs.gxt.ui.client.widget.form.NumberField;
-import com.extjs.gxt.ui.client.widget.form.TextArea;
-import com.extjs.gxt.ui.client.widget.layout.FormData;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModelFactory;
-import com.nimbits.client.service.recordedvalues.RecordedValueService;
-import com.nimbits.client.service.recordedvalues.RecordedValueServiceAsync;
+import com.extjs.gxt.ui.client.*;
+import com.extjs.gxt.ui.client.event.*;
+import com.extjs.gxt.ui.client.widget.*;
+import com.extjs.gxt.ui.client.widget.button.*;
+import com.extjs.gxt.ui.client.widget.form.*;
+import com.extjs.gxt.ui.client.widget.layout.*;
+import com.google.gwt.core.client.*;
+import com.google.gwt.user.client.*;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.client.service.recordedvalues.*;
 
 /**
  * Created by bsautner
@@ -78,21 +71,17 @@ public class DataEntryPanel extends NavigationEventProvider {
             public void componentSelected(ButtonEvent buttonEvent) {
                 RecordedValueServiceAsync service = GWT.create(RecordedValueService.class);
                 Value v = ValueModelFactory.createValueModel(value.getValue().doubleValue(), note.getValue());
-                try {
-                    service.recordValue(point, v, new AsyncCallback<Value>() {
-                        @Override
-                        public void onFailure(Throwable throwable) {
-                            //To change body of implemented methods use File | Settings | File Templates.
-                        }
+                service.recordValue(point, v, new AsyncCallback<Value>() {
+                    @Override
+                    public void onFailure(Throwable throwable) {
+                        //To change body of implemented methods use File | Settings | File Templates.
+                    }
 
-                        @Override
-                        public void onSuccess(Value value) {
-                            notifyValueEnteredListener(point, value);
-                        }
-                    });
-                } catch (NimbitsException e) {
-
-                }
+                    @Override
+                    public void onSuccess(Value value) {
+                        notifyValueEnteredListener(point, value);
+                    }
+                });
 
                 //
             }

@@ -14,17 +14,13 @@
 package com.nimbits.client.exception;
 
 
-import com.nimbits.client.model.Const;
-
-import java.io.Serializable;
+import java.io.*;
 
 public class NimbitsException extends Exception implements Serializable {
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = Const.DEFAULT_SERIAL_VERSION;
+    private static final long serialVersionUID = 10l;
 
+    private String message;
 
     public NimbitsException() {
         super();
@@ -35,6 +31,6 @@ public class NimbitsException extends Exception implements Serializable {
     }
 
     public NimbitsException(Throwable e) {
-        super(e.getMessage());
+        super(e);
     }
 }

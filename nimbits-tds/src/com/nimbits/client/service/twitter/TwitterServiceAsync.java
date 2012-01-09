@@ -27,10 +27,10 @@ import com.nimbits.client.model.user.User;
 public interface TwitterServiceAsync {
     // public void updateStatus( String code, String message,
     // AsyncCallback<Void> asyncCallback);
-    void twitterAuthorise(final EmailAddress email, final AsyncCallback<String> asyncCallback) throws NimbitsException;
+    void twitterAuthorise(final EmailAddress email, final AsyncCallback<String> asyncCallback);
 
     void updateUserToken(final String oauth_token,
-                         AsyncCallback<Void> asyncCallback) throws NimbitsException;
+                         AsyncCallback<Void> asyncCallback);
 
-    void sendTweet(final User user,  final String message, final AsyncCallback<Void> async) throws NimbitsException;
+    void sendTweet(final User user,  final String message, final AsyncCallback<Void> async);
 }

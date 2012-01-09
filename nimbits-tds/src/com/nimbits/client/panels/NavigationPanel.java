@@ -35,7 +35,6 @@ import com.google.gwt.user.client.ui.*;
 import com.nimbits.client.controls.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.exceptions.*;
 import com.nimbits.client.icons.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.category.*;
@@ -190,13 +189,15 @@ class NavigationPanel extends NavigationEventProvider {
                         selectedModel.set(Const.PARAM_NAME, gxtPointModel.getName().getValue());
 
                         PointServiceAsync pointService = GWT.create(PointService.class);
-                        try {
+
                             CategoryName categoryName = CommonFactoryLocator.getInstance().createCategoryName(e.getTarget()
                                     .getInnerText());
                             pointService.movePoint(gxtPointModel.getName(), categoryName, new AsyncCallback<Point>() {
                                 @Override
-                                public void onFailure(Throwable caught) {
-                                    Info.display(Const.WORD_ERROR, caught.getMessage());
+                                public void onFailure(Throwable e) {
+                                    updater.cancel();
+                                    Info.display(Const.WORD_ERROR,
+                                            e.getMessage());
                                 }
 
                                 @Override
@@ -205,36 +206,32 @@ class NavigationPanel extends NavigationEventProvider {
                                     Info.display("Point moved ", gxtPointModel.getName().getValue());
                                 }
                             });
-                        } catch (NimbitsException e1) {
-                            Info.display(Const.WORD_ERROR, e1.getMessage());
-                        }
+
                     } else if (selectedModel instanceof GxtDiagramModel) {
                         final GxtDiagramModel gxtDiagramModel = (GxtDiagramModel) selectedModel;
 
                         selectedModel.set(Const.PARAM_NAME, gxtDiagramModel.getName());
 
                         DiagramServiceAsync diagramService = GWT.create(DiagramService.class);
-                        try {
-                            CategoryName categoryName = CommonFactoryLocator.getInstance().createCategoryName(e.getTarget().getInnerText());
-                            diagramService.moveDiagram(gxtDiagramModel.getName(), categoryName, new AsyncCallback<Void>() {
+                        CategoryName categoryName = CommonFactoryLocator.getInstance().createCategoryName(e.getTarget().getInnerText());
+                        diagramService.moveDiagram(gxtDiagramModel.getName(), categoryName, new AsyncCallback<Void>() {
 
-                                @Override
-                                public void onFailure(Throwable throwable) {
+                            @Override
+                            public void onFailure(Throwable e) {
+                                updater.cancel();
+                                Info.display(Const.WORD_ERROR,
+                                        e.getMessage());
+                            }
 
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                try {
+                                    getUserEntities();
+                                } catch (NimbitsException e1) {
+                                    GWT.log(e1.getMessage(), e1);
                                 }
-
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    try {
-                                        getUserEntities();
-                                    } catch (NimbitsException e1) {
-                                        GWT.log(e1.getMessage(), e1);
-                                    }
-                                }
-                            });
-                        } catch (NimbitsException caught) {
-                            Info.display(Const.WORD_ERROR, caught.getMessage());
-                        }
+                            }
+                        });
                     }
                 } else {
                     // final GxtPointModel gxtPointModel = (GxtPointModel) selectedModel;
@@ -408,11 +405,10 @@ class NavigationPanel extends NavigationEventProvider {
             final CategoryServiceAsync service = GWT.create(CategoryService.class);
             service.getCategories(true, false, true, new AsyncCallback<List<Category>>() {
                 @Override
-                public void onFailure(final Throwable throwable) {
-                    GWT.log(throwable.getMessage(), throwable);
-                    //  notify.setText("There was a problem communicating with the server, you may need to refresh your browser:" caught.getMessage());
-                    // notify.show();
+                public void onFailure(final Throwable e) {
                     updater.cancel();
+                    Info.display(Const.WORD_ERROR,
+                            e.getMessage());
                 }
 
                 @Override
@@ -548,11 +544,12 @@ class NavigationPanel extends NavigationEventProvider {
                         final CategoryName categoryName = CommonFactoryLocator.getInstance().createCategoryName(newCategoryName);
 
                         final CategoryServiceAsync categoryService = GWT.create(CategoryService.class);
-                        try {
+
                             categoryService.addCategory(categoryName,
                                     new AsyncCallback<Category>() {
                                         @Override
                                         public void onFailure(Throwable caught) {
+                                            updater.cancel();
                                             Info.display(Const.WORD_ERROR,
                                                     caught.getMessage());
                                         }
@@ -590,9 +587,7 @@ class NavigationPanel extends NavigationEventProvider {
                                             }
                                         }
                                     });
-                        } catch (NimbitsException e) {
-                            Info.display(Const.WORD_ERROR, e.getMessage());
-                        }
+
                     }
                 });
             }
@@ -735,12 +730,14 @@ class NavigationPanel extends NavigationEventProvider {
                 GxtPointModel model = (GxtPointModel) selectedModel;
                 Point p = pointMap.get(model.getName());
                 PointServiceAsync pointService = GWT.create(PointService.class);
-                try {
+
                     pointService.publishPoint(p, new AsyncCallback<Point>() {
 
                         @Override
                         public void onFailure(Throwable e) {
-                            GWT.log(e.getMessage(), e);
+                            updater.cancel();
+                            Info.display(Const.WORD_ERROR,
+                                    e.getMessage());
                         }
 
                         @Override
@@ -750,20 +747,20 @@ class NavigationPanel extends NavigationEventProvider {
 
                         }
                     });
-                } catch (NimbitsException e) {
-                    GWT.log(e.getMessage(), e);
-                }
+
             }
 
             private void publishCategory(GxtPointCategoryModel selectedModel) {
                 GxtPointCategoryModel model = (GxtPointCategoryModel) selectedModel;
                 Category p = categoryMap.get(model.getName());
                 CategoryServiceAsync service = GWT.create(CategoryService.class);
-                try {
+
                     service.publishCategory(p, new AsyncCallback<Category>() {
                         @Override
                         public void onFailure(Throwable throwable) {
-                            GWT.log(throwable.getMessage(), throwable);
+                            updater.cancel();
+                            Info.display(Const.WORD_ERROR,
+                                    throwable.getMessage());
                         }
 
                         @Override
@@ -772,9 +769,7 @@ class NavigationPanel extends NavigationEventProvider {
                                     " searching for its name or description on nimbits.com. Please select the property option to edit these values.");
                         }
                     });
-                } catch (NimbitsException e) {
-                    GWT.log(e.getMessage(), e);
-                }
+
             }
         });
         return retObj;
@@ -863,7 +858,7 @@ class NavigationPanel extends NavigationEventProvider {
 
             if (btn.getText().equals(Const.WORD_YES)) {
                 Category categoryToDelete = categoryMap.get(categoryModelToDelete.getName());
-                try {
+
                     categoryService.deleteCategory(categoryToDelete, new AsyncCallback<Void>() {
                         @Override
                         public void onFailure(Throwable e) {
@@ -885,9 +880,7 @@ class NavigationPanel extends NavigationEventProvider {
                             tree.getStore().remove(categoryModelToDelete);
                         }
                     });
-                } catch (NimbitsException ex) {
-                    GWT.log(ex.getMessage());
-                }
+
             }
         }
     };
@@ -906,7 +899,7 @@ class NavigationPanel extends NavigationEventProvider {
 
                 PointName pointName = CommonFactoryLocator.getInstance().createPointName(newPointName);
 
-                try {
+
                     pointService.addPoint(pointName, new AsyncCallback<Point>() {
                         @Override
                         public void onFailure(Throwable caught) {
@@ -922,15 +915,7 @@ class NavigationPanel extends NavigationEventProvider {
                             box.close();
                         }
                     });
-                } catch (NimbitsException e) {
-                    box.close();
-                    GWT.log(e.getMessage());
-                } catch (PointExistsException e) {
-                    box.close();
-                    Info.display("Could not create "
-                            + newPointName,
-                            e.getMessage());
-                }
+
             }
         }
     };
@@ -986,7 +971,7 @@ class NavigationPanel extends NavigationEventProvider {
 
             if (btn.getText().equals(Const.WORD_YES)) {
                 final Point pointToDelete = pointMap.get(pointModelToDelete.getName());
-                try {
+
                     service.deletePoint(pointToDelete, new AsyncCallback<Void>() {
                         @Override
                         public void onFailure(Throwable e) {
@@ -1005,9 +990,7 @@ class NavigationPanel extends NavigationEventProvider {
                             tree.getStore().remove(pointModelToDelete);
                         }
                     });
-                } catch (NimbitsException e) {
-                    GWT.log(e.getMessage(), e);
-                }
+
             }
         }
     };
@@ -1019,28 +1002,24 @@ class NavigationPanel extends NavigationEventProvider {
 
             if (btn.getText().equals(Const.WORD_YES)) {
                 final Diagram diagramToDelete = diagramMap.get(diagramModelToDelete.getName());
-                try {
-                    service.deleteDiagram(diagramToDelete, new AsyncCallback<Void>() {
-                        @Override
-                        public void onFailure(Throwable e) {
+                service.deleteDiagram(diagramToDelete, new AsyncCallback<Void>() {
+                    @Override
+                    public void onFailure(Throwable e) {
+                        GWT.log(e.getMessage(), e);
+                    }
+
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        try {
+                            notifyDiagramDeletedListener(diagramToDelete, false);
+                            GWT.log("Deleted " + diagramToDelete.getName());
+                        } catch (NimbitsException e) {
                             GWT.log(e.getMessage(), e);
                         }
 
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            try {
-                                notifyDiagramDeletedListener(diagramToDelete, false);
-                                GWT.log("Deleted " + diagramToDelete.getName());
-                            } catch (NimbitsException e) {
-                                GWT.log(e.getMessage(), e);
-                            }
-
-                            tree.getStore().remove(diagramModelToDelete);
-                        }
-                    });
-                } catch (NimbitsException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                }
+                        tree.getStore().remove(diagramModelToDelete);
+                    }
+                });
             }
         }
     };
@@ -1060,25 +1039,21 @@ class NavigationPanel extends NavigationEventProvider {
 
                 final Value value = ValueModelFactory.createValueModel(v, timestamp);
                 RecordedValueServiceAsync service = GWT.create(RecordedValueService.class);
-                try {
-                    service.recordValue(point, value, new AsyncCallback<Value>() {
-                        @Override
-                        public void onFailure(final Throwable throwable) {
-                            be.getRecord().reject(false);
-                            updater.cancel();
-                        }
+                service.recordValue(point, value, new AsyncCallback<Value>() {
+                    @Override
+                    public void onFailure(final Throwable throwable) {
+                        be.getRecord().reject(false);
+                        updater.cancel();
+                    }
 
-                        @Override
-                        public void onSuccess(final Value value) {
-                            be.getRecord().commit(false);
-                            model.setDirty(false);
-                            updateModel(value, model);
+                    @Override
+                    public void onSuccess(final Value value) {
+                        be.getRecord().commit(false);
+                        model.setDirty(false);
+                        updateModel(value, model);
 
-                        }
-                    });
-                } catch (NimbitsException e) {
-                    GWT.log(e.getMessage());
-                }
+                    }
+                });
 
             }
         }

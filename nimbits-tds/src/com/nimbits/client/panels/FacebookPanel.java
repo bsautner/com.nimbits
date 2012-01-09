@@ -13,21 +13,16 @@
 
 package com.nimbits.client.panels;
 
-import com.extjs.gxt.ui.client.widget.ContentPanel;
-import com.extjs.gxt.ui.client.widget.Label;
-import com.extjs.gxt.ui.client.widget.LayoutContainer;
-import com.extjs.gxt.ui.client.widget.layout.FillLayout;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.service.facebook.FacebookService;
-import com.nimbits.client.service.facebook.FacebookServiceAsync;
+import com.extjs.gxt.ui.client.widget.*;
+import com.extjs.gxt.ui.client.widget.layout.*;
+import com.google.gwt.core.client.*;
+import com.google.gwt.user.client.*;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.service.facebook.*;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -76,31 +71,25 @@ public class FacebookPanel extends LayoutContainer {
 
         } else {
             FacebookServiceAsync facebookService = GWT.create(FacebookService.class);
-            try {
-                facebookService.facebookLogin(facebookOauthCode, new AsyncCallback<EmailAddress>() {
+            facebookService.facebookLogin(facebookOauthCode, new AsyncCallback<EmailAddress>() {
 
-                    @Override
-                    public void onFailure(Throwable caught) {
+                @Override
+                public void onFailure(Throwable caught) {
 
-                        l.setText(caught.getMessage() + "  " + facebookOauthCode);
+                    l.setText(caught.getMessage() + "  " + facebookOauthCode);
 
-                    }
+                }
 
-                    @Override
-                    public void onSuccess(EmailAddress result) {
-                        l.setText("<P>You have successfuly added facebook to your Nimbits account. You can now log into <A href =\"http://www.nimbits.com\" target=\"_blank\" >Nimbits Data Logger</A> and configure your data points to relay new values and alerts to facebook.</p>" +
-                                "");
+                @Override
+                public void onSuccess(EmailAddress result) {
+                    l.setText("<P>You have successfuly added facebook to your Nimbits account. You can now log into <A href =\"http://www.nimbits.com\" target=\"_blank\" >Nimbits Data Logger</A> and configure your data points to relay new values and alerts to facebook.</p>" +
+                            "");
 
-                        //	l.setText(result);
+                    //	l.setText(result);
 
-                    }
+                }
 
-                });
-            } catch (UnsupportedEncodingException e) {
-                //  e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            } catch (NimbitsException e) {
-                //   e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
+            });
 
 
         }

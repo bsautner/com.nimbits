@@ -13,11 +13,8 @@
 
 package com.nimbits.client.service.facebook;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.email.EmailAddress;
-
-import java.io.UnsupportedEncodingException;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.model.email.*;
 
 /**
  * Created by bsautner
@@ -26,7 +23,7 @@ import java.io.UnsupportedEncodingException;
  * Time: 12:29 PM
  */
 public interface FacebookServiceAsync {
-    void facebookLogin(final String code, final AsyncCallback<EmailAddress> async) throws UnsupportedEncodingException, NimbitsException;
+    void facebookLogin(final String code, final AsyncCallback<EmailAddress> async);
 
     void updateStatus(final String token, final String message, final String picture, final String link, final String name, final String captions, final String description, final AsyncCallback<String> async);
 }

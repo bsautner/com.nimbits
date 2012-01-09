@@ -13,16 +13,15 @@
 
 package com.nimbits.client.service.settings;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.client.exception.NimbitsException;
+import com.google.gwt.user.client.rpc.*;
 
-import java.util.Map;
+import java.util.*;
 
 public interface SettingsServiceAsync {
 
-    void getSetting(final String paramName, final AsyncCallback<String> asyncCallback) throws NimbitsException;
+    void getSetting(final String paramName, final AsyncCallback<String> asyncCallback);
 
-    void getSettings(final AsyncCallback<Map<String, String>> asyncCallback) throws NimbitsException;
+    void getSettings(final AsyncCallback<Map<String, String>> asyncCallback);
 
-    void getServerSecret(final AsyncCallback<String> async) throws NimbitsException;
+    void getServerSecret(final AsyncCallback<String> async);
 }

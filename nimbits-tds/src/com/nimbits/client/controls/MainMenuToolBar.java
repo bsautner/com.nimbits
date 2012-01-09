@@ -13,37 +13,24 @@
 
 package com.nimbits.client.controls;
 
-import com.extjs.gxt.ui.client.event.BaseEvent;
-import com.extjs.gxt.ui.client.event.Events;
-import com.extjs.gxt.ui.client.event.Listener;
-import com.extjs.gxt.ui.client.event.MessageBoxEvent;
-import com.extjs.gxt.ui.client.widget.ContentPanel;
-import com.extjs.gxt.ui.client.widget.LayoutContainer;
-import com.extjs.gxt.ui.client.widget.MessageBox;
+import com.extjs.gxt.ui.client.event.*;
+import com.extjs.gxt.ui.client.widget.*;
 import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.menu.SeparatorMenuItem;
-import com.extjs.gxt.ui.client.widget.toolbar.SeparatorToolItem;
-import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
-import com.google.gwt.core.client.GWT;
+import com.extjs.gxt.ui.client.widget.menu.*;
+import com.extjs.gxt.ui.client.widget.toolbar.*;
+import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.icons.Icons;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.LoginInfo;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.service.instantmessage.IMService;
-import com.nimbits.client.service.instantmessage.IMServiceAsync;
-import com.nimbits.client.service.twitter.TwitterService;
-import com.nimbits.client.service.twitter.TwitterServiceAsync;
-import com.nimbits.client.service.user.UserService;
-import com.nimbits.client.service.user.UserServiceAsync;
-import com.nimbits.shared.Utils;
+import com.google.gwt.user.client.rpc.*;
+import com.google.gwt.user.client.ui.*;
+import com.nimbits.client.icons.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.service.instantmessage.*;
+import com.nimbits.client.service.twitter.*;
+import com.nimbits.client.service.user.*;
+import com.nimbits.shared.*;
 
-import java.util.Map;
-
-import static com.google.gwt.user.client.Window.alert;
+import java.util.*;
 
 
 public class MainMenuToolBar extends LayoutContainer {
@@ -164,26 +151,22 @@ public class MainMenuToolBar extends LayoutContainer {
         SecretButton.addListener(Events.OnClick, new Listener<BaseEvent>() {
 
             public void handleEvent(BaseEvent be) {
-                try {
-                    us.getSecret(new AsyncCallback<String>() {
-                        @Override
-                        public void onFailure(Throwable throwable) {
-                            //To change body of implemented methods use File | Settings | File Templates.
-                        }
+                us.getSecret(new AsyncCallback<String>() {
+                    @Override
+                    public void onFailure(Throwable throwable) {
+                        //To change body of implemented methods use File | Settings | File Templates.
+                    }
 
-                        @Override
-                        public void onSuccess(String s) {
-                            MessageBox.confirm("Reset Your Key",
-                                    "Your secret Key is currently set to: " + s +
-                                            "<br> Press YES to generate a new secret key and to have it emailed to the account you are currently logged in with. " +
-                                            "Your old key will no longer be valid. You can use your key to use Nimbits web services.",
-                                    l);
+                    @Override
+                    public void onSuccess(String s) {
+                        MessageBox.confirm("Reset Your Key",
+                                "Your secret Key is currently set to: " + s +
+                                        "<br> Press YES to generate a new secret key and to have it emailed to the account you are currently logged in with. " +
+                                        "Your old key will no longer be valid. You can use your key to use Nimbits web services.",
+                                l);
 
-                        }
-                    });
-                } catch (NimbitsException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                }
+                    }
+                });
 
             }
         });
@@ -196,25 +179,21 @@ public class MainMenuToolBar extends LayoutContainer {
             public void handleEvent(MessageBoxEvent ce) {
                 Button btn = ce.getButtonClicked();
                 if (btn.getText().toLowerCase().equals("yes")) {
-                    try {
-                        us.updateSecret(new AsyncCallback<String>() {
+                    us.updateSecret(new AsyncCallback<String>() {
 
-                            @Override
-                            public void onFailure(Throwable caught) {
+                        @Override
+                        public void onFailure(Throwable caught) {
 
 
-                            }
+                        }
 
-                            @Override
-                            public void onSuccess(String key) {
-                                Window.alert("Your new secret has been reset to: " + key + " and a copy has been emailed to you. Your old secret key is no longer valid.");
+                        @Override
+                        public void onSuccess(String key) {
+                            Window.alert("Your new secret has been reset to: " + key + " and a copy has been emailed to you. Your old secret key is no longer valid.");
 
-                            }
+                        }
 
-                        });
-                    } catch (NimbitsException e) {
-                        alert(e.getMessage());
-                    }
+                    });
 
                 }
 
@@ -246,26 +225,21 @@ public class MainMenuToolBar extends LayoutContainer {
 
 
                 TwitterServiceAsync twitterService = GWT.create(TwitterService.class);
-                try {
-                    twitterService.twitterAuthorise(email, new AsyncCallback<String>() {
+                twitterService.twitterAuthorise(email, new AsyncCallback<String>() {
 
-                        @Override
-                        public void onFailure(Throwable caught) {
-                            GWT.log(caught.getMessage(), caught);
-                        }
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        GWT.log(caught.getMessage(), caught);
+                    }
 
-                        @Override
-                        public void onSuccess(String result) {
-                            //	Window.alert(result);
-                            Window.Location.replace(result);
+                    @Override
+                    public void onSuccess(String result) {
+                        //	Window.alert(result);
+                        Window.Location.replace(result);
 
-                        }
+                    }
 
-                    });
-                } catch (NimbitsException e) {
-                    Window.alert("This server may not be configured for twitter");
-
-                }
+                });
 
 
                 //    Window.open("http://www.nimbits.com?TW=1&email=" + email, "", "");
@@ -286,25 +260,21 @@ public class MainMenuToolBar extends LayoutContainer {
             public void handleEvent(BaseEvent be) {
 
                 IMServiceAsync IMService = GWT.create(IMService.class);
-                try {
-                    IMService.sendInvite(new AsyncCallback<Void>() {
+                IMService.sendInvite(new AsyncCallback<Void>() {
 
-                        @Override
-                        public void onFailure(Throwable caught) {
+                    @Override
+                    public void onFailure(Throwable caught) {
 
 
-                        }
+                    }
 
-                        @Override
-                        public void onSuccess(Void result) {
-                            Window.alert("Please check your instant messaging client for an invite to chat from nimbits1.appspot.com. You must accept the invitation in order for Nimbits to IM you.");
+                    @Override
+                    public void onSuccess(Void result) {
+                        Window.alert("Please check your instant messaging client for an invite to chat from nimbits1.appspot.com. You must accept the invitation in order for Nimbits to IM you.");
 
-                        }
+                    }
 
-                    });
-                } catch (NimbitsException ignored) {
-
-                }
+                });
 
             }
         });

@@ -175,26 +175,22 @@ class ConnectionPanel extends NavigationEventProvider {
                                 UserServiceAsync userService;
                                 userService = GWT.create(UserService.class);
                                 EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
-                                try {
-                                    userService.sendConnectionRequest(emailAddress, new AsyncCallback<Void>() {
+                                userService.sendConnectionRequest(emailAddress, new AsyncCallback<Void>() {
 
-                                        @Override
-                                        public void onFailure(Throwable caught) {
+                                    @Override
+                                    public void onFailure(Throwable caught) {
 
 
-                                        }
+                                    }
 
-                                        @Override
-                                        public void onSuccess(Void result) {
+                                    @Override
+                                    public void onSuccess(Void result) {
 
-                                            Info.display("Connection Request", "Connection Request Sent!");
+                                        Info.display("Connection Request", "Connection Request Sent!");
 
-                                        }
+                                    }
 
-                                    });
-                                } catch (NimbitsException e) {
-                                    // e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                                }
+                                });
 
 
                             }

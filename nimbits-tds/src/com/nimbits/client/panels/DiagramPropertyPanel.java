@@ -184,30 +184,26 @@ class DiagramPropertyPanel extends NavigationEventProvider {
                 Button btn = ce.getButtonClicked();
 
                 if (btn.getText().equals("Yes")) {
-                    try {
-                        diagramService.deleteDiagram(diagram, new AsyncCallback<Void>() {
+                    diagramService.deleteDiagram(diagram, new AsyncCallback<Void>() {
 
-                            @Override
-                            public void onFailure(Throwable caught) {
+                        @Override
+                        public void onFailure(Throwable caught) {
 
 
+                        }
+
+                        @Override
+                        public void onSuccess(Void result) {
+                            try {
+                                notifyDiagramDeletedListener(diagram, readOnly);
+                            } catch (NimbitsException e) {
+                                GWT.log(e.getMessage());
                             }
 
-                            @Override
-                            public void onSuccess(Void result) {
-                                try {
-                                    notifyDiagramDeletedListener(diagram, readOnly);
-                                } catch (NimbitsException e) {
-                                    GWT.log(e.getMessage());
-                                }
 
+                        }
 
-                            }
-
-                        });
-                    } catch (NimbitsException e) {
-                        GWT.log(e.getMessage());
-                    }
+                    });
 
                 }
 

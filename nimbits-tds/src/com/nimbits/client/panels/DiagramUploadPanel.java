@@ -14,33 +14,24 @@
 package com.nimbits.client.panels;
 
 import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.widget.LayoutContainer;
-import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.form.FileUploadField;
-import com.extjs.gxt.ui.client.widget.form.FormPanel;
-import com.extjs.gxt.ui.client.widget.form.FormPanel.Encoding;
-import com.extjs.gxt.ui.client.widget.form.FormPanel.Method;
-import com.extjs.gxt.ui.client.widget.form.HiddenField;
-import com.extjs.gxt.ui.client.widget.form.TextField;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Element;
+import com.extjs.gxt.ui.client.widget.*;
+import com.extjs.gxt.ui.client.widget.button.*;
+import com.extjs.gxt.ui.client.widget.form.*;
+import com.extjs.gxt.ui.client.widget.form.FormPanel.*;
+import com.google.gwt.core.client.*;
+import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.client.enums.UploadType;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.LoginInfo;
-import com.nimbits.client.model.diagram.Diagram;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.service.LoginService;
-import com.nimbits.client.service.LoginServiceAsync;
-import com.nimbits.client.service.diagram.DiagramService;
-import com.nimbits.client.service.diagram.DiagramServiceAsync;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.diagram.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.service.*;
+import com.nimbits.client.service.diagram.*;
+import static com.nimbits.shared.Utils.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.nimbits.shared.Utils.isEmptyString;
+import java.util.*;
 
 /**
  * Created by bsautner
@@ -144,25 +135,21 @@ public class DiagramUploadPanel extends LayoutContainer {
         emailAddressHiddenField.setName(Const.PARAM_EMAIL_HIDDEN_FIELD);
 
         panel.add(emailAddressHiddenField);
-        try {
-            loginService.login(GWT.getHostPageBaseURL(),
-                    new AsyncCallback<LoginInfo>() {
-                        @Override
-                        public void onFailure(Throwable error) {
+        loginService.login(GWT.getHostPageBaseURL(),
+                new AsyncCallback<LoginInfo>() {
+                    @Override
+                    public void onFailure(Throwable error) {
 
-                        }
+                    }
 
-                        @Override
-                        public void onSuccess(LoginInfo result) {
+                    @Override
+                    public void onSuccess(LoginInfo result) {
 
-                            email = result.getEmailAddress();
-                            emailAddressHiddenField.setValue(email.getValue());
-                        }
+                        email = result.getEmailAddress();
+                        emailAddressHiddenField.setValue(email.getValue());
+                    }
 
-                    });
-        } catch (NimbitsException e) {
-            GWT.log(e.getMessage());
-        }
+                });
 
         final HiddenField<UploadType> uploadTypeHiddenField = new HiddenField<UploadType>();
         uploadTypeHiddenField.setName(Const.PARAM_UPLOAD_TYPE_HIDDEN_FIELD);

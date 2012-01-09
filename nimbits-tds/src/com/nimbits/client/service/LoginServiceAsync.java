@@ -13,10 +13,9 @@
 
 package com.nimbits.client.service;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.LoginInfo;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.model.*;
 
 public interface LoginServiceAsync {
-    void login(final String requestUri, final AsyncCallback<LoginInfo> async) throws NimbitsException;
+    void login(final String requestUri, final AsyncCallback<LoginInfo> async);
 }

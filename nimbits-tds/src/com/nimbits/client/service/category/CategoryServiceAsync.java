@@ -13,38 +13,36 @@
 
 package com.nimbits.client.service.category;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.CategoryName;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.user.User;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.model.category.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.user.*;
 
-import java.util.List;
+import java.util.*;
 
 public interface CategoryServiceAsync {
     void getCategories(final boolean includePoints, final boolean includeDiagrams, final boolean includeAlertState,
-                       AsyncCallback<List<Category>> asyncCallback) throws NimbitsException;
+                       AsyncCallback<List<Category>> asyncCallback);
 
     void getConnectionCategories(final boolean includePoints, final boolean includeDiagrams, final EmailAddress email,
-                                 AsyncCallback<List<Category>> asyncCallback) throws NimbitsException;
+                                 AsyncCallback<List<Category>> asyncCallback);
 
     void addCategory(final CategoryName CategoryName,
-                     AsyncCallback<Category> asyncCallback) throws NimbitsException;
+                     AsyncCallback<Category> asyncCallback);
 
     void deleteCategory(final Category c,
-                        AsyncCallback<Void> asyncCallback) throws NimbitsException;
+                        AsyncCallback<Void> asyncCallback);
 
     void getCategories(final User u, final boolean includePoints, final boolean includeDiagrams,
                        AsyncCallback<List<Category>> callback);
 
-    void getCategoryByName(final CategoryName categoryName, final boolean includePoints, final boolean includeDiagrams, AsyncCallback<Category> async) throws NimbitsException;
+    void getCategoryByName(final CategoryName categoryName, final boolean includePoints, final boolean includeDiagrams, AsyncCallback<Category> async);
 
     void getCategory(final User user, final CategoryName categoryName, AsyncCallback<Category> async);
 
     void createHiddenCategory(User u, AsyncCallback<Category> async);
 
-    void categoryExists(User u, CategoryName categoryName, AsyncCallback<Boolean> async) throws NimbitsException;
+    void categoryExists(User u, CategoryName categoryName, AsyncCallback<Boolean> async);
 
     void addCategory(final User u, final CategoryName categoryName, AsyncCallback<Category> async);
 
@@ -52,9 +50,9 @@ public interface CategoryServiceAsync {
 
     void deleteCategory(final User u, final Category c, AsyncCallback<Void> async);
 
-    void updateCategory(Category category, AsyncCallback<Category> asyncCallback) throws NimbitsException;
+    void updateCategory(Category category, AsyncCallback<Category> asyncCallback);
 
-    void publishCategory(Category category, AsyncCallback<Category> asyncCallback) throws NimbitsException;
+    void publishCategory(Category category, AsyncCallback<Category> asyncCallback) ;
 
     void getCategoryByUUID(String uuidParam, AsyncCallback<Category> async);
 

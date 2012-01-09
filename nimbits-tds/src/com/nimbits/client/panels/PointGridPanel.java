@@ -82,25 +82,21 @@ class PointGridPanel extends NavigationEventProvider {
                         GWT.log(value.getNote());
                         GWT.log(String.valueOf(value.getNumberValue()));
                         RecordedValueServiceAsync service = GWT.create(RecordedValueService.class);
-                        try {
-                            service.recordValue(point, value, new AsyncCallback<Value>() {
-                                @Override
-                                public void onFailure(final Throwable throwable) {
-                                    be.getRecord().reject(false);
-                                    updater.cancel();
-                                }
+                        service.recordValue(point, value, new AsyncCallback<Value>() {
+                            @Override
+                            public void onFailure(final Throwable throwable) {
+                                be.getRecord().reject(false);
+                                updater.cancel();
+                            }
 
-                                @Override
-                                public void onSuccess(final Value value) {
-                                    be.getRecord().commit(false);
-                                    model.setDirty(false);
-                                    updateModel(value, model);
+                            @Override
+                            public void onSuccess(final Value value) {
+                                be.getRecord().commit(false);
+                                model.setDirty(false);
+                                updateModel(value, model);
 
-                                }
-                            });
-                        } catch (NimbitsException e) {
-                            GWT.log(e.getMessage(), e);
-                        }
+                            }
+                        });
                     } else {
                         notify.show();
                     }

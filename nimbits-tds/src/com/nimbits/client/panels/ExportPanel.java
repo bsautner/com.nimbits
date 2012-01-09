@@ -1,33 +1,22 @@
 package com.nimbits.client.panels;
 
-import com.extjs.gxt.ui.client.Style;
+import com.extjs.gxt.ui.client.*;
 import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.widget.Html;
-import com.extjs.gxt.ui.client.widget.LayoutContainer;
-import com.extjs.gxt.ui.client.widget.MessageBox;
-import com.extjs.gxt.ui.client.widget.VerticalPanel;
-import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.form.FormPanel;
-import com.extjs.gxt.ui.client.widget.form.Radio;
-import com.extjs.gxt.ui.client.widget.form.RadioGroup;
-import com.extjs.gxt.ui.client.widget.layout.FillLayout;
-import com.extjs.gxt.ui.client.widget.layout.FitLayout;
-import com.extjs.gxt.ui.client.widget.layout.FormData;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Element;
+import com.extjs.gxt.ui.client.widget.*;
+import com.extjs.gxt.ui.client.widget.button.*;
+import com.extjs.gxt.ui.client.widget.form.*;
+import com.extjs.gxt.ui.client.widget.layout.*;
+import com.google.gwt.core.client.*;
+import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.client.enums.ExportType;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointName;
-import com.nimbits.client.service.datapoints.PointService;
-import com.nimbits.client.service.datapoints.PointServiceAsync;
+import static com.google.gwt.user.client.Window.*;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.service.datapoints.*;
 
-import java.util.Map;
-
-import static com.google.gwt.user.client.Window.alert;
+import java.util.*;
 
 
 public class ExportPanel extends LayoutContainer {
@@ -100,42 +89,36 @@ public class ExportPanel extends LayoutContainer {
                 final MessageBox box = MessageBox.wait("Progress",
                         "Generating your report, please wait", "Thinking about it...");
                 box.show();
-                try {
-                    final ExportType exportType;
+                final ExportType exportType;
 
-                    if (csvSeparateColumns.getValue()) {
-                        exportType = ExportType.csvSeparateColumns;
-                     } else if (dataView.getValue()) {
-                              exportType = ExportType.currentStatusReport;
+                if (csvSeparateColumns.getValue()) {
+                    exportType = ExportType.csvSeparateColumns;
+                 } else if (dataView.getValue()) {
+                          exportType = ExportType.currentStatusReport;
 
-                        //  } else if (possibleContinuation.getValue()) {
-                        //      exportType = ExportType.possibleContinuation;
-                    } else {
-                        exportType = ExportType.csvSeparateColumns;
+                    //  } else if (possibleContinuation.getValue()) {
+                    //      exportType = ExportType.possibleContinuation;
+                } else {
+                    exportType = ExportType.csvSeparateColumns;
+                }
+
+
+                pointService.exportData(points, exportType, new AsyncCallback<String>() {
+                    @Override
+                    public void onFailure(Throwable e) {
+                        GWT.log(e.getMessage(), e);
+                        box.close();
+                        MessageBox.alert("Error", e.getMessage(), null);
                     }
 
-
-                    pointService.exportData(points, exportType, new AsyncCallback<String>() {
-                        @Override
-                        public void onFailure(Throwable e) {
-                            GWT.log(e.getMessage(), e);
-                            box.close();
-                            MessageBox.alert("Error", e.getMessage(), null);
-                        }
-
-                        @Override
-                        public void onSuccess(final String result) {
-                            final String url = GWT.getModuleBaseURL() + "export?" + Const.PARAM_BLOB_KEY
-                                    + "=" + result;
-                            box.close();
-                            Window.open(url, "Export", "");
-                        }
-                    });
-                } catch (NimbitsException e) {
-                    box.close();
-                    MessageBox.alert("Error", e.getMessage(), null);
-                    GWT.log(e.getMessage(), e);
-                }
+                    @Override
+                    public void onSuccess(final String result) {
+                        final String url = GWT.getModuleBaseURL() + "export?" + Const.PARAM_BLOB_KEY
+                                + "=" + result;
+                        box.close();
+                        Window.open(url, "Export", "");
+                    }
+                });
 
             }
         });

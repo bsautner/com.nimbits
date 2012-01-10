@@ -13,24 +13,20 @@
 
 package com.nimbits.server.dao.diagram;
 
-import com.google.appengine.api.blobstore.BlobKey;
-import com.nimbits.PMF;
-import com.nimbits.client.exception.NimbitsRuntimeException;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.CategoryName;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.diagram.Diagram;
-import com.nimbits.client.model.diagram.DiagramName;
-import com.nimbits.client.model.user.User;
+import com.google.appengine.api.blobstore.*;
+import com.nimbits.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.category.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.diagram.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.server.diagram.*;
+import com.nimbits.server.orm.*;
 import com.nimbits.server.pointcategory.*;
-import com.nimbits.server.diagram.DiagramModelFactory;
-import com.nimbits.server.orm.DiagramEntity;
 
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
-import java.util.List;
+import javax.jdo.*;
+import java.util.*;
 
 /**
  * Created by bsautner
@@ -38,16 +34,19 @@ import java.util.List;
  * Date: 5/20/11
  * Time: 4:14 PM
  */
-public class DiagramDaoImpl implements DiagramDao {
+public class DiagramDaoImpl implements DiagramTransaction {
+    private User user;
 
+    public DiagramDaoImpl(User u) {
+        this.user = u;
+    }
     @Override
     @SuppressWarnings(Const.WARNING_UNCHECKED)
-    public List<Diagram> getDiagramsByCategory(final Category c,
-                                               final User u) {
+    public List<Diagram> getDiagramsByCategory(final Category c ) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final List<Diagram> diagrams;
         try {
-            long userFK = u.getId();
+            long userFK = user.getId();
             final Query q = pm.newQuery(DiagramEntity.class, "userFk == k && categoryFk  == c");
             q.declareParameters("Long k, Long c");
             q.setOrdering("name ascending");
@@ -60,26 +59,20 @@ public class DiagramDaoImpl implements DiagramDao {
     }
 
     @Override
-    public void moveDiagram(final User u,
-                            final DiagramName diagramName,
+    public void moveDiagram(final DiagramName diagramName,
                             final CategoryName newCategoryName) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-
-
-        final Category c = CategoryServiceFactory.getInstance().getCategory(u, newCategoryName);
+        final Category c = CategoryServiceFactory.getInstance().getCategory(user, newCategoryName);
 
         if (!(c == null)) {
             Transaction tx = null;
-
-            long userFK = u.getId();
             try {
-
                 tx = pm.currentTransaction();
                 tx.begin();
                 Query q1 = pm.newQuery(DiagramEntity.class, "userFk==u && name==p");
                 q1.declareParameters("Long u, String p");
                 q1.setRange(0, 1);
-                List<DiagramEntity> diagrams = (List<DiagramEntity>) q1.execute(userFK,
+                List<DiagramEntity> diagrams = (List<DiagramEntity>) q1.execute(user.getId(),
                         diagramName.getValue());
                 if (diagrams.size() > 0) {
                     DiagramEntity diagram = diagrams.get(0);
@@ -88,9 +81,7 @@ public class DiagramDaoImpl implements DiagramDao {
                 } else {
                     tx.rollback();
                 }
-
                 //PointCacheManager.remove(point);
-
             } catch (Exception e) {
                 if (tx != null) {
                     tx.rollback();
@@ -134,17 +125,17 @@ public class DiagramDaoImpl implements DiagramDao {
 
 
     @Override
-    public void addDiagram(final User u, final BlobKey blobKey, final DiagramName name) {
+    public void addDiagram(final BlobKey blobKey, final DiagramName name) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         final CategoryName categoryName = CommonFactoryLocator.getInstance().createCategoryName(Const.CONST_HIDDEN_CATEGORY);
-        Category targetCategory =CategoryServiceFactory.getInstance().getCategory(u, categoryName);
+        Category targetCategory =CategoryServiceFactory.getInstance().getCategory(user, categoryName);
 
         if (targetCategory == null) {
-            targetCategory = CategoryServiceFactory.getInstance().createHiddenCategory(u);
+            targetCategory = CategoryServiceFactory.getInstance().createHiddenCategory(user);
         }
 
-        final DiagramEntity d = new DiagramEntity(u, blobKey, name, targetCategory);
+        final DiagramEntity d = new DiagramEntity(user, blobKey, name, targetCategory);
 
         pm.makePersistent(d);
         pm.close();
@@ -153,7 +144,7 @@ public class DiagramDaoImpl implements DiagramDao {
 
     @Override
     @SuppressWarnings(Const.WARNING_UNCHECKED)
-    public Diagram getDiagramByName(User u, DiagramName name) {
+    public Diagram getDiagramByName(DiagramName name) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         List<DiagramEntity> points;
         Diagram retObj = null;
@@ -164,7 +155,7 @@ public class DiagramDaoImpl implements DiagramDao {
             Query q = pm.newQuery(DiagramEntity.class, "userFk==u && name==p");
             q.declareParameters("Long u, String p");
             q.setRange(0, 1);
-            points = (List<DiagramEntity>) q.execute(u.getId(), name.getValue());
+            points = (List<DiagramEntity>) q.execute(user.getId(), name.getValue());
             if (points.size() > 0) {
                 DiagramEntity result = points.get(0);
                 retObj = DiagramModelFactory.createDiagramModel(result);
@@ -182,7 +173,7 @@ public class DiagramDaoImpl implements DiagramDao {
     }
 
     @Override
-    public Diagram updateDiagram(Long id, Diagram diagram) {
+    public Diagram updateDiagram(Diagram diagram) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         Transaction tx;
         Diagram retObj = null;
@@ -232,7 +223,7 @@ public class DiagramDaoImpl implements DiagramDao {
     }
 
     @Override
-    public Diagram updateDiagram(final User u, final BlobKey blobKey, final DiagramName name, final long id) {
+    public Diagram updateDiagram(final BlobKey blobKey, final DiagramName name, final long id) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         Transaction tx;
         Diagram retObj = null;

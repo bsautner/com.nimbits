@@ -25,6 +25,6 @@ import javax.servlet.http.HttpServletRequest;
  * Time: 7:17 PM
  */
 public interface UserServerService {
-    User getHttpRequestUser(HttpServletRequest req) throws NimbitsException;
-    User getUserByID(long id) throws NimbitsException;
+    User getHttpRequestUser(final HttpServletRequest req) throws NimbitsException;
+    User getUserByID(final long id) throws NimbitsException;
 }

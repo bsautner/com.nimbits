@@ -18,7 +18,7 @@ import java.io.*;
 
 public class NimbitsException extends Exception implements Serializable {
 
-    private static final long serialVersionUID = 10l;
+    private static final long serialVersionUID = 10L;
 
     private String message;
 

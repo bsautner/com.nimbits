@@ -13,24 +13,21 @@
 
 package com.nimbits.server.user;
 
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.point.PointName;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModelFactory;
-import com.nimbits.server.counter.CounterFactory;
-import com.nimbits.server.dao.counter.ShardedCounter;
-import com.nimbits.server.recordedvalue.RecordedValueServiceFactory;
-import com.nimbits.shared.Utils;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.server.counter.*;
+import com.nimbits.server.dao.counter.*;
+import com.nimbits.server.recordedvalue.*;
+import com.nimbits.shared.*;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
+import javax.servlet.http.*;
+import java.io.*;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner
@@ -41,10 +38,10 @@ import java.util.List;
 public class UserReportService extends HttpServlet {
 
     @Override
-    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    public void doGet(final HttpServletRequest req,final HttpServletResponse resp) throws IOException {
 
-        String c = req.getParameter("count");
-        String email = req.getParameter("email");
+        String c = req.getParameter(Const.PARAM_COUNT);
+        String email = req.getParameter(Const.PARAM_EMAIL);
         final PrintWriter out = resp.getWriter();
         int count = 100;
 

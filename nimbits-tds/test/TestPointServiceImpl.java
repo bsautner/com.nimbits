@@ -11,14 +11,11 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.user.User;
-import com.nimbits.server.point.PointServiceFactory;
-import com.nimbits.server.user.UserModelFactory;
-import org.junit.Assert;
-import org.junit.Test;
-
-import static com.nimbits.client.model.point.PointModelFactory.createPointModel;
+import com.nimbits.client.model.point.*;
+import static com.nimbits.client.model.point.PointModelFactory.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.server.point.*;
+import org.junit.*;
 
 /**
  * Created by bsautner

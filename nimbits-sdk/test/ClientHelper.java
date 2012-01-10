@@ -43,7 +43,7 @@ class ClientHelper {
     //  private static final String accountPath = "/mnt/raid/nimbits/test";
     private final static String email = "test@example.com";
 
-    private final static String password = "47649320-cefb-4c93-a4f5-10f7a6fa6dbc";
+    private final static String password = "1c5d5183-1eb8-443c-8df1-11082acc8734";
 
     //  private final static String appscale =  "http://127.0.0.1:8888";
     public final static String url = "http://192.168.1.2:8081";

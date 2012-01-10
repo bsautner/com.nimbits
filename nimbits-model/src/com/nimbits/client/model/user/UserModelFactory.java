@@ -17,18 +17,29 @@ import java.util.Set;
  * Time: 4:10 PM
  */
 public class UserModelFactory {
+    public static User createUserModel(final long id) {
+        return new UserModel(id);
+    }
 
+    public static List<User> createUserModels(final List<User> users) {
+        List<User> retObj = new ArrayList<User>();
 
-    public static UserModel createUserModel(final User u) {
+        for (final User u : users) {
+            retObj.add(createUserModel(u));
+        }
 
+        return retObj;
+    }
+
+    public static User createUserModel(final User u) {
         return new UserModel(u);
-
     }
 
 
-    public List<UserModel> createUserModels(final Set<User> users) {
 
-        final List<UserModel> retObj = new ArrayList<UserModel>();
+    public List<User> createUserModels(final Set<User> users) {
+
+        final List<User> retObj = new ArrayList<User>();
 
         for (final User u : users) {
             retObj.add(createUserModel(u));

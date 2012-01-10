@@ -60,13 +60,13 @@ public class CategoryDAOImpl implements CategoryTransactions {
     public Category createHiddenCategory() {
 
 
-        PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         Category retObj;
         try {
 
             final CategoryName categoryName = CommonFactoryLocator.getInstance().createCategoryName(Const.CONST_HIDDEN_CATEGORY);
-            Category c = new PointCatagory();
+            final Category c = new PointCatagory();
             c.setName(categoryName);
             c.setProtectionLevel(ProtectionLevel.onlyMe);
             c.setUUID(UUID.randomUUID().toString());
@@ -94,14 +94,14 @@ public class CategoryDAOImpl implements CategoryTransactions {
         final LinkedList<Category> retObj = new LinkedList<Category>();
         final Query q = pm.newQuery(PointCatagory.class, "userFK == u");
 
-        List<Category> result;
+
         long userFK = user.getId();
 
         q.setOrdering("name ascending");
         q.declareParameters("Long u");
 
         try {
-            result = (List<Category>) q.execute(userFK);
+            List<Category> result = (List<Category>) q.execute(userFK);
             final Map<Long, List<Point>> points = includePoints ? getPointsByCategoryList(result) : null;
             final Map<Long, List<Diagram>> diagrams = includeDiagrams ? getDiagramsByCategoryList(result) : null;
 
@@ -136,7 +136,7 @@ public class CategoryDAOImpl implements CategoryTransactions {
         Map<Long, List<Point>> retObj = null;
         final List<Point> points;
         List<Long> ids = new ArrayList<Long>();
-        for (Category c : categories) {
+        for (final Category c : categories) {
             ids.add(c.getId());
         }
         try {
@@ -167,7 +167,7 @@ public class CategoryDAOImpl implements CategoryTransactions {
         Map<Long, List<Diagram>> retObj = null;
 
         List<Long> ids = new ArrayList<Long>();
-        for (Category c : categories) {
+        for (final Category c : categories) {
             ids.add(c.getId());
         }
         try {
@@ -252,7 +252,7 @@ public class CategoryDAOImpl implements CategoryTransactions {
     public Category addCategory(final CategoryName categoryName) {
         Category retObj;
 
-        PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
         PointCatagory c;
 
         try {

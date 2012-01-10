@@ -34,9 +34,8 @@ public class ConnectionRequestModelFactory {
 
     public static List<Connection> CreateConnectionRequestModels(final List<ConnectionRequest> cl) {
         final List<Connection> retObj = new ArrayList<Connection>();
-        for (ConnectionRequest c : cl) {
+        for (final ConnectionRequest c : cl) {
             retObj.add(new ConnectionRequestModel(c));
-
         }
         return retObj;
     }

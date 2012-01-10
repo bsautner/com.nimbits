@@ -16,11 +16,11 @@ import java.nio.channels.Channels;
 public class BlobStoreImpl implements BlobStore {
 
     @Override
-    public String createFile(String data, ExportType exportType) throws NimbitsException {
+    public String createFile(final String data,final ExportType exportType) throws NimbitsException {
         // Get a file service
 
         try {
-            FileService fileService = FileServiceFactory.getFileService();
+            final FileService fileService = FileServiceFactory.getFileService();
 
             // Create a new Blob file with mime-type "text/plain"
             AppEngineFile file = fileService.createNewBlobFile(exportType.getCode());

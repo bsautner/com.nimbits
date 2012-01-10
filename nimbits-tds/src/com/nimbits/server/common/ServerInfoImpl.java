@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class ServerInfoImpl {
 
-    public static String getFullServerURL(HttpServletRequest req) {
+    public static String getFullServerURL(final HttpServletRequest req) {
 
         return req == null ? null : req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort();
     }

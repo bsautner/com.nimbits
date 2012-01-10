@@ -10,6 +10,5 @@ import java.util.Map;
 public interface ExportHelper {
     String exportPointDataToCSVSeparateColumns(final Map<PointName, Point> points);
     String exportPointDataToDescriptiveStatistics(final Map<PointName, Point> points) throws NimbitsException;
-
-    String exportPointDataToPossibleContinuation(Map<PointName, Point> points) throws NimbitsException;
+    String exportPointDataToPossibleContinuation(final Map<PointName, Point> points) throws NimbitsException;
 }

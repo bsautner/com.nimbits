@@ -11,5 +11,5 @@ import com.nimbits.client.exception.NimbitsException;
  * To change this template use File | Settings | File Templates.
  */
 public interface BlobStore {
-    String createFile(String data, ExportType exportType) throws NimbitsException;
+    String createFile(final String data, final ExportType exportType) throws NimbitsException;
 }

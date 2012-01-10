@@ -49,21 +49,17 @@ public class IncomingMailTask extends HttpServlet {
         final String inContent = req.getParameter(Const.PARAM_IN_CONTENT);
 
         final EmailAddress internetAddress = CommonFactoryLocator.getInstance().createEmailAddress(fromAddress);
-        // final UserContext context = GsonFactory.getInstance().fromJson(contextJson, UserContextImpl.class);
         final User u;
         try {
             log.info("Incoming mail post: " + internetAddress);
             u = UserTransactionFactory.getInstance().getNimbitsUser(internetAddress);
-            // delete me context.addTrace(IncomingMailTask.class.getName());
-
 
             final String content = inContent.replaceAll("\n", "").replaceAll("\r", "");
             final String Data[] = content.split(";");
             log.info("Incoming mail post: " + inContent);
 
             if (u != null) {
-                // delete me context.addTrace(u.getEmail().getValue());
-                if (Data.length > 0) {
+                 if (Data.length > 0) {
                     for (String s : Data) {
                         processLine(u, s);
                     }

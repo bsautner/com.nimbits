@@ -46,8 +46,6 @@ public class MailHandlerServlet extends HttpServlet {
         log.info("Incoming Mail");
         final Properties props = new Properties();
         final Session session = Session.getDefaultInstance(props, null);
-
-        // final // delete me UserContext context = UserContextFactory.createUserContext(MailHandlerServlet.class.getName());
         try {
             final MimeMessage message = new MimeMessage(session, req.getInputStream());
 

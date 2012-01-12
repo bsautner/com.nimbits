@@ -78,9 +78,10 @@ public class PointMaintTask extends HttpServlet {
                     String j = GsonFactory.getInstance().toJson(category);
                     CoreFactory.getInstance().reportUpdateToCore(url, j, EntityType.category);
                 }
-                else {
-                    log.severe("Point Maint Task could not find point's category - would like to delete point :" + p.getName().getValue());
-                }
+
+            }
+            else {
+                log.severe("Point Maint Task could not find point's category - would like to delete point :" + p.getName().getValue());
             }
 
         } else {

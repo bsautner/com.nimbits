@@ -15,7 +15,6 @@ import javax.jdo.annotations.*;
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 
 public class CalculationEntity implements Calculation {
-    private static final long serialVersionUID = 2L;
 
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)

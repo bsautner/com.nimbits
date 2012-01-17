@@ -34,7 +34,7 @@ import java.util.*;
  * Date: 5/20/11
  * Time: 4:14 PM
  */
-public class DiagramDaoImpl implements DiagramTransaction {
+public class DiagramDaoImpl implements DiagramTransactions {
     private User user;
 
     public DiagramDaoImpl(User u) {

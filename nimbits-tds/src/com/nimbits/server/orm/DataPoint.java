@@ -29,7 +29,6 @@ import java.util.List;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 public class DataPoint implements Point {
-    private static final long serialVersionUID = 2L;
 
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)

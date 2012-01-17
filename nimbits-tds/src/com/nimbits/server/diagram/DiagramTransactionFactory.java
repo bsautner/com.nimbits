@@ -29,11 +29,11 @@ public class DiagramTransactionFactory {
     protected DiagramTransactionFactory() {
     }
 
-    public static DiagramTransaction getInstance(User user) {
+    public static DiagramTransactions getInstance(User user) {
         return new DiagramMemCacheImpl(user);
     }
 
-    public static DiagramTransaction getDaoInstance(User user) {
+    public static DiagramTransactions getDaoInstance(User user) {
         return new DiagramDaoImpl(user);
     }
 }

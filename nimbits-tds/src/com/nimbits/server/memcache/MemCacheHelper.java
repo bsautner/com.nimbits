@@ -70,8 +70,7 @@ public class MemCacheHelper {
           return sample;
        }
         else {
-           String retStr = sample.replaceAll(Const.REGEX_SPECIAL_CHARS, "A");
-           return retStr;
+           return sample.replaceAll(Const.REGEX_SPECIAL_CHARS, "A");
        }
     }
 

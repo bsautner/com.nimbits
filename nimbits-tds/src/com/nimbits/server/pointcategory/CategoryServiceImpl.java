@@ -17,6 +17,7 @@ package com.nimbits.server.pointcategory;
 import com.google.gwt.user.server.rpc.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
+import com.nimbits.client.model.*;
 import com.nimbits.client.model.category.*;
 import com.nimbits.client.model.diagram.*;
 import com.nimbits.client.model.email.*;
@@ -51,8 +52,10 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
     }
 
     private void sendToCore(Category c) {
-        String j = GsonFactory.getInstance().toJson(c);
-        CoreFactory.getInstance().reportUpdateToCore(getServerName(), j, EntityType.category);
+        if (! c.getName().getValue().equals(Const.CONST_HIDDEN_CATEGORY)) {
+            String j = GsonFactory.getInstance().toJson(c);
+            CoreFactory.getInstance().reportUpdateToCore(getServerName(), j, EntityType.category);
+        }
     }
 
     // called from RPC client

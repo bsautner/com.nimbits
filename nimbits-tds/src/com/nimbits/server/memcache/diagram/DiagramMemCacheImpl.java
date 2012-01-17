@@ -16,7 +16,7 @@ import java.util.*;
  * Date: 1/3/12
  * Time: 2:43 PM
  */
-public class DiagramMemCacheImpl implements DiagramTransaction {
+public class DiagramMemCacheImpl implements DiagramTransactions {
     private User user;
 
     public DiagramMemCacheImpl(User u) {

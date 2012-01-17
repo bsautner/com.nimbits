@@ -1,4 +1,4 @@
-drop table nimbits_schema.ENTITY_DESCRIPTIONS;
+drop table if exists nimbits_schema.ENTITY_DESCRIPTIONS;
 
 create table nimbits_schema.ENTITY_DESCRIPTIONS (
   FK_SERVER INT NOT NULL,

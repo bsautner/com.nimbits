@@ -2,9 +2,11 @@ package com.nimbits.server.service;
 
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ExportType;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.entity.EntityDescription;
 import com.nimbits.server.dao.pointDescription.EntityJPATransactionFactory;
+import com.nimbits.server.dao.search.*;
 import com.nimbits.server.gson.GsonFactory;
 import org.apache.commons.lang3.StringUtils;
 
@@ -34,7 +36,7 @@ public class EntityDescriptionSearchServletImpl extends HttpServlet {
                 && !search.contains("}")) {
             return search;
         } else {
-            return "foo";
+            return "nimbits data";
         }
 
 
@@ -48,19 +50,20 @@ public class EntityDescriptionSearchServletImpl extends HttpServlet {
         resp.addHeader("Access-Control-Allow-Origin", "*");
 
 
-        String dangerousSearchText = request.getParameter(Const.PARAM_SEARCH);
-        String format = request.getParameter(Const.PARAM_FORMAT);
-        ExportType type;
-        if (StringUtils.isEmpty(format)) {
-            type = ExportType.json;
+        final String dangerousSearchText = request.getParameter(Const.PARAM_SEARCH);
+        final String format = request.getParameter(Const.PARAM_FORMAT);
+        final ExportType type = StringUtils.isEmpty(format) ?
+             ExportType.json :  ExportType.valueOf(format);
 
-        } else {
-            type = ExportType.valueOf(format);
+
+
+        final String safeSearch = safeSearchText(dangerousSearchText);
+        try {
+            SearchLogTransactionFactory.getInstance().addUpdateSearchLog(safeSearch);
+        } catch (NimbitsException ignored) {
+
         }
-
-
-        String safeSearch = safeSearchText(dangerousSearchText);
-        List<EntityDescription> result = EntityJPATransactionFactory.getInstance().searchEntityDescription(safeSearch);
+        final List<EntityDescription> result = EntityJPATransactionFactory.getInstance().searchEntityDescription(safeSearch);
         final PrintWriter out = resp.getWriter();
         String r;
         if (format.equals(ExportType.json)) {

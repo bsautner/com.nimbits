@@ -52,11 +52,6 @@ public class ConnectionRequest implements Connection {
     @Persistent
     private String uuid;
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
-
     public ConnectionRequest() {
     }
 

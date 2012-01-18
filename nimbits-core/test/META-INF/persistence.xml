@@ -4,6 +4,7 @@
     <persistence-unit name="persistenceUnit">
         <class>com.nimbits.server.orm.jpa.JpaEntityDescription</class>
         <class>com.nimbits.server.orm.jpa.JpaServer</class>
+        <class>com.nimbits.server.orm.jpa.JpaSearchLog</class>
         <properties>
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3307/nimbits_schema"/>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>

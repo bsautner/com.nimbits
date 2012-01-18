@@ -28,16 +28,12 @@ import javax.jdo.annotations.*;
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 public class DataPointIntelligenceEntity implements Intelligence {
 
-
-    private static final long serialVersionUID = 2L;
-
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private com.google.appengine.api.datastore.Key id;
 
     @Persistent(mappedBy = "dataPointIntelligenceEntity")
     private DataPoint point;
-
 
     @Persistent
     private Boolean enabled;

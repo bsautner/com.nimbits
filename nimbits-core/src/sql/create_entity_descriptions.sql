@@ -1,4 +1,5 @@
 drop table if exists nimbits_schema.ENTITY_DESCRIPTIONS;
+<<<<<<< HEAD
 drop table if exists nimbits_schema.SERVERS;
 
 
@@ -16,6 +17,8 @@ create table nimbits_schema.SERVERS (
 create unique index ID_SERVERS_UNIQUE on nimbits_schema.SERVERS (ID_SERVER);
 create unique index base_url_servers_UNIQUE on nimbits_schema.SERVERS (BASE_URL);
 
+=======
+>>>>>>> 25a7c4bdfd6f2de429e11d6b809c9457ee10380d
 
 create table nimbits_schema.ENTITY_DESCRIPTIONS (
   FK_SERVER INT NOT NULL,

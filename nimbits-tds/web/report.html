@@ -59,8 +59,8 @@ var uuid = getParameterByName("uuid");
 var count = getParameterByName("count");
 var responseObject;
 var hist = getParameterByName("hist");
-
-
+var labels = [];
+var pointNames = [];
 if (count == "") {
     count = 25;
 }
@@ -155,43 +155,52 @@ function getPoint(_callback, _base, _uuid, _count, _start, _end) {
 
 }
 
-function loadGraph(data, labels, pointNames, obj) {
+pts_info = function(e, x, pts, row) {
+
+    var str = "<span class=\"label\">" + new Date(x) + ") ";
+    for (var i = 0; i < pts.length; i++) {
+        var p = pts[i];
+        if (i) str += ", ";
+        var name;
+        for (var ix = 0; ix <= labels.length; ix++) {
+            if (p.name == "Y" + ix) {
+                name =pointNames[ix - 1];
+                break;
+            }
+
+        }
+        str += name + ": " + p.yval;
+    }
+    str += "</span>";
+
+    return str;
+};
+
+function loadGraph(data, obj) {
     var lines = [];
-    var xline;
+  //  var xline;
+
     graph = new Dygraph(
             document.getElementById("div_g"),
             data, {
 
                 connectSeparatedPoints:true,
-                //  labels:labels,
+                 labels:labels,
                 //showRangeSelector:true,
                 labelsDiv:"labels",
-                highlightCallback:function (e, x, pts) {
-                    for (var i = 0; i < pts.length; i++) {
-                        var y = pts[i].canvasy;
-                        lines[i].style.display = "";
-                        lines[i].style.top = y + "px";
-                        if (i == 0) xline.style.left = pts[i].canvasx + "px";
-                    }
+                highlightCallback: function(e, x, pts, row) {
+                    document.getElementById("labelsF").style.display='block';
+                    document.getElementById("labelsF").innerHTML = pts_info(e,x,pts,row);
 
-                    var fixed = document.getElementById("labels").innerHTML;
-
-                    for (var ix = 0; ix <= labels.length; ix++) {
-
-                        var rp = "Y" + ix;
-
-                        fixed = fixed.replace(rp, pointNames[ix - 1]);
-                    }
-
-                    document.getElementById("labelsF").innerHTML = fixed;
-                    xline.style.display = "";
                 },
 
                 unhighlightCallback:function (e) {
                     for (var i = 0; i < 2; i++) {
                         lines[i].style.display = "none";
                     }
-                    xline.style.display = "none";
+                    document.getElementById("labels").innerHTML = "";
+                    document.getElementById("labelsF").innerHTML = "";
+                   // xline.style.display = "none";
                 }
 
 
@@ -209,14 +218,14 @@ function loadGraph(data, labels, pointNames, obj) {
         lines.push(line);
     }
 
-    xline = document.createElement("div");
-    xline.style.display = "none";
-    xline.style.width = "1px";
-    xline.style.height = "100%";
-    xline.style.top = "0px";
-    xline.style.backgroundColor = "black";
-    xline.style.position = "absolute";
-    document.getElementById("div_g").appendChild(xline);
+//    xline = document.createElement("div");
+//    xline.style.display = "none";
+//    xline.style.width = "1px";
+//    xline.style.height = "100%";
+//    xline.style.top = "0px";
+//    xline.style.backgroundColor = "black";
+//    xline.style.position = "absolute";
+//    document.getElementById("div_g").appendChild(xline);
 
     if (obj.entityType == 2 && document.getElementById("yOption").checked) {
         setY();
@@ -227,8 +236,8 @@ function loadGraph(data, labels, pointNames, obj) {
 }
 function callback(obj) {
     var data = [];
-    var labels = [];
-    var pointNames = [];
+
+
 
 
     responseObject = obj;
@@ -274,7 +283,7 @@ function callback(obj) {
 
         document.getElementById("s4").innerHTML = obj.host + "/service/currentvalue?uuid=" + obj.uuid;
         document.getElementById("a4").href = obj.host + "/service/currentvalue?format=json&uuid=" + obj.uuid;
-        labels.push("Date");
+        labels.push("date");
         labels.push(obj.name);
         pointNames.push(obj.name);
         values = obj.values;
@@ -293,11 +302,10 @@ function callback(obj) {
                         + "</span><br />";
 
         document.getElementById("dataText").value = current.data;
-
         document.getElementById("meter").style.display = "block";
         document.getElementById("meter").src = "meter.html";
 
-        for (i = 0; i < values.length; i++) {
+        for (i = values.length-1; i > -1; i--) {
 
             var value = (eval('(' + values[i] + ')'));
             var date = new Date(value.timestamp);
@@ -326,7 +334,7 @@ function callback(obj) {
         document.getElementById("yOption").disabled = false;
         var count = 0;
         document.getElementById("status").innerHTML = "";
-        labels.push("Date");
+        labels.push("date");
 
         for (var idx = 0; idx < obj.points.length; idx++) {
             var px = obj.points[idx];
@@ -346,7 +354,7 @@ function callback(obj) {
 
             var c = 0;
 
-            for (var v = 0; v < px.values.length; v++) {
+            for (var v = px.values.length-1; v >-1 ; v--) {
                 var vx = px.values[v];
                 c++;
 
@@ -423,7 +431,7 @@ function callback(obj) {
 //        document.getElementById("startTime").value = fh + start.getHours() + ":" + fm + start.getMinutes() + ":" + fs + start.getSeconds();
 
 //        document.getElementById("endTime").value = fh + end.getHours() + ":" + fm + end.getMinutes() + ":" + fs + end.getSeconds();
-    var i = loadGraph(data, labels, pointNames, obj);
+    var i = loadGraph(data, obj);
 }
 
 function setY() {

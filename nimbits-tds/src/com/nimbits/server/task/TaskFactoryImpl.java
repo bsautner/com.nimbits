@@ -148,6 +148,16 @@ public class TaskFactoryImpl implements TaskFactory {
     }
 
     @Override
+    public void startUpgradeTask() {
+
+
+        final Queue queue = QueueFactory.getQueue(Const.TASK_UPGRADE);
+
+        queue.add(TaskOptions.Builder.withUrl(Const.PATH_UPGRADE_TASK));
+
+    }
+
+    @Override
     public void startMoveCachedValuesToStoreTask(Point point) {
         final String json = gson.toJson(point);
 

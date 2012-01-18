@@ -226,6 +226,14 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>UpgradeTask</servlet-name>
+        <servlet-class>com.nimbits.server.task.UpgradeTask</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpgradeTask</servlet-name>
+        <url-pattern>/task/upgrade</url-pattern>
+    </servlet-mapping>
+    <servlet>
         <servlet-name>MoveCachedValuesToStoreTask</servlet-name>
         <servlet-class>com.nimbits.server.task.MoveCachedValuesToStoreTask</servlet-class>
     </servlet>

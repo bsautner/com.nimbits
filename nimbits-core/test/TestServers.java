@@ -34,7 +34,7 @@ public class TestServers {
              ServerTransactionFactory.getInstance().deleteServer(read);
         }
         EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress("b@b.com");
-        Server server = ServerModelFactory.createServer(host, emailAddress, "1.2.0");
+        Server server = ServerModelFactory.createServer(host, emailAddress, Const.CONST_SERVER_VERSION);
         createdServer =  ServerTransactionFactory.getInstance().addUpdateServer(server);
         assertNotNull(createdServer);
         assertTrue(createdServer.getIdServer() > 0);
@@ -43,13 +43,13 @@ public class TestServers {
 
     @After
     public void deleteServer() {
-          ServerTransactionFactory.getInstance().deleteServer(createdServer);
+       //   ServerTransactionFactory.getInstance().deleteServer(createdServer);
     }
 
     @Test(expected = PersistenceException.class)
     public void testUniqueConstraint() throws NimbitsException {
       EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress("b@b.com");
-      Server server = ServerModelFactory.createServer(host, emailAddress, "1.2.0");
+      Server server = ServerModelFactory.createServer(host, emailAddress, Const.CONST_SERVER_VERSION);
       createdServer =  ServerTransactionFactory.getInstance().addUpdateServer(server);
 
     }

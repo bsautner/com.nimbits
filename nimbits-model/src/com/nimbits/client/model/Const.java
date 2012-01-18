@@ -22,7 +22,7 @@ import com.nimbits.client.model.email.EmailAddress;
  * Time: 10:35 AM
  */
 public class Const {
-    public static final String CONST_SERVER_VERSION = "3.3.1.15";
+    public static final String CONST_SERVER_VERSION = "3.3.1.18";
     public static final long DEFAULT_SERIAL_VERSION = 12L;
     public static final String CACHE_KEY_PREFIX = CONST_SERVER_VERSION + DEFAULT_SERIAL_VERSION;
     public static final String PATH_NIMBITS_CORE_SERVERS_URL = "http://nimbits.com:8080/core/servers";
@@ -177,6 +177,7 @@ public class Const {
     public static final String PATH_OBJECT_PROTECTION_URL = "http://www.nimbits.com/app/diagram_protection.html";
     public static final String PATH_POINT_MAINT_TASK = "/task/pointmaint";
     public static final String PATH_CATEGORY_MAINT_TASK = "/task/categorymaint";
+    public static final String PATH_UPGRADE_TASK = "/task/upgrade";
     public static final String PATH_MOVE_TASK = "/task/move";
     public static final String PATH_POINT_SERVICE = "/service/point";
     public static final String PATH_SERIES_SERVICE = "/service/series";
@@ -206,6 +207,7 @@ public class Const {
     public static final String TASK_POINT_MAINT = "pointmaint";
 
     public static final String TASK_CATEGORY_MAINT = "categorymaint";
+    public static final String TASK_UPGRADE = "upgrade";
     public static final String TASK_MOVE = "move";
     public static final String TEXT_NEW_CATEGORY = "Create category";
     public static final String TRANSACTION_OPTIONAL = "transactions-optional";

@@ -21,7 +21,6 @@ import com.nimbits.client.model.category.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.diagram.*;
 import com.nimbits.client.model.user.*;
-import com.nimbits.server.dao.diagram.*;
 import com.nimbits.server.orm.*;
 import com.nimbits.server.pointcategory.*;
 
@@ -34,7 +33,7 @@ import java.util.*;
  * Date: 5/20/11
  * Time: 4:14 PM
  */
-public class DiagramDaoImpl implements DiagramTransaction {
+public class DiagramDaoImpl implements DiagramTransactions {
     private User user;
 
     public DiagramDaoImpl(User u) {

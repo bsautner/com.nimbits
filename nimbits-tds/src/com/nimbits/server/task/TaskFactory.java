@@ -46,4 +46,6 @@ public interface TaskFactory {
 
     void startCategoryMaintTask(final User user);
 
+    void startUpgradeTask();
+
 }

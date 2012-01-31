@@ -14,23 +14,18 @@
 package com.nimbits.client.service.datapoints;
 
 
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.nimbits.client.enums.AlertType;
-import com.nimbits.client.enums.ExportType;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.exceptions.PointExistsException;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.CategoryName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointName;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.exceptions.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.category.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.subscription.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @RemoteServiceRelativePath(Const.PARAM_POINT)
 public interface PointService extends RemoteService {
@@ -91,4 +86,6 @@ public interface PointService extends RemoteService {
     Point publishPoint(User u, Point p) throws NimbitsException;
 
     List<Point> getAllPoints();
+
+    Subscription subscribe(Point p, Subscription subscription) throws NimbitsException;
 }

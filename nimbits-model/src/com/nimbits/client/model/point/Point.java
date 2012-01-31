@@ -14,12 +14,11 @@
 package com.nimbits.client.model.point;
 
 import com.nimbits.client.enums.*;
-import com.nimbits.client.model.intelligence.Intelligence;
-import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.intelligence.*;
+import com.nimbits.client.model.value.*;
 
-import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 /**
  * Created by bsautner
@@ -215,4 +214,6 @@ public interface Point extends Serializable {
     Calculation getCalculation();
 
     public EntityType getEntityType();
+
+
 }

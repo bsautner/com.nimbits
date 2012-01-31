@@ -321,6 +321,14 @@ public class Const {
     public static final String PARAM_CHANNEL = "channel";
     public static final String CACHE_KEY_SYSTEM = "SYSTEM_CACHE";
     public static final String CACHE_KEY_POINT_PREFIX = "POINT_CACHE";
+    public static final String ACTION_SUBSCRIBE = "subscribe";
+    public static final String ACTION_NONE = "none";
+    public static final String ACTION_ANDROID = "android";
+    public static final String ACTION_FACEBOOK = "facebook";
+    public static final String ACTION_TWITTER = "twitter";
+    public static final String ACTION_TWITTER_FINISH_REG = "twitterFinishReg";
+    public static final String ACTION_REPORT = "report";
+    public static final String ACTION_DIAGRAM = "diagram";
 
     public static String getConnectionInviteEmail(final EmailAddress email) {
         return "<P STYLE=\"margin-bottom: 0in\"> " + email.getValue() +

@@ -53,8 +53,8 @@ public class nimbits implements EntryPoint {
     private ClientType clientType;
 
 
-    private void loadLayout(final LoginInfo loginInfo, final boolean doAndroid,
-                            final Map<String, String> settings) throws NimbitsException {
+    private void loadLayout(final LoginInfo loginInfo, final Action action,
+                            final Map<String, String> settings)  {
 
         final ContentPanel contentPanel = new ContentPanel(new FillLayout());
 
@@ -67,10 +67,10 @@ public class nimbits implements EntryPoint {
 
 
         viewport = new Viewport();
-        if (doAndroid) {
+        if (action.equals(Action.android)) {
             viewport.setLayout(new FillLayout());
             viewport.setBorders(false);
-            mainPanel = new MainPanel(loginInfo, doAndroid, false);
+            mainPanel = new MainPanel(loginInfo, true, false);
             contentPanel.add(mainPanel);
             contentPanel.setHeaderVisible(false);
             contentPanel.setLayout(new FillLayout());
@@ -79,9 +79,7 @@ public class nimbits implements EntryPoint {
         else {
             viewport.setLayout(new BorderLayout());
             viewport.setBorders(false);
-
             mainPanel = new MainPanel(loginInfo, false, loadConnections);
-
             contentPanel.setHeaderVisible(true);
             if (loginInfo != null) {
                 contentPanel.setHeading(heading + " " + loginInfo.getEmailAddress().getValue());
@@ -161,11 +159,11 @@ public class nimbits implements EntryPoint {
     void showAnnotatedTimeLine(final Point point) {
 
         final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
-        final RecordedValueServiceAsync dataService = GWT.create(RecordedValueService.class);
+     //   final RecordedValueServiceAsync dataService = GWT.create(RecordedValueService.class);
         final ContentPanel p = new ContentPanel();
         p.setHeading(point.getName().getValue());
 
-        final List<Point> points = Arrays.asList(point);
+       // final List<Point> points = Arrays.asList(point);
         //the chart panel will determine the end date for the first show
         final AnnotatedTimeLinePanel annotatedTimeLinePanel = new AnnotatedTimeLinePanel(false, Const.DEFAULT_CHART_NAME);
         //  final Date start = new Date(result.getTime() - (1000 * 60 * 60 * 24) );
@@ -203,7 +201,7 @@ public class nimbits implements EntryPoint {
         mainPanel.addCategoryClickedListeners(new NavigationEventProvider.CategoryClickedListener() {
             //need to getInstance a fresh copy here
             @Override
-            public void onCategoryClicked(final Category c, final boolean readOnly) throws NimbitsException {
+            public void onCategoryClicked(final Category c, final boolean readOnly)  {
 
                 final CategoryServiceAsync categoryService = GWT.create(CategoryService.class);
                 categoryService.getCategoryByName(c.getName(), true, true, new AsyncCallback<Category>() {
@@ -220,11 +218,8 @@ public class nimbits implements EntryPoint {
                         if (category.getPoints() != null) {
                             for (final Point p : category.getPoints()) {
                                 p.setReadOnly(readOnly);
-                                try {
-                                    mainPanel.addPoint(p);
-                                } catch (NimbitsException e) {
-                                    GWT.log(e.getMessage());
-                                }
+                                mainPanel.addPoint(p);
+
                             }
                         }
                     }
@@ -235,7 +230,7 @@ public class nimbits implements EntryPoint {
         mainPanel.addPointClickedListeners(new NavigationEventProvider.PointClickedListener() {
 
             @Override
-            public void onPointClicked(final Point p) throws NimbitsException {
+            public void onPointClicked(final Point p)  {
                 mainPanel.addPoint(p);
             }
 
@@ -256,25 +251,26 @@ public class nimbits implements EntryPoint {
 
     @Override
     public void onModuleLoad() {
+        final String clientTypeParam = Location.getParameter(Const.PARAM_CLIENT);
+        GWT.log("onModuleLoad");
 
-        final String uuid = Location.getParameter(Const.PARAM_UUID);
+        String uuid = Location.getParameter(Const.PARAM_UUID);
+        final String actionParam = Location.getParameter(Const.PARAM_ACTION);
         final String fb = Location.getParameter(Const.PARAM_FACEBOOK);
         final String code = Location.getParameter(Const.PARAM_CODE);
         final String tw = Location.getParameter(Const.PARAM_TWITTER);
         final String oauth_token = Location.getParameter(Const.PARAM_OAUTH);
         final String diagramUUID = Location.getParameter(Const.PARAM_DIAGRAM);
-        final String clientTypeParam = Location.getParameter(Const.PARAM_CLIENT);
-        final String debug = Location.getParameter(Const.PARAM_DEBUG);
+
+//        final String debug = Location.getParameter(Const.PARAM_DEBUG);
         boolean doAndroid = false;
 
         final boolean doFacebook = ((fb != null) || (code != null));
         final boolean doTwitter = ((tw != null) && (oauth_token == null));
         final boolean doTwitterFinish = ((tw != null) && (oauth_token != null));
         final boolean doDiagram = (diagramUUID != null);
-
-
-
-        final boolean doDebug = (debug != null);
+        boolean doSubscribe = (uuid != null && actionParam != null && actionParam.equals(Action.subscribe.name()));
+        Action action = Action.none;
 
         if (Cookies.getCookieNames().contains(Const.PARAM_CLIENT) && Utils.isEmptyString(clientTypeParam)) {
             clientType = ClientType.valueOf(Cookies.getCookie(Const.PARAM_CLIENT));
@@ -284,20 +280,40 @@ public class nimbits implements EntryPoint {
             doAndroid = true;
         } else {
             clientType = ClientType.other;
+        }
 
+        //handles the round trip from login screen.
+
+        if (doSubscribe && ! Cookies.getCookieNames().contains(Action.subscribe.name())) {
+            Cookies.setCookie(Action.subscribe.name(), uuid);
+            action = Action.subscribe;
+        }
+        else if (uuid != null && ! doSubscribe) {
+            action = Action.report;
+        }
+        else if (! doSubscribe && Cookies.getCookieNames().contains(Action.subscribe.name())) {
+            uuid = Cookies.getCookie(Action.subscribe.name());
+            Cookies.removeCookie(Action.subscribe.name());
+            action = Action.subscribe;
+        }
+        else if (doAndroid) {
+            action = Action.android;
+        }
+        else if (doDiagram) {
+            action = Action.diagram;
+        }
+        else if (doTwitter) {
+            action = Action.twitter;
+        }
+        else if (doTwitterFinish) {
+            action = Action.twitterFinishReg;
+        }
+        else if (doFacebook) {
+            action = Action.facebook;
         }
 
         Cookies.setCookie(Const.PARAM_CLIENT, clientType.name());
-        if (doDiagram) {
-            processDiagramRequest(diagramUUID, clientType);
-        } else {
-            try {
-                loadPortalView(uuid, code, oauth_token, doFacebook, doTwitter, doTwitterFinish, doAndroid);
-            } catch (NimbitsException e) {
-                Window.alert(e.getMessage());
-            }
-        }
-
+        loadPortalView(uuid, code, oauth_token, action);
 
     }
 
@@ -305,24 +321,25 @@ public class nimbits implements EntryPoint {
     private void processDiagramRequest(final String diagramName, final ClientType clientType) {
         DiagramServiceAsync diagramService = GWT.create(DiagramService.class);
 
-            diagramService.getDiagramByUuid(diagramName, new AsyncCallback<Diagram>() {
-                @Override
-                public void onFailure(Throwable throwable) {
-                    handleError(throwable);
-                }
+        diagramService.getDiagramByUuid(diagramName, new AsyncCallback<Diagram>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                handleError(throwable);
+            }
 
-                @Override
-                public void onSuccess(final Diagram diagram) {
-                    loadDiagramView(diagram, clientType);
-                }
-            });
+            @Override
+            public void onSuccess(final Diagram diagram) {
+                loadDiagramView(diagram, clientType);
+            }
+        });
 
     }
 
 
-    private void loadPortalView(final String uuid, final String code, final String oauth_token, final boolean doFacebook,
-                                final boolean doTwitter, final boolean doTwitterFinish,
-                                final boolean doAndroid) throws NimbitsException {
+    private void loadPortalView(final String uuid,
+                                final String code,
+                                final String oauth_token,
+                                final Action action){
         SettingsServiceAsync settingService = GWT.create(SettingsService.class);
         settingService.getSettings(new AsyncCallback<Map<String, String>>() {
 
@@ -334,35 +351,45 @@ public class nimbits implements EntryPoint {
 
             @Override
             public void onSuccess(final Map<String, String> settings) {
-
-                if (uuid != null) {
-                    try {
+                switch (action) {
+                    case report:
                         loadSinglePointDisplay(uuid);
-                    } catch (NimbitsException e) {
-                        Window.alert(e.getMessage());
-                    }
-                } else if (doFacebook) {
-                    finishFacebookAuthentication(settings, code);
-                } else if (doTwitterFinish) {
-                    try {
-                        finishTwitterAuthentication(settings, oauth_token, doTwitter);
-                    } catch (NimbitsException e) {
-                        Window.alert(e.getMessage());
-                    }
-                } else {
-
-                    try {
-                        loadPortal(doTwitter, doAndroid, settings);
-                    } catch (NimbitsException e) {
-                        Window.alert(e.getMessage());
-                    }
+                        break;
+                    case diagram:
+                        processDiagramRequest(uuid, clientType);
+                        break;
+                    case facebook:
+                        finishFacebookAuthentication(settings, code);
+                        break;
+                    case twitterFinishReg:
+                        finishTwitterAuthentication(settings, oauth_token, action);
+                        break;
+                    case subscribe: case none:
+                        loadPortal(action, settings, uuid);
+                        showSubscriptionPanel(uuid);
+                        Cookies.removeCookie(Action.subscribe.name());
+                        break;
+                    default:
+                        loadLogin();
 
                 }
+
 
             }
 
         });
     }
+
+    private void showSubscriptionPanel(final String uuid) {
+        SubscribePanel dp = new SubscribePanel(uuid);
+        final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
+        w.setWidth(500);
+        w.setHeight(400);
+        w.setHeading("Subscribe");
+        w.add(dp);
+        w.show();
+    }
+
 
     private void finishFacebookAuthentication(final Map<String, String> settings, final String code) {
         getViewport();
@@ -375,10 +402,8 @@ public class nimbits implements EntryPoint {
         RootPanel.get("main").add(viewport);
     }
 
-    private void finishTwitterAuthentication(final Map<String, String> settings, final String oauth_token, final boolean doTwitter) throws NimbitsException {
+    private void finishTwitterAuthentication(final Map<String, String> settings, final String oauth_token, final Action action) {
         TwitterServiceAsync twitterService = GWT.create(TwitterService.class);
-
-
         twitterService.updateUserToken(oauth_token,
                 new AsyncCallback<Void>() {
 
@@ -391,11 +416,8 @@ public class nimbits implements EntryPoint {
                     @Override
                     public void onSuccess(Void result) {
                         Window.alert(Const.MESSAGE_TWITTER_ADDED);
-                        try {
-                            loadPortal(doTwitter, false, settings);
-                        } catch (NimbitsException e) {
-                            Window.alert(e.getMessage());
-                        }
+                        loadPortal(action, settings, null);
+
                     }
 
                 });
@@ -408,11 +430,11 @@ public class nimbits implements EntryPoint {
         viewport.setBorders(false);
     }
 
-    private void loadSinglePointDisplay(final String uuid) throws NimbitsException {
+    private void loadSinglePointDisplay(final String uuid) {
         Location.replace("report.html?uuid=" + uuid);
     }
 
-    private void loadPortal(final boolean doTwitter, final boolean doAndroid, final Map<String, String> settings) throws NimbitsException {
+    private void loadPortal(final Action action, final Map<String, String> settings, final String uuid)   {
         LoginServiceAsync loginService = GWT
                 .create(LoginService.class);
         loginService.login(GWT.getHostPageBaseURL(),
@@ -425,37 +447,39 @@ public class nimbits implements EntryPoint {
 
                     @Override
                     public void onSuccess(LoginInfo result) {
-
-
                         loginInfo = result;
-
                         if (loginInfo.isLoggedIn()) {
+                            switch (action) {
+                                case android: case none:
+                                    loadLayout(loginInfo, action, settings);
+                                    break;
+                                case twitter:
+                                    final TwitterServiceAsync twitterService = GWT.create(TwitterService.class);
+                                    twitterService.twitterAuthorise(loginInfo.getEmailAddress(), new AsyncCallback<String>() {
 
-                            try {
-                                loadLayout(loginInfo, doAndroid, settings);
-                            } catch (NimbitsException ignored) {
+                                        @Override
+                                        public void onFailure(Throwable caught) {
+                                            GWT.log(caught.getMessage(), caught);
+                                        }
+
+                                        @Override
+                                        public void onSuccess(String result) {
+
+                                            Location.replace(result);
+                                        }
+
+                                    });
+                                    break;
+                                case subscribe:
+
+                                    loadLayout(loginInfo, action, settings);
+                                    break;
+
+                                default:
+                                    loadLogin();
 
                             }
-                            if (doTwitter) {
-                                final TwitterServiceAsync twitterService = GWT.create(TwitterService.class);
 
-                                twitterService.twitterAuthorise(loginInfo.getEmailAddress(), new AsyncCallback<String>() {
-
-                                    @Override
-                                    public void onFailure(Throwable caught) {
-                                        GWT.log(caught.getMessage(), caught);
-                                    }
-
-                                    @Override
-                                    public void onSuccess(String result) {
-
-                                        Location.replace(result);
-                                    }
-
-                                });
-
-
-                            }
 
                         } else {
                             loadLogin();

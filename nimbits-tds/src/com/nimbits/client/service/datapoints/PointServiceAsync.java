@@ -18,6 +18,7 @@ import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.category.*;
 import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.subscription.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 
@@ -89,4 +90,6 @@ public interface PointServiceAsync {
     void publishPoint(final User u, final Point p, final AsyncCallback<Point> async);
 
     void getAllPoints(final AsyncCallback<List<Point>> async);
+
+    void subscribe(Point p, Subscription subscription, AsyncCallback<Subscription> async);
 }

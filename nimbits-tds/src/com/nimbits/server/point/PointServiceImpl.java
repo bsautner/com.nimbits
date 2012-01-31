@@ -27,6 +27,7 @@ import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.point.PointName;
+import com.nimbits.client.model.subscription.*;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.service.datapoints.PointService;
@@ -35,6 +36,7 @@ import com.nimbits.server.core.CoreFactory;
 import com.nimbits.server.export.ExportHelperFactory;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.pointcategory.CategoryServiceFactory;
+import com.nimbits.server.subscription.*;
 import com.nimbits.server.task.TaskFactoryLocator;
 import com.nimbits.server.user.UserServiceFactory;
 import com.nimbits.server.user.UserTransactionFactory;
@@ -346,6 +348,17 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     @Override
     public List<Point> getAllPoints() {
         return PointTransactionsFactory.getInstance(null).getAllPoints();
+    }
+
+    @Override
+    public Subscription subscribe(Point p, Subscription subscription) throws NimbitsException {
+        final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
+                this.getThreadLocalRequest());
+        subscription.setSubscriberUUID(u.getUuid());
+        subscription.setSubscribedPointUUID(p.getUUID());
+        return SubscriptionTransactionFactory.getInstance(u).subscribe(subscription);
+
+
     }
 
     @Override

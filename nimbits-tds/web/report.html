@@ -178,14 +178,14 @@ pts_info = function(e, x, pts, row) {
 
 function loadGraph(data, obj) {
     var lines = [];
-  //  var xline;
+    //  var xline;
 
     graph = new Dygraph(
             document.getElementById("div_g"),
             data, {
 
                 connectSeparatedPoints:true,
-                 labels:labels,
+                labels:labels,
                 //showRangeSelector:true,
                 labelsDiv:"labels",
                 highlightCallback: function(e, x, pts, row) {
@@ -200,7 +200,7 @@ function loadGraph(data, obj) {
                     }
                     document.getElementById("labels").innerHTML = "";
                     document.getElementById("labelsF").innerHTML = "";
-                   // xline.style.display = "none";
+                    // xline.style.display = "none";
                 }
 
 
@@ -237,28 +237,23 @@ function loadGraph(data, obj) {
 function callback(obj) {
     var data = [];
 
-
-
-
     responseObject = obj;
     document.getElementById("all").style.display = "block";
     document.getElementById("loading").style.display = "none";
 
+    document.getElementById("name").innerHTML = obj.name;
+    document.getElementById("desc").innerHTML = obj.description;
+    document.getElementById("uuid").innerHTML = "<a href='report.html?uuid=" + obj.uuid + "'>" + obj.uuid + "</a>";
 
+    document.getElementById("QR").src = "https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl=" +
+            obj.host + "?uuid=" + obj.uuid;
+    //"&choe=UTF-8";
 
-        document.getElementById("name").innerHTML = obj.name;
-        document.getElementById("desc").innerHTML = obj.description;
-        document.getElementById("uuid").innerHTML = "<a href='report.html?uuid=" + obj.uuid + "'>" + obj.uuid + "</a>";
+    document.getElementById("s1").innerHTML = obj.host + "/service/point?format=json&uuid=" + obj.uuid;
+    document.getElementById("a1").href = obj.host + "/service/point?format=json&uuid=" + obj.uuid;
 
-        document.getElementById("QR").src = "https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl=" +
-                obj.host + "?uuid=" + obj.uuid;
-        //"&choe=UTF-8";
-
-        document.getElementById("s1").innerHTML = obj.host + "/service/point?format=json&uuid=" + obj.uuid;
-        document.getElementById("a1").href = obj.host + "/service/point?format=json&uuid=" + obj.uuid;
-
-        document.getElementById("s2").innerHTML = obj.host + "/service/point?count=100&uuid=" + obj.uuid;
-        document.getElementById("a2").href = obj.host + "/service/point?count=20&uuid=" + obj.uuid;
+    document.getElementById("s2").innerHTML = obj.host + "/service/point?count=100&uuid=" + obj.uuid;
+    document.getElementById("a2").href = obj.host + "/service/point?count=20&uuid=" + obj.uuid;
 
 
 
@@ -280,7 +275,7 @@ function callback(obj) {
         document.getElementById("yOption").disabled = true;
         document.getElementById("s3").innerHTML = obj.host + "/service/currentvalue?uuid=" + obj.uuid;
         document.getElementById("a3").href = obj.host + "/service/currentvalue?uuid=" + obj.uuid;
-
+        document.getElementById("subscribe").href = obj.host + "/nimbits.html?action=subscribe&uuid=" + obj.uuid;
         document.getElementById("s4").innerHTML = obj.host + "/service/currentvalue?uuid=" + obj.uuid;
         document.getElementById("a4").href = obj.host + "/service/currentvalue?format=json&uuid=" + obj.uuid;
         labels.push("date");
@@ -474,19 +469,31 @@ function setStep() {
 
 </script>
 </head>
-<body>
+<body style="padding-top: 40px;">
+<div class="topbar">
+    <div class="topbar-inner">
+        <div class="container">
+            <h3><a href="http://www.nimbits.com">nimbits.com</a></h3>
 
+
+            <ul class="nav">
+                <li><a href="#" id="subscribe">Subscribe To this point</a></li>
+
+                <li><a href="http://app.nimbits.com" target="_blank">Launch Nimbits</a></li>
+            </ul>
+            </div>
+        </div>
+
+    </div>
+<br>
 <div id="all" style="display: none;">
-    <div class="container">
 
-        <h5><a href="http://www.nimbits.com">nimbits.com</a> report</h5>
+    <div class="container">
 
         <div id="detailsRow" class="row">
             <div class="span3">
-                <img id="QR" width="100" height="100" alt="QR" src=""/>
-                <br/>
 
-                <div id="meter"></div>
+                <img align="left" id="QR" width="100" height="100" alt="QR" src=""/>
 
             </div>
             <div class="span6">
@@ -494,7 +501,7 @@ function setStep() {
                 <h6>Name</h6>
 
                 <p id="name"></p>
-                <h6>Description</h6>
+                 <h6>Description</h6>
 
                 <p id="desc"></p>
                 <h6>URL</h6>

@@ -18,7 +18,6 @@ import com.extjs.gxt.ui.client.util.*;
 import com.extjs.gxt.ui.client.widget.*;
 import com.extjs.gxt.ui.client.widget.layout.*;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.category.*;
 import com.nimbits.client.model.diagram.*;
@@ -38,7 +37,7 @@ public class MainPanel extends NavigationEventProvider {
         navTree.addCategoryClickedListeners(new CategoryClickedListener() {
 
             @Override
-            public void onCategoryClicked(final Category c, boolean readOnly) throws NimbitsException {
+            public void onCategoryClicked(final Category c, boolean readOnly)  {
 
                 notifyCategoryClickedListener(c, readOnly);
 
@@ -49,7 +48,7 @@ public class MainPanel extends NavigationEventProvider {
         navTree.addPointClickedListeners(new PointClickedListener() {
 
             @Override
-            public void onPointClicked(final Point p) throws NimbitsException {
+            public void onPointClicked(final Point p) {
 
                 notifyPointClickedListener(p);
             }
@@ -70,7 +69,7 @@ public class MainPanel extends NavigationEventProvider {
         navTree.addPointDeletedListeners(new PointDeletedListener() {
 
             @Override
-            public void onPointDeleted(final Point c) throws NimbitsException {
+            public void onPointDeleted(final Point c)  {
                 notifyPointDeletedListener(c);
                 center.removePoint(c);
             }
@@ -80,7 +79,7 @@ public class MainPanel extends NavigationEventProvider {
         navTree.addDiagramDeletedListeners(new DiagramDeletedListener() {
 
             @Override
-            public void onDiagramDeleted(final Diagram c, final boolean readOnly) throws NimbitsException {
+            public void onDiagramDeleted(final Diagram c, final boolean readOnly) {
                 notifyDiagramDeletedListener(c, readOnly);
             }
 
@@ -91,12 +90,12 @@ public class MainPanel extends NavigationEventProvider {
     }
 
 
-    public void addPoint(final Point point) throws NimbitsException {
+    public void addPoint(final Point point)  {
         center.addPoint(point);
     }
 
 
-    public MainPanel(final LoginInfo loginInfo, final boolean doAndroid, final boolean loadConnections) throws NimbitsException {
+    public MainPanel(final LoginInfo loginInfo, final boolean doAndroid, final boolean loadConnections)   {
 
         if (doAndroid) {
             loadAndroidLayout(loginInfo);
@@ -107,7 +106,7 @@ public class MainPanel extends NavigationEventProvider {
 
     }
 
-    private void loadAndroidLayout(LoginInfo loginInfo) throws NimbitsException {
+    private void loadAndroidLayout(LoginInfo loginInfo)  {
         final FillLayout layout = new FillLayout();
         this.emailAddress = loginInfo.getEmailAddress();
         setLayout(layout);
@@ -128,7 +127,7 @@ public class MainPanel extends NavigationEventProvider {
 
     }
 
-    private void loadBorderLayout(final LoginInfo loginInfo,final boolean loadConnections) throws NimbitsException {
+    private void loadBorderLayout(final LoginInfo loginInfo,final boolean loadConnections)   {
         final BorderLayout layout = new BorderLayout();
         this.emailAddress = loginInfo.getEmailAddress();
         setLayout(layout);
@@ -180,13 +179,13 @@ public class MainPanel extends NavigationEventProvider {
     }
 
 
-    private ConnectionPanel createConnections(final EmailAddress email) throws NimbitsException {
+    private ConnectionPanel createConnections(final EmailAddress email)   {
         final ConnectionPanel connections = new ConnectionPanel(email);
 
         connections.addCategoryClickedListeners(new CategoryClickedListener() {
 
             @Override
-            public void onCategoryClicked(final Category c, boolean readOnly) throws NimbitsException {
+            public void onCategoryClicked(final Category c, boolean readOnly)  {
 
                 notifyCategoryClickedListener(c, readOnly);
 
@@ -197,7 +196,7 @@ public class MainPanel extends NavigationEventProvider {
         connections.addPointClickedListeners(new PointClickedListener() {
 
             @Override
-            public void onPointClicked(final Point p) throws NimbitsException {
+            public void onPointClicked(final Point p){
 
                 notifyPointClickedListener(p);
             }

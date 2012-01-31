@@ -170,11 +170,8 @@ class PointGridPanel extends NavigationEventProvider {
         updater = new Timer() {
             @Override
             public void run() {
-                try {
-                    updateValues();
-                } catch (NimbitsException e) {
-                    GWT.log(e.getMessage(), e);
-                }
+              updateValues();
+
             }
         };
         updater.scheduleRepeating(Const.DEFAULT_TIMER_UPDATE_SPEED);
@@ -190,7 +187,7 @@ class PointGridPanel extends NavigationEventProvider {
         super.onDetach();
     }
 
-    public void addPoint(final Point point) throws NimbitsException {
+    public void addPoint(final Point point)  {
         if (!points.containsKey(point.getName())) {
             points.put(point.getName(), point);
 
@@ -202,7 +199,7 @@ class PointGridPanel extends NavigationEventProvider {
     }
 
 
-    private void updateValues() throws NimbitsException {
+    private void updateValues() {
 
 
         store.commitChanges();
@@ -264,14 +261,8 @@ class PointGridPanel extends NavigationEventProvider {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
-
-
-                try {
-                    updateValues();
-                } catch (NimbitsException ignored) {
-
-                }
-            }
+                     updateValues();
+             }
 
         });
 

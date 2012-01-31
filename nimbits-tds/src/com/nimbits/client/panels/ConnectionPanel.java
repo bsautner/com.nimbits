@@ -59,14 +59,14 @@ class ConnectionPanel extends NavigationEventProvider {
         userList.addCategoryClickedListeners(new CategoryClickedListener() {
 
             @Override
-            public void onCategoryClicked(final Category c, boolean readOnly) throws NimbitsException {
+            public void onCategoryClicked(final Category c, boolean readOnly) {
                 notifyCategoryClickedListener(c, readOnly);
             }
         });
 
         userList.addPointClickedListeners(new PointClickedListener() {
             @Override
-            public void onPointClicked(Point p) throws NimbitsException {
+            public void onPointClicked(Point p){
                 notifyPointClickedListener(p);
             }
         });
@@ -85,7 +85,7 @@ class ConnectionPanel extends NavigationEventProvider {
 
     }
 
-    public ConnectionPanel(final EmailAddress email) throws NimbitsException {
+    public ConnectionPanel(final EmailAddress email)  {
         this.email = email;
 
         mainPanel.setTopComponent(toolbar());
@@ -105,7 +105,7 @@ class ConnectionPanel extends NavigationEventProvider {
 
     }
 
-    private ToolBar toolbar() throws NimbitsException {
+    private ToolBar toolbar()  {
         final ToolBar t = new ToolBar();
         t.setBorders(false);
         ButtonGroup group = new ButtonGroup(1);

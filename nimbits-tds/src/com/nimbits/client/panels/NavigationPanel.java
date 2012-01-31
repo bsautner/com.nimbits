@@ -640,7 +640,7 @@ class NavigationPanel extends NavigationEventProvider {
                     CategoryPropertyPanel dp = new CategoryPropertyPanel(c, c.isReadOnly());
                     dp.addCategoryDeletedListeners(new CategoryDeletedListener() {
                         @Override
-                        public void onCategoryDeleted(Category c, boolean readOnly) throws NimbitsException {
+                        public void onCategoryDeleted(Category c, boolean readOnly)  {
                             categoryMap.remove(c.getName());
                         }
                     });
@@ -870,11 +870,8 @@ class NavigationPanel extends NavigationEventProvider {
                             for (ModelData modelData : categoryModelToDelete.getChildren()) {
                                 GxtPointModel pointModel = (GxtPointModel) modelData;
                                 Point point = pointMap.get(pointModel.getName());
-                                try {
-                                    notifyPointDeletedListener(point);
-                                } catch (NimbitsException e) {
-                                    GWT.log(e.getMessage(), e);
-                                }
+                                notifyPointDeletedListener(point);
+
                             }
 
                             tree.getStore().remove(categoryModelToDelete);
@@ -930,25 +927,16 @@ class NavigationPanel extends NavigationEventProvider {
                 // String icon = selectedFolder.getInstance("icon");
 
                 if (selectedFolder instanceof GxtPointCategoryModel) {
-                    try {
-
-
-                        final Category category = categoryMap.get(((GxtPointCategoryModel) selectedFolder).getName());
+                     final Category category = categoryMap.get(((GxtPointCategoryModel) selectedFolder).getName());
 
                         notifyCategoryClickedListener(category, isConnectionPanel);
-                    } catch (NimbitsException e) {
-                        GWT.log(e.getMessage(), e);
-                    }
+
                 } else if (selectedFolder instanceof GxtPointModel) {
                     Point point = pointMap.get(((GxtPointModel) selectedFolder).getName());
                     point.setReadOnly(isConnectionPanel);
                     point.setClientType(ClientType.other);
+                    notifyPointClickedListener(point);
 
-                    try {
-                        notifyPointClickedListener(point);
-                    } catch (NimbitsException e) {
-                        GWT.log(e.getMessage());
-                    }
                 } else if (selectedFolder instanceof GxtDiagramModel) {
                     Diagram diagram = diagramMap.get(((GxtDiagramModel) selectedFolder).getName());
                     diagram.setClientType(ClientType.other);
@@ -980,12 +968,10 @@ class NavigationPanel extends NavigationEventProvider {
 
                         @Override
                         public void onSuccess(Void aVoid) {
-                            try {
+
                                 notifyPointDeletedListener(pointToDelete);
                                 GWT.log("Deleted " + pointToDelete.getName().getValue());
-                            } catch (NimbitsException e) {
-                                GWT.log(e.getMessage(), e);
-                            }
+
 
                             tree.getStore().remove(pointModelToDelete);
                         }
@@ -1010,14 +996,9 @@ class NavigationPanel extends NavigationEventProvider {
 
                     @Override
                     public void onSuccess(Void aVoid) {
-                        try {
-                            notifyDiagramDeletedListener(diagramToDelete, false);
-                            GWT.log("Deleted " + diagramToDelete.getName());
-                        } catch (NimbitsException e) {
-                            GWT.log(e.getMessage(), e);
-                        }
-
-                        tree.getStore().remove(diagramModelToDelete);
+                         notifyDiagramDeletedListener(diagramToDelete, false);
+                         GWT.log("Deleted " + diagramToDelete.getName());
+                         tree.getStore().remove(diagramModelToDelete);
                     }
                 });
             }

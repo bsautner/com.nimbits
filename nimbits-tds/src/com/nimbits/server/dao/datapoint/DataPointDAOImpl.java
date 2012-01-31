@@ -157,6 +157,7 @@ public class DataPointDAOImpl implements PointTransactions {
                     }
                 }
 
+
                 tx.commit();
                 retObj = PointModelFactory.createPointModel(original);
 

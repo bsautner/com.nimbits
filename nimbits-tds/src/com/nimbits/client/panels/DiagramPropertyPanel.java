@@ -194,11 +194,8 @@ class DiagramPropertyPanel extends NavigationEventProvider {
 
                         @Override
                         public void onSuccess(Void result) {
-                            try {
-                                notifyDiagramDeletedListener(diagram, readOnly);
-                            } catch (NimbitsException e) {
-                                GWT.log(e.getMessage());
-                            }
+                          notifyDiagramDeletedListener(diagram, readOnly);
+
 
 
                         }

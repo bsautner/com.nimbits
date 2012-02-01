@@ -39,18 +39,18 @@ public class SubscribePanel extends LayoutContainer {
         vp = new VerticalPanel();
         vp.setBorders(false);
         PointServiceAsync service = GWT.create(PointService.class);
-        service.getPointByUUID(pointUUID, new AsyncCallback<Point>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                GWT.log(caught.getMessage());
-            }
-
-            @Override
-            public void onSuccess(Point result) {
-                createForm();
-                add(vp);
-            }
-        });
+//        service.getPointByUUID(pointUUID, new AsyncCallback<Point>() {
+//            @Override
+//            public void onFailure(Throwable caught) {
+//                GWT.log(caught.getMessage());
+//            }
+//
+//            @Override
+//            public void onSuccess(Point result) {
+//             //   createForm();
+//                add(vp);
+//            }
+//        });
 
 
     }

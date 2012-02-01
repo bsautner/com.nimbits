@@ -422,11 +422,14 @@ public class UserDAOImpl implements UserTransactions {
             n.setLastLoggedIn(lastLoggedIn);
             tx.commit();
             retObj = UserModelFactory.createUserModel(n);
-
+            return retObj;
+        } catch (ConcurrentModificationException ex) {
+            log.severe(ex.getMessage());
+            return user;
         } finally {
             pm.close();
         }
-        return retObj;
+
 
     }
 

@@ -53,8 +53,10 @@ public class nimbits implements EntryPoint {
     private ClientType clientType;
 
 
-    private void loadLayout(final LoginInfo loginInfo, final Action action,
-                            final Map<String, String> settings)  {
+    private void loadLayout(final LoginInfo loginInfo,
+                            final Action action,
+                            final Map<String, String> settings,
+                            final String uuid)  {
 
         final ContentPanel contentPanel = new ContentPanel(new FillLayout());
 
@@ -89,6 +91,10 @@ public class nimbits implements EntryPoint {
             contentPanel.setLayout(new FillLayout());
             addListeners();
             viewport.add(contentPanel, new BorderLayoutData(LayoutRegion.CENTER));
+            if (action.equals(Action.subscribe)) {
+                Cookies.removeCookie(Action.subscribe.name());
+                showSubscriptionPanel(uuid);
+            }
         }
 
 
@@ -285,16 +291,16 @@ public class nimbits implements EntryPoint {
         //handles the round trip from login screen.
 
         if (doSubscribe && ! Cookies.getCookieNames().contains(Action.subscribe.name())) {
-            Cookies.setCookie(Action.subscribe.name(), uuid);
+
             action = Action.subscribe;
-        }
-        else if (uuid != null && ! doSubscribe) {
-            action = Action.report;
         }
         else if (! doSubscribe && Cookies.getCookieNames().contains(Action.subscribe.name())) {
             uuid = Cookies.getCookie(Action.subscribe.name());
             Cookies.removeCookie(Action.subscribe.name());
             action = Action.subscribe;
+        }
+        else if (uuid != null && ! doSubscribe) {
+            action = Action.report;
         }
         else if (doAndroid) {
             action = Action.android;
@@ -364,17 +370,16 @@ public class nimbits implements EntryPoint {
                     case twitterFinishReg:
                         finishTwitterAuthentication(settings, oauth_token, action);
                         break;
-                    case subscribe: case none:
+                    case subscribe:
                         loadPortal(action, settings, uuid);
-                        showSubscriptionPanel(uuid);
-                        Cookies.removeCookie(Action.subscribe.name());
+
+
+                    case none:
+                        loadPortal(action, settings, uuid);
                         break;
                     default:
                         loadLogin();
-
                 }
-
-
             }
 
         });
@@ -451,7 +456,7 @@ public class nimbits implements EntryPoint {
                         if (loginInfo.isLoggedIn()) {
                             switch (action) {
                                 case android: case none:
-                                    loadLayout(loginInfo, action, settings);
+                                    loadLayout(loginInfo, action, settings, uuid);
                                     break;
                                 case twitter:
                                     final TwitterServiceAsync twitterService = GWT.create(TwitterService.class);
@@ -472,16 +477,20 @@ public class nimbits implements EntryPoint {
                                     break;
                                 case subscribe:
 
-                                    loadLayout(loginInfo, action, settings);
+                                    loadLayout(loginInfo, action, settings, uuid);
                                     break;
 
                                 default:
+
                                     loadLogin();
 
                             }
 
 
                         } else {
+                            if (action.equals(Action.subscribe)) {
+                                Cookies.setCookie(Action.subscribe.name(), uuid);
+                            }
                             loadLogin();
                         }
                     }

@@ -66,7 +66,6 @@ public interface PointServiceAsync {
 
     void getPointByID(final User u, final long id, final AsyncCallback<Point> async);
 
-
     void exportData(final Map<PointName, Point> points, ExportType exportType, AsyncCallback<String> async);
 
     void getAllPoints(final int start, final int end, AsyncCallback<List<Point>> async);

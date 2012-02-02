@@ -17,10 +17,17 @@ public class SubscriptionFactory {
 
     }
 
-    public static Subscription createSubscription(SubscriptionDeliveryMethod dataUpdateAlertMethod,
-                                                  SubscriptionDeliveryMethod alarmStateChangeMethod,
-                                                  SubscriptionDeliveryMethod propertyChangeMethod) {
-        return new SubscriptionModel(dataUpdateAlertMethod, alarmStateChangeMethod, propertyChangeMethod);
+    public static Subscription createSubscription(final SubscriptionDeliveryMethod dataUpdateAlertMethod,
+                                                  final SubscriptionDeliveryMethod alarmStateChangeMethod,
+                                                  final SubscriptionDeliveryMethod propertyChangeMethod,
+                                                  final double maxRepeat,
+                                                  final Date lastSent) {
+        return new SubscriptionModel(
+                dataUpdateAlertMethod,
+                alarmStateChangeMethod,
+                propertyChangeMethod,
+                maxRepeat, lastSent
+                );
 
     }
     public static List<Subscription> createSubscriptions(List<Subscription> subscriptions) {

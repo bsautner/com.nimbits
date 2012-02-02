@@ -91,4 +91,6 @@ public interface PointServiceAsync {
     void getAllPoints(final AsyncCallback<List<Point>> async);
 
     void subscribe(Point p, Subscription subscription, AsyncCallback<Subscription> async);
+
+    void readSubscription(final Point point, AsyncCallback<Subscription> async);
 }

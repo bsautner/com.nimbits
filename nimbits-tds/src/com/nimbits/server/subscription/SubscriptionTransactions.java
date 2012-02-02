@@ -1,5 +1,6 @@
 package com.nimbits.server.subscription;
 
+import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.subscription.*;
 
 /**
@@ -12,6 +13,6 @@ public interface SubscriptionTransactions {
 
 
     Subscription subscribe(Subscription subscription);
-
+    Subscription readSubscription(final Point point);
 
 }

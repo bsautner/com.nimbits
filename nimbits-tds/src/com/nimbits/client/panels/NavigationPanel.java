@@ -403,7 +403,7 @@ class NavigationPanel extends NavigationEventProvider {
     private void updateValues() throws NimbitsException {
         if (tree != null) {
             final CategoryServiceAsync service = GWT.create(CategoryService.class);
-            service.getCategories(true, false, true, new AsyncCallback<List<Category>>() {
+            service.getCategories(true, false, true,true, new AsyncCallback<List<Category>>() {
                 @Override
                 public void onFailure(final Throwable e) {
                     updater.cancel();
@@ -1065,7 +1065,7 @@ class NavigationPanel extends NavigationEventProvider {
     private void getUserEntities() throws NimbitsException {
 
         final CategoryServiceAsync categoryService = GWT.create(CategoryService.class);
-        categoryService.getCategories(true, true, true,
+        categoryService.getCategories(true, true, true,true,
                 new AsyncCallback<List<Category>>() {
                     @Override
                     public void onFailure(Throwable caught) {
@@ -1084,7 +1084,7 @@ class NavigationPanel extends NavigationEventProvider {
 
 
         final CategoryServiceAsync categoryService = GWT.create(CategoryService.class);
-        categoryService.getConnectionCategories(true, true, email,
+        categoryService.getConnectionCategories(true, true, true, email,
                 new AsyncCallback<List<Category>>() {
                     @Override
                     public void onFailure(Throwable caught) {

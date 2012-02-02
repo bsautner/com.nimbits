@@ -88,4 +88,6 @@ public interface PointService extends RemoteService {
     List<Point> getAllPoints();
 
     Subscription subscribe(Point p, Subscription subscription) throws NimbitsException;
+
+    Subscription readSubscription(final Point point) throws NimbitsException;
 }

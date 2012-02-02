@@ -17,6 +17,7 @@ import com.extjs.gxt.ui.client.widget.*;
 import com.nimbits.client.model.category.*;
 import com.nimbits.client.model.diagram.*;
 import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.subscription.*;
 import com.nimbits.client.model.value.*;
 
 import java.util.*;
@@ -32,6 +33,25 @@ public abstract class NavigationEventProvider extends LayoutContainer {
     private final List<ValueEnteredListener> valueEnteredListeners = new ArrayList<ValueEnteredListener>();
     private final List<ChartRemovedListener> chartRemovedListeners = new ArrayList<ChartRemovedListener>();
     private final List<DiagramRemovedListener> diagramRemovedListeners = new ArrayList<DiagramRemovedListener>();
+
+    private final List<SubscriptionAddedListener> subscriptionAddedListeners = new ArrayList<SubscriptionAddedListener>();
+
+
+    public interface SubscriptionAddedListener {
+        void onSubscriptionAdded(final Subscription model);
+    }
+
+    public void addSubscriptionAddedListener(final SubscriptionAddedListener listener) {
+        subscriptionAddedListeners.add(listener);
+    }
+
+
+    void notifySubscriptionAddedListener(final Subscription model)  {
+        for (SubscriptionAddedListener SubscriptionAddedListener : subscriptionAddedListeners) {
+            SubscriptionAddedListener.onSubscriptionAdded(model);
+        }
+    }
+
 
     // Category Click Handlers
     public interface CategoryClickedListener {

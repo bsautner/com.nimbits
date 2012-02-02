@@ -5,6 +5,7 @@ import com.nimbits.client.model.subscription.*;
 
 import javax.jdo.annotations.*;
 import java.io.*;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner
@@ -15,9 +16,10 @@ import java.io.*;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 public class SubscriptionEntity implements Serializable, Subscription {
+
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    private Key key;
+    private com.google.appengine.api.datastore.Key id;
 
     @Persistent
     private String subscriberUUID;
@@ -29,13 +31,19 @@ public class SubscriptionEntity implements Serializable, Subscription {
     private Long categoryId;
 
     @Persistent
-    private int dataUpdateAlertMethod = SubscriptionDeliveryMethod.none.getCode();
+    private Integer dataUpdateAlertMethod = SubscriptionDeliveryMethod.none.getCode();
 
     @Persistent
-    private int alarmStateChangeMethod = SubscriptionDeliveryMethod.none.getCode();
+    private Integer alertStateChangeMethod = SubscriptionDeliveryMethod.none.getCode();
 
     @Persistent
-    private int propertyChangeMethod = SubscriptionDeliveryMethod.none.getCode();
+    private Integer propertyChangeMethod = SubscriptionDeliveryMethod.none.getCode();
+
+    @Persistent
+    private Double maxRepeat;
+
+    @Persistent
+    private Date lastSent;
 
     public SubscriptionEntity(final String subscriberUUID) {
         this.subscriberUUID = subscriberUUID;
@@ -44,13 +52,15 @@ public class SubscriptionEntity implements Serializable, Subscription {
     public SubscriptionEntity() {
     }
 
-    public SubscriptionEntity(Subscription subscription) {
+    public SubscriptionEntity(final Subscription subscription) {
         this.subscriberUUID = subscription.getSubscriberUUID();
         this.dataUpdateAlertMethod = subscription.getDataUpdateAlertMethod().getCode();
-        this.alarmStateChangeMethod = subscription.getAlarmStateChangeMethod().getCode();
+        this.alertStateChangeMethod = subscription.getAlertStateChangeMethod().getCode();
         this.propertyChangeMethod = subscription.getPropertyChangeMethod().getCode();
         this.subscribedPointUUID = subscription.getSubscribedPointUUID();
         this.categoryId = subscription.getCategoryId();
+        this.maxRepeat = subscription.getMaxRepeat();
+        this.lastSent = subscription.getLastSent();
     }
 
     @Override
@@ -74,13 +84,13 @@ public class SubscriptionEntity implements Serializable, Subscription {
     }
 
     @Override
-    public SubscriptionDeliveryMethod getAlarmStateChangeMethod() {
-        return SubscriptionDeliveryMethod.get(alarmStateChangeMethod);
+    public SubscriptionDeliveryMethod getAlertStateChangeMethod() {
+        return SubscriptionDeliveryMethod.get(alertStateChangeMethod);
     }
 
     @Override
-    public void setAlarmStateChangeMethod(SubscriptionDeliveryMethod alarmStateChangeMethod) {
-        this.alarmStateChangeMethod = alarmStateChangeMethod.getCode();
+    public void setAlertStateChangeMethod(SubscriptionDeliveryMethod alertStateChangeMethod) {
+        this.alertStateChangeMethod = alertStateChangeMethod.getCode();
     }
 
     @Override
@@ -114,7 +124,24 @@ public class SubscriptionEntity implements Serializable, Subscription {
       this.categoryId = id;
     }
 
-    public String getKey() {
-        return key.toString();
+    @Override
+    public double getMaxRepeat() {
+        return 0;  //auto generated
     }
+
+    @Override
+    public void setMaxRepeat(double maxRepeat) {
+      this.maxRepeat = maxRepeat;
+    }
+
+    @Override
+    public Date getLastSent() {
+      return lastSent;
+    }
+
+    @Override
+    public void setLastSent(Date lastSent) {
+       this.lastSent = lastSent;
+    }
+
 }

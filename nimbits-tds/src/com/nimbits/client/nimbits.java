@@ -30,6 +30,7 @@ import com.nimbits.client.model.*;
 import com.nimbits.client.model.category.*;
 import com.nimbits.client.model.diagram.*;
 import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.subscription.*;
 import com.nimbits.client.panels.*;
 import com.nimbits.client.service.*;
 import com.nimbits.client.service.category.*;
@@ -372,7 +373,7 @@ public class nimbits implements EntryPoint {
                         break;
                     case subscribe:
                         loadPortal(action, settings, uuid);
-
+                        break;
 
                     case none:
                         loadPortal(action, settings, uuid);
@@ -387,11 +388,19 @@ public class nimbits implements EntryPoint {
 
     private void showSubscriptionPanel(final String uuid) {
         SubscribePanel dp = new SubscribePanel(uuid);
+
         final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
         w.setWidth(500);
-        w.setHeight(400);
+        w.setHeight(500);
         w.setHeading("Subscribe");
         w.add(dp);
+        dp.addSubscriptionAddedListener(new NavigationEventProvider.SubscriptionAddedListener() {
+            @Override
+            public void onSubscriptionAdded(Subscription model) {
+             w.hide();
+            }
+        });
+
         w.show();
     }
 

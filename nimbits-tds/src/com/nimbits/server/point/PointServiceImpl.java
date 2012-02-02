@@ -356,9 +356,21 @@ public class PointServiceImpl extends RemoteServiceServlet implements
                 this.getThreadLocalRequest());
         subscription.setSubscriberUUID(u.getUuid());
         subscription.setSubscribedPointUUID(p.getUUID());
+        CategoryName categoryName = CommonFactoryLocator.getInstance().createCategoryName(Const.CONST_HIDDEN_CATEGORY);
+        Category c = CategoryServiceFactory.getInstance().getCategoryByName(u, categoryName, false, false);
+        subscription.setCategoryId(c.getId());
+        subscription.setLastSent(new Date());
+
         return SubscriptionTransactionFactory.getInstance(u).subscribe(subscription);
 
 
+    }
+
+    @Override
+    public Subscription readSubscription(Point point) throws NimbitsException {
+        final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
+                this.getThreadLocalRequest());
+       return SubscriptionTransactionFactory.getInstance(u).readSubscription(point);
     }
 
     @Override

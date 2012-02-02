@@ -185,9 +185,9 @@ public class XMPPReceiverServlet extends HttpServlet {
         List<Point> l;
         //StringBuilder sb = new StringBuilder();
         IMFactory.getInstance().sendMessage("Point List:", u.getEmail());
-        boolean includeDiagrams = false;
+
         try {
-            final List<Category> c = CategoryServiceFactory.getInstance().getCategories(u, true, includeDiagrams);
+            final List<Category> c = CategoryServiceFactory.getInstance().getCategories(u, true, false, false);
             if (c.size() == 0) {
                 IMFactory.getInstance().sendMessage("None found", u.getEmail());
 

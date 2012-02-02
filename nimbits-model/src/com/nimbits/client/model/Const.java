@@ -123,6 +123,7 @@ public class Const {
     public static final String PARAM_ID = "id";
     public static final String PARAM_IDLE = "idle";
     public static final String PARAM_INCLUDE_DIAGRAMS = "includediagrams";
+    public static final String PARAM_INCLUDE_SUBSCRIPTIONS = "includesubscriptions";
     public static final String PARAM_INCLUDE_POINTS = "includepoints";
     public static final String PARAM_IN_CONTENT = "inContent";
     public static final String PARAM_IS_LOGGED_IN = "isLoggedIn";

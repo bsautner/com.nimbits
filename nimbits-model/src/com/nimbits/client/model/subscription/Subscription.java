@@ -3,6 +3,7 @@ package com.nimbits.client.model.subscription;
 import com.nimbits.client.enums.*;
 
 import java.io.*;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner
@@ -20,9 +21,9 @@ public interface Subscription extends Serializable {
 
     void setDataUpdateAlertMethod(SubscriptionDeliveryMethod dataUpdateAlertMethod);
 
-    SubscriptionDeliveryMethod getAlarmStateChangeMethod();
+    SubscriptionDeliveryMethod getAlertStateChangeMethod();
 
-    void setAlarmStateChangeMethod(SubscriptionDeliveryMethod alarmStateChangeMethod);
+    void setAlertStateChangeMethod(SubscriptionDeliveryMethod alertStateChangeMethod);
 
     SubscriptionDeliveryMethod getPropertyChangeMethod();
 
@@ -36,4 +37,11 @@ public interface Subscription extends Serializable {
 
     void setCategoryId(long categoryId);
 
+    double getMaxRepeat();
+
+    void setMaxRepeat(double maxRepeat);
+
+    Date getLastSent();
+
+    void setLastSent(Date lastSent);
 }

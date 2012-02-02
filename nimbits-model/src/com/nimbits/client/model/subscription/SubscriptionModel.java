@@ -3,6 +3,7 @@ package com.nimbits.client.model.subscription;
 import com.nimbits.client.enums.*;
 
 import java.io.*;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner
@@ -16,9 +17,11 @@ public class SubscriptionModel implements Serializable, Subscription  {
     private String subscriberUUID;
     private String subscribedPointUUID;
     private int dataUpdateAlertMethod;
-    private int alarmStateChangeMethod;
+    private int alertAlertChangeMethod;
     private int propertyChangeMethod;
     private long categoryId;
+    private double maxRepeat;
+    private Date lastSent;
 
     public SubscriptionModel() {
     }
@@ -27,18 +30,24 @@ public class SubscriptionModel implements Serializable, Subscription  {
         this.subscriberUUID = subscription.getSubscriberUUID();
         this.subscribedPointUUID = subscription.getSubscribedPointUUID();
         this.dataUpdateAlertMethod = subscription.getDataUpdateAlertMethod().getCode();
-        this.alarmStateChangeMethod = subscription.getAlarmStateChangeMethod().getCode();
+        this.alertAlertChangeMethod = subscription.getAlertStateChangeMethod().getCode();
         this.propertyChangeMethod = subscription.getPropertyChangeMethod().getCode();
+        this.maxRepeat = subscription.getMaxRepeat();
+        this.lastSent = subscription.getLastSent();
 
     }
 
     public SubscriptionModel(SubscriptionDeliveryMethod dataUpdateAlertMethod,
-                             SubscriptionDeliveryMethod alarmStateChangeMethod,
-                             SubscriptionDeliveryMethod propertyChangeMethod) {
+                             SubscriptionDeliveryMethod alertStateChangeMethod,
+                             SubscriptionDeliveryMethod propertyChangeMethod,
+                             double maxRepeat,
+                             Date lastSent) {
 
         this.dataUpdateAlertMethod = dataUpdateAlertMethod.getCode();
-        this.alarmStateChangeMethod = alarmStateChangeMethod.getCode();
+        this.alertAlertChangeMethod = alertStateChangeMethod.getCode();
         this.propertyChangeMethod = propertyChangeMethod.getCode();
+        this.maxRepeat = maxRepeat;
+        this.lastSent = lastSent;
     }
 
     @Override
@@ -62,13 +71,13 @@ public class SubscriptionModel implements Serializable, Subscription  {
     }
 
     @Override
-    public SubscriptionDeliveryMethod getAlarmStateChangeMethod() {
-       return SubscriptionDeliveryMethod.get(alarmStateChangeMethod);
+    public SubscriptionDeliveryMethod getAlertStateChangeMethod() {
+       return SubscriptionDeliveryMethod.get(alertAlertChangeMethod);
     }
 
     @Override
-    public void setAlarmStateChangeMethod(SubscriptionDeliveryMethod alarmStateChangeMethod) {
-       this.alarmStateChangeMethod = alarmStateChangeMethod.getCode();
+    public void setAlertStateChangeMethod(SubscriptionDeliveryMethod alertStateChangeMethod) {
+       this.alertAlertChangeMethod = alertStateChangeMethod.getCode();
     }
 
     @Override
@@ -101,4 +110,19 @@ public class SubscriptionModel implements Serializable, Subscription  {
       this.categoryId = categoryId;
     }
 
+    public double getMaxRepeat() {
+        return maxRepeat;
+    }
+
+    public void setMaxRepeat(double maxRepeat) {
+        this.maxRepeat = maxRepeat;
+    }
+
+    public Date getLastSent() {
+        return lastSent;
+    }
+
+    public void setLastSent(Date lastSent) {
+        this.lastSent = lastSent;
+    }
 }

@@ -62,6 +62,7 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
     @Override
     public List<Category> getCategories(final boolean includePoints,
                                         final boolean includeDiagrams,
+                                        final boolean includeSubscriptions,
                                         final boolean includeAlertState) throws NimbitsException {
 
         final List<Category> categoryList;
@@ -70,7 +71,7 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
 
 
         if (u != null) {
-            categoryList = getCategories(u, includePoints, includeDiagrams);
+            categoryList = getCategories(u, includePoints, includeDiagrams, includeSubscriptions);
 
             for (final Category c : categoryList) {
                 if (c.getPoints() != null) {
@@ -97,10 +98,11 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
 
     public List<Category> getCategories(final User u,
                                         final boolean includePoints,
-                                        final boolean includeDiagrams) {
+                                        final boolean includeDiagrams,
+                                        final boolean includeSubscriptions) {
 
 
-        return CategoryTransactionFactory.getInstance(u).getCategories(includePoints, includeDiagrams);
+        return CategoryTransactionFactory.getInstance(u).getCategories(includePoints, includeDiagrams, includeSubscriptions);
     }
 
     public Category addCategory(final CategoryName categoryName) throws NimbitsException {
@@ -128,10 +130,19 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
                                       final boolean includeDiagrams) throws NimbitsException {
 
 
-        // final // delete me UserContext context = UserContextFactory.createUserContext(CategoryServiceImpl.class.getName());
-        // delete me context.addTrace("getCategoryByName");
+
         final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
                 this.getThreadLocalRequest());
+
+
+        return getCategoryByName(u, categoryName, includePoints, includeDiagrams);
+
+    }
+    @Override
+    public Category getCategoryByName(final User u,
+                                      final CategoryName categoryName,
+                                      final boolean includePoints,
+                                      final boolean includeDiagrams) throws NimbitsException {
 
         final Category c = CategoryServiceFactory.getInstance().getCategory(u, categoryName);
         if (includePoints) {
@@ -146,7 +157,6 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
         return c;
 
     }
-
     public void deleteCategory(final User u, final Category c) throws NimbitsException {
 
         CategoryTransactionFactory.getInstance(u).deleteCategory(c);
@@ -165,6 +175,7 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
     @Override
     public List<Category> getConnectionCategories(final boolean includePoints,
                                                   final boolean includeDiagrams,
+                                                  final boolean includeSubscriptions,
                                                   final EmailAddress email) throws NimbitsException {
 
         final User connectionUser = UserTransactionFactory.getInstance().getNimbitsUser(email);
@@ -172,7 +183,7 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
                 this.getThreadLocalRequest());
         if (connectionUser != null && loggedInUser != null) {
 
-            final List<Category> result = getCategories(connectionUser, includePoints, includeDiagrams);
+            final List<Category> result = getCategories(connectionUser, includePoints, includeDiagrams,includeSubscriptions);
             for (final Category c : result) {
                 for (final Point p : c.getPoints()) {
                     final List<Point> approvedPoints = new ArrayList<Point>();

@@ -40,4 +40,5 @@ public interface UserService extends RemoteService {
     String getSecret() throws NimbitsException;
 
 
+    User getUserByUUID(String subscriberUUID);
 }

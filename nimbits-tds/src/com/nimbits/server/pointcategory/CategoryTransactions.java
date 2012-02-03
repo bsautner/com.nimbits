@@ -21,7 +21,7 @@ import java.util.List;
 
 public interface CategoryTransactions {
 
-    void purgeMemCache() throws NimbitsException;
+    void purgeMemCache();
 
     Category getCategory(final long id);
 

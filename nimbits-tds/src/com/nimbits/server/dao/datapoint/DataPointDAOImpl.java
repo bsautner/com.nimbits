@@ -267,10 +267,10 @@ public class DataPointDAOImpl implements PointTransactions {
       */
     @Override
     @SuppressWarnings(Const.WARNING_UNCHECKED)
-    public Point movePoint(final PointName pointName, final CategoryName categoryName) {
+    public Point movePoint(final Point point, final CategoryName categoryName) {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        DataPoint point = null;
+
         Category c = CategoryServiceFactory.getInstance().getCategory(u, categoryName);
 
         if (!(c == null)) {
@@ -281,13 +281,14 @@ public class DataPointDAOImpl implements PointTransactions {
 
                 tx = pm.currentTransaction();
                 tx.begin();
-                Query q1 = pm.newQuery(DataPoint.class, "userFK==u && name==p");
-                q1.declareParameters("Long u, String p");
+                Query q1 = pm.newQuery(DataPoint.class, "uuid==p");
+                q1.declareParameters("String p");
                 q1.setRange(0, 1);
-                List<DataPoint> points = (List<DataPoint>) q1.execute(userFK,
-                        pointName.getValue());
-                point = points.get(0);
-                point.setCatID(c.getId());
+                List<DataPoint> points = (List<DataPoint>) q1.execute(point.getUUID());
+                if (points.size() > 0) {
+                    Point result = points.get(0);
+                    result.setCatID(c.getId());
+                }
                 tx.commit();
 
             } finally {

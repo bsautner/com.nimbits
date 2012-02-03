@@ -34,6 +34,7 @@ public class SubscriptionModel implements Serializable, Subscription  {
         this.propertyChangeMethod = subscription.getPropertyChangeMethod().getCode();
         this.maxRepeat = subscription.getMaxRepeat();
         this.lastSent = subscription.getLastSent();
+        this.categoryId = subscription.getCategoryId();
 
     }
 

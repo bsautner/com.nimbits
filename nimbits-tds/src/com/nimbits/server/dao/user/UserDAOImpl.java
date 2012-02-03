@@ -32,6 +32,8 @@ import java.util.logging.*;
 public class UserDAOImpl implements UserTransactions {
     private static final Logger log = Logger.getLogger(UserDAOImpl.class.getName());
 
+
+
     @SuppressWarnings(Const.WARNING_UNCHECKED)
     public User setFacebookToken(final EmailAddress internetAddress, final String token, final long fbid) {
 
@@ -433,8 +435,28 @@ public class UserDAOImpl implements UserTransactions {
 
     }
 
+    @Override
+    public User getUserByUUID(String subscriberUUID) {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final Query q = pm.newQuery(NimbitsUser.class, "uuid == u");
+        User retObj = null;
+        try {
+            q.declareParameters("String u");
+            final List<NimbitsUser> result = (List<NimbitsUser>) q.execute(subscriberUUID);
+            if (result.size() > 0) {
 
-    //sharding
+                NimbitsUser n = result.get(0);
+                retObj = UserModelFactory.createUserModel(n);
+
+            }
+            return retObj;
+        } finally {
+            pm.close();
+        }
+
+
+
+    }
 
 
 }

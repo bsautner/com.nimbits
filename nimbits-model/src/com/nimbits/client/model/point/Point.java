@@ -213,7 +213,8 @@ public interface Point extends Serializable {
 
     Calculation getCalculation();
 
-    public EntityType getEntityType();
+    EntityType getEntityType();
 
+    void setEntityType(final EntityType entityType);
 
 }

@@ -14,6 +14,7 @@
 package com.nimbits.server.diagram;
 
 import com.nimbits.client.model.user.*;
+import com.nimbits.server.dao.diagram.*;
 import com.nimbits.server.memcache.diagram.*;
 
 /**

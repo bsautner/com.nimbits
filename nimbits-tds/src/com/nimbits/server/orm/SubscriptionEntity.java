@@ -126,7 +126,7 @@ public class SubscriptionEntity implements Serializable, Subscription {
 
     @Override
     public double getMaxRepeat() {
-        return 0;  //auto generated
+        return this.maxRepeat;
     }
 
     @Override

@@ -46,6 +46,7 @@ import java.util.*;
 public class PointServiceImpl extends RemoteServiceServlet implements
         PointService {
 
+
     private static final long serialVersionUID = 1L;
 
 
@@ -53,7 +54,12 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     public void deletePoint(final Point p) throws NimbitsException {
         final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
                 this.getThreadLocalRequest());
-        deletePoint(u, p);
+        if (p.getEntityType().equals(EntityType.point)) {
+            deletePoint(u, p);
+        }
+        else if (p.getEntityType().equals(EntityType.subscription)) {
+           deleteSubscription(p);
+        }
 
     }
 
@@ -69,8 +75,9 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
 
     @Override
-    public Point movePoint(User u, PointName pointName, CategoryName categoryName) throws NimbitsException {
-        return PointTransactionsFactory.getInstance(u).movePoint(pointName, categoryName);
+    public Point movePoint(User u, Point point, CategoryName categoryName) throws NimbitsException {
+
+        return PointTransactionsFactory.getInstance(u).movePoint(point, categoryName);
     }
 
     @Override
@@ -138,7 +145,7 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     }
 
 
-    public AlertType getPointAlertState(final Point point, final Value value) throws NimbitsException {
+    public AlertType getPointAlertState(final Point point, final Value value)  {
         AlertType retObj = AlertType.OK;
 
         if (point.isHighAlarmOn() || point.isLowAlarmOn()) {
@@ -203,11 +210,19 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public Point movePoint(final PointName pointName, final CategoryName newCategoryName) throws NimbitsException {
+    public Point movePoint(final Point point, final CategoryName newCategoryName) throws NimbitsException {
         final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
                 this.getThreadLocalRequest());
+        if (point.getEntityType().equals(EntityType.point)) {
+            return PointTransactionsFactory.getInstance(u).movePoint(point, newCategoryName);
+        }
+        else if (point.getEntityType().equals(EntityType.subscription)) {
+            return SubscriptionTransactionFactory.getInstance(u).moveSubscription(point, newCategoryName);
+        }
+        else {
+            return null;
+        }
 
-        return PointTransactionsFactory.getInstance(u).movePoint(pointName, newCategoryName);
 
     }
 
@@ -370,7 +385,24 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     public Subscription readSubscription(Point point) throws NimbitsException {
         final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
                 this.getThreadLocalRequest());
-       return SubscriptionTransactionFactory.getInstance(u).readSubscription(point);
+        return SubscriptionTransactionFactory.getInstance(u).readSubscription(point);
+    }
+
+    @Override
+    public void deleteSubscription(Point point) throws NimbitsException {
+        final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
+                this.getThreadLocalRequest());
+        SubscriptionTransactionFactory.getInstance(u).deleteSubscription(point);
+    }
+
+    @Override
+    public List<Subscription> getSubscriptionsToPoint(Point point) {
+       return SubscriptionTransactionFactory.getInstance(null).getSubscriptionsToPoint(point);
+    }
+
+    @Override
+    public void updateSubscriptionLastSent(Subscription subscription) {
+       SubscriptionTransactionFactory.getInstance(null).updateSubscriptionLastSent(subscription);
     }
 
     @Override

@@ -29,7 +29,7 @@ import java.util.List;
 
 public class CategoryModel implements Serializable, Category {
 
-    private static long serialVersionUID = 9l;
+    private static long serialVersionUID = 10L;
 
     private int entityType = EntityType.category.getCode();
 

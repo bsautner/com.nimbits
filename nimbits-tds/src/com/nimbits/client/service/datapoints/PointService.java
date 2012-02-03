@@ -52,13 +52,13 @@ public interface PointService extends RemoteService {
 
     Map<PointName, Point> getPointsByName(final long pointOwnerId, final Set<PointName> names) throws NimbitsException;
 
-    Point movePoint(final PointName pointName, final CategoryName newCategoryName) throws NimbitsException;
+    Point movePoint(final Point point, final CategoryName newCategoryName) throws NimbitsException;
 
     List<Point> getPoints(final User u) throws NimbitsException;
 
     Point getPointByUUID(final String uuid) throws NimbitsException;
 
-    AlertType getPointAlertState(final Point point, final Value value) throws NimbitsException;
+    AlertType getPointAlertState(final Point point, final Value value);
 
     Point copyPoint(final Point point, final PointName newName) throws NimbitsException, PointExistsException;
 
@@ -69,7 +69,7 @@ public interface PointService extends RemoteService {
 
     String exportData(final Map<PointName, Point> points, ExportType exportType) throws NimbitsException;
 
-    Point movePoint(final User u, final PointName pointName, final CategoryName categoryName) throws NimbitsException;
+    Point movePoint(final User u, final Point point, final CategoryName categoryName) throws NimbitsException;
 
     Point addPoint(final Point point, final Category c, final User u) throws NimbitsException;
 
@@ -90,4 +90,10 @@ public interface PointService extends RemoteService {
     Subscription subscribe(Point p, Subscription subscription) throws NimbitsException;
 
     Subscription readSubscription(final Point point) throws NimbitsException;
+
+    void deleteSubscription(final Point point) throws NimbitsException;
+
+    List<Subscription> getSubscriptionsToPoint(Point point);
+
+    void updateSubscriptionLastSent(Subscription subscription);
 }

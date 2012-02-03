@@ -88,7 +88,7 @@ public class PointCatagory implements Category {
 
     @Override
     public List<Point> getPoints() {
-        return _points;
+        return _points == null ? new ArrayList<Point>() : _points;
     }
 
     @Override

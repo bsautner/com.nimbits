@@ -47,7 +47,7 @@ public interface PointServiceAsync {
 
     //public void getPointCount(AsyncCallback<Integer> async);
 
-    void movePoint(final PointName pointName, final CategoryName targetCategoryName,
+    void movePoint(final Point point, final CategoryName targetCategoryName,
                    final AsyncCallback<Point> async);
 
     void getPoints(final User u, final AsyncCallback<List<Point>> callback);
@@ -76,7 +76,7 @@ public interface PointServiceAsync {
 
     void addPoint(final Point point, final Category c, final User u, AsyncCallback<Point> async);
 
-    void movePoint(final User u, final PointName pointName, final CategoryName categoryName, AsyncCallback<Point> async);
+    void movePoint(final User u, final Point point, final CategoryName categoryName, AsyncCallback<Point> async);
 
     void publishPoint(Point p, AsyncCallback<Point> asyncCallback);
 
@@ -93,4 +93,10 @@ public interface PointServiceAsync {
     void subscribe(Point p, Subscription subscription, AsyncCallback<Subscription> async);
 
     void readSubscription(final Point point, AsyncCallback<Subscription> async);
+
+    void deleteSubscription(final Point point, AsyncCallback<Void> async);
+
+    void getSubscriptionsToPoint(Point point, AsyncCallback<List<Subscription>> async);
+
+    void updateSubscriptionLastSent(Subscription subscription, AsyncCallback<Void> async);
 }

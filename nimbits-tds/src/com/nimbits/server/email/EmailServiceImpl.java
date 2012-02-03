@@ -94,15 +94,21 @@ public class EmailServiceImpl implements EmailService {
         }
     }
 
-    private static InternetAddress getFromEmail() throws UnsupportedEncodingException, NimbitsException {
-        final String fromEmail = new SettingServiceImpl().getSetting(Const.PARAM_ADMIN);
-        return new InternetAddress(fromEmail, Const.WORD_NIMBITS);
+    private static InternetAddress getFromEmail() throws UnsupportedEncodingException {
+        final String fromEmail;
+        try {
+            fromEmail = new SettingServiceImpl().getSetting(Const.PARAM_ADMIN);
+            return new InternetAddress(fromEmail, Const.WORD_NIMBITS);
+        } catch (NimbitsException e) {
+          return null;
+        }
+
     }
 
     public void sendAlert(final Point point,
                           final EmailAddress emailAddress,
                           final Double value,
-                          final AlertType alertType) throws NimbitsException {
+                          final AlertType alertType) {
 
         final Properties props = new Properties();
         final Session session = Session.getDefaultInstance(props, null);
@@ -113,20 +119,24 @@ public class EmailServiceImpl implements EmailService {
 
         switch (alertType) {
             case HighAlert: {
-                message.append("<P>Alarm Type: High</P>")
+                message.append("<P>Alarm Status: High</P>")
                         .append("<P>Alarm Setting: ").append(point.getHighAlarm()).append("</P>")
                         .append("<p>Value Recorded: ").append(value).append("</p>");
                 break;
             }
             case LowAlert: {
-                message.append("<P>Alarm Type: Low</P>")
+                message.append("<P>Alarm Status: Low</P>")
                         .append("<P>Alarm Setting: ").append(point.getLowAlarm()).append("</P>")
                         .append("<p>Value Recorded: ").append(value).append("</p>");
                 break;
             }
             case IdleAlert: {
-                message.append("<P>Alarm Type: Idle</P>")
+                message.append("<P>Alarm Status: Idle</P>")
                         .append("<P>Idle Setting: ").append(point.getIdleSeconds() / 60).append(" minutes</P>");
+
+            }
+            case OK: {
+                message.append("<P>Alarm Status: OK</P>");
 
             }
 
@@ -137,14 +147,20 @@ public class EmailServiceImpl implements EmailService {
 
 
         try {
+
             final Message msg = new MimeMessage(session);
+            InternetAddress from = getFromEmail();
+            if (from != null) {
             msg.setFrom(getFromEmail());
             InternetAddress internetAddress = new InternetAddress(emailAddress.getValue());
             msg.addRecipient(Message.RecipientType.TO, internetAddress);
             msg.setSubject(Const.DEFAULT_EMAIL_SUBJECT);
             msg.setContent(message.toString(), Const.CONTENT_TYPE_HTML);
             send(msg);
-
+            }
+            else {
+                log.severe("Null email from sendAlert");
+            }
         } catch (AddressException e) {
             log.severe(e.getMessage());
         } catch (MessagingException e) {

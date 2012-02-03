@@ -14,8 +14,7 @@
 package com.nimbits.client.model;
 
 import com.extjs.gxt.ui.client.data.BaseModelData;
-import com.nimbits.client.enums.AlertType;
-import com.nimbits.client.enums.ClientType;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointName;
 import com.nimbits.client.model.value.Value;
@@ -32,8 +31,8 @@ public class GxtPointModel extends BaseModelData {
     private PointName name;
     private final boolean readOnly;
     private boolean isDirty;
-
-
+    private String UUID;
+    private EntityType entityType;
     public void setAlertState(AlertType alertState) {
         this.alertState = alertState;
     }
@@ -41,11 +40,13 @@ public class GxtPointModel extends BaseModelData {
     private AlertType alertState;
 
     public GxtPointModel(Point point, ClientType clientType) {
+        this.UUID = point.getUUID();
         this.id = point.getId();
         //String lastNote = point.getLastNote();
         this.name = point.getName();
         this.readOnly = point.getReadOnly();
         this.alertState = point.getAlertState();
+        this.entityType = point.getEntityType();
         set(Const.PARAM_ID, this.id);
         if (clientType.equals(ClientType.android)) {
             set(Const.PARAM_NAME, "<A href = \"report.html?client=" + clientType.name() + "&uuid=" + point.getUUID() + "\">" + this.name.getValue() + "</a>");
@@ -55,6 +56,7 @@ public class GxtPointModel extends BaseModelData {
         set(Const.PARAM_ICON, Const.PARAM_POINT);
         set(Const.PARAM_VALUE, 0.0);
         set(Const.PARAM_ENTITY_TYPE, point.getEntityType().getCode());
+        set(Const.PARAM_UUID, point.getUUID());
     }
 
     public long getId() {
@@ -94,5 +96,13 @@ public class GxtPointModel extends BaseModelData {
             set(Const.PARAM_VALUE, value.getNumberValue());
         }
 
+    }
+
+    public String getUUID() {
+        return UUID;
+    }
+
+    public EntityType getEntityType() {
+        return entityType;
     }
 }

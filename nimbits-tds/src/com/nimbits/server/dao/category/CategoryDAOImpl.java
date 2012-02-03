@@ -25,6 +25,7 @@ import com.nimbits.client.model.subscription.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.server.diagram.*;
 import com.nimbits.server.orm.*;
+import com.nimbits.server.point.*;
 import com.nimbits.server.pointcategory.*;
 import com.nimbits.server.task.*;
 import com.nimbits.shared.*;
@@ -43,8 +44,8 @@ public class CategoryDAOImpl implements CategoryTransactions {
     }
 
     @Override
-    public void purgeMemCache() throws NimbitsException {
-        throw new NimbitsException("Not Implemented");
+    public void purgeMemCache()  {
+
     }
 
     /* (non-Javadoc)
@@ -111,10 +112,24 @@ public class CategoryDAOImpl implements CategoryTransactions {
                     c.setDiagrams(diagrams.get(c.getId()));
                 }
                 if (subscriptions != null && includeSubscriptions) {
-                     List<Point> p = c.getPoints();
-                     for (Subscription subscription : subscriptions.get(c.getId())) {
 
-                     }
+                    List<Point> p = c.getPoints();
+                    List<Subscription> subscriptionList = subscriptions.get(c.getId());
+                    if (subscriptionList != null) {
+                        for (Subscription subscription : subscriptionList) {
+                            try {
+                                Point sp = PointServiceFactory.getInstance().getPointByUUID(subscription.getSubscribedPointUUID());
+                                if (sp != null && (sp.getUserFK() == user.getId() || sp.isPublic())) {
+                                    sp.setReadOnly(true);
+                                    sp.setEntityType(EntityType.subscription);
+                                    p.add(sp);
+                                }
+                                c.setPoints(p);
+                            } catch (NimbitsException e) {
+                                log.severe(e.getMessage());
+                            }
+                        }
+                    }
 
                 }
 
@@ -151,14 +166,14 @@ public class CategoryDAOImpl implements CategoryTransactions {
                 points = (List<Point>) q.execute(ids);
 
 
-            List<Point> models = PointModelFactory.createPointModels(points);
-            retObj = new HashMap<Long, List<Point>>();
-            for (Point p : models) {
-                if (!retObj.containsKey(p.getCatID())) {
-                    retObj.put(p.getCatID(), new ArrayList<Point>());
+                List<Point> models = PointModelFactory.createPointModels(points);
+                retObj = new HashMap<Long, List<Point>>();
+                for (Point p : models) {
+                    if (!retObj.containsKey(p.getCatID())) {
+                        retObj.put(p.getCatID(), new ArrayList<Point>());
+                    }
+                    retObj.get(p.getCatID()).add(p);
                 }
-                retObj.get(p.getCatID()).add(p);
-            }
             }
         } finally {
             pm.close();
@@ -357,7 +372,19 @@ public class CategoryDAOImpl implements CategoryTransactions {
                 }
             }
 
-
+            //delete subscriptions
+            if (catID > 0) {
+                List<Subscription> results;
+                //	ArrayList<DataPoint> retObj = new ArrayList<DataPoint>();
+                try {
+                    Query q4 = pm.newQuery(SubscriptionEntity.class, "categoryId == c");
+                    q4.declareParameters("Long c");
+                    results = (List<Subscription>) q4.execute(catID);
+                    pm.deletePersistentAll(results);
+                } catch (Exception e) {
+                    log.severe(e.getMessage());
+                }
+            }
         } catch (Exception e) {
             log.severe(e.getMessage());
         } finally {

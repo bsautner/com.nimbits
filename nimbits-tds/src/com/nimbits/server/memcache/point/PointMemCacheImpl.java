@@ -197,8 +197,8 @@ public class PointMemCacheImpl implements PointTransactions {
     }
 
     @Override
-    public Point movePoint(final PointName pointName, final CategoryName newCategoryName) throws NimbitsException {
-        Point movedPoint = PointTransactionsFactory.getDaoInstance(u).movePoint(pointName, newCategoryName);
+    public Point movePoint(final Point point, final CategoryName newCategoryName) throws NimbitsException {
+        Point movedPoint = PointTransactionsFactory.getDaoInstance(u).movePoint(point, newCategoryName);
         purgeMemCache(movedPoint);
         updateMap(movedPoint);
         return movedPoint;

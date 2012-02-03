@@ -17,6 +17,7 @@ import com.nimbits.client.model.*;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.subscription.*;
 import com.nimbits.client.service.datapoints.*;
+import com.nimbits.shared.*;
 
 import java.util.*;
 
@@ -33,9 +34,11 @@ public class SubscribePanel extends NavigationEventProvider {
     private String pointUUID;
     private Point point;
     private Subscription subscription;
-
-    public SubscribePanel(String pointUUID) {
+    private Map<String, String> settings;
+    public SubscribePanel(String pointUUID, Map<String, String> settings) {
         this.pointUUID = pointUUID;
+        this.settings = settings;
+
 
     }
     @Override
@@ -100,8 +103,17 @@ public class SubscribePanel extends NavigationEventProvider {
 
 
         ops.add(new Option(SubscriptionDeliveryMethod.email));
-        ops.add(new Option(SubscriptionDeliveryMethod.facebook));
-        ops.add(new Option(SubscriptionDeliveryMethod.twitter));
+
+        if (settings.containsKey(Const.SETTING_TWITTER_CLIENT_ID) && !Utils.isEmptyString(settings.get(Const.SETTING_TWITTER_CLIENT_ID))) {
+            ops.add(new Option(SubscriptionDeliveryMethod.twitter));
+        }
+        if (settings.containsKey(Const.SETTING_FACEBOOK_API_KEY) && !Utils.isEmptyString(settings.get(Const.SETTING_FACEBOOK_API_KEY))) {
+            ops.add(new Option(SubscriptionDeliveryMethod.facebook));
+        }
+
+
+
+
         ops.add(new Option(SubscriptionDeliveryMethod.instantMessage));
 
         ListStore<Option> store = new ListStore<Option>();
@@ -137,9 +149,10 @@ public class SubscribePanel extends NavigationEventProvider {
         spinnerField.setIncrement(5d);
         spinnerField.getPropertyEditor().setType(Double.class);
         spinnerField.getPropertyEditor().setFormat(NumberFormat.getFormat("00"));
-        spinnerField.setFieldLabel("Max Alert Repeat (Minutes)");
+        spinnerField.setFieldLabel("Repeat limit (Minutes)");
         spinnerField.setMinValue(5d);
-        spinnerField.setValue(30);
+
+        spinnerField.setValue(subscription == null ? 30 : subscription.getMaxRepeat());
         spinnerField.setMaxValue(1000d);
         int newSelected = (subscription == null) ? SubscriptionDeliveryMethod.none.getCode() : subscription.getDataUpdateAlertMethod().getCode();
 

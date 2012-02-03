@@ -13,34 +13,29 @@
 
 package com.nimbits.server.task;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonParseException;
-import com.nimbits.client.enums.AlertType;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointModel;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.user.UserModel;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModel;
-import com.nimbits.client.model.value.ValueModelFactory;
-import com.nimbits.server.email.EmailServiceFactory;
-import com.nimbits.server.facebook.FacebookFactory;
-import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.instantmessage.IMFactory;
-import com.nimbits.server.intelligence.IntelligenceServiceFactory;
-import com.nimbits.server.math.EquationSolver;
-import com.nimbits.server.point.PointServiceFactory;
-import com.nimbits.server.recordedvalue.RecordedValueServiceFactory;
-import com.nimbits.server.twitter.TwitterServiceFactory;
-import com.nimbits.shared.Utils;
+import com.google.gson.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.subscription.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.server.email.*;
+import com.nimbits.server.facebook.*;
+import com.nimbits.server.gson.*;
+import com.nimbits.server.instantmessage.*;
+import com.nimbits.server.intelligence.*;
+import com.nimbits.server.math.*;
+import com.nimbits.server.point.*;
+import com.nimbits.server.recordedvalue.*;
+import com.nimbits.server.twitter.*;
+import com.nimbits.server.user.*;
+import com.nimbits.shared.*;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
-import java.util.logging.Logger;
+import javax.servlet.http.*;
+import java.util.*;
+import java.util.logging.*;
 
 public class RecordValueTask extends HttpServlet {
 
@@ -110,6 +105,7 @@ public class RecordValueTask extends HttpServlet {
             log.severe(e.getMessage());
 
         }
+        processSubscriptions(point, value);
 
 
     }
@@ -119,7 +115,6 @@ public class RecordValueTask extends HttpServlet {
 
         log.info("Processing Intelligence");
 
-        // if (value.getType() != ValueType.calculated) {
         final String input = IntelligenceServiceFactory.getInstance().addDataToInput(u, point);
         if (!Utils.isEmptyString(input)) {
             Point targetPoint = PointServiceFactory.getInstance().getPointByID(u, point.getIntelligence().getTargetPointId());
@@ -133,7 +128,7 @@ public class RecordValueTask extends HttpServlet {
 
             }
         }
-        //   }
+
 
 
     }
@@ -179,8 +174,71 @@ public class RecordValueTask extends HttpServlet {
             TwitterServiceFactory.getInstance().sendTweet(u, "#" + point.getName().getValue() + " updated to " + v.getNumberValue() + " on #Nimbits");
 
         }
+
         return alarmSent;
     }
+
+    private void processSubscriptions(final Point point, final Value v) {
+        List<Subscription> subscriptions= PointServiceFactory.getInstance().getSubscriptionsToPoint(point);
+        for (Subscription subscription : subscriptions) {
+
+            if (subscription.getLastSent().getTime() + (subscription.getMaxRepeat() * 60 * 1000) < new Date().getTime()) {
+                User subscriber = UserServiceFactory.getInstance().getUserByUUID(subscription.getSubscriberUUID());
+                AlertType alert = null;
+                if (! subscription.getAlertStateChangeMethod().equals(SubscriptionDeliveryMethod.none)){
+                    alert = PointServiceFactory.getInstance().getPointAlertState(point, v);
+                    if (! alert.equals(AlertType.OK)) {
+                        PointServiceFactory.getInstance().updateSubscriptionLastSent(subscription);
+                        switch (subscription.getAlertStateChangeMethod()) {
+                            case none:
+                                break;
+                            case email:
+                                EmailServiceFactory.getInstance().sendAlert(point, subscriber.getEmail(), v.getNumberValue(),
+                                        alert);
+                                break;
+                            case facebook:
+                                postToFB(point, subscriber, v.getNumberValue(), v.getNote());
+                                break;
+                            case twitter:
+                                sendTweet(subscriber, point, v);
+                                break;
+                            case instantMessage:
+                                doXMPP(subscriber, point, v);
+                                break;
+                        }
+                    }
+                }
+                if (! subscription.getDataUpdateAlertMethod().equals(SubscriptionDeliveryMethod.none)) {
+                    PointServiceFactory.getInstance().updateSubscriptionLastSent(subscription);
+
+                    switch (subscription.getDataUpdateAlertMethod()) {
+
+                        case none:
+                            break;
+                        case email:
+                            EmailServiceFactory.getInstance().sendAlert(point, subscriber.getEmail(), v.getNumberValue(),
+                                    alert);
+                            break;
+                        case facebook:
+                            postToFB(point, subscriber, v.getNumberValue(), v.getNote());
+                            break;
+                        case twitter:
+                            sendTweet(subscriber, point, v);
+                            break;
+                        case instantMessage:
+                            doXMPP(subscriber, point, v);
+                            break;
+                    }
+                }
+            }
+
+
+
+
+        }
+
+    }
+
 
     private void doXMPP(final User u, final Point point, final Value v) {
         final String message;
@@ -232,19 +290,9 @@ public class RecordValueTask extends HttpServlet {
             postToFB(point, u, v.getNumberValue(), note);
         }
         if (point.getSendAlarmTweet()) {
-            try {
-                StringBuilder message = new StringBuilder();
-                message.append("#").append(point.getName().getValue()).append(" ");
-                message.append("Value=").append(v.getNumberValue());
-                if (!Utils.isEmptyString(v.getNote())) {
-                    message.append(" ").append(v.getNote());
-                }
-                message.append(" via #Nimbits");
-                TwitterServiceFactory.getInstance().sendTweet(u, message.toString());
 
-            } catch (NimbitsException e) {
-                log.severe(e.getMessage());
-            }
+            sendTweet(u, point, v);
+
         }
         if (point.getSendAlarmIM()) {
             doXMPP(u, point, v);
@@ -255,6 +303,17 @@ public class RecordValueTask extends HttpServlet {
         // PointTransactionsFactory.getInstance().updatePoint(point);
 
         return alarmSent;
+    }
+
+    private void sendTweet(User u, Point point, Value v)  {
+        StringBuilder message = new StringBuilder();
+        message.append("#").append(point.getName().getValue()).append(" ");
+        message.append("Value=").append(v.getNumberValue());
+        if (!Utils.isEmptyString(v.getNote())) {
+            message.append(" ").append(v.getNote());
+        }
+        message.append(" via #Nimbits");
+        TwitterServiceFactory.getInstance().sendTweet(u, message.toString());
     }
 
     private void postToFB(final Point p, final User u, final double v, final String note) {
@@ -283,7 +342,7 @@ public class RecordValueTask extends HttpServlet {
         // String link = "http://app.nimbits.com?view=chart&uuid=" + p.getUUID();
         String link = "http://www.nimbits.com";
         FacebookFactory.getInstance().updateStatus(u.getFacebookToken(), m, picture, link, "via Nimbits",
-                "See Charts, Maps and More", "Point Description: " + p.getDescription());
+                "Subscribe To this Date Channel", "Point Description: " + p.getDescription());
 
 
     }

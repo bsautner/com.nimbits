@@ -34,6 +34,7 @@ import com.nimbits.client.model.subscription.*;
 import com.nimbits.client.panels.*;
 import com.nimbits.client.service.*;
 import com.nimbits.client.service.category.*;
+import com.nimbits.client.service.datapoints.*;
 import com.nimbits.client.service.diagram.*;
 import com.nimbits.client.service.recordedvalues.*;
 import com.nimbits.client.service.settings.*;
@@ -52,6 +53,7 @@ public class nimbits implements EntryPoint {
     private Viewport viewport;
     private final static String heading = (Const.CONST_SERVER_NAME + " " + Const.CONST_SERVER_VERSION);
     private ClientType clientType;
+
 
 
     private void loadLayout(final LoginInfo loginInfo,
@@ -73,7 +75,7 @@ public class nimbits implements EntryPoint {
         if (action.equals(Action.android)) {
             viewport.setLayout(new FillLayout());
             viewport.setBorders(false);
-            mainPanel = new MainPanel(loginInfo, true, false);
+            mainPanel = new MainPanel(loginInfo, true, false, settings);
             contentPanel.add(mainPanel);
             contentPanel.setHeaderVisible(false);
             contentPanel.setLayout(new FillLayout());
@@ -82,7 +84,7 @@ public class nimbits implements EntryPoint {
         else {
             viewport.setLayout(new BorderLayout());
             viewport.setBorders(false);
-            mainPanel = new MainPanel(loginInfo, false, loadConnections);
+            mainPanel = new MainPanel(loginInfo, false, loadConnections, settings);
             contentPanel.setHeaderVisible(true);
             if (loginInfo != null) {
                 contentPanel.setHeading(heading + " " + loginInfo.getEmailAddress().getValue());
@@ -94,7 +96,7 @@ public class nimbits implements EntryPoint {
             viewport.add(contentPanel, new BorderLayoutData(LayoutRegion.CENTER));
             if (action.equals(Action.subscribe)) {
                 Cookies.removeCookie(Action.subscribe.name());
-                showSubscriptionPanel(uuid);
+                 showSubscriptionPanel(uuid, settings);
             }
         }
 
@@ -103,7 +105,41 @@ public class nimbits implements EntryPoint {
         RootPanel.get("main").add(viewport);
 
     }
+    public void showSubscriptionPanel(final String uuid, final Map<String, String> settings) {
+        SubscribePanel dp = new SubscribePanel(uuid, settings);
 
+        final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
+        w.setWidth(500);
+        w.setHeight(500);
+        w.setHeading("Subscribe");
+        w.add(dp);
+        dp.addSubscriptionAddedListener(new NavigationEventProvider.SubscriptionAddedListener() {
+            @Override
+            public void onSubscriptionAdded(Subscription model) {
+                w.hide();
+                Cookies.removeCookie(Action.subscribe.name());
+                if (model != null) {
+                    PointServiceAsync serviceAsync = GWT.create(PointService.class);
+                    serviceAsync.getPointByUUID(model.getSubscribedPointUUID(), new AsyncCallback<Point>() {
+                        @Override
+                        public void onFailure(Throwable caught) {
+                           GWT.log(caught.getMessage());
+                        }
+
+                        @Override
+                        public void onSuccess(Point result) {
+                            result.setEntityType(EntityType.subscription);
+                            result.setReadOnly(true);
+                            mainPanel.addPoint(result);
+                            mainPanel.addPointToTree(result);
+                        }
+                    });
+                }
+            }
+        });
+
+        w.show();
+    }
     private void loadDiagramView(final Diagram diagram,
                                  final ClientType clientType) {
 
@@ -386,23 +422,7 @@ public class nimbits implements EntryPoint {
         });
     }
 
-    private void showSubscriptionPanel(final String uuid) {
-        SubscribePanel dp = new SubscribePanel(uuid);
 
-        final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
-        w.setWidth(500);
-        w.setHeight(500);
-        w.setHeading("Subscribe");
-        w.add(dp);
-        dp.addSubscriptionAddedListener(new NavigationEventProvider.SubscriptionAddedListener() {
-            @Override
-            public void onSubscriptionAdded(Subscription model) {
-             w.hide();
-            }
-        });
-
-        w.show();
-    }
 
 
     private void finishFacebookAuthentication(final Map<String, String> settings, final String code) {

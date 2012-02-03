@@ -28,7 +28,7 @@ public interface PointTransactions {
 
     void deletePoint(final Point p) throws NimbitsException;
 
-    Point movePoint(final PointName pointName, final CategoryName categoryName) throws NimbitsException;
+    Point movePoint(final Point point, final CategoryName categoryName) throws NimbitsException;
 
     Point addPoint(final Point point, final Category c) throws NimbitsException;
 

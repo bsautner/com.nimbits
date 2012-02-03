@@ -26,5 +26,5 @@ public interface TwitterService extends RemoteService {
 
     void updateUserToken(final String oauth_token) throws NimbitsException;
 
-    void sendTweet(final User user, final String message) throws NimbitsException;
+    void sendTweet(final User user, final String message) ;
 }

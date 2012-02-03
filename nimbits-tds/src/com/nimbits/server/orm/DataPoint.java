@@ -691,6 +691,10 @@ public class DataPoint implements Point {
         return EntityType.get(this.entityType);
     }
 
+    @Override
+    public void setEntityType(EntityType entityType) {
+        this.entityType = entityType.getCode();
+    }
 
 
     @Override

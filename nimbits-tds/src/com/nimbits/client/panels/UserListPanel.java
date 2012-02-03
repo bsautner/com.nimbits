@@ -36,9 +36,10 @@ class UserListPanel extends NavigationEventProvider {
     private final UserServiceAsync userService = GWT.create(UserService.class);
     // private NavigationPanel navTree;// = new NavTree();
     private final EmailAddress email;
+    private final Map<String, String> settings;
 
-
-    public UserListPanel(EmailAddress email) {
+    public UserListPanel(EmailAddress email, Map<String, String> settings) {
+        this.settings = settings;
         setLayout(new FlowLayout(10));
         this.email = email;
 
@@ -132,7 +133,7 @@ class UserListPanel extends NavigationEventProvider {
 
     final NavigationPanel createNavigationPanel(final EmailAddress selectedEmail) {
 
-        final NavigationPanel navTree = new NavigationPanel(selectedEmail, true, ClientType.other);
+        final NavigationPanel navTree = new NavigationPanel(selectedEmail, true, ClientType.other, settings);
 
         //  navTree.loadAuthTree();
 

@@ -18,13 +18,13 @@ public class SubscriptionFactory {
     }
 
     public static Subscription createSubscription(final SubscriptionDeliveryMethod dataUpdateAlertMethod,
-                                                  final SubscriptionDeliveryMethod alarmStateChangeMethod,
+                                                  final SubscriptionDeliveryMethod alertStateChangeMethod,
                                                   final SubscriptionDeliveryMethod propertyChangeMethod,
                                                   final double maxRepeat,
                                                   final Date lastSent) {
         return new SubscriptionModel(
                 dataUpdateAlertMethod,
-                alarmStateChangeMethod,
+                alertStateChangeMethod,
                 propertyChangeMethod,
                 maxRepeat, lastSent
                 );

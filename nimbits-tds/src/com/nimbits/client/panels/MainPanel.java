@@ -24,14 +24,17 @@ import com.nimbits.client.model.diagram.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.point.Point;
 
+import java.util.*;
+
 public class MainPanel extends NavigationEventProvider {
 
     private final CenterPanel center = new CenterPanel();
     private EmailAddress emailAddress;
-
-
+    private ContentPanel west;
+    private NavigationPanel navigationPanel;
+    private Map<String, String> settings;
     final NavigationPanel createNavigationPanel(ClientType clientType) {
-        final NavigationPanel navTree = new NavigationPanel(emailAddress, false, clientType);
+        final NavigationPanel navTree = new NavigationPanel(emailAddress, false, clientType, settings);
 
 
         navTree.addCategoryClickedListeners(new CategoryClickedListener() {
@@ -65,7 +68,6 @@ public class MainPanel extends NavigationEventProvider {
 
         });
 
-
         navTree.addPointDeletedListeners(new PointDeletedListener() {
 
             @Override
@@ -86,16 +88,22 @@ public class MainPanel extends NavigationEventProvider {
         });
         return navTree;
 
-
     }
 
 
     public void addPoint(final Point point)  {
         center.addPoint(point);
     }
+    public void addPointToTree(final Point point) {
+        navigationPanel.addNewlyCreatedPointToTree(point);
+    }
 
+    public MainPanel(final LoginInfo loginInfo,
+                     final boolean doAndroid,
+                     final boolean loadConnections,
+                     final Map<String, String> settings)   {
 
-    public MainPanel(final LoginInfo loginInfo, final boolean doAndroid, final boolean loadConnections)   {
+        this.settings = settings;
 
         if (doAndroid) {
             loadAndroidLayout(loginInfo);
@@ -114,9 +122,9 @@ public class MainPanel extends NavigationEventProvider {
 
         final ContentPanel west = new ContentPanel();
         final NavigationPanel navigationPanel = createNavigationPanel(ClientType.android);
-       navigationPanel.setLayout(new FillLayout());
-       navigationPanel.setHeight(1280);
-    //  navigationPanel.setAutoHeight(true);
+        navigationPanel.setLayout(new FillLayout());
+        navigationPanel.setHeight(1280);
+        //  navigationPanel.setAutoHeight(true);
         west.setHeaderVisible(false);
         west.add(navigationPanel);
         west.setHeight("100%");
@@ -126,6 +134,13 @@ public class MainPanel extends NavigationEventProvider {
 
 
     }
+    public void loadTree() {
+        west.removeAll();
+        navigationPanel = createNavigationPanel(ClientType.other);
+        navigationPanel.setLayout(new FillLayout());
+
+        west.add(navigationPanel);
+    }
 
     private void loadBorderLayout(final LoginInfo loginInfo,final boolean loadConnections)   {
         final BorderLayout layout = new BorderLayout();
@@ -133,10 +148,8 @@ public class MainPanel extends NavigationEventProvider {
         setLayout(layout);
 
 
-        final ContentPanel west = new ContentPanel();
-        final NavigationPanel navigationPanel = createNavigationPanel(ClientType.other);
-        navigationPanel.setLayout(new FillLayout());
-        west.add(navigationPanel);
+        west = new ContentPanel();
+        loadTree();
         west.setHeight("100%");
         west.setHeading("Navigator");
 
@@ -178,9 +191,8 @@ public class MainPanel extends NavigationEventProvider {
         add(center, centerData);
     }
 
-
     private ConnectionPanel createConnections(final EmailAddress email)   {
-        final ConnectionPanel connections = new ConnectionPanel(email);
+        final ConnectionPanel connections = new ConnectionPanel(email, settings);
 
         connections.addCategoryClickedListeners(new CategoryClickedListener() {
 

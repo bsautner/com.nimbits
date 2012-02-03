@@ -13,39 +13,33 @@
 
 package com.nimbits.client.panels;
 
-import com.extjs.gxt.ui.client.event.Events;
-import com.extjs.gxt.ui.client.event.Listener;
-import com.extjs.gxt.ui.client.event.SelectionChangedEvent;
-import com.extjs.gxt.ui.client.store.ListStore;
-import com.extjs.gxt.ui.client.util.Format;
-import com.extjs.gxt.ui.client.widget.ContentPanel;
-import com.extjs.gxt.ui.client.widget.ListView;
-import com.extjs.gxt.ui.client.widget.layout.FillLayout;
-import com.extjs.gxt.ui.client.widget.layout.FlowLayout;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.extjs.gxt.ui.client.event.*;
+import com.extjs.gxt.ui.client.store.*;
+import com.extjs.gxt.ui.client.util.*;
+import com.extjs.gxt.ui.client.widget.*;
+import com.extjs.gxt.ui.client.widget.layout.*;
+import com.google.gwt.core.client.*;
+import com.google.gwt.user.client.*;
+import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.GxtUserModel;
-import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.diagram.Diagram;
-import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.category.*;
+import com.nimbits.client.model.diagram.*;
+import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.service.user.UserService;
-import com.nimbits.client.service.user.UserServiceAsync;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.service.user.*;
 
-import java.util.List;
+import java.util.*;
 
 class UserListPanel extends NavigationEventProvider {
     private final UserServiceAsync userService = GWT.create(UserService.class);
     // private NavigationPanel navTree;// = new NavTree();
     private final EmailAddress email;
+    private final Map<String, String> settings;
 
-
-    public UserListPanel(EmailAddress email) {
+    public UserListPanel(EmailAddress email, Map<String, String> settings) {
+        this.settings = settings;
         setLayout(new FlowLayout(10));
         this.email = email;
 
@@ -139,14 +133,14 @@ class UserListPanel extends NavigationEventProvider {
 
     final NavigationPanel createNavigationPanel(final EmailAddress selectedEmail) {
 
-        final NavigationPanel navTree = new NavigationPanel(selectedEmail, true, ClientType.other);
+        final NavigationPanel navTree = new NavigationPanel(selectedEmail, true, ClientType.other, settings);
 
         //  navTree.loadAuthTree();
 
         navTree.addCategoryClickedListeners(new CategoryClickedListener() {
 
             @Override
-            public void onCategoryClicked(final Category c, boolean readOnly) throws NimbitsException {
+            public void onCategoryClicked(final Category c, boolean readOnly)  {
 
                 notifyCategoryClickedListener(c, readOnly);
 
@@ -157,7 +151,7 @@ class UserListPanel extends NavigationEventProvider {
         navTree.addPointClickedListeners(new PointClickedListener() {
 
             @Override
-            public void onPointClicked(final Point p) throws NimbitsException {
+            public void onPointClicked(final Point p){
 
                 notifyPointClickedListener(p);
             }
@@ -178,7 +172,7 @@ class UserListPanel extends NavigationEventProvider {
         navTree.addDiagramDeletedListeners(new DiagramDeletedListener() {
 
             @Override
-            public void onDiagramDeleted(final Diagram c, final boolean readOnly) throws NimbitsException {
+            public void onDiagramDeleted(final Diagram c, final boolean readOnly) {
                 notifyDiagramDeletedListener(c, readOnly);
             }
 

@@ -197,24 +197,7 @@ public class RecordedValueDAOImpl implements RecordedValueTransactions {
     @Override
     public Value recordValue(final Value v) throws NimbitsException {
         throw new NimbitsException("Not Implemented");
-//        final PersistenceManager pm = PMF.get().getPersistenceManager();
-//        final RecordedValue jdoVal = new RecordedValue(point, v);
-//
-//        final Transaction tx = pm.currentTransaction();
-//        Value retObj;
-//        try {
-//            tx.begin();
-//            pm.makePersistent(jdoVal);
-//            tx.commit();
-//            retObj = ValueModelFactory.createValueModel(jdoVal);
-//        } catch (JDOException ex) {
-//            log.severe(ex.getMessage());
-//            throw new NimbitsException(Const.ERROR_RETRY);
-//
-//        } finally {
-//            pm.close();
-//        }
-//        return retObj;
+
     }
 
     @Override

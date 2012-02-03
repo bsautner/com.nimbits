@@ -39,7 +39,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.service.user.UserService;
 import com.nimbits.client.service.user.UserServiceAsync;
 
-import java.util.List;
+import java.util.*;
 
 class ConnectionPanel extends NavigationEventProvider {
 
@@ -48,25 +48,25 @@ class ConnectionPanel extends NavigationEventProvider {
     private final EmailAddress email;
     private final ContentPanel mainPanel = new ContentPanel();
     private int connectionCount = 0;
-
+    private final Map<String, String> settings;
 //    @Override
 //    protected void onRender(com.google.gwt.user.client.Element parent, int pos) {
 //        super.onRender(parent, pos);
 //    }
 
     private UserListPanel createUserList() {
-        final UserListPanel userList = new UserListPanel(email);
+        final UserListPanel userList = new UserListPanel(email, settings);
         userList.addCategoryClickedListeners(new CategoryClickedListener() {
 
             @Override
-            public void onCategoryClicked(final Category c, boolean readOnly) throws NimbitsException {
+            public void onCategoryClicked(final Category c, boolean readOnly) {
                 notifyCategoryClickedListener(c, readOnly);
             }
         });
 
         userList.addPointClickedListeners(new PointClickedListener() {
             @Override
-            public void onPointClicked(Point p) throws NimbitsException {
+            public void onPointClicked(Point p){
                 notifyPointClickedListener(p);
             }
         });
@@ -85,8 +85,9 @@ class ConnectionPanel extends NavigationEventProvider {
 
     }
 
-    public ConnectionPanel(final EmailAddress email) throws NimbitsException {
+    public ConnectionPanel(final EmailAddress email, Map<String, String> settings)  {
         this.email = email;
+        this.settings = settings;
 
         mainPanel.setTopComponent(toolbar());
         mainPanel.setHeaderVisible(false);
@@ -105,7 +106,7 @@ class ConnectionPanel extends NavigationEventProvider {
 
     }
 
-    private ToolBar toolbar() throws NimbitsException {
+    private ToolBar toolbar()  {
         final ToolBar t = new ToolBar();
         t.setBorders(false);
         ButtonGroup group = new ButtonGroup(1);

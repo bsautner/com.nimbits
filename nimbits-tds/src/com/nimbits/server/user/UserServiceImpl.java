@@ -181,6 +181,11 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         return u.getSecret();
     }
 
+    @Override
+    public User getUserByUUID(String subscriberUUID) {
+        return UserTransactionFactory.getInstance().getUserByUUID(subscriberUUID);
+    }
+
 
     @Override
     public String updateSecret() throws NimbitsException {

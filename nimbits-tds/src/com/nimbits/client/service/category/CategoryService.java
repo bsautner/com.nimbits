@@ -26,21 +26,36 @@ import java.util.List;
 
 @RemoteServiceRelativePath(Const.PARAM_CATEGORY)
 public interface CategoryService extends RemoteService {
-    List<Category> getCategories(final boolean includePoints, final boolean includeDiagrams, final boolean includeAlertState) throws NimbitsException;
+    List<Category> getCategories(final boolean includePoints,
+                                 final boolean includeDiagrams,
+                                 final boolean includeSubscriptions,
+                                 final boolean includeAlertState) throws NimbitsException;
 
-    List<Category> getCategories(final User u, final boolean includePoints, final boolean includeDiagrams);
+    List<Category> getCategories(final User u,
+                                 final boolean includePoints,
+                                 final boolean includeDiagrams,
+                                 final boolean includeSubscriptions);
 
     Category addCategory(final CategoryName CategoryName) throws NimbitsException;
 
     Category addCategory(final User u, final CategoryName categoryName);
 
-    Category getCategoryByName(final CategoryName categoryName, final boolean includePoints, final boolean includeDiagrams) throws NimbitsException;
+    Category getCategoryByName(final CategoryName categoryName,
+                               final boolean includePoints,
+                               final boolean includeDiagrams
+                              ) throws NimbitsException;
+
+    Category getCategoryByName(final User u, final CategoryName categoryName, final boolean includePoints, final boolean includeDiagrams) throws NimbitsException;
 
     void deleteCategory(final Category c) throws NimbitsException;
 
     void deleteCategory(final User u, final Category c) throws NimbitsException;
 
-    List<Category> getConnectionCategories(final boolean includePoints, final boolean includeDiagrams, final EmailAddress email) throws NimbitsException;
+    List<Category> getConnectionCategories(final boolean includePoints,
+                                           final boolean includeDiagrams,
+                                           final boolean includeSubscriptions,
+                                           final EmailAddress email
+                                           ) throws NimbitsException;
 
     Category getCategory(final User user, final CategoryName categoryName);
 

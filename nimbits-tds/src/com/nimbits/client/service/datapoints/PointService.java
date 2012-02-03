@@ -14,23 +14,18 @@
 package com.nimbits.client.service.datapoints;
 
 
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.nimbits.client.enums.AlertType;
-import com.nimbits.client.enums.ExportType;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.exceptions.PointExistsException;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.CategoryName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointName;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.exceptions.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.category.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.subscription.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @RemoteServiceRelativePath(Const.PARAM_POINT)
 public interface PointService extends RemoteService {
@@ -57,13 +52,13 @@ public interface PointService extends RemoteService {
 
     Map<PointName, Point> getPointsByName(final long pointOwnerId, final Set<PointName> names) throws NimbitsException;
 
-    Point movePoint(final PointName pointName, final CategoryName newCategoryName) throws NimbitsException;
+    Point movePoint(final Point point, final CategoryName newCategoryName) throws NimbitsException;
 
     List<Point> getPoints(final User u) throws NimbitsException;
 
     Point getPointByUUID(final String uuid) throws NimbitsException;
 
-    AlertType getPointAlertState(final Point point, final Value value) throws NimbitsException;
+    AlertType getPointAlertState(final Point point, final Value value);
 
     Point copyPoint(final Point point, final PointName newName) throws NimbitsException, PointExistsException;
 
@@ -74,7 +69,7 @@ public interface PointService extends RemoteService {
 
     String exportData(final Map<PointName, Point> points, ExportType exportType) throws NimbitsException;
 
-    Point movePoint(final User u, final PointName pointName, final CategoryName categoryName) throws NimbitsException;
+    Point movePoint(final User u, final Point point, final CategoryName categoryName) throws NimbitsException;
 
     Point addPoint(final Point point, final Category c, final User u) throws NimbitsException;
 
@@ -91,4 +86,14 @@ public interface PointService extends RemoteService {
     Point publishPoint(User u, Point p) throws NimbitsException;
 
     List<Point> getAllPoints();
+
+    Subscription subscribe(Point p, Subscription subscription) throws NimbitsException;
+
+    Subscription readSubscription(final Point point) throws NimbitsException;
+
+    void deleteSubscription(final Point point) throws NimbitsException;
+
+    List<Subscription> getSubscriptionsToPoint(Point point);
+
+    void updateSubscriptionLastSent(Subscription subscription);
 }

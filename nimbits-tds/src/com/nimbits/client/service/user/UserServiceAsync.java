@@ -35,4 +35,6 @@ public interface UserServiceAsync {
     void getConnections(final EmailAddress email, final AsyncCallback<List<User>> asyncCallback);
 
     void getAppUserUsingGoogleAuth(AsyncCallback<User> async);
+
+    void getUserByUUID(String subscriberUUID, AsyncCallback<User> async);
 }

@@ -21,10 +21,13 @@ import com.nimbits.client.model.user.*;
 import java.util.*;
 
 public interface CategoryServiceAsync {
-    void getCategories(final boolean includePoints, final boolean includeDiagrams, final boolean includeAlertState,
+    void getCategories(final boolean includePoints,
+                       final boolean includeDiagrams,
+                       final boolean includeSubscriptions,
+                       final boolean includeAlertState,
                        AsyncCallback<List<Category>> asyncCallback);
 
-    void getConnectionCategories(final boolean includePoints, final boolean includeDiagrams, final EmailAddress email,
+    void getConnectionCategories(final boolean includePoints, final boolean includeDiagrams,  final boolean includeSubscriptions, final EmailAddress email,
                                  AsyncCallback<List<Category>> asyncCallback);
 
     void addCategory(final CategoryName CategoryName,
@@ -33,7 +36,7 @@ public interface CategoryServiceAsync {
     void deleteCategory(final Category c,
                         AsyncCallback<Void> asyncCallback);
 
-    void getCategories(final User u, final boolean includePoints, final boolean includeDiagrams,
+    void getCategories(final User u, final boolean includePoints, final boolean includeDiagrams, final boolean includeSubscriptions,
                        AsyncCallback<List<Category>> callback);
 
     void getCategoryByName(final CategoryName categoryName, final boolean includePoints, final boolean includeDiagrams, AsyncCallback<Category> async);
@@ -57,4 +60,6 @@ public interface CategoryServiceAsync {
     void getCategoryByUUID(String uuidParam, AsyncCallback<Category> async);
 
     void updateCategory(User u, Category category, AsyncCallback<Category> async);
+
+    void getCategoryByName(final User u, final CategoryName categoryName, final boolean includePoints, final boolean includeDiagrams, AsyncCallback<Category> async);
 }

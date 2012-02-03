@@ -164,7 +164,7 @@ class PointPanel extends LayoutContainer {
     private final CheckBox intelEnabled = new CheckBox();
     private final CheckBox intelPlainText = new CheckBox();
 
-    public PointPanel(final Point x) throws NimbitsException {
+    public PointPanel(final Point x)   {
         originalPoint = x;
         SettingsServiceAsync settings = GWT.create(SettingsService.class);
         settings.getSettings(new AsyncCallback<Map<String, String>>() {
@@ -350,49 +350,53 @@ class PointPanel extends LayoutContainer {
 
     private Button saveButtonInit() {
         Button buttonSave = new Button("Save");
+        buttonSave.setEnabled(! point.getReadOnly());
         buttonSave.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.SaveAll()));
-        buttonSave.addSelectionListener(new SelectionListener<ButtonEvent>() {
-            public void componentSelected(ButtonEvent ce) {
-                try {
-                    if (!Utils.isEmptyString(intelTargetPoint.getValue()) && !Utils.isEmptyString(intelFormula.getValue())) {
-                        pointService.getPointByName(null, CommonFactoryLocator.getInstance().createPointName(intelTargetPoint.getValue()), new AsyncCallback<Point>() {
-                            @Override
-                            public void onFailure(Throwable throwable) {
-                                final MessageBox box = MessageBox.alert("Target Point Not Found", "There was an error trying to find the data point name entered in the" +
-                                        " Intelligence target, please enter a valid point name or nothing to not use the intelligence function", null);
-                                box.show();
-                            }
 
-                            @Override
-                            public void onSuccess(Point point) {
-                                try {
-                                    if (point != null) {
-
-                                        intelligenceTargetPoint = point;
-
-                                        savePoint();
-
-                                    } else {
-                                        final MessageBox box = MessageBox.alert("Target Point Not Found", "There was an error trying to find the data point name entered in the" +
-                                                " Intelligence target, please enter a valid point name or nothing to not use the intelligence function", null);
-                                        box.show();
-                                    }
-                                } catch (NimbitsException e) {
-                                    GWT.log(e.getMessage(), e);
+        if (! point.getReadOnly()) {
+            buttonSave.addSelectionListener(new SelectionListener<ButtonEvent>() {
+                public void componentSelected(ButtonEvent ce) {
+                    try {
+                        if (!Utils.isEmptyString(intelTargetPoint.getValue()) && !Utils.isEmptyString(intelFormula.getValue())) {
+                            pointService.getPointByName(null, CommonFactoryLocator.getInstance().createPointName(intelTargetPoint.getValue()), new AsyncCallback<Point>() {
+                                @Override
+                                public void onFailure(Throwable throwable) {
+                                    final MessageBox box = MessageBox.alert("Target Point Not Found", "There was an error trying to find the data point name entered in the" +
+                                            " Intelligence target, please enter a valid point name or nothing to not use the intelligence function", null);
+                                    box.show();
                                 }
-                            }
-                        });
-                    } else {
-                        intelligenceTargetPoint = null;
-                        savePoint();
+
+                                @Override
+                                public void onSuccess(Point point) {
+                                    try {
+                                        if (point != null) {
+
+                                            intelligenceTargetPoint = point;
+
+                                            savePoint();
+
+                                        } else {
+                                            final MessageBox box = MessageBox.alert("Target Point Not Found", "There was an error trying to find the data point name entered in the" +
+                                                    " Intelligence target, please enter a valid point name or nothing to not use the intelligence function", null);
+                                            box.show();
+                                        }
+                                    } catch (NimbitsException e) {
+                                        GWT.log(e.getMessage(), e);
+                                    }
+                                }
+                            });
+                        } else {
+                            intelligenceTargetPoint = null;
+                            savePoint();
+                        }
+
+
+                    } catch (NimbitsException e) {
+                        GWT.log(e.getMessage(), e);
                     }
-
-
-                } catch (NimbitsException e) {
-                    GWT.log(e.getMessage(), e);
                 }
-            }
-        });
+            });
+        }
         return buttonSave;
     }
 

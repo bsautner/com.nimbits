@@ -14,18 +14,13 @@
 package com.nimbits.server.orm;
 
 import com.nimbits.client.enums.*;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.intelligence.Intelligence;
-import com.nimbits.client.model.intelligence.IntelligenceModelFactory;
-import com.nimbits.client.model.point.Calculation;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointModelFactory;
-import com.nimbits.client.model.point.PointName;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.intelligence.*;
+import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.value.Value;
 
 import javax.jdo.annotations.*;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 public class DataPoint implements Point {
@@ -34,13 +29,11 @@ public class DataPoint implements Point {
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Long id;
 
-
     @Persistent(defaultFetchGroup = "true")
     private DataPointIntelligenceEntity dataPointIntelligenceEntity;
 
     @Persistent(defaultFetchGroup = "true")
     private CalculationEntity calculationEntity;
-
 
     @Persistent
     private String uuid;
@@ -699,12 +692,20 @@ public class DataPoint implements Point {
     }
 
     @Override
+    public void setEntityType(EntityType entityType) {
+        this.entityType = entityType.getCode();
+    }
+
+
+    @Override
     public void setCalculation(Calculation calculation) {
         this.calculationEntity = new CalculationEntity(calculation);
 
     }
 
-    public void updateCalculation(Calculation calculation) {
+
+
+    public void updateCalculation(final Calculation calculation) {
         if (this.calculationEntity != null) {
             this.calculationEntity.setEnabled(calculation.getEnabled());
             this.calculationEntity.setFormula(calculation.getFormula());
@@ -726,4 +727,6 @@ public class DataPoint implements Point {
         }
         //To change body of created methods use File | Settings | File Templates.
     }
+
+
 }

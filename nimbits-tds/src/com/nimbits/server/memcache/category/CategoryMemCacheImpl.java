@@ -57,17 +57,19 @@ public class CategoryMemCacheImpl implements CategoryTransactions {
     }
 
     @Override
-    public List<Category> getCategories(final boolean includePoints, final boolean includeDiagrams) {
+    public List<Category> getCategories(final boolean includePoints,
+                                        final boolean includeDiagrams,
+                                        final boolean includeSubscriptions) {
         List<Category> retObj;
         try {
             if (cache.contains(MemCacheHelper.categoryCollection(user))) {
                 retObj = (List<Category>) cache.get(MemCacheHelper.categoryCollection(user));
 
             } else {
-                List<Category> store = CategoryTransactionFactory.getDaoInstance(user).getCategories(includePoints, includeDiagrams);
+                List<Category> store = CategoryTransactionFactory.getDaoInstance(user).getCategories(includePoints, includeDiagrams, includeSubscriptions);
                 //only store complete trees in the cache.
-                if (includeDiagrams && includePoints) {
-                cache.put(MemCacheHelper.categoryCollection(user), store);
+                if (includeDiagrams && includePoints && includeSubscriptions) {
+                    cache.put(MemCacheHelper.categoryCollection(user), store);
 
                 }
                 retObj = store;
@@ -75,7 +77,7 @@ public class CategoryMemCacheImpl implements CategoryTransactions {
 
         } catch (InvalidValueException e) {
             cache.delete(cache.get(MemCacheHelper.categoryCollection(user)));
-            List<Category> store = CategoryTransactionFactory.getDaoInstance(user).getCategories(includePoints, includeDiagrams);
+            List<Category> store = CategoryTransactionFactory.getDaoInstance(user).getCategories(includePoints, includeDiagrams, includeSubscriptions);
             cache.put(MemCacheHelper.categoryCollection(user), store);
             retObj = store;
         }

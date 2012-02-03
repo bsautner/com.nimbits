@@ -120,10 +120,13 @@ public class TwitterImpl extends RemoteServiceServlet implements
 
     }
 
-    public void sendTweet(final User u, final String message) throws NimbitsException {
+    public void sendTweet(final User u, final String message)  {
 
 
-        final String twitter_client_id = SettingTransactionsFactory.getInstance().getSetting(Const.SETTING_TWITTER_CLIENT_ID);
+        final String twitter_client_id;
+        try {
+            twitter_client_id = SettingTransactionsFactory.getInstance().getSetting(Const.SETTING_TWITTER_CLIENT_ID);
+
         final String twitter_Secret = SettingTransactionsFactory.getInstance().getSetting(Const.SETTING_TWITTER_SECRET);
         if (u != null && ! Utils.isEmptyString(u.getTwitterToken()) && ! Utils.isEmptyString(u.getTwitterTokenSecret())) {
             final AccessToken accessToken = new AccessToken(u.getTwitterToken(),
@@ -142,6 +145,9 @@ public class TwitterImpl extends RemoteServiceServlet implements
             } catch (TwitterException e) {
                 GWT.log(e.getMessage(), e);
             }
+        }
+        } catch (NimbitsException e) {
+           log.severe(e.getMessage());
         }
     }
 

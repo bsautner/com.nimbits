@@ -35,6 +35,8 @@ public class DataPointIntelligenceEntity implements Intelligence {
     @Persistent(mappedBy = "dataPointIntelligenceEntity")
     private DataPoint point;
 
+
+
     @Persistent
     private Boolean enabled;
 

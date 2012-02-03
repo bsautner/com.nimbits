@@ -13,32 +13,24 @@
 
 package com.nimbits.client.panels;
 
-import com.extjs.gxt.ui.client.Style;
-import com.extjs.gxt.ui.client.event.BaseEvent;
-import com.extjs.gxt.ui.client.event.Events;
-import com.extjs.gxt.ui.client.event.Listener;
-import com.extjs.gxt.ui.client.util.Margins;
-import com.extjs.gxt.ui.client.widget.ContentPanel;
-import com.extjs.gxt.ui.client.widget.Info;
+import com.extjs.gxt.ui.client.*;
+import com.extjs.gxt.ui.client.event.*;
+import com.extjs.gxt.ui.client.util.*;
+import com.extjs.gxt.ui.client.widget.*;
 import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.layout.FlowData;
-import com.extjs.gxt.ui.client.widget.layout.RowData;
-import com.extjs.gxt.ui.client.widget.layout.RowLayout;
-import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.icons.Icons;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.diagram.Diagram;
+import com.extjs.gxt.ui.client.widget.layout.*;
+import com.extjs.gxt.ui.client.widget.toolbar.*;
+import com.google.gwt.user.client.*;
+import com.google.gwt.user.client.ui.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.icons.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.diagram.*;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointName;
-import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.value.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by bsautner
@@ -59,11 +51,8 @@ class CenterPanel extends NavigationEventProvider {
 
             @Override
             public void onPointClicked(final Point c) {
-                try {
-                    addPoint(c);
-                } catch (NimbitsException e) {
-                    GWT.log(e.getMessage());
-                }
+              addPoint(c);
+
 
             }
         });
@@ -255,7 +244,7 @@ class CenterPanel extends NavigationEventProvider {
         return bottom;
     }
 
-    public void addPoint(final Point point) throws NimbitsException {
+    public void addPoint(final Point point) {
         if (!points.containsKey(point.getName())) {
             points.put(point.getName(), point);
             grid.addPoint(point);
@@ -285,7 +274,7 @@ class CenterPanel extends NavigationEventProvider {
         diagramPanel.addPointClickedListeners(new PointClickedListener() {
 
             @Override
-            public void onPointClicked(final Point p) throws NimbitsException {
+            public void onPointClicked(final Point p){
                 addPoint(p);
             }
 

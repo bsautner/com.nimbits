@@ -110,9 +110,9 @@ public class PointModel implements Serializable, Point {
 
     private Calculation calculation;
 
-
     private boolean sendAlertAsJson;
 
+    private boolean isSubscription;
 
     public void setClientType(ClientType clientType) {
         this.clientType = clientType;
@@ -679,4 +679,11 @@ public class PointModel implements Serializable, Point {
     public EntityType getEntityType() {
         return EntityType.get(this.entityType);
     }
+
+    @Override
+    public void setEntityType(EntityType entityType) {
+       this.entityType = entityType.getCode();
+    }
+
+
 }

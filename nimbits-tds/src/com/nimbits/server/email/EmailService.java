@@ -23,5 +23,5 @@ public interface EmailService {
 
     void sendEmail(final EmailAddress email, final String message, final String subject) throws NimbitsException;
 
-    void sendAlert(final Point point, final EmailAddress email, final Double value, final AlertType anAlertType) throws NimbitsException;
+    void sendAlert(final Point point, final EmailAddress email, final Double value, final AlertType anAlertType);
 }

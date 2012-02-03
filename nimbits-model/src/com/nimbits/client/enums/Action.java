@@ -30,8 +30,14 @@ public enum Action {
     readNote(Const.ACTION_READ_NOTE),
     readValue(Const.ACTION_READ_VALUE),
     readGps(Const.ACTION_READ_GPS),
-    readJson(Const.ACTION_READ_JSON);
-
+    readJson(Const.ACTION_READ_JSON),
+    subscribe(Const.ACTION_SUBSCRIBE),
+    android(Const.ACTION_ANDROID),
+    facebook(Const.ACTION_FACEBOOK),
+    twitter(Const.ACTION_TWITTER),
+    twitterFinishReg(Const.ACTION_TWITTER_FINISH_REG),
+    none(Const.ACTION_NONE),
+    report(Const.ACTION_REPORT), diagram(Const.ACTION_DIAGRAM);
     private static final Map<String, Action> lookup = new HashMap<String, Action>();
 
     static {

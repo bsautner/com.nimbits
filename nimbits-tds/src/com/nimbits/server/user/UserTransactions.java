@@ -50,4 +50,6 @@ public interface UserTransactions {
     User updateTwitter(final EmailAddress emailAddress, final AccessToken token) throws NimbitsException;
 
     User updateLastLoggedIn(final User user, final Date LastLoggedIn) throws NimbitsException;
+
+    User getUserByUUID(String subscriberUUID);
 }

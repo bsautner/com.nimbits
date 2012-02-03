@@ -13,15 +13,14 @@
 
 package com.nimbits.client.panels;
 
-import com.extjs.gxt.ui.client.widget.LayoutContainer;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.diagram.Diagram;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.value.Value;
+import com.extjs.gxt.ui.client.widget.*;
+import com.nimbits.client.model.category.*;
+import com.nimbits.client.model.diagram.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.subscription.*;
+import com.nimbits.client.model.value.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public abstract class NavigationEventProvider extends LayoutContainer {
     private final List<CategoryClickedListener> categoryClickedListeners = new ArrayList<CategoryClickedListener>();
@@ -35,9 +34,28 @@ public abstract class NavigationEventProvider extends LayoutContainer {
     private final List<ChartRemovedListener> chartRemovedListeners = new ArrayList<ChartRemovedListener>();
     private final List<DiagramRemovedListener> diagramRemovedListeners = new ArrayList<DiagramRemovedListener>();
 
+    private final List<SubscriptionAddedListener> subscriptionAddedListeners = new ArrayList<SubscriptionAddedListener>();
+
+
+    public interface SubscriptionAddedListener {
+        void onSubscriptionAdded(final Subscription model);
+    }
+
+    public void addSubscriptionAddedListener(final SubscriptionAddedListener listener) {
+        subscriptionAddedListeners.add(listener);
+    }
+
+
+    void notifySubscriptionAddedListener(final Subscription model)  {
+        for (SubscriptionAddedListener SubscriptionAddedListener : subscriptionAddedListeners) {
+            SubscriptionAddedListener.onSubscriptionAdded(model);
+        }
+    }
+
+
     // Category Click Handlers
     public interface CategoryClickedListener {
-        void onCategoryClicked(final Category c, final boolean readOnly) throws NimbitsException;
+        void onCategoryClicked(final Category c, final boolean readOnly);
     }
 
     void addCategoryDeletedListeners(final CategoryDeletedListener listener) {
@@ -48,20 +66,20 @@ public abstract class NavigationEventProvider extends LayoutContainer {
         categoryClickedListeners.add(listener);
     }
 
-    void notifyCategoryClickedListener(final Category c, final boolean readOnly) throws NimbitsException {
+    void notifyCategoryClickedListener(final Category c, final boolean readOnly)  {
         for (CategoryClickedListener categoryClickedListener : categoryClickedListeners) {
             categoryClickedListener.onCategoryClicked(c, readOnly);
         }
     }
 
-    void notifyCategoryDeletedListener(final Category c, final boolean readOnly) throws NimbitsException {
+    void notifyCategoryDeletedListener(final Category c, final boolean readOnly)  {
         for (CategoryDeletedListener categoryDeletedListener : categoryDeletedListeners) {
             categoryDeletedListener.onCategoryDeleted(c, readOnly);
         }
     }
 
     public interface CategoryDeletedListener {
-        void onCategoryDeleted(final Category c, final boolean readOnly) throws NimbitsException;
+        void onCategoryDeleted(final Category c, final boolean readOnly) ;
 
     }
 
@@ -98,7 +116,7 @@ public abstract class NavigationEventProvider extends LayoutContainer {
 
     // Point Click Handlers
     public interface PointClickedListener {
-        void onPointClicked(final Point c) throws NimbitsException;
+        void onPointClicked(final Point c);
 
     }
 
@@ -106,7 +124,7 @@ public abstract class NavigationEventProvider extends LayoutContainer {
         pointClickedListeners.add(listener);
     }
 
-    void notifyPointClickedListener(final Point c) throws NimbitsException {
+    void notifyPointClickedListener(final Point c)  {
 
         for (PointClickedListener pointClickedListener : pointClickedListeners) {
             pointClickedListener.onPointClicked(c);
@@ -146,7 +164,7 @@ public abstract class NavigationEventProvider extends LayoutContainer {
     }
 
     public interface DiagramDeletedListener {
-        void onDiagramDeleted(final Diagram c, final boolean readOnly) throws NimbitsException;
+        void onDiagramDeleted(final Diagram c, final boolean readOnly);
 
     }
 
@@ -154,7 +172,7 @@ public abstract class NavigationEventProvider extends LayoutContainer {
         diagramDeletedListeners.add(listener);
     }
 
-    void notifyDiagramDeletedListener(final Diagram c, final boolean readOnly) throws NimbitsException {
+    void notifyDiagramDeletedListener(final Diagram c, final boolean readOnly) {
         for (DiagramDeletedListener diagramDeletedListener : diagramDeletedListeners) {
             diagramDeletedListener.onDiagramDeleted(c, readOnly);
         }
@@ -176,7 +194,7 @@ public abstract class NavigationEventProvider extends LayoutContainer {
 
 
     public interface PointDeletedListener {
-        void onPointDeleted(Point c) throws NimbitsException;
+        void onPointDeleted(Point c);
 
     }
 
@@ -184,7 +202,7 @@ public abstract class NavigationEventProvider extends LayoutContainer {
         pointDeletedListeners.add(listener);
     }
 
-    void notifyPointDeletedListener(Point c) throws NimbitsException {
+    void notifyPointDeletedListener(Point c)  {
         for (PointDeletedListener pointDeletedListener : pointDeletedListeners) {
             pointDeletedListener.onPointDeleted(c);
         }

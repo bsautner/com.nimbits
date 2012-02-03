@@ -106,10 +106,12 @@ public class CategoryWebService extends HttpServlet {
 
         final String includePointsStr = req.getParameter(Const.PARAM_INCLUDE_POINTS);
         final String includeDiagramsStr = req.getParameter(Const.PARAM_INCLUDE_DIAGRAMS);
+        final String includeSubscriptionsStr = req.getParameter(Const.PARAM_INCLUDE_SUBSCRIPTIONS);
         final String categoryNameParam = req.getParameter(Const.PARAM_NAME);
 
         final boolean includePoints = includePointsStr != null && includePointsStr.equalsIgnoreCase(Const.WORD_TRUE);
         final boolean includeDiagrams = includeDiagramsStr != null && includeDiagramsStr.equalsIgnoreCase(Const.WORD_TRUE);
+        final boolean includeSubscriptions = includeSubscriptionsStr != null && includeSubscriptionsStr.equalsIgnoreCase(Const.WORD_TRUE);
 
         try {
             final PrintWriter out = resp.getWriter();
@@ -117,7 +119,7 @@ public class CategoryWebService extends HttpServlet {
             if (categoryNameParam == null) {
 
                 final List<Category> categories = CategoryServiceFactory.getInstance().getCategories(u,
-                        includePoints, includeDiagrams);
+                        includePoints, includeDiagrams,includeSubscriptions);
 
 //                for (final Category category : Categories) {
 //                    if (includePoints && category.getPoints() != null) {

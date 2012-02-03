@@ -106,14 +106,12 @@ public class SettingsDAOImpl implements SettingTransactions {
             for (final ServerSetting s : l) {
                 settings.put(s.getName(), s.getValue());
             }
-
-        } catch (Exception ex) {
-            log.severe(ex.getMessage());
-        } finally {
+            return settings;
+        }finally {
             pm.close();
         }
 
-        return settings;
+
 
 
     }

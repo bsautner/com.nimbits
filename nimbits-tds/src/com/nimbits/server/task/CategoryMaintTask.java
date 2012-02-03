@@ -48,7 +48,7 @@ public class CategoryMaintTask extends HttpServlet {
 
 
         if (u != null) {
-            List<Category> categories = CategoryServiceFactory.getInstance().getCategories(u, false, false);
+            List<Category> categories = CategoryServiceFactory.getInstance().getCategories(u, false, false, false);
             for (Category c : categories) {
                 if (Utils.isEmptyString(c.getUUID())) {
                     log.info("Fixing category " + c.getName().getValue());

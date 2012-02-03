@@ -13,7 +13,8 @@ public enum EntityType {
     point(1),
     category(2),
     diagram(3),
-    file(4);
+    file(4),
+    subscription(5);
 
     private static final Map<Integer, EntityType> lookup = new HashMap<Integer, EntityType>();
 

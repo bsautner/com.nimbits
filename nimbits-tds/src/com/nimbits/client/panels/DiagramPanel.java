@@ -422,7 +422,7 @@ public class DiagramPanel extends NavigationEventProvider {
     private void addTextPointActions(final OMSVGTextElement t, final PointName pointName, final String[] actions) {
         originalFill.put(t.getId(), t.getStyle().getSVGProperty(SVGConstants.CSS_FILL_VALUE));
         // com.google.gwt.user.client.Window.alert("Adding handler " + t.getId());
-        try {
+
             t.addMouseDownHandler(new MouseDownHandler() {
 
                 @Override
@@ -433,18 +433,13 @@ public class DiagramPanel extends NavigationEventProvider {
                         PointModel p = (PointModel) points.get(pointName);
                         p.setReadOnly(readOnly);
                         p.setClientType(clientType);
-                        try {
-                            notifyPointClickedListener(p);
-                        } catch (NimbitsException e) {
-                            GWT.log(e.getMessage());
-                        }
+                        notifyPointClickedListener(p);
+
 
                     }
                 }
             });
-        } catch (Exception e) {
-            com.google.gwt.user.client.Window.alert(e.getMessage());
-        }
+
         t.addMouseOverHandler(new MouseOverHandler() {
             @Override
             public void onMouseOver(MouseOverEvent mouseOverEvent) {
@@ -614,12 +609,8 @@ public class DiagramPanel extends NavigationEventProvider {
             public void onMouseDown(MouseDownEvent mouseDownEvent) {
                 if (points.containsKey(pointName)) {
                     PointModel p = (PointModel) points.get(pointName);
+                    notifyPointClickedListener(p);
 
-                    try {
-                        notifyPointClickedListener(p);
-                    } catch (NimbitsException e) {
-                        GWT.log(e.getMessage());
-                    }
                 }
             }
         });
@@ -796,11 +787,8 @@ public class DiagramPanel extends NavigationEventProvider {
                     PointModel p = (PointModel) points.get(pointName);
                     p.setReadOnly(readOnly);
                     p.setClientType(clientType);
-                    try {
-                        notifyPointClickedListener(p);
-                    } catch (NimbitsException e) {
-                        GWT.log(e.getMessage());
-                    }
+                  notifyPointClickedListener(p);
+
                 }
             }
         });

@@ -1,29 +1,14 @@
 /*
- strftime for Javascript
- Copyright (c) 2008, Philip S Tellis <philip@bluesmoon.info>
- All rights reserved.
- 
- This code is distributed under the terms of the BSD licence
- 
- Redistribution and use of this software in source and binary forms, with or without modification,
- are permitted provided that the following conditions are met:
-
-   * Redistributions of source code must retain the above copyright notice, this list of conditions
-     and the following disclaimer.
-   * Redistributions in binary form must reproduce the above copyright notice, this list of
-     conditions and the following disclaimer in the documentation and/or other materials provided
-     with the distribution.
-   * The names of the contributors to this file may not be used to endorse or promote products
-     derived from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
-ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
-TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Copyright (c) 2010 Tonic Solutions LLC.
+ *
+ * http://www.nimbits.com
+ *
+ *
+ * Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.gnu.org/licenses/gpl.html
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
 /**
@@ -32,7 +17,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * \version 1.3
  * \date 2008/06
  * \brief Javascript implementation of strftime
- * 
+ *
  * Implements strftime for the Date object in javascript based on the PHP implementation described at
  * http://www.php.net/strftime  This is in turn based on the Open Group specification defined
  * at http://www.opengroup.org/onlinepubs/007908799/xsh/strftime.html This implementation does not
@@ -253,7 +238,7 @@ Date.ext.formats = {
 			// First week is 01 and not 00 as in the case of %U and %W,
 			// so we add 1 to the final result except if day 1 of the year
 			// is a Monday (then %W returns 01).
-			// We also need to subtract 1 if the day 1 of the year is 
+			// We also need to subtract 1 if the day 1 of the year is
 			// Friday-Sunday, so the resulting equation becomes:
 			var idow = woy + (dow1_1 > 4 || dow1_1 <= 1 ? 0 : 1);
 			if(idow == 53 && (new Date('' + d.getFullYear() + '/12/31')).getDay() < 4)
@@ -361,7 +346,7 @@ Date.prototype.strftime=function(fmt)
 
 
 	// Now replace formats - we need a closure so that the date object gets passed through
-	var str = fmt.replace(/%([aAbBCdegGHIjmMpPSuUVwWyY%])/g, function(m0, m1) 
+	var str = fmt.replace(/%([aAbBCdegGHIjmMpPSuUVwWyY%])/g, function(m0, m1)
 			{
 				var f = Date.ext.formats[m1];
 				if(typeof(f) == 'string') {
@@ -421,7 +406,7 @@ Date.prototype.strftime=function(fmt)
  * \endcode
  *
  * \subsection examples Examples
- * 
+ *
  * To get the current time in hours and minutes:
  * \code
  * 	var d = new Date();
@@ -510,13 +495,13 @@ Date.prototype.strftime=function(fmt)
  *
  * Locale names are defined in RFC 1766. Typically, a locale would be a two letter ISO639
  * defined language code and an optional ISO3166 defined country code separated by a -
- * 
+ *
  * eg: fr-FR, de-DE, hi-IN
  *
  * \sa http://www.ietf.org/rfc/rfc1766.txt
  * \sa http://www.loc.gov/standards/iso639-2/php/code_list.php
  * \sa http://www.iso.org/iso/country_codes/iso_3166_code_lists/english_country_names_and_code_elements.htm
- * 
+ *
  * \section locale_fallback Locale fallbacks
  *
  * If a locale object corresponding to the fully specified locale isn't found, an attempt will be made
@@ -562,13 +547,13 @@ Date.prototype.strftime=function(fmt)
  *
  * This library comes with pre-defined locales for en, en-GB, en-US and en-AU.
  *
- * 
+ *
  *
  *
  * \page format_specifiers Format specifiers
- * 
+ *
  * \section specifiers Format specifiers
- * strftime has several format specifiers defined by the Open group at 
+ * strftime has several format specifiers defined by the Open group at
  * http://www.opengroup.org/onlinepubs/007908799/xsh/strftime.html
  *
  * PHP added a few of its own, defined at http://www.php.net/strftime
@@ -577,7 +562,7 @@ Date.prototype.strftime=function(fmt)
  *
  * \subsection supp Supported format specifiers:
  * \copydoc formats
- * 
+ *
  * \subsection unsupportedformats Unsupported format specifiers:
  * \copydoc unsupported
  *
@@ -594,7 +579,7 @@ Date.prototype.strftime=function(fmt)
  *
  *
  * \page faq FAQ
- * 
+ *
  * \section how_tos Usage
  *
  * \subsection howtouse Is there a manual on how to use this library?

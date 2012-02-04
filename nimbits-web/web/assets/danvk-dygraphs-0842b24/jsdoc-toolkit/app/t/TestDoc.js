@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2010 Tonic Solutions LLC.
+ *
+ * http://www.nimbits.com
+ *
+ *
+ * Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.gnu.org/licenses/gpl.html
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+ */
+
 var TestDoc = {
 	fails: 0,
 	plans: 0,
@@ -23,16 +36,16 @@ TestDoc.prove = function(filePath) {
 
 TestDoc.run = function(src) {
 	try { eval(src); } catch(e) { print("# ERROR! "+e); }
-	
+
 	var chunks = src.split(/\/\*t:/);
-	
+
 	var run = function(chunk) {
 		// local shortcuts
 		var is = TestDoc.assertEquals;
 		var isnt = TestDoc.assertNotEquals;
 		var plan = TestDoc.plan;
 		var requires = TestDoc.requires;
-		
+
 		try { eval(chunk); } catch(e) { print("# ERROR! "+e); }
 	}
 	for (var start = -1, end = 0; (start = src.indexOf("/*t:", end)) > end; start = end) {
@@ -54,7 +67,7 @@ TestDoc.Result.prototype.toString = function() {
 	if (typeof this.verdict == "boolean") {
 		return (this.verdict? "ok" : "not ok") + " " + (++TestDoc.report.counter) + " - " + this.message;
 	}
-	
+
 	return "# " + this.message;
 }
 
@@ -111,25 +124,25 @@ TestDoc.readFile = (function(){
 	else {
 		return function(url) {
 			var httpRequest;
-		
+
 			if (window.XMLHttpRequest) { // Mozilla, Safari, etc
 				httpRequest = new XMLHttpRequest();
-			} 
+			}
 			else if (window.ActiveXObject) { // IE
 				try {
 					httpRequest = new ActiveXObject("Msxml2.XMLHTTP");
-				} 
+				}
 				catch (e) {
 				   try {
 						httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
-					} 
+					}
 					catch (e) {
 					}
 				}
 			}
-		
+
 			if (!httpRequest) { throw "Cannot create HTTP Request."; }
-			
+
 			httpRequest.open('GET', url, false);
 			httpRequest.send('');
 			if (httpRequest.readyState == 4) {
@@ -137,7 +150,7 @@ TestDoc.readFile = (function(){
 					throw "The HTTP Request returned an error code: "+httpRequest.status;
 				}
 			}
-			
+
 			return httpRequest.responseText || "";
 		}
 	}

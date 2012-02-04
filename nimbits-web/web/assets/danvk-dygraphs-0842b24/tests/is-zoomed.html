@@ -1,3 +1,16 @@
+<!--
+  ~ Copyright (c) 2010 Tonic Solutions LLC.
+  ~
+  ~ http://www.nimbits.com
+  ~
+  ~
+  ~ Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.gnu.org/licenses/gpl.html
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+  -->
+
 <html>
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7; IE=EmulateIE9">
@@ -20,9 +33,9 @@
       If called with no argument, it will report whether <em>either</em> axis has been zoomed.
       Alternatively it can be called with an argument of either <code>'x'</code> or <code>'y'</code> and it will report the status of just that axis.
     </p>
-  
+
     <p>Here's a simple example using <code>drawCallback</code> to display the various zoom states whenever the chart is zoomed:</p>
-  
+
     <div style="width:600px; text-align:center; font-weight: bold; font-size: 125%;">OUTPUT</div>
     <div style="width: 750px">
       <div style="float: right">
@@ -34,10 +47,10 @@
       <div id="zoomdiv"></div>
       <script type="text/javascript">
         new Dygraph(
-  
+
         // containing div
         document.getElementById("zoomdiv"),
-  
+
         // CSV or path to a CSV file.
         "Date,Value\n" +
         "2011-01-07,75\n" +
@@ -59,7 +72,7 @@
       </script>
       </div>
     </div>
-  
+
     <p>
       <div style="clear:both; width:600px; text-align:center; font-weight: bold; font-size: 125%;">HTML</div>
 
@@ -89,9 +102,9 @@
   );
 </pre>
     </p>
-  
+
     <p>The <a href="zoom.html">Tests for zoom operations</a> show a full example of this in action.</p>
-  
+
     <h3>Programmatic Zoom</h3>
     <p>
       When a chart is programmatically zoomed by updating either the <code>dateWindow</code>

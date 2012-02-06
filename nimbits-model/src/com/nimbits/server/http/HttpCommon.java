@@ -34,5 +34,7 @@ public interface HttpCommon {
 
     byte[] doGetBytes(final String postUrl, final String params, final String authCookie) throws Exception;
 
+    String doJsonPost(final String postUrl, final String params, final String json);
+
 
 }

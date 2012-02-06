@@ -332,6 +332,7 @@ public class Const {
     public static final String ACTION_TWITTER_FINISH_REG = "twitterFinishReg";
     public static final String ACTION_REPORT = "report";
     public static final String ACTION_DIAGRAM = "diagram";
+    public static final String PATH_GOOGLE_URL_SHORTENER =  "https://www.googleapis.com/urlshortener/v1/url";;
 
     public static String getConnectionInviteEmail(final EmailAddress email) {
         return "<P STYLE=\"margin-bottom: 0in\"> " + email.getValue() +

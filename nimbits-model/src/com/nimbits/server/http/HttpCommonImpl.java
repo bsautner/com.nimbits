@@ -111,6 +111,42 @@ public class HttpCommonImpl implements HttpCommon {
 
     }
 
+    @Override
+    public String doJsonPost(String postUrl, String params, String json) {
+        final URL url;
+        try {
+            url = new URL(postUrl + "?" + params);
+            StringBuilder sb = new StringBuilder();
+            final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoOutput(true);
+            connection.setRequestMethod(Const.METHOD_POST);
+            connection.setReadTimeout(Const.DEFAULT_HTTP_TIMEOUT);
+            connection.setRequestProperty("Content-Type", "application/json");
+
+
+            final OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+            writer.write(json);
+
+            writer.close();
+            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+                }
+                reader.close();
+            }
+            return sb.toString();
+
+        } catch (MalformedURLException e) {
+            return e.getMessage();
+        } catch (ProtocolException e) {
+            return e.getMessage();
+        } catch (IOException e) {
+            return e.getMessage();
+        }
+    }
+
     public String doGet(final String postUrl, final String params, final String authCookie) throws NimbitsException {
         final StringBuilder sb = new StringBuilder();
 

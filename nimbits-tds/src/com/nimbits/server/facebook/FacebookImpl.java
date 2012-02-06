@@ -8,7 +8,7 @@
  *
  * http://www.gnu.org/licenses/gpl.html
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
 package com.nimbits.server.facebook;
@@ -22,6 +22,7 @@ import com.nimbits.client.model.Const;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.facebook.FacebookService;
+import com.nimbits.server.google.*;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.http.HttpCommonFactory;
 import com.nimbits.server.settings.SettingTransactionsFactory;
@@ -134,7 +135,8 @@ public class FacebookImpl extends RemoteServiceServlet implements FacebookServic
         try {
 
             eMessage = URLEncoder.encode(message, Const.CONST_ENCODING);
-            ePicture = URLEncoder.encode(unEncodedPicture, Const.CONST_ENCODING);
+            String shortPic = GoogleURLShortener.shortenURL(unEncodedPicture);
+            ePicture = URLEncoder.encode(shortPic, Const.CONST_ENCODING);
 
 
             String feedURL = "https://graph.facebook.com/me/feed";

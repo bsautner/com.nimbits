@@ -8,7 +8,7 @@
  *
  * http://www.gnu.org/licenses/gpl.html
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
 package com.nimbits.server.user;
@@ -58,21 +58,21 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         EmailAddress email;
         User user;
 
-        final String emailParam = req.getParameter(Const.PARAM_EMAIL);
+        String emailParam = req.getParameter(Const.PARAM_EMAIL);
         final String secret = req.getParameter(Const.PARAM_SECRET);
         final HttpSession session = req.getSession();
         final com.google.appengine.api.users.UserService googleUserService = UserServiceFactory.getUserService();
 
-        //      log.info(req.getRequestURI());
-//        log.info(req.getQueryString());
         if (emailParam != null && emailParam.equals(Const.TEST_ACCOUNT)) {
             user = UserTransactionFactory.getDAOInstance().getNimbitsUser(CommonFactoryLocator.getInstance().createEmailAddress(emailParam));
 
         } else {
-
+             if (emailParam != null) {
+                 emailParam = emailParam.replace("%40", "@");
+             }
 
             if (!Utils.isEmptyString(emailParam)) {
-                //log.info("getHttpRequestUser found an email param: " + emailParam);
+
             }
             email = (!Utils.isEmptyString(emailParam)) ?
                     CommonFactoryLocator.getInstance().createEmailAddress(emailParam) : null;

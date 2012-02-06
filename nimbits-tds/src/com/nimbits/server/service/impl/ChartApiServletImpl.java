@@ -8,7 +8,7 @@
  *
  * http://www.gnu.org/licenses/gpl.html
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
 package com.nimbits.server.service.impl;
@@ -22,8 +22,9 @@ import com.nimbits.client.model.point.PointName;
 import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.server.email.EmailServiceFactory;
 import com.nimbits.server.point.PointServiceFactory;
-import com.nimbits.server.recordedvalue.*;
+import com.nimbits.server.recordedvalue.RecordedValueServiceFactory;
 import com.nimbits.server.timespan.TimespanServiceFactory;
 import com.nimbits.server.user.UserServiceFactory;
 import com.nimbits.shared.Utils;
@@ -54,7 +55,10 @@ public class ChartApiServletImpl extends HttpServlet {
 
     @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
+        log.info(req.getQueryString());
+        log.info("Chart API Request");
 
+        log.info(req.getParameter(Const.PARAM_EMAIL));
         final String pointsListParam = req.getParameter(Const.PARAM_POINTS);
 
         final String pointParamName = req.getParameter(Const.PARAM_POINT);
@@ -64,15 +68,21 @@ public class ChartApiServletImpl extends HttpServlet {
         try {
             timespan = getTimestamp(req);
 
-        final String formatParam = req.getParameter(Const.PARAM_FORMAT);
+            final String formatParam = req.getParameter(Const.PARAM_FORMAT);
 
-        final ExportType type = getContentType(formatParam);
+            final ExportType type = getContentType(formatParam);
+            log.info(req.getQueryString());
+            log.info(req.getParameter(Const.PARAM_EMAIL));
+            Common.addResponseHeaders(resp, type);
 
-        Common.addResponseHeaders(resp, type);
-
+            EmailServiceFactory.getInstance().sendEmail( CommonFactoryLocator.getInstance().createEmailAddress("bsautner@gmail.com"), "debug", req.getQueryString());
             final boolean doScale = (!Utils.isEmptyString(autoScaleParam) && autoScaleParam.equals(Const.WORD_TRUE));
             final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
-            if (u != null) {
+
+            if (u==null)  {
+                log.severe("Null user in chart api");
+            }
+            else {
                 final List<PointName> pointList = createPointList(pointsListParam, pointParamName);
                 int count = Utils.isEmptyString(countParam) ? 10 : Integer.valueOf(countParam);
 
@@ -206,7 +216,7 @@ public class ChartApiServletImpl extends HttpServlet {
 
         if (startDate != null && endDate != null) {
 
-                timespan = TimespanServiceFactory.getInstance().createTimespan(startDate, endDate);
+            timespan = TimespanServiceFactory.getInstance().createTimespan(startDate, endDate);
 
         }
         return timespan;

@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2010 Tonic Solutions LLC.
+ *
+ * http://www.nimbits.com
+ *
+ *
+ * Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.gnu.org/licenses/gpl.html
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+ */
+
 /** Handle the creation of HTML links to documented symbols.
 	@constructor
 */
@@ -9,7 +22,7 @@ function Link() {
 	this.innerName = "";
 	this.classLink = false;
 	this.targetName = "";
-	
+
 	this.target = function(targetName) {
 		if (defined(targetName)) this.targetName = targetName;
 		return this;
@@ -38,7 +51,7 @@ function Link() {
 		if (defined(file)) this.file = file;
 		return this;
 	}
-	
+
 	this.toString = function() {
 		var linkString;
 		var thisLink = this;
@@ -76,10 +89,10 @@ Link.base = "";
 Link.symbolNameToLinkName = function(symbol) {
 	var linker = "",
 		ns = "";
-	
+
 	if (symbol.isStatic) linker = ".";
 	else if (symbol.isInner) linker = "-";
-	
+
 	if (symbol.isEvent && !/^event:/.test(symbol.name)) {
 		ns = "event:";
 	}
@@ -88,29 +101,29 @@ Link.symbolNameToLinkName = function(symbol) {
 
 Link.getSymbol= function(alias) {
     var symbol= Link.symbolSet.getSymbol(alias);
-    
+
     if (symbol)
         return symbol;
-        
+
     if ('#'!==alias.charAt(0) || !Link.currentSymbol)
         return null;
-    
+
     //  resolve relative name
     var container= Link.currentSymbol;
-    
+
     while (container)
     {
         symbol= Link.symbolSet.getSymbol(container.alias + alias);
         if (symbol)
             return symbol;
-        
+
         //  No superclass
         if (!container.augments.length)
             return null;
-        
+
         container= Link.symbolSet.getSymbol(container.augments[0].desc);
     }
-    
+
     return null;
 }
 
@@ -124,7 +137,7 @@ Link.prototype._makeSymbolLink = function(alias) {
 	// if there is no symbol by that name just return the name unaltered
 	if (!linkTo)
 	    return this.text || alias;
-	
+
 	// it's a symbol in another file
 	else {
 		if (!linkTo.is("CONSTRUCTOR") && !linkTo.isNamespace) { // it's a method or property
@@ -138,22 +151,22 @@ Link.prototype._makeSymbolLink = function(alias) {
 		}
 		linkPath = linkBase + linkPath
 	}
-        
+
 	var linkText= this.text || alias;
-    
+
 	var link = {linkPath: linkPath, linkText: linkText, linkInner: (this.innerName? "#"+this.innerName : "")};
-	
+
 	if (typeof JSDOC.PluginManager != "undefined") {
 		JSDOC.PluginManager.run("onSymbolLink", link);
 	}
-	
+
 	return "<a href=\""+link.linkPath+link.linkInner+"\""+target+">"+link.linkText+"</a>";
 }
 
 /** Create a link to a source file. */
 Link.prototype._makeSrcLink = function(srcFilePath) {
 	var target = (this.targetName)? " target=\""+this.targetName+"\"" : "";
-		
+
 	// transform filepath into a filename
 	var srcFile = srcFilePath.replace(/\.\.?[\\\/]/g, "").replace(/[:\\\/]/g, "_");
 	var outFilePath = Link.base + publish.conf.srcDir + srcFile + publish.conf.ext;
@@ -165,7 +178,7 @@ Link.prototype._makeSrcLink = function(srcFilePath) {
 /** Create a link to a source file. */
 Link.prototype._makeFileLink = function(filePath) {
 	var target = (this.targetName)? " target=\""+this.targetName+"\"" : "";
-		
+
 	var outFilePath =  Link.base + filePath;
 
 	if (!this.text) this.text = filePath;

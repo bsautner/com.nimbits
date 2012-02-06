@@ -13,29 +13,38 @@
 
 package com.nimbits.server.task;
 
-import com.google.gson.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.subscription.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.server.email.*;
-import com.nimbits.server.facebook.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.instantmessage.*;
-import com.nimbits.server.intelligence.*;
-import com.nimbits.server.math.*;
-import com.nimbits.server.point.*;
-import com.nimbits.server.recordedvalue.*;
-import com.nimbits.server.twitter.*;
-import com.nimbits.server.user.*;
-import com.nimbits.shared.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
+import com.nimbits.client.enums.AlertType;
+import com.nimbits.client.enums.SubscriptionDeliveryMethod;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.Const;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModel;
+import com.nimbits.client.model.subscription.Subscription;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.user.UserModel;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.ValueModel;
+import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.server.email.EmailServiceFactory;
+import com.nimbits.server.facebook.FacebookFactory;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.instantmessage.IMFactory;
+import com.nimbits.server.intelligence.IntelligenceServiceFactory;
+import com.nimbits.server.math.EquationSolver;
+import com.nimbits.server.point.PointServiceFactory;
+import com.nimbits.server.recordedvalue.RecordedValueServiceFactory;
+import com.nimbits.server.twitter.TwitterServiceFactory;
+import com.nimbits.server.user.UserServiceFactory;
+import com.nimbits.shared.Utils;
 
-import javax.servlet.http.*;
-import java.util.*;
-import java.util.logging.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Logger;
 
 public class RecordValueTask extends HttpServlet {
 
@@ -323,26 +332,44 @@ public class RecordValueTask extends HttpServlet {
             m += " " + note;
         }
 
-        String picture;
+        StringBuilder picture = new StringBuilder();
+
 
 
         if (p.isPublic()) {
-            picture = "http://app.nimbits.com" +
-                    "/service/chartapi?" +
-                    "point=" + p.getName().getValue() +
-                    "&email=" + u.getEmail().getValue() +
-                    "&cht=lc" +
-                    "&chs=100x100" +
-                    "&chds=a";
+
+            List<Value> values = RecordedValueServiceFactory.getInstance().getTopDataSeries(p, 10).getValues();
+            if (values.size() > 0) {
+                picture.append("http://goo.gl/OFNZU");
+               // picture.append("http://chart.apis.google.com/chart?chd=t:");
+               // for (Value vx : values) {
+                //    picture.append(vx.getNumberValue() + ",");
+               // /}
+               // picture.deleteCharAt(picture.length()-1);
+               // picture.append("&chs=100x100&cht=ls&chco=3072F3&chds=0,105&chdlp=b&chls=2,4,1&chma=5,5,5,25&chds=a");
+            }
+            else {
+                picture.append("http://app.nimbits.com/resources/images/logo.png");
+            }
+
+//                picture = "http://app.nimbits.com" +
+//                        "/service/chartapi?" +
+//                        "point=" +  URLEncoder.encode(p.getName().getValue(), Const.CONST_ENCODING) +
+//                        "&email=" + URLEncoder.encode(u.getEmail().getValue(), Const.CONST_ENCODING) +
+//                        "&cht=lc" +
+//                        "&chs=100x100" +
+//                        "&chds=a";
+
             log.info("facebook image: " + picture);
         } else {
-            picture = "http://app.nimbits.com/resources/images/logo.png";
+            picture.append("http://app.nimbits.com/resources/images/logo.png");
         }
-
+        log.info(picture.toString());
         // String link = "http://app.nimbits.com?view=chart&uuid=" + p.getUUID();
-        String link = "http://www.nimbits.com";
-        FacebookFactory.getInstance().updateStatus(u.getFacebookToken(), m, picture, link, "via Nimbits",
-                "Subscribe To this Date Channel", "Point Description: " + p.getDescription());
+        String link = "http://app.nimbits.com?uuid=" + p.getUUID();
+        String d = Utils.isEmptyString(p.getDescription()) ? "" : p.getDescription();
+        FacebookFactory.getInstance().updateStatus(u.getFacebookToken(), m, picture.toString(), link, "Subscribe to this data feed.",
+                "nimbits.com", d);
 
 
     }

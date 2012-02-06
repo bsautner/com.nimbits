@@ -58,21 +58,21 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         EmailAddress email;
         User user;
 
-        final String emailParam = req.getParameter(Const.PARAM_EMAIL);
+        String emailParam = req.getParameter(Const.PARAM_EMAIL);
         final String secret = req.getParameter(Const.PARAM_SECRET);
         final HttpSession session = req.getSession();
         final com.google.appengine.api.users.UserService googleUserService = UserServiceFactory.getUserService();
 
-        //      log.info(req.getRequestURI());
-//        log.info(req.getQueryString());
         if (emailParam != null && emailParam.equals(Const.TEST_ACCOUNT)) {
             user = UserTransactionFactory.getDAOInstance().getNimbitsUser(CommonFactoryLocator.getInstance().createEmailAddress(emailParam));
 
         } else {
-
+             if (emailParam != null) {
+                 emailParam = emailParam.replace("%40", "@");
+             }
 
             if (!Utils.isEmptyString(emailParam)) {
-                //log.info("getHttpRequestUser found an email param: " + emailParam);
+
             }
             email = (!Utils.isEmptyString(emailParam)) ?
                     CommonFactoryLocator.getInstance().createEmailAddress(emailParam) : null;

@@ -36,7 +36,7 @@ import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
-import com.nimbits.client.model.point.PointName;
+
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueModelFactory;
 import com.nimbits.server.gson.GsonFactory;
@@ -53,7 +53,7 @@ public class PointActivity extends Activity implements OnGestureListener {
     private static final int SWIPE_MAX_OFF_PATH = 250;
     private static final int SWIPE_THRESHOLD_VELOCITY = 200;
 
-    private PointName pointName;
+    private EntityName pointName;
     private String category;
     private String json;
     private Point point;
@@ -216,7 +216,7 @@ public class PointActivity extends Activity implements OnGestureListener {
 
         setContentView(R.layout.point_layout);
 
-        pointName = CommonFactoryLocator.getInstance().createPointName(b.getString(Const.PARAM_POINT));
+        pointName = CommonFactoryLocator.getInstance().createName(b.getString(Const.PARAM_POINT));
         category = b.getString(Const.PARAM_CATEGORY);
         json = b.getString(Const.PARAM_JSON);
         this.setTitle(pointName.getValue());
@@ -322,7 +322,7 @@ public class PointActivity extends Activity implements OnGestureListener {
             //db1 = DatabaseHelperImpl.getDB(true, PointActivity.this);
             //db1.update(Const.ANDROID_TABLE_LEVEL_TWO_DISPLAY, update, "NAME=?", new String[] {pointName});
             // db1.close();
-            // PointName pointName = (PointName) CommonFactoryLocator.getInstance().createPointName()
+            // EntityName pointName = (EntityName) CommonFactoryLocator.getInstance().createName()
             OwnerAccountFactory.getInstance().getNimbitsClient(PointActivity.this, baseURL).recordValue(pointName, nv);
             Toast.makeText(PointActivity.this, "Saved " + v + " '" + note + "' to " + pointName.getValue() + " using location: " + lat + "," + lng, Toast.LENGTH_LONG).show();
         } catch (Exception e) {

@@ -15,6 +15,7 @@ package com.nimbits.client.model.point;
 
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.intelligence.*;
 import com.nimbits.client.model.value.*;
 
@@ -185,7 +186,7 @@ public class PointModel implements Serializable, Point {
     public PointModel() {
     }
 
-    public PointModel(final long userFK, final PointName pointName, final long catID, final String uuid) {
+    public PointModel(final long userFK, final EntityName pointName, final long catID, final String uuid) {
         this();
         this.userFK = userFK;
         this.name = pointName.getValue();
@@ -195,14 +196,14 @@ public class PointModel implements Serializable, Point {
 
     }
 
-    public PointModel(final long userFK, final PointName pointName, final String uuid) {
+    public PointModel(final long userFK, final EntityName pointName, final String uuid) {
         this();
         this.userFK = userFK;
         this.name = pointName.getValue();
         this.uuid = uuid;
     }
 
-    public PointModel(final PointName name, final String uuid) {
+    public PointModel(final EntityName name, final String uuid) {
         this.name = name.getValue();
         this.uuid = uuid;
 
@@ -306,8 +307,8 @@ public class PointModel implements Serializable, Point {
     }
 
     @Override
-    public PointName getName() {
-        return CommonFactoryLocator.getInstance().createPointName(this.name);
+    public EntityName getName() {
+        return CommonFactoryLocator.getInstance().createName(this.name);
     }
 
     @Override
@@ -492,7 +493,7 @@ public class PointModel implements Serializable, Point {
     }
 
     @Override
-    public void setName(final PointName name) {
+    public void setName(final EntityName name) {
         this.name = name.getValue();
     }
 

@@ -27,8 +27,8 @@ public class ShardTest {
     @Test
     public void testShard() throws UnsupportedEncodingException, InterruptedException {
 
-//        CategoryName categoryName = CommonFactoryLocator.getInstance().createCategoryName(UUID.randomUUID().toString());
-//        PointName pointName = CommonFactoryLocator.getInstance().createPointName(UUID.randomUUID().toString());
+//        EntityName categoryName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
+//        EntityName pointName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
 //        ClientHelper.client().addCategory(categoryName);
 //        Point point = ClientHelper.client().addPoint(categoryName, pointName);
 //        assertNotNull(point);
@@ -76,8 +76,8 @@ public class ShardTest {
 
     @Test
     public void testShardCounter() throws IOException, InterruptedException {
-//        CategoryName categoryName = CommonFactoryLocator.getInstance().createCategoryName(UUID.randomUUID().toString());
-//        PointName pointName = CommonFactoryLocator.getInstance().createPointName(UUID.randomUUID().toString());
+//        EntityName categoryName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
+//        EntityName pointName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
 //        ClientHelper.client().addCategory(categoryName);
 //        Point point = ClientHelper.client().addPoint(categoryName, pointName);
 //

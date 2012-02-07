@@ -13,29 +13,39 @@
 
 package com.nimbits.client.panels;
 
-import com.extjs.gxt.ui.client.*;
-import com.extjs.gxt.ui.client.data.*;
+import com.extjs.gxt.ui.client.Style;
+import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.store.*;
-import com.extjs.gxt.ui.client.widget.*;
+import com.extjs.gxt.ui.client.store.ListStore;
+import com.extjs.gxt.ui.client.widget.ContentPanel;
+import com.extjs.gxt.ui.client.widget.Info;
 import com.extjs.gxt.ui.client.widget.Label;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.CheckBox;
-import com.extjs.gxt.ui.client.widget.grid.*;
-import com.extjs.gxt.ui.client.widget.layout.*;
-import com.extjs.gxt.ui.client.widget.toolbar.*;
-import com.google.gwt.core.client.*;
-import com.google.gwt.user.client.*;
+import com.extjs.gxt.ui.client.widget.grid.CheckBoxSelectionModel;
+import com.extjs.gxt.ui.client.widget.grid.ColumnConfig;
+import com.extjs.gxt.ui.client.widget.grid.ColumnModel;
+import com.extjs.gxt.ui.client.widget.grid.EditorGrid;
+import com.extjs.gxt.ui.client.widget.layout.FillLayout;
+import com.extjs.gxt.ui.client.widget.layout.FitLayout;
+import com.extjs.gxt.ui.client.widget.toolbar.SeparatorToolItem;
+import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.icons.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.client.service.recordedvalues.*;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.nimbits.client.enums.ClientType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.icons.Icons;
+import com.nimbits.client.model.Const;
+import com.nimbits.client.model.GxtPointModel;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.client.service.recordedvalues.RecordedValueService;
+import com.nimbits.client.service.recordedvalues.RecordedValueServiceAsync;
 
 import java.util.*;
 
@@ -44,7 +54,7 @@ class PointGridPanel extends NavigationEventProvider {
 
     private final ListStore<GxtPointModel> store = new ListStore<GxtPointModel>();
     private final EditorGrid<GxtPointModel> grid;
-    private final Map<PointName, Point> points = new HashMap<PointName, Point>();
+    private final Map<EntityName, Point> points = new HashMap<EntityName, Point>();
     private final CheckBox saveToNowCheckBox = new CheckBox();
     private final CheckBox autoSaveCheckBox = new CheckBox();
     private final CheckBoxSelectionModel<GxtPointModel> sm = new CheckBoxSelectionModel<GxtPointModel>();
@@ -154,7 +164,7 @@ class PointGridPanel extends NavigationEventProvider {
         //  columnConfigs.addPropertyColumn(configs);
         configs.add(columnConfigs.alertColumn(points));
         configs.add(columnConfigs.pointNameColumn(false));
-        //columnConfigs.addPointNameColumn(configs);
+        //columnConfigs.addEntityNameColumn(configs);
         configs.add(columnConfigs.currentValueColumn());
         configs.add(columnConfigs.noteColumn());
         configs.add(columnConfigs.addDataColumn());
@@ -357,7 +367,7 @@ class PointGridPanel extends NavigationEventProvider {
         notifyValueEnteredListener(points.get(model.getName()), value);
     }
 
-    public Map<PointName, Point> getPoints() {
+    public Map<EntityName, Point> getPoints() {
         return points;
     }
 }

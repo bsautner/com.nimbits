@@ -45,9 +45,13 @@ import com.nimbits.client.icons.Icons;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.GxtPointModel;
 import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.intelligence.Intelligence;
 import com.nimbits.client.model.intelligence.IntelligenceModelFactory;
-import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.point.Calculation;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModel;
+import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.service.datapoints.PointService;
 import com.nimbits.client.service.datapoints.PointServiceAsync;
 import com.nimbits.client.service.intelligence.IntelligenceService;
@@ -358,7 +362,7 @@ class PointPanel extends LayoutContainer {
                 public void componentSelected(ButtonEvent ce) {
                     try {
                         if (!Utils.isEmptyString(intelTargetPoint.getValue()) && !Utils.isEmptyString(intelFormula.getValue())) {
-                            pointService.getPointByName(null, CommonFactoryLocator.getInstance().createPointName(intelTargetPoint.getValue()), new AsyncCallback<Point>() {
+                            pointService.getPointByName(null, CommonFactoryLocator.getInstance().createName(intelTargetPoint.getValue()), new AsyncCallback<Point>() {
                                 @Override
                                 public void onFailure(Throwable throwable) {
                                     final MessageBox box = MessageBox.alert("Target Point Not Found", "There was an error trying to find the data point name entered in the" +
@@ -745,10 +749,10 @@ class PointPanel extends LayoutContainer {
                 if (!Utils.isEmptyString(intelTargetPoint.getValue())) {
 
 
-                    PointName targetPointName = CommonFactoryLocator.getInstance().createPointName(intelTargetPoint.getValue());
+                    EntityName targetEntityName = CommonFactoryLocator.getInstance().createName(intelTargetPoint.getValue());
                     boolean getPlainText = intelPlainText.getValue();
 
-                    service.processInput(point, intelFormula.getValue(), intelNodeId.getValue(), intelligenceResultTarget, targetPointName, getPlainText, new AsyncCallback<String>() {
+                    service.processInput(point, intelFormula.getValue(), intelNodeId.getValue(), intelligenceResultTarget, targetEntityName, getPlainText, new AsyncCallback<String>() {
                         @Override
                         public void onFailure(Throwable throwable) {
                             final MessageBox box = MessageBox.alert("Error", throwable.getMessage(), null);

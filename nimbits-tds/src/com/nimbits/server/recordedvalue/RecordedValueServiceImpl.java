@@ -19,8 +19,8 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.exceptions.CalculationFailedException;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointName;
 import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
@@ -55,7 +55,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public Value getCurrentValue(final long pointOwnerId,
-                                 final PointName pointName) throws NimbitsException {
+                                 final EntityName pointName) throws NimbitsException {
 
         final User u = UserServiceFactory.getInstance().getAppUserUsingGoogleAuth();
         final User pointOwner = UserTransactionFactory.getInstance().getNimbitsUserByID(pointOwnerId);
@@ -132,7 +132,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
     //RPC
     public Value recordValue(final User u,
-                             final PointName pointName,
+                             final EntityName pointName,
                              final Value value) throws NimbitsException {
 
 

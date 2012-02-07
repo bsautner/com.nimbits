@@ -18,8 +18,8 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.CategoryName;
 import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.user.User;
 
 import java.util.List;
@@ -36,16 +36,16 @@ public interface CategoryService extends RemoteService {
                                  final boolean includeDiagrams,
                                  final boolean includeSubscriptions);
 
-    Category addCategory(final CategoryName CategoryName) throws NimbitsException;
+    Category addCategory(final EntityName EntityName) throws NimbitsException;
 
-    Category addCategory(final User u, final CategoryName categoryName);
+    Category addCategory(final User u, final EntityName name);
 
-    Category getCategoryByName(final CategoryName categoryName,
+    Category getCategoryByName(final EntityName name,
                                final boolean includePoints,
                                final boolean includeDiagrams
                               ) throws NimbitsException;
 
-    Category getCategoryByName(final User u, final CategoryName categoryName, final boolean includePoints, final boolean includeDiagrams) throws NimbitsException;
+    Category getCategoryByName(final User u, final EntityName name, final boolean includePoints, final boolean includeDiagrams) throws NimbitsException;
 
     void deleteCategory(final Category c) throws NimbitsException;
 
@@ -57,11 +57,11 @@ public interface CategoryService extends RemoteService {
                                            final EmailAddress email
                                            ) throws NimbitsException;
 
-    Category getCategory(final User user, final CategoryName categoryName);
+    Category getCategory(final User user, final EntityName EntityName);
 
     Category createHiddenCategory(User u);
 
-    boolean categoryExists(User u, CategoryName categoryName) throws NimbitsException;
+    boolean categoryExists(User u, EntityName EntityName) throws NimbitsException;
 
     Category getCategory(User u, long catID);
 

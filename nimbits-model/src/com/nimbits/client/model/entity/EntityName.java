@@ -11,26 +11,16 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.xmpp;
+package com.nimbits.client.model.entity;
 
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.common.CommonIdentifier;
 
 /**
- * Created by Benjamin Sautner
- * User: BSautner
- * Date: 11/22/11
- * Time: 3:56 PM
+ * Created by bsautner
+ * User: benjamin
+ * Date: 2/6/12
+ * Time: 6:38 PM
  */
-public interface XMPPClient {
-    boolean connect() throws NimbitsException;
+public interface EntityName  extends CommonIdentifier  {
 
-    void sendMessage(final String outgoingMessage);
-
-    void sendValue(EntityName pointName, Value value);
-
-    void addMessageReceivedListeners(final XMPPClientImpl.MessageReceivedListener listener);
-
-    void disconnect();
 }

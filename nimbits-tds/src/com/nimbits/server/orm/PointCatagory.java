@@ -15,9 +15,10 @@ package com.nimbits.server.orm;
 
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.CategoryName;
+
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.diagram.Diagram;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 
 import javax.jdo.annotations.*;
@@ -30,7 +31,7 @@ public class PointCatagory implements Category {
 
     private static final long serialVersionUID = 5L;
 
-    public PointCatagory(final CategoryName name) {
+    public PointCatagory(final EntityName name) {
         this.name = name.getValue();
     }
 
@@ -130,12 +131,12 @@ public class PointCatagory implements Category {
     }
 
     @Override
-    public CategoryName getName() {
-        return CommonFactoryLocator.getInstance().createCategoryName(this.name);
+    public EntityName getName() {
+        return CommonFactoryLocator.getInstance().createName(this.name);
     }
 
     @Override
-    public void setName(final CategoryName name) {
+    public void setName(final EntityName name) {
         this.name = name.getValue();
     }
 

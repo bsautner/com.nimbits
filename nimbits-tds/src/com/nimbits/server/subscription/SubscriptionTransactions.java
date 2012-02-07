@@ -13,11 +13,11 @@
 
 package com.nimbits.server.subscription;
 
-import com.nimbits.client.model.category.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.subscription.*;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.subscription.Subscription;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * Created by Benjamin Sautner
@@ -33,7 +33,7 @@ public interface SubscriptionTransactions {
 
     void deleteSubscription(Point point);
 
-    Point moveSubscription(Point point, CategoryName newCategoryName);
+    Point moveSubscription(Point point, EntityName newEntityName);
 
     List<Subscription> getSubscriptionsToPoint(Point point);
 

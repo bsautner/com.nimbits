@@ -6,9 +6,9 @@ import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.EntityDescription;
 import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
-import com.nimbits.client.model.point.PointName;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.server.ServerModelFactory;
 import com.nimbits.server.dao.pointDescription.EntityJPATransactionFactory;
@@ -33,7 +33,7 @@ import static org.junit.Assert.*;
 public class TestPointDesc {
     String host = "http://delete.me";
     Server createdServer;
-    PointName pointName = CommonFactoryLocator.getInstance().createPointName("testPointFromJunit");
+    EntityName pointName = CommonFactoryLocator.getInstance().createName("testPointFromJunit");
 
     @Before
     public void createServer() throws NimbitsException {
@@ -146,7 +146,7 @@ public class TestPointDesc {
     public void testHTTP() {
         Point point = PointModelFactory.createPointModel(0, 1);
         point.setUuid(UUID.randomUUID().toString());
-        point.setName(CommonFactoryLocator.getInstance().createPointName(UUID.randomUUID().toString()));
+        point.setName(CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString()));
         point.setDescription("A Description");
 
         String json = GsonFactory.getInstance().toJson(point);

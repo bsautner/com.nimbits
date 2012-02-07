@@ -14,42 +14,58 @@
 package com.nimbits.client.panels;
 
 import com.extjs.gxt.ui.client.Style.Scroll;
-import com.extjs.gxt.ui.client.data.*;
-import com.extjs.gxt.ui.client.dnd.DND.*;
-import com.extjs.gxt.ui.client.dnd.*;
+import com.extjs.gxt.ui.client.data.ModelData;
+import com.extjs.gxt.ui.client.dnd.DND.Feedback;
+import com.extjs.gxt.ui.client.dnd.TreeGridDragSource;
+import com.extjs.gxt.ui.client.dnd.TreeGridDropTarget;
 import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.store.*;
-import com.extjs.gxt.ui.client.util.*;
-import com.extjs.gxt.ui.client.widget.*;
+import com.extjs.gxt.ui.client.store.TreeStore;
+import com.extjs.gxt.ui.client.util.Format;
+import com.extjs.gxt.ui.client.util.Params;
+import com.extjs.gxt.ui.client.widget.ContentPanel;
+import com.extjs.gxt.ui.client.widget.Info;
+import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.Window;
 import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.grid.*;
-import com.extjs.gxt.ui.client.widget.layout.*;
-import com.extjs.gxt.ui.client.widget.menu.*;
+import com.extjs.gxt.ui.client.widget.grid.ColumnModel;
+import com.extjs.gxt.ui.client.widget.grid.EditorGrid;
+import com.extjs.gxt.ui.client.widget.layout.FillLayout;
+import com.extjs.gxt.ui.client.widget.menu.Menu;
 import com.extjs.gxt.ui.client.widget.menu.MenuItem;
-import com.extjs.gxt.ui.client.widget.toolbar.*;
-import com.google.gwt.core.client.*;
+import com.extjs.gxt.ui.client.widget.toolbar.SeparatorToolItem;
+import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
-import com.nimbits.client.controls.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.icons.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.category.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.diagram.*;
-import com.nimbits.client.model.email.*;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.nimbits.client.controls.EntityTree;
+import com.nimbits.client.enums.ClientType;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.UploadType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.icons.Icons;
+import com.nimbits.client.model.Const;
+import com.nimbits.client.model.GxtDiagramModel;
+import com.nimbits.client.model.GxtPointCategoryModel;
+import com.nimbits.client.model.GxtPointModel;
+import com.nimbits.client.model.category.Category;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.diagram.Diagram;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.client.service.category.*;
-import com.nimbits.client.service.datapoints.*;
-import com.nimbits.client.service.diagram.*;
-import com.nimbits.client.service.recordedvalues.*;
-import com.nimbits.client.windows.*;
-import com.nimbits.shared.*;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.client.service.category.CategoryService;
+import com.nimbits.client.service.category.CategoryServiceAsync;
+import com.nimbits.client.service.datapoints.PointService;
+import com.nimbits.client.service.datapoints.PointServiceAsync;
+import com.nimbits.client.service.diagram.DiagramService;
+import com.nimbits.client.service.diagram.DiagramServiceAsync;
+import com.nimbits.client.service.recordedvalues.RecordedValueService;
+import com.nimbits.client.service.recordedvalues.RecordedValueServiceAsync;
+import com.nimbits.client.windows.WindowHelper;
+import com.nimbits.shared.Utils;
 
 import java.util.*;
 
@@ -63,8 +79,8 @@ class NavigationPanel extends NavigationEventProvider {
     private Point pointToBeCopied;
 
     private final Map<String, Point> pointMap = new HashMap<String, Point>();
-    private final Map<CategoryName, Category> categoryMap = new HashMap<CategoryName, Category>();
-    private final Map<DiagramName, Diagram> diagramMap = new HashMap<DiagramName, Diagram>();
+    private final Map<EntityName, Category> categoryMap = new HashMap<EntityName, Category>();
+    private final Map<EntityName, Diagram> diagramMap = new HashMap<EntityName, Diagram>();
 
     private EntityTree<ModelData> tree;
     private TreeStore<ModelData> store;
@@ -197,7 +213,7 @@ class NavigationPanel extends NavigationEventProvider {
                         final Point point = pointMap.get(model.getUUID());
                         PointServiceAsync pointService = GWT.create(PointService.class);
 
-                        CategoryName categoryName = CommonFactoryLocator.getInstance().createCategoryName(e.getTarget()
+                        EntityName categoryName = CommonFactoryLocator.getInstance().createName(e.getTarget()
                                 .getInnerText());
                         pointService.movePoint(point, categoryName, new AsyncCallback<Point>() {
                             @Override
@@ -220,7 +236,7 @@ class NavigationPanel extends NavigationEventProvider {
                         selectedModel.set(Const.PARAM_NAME, gxtDiagramModel.getName());
 
                         DiagramServiceAsync diagramService = GWT.create(DiagramService.class);
-                        CategoryName categoryName = CommonFactoryLocator.getInstance().createCategoryName(e.getTarget().getInnerText());
+                        EntityName categoryName = CommonFactoryLocator.getInstance().createName(e.getTarget().getInnerText());
                         diagramService.moveDiagram(gxtDiagramModel.getName(), categoryName, new AsyncCallback<Void>() {
 
                             @Override
@@ -424,7 +440,7 @@ class NavigationPanel extends NavigationEventProvider {
                 @Override
                 public void onSuccess(final List<Category> categories) {
                     final TreeStore<ModelData> models = tree.getTreeStore();
-                    final HashMap<PointName, Point> pointHashMap = new HashMap<PointName, Point>();
+                    final HashMap<EntityName, Point> pointHashMap = new HashMap<EntityName, Point>();
 
                     for (final Category c : categories) {
                         if (c.getPoints() != null) {
@@ -550,8 +566,8 @@ class NavigationPanel extends NavigationEventProvider {
                 box.addCallback(new Listener<MessageBoxEvent>() {
                     @Override
                     public void handleEvent(final MessageBoxEvent be) {
-                        final String newCategoryName = be.getValue();
-                        final CategoryName categoryName = CommonFactoryLocator.getInstance().createCategoryName(newCategoryName);
+                        final String newEntityName = be.getValue();
+                        final EntityName categoryName = CommonFactoryLocator.getInstance().createName(newEntityName);
 
                         final CategoryServiceAsync categoryService = GWT.create(CategoryService.class);
 
@@ -575,7 +591,7 @@ class NavigationPanel extends NavigationEventProvider {
 
                                             tree.setExpanded(m, true);
                                             final String v = Format.ellipse(
-                                                    newCategoryName, 80);
+                                                    newEntityName, 80);
                                             Info.display(Const.WORD_SUCCESS,
                                                     "New Category added: '{0}'",
                                                     new Params(v));
@@ -832,26 +848,26 @@ class NavigationPanel extends NavigationEventProvider {
 
     //listeners
     private final Listener<MessageBoxEvent> copyPointListener  = new Listener<MessageBoxEvent>() {
-        private String newPointName;
+        private String newEntityName;
 
 
         public void handleEvent(MessageBoxEvent be) {
-            newPointName = be.getValue();
-            if (!Utils.isEmptyString(newPointName)) {
+            newEntityName = be.getValue();
+            if (!Utils.isEmptyString(newEntityName)) {
                 final MessageBox box = MessageBox.wait("Progress",
-                        "Creating your data point channel into the cloud", "Creating: " + newPointName);
+                        "Creating your data point channel into the cloud", "Creating: " + newEntityName);
                 box.show();
                 PointServiceAsync pointService = GWT.create(PointService.class);
 
 
-                PointName pointName = CommonFactoryLocator.getInstance().createPointName(newPointName);
+                EntityName pointName = CommonFactoryLocator.getInstance().createName(newEntityName);
 
                 pointService.copyPoint(pointToBeCopied, pointName,
                         new AsyncCallback<Point>() {
                             @Override
                             public void onFailure(Throwable caught) {
                                 Info.display("Could not create "
-                                        + newPointName,
+                                        + newEntityName,
                                         caught.getMessage());
                                 box.close();
                             }
@@ -901,26 +917,26 @@ class NavigationPanel extends NavigationEventProvider {
         }
     };
     private final Listener<MessageBoxEvent> createNewPointListener = new Listener<MessageBoxEvent>() {
-        private String newPointName;
+        private String newEntityName;
 
         @Override
         public void handleEvent(MessageBoxEvent be) {
-            newPointName = be.getValue();
-            if (!Utils.isEmptyString(newPointName)) {
+            newEntityName = be.getValue();
+            if (!Utils.isEmptyString(newEntityName)) {
                 final MessageBox box = MessageBox.wait("Progress",
-                        "Creating your data point channel into the cloud", "Creating: " + newPointName);
+                        "Creating your data point channel into the cloud", "Creating: " + newEntityName);
                 box.show();
                 PointServiceAsync pointService = GWT.create(PointService.class);
 
 
-                PointName pointName = CommonFactoryLocator.getInstance().createPointName(newPointName);
+                EntityName pointName = CommonFactoryLocator.getInstance().createName(newEntityName);
 
 
                 pointService.addPoint(pointName, new AsyncCallback<Point>() {
                     @Override
                     public void onFailure(Throwable caught) {
                         Info.display("Could not create "
-                                + newPointName,
+                                + newEntityName,
                                 caught.getMessage());
                         box.close();
                     }

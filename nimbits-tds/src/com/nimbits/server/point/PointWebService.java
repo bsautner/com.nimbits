@@ -20,11 +20,10 @@ import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.CategoryName;
 import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
-import com.nimbits.client.model.point.PointName;
 import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
@@ -69,28 +68,28 @@ public class PointWebService extends HttpServlet {
 
             if ((u != null) && (!u.isRestricted())) {
 
-                String pointNameParam = req.getParameter(Const.PARAM_NAME);
-                if (pointNameParam == null) {
-                    pointNameParam = req.getParameter(Const.PARAM_POINT);
+                String nameParam = req.getParameter(Const.PARAM_NAME);
+                if (nameParam == null) {
+                    nameParam = req.getParameter(Const.PARAM_POINT);
                 }
                 final String categoryNameParam = req.getParameter(Const.PARAM_CATEGORY);
                 final String json = req.getParameter(Const.PARAM_JSON);
                 final String actionParam = req.getParameter(Const.PARAM_ACTION);
                 final Action action = (Utils.isEmptyString(actionParam)) ? Action.create : Action.get(actionParam);
-                final CategoryName categoryName = CommonFactoryLocator.getInstance().createCategoryName(categoryNameParam);
+                final EntityName categoryName = CommonFactoryLocator.getInstance().createName(categoryNameParam);
 
 
                 switch (action) {
                     case delete:
-                        deletePoint(u, pointNameParam);
+                        deletePoint(u, nameParam);
                         return;
                     case update:
                         updatePoint(u, json);
                         return;
                     case create:
-                        if (!Utils.isEmptyString(pointNameParam) && Utils.isEmptyString(json)) {
-                            final PointName pointName = CommonFactoryLocator.getInstance().createPointName(pointNameParam);
-                            final Point point = createPoint(u, pointName, categoryName);
+                        if (!Utils.isEmptyString(nameParam) && Utils.isEmptyString(json)) {
+                            final EntityName name = CommonFactoryLocator.getInstance().createName(nameParam);
+                            final Point point = createPoint(u, name, categoryName);
                             final String retJson = gson.toJson(point);
                             out.println(retJson);
 
@@ -112,7 +111,7 @@ public class PointWebService extends HttpServlet {
 
     }
 
-    private Category getCategoryWithParam(final CategoryName categoryName, final User u) {
+    private Category getCategoryWithParam(final EntityName categoryName, final User u) {
 
         Category c = CategoryServiceFactory.getInstance().getCategory(u, categoryName);
         if (c == null & categoryName.getValue().equals(Const.CONST_HIDDEN_CATEGORY)) {
@@ -123,12 +122,12 @@ public class PointWebService extends HttpServlet {
         return c;
     }
 
-    private Point createPoint(final User u, final PointName pointName, final CategoryName categoryName) throws NimbitsException {
+    private Point createPoint(final User u, final EntityName name, final EntityName categoryName) throws NimbitsException {
         Point retObj = null;
         final Category category = getCategoryWithParam(categoryName, u);
 
         if (category != null) {
-            final Point point = new DataPoint(u.getId(), pointName, category.getId(), UUID.randomUUID().toString());
+            final Point point = new DataPoint(u.getId(), name, category.getId(), UUID.randomUUID().toString());
             point.setUserFK(u.getId());
             point.setCatID(category.getId());
             point.setLastChecked(new Date());
@@ -141,7 +140,7 @@ public class PointWebService extends HttpServlet {
         return retObj;
     }
 
-    private Point createPointWithJson(final User u, final CategoryName categoryName, final String json) throws NimbitsException {
+    private Point createPointWithJson(final User u, final EntityName categoryName, final String json) throws NimbitsException {
         Point retObj = null;
         final Category category = getCategoryWithParam(categoryName, u);
 
@@ -165,12 +164,12 @@ public class PointWebService extends HttpServlet {
 
     }
 
-    private void deletePoint(final User u, final String pointNameParam) throws NimbitsException {
-        final PointName pointName = CommonFactoryLocator.getInstance().createPointName(pointNameParam);
-        final Point point = PointServiceFactory.getInstance().getPointByName(u, pointName);
+    private void deletePoint(final User u, final String nameParam) throws NimbitsException {
+        final EntityName name = CommonFactoryLocator.getInstance().createName(nameParam);
+        final Point point = PointServiceFactory.getInstance().getPointByName(u, name);
         if (point != null) {
             PointServiceFactory.getInstance().deletePoint(u, point);
-            TaskFactoryLocator.getInstance().startDeleteDataTask(point.getId(), false, 0, pointName);
+            TaskFactoryLocator.getInstance().startDeleteDataTask(point.getId(), false, 0, name);
         }
     }
 
@@ -178,7 +177,7 @@ public class PointWebService extends HttpServlet {
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp) {
 
         final String categoryNameParam = req.getParameter(Const.PARAM_CATEGORY);
-        String pointNameParam = req.getParameter(Const.PARAM_NAME);
+        String nameParam = req.getParameter(Const.PARAM_NAME);
         final String countParam = req.getParameter(Const.PARAM_COUNT);
         final String format = req.getParameter(Const.PARAM_FORMAT);
         final String uuidParam = req.getParameter(Const.PARAM_UUID);
@@ -189,8 +188,8 @@ public class PointWebService extends HttpServlet {
 
         Common.addResponseHeaders(resp, ExportType.plain);
 
-        if (Utils.isEmptyString(pointNameParam)) {
-            pointNameParam = req.getParameter(Const.PARAM_POINT);
+        if (Utils.isEmptyString(nameParam)) {
+            nameParam = req.getParameter(Const.PARAM_POINT);
         }
         User u;
         try {
@@ -204,7 +203,7 @@ public class PointWebService extends HttpServlet {
 
             final String host = ServerInfoImpl.getFullServerURL(req);
             if (Utils.isEmptyString(uuidParam)) {
-                getPointObjects(req, categoryNameParam, pointNameParam, out);
+                getPointObjects(req, categoryNameParam, nameParam, out);
             } else {
                 final Point point = PointServiceFactory.getInstance().getPointByUUID(uuidParam);
                 if (point != null) {
@@ -317,18 +316,18 @@ public class PointWebService extends HttpServlet {
         return c.getProtectionLevel().equals(ProtectionLevel.everyone) || !(u == null || u.isRestricted());
     }
 
-    private void getPointObjects(HttpServletRequest req, String categoryNameParam, String pointNameParam, PrintWriter out) throws NimbitsException {
+    private void getPointObjects(HttpServletRequest req, String categoryNameParam, String nameParam, PrintWriter out) throws NimbitsException {
         final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
         if (u != null) {
 
             final String result;
-            if (!Utils.isEmptyString(pointNameParam)) {
-                final PointName pointName = CommonFactoryLocator.getInstance().createPointName(pointNameParam);
-                final Point p = PointServiceFactory.getInstance().getPointByName(u, pointName);
+            if (!Utils.isEmptyString(nameParam)) {
+                final EntityName name = CommonFactoryLocator.getInstance().createName(nameParam);
+                final Point p = PointServiceFactory.getInstance().getPointByName(u, name);
                 result = gson.toJson(p);
                 out.println(result);
             } else if (!Utils.isEmptyString(categoryNameParam)) {
-                final CategoryName categoryName = CommonFactoryLocator.getInstance().createCategoryName(categoryNameParam);
+                final EntityName categoryName = CommonFactoryLocator.getInstance().createName(categoryNameParam);
                 final Category c = CategoryServiceFactory.getInstance().getCategory(u, categoryName);
                 final List<Point> points = PointServiceFactory.getInstance().getPointsByCategory(u, c);
                 result = gson.toJson(points, GsonFactory.pointListType);

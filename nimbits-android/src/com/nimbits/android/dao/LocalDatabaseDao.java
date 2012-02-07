@@ -16,7 +16,7 @@ package com.nimbits.android.dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.widget.ListAdapter;
-import com.nimbits.client.model.point.PointName;
+import com.nimbits.client.model.entity.EntityName;
 
 import java.util.List;
 
@@ -36,7 +36,7 @@ public interface LocalDatabaseDao {
 
     ListAdapter mainListCursor(final Context aContext);
 
-    void updatePointValuesByName(final Context aContext, final ContentValues u, final PointName pointName);
+    void updatePointValuesByName(final Context aContext, final ContentValues u, final EntityName pointName);
 
     void updateSetting(final Context aContext, final String settingName, final String newValue);
 

@@ -17,8 +17,8 @@ import com.google.gson.Gson;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointName;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
 import com.nimbits.client.model.value.Value;
@@ -78,7 +78,7 @@ public class ProcessBatchTask extends HttpServlet {
         final Enumeration enumeration = req.getParameterNames();
         final Map m = req.getParameterMap();
 
-        final Map<PointName, Point> points = new HashMap<PointName, Point>();
+        final Map<EntityName, Point> points = new HashMap<EntityName, Point>();
 
         if (u != null) {
             while (enumeration.hasMoreElements()) {
@@ -151,7 +151,7 @@ public class ProcessBatchTask extends HttpServlet {
 
         Date timestamp;
         final String[] points = (String[]) m.get("p" + x);
-        final PointName pointName = CommonFactoryLocator.getInstance().createPointName(points[0]);
+        final EntityName pointName = CommonFactoryLocator.getInstance().createName(points[0]);
         String note = "";
 
         if (m.containsKey("n" + x)) {
@@ -179,11 +179,11 @@ public class ProcessBatchTask extends HttpServlet {
     private static class BR {
         private final String note;
         private final User u;
-        private final PointName pointName;
+        private final EntityName pointName;
         private final Date timestamp;
         private final Double value;
 
-        public BR(final User u, final PointName pointName, final Date timestamp,
+        public BR(final User u, final EntityName pointName, final Date timestamp,
                   final Double value, final String valNote) {
             super();
             this.u = u;

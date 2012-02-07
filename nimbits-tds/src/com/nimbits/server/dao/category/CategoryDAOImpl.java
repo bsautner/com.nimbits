@@ -13,26 +13,38 @@
 
 package com.nimbits.server.dao.category;
 
-import com.nimbits.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.category.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.diagram.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.subscription.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.diagram.*;
-import com.nimbits.server.orm.*;
-import com.nimbits.server.point.*;
-import com.nimbits.server.pointcategory.*;
-import com.nimbits.server.task.*;
-import com.nimbits.shared.*;
+import com.nimbits.PMF;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.Const;
+import com.nimbits.client.model.category.Category;
+import com.nimbits.client.model.category.CategoryModelFactory;
 
-import javax.jdo.*;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.diagram.Diagram;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModelFactory;
+import com.nimbits.client.model.subscription.Subscription;
+import com.nimbits.client.model.subscription.SubscriptionFactory;
+import com.nimbits.client.model.user.User;
+import com.nimbits.server.diagram.DiagramModelFactory;
+import com.nimbits.server.orm.DataPoint;
+import com.nimbits.server.orm.DiagramEntity;
+import com.nimbits.server.orm.PointCatagory;
+import com.nimbits.server.orm.SubscriptionEntity;
+import com.nimbits.server.orm.entity.Entity;
+import com.nimbits.server.point.PointServiceFactory;
+import com.nimbits.server.pointcategory.CategoryTransactions;
+import com.nimbits.server.task.TaskFactoryLocator;
+import com.nimbits.shared.Utils;
+
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
 import java.util.*;
-import java.util.logging.*;
+import java.util.logging.Logger;
 
 public class CategoryDAOImpl implements CategoryTransactions {
 
@@ -60,7 +72,7 @@ public class CategoryDAOImpl implements CategoryTransactions {
         Category retObj;
         try {
 
-            final CategoryName categoryName = CommonFactoryLocator.getInstance().createCategoryName(Const.CONST_HIDDEN_CATEGORY);
+            final EntityName categoryName = CommonFactoryLocator.getInstance().createName(Const.CONST_HIDDEN_CATEGORY);
             final Category c = new PointCatagory();
             c.setName(categoryName);
             c.setProtectionLevel(ProtectionLevel.onlyMe);
@@ -242,7 +254,7 @@ public class CategoryDAOImpl implements CategoryTransactions {
     * @see com.nimbits.server.pointcategory.CategoryDAO#getCategory(java.lang.String, long)
     */
     @Override
-    public Category getCategory(final CategoryName categoryName) {
+    public Category getCategory(final EntityName categoryName) {
         Category retObj = null;
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final Query q1 = pm.newQuery(PointCatagory.class, "name==u && userFK==l");
@@ -291,13 +303,13 @@ public class CategoryDAOImpl implements CategoryTransactions {
       * @see com.nimbits.server.pointcategory.CategoryDAO#categoryExists(com.nimbits.client.model.user.NimbitsUser, java.lang.String)
       */
     @Override
-    public boolean categoryExists(final CategoryName CategoryName) throws NimbitsException {
+    public boolean categoryExists(final EntityName EntityName) throws NimbitsException {
         throw new NimbitsException("Not Implemented");
     }
 
 
     @Override
-    public Category addCategory(final CategoryName categoryName) {
+    public Category addCategory(final EntityName name) {
         Category retObj;
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -305,11 +317,22 @@ public class CategoryDAOImpl implements CategoryTransactions {
 
         try {
             long userFK = user.getId();
-            c = new PointCatagory(categoryName);
+            c = new PointCatagory(name);
             c.setProtectionLevel(ProtectionLevel.everyone);
             c.setUserFK(userFK);
             c.setUUID(UUID.randomUUID().toString());
             pm.makePersistent(c);
+
+            Entity entity = new Entity(name, "",
+                    EntityType.category,
+                    ProtectionLevel.everyone,
+                    UUID.randomUUID(),
+                  null,
+                    UUID.fromString(c.getUUID()),
+                    UUID.fromString(user.getUuid()));
+
+            pm.makePersistent(entity);
+
             retObj = CategoryModelFactory.createCategoryModel(c);
         } finally {
             pm.close();

@@ -17,8 +17,8 @@ package com.nimbits.client.model;
 import com.extjs.gxt.ui.client.data.BaseTreeModel;
 import com.nimbits.client.enums.ClientType;
 import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.CategoryName;
 import com.nimbits.client.model.diagram.Diagram;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 
 import java.io.Serializable;
@@ -41,7 +41,7 @@ public class GxtPointCategoryModel extends BaseTreeModel implements Serializable
     private List<Diagram> diagrams;
     private boolean isSystem;
     private Long userFK;
-    private CategoryName name;
+    private EntityName name;
     private Long id;
 
 
@@ -68,7 +68,7 @@ public class GxtPointCategoryModel extends BaseTreeModel implements Serializable
 
     }
 
-    public GxtPointCategoryModel(CategoryName name) {
+    public GxtPointCategoryModel(EntityName name) {
         this.name = name;
 
     }
@@ -113,11 +113,11 @@ public class GxtPointCategoryModel extends BaseTreeModel implements Serializable
         this.userFK = userFK;
     }
 
-    public CategoryName getName() {
+    public EntityName getName() {
         return this.name;
     }
 
-    void setName(CategoryName name) {
+    void setName(EntityName name) {
         this.name = name;
     }
 

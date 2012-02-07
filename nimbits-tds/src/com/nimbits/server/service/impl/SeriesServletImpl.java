@@ -18,8 +18,8 @@ import com.nimbits.client.enums.ExportType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointName;
 import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
@@ -104,7 +104,7 @@ public class SeriesServletImpl extends HttpServlet {
             } else {
 
 
-                final PointName pointName = CommonFactoryLocator.getInstance().createPointName(pointNameParam);
+                final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam);
                 final Point point = PointServiceFactory.getInstance().getPointByName(u, pointName);
                 if (point == null) {
                     out.println("Point not found");

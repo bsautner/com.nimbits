@@ -26,9 +26,9 @@ import com.nimbits.client.model.Const;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
-import com.nimbits.client.model.point.PointName;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueModelFactory;
@@ -144,7 +144,7 @@ public class XMPPReceiverServlet extends HttpServlet {
     private void createPoint(final String body, final User u) throws NimbitsException {
 
 
-        PointName pointName = CommonFactoryLocator.getInstance().createPointName(body.substring(1).trim());
+        EntityName pointName = CommonFactoryLocator.getInstance().createName(body.substring(1).trim());
         Point r = PointServiceFactory.getInstance().addPoint(pointName, null, u);
         if (r != null) {
             IMFactory.getInstance().sendMessage(pointName.getValue() + " created", u.getEmail());
@@ -160,7 +160,7 @@ public class XMPPReceiverServlet extends HttpServlet {
         String b[] = body.split("=");
         if (b.length == 2) {
 
-            PointName pointName = CommonFactoryLocator.getInstance().createPointName(b[0]);
+            EntityName pointName = CommonFactoryLocator.getInstance().createName(b[0]);
             String sval = b[1];
             double v = 0.0;
             String t = "";
@@ -228,7 +228,7 @@ public class XMPPReceiverServlet extends HttpServlet {
 
     private void sendCurrentValue(final String body, final User u) throws NimbitsException {
         if (!Utils.isEmptyString(body) && body.endsWith("?")) {
-            final PointName pointName = CommonFactoryLocator.getInstance().createPointName(body.replace("?", ""));
+            final EntityName pointName = CommonFactoryLocator.getInstance().createName(body.replace("?", ""));
             final Point p = PointServiceFactory.getInstance().getPointByName(u, pointName);
             String t = "";
 

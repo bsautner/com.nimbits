@@ -6,12 +6,13 @@
 
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.CategoryName;
 import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.value.Value;
-import org.junit.*;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,8 +36,8 @@ public class SeriesTest {
         Random rx = new Random();
         Point p = new PointModel();
 
-        p.setName(CommonFactoryLocator.getInstance().createPointName(UUID.randomUUID().toString()));
-        CategoryName categoryName = CommonFactoryLocator.getInstance().createCategoryName(UUID.randomUUID().toString());
+        p.setName(CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString()));
+        EntityName categoryName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
         Category c = ClientHelper.client().addCategory(categoryName);
         Point rp = ClientHelper.client().addPoint(p, categoryName);
         assertNotNull(c);
@@ -66,8 +67,8 @@ public class SeriesTest {
         s.set(2009, 0, 1);
         Point p = new PointModel();
 
-        p.setName(CommonFactoryLocator.getInstance().createPointName(UUID.randomUUID().toString()));
-        CategoryName categoryName = CommonFactoryLocator.getInstance().createCategoryName(Const.CONST_HIDDEN_CATEGORY);
+        p.setName(CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString()));
+        EntityName categoryName = CommonFactoryLocator.getInstance().createName(Const.CONST_HIDDEN_CATEGORY);
         ClientHelper.client().addPoint(p, categoryName);
         try {
             Random rx = new Random();

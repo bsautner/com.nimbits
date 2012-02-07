@@ -118,7 +118,7 @@ public class JpaEntityDescription implements EntityDescription {
     public JpaEntityDescription() {
     }
 
-    public void setPointName(String pointName) {
+    public void setEntityName(String pointName) {
         this.pointName = pointName;
     }
 

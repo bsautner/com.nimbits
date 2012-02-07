@@ -13,23 +13,28 @@
 
 package com.nimbits.client.panels;
 
-import com.extjs.gxt.ui.client.*;
-import com.extjs.gxt.ui.client.data.*;
-import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.store.*;
+import com.extjs.gxt.ui.client.Style;
+import com.extjs.gxt.ui.client.data.ModelData;
+import com.extjs.gxt.ui.client.event.ButtonEvent;
+import com.extjs.gxt.ui.client.event.SelectionListener;
+import com.extjs.gxt.ui.client.store.ListStore;
 import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.form.*;
+import com.extjs.gxt.ui.client.widget.form.DateField;
+import com.extjs.gxt.ui.client.widget.form.NumberField;
+import com.extjs.gxt.ui.client.widget.form.TextField;
 import com.extjs.gxt.ui.client.widget.grid.*;
-import com.extjs.gxt.ui.client.widget.grid.Grid;
-import com.extjs.gxt.ui.client.widget.treegrid.*;
-import com.google.gwt.i18n.client.*;
-import com.google.gwt.user.client.*;
-import com.google.gwt.user.client.ui.*;
-import com.nimbits.client.icons.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.point.*;
+import com.extjs.gxt.ui.client.widget.treegrid.TreeGridCellRenderer;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.NumberFormat;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.nimbits.client.icons.Icons;
+import com.nimbits.client.model.Const;
+import com.nimbits.client.model.GxtPointModel;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
 
-import java.util.*;
+import java.util.Map;
 
 public class ColumnConfigs {
 
@@ -113,7 +118,7 @@ public class ColumnConfigs {
     }
 
 
-    public ColumnConfig alertColumn(final Map<PointName, Point> points) {
+    public ColumnConfig alertColumn(final Map<EntityName, Point> points) {
 
         final GridCellRenderer<GxtPointModel> propertyButtonRenderer = new GridCellRenderer<GxtPointModel>() {
 

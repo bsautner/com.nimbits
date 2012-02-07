@@ -17,9 +17,9 @@ package com.nimbits.client.model.category.impl;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.CategoryName;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.diagram.Diagram;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 
 import java.io.Serializable;
@@ -97,7 +97,7 @@ public class CategoryModel implements Serializable, Category {
         this.uuid = c.getUUID();
     }
 
-    public CategoryModel(final CategoryName name) {
+    public CategoryModel(final EntityName name) {
         this.name = name.getValue();
     }
 
@@ -118,11 +118,11 @@ public class CategoryModel implements Serializable, Category {
         this.userFK = userFK;
     }
 
-    public CategoryName getName() {
-        return CommonFactoryLocator.getInstance().createCategoryName(this.name);
+    public EntityName getName() {
+        return CommonFactoryLocator.getInstance().createName(this.name);
     }
 
-    public void setName(final CategoryName name) {
+    public void setName(final EntityName name) {
         this.name = name.getValue();
     }
 

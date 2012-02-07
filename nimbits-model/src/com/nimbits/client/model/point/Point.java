@@ -14,6 +14,7 @@
 package com.nimbits.client.model.point;
 
 import com.nimbits.client.enums.*;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.intelligence.*;
 import com.nimbits.client.model.value.*;
 
@@ -73,7 +74,7 @@ public interface Point extends Serializable {
 
     double getLowAlarm();
 
-    PointName getName();
+    EntityName getName();
 
     boolean getReadOnly();
 
@@ -169,7 +170,7 @@ public interface Point extends Serializable {
 
     void setLowAlarmOn(final boolean lowAlarmOn);
 
-    void setName(final PointName name);
+    void setName(final EntityName name);
 
     void setPostToFacebook(final boolean postToFacebook);
 

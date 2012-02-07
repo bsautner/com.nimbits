@@ -22,7 +22,7 @@ import com.nimbits.android.ImageCursorAdapter;
 import com.nimbits.android.R;
 import com.nimbits.android.database.DatabaseHelperFactory;
 import com.nimbits.client.model.Const;
-import com.nimbits.client.model.point.PointName;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +92,7 @@ public class LocalDatabaseDaoImpl implements LocalDatabaseDao {
     }
 
     @Override
-    public void updatePointValuesByName(Context aContext, final ContentValues u, final PointName pointName) {
+    public void updatePointValuesByName(Context aContext, final ContentValues u, final EntityName pointName) {
         final SQLiteDatabase db1 = DatabaseHelperFactory.getInstance(aContext).getDB(false);
         db1.update(Const.ANDROID_TABLE_LEVEL_TWO_DISPLAY, u, Const.ANDROID_COL_NAME + "=?", new String[]{pointName.getValue()});
         db1.close();

@@ -15,10 +15,9 @@ package com.nimbits.client.service.datapoints;
 
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.CategoryName;
 import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointName;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -37,15 +36,15 @@ public interface PointTransactions {
 
     Point updatePoint(final Point point) throws NimbitsException;
 
-    Point getPointByName(final PointName name) throws NimbitsException;
+    Point getPointByName(final EntityName name) throws NimbitsException;
 
     void deletePoint(final Point p) throws NimbitsException;
 
-    Point movePoint(final Point point, final CategoryName categoryName) throws NimbitsException;
+    Point movePoint(final Point point, final EntityName categoryName) throws NimbitsException;
 
     Point addPoint(final Point point, final Category c) throws NimbitsException;
 
-    Point addPoint(final PointName pointName, final Category c) throws NimbitsException;
+    Point addPoint(final EntityName pointName, final Category c) throws NimbitsException;
 
      List<Point> getPointsByCategory(final Category c);
 

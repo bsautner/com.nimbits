@@ -14,8 +14,8 @@
 package com.nimbits.server.export;
 
 import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointName;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.intelligence.IntelligenceServiceFactory;
 
@@ -24,14 +24,14 @@ import java.util.Map;
 
 public class ExportHelperImpl implements ExportHelper {
 
-    public String exportPointDataToCSVSeparateColumns(final Map<PointName, Point> points) {
+    public String exportPointDataToCSVSeparateColumns(final Map<EntityName, Point> points) {
         final StringBuilder sb = new StringBuilder();
         int max = 0;
         int i = 0;
         Value v;
         Point p;
 
-        for (final PointName name : points.keySet()) {
+        for (final EntityName name : points.keySet()) {
             sb.append(name.toString()).append(",,");
             if (points.get(name).getValues().size() > max) {
                 max = points.get(name).getValues().size();
@@ -42,7 +42,7 @@ public class ExportHelperImpl implements ExportHelper {
 
 
         while (i < max) {
-            for (final PointName name : points.keySet()) {
+            for (final EntityName name : points.keySet()) {
                 p = points.get(name);
                 if (p.getValues().size() >= i) {
                     v = p.getValues().get(i);
@@ -57,8 +57,8 @@ public class ExportHelperImpl implements ExportHelper {
     }
 
     @Override
-    public String exportPointDataToDescriptiveStatistics(final Map<PointName, Point> points) throws NimbitsException {
-        final PointName pointName = points.keySet().iterator().next();
+    public String exportPointDataToDescriptiveStatistics(final Map<EntityName, Point> points) throws NimbitsException {
+        final EntityName pointName = points.keySet().iterator().next();
         final Point point = points.get(pointName);
         final StringBuilder sb = new StringBuilder();
 
@@ -72,8 +72,8 @@ public class ExportHelperImpl implements ExportHelper {
     }
 
     @Override
-    public String exportPointDataToPossibleContinuation(final Map<PointName, Point> points) throws NimbitsException {
-        final PointName pointName = points.keySet().iterator().next();
+    public String exportPointDataToPossibleContinuation(final Map<EntityName, Point> points) throws NimbitsException {
+        final EntityName pointName = points.keySet().iterator().next();
         final Point point = points.get(pointName);
         final StringBuilder sb = new StringBuilder();
 

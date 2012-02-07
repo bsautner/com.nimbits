@@ -13,13 +13,15 @@
 
 package com.nimbits.client.service.recordedvalues;
 
-import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.timespan.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.timespan.Timespan;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 public interface RecordedValueServiceAsync {
 
@@ -42,7 +44,7 @@ public interface RecordedValueServiceAsync {
 
     // void recordValue(final User u, final Point target, final Value value, final AsyncCallback<Value> callback);
 
-    void recordValue(final User u, final PointName pointName, final Value value, final AsyncCallback<Value> callback);
+    void recordValue(final User u, final EntityName pointName, final Value value, final AsyncCallback<Value> callback);
 
     void recordValue(final Point point, final Value value, final AsyncCallback<Value> asyncCallback);
 
@@ -50,7 +52,7 @@ public interface RecordedValueServiceAsync {
 
     void getTopDataSeries(final Point point, int maxValues, final Date endDate, final AsyncCallback<List<Value>> async);
 
-    void getCurrentValue(long pointOwnerId, final PointName pointName, final AsyncCallback<Value> async);
+    void getCurrentValue(long pointOwnerId, final EntityName pointName, final AsyncCallback<Value> async);
 
 
     void recordValue(final User u, final Point target, final Value value, final boolean loopFlag, AsyncCallback<Value> async);

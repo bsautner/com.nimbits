@@ -17,8 +17,8 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointName;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueModelFactory;
@@ -77,7 +77,7 @@ public class IncomingMailTask extends HttpServlet {
 
     void processLine(final User u, final String s) throws NimbitsException {
         final String emailLine[] = s.split(",");
-        final PointName pointName = CommonFactoryLocator.getInstance().createPointName(emailLine[0]);
+        final EntityName pointName = CommonFactoryLocator.getInstance().createName(emailLine[0]);
         final Point point = PointServiceFactory.getInstance().getPointByName(u, pointName);
 
         if (point != null) {

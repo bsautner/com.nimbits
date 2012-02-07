@@ -13,19 +13,22 @@
 
 package com.nimbits.server.diagram;
 
-import com.google.appengine.api.blobstore.*;
-import com.nimbits.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.category.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.diagram.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.orm.*;
-import com.nimbits.server.pointcategory.*;
+import com.google.appengine.api.blobstore.BlobKey;
+import com.nimbits.PMF;
+import com.nimbits.client.exception.NimbitsRuntimeException;
+import com.nimbits.client.model.Const;
+import com.nimbits.client.model.category.Category;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.diagram.Diagram;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.user.User;
+import com.nimbits.server.orm.DiagramEntity;
+import com.nimbits.server.pointcategory.CategoryServiceFactory;
 
-import javax.jdo.*;
-import java.util.*;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
+import java.util.List;
 
 /**
  * Created by bsautner
@@ -58,10 +61,10 @@ public class DiagramDaoImpl implements DiagramTransactions {
     }
 
     @Override
-    public void moveDiagram(final DiagramName diagramName,
-                            final CategoryName newCategoryName) {
+    public void moveDiagram(final EntityName diagramName,
+                            final EntityName newEntityName) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final Category c = CategoryServiceFactory.getInstance().getCategory(user, newCategoryName);
+        final Category c = CategoryServiceFactory.getInstance().getCategory(user, newEntityName);
 
         if (!(c == null)) {
             Transaction tx = null;
@@ -124,10 +127,10 @@ public class DiagramDaoImpl implements DiagramTransactions {
 
 
     @Override
-    public void addDiagram(final BlobKey blobKey, final DiagramName name) {
+    public void addDiagram(final BlobKey blobKey, final EntityName name) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
-        final CategoryName categoryName = CommonFactoryLocator.getInstance().createCategoryName(Const.CONST_HIDDEN_CATEGORY);
+        final EntityName categoryName = CommonFactoryLocator.getInstance().createName(Const.CONST_HIDDEN_CATEGORY);
         Category targetCategory =CategoryServiceFactory.getInstance().getCategory(user, categoryName);
 
         if (targetCategory == null) {
@@ -143,7 +146,7 @@ public class DiagramDaoImpl implements DiagramTransactions {
 
     @Override
     @SuppressWarnings(Const.WARNING_UNCHECKED)
-    public Diagram getDiagramByName(DiagramName name) {
+    public Diagram getDiagramByName(EntityName name) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         List<DiagramEntity> points;
         Diagram retObj = null;
@@ -222,7 +225,7 @@ public class DiagramDaoImpl implements DiagramTransactions {
     }
 
     @Override
-    public Diagram updateDiagram(final BlobKey blobKey, final DiagramName name, final long id) {
+    public Diagram updateDiagram(final BlobKey blobKey, final EntityName name, final long id) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         Transaction tx;
         Diagram retObj = null;

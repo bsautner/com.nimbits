@@ -16,6 +16,7 @@ package com.nimbits.server.dao.subscription;
 import com.nimbits.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.category.*;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.subscription.*;
 import com.nimbits.client.model.user.*;
@@ -137,7 +138,7 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
 
     @Override
     @SuppressWarnings(Const.WARNING_UNCHECKED)
-    public Point moveSubscription(final Point point, final CategoryName categoryName) {
+    public Point moveSubscription(final Point point, final EntityName categoryName) {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         List<SubscriptionEntity> results;

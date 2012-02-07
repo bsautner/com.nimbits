@@ -20,7 +20,7 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.point.PointName;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueModelFactory;
 import com.nimbits.console.KeyFile;
@@ -146,7 +146,7 @@ public class MainClass {
     }
 
     private static void readValue(final NimbitsClient client, final Map<String, String> argsMap, Action action) {
-        final PointName pointName = CommonFactoryLocator.getInstance().createPointName(argsMap.get(Const.PARAM_POINT));
+        final EntityName pointName = CommonFactoryLocator.getInstance().createName(argsMap.get(Const.PARAM_POINT));
         final Value v = client.getCurrentRecordedValue(pointName);
 
         switch (action) {
@@ -180,7 +180,7 @@ public class MainClass {
         out(verbose, "Recording values");
 
         final Value v = buildValue(argsMap);
-        final PointName pointName = CommonFactoryLocator.getInstance().createPointName(argsMap.get(Const.PARAM_POINT));
+        final EntityName pointName = CommonFactoryLocator.getInstance().createName(argsMap.get(Const.PARAM_POINT));
         final Value result = client.recordValue(pointName, v);
         if (result == null) {
             out(verbose, "An error occurred recording your data");

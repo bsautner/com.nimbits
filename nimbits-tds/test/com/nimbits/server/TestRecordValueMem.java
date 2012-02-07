@@ -48,7 +48,7 @@ public class TestRecordValueMem {
     public void testMem1() throws NimbitsException, InterruptedException {
 
         Point p = PointModelFactory.createPointModel(0, 0);
-        p.setName(CommonFactoryLocator.getInstance().createPointName(UUID.randomUUID().toString()));
+        p.setName(CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString()));
         long ts = new Date().getTime();
 
         Random r = new Random();

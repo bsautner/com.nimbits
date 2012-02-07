@@ -13,38 +13,47 @@
 
 package com.nimbits.client.panels;
 
-import com.extjs.gxt.ui.client.dnd.*;
+import com.extjs.gxt.ui.client.dnd.DropTarget;
 import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.store.*;
+import com.extjs.gxt.ui.client.store.TreeStoreModel;
 import com.extjs.gxt.ui.client.widget.*;
-import com.extjs.gxt.ui.client.widget.Label;
-import com.extjs.gxt.ui.client.widget.Window;
 import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.button.*;
-import com.extjs.gxt.ui.client.widget.form.*;
-import com.extjs.gxt.ui.client.widget.toolbar.*;
-import com.google.gwt.core.client.*;
-import com.google.gwt.i18n.client.*;
-import com.google.gwt.user.client.*;
-import static com.google.gwt.user.client.Window.*;
-import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
-import com.google.gwt.visualization.client.AbstractDataTable.*;
-import com.google.gwt.visualization.client.*;
-import com.google.gwt.visualization.client.visualizations.*;
-import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.icons.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.timespan.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.client.service.datapoints.*;
-import com.nimbits.client.service.recordedvalues.*;
-import com.nimbits.shared.*;
+import com.extjs.gxt.ui.client.widget.button.ToolButton;
+import com.extjs.gxt.ui.client.widget.form.NumberField;
+import com.extjs.gxt.ui.client.widget.form.TextField;
+import com.extjs.gxt.ui.client.widget.toolbar.SeparatorToolItem;
+import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.google.gwt.visualization.client.AbstractDataTable.ColumnType;
+import com.google.gwt.visualization.client.DataTable;
+import com.google.gwt.visualization.client.VisualizationUtils;
+import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine;
+import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine.Options;
+import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine.WindowMode;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.icons.Icons;
+import com.nimbits.client.model.Const;
+import com.nimbits.client.model.GxtPointModel;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.timespan.Timespan;
+import com.nimbits.client.model.timespan.TimespanModelFactory;
+import com.nimbits.client.model.timespan.TimespanServiceClientImpl;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.service.datapoints.PointService;
+import com.nimbits.client.service.datapoints.PointServiceAsync;
+import com.nimbits.client.service.recordedvalues.RecordedValueService;
+import com.nimbits.client.service.recordedvalues.RecordedValueServiceAsync;
+import com.nimbits.shared.Utils;
 
 import java.util.*;
+
+import static com.google.gwt.user.client.Window.alert;
 
 public class AnnotatedTimeLinePanel extends NavigationEventProvider {
     private final DateTimeFormat fmt = DateTimeFormat.getFormat(Const.FORMAT_DATE_TIME);
@@ -53,7 +62,7 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
     private ContentPanel mainPanel;
     private DataTable dataTable = null;
 
-    private final Map<PointName, Point> points = new HashMap<PointName, Point>();
+    private final Map<EntityName, Point> points = new HashMap<EntityName, Point>();
 
     private final TextField endDateSelector = new TextField();
     private final TextField startDateSelector = new TextField();
@@ -76,7 +85,7 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
         boolean found = false;
 
 
-        removePointDataFromTable(CommonFactoryLocator.getInstance().createPointName(Const.DEFAULT_EMPTY_COL));
+        removePointDataFromTable(CommonFactoryLocator.getInstance().createName(Const.DEFAULT_EMPTY_COL));
 
         int r = dataTable.getNumberOfColumns();
         int CurrentRow = dataTable.getNumberOfRows();
@@ -123,7 +132,7 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
         }
     }
 
-    private void removePointDataFromTable(final PointName pointName) {
+    private void removePointDataFromTable(final EntityName pointName) {
         int r = dataTable.getNumberOfColumns();
         for (int i = 0; i < r; i++) {
             String s = dataTable.getColumnLabel(i);
@@ -380,7 +389,7 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
                 dataTable = DataTable.create();
                 dataTable.addColumn(ColumnType.DATETIME, "Date");
 
-                for (PointName pointName : points.keySet()) {
+                for (EntityName pointName : points.keySet()) {
                     addPointToChart(points.get(pointName));
                 }
             }
@@ -551,7 +560,7 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
             points.remove(p.getName());
         }
         if (points.size() == 0) {
-            removePointDataFromTable(CommonFactoryLocator.getInstance().createPointName(Const.DEFAULT_EMPTY_COL));
+            removePointDataFromTable(CommonFactoryLocator.getInstance().createName(Const.DEFAULT_EMPTY_COL));
             addEmptyDataToTable();
         }
 
@@ -592,7 +601,7 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
 
                         window.show();
                         panel.resize(770, 790);
-                        for (final PointName pointName : points.keySet()) {
+                        for (final EntityName pointName : points.keySet()) {
                             panel.addPoint(points.get(pointName));
                         }
 

@@ -32,10 +32,9 @@ import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.diagram.Diagram;
 import com.nimbits.client.model.diagram.DiagramModel;
-import com.nimbits.client.model.diagram.DiagramName;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
-import com.nimbits.client.model.point.PointName;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.service.datapoints.PointService;
 import com.nimbits.client.service.datapoints.PointServiceAsync;
@@ -69,13 +68,13 @@ public class DiagramPanel extends NavigationEventProvider {
     private SVGImage image;
     private OMSVGSVGElement svg;
     private final ContentPanel mainPanel = new ContentPanel();
-    private Map<PointName, Point> points = new HashMap<PointName, Point>();
-    private Map<DiagramName, Diagram> diagrams = new HashMap<DiagramName, Diagram>();
+    private Map<EntityName, Point> points = new HashMap<EntityName, Point>();
+    private Map<EntityName, Diagram> diagrams = new HashMap<EntityName, Diagram>();
 
     private final boolean readOnly;
     private final RecordedValueServiceAsync recordedValueService = GWT.create(RecordedValueService.class);
-    private final Set<PointName> pointsInDiagram = new HashSet<PointName>();
-    private final Set<DiagramName> diagramsInDiagram = new HashSet<DiagramName>();
+    private final Set<EntityName> pointsInDiagram = new HashSet<EntityName>();
+    private final Set<EntityName> diagramsInDiagram = new HashSet<EntityName>();
     private final Map<String, String> originalFill = new HashMap<String, String>();
 
     public Diagram getDiagram() {
@@ -307,7 +306,7 @@ public class DiagramPanel extends NavigationEventProvider {
 
     private void getDiagramsUsedInDiagram() throws NimbitsException {
         final DiagramServiceAsync diagramServiceAsync = GWT.create(DiagramService.class);
-        diagramServiceAsync.getDiagramsByName(diagram.getUserFk(), diagramsInDiagram, new AsyncCallback<Map<DiagramName, Diagram>>() {
+        diagramServiceAsync.getDiagramsByName(diagram.getUserFk(), diagramsInDiagram, new AsyncCallback<Map<EntityName, Diagram>>() {
 
 
             @Override
@@ -316,7 +315,7 @@ public class DiagramPanel extends NavigationEventProvider {
             }
 
             @Override
-            public void onSuccess(Map<DiagramName, Diagram> diagramNameDiagramMap) {
+            public void onSuccess(Map<EntityName, Diagram> diagramNameDiagramMap) {
                 diagrams = diagramNameDiagramMap;
             }
         });
@@ -325,7 +324,7 @@ public class DiagramPanel extends NavigationEventProvider {
     private void getPointsUsedInDiagram() throws NimbitsException {
         final PointServiceAsync pointServiceAsync = GWT.create(PointService.class);
 
-        pointServiceAsync.getPointsByName(diagram.getUserFk(), pointsInDiagram, new AsyncCallback<Map<PointName, Point>>() {
+        pointServiceAsync.getPointsByName(diagram.getUserFk(), pointsInDiagram, new AsyncCallback<Map<EntityName, Point>>() {
 
 
             @Override
@@ -334,7 +333,7 @@ public class DiagramPanel extends NavigationEventProvider {
             }
 
             @Override
-            public void onSuccess(Map<PointName, Point> stringPointMap) {
+            public void onSuccess(Map<EntityName, Point> stringPointMap) {
                 points = stringPointMap;
 
             }
@@ -397,7 +396,7 @@ public class DiagramPanel extends NavigationEventProvider {
         if (!Utils.isEmptyString(action)) {
             final String[] actions = action.split(",");
             if (!Utils.isEmptyString(pointNameParam)) {
-                PointName pointName = CommonFactoryLocator.getInstance().createPointName(pointNameParam);
+                EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam);
                 if (!pointsInDiagram.contains(pointName)) {
 
                     pointsInDiagram.add(pointName);
@@ -405,7 +404,7 @@ public class DiagramPanel extends NavigationEventProvider {
                 addTextPointActions(o, pointName, actions);
             }
             if (!Utils.isEmptyString(diagramNameParam)) {
-                DiagramName diagramName = CommonFactoryLocator.getInstance().createDiagramName(diagramNameParam);
+                EntityName diagramName = CommonFactoryLocator.getInstance().createName(diagramNameParam);
                 if (!diagramsInDiagram.contains(diagramName)) {
                     diagramsInDiagram.add(diagramName);
                 }
@@ -419,7 +418,7 @@ public class DiagramPanel extends NavigationEventProvider {
 
     }
 
-    private void addTextPointActions(final OMSVGTextElement t, final PointName pointName, final String[] actions) {
+    private void addTextPointActions(final OMSVGTextElement t, final EntityName pointName, final String[] actions) {
         originalFill.put(t.getId(), t.getStyle().getSVGProperty(SVGConstants.CSS_FILL_VALUE));
         // com.google.gwt.user.client.Window.alert("Adding handler " + t.getId());
 
@@ -460,7 +459,7 @@ public class DiagramPanel extends NavigationEventProvider {
 
     }
 
-    private void addNestedTextDiagramActions(final OMSVGTextElement t, final DiagramName diagramName, final String[] actions) {
+    private void addNestedTextDiagramActions(final OMSVGTextElement t, final EntityName diagramName, final String[] actions) {
         t.addMouseDownHandler(new MouseDownHandler() {
             @Override
             public void onMouseDown(MouseDownEvent mouseDownEvent) {
@@ -503,7 +502,7 @@ public class DiagramPanel extends NavigationEventProvider {
 
         if (!Utils.isEmptyString(action)) {
             final String[] actions = action.split(",");
-            final PointName pointName = CommonFactoryLocator.getInstance().createPointName(pointNameParam);
+            final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam);
             if (!Utils.isEmptyString(pointNameParam) && points.containsKey(pointName)) {
                 recordedValueService.getCurrentValue(diagram.getUserFk(), pointName, new AsyncCallback<Value>() {
 
@@ -522,7 +521,7 @@ public class DiagramPanel extends NavigationEventProvider {
         }
     }
 
-    private void applyValueToTextNode(final Value result, final PointName pointName, final String[] actions, final OMSVGTextElement o) {
+    private void applyValueToTextNode(final Value result, final EntityName pointName, final String[] actions, final OMSVGTextElement o) {
         if (points != null) {
 
             final Point p = points.get(pointName);
@@ -580,14 +579,14 @@ public class DiagramPanel extends NavigationEventProvider {
         if (!Utils.isEmptyString(action)) {
             final String[] actions = action.split(",");
             if (!Utils.isEmptyString(pointNameParam)) {
-                PointName pointName = CommonFactoryLocator.getInstance().createPointName(pointNameParam);
+                EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam);
                 if (!pointsInDiagram.contains(pointName)) {
                     pointsInDiagram.add(pointName);
                 }
                 addPathPointActions(o, pointName, actions);
             }
             if (!Utils.isEmptyString(diagramNameParam)) {
-                DiagramName diagramName = CommonFactoryLocator.getInstance().createDiagramName(diagramNameParam);
+                EntityName diagramName = CommonFactoryLocator.getInstance().createName(diagramNameParam);
                 if (!diagramsInDiagram.contains(diagramName)) {
                     diagramsInDiagram.add(diagramName);
                 }
@@ -601,7 +600,7 @@ public class DiagramPanel extends NavigationEventProvider {
 
     }
 
-    private void addPathPointActions(final OMSVGPathElement t, final PointName pointName, final String[] actions) {
+    private void addPathPointActions(final OMSVGPathElement t, final EntityName pointName, final String[] actions) {
         originalFill.put(t.getId(), t.getStyle().getSVGProperty(SVGConstants.CSS_FILL_VALUE));
         t.addMouseDownHandler(new MouseDownHandler() {
 
@@ -634,7 +633,7 @@ public class DiagramPanel extends NavigationEventProvider {
 
     }
 
-    private void addNestedPathDiagramActions(final OMSVGPathElement t, final DiagramName diagramName, final String[] actions) {
+    private void addNestedPathDiagramActions(final OMSVGPathElement t, final EntityName diagramName, final String[] actions) {
         t.addMouseDownHandler(new MouseDownHandler() {
             @Override
             public void onMouseDown(final MouseDownEvent mouseDownEvent) {
@@ -656,7 +655,7 @@ public class DiagramPanel extends NavigationEventProvider {
 
         if (!Utils.isEmptyString(action)) {
             final String[] actions = action.split(",");
-            final PointName pointName = CommonFactoryLocator.getInstance().createPointName(pointNameParam);
+            final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam);
             if (!Utils.isEmptyString(pointNameParam) && points.containsKey(pointName)) {
 
                 recordedValueService.getCurrentValue(diagram.getUserFk(), pointName, new AsyncCallback<Value>() {
@@ -676,7 +675,7 @@ public class DiagramPanel extends NavigationEventProvider {
         }
     }
 
-    private void applyValueToPathNode(final Value result, final PointName pointName, final String[] actions, final OMSVGPathElement o) {
+    private void applyValueToPathNode(final Value result, final EntityName pointName, final String[] actions, final OMSVGPathElement o) {
 
         if (points != null) {
             final Point p = points.get(pointName);
@@ -755,14 +754,14 @@ public class DiagramPanel extends NavigationEventProvider {
         if (!Utils.isEmptyString(action)) {
             final String[] actions = action.split(",");
             if (!Utils.isEmptyString(pointNameParam)) {
-                final PointName pointName = CommonFactoryLocator.getInstance().createPointName(pointNameParam);
+                final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam);
                 if (!pointsInDiagram.contains(pointName)) {
                     pointsInDiagram.add(pointName);
                 }
                 addRectPointActions(o, pointName, actions);
             }
             if (!Utils.isEmptyString(diagramNameParam)) {
-                DiagramName diagramName = CommonFactoryLocator.getInstance().createDiagramName(diagramNameParam);
+                EntityName diagramName = CommonFactoryLocator.getInstance().createName(diagramNameParam);
                 if (!diagramsInDiagram.contains(diagramName)) {
 
                     diagramsInDiagram.add(diagramName);
@@ -777,7 +776,7 @@ public class DiagramPanel extends NavigationEventProvider {
 
     }
 
-    private void addRectPointActions(final OMSVGRectElement t, final PointName pointName, final String[] actions) {
+    private void addRectPointActions(final OMSVGRectElement t, final EntityName pointName, final String[] actions) {
         originalFill.put(t.getId(), t.getStyle().getSVGProperty(SVGConstants.CSS_FILL_VALUE));
         t.addMouseDownHandler(new MouseDownHandler() {
 
@@ -812,7 +811,7 @@ public class DiagramPanel extends NavigationEventProvider {
 
     }
 
-    private void addNestedRectDiagramActions(final OMSVGRectElement t, final DiagramName diagramName, final String[] actions) {
+    private void addNestedRectDiagramActions(final OMSVGRectElement t, final EntityName diagramName, final String[] actions) {
         t.addMouseDownHandler(new MouseDownHandler() {
             @Override
             public void onMouseDown(MouseDownEvent mouseDownEvent) {
@@ -834,7 +833,7 @@ public class DiagramPanel extends NavigationEventProvider {
 
         if (!Utils.isEmptyString(action)) {
             final String[] actions = action.split(",");
-            final PointName pointName = CommonFactoryLocator.getInstance().createPointName(pointNameParam);
+            final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam);
             if (!Utils.isEmptyString(pointNameParam) && points.containsKey(pointName)) {
                 recordedValueService.getCurrentValue(diagram.getUserFk(), pointName, new AsyncCallback<Value>() {
 
@@ -853,7 +852,7 @@ public class DiagramPanel extends NavigationEventProvider {
         }
     }
 
-    private void applyValueToRectNode(Value result, PointName pointName, String[] actions, OMSVGRectElement o) {
+    private void applyValueToRectNode(Value result, EntityName pointName, String[] actions, OMSVGRectElement o) {
         final Point p = points.get(pointName);
 
         if (result != null) {

@@ -15,6 +15,7 @@ package com.nimbits.server.orm;
 
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.intelligence.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.value.Value;
@@ -163,7 +164,7 @@ public class DataPoint implements Point {
     public DataPoint() {
     }
 
-    public DataPoint(final long userFK, final PointName pointName, final Long catID, final String uuid) {
+    public DataPoint(final long userFK, final EntityName pointName, final Long catID, final String uuid) {
         this();
         this.userFK = userFK;
         this.name = pointName.getValue();
@@ -308,8 +309,8 @@ public class DataPoint implements Point {
 
 
     @Override
-    public PointName getName() {
-        return CommonFactoryLocator.getInstance().createPointName(this.name);
+    public EntityName getName() {
+        return CommonFactoryLocator.getInstance().createName(this.name);
     }
 
 
@@ -497,7 +498,7 @@ public class DataPoint implements Point {
     }
 
     @Override
-    public void setName(final PointName name) {
+    public void setName(final EntityName name) {
         this.name = name.getValue();
     }
 

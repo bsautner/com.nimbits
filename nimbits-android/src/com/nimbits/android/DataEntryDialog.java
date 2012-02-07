@@ -32,9 +32,9 @@ import com.nimbits.android.dao.LocalDatabaseDaoFactory;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
-import com.nimbits.client.model.point.PointName;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueModelFactory;
 import com.nimbits.server.gson.GsonFactory;
@@ -68,7 +68,7 @@ public class DataEntryDialog extends Dialog {
     private Bundle bundle;
     private double lat;
     private double lng;
-    private PointName pointName;
+    private EntityName pointName;
     private Context context;
     private Point point;
     private String base;
@@ -87,7 +87,7 @@ public class DataEntryDialog extends Dialog {
         this.recordValueListener = okListener;
         this.chartRequestListener = viewChartListener;
         this.context = context;
-        pointName = CommonFactoryLocator.getInstance().createPointName(bundle.getString(Const.PARAM_POINT));
+        pointName = CommonFactoryLocator.getInstance().createName(bundle.getString(Const.PARAM_POINT));
         String json = bundle1.getString(Const.PARAM_JSON);
         base = bundle.getString(Const.PARAM_BASE_URL);
         if (json != null) {
@@ -177,7 +177,7 @@ public class DataEntryDialog extends Dialog {
                     //db1 = DatabaseHelperImpl.getDB(true, PointActivity.this);
                     //db1.update(Const.ANDROID_TABLE_LEVEL_TWO_DISPLAY, update, "NAME=?", new String[] {pointName});
                     // db1.close();
-                    // PointName pointName = (PointName) CommonFactoryLocator.getInstance().createPointName()
+                    // EntityName pointName = (EntityName) CommonFactoryLocator.getInstance().createName()
                     OwnerAccountFactory.getInstance().getNimbitsClient(context, base).recordValue(pointName, nv);
                     Toast.makeText(context, "Saved " + value + " '" + note + "' to " + pointName.getValue() + " using location: " + lat + "," + lng, Toast.LENGTH_LONG).show();
                     recordValueListener.ready(bundle, nv);

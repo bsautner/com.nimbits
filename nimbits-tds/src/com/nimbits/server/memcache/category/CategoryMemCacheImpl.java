@@ -18,7 +18,7 @@ import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.CategoryName;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.user.User;
 import com.nimbits.server.memcache.MemCacheHelper;
 import com.nimbits.server.pointcategory.CategoryTransactionFactory;
@@ -101,7 +101,7 @@ public class CategoryMemCacheImpl implements CategoryTransactions {
     }
 
     @Override
-    public Category getCategory(final CategoryName categoryName) {
+    public Category getCategory(final EntityName categoryName) {
         if (cache.contains(categoryName)) {
             return (Category) cache.get(categoryName);
         } else {
@@ -115,12 +115,12 @@ public class CategoryMemCacheImpl implements CategoryTransactions {
     }
 
     @Override
-    public boolean categoryExists(final CategoryName categoryName) {
+    public boolean categoryExists(final EntityName categoryName) {
         return (getCategory(categoryName) != null);
     }
 
     @Override
-    public Category addCategory(final CategoryName categoryName) {
+    public Category addCategory(final EntityName categoryName) {
         Category c = CategoryTransactionFactory.getDaoInstance(user).addCategory(categoryName);
         cache.put(categoryName, c);
         purgeMemCache();

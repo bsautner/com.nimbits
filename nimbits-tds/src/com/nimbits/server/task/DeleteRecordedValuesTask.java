@@ -17,7 +17,7 @@ import com.google.appengine.api.datastore.*;
 import com.google.gwt.core.client.GWT;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.point.PointName;
+import com.nimbits.client.model.entity.EntityName;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +42,7 @@ public class DeleteRecordedValuesTask extends HttpServlet {
 
 
         // delete me context.addTrace(DeleteRecordedValuesTask.class.getName());
-        final PointName pointName = CommonFactoryLocator.getInstance().createPointName(name);
+        final EntityName pointName = CommonFactoryLocator.getInstance().createName(name);
         int expDays = 0;
         try {
             final long id = Long.parseLong(pointID);
@@ -60,7 +60,7 @@ public class DeleteRecordedValuesTask extends HttpServlet {
     }
 
 
-    private void deleteData(final long pointId, final boolean expOnly, final int expDays, final PointName name) {
+    private void deleteData(final long pointId, final boolean expOnly, final int expDays, final EntityName name) {
         long count = 0;
         final Set<Key> keys = new HashSet<Key>();
         final Calendar d = Calendar.getInstance();

@@ -14,16 +14,11 @@
 package com.nimbits.client.model.common.impl;
 
 import com.nimbits.client.exception.NimbitsRuntimeException;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.category.CategoryName;
-import com.nimbits.client.model.category.impl.CategoryNameImpl;
 import com.nimbits.client.model.common.CommonFactory;
-import com.nimbits.client.model.diagram.DiagramName;
-import com.nimbits.client.model.diagram.impl.DiagramNameImpl;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.email.impl.EmailAddressImpl;
-import com.nimbits.client.model.point.PointName;
-import com.nimbits.client.model.point.PointNameImpl;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.entity.EntityNameImpl;
 
 
 /**
@@ -44,21 +39,11 @@ public class CommonFactoryImpl implements CommonFactory {
 
     }
 
-    @Override
-    public CategoryName createCategoryName(String value) {
-        if (value == null) {
-            value = Const.CONST_HIDDEN_CATEGORY;
-        }
-        return new CategoryNameImpl(value);
-    }
+
 
     @Override
-    public PointName createPointName(final String value) {
-        return new PointNameImpl(value);
+    public EntityName createName(final String value) {
+        return new EntityNameImpl(value);
     }
 
-    @Override
-    public DiagramName createDiagramName(final String value) {
-        return new DiagramNameImpl(value);
-    }
 }

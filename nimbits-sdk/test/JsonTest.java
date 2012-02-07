@@ -13,10 +13,9 @@
 
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.CategoryName;
 import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointName;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.json.JsonHelper;
 import org.junit.Test;
@@ -51,8 +50,8 @@ public class JsonTest {
     @Test
     public void testM2M() throws IOException, InterruptedException, NimbitsException {
 
-        PointName pointName = CommonFactoryLocator.getInstance().createPointName(UUID.randomUUID().toString());
-        CategoryName cName = CommonFactoryLocator.getInstance().createCategoryName(UUID.randomUUID().toString());
+        EntityName pointName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
+        EntityName cName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
         Category c = ClientHelper.client().addCategory(cName);
 
         Point point = ClientHelper.client().addPoint(cName, pointName);

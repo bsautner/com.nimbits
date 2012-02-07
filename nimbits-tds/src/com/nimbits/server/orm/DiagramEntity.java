@@ -15,11 +15,12 @@ package com.nimbits.server.orm;
 
 
 import com.google.appengine.api.blobstore.BlobKey;
-import com.nimbits.client.enums.*;
+import com.nimbits.client.enums.ClientType;
+import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.diagram.Diagram;
-import com.nimbits.client.model.diagram.DiagramName;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.user.User;
 
 import javax.jdo.annotations.*;
@@ -61,7 +62,7 @@ public class DiagramEntity implements Diagram {
     private int entityType = EntityType.diagram.getCode();
 
 
-    public void setName(DiagramName name) {
+    public void setName(EntityName name) {
         this.name = name.getValue();
     }
 
@@ -126,7 +127,7 @@ public class DiagramEntity implements Diagram {
     @NotPersistent
     private boolean readOnly;
 
-    public DiagramEntity(long userFk, BlobKey blobKey, DiagramName name, long categoryFk) {
+    public DiagramEntity(long userFk, BlobKey blobKey, EntityName name, long categoryFk) {
         this.userFk = userFk;
         this.blobKey = blobKey;
         this.name = name.getValue();
@@ -140,7 +141,7 @@ public class DiagramEntity implements Diagram {
     public DiagramEntity() {
     }
 
-    public DiagramEntity(User u, BlobKey blobKey, DiagramName name, Category category) {
+    public DiagramEntity(User u, BlobKey blobKey, EntityName name, Category category) {
         this.userFk = u.getId();
         this.blobKey = blobKey;
         this.name = name.getValue();
@@ -182,8 +183,8 @@ public class DiagramEntity implements Diagram {
     }
 
     @Override
-    public DiagramName getName() {
-        return CommonFactoryLocator.getInstance().createDiagramName(this.name);
+    public EntityName getName() {
+        return CommonFactoryLocator.getInstance().createName(this.name);
     }
 
 }

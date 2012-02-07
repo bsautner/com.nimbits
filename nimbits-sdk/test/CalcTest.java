@@ -1,10 +1,9 @@
 import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.CategoryName;
 import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Calculation;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
-import com.nimbits.client.model.point.PointName;
 import com.nimbits.client.model.value.Value;
 import org.junit.Test;
 
@@ -24,14 +23,14 @@ public class CalcTest {
 
     @Test
     public void testCalc1() throws IOException, InterruptedException {
-        PointName targetName = CommonFactoryLocator.getInstance().createPointName("TARGET" + UUID.randomUUID().toString());
-        PointName triggerName = CommonFactoryLocator.getInstance().createPointName("TRIGGER" + UUID.randomUUID().toString());
+        EntityName targetName = CommonFactoryLocator.getInstance().createName("TARGET" + UUID.randomUUID().toString());
+        EntityName triggerName = CommonFactoryLocator.getInstance().createName("TRIGGER" + UUID.randomUUID().toString());
 
-        PointName yName = CommonFactoryLocator.getInstance().createPointName(UUID.randomUUID().toString());
-        PointName zName = CommonFactoryLocator.getInstance().createPointName(UUID.randomUUID().toString());
+        EntityName yName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
+        EntityName zName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
 
 
-        CategoryName cName = CommonFactoryLocator.getInstance().createCategoryName(UUID.randomUUID().toString());
+        EntityName cName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
         Category c = ClientHelper.client().addCategory(cName);
         assertNotNull(c);
         Point trigger = ClientHelper.client().addPoint(c.getName(), triggerName);

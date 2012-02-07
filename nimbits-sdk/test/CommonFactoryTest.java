@@ -13,7 +13,7 @@
 
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.point.PointName;
+import com.nimbits.client.model.entity.EntityName;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -34,7 +34,7 @@ public class CommonFactoryTest {
         Assert.assertEquals("test", emailAddress.getValue());
         Assert.assertNotSame("TEST", emailAddress.getValue());
 
-        PointName pointName = CommonFactoryLocator.getInstance().createPointName("TEST");
+        EntityName pointName = CommonFactoryLocator.getInstance().createName("TEST");
 
         Assert.assertEquals("TEST", pointName.getValue());
         Assert.assertNotSame("test", pointName.getValue());

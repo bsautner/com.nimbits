@@ -14,7 +14,9 @@
 package com.nimbits.client.model.diagram;
 
 
-import com.nimbits.client.enums.*;
+import com.nimbits.client.enums.ClientType;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.model.entity.EntityName;
 
 import java.io.Serializable;
 
@@ -34,7 +36,7 @@ public interface Diagram extends Serializable {
 
     String getBlobKey();
 
-    DiagramName getName();
+    EntityName getName();
 
     long getCategoryFk();
 

@@ -17,16 +17,15 @@ import com.nimbits.PMF;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.CategoryName;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
-import com.nimbits.client.model.point.PointName;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.datapoints.PointTransactions;
 import com.nimbits.server.orm.DataPoint;
-import com.nimbits.server.point.*;
+import com.nimbits.server.point.PointServiceFactory;
 import com.nimbits.server.pointcategory.CategoryServiceFactory;
 import com.nimbits.server.task.TaskFactoryLocator;
 
@@ -176,7 +175,7 @@ public class DataPointDAOImpl implements PointTransactions {
 
     @Override
     @SuppressWarnings(Const.WARNING_UNCHECKED)
-    public Point getPointByName(final PointName name) {
+    public Point getPointByName(final EntityName name) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         Point retObj = null;
@@ -267,7 +266,7 @@ public class DataPointDAOImpl implements PointTransactions {
       */
     @Override
     @SuppressWarnings(Const.WARNING_UNCHECKED)
-    public Point movePoint(final Point point, final CategoryName categoryName) {
+    public Point movePoint(final Point point, final EntityName categoryName) {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
@@ -328,7 +327,7 @@ public class DataPointDAOImpl implements PointTransactions {
       * @see com.nimbits.client.service.datapoints.PointTransactions#addPoint(java.lang.String, com.nimbits.client.model.PointCatagory, com.nimbits.client.model.user.NimbitsUser, java.lang.String)
       */
     @Override
-    public Point addPoint(final PointName pointName, final Category c) throws NimbitsException {
+    public Point addPoint(final EntityName pointName, final Category c) throws NimbitsException {
 
         Point retObj = null;
         Category targetCategory;
@@ -338,7 +337,7 @@ public class DataPointDAOImpl implements PointTransactions {
             if (!(pointName == null) && (pointName.getValue().trim().length() > 0)) {
 
                 if (c == null) {
-                    CategoryName categoryName = CommonFactoryLocator.getInstance().createCategoryName(Const.CONST_HIDDEN_CATEGORY);
+                    EntityName categoryName = CommonFactoryLocator.getInstance().createName(Const.CONST_HIDDEN_CATEGORY);
                     targetCategory = CategoryServiceFactory.getInstance().getCategory(u, categoryName);
 
                     if (targetCategory == null) {

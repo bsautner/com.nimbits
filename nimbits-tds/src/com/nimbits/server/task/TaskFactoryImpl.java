@@ -19,8 +19,8 @@ import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.gson.Gson;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointName;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.gson.GsonFactory;
@@ -44,7 +44,7 @@ public class TaskFactoryImpl implements TaskFactory {
     public void startDeleteDataTask(final long pointID,
                                     final boolean onlyExpired,
                                     final int exp,
-                                    final PointName pointName) {
+                                    final EntityName pointName) {
 
 
         final Queue queue = QueueFactory.getQueue(Const.QUEUE_DELETE_DATA);

@@ -1,8 +1,6 @@
 package com.nimbits.client.model.entity;
 
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.model.category.CategoryName;
-import com.nimbits.client.model.point.PointName;
 import com.nimbits.client.model.server.Server;
 
 import java.util.ArrayList;
@@ -17,32 +15,32 @@ import java.util.List;
 public class EntityModelFactory {
 
 //
-//    public static EntityDescription createEntityDescription(Server server, PointName name, String uuid, String pointDesc) {
+//    public static EntityDescription createEntityDescription(Server server, EntityName name, String uuid, String pointDesc) {
 //
 //        return new EntityDescriptionModel(server, name, uuid, pointDesc, EntityType.point);
 //
 //
 //    }
-//    public static EntityDescription createEntityDescription(Server server, CategoryName  name, String uuid, String pointDesc) {
+//    public static EntityDescription createEntityDescription(Server server, EntityName  name, String uuid, String pointDesc) {
 //
 //        return new EntityDescriptionModel(server, name, uuid, pointDesc, EntityType.category);
 //
 //
 //    }
 
-    public static EntityDescription createEntityDescription(Server server, PointName name, String uuid, String pointDesc, EntityType type) {
+    public static EntityDescription createEntityDescription(Server server, EntityName name, String uuid, String pointDesc, EntityType type) {
 
         return new EntityDescriptionModel(server, name, uuid, pointDesc, type);
 
 
     }
 
-    public static EntityDescription createEntityDescription(Server server, CategoryName name, String uuid, String pointDesc, EntityType type) {
-
-        return new EntityDescriptionModel(server, name, uuid, pointDesc, type);
-
-
-    }
+//    public static EntityDescription createEntityDescription(Server server, EntityName name, String uuid, String pointDesc, EntityType type) {
+//
+//        return new EntityDescriptionModel(server, name, uuid, pointDesc, type);
+//
+//
+//    }
 
 
     public static List<EntityDescription> createPointDescriptions(List<EntityDescription> entityDescriptions) {

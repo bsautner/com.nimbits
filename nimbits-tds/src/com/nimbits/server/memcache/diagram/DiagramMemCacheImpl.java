@@ -13,15 +13,17 @@
 
 package com.nimbits.server.memcache.diagram;
 
-import com.google.appengine.api.blobstore.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.category.*;
-import com.nimbits.client.model.diagram.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.diagram.*;
-import com.nimbits.server.pointcategory.*;
+import com.google.appengine.api.blobstore.BlobKey;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.category.Category;
+import com.nimbits.client.model.diagram.Diagram;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.user.User;
+import com.nimbits.server.diagram.DiagramTransactionFactory;
+import com.nimbits.server.diagram.DiagramTransactions;
+import com.nimbits.server.pointcategory.CategoryTransactionFactory;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * Created by Benjamin Sautner
@@ -37,7 +39,7 @@ public class DiagramMemCacheImpl implements DiagramTransactions {
     }
 
     @Override
-    public void addDiagram(final BlobKey blobKey,final DiagramName name) throws NimbitsException {
+    public void addDiagram(final BlobKey blobKey,final EntityName name) throws NimbitsException {
         CategoryTransactionFactory.getInstance(user).purgeMemCache();
         DiagramTransactionFactory.getDaoInstance(user).addDiagram(blobKey, name);
     }
@@ -48,9 +50,9 @@ public class DiagramMemCacheImpl implements DiagramTransactions {
     }
 
     @Override
-    public void moveDiagram(final DiagramName diagramName, final CategoryName newCategoryName) throws NimbitsException {
+    public void moveDiagram(final EntityName diagramName, final EntityName newEntityName) throws NimbitsException {
         CategoryTransactionFactory.getInstance(user).purgeMemCache();
-        DiagramTransactionFactory.getDaoInstance(user).moveDiagram(diagramName, newCategoryName);
+        DiagramTransactionFactory.getDaoInstance(user).moveDiagram(diagramName, newEntityName);
     }
 
     @Override
@@ -60,7 +62,7 @@ public class DiagramMemCacheImpl implements DiagramTransactions {
     }
 
     @Override
-    public Diagram getDiagramByName(final DiagramName name) {
+    public Diagram getDiagramByName(final EntityName name) {
         return  DiagramTransactionFactory.getDaoInstance(user).getDiagramByName(name);
     }
 
@@ -76,7 +78,7 @@ public class DiagramMemCacheImpl implements DiagramTransactions {
     }
 
     @Override
-    public Diagram updateDiagram(final BlobKey blobKey, final DiagramName diagramName, final long id) throws NimbitsException {
+    public Diagram updateDiagram(final BlobKey blobKey, final EntityName diagramName, final long id) throws NimbitsException {
         CategoryTransactionFactory.getInstance(user).purgeMemCache();
         return  DiagramTransactionFactory.getDaoInstance(user).updateDiagram(blobKey, diagramName, id);
     }

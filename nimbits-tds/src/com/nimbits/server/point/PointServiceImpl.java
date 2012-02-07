@@ -22,12 +22,12 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.exceptions.PointExistsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.CategoryName;
 import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
-import com.nimbits.client.model.point.PointName;
-import com.nimbits.client.model.subscription.*;
+
+import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.service.datapoints.PointService;
@@ -36,7 +36,7 @@ import com.nimbits.server.core.CoreFactory;
 import com.nimbits.server.export.ExportHelperFactory;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.pointcategory.CategoryServiceFactory;
-import com.nimbits.server.subscription.*;
+import com.nimbits.server.subscription.SubscriptionTransactionFactory;
 import com.nimbits.server.task.TaskFactoryLocator;
 import com.nimbits.server.user.UserServiceFactory;
 import com.nimbits.server.user.UserTransactionFactory;
@@ -75,9 +75,9 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
 
     @Override
-    public Point movePoint(User u, Point point, CategoryName categoryName) throws NimbitsException {
+    public Point movePoint(User u, Point point, EntityName EntityName) throws NimbitsException {
 
-        return PointTransactionsFactory.getInstance(u).movePoint(point, categoryName);
+        return PointTransactionsFactory.getInstance(u).movePoint(point, EntityName);
     }
 
     @Override
@@ -91,7 +91,7 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public Point addPoint(final PointName pointName, final Category c, final User u) throws NimbitsException {
+    public Point addPoint(final EntityName pointName, final Category c, final User u) throws NimbitsException {
         Point result = PointTransactionsFactory.getInstance(u).addPoint(pointName, c);
         if (result != null) {
             TaskFactoryLocator.getInstance().startPointMaintTask(result);
@@ -174,7 +174,7 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public Point getPointByName(final User pointOwner, final PointName name) throws NimbitsException {
+    public Point getPointByName(final User pointOwner, final EntityName name) throws NimbitsException {
         final User u = pointOwner == null ? UserServiceFactory.getServerInstance().getHttpRequestUser(
                 this.getThreadLocalRequest()) : pointOwner;
 
@@ -183,14 +183,14 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public Map<PointName, Point> getPointsByName(final long pointOwnerId, final Set<PointName> names) throws NimbitsException {
+    public Map<EntityName, Point> getPointsByName(final long pointOwnerId, final Set<EntityName> names) throws NimbitsException {
 
         final User loggedInUser = UserServiceFactory.getServerInstance().getHttpRequestUser(
                 this.getThreadLocalRequest());
         final User pointOwner = UserTransactionFactory.getInstance().getNimbitsUserByID(pointOwnerId);
 
-        final Map<PointName, Point> retObj = new HashMap<PointName, Point>();
-        for (final PointName name : names) {
+        final Map<EntityName, Point> retObj = new HashMap<EntityName, Point>();
+        for (final EntityName name : names) {
             final Point p = PointTransactionsFactory.getInstance(pointOwner).getPointByName(name);
             if (p != null && checkPointProtection(loggedInUser, pointOwner, p)) {
                 retObj.put(name, p);
@@ -210,14 +210,14 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public Point movePoint(final Point point, final CategoryName newCategoryName) throws NimbitsException {
+    public Point movePoint(final Point point, final EntityName newEntityName) throws NimbitsException {
         final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
                 this.getThreadLocalRequest());
         if (point.getEntityType().equals(EntityType.point)) {
-            return PointTransactionsFactory.getInstance(u).movePoint(point, newCategoryName);
+            return PointTransactionsFactory.getInstance(u).movePoint(point, newEntityName);
         }
         else if (point.getEntityType().equals(EntityType.subscription)) {
-            return SubscriptionTransactionFactory.getInstance(u).moveSubscription(point, newCategoryName);
+            return SubscriptionTransactionFactory.getInstance(u).moveSubscription(point, newEntityName);
         }
         else {
             return null;
@@ -227,7 +227,7 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public Point addPoint(final PointName pointName, final Category c) throws NimbitsException, PointExistsException {
+    public Point addPoint(final EntityName pointName, final Category c) throws NimbitsException, PointExistsException {
 
 
         final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
@@ -244,13 +244,13 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public Point addPoint(final PointName pointName) throws NimbitsException, PointExistsException {
+    public Point addPoint(final EntityName pointName) throws NimbitsException, PointExistsException {
 
         final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
                 this.getThreadLocalRequest());
-        final CategoryName categoryName = CommonFactoryLocator.getInstance().createCategoryName(Const.CONST_HIDDEN_CATEGORY);
+        final EntityName EntityName = CommonFactoryLocator.getInstance().createName(Const.CONST_HIDDEN_CATEGORY);
 
-        Category targetCategory = CategoryServiceFactory.getInstance().getCategory(u, categoryName);
+        Category targetCategory = CategoryServiceFactory.getInstance().getCategory(u, EntityName);
         if (targetCategory == null) {
             targetCategory = CategoryServiceFactory.getInstance().createHiddenCategory(u);
         }
@@ -286,7 +286,7 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
 
     @Override
-    public Point copyPoint(final Point point, final PointName newName) throws NimbitsException, PointExistsException {
+    public Point copyPoint(final Point point, final EntityName newName) throws NimbitsException, PointExistsException {
         final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
                 this.getThreadLocalRequest());
 
@@ -325,7 +325,7 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
 
     @Override
-    public String exportData(final Map<PointName, Point> points, final ExportType exportType) throws NimbitsException {
+    public String exportData(final Map<EntityName, Point> points, final ExportType exportType) throws NimbitsException {
         final String data;
 
         switch (exportType) {
@@ -371,8 +371,8 @@ public class PointServiceImpl extends RemoteServiceServlet implements
                 this.getThreadLocalRequest());
         subscription.setSubscriberUUID(u.getUuid());
         subscription.setSubscribedPointUUID(p.getUUID());
-        CategoryName categoryName = CommonFactoryLocator.getInstance().createCategoryName(Const.CONST_HIDDEN_CATEGORY);
-        Category c = CategoryServiceFactory.getInstance().getCategoryByName(u, categoryName, false, false);
+        EntityName EntityName = CommonFactoryLocator.getInstance().createName(Const.CONST_HIDDEN_CATEGORY);
+        Category c = CategoryServiceFactory.getInstance().getCategoryByName(u, EntityName, false, false);
         subscription.setCategoryId(c.getId());
         subscription.setLastSent(new Date());
 

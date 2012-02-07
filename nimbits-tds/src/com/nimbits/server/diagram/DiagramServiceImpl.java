@@ -23,15 +23,18 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.exceptions.DiagramNotFoundException;
 import com.nimbits.client.exceptions.ObjectProtectionException;
 import com.nimbits.client.model.Const;
-import com.nimbits.client.model.category.*;
+import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.diagram.Diagram;
-import com.nimbits.client.model.diagram.DiagramName;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.diagram.DiagramService;
 import com.nimbits.server.user.UserServiceFactory;
 import com.nimbits.server.user.UserTransactionFactory;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by bsautner
@@ -58,9 +61,9 @@ public class DiagramServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public void moveDiagram(final DiagramName diagramName, final CategoryName newCategoryName) throws NimbitsException {
+    public void moveDiagram(final EntityName diagramName, final EntityName newEntityName) throws NimbitsException {
         User u = UserServiceFactory.getServerInstance().getHttpRequestUser(this.getThreadLocalRequest());
-        DiagramTransactionFactory.getInstance(u).moveDiagram(diagramName, newCategoryName);
+        DiagramTransactionFactory.getInstance(u).moveDiagram(diagramName, newEntityName);
 
     }
 
@@ -71,13 +74,13 @@ public class DiagramServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public Map<DiagramName, Diagram> getDiagramsByName(final long diagramOwnerId, final Set<DiagramName> names) throws NimbitsException {
+    public Map<EntityName, Diagram> getDiagramsByName(final long diagramOwnerId, final Set<EntityName> names) throws NimbitsException {
 
         User loggedInUser = UserServiceFactory.getServerInstance().getHttpRequestUser(
                 this.getThreadLocalRequest());
         User diagramOwner = UserTransactionFactory.getInstance().getNimbitsUserByID(diagramOwnerId);
-        Map<DiagramName, Diagram> retObj = new HashMap<DiagramName, Diagram>();
-        for (DiagramName name : names) {
+        Map<EntityName, Diagram> retObj = new HashMap<EntityName, Diagram>();
+        for (EntityName name : names) {
 
             Diagram d = DiagramTransactionFactory.getInstance(diagramOwner).getDiagramByName(name);
             if (d != null && checkDiagramProtection(loggedInUser, diagramOwner, d)) {

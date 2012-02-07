@@ -13,32 +13,42 @@
 
 package com.nimbits.client.panels;
 
-import com.extjs.gxt.ui.client.*;
+import com.extjs.gxt.ui.client.Style;
 import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.widget.*;
-import com.extjs.gxt.ui.client.widget.button.*;
-import com.extjs.gxt.ui.client.widget.form.*;
-import com.extjs.gxt.ui.client.widget.layout.*;
-import com.google.gwt.core.client.*;
-import com.google.gwt.user.client.*;
+import com.extjs.gxt.ui.client.widget.Html;
+import com.extjs.gxt.ui.client.widget.LayoutContainer;
+import com.extjs.gxt.ui.client.widget.MessageBox;
+import com.extjs.gxt.ui.client.widget.VerticalPanel;
+import com.extjs.gxt.ui.client.widget.button.Button;
+import com.extjs.gxt.ui.client.widget.form.FormPanel;
+import com.extjs.gxt.ui.client.widget.form.Radio;
+import com.extjs.gxt.ui.client.widget.form.RadioGroup;
+import com.extjs.gxt.ui.client.widget.layout.FillLayout;
+import com.extjs.gxt.ui.client.widget.layout.FitLayout;
+import com.extjs.gxt.ui.client.widget.layout.FormData;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
-import static com.google.gwt.user.client.Window.*;
-import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.service.datapoints.*;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.nimbits.client.enums.ExportType;
+import com.nimbits.client.model.Const;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.service.datapoints.PointService;
+import com.nimbits.client.service.datapoints.PointServiceAsync;
 
-import java.util.*;
+import java.util.Map;
+
+import static com.google.gwt.user.client.Window.alert;
 
 
 public class ExportPanel extends LayoutContainer {
 
     VerticalPanel vp;
 
-    private Map<PointName, Point> points;
+    private Map<EntityName, Point> points;
 
-    public ExportPanel(Map<PointName, Point> points) {
+    public ExportPanel(Map<EntityName, Point> points) {
         this.points = points;
     }
 

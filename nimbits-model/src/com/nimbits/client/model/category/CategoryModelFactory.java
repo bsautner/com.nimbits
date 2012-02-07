@@ -7,6 +7,7 @@
 package com.nimbits.client.model.category;
 
 import com.nimbits.client.model.category.impl.CategoryModel;
+import com.nimbits.client.model.entity.EntityName;
 
 /**
  * Created by bsautner
@@ -22,7 +23,7 @@ public class CategoryModelFactory {
 
     }
 
-    public static Category createCategoryModel(CategoryName categoryName) {
+    public static Category createCategoryModel(EntityName categoryName) {
 
         return new CategoryModel(categoryName);
 

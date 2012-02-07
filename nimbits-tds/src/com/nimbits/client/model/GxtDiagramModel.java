@@ -14,7 +14,8 @@
 package com.nimbits.client.model;
 
 import com.nimbits.client.model.diagram.Diagram;
-import com.nimbits.client.model.diagram.DiagramName;
+import com.nimbits.client.model.entity.EntityName;
+
 
 /**
  * Created by bsautner
@@ -24,7 +25,7 @@ import com.nimbits.client.model.diagram.DiagramName;
  */
 public class GxtDiagramModel extends GxtBaseModel {
     private long id;
-    private DiagramName name;
+    private EntityName name;
 
     public GxtDiagramModel(Diagram diagram) {
         this.id = diagram.getId();
@@ -43,11 +44,11 @@ public class GxtDiagramModel extends GxtBaseModel {
         this.id = id;
     }
 
-    public DiagramName getName() {
+    public EntityName getName() {
         return this.name;
     }
 
-    public void setName(DiagramName name) {
+    public void setName(EntityName name) {
         this.name = name;
     }
 

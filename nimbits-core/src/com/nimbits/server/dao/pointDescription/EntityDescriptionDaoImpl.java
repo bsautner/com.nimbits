@@ -96,7 +96,7 @@ public class EntityDescriptionDaoImpl implements EntityJPATransactions {
             final EntityTransaction tx = em.getTransaction();
             tx.begin();
             r.setPointDesc(entityDescription.getDesc());
-            r.setPointName(entityDescription.getName());
+            r.setEntityName(entityDescription.getName());
             r.setEntityType(entityDescription.getEntityType());
             em.flush();
             tx.commit();

@@ -20,7 +20,7 @@ import com.nimbits.client.enums.UploadType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.diagram.DiagramName;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.user.User;
 import com.nimbits.server.user.UserServiceFactory;
 
@@ -58,7 +58,7 @@ public class DiagramServlet extends HttpServlet {
             u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
 
 
-            final DiagramName diagramName = CommonFactoryLocator.getInstance().createDiagramName(diagramNameParam);
+            final EntityName diagramName = CommonFactoryLocator.getInstance().createName(diagramNameParam);
 
             if (uploadType.equals(UploadType.newFile.name())) {
 

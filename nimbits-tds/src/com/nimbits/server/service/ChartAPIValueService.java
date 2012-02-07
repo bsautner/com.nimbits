@@ -16,8 +16,8 @@ package com.nimbits.server.service;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointName;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.point.PointServiceFactory;
@@ -55,7 +55,7 @@ public class ChartAPIValueService extends HttpServlet {
         try {
             final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
             if (u != null && pointNameParam != null) {
-                PointName pointName = CommonFactoryLocator.getInstance().createPointName(pointNameParam);
+                EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam);
                 processRequest(resp, pointName, uuid, u);
             }
         } catch (IOException ignore) {
@@ -65,7 +65,7 @@ public class ChartAPIValueService extends HttpServlet {
         }
     }
 
-    private void processRequest(HttpServletResponse resp, PointName point, String uuid, User u) throws IOException, NimbitsException {
+    private void processRequest(HttpServletResponse resp, EntityName point, String uuid, User u) throws IOException, NimbitsException {
         OutputStream out;
         Value nv;
         out = resp.getOutputStream();

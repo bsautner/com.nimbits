@@ -17,6 +17,7 @@ import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
@@ -61,7 +62,7 @@ public class UserReportService extends HttpServlet {
             } catch (NimbitsException e) {
                 return;
             }
-            final PointName pointName = CommonFactoryLocator.getInstance().createPointName("User Count");
+            final EntityName pointName = CommonFactoryLocator.getInstance().createName("User Count");
 
             // Point p = PointServiceFactory.getInstance().getPointByName(me, pointName);
             final Value value = ValueModelFactory.createValueModel((double) users.size());

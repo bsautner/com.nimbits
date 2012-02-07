@@ -14,9 +14,11 @@
 package com.nimbits.client.model;
 
 import com.extjs.gxt.ui.client.data.BaseModelData;
-import com.nimbits.client.enums.*;
+import com.nimbits.client.enums.AlertType;
+import com.nimbits.client.enums.ClientType;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointName;
 import com.nimbits.client.model.value.Value;
 
 
@@ -28,7 +30,7 @@ import com.nimbits.client.model.value.Value;
  */
 public class GxtPointModel extends BaseModelData {
     private final long id;
-    private PointName name;
+    private EntityName name;
     private final boolean readOnly;
     private boolean isDirty;
     private String UUID;
@@ -63,11 +65,11 @@ public class GxtPointModel extends BaseModelData {
         return id;
     }
 
-    public PointName getName() {
+    public EntityName getName() {
         return name;
     }
 
-    public void setName(PointName name) {
+    public void setName(EntityName name) {
         this.name = name;
     }
 

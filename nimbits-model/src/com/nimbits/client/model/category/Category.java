@@ -13,8 +13,10 @@
 
 package com.nimbits.client.model.category;
 
-import com.nimbits.client.enums.*;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.model.diagram.Diagram;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 
 import java.io.Serializable;
@@ -42,9 +44,9 @@ public interface Category extends Serializable {
 
     void setUserFK(final long userFK);
 
-    CategoryName getName();
+    EntityName getName();
 
-    void setName(final CategoryName name);
+    void setName(final EntityName name);
 
     List<Diagram> getDiagrams();
 

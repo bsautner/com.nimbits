@@ -15,7 +15,7 @@ package com.nimbits.server.pointcategory;
 
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.CategoryName;
+import com.nimbits.client.model.entity.EntityName;
 
 import java.util.List;
 
@@ -29,12 +29,12 @@ public interface CategoryTransactions {
 
     List<Category> getCategories(final boolean includePoints, final boolean includeDiagrams, final boolean includeSubscriptions);
 
-    public Category getCategory(final CategoryName categoryName);
+    public Category getCategory(final EntityName categoryName);
 
-    boolean categoryExists(final CategoryName CategoryName) throws NimbitsException;
+    boolean categoryExists(final EntityName EntityName) throws NimbitsException;
 
-    //  Category addCategory(final CategoryName CategoryName, final User nimbitsUser);
-    Category addCategory(final CategoryName categoryName);
+    //  Category addCategory(final EntityName EntityName, final User nimbitsUser);
+    Category addCategory(final EntityName categoryName);
 
     void deleteCategory(final Category c);
 

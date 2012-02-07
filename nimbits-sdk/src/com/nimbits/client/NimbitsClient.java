@@ -16,9 +16,8 @@ package com.nimbits.client;
 
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.CategoryName;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointName;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.user.GoogleUser;
@@ -48,36 +47,36 @@ public interface NimbitsClient {
 
     String getChartURL(final String points, final int count, final String additionalParams);
 
-    Value recordValue(final PointName pointName, final double value, final Date timestamp);
+    Value recordValue(final EntityName pointName, final double value, final Date timestamp);
 
-    Value recordValueWithGet(final PointName pointName, final double value, final Date timestamp) throws IOException, NimbitsException;
+    Value recordValueWithGet(final EntityName pointName, final double value, final Date timestamp) throws IOException, NimbitsException;
 
     Value recordValue(final String pointName, final double value, final Date timestamp);
 
     String recordBatch(final String params);
 
-    Value recordValue(final PointName pointName, final Value v) throws IOException;
+    Value recordValue(final EntityName pointName, final Value v) throws IOException;
 
     Value recordValue(final String pointName, final double v);
 
-    Value recordValue(final PointName pointName, double d);
+    Value recordValue(final EntityName pointName, double d);
 
-    Category addCategory(final CategoryName categoryName) throws UnsupportedEncodingException;
+    Category addCategory(final EntityName categoryName) throws UnsupportedEncodingException;
 
-    String deleteCategory(final CategoryName categoryName);
+    String deleteCategory(final EntityName categoryName);
 
 
-    Point getPoint(final PointName pointName) throws NimbitsException;
+    Point getPoint(final EntityName pointName) throws NimbitsException;
 
     Point updatePoint(final Point p);
 
-    void deletePoint(final PointName pointName);
+    void deletePoint(final EntityName pointName);
 
     void deletePoint(final String pointName);
 
-    Point addPoint(final Point p, final CategoryName categoryName);
+    Point addPoint(final Point p, final EntityName categoryName);
 
-    Point addPoint(final CategoryName categoryName, final PointName pointName);
+    Point addPoint(final EntityName categoryName, final EntityName pointName);
 
     Point addPoint(final String pointName);
 
@@ -85,27 +84,27 @@ public interface NimbitsClient {
     List<Category> getCategories(final boolean includePoints, final boolean includeDiagrams) throws NimbitsException;
 
     @SuppressWarnings({"SameParameterValue"})
-    Category getCategory(final CategoryName categoryName, final boolean includePoints, final boolean includeDiagrams) throws NimbitsException;
+    Category getCategory(final EntityName categoryName, final boolean includePoints, final boolean includeDiagrams) throws NimbitsException;
 
-    String currentValue(final PointName pointName) throws IOException, NimbitsException;
+    String currentValue(final EntityName pointName) throws IOException, NimbitsException;
 
-    Value getCurrentRecordedValue(final PointName pointName);
+    Value getCurrentRecordedValue(final EntityName pointName);
 
-    List<Value> getSeries(final PointName pointName, final int count) throws NimbitsException;
+    List<Value> getSeries(final EntityName pointName, final int count) throws NimbitsException;
 
     List<Value> getSeries(final String pointName, final int count) throws NimbitsException;
 
-    List<Value> getSeries(final PointName pointName, final Date startDate, final Date endDate) throws NimbitsException;
+    List<Value> getSeries(final EntityName pointName, final Date startDate, final Date endDate) throws NimbitsException;
 
-    void downloadSeries(final PointName pointName, final Date startDate, final Date endDate, final String filename) throws IOException, NimbitsException;
+    void downloadSeries(final EntityName pointName, final Date startDate, final Date endDate, final String filename) throws IOException, NimbitsException;
 
     List<Value> loadSeriesFile(final String fileName) throws IOException;
 
-    Object getCurrentDataObject(final PointName pointName, Class<?> cls);
+    Object getCurrentDataObject(final EntityName pointName, Class<?> cls);
 
-    Value recordDataObject(final PointName pointName, Object object, Class<?> cls) throws NimbitsException;
+    Value recordDataObject(final EntityName pointName, Object object, Class<?> cls) throws NimbitsException;
 
-    Value recordDataObject(PointName pointName, Object object, Class<?> cls, double latitude, double longitude, double value) throws NimbitsException;
+    Value recordDataObject(EntityName pointName, Object object, Class<?> cls, double latitude, double longitude, double value) throws NimbitsException;
 
     NimbitsUser getNimbitsUser();
 

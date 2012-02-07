@@ -19,8 +19,8 @@ import com.nimbits.client.enums.Action;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.CategoryName;
 import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.user.User;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.user.UserServiceFactory;
@@ -70,18 +70,18 @@ public class CategoryWebService extends HttpServlet {
 
             if (u != null && !u.isRestricted() && !Utils.isEmptyString(categoryNameParam)) {
 
-                final CategoryName categoryName = CommonFactoryLocator.getInstance().createCategoryName(categoryNameParam);
+                final EntityName name = CommonFactoryLocator.getInstance().createName(categoryNameParam);
                 switch (action) {
                     case create:
-                        if (CategoryServiceFactory.getInstance().categoryExists(u, categoryName)) {
+                        if (CategoryServiceFactory.getInstance().categoryExists(u, name)) {
                             out.println(Const.RESPONSE_CATEGORY_EXISTS);
                         } else {
-                            final Category c = CategoryServiceFactory.getInstance().addCategory(u, categoryName);
+                            final Category c = CategoryServiceFactory.getInstance().addCategory(u, name);
                             out.print(gson.toJson(c));
                         }
                         return;
                     case delete: {
-                        final Category c = CategoryServiceFactory.getInstance().getCategory(u, categoryName);
+                        final Category c = CategoryServiceFactory.getInstance().getCategory(u, name);
                         if (c != null) {
                             CategoryServiceFactory.getInstance().deleteCategory(u, c);
                             out.println(gson.toJson(c));
@@ -142,7 +142,7 @@ public class CategoryWebService extends HttpServlet {
                 out.println(result);
             } else {
 
-                final CategoryName categoryName = CommonFactoryLocator.getInstance().createCategoryName(categoryNameParam);
+                final EntityName categoryName = CommonFactoryLocator.getInstance().createName(categoryNameParam);
 
                 final Category c = CategoryServiceFactory.getInstance().getCategory(u, categoryName);
 

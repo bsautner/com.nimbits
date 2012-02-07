@@ -13,12 +13,13 @@
 
 package com.nimbits.server.diagram;
 
-import com.google.appengine.api.blobstore.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.category.*;
-import com.nimbits.client.model.diagram.*;
+import com.google.appengine.api.blobstore.BlobKey;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.category.Category;
+import com.nimbits.client.model.diagram.Diagram;
+import com.nimbits.client.model.entity.EntityName;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * Created by bsautner
@@ -30,23 +31,23 @@ public interface DiagramTransactions {
 
 
     void addDiagram(final BlobKey blobKey,
-                    final DiagramName name) throws NimbitsException;
+                    final EntityName name) throws NimbitsException;
 
     List<Diagram> getDiagramsByCategory(final Category c);
 
-    void moveDiagram(final DiagramName diagramName,
-                     final CategoryName newCategoryName) throws NimbitsException;
+    void moveDiagram(final EntityName diagramName,
+                     final EntityName newEntityName) throws NimbitsException;
 
     void deleteDiagram(final Diagram diagram) throws NimbitsException;
 
-    Diagram getDiagramByName(final DiagramName name);
+    Diagram getDiagramByName(final EntityName name);
 
     Diagram updateDiagram(final Diagram diagram) throws NimbitsException;
 
     Diagram getDiagramByUuid(final String uuid);
 
     Diagram updateDiagram(final BlobKey blobKey,
-                          final DiagramName diagramName,
+                          final EntityName diagramName,
                           final long id) throws NimbitsException;
 
 }

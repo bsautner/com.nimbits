@@ -14,28 +14,34 @@
 package com.nimbits.server.pointcategory;
 
 
-import com.google.gwt.user.server.rpc.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.category.*;
-import com.nimbits.client.model.diagram.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.client.service.category.*;
-import com.nimbits.server.common.*;
-import com.nimbits.server.core.*;
-import com.nimbits.server.diagram.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.point.*;
-import com.nimbits.server.recordedvalue.*;
-import com.nimbits.server.user.*;
-import com.nimbits.shared.*;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.Const;
+import com.nimbits.client.model.category.Category;
 
-import java.util.*;
-import java.util.logging.*;
+import com.nimbits.client.model.diagram.Diagram;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.service.category.CategoryService;
+import com.nimbits.server.common.ServerInfoImpl;
+import com.nimbits.server.core.CoreFactory;
+import com.nimbits.server.diagram.DiagramServiceFactory;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.point.PointServiceFactory;
+import com.nimbits.server.recordedvalue.RecordedValueServiceFactory;
+import com.nimbits.server.user.UserServiceFactory;
+import com.nimbits.server.user.UserTransactionFactory;
+import com.nimbits.shared.Utils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.logging.Logger;
 
 public class CategoryServiceImpl extends RemoteServiceServlet implements CategoryService
 
@@ -105,7 +111,7 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
         return CategoryTransactionFactory.getInstance(u).getCategories(includePoints, includeDiagrams, includeSubscriptions);
     }
 
-    public Category addCategory(final CategoryName categoryName) throws NimbitsException {
+    public Category addCategory(final EntityName categoryName) throws NimbitsException {
 
         final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
                 this.getThreadLocalRequest());
@@ -115,7 +121,7 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
 
     }
 
-    public Category addCategory(final User u, final CategoryName categoryName) {
+    public Category addCategory(final User u, final EntityName categoryName) {
 
 
         Category c = CategoryTransactionFactory.getInstance(u).addCategory(categoryName);
@@ -125,7 +131,7 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
     }
 
     @Override
-    public Category getCategoryByName(final CategoryName categoryName,
+    public Category getCategoryByName(final EntityName categoryName,
                                       final boolean includePoints,
                                       final boolean includeDiagrams) throws NimbitsException {
 
@@ -140,7 +146,7 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
     }
     @Override
     public Category getCategoryByName(final User u,
-                                      final CategoryName categoryName,
+                                      final EntityName categoryName,
                                       final boolean includePoints,
                                       final boolean includeDiagrams) throws NimbitsException {
 
@@ -212,7 +218,7 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
     }
 
     @Override
-    public Category getCategory(final User user, final CategoryName categoryName) {
+    public Category getCategory(final User user, final EntityName categoryName) {
         return CategoryTransactionFactory.getInstance(user).getCategory(categoryName);
     }
 
@@ -222,7 +228,7 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
     }
 
     @Override
-    public boolean categoryExists(User u, CategoryName categoryName) throws NimbitsException {
+    public boolean categoryExists(User u, EntityName categoryName) throws NimbitsException {
         return CategoryTransactionFactory.getInstance(u).categoryExists(categoryName);
     }
 

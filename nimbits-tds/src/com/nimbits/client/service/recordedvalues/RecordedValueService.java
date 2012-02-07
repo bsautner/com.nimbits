@@ -17,8 +17,8 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.exceptions.CalculationFailedException;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointName;
 import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
@@ -33,7 +33,7 @@ public interface RecordedValueService extends RemoteService {
 
     List<Value> getCache(final Point point);
 
-    Value getCurrentValue(final long pointOwnerId, final PointName pointName) throws NimbitsException;
+    Value getCurrentValue(final long pointOwnerId, final EntityName pointName) throws NimbitsException;
 
     Value getCurrentValue(final Point p) throws NimbitsException;
 
@@ -45,7 +45,7 @@ public interface RecordedValueService extends RemoteService {
     Value recordValue(final User u, final Point target, final Value value, final boolean loopFlag) throws NimbitsException;
 
     //rpc
-    Value recordValue(final User u, final PointName pointName, final Value value) throws NimbitsException;
+    Value recordValue(final User u, final EntityName pointName, final Value value) throws NimbitsException;
 
     Value recordValue(final Point point, final Value value) throws NimbitsException;
 

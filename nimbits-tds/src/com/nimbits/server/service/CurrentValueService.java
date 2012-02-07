@@ -17,8 +17,8 @@ import com.nimbits.client.enums.ExportType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointName;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueModel;
@@ -64,7 +64,7 @@ public class CurrentValueService extends HttpServlet {
 //
 //
             final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
-            final PointName pointName = CommonFactoryLocator.getInstance().createPointName(pointNameParam);
+            final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam);
             final Point point = PointServiceFactory.getInstance().getPointByName(u, pointName);
 
 
@@ -184,7 +184,7 @@ public class CurrentValueService extends HttpServlet {
             p = PointServiceFactory.getInstance().getPointByUUID(uuid);
 
         } else if (!Utils.isEmptyString(pointNameParam)) {
-            PointName pointName = CommonFactoryLocator.getInstance().createPointName(pointNameParam);
+            EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam);
             p = PointServiceFactory.getInstance().getPointByName(u, pointName);
         } else {
 

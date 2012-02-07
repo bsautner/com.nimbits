@@ -42,15 +42,7 @@
         <name>categorymaint</name>
         <rate>10/s</rate>
     </queue>
-    <queue>
-        <name>updatepointstats</name>
-        <rate>10/s</rate>
-    </queue>
 
-    <queue>
-        <name>backgroundprocessing</name>
-        <rate>5/s</rate>
-    </queue>
     <queue>
         <name>incommingmail</name>
         <rate>5/s</rate>

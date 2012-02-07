@@ -13,15 +13,20 @@
 
 package com.nimbits.client.service.diagram;
 
-import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.exceptions.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.category.*;
-import com.nimbits.client.model.diagram.*;
-import com.nimbits.client.model.user.*;
+import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.exceptions.DiagramNotFoundException;
+import com.nimbits.client.exceptions.ObjectProtectionException;
+import com.nimbits.client.model.Const;
+import com.nimbits.client.model.category.Category;
+import com.nimbits.client.model.diagram.Diagram;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.user.User;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by bsautner
@@ -33,11 +38,11 @@ import java.util.*;
 public interface DiagramService extends RemoteService {
     String getBlobStoreUrl(String url);
 
-    void moveDiagram(final DiagramName diagramName, final CategoryName targetCategoryName) throws NimbitsException;
+    void moveDiagram(final EntityName diagramName, final EntityName targetEntityName) throws NimbitsException;
 
     void deleteDiagram(final Diagram diagram) throws NimbitsException;
 
-    Map<DiagramName, Diagram> getDiagramsByName(final long diagramOwnerId, final Set<DiagramName> names) throws NimbitsException;
+    Map<EntityName, Diagram> getDiagramsByName(final long diagramOwnerId, final Set<EntityName> names) throws NimbitsException;
 
     Diagram updateDiagram(final Diagram diagram) throws NimbitsException;
 

@@ -14,8 +14,8 @@
 package com.nimbits.server.task;
 
 import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointName;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 
@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public interface TaskFactory {
 
-    void startDeleteDataTask(final long pointID, final boolean onlyExpired, final int exp, final PointName name);
+    void startDeleteDataTask(final long pointID, final boolean onlyExpired, final int exp, final EntityName name);
 
     void startProcessBatchTask(final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException;
 

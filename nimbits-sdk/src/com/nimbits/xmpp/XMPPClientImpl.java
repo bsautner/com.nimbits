@@ -18,10 +18,11 @@ import com.nimbits.client.NimbitsClient;
 import com.nimbits.client.enums.Action;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.point.PointModelFactory;
-import com.nimbits.client.model.point.PointName;
+
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.gson.GsonFactory;
 import org.jivesoftware.smack.*;
@@ -177,7 +178,7 @@ public class XMPPClientImpl extends Observable implements XMPPClient {
         return retVal;
     }
 
-    public void sendValue(PointName pointName, Value value) {
+    public void sendValue(EntityName pointName, Value value) {
         Collection collection = new ArrayList();
         Point point = PointModelFactory.createPointModel(0, 0);
         point.setName(pointName);

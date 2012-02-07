@@ -1,8 +1,6 @@
 package com.nimbits.client.model.entity;
 
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.model.category.CategoryName;
-import com.nimbits.client.model.point.PointName;
 import com.nimbits.client.model.server.Server;
 
 import java.io.Serializable;
@@ -27,7 +25,7 @@ public class EntityDescriptionModel implements Serializable, EntityDescription {
 
     private int entityType;
 
-    public EntityDescriptionModel(Server server, PointName name, String uuid, String pointDesc, EntityType entityType) {
+    public EntityDescriptionModel(Server server, EntityName name, String uuid, String pointDesc, EntityType entityType) {
         this.server = server;
         this.pointName = name.getValue();
         this.uuid = uuid;
@@ -35,13 +33,13 @@ public class EntityDescriptionModel implements Serializable, EntityDescription {
         this.entityType = entityType.getCode();
     }
 
-    public EntityDescriptionModel(Server server, CategoryName name, String uuid, String pointDesc, EntityType entityType) {
-        this.server = server;
-        this.pointName = name.getValue();
-        this.uuid = uuid;
-        this.pointDesc = pointDesc;
-        this.entityType = entityType.getCode();
-    }
+//    public EntityDescriptionModel(Server server, EntityName name, String uuid, String pointDesc, EntityType entityType) {
+//        this.server = server;
+//        this.pointName = name.getValue();
+//        this.uuid = uuid;
+//        this.pointDesc = pointDesc;
+//        this.entityType = entityType.getCode();
+//    }
 
     public EntityDescriptionModel(EntityDescription p) {
         this.server = p.getServer();

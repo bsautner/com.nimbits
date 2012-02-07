@@ -37,7 +37,7 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
 
     MemcacheService cache;
    // MemcacheService systemCache;
-    // private PointName pointName;
+    // private EntityName pointName;
     private final Point p;
 
     public ValueMemCacheImpl(final Point point) {

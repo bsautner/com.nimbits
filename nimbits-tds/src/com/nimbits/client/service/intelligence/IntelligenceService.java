@@ -17,8 +17,9 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.nimbits.client.enums.IntelligenceResultTarget;
 import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointName;
+
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 
@@ -34,7 +35,7 @@ import java.util.Map;
 public interface IntelligenceService extends RemoteService {
     String getRawResult(final String query, final String podId, final boolean htmlOutput) throws NimbitsException;
 
-    String processInput(Point point, String input, String value, IntelligenceResultTarget intelligenceResultTarget, PointName targetPointName, boolean getPlainText) throws NimbitsException;
+    String processInput(Point point, String input, String value, IntelligenceResultTarget intelligenceResultTarget, EntityName targetEntityName, boolean getPlainText) throws NimbitsException;
 
     Value processInput(final Point point, final Point targetPoint, final String processedInput) throws NimbitsException;
 

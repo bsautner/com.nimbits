@@ -60,9 +60,9 @@ public class UserTest {
 //        Assert.assertTrue(users.size() > 1);
 //        System.out.println(users.size());
 //        System.out.println(ClientHelper.meOnProd().isLoggedIn());
-//        PointName pointName = (PointName) CommonFactoryLocator.getInstance().createPointName("usercount");
+//        EntityName pointName = (EntityName) CommonFactoryLocator.getInstance().createName("usercount");
 //        ClientHelper.meOnProd().deletePoint(pointName);
-//        CategoryName cat = CommonFactoryLocator.getInstance().createCategoryName(Const.CONST_HIDDEN_CATEGORY);
+//        EntityName cat = CommonFactoryLocator.getInstance().createName(Const.CONST_HIDDEN_CATEGORY);
 //
 //        ClientHelper.meOnProd().addPoint(cat, pointName);
 //        double i = 0.0;

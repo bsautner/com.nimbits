@@ -16,6 +16,7 @@ package com.nimbits.client.service.category;
 import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.model.category.*;
 import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.user.*;
 
 import java.util.*;
@@ -30,7 +31,7 @@ public interface CategoryServiceAsync {
     void getConnectionCategories(final boolean includePoints, final boolean includeDiagrams,  final boolean includeSubscriptions, final EmailAddress email,
                                  AsyncCallback<List<Category>> asyncCallback);
 
-    void addCategory(final CategoryName CategoryName,
+    void addCategory(final EntityName name,
                      AsyncCallback<Category> asyncCallback);
 
     void deleteCategory(final Category c,
@@ -39,15 +40,15 @@ public interface CategoryServiceAsync {
     void getCategories(final User u, final boolean includePoints, final boolean includeDiagrams, final boolean includeSubscriptions,
                        AsyncCallback<List<Category>> callback);
 
-    void getCategoryByName(final CategoryName categoryName, final boolean includePoints, final boolean includeDiagrams, AsyncCallback<Category> async);
+    void getCategoryByName(final EntityName name, final boolean includePoints, final boolean includeDiagrams, AsyncCallback<Category> async);
 
-    void getCategory(final User user, final CategoryName categoryName, AsyncCallback<Category> async);
+    void getCategory(final User user, final EntityName name, AsyncCallback<Category> async);
 
     void createHiddenCategory(User u, AsyncCallback<Category> async);
 
-    void categoryExists(User u, CategoryName categoryName, AsyncCallback<Boolean> async);
+    void categoryExists(User u, EntityName name, AsyncCallback<Boolean> async);
 
-    void addCategory(final User u, final CategoryName categoryName, AsyncCallback<Category> async);
+    void addCategory(final User u, final EntityName name, AsyncCallback<Category> async);
 
     void getCategory(User u, long catID, AsyncCallback<Category> async);
 
@@ -61,5 +62,5 @@ public interface CategoryServiceAsync {
 
     void updateCategory(User u, Category category, AsyncCallback<Category> async);
 
-    void getCategoryByName(final User u, final CategoryName categoryName, final boolean includePoints, final boolean includeDiagrams, AsyncCallback<Category> async);
+    void getCategoryByName(final User u, final EntityName name, final boolean includePoints, final boolean includeDiagrams, AsyncCallback<Category> async);
 }

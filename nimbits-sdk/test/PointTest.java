@@ -5,10 +5,9 @@
  */
 
 import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.CategoryName;
 import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointName;
 import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
@@ -27,11 +26,11 @@ public class PointTest {
 
     @Test
     public void createPoints() throws UnsupportedEncodingException {
-        CategoryName cName = CommonFactoryLocator.getInstance().createCategoryName(UUID.randomUUID().toString());
+        EntityName cName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
         Category c = ClientHelper.client().addCategory(cName);
 
         for (int i = 0; i < 20; i++) {
-            PointName pointName = CommonFactoryLocator.getInstance().createPointName(UUID.randomUUID().toString());
+            EntityName pointName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
             Point p = ClientHelper.client().addPoint(c.getName(), pointName);
             assertNotNull(p);
             System.out.println(p.getName().toString());
@@ -45,8 +44,8 @@ public class PointTest {
 
     @Test
     public void ensureDataPointPresent() throws Exception {
-        CategoryName categoryName = CommonFactoryLocator.getInstance().createCategoryName(UUID.randomUUID().toString());
-        PointName pointName = CommonFactoryLocator.getInstance().createPointName(UUID.randomUUID().toString());
+        EntityName categoryName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
+        EntityName pointName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
 
 
         assertTrue(ClientHelper.client().isLoggedIn());

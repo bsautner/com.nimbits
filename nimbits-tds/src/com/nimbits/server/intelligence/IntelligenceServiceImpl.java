@@ -18,8 +18,8 @@ import com.nimbits.client.enums.IntelligenceResultTarget;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointName;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueModelFactory;
@@ -176,7 +176,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
                                final String input,
                                final String podId,
                                final IntelligenceResultTarget intelligenceResultTarget,
-                               final PointName targetPointName,
+                               final EntityName targetEntityName,
                                final boolean getPlainText) throws NimbitsException {
 
 
@@ -186,11 +186,11 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
         final String processedInput = addDataToInput(loggedInUser, input);
 
-        final Point targetPoint = PointServiceFactory.getInstance().getPointByName(loggedInUser, targetPointName);
+        final Point targetPoint = PointServiceFactory.getInstance().getPointByName(loggedInUser, targetEntityName);
 
 
         if (targetPoint == null) {
-            retVal = "Could not find the target point:" + targetPointName.getValue() + " . You'll want to create it first.";
+            retVal = "Could not find the target point:" + targetEntityName.getValue() + " . You'll want to create it first.";
 
         } else if (targetPoint.getId() == point.getId()) {
             retVal = "Infinite loop error. You can't set the target point as the source point.";
@@ -237,7 +237,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
                 // System.out.println(k);
                 if (k.contains(".data]") || k.contains(".value]") || k.contains(".note]")) {
                     String p = k.split("\\.")[0];
-                    PointName pointName = CommonFactoryLocator.getInstance().createPointName(p);
+                    EntityName pointName = CommonFactoryLocator.getInstance().createName(p);
                     String a = k.split("\\.")[1];
 
                     a = a.substring(0, a.indexOf("]"));

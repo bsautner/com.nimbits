@@ -14,10 +14,9 @@
 import com.nimbits.client.NimbitsClient;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.CategoryName;
 import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointName;
 import com.nimbits.client.model.value.Value;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -54,10 +53,10 @@ public class LocalTest {
     @Test
     public void loadRandomTest() throws IOException {
 
-        CategoryName cName = CommonFactoryLocator.getInstance().createCategoryName(UUID.randomUUID().toString());
+        EntityName cName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
         Category cx = c.addCategory(cName);
 
-        PointName pointName = CommonFactoryLocator.getInstance().createPointName(UUID.randomUUID().toString());
+        EntityName pointName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
         Point p = c.addPoint(cName, pointName);
         assertNotNull(p);
         long now = new Date().getTime();
@@ -80,8 +79,8 @@ public class LocalTest {
         long then = now - 1000 * 100;
         double d = 0;
 
-        PointName pointName = CommonFactoryLocator.getInstance().createPointName(UUID.randomUUID().toString());
-        CategoryName categoryName = CommonFactoryLocator.getInstance().createCategoryName(null);
+        EntityName pointName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
+        EntityName categoryName = CommonFactoryLocator.getInstance().createName(null);
         c.addPoint(categoryName, pointName);
 
         while (then < now) {

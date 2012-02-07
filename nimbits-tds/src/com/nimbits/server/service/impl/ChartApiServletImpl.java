@@ -17,8 +17,8 @@ import com.nimbits.client.enums.ExportType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointName;
 import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
@@ -83,7 +83,7 @@ public class ChartApiServletImpl extends HttpServlet {
                 log.severe("Null user in chart api");
             }
             else {
-                final List<PointName> pointList = createPointList(pointsListParam, pointParamName);
+                final List<EntityName> pointList = createPointList(pointsListParam, pointParamName);
                 int count = Utils.isEmptyString(countParam) ? 10 : Integer.valueOf(countParam);
 
                 if (type == ExportType.png) {
@@ -120,13 +120,13 @@ public class ChartApiServletImpl extends HttpServlet {
 
 
 
-    private String generateImageChartParams(final HttpServletRequest req, final Timespan timespan, final int valueCount, final boolean doScale, final User u, final List<PointName> pointList) throws NimbitsException {
+    private String generateImageChartParams(final HttpServletRequest req, final Timespan timespan, final int valueCount, final boolean doScale, final User u, final List<EntityName> pointList) throws NimbitsException {
 
         StringBuilder params = new StringBuilder();
         params.append(req.getQueryString());
         params.append(chartDateCode);
 
-        for (final PointName pointName : pointList) {
+        for (final EntityName pointName : pointList) {
 
             final Point p = PointServiceFactory.getInstance().getPointByName(u, pointName);
             if (p != null) {
@@ -187,15 +187,15 @@ public class ChartApiServletImpl extends HttpServlet {
         out.close();
     }
 
-    private List<PointName> createPointList(String pointsListParam, String pointParamName) {
-        final List<PointName> pointList = new ArrayList<PointName>();
+    private List<EntityName> createPointList(String pointsListParam, String pointParamName) {
+        final List<EntityName> pointList = new ArrayList<EntityName>();
         if (!Utils.isEmptyString(pointParamName)) {
-            pointList.add(CommonFactoryLocator.getInstance().createPointName(pointParamName));
+            pointList.add(CommonFactoryLocator.getInstance().createName(pointParamName));
         } else if (!Utils.isEmptyString(pointsListParam)) {
             final String[] p1 = (pointsListParam.split(","));
             final List<String> pointsParams = Arrays.asList(p1);
             for (String pn : pointsParams) {
-                pointList.add(CommonFactoryLocator.getInstance().createPointName(pn));
+                pointList.add(CommonFactoryLocator.getInstance().createName(pn));
             }
         }
         return pointList;

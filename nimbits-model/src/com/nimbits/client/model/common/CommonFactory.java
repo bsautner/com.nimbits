@@ -13,10 +13,9 @@
 
 package com.nimbits.client.model.common;
 
-import com.nimbits.client.model.category.CategoryName;
-import com.nimbits.client.model.diagram.DiagramName;
+
 import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.point.PointName;
+import com.nimbits.client.model.entity.EntityName;
 
 /**
  * Created by bsautner
@@ -28,7 +27,9 @@ public abstract interface CommonFactory {
 
 
     EmailAddress createEmailAddress(final String value);
-    CategoryName createCategoryName(final String value);
-    PointName createPointName(final String value);
-    DiagramName createDiagramName(final String value);
+
+
+    EntityName createName(final String value);
+
+
 }

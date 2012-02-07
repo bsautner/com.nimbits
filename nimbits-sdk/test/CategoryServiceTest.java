@@ -3,8 +3,8 @@
  */
 
 import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.CategoryName;
 import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.EntityName;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -24,7 +24,7 @@ public class CategoryServiceTest {
     @Test
     public void TestCategoryCrud() throws Exception {
 
-        CategoryName n = CommonFactoryLocator.getInstance().createCategoryName(UUID.randomUUID().toString());
+        EntityName n = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
         assertTrue(ClientHelper.client().isLoggedIn());
         Category c = ClientHelper.client().addCategory(n);
         Assert.assertNotNull(c);

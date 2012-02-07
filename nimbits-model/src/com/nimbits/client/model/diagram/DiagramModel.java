@@ -14,10 +14,12 @@
 package com.nimbits.client.model.diagram;
 
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.common.*;
+import com.nimbits.client.enums.ClientType;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.EntityName;
 
-import java.io.*;
+import java.io.Serializable;
 
 /**
  * Created by bsautner
@@ -115,8 +117,8 @@ public class DiagramModel implements Serializable, Diagram {
     }
 
     @Override
-    public DiagramName getName() {
-        return CommonFactoryLocator.getInstance().createDiagramName(name);
+    public EntityName getName() {
+        return CommonFactoryLocator.getInstance().createName(name);
     }
 
     @Override

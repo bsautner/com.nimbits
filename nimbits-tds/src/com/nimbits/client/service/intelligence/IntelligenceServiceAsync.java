@@ -15,6 +15,7 @@ package com.nimbits.client.service.intelligence;
 
 import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.enums.*;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
@@ -33,7 +34,7 @@ public interface IntelligenceServiceAsync {
                       final String input,
                       final String value,
                       final IntelligenceResultTarget intelligenceResultTarget,
-                      final PointName targetPointName,
+                      final EntityName targetEntityName,
                       final boolean getPlainText,
                       final AsyncCallback<String> async);
 

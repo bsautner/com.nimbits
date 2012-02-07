@@ -19,17 +19,11 @@ package com.nimbits.server.google;
  * Date: 9/21/11
  * Time: 11:10 AM
  */
-import com.google.api.client.auth.oauth2.draft10.AccessTokenResponse;
-import com.google.api.client.auth.oauth2.draft10.AuthorizationRequestUrl;
-import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAccessTokenRequest;
-import com.google.api.client.googleapis.auth.oauth2.draft10.GoogleAuthorizationRequestUrl;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.gson.GsonFactory;
+
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.logging.Logger;
 
@@ -44,61 +38,61 @@ public class OAuth2Servlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        HttpSession session = req.getSession();
-        String CLIENT_ID = "768124221699@developer.gserviceaccount.com";
-        String CLIENT_SECRET = "fFkt6n3WiO7r4856I4qB1dHJ";
-        String REDIRECT_URI = "http://app.nimbits.com/oauth2callback";
-        String SCOPES = "https://www.google.com/m8/feeds/";
-
-      //  Check for an error returned by OAuth
-    String error = req.getParameter("error");
-    if (error != null) {
-      resp.setContentType("text/plain");
-      resp.getWriter().println("There was a problem during authentication: " + error);
-      log.severe("There was a problem during authentication: " + error);
-      return;
-    }
-
-    // When we're redirected back from the OAuth 2.0 grant page, a code will be supplied in a GET parameter named 'code'
-    String code = req.getParameter("code");
-    if (code == null || code.isEmpty()) {
-      // Now that we have the OAuth 2.0 code, we must exchange it for a token to make API requests.
-
-
-      // Build the authorization URL
-      AuthorizationRequestUrl authorizeUrl = new GoogleAuthorizationRequestUrl(
-              CLIENT_ID,
-               REDIRECT_URI,
-               SCOPES
-      );
-      authorizeUrl.redirectUri =  REDIRECT_URI;
-      authorizeUrl.scope =  SCOPES;
-      String authorizationUrl = authorizeUrl.build();
-
-      log.info("Redirecting browser for OAuth 2.0 authorization to " + authorizationUrl);
-      resp.sendRedirect(authorizationUrl);
-      return;
-    } else {
-      log.info("Exchanging OAuth code for access token using server side call");
-
-      AccessTokenResponse accessTokenResponse = new GoogleAccessTokenRequest.GoogleAuthorizationCodeGrant(
-
-              new NetHttpTransport(),
-              new GsonFactory(),
-               CLIENT_ID,
-               CLIENT_SECRET,
-              code,
-               REDIRECT_URI
-      ).execute();
-
-      log.info("Storing authentication token into the session");
-      session.setAttribute("accessToken", accessTokenResponse.accessToken);
-      session.setAttribute("refreshToken", accessTokenResponse.refreshToken);
-
-      //The authentication is all done! Redirect back to the samples index so you can play with them.
-      resp.sendRedirect("/");
+//        HttpSession session = req.getSession();
+//        String CLIENT_ID = "768124221699@developer.gserviceaccount.com";
+//        String CLIENT_SECRET = "fFkt6n3WiO7r4856I4qB1dHJ";
+//        String REDIRECT_URI = "http://app.nimbits.com/oauth2callback";
+//        String SCOPES = "https://www.google.com/m8/feeds/";
+//
+//      //  Check for an error returned by OAuth
+//    String error = req.getParameter("error");
+//    if (error != null) {
+//      resp.setContentType("text/plain");
+//      resp.getWriter().println("There was a problem during authentication: " + error);
+//      log.severe("There was a problem during authentication: " + error);
+//      return;
 //    }
-    }
+//
+//    // When we're redirected back from the OAuth 2.0 grant page, a code will be supplied in a GET parameter named 'code'
+//    String code = req.getParameter("code");
+//    if (code == null || code.isEmpty()) {
+//      // Now that we have the OAuth 2.0 code, we must exchange it for a token to make API requests.
+//
+//
+//      // Build the authorization URL
+//      AuthorizationRequestUrl authorizeUrl = new GoogleAuthorizationRequestUrl(
+//              CLIENT_ID,
+//               REDIRECT_URI,
+//               SCOPES
+//      );
+//      authorizeUrl.redirectUri =  REDIRECT_URI;
+//      authorizeUrl.scope =  SCOPES;
+//      String authorizationUrl = authorizeUrl.build();
+//
+//      log.info("Redirecting browser for OAuth 2.0 authorization to " + authorizationUrl);
+//      resp.sendRedirect(authorizationUrl);
+//      return;
+//    } else {
+//      log.info("Exchanging OAuth code for access token using server side call");
+//
+//      AccessTokenResponse accessTokenResponse = new GoogleAccessTokenRequest.GoogleAuthorizationCodeGrant(
+//
+//              new NetHttpTransport(),
+//              new GsonFactory(),
+//               CLIENT_ID,
+//               CLIENT_SECRET,
+//              code,
+//               REDIRECT_URI
+//      ).execute();
+//
+//      log.info("Storing authentication token into the session");
+//      session.setAttribute("accessToken", accessTokenResponse.accessToken);
+//      session.setAttribute("refreshToken", accessTokenResponse.refreshToken);
+//
+//      //The authentication is all done! Redirect back to the samples index so you can play with them.
+//      resp.sendRedirect("/");
+////    }
+//    }
     }
 }
 

@@ -154,15 +154,10 @@ public class EntityDaoImpl implements EntityTransactions {
             final List<Entity> c = (List<Entity>) q1.execute(entity.getUUID());
 
             if (c.size() > 0) {
-
-                Transaction tx = pm.currentTransaction();
-                tx.begin();
                 List<Entity> entities = getEntityChildren(pm, c.get(0));
+                entities.add(c.get(0));
                 pm.deletePersistentAll(entities);
-                tx.commit();
-
             }
-
         } finally {
             pm.close();
         }

@@ -13,11 +13,11 @@ import java.io.Serializable;
 public class CalculationModel implements Serializable, Calculation {
     private static final long serialVersionUID = Const.DEFAULT_SERIAL_VERSION;
     private long id;
-    private long target;
+    private String target;
     private String formula;
-    private long x;
-    private long y;
-    private long z;
+    private String x;
+    private String y;
+    private String z;
     private boolean enabled;
 
 
@@ -36,7 +36,8 @@ public class CalculationModel implements Serializable, Calculation {
 
     }
 
-    public CalculationModel(final boolean enabled, final String f, final long target, final long x, final long y, final long z) {
+
+    public CalculationModel(final boolean enabled, final String f, final String target, final String x, final String y, final String z) {
         this.target = target;
         this.formula = f;
         this.x = x;
@@ -45,7 +46,6 @@ public class CalculationModel implements Serializable, Calculation {
         this.enabled = enabled;
 
     }
-
 
     @Override
     public String getFormula() {
@@ -58,22 +58,22 @@ public class CalculationModel implements Serializable, Calculation {
     }
 
     @Override
-    public Long getTarget() {
+    public String getTarget() {
         return target;
     }
 
     @Override
-    public Long getX() {
+    public String getX() {
         return x;
     }
 
     @Override
-    public Long getY() {
+    public String getY() {
         return y;
     }
 
     @Override
-    public Long getZ() {
+    public String getZ() {
         return z;
 
     }

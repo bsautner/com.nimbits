@@ -96,7 +96,7 @@ public class RecordValueTask extends HttpServlet {
             alarmSent = pointDataRelay(u, point, value, note);
             if (!loopFlag) {
 
-                if (point.getCalculation() != null && point.getCalculation().getEnabled() && point.getCalculation().getTarget() > 0) {
+                if (point.getCalculation() != null && point.getCalculation().getEnabled() && ! Utils.isEmptyString(point.getCalculation().getTarget())) {
 
 
                     doCalculation(u, point, value, note, lat, lng);
@@ -152,13 +152,13 @@ public class RecordValueTask extends HttpServlet {
             final double lng
     ) throws NimbitsException {
 
-        if (point.getCalculation().getTarget() > 0) {
-            final Point target = PointServiceFactory.getInstance().getPointByID(u, point.getCalculation().getTarget());
+        if (! Utils.isEmptyString(point.getCalculation().getTarget())) {
+            final Point target = PointServiceFactory.getInstance().getPointByUUID(point.getCalculation().getTarget());
 
             if (!(target == null)) {
                 final double calcResult = EquationSolver.solveEquation(point, u);
 
-                final Value v = ValueModelFactory.createValueModel(lat, lng, calcResult, value.getTimestamp(), target.getId(), note);
+                final Value v = ValueModelFactory.createValueModel(lat, lng, calcResult, value.getTimestamp(), target.getUUID(), note);
                 RecordedValueServiceFactory.getInstance().recordValue(u, target, v, true);
 
 
@@ -188,63 +188,64 @@ public class RecordValueTask extends HttpServlet {
     }
 
     private void processSubscriptions(final Point point, final Value v) {
-        List<Subscription> subscriptions= PointServiceFactory.getInstance().getSubscriptionsToPoint(point);
-        for (Subscription subscription : subscriptions) {
-
-            if (subscription.getLastSent().getTime() + (subscription.getMaxRepeat() * 60 * 1000) < new Date().getTime()) {
-                User subscriber = UserServiceFactory.getInstance().getUserByUUID(subscription.getSubscriberUUID());
-                AlertType alert = null;
-                if (! subscription.getAlertStateChangeMethod().equals(SubscriptionDeliveryMethod.none)){
-                    alert = PointServiceFactory.getInstance().getPointAlertState(point, v);
-                    if (! alert.equals(AlertType.OK)) {
-                        PointServiceFactory.getInstance().updateSubscriptionLastSent(subscription);
-                        switch (subscription.getAlertStateChangeMethod()) {
-                            case none:
-                                break;
-                            case email:
-                                EmailServiceFactory.getInstance().sendAlert(point, subscriber.getEmail(), v.getNumberValue(),
-                                        alert);
-                                break;
-                            case facebook:
-                                postToFB(point, subscriber, v.getNumberValue(), v.getNote());
-                                break;
-                            case twitter:
-                                sendTweet(subscriber, point, v);
-                                break;
-                            case instantMessage:
-                                doXMPP(subscriber, point, v);
-                                break;
-                        }
-                    }
-                }
-                if (! subscription.getDataUpdateAlertMethod().equals(SubscriptionDeliveryMethod.none)) {
-                    PointServiceFactory.getInstance().updateSubscriptionLastSent(subscription);
-
-                    switch (subscription.getDataUpdateAlertMethod()) {
-
-                        case none:
-                            break;
-                        case email:
-                            EmailServiceFactory.getInstance().sendAlert(point, subscriber.getEmail(), v.getNumberValue(),
-                                    alert);
-                            break;
-                        case facebook:
-                            postToFB(point, subscriber, v.getNumberValue(), v.getNote());
-                            break;
-                        case twitter:
-                            sendTweet(subscriber, point, v);
-                            break;
-                        case instantMessage:
-                            doXMPP(subscriber, point, v);
-                            break;
-                    }
-                }
-            }
-
-
-
-
-        }
+        //TODO
+//        List<Subscription> subscriptions= PointServiceFactory.getInstance().getSubscriptionsToPoint(point);
+//        for (Subscription subscription : subscriptions) {
+//
+//            if (subscription.getLastSent().getTime() + (subscription.getMaxRepeat() * 60 * 1000) < new Date().getTime()) {
+//                User subscriber = UserServiceFactory.getInstance().getUserByUUID(subscription.getSubscriberUUID());
+//                AlertType alert = null;
+//                if (! subscription.getAlertStateChangeMethod().equals(SubscriptionDeliveryMethod.none)){
+//                    alert = PointServiceFactory.getInstance().getPointAlertState(point, v);
+//                    if (! alert.equals(AlertType.OK)) {
+//                        PointServiceFactory.getInstance().updateSubscriptionLastSent(subscription);
+//                        switch (subscription.getAlertStateChangeMethod()) {
+//                            case none:
+//                                break;
+//                            case email:
+//                                EmailServiceFactory.getInstance().sendAlert(point, subscriber.getEmail(), v.getNumberValue(),
+//                                        alert);
+//                                break;
+//                            case facebook:
+//                                postToFB(point, subscriber, v.getNumberValue(), v.getNote());
+//                                break;
+//                            case twitter:
+//                                sendTweet(subscriber, point, v);
+//                                break;
+//                            case instantMessage:
+//                                doXMPP(subscriber, point, v);
+//                                break;
+//                        }
+//                    }
+//                }
+//                if (! subscription.getDataUpdateAlertMethod().equals(SubscriptionDeliveryMethod.none)) {
+//                    PointServiceFactory.getInstance().updateSubscriptionLastSent(subscription);
+//
+//                    switch (subscription.getDataUpdateAlertMethod()) {
+//
+//                        case none:
+//                            break;
+//                        case email:
+//                            EmailServiceFactory.getInstance().sendAlert(point, subscriber.getEmail(), v.getNumberValue(),
+//                                    alert);
+//                            break;
+//                        case facebook:
+//                            postToFB(point, subscriber, v.getNumberValue(), v.getNote());
+//                            break;
+//                        case twitter:
+//                            sendTweet(subscriber, point, v);
+//                            break;
+//                        case instantMessage:
+//                            doXMPP(subscriber, point, v);
+//                            break;
+//                    }
+//                }
+//            }
+//
+//
+//
+//
+//        }
 
     }
 
@@ -254,8 +255,7 @@ public class RecordValueTask extends HttpServlet {
 
         if (point.getSendAlertsAsJson()) {
             point.setValue(v);
-            final String json = GsonFactory.getInstance().toJson(point);
-            message = json;
+            message = GsonFactory.getInstance().toJson(point);
         } else {
             message = "Nimbits Data Point [" + point.getName().getValue()
                     + "] updated to new value: " + v.getNumberValue();

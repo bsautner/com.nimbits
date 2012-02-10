@@ -19,7 +19,7 @@ import com.nimbits.client.model.Const;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.user.User;
@@ -243,6 +243,23 @@ public class DataPointDAOImpl implements PointTransactions {
         }
     }
 
+    @Override
+    public Point addPoint(Entity entity) {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final DataPoint jdoPoint = new DataPoint(
+                u.getId(),
+                entity.getName(),
+                entity.getUUID());
+
+        jdoPoint.setPublic(true);
+        jdoPoint.setCompression(0.1);
+        jdoPoint.setExpire(90);
+        jdoPoint.setLastChecked(new Date());
+        pm.makePersistent(jdoPoint);
+
+        return PointModelFactory.createPointModel(jdoPoint);
+    }
+
 
     /* (non-Javadoc)
       * @see com.nimbits.client.service.datapoints.PointTransactions#deletePoint(com.nimbits.client.model.DataPoint)
@@ -331,8 +348,8 @@ public class DataPointDAOImpl implements PointTransactions {
 
         Point retObj = null;
         Category targetCategory;
-
         final PersistenceManager pm = PMF.get().getPersistenceManager();
+
         try {
             if (!(pointName == null) && (pointName.getValue().trim().length() > 0)) {
 

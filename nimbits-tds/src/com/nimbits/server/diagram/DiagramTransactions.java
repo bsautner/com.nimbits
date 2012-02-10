@@ -48,6 +48,6 @@ public interface DiagramTransactions {
 
     Diagram updateDiagram(final BlobKey blobKey,
                           final EntityName diagramName,
-                          final long id) throws NimbitsException;
+                          final String id) throws NimbitsException;
 
 }

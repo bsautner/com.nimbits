@@ -28,9 +28,6 @@ public interface CategoryServiceAsync {
                        final boolean includeAlertState,
                        AsyncCallback<List<Category>> asyncCallback);
 
-    void getConnectionCategories(final boolean includePoints, final boolean includeDiagrams,  final boolean includeSubscriptions, final EmailAddress email,
-                                 AsyncCallback<List<Category>> asyncCallback);
-
     void addCategory(final EntityName name,
                      AsyncCallback<Category> asyncCallback);
 
@@ -44,7 +41,7 @@ public interface CategoryServiceAsync {
 
     void getCategory(final User user, final EntityName name, AsyncCallback<Category> async);
 
-    void createHiddenCategory(User u, AsyncCallback<Category> async);
+    //void createHiddenCategory(User u, AsyncCallback<Category> async);
 
     void categoryExists(User u, EntityName name, AsyncCallback<Boolean> async);
 
@@ -63,4 +60,6 @@ public interface CategoryServiceAsync {
     void updateCategory(User u, Category category, AsyncCallback<Category> async);
 
     void getCategoryByName(final User u, final EntityName name, final boolean includePoints, final boolean includeDiagrams, AsyncCallback<Category> async);
+
+    void createHiddenCategory(User u, AsyncCallback<Category> async);
 }

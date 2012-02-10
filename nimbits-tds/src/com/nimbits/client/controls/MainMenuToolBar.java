@@ -17,6 +17,7 @@ import com.extjs.gxt.ui.client.event.*;
 import com.extjs.gxt.ui.client.widget.*;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.menu.*;
+import com.extjs.gxt.ui.client.widget.menu.MenuItem;
 import com.extjs.gxt.ui.client.widget.toolbar.*;
 import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.Window;
@@ -24,6 +25,8 @@ import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 import com.nimbits.client.icons.*;
 import com.nimbits.client.model.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.connection.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.service.instantmessage.*;
 import com.nimbits.client.service.twitter.*;
@@ -34,14 +37,23 @@ import java.util.*;
 
 
 public class MainMenuToolBar extends LayoutContainer {
-    //    private static final Icons.INSTANCE. Icons.INSTANCE. = GWT.create(Icons.INSTANCE.class);
+    private final UserServiceAsync userService = GWT.create(UserService.class);
+
+    private final ContentPanel mainPanel = new ContentPanel();
+    private int connectionCount = 0;
+    private  LoginInfo loginInfo;
+
+
+
     private final UserServiceAsync us = GWT.create(UserService.class);
 
-    public MainMenuToolBar(final String logoutURL, final LoginInfo loginInfo, final Map<String, String> settings) {
+    public MainMenuToolBar(final String logoutURL,
+                           final LoginInfo loginInfo,
+                           final Map<String, String> settings) {
         // setLayout(new FlowLayout(0));
 
         final ToolBar toolBar = new ToolBar();
-
+        this.loginInfo = loginInfo;
         toolBar.setBorders(true);
 
         toolBar.add(new SeparatorToolItem());
@@ -90,6 +102,11 @@ public class MainMenuToolBar extends LayoutContainer {
             }
         });
 
+
+
+
+
+
 //        final Button adminButton = new Button("Admin");
 //        adminButton.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.Key()));
 //        adminButton.addListener(Events.OnClick, new Listener<BaseEvent>() {
@@ -108,6 +125,7 @@ public class MainMenuToolBar extends LayoutContainer {
         toolBar.add(IMButton);
 
 
+
         if (settings.containsKey(Const.SETTING_TWITTER_CLIENT_ID) && !Utils.isEmptyString(settings.get(Const.SETTING_TWITTER_CLIENT_ID)) && loginInfo != null) {
             toolBar.add(TwitterButton);
         }
@@ -120,6 +138,8 @@ public class MainMenuToolBar extends LayoutContainer {
         toolBar.add(logoutButton);
         toolBar.add(new SeparatorMenuItem());
 
+        toolBar.add(connectionButton());
+        toolBar.add(pendingConnectionsButton());
         if (loginInfo.isUserAdmin()) {
             //toolBar.add(adminButton);
         }
@@ -143,7 +163,57 @@ public class MainMenuToolBar extends LayoutContainer {
         //Html h = new Html()
         add(toolBar);
     }
+    private Button connectionButton() {
+        final Button b = new Button("New Connection");
+        b.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.addFriend()));
 
+        b.addListener(Events.OnClick, new Listener<BaseEvent>() {
+
+            @Override
+            public void handleEvent(BaseEvent be) {
+
+
+                final MessageBox box = MessageBox.prompt("Connect to Friends",
+                        "Enter an email address to invite a friend to connect their Data Points to yours. After they approve your request " +
+                                "you'll be able to see each others data points and diagrams (based on permission levels).");
+                box.addCallback(new Listener<MessageBoxEvent>() {
+                    @Override
+                    public void handleEvent(MessageBoxEvent be) {
+                        final String email;
+                        email = be.getValue();
+                        if (email != null) {
+                            if (email.length() > 0) {
+                                UserServiceAsync userService;
+                                userService = GWT.create(UserService.class);
+                                EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
+                                userService.sendConnectionRequest(emailAddress, new AsyncCallback<Void>() {
+
+                                    @Override
+                                    public void onFailure(Throwable caught) {
+
+
+                                    }
+
+                                    @Override
+                                    public void onSuccess(Void result) {
+
+                                        Info.display("Connection Request", "Connection Request Sent!");
+
+                                    }
+
+                                });
+
+
+                            }
+                        }
+                    }
+
+                });
+
+            }
+        });
+        return b;
+    }
 
     private Button newKeyButton(final Listener<MessageBoxEvent> l) {
         Button SecretButton = new Button("Secret Key");
@@ -280,5 +350,109 @@ public class MainMenuToolBar extends LayoutContainer {
         });
         return IMButton;
     }
+    private Button pendingConnectionsButton() {
+        final Button connectionRequest = new Button("Connection Requests(" + connectionCount + ")");
 
+        connectionRequest.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.add16()));
+        userService.getPendingConnectionRequests(loginInfo.getEmailAddress(), new AsyncCallback<List<Connection>>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                GWT.log(caught.getMessage(), caught);
+
+            }
+
+            @Override
+            public void onSuccess(final List<Connection> result) {
+
+
+                final Menu scrollMenu = new Menu();
+                scrollMenu.setMaxHeight(200);
+                for (final Connection r : result) {
+                    final MenuItem m = new MenuItem(r.getRequestorEmail().getValue());
+                    m.addListener(Events.Select, new Listener<BaseEvent>() {
+
+                        @Override
+                        public void handleEvent(final BaseEvent be) {
+                            //	final Dialog simple = new Dialog();
+                            //simple.setHeading(");
+                            final MessageBox box = new MessageBox();
+                            box.setButtons(MessageBox.YESNOCANCEL);
+                            box.setIcon(MessageBox.QUESTION);
+                            box.setTitle("Connection request approval");
+                            box.addCallback(new Listener<MessageBoxEvent>() {
+
+                                @Override
+                                public void handleEvent(final MessageBoxEvent be) {
+
+                                    final Button btn = be.getButtonClicked();
+
+                                        if (btn.getText().equals("Yes")) {
+
+                                            acceptConnection(r, true);
+
+                                            scrollMenu.remove(m);
+                                        } else if (btn.getText().equals("No")) {
+                                            scrollMenu.remove(m);
+
+                                            acceptConnection(r, false);
+
+                                        }
+
+
+                                }
+
+                                private void acceptConnection(
+                                        final Connection r,
+                                        boolean accepted)  {
+                                    UserServiceAsync userService;
+                                    userService = GWT.create(UserService.class);
+                                    userService.connectionRequestReply(r.getTargetEmail(), r.getRequestorEmail(), r.getUUID(), accepted, new AsyncCallback<Void>() {
+
+                                        @Override
+                                        public void onFailure(Throwable e) {
+                                            GWT.log(e.getMessage(), e);
+
+                                        }
+
+                                        @Override
+                                        public void onSuccess(Void result) {
+                                          //  reloadConnections();
+                                            connectionCount += (-1);
+
+                                            connectionRequest.setText("Requests(" + connectionCount + ")");
+
+                                        }
+
+                                    });
+                                }
+
+
+                            });
+
+                            box.setMessage("The owner of the email address: '" + r.getRequestorEmail().getValue() + "' would like to connect with you. You will have read only access to each others data points. Is that OK?");
+                            box.show();
+
+
+                        }
+
+                    });
+                    scrollMenu.add(m);
+                }
+
+
+                connectionRequest.setMenu(scrollMenu);
+                connectionCount = result.size();
+
+                connectionRequest.setText("Requests(" + connectionCount + ")");
+
+                //	Window.alert("" + result.size());
+
+
+            }
+
+
+        });
+        return connectionRequest;
+    }
 }

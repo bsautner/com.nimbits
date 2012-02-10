@@ -40,7 +40,7 @@ public interface Point extends Serializable {
     boolean getAlarmToFacebook();
 
     AlertType getAlertState();
-
+    @Deprecated
     long getCatID();
 
     ClientType getClientType();
@@ -121,7 +121,7 @@ public interface Point extends Serializable {
     boolean isLowAlarmOn();
 
     boolean isPostToFacebook();
-
+    @Deprecated
     boolean isPublic();
 
     boolean isSystemPoint();
@@ -173,7 +173,7 @@ public interface Point extends Serializable {
     void setName(final EntityName name);
 
     void setPostToFacebook(final boolean postToFacebook);
-
+    @Deprecated
     void setPublic(final boolean isPublic);
 
     void setReadOnly(final boolean readOnly);

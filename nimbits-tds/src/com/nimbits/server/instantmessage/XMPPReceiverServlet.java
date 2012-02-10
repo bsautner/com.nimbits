@@ -172,7 +172,7 @@ public class XMPPReceiverServlet extends HttpServlet {
             }
 
             if (u != null) {
-                Value value = ValueModelFactory.createValueModel(0.0, 0.0, v, new Date(), 0, "");
+                Value value = ValueModelFactory.createValueModel(0.0, 0.0, v, new Date(), null, "");
                 RecordedValueServiceFactory.getInstance().recordValue(u, pointName, value);
             }
             // email.sendEmail(Global.AdminEmail,"2" + pointname +

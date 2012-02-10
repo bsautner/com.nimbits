@@ -14,22 +14,18 @@
 package com.nimbits.client.panels;
 
 import com.extjs.gxt.ui.client.widget.*;
-import com.nimbits.client.model.category.*;
 import com.nimbits.client.model.diagram.*;
-import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.subscription.*;
 import com.nimbits.client.model.value.*;
 
 import java.util.*;
 
 public abstract class NavigationEventProvider extends LayoutContainer {
-    private final List<CategoryClickedListener> categoryClickedListeners = new ArrayList<CategoryClickedListener>();
-    private final List<CategoryDeletedListener> categoryDeletedListeners = new ArrayList<CategoryDeletedListener>();
-    private final List<PointDeletedListener> pointDeletedListeners = new ArrayList<PointDeletedListener>();
-    private final List<PointClickedListener> pointClickedListeners = new ArrayList<PointClickedListener>();
-    private final List<DiagramClickedListener> diagramClickedListeners = new ArrayList<DiagramClickedListener>();
+
+    private final List<EntityDeletedListener> entityDeletedListeners = new ArrayList<EntityDeletedListener>();
+    private final List<EntityClickedListener> entityClickedListeners = new ArrayList<EntityClickedListener>();
     private final List<UrlClickedListener> urlClickedListeners = new ArrayList<UrlClickedListener>();
-    private final List<DiagramDeletedListener> diagramDeletedListeners = new ArrayList<DiagramDeletedListener>();
     private final List<ValueEnteredListener> valueEnteredListeners = new ArrayList<ValueEnteredListener>();
     private final List<ChartRemovedListener> chartRemovedListeners = new ArrayList<ChartRemovedListener>();
     private final List<DiagramRemovedListener> diagramRemovedListeners = new ArrayList<DiagramRemovedListener>();
@@ -38,7 +34,7 @@ public abstract class NavigationEventProvider extends LayoutContainer {
 
 
     public interface SubscriptionAddedListener {
-        void onSubscriptionAdded(final Subscription model);
+        void onSubscriptionAdded(final Entity model);
     }
 
     public void addSubscriptionAddedListener(final SubscriptionAddedListener listener) {
@@ -46,40 +42,25 @@ public abstract class NavigationEventProvider extends LayoutContainer {
     }
 
 
-    void notifySubscriptionAddedListener(final Subscription model)  {
+    void notifySubscriptionAddedListener(final Entity model)  {
         for (SubscriptionAddedListener SubscriptionAddedListener : subscriptionAddedListeners) {
             SubscriptionAddedListener.onSubscriptionAdded(model);
         }
     }
 
 
-    // Category Click Handlers
-    public interface CategoryClickedListener {
-        void onCategoryClicked(final Category c, final boolean readOnly);
+    void addEntityDeletedListeners(final EntityDeletedListener listener) {
+        entityDeletedListeners.add(listener);
     }
 
-    void addCategoryDeletedListeners(final CategoryDeletedListener listener) {
-        categoryDeletedListeners.add(listener);
-    }
-
-    public void addCategoryClickedListeners(final CategoryClickedListener listener) {
-        categoryClickedListeners.add(listener);
-    }
-
-    void notifyCategoryClickedListener(final Category c, final boolean readOnly)  {
-        for (CategoryClickedListener categoryClickedListener : categoryClickedListeners) {
-            categoryClickedListener.onCategoryClicked(c, readOnly);
+    void notifyEntityDeletedListener(final Entity entity)  {
+        for (EntityDeletedListener listener : entityDeletedListeners) {
+            listener.onEntityDeleted(entity);
         }
     }
 
-    void notifyCategoryDeletedListener(final Category c, final boolean readOnly)  {
-        for (CategoryDeletedListener categoryDeletedListener : categoryDeletedListeners) {
-            categoryDeletedListener.onCategoryDeleted(c, readOnly);
-        }
-    }
-
-    public interface CategoryDeletedListener {
-        void onCategoryDeleted(final Category c, final boolean readOnly) ;
+    public interface EntityDeletedListener {
+        void onEntityDeleted(final Entity entity) ;
 
     }
 
@@ -100,7 +81,7 @@ public abstract class NavigationEventProvider extends LayoutContainer {
 
     // Value entered Handlers
     public interface ValueEnteredListener {
-        void onValueEntered(final Point point, final Value value);
+        void onValueEntered(final Entity point, final Value value);
 
     }
 
@@ -108,44 +89,29 @@ public abstract class NavigationEventProvider extends LayoutContainer {
         valueEnteredListeners.add(listener);
     }
 
-    void notifyValueEnteredListener(final Point point, final Value value) {
+    void notifyValueEnteredListener(final Entity point, final Value value) {
         for (final ValueEnteredListener valueEnteredListener : valueEnteredListeners) {
             valueEnteredListener.onValueEntered(point, value);
         }
     }
 
     // Point Click Handlers
-    public interface PointClickedListener {
-        void onPointClicked(final Point c);
+    public interface EntityClickedListener {
+        void onEntityClicked(final Entity entity);
 
     }
 
-    public void addPointClickedListeners(final PointClickedListener listener) {
-        pointClickedListeners.add(listener);
+    public void addEntityClickedListeners(final EntityClickedListener listener) {
+        entityClickedListeners.add(listener);
     }
 
-    void notifyPointClickedListener(final Point c)  {
+    void notifyEntityClickedListener(final Entity entity)  {
 
-        for (PointClickedListener pointClickedListener : pointClickedListeners) {
-            pointClickedListener.onPointClicked(c);
+        for (EntityClickedListener clickedListener :entityClickedListeners) {
+            clickedListener.onEntityClicked(entity);
         }
     }
 
-    // Diagram Click Handlers
-    public interface DiagramClickedListener {
-        void onDiagramClicked(final Diagram d);
-
-    }
-
-    public void addDiagramClickedListeners(final DiagramClickedListener listener) {
-        diagramClickedListeners.add(listener);
-    }
-
-    void notifyDiagramClickedListener(final Diagram d) {
-        for (DiagramClickedListener diagramClickedListener : diagramClickedListeners) {
-            diagramClickedListener.onDiagramClicked(d);
-        }
-    }
 
     // Diagram Click Handlers
     public interface UrlClickedListener {
@@ -163,20 +129,7 @@ public abstract class NavigationEventProvider extends LayoutContainer {
         }
     }
 
-    public interface DiagramDeletedListener {
-        void onDiagramDeleted(final Diagram c, final boolean readOnly);
 
-    }
-
-    void addDiagramDeletedListeners(final DiagramDeletedListener listener) {
-        diagramDeletedListeners.add(listener);
-    }
-
-    void notifyDiagramDeletedListener(final Diagram c, final boolean readOnly) {
-        for (DiagramDeletedListener diagramDeletedListener : diagramDeletedListeners) {
-            diagramDeletedListener.onDiagramDeleted(c, readOnly);
-        }
-    }
 
     public interface DiagramRemovedListener {
         void onDiagramRemovedClicked(final Diagram diagram);
@@ -193,20 +146,6 @@ public abstract class NavigationEventProvider extends LayoutContainer {
     }
 
 
-    public interface PointDeletedListener {
-        void onPointDeleted(Point c);
-
-    }
-
-    void addPointDeletedListeners(PointDeletedListener listener) {
-        pointDeletedListeners.add(listener);
-    }
-
-    void notifyPointDeletedListener(Point c)  {
-        for (PointDeletedListener pointDeletedListener : pointDeletedListeners) {
-            pointDeletedListener.onPointDeleted(c);
-        }
-    }
 
 
 }

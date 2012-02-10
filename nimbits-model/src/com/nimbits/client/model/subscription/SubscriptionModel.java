@@ -14,12 +14,11 @@ import java.util.*;
 public class SubscriptionModel implements Serializable, Subscription  {
 
     private String key;
-    private String subscriberUUID;
-    private String subscribedPointUUID;
+    private String uuid;
+    private String subscribedEntityUUID;
     private int dataUpdateAlertMethod;
     private int alertAlertChangeMethod;
     private int propertyChangeMethod;
-    private long categoryId;
     private double maxRepeat;
     private Date lastSent;
 
@@ -27,14 +26,14 @@ public class SubscriptionModel implements Serializable, Subscription  {
     }
 
     public SubscriptionModel(Subscription subscription) {
-        this.subscriberUUID = subscription.getSubscriberUUID();
-        this.subscribedPointUUID = subscription.getSubscribedPointUUID();
+        this.uuid = subscription.getUUID();
+        this.subscribedEntityUUID = subscription.getSubscribedEntityUUID();
         this.dataUpdateAlertMethod = subscription.getDataUpdateAlertMethod().getCode();
         this.alertAlertChangeMethod = subscription.getAlertStateChangeMethod().getCode();
         this.propertyChangeMethod = subscription.getPropertyChangeMethod().getCode();
         this.maxRepeat = subscription.getMaxRepeat();
         this.lastSent = subscription.getLastSent();
-        this.categoryId = subscription.getCategoryId();
+
 
     }
 
@@ -51,15 +50,7 @@ public class SubscriptionModel implements Serializable, Subscription  {
         this.lastSent = lastSent;
     }
 
-    @Override
-    public String getSubscriberUUID() {
-        return subscriberUUID;
-    }
 
-    @Override
-    public void setSubscriberUUID(String subscriberUUID) {
-       this.subscriberUUID = subscriberUUID;
-    }
 
     @Override
     public SubscriptionDeliveryMethod getDataUpdateAlertMethod() {
@@ -92,24 +83,25 @@ public class SubscriptionModel implements Serializable, Subscription  {
     }
 
     @Override
-    public String getSubscribedPointUUID() {
-     return this.subscribedPointUUID;
+    public String getSubscribedEntityUUID() {
+     return this.subscribedEntityUUID;
     }
 
     @Override
-    public void setSubscribedPointUUID(String uuid) {
-        subscribedPointUUID = uuid;
+    public void setSubscribedEntityUUID(String uuid) {
+      this.subscribedEntityUUID = uuid;
     }
 
     @Override
-    public long getCategoryId() {
-      return this.categoryId;
+    public String getUUID() {
+        return this.uuid;
     }
 
     @Override
-    public void setCategoryId(long categoryId) {
-      this.categoryId = categoryId;
+    public void setUUID(String uuid) {
+        subscribedEntityUUID = uuid;
     }
+
 
     public double getMaxRepeat() {
         return maxRepeat;

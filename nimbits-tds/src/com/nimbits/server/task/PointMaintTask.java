@@ -13,26 +13,25 @@
 
 package com.nimbits.server.task;
 
-import com.google.gson.Gson;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
+import com.google.gson.*;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.point.PointModel;
-import com.nimbits.client.model.user.User;
-import com.nimbits.server.common.ServerInfoImpl;
-import com.nimbits.server.core.CoreFactory;
-import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.point.PointTransactionsFactory;
-import com.nimbits.server.pointcategory.CategoryServiceFactory;
-import com.nimbits.server.user.UserTransactionFactory;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.category.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.server.common.*;
+import com.nimbits.server.core.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.gson.*;
+import com.nimbits.server.point.*;
+import com.nimbits.server.pointcategory.*;
+import com.nimbits.server.user.*;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.logging.Logger;
+import javax.servlet.http.*;
+import java.io.*;
+import java.util.logging.*;
 
 public class PointMaintTask extends HttpServlet {
 
@@ -63,8 +62,11 @@ public class PointMaintTask extends HttpServlet {
 
 
         if (n != null) {
+            Category category = CategoryServiceFactory.getInstance().getCategory(n, p.getCatID());
             try {
                 PointTransactionsFactory.getInstance(null).checkPoint(req, n.getEmail(), p);
+
+
             } catch (NimbitsException e) {
                 log.severe(e.getMessage());
             }
@@ -72,7 +74,13 @@ public class PointMaintTask extends HttpServlet {
             log.info("reporting point to core:" + p.getName().getValue());
             String url = ServerInfoImpl.getFullServerURL(req);
             CoreFactory.getInstance().reportUpdateToCore(url, pointJson, EntityType.point);
-            Category category = CategoryServiceFactory.getInstance().getCategory(n, p.getCatID());
+
+
+
+
+
+
+
             if (category != null) {
                 if (category.getProtectionLevel() != null && category.getProtectionLevel().equals(ProtectionLevel.everyone)) {
                     String j = GsonFactory.getInstance().toJson(category);

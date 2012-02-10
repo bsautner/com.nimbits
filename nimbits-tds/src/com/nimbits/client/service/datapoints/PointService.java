@@ -20,7 +20,7 @@ import com.nimbits.client.exception.*;
 import com.nimbits.client.exceptions.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.category.*;
-import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.subscription.*;
 import com.nimbits.client.model.user.*;
@@ -30,6 +30,8 @@ import java.util.*;
 
 @RemoteServiceRelativePath(Const.PARAM_POINT)
 public interface PointService extends RemoteService {
+
+    Point addPoint(final User user, final Entity entity);
 
     boolean checkPointProtection(final User loggedInUser, final User pointOwner, final Point p);
 
@@ -57,7 +59,7 @@ public interface PointService extends RemoteService {
 
     List<Point> getPoints(final User u) throws NimbitsException;
 
-    Point getPointByUUID(final String uuid) throws NimbitsException;
+    Point getPointByUUID(final String uuid);
 
     AlertType getPointAlertState(final Point point, final Value value);
 
@@ -88,13 +90,15 @@ public interface PointService extends RemoteService {
 
     List<Point> getAllPoints();
 
-    Subscription subscribe(Point p, Subscription subscription) throws NimbitsException;
+    Entity subscribe(Entity entity, Subscription subscription) throws NimbitsException;
 
-    Subscription readSubscription(final Point point) throws NimbitsException;
+    Subscription readSubscription(final Entity point) throws NimbitsException;
 
     void deleteSubscription(final Point point) throws NimbitsException;
 
     List<Subscription> getSubscriptionsToPoint(Point point);
 
     void updateSubscriptionLastSent(Subscription subscription);
+
+
 }

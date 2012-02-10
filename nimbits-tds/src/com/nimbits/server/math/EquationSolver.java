@@ -13,13 +13,14 @@
 
 package com.nimbits.server.math;
 
-import com.google.gwt.core.client.GWT;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.server.point.PointServiceFactory;
-import com.nimbits.server.recordedvalue.RecordedValueServiceFactory;
+import com.google.gwt.core.client.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.server.point.*;
+import com.nimbits.server.recordedvalue.*;
+import com.nimbits.shared.*;
 
 
 /**
@@ -35,8 +36,8 @@ public class EquationSolver {
         final MathEvaluator m = new MathEvaluator(point.getCalculation().getFormula());
 
 
-        if (!(point.getCalculation().getX() == 0) && point.getCalculation().getFormula().contains("x")) {
-            Point p = PointServiceFactory.getInstance().getPointByID(u, point.getCalculation().getX());
+        if (!(Utils.isEmptyString(point.getCalculation().getX())) && point.getCalculation().getFormula().contains("x")) {
+            Point p = PointServiceFactory.getInstance().getPointByUUID(point.getCalculation().getX());
             if (p != null) {
                 Value val = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
                 double d = val == null ? 0.0 : val.getNumberValue();
@@ -44,9 +45,9 @@ public class EquationSolver {
                 m.addVariable("x", d);
             }
         }
-        if (!(point.getCalculation().getY() == 0) && point.getCalculation().getFormula().contains("y")) {
+        if (!(Utils.isEmptyString(point.getCalculation().getY())) && point.getCalculation().getFormula().contains("y")) {
 
-            Point p = PointServiceFactory.getInstance().getPointByID(u, point.getCalculation().getY());
+            Point p = PointServiceFactory.getInstance().getPointByUUID(point.getCalculation().getY());
             if (p != null) {
                 Value val = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
                 double d = val == null ? 0.0 : val.getNumberValue();
@@ -54,8 +55,8 @@ public class EquationSolver {
             }
 
         }
-        if (!(point.getCalculation().getZ() == 0) && point.getCalculation().getFormula().contains("z")) {
-            Point p = PointServiceFactory.getInstance().getPointByID(u, point.getCalculation().getZ());
+        if (!(Utils.isEmptyString(point.getCalculation().getZ())) && point.getCalculation().getFormula().contains("z")) {
+            Point p = PointServiceFactory.getInstance().getPointByUUID(point.getCalculation().getZ());
             if (p != null) {
                 Value val = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
                 double d = val == null ? 0.0 : val.getNumberValue();

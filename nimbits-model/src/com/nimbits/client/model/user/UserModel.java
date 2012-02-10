@@ -38,6 +38,8 @@ public class UserModel implements Serializable, User {
 
     private List<Long> connections;
 
+    private List<String> userConnections;
+
     private String emailAddress;
 
     private String facebookToken;
@@ -88,8 +90,12 @@ public class UserModel implements Serializable, User {
             l.add(x);
         }
 
-
+        final List<String> c = new ArrayList<String>();
+        for (final String x : u.getUserConnections()) {
+            c.add(x);
+        }
         this.connections = l;
+        this.userConnections = c;
         this.restricted = u.isRestricted();
         this.emailAddress = u.getEmail().getValue();
         this.facebookToken = u.getFacebookToken();
@@ -257,17 +263,25 @@ public class UserModel implements Serializable, User {
     }
 
     @Override
-    public void addConnection(final long id) {
-        if (connections == null) {
-            connections = new ArrayList<Long>();
+    public void addConnection(final String id) {
+        if (userConnections == null) {
+            userConnections = new ArrayList<String>();
         }
-        if (!connections.contains(id)) {
-            connections.add(id);
+        if (!userConnections.contains(id)) {
+            userConnections.add(id);
         }
     }
 
     @Override
-    public void removeConnection(final long id) {
+    public void removeConnection(final String id) {
         connections.remove(id);
+    }
+
+    @Override
+    public List<String> getUserConnections() {
+        if (userConnections == null) {
+            userConnections = new LinkedList<String>();
+        }
+        return userConnections;
     }
 }

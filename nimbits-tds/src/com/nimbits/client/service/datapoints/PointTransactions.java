@@ -16,7 +16,7 @@ package com.nimbits.client.service.datapoints;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.Point;
 
 import javax.servlet.http.HttpServletRequest;
@@ -56,7 +56,9 @@ public interface PointTransactions {
 
     List<Point> getIdlePoints();
 
-    Point getPointByUUID(final String uuid) throws NimbitsException;
+    Point getPointByUUID(final String uuid);
 
     List<Point> getAllPoints();
+
+    Point addPoint(Entity entity);
 }

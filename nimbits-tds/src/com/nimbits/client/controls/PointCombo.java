@@ -17,19 +17,18 @@ import com.extjs.gxt.ui.client.store.*;
 import com.extjs.gxt.ui.client.widget.form.*;
 import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.enums.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.service.datapoints.*;
 
 import java.util.*;
 
-public class PointCombo extends ComboBox<GxtPointModel> {
+public class PointCombo extends ComboBox<GxtModel> {
 
     public String getText() {
-        List<GxtPointModel> s = getSelection();
+        List<GxtModel> s = getSelection();
         if (s.size() > 0) {
-            GxtPointModel si = s.get(0);
+            GxtModel si = s.get(0);
             return si.getName().getValue();
         } else {
             return null;
@@ -38,15 +37,15 @@ public class PointCombo extends ComboBox<GxtPointModel> {
 
     }
 
-    public GxtPointModel getPoint() {
-        List<GxtPointModel> s = getSelection();
+    public GxtModel getPoint() {
+        List<GxtModel> s = getSelection();
         return s.get(0);
 
     }
 
     public PointCombo() {
         setEmptyText(Const.MESSAGE_LOADING_POINTS);
-        final ListStore<GxtPointModel> cbStore = new ListStore<GxtPointModel>();
+        final ListStore<GxtModel> cbStore = new ListStore<GxtModel>();
         setStore(cbStore);
         setDisplayField(Const.PARAM_NAME);
         setValueField(Const.PARAM_ID);
@@ -68,7 +67,7 @@ public class PointCombo extends ComboBox<GxtPointModel> {
                 setEmptyText(Const.MESSAGE_SELECT_POINT);
 
                 for (Point p : result) {
-                    GxtPointModel model = new GxtPointModel(p, ClientType.other);
+                    GxtModel model = new GxtModel(p);
                     cbStore.add(model);
 
                 }

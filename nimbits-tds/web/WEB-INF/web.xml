@@ -90,6 +90,16 @@
 
 
     <servlet>
+        <servlet-name>entityService</servlet-name>
+        <servlet-class>com.nimbits.server.entity.EntityServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>entityService</servlet-name>
+        <url-pattern>/nimbits/entity</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
         <servlet-name>channelService</servlet-name>
         <servlet-class>com.nimbits.server.channel.ChannelApiServiceImpl</servlet-class>
     </servlet>

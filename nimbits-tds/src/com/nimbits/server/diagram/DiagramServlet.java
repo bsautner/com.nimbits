@@ -64,9 +64,8 @@ public class DiagramServlet extends HttpServlet {
 
                 DiagramTransactionFactory.getInstance(u).addDiagram(blobKey, diagramName);
             } else if (uploadType.equals(UploadType.updatedFile.name()) && diagramId != null) {
-                long id = Long.valueOf(diagramId);
 
-                    DiagramTransactionFactory.getInstance(u).updateDiagram(blobKey, diagramName, id);
+                     DiagramTransactionFactory.getInstance(u).updateDiagram(blobKey, diagramName, diagramId);
 
             }
         } catch (NimbitsException e) {

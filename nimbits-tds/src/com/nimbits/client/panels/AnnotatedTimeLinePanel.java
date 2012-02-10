@@ -13,47 +13,39 @@
 
 package com.nimbits.client.panels;
 
-import com.extjs.gxt.ui.client.dnd.DropTarget;
+import com.extjs.gxt.ui.client.dnd.*;
 import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.store.TreeStoreModel;
+import com.extjs.gxt.ui.client.store.*;
 import com.extjs.gxt.ui.client.widget.*;
+import com.extjs.gxt.ui.client.widget.Label;
+import com.extjs.gxt.ui.client.widget.Window;
 import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.button.ToolButton;
-import com.extjs.gxt.ui.client.widget.form.NumberField;
-import com.extjs.gxt.ui.client.widget.form.TextField;
-import com.extjs.gxt.ui.client.widget.toolbar.SeparatorToolItem;
-import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.visualization.client.AbstractDataTable.ColumnType;
-import com.google.gwt.visualization.client.DataTable;
-import com.google.gwt.visualization.client.VisualizationUtils;
-import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine;
-import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine.Options;
-import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine.WindowMode;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.icons.Icons;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.GxtPointModel;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.timespan.Timespan;
-import com.nimbits.client.model.timespan.TimespanModelFactory;
-import com.nimbits.client.model.timespan.TimespanServiceClientImpl;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.service.datapoints.PointService;
-import com.nimbits.client.service.datapoints.PointServiceAsync;
-import com.nimbits.client.service.recordedvalues.RecordedValueService;
-import com.nimbits.client.service.recordedvalues.RecordedValueServiceAsync;
-import com.nimbits.shared.Utils;
+import com.extjs.gxt.ui.client.widget.button.*;
+import com.extjs.gxt.ui.client.widget.form.*;
+import com.extjs.gxt.ui.client.widget.toolbar.*;
+import com.google.gwt.core.client.*;
+import com.google.gwt.i18n.client.*;
+import com.google.gwt.user.client.*;
+import static com.google.gwt.user.client.Window.*;
+import com.google.gwt.user.client.rpc.*;
+import com.google.gwt.user.client.ui.*;
+import com.google.gwt.visualization.client.AbstractDataTable.*;
+import com.google.gwt.visualization.client.*;
+import com.google.gwt.visualization.client.visualizations.*;
+import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.icons.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.timespan.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.client.service.datapoints.*;
+import com.nimbits.client.service.recordedvalues.*;
+import com.nimbits.shared.*;
 
 import java.util.*;
-
-import static com.google.gwt.user.client.Window.alert;
 
 public class AnnotatedTimeLinePanel extends NavigationEventProvider {
     private final DateTimeFormat fmt = DateTimeFormat.getFormat(Const.FORMAT_DATE_TIME);
@@ -147,11 +139,11 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
     //end data
 
 
-    public boolean containsPoint(final Point point) {
+    public boolean containsPoint(final Entity point) {
         return points.containsKey(point.getName());
     }
 
-    public void addValue(final Point point, final Value value) {
+    public void addValue(final Entity entity, final Value value) {
         if (timespan != null) {
             Date end = (timespan.getEnd().getTime() > value.getTimestamp().getTime()) ? value.getTimestamp() : timespan.getEnd();
             Date start = (timespan.getStart().getTime() < value.getTimestamp().getTime()) ? value.getTimestamp() : timespan.getStart();
@@ -170,7 +162,19 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
         }
         startDateSelector.setValue(fmt.format(this.timespan.getStart()));
         endDateSelector.setValue(fmt.format(this.timespan.getEnd()));
-        addPointDataToTable(point, Arrays.asList(value));
+        PointServiceAsync service = GWT.create(PointService.class);
+        service.getPointByUUID(entity.getUUID(), new AsyncCallback<Point>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                //auto generated
+            }
+
+            @Override
+            public void onSuccess(Point result) {
+                addPointDataToTable(result, Arrays.asList(value));
+            }
+        });
+
         drawChart();
     }
 
@@ -523,10 +527,10 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
                 List<TreeStoreModel> t = event.getData();
 
                 for (final TreeStoreModel a : t) {
-                    final GxtPointModel p = (GxtPointModel) a.getModel();
+                    final GxtModel p = (GxtModel) a.getModel();
 
                     final PointServiceAsync pointService = GWT.create(PointService.class);
-                    pointService.getPointByID(p.getId(), new AsyncCallback<Point>() {
+                    pointService.getPointByUUID(p.getId(), new AsyncCallback<Point>() {
                         @Override
                         public void onFailure(final Throwable throwable) {
 
@@ -554,10 +558,10 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
         return options;
     }
 
-    public void removePoint(Point p) {
-        removePointDataFromTable(p.getName());
-        if (points.containsKey(p.getName())) {
-            points.remove(p.getName());
+    public void removePoint(Entity entity) {
+        removePointDataFromTable(entity.getName());
+        if (points.containsKey(entity.getName())) {
+            points.remove(entity.getName());
         }
         if (points.size() == 0) {
             removePointDataFromTable(CommonFactoryLocator.getInstance().createName(Const.DEFAULT_EMPTY_COL));

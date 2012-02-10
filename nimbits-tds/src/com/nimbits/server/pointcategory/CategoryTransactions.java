@@ -27,6 +27,7 @@ public interface CategoryTransactions {
 
     Category createHiddenCategory();
 
+    @Deprecated
     List<Category> getCategories(final boolean includePoints, final boolean includeDiagrams, final boolean includeSubscriptions);
 
     public Category getCategory(final EntityName categoryName);

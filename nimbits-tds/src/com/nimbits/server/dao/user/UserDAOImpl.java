@@ -17,8 +17,10 @@ import com.nimbits.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.connection.*;
 import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.server.connections.*;
+import com.nimbits.server.entity.*;
 import com.nimbits.server.orm.*;
 import com.nimbits.server.pointcategory.*;
 import com.nimbits.server.user.*;
@@ -91,6 +93,8 @@ public class UserDAOImpl implements UserTransactions {
             pm.makePersistent(u);
             CategoryServiceFactory.getInstance().createHiddenCategory(u);
             retObj = UserModelFactory.createUserModel(u);
+            Entity entity = EntityModelFactory.createEntity(retObj);
+            EntityTransactionFactory.getInstance(retObj).addUpdateEntity(entity);
         } finally {
             pm.close();
         }
@@ -309,7 +313,7 @@ public class UserDAOImpl implements UserTransactions {
                 if (r != null) {
                     Transaction txr = pm.currentTransaction();
                     txr.begin();
-                    r.addConnection(acceptor.getId());
+                    r.addConnection(acceptor.getUuid());
                     txr.commit();
                     affectedUsers.add(UserModelFactory.createUserModel(r));
                 }
@@ -318,7 +322,7 @@ public class UserDAOImpl implements UserTransactions {
                 if (a != null) {
                     Transaction txr = pm.currentTransaction();
                     txr.begin();
-                    a.addConnection(requestor.getId());
+                    a.addConnection(requestor.getUuid());
                     txr.commit();
                     affectedUsers.add(UserModelFactory.createUserModel(a));
                 }
@@ -329,44 +333,7 @@ public class UserDAOImpl implements UserTransactions {
 
     }
 
-    @Override
-    @SuppressWarnings(Const.WARNING_UNCHECKED)
-    public List<User> getConnections(final EmailAddress internetAddress) {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final LinkedList<User> users = new LinkedList<User>();
-        final Query q = pm.newQuery(NimbitsUser.class, "email == e");
-        final Map<String, Object> args = new HashMap<String, Object>();
 
-        try {
-            args.put("e", internetAddress.getValue());
-            q.declareParameters("String e");
-            List<NimbitsUser> data = (List<NimbitsUser>) q.executeWithMap(args);
-            if (data.size() > 0) {
-
-                NimbitsUser n = data.get(0);
-                NimbitsUser a;
-                if (n.getConnections() != null && n.getConnections().size() > 0) {
-                    for (Long id : n.getConnections()) {
-                        try {
-                            a = pm.getObjectById(NimbitsUser.class, id);
-                        } catch (Exception ex) {
-                            a = null;
-                        }
-
-                        if (a != null) {
-                            users.add(UserModelFactory.createUserModel(a));
-
-                        }
-                    }
-                }
-            }
-        } finally {
-            pm.close();
-        }
-
-
-        return users;
-    }
 
 
     public Connection makeConnectionRequest(final User u, final EmailAddress emailAddress) {

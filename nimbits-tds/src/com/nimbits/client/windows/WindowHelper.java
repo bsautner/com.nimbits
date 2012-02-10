@@ -15,6 +15,7 @@ package com.nimbits.client.windows;
 
 import com.google.gwt.user.client.*;
 import com.nimbits.client.enums.*;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.subscription.*;
 import com.nimbits.client.panels.*;
 
@@ -28,8 +29,8 @@ import java.util.*;
  */
 public class WindowHelper {
 
-    public static void showSubscriptionPanel(final String uuid, Map<String, String> settings) {
-        SubscribePanel dp = new SubscribePanel(uuid, settings);
+    public static void showSubscriptionPanel(final Entity entity, Map<String, String> settings) {
+        SubscribePanel dp = new SubscribePanel(entity, settings);
 
         final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
         w.setWidth(500);
@@ -38,7 +39,7 @@ public class WindowHelper {
         w.add(dp);
         dp.addSubscriptionAddedListener(new NavigationEventProvider.SubscriptionAddedListener() {
             @Override
-            public void onSubscriptionAdded(Subscription model) {
+            public void onSubscriptionAdded(Entity model) {
                 w.hide();
                 Cookies.removeCookie(Action.subscribe.name());
 

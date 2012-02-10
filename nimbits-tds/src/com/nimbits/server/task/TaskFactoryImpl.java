@@ -147,6 +147,17 @@ public class TaskFactoryImpl implements TaskFactory {
 
     }
 
+//    @Override
+//    public void startEntityMaintTask(final User user, ) {
+//        final String json = gson.toJson(user);
+//
+//        final Queue queue = QueueFactory.getQueue(Const.TASK_CATEGORY_MAINT);
+//
+//        queue.add(TaskOptions.Builder.withUrl(Const.PATH_CATEGORY_MAINT_TASK)
+//                .param(Const.PARAM_USER, json));
+//
+//    }
+
     @Override
     public void startUpgradeTask() {
 

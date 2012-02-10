@@ -24,9 +24,9 @@ import com.nimbits.client.model.email.EmailAddress;
  */
 public class UserFactory {
 
-    public static NimbitsUser createNimbitsUser(EmailAddress emailAddress, String secretKey) {
-        return new NimbitsUser(emailAddress, secretKey);
-    }
+//    public static NimbitsUser createNimbitsUser(EmailAddress emailAddress, String secretKey) {
+//        return new NimbitsUser(emailAddress, secretKey);
+//    }
 
     public static NimbitsUser createNimbitsUser(String emailAddress, String secretKey) {
         EmailAddress emailAddress1 = CommonFactoryLocator.getInstance().createEmailAddress(emailAddress);

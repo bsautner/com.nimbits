@@ -89,16 +89,17 @@ public class UpgradeTask  extends HttpServlet
             if (p.getFormula() != null) {
 
                 String formula = p.getFormula();
-                long x = 0;
-                long y = 0;
-                long z = 0;
-                long target = 0;
+                String x = "";
+                String y = "";
+                String z =  "";
+                String target =  "";
                 boolean enabled = true;
 
                 if (p.getX() > 0) {
                     Point px = PointTransactionsFactory.getDaoInstance(null).getPointByID(p.getX());
                     if (px != null) {
-                        x = p.getX();
+                        Point cp = PointServiceFactory.getInstance().getPointByID(p.getX());
+                        x = cp.getUUID();
                     } else {
                         enabled = false;
                     }
@@ -107,7 +108,8 @@ public class UpgradeTask  extends HttpServlet
                 if (p.getY() > 0) {
                     Point py = PointTransactionsFactory.getDaoInstance(null).getPointByID(p.getY());
                     if (py != null) {
-                        y = p.getY();
+                        Point cp = PointServiceFactory.getInstance().getPointByID(p.getY());
+                        y = cp.getUUID();
                     } else {
                         enabled = false;
                     }
@@ -115,7 +117,8 @@ public class UpgradeTask  extends HttpServlet
                 if (p.getZ() > 0) {
                     Point pz = PointTransactionsFactory.getDaoInstance(null).getPointByID(p.getZ());
                     if (pz != null) {
-                        z = p.getZ();
+                        Point cp = PointServiceFactory.getInstance().getPointByID(p.getZ());
+                        z = cp.getUUID();
                     } else {
                         enabled = false;
                     }
@@ -123,7 +126,9 @@ public class UpgradeTask  extends HttpServlet
                 if (p.getTarget() > 0) {
                     Point pt = PointTransactionsFactory.getDaoInstance(null).getPointByID(p.getTarget());
                     if (pt != null) {
-                        target = p.getTarget();
+                        Point cp = PointServiceFactory.getInstance().getPointByID(p.getTarget());
+
+                        target = cp.getUUID();
                     } else {
                         enabled = false;
                     }

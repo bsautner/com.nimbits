@@ -13,18 +13,16 @@
 
 package com.nimbits.client.service.recordedvalues;
 
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.exceptions.CalculationFailedException;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.timespan.Timespan;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.exceptions.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.timespan.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RemoteServiceRelativePath("data")
 public interface RecordedValueService extends RemoteService {
@@ -35,7 +33,7 @@ public interface RecordedValueService extends RemoteService {
 
     Value getCurrentValue(final long pointOwnerId, final EntityName pointName) throws NimbitsException;
 
-    Value getCurrentValue(final Point p) throws NimbitsException;
+    Value getCurrentValue(final Point p);
 
     double solveEquation(final Point point) throws CalculationFailedException, NimbitsException;
 
@@ -47,7 +45,7 @@ public interface RecordedValueService extends RemoteService {
     //rpc
     Value recordValue(final User u, final EntityName pointName, final Value value) throws NimbitsException;
 
-    Value recordValue(final Point point, final Value value) throws NimbitsException;
+    Value recordValue(final Entity entity, final Value value) throws NimbitsException;
 
 
     Value getPrevValue(final Point p, final Date date);
@@ -65,4 +63,6 @@ public interface RecordedValueService extends RemoteService {
 
     List<Value> getDataSegment(final Point point,
                                final Timespan timespan);
+
+
 }

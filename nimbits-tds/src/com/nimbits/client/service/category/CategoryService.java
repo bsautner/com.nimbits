@@ -51,15 +51,10 @@ public interface CategoryService extends RemoteService {
 
     void deleteCategory(final User u, final Category c) throws NimbitsException;
 
-    List<Category> getConnectionCategories(final boolean includePoints,
-                                           final boolean includeDiagrams,
-                                           final boolean includeSubscriptions,
-                                           final EmailAddress email
-                                           ) throws NimbitsException;
 
     Category getCategory(final User user, final EntityName EntityName);
 
-    Category createHiddenCategory(User u);
+//    Category createHiddenCategory(User u);
 
     boolean categoryExists(User u, EntityName EntityName) throws NimbitsException;
 
@@ -74,4 +69,5 @@ public interface CategoryService extends RemoteService {
     Category getCategoryByUUID(String uuidParam);
 
 
+    Category createHiddenCategory(User u);
 }

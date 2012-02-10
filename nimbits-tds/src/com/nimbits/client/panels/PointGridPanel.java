@@ -13,51 +13,40 @@
 
 package com.nimbits.client.panels;
 
-import com.extjs.gxt.ui.client.Style;
-import com.extjs.gxt.ui.client.data.ModelData;
+import com.extjs.gxt.ui.client.*;
+import com.extjs.gxt.ui.client.data.*;
 import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.store.ListStore;
-import com.extjs.gxt.ui.client.widget.ContentPanel;
-import com.extjs.gxt.ui.client.widget.Info;
+import com.extjs.gxt.ui.client.store.*;
+import com.extjs.gxt.ui.client.widget.*;
 import com.extjs.gxt.ui.client.widget.Label;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.CheckBox;
-import com.extjs.gxt.ui.client.widget.grid.CheckBoxSelectionModel;
-import com.extjs.gxt.ui.client.widget.grid.ColumnConfig;
-import com.extjs.gxt.ui.client.widget.grid.ColumnModel;
-import com.extjs.gxt.ui.client.widget.grid.EditorGrid;
-import com.extjs.gxt.ui.client.widget.layout.FillLayout;
-import com.extjs.gxt.ui.client.widget.layout.FitLayout;
-import com.extjs.gxt.ui.client.widget.toolbar.SeparatorToolItem;
-import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Element;
+import com.extjs.gxt.ui.client.widget.grid.*;
+import com.extjs.gxt.ui.client.widget.layout.*;
+import com.extjs.gxt.ui.client.widget.toolbar.*;
+import com.google.gwt.core.client.*;
+import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.nimbits.client.enums.ClientType;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.icons.Icons;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.GxtPointModel;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModelFactory;
-import com.nimbits.client.service.recordedvalues.RecordedValueService;
-import com.nimbits.client.service.recordedvalues.RecordedValueServiceAsync;
+import com.google.gwt.user.client.ui.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.icons.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.client.service.recordedvalues.*;
 
 import java.util.*;
 
 class PointGridPanel extends NavigationEventProvider {
 
 
-    private final ListStore<GxtPointModel> store = new ListStore<GxtPointModel>();
-    private final EditorGrid<GxtPointModel> grid;
-    private final Map<EntityName, Point> points = new HashMap<EntityName, Point>();
+    private final ListStore<GxtModel> store = new ListStore<GxtModel>();
+    private final EditorGrid<GxtModel> grid;
+    private final Map<String, Entity> points = new HashMap<String, Entity>();
     private final CheckBox saveToNowCheckBox = new CheckBox();
     private final CheckBox autoSaveCheckBox = new CheckBox();
-    private final CheckBoxSelectionModel<GxtPointModel> sm = new CheckBoxSelectionModel<GxtPointModel>();
+    private final CheckBoxSelectionModel<GxtModel> sm = new CheckBoxSelectionModel<GxtModel>();
     private Timer updater;
     private final static int valueColumnIndex = 3;
     Label notify = new Label("You have unsaved entries! click save");
@@ -75,14 +64,14 @@ class PointGridPanel extends NavigationEventProvider {
             @Override
             public void handleEvent(final GridEvent be) {
                 //updater.cancel();
-                final GxtPointModel model = (GxtPointModel) be.getModel();
+                final GxtModel model = (GxtModel) be.getModel();
                 if (!model.isReadOnly()) {
                     model.setDirty(true);
 
 
                     if (be.getColIndex() == valueColumnIndex && autoSaveCheckBox.getValue()) { //only save when the value is updated
                         notify.hide();
-                        final Point point = points.get(model.getName());
+                        final Entity point = points.get(model.getUUID());
                         final Date timestamp = saveToNowCheckBox.getValue() ? new Date() : (Date) model.get(Const.PARAM_TIMESTAMP);
                         final Double v = model.get(Const.PARAM_VALUE);
                         final String note = model.get(Const.PARAM_NOTE);
@@ -92,21 +81,22 @@ class PointGridPanel extends NavigationEventProvider {
                         GWT.log(value.getNote());
                         GWT.log(String.valueOf(value.getNumberValue()));
                         RecordedValueServiceAsync service = GWT.create(RecordedValueService.class);
-                        service.recordValue(point, value, new AsyncCallback<Value>() {
-                            @Override
-                            public void onFailure(final Throwable throwable) {
-                                be.getRecord().reject(false);
-                                updater.cancel();
-                            }
-
-                            @Override
-                            public void onSuccess(final Value value) {
-                                be.getRecord().commit(false);
-                                model.setDirty(false);
-                                updateModel(value, model);
-
-                            }
-                        });
+                        //TODO
+//                        service.recordValue(point, value, new AsyncCallback<Value>() {
+//                            @Override
+//                            public void onFailure(final Throwable throwable) {
+//                                be.getRecord().reject(false);
+//                                updater.cancel();
+//                            }
+//
+//                            @Override
+//                            public void onSuccess(final Value value) {
+//                                be.getRecord().commit(false);
+//                                model.setDirty(false);
+//                                updateModel(value, model);
+//
+//                            }
+//                        });
                     } else {
                         notify.show();
                     }
@@ -135,7 +125,7 @@ class PointGridPanel extends NavigationEventProvider {
     }
 
     public PointGridPanel() {
-        grid = new EditorGrid<GxtPointModel>(store, new ColumnModel(gridConfig()));
+        grid = new EditorGrid<GxtModel>(store, new ColumnModel(gridConfig()));
 
         grid.setHeight("100%");
         grid.setBorders(true);
@@ -145,12 +135,12 @@ class PointGridPanel extends NavigationEventProvider {
         notify.hide();
     }
 
-    public List<Point> getSelectedPoints() {
-        final List<GxtPointModel> models = grid.getSelectionModel().getSelectedItems();
-        final List<Point> retObj = new ArrayList<Point>();
+    public List<Entity> getSelectedPoints() {
+        final List<GxtModel> models = grid.getSelectionModel().getSelectedItems();
+        final List<Entity> retObj = new ArrayList<Entity>();
 
-        for (final GxtPointModel model : models) {
-            retObj.add(points.get(model.getName()));
+        for (final GxtModel model : models) {
+            retObj.add(points.get(model.getId()));
         }
         return retObj;
 
@@ -197,12 +187,12 @@ class PointGridPanel extends NavigationEventProvider {
         super.onDetach();
     }
 
-    public void addPoint(final Point point)  {
-        if (!points.containsKey(point.getName())) {
-            points.put(point.getName(), point);
+    public void addPoint(final Entity point)  {
+        if (!points.containsKey(point.getUUID())) {
+            points.put(point.getUUID(), point);
 
 
-            store.add(new GxtPointModel(point, ClientType.other));
+            store.add(new GxtModel(point));
             store.commitChanges();
         }
         updateValues();
@@ -217,37 +207,37 @@ class PointGridPanel extends NavigationEventProvider {
         if (!grid.isEditing()) {
 
 
-            for (final GxtPointModel model : store.getModels()) {
+            for (final GxtModel model : store.getModels()) {
                 if (!model.isDirty()) {
-                    final Point point = points.get(model.getName());
-
-                    dataService.getCurrentValue(point,
-                            new AsyncCallback<Value>() {
-
-                                @Override
-                                public void onFailure(final Throwable caught) {
-
-                                    notify.setText("There was a problem communicating with the server, you may need to refresh your browser");
-                                    notify.show();
-                                    updater.cancel();
-                                }
-
-
-                                @Override
-                                public void onSuccess(final Value result) {
-
-
-                                    if (!(result == null)) {
-                                        Date current = model.get(Const.PARAM_TIMESTAMP) == null ? new Date(0) : (Date) model.get(Const.PARAM_TIMESTAMP);
-                                        //protects against possible race condition on updates
-                                        if (model.get(Const.PARAM_TIMESTAMP) == null || (result.getTimestamp().getTime() > current.getTime())) {
-                                            updateModel(result, model);
-                                        }
-                                    }
-
-                                }
-
-                            });
+                    final Entity point = points.get(model.getName());
+                      //TODO
+//                    dataService.getCurrentValue(point,
+//                            new AsyncCallback<Value>() {
+//
+//                                @Override
+//                                public void onFailure(final Throwable caught) {
+//
+//                                    notify.setText("There was a problem communicating with the server, you may need to refresh your browser");
+//                                    notify.show();
+//                                    updater.cancel();
+//                                }
+//
+//
+//                                @Override
+//                                public void onSuccess(final Value result) {
+//
+//
+//                                    if (!(result == null)) {
+//                                        Date current = model.get(Const.PARAM_TIMESTAMP) == null ? new Date(0) : (Date) model.get(Const.PARAM_TIMESTAMP);
+//                                        //protects against possible race condition on updates
+//                                        if (model.get(Const.PARAM_TIMESTAMP) == null || (result.getTimestamp().getTime() > current.getTime())) {
+//                                            updateModel(result, model);
+//                                        }
+//                                    }
+//
+//                                }
+//
+//                            });
 
                 }
 
@@ -301,12 +291,12 @@ class PointGridPanel extends NavigationEventProvider {
 
     }
 
-    public void removePoint(final Point p) {
+    public void removePoint(final Entity p) {
 
         for (final ModelData m : store.getModels()) {
 
-            final GxtPointModel model = (GxtPointModel) m;
-            points.remove(((GxtPointModel) m).getName());
+            final GxtModel model = (GxtModel) m;
+            points.remove(((GxtModel) m).getName());
             if (model.getName().getValue().equals(p.getName().getValue())) {
                 store.remove(model);
                 break;
@@ -318,12 +308,12 @@ class PointGridPanel extends NavigationEventProvider {
     }
 
 
-    public List<Point> saveSelectedPoints() throws NimbitsException {
-        final List<GxtPointModel> models = grid.getSelectionModel().getSelectedItems();
-        final List<Point> retObj = new ArrayList<Point>();
+    public List<Entity> saveSelectedPoints() throws NimbitsException {
+        final List<GxtModel> models = grid.getSelectionModel().getSelectedItems();
+        final List<Entity> retObj = new ArrayList<Entity>();
         RecordedValueServiceAsync service = GWT.create(RecordedValueService.class);
         notify.hide();
-        for (final GxtPointModel model : models) {
+        for (final GxtModel model : models) {
             if (model.isDirty()) {
                 Date date = model.get(Const.PARAM_TIMESTAMP) == null ? new Date() : (Date) model.get(Const.PARAM_TIMESTAMP);
                 final Date timestamp = saveToNowCheckBox.getValue() ? new Date() : date;
@@ -331,43 +321,43 @@ class PointGridPanel extends NavigationEventProvider {
                 final String note = model.get(Const.PARAM_NOTE);
                 final String data = model.get(Const.PARAM_DATA);
                 final Value value = ValueModelFactory.createValueModel(0.0, 0.0, v, timestamp, model.getId(), note, data);
-
-                service.recordValue(points.get(model.getName()), value, new AsyncCallback<Value>() {
-                    @Override
-                    public void onFailure(final Throwable throwable) {
-
-                        Info.display("Error Saving", throwable.getMessage());
-                    }
-
-                    @Override
-                    public void onSuccess(final Value value) {
-                        updateModel(value, model);
-
-                    }
-                });
+                 //TODO
+//                service.recordValue(points.get(model.getName()), value, new AsyncCallback<Value>() {
+//                    @Override
+//                    public void onFailure(final Throwable throwable) {
+//
+//                        Info.display("Error Saving", throwable.getMessage());
+//                    }
+//
+//                    @Override
+//                    public void onSuccess(final Value value) {
+//                        updateModel(value, model);
+//
+//                    }
+//                });
                 model.setDirty(false);
             }
-            retObj.add(points.get(model.getName()));
+            retObj.add(points.get(model.getUUID()));
         }
         return retObj;
 
     }
 
-    private void updateModel(Value value, GxtPointModel model) {
+    private void updateModel(Value value, GxtModel model) {
         model.set(Const.PARAM_VALUE, value.getNumberValue());
         model.set(Const.PARAM_DATA, value.getData());
         model.set(Const.PARAM_TIMESTAMP, value.getTimestamp());
         model.set(Const.PARAM_NOTE, value.getNote());
 
-        model.setAlertState(value.getAlertState());
+        model.setAlertType(value.getAlertState());
 
 //be.getRecord().commit(false);
         model.setDirty(false);
         store.update(model);
-        notifyValueEnteredListener(points.get(model.getName()), value);
+        notifyValueEnteredListener(points.get(model.getUUID()), value);
     }
 
-    public Map<EntityName, Point> getPoints() {
+    public Map<String, Entity> getPoints() {
         return points;
     }
 }

@@ -196,11 +196,6 @@ public class UserMemCacheImpl implements UserTransactions {
     }
 
     @Override
-    public List<User> getConnections(final EmailAddress email) {
-        return UserTransactionFactory.getDAOInstance().getConnections(email);
-    }
-
-    @Override
     public User updateTwitter(final EmailAddress email, final AccessToken token) throws NimbitsException {
         final User u = UserTransactionFactory.getDAOInstance().updateTwitter(email, token);
         addUserToCache(u);

@@ -81,13 +81,13 @@ public class CurrentValueService extends HttpServlet {
                         final Value vx = GsonFactory.getInstance().fromJson(json, ValueModel.class);
 
                         v = ValueModelFactory.createValueModel(vx.getLatitude(), vx.getLongitude(), vx.getNumberValue(), vx.getTimestamp(),
-                                point.getId(), vx.getNote(), vx.getData());
+                                point.getUUID(), vx.getNote(), vx.getData());
                     } else {
                         final double latitude = getDoubleFromParam(lat);
                         final double longitude = getDoubleFromParam(lng);
                         final double value = getDoubleFromParam(valueStr);
                         final Date timestamp = (timestampStr != null) ? (new Date(Long.parseLong(timestampStr))) : new Date();
-                        v = ValueModelFactory.createValueModel(latitude, longitude, value, timestamp, point.getId(), note, jsonData);
+                        v = ValueModelFactory.createValueModel(latitude, longitude, value, timestamp, point.getUUID(), note, jsonData);
                     }
 
                     Value result = RecordedValueServiceFactory.getInstance().recordValue(u, point, v, false);
@@ -202,7 +202,7 @@ public class CurrentValueService extends HttpServlet {
                     // request
                     final Value newValue = ValueModelFactory.createValueModel(
                             nv.getLatitude(), nv.getLongitude(), nv.getNumberValue(),
-                            nv.getTimestamp(), p.getId(), nv.getNote(), nv.getData());
+                            nv.getTimestamp(), p.getUUID(), nv.getNote(), nv.getData());
 
 
                     value = RecordedValueServiceFactory.getInstance().recordValue(u, p, newValue, false);

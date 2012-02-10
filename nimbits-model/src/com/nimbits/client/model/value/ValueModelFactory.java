@@ -38,11 +38,11 @@ public class ValueModelFactory {
                                               final double lng,
                                               final double d,
                                               final Date timestamp,
-                                              final long pointId,
+                                              final String pointUUID,
                                               final String note,
                                               final String data) {
 
-        return new ValueModel(lat, lng, d, timestamp, pointId, note, data);
+        return new ValueModel(lat, lng, d, timestamp, pointUUID, note, data);
 
     }
 
@@ -51,11 +51,11 @@ public class ValueModelFactory {
                                               final double lng,
                                               final double d,
                                               final Date timestamp,
-                                              final long pointId,
+                                              final String pointUUID,
                                               final String note,
                                               final String data) {
 
-        return new ValueModel(lat, lng, d, timestamp, pointId, note, data);
+        return new ValueModel(lat, lng, d, timestamp, pointUUID, note, data);
 
     }
 
@@ -63,28 +63,28 @@ public class ValueModelFactory {
                                               final double lng,
                                               final double d,
                                               final Date timestamp,
-                                              final long pointId,
+                                              final String pointUUID,
                                               final String note) {
 
-        return new ValueModel(lat, lng, d, timestamp, pointId, note, "");
+        return new ValueModel(lat, lng, d, timestamp, pointUUID, note, "");
 
     }
 
     public static ValueModel createValueModel(final double d) {
 
-        return new ValueModel(0.0, 0.0, d, new Date(), 0, "", "");
+        return new ValueModel(0.0, 0.0, d, new Date(), null, "", "");
 
     }
 
     public static ValueModel createValueModel(final double d, final String note) {
 
-        return new ValueModel(0.0, 0.0, d, new Date(), 0, note, "");
+        return new ValueModel(0.0, 0.0, d, new Date(), null, note, "");
 
     }
 
     public static ValueModel createValueModel(final double d, final Date timestamp) {
 
-        return new ValueModel(0.0, 0.0, d, timestamp, 0, "", "");
+        return new ValueModel(0.0, 0.0, d, timestamp, null, "", "");
 
     }
 
@@ -121,7 +121,7 @@ public class ValueModelFactory {
         }
 
 
-        return createValueModel(latitude, longitude, value, timestamp, 0, note, data);
+        return createValueModel(latitude, longitude, value, timestamp, null, note, data);
 
     }
 

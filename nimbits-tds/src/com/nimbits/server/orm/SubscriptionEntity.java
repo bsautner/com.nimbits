@@ -35,13 +35,10 @@ public class SubscriptionEntity implements Serializable, Subscription {
     private com.google.appengine.api.datastore.Key id;
 
     @Persistent
-    private String subscriberUUID;
+    private String UUID;
 
     @Persistent
-    private String subscribedPointUUID;
-
-    @Persistent
-    private Long categoryId;
+    private String subscribedEntityUUID;
 
     @Persistent
     private Integer dataUpdateAlertMethod = SubscriptionDeliveryMethod.none.getCode();
@@ -58,32 +55,18 @@ public class SubscriptionEntity implements Serializable, Subscription {
     @Persistent
     private Date lastSent;
 
-    public SubscriptionEntity(final String subscriberUUID) {
-        this.subscriberUUID = subscriberUUID;
-    }
 
     public SubscriptionEntity() {
     }
 
     public SubscriptionEntity(final Subscription subscription) {
-        this.subscriberUUID = subscription.getSubscriberUUID();
+
         this.dataUpdateAlertMethod = subscription.getDataUpdateAlertMethod().getCode();
         this.alertStateChangeMethod = subscription.getAlertStateChangeMethod().getCode();
         this.propertyChangeMethod = subscription.getPropertyChangeMethod().getCode();
-        this.subscribedPointUUID = subscription.getSubscribedPointUUID();
-        this.categoryId = subscription.getCategoryId();
+        this.UUID = subscription.getUUID();
         this.maxRepeat = subscription.getMaxRepeat();
         this.lastSent = subscription.getLastSent();
-    }
-
-    @Override
-    public String getSubscriberUUID() {
-        return subscriberUUID;
-    }
-
-    @Override
-    public void setSubscriberUUID(String subscriberUUID) {
-        this.subscriberUUID = subscriberUUID;
     }
 
     @Override
@@ -117,24 +100,13 @@ public class SubscriptionEntity implements Serializable, Subscription {
     }
 
     @Override
-    public String getSubscribedPointUUID() {
-      return this.subscribedPointUUID;
+    public String getUUID() {
+      return this.UUID;
     }
 
     @Override
-    public void setSubscribedPointUUID(String uuid) {
-      this.subscribedPointUUID = uuid;
-    }
-
-
-    @Override
-    public long getCategoryId() {
-      return this.categoryId;
-    }
-
-    @Override
-    public void setCategoryId(long id) {
-      this.categoryId = id;
+    public void setUUID(String uuid) {
+      this.UUID = uuid;
     }
 
     @Override
@@ -157,4 +129,11 @@ public class SubscriptionEntity implements Serializable, Subscription {
        this.lastSent = lastSent;
     }
 
+    public String getSubscribedEntityUUID() {
+        return subscribedEntityUUID;
+    }
+
+    public void setSubscribedEntityUUID(String subscribedEntityUUID) {
+        this.subscribedEntityUUID = subscribedEntityUUID;
+    }
 }

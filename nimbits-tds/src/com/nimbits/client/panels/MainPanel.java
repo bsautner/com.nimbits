@@ -19,104 +19,77 @@ import com.extjs.gxt.ui.client.widget.*;
 import com.extjs.gxt.ui.client.widget.layout.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.*;
-import com.nimbits.client.model.category.*;
-import com.nimbits.client.model.diagram.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.user.*;
 
 import java.util.*;
 
 public class MainPanel extends NavigationEventProvider {
 
     private final CenterPanel center = new CenterPanel();
-    private EmailAddress emailAddress;
+    private User user;
     private ContentPanel west;
     private NavigationPanel navigationPanel;
     private Map<String, String> settings;
+
     final NavigationPanel createNavigationPanel(ClientType clientType) {
-        final NavigationPanel navTree = new NavigationPanel(emailAddress, false, clientType, settings);
+        final NavigationPanel navTree = new NavigationPanel(clientType, settings);
 
 
-        navTree.addCategoryClickedListeners(new CategoryClickedListener() {
+        navTree.addEntityClickedListeners(new EntityClickedListener() {
 
             @Override
-            public void onCategoryClicked(final Category c, boolean readOnly)  {
+            public void onEntityClicked(final Entity c)  {
 
-                notifyCategoryClickedListener(c, readOnly);
+                notifyEntityClickedListener(c);
 
             }
 
         });
 
-        navTree.addPointClickedListeners(new PointClickedListener() {
+
+
+        navTree.addEntityDeletedListeners(new EntityDeletedListener() {
 
             @Override
-            public void onPointClicked(final Point p) {
-
-                notifyPointClickedListener(p);
+            public void onEntityDeleted(final Entity c)  {
+                notifyEntityDeletedListener(c);
+                //TODO center.removePoint(c);
             }
 
         });
 
-        navTree.addDiagramClickedListeners(new DiagramClickedListener() {
 
-            @Override
-            public void onDiagramClicked(final Diagram p) {
-
-                notifyDiagramClickedListener(p);
-            }
-
-        });
-
-        navTree.addPointDeletedListeners(new PointDeletedListener() {
-
-            @Override
-            public void onPointDeleted(final Point c)  {
-                notifyPointDeletedListener(c);
-                center.removePoint(c);
-            }
-
-        });
-
-        navTree.addDiagramDeletedListeners(new DiagramDeletedListener() {
-
-            @Override
-            public void onDiagramDeleted(final Diagram c, final boolean readOnly) {
-                notifyDiagramDeletedListener(c, readOnly);
-            }
-
-        });
         return navTree;
 
     }
 
 
-    public void addPoint(final Point point)  {
-        center.addPoint(point);
+    public void addPoint(final Entity entity)  {
+        center.addEntity(entity);
     }
-    public void addPointToTree(final Point point) {
-        navigationPanel.addNewlyCreatedPointToTree(point);
+    public void addPointToTree(final Entity entity) {
+        navigationPanel.addNewlyCreatedEntityToTree(entity);
     }
 
-    public MainPanel(final LoginInfo loginInfo,
+    public MainPanel(final LoginInfo l,
                      final boolean doAndroid,
-                     final boolean loadConnections,
                      final Map<String, String> settings)   {
 
         this.settings = settings;
-
+        this.user = l.getUser();
         if (doAndroid) {
-            loadAndroidLayout(loginInfo);
+            loadAndroidLayout();
         } else {
-            loadBorderLayout(loginInfo, loadConnections);
+            loadBorderLayout();
         }
 
 
     }
 
-    private void loadAndroidLayout(LoginInfo loginInfo)  {
+    private void loadAndroidLayout()  {
         final FillLayout layout = new FillLayout();
-        this.emailAddress = loginInfo.getEmailAddress();
+        //this.emailAddress = loginInfo.getEmailAddress();
         setLayout(layout);
 
 
@@ -134,6 +107,7 @@ public class MainPanel extends NavigationEventProvider {
 
 
     }
+
     public void loadTree() {
         west.removeAll();
         navigationPanel = createNavigationPanel(ClientType.other);
@@ -142,25 +116,15 @@ public class MainPanel extends NavigationEventProvider {
         west.add(navigationPanel);
     }
 
-    private void loadBorderLayout(final LoginInfo loginInfo,final boolean loadConnections)   {
+    private void loadBorderLayout()   {
         final BorderLayout layout = new BorderLayout();
-        this.emailAddress = loginInfo.getEmailAddress();
+      //  this.emailAddress = loginInfo.getEmailAddress();
         setLayout(layout);
-
 
         west = new ContentPanel();
         loadTree();
         west.setHeight("100%");
         west.setHeading("Navigator");
-
-        final ContentPanel east = new ContentPanel();
-
-        east.setHeading("Connections");
-        if (loadConnections) {
-            ConnectionPanel connections = createConnections(loginInfo.getEmailAddress());
-            east.add(connections);
-        }
-
 
         final BorderLayoutData westData = new BorderLayoutData(LayoutRegion.WEST, 250);
         westData.setSplit(true);
@@ -183,51 +147,13 @@ public class MainPanel extends NavigationEventProvider {
         west.setLayout(new FillLayout(Orientation.VERTICAL));
 
         add(west, westData);
-        if (loadConnections) {
-            add(east, eastData);
-        }
+
 
         center.setLayout(new FillLayout());
         add(center, centerData);
     }
 
-    private ConnectionPanel createConnections(final EmailAddress email)   {
-        final ConnectionPanel connections = new ConnectionPanel(email, settings);
-
-        connections.addCategoryClickedListeners(new CategoryClickedListener() {
-
-            @Override
-            public void onCategoryClicked(final Category c, boolean readOnly)  {
-
-                notifyCategoryClickedListener(c, readOnly);
-
-            }
-
-        });
-
-        connections.addPointClickedListeners(new PointClickedListener() {
-
-            @Override
-            public void onPointClicked(final Point p){
-
-                notifyPointClickedListener(p);
-            }
-
-        });
-        connections.addDiagramClickedListeners(new DiagramClickedListener() {
-
-            @Override
-            public void onDiagramClicked(final Diagram p) {
-
-                notifyDiagramClickedListener(p);
-            }
-
-        });
-
-        return connections;
-    }
-
-    public void addDiagram(final Diagram d) {
-        center.addDiagram(d);
-    }
+//    public void addDiagram(final Diagram d) {
+//        center.addDiagram(d);
+//    }
 }

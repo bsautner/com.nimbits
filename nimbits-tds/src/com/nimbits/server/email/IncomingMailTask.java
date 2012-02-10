@@ -120,7 +120,7 @@ public class IncomingMailTask extends HttpServlet {
             } else {
                 note = "";
             }
-            final Value value = ValueModelFactory.createValueModel(0.0, 0.0, v, new Date(timestamp), point.getId(), note);
+            final Value value = ValueModelFactory.createValueModel(0.0, 0.0, v, new Date(timestamp), point.getUUID(), note);
             RecordedValueServiceFactory.getInstance().recordValue(u, point, value, false);
         }
 

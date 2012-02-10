@@ -34,7 +34,7 @@ public interface Value extends Serializable {
 
     double getLongitude();
 
-    long getPoint();
+    String getPointUUID();
 
     @Deprecated
     double getValue();

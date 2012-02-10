@@ -45,8 +45,6 @@ public interface UserTransactions {
 
     List<User> updateConnectionRequest(final String uuid, final User requestor, final User acceptor, final boolean accepted) throws NimbitsException;
 
-    List<User> getConnections(final EmailAddress emailAddress);
-
     User updateTwitter(final EmailAddress emailAddress, final AccessToken token) throws NimbitsException;
 
     User updateLastLoggedIn(final User user, final Date LastLoggedIn) throws NimbitsException;

@@ -57,23 +57,23 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
         EmailAddress email;
         User user;
-
-        String emailParam = req.getParameter(Const.PARAM_EMAIL);
-        final String secret = req.getParameter(Const.PARAM_SECRET);
-        final HttpSession session = req.getSession();
+        String emailParam = null;
+        String secret = null;
+        HttpSession session = null;
         final com.google.appengine.api.users.UserService googleUserService = UserServiceFactory.getUserService();
+
+        if (req != null) {
+            emailParam = req.getParameter(Const.PARAM_EMAIL);
+            secret = req.getParameter(Const.PARAM_SECRET);
+            session = req.getSession();
+        }
+
 
         if (emailParam != null && emailParam.equals(Const.TEST_ACCOUNT)) {
             user = UserTransactionFactory.getDAOInstance().getNimbitsUser(CommonFactoryLocator.getInstance().createEmailAddress(emailParam));
 
         } else {
-             if (emailParam != null) {
-                 emailParam = emailParam.replace("%40", "@");
-             }
 
-            if (!Utils.isEmptyString(emailParam)) {
-
-            }
             email = (!Utils.isEmptyString(emailParam)) ?
                     CommonFactoryLocator.getInstance().createEmailAddress(emailParam) : null;
 
@@ -90,8 +90,6 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
 
                 user = UserTransactionFactory.getInstance().getNimbitsUser(email);
-
-
                 if (user != null) {
                     //log.info("Found existing user");
                     // log.info("user has null email: " + String.valueOf(user.getEmail() == null));
@@ -198,11 +196,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         return secret.toString();
     }
 
-    @Override
-    public List<User> getConnections(final EmailAddress email) {
 
-        return UserTransactionFactory.getInstance().getConnections(email);
-    }
 
     public void sendConnectionRequest(final EmailAddress email) throws NimbitsException {
         final User n = getAppUserUsingGoogleAuth();

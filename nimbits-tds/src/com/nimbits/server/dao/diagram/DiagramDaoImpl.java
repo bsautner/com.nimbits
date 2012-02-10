@@ -227,7 +227,7 @@ public class DiagramDaoImpl implements DiagramTransactions {
     }
 
     @Override
-    public Diagram updateDiagram(final BlobKey blobKey, final EntityName name, final long id) {
+    public Diagram updateDiagram(final BlobKey blobKey, final EntityName name, final String id) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         Transaction tx;
         Diagram retObj = null;

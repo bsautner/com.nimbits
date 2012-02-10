@@ -18,7 +18,7 @@
     <cron>
         <url>/cron/PointMaint</url>
         <description>Check points Delete Expired Data</description>
-        <schedule>every day 01:00</schedule>
+        <schedule>every day 02:00</schedule>
         <timezone>America/New_York</timezone>
     </cron>
     <cron>
@@ -31,7 +31,7 @@
     <cron>
         <url>/cron/SessionMaint</url>
         <description>Check Delete Expired Sessions</description>
-        <schedule>every 5 minutes</schedule>
+        <schedule>every 30 minutes</schedule>
         <timezone>America/New_York</timezone>
     </cron>
 
@@ -50,12 +50,5 @@
         <timezone>America/New_York</timezone>
     </cron>
 
-    <!--
-     <cron>
-         <url>/cron/DataScrubberCron</url>
-         <description>Pours over existing data checking for problems</description>
-         <schedule>every 5 minutes</schedule>
-         <timezone>America/New_York</timezone>
-     </cron>
-     -->
+
 </cronentries>

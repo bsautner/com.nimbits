@@ -13,7 +13,7 @@
 
 package com.nimbits.server.subscription;
 
-import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.subscription.Subscription;
 
@@ -28,8 +28,9 @@ import java.util.List;
 public interface SubscriptionTransactions {
 
 
-    Subscription subscribe(Subscription subscription);
-    Subscription readSubscription(final Point point);
+    Entity subscribe(Subscription subscription);
+
+    Subscription readSubscription(final Entity entity);
 
     void deleteSubscription(Point point);
 

@@ -18,7 +18,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.ExportType;
 import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.Point;
 
 import com.nimbits.client.model.subscription.Subscription;
@@ -35,6 +35,8 @@ public interface PointServiceAsync {
     void addPoint(final EntityName pointName, final Category category, final AsyncCallback<Point> async);
 
     void addPoint(final EntityName pointName, final AsyncCallback<Point> async);
+
+
 
     void getPointsByCategory(final Category category,
                              final AsyncCallback<List<Point>> asyncCallback);
@@ -95,13 +97,15 @@ public interface PointServiceAsync {
 
     void getAllPoints(final AsyncCallback<List<Point>> async);
 
-    void subscribe(Point p, Subscription subscription, AsyncCallback<Subscription> async);
+    void subscribe(Entity entity, Subscription subscription, AsyncCallback<Entity> async);
 
-    void readSubscription(final Point point, AsyncCallback<Subscription> async);
+    void readSubscription(final Entity point, AsyncCallback<Subscription> async);
 
     void deleteSubscription(final Point point, AsyncCallback<Void> async);
 
     void getSubscriptionsToPoint(Point point, AsyncCallback<List<Subscription>> async);
 
     void updateSubscriptionLastSent(Subscription subscription, AsyncCallback<Void> async);
+
+    void addPoint(final User user, final Entity entity, AsyncCallback<Point> async);
 }

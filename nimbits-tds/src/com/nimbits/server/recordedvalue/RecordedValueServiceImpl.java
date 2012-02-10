@@ -19,7 +19,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.exceptions.CalculationFailedException;
-import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.user.User;
@@ -38,6 +38,7 @@ import java.util.logging.Logger;
 
 public class RecordedValueServiceImpl extends RemoteServiceServlet implements
         RecordedValueService, RequestCallback {
+
 
     private static final Logger log = Logger.getLogger(RecordedValueServiceImpl.class.getName());
     private static final long serialVersionUID = 1L;
@@ -98,13 +99,13 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public Value recordValue(final Point point,
+    public Value recordValue(final Entity point,
                              final Value value) throws NimbitsException {
 
         final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
                 this.getThreadLocalRequest());
 
-        final Point px = PointServiceFactory.getInstance().getPointByID(u, point.getId());
+        final Point px = PointServiceFactory.getInstance().getPointByUUID(point.getUUID());
         return recordValue(u, px, value, false);
 
 
@@ -165,7 +166,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
     }
 
 
-    public Value getCurrentValue(final Point p) throws NimbitsException {
+    public Value getCurrentValue(final Point p) {
 
         Value retObj = null;
         if (p != null) {

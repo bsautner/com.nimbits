@@ -13,9 +13,9 @@ import java.util.*;
  */
 public interface Subscription extends Serializable {
 
-    String getSubscriberUUID();
+    String getUUID();
 
-    void setSubscriberUUID(String subscriberUUID);
+    void setUUID(String uuid);
 
     SubscriptionDeliveryMethod getDataUpdateAlertMethod();
 
@@ -29,14 +29,6 @@ public interface Subscription extends Serializable {
 
     void setPropertyChangeMethod(SubscriptionDeliveryMethod propertyChangeMethod);
 
-    String getSubscribedPointUUID();
-
-    void setSubscribedPointUUID(String uuid);
-
-    long getCategoryId();
-
-    void setCategoryId(long categoryId);
-
     double getMaxRepeat();
 
     void setMaxRepeat(double maxRepeat);
@@ -44,4 +36,8 @@ public interface Subscription extends Serializable {
     Date getLastSent();
 
     void setLastSent(Date lastSent);
+
+    String getSubscribedEntityUUID();
+
+    void setSubscribedEntityUUID(String uuid);
 }

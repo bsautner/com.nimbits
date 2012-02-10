@@ -19,7 +19,7 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.datapoints.PointTransactions;
@@ -56,7 +56,7 @@ public class PointMemCacheImpl implements PointTransactions {
 
     }
 
-    public void purgeMemCache(final Point p) throws NimbitsException {
+    public void purgeMemCache(final Point p)  {
         if (cache.contains(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + p.getId())) {
             cache.delete(Const.CONST_SERVER_VERSION +  Const.CACHE_KEY_POINT_PREFIX + p.getId());
         }
@@ -77,7 +77,7 @@ public class PointMemCacheImpl implements PointTransactions {
 
     }
 
-    private void updateMap(final Point p) throws NimbitsException {
+    private void updateMap(final Point p)  {
         if (p != null) {
             purgeMemCache(p);
             cache.put(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + p.getUUID(), p);
@@ -237,7 +237,7 @@ public class PointMemCacheImpl implements PointTransactions {
 
     //these should not use the cache, since we don't know the user
     @Override
-    public Point getPointByUUID(final String uuid) throws NimbitsException {
+    public Point getPointByUUID(final String uuid)  {
         return PointTransactionsFactory.getDaoInstance(u).getPointByUUID(uuid);
     }
 
@@ -253,6 +253,14 @@ public class PointMemCacheImpl implements PointTransactions {
         }
         return retObj;
 
+    }
+
+    @Override
+    public Point addPoint(Entity entity) {
+        final Point retObj = PointTransactionsFactory.getDaoInstance(u).addPoint(entity);
+        purgeMemCache(retObj);
+        updateMap(retObj);
+        return retObj;
     }
 
     @Override

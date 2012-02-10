@@ -21,7 +21,6 @@
     <inherits name='org.vectomatic.libgwtsvg'/>
     <inherits name="com.google.gwt.resources.Resources"/>
     <inherits name='com.google.gwt.user.User'/>
-    cc
     <inherits name='com.google.gwt.user.theme.standard.Standard'/>
     <inherits name='com.extjs.gxt.charts.Chart'/>
     <inherits name='com.google.gwt.visualization.Visualization'/>

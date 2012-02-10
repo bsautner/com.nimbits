@@ -108,7 +108,7 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
                                         final boolean includeSubscriptions) {
 
 
-        return CategoryTransactionFactory.getInstance(u).getCategories(includePoints, includeDiagrams, includeSubscriptions);
+        return CategoryTransactionFactory.getInstance(u).getCategories(includePoints, includeDiagrams, false);
     }
 
     public Category addCategory(final EntityName categoryName) throws NimbitsException {
@@ -178,44 +178,6 @@ public class CategoryServiceImpl extends RemoteServiceServlet implements Categor
 
     }
 
-    @Override
-    public List<Category> getConnectionCategories(final boolean includePoints,
-                                                  final boolean includeDiagrams,
-                                                  final boolean includeSubscriptions,
-                                                  final EmailAddress email) throws NimbitsException {
-
-        final User connectionUser = UserTransactionFactory.getInstance().getNimbitsUser(email);
-        final User loggedInUser = UserServiceFactory.getServerInstance().getHttpRequestUser(
-                this.getThreadLocalRequest());
-        if (connectionUser != null && loggedInUser != null) {
-
-            final List<Category> result = getCategories(connectionUser, includePoints, includeDiagrams,includeSubscriptions);
-            for (final Category c : result) {
-                for (final Point p : c.getPoints()) {
-                    final List<Point> approvedPoints = new ArrayList<Point>();
-                    final List<Diagram> approvedDiagrams = new ArrayList<Diagram>();
-
-                    if (PointServiceFactory.getInstance().checkPointProtection(loggedInUser, connectionUser, p)) {
-                        approvedPoints.add(p);
-                    }
-                    c.setPoints(approvedPoints);
-
-
-                    for (final Diagram d : c.getDiagrams()) {
-                        if (DiagramServiceFactory.getInstance().checkDiagramProtection(loggedInUser, connectionUser, d)) {
-                            approvedDiagrams.add(d);
-                        }
-                        c.setDiagrams(approvedDiagrams);
-
-                    }
-                }
-            }
-
-            return result;
-        } else {
-            return null;
-        }
-    }
 
     @Override
     public Category getCategory(final User user, final EntityName categoryName) {

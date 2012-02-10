@@ -27,6 +27,7 @@ import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.diagram.*;
 import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.service.*;
 import com.nimbits.client.service.diagram.*;
 import static com.nimbits.shared.Utils.*;
@@ -42,17 +43,18 @@ import java.util.*;
 public class DiagramUploadPanel extends LayoutContainer {
 
     private final List<DiagramAddedListener> DiagramAddedListeners = new ArrayList<DiagramAddedListener>();
-    private Diagram diagram;
+  //  private Diagram diagram;
     private EmailAddress email;
+   Entity entity;
 
     public DiagramUploadPanel(UploadType uploadType) {
         this.uploadType = uploadType;
     }
 
-    public DiagramUploadPanel(UploadType uploadType, Diagram diagram) {
+    public DiagramUploadPanel(UploadType uploadType, Entity entity) {
         this.uploadType = uploadType;
-        this.diagram = diagram;
-
+        //this.diagram = diagram;
+        this.entity = entity;
     }
 
 
@@ -155,12 +157,12 @@ public class DiagramUploadPanel extends LayoutContainer {
         uploadTypeHiddenField.setName(Const.PARAM_UPLOAD_TYPE_HIDDEN_FIELD);
         uploadTypeHiddenField.setValue(uploadType);
         panel.add(uploadTypeHiddenField);
-        if (uploadType == UploadType.updatedFile && diagram != null) {
-            final HiddenField<Long> diagramId = new HiddenField<Long>();
+        if (uploadType == UploadType.updatedFile && entity != null) {
+            final HiddenField<String> diagramId = new HiddenField<String>();
             diagramId.setName(Const.PARAM_DIAGRAM_ID);
-            diagramId.setValue(diagram.getId());
+            diagramId.setValue(entity.getUUID());
             panel.add(diagramId);
-            name.setValue(diagram.getName().getValue());
+            name.setValue(entity.getName().getValue());
             name.setReadOnly(true);
             name.setVisible(false);
         }

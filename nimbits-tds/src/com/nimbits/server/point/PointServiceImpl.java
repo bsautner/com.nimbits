@@ -23,7 +23,7 @@ import com.nimbits.client.exceptions.PointExistsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
 
@@ -200,6 +200,11 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
     }
 
+    @Override
+    public Point addPoint(User user, Entity entity) {
+        return PointTransactionsFactory.getInstance(user).addPoint(entity);
+    }
+
     public boolean checkPointProtection(final User loggedInUser, final User pointOwner, final Point p) {
         long loggedInUserId = 0;
 
@@ -351,7 +356,7 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public Point getPointByUUID(final String uuid) throws NimbitsException {
+    public Point getPointByUUID(final String uuid)  {
         return PointTransactionsFactory.getInstance(null).getPointByUUID(uuid);
     }
 
@@ -366,14 +371,12 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public Subscription subscribe(Point p, Subscription subscription) throws NimbitsException {
+    public Entity subscribe(Entity entity, Subscription subscription) throws NimbitsException {
         final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
                 this.getThreadLocalRequest());
-        subscription.setSubscriberUUID(u.getUuid());
-        subscription.setSubscribedPointUUID(p.getUUID());
+        subscription.setSubscribedEntityUUID(entity.getUUID());
         EntityName EntityName = CommonFactoryLocator.getInstance().createName(Const.CONST_HIDDEN_CATEGORY);
         Category c = CategoryServiceFactory.getInstance().getCategoryByName(u, EntityName, false, false);
-        subscription.setCategoryId(c.getId());
         subscription.setLastSent(new Date());
 
         return SubscriptionTransactionFactory.getInstance(u).subscribe(subscription);
@@ -382,10 +385,10 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public Subscription readSubscription(Point point) throws NimbitsException {
+    public Subscription readSubscription(Entity entity) throws NimbitsException {
         final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
                 this.getThreadLocalRequest());
-        return SubscriptionTransactionFactory.getInstance(u).readSubscription(point);
+        return SubscriptionTransactionFactory.getInstance(u).readSubscription(entity);
     }
 
     @Override

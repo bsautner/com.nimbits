@@ -49,7 +49,7 @@ public class PointModelFactory {
 
     }
 
-    public static Calculation createCalculation(boolean enabled, String f, long target, long x, long y, long z) {
+    public static Calculation createCalculation(boolean enabled, String f, String target, String x, String y, String z) {
         return new CalculationModel(enabled, f, target, x, y, z);
 
     }

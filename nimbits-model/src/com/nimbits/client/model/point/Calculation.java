@@ -15,11 +15,11 @@ public interface Calculation extends Serializable {
 
     Boolean getEnabled();
 
-    Long getTarget();
+    String getTarget();
 
-    Long getX();
+    String getX();
 
-    Long getY();
+    String getY();
 
-    Long getZ();
+    String getZ();
 }

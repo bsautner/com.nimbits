@@ -36,8 +36,10 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.icons.Icons;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.diagram.Diagram;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.service.diagram.DiagramService;
 import com.nimbits.client.service.diagram.DiagramServiceAsync;
+import com.nimbits.client.service.entity.*;
 
 
 /**
@@ -48,7 +50,8 @@ import com.nimbits.client.service.diagram.DiagramServiceAsync;
  */
 class DiagramPropertyPanel extends NavigationEventProvider {
 
-    private final Diagram diagram;
+    //private final Diagram diagram;
+    private final Entity entity;
 
     //    private final Icons ICONS = GWT.create(Icons.class);
     private final boolean readOnly;
@@ -72,9 +75,10 @@ class DiagramPropertyPanel extends NavigationEventProvider {
 //    }
 
 
-    DiagramPropertyPanel(final Diagram d, final boolean readOnly) {
-        this.diagram = d;
-        this.readOnly = readOnly;
+    DiagramPropertyPanel(final Entity entity) {
+        this.entity = entity;
+      //  this.diagram = d;
+        this.readOnly = entity.isReadOnly();
     }
 
     private VerticalPanel vp;
@@ -103,15 +107,15 @@ class DiagramPropertyPanel extends NavigationEventProvider {
 
 
         radioProtection0.setBoxLabel("Only Me");
-        radioProtection0.setValue((diagram.getProtectionLevel() == ProtectionLevel.onlyMe.getCode()));
+        radioProtection0.setValue((entity.getProtectionLevel().equals(ProtectionLevel.onlyMe)));
 
 
         radioProtection1.setBoxLabel("My Connections");
-        radioProtection1.setValue((diagram.getProtectionLevel() == ProtectionLevel.onlyConnection.getCode()));
+        radioProtection1.setValue((entity.getProtectionLevel().equals(ProtectionLevel.onlyConnection.getCode())));
 
 
         radioProtection2.setBoxLabel("Anyone");
-        radioProtection2.setValue((diagram.getProtectionLevel() == ProtectionLevel.everyone.getCode()));
+        radioProtection2.setValue((entity.getProtectionLevel().equals(ProtectionLevel.everyone.getCode())));
 
 
         radioGroup.setFieldLabel("Who can view");
@@ -122,10 +126,10 @@ class DiagramPropertyPanel extends NavigationEventProvider {
         simple.add(radioGroup, formData);
 
 
-        String url = "http://" + com.google.gwt.user.client.Window.Location.getHostName() + "?" + Const.PARAM_DIAGRAM + "=" + diagram.getUuid();
+        String url = "http://" + com.google.gwt.user.client.Window.Location.getHostName() + "?uuid=" + entity.getUUID();
 
         if (com.google.gwt.user.client.Window.Location.getHostName().equals("127.0.0.1")) {
-            url = "http://127.0.0.1:8888/nimbits.html?gwt.codesvr=127.0.0.1:9997&" + Const.PARAM_DIAGRAM + "=" + diagram.getUuid();
+            url = "http://127.0.0.1:8888/nimbits.html?gwt.codesvr=127.0.0.1:9997&uuid=" + entity.getUUID();
         }
 
         Html h = new Html("<p>This diagram can be viewed in a full window by anyone by setting" +
@@ -177,14 +181,14 @@ class DiagramPropertyPanel extends NavigationEventProvider {
         final Button buttonDelete = new Button("Delete");
 
         buttonDelete.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.delete()));
-        final DiagramServiceAsync diagramService = GWT.create(DiagramService.class);
+        final EntityServiceAsync service = GWT.create(EntityService.class);
 
         final Listener<MessageBoxEvent> deleteDiagramListener = new Listener<MessageBoxEvent>() {
             public void handleEvent(MessageBoxEvent ce) {
                 Button btn = ce.getButtonClicked();
 
                 if (btn.getText().equals("Yes")) {
-                    diagramService.deleteDiagram(diagram, new AsyncCallback<Void>() {
+                    service.deleteEntity(entity, new AsyncCallback<Void>() {
 
                         @Override
                         public void onFailure(Throwable caught) {
@@ -194,10 +198,7 @@ class DiagramPropertyPanel extends NavigationEventProvider {
 
                         @Override
                         public void onSuccess(Void result) {
-                          notifyDiagramDeletedListener(diagram, readOnly);
-
-
-
+                          notifyEntityDeletedListener(entity);
                         }
 
                     });
@@ -225,7 +226,7 @@ class DiagramPropertyPanel extends NavigationEventProvider {
                 final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
                 w.setAutoWidth(true);
                 w.setHeading("Upload a process diagram in .svg format");
-                final DiagramUploadPanel p = new DiagramUploadPanel(UploadType.updatedFile, diagram);
+                final DiagramUploadPanel p = new DiagramUploadPanel(UploadType.updatedFile, entity);
                 p.addDiagramAddedListeners(new DiagramUploadPanel.DiagramAddedListener() {
                     @Override
                     public void onDiagramAdded() {
@@ -245,17 +246,17 @@ class DiagramPropertyPanel extends NavigationEventProvider {
 
     private void saveDiagram() throws NimbitsException {
 
-        final DiagramServiceAsync serviceAsync = GWT.create(DiagramService.class);
+        final EntityServiceAsync serviceAsync = GWT.create(DiagramService.class);
         if (radioProtection0.getValue()) {
-            diagram.setProtectionLevel(0);
+            entity.setProtectionLevel(ProtectionLevel.onlyMe);
         } else if (radioProtection1.getValue()) {
-            diagram.setProtectionLevel(1);
+            entity.setProtectionLevel(ProtectionLevel.onlyConnection);
         } else if (radioProtection2.getValue()) {
-            diagram.setProtectionLevel(2);
+            entity.setProtectionLevel(ProtectionLevel.everyone);
         }
 
 
-        serviceAsync.updateDiagram(diagram, new AsyncCallback<Diagram>() {
+        serviceAsync.addUpdateEntity(entity, new AsyncCallback<Entity>() {
 
             @Override
             public void onFailure(Throwable throwable) {
@@ -263,7 +264,7 @@ class DiagramPropertyPanel extends NavigationEventProvider {
             }
 
             @Override
-            public void onSuccess(Diagram diagram) {
+            public void onSuccess(Entity entity) {
                 MessageBox.info("Diagram Settings", "Diagram Updated", null);
 
             }

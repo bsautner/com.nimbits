@@ -33,8 +33,6 @@ public interface UserService extends RemoteService {
 
     void connectionRequestReply(final EmailAddress targetEmail, final EmailAddress RequestorEmail, final String uuid, final boolean accepted) throws NimbitsException;
 
-    List<User> getConnections(final EmailAddress email);
-
     User getAppUserUsingGoogleAuth() throws NimbitsException;
 
     String getSecret() throws NimbitsException;

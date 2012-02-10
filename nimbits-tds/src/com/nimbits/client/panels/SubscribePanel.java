@@ -27,6 +27,7 @@ import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.*;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.subscription.*;
 import com.nimbits.client.service.datapoints.*;
@@ -44,14 +45,13 @@ public class SubscribePanel extends NavigationEventProvider {
 
     FormData formdata;
     VerticalPanel vp;
-    private String pointUUID;
-    private Point point;
+
+    private Entity entity;
     private Subscription subscription;
     private Map<String, String> settings;
-    public SubscribePanel(String pointUUID, Map<String, String> settings) {
-        this.pointUUID = pointUUID;
+    public SubscribePanel(Entity entity, Map<String, String> settings) {
+        this.entity = entity;
         this.settings = settings;
-
 
     }
     @Override
@@ -61,35 +61,20 @@ public class SubscribePanel extends NavigationEventProvider {
         formdata = new FormData("-20");
         vp = new VerticalPanel();
         vp.setSpacing(10);
-        // vp.setBorders(false);
 
-
-        PointServiceAsync service = GWT.create(PointService.class);
-        service.getPointByUUID(pointUUID, new AsyncCallback<Point>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                GWT.log(caught.getMessage());
-            }
-
-            @Override
-            public void onSuccess(Point result) {
-                point = result;
-                if (point != null) {
-                    getExistingSubscription();
-                }
-                else {
-                    createNotFoundForm();
-                    doLayout();
-                }
-
-            }
-        });
+        if (entity != null) {
+            getExistingSubscription();
+        }
+        else {
+            createNotFoundForm();
+            doLayout();
+        }
 
 
     }
     private void getExistingSubscription() {
         PointServiceAsync service = GWT.create(PointService.class);
-        service.readSubscription(point, new AsyncCallback<Subscription>() {
+        service.readSubscription(entity, new AsyncCallback<Subscription>() {
             @Override
             public void onFailure(Throwable caught) {
                 GWT.log(caught.getMessage(), caught);
@@ -203,7 +188,7 @@ public class SubscribePanel extends NavigationEventProvider {
                         spinnerField.getValue().doubleValue(),
                         new Date());
 
-                pointService.subscribe(point, subscription , new AsyncCallback<Subscription>() {
+                pointService.subscribe(entity, subscription , new AsyncCallback<Entity>() {
                     @Override
                     public void onFailure(Throwable e) {
                         GWT.log(e.getMessage(), e);
@@ -213,7 +198,7 @@ public class SubscribePanel extends NavigationEventProvider {
                     }
 
                     @Override
-                    public void onSuccess(final Subscription result) {
+                    public void onSuccess(final Entity result) {
                         box.close();
                         notifySubscriptionAddedListener(result);
                     }
@@ -233,7 +218,7 @@ public class SubscribePanel extends NavigationEventProvider {
                 "you must enable them on the main menu.");
 
 
-        Html pn = new Html("<p><b>Point Name: </b>" + point.getName().getValue() + "</p>");
+        Html pn = new Html("<p><b>Point Name: </b>" + entity.getName().getValue() + "</p>");
 
 
 

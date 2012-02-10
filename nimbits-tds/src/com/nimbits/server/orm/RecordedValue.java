@@ -66,7 +66,7 @@ public class RecordedValue implements com.nimbits.client.model.value.Value {
         this.lng = v.getLongitude();
         this.d = v.getNumberValue();
         this.timestamp = v.getTimestamp();
-        this.pointFK = v.getPoint();
+        this.pointFK = point.getId();
         this.note = v.getNote();
         this.data = v.getData();
         this.pointFK = point.getId();
@@ -97,9 +97,14 @@ public class RecordedValue implements com.nimbits.client.model.value.Value {
     }
 
     @Override
-    public long getPoint() {
-        return pointFK;
+    public String getPointUUID() {
+        return null;  //auto generated
     }
+
+//    @Override
+//    public long getPoint() {
+//        return pointFK;
+//    }
 
     @Deprecated
     public double getValue() {

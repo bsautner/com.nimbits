@@ -319,7 +319,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
             data = result;
         }
 
-        return ValueModelFactory.createValueModel(0.0, 0.0, v, new Date(), targetPoint.getId(), "", data);
+        return ValueModelFactory.createValueModel(0.0, 0.0, v, new Date(), targetPoint.getUUID(),"", data);
 
 
     }

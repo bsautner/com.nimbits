@@ -14,13 +14,16 @@
 package com.nimbits.server.dao.subscription;
 
 import com.nimbits.*;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.category.*;
-import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.subscription.*;
 import com.nimbits.client.model.user.*;
+import com.nimbits.server.entity.*;
 import com.nimbits.server.orm.*;
+import com.nimbits.server.orm.entity.*;
 import com.nimbits.server.pointcategory.*;
 import com.nimbits.server.subscription.*;
 
@@ -42,44 +45,53 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
 
 
     @Override
-    public Subscription subscribe(Subscription subscription) {
+    public Entity subscribe(Subscription subscription) {
         return addOrUpdateSubscription(subscription);
     }
 
-    private Subscription addOrUpdateSubscription(Subscription subscription)  {
+    private Entity addOrUpdateSubscription(Subscription subscription)  {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         List<SubscriptionEntity> results;
-        Subscription retObj = null;
+        Entity retObj;
 
         try {
 
-            Query q = pm.newQuery(SubscriptionEntity.class, "subscriberUUID==u && subscribedPointUUID==p");
+            Query q = pm.newQuery(SubscriptionEntity.class, "subscriberUUID==u && subscribedEntityUUID==p");
             q.declareParameters("String u, String p");
             q.setRange(0, 1);
-            results = (List<SubscriptionEntity>) q.execute(user.getUuid(), subscription.getSubscribedPointUUID());
+            results = (List<SubscriptionEntity>) q.execute(user.getUuid(), subscription.getUUID());
             if (results.size() > 0) {
                 SubscriptionEntity result = results.get(0);
                 Transaction tx = pm.currentTransaction();
                 tx.begin();
-                result.setCategoryId(subscription.getCategoryId());
                 result.setAlertStateChangeMethod(subscription.getAlertStateChangeMethod());
                 result.setPropertyChangeMethod(subscription.getPropertyChangeMethod());
                 result.setDataUpdateAlertMethod(subscription.getDataUpdateAlertMethod());
                 result.setLastSent(subscription.getLastSent());
                 result.setMaxRepeat(subscription.getMaxRepeat());
-                result.setSubscribedPointUUID(subscription.getSubscribedPointUUID());
-                result.setSubscriberUUID(subscription.getSubscriberUUID());
+                result.setUUID(subscription.getUUID());
                 tx.commit();
+                retObj = EntityTransactionFactory.getInstance(user).getEntityByUUID(result.getUUID());
                 pm.flush();
-                retObj = SubscriptionFactory.createSubscription(result);
+
 
             }
             else {
-                SubscriptionEntity entity = new SubscriptionEntity(subscription);
-                pm.makePersistent(entity);
-                retObj = SubscriptionFactory.createSubscription(entity);
+                SubscriptionEntity s = new SubscriptionEntity(subscription);
+                pm.makePersistent(s);
 
+                EntityStore entityStore = new EntityStore(
+                        null,
+                        null,
+                        EntityType.subscription,
+                        ProtectionLevel.onlyMe,
+                        s.getUUID(),
+                        user.getUuid(),
+                        user.getUuid());
+
+                pm.makePersistent(entityStore);
+                 retObj = EntityModelFactory.createEntity(entityStore);
             }
             CategoryTransactionFactory.getInstance(user).purgeMemCache();
             return retObj;
@@ -95,7 +107,7 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
         List<SubscriptionEntity> results;
 
         try {
-            Query q = pm.newQuery(SubscriptionEntity.class, "subscriberUUID==u && subscribedPointUUID==p");
+            Query q = pm.newQuery(SubscriptionEntity.class, "subscriberUUID==u && subscribedEntityUUID==p");
             q.declareParameters("String u, String p");
             q.setRange(0, 1);
             results = (List<SubscriptionEntity>) q.execute(user.getUuid(), point.getUUID());
@@ -114,16 +126,16 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
 
     }
 
-    public Subscription readSubscription(final Point point)  {
+    public Subscription readSubscription(final Entity entity)  {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         List<SubscriptionEntity> results;
         Subscription retObj = null;
         try {
-            Query q = pm.newQuery(SubscriptionEntity.class, "subscriberUUID==u && subscribedPointUUID==p");
+            Query q = pm.newQuery(SubscriptionEntity.class, "subscriberUUID==u && subscribedEntityUUID==p");
             q.declareParameters("String u, String p");
             q.setRange(0, 1);
-            results = (List<SubscriptionEntity>) q.execute(user.getUuid(), point.getUUID());
+            results = (List<SubscriptionEntity>) q.execute(user.getUuid(), entity.getUUID());
             if (results.size() > 0) {
                 SubscriptionEntity result = results.get(0);
                 retObj = SubscriptionFactory.createSubscription(result);
@@ -152,7 +164,7 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
             long userFK = user.getId();
             try {
 
-                Query q = pm.newQuery(SubscriptionEntity.class, "subscriberUUID==u && subscribedPointUUID==p");
+                Query q = pm.newQuery(SubscriptionEntity.class, "subscriberUUID==u && subscribedEntityUUID==p");
                 q.declareParameters("String u, String p");
                 q.setRange(0, 1);
                 results = (List<SubscriptionEntity>) q.execute(user.getUuid(), point.getUUID());
@@ -160,7 +172,7 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
                     Transaction tx = pm.currentTransaction();
                     tx.begin();
                     SubscriptionEntity result = results.get(0);
-                    result.setCategoryId(c.getId());
+                  //  result.setCategoryId(c.getId());
                     tx.commit();
                 }
             } finally {
@@ -179,7 +191,7 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
         List<Subscription> results;
         List<Subscription> retObj;
         try {
-            Query q = pm.newQuery(SubscriptionEntity.class, "subscribedPointUUID==p");
+            Query q = pm.newQuery(SubscriptionEntity.class, "subscribedEntityUUID==p");
             q.declareParameters("String p");
             results = (List<Subscription>) q.execute(point.getUUID());
             retObj = SubscriptionFactory.createSubscriptions(results);
@@ -196,10 +208,10 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
 
             try {
                 List<SubscriptionEntity> results;
-                Query q = pm.newQuery(SubscriptionEntity.class, "subscriberUUID==u && subscribedPointUUID==p");
-                q.declareParameters("String u, String p");
+                Query q = pm.newQuery(SubscriptionEntity.class, "uuid==u");
+                q.declareParameters("String u");
                 q.setRange(0, 1);
-                results = (List<SubscriptionEntity>) q.execute(subscription.getSubscriberUUID(), subscription.getSubscribedPointUUID());
+                results = (List<SubscriptionEntity>) q.execute(subscription.getUUID());
                 if (results.size() > 0) {
                     Transaction tx = pm.currentTransaction();
                     tx.begin();

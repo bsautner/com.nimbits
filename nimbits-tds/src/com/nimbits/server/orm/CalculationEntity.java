@@ -51,6 +51,18 @@ public class CalculationEntity implements Calculation {
     @Persistent
     private Long z;
 
+    @Persistent
+    private String xVar;
+
+    @Persistent
+    private String yVar;
+
+    @Persistent
+    private String zVar;
+
+    @Persistent
+    private String targetVar;
+
     @Persistent(mappedBy = "calculationEntity")
     private DataPoint point;
 
@@ -69,10 +81,10 @@ public class CalculationEntity implements Calculation {
     public CalculationEntity(Calculation calculation) {
         this.formula = calculation.getFormula();
         this.enabled = calculation.getEnabled();
-        this.target = calculation.getTarget();
-        this.x = calculation.getX();
-        this.y = calculation.getY();
-        this.z = calculation.getZ();
+        this.targetVar = calculation.getTarget();
+        this.xVar = calculation.getX();
+        this.yVar = calculation.getY();
+        this.zVar = calculation.getZ();
     }
 
 
@@ -95,38 +107,38 @@ public class CalculationEntity implements Calculation {
     }
 
     @Override
-    public Long getTarget() {
-        return target;
+    public String getTarget() {
+        return targetVar;
     }
 
-    public void setTarget(Long target) {
-        this.target = target;
-    }
-
-    @Override
-    public Long getX() {
-        return x;
-    }
-
-    public void setX(Long x) {
-        this.x = x;
+    public void setTarget(String target) {
+        this.targetVar = target;
     }
 
     @Override
-    public Long getY() {
-        return y;
+    public String getX() {
+        return xVar;
     }
 
-    public void setY(Long y) {
-        this.y = y;
+    public void setX(String x) {
+        this.xVar = x;
     }
 
     @Override
-    public Long getZ() {
-        return z;
+    public String getY() {
+        return yVar ;
     }
 
-    public void setZ(Long z) {
-        this.z = z;
+    public void setY(String y) {
+        this.yVar  = y;
+    }
+
+    @Override
+    public String getZ() {
+        return zVar;
+    }
+
+    public void setZ(String z) {
+        this.zVar = z;
     }
 }

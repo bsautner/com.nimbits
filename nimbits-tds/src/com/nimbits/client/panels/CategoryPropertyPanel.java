@@ -36,8 +36,10 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.icons.Icons;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.category.Category;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.service.category.CategoryService;
 import com.nimbits.client.service.category.CategoryServiceAsync;
+import com.nimbits.client.service.entity.*;
 
 
 /**
@@ -48,7 +50,7 @@ import com.nimbits.client.service.category.CategoryServiceAsync;
  */
 class CategoryPropertyPanel extends NavigationEventProvider {
 
-    private final Category category;
+    private final Entity entity;
 
     //    private final Icons ICONS = GWT.create(Icons.class);
     private final boolean readOnly;
@@ -59,9 +61,9 @@ class CategoryPropertyPanel extends NavigationEventProvider {
     private final TextArea description = new TextArea();
 
 
-    CategoryPropertyPanel(final Category c, final boolean readOnly) {
-        this.category = c;
-        this.readOnly = readOnly;
+    CategoryPropertyPanel(final Entity entity) {
+        this.entity = entity;
+        this.readOnly = entity.isReadOnly();
     }
 
     private VerticalPanel vp;
@@ -86,7 +88,7 @@ class CategoryPropertyPanel extends NavigationEventProvider {
         // vp.setSpacing(10);
         createForm();
 
-        String url = "http://" + com.google.gwt.user.client.Window.Location.getHostName() + "?" + Const.PARAM_UUID + "=" + category.getUUID();
+        String url = "http://" + com.google.gwt.user.client.Window.Location.getHostName() + "?" + Const.PARAM_UUID + "=" + entity.getUUID();
 
 
         Html h = new Html("<p>Link:</p><br>" +
@@ -108,15 +110,15 @@ class CategoryPropertyPanel extends NavigationEventProvider {
 
 
         radioProtection0.setBoxLabel("Only Me");
-        radioProtection0.setValue(category.getProtectionLevel().equals(ProtectionLevel.onlyMe));
+        radioProtection0.setValue(entity.getProtectionLevel().equals(ProtectionLevel.onlyMe));
 
 
         radioProtection1.setBoxLabel("My Connections");
-        radioProtection1.setValue(category.getProtectionLevel().equals(ProtectionLevel.onlyConnection));
+        radioProtection1.setValue(entity.getProtectionLevel().equals(ProtectionLevel.onlyConnection));
 
 
         radioProtection2.setBoxLabel("Anyone");
-        radioProtection2.setValue(category.getProtectionLevel().equals(ProtectionLevel.everyone));
+        radioProtection2.setValue(entity.getProtectionLevel().equals(ProtectionLevel.everyone));
 
 
         radioGroup.setFieldLabel("Who can view");
@@ -128,7 +130,7 @@ class CategoryPropertyPanel extends NavigationEventProvider {
 
 
         description.setPreventScrollbars(true);
-        description.setValue(category.getDescription());
+        description.setValue(entity.getDescription());
         description.setFieldLabel("Description");
         simple.add(description, new FormData("-20"));
         description.setSize("400", "100");
@@ -168,18 +170,18 @@ class CategoryPropertyPanel extends NavigationEventProvider {
 
     private void save() throws NimbitsException {
 
-        final CategoryServiceAsync serviceAsync = GWT.create(CategoryService.class);
+        final EntityServiceAsync service = GWT.create(CategoryService.class);
         if (radioProtection0.getValue()) {
-            category.setProtectionLevel(ProtectionLevel.onlyMe);
+            entity.setProtectionLevel(ProtectionLevel.onlyMe);
         } else if (radioProtection1.getValue()) {
-            category.setProtectionLevel(ProtectionLevel.onlyConnection);
+            entity.setProtectionLevel(ProtectionLevel.onlyConnection);
         } else if (radioProtection2.getValue()) {
-            category.setProtectionLevel(ProtectionLevel.everyone);
+            entity.setProtectionLevel(ProtectionLevel.everyone);
         }
 
-        category.setDescription(description.getValue());
+        entity.setDescription(description.getValue());
 
-        serviceAsync.updateCategory(category, new AsyncCallback<Category>() {
+        service.addUpdateEntity(entity, new AsyncCallback<Entity>() {
 
             @Override
             public void onFailure(Throwable throwable) {
@@ -187,8 +189,7 @@ class CategoryPropertyPanel extends NavigationEventProvider {
             }
 
             @Override
-            public void onSuccess(Category diagram) {
-                MessageBox.info("Category Settings", "Category Updated", null);
+            public void onSuccess(Entity entity1) {
 
             }
         });

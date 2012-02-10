@@ -32,7 +32,7 @@ import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.diagram.Diagram;
 import com.nimbits.client.model.diagram.DiagramModel;
-import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.value.Value;
@@ -432,7 +432,8 @@ public class DiagramPanel extends NavigationEventProvider {
                         PointModel p = (PointModel) points.get(pointName);
                         p.setReadOnly(readOnly);
                         p.setClientType(clientType);
-                        notifyPointClickedListener(p);
+                        Entity entity = EntityModelFactory.createEntity(p);
+                        notifyEntityClickedListener(entity);
 
 
                     }
@@ -466,7 +467,8 @@ public class DiagramPanel extends NavigationEventProvider {
                 if (diagrams.containsKey(diagramName)) {
                     DiagramModel diagramModel = (DiagramModel) diagrams.get(diagramName);
                     diagramModel.setClientType(clientType);
-                    notifyDiagramClickedListener(diagramModel);
+                    Entity entity = EntityModelFactory.createEntity(diagramModel);
+                    notifyEntityClickedListener(entity);
 
                 }
             }
@@ -608,7 +610,8 @@ public class DiagramPanel extends NavigationEventProvider {
             public void onMouseDown(MouseDownEvent mouseDownEvent) {
                 if (points.containsKey(pointName)) {
                     PointModel p = (PointModel) points.get(pointName);
-                    notifyPointClickedListener(p);
+                    Entity entity = EntityModelFactory.createEntity(p);
+                    notifyEntityClickedListener(entity);
 
                 }
             }
@@ -640,7 +643,8 @@ public class DiagramPanel extends NavigationEventProvider {
                 if (diagrams.containsKey(diagramName)) {
                     DiagramModel diagramModel = (DiagramModel) diagrams.get(diagramName);
                     diagramModel.setClientType(clientType);
-                    notifyDiagramClickedListener(diagramModel);
+                    Entity entity = EntityModelFactory.createEntity(diagramModel);
+                    notifyEntityClickedListener(entity);
 
                 }
             }
@@ -786,7 +790,8 @@ public class DiagramPanel extends NavigationEventProvider {
                     PointModel p = (PointModel) points.get(pointName);
                     p.setReadOnly(readOnly);
                     p.setClientType(clientType);
-                  notifyPointClickedListener(p);
+                    Entity entity = EntityModelFactory.createEntity(p);
+                  notifyEntityClickedListener(entity);
 
                 }
             }
@@ -818,13 +823,11 @@ public class DiagramPanel extends NavigationEventProvider {
                 if (diagrams.containsKey(diagramName)) {
                     DiagramModel diagramModel = (DiagramModel) diagrams.get(diagramName);
                     diagramModel.setClientType(clientType);
-                    notifyDiagramClickedListener(diagramModel);
-
+                    Entity entity = EntityModelFactory.createEntity(diagramModel);
+                    notifyEntityClickedListener(entity);
                 }
             }
         });
-
-
     }
 
     private void updateRectValue(final OMSVGRectElement o) throws NimbitsException {

@@ -29,6 +29,7 @@ import com.nimbits.client.exceptions.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.category.*;
 import com.nimbits.client.model.diagram.*;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.subscription.*;
 import com.nimbits.client.panels.*;
@@ -36,6 +37,7 @@ import com.nimbits.client.service.*;
 import com.nimbits.client.service.category.*;
 import com.nimbits.client.service.datapoints.*;
 import com.nimbits.client.service.diagram.*;
+import com.nimbits.client.service.entity.*;
 import com.nimbits.client.service.recordedvalues.*;
 import com.nimbits.client.service.settings.*;
 import com.nimbits.client.service.twitter.*;
@@ -75,7 +77,7 @@ public class nimbits implements EntryPoint {
         if (action.equals(Action.android)) {
             viewport.setLayout(new FillLayout());
             viewport.setBorders(false);
-            mainPanel = new MainPanel(loginInfo, true, false, settings);
+            mainPanel = new MainPanel(loginInfo, true, settings);
             contentPanel.add(mainPanel);
             contentPanel.setHeaderVisible(false);
             contentPanel.setLayout(new FillLayout());
@@ -84,7 +86,7 @@ public class nimbits implements EntryPoint {
         else {
             viewport.setLayout(new BorderLayout());
             viewport.setBorders(false);
-            mainPanel = new MainPanel(loginInfo, false, loadConnections, settings);
+            mainPanel = new MainPanel(loginInfo, false, settings);
             contentPanel.setHeaderVisible(true);
             if (loginInfo != null) {
                 contentPanel.setHeading(heading + " " + loginInfo.getEmailAddress().getValue());
@@ -106,39 +108,42 @@ public class nimbits implements EntryPoint {
 
     }
     public void showSubscriptionPanel(final String uuid, final Map<String, String> settings) {
-        SubscribePanel dp = new SubscribePanel(uuid, settings);
 
-        final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
-        w.setWidth(500);
-        w.setHeight(500);
-        w.setHeading("Subscribe");
-        w.add(dp);
-        dp.addSubscriptionAddedListener(new NavigationEventProvider.SubscriptionAddedListener() {
+        EntityServiceAsync service = GWT.create(EntityService.class);
+
+        service.getEntityByUUID(uuid, new AsyncCallback<Entity>() {
             @Override
-            public void onSubscriptionAdded(Subscription model) {
-                w.hide();
-                Cookies.removeCookie(Action.subscribe.name());
-                if (model != null) {
-                    PointServiceAsync serviceAsync = GWT.create(PointService.class);
-                    serviceAsync.getPointByUUID(model.getSubscribedPointUUID(), new AsyncCallback<Point>() {
-                        @Override
-                        public void onFailure(Throwable caught) {
-                           GWT.log(caught.getMessage());
-                        }
+            public void onFailure(Throwable caught) {
+                //auto generated
+            }
 
-                        @Override
-                        public void onSuccess(Point result) {
-                            result.setEntityType(EntityType.subscription);
-                            result.setReadOnly(true);
-                            mainPanel.addPoint(result);
-                            mainPanel.addPointToTree(result);
-                        }
-                    });
-                }
+            @Override
+            public void onSuccess(Entity result) {
+                SubscribePanel dp = new SubscribePanel(result, settings);
+
+                final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
+                w.setWidth(500);
+                w.setHeight(500);
+                w.setHeading("Subscribe");
+                w.add(dp);
+                dp.addSubscriptionAddedListener(new NavigationEventProvider.SubscriptionAddedListener() {
+                    @Override
+                    public void onSubscriptionAdded(Entity model) {
+                        w.hide();
+                        Cookies.removeCookie(Action.subscribe.name());
+                      //  mainPanel.addEntity(result);
+                     //TODO   mainPanel.addEnToTree(result);
+
+                    }
+                });
+
+                w.show();
             }
         });
 
-        w.show();
+
+
+
     }
     private void loadDiagramView(final Diagram diagram,
                                  final ClientType clientType) {
@@ -155,13 +160,19 @@ public class nimbits implements EntryPoint {
         diagram.setFullScreenView(true);
 
         final DiagramPanel diagramPanel = new DiagramPanel(diagram, false, Window.getClientWidth(), Window.getClientHeight());
-        diagramPanel.addPointClickedListeners(new NavigationEventProvider.PointClickedListener() {
+        diagramPanel.addEntityClickedListeners(new NavigationEventProvider.EntityClickedListener() {
 
             @Override
-            public void onPointClicked(final Point p) {
+            public void onEntityClicked(final Entity p) {
 
                 if (clientType == ClientType.other) {
-                    showAnnotatedTimeLine(p);
+                    switch (p.getEntityType()) {
+                        case point:
+                          //TODO  showAnnotatedTimeLine(p);
+                        case diagram:
+                         //TODO  loadDiagramView(d, clientType);
+                    }
+
                 } else {
                     Window.Location.replace("?" + Const.PARAM_CLIENT + "=" + Const.WORD_ANDROID + "&" + Const.PARAM_POINT + "=" + p.getName());
                 }
@@ -170,19 +181,7 @@ public class nimbits implements EntryPoint {
 
         });
 
-        diagramPanel.addDiagramClickedListeners(new NavigationEventProvider.DiagramClickedListener() {
 
-            @Override
-
-            public void onDiagramClicked(final Diagram d) {
-
-                RootPanel.get().remove(viewport);
-                loadDiagramView(d, clientType);
-
-
-            }
-
-        });
 
         diagramPanel.addUrlClickedListeners(new NavigationEventProvider.UrlClickedListener() {
 
@@ -241,53 +240,50 @@ public class nimbits implements EntryPoint {
 
     private void addListeners() {
 
-        mainPanel.addCategoryClickedListeners(new NavigationEventProvider.CategoryClickedListener() {
+        mainPanel.addEntityClickedListeners(new NavigationEventProvider.EntityClickedListener() {
             //need to getInstance a fresh copy here
             @Override
-            public void onCategoryClicked(final Category c, final boolean readOnly)  {
+            public void onEntityClicked(final Entity c) {
+                switch (c.getEntityType()) {
+                    case category:
+                        categoryClicked(c);
+                        break;
+                    case point:
+                        //TODO mainPanel.addPoint(c);
+                        break;
+                    case diagram:
+                       //TODO mainPanel.addDiagram(d);
+                        break;
+                }
 
-                final CategoryServiceAsync categoryService = GWT.create(CategoryService.class);
-                categoryService.getCategoryByName(c.getName(), true, true, new AsyncCallback<Category>() {
 
-
-                    @Override
-                    public void onFailure(final Throwable throwable) {
-
-                    }
-
-                    @Override
-                    public void onSuccess(final Category category) {
-
-                        if (category.getPoints() != null) {
-                            for (final Point p : category.getPoints()) {
-                                p.setReadOnly(readOnly);
-                                mainPanel.addPoint(p);
-
-                            }
-                        }
-                    }
-                });
             }
         });
 
-        mainPanel.addPointClickedListeners(new NavigationEventProvider.PointClickedListener() {
+
+
+    }
+
+    private void categoryClicked(Entity c) {
+        final CategoryServiceAsync categoryService = GWT.create(CategoryService.class);
+        categoryService.getCategoryByName(c.getName(), true, true, new AsyncCallback<Category>() {
+
 
             @Override
-            public void onPointClicked(final Point p)  {
-                mainPanel.addPoint(p);
+            public void onFailure(final Throwable throwable) {
+
             }
-
-        });
-
-        mainPanel.addDiagramClickedListeners(new NavigationEventProvider.DiagramClickedListener() {
 
             @Override
-            public void onDiagramClicked(final Diagram d) {
-                mainPanel.addDiagram(d);
+            public void onSuccess(final Category category) {
 
-                // showDiagram(d);
+                if (category.getPoints() != null) {
+                    for (final Point p : category.getPoints()) {
+                        //TODO mainPanel.addPoint(p);
+
+                    }
+                }
             }
-
         });
     }
 

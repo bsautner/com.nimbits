@@ -13,31 +13,27 @@
 
 package com.nimbits.client.panels;
 
-import com.extjs.gxt.ui.client.Style;
-import com.extjs.gxt.ui.client.event.BaseEvent;
-import com.extjs.gxt.ui.client.event.Events;
-import com.extjs.gxt.ui.client.event.Listener;
-import com.extjs.gxt.ui.client.util.Margins;
-import com.extjs.gxt.ui.client.widget.ContentPanel;
-import com.extjs.gxt.ui.client.widget.Info;
+import com.extjs.gxt.ui.client.*;
+import com.extjs.gxt.ui.client.event.*;
+import com.extjs.gxt.ui.client.util.*;
+import com.extjs.gxt.ui.client.widget.*;
 import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.layout.FlowData;
-import com.extjs.gxt.ui.client.widget.layout.RowData;
-import com.extjs.gxt.ui.client.widget.layout.RowLayout;
-import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
-import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.icons.Icons;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.diagram.Diagram;
-import com.nimbits.client.model.entity.EntityName;
+import com.extjs.gxt.ui.client.widget.layout.*;
+import com.extjs.gxt.ui.client.widget.toolbar.*;
+import com.google.gwt.core.client.*;
+import com.google.gwt.user.client.*;
+import com.google.gwt.user.client.rpc.*;
+import com.google.gwt.user.client.ui.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.icons.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.diagram.*;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.*;
+import com.nimbits.client.service.datapoints.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by bsautner
@@ -47,18 +43,19 @@ import java.util.Map;
  */
 class CenterPanel extends NavigationEventProvider {
 
-    final private Map<EntityName, Point> points = new HashMap<EntityName, Point>();
+    final private Map<String, Entity> entities = new HashMap<String, Entity>();
     final private PointGridPanel grid = new PointGridPanel();
     private final Map<String, AnnotatedTimeLinePanel> lines = new HashMap<String, AnnotatedTimeLinePanel>();
     private ContentPanel bottom;
 
     protected void onRender(final Element target, final int index) {
         super.onRender(target, index);
-        grid.addPointClickedListeners(new PointClickedListener() {
+        grid.addEntityClickedListeners(new EntityClickedListener() {
 
             @Override
-            public void onPointClicked(final Point c) {
-              addPoint(c);
+            public void onEntityClicked(final Entity entity) {
+
+                addEntity(entity);
 
 
             }
@@ -67,10 +64,10 @@ class CenterPanel extends NavigationEventProvider {
         grid.addValueEnteredListeners(new ValueEnteredListener() {
 
             @Override
-            public void onValueEntered(final Point point, final Value value) {
+            public void onValueEntered(final Entity entity, final Value value) {
                 for (AnnotatedTimeLinePanel line : lines.values()) {
-                    if (line.containsPoint(point)) {
-                        line.addValue(point, value);
+                    if (line.containsPoint(entity)) {
+                        line.addValue(entity, value);
                     }
                 }
             }
@@ -107,8 +104,8 @@ class CenterPanel extends NavigationEventProvider {
         removeButton.addListener(Events.OnClick, new Listener<BaseEvent>() {
             @Override
             public void handleEvent(BaseEvent baseEvent) {
-                List<Point> selectedPoints = grid.getSelectedPoints();
-                for (Point px : selectedPoints) {
+                List<Entity> selectedPoints = grid.getSelectedPoints();
+                for (Entity px : selectedPoints) {
                     removePoint(px);
                 }
                 addLinesToBottom();
@@ -205,12 +202,12 @@ class CenterPanel extends NavigationEventProvider {
         bottom = bottomPanel();
     }
 
-    public void removePoint(final Point p) {
+    public void removePoint(final Entity entity) {
         for (AnnotatedTimeLinePanel line : lines.values()) {
-            line.removePoint(p);
-            points.remove(p.getName());
+            line.removePoint(entity);
+            entities.remove(entity.getUUID());
         }
-        grid.removePoint(p);
+        grid.removePoint(entity);
     }
 
     private void loadLayout() {
@@ -251,15 +248,27 @@ class CenterPanel extends NavigationEventProvider {
         return bottom;
     }
 
-    public void addPoint(final Point point) {
-        if (!points.containsKey(point.getName())) {
-            points.put(point.getName(), point);
-            grid.addPoint(point);
+    public void addEntity(final Entity entity) {
+        if (!entities.containsKey(entity.getUUID())) {
+            entities.put(entity.getUUID(), entity);
+            grid.addPoint(entity);
         }
 
         for (final AnnotatedTimeLinePanel line : lines.values()) {
-            if (!line.containsPoint(point) && line.isSelected()) {
-                line.addPoint(point);
+            if (!line.containsPoint(entity) && line.isSelected()) {
+                PointServiceAsync service = GWT.create(PointService.class);
+                service.getPointByUUID(entity.getUUID(), new AsyncCallback<Point>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        //auto generated
+                    }
+
+                    @Override
+                    public void onSuccess(Point result) {
+                        line.addPoint(result);
+                    }
+                });
+
             }
         }
 //
@@ -274,48 +283,48 @@ class CenterPanel extends NavigationEventProvider {
     }
 
 
-    public void addDiagram(final Diagram d) {
-        final int w = (bottom.getWidth() / 2);
-        final AnnotatedTimeLinePanel line = createLine(Const.DEFAULT_CHART_NAME);
-        final DiagramPanel diagramPanel = new DiagramPanel(d, true, w, bottom.getHeight());
-        diagramPanel.addPointClickedListeners(new PointClickedListener() {
-
-            @Override
-            public void onPointClicked(final Point p){
-                addPoint(p);
-            }
-
-        });
-        diagramPanel.addDiagramClickedListeners(new DiagramClickedListener() {
-
-            @Override
-            public void onDiagramClicked(Diagram d) {
-                bottom.remove(diagramPanel);
-                addDiagram(d);
-            }
-        });
-
-        diagramPanel.addDiagramRemovedClickedListeners(new DiagramRemovedListener() {
-            @Override
-            public void onDiagramRemovedClicked(Diagram diagram) {
-                bottom.remove(diagramPanel);
-                line.resize(bottom.getHeight(), bottom.getWidth());
-
-                line.setWidth(bottom.getWidth());
-                line.setHeight(bottom.getHeight());
-                bottom.remove(line);
-                bottom.add(line, new RowData(1, 1, new Margins(4)));
-                layout(true);
-            }
-        });
-        bottom.removeAll();
-        lines.clear();
-
-        line.setSelected(true);
-        lines.put(Const.DEFAULT_CHART_NAME, line);
-
-        bottom.add(diagramPanel, new RowData(w, 1, new Margins(4)));
-        bottom.add(line, new RowData(w, 1, new Margins(4)));
-        layout(true);
-    }
+//    public void addDiagram(final Diagram d) {
+//        final int w = (bottom.getWidth() / 2);
+//        final AnnotatedTimeLinePanel line = createLine(Const.DEFAULT_CHART_NAME);
+//        final DiagramPanel diagramPanel = new DiagramPanel(d, true, w, bottom.getHeight());
+//        diagramPanel.addPointClickedListeners(new EntityClickedListener() {
+//
+//            @Override
+//            public void onPointClicked(final Point p){
+//                addPoint(p);
+//            }
+//
+//        });
+//        diagramPanel.addEntityClickedListeners(new EntityClickedListener() {
+//
+//            @Override
+//            public void onDiagramClicked(Diagram d) {
+//                bottom.remove(diagramPanel);
+//                addDiagram(d);
+//            }
+//        });
+//
+//        diagramPanel.addDiagramRemovedClickedListeners(new DiagramRemovedListener() {
+//            @Override
+//            public void onDiagramRemovedClicked(Diagram diagram) {
+//                bottom.remove(diagramPanel);
+//                line.resize(bottom.getHeight(), bottom.getWidth());
+//
+//                line.setWidth(bottom.getWidth());
+//                line.setHeight(bottom.getHeight());
+//                bottom.remove(line);
+//                bottom.add(line, new RowData(1, 1, new Margins(4)));
+//                layout(true);
+//            }
+//        });
+//        bottom.removeAll();
+//        lines.clear();
+//
+//        line.setSelected(true);
+//        lines.put(Const.DEFAULT_CHART_NAME, line);
+//
+//        bottom.add(diagramPanel, new RowData(w, 1, new Margins(4)));
+//        bottom.add(line, new RowData(w, 1, new Margins(4)));
+//        layout(true);
+//    }
 }

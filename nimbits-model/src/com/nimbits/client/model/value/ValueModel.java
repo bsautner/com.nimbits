@@ -32,7 +32,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
     private double lng;
     private double d;
     private long timestamp;
-    private long pointFK;
+    private String pointUUID;
     private String note;
     private String data;
     private int alertState;
@@ -57,7 +57,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
         this.lng = v.getLongitude();
         this.d = v.getNumberValue();
         this.timestamp = v.getTimestamp().getTime();
-        this.pointFK = v.getPoint();
+        this.pointUUID = v.getPointUUID();
         this.note = v.getNote();
         this.data = v.getData();
 
@@ -67,7 +67,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
                       final double lng,
                       final double d,
                       final Date timestamp,
-                      final long pointFK,
+                      final String pointUUID,
                       final String note,
                       final String data) {
         this.id = 0;
@@ -75,7 +75,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
         this.lng = lng;
         this.d = d;
         this.timestamp = timestamp.getTime();
-        this.pointFK = pointFK;
+        this.pointUUID = pointUUID;
         this.note = note;
         this.data = data;
     }
@@ -85,7 +85,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
                       final double lng,
                       final double d,
                       final Date timestamp,
-                      final long pointFK,
+                      final String pointUUID,
                       final String note,
                       final String data) {
         this.id = id;
@@ -93,7 +93,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
         this.lng = lng;
         this.d = d;
         this.timestamp = timestamp.getTime();
-        this.pointFK = pointFK;
+        this.pointUUID = pointUUID;
         this.note = note;
         this.data = data;
     }
@@ -124,8 +124,8 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
 
 
     @Override
-    public long getPoint() {
-        return pointFK;
+    public String getPointUUID() {
+        return pointUUID;
     }
 
 

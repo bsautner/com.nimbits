@@ -45,14 +45,17 @@ public class DataPoint implements Point {
     private Date lastAlarmSent;
 
     @Persistent
+    @Deprecated
     private String host;
     @Persistent
+    @Deprecated
     private Long catID;
     @Persistent
     private boolean isSystemPoint;
     @Persistent
     private Long userFK;
     @Persistent
+    @Deprecated
     private String name;
     @Persistent
     private Date createDate;
@@ -85,6 +88,7 @@ public class DataPoint implements Point {
     @Persistent
     private String description;
     @Persistent
+    @Deprecated
     private Boolean isPublic;
     @Persistent
     private Boolean postToFacebook;
@@ -172,7 +176,12 @@ public class DataPoint implements Point {
         this.uuid = uuid;
     }
 
-
+    public DataPoint(final long userFK, final EntityName pointName, final String uuid) {
+        this();
+        this.userFK = userFK;
+        this.name = pointName.getValue();
+        this.uuid = uuid;
+    }
     public DataPoint(final Point p) {
 
         this.uuid = p.getUUID();
@@ -405,6 +414,7 @@ public class DataPoint implements Point {
     }
 
     @Override
+    @Deprecated
     public boolean isPublic() {
         return (isPublic == null) ? false : isPublic;
 
@@ -508,6 +518,7 @@ public class DataPoint implements Point {
     }
 
     @Override
+    @Deprecated
     public void setPublic(final boolean isPublic) {
         this.isPublic = isPublic;
     }

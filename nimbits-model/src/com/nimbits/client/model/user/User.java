@@ -27,11 +27,14 @@ import java.util.*;
  */
 public interface User extends Serializable {
 
+    @Deprecated
     List<Long> getConnections();
 
-    void addConnection(final long id);
+    List<String> getUserConnections();
 
-    void removeConnection(final long id);
+    void addConnection(final String id);
+
+    void removeConnection(final String id);
 
     boolean getSendEmail();
 

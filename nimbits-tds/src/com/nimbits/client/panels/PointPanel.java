@@ -13,9 +13,7 @@
 
 package com.nimbits.client.panels;
 
-import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
-import com.extjs.gxt.ui.client.Style.Orientation;
-import com.extjs.gxt.ui.client.Style.Scroll;
+import com.extjs.gxt.ui.client.Style.*;
 import com.extjs.gxt.ui.client.event.*;
 import com.extjs.gxt.ui.client.widget.*;
 import com.extjs.gxt.ui.client.widget.HorizontalPanel;
@@ -26,45 +24,30 @@ import com.extjs.gxt.ui.client.widget.form.CheckBox;
 import com.extjs.gxt.ui.client.widget.form.*;
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
 import com.extjs.gxt.ui.client.widget.form.TextArea;
-import com.extjs.gxt.ui.client.widget.layout.FillLayout;
-import com.extjs.gxt.ui.client.widget.layout.FormData;
-import com.extjs.gxt.ui.client.widget.layout.TableData;
-import com.extjs.gxt.ui.client.widget.toolbar.SeparatorToolItem;
-import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
-import com.google.gwt.core.client.GWT;
+import com.extjs.gxt.ui.client.widget.layout.*;
+import com.extjs.gxt.ui.client.widget.toolbar.*;
+import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.ui.Label;
-import com.nimbits.client.controls.PointCombo;
-import com.nimbits.client.enums.ClientType;
-import com.nimbits.client.enums.IntelligenceResultTarget;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.exceptions.CalculationFailedException;
-import com.nimbits.client.icons.Icons;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.GxtPointModel;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.intelligence.Intelligence;
-import com.nimbits.client.model.intelligence.IntelligenceModelFactory;
-import com.nimbits.client.model.point.Calculation;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointModel;
-import com.nimbits.client.model.point.PointModelFactory;
-import com.nimbits.client.service.datapoints.PointService;
-import com.nimbits.client.service.datapoints.PointServiceAsync;
-import com.nimbits.client.service.intelligence.IntelligenceService;
-import com.nimbits.client.service.intelligence.IntelligenceServiceAsync;
-import com.nimbits.client.service.recordedvalues.RecordedValueService;
-import com.nimbits.client.service.recordedvalues.RecordedValueServiceAsync;
-import com.nimbits.client.service.settings.SettingsService;
-import com.nimbits.client.service.settings.SettingsServiceAsync;
-import com.nimbits.shared.Utils;
+import com.nimbits.client.controls.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.exceptions.*;
+import com.nimbits.client.icons.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.intelligence.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.service.datapoints.*;
+import com.nimbits.client.service.intelligence.*;
+import com.nimbits.client.service.recordedvalues.*;
+import com.nimbits.client.service.settings.*;
+import com.nimbits.shared.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 class PointPanel extends LayoutContainer {
 
@@ -151,7 +134,7 @@ class PointPanel extends LayoutContainer {
     private final TextField<String> unit = new TextField<String>();
 
 
-    private final Point originalPoint;
+    private final Entity originalEntity;
     private Point point;
     private Point intelligenceTargetPoint = null;
 
@@ -168,8 +151,8 @@ class PointPanel extends LayoutContainer {
     private final CheckBox intelEnabled = new CheckBox();
     private final CheckBox intelPlainText = new CheckBox();
 
-    public PointPanel(final Point x)   {
-        originalPoint = x;
+    public PointPanel(final Entity x)   {
+        originalEntity = x;
         SettingsServiceAsync settings = GWT.create(SettingsService.class);
         settings.getSettings(new AsyncCallback<Map<String, String>>() {
             @Override
@@ -190,7 +173,7 @@ class PointPanel extends LayoutContainer {
     }
 
     private void loadForm(final Map<String, String> settingMap) throws NimbitsException {
-        pointService.getPointByID(originalPoint.getId(), new AsyncCallback<Point>() {
+        pointService.getPointByUUID(originalEntity.getUUID(), new AsyncCallback<Point>() {
             @Override
             public void onFailure(Throwable caught) {
                 GWT.log(caught.getMessage());
@@ -259,23 +242,23 @@ class PointPanel extends LayoutContainer {
                         new Listener<BaseEvent>() {
                             public void handleEvent(BaseEvent tpe) {
                                 if (point.getCalculation() != null) {
-                                    if (!(point.getCalculation().getTarget() == 0)) {
+                                    if (!(Utils.isEmptyString(point.getCalculation().getTarget()))) {
                                         calcTarget.setValue(calcTarget.getStore().findModel(Const.PARAM_ID,
                                                 point.getCalculation().getTarget()));
                                     }
-                                    if (!(point.getCalculation().getX() == 0)) {
+                                    if (!(Utils.isEmptyString(point.getCalculation().getX()))) {
                                         CalcXCombo.setValue(CalcXCombo.getStore().findModel(Const.PARAM_ID, point.getCalculation().getX()));
                                         CalcXCombo.repaint();
                                     } else {
-                                        GxtPointModel xModel = new GxtPointModel(point, ClientType.other);
+                                        GxtModel xModel = new GxtModel(point);
                                         CalcXCombo.setValue(xModel);
                                     }
 
-                                    if (!(point.getCalculation().getY() == 0)) {
+                                    if (!(Utils.isEmptyString(point.getCalculation().getY()))) {
                                         Y.setValue(Y.getStore().findModel(Const.PARAM_ID, point.getCalculation().getY()));
                                     }
 
-                                    if (!(point.getCalculation().getZ() == 0)) {
+                                    if (!(Utils.isEmptyString(point.getCalculation().getZ()))) {
                                         Z.setValue(Z.getStore().findModel(Const.PARAM_ID, point.getCalculation().getZ()));
                                     }
                                 }
@@ -456,20 +439,20 @@ class PointPanel extends LayoutContainer {
 
 
         String f = formula.getValue();
-        long t = 0;
-        long x = 0;
-        long y = 0;
-        long z = 0;
+        String t = "";
+        String x = "";
+        String y = "";
+        String z = "";
         boolean enabled = calcEnabled.getValue();
 
 
         //calcs
 
 
-        t = (calcTarget.getValue() != null) ? calcTarget.getPoint().getId() : 0;
-        x = (CalcXCombo.getValue() != null) ? CalcXCombo.getPoint().getId() : 0;
-        y = (Y.getValue() != null) ? Y.getPoint().getId() : 0;
-        z = (Z.getValue() != null) ? Z.getPoint().getId() : 0;
+        t = (calcTarget.getValue() != null) ? calcTarget.getPoint().getId() : "";
+        x = (CalcXCombo.getValue() != null) ? CalcXCombo.getPoint().getId() : "";
+        y = (Y.getValue() != null) ? Y.getPoint().getId() : "";
+        z = (Z.getValue() != null) ? Z.getPoint().getId() : "";
 
         if (!Utils.isEmptyString(f)) {
             Calculation calculation = PointModelFactory.createCalculation(enabled, f, t, x, y, z);
@@ -503,15 +486,15 @@ class PointPanel extends LayoutContainer {
             @Override
             public void onSuccess(Point result) {
                 MessageBox.alert("Message", "Point Updated", null);
-                notifyPointUpdatedListener(point);
+                notifyPointUpdatedListener(originalEntity);
                 box.close();
             }
         });
     }
 
-    private void notifyPointUpdatedListener(Point p) {
+    private void notifyPointUpdatedListener(Entity p) {
         for (final PointUpdatedListener pointUpdatedListener : pointUpdatedListeners) {
-            pointUpdatedListener.onPointUpdated(p);
+            pointUpdatedListener.onPointUpdated(originalEntity);
         }
     }
 
@@ -565,20 +548,20 @@ class PointPanel extends LayoutContainer {
 
 
         String f = formula.getValue();
-        long t = 0;
-        long x = 0;
-        long y = 0;
-        long z = 0;
+        String t = "";
+        String x = "";
+        String y = "";
+        String z = "";
         boolean enabled = false;
 
 
         //calcs
 
 
-        t = (calcTarget.getValue() != null) ? calcTarget.getPoint().getId() : 0;
-        x = (CalcXCombo.getValue() != null) ? CalcXCombo.getPoint().getId() : 0;
-        y = (Y.getValue() != null) ? Y.getPoint().getId() : 0;
-        z = (Z.getValue() != null) ? Z.getPoint().getId() : 0;
+        t = (calcTarget.getValue() != null) ? calcTarget.getPoint().getId() : "";
+        x = (CalcXCombo.getValue() != null) ? CalcXCombo.getPoint().getId() : "";
+        y = (Y.getValue() != null) ? Y.getPoint().getId() : "";
+        z = (Z.getValue() != null) ? Z.getPoint().getId() : "";
 
 
         Calculation calculation = PointModelFactory.createCalculation(enabled, f, t, x, y, z);
@@ -1169,7 +1152,7 @@ class PointPanel extends LayoutContainer {
     }
 
     public interface PointUpdatedListener {
-        void onPointUpdated(Point p);
+        void onPointUpdated(Entity entity);
     }
 
     public void addPointUpdatedListeners(PointUpdatedListener listener) {

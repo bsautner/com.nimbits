@@ -78,7 +78,7 @@ public class DiagramMemCacheImpl implements DiagramTransactions {
     }
 
     @Override
-    public Diagram updateDiagram(final BlobKey blobKey, final EntityName diagramName, final long id) throws NimbitsException {
+    public Diagram updateDiagram(final BlobKey blobKey, final EntityName diagramName, final String id) throws NimbitsException {
         CategoryTransactionFactory.getInstance(user).purgeMemCache();
         return  DiagramTransactionFactory.getDaoInstance(user).updateDiagram(blobKey, diagramName, id);
     }

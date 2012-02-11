@@ -13,14 +13,15 @@
 
 package com.nimbits.server.orm.entity;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.value.*;
+import com.nimbits.client.enums.AlertType;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
 
 import javax.jdo.annotations.*;
-import javax.jdo.annotations.Value;
-import java.util.*;
+import java.util.Arrays;
 
 /**
  * Created by bsautner
@@ -60,9 +61,6 @@ public class EntityStore implements Entity {
     @NotPersistent
     private int alertType;
 
-    @NotPersistent
-    private com.nimbits.client.model.value.Value value;
-
     @Persistent
     private String[] metadata;
 
@@ -87,8 +85,7 @@ public class EntityStore implements Entity {
         this.description = description;
         this.entityType = entityType.getCode();
         this.entityUUID =entityUUID;
-
-        this.parentUUID = parentUUID==null ? null : parentUUID;
+        this.parentUUID = parentUUID== null ? null : parentUUID;
         this.ownerUUID = ownerUUID;
         this.protectionLevel = protectionLevel.getCode();
 
@@ -193,13 +190,11 @@ public class EntityStore implements Entity {
       return this.readOnly;
     }
 
-    public com.nimbits.client.model.value.Value getValue() {
-        return value;
+    @Override
+    public void setReadOnly(boolean readOnly) {
+        this.readOnly = readOnly;
     }
 
-    public void setValue(com.nimbits.client.model.value.Value value) {
-        this.value = value;
-    }
 
     @Override
     public boolean equals(Object o) {

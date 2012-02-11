@@ -13,15 +13,17 @@
 
 package com.nimbits.client.service.category;
 
-import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.model.category.*;
-import com.nimbits.client.model.email.*;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.user.User;
 
-import java.util.*;
+import java.util.List;
 
+@Deprecated
 public interface CategoryServiceAsync {
+
+    @Deprecated
     void getCategories(final boolean includePoints,
                        final boolean includeDiagrams,
                        final boolean includeSubscriptions,

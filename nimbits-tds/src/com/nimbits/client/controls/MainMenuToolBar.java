@@ -28,6 +28,7 @@ import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.connection.*;
 import com.nimbits.client.model.email.*;
+import com.nimbits.client.panels.NavigationEventProvider;
 import com.nimbits.client.service.instantmessage.*;
 import com.nimbits.client.service.twitter.*;
 import com.nimbits.client.service.user.*;
@@ -36,7 +37,7 @@ import com.nimbits.shared.*;
 import java.util.*;
 
 
-public class MainMenuToolBar extends LayoutContainer {
+public class MainMenuToolBar extends NavigationEventProvider {
     private final UserServiceAsync userService = GWT.create(UserService.class);
 
     private final ContentPanel mainPanel = new ContentPanel();
@@ -417,10 +418,11 @@ public class MainMenuToolBar extends LayoutContainer {
 
                                         @Override
                                         public void onSuccess(Void result) {
-                                          //  reloadConnections();
+
                                             connectionCount += (-1);
 
                                             connectionRequest.setText("Requests(" + connectionCount + ")");
+                                            notifyReloadListener();
 
                                         }
 

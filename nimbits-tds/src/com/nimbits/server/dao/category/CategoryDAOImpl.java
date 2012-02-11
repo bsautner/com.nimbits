@@ -13,28 +13,34 @@
 
 package com.nimbits.server.dao.category;
 
-import com.nimbits.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.category.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.diagram.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.subscription.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.diagram.*;
-import com.nimbits.server.orm.*;
-import com.nimbits.server.point.*;
-import com.nimbits.server.pointcategory.*;
-import com.nimbits.server.task.*;
-import com.nimbits.shared.*;
+import com.nimbits.PMF;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.Const;
+import com.nimbits.client.model.category.Category;
+import com.nimbits.client.model.category.CategoryModelFactory;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.diagram.Diagram;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModelFactory;
+import com.nimbits.client.model.subscription.Subscription;
+import com.nimbits.client.model.user.User;
+import com.nimbits.server.diagram.DiagramModelFactory;
+import com.nimbits.server.orm.DataPoint;
+import com.nimbits.server.orm.DiagramEntity;
+import com.nimbits.server.orm.PointCatagory;
+import com.nimbits.server.orm.SubscriptionEntity;
+import com.nimbits.server.pointcategory.CategoryTransactions;
+import com.nimbits.server.task.TaskFactoryLocator;
+import com.nimbits.shared.Utils;
 
-import javax.jdo.*;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
 import java.util.*;
-import java.util.logging.*;
-
+import java.util.logging.Logger;
+@Deprecated
 public class CategoryDAOImpl implements CategoryTransactions {
 
     private static final Logger log = Logger.getLogger(CategoryDAOImpl.class.getName());

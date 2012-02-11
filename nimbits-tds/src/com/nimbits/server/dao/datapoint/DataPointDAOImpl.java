@@ -14,12 +14,14 @@
 package com.nimbits.server.dao.datapoint;
 
 import com.nimbits.PMF;
+import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.user.User;
@@ -34,6 +36,7 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -260,10 +263,32 @@ public class DataPointDAOImpl implements PointTransactions {
         return PointModelFactory.createPointModel(jdoPoint);
     }
 
+    @Override
+    public List<Point> getPoints(List<Entity> entities) {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        List<String> ids = new ArrayList<String>();
+
+        for (Entity e : entities) {
+            if (e.getEntityType().equals(EntityType.point)) {
+                ids.add(e.getUUID());
+            }
+        }
+
+
+        final Query q1 = pm.newQuery(DataPoint.class, ":p.contains(uuid)");
+
+        try {
+            final List<Point> result = (List<Point>) q1.execute(ids);
+            return PointModelFactory.createPointModels(result);
+        } finally {
+            pm.close();
+        }
+    }
+
 
     /* (non-Javadoc)
-      * @see com.nimbits.client.service.datapoints.PointTransactions#deletePoint(com.nimbits.client.model.DataPoint)
-      */
+    * @see com.nimbits.client.service.datapoints.PointTransactions#deletePoint(com.nimbits.client.model.DataPoint)
+    */
     @Override
     public void deletePoint(final Point p) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -340,9 +365,28 @@ public class DataPointDAOImpl implements PointTransactions {
         return retObj;
     }
 
+    @Override
+    public Point addPoint(final Point point) {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+
+        Point retObj;
+
+        final DataPoint jdoPoint = new DataPoint(point);
+
+        jdoPoint.setCreateDate(new Date());
+
+        pm.makePersistent(jdoPoint);
+
+        //PointCacheManager.put(jdoPoint);
+        retObj = PointModelFactory.createPointModel(jdoPoint);
+
+        pm.close();
+        return retObj;
+    }
+
     /* (non-Javadoc)
-      * @see com.nimbits.client.service.datapoints.PointTransactions#addPoint(java.lang.String, com.nimbits.client.model.PointCatagory, com.nimbits.client.model.user.NimbitsUser, java.lang.String)
-      */
+    * @see com.nimbits.client.service.datapoints.PointTransactions#addPoint(java.lang.String, com.nimbits.client.model.PointCatagory, com.nimbits.client.model.user.NimbitsUser, java.lang.String)
+    */
     @Override
     public Point addPoint(final EntityName pointName, final Category c) throws NimbitsException {
 

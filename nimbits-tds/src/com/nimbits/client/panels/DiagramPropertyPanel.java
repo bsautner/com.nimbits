@@ -22,24 +22,20 @@ import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.VerticalPanel;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
-import com.extjs.gxt.ui.client.widget.form.Radio;
-import com.extjs.gxt.ui.client.widget.form.RadioGroup;
 import com.extjs.gxt.ui.client.widget.layout.FormData;
 import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.controls.ProtectionLevelOptions;
 import com.nimbits.client.enums.UploadType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.icons.Icons;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.diagram.Diagram;
-import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.service.diagram.DiagramService;
-import com.nimbits.client.service.diagram.DiagramServiceAsync;
-import com.nimbits.client.service.entity.*;
+import com.nimbits.client.service.entity.EntityService;
+import com.nimbits.client.service.entity.EntityServiceAsync;
 
 
 /**
@@ -53,12 +49,9 @@ class DiagramPropertyPanel extends NavigationEventProvider {
     //private final Diagram diagram;
     private final Entity entity;
 
-    //    private final Icons ICONS = GWT.create(Icons.class);
-    private final boolean readOnly;
-    private final RadioGroup radioGroup = new RadioGroup();
-    private final Radio radioProtection0 = new Radio();
-    private final Radio radioProtection1 = new Radio();
-    private final Radio radioProtection2 = new Radio();
+
+    private final ProtectionLevelOptions protectionLevelOptions;
+
 //      public interface DiagramDeletedListener {
 //        public void onDiagramDeleted(Diagram p);
 //
@@ -77,8 +70,9 @@ class DiagramPropertyPanel extends NavigationEventProvider {
 
     DiagramPropertyPanel(final Entity entity) {
         this.entity = entity;
+        this.protectionLevelOptions = new ProtectionLevelOptions(entity);
       //  this.diagram = d;
-        this.readOnly = entity.isReadOnly();
+      //  this.readOnly = entity.isReadOnly();
     }
 
     private VerticalPanel vp;
@@ -106,24 +100,9 @@ class DiagramPropertyPanel extends NavigationEventProvider {
         simple.setWidth(480);
 
 
-        radioProtection0.setBoxLabel("Only Me");
-        radioProtection0.setValue((entity.getProtectionLevel().equals(ProtectionLevel.onlyMe)));
 
 
-        radioProtection1.setBoxLabel("My Connections");
-        radioProtection1.setValue((entity.getProtectionLevel().equals(ProtectionLevel.onlyConnection.getCode())));
-
-
-        radioProtection2.setBoxLabel("Anyone");
-        radioProtection2.setValue((entity.getProtectionLevel().equals(ProtectionLevel.everyone.getCode())));
-
-
-        radioGroup.setFieldLabel("Who can view");
-
-        radioGroup.add(radioProtection0);
-        radioGroup.add(radioProtection1);
-        radioGroup.add(radioProtection2);
-        simple.add(radioGroup, formData);
+        simple.add(protectionLevelOptions, formData);
 
 
         String url = "http://" + com.google.gwt.user.client.Window.Location.getHostName() + "?uuid=" + entity.getUUID();
@@ -247,14 +226,7 @@ class DiagramPropertyPanel extends NavigationEventProvider {
     private void saveDiagram() throws NimbitsException {
 
         final EntityServiceAsync serviceAsync = GWT.create(DiagramService.class);
-        if (radioProtection0.getValue()) {
-            entity.setProtectionLevel(ProtectionLevel.onlyMe);
-        } else if (radioProtection1.getValue()) {
-            entity.setProtectionLevel(ProtectionLevel.onlyConnection);
-        } else if (radioProtection2.getValue()) {
-            entity.setProtectionLevel(ProtectionLevel.everyone);
-        }
-
+        entity.setProtectionLevel(protectionLevelOptions.getProtectionLevel());
 
         serviceAsync.addUpdateEntity(entity, new AsyncCallback<Entity>() {
 

@@ -26,6 +26,9 @@ public interface EntityService extends RemoteService {
 
     Map<String, Entity> getEntityMap(EntityType type, boolean includeValues);
 
+    Entity copyEntity(Entity originalEntity, EntityName newName);
+
+
 
 
 }

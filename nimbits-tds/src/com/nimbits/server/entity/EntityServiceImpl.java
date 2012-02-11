@@ -1,15 +1,20 @@
 package com.nimbits.server.entity;
 
-import com.google.gwt.user.server.rpc.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.service.entity.*;
-import com.nimbits.server.user.*;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.service.entity.EntityService;
+import com.nimbits.server.orm.entity.EntityStore;
+import com.nimbits.server.point.PointServiceFactory;
+import com.nimbits.server.user.UserServiceFactory;
 
-import javax.servlet.*;
-import java.util.*;
+import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by Benjamin Sautner
@@ -18,52 +23,85 @@ import java.util.*;
  * Time: 12:05 PM
  */
 public class EntityServiceImpl  extends RemoteServiceServlet implements EntityService {
-    private User u;
 
-    @Override
-    public void init() throws ServletException {
-        super.init();
+
+    private HttpSession getSession() {
+             // Get the current request and then return its session
+             return this.getThreadLocalRequest().getSession();
+    }
+
+
+    private User getUser() {
         try {
-            u = UserServiceFactory.getServerInstance().getHttpRequestUser(
-                    this.getThreadLocalRequest());
+            return UserServiceFactory.getServerInstance().getHttpRequestUser(
+                     this.getThreadLocalRequest());
         } catch (NimbitsException e) {
-            u = null;
+           return null;
         }
     }
 
+
     @Override
     public List<Entity> getEntities() {
-         return EntityTransactionFactory.getInstance(u).getEntities();
+
+         return EntityTransactionFactory.getInstance(getUser()).getEntities();
     }
 
     @Override
     public Entity addUpdateEntity(Entity entity) {
         if (entity.getOwnerUUID() == null) {
-            entity.setOwnerUUID(u.getUuid());
+            entity.setOwnerUUID(getUser().getUuid());
         }
         if (entity.getParentUUID() == null) {
-            entity.setParentUUID(u.getUuid());
+            entity.setParentUUID(getUser().getUuid());
         }
         if (entity.getUUID() == null) {
             entity.setUUID(UUID.randomUUID().toString());
         }
-        return EntityTransactionFactory.getInstance(u).addUpdateEntity(entity);
+        return EntityTransactionFactory.getInstance(getUser()).addUpdateEntity(entity);
     }
 
     @Override
     public void deleteEntity(Entity entity) {
-        EntityTransactionFactory.getInstance(u).deleteEntity(entity);
+        EntityTransactionFactory.getInstance(getUser()).deleteEntity(entity);
     }
 
     @Override
     public Entity getEntityByUUID(String uuid) {
-       return EntityTransactionFactory.getInstance(u).getEntityByUUID(uuid);
+       return EntityTransactionFactory.getInstance(getUser()).getEntityByUUID(uuid);
     }
 
     @Override
     public Map<String, Entity> getEntityMap(EntityType type, boolean includeValues) {
-       return EntityTransactionFactory.getInstance(u).getEntityMap(type, includeValues);
+       return EntityTransactionFactory.getInstance(getUser()).getEntityMap(type);
     }
+
+    @Override
+    public Entity copyEntity(Entity originalEntity, EntityName newName) {
+        Entity newEntity = new EntityStore(originalEntity);
+        newEntity.setUUID(UUID.randomUUID().toString());
+        switch (newEntity.getEntityType()) {
+
+
+            case user:
+                 return null;
+            case point:
+                return PointServiceFactory.getInstance().copyPoint(getUser(), originalEntity, newName);
+            case category:
+                return null;
+            case diagram:
+                return null;
+            case file:
+                return null;
+            case subscription:
+                return null;
+            default:
+                return null;
+        }
+    }
+
+
+
 
 
 }

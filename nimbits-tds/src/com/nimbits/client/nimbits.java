@@ -13,37 +13,52 @@
 
 package com.nimbits.client;
 
-import com.extjs.gxt.ui.client.Style.*;
-import com.extjs.gxt.ui.client.widget.*;
-import com.extjs.gxt.ui.client.widget.layout.*;
-import com.google.gwt.core.client.*;
-import com.google.gwt.user.client.*;
+import com.extjs.gxt.ui.client.Style.LayoutRegion;
+import com.extjs.gxt.ui.client.widget.ContentPanel;
+import com.extjs.gxt.ui.client.widget.Viewport;
+import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
+import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
+import com.extjs.gxt.ui.client.widget.layout.FillLayout;
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.Window.*;
-import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
-import com.nimbits.client.controls.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.exceptions.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.category.*;
-import com.nimbits.client.model.diagram.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.subscription.*;
+import com.google.gwt.user.client.Window.Location;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.nimbits.client.controls.MainMenuToolBar;
+import com.nimbits.client.enums.Action;
+import com.nimbits.client.enums.ClientType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.exceptions.NotLoggedInException;
+import com.nimbits.client.exceptions.ObjectProtectionException;
+import com.nimbits.client.model.Const;
+import com.nimbits.client.model.LoginInfo;
+import com.nimbits.client.model.category.Category;
+import com.nimbits.client.model.diagram.Diagram;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.point.Point;
 import com.nimbits.client.panels.*;
-import com.nimbits.client.service.*;
-import com.nimbits.client.service.category.*;
-import com.nimbits.client.service.datapoints.*;
-import com.nimbits.client.service.diagram.*;
-import com.nimbits.client.service.entity.*;
-import com.nimbits.client.service.recordedvalues.*;
-import com.nimbits.client.service.settings.*;
-import com.nimbits.client.service.twitter.*;
-import com.nimbits.shared.*;
+import com.nimbits.client.service.LoginService;
+import com.nimbits.client.service.LoginServiceAsync;
+import com.nimbits.client.service.category.CategoryService;
+import com.nimbits.client.service.category.CategoryServiceAsync;
+import com.nimbits.client.service.diagram.DiagramService;
+import com.nimbits.client.service.diagram.DiagramServiceAsync;
+import com.nimbits.client.service.entity.EntityService;
+import com.nimbits.client.service.entity.EntityServiceAsync;
+import com.nimbits.client.service.recordedvalues.RecordedValueService;
+import com.nimbits.client.service.recordedvalues.RecordedValueServiceAsync;
+import com.nimbits.client.service.settings.SettingsService;
+import com.nimbits.client.service.settings.SettingsServiceAsync;
+import com.nimbits.client.service.twitter.TwitterService;
+import com.nimbits.client.service.twitter.TwitterServiceAsync;
+import com.nimbits.shared.Utils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>
@@ -86,12 +101,26 @@ public class nimbits implements EntryPoint {
         else {
             viewport.setLayout(new BorderLayout());
             viewport.setBorders(false);
-            mainPanel = new MainPanel(loginInfo, false, settings);
+
             contentPanel.setHeaderVisible(true);
+            MainMenuToolBar toolBar = new MainMenuToolBar(logoutUrl, loginInfo, settings);
+            toolBar.addReloadListener(new NavigationEventProvider.ReloadListener() {
+                @Override
+                public void onReload() {
+                    contentPanel.removeAll();
+                    mainPanel = new MainPanel(loginInfo, false, settings);
+                    contentPanel.add(mainPanel);
+                    viewport.layout(true);
+
+                }
+            });
+            contentPanel.setTopComponent(toolBar);
+
             if (loginInfo != null) {
                 contentPanel.setHeading(heading + " " + loginInfo.getEmailAddress().getValue());
             }
-            contentPanel.setTopComponent(new MainMenuToolBar(logoutUrl, loginInfo, settings));
+
+            mainPanel = new MainPanel(loginInfo, false, settings);
             contentPanel.add(mainPanel);
             contentPanel.setLayout(new FillLayout());
             addListeners();

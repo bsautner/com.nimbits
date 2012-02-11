@@ -101,4 +101,7 @@ public interface PointService extends RemoteService {
     void updateSubscriptionLastSent(Subscription subscription);
 
 
+    Entity copyPoint(User u, Entity originalEntity, EntityName newName);
+
+    Map<String,Point> getPoints(Map<String, Entity> entities);
 }

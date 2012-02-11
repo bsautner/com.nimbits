@@ -22,6 +22,8 @@ public interface EntityTransactions {
 
     Entity getEntityByUUID(String uuid);
 
-    Map<String,Entity> getEntityMap(EntityType type, boolean includeValues);
+    Map<String,Entity> getEntityMap(EntityType type);
+
+
 
 }

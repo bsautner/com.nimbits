@@ -45,8 +45,6 @@ public class GxtModel extends BaseTreeModel implements Serializable {
 
         set(Const.PARAM_ID, this.uuid);
         set(Const.PARAM_NAME, this.name.getValue());
-
-       // set(Const.PARAM_ICON, Const.PARAM_DIAGRAM);
         set(Const.PARAM_ENTITY_TYPE, entity.getEntityType().getCode());
     }
 
@@ -114,6 +112,7 @@ public class GxtModel extends BaseTreeModel implements Serializable {
     }
 
     public void setValue(Value value) {
+        set(Const.PARAM_VALUE, value.getNumberValue());
         this.value = value;
     }
 }

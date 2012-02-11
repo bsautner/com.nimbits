@@ -14,40 +14,52 @@
 package com.nimbits.client.panels;
 
 import com.extjs.gxt.ui.client.Style.Scroll;
-import com.extjs.gxt.ui.client.data.*;
-import com.extjs.gxt.ui.client.dnd.DND.*;
-import com.extjs.gxt.ui.client.dnd.*;
+import com.extjs.gxt.ui.client.data.ModelData;
+import com.extjs.gxt.ui.client.dnd.DND.Feedback;
+import com.extjs.gxt.ui.client.dnd.TreeGridDragSource;
+import com.extjs.gxt.ui.client.dnd.TreeGridDropTarget;
 import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.store.*;
-import com.extjs.gxt.ui.client.util.*;
-import com.extjs.gxt.ui.client.widget.*;
+import com.extjs.gxt.ui.client.store.TreeStore;
+import com.extjs.gxt.ui.client.widget.ContentPanel;
+import com.extjs.gxt.ui.client.widget.Info;
+import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.Window;
 import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.grid.*;
-import com.extjs.gxt.ui.client.widget.layout.*;
-import com.extjs.gxt.ui.client.widget.menu.*;
+import com.extjs.gxt.ui.client.widget.grid.ColumnModel;
+import com.extjs.gxt.ui.client.widget.grid.EditorGrid;
+import com.extjs.gxt.ui.client.widget.layout.FillLayout;
+import com.extjs.gxt.ui.client.widget.menu.Menu;
 import com.extjs.gxt.ui.client.widget.menu.MenuItem;
-import com.extjs.gxt.ui.client.widget.toolbar.*;
-import com.google.gwt.core.client.*;
+import com.extjs.gxt.ui.client.widget.toolbar.SeparatorToolItem;
+import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
-import com.nimbits.client.controls.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.icons.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.category.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.nimbits.client.controls.EntityTree;
+import com.nimbits.client.enums.AlertType;
+import com.nimbits.client.enums.ClientType;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.UploadType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.icons.Icons;
+import com.nimbits.client.model.Const;
+import com.nimbits.client.model.GxtModel;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.value.*;
-import com.nimbits.client.service.category.*;
-import com.nimbits.client.service.datapoints.*;
-import com.nimbits.client.service.entity.*;
-import com.nimbits.client.service.recordedvalues.*;
-import com.nimbits.client.windows.*;
-import com.nimbits.shared.*;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.client.service.datapoints.PointService;
+import com.nimbits.client.service.datapoints.PointServiceAsync;
+import com.nimbits.client.service.entity.EntityService;
+import com.nimbits.client.service.entity.EntityServiceAsync;
+import com.nimbits.client.service.recordedvalues.RecordedValueService;
+import com.nimbits.client.service.recordedvalues.RecordedValueServiceAsync;
+import com.nimbits.client.windows.WindowHelper;
+import com.nimbits.shared.Utils;
 
 import java.util.*;
 
@@ -221,6 +233,8 @@ class NavigationPanel extends NavigationEventProvider {
 
     private void createPointPropertyWindow(Entity entity) {
         final Window window = new Window();
+
+
         final PointPanel panel = new PointPanel(entity);
 
         panel.addPointUpdatedListeners(new PointPanel.PointUpdatedListener() {
@@ -235,14 +249,7 @@ class NavigationPanel extends NavigationEventProvider {
             }
         });
 
-        panel.addPointDeletedListeners(new PointPanel.PointDeletedListener() {
-            @Override
-            public void onPointDeleted(Point p) {
-                entityMap.remove(p.getUUID());
 
-
-            }
-        });
 
         window.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.connect()));
         window.setSize(466, 520);
@@ -272,7 +279,6 @@ class NavigationPanel extends NavigationEventProvider {
         }
         // return model;
     }
-
 
     private void treeStoreBuilder(final List<Entity> result) {
         if (entityMap == null) {
@@ -330,6 +336,19 @@ class NavigationPanel extends NavigationEventProvider {
         }
     }
 
+    private void removeEntity(final Entity result, GxtModel currentModel) {
+
+        entityMap.remove(result.getUUID());
+
+        if (tree != null && tree.getStore() != null) {
+            GxtModel model = new GxtModel(result);
+            store = tree.getTreeStore();
+            store.remove(currentModel);
+
+        }
+    }
+
+
     @Override
     protected void afterRender() {
         super.afterRender();
@@ -355,30 +374,38 @@ class NavigationPanel extends NavigationEventProvider {
 
     private void updateValues() throws NimbitsException {
         if (tree != null) {
-            final CategoryServiceAsync service = GWT.create(CategoryService.class);
-            service.getCategories(true, false, true,true, new AsyncCallback<List<Category>>() {
+
+             final PointServiceAsync service = GWT.create(PointService.class);
+            service.getPoints(entityMap, new AsyncCallback<Map<String, Point>>() {
                 @Override
-                public void onFailure(final Throwable e) {
-                    updater.cancel();
-                    Info.display(Const.WORD_ERROR,
-                            e.getMessage());
+                public void onFailure(Throwable throwable) {
+                  GWT.log(throwable.getMessage(), throwable);
                 }
 
                 @Override
-                public void onSuccess(final List<Category> categories) {
+                public void onSuccess(Map<String, Point> stringPointMap) {
                     final TreeStore<ModelData> models = tree.getTreeStore();
-                    final HashMap<String, Entity> map = new HashMap<String, Entity>();
 
 
                     for (final ModelData m : models.getAllItems()) {
 
                         final GxtModel model = (GxtModel) m;
+
+
                         if (!model.isDirty() && model.getEntityType().equals(EntityType.point)) {
 
-                            if (map.containsKey(model.getUUID())) {
-                                Entity e = map.get(model.getUUID());
-                                model.setAlertType(e.getAlertType());
-                                model.setValue(e.getValue());
+                            if (stringPointMap.containsKey(model.getUUID())) {
+                                Point p = stringPointMap.get(model.getUUID());
+                                if (p.getValue() == null) {
+                                    model.setAlertType(AlertType.OK);
+                                    model.setValue(ValueModelFactory.createValueModel(0.0));
+                                }
+                                else {
+                                    model.setAlertType(p.getValue().getAlertState());
+                                    model.setValue(p.getValue());
+                                }
+
+
                             }
                             models.update(m);
                         }
@@ -386,26 +413,10 @@ class NavigationPanel extends NavigationEventProvider {
                     }
                 }
             });
+
+
         }
     }
-
-//    public void addPoint(final Entity p) {
-//        store = tree.getTreeStore();
-//
-//
-//        GxtModel pModel = new GxtModel(p);
-//        store.remove(model);
-//        model.add(pModel);
-//        store.add(model, true);
-//        if (!pointMap.containsKey(p.getUUID())) {
-//            pointMap.put(p.getUUID(), p);
-//        }
-//        if (!categoryMap.containsKey(c.getName())) {
-//            categoryMap.put(c.getName(), c);
-//        }
-//        tree.setExpanded(model, true);
-//    }
-
 
     //toolbars
 
@@ -608,16 +619,20 @@ class NavigationPanel extends NavigationEventProvider {
         retObj.addSelectionListener(new SelectionListener<MenuEvent>() {
             public void componentSelected(MenuEvent ce) {
                 ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
-                if (selectedModel.get(Const.PARAM_ICON).equals(Const.PARAM_POINT)) {
-                    GxtModel model = (GxtModel) selectedModel;
-                    if (model.getEntityType().equals(EntityType.point)) {
-                        //entityToBeCopied = entityMap.get(model.getUUID());
-                        final MessageBox box = MessageBox.prompt(
-                                Const.MESSAGE_NEW_POINT,
-                                Const.MESSAGE_NEW_POINT_PROMPT);
-                        box.addCallback(copyPointListener);
-                    }
+                currentModel = (GxtModel) selectedModel;
+                final MessageBox box;
+                if (currentModel.getEntityType().equals(EntityType.point)) {
+
+                    box= MessageBox.prompt(
+                            Const.MESSAGE_NEW_POINT,
+                            Const.MESSAGE_NEW_POINT_PROMPT);
+                    box.addCallback(copyPointListener);
                 }
+                else {
+                    box = MessageBox.alert("Not supported", "Sorry, for the moment you can only copy a data point", null);
+
+                }
+                box.show();
             }
         });
         return retObj;
@@ -703,31 +718,23 @@ class NavigationPanel extends NavigationEventProvider {
                 final MessageBox box = MessageBox.wait("Progress",
                         "Creating your data point channel into the cloud", "Creating: " + newEntityName);
                 box.show();
-                PointServiceAsync pointService = GWT.create(PointService.class);
+                EntityServiceAsync service = GWT.create(EntityService.class);
+                EntityName name = CommonFactoryLocator.getInstance().createName(newEntityName);
+                Entity entity = entityMap.get(currentModel.getUUID());
 
+                service.copyEntity(entity, name,new AsyncCallback<Entity>() {
+                    @Override
+                    public void onFailure(Throwable throwable) {
+                      box.close();
+                    }
 
-                EntityName pointName = CommonFactoryLocator.getInstance().createName(newEntityName);
-                //TODO
-//                pointService.copyPoint(entityToBeCopied, pointName,
-//                        new AsyncCallback<Point>() {
-//                            @Override
-//                            public void onFailure(Throwable caught) {
-//                                Info.display("Could not create "
-//                                        + newEntityName,
-//                                        caught.getMessage());
-//                                box.close();
-//                            }
-//
-//                            @Override
-//                            public void onSuccess(Point result) {
-//                                try {
-//                                    reloadTree();
-//                                } catch (NimbitsException e) {
-//                                    GWT.log(e.getMessage(), e);
-//                                }
-//                                box.close();
-//                            }
-//                        });
+                    @Override
+                    public void onSuccess(Entity entity) {
+                        box.close();
+                        addNewlyCreatedEntityToTree(entity);
+                    }
+                });
+
             }
         }
     };
@@ -792,12 +799,12 @@ class NavigationPanel extends NavigationEventProvider {
                 service.deleteEntity(entityToDelete, new AsyncCallback<Void>() {
                     @Override
                     public void onFailure(Throwable caught) {
-                        //auto generated
+                        GWT.log("Error Deleting Point", caught);
                     }
 
                     @Override
                     public void onSuccess(Void result) {
-                        //auto generated
+                        removeEntity(entityToDelete, currentModel);
                     }
                 });
 
@@ -814,13 +821,13 @@ class NavigationPanel extends NavigationEventProvider {
                 model.setDirty(true);
 
 
-                final Entity point = entityMap.get(model.getId());
+                final Entity entity = entityMap.get(model.getId());
                 final Date timestamp = new Date();
                 final Double v = model.get(Const.PARAM_VALUE);
 
                 final Value value = ValueModelFactory.createValueModel(v, timestamp);
                 RecordedValueServiceAsync service = GWT.create(RecordedValueService.class);
-                service.recordValue(point, value, new AsyncCallback<Value>() {
+                service.recordValue(entity, value, new AsyncCallback<Value>() {
                     @Override
                     public void onFailure(final Throwable throwable) {
                         be.getRecord().reject(false);

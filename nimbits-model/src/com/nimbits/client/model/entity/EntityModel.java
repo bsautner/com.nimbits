@@ -27,7 +27,7 @@ public class EntityModel  implements Serializable, Entity {
     private String[] metadata = null;
     private String[] accessKeys = null;
     private boolean readOnly = false;
-    private Value value = null;
+
 
     public EntityModel(final EntityName name,
                        final String description,
@@ -35,7 +35,6 @@ public class EntityModel  implements Serializable, Entity {
                        final ProtectionLevel protectionLevel,
                        final String entityUUID,
                        final String parentUUID,
-                       final String childUUID,
                        final String ownerUUID) {
         this.name = name.getValue();
         this.description = description;
@@ -149,11 +148,10 @@ public class EntityModel  implements Serializable, Entity {
         return readOnly;
     }
 
-    public Value getValue() {
-        return value;
+    @Override
+    public void setReadOnly(boolean readOnly) {
+        this.readOnly = readOnly;
     }
 
-    public void setValue(Value value) {
-        this.value = value;
-    }
+
 }

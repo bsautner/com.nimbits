@@ -70,7 +70,6 @@ public class CategoryMaintTask extends HttpServlet {
                                 c.getProtectionLevel(),
                                 c.getUUID(),
                                 u.getUuid(),
-                                c.getUUID(),
                                 u.getUuid());
                         EntityTransactionFactory.getInstance(u).addUpdateEntity(entity);
                     }
@@ -92,7 +91,6 @@ public class CategoryMaintTask extends HttpServlet {
                                     protectionLevel,
                                     p.getUUID(),
                                     parentUUID,
-                                    "",
                                     u.getUuid());
 
                             EntityTransactionFactory.getInstance(u).addUpdateEntity(entity);
@@ -111,7 +109,6 @@ public class CategoryMaintTask extends HttpServlet {
                                     protectionLevel,
                                     p.getUuid(),
                                     parentUUID,
-                                    "",
                                     u.getUuid());
 
                             EntityTransactionFactory.getInstance(u).addUpdateEntity(entity);

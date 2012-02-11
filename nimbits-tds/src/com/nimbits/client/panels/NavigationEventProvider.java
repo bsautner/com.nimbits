@@ -13,17 +13,20 @@
 
 package com.nimbits.client.panels;
 
-import com.extjs.gxt.ui.client.widget.*;
-import com.nimbits.client.model.diagram.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.subscription.*;
-import com.nimbits.client.model.value.*;
+import com.extjs.gxt.ui.client.widget.LayoutContainer;
+import com.nimbits.client.model.diagram.Diagram;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.value.Value;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class NavigationEventProvider extends LayoutContainer {
 
     private final List<EntityDeletedListener> entityDeletedListeners = new ArrayList<EntityDeletedListener>();
+    private final List<ReloadListener> reloadListeners = new ArrayList<ReloadListener>();
+
+
     private final List<EntityClickedListener> entityClickedListeners = new ArrayList<EntityClickedListener>();
     private final List<UrlClickedListener> urlClickedListeners = new ArrayList<UrlClickedListener>();
     private final List<ValueEnteredListener> valueEnteredListeners = new ArrayList<ValueEnteredListener>();
@@ -33,6 +36,19 @@ public abstract class NavigationEventProvider extends LayoutContainer {
     private final List<SubscriptionAddedListener> subscriptionAddedListeners = new ArrayList<SubscriptionAddedListener>();
 
 
+    public interface ReloadListener {
+        void onReload();
+    }
+
+
+    public void notifyReloadListener()  {
+        for (ReloadListener l : reloadListeners) {
+            l.onReload();
+        }
+    }
+    public void addReloadListener(final ReloadListener listener) {
+        reloadListeners.add(listener);
+    }
     public interface SubscriptionAddedListener {
         void onSubscriptionAdded(final Entity model);
     }

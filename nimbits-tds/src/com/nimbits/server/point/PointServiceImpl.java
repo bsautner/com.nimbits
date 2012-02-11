@@ -33,9 +33,11 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.service.datapoints.PointService;
 import com.nimbits.server.blobstore.BlobStoreFactory;
 import com.nimbits.server.core.CoreFactory;
+import com.nimbits.server.entity.EntityTransactionFactory;
 import com.nimbits.server.export.ExportHelperFactory;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.pointcategory.CategoryServiceFactory;
+import com.nimbits.server.recordedvalue.RecordedValueServiceFactory;
 import com.nimbits.server.subscription.SubscriptionTransactionFactory;
 import com.nimbits.server.task.TaskFactoryLocator;
 import com.nimbits.server.user.UserServiceFactory;
@@ -46,8 +48,58 @@ import java.util.*;
 public class PointServiceImpl extends RemoteServiceServlet implements
         PointService {
 
-
     private static final long serialVersionUID = 1L;
+
+    private User getUser() {
+        User u;
+        try {
+            u = UserServiceFactory.getServerInstance().getHttpRequestUser(
+                    this.getThreadLocalRequest());
+        } catch (NimbitsException e) {
+            u = null;
+        }
+        return u;
+    }
+
+
+    @Override
+    public Entity copyPoint(User u, Entity originalEntity, EntityName newName) {
+
+
+        final Point storedPoint = PointServiceFactory.getInstance().getPointByUUID(originalEntity.getUUID());
+        final Point newPoint = PointModelFactory.createPointModel(storedPoint);
+        final String newUUID = UUID.randomUUID().toString();
+        newPoint.setName(newName);
+        newPoint.setUuid(newUUID);
+
+        final Entity newEntity = EntityModelFactory.createEntity(originalEntity);
+        newEntity.setName(newName);
+        newEntity.setUUID(newUUID);
+
+
+        PointTransactionsFactory.getInstance(u).addPoint(newPoint);
+        EntityTransactionFactory.getInstance(u).addUpdateEntity(newEntity);
+
+
+        return newEntity;
+    }
+
+    @Override
+    public Map<String, Point> getPoints(Map<String, Entity> entities) {
+        List<Entity> entityList = new ArrayList<Entity>(entities.values());
+
+        List<Point> points =  PointTransactionsFactory.getInstance(getUser()).getPoints(entityList);
+        Map<String, Point> retObj = new HashMap<String, Point>();
+
+        for (Point p : points) {
+            Value v  = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
+            p.setValue(v);
+            retObj.put(p.getUUID(), p);
+        }
+        return retObj;
+
+    }
+
 
 
     //called from rpc
@@ -58,7 +110,7 @@ public class PointServiceImpl extends RemoteServiceServlet implements
             deletePoint(u, p);
         }
         else if (p.getEntityType().equals(EntityType.subscription)) {
-           deleteSubscription(p);
+            deleteSubscription(p);
         }
 
     }
@@ -400,12 +452,12 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public List<Subscription> getSubscriptionsToPoint(Point point) {
-       return SubscriptionTransactionFactory.getInstance(null).getSubscriptionsToPoint(point);
+        return SubscriptionTransactionFactory.getInstance(null).getSubscriptionsToPoint(point);
     }
 
     @Override
     public void updateSubscriptionLastSent(Subscription subscription) {
-       SubscriptionTransactionFactory.getInstance(null).updateSubscriptionLastSent(subscription);
+        SubscriptionTransactionFactory.getInstance(null).updateSubscriptionLastSent(subscription);
     }
 
     @Override

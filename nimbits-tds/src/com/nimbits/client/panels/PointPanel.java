@@ -13,7 +13,9 @@
 
 package com.nimbits.client.panels;
 
-import com.extjs.gxt.ui.client.Style.*;
+import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
+import com.extjs.gxt.ui.client.Style.Orientation;
+import com.extjs.gxt.ui.client.Style.Scroll;
 import com.extjs.gxt.ui.client.event.*;
 import com.extjs.gxt.ui.client.widget.*;
 import com.extjs.gxt.ui.client.widget.HorizontalPanel;
@@ -24,30 +26,48 @@ import com.extjs.gxt.ui.client.widget.form.CheckBox;
 import com.extjs.gxt.ui.client.widget.form.*;
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
 import com.extjs.gxt.ui.client.widget.form.TextArea;
-import com.extjs.gxt.ui.client.widget.layout.*;
-import com.extjs.gxt.ui.client.widget.toolbar.*;
-import com.google.gwt.core.client.*;
+import com.extjs.gxt.ui.client.widget.layout.FillLayout;
+import com.extjs.gxt.ui.client.widget.layout.FormData;
+import com.extjs.gxt.ui.client.widget.layout.TableData;
+import com.extjs.gxt.ui.client.widget.toolbar.SeparatorToolItem;
+import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.*;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.ui.Label;
-import com.nimbits.client.controls.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.exceptions.*;
-import com.nimbits.client.icons.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.intelligence.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.service.datapoints.*;
-import com.nimbits.client.service.intelligence.*;
-import com.nimbits.client.service.recordedvalues.*;
-import com.nimbits.client.service.settings.*;
-import com.nimbits.shared.*;
+import com.nimbits.client.controls.PointCombo;
+import com.nimbits.client.controls.ProtectionLevelOptions;
+import com.nimbits.client.enums.IntelligenceResultTarget;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.exceptions.CalculationFailedException;
+import com.nimbits.client.icons.Icons;
+import com.nimbits.client.model.Const;
+import com.nimbits.client.model.GxtModel;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.intelligence.Intelligence;
+import com.nimbits.client.model.intelligence.IntelligenceModelFactory;
+import com.nimbits.client.model.point.Calculation;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModel;
+import com.nimbits.client.model.point.PointModelFactory;
+import com.nimbits.client.service.datapoints.PointService;
+import com.nimbits.client.service.datapoints.PointServiceAsync;
+import com.nimbits.client.service.entity.EntityService;
+import com.nimbits.client.service.entity.EntityServiceAsync;
+import com.nimbits.client.service.intelligence.IntelligenceService;
+import com.nimbits.client.service.intelligence.IntelligenceServiceAsync;
+import com.nimbits.client.service.recordedvalues.RecordedValueService;
+import com.nimbits.client.service.recordedvalues.RecordedValueServiceAsync;
+import com.nimbits.client.service.settings.SettingsService;
+import com.nimbits.client.service.settings.SettingsServiceAsync;
+import com.nimbits.shared.Utils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 class PointPanel extends LayoutContainer {
 
@@ -55,8 +75,11 @@ class PointPanel extends LayoutContainer {
 
     //  private final Button btnHelp = new Button("Help");
     private final Button btnTestCalc = new Button("Test Calc");
-    private final Button buttonDelete = new Button("Delete Point");
-    private final CheckBox check2 = new CheckBox();
+    private ProtectionLevelOptions protectionLevelOptions;
+
+
+
+
     private final CheckBox checkFB = new CheckBox();
     private final CheckBox checkIM = new CheckBox();
     private final CheckBox checkTwitter = new CheckBox();
@@ -134,7 +157,7 @@ class PointPanel extends LayoutContainer {
     private final TextField<String> unit = new TextField<String>();
 
 
-    private final Entity originalEntity;
+    private final Entity entity;
     private Point point;
     private Point intelligenceTargetPoint = null;
 
@@ -152,7 +175,9 @@ class PointPanel extends LayoutContainer {
     private final CheckBox intelPlainText = new CheckBox();
 
     public PointPanel(final Entity x)   {
-        originalEntity = x;
+        entity = x;
+        protectionLevelOptions = new ProtectionLevelOptions(x);
+
         SettingsServiceAsync settings = GWT.create(SettingsService.class);
         settings.getSettings(new AsyncCallback<Map<String, String>>() {
             @Override
@@ -173,7 +198,7 @@ class PointPanel extends LayoutContainer {
     }
 
     private void loadForm(final Map<String, String> settingMap) throws NimbitsException {
-        pointService.getPointByUUID(originalEntity.getUUID(), new AsyncCallback<Point>() {
+        pointService.getPointByUUID(entity.getUUID(), new AsyncCallback<Point>() {
             @Override
             public void onFailure(Throwable caught) {
                 GWT.log(caught.getMessage());
@@ -278,36 +303,6 @@ class PointPanel extends LayoutContainer {
 
         btnTestIntel.setVisible(settingMap.containsKey(Const.SETTING_WOLFRAM) && !Utils.isEmptyString(settingMap.get(Const.SETTING_WOLFRAM)));
 
-        buttonDelete.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.delete()));
-
-
-        final Listener<MessageBoxEvent> deletePointListener = new Listener<MessageBoxEvent>() {
-            public void handleEvent(MessageBoxEvent ce) {
-                Button btn = ce.getButtonClicked();
-
-                if (btn.getText().equals("Yes")) {
-                    pointService.deletePoint(point, new AsyncCallback<Void>() {
-                        @Override
-                        public void onFailure(Throwable caught) {
-
-
-                        }
-
-                        @Override
-                        public void onSuccess(Void result) {
-                            notifyPointDeletedListener(point);
-                            Window.alert(Const.MESSAGE_POINT_DELETED);
-                        }
-                    });
-                }
-            }
-        };
-        buttonDelete.addSelectionListener(new SelectionListener<ButtonEvent>() {
-            public void componentSelected(ButtonEvent ce) {
-                MessageBox.confirm("Confirm", "Are you sure you want delete this point? Doing so will permanently delete all historical data for this point.", deletePointListener);
-            }
-        });
-
         Button buttonSave = saveButtonInit();
 
 
@@ -322,11 +317,11 @@ class PointPanel extends LayoutContainer {
                 }
             }
         });
-        buttonDelete.setWidth("90px");
+
         separatorToolItem.setWidth("25px");
 
         toolBar.add(buttonSave);
-        toolBar.add(buttonDelete);
+
         toolBar.add(new SeparatorToolItem());
         toolBar.add(btnTestIntel);
         toolBar.add(btnTestCalc);
@@ -337,10 +332,10 @@ class PointPanel extends LayoutContainer {
 
     private Button saveButtonInit() {
         Button buttonSave = new Button("Save");
-        buttonSave.setEnabled(! point.getReadOnly());
+        buttonSave.setEnabled(! entity.isReadOnly());
         buttonSave.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.SaveAll()));
 
-        if (! point.getReadOnly()) {
+
             buttonSave.addSelectionListener(new SelectionListener<ButtonEvent>() {
                 public void componentSelected(ButtonEvent ce) {
                     try {
@@ -383,7 +378,7 @@ class PointPanel extends LayoutContainer {
                     }
                 }
             });
-        }
+
         return buttonSave;
     }
 
@@ -406,12 +401,33 @@ class PointPanel extends LayoutContainer {
 
 
         //General
+
+
+
+        entity.setDescription(description.getValue());
+        entity.setProtectionLevel(protectionLevelOptions.getProtectionLevel());
+        final EntityServiceAsync serviceAsync = GWT.create(EntityService.class);
+
+
+
+        serviceAsync.addUpdateEntity(entity, new AsyncCallback<Entity>() {
+
+            @Override
+            public void onFailure(Throwable throwable) {
+
+            }
+
+            @Override
+            public void onSuccess(Entity entity) {
+
+
+            }
+        });
         point.setCompression(compression.getValue().doubleValue());
         point.setIgnoreIncomingCompressedValues(ignoreCompressedValues.getValue());
         point.setExpire(expires.getValue().intValue());
         point.setUnit(unit.getValue());
         point.setDescription(description.getValue());
-        point.setPublic(check2.getValue());
         point.setSendIM(checkIM.getValue());
         point.setSendTweet(checkTwitter.getValue());
         point.setPostToFacebook(checkFB.getValue());
@@ -485,8 +501,8 @@ class PointPanel extends LayoutContainer {
 
             @Override
             public void onSuccess(Point result) {
-                MessageBox.alert("Message", "Point Updated", null);
-                notifyPointUpdatedListener(originalEntity);
+                MessageBox.alert("Success", "Point Updated", null);
+                notifyPointUpdatedListener(entity);
                 box.close();
             }
         });
@@ -494,7 +510,7 @@ class PointPanel extends LayoutContainer {
 
     private void notifyPointUpdatedListener(Entity p) {
         for (final PointUpdatedListener pointUpdatedListener : pointUpdatedListeners) {
-            pointUpdatedListener.onPointUpdated(originalEntity);
+            pointUpdatedListener.onPointUpdated(entity);
         }
     }
 
@@ -947,8 +963,7 @@ class PointPanel extends LayoutContainer {
         simple.add(unit);
 
 
-        check2.setBoxLabel("Public");
-        check2.setValue(point.isPublic());
+        simple.add(protectionLevelOptions, new FormData("-20"));
 
 
         checkFB.setBoxLabel("facebook");
@@ -962,11 +977,7 @@ class PointPanel extends LayoutContainer {
         checkTwitter.setBoxLabel("Twitter");
         checkTwitter.setValue(point.getSendTweet());
 
-        CheckBoxGroup checkGroup = new CheckBoxGroup();
-        checkGroup.setFieldLabel("Sharing");
 
-        checkGroup.add(check2);
-        simple.add(checkGroup);
 
         CheckBoxGroup checkGroupFB = new CheckBoxGroup();
         checkGroupFB.setFieldLabel("Messaging");

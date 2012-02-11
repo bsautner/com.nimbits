@@ -49,7 +49,7 @@ public class CalcTest {
         double r2 = r.nextDouble();
         double ry = r.nextDouble();
         double rz = r.nextDouble();
-        Calculation calc = PointModelFactory.createCalculation(true, "x+y+z+" + r1, target.getId(), trigger.getId(), y.getId(), z.getId());
+        Calculation calc = PointModelFactory.createCalculation(true, "x+y+z+" + r1, target.getUUID(), trigger.getUUID(), y.getUUID(), z.getUUID());
         trigger.setCalculation(calc);
 
 //        trigger.setX(trigger.getId());

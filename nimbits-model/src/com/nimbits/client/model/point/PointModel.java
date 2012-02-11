@@ -47,7 +47,7 @@ public class PointModel implements Serializable, Point {
     private boolean isSystemPoint;
 
     private long userFK;
-
+    @Deprecated
     private String name;
 
     private long X;
@@ -491,7 +491,7 @@ public class PointModel implements Serializable, Point {
     public void setLowAlarmOn(final boolean lowAlarmOn) {
         this.lowAlarmOn = lowAlarmOn;
     }
-
+    @Deprecated
     @Override
     public void setName(final EntityName name) {
         this.name = name.getValue();
@@ -641,7 +641,7 @@ public class PointModel implements Serializable, Point {
     public boolean isIdleAlarmOn() {
         return idleAlarmOn;
     }
-
+    @Deprecated
     @Override
     public AlertType getAlertState() {
         return this.alertState;

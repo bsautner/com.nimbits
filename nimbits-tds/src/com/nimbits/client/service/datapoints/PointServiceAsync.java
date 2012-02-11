@@ -108,4 +108,8 @@ public interface PointServiceAsync {
     void updateSubscriptionLastSent(Subscription subscription, AsyncCallback<Void> async);
 
     void addPoint(final User user, final Entity entity, AsyncCallback<Point> async);
+
+    void copyPoint(User u, Entity originalEntity, EntityName newName, AsyncCallback<Entity> async);
+
+    void getPoints(Map<String, Entity> entities, AsyncCallback<Map<String, Point>> async);
 }

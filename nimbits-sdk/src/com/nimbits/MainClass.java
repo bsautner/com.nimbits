@@ -172,7 +172,7 @@ public class MainClass {
         final double lat = argsMap.containsKey(Const.PARAM_LAT) ? Double.valueOf(argsMap.get(Const.PARAM_LAT)) : 0.0;
         final double lng = argsMap.containsKey(Const.PARAM_LNG) ? Double.valueOf(argsMap.get(Const.PARAM_LNG)) : 0.0;
 
-        return ValueModelFactory.createValueModel(lat, lng, d, new Date(), 0, note, "");
+        return ValueModelFactory.createValueModel(lat, lng, d, new Date(), "", note, "");
 
     }
 

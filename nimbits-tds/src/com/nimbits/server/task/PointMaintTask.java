@@ -13,25 +13,23 @@
 
 package com.nimbits.server.task;
 
-import com.google.gson.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.category.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.common.*;
-import com.nimbits.server.core.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.point.*;
-import com.nimbits.server.pointcategory.*;
-import com.nimbits.server.user.*;
+import com.google.gson.Gson;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.Const;
+import com.nimbits.client.model.point.PointModel;
+import com.nimbits.client.model.user.User;
+import com.nimbits.server.common.ServerInfoImpl;
+import com.nimbits.server.core.CoreFactory;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.point.PointTransactionsFactory;
+import com.nimbits.server.user.UserTransactionFactory;
 
-import javax.servlet.http.*;
-import java.io.*;
-import java.util.logging.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.logging.Logger;
 
 public class PointMaintTask extends HttpServlet {
 
@@ -62,7 +60,8 @@ public class PointMaintTask extends HttpServlet {
 
 
         if (n != null) {
-            Category category = CategoryServiceFactory.getInstance().getCategory(n, p.getCatID());
+           // if (p.getCatID() != 0) {
+           // Category category = CategoryServiceFactory.getInstance().getCategory(n, p.getCatID());
             try {
                 PointTransactionsFactory.getInstance(null).checkPoint(req, n.getEmail(), p);
 
@@ -81,16 +80,7 @@ public class PointMaintTask extends HttpServlet {
 
 
 
-            if (category != null) {
-                if (category.getProtectionLevel() != null && category.getProtectionLevel().equals(ProtectionLevel.everyone)) {
-                    String j = GsonFactory.getInstance().toJson(category);
-                    CoreFactory.getInstance().reportUpdateToCore(url, j, EntityType.category);
-                }
 
-            }
-            else {
-                log.severe("Point Maint Task could not find point's category - would like to delete point :" + p.getName().getValue());
-            }
 
         } else {
 

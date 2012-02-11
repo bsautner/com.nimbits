@@ -44,6 +44,8 @@ public interface PointTransactions {
 
     Point addPoint(final Point point, final Category c) throws NimbitsException;
 
+    Point addPoint(final Point point);
+
     Point addPoint(final EntityName pointName, final Category c) throws NimbitsException;
 
      List<Point> getPointsByCategory(final Category c);
@@ -61,4 +63,7 @@ public interface PointTransactions {
     List<Point> getAllPoints();
 
     Point addPoint(Entity entity);
+
+
+    List<Point>  getPoints(List<Entity> entities);
 }

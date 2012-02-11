@@ -11,9 +11,9 @@ import java.util.Map;
  * Time: 7:57 PM
  */
 public enum ProtectionLevel {
-    onlyMe(0),
-    onlyConnection(1),
-    everyone(2);
+    onlyMe(0, "Only Me"),
+    onlyConnection(1, "Connections"),
+    everyone(2, "Everyone");
 
 
     private static final Map<Integer, ProtectionLevel> lookup = new HashMap<Integer, ProtectionLevel>();
@@ -24,9 +24,11 @@ public enum ProtectionLevel {
     }
 
     private final int code;
+    private final String text;
 
-    private ProtectionLevel(int code) {
+    private ProtectionLevel(int code, String text) {
         this.code = code;
+        this.text = text;
     }
 
     public int getCode() {
@@ -36,4 +38,10 @@ public enum ProtectionLevel {
     public static ProtectionLevel get(int code) {
         return lookup.get(code);
     }
+
+    public String getText() {
+        return text;
+    }
+
+
 }

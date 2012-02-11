@@ -19,7 +19,8 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.datapoints.PointTransactions;
@@ -40,6 +41,15 @@ import java.util.List;
 public class PointMemCacheImpl implements PointTransactions {
 
     private final MemcacheService cache;
+
+    @Override
+    public Point addPoint(Point point) {
+        final Point retObj = PointTransactionsFactory.getDaoInstance(u).addPoint(point);
+        purgeMemCache(retObj);
+        updateMap(retObj);
+        return retObj;
+    }
+
     private final User u;
     private final String pointListKey;
 
@@ -262,6 +272,12 @@ public class PointMemCacheImpl implements PointTransactions {
         updateMap(retObj);
         return retObj;
     }
+
+    @Override
+    public List<Point> getPoints(List<Entity> entities) {
+        return PointTransactionsFactory.getDaoInstance(u).getPoints(entities);
+    }
+
 
     @Override
     public List<Point> getAllPoints(final int start,final  int end) {

@@ -1,20 +1,25 @@
 package com.nimbits.server.dao.entity;
 
 
-import com.nimbits.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.orm.entity.*;
-import com.nimbits.server.point.*;
-import com.nimbits.server.recordedvalue.*;
-import com.nimbits.shared.*;
+import com.nimbits.PMF;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.server.entity.EntityTransactions;
+import com.nimbits.server.orm.entity.EntityStore;
+import com.nimbits.server.point.PointServiceFactory;
+import com.nimbits.server.recordedvalue.RecordedValueServiceFactory;
 
-import javax.jdo.*;
-import java.util.*;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Benjamin Sautner
@@ -27,7 +32,7 @@ public class EntityDaoImpl implements EntityTransactions {
     private final User user;
 
     @Override
-    public Map<String, Entity> getEntityMap(EntityType type, boolean includeValues) {
+    public Map<String, Entity> getEntityMap(EntityType type) {
         Map<String, Entity> retObj = new HashMap<String, Entity>();
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -36,15 +41,9 @@ public class EntityDaoImpl implements EntityTransactions {
         try {
 
             final List<Entity> result = (List<Entity>) q1.execute(user.getUuid(), type.getCode());
-            List<Entity> models = EntityModelFactory.createEntities(result);
+            List<Entity> models = EntityModelFactory.createEntities(user, result);
             for (Entity e : models) {
-                if (includeValues) {
-                    Point p = PointServiceFactory.getInstance().getPointByUUID(e.getUUID());
-                    if (p!= null) {
-                        Value v = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
-                        e.setValue(v);
-                    }
-                }
+
                 retObj.put(e.getUUID(), e);
             }
             return retObj;
@@ -55,6 +54,7 @@ public class EntityDaoImpl implements EntityTransactions {
 
 
     }
+
 
 
     public EntityDaoImpl(User user) {
@@ -104,16 +104,16 @@ public class EntityDaoImpl implements EntityTransactions {
 
     @Override
     public List<Entity> getEntities() {
-        Entity retObj = null;
+
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         List<String> uuids = user.getUserConnections();
         uuids.add(user.getUuid());
 
-        final Query q1 = pm.newQuery(EntityStore.class, ":p.contains(ownerUUID)");// "ownerUUID==a");
+        final Query q1 = pm.newQuery(EntityStore.class, ":p.contains(ownerUUID)");
 
         try {
             final List<Entity> result = (List<Entity>) q1.execute(uuids);
-            return EntityModelFactory.createEntities(result);
+            return EntityModelFactory.createEntities(user, result);
         } finally {
             pm.close();
         }

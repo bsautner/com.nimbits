@@ -1,9 +1,10 @@
 package com.nimbits.client.model.entity;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.value.*;
+import com.nimbits.client.enums.AlertType;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
 
-import java.io.*;
+import java.io.Serializable;
 
 /**
  * Created by Benjamin Sautner
@@ -46,7 +47,5 @@ public interface Entity  extends Serializable {
 
     boolean isReadOnly();
 
-    Value getValue();
-
-    void setValue(Value value);
+    void setReadOnly(boolean readOnly);
 }

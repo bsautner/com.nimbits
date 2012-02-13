@@ -1,4 +1,3 @@
-import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Calculation;
@@ -6,6 +5,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.value.Value;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import java.io.IOException;
 import java.util.Random;
@@ -31,13 +31,13 @@ public class CalcTest {
 
 
         EntityName cName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
-        Category c = ClientHelper.client().addCategory(cName);
-        assertNotNull(c);
-        Point trigger = ClientHelper.client().addPoint(c.getName(), triggerName);
-        Point target = ClientHelper.client().addPoint(c.getName(), targetName);
+      //  Category c = ClientHelper.client().addCategory(cName);
+       // assertNotNull(c);
+        Point trigger = ClientHelper.client().addPoint(triggerName);
+        Point target = ClientHelper.client().addPoint(targetName);
 
-        Point y = ClientHelper.client().addPoint(c.getName(), yName);
-        Point z = ClientHelper.client().addPoint(c.getName(), zName);
+        Point y = ClientHelper.client().addPoint( yName);
+        Point z = ClientHelper.client().addPoint(zName);
 
         assertNotNull(trigger);
         assertTrue(trigger.getId() > 0);

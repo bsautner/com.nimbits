@@ -13,13 +13,17 @@
 
 package com.nimbits.client.model;
 
-import com.extjs.gxt.ui.client.data.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.value.*;
+import com.extjs.gxt.ui.client.data.BaseTreeModel;
+import com.nimbits.client.enums.AlertType;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
 
-import java.io.*;
+import java.io.Serializable;
 
 
 /**
@@ -38,21 +42,34 @@ public class GxtModel extends BaseTreeModel implements Serializable {
     private Value value;
 
     public GxtModel(Entity entity) {
-        this.uuid = entity.getUUID();
+        this.uuid = entity.getEntity();
         this.name = entity.getName();
         this.alertType = entity.getAlertType();
         this.entityType = entity.getEntityType();
-
+        this.isReadOnly = entity.isReadOnly();
         set(Const.PARAM_ID, this.uuid);
         set(Const.PARAM_NAME, this.name.getValue());
         set(Const.PARAM_ENTITY_TYPE, entity.getEntityType().getCode());
     }
+    public GxtModel(User user) {
+        this.uuid = user.getUuid();
+        this.name = CommonFactoryLocator.getInstance().createName(user.getEmail().getValue());
+        this.alertType = AlertType.OK;
+        this.entityType = EntityType.user;
+        this.isReadOnly = true;
 
+        set(Const.PARAM_ID, this.uuid);
+        set(Const.PARAM_NAME, this.name.getValue());
+        set(Const.PARAM_ENTITY_TYPE,  this.entityType.getCode());
+    }
+
+    @Deprecated
     public GxtModel(Point point) {
         this.uuid = point.getUUID();
         this.name = point.getName();
         this.alertType = point.getAlertState();
         this.entityType = point.getEntityType();
+        this.isReadOnly = point.getReadOnly();
         set(Const.PARAM_ID, this.uuid);
         set(Const.PARAM_NAME, this.name.getValue());
         // set(Const.PARAM_ICON, Const.PARAM_DIAGRAM);

@@ -1,10 +1,12 @@
 package com.nimbits.server.entity;
 
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.entity.*;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Benjamin Sautner
@@ -23,6 +25,8 @@ public interface EntityTransactions {
     Entity getEntityByUUID(String uuid);
 
     Map<String,Entity> getEntityMap(EntityType type);
+
+    Map<EntityName,Entity> getEntityNameMap(EntityType type);
 
 
 

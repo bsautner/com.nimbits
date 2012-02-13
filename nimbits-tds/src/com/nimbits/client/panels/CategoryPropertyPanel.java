@@ -17,7 +17,6 @@ import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.Html;
-import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.VerticalPanel;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
@@ -35,11 +34,9 @@ import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.icons.Icons;
 import com.nimbits.client.model.Const;
-import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.service.category.CategoryService;
-import com.nimbits.client.service.category.CategoryServiceAsync;
-import com.nimbits.client.service.entity.*;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.service.entity.EntityService;
+import com.nimbits.client.service.entity.EntityServiceAsync;
 
 
 /**
@@ -88,7 +85,7 @@ class CategoryPropertyPanel extends NavigationEventProvider {
         // vp.setSpacing(10);
         createForm();
 
-        String url = "http://" + com.google.gwt.user.client.Window.Location.getHostName() + "?" + Const.PARAM_UUID + "=" + entity.getUUID();
+        String url = "http://" + com.google.gwt.user.client.Window.Location.getHostName() + "?" + Const.PARAM_UUID + "=" + entity.getEntity();
 
 
         Html h = new Html("<p>Link:</p><br>" +
@@ -170,7 +167,7 @@ class CategoryPropertyPanel extends NavigationEventProvider {
 
     private void save() throws NimbitsException {
 
-        final EntityServiceAsync service = GWT.create(CategoryService.class);
+        final EntityServiceAsync service = GWT.create(EntityService.class);
         if (radioProtection0.getValue()) {
             entity.setProtectionLevel(ProtectionLevel.onlyMe);
         } else if (radioProtection1.getValue()) {

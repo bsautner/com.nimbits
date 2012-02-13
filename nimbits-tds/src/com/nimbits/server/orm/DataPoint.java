@@ -168,13 +168,6 @@ public class DataPoint implements Point {
     public DataPoint() {
     }
 
-    public DataPoint(final long userFK, final EntityName pointName, final Long catID, final String uuid) {
-        this();
-        this.userFK = userFK;
-        this.name = pointName.getValue();
-        this.catID = catID;
-        this.uuid = uuid;
-    }
 
     public DataPoint(final long userFK, final EntityName pointName, final String uuid) {
         this();
@@ -187,7 +180,7 @@ public class DataPoint implements Point {
         this.uuid = p.getUUID();
         this.LastChecked = p.getLastChecked();
         this.host = p.getHost();
-        this.catID = p.getCatID();
+
         this.isSystemPoint = p.isSystemPoint();
         this.userFK = p.getUserFK();
         this.name = p.getName().getValue();
@@ -256,11 +249,6 @@ public class DataPoint implements Point {
         return (alarmToFacebook != null) && alarmToFacebook;
     }
 
-    @Override
-    public long getCatID() {
-        return (catID == null) ? 0 : catID;
-
-    }
 
     @Override
     public double getCompression() {
@@ -436,10 +424,7 @@ public class DataPoint implements Point {
         this.alarmToFacebook = alarmToFacebook;
     }
 
-    @Override
-    public void setCatID(final long catID) {
-        this.catID = catID;
-    }
+
 
     @Override
     public void setCompression(final double compression) {

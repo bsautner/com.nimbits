@@ -17,12 +17,10 @@ import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.model.Const;
-import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.impl.CategoryModel;
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityDescription;
+import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.server.ServerModel;
 import com.nimbits.server.dao.pointDescription.EntityJPATransactionFactory;
@@ -63,37 +61,26 @@ public class EntityDescriptionServletImpl extends HttpServlet {
         if (StringUtils.isNotEmpty(json) && StringUtils.isNotEmpty(action)) {
             final Server server = GsonFactory.getInstance().fromJson(serverJson, ServerModel.class);
             final Server currentServer = ServerTransactionFactory.getInstance().readServer(server.getBaseUrl());
-            boolean isPublic = false;
+            ProtectionLevel protectionLevel;
 
             final EntityDescription entityDescription;
             EntityType type = EntityType.get(Integer.valueOf(entityTypeParam));
-            if (type.equals(EntityType.point)) {
-                final Point point = GsonFactory.getInstance().fromJson(json, PointModel.class);
+
+                final Entity point = GsonFactory.getInstance().fromJson(json, EntityModel.class);
                 final String desc = StringUtils.isEmpty(point.getDescription()) ? point.getName().getValue() : point.getDescription();
                 entityDescription =
                         EntityModelFactory.createEntityDescription(
-                                currentServer, point.getName(), point.getUUID(), desc, type
+                                currentServer, point.getName(), point.getEntity(), desc, type
                         );
-                isPublic = point.isPublic();
+            protectionLevel = point.getProtectionLevel();
 
-            } else if (type.equals(EntityType.category)) {
-                final Category category = GsonFactory.getInstance().fromJson(json, CategoryModel.class);
-                final String desc = StringUtils.isEmpty(category.getDescription()) ? category.getName().getValue() : category.getDescription();
-                entityDescription =
-                        EntityModelFactory.createEntityDescription(
-                                currentServer, category.getName(), category.getUUID(), desc, type
-                        );
-                isPublic = category.getProtectionLevel().equals(ProtectionLevel.everyone);
 
-            } else {
-                entityDescription = null;
-            }
 
             if (action.equals(Action.update.name()) && StringUtils.isNotEmpty(serverJson)) {
 
                 if (currentServer != null && entityDescription != null) {
 
-                    if (isPublic) {
+                    if (protectionLevel.equals(ProtectionLevel.everyone)) {
 
                         final EntityDescription retObj = EntityJPATransactionFactory.getInstance().addUpdateEntityDescription(entityDescription);
 

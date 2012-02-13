@@ -13,23 +13,17 @@
 
 package com.nimbits.server.task;
 
-import com.google.gson.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.category.*;
-import com.nimbits.client.model.diagram.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.pointcategory.*;
-import com.nimbits.shared.*;
+import com.google.gson.Gson;
+import com.nimbits.client.model.Const;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.user.UserModel;
+import com.nimbits.server.gson.GsonFactory;
 
-import javax.servlet.http.*;
-import java.io.*;
-import java.util.*;
-import java.util.logging.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.logging.Logger;
 
 public class CategoryMaintTask extends HttpServlet {
 
@@ -49,71 +43,73 @@ public class CategoryMaintTask extends HttpServlet {
 
         if (u != null) {
 
-            Entity userEntity = EntityModelFactory.createEntity(u);
-            EntityTransactionFactory.getInstance(u).addUpdateEntity(userEntity);
-            List<Category> categories = CategoryServiceFactory.getInstance().getCategories(u, true,true, false);
-            for (Category c : categories) {
-                if (Utils.isEmptyString(c.getUUID())) {
-                    log.info("Fixing category " + c.getName().getValue());
-                    c.setUUID(UUID.randomUUID().toString());
-                    c.setDescription("");
-                    c.setProtectionLevel(ProtectionLevel.onlyMe);
-                    CategoryServiceFactory.getInstance().updateCategory(u, c);
+//            Entity userEntity = EntityModelFactory.createEntity(u);
+//            EntityTransactionFactory.getInstance(u).addUpdateEntity(userEntity);
+//            List<Category> categories = CategoryServiceFactory.getInstance().getCategories(u, true,true, false);
+//            for (Category c : categories) {
+//                if (Utils.isEmptyString(c.getUUID())) {
+//                    log.info("Fixing category " + c.getName().getValue());
+//                    c.setUUID(UUID.randomUUID().toString());
+//                    c.setDescription("");
+//                    c.setProtectionLevel(ProtectionLevel.onlyMe);
+//                    CategoryServiceFactory.getInstance().updateCategory(u, c);
+//
+//                }
+//                else {
+//                    if (! c.getName().getValue().equals(Const.CONST_HIDDEN_CATEGORY)) {
+//                        Entity entity = EntityModelFactory.createEntity(
+//                                c.getName(),
+//                                c.getDescription(),
+//                                EntityType.category,
+//                                c.getProtectionLevel(),
+//                                c.getUUID(),
+//                                u.getUuid(),
+//                                u.getUuid());
+//                        EntityTransactionFactory.getInstance(u).addUpdateEntity(entity);
+//                    }
+//                    if (c.getPoints() != null) {
+//                        for (Point p : c.getPoints()) {
+//                            ProtectionLevel protectionLevel;
+//                            if (p.isPublic()) {
+//                                protectionLevel = ProtectionLevel.everyone;
+//                            }
+//                            else {
+//                                protectionLevel = ProtectionLevel.onlyMe;
+//                            }
+//                            String parentUUID = c.getName().getValue().equals(Const.CONST_HIDDEN_CATEGORY) ?
+//                                    u.getUuid() : c.getUUID();
+//                            Entity entity = EntityModelFactory.createEntity(
+//                                    p.getName(),
+//                                    p.getDescription(),
+//                                    EntityType.point,
+//                                    protectionLevel,
+//                                    p.getUUID(),
+//                                    parentUUID,
+//                                    u.getUuid());
+//
+//                            EntityTransactionFactory.getInstance(u).addUpdateEntity(entity);
+//                        }
+//                    }
 
-                }
-                else {
-                    if (! c.getName().getValue().equals(Const.CONST_HIDDEN_CATEGORY)) {
-                        Entity entity = EntityModelFactory.createEntity(
-                                c.getName(),
-                                c.getDescription(),
-                                EntityType.category,
-                                c.getProtectionLevel(),
-                                c.getUUID(),
-                                u.getUuid(),
-                                u.getUuid());
-                        EntityTransactionFactory.getInstance(u).addUpdateEntity(entity);
-                    }
-                    if (c.getPoints() != null) {
-                        for (Point p : c.getPoints()) {
-                            ProtectionLevel protectionLevel;
-                            if (p.isPublic()) {
-                                protectionLevel = ProtectionLevel.everyone;
-                            }
-                            else {
-                                protectionLevel = ProtectionLevel.onlyMe;
-                            }
-                            String parentUUID = c.getName().getValue().equals(Const.CONST_HIDDEN_CATEGORY) ?
-                                    u.getUuid() : c.getUUID();
-                            Entity entity = EntityModelFactory.createEntity(
-                                    p.getName(),
-                                    p.getDescription(),
-                                    EntityType.point,
-                                    protectionLevel,
-                                    p.getUUID(),
-                                    parentUUID,
-                                    u.getUuid());
-
-                            EntityTransactionFactory.getInstance(u).addUpdateEntity(entity);
-                        }
-                    }
-                    if (c.getDiagrams() != null) {
-                        for (Diagram p : c.getDiagrams()) {
-                            ProtectionLevel protectionLevel = ProtectionLevel.get(p.getProtectionLevel());
-
-                            String parentUUID = c.getName().getValue().equals(Const.CONST_HIDDEN_CATEGORY) ?
-                                    u.getUuid() : c.getUUID();
-                            Entity entity = EntityModelFactory.createEntity(
-                                    p.getName(),
-                                    "",
-                                    EntityType.point,
-                                    protectionLevel,
-                                    p.getUuid(),
-                                    parentUUID,
-                                    u.getUuid());
-
-                            EntityTransactionFactory.getInstance(u).addUpdateEntity(entity);
-                        }
-                    }
+                    //TODO
+//                    if (c.getDiagrams() != null) {
+//                        for (Diagram p : c.getDiagrams()) {
+//                            ProtectionLevel protectionLevel = ProtectionLevel.get(p.getProtectionLevel());
+//
+//                            String parentUUID = c.getName().getValue().equals(Const.CONST_HIDDEN_CATEGORY) ?
+//                                    u.getUuid() : c.getUUID();
+//                            Entity entity = EntityModelFactory.createEntity(
+//                                    p.getName(),
+//                                    "",
+//                                    EntityType.point,
+//                                    protectionLevel,
+//                                    p.getUuid(),
+//                                    parentUUID,
+//                                    u.getUuid());
+//
+//                            EntityTransactionFactory.getInstance(u).addUpdateEntity(entity);
+//                        }
+//                    }
 
                 }
 
@@ -123,8 +119,8 @@ public class CategoryMaintTask extends HttpServlet {
         }
 
 
-    }
 
 
-}
+
+
 

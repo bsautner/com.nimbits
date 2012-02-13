@@ -17,8 +17,6 @@ import com.nimbits.PMF;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
-import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
@@ -27,8 +25,6 @@ import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.datapoints.PointTransactions;
 import com.nimbits.server.orm.DataPoint;
-import com.nimbits.server.point.PointServiceFactory;
-import com.nimbits.server.pointcategory.CategoryServiceFactory;
 import com.nimbits.server.task.TaskFactoryLocator;
 
 import javax.jdo.JDOObjectNotFoundException;
@@ -118,7 +114,6 @@ public class DataPointDAOImpl implements PointTransactions {
                 original.setExpire(update.getExpire());
                 original.setPublic(update.isPublic());
                 original.setTag(update.getTag());
-                original.setCatID(update.getCatID());
 
                 original.setUserFK(update.getUserFK());
                 original.setSystemPoint(update.isSystemPoint());
@@ -252,7 +247,7 @@ public class DataPointDAOImpl implements PointTransactions {
         final DataPoint jdoPoint = new DataPoint(
                 u.getId(),
                 entity.getName(),
-                entity.getUUID());
+                entity.getEntity());
 
         jdoPoint.setPublic(true);
         jdoPoint.setCompression(0.1);
@@ -270,7 +265,7 @@ public class DataPointDAOImpl implements PointTransactions {
 
         for (Entity e : entities) {
             if (e.getEntityType().equals(EntityType.point)) {
-                ids.add(e.getUUID());
+                ids.add(e.getEntity());
             }
         }
 
@@ -278,8 +273,13 @@ public class DataPointDAOImpl implements PointTransactions {
         final Query q1 = pm.newQuery(DataPoint.class, ":p.contains(uuid)");
 
         try {
+            if (ids.size() > 0) {
             final List<Point> result = (List<Point>) q1.execute(ids);
             return PointModelFactory.createPointModels(result);
+            }
+            else {
+                return new ArrayList<Point>();
+            }
         } finally {
             pm.close();
         }
@@ -306,64 +306,31 @@ public class DataPointDAOImpl implements PointTransactions {
     /* (non-Javadoc)
       * @see com.nimbits.client.service.datapoints.PointTransactions#movePoint(com.nimbits.client.model.user.NimbitsUser, java.lang.String, java.lang.String)
       */
-    @Override
-    @SuppressWarnings(Const.WARNING_UNCHECKED)
-    public Point movePoint(final Point point, final EntityName categoryName) {
-
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-
-        Category c = CategoryServiceFactory.getInstance().getCategory(u, categoryName);
-
-        if (!(c == null)) {
-            Transaction tx;
-
-            long userFK = u.getId();
-            try {
-
-                tx = pm.currentTransaction();
-                tx.begin();
-                Query q1 = pm.newQuery(DataPoint.class, "uuid==p");
-                q1.declareParameters("String p");
-                q1.setRange(0, 1);
-                List<DataPoint> points = (List<DataPoint>) q1.execute(point.getUUID());
-                if (points.size() > 0) {
-                    Point result = points.get(0);
-                    result.setCatID(c.getId());
-                }
-                tx.commit();
-
-            } finally {
-                pm.close();
-            }
-        }
-        return PointModelFactory.createPointModel(point);
-
-    }
 
     /* (non-Javadoc)
       * @see com.nimbits.client.service.datapoints.PointTransactions#addPoint(com.nimbits.client.model.DataPoint, com.nimbits.client.model.PointCatagory, com.nimbits.client.model.user.NimbitsUser)
       */
-    @Override
-    public Point addPoint(final Point point, final Category c) throws NimbitsException {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final Point p = PointServiceFactory.getInstance().getPointByName(u, point.getName());
-        Point retObj;
-
-        if (p != null) {
-            throw new NimbitsException("A point with the name " + point.getName().getValue() + " already exists");
-        } else {
-            final DataPoint jdoPoint = new DataPoint(point);
-            jdoPoint.setUuid(UUID.randomUUID().toString());
-            jdoPoint.setCreateDate(new Date());
-
-            pm.makePersistent(jdoPoint);
-
-            //PointCacheManager.put(jdoPoint);
-            retObj = PointModelFactory.createPointModel(jdoPoint);
-        }
-        pm.close();
-        return retObj;
-    }
+//    @Override
+//    public Point addPoint(final Point point, final Category c) throws NimbitsException {
+//        final PersistenceManager pm = PMF.get().getPersistenceManager();
+//        final Point p = PointServiceFactory.getInstance().getPointByName(u, point.getName());
+//        Point retObj;
+//
+//        if (p != null) {
+//            throw new NimbitsException("A point with the name " + point.getName().getValue() + " already exists");
+//        } else {
+//            final DataPoint jdoPoint = new DataPoint(point);
+//            jdoPoint.setUuid(UUID.randomUUID().toString());
+//            jdoPoint.setCreateDate(new Date());
+//
+//            pm.makePersistent(jdoPoint);
+//
+//            //PointCacheManager.put(jdoPoint);
+//            retObj = PointModelFactory.createPointModel(jdoPoint);
+//        }
+//        pm.close();
+//        return retObj;
+//    }
 
     @Override
     public Point addPoint(final Point point) {
@@ -384,69 +351,69 @@ public class DataPointDAOImpl implements PointTransactions {
         return retObj;
     }
 
-    /* (non-Javadoc)
-    * @see com.nimbits.client.service.datapoints.PointTransactions#addPoint(java.lang.String, com.nimbits.client.model.PointCatagory, com.nimbits.client.model.user.NimbitsUser, java.lang.String)
-    */
-    @Override
-    public Point addPoint(final EntityName pointName, final Category c) throws NimbitsException {
-
-        Point retObj = null;
-        Category targetCategory;
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-
-        try {
-            if (!(pointName == null) && (pointName.getValue().trim().length() > 0)) {
-
-                if (c == null) {
-                    EntityName categoryName = CommonFactoryLocator.getInstance().createName(Const.CONST_HIDDEN_CATEGORY);
-                    targetCategory = CategoryServiceFactory.getInstance().getCategory(u, categoryName);
-
-                    if (targetCategory == null) {
-                        // targetCategory = CategoryTransactionFactory.getInstance(u).createHiddenCategory(u);
-                        targetCategory = CategoryServiceFactory.getInstance().createHiddenCategory(u);
-                    }
-                } else {
-                    targetCategory = c;
-                }
-
-
-                //check if point exists
-                Point pp = PointServiceFactory.getInstance().getPointByName(u, pointName);
-
-                if (pp == null) {
-
-                    final DataPoint jdoPoint = new DataPoint(
-                            u.getId(),
-                            pointName,
-                            targetCategory.getId(),
-                            UUID.randomUUID().toString());
-
-                    jdoPoint.setPublic(true);
-                    jdoPoint.setCompression(0.1);
-                    jdoPoint.setExpire(90);
-                    jdoPoint.setLastChecked(new Date());
-                    pm.makePersistent(jdoPoint);
-
-                    retObj = PointModelFactory.createPointModel(jdoPoint);
-
-                    //  final Value v = new RecordedValue(0.0, 0.0, 0.0, new Date(new Date().getTime() - 1000 * 60 * 60 * 24), jdoPoint.getId(), Const.DEFAULT_NOTE);
-
-
-                    // pm.makePersistent(v);
-
-                    //PointCacheManager.put(retObj);
-
-                } else {
-                    throw new NimbitsException("A point with the name " + pointName + " already exists");
-                }
-            }
-        } finally {
-            pm.close();
-        }
-
-        return retObj;
-
-    }
+//    /* (non-Javadoc)
+//    * @see com.nimbits.client.service.datapoints.PointTransactions#addPoint(java.lang.String, com.nimbits.client.model.PointCatagory, com.nimbits.client.model.user.NimbitsUser, java.lang.String)
+//    */
+//    @Override
+//    public Point addPoint(final EntityName pointName, final Category c) throws NimbitsException {
+//
+//        Point retObj = null;
+//        Category targetCategory;
+//        final PersistenceManager pm = PMF.get().getPersistenceManager();
+//
+//        try {
+//            if (!(pointName == null) && (pointName.getValue().trim().length() > 0)) {
+//
+//                if (c == null) {
+//                    EntityName categoryName = CommonFactoryLocator.getInstance().createName(Const.CONST_HIDDEN_CATEGORY);
+//                    targetCategory = CategoryServiceFactory.getInstance().getCategory(u, categoryName);
+//
+//                    if (targetCategory == null) {
+//                        // targetCategory = CategoryTransactionFactory.getInstance(u).createHiddenCategory(u);
+//                        targetCategory = CategoryServiceFactory.getInstance().createHiddenCategory(u);
+//                    }
+//                } else {
+//                    targetCategory = c;
+//                }
+//
+//
+//                //check if point exists
+//                Point pp = PointServiceFactory.getInstance().getPointByName(u, pointName);
+//
+//                if (pp == null) {
+//
+//                    final DataPoint jdoPoint = new DataPoint(
+//                            u.getId(),
+//                            pointName,
+//                            targetCategory.getId(),
+//                            UUID.randomUUID().toString());
+//
+//                    jdoPoint.setPublic(true);
+//                    jdoPoint.setCompression(0.1);
+//                    jdoPoint.setExpire(90);
+//                    jdoPoint.setLastChecked(new Date());
+//                    pm.makePersistent(jdoPoint);
+//
+//                    retObj = PointModelFactory.createPointModel(jdoPoint);
+//
+//                    //  final Value v = new RecordedValue(0.0, 0.0, 0.0, new Date(new Date().getTime() - 1000 * 60 * 60 * 24), jdoPoint.getId(), Const.DEFAULT_NOTE);
+//
+//
+//                    // pm.makePersistent(v);
+//
+//                    //PointCacheManager.put(retObj);
+//
+//                } else {
+//                    throw new NimbitsException("A point with the name " + pointName + " already exists");
+//                }
+//            }
+//        } finally {
+//            pm.close();
+//        }
+//
+//        return retObj;
+//
+//    }
 
     /* (non-Javadoc)
       * @see com.nimbits.client.service.datapoints.PointTransactions#updatePointStats(com.nimbits.client.model.DataPoint, com.nimbits.client.model.value.RecordedValue)
@@ -526,26 +493,26 @@ public class DataPointDAOImpl implements PointTransactions {
     /* (non-Javadoc)
       * @see com.nimbits.client.service.datapoints.PointTransactions#getPointsByCategory(com.nimbits.client.model.PointCatagory, com.nimbits.client.model.user.NimbitsUser)
       */
-    @Override
-    @SuppressWarnings(Const.WARNING_UNCHECKED)
-    public List<Point> getPointsByCategory(final Category c) {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-
-        List<Point> retObj = null;
-
-        long userFK = u.getId();
-
-        try {
-            final Query q = pm.newQuery(DataPoint.class, "userFK == k && catID  == c");
-            q.declareParameters("Long k, Long c");
-            q.setOrdering("name ascending");
-            final List<Point> points = (List<Point>) q.execute(userFK, c.getId());
-            retObj = PointModelFactory.createPointModels(points);
-        } finally {
-            pm.close();
-        }
-        return retObj;
-    }
+//    @Override
+//    @SuppressWarnings(Const.WARNING_UNCHECKED)
+//    public List<Point> getPointsByCategory(final Category c) {
+//        final PersistenceManager pm = PMF.get().getPersistenceManager();
+//
+//        List<Point> retObj = null;
+//
+//        long userFK = u.getId();
+//
+//        try {
+//            final Query q = pm.newQuery(DataPoint.class, "userFK == k && catID  == c");
+//            q.declareParameters("Long k, Long c");
+//            q.setOrdering("name ascending");
+//            final List<Point> points = (List<Point>) q.execute(userFK, c.getId());
+//            retObj = PointModelFactory.createPointModels(points);
+//        } finally {
+//            pm.close();
+//        }
+//        return retObj;
+//    }
 
 
     @Override

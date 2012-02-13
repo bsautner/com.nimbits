@@ -16,12 +16,10 @@ package com.nimbits.server.task;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.nimbits.client.enums.AlertType;
-import com.nimbits.client.enums.SubscriptionDeliveryMethod;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
-import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
 import com.nimbits.client.model.value.Value;
@@ -36,7 +34,6 @@ import com.nimbits.server.math.EquationSolver;
 import com.nimbits.server.point.PointServiceFactory;
 import com.nimbits.server.recordedvalue.RecordedValueServiceFactory;
 import com.nimbits.server.twitter.TwitterServiceFactory;
-import com.nimbits.server.user.UserServiceFactory;
 import com.nimbits.shared.Utils;
 
 import javax.servlet.http.HttpServlet;
@@ -289,6 +286,7 @@ public class RecordValueTask extends HttpServlet {
                                final Value v, final String note, final AlertType anAlertType) throws NimbitsException {
 
         boolean alarmSent;
+        //TODO add link to email back to data screen
 
         if (point.isAlarmToEmail()) {
             EmailServiceFactory.getInstance().sendAlert(point, u.getEmail(), v.getNumberValue(), anAlertType);

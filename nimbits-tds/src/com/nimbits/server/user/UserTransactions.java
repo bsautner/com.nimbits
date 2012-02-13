@@ -50,4 +50,6 @@ public interface UserTransactions {
     User updateLastLoggedIn(final User user, final Date LastLoggedIn) throws NimbitsException;
 
     User getUserByUUID(String subscriberUUID);
+
+    List<User>  getConnectionRequests(List<String> connections);
 }

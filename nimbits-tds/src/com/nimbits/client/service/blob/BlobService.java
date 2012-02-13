@@ -11,14 +11,23 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.client.service.timespan;
+package com.nimbits.client.service.blob;
 
-import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.timespan.*;
+import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.nimbits.client.model.Const;
 
-public interface TimespanServiceAsync {
-    void createTimespan(final String start, final String end, final AsyncCallback<Timespan> async);
+/**
+ * Created by bsautner
+ * User: benjamin
+ * Date: 5/20/11
+ * Time: 5:38 PM
+ */
+@RemoteServiceRelativePath(Const.PARAM_BLOB)
+public interface BlobService extends RemoteService {
 
-    void createTimespan(final String start, final String end, final int offset, AsyncCallback<Timespan> async) throws NimbitsException;
+    String getBlobStoreUrl(String url);
+
+
+
 }

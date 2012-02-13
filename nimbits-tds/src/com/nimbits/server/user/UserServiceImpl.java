@@ -15,16 +15,21 @@ package com.nimbits.server.user;
 
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.connection.Connection;
 import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.user.UserService;
 import com.nimbits.server.counter.CounterFactory;
 import com.nimbits.server.dao.counter.ShardedCounter;
 import com.nimbits.server.email.EmailServiceFactory;
+import com.nimbits.server.entity.EntityTransactionFactory;
 import com.nimbits.server.settings.SettingsServiceFactory;
 import com.nimbits.shared.Utils;
 
@@ -216,6 +221,13 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
+    public List<User> getConnectionRequests(List<String> connections) {
+        return UserTransactionFactory.getInstance().getConnectionRequests(connections);
+    }
+
+
+
+    @Override
     public void connectionRequestReply(final EmailAddress targetEmail,
                                        final EmailAddress requesterEmail,
                                        final String uuid,
@@ -223,6 +235,14 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         final User acceptor = getAppUserUsingGoogleAuth();
 
         final User requester = UserTransactionFactory.getInstance().getNimbitsUser(requesterEmail);
+
+        Entity rConnection = EntityModelFactory.createEntity(acceptor.getName(), "", EntityType.userConnection, ProtectionLevel.onlyMe, acceptor.getUuid(), requester.getUuid(), requester.getUuid());
+
+        Entity aConnection = EntityModelFactory.createEntity(requester.getName(), "", EntityType.userConnection, ProtectionLevel.onlyMe, requester.getUuid(), acceptor.getUuid(), acceptor.getUuid());
+
+        EntityTransactionFactory.getInstance(acceptor).addUpdateEntity(aConnection);
+        EntityTransactionFactory.getInstance(requester).addUpdateEntity(rConnection);
+
         UserTransactionFactory.getInstance().updateConnectionRequest(uuid, requester, acceptor, accepted);
 
 

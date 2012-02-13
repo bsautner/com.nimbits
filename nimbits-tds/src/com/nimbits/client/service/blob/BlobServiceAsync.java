@@ -11,14 +11,12 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.client.service.timespan;
+package com.nimbits.client.service.blob;
 
-import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.timespan.*;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public interface TimespanServiceAsync {
-    void createTimespan(final String start, final String end, final AsyncCallback<Timespan> async);
+public interface BlobServiceAsync {
 
-    void createTimespan(final String start, final String end, final int offset, AsyncCallback<Timespan> async) throws NimbitsException;
+
+    void getBlobStoreUrl(String url, AsyncCallback<String> async);
 }

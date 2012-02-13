@@ -33,7 +33,7 @@ import com.nimbits.client.enums.UploadType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.icons.Icons;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.service.diagram.DiagramService;
+import com.nimbits.client.service.blob.BlobService;
 import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.entity.EntityServiceAsync;
 
@@ -205,10 +205,10 @@ class DiagramPropertyPanel extends NavigationEventProvider {
                 final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
                 w.setAutoWidth(true);
                 w.setHeading("Upload a process diagram in .svg format");
-                final DiagramUploadPanel p = new DiagramUploadPanel(UploadType.updatedFile, entity);
-                p.addDiagramAddedListeners(new DiagramUploadPanel.DiagramAddedListener() {
+                final FileUploadPanel p = new FileUploadPanel(UploadType.updatedFile, entity);
+                p.addFileAddedListeners(new FileUploadPanel.FileAddedListener() {
                     @Override
-                    public void onDiagramAdded() {
+                    public void onFileAdded() {
 
                         w.hide();
                         //   notifyDiagramClickedListener();
@@ -225,7 +225,7 @@ class DiagramPropertyPanel extends NavigationEventProvider {
 
     private void saveDiagram() throws NimbitsException {
 
-        final EntityServiceAsync serviceAsync = GWT.create(DiagramService.class);
+        final EntityServiceAsync serviceAsync = GWT.create(BlobService.class);
         entity.setProtectionLevel(protectionLevelOptions.getProtectionLevel());
 
         serviceAsync.addUpdateEntity(entity, new AsyncCallback<Entity>() {

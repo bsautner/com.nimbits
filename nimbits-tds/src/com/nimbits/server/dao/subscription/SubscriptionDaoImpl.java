@@ -13,22 +13,25 @@
 
 package com.nimbits.server.dao.subscription;
 
-import com.nimbits.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.category.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.subscription.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.orm.*;
-import com.nimbits.server.orm.entity.*;
-import com.nimbits.server.pointcategory.*;
-import com.nimbits.server.subscription.*;
+import com.nimbits.PMF;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.subscription.Subscription;
+import com.nimbits.client.model.subscription.SubscriptionFactory;
+import com.nimbits.client.model.user.User;
+import com.nimbits.server.entity.EntityTransactionFactory;
+import com.nimbits.server.orm.SubscriptionEntity;
+import com.nimbits.server.orm.entity.EntityStore;
+import com.nimbits.server.subscription.SubscriptionTransactions;
 
-import javax.jdo.*;
-import java.util.*;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Benjamin Sautner
@@ -93,7 +96,7 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
                 pm.makePersistent(entityStore);
                  retObj = EntityModelFactory.createEntity(entityStore);
             }
-            CategoryTransactionFactory.getInstance(user).purgeMemCache();
+
             return retObj;
         }
         finally {
@@ -118,7 +121,7 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
                 pm.deletePersistent(result);
                 tx.commit();
             }
-            CategoryTransactionFactory.getInstance(user).purgeMemCache();
+
         }
         finally {
             pm.close();
@@ -135,7 +138,7 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
             Query q = pm.newQuery(SubscriptionEntity.class, "subscriberUUID==u && subscribedEntityUUID==p");
             q.declareParameters("String u, String p");
             q.setRange(0, 1);
-            results = (List<SubscriptionEntity>) q.execute(user.getUuid(), entity.getUUID());
+            results = (List<SubscriptionEntity>) q.execute(user.getUuid(), entity.getEntity());
             if (results.size() > 0) {
                 SubscriptionEntity result = results.get(0);
                 retObj = SubscriptionFactory.createSubscription(result);
@@ -148,42 +151,7 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
 
     }
 
-    @Override
-    @SuppressWarnings(Const.WARNING_UNCHECKED)
-    public Point moveSubscription(final Point point, final EntityName categoryName) {
 
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-        List<SubscriptionEntity> results;
-
-        Category c = CategoryServiceFactory.getInstance().getCategory(user, categoryName);
-      //  Subscription s = readSubscription(point);
-
-        if (!(c == null) ) {
-
-
-            long userFK = user.getId();
-            try {
-
-                Query q = pm.newQuery(SubscriptionEntity.class, "subscriberUUID==u && subscribedEntityUUID==p");
-                q.declareParameters("String u, String p");
-                q.setRange(0, 1);
-                results = (List<SubscriptionEntity>) q.execute(user.getUuid(), point.getUUID());
-                if (results.size() > 0) {
-                    Transaction tx = pm.currentTransaction();
-                    tx.begin();
-                    SubscriptionEntity result = results.get(0);
-                  //  result.setCategoryId(c.getId());
-                    tx.commit();
-                }
-            } finally {
-                pm.close();
-            }
-            point.setCatID(c.getId());
-        }
-        CategoryTransactionFactory.getInstance(user).purgeMemCache();
-        return PointModelFactory.createPointModel(point);
-
-    }
 
     @Override
     public List<Subscription> getSubscriptionsToPoint(final Point point) {

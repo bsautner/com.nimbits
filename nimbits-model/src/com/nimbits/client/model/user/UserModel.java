@@ -17,12 +17,10 @@ package com.nimbits.client.model.user;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.EntityName;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 
 
 //import com.google.appengine.api.users.User;
@@ -35,10 +33,6 @@ public class UserModel implements Serializable, User {
     private Date dateCreated;
 
     private Date lastLoggedIn;
-
-    private List<Long> connections;
-
-    private List<String> userConnections;
 
     private String emailAddress;
 
@@ -84,18 +78,7 @@ public class UserModel implements Serializable, User {
         this.uuid = u.getUuid();
         this.secret = u.getSecret();
 
-        //Resolves Type 'org.datanucleus.sco.backed.ArrayList' was not included in the set of types which can be serialized by this SerializationPolicy
-        final List<Long> l = new ArrayList<Long>();
-        for (final long x : u.getConnections()) {
-            l.add(x);
-        }
 
-        final List<String> c = new ArrayList<String>();
-        for (final String x : u.getUserConnections()) {
-            c.add(x);
-        }
-        this.connections = l;
-        this.userConnections = c;
         this.restricted = u.isRestricted();
         this.emailAddress = u.getEmail().getValue();
         this.facebookToken = u.getFacebookToken();
@@ -119,13 +102,7 @@ public class UserModel implements Serializable, User {
         // case
     }
 
-    @Override
-    public List<Long> getConnections() {
-        if (connections == null) {
-            connections = new LinkedList<Long>();
-        }
-        return connections;
-    }
+
 
     @Override
     public boolean getSendEmail() {
@@ -253,6 +230,11 @@ public class UserModel implements Serializable, User {
     }
 
     @Override
+    public EntityName getName() {
+      return CommonFactoryLocator.getInstance().createName(this.emailAddress);
+    }
+
+    @Override
     public void setRestricted(final boolean restricted) {
         this.restricted = restricted;
     }
@@ -262,26 +244,5 @@ public class UserModel implements Serializable, User {
         return CommonFactoryLocator.getInstance().createEmailAddress(emailAddress);
     }
 
-    @Override
-    public void addConnection(final String id) {
-        if (userConnections == null) {
-            userConnections = new ArrayList<String>();
-        }
-        if (!userConnections.contains(id)) {
-            userConnections.add(id);
-        }
-    }
 
-    @Override
-    public void removeConnection(final String id) {
-        connections.remove(id);
-    }
-
-    @Override
-    public List<String> getUserConnections() {
-        if (userConnections == null) {
-            userConnections = new LinkedList<String>();
-        }
-        return userConnections;
-    }
 }

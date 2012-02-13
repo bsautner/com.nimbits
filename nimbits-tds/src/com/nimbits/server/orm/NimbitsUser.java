@@ -15,6 +15,7 @@ package com.nimbits.server.orm;
 
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.user.User;
 
 import javax.jdo.annotations.*;
@@ -203,6 +204,11 @@ public class NimbitsUser implements User {
 
     public boolean isRestricted() {
         return restricted;
+    }
+
+    @Override
+    public EntityName getName() {
+        return CommonFactoryLocator.getInstance().createName(this.email);
     }
 
     public void setRestricted(final boolean restricted) {

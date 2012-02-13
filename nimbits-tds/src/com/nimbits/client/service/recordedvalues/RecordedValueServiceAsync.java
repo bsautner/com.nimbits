@@ -51,7 +51,7 @@ public interface RecordedValueServiceAsync {
 
     void getTopDataSeries(final Point point, int maxValues, final Date endDate, final AsyncCallback<List<Value>> async);
 
-    void getCurrentValue(long pointOwnerId, final EntityName pointName, final AsyncCallback<Value> async);
+    void getCurrentValue(Entity entity, final AsyncCallback<Value> async);
 
 
     void recordValue(final User u, final Point target, final Value value, final boolean loopFlag, AsyncCallback<Value> async);

@@ -14,6 +14,7 @@
 package com.nimbits.client.model.user;
 
 import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.entity.EntityName;
 
 import java.io.*;
 import java.util.*;
@@ -27,14 +28,6 @@ import java.util.*;
  */
 public interface User extends Serializable {
 
-    @Deprecated
-    List<Long> getConnections();
-
-    List<String> getUserConnections();
-
-    void addConnection(final String id);
-
-    void removeConnection(final String id);
 
     boolean getSendEmail();
 
@@ -91,5 +84,7 @@ public interface User extends Serializable {
     void setRestricted(final boolean restricted);
 
     boolean isRestricted();
+
+    EntityName getName();
 
 }

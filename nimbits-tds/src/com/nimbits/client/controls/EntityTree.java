@@ -55,12 +55,17 @@ public class EntityTree<ModelData extends com.extjs.gxt.ui.client.data.ModelData
                         }
 
                     case user:
-                        return AbstractImagePrototype.create(Icons.INSTANCE.user_add());
+                        return AbstractImagePrototype.create(Icons.INSTANCE.web());
 
                     case category:
                         return AbstractImagePrototype.create(Icons.INSTANCE.category());
 
                     case diagram:
+                        return AbstractImagePrototype.create(Icons.INSTANCE.diagram());
+
+                    case userConnection:
+                        return AbstractImagePrototype.create(Icons.INSTANCE.connection());
+                    case file:
                         return AbstractImagePrototype.create(Icons.INSTANCE.diagram());
 
                     default:

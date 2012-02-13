@@ -4,8 +4,6 @@
  * This source code is distributed under GPL v3 without any warranty.
  */
 
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
@@ -38,9 +36,9 @@ public class SeriesTest {
 
         p.setName(CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString()));
         EntityName categoryName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
-        Category c = ClientHelper.client().addCategory(categoryName);
+       // Category c = ClientHelper.client().addCategory(categoryName);
         Point rp = ClientHelper.client().addPoint(p, categoryName);
-        assertNotNull(c);
+       // assertNotNull(c);
         assertNotNull(rp);
 
         assertTrue(ClientHelper.client().isLoggedIn());
@@ -68,8 +66,8 @@ public class SeriesTest {
         Point p = new PointModel();
 
         p.setName(CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString()));
-        EntityName categoryName = CommonFactoryLocator.getInstance().createName(Const.CONST_HIDDEN_CATEGORY);
-        ClientHelper.client().addPoint(p, categoryName);
+       // EntityName categoryName = CommonFactoryLocator.getInstance().createName(Const.CONST_HIDDEN_CATEGORY);
+        ClientHelper.client().addPoint(p.getName().getValue());
         try {
             Random rx = new Random();
 

@@ -4,8 +4,9 @@
  * This source code is distributed under GPL v3 without any warranty.
  */
 
-import com.nimbits.client.model.category.Category;
+
 import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import org.junit.Test;
@@ -27,11 +28,11 @@ public class PointTest {
     @Test
     public void createPoints() throws UnsupportedEncodingException {
         EntityName cName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
-        Category c = ClientHelper.client().addCategory(cName);
+        Entity c = ClientHelper.client().addCategory(cName);
 
         for (int i = 0; i < 20; i++) {
             EntityName pointName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
-            Point p = ClientHelper.client().addPoint(c.getName(), pointName);
+            Point p = ClientHelper.client().addPoint( pointName);
             assertNotNull(p);
             System.out.println(p.getName().toString());
         }
@@ -50,7 +51,7 @@ public class PointTest {
 
         assertTrue(ClientHelper.client().isLoggedIn());
         ClientHelper.client().addCategory(categoryName);
-        Point p = ClientHelper.client().addPoint(categoryName, pointName);
+        Point p = ClientHelper.client().addPoint( pointName);
         assertNotNull(p);
     }
 

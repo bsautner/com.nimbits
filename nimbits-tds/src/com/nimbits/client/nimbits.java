@@ -34,17 +34,13 @@ import com.nimbits.client.exceptions.NotLoggedInException;
 import com.nimbits.client.exceptions.ObjectProtectionException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.LoginInfo;
-import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.diagram.Diagram;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.panels.*;
 import com.nimbits.client.service.LoginService;
 import com.nimbits.client.service.LoginServiceAsync;
-import com.nimbits.client.service.category.CategoryService;
-import com.nimbits.client.service.category.CategoryServiceAsync;
-import com.nimbits.client.service.diagram.DiagramService;
-import com.nimbits.client.service.diagram.DiagramServiceAsync;
+import com.nimbits.client.service.blob.BlobService;
+import com.nimbits.client.service.blob.BlobServiceAsync;
 import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.entity.EntityServiceAsync;
 import com.nimbits.client.service.recordedvalues.RecordedValueService;
@@ -174,7 +170,7 @@ public class nimbits implements EntryPoint {
 
 
     }
-    private void loadDiagramView(final Diagram diagram,
+    private void loadDiagramView(final Entity diagram,
                                  final ClientType clientType) {
 
         viewport = new Viewport();
@@ -186,7 +182,7 @@ public class nimbits implements EntryPoint {
         contentPanel.setHeading(Const.HTML_HOME_LINK + " | " + heading + " "
                 + diagram.getName());
 
-        diagram.setFullScreenView(true);
+      //  diagram.setFullScreenView(true);
 
         final DiagramPanel diagramPanel = new DiagramPanel(diagram, false, Window.getClientWidth(), Window.getClientHeight());
         diagramPanel.addEntityClickedListeners(new NavigationEventProvider.EntityClickedListener() {
@@ -275,7 +271,7 @@ public class nimbits implements EntryPoint {
             public void onEntityClicked(final Entity c) {
                 switch (c.getEntityType()) {
                     case category:
-                        categoryClicked(c);
+                        //TODO categoryClicked(c);
                         break;
                     case point:
                         //TODO mainPanel.addPoint(c);
@@ -291,29 +287,6 @@ public class nimbits implements EntryPoint {
 
 
 
-    }
-
-    private void categoryClicked(Entity c) {
-        final CategoryServiceAsync categoryService = GWT.create(CategoryService.class);
-        categoryService.getCategoryByName(c.getName(), true, true, new AsyncCallback<Category>() {
-
-
-            @Override
-            public void onFailure(final Throwable throwable) {
-
-            }
-
-            @Override
-            public void onSuccess(final Category category) {
-
-                if (category.getPoints() != null) {
-                    for (final Point p : category.getPoints()) {
-                        //TODO mainPanel.addPoint(p);
-
-                    }
-                }
-            }
-        });
     }
 
 
@@ -387,19 +360,33 @@ public class nimbits implements EntryPoint {
 
 
     private void processDiagramRequest(final String diagramName, final ClientType clientType) {
-        DiagramServiceAsync diagramService = GWT.create(DiagramService.class);
+        BlobServiceAsync diagramService = GWT.create(BlobService.class);
 
-        diagramService.getDiagramByUuid(diagramName, new AsyncCallback<Diagram>() {
+        EntityServiceAsync service = GWT.create(EntityService.class);
+
+        service.getEntityByUUID(diagramName, new AsyncCallback<Entity>() {
             @Override
             public void onFailure(Throwable throwable) {
-                handleError(throwable);
+                //To change body of implemented methods use File | Settings | File Templates.
             }
 
             @Override
-            public void onSuccess(final Diagram diagram) {
-                loadDiagramView(diagram, clientType);
+            public void onSuccess(Entity entity) {
+                loadDiagramView(entity, clientType);
             }
         });
+
+//        diagramService.getDiagramByUuid(diagramName, new AsyncCallback<Diagram>() {
+//            @Override
+//            public void onFailure(Throwable throwable) {
+//                handleError(throwable);
+//            }
+//
+//            @Override
+//            public void onSuccess(final Diagram diagram) {
+//
+//            }
+//        });
 
     }
 

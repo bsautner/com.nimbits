@@ -198,7 +198,7 @@ class PointPanel extends LayoutContainer {
     }
 
     private void loadForm(final Map<String, String> settingMap) throws NimbitsException {
-        pointService.getPointByUUID(entity.getUUID(), new AsyncCallback<Point>() {
+        pointService.getPointByUUID(entity.getEntity(), new AsyncCallback<Point>() {
             @Override
             public void onFailure(Throwable caught) {
                 GWT.log(caught.getMessage());

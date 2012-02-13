@@ -13,8 +13,8 @@
 
 import com.nimbits.client.NimbitsClient;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.value.Value;
@@ -43,8 +43,8 @@ public class LocalTest {
     @Before
     @Ignore
     public void setup() throws NimbitsException {
-        List<Category> categoryList = c.getCategories(true, true);
-        for (Category x : categoryList) {
+        List<Entity> categoryList = c.getCategories(true, true);
+        for (Entity x : categoryList) {
             c.deleteCategory(x.getName());
         }
     }
@@ -54,10 +54,10 @@ public class LocalTest {
     public void loadRandomTest() throws IOException {
 
         EntityName cName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
-        Category cx = c.addCategory(cName);
+        Entity cx = c.addCategory(cName);
 
         EntityName pointName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
-        Point p = c.addPoint(cName, pointName);
+        Point p = c.addPoint(pointName);
         assertNotNull(p);
         long now = new Date().getTime();
         long then = now - 1000 * 100;
@@ -81,7 +81,7 @@ public class LocalTest {
 
         EntityName pointName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
         EntityName categoryName = CommonFactoryLocator.getInstance().createName(null);
-        c.addPoint(categoryName, pointName);
+        c.addPoint(pointName);
 
         while (then < now) {
             then += 1000;

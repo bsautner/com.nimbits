@@ -4,8 +4,8 @@
 
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
-import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
@@ -39,9 +39,9 @@ public class DataPointIntegrationTest extends TestCase {
     public void setUp() throws Exception {
         cat = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
 
-        Category c = ClientHelper.client().addCategory(cat);
+        Entity c = ClientHelper.client().addCategory(cat);
 
-        Assert.assertTrue(c.getId() > 0);
+        Assert.assertNotNull(c);
     }
 
     @After

@@ -27,19 +27,19 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.nimbits.client.enums.ClientType;
+import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.diagram.Diagram;
-import com.nimbits.client.model.diagram.DiagramModel;
-import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModel;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.client.service.datapoints.PointService;
-import com.nimbits.client.service.datapoints.PointServiceAsync;
-import com.nimbits.client.service.diagram.DiagramService;
-import com.nimbits.client.service.diagram.DiagramServiceAsync;
+import com.nimbits.client.service.entity.EntityService;
+import com.nimbits.client.service.entity.EntityServiceAsync;
 import com.nimbits.client.service.recordedvalues.RecordedValueService;
 import com.nimbits.client.service.recordedvalues.RecordedValueServiceAsync;
 import com.nimbits.shared.Utils;
@@ -69,7 +69,7 @@ public class DiagramPanel extends NavigationEventProvider {
     private OMSVGSVGElement svg;
     private final ContentPanel mainPanel = new ContentPanel();
     private Map<EntityName, Point> points = new HashMap<EntityName, Point>();
-    private Map<EntityName, Diagram> diagrams = new HashMap<EntityName, Diagram>();
+    private Map<EntityName, Entity> diagrams = new HashMap<EntityName, Entity>();
 
     private final boolean readOnly;
     private final RecordedValueServiceAsync recordedValueService = GWT.create(RecordedValueService.class);
@@ -77,21 +77,21 @@ public class DiagramPanel extends NavigationEventProvider {
     private final Set<EntityName> diagramsInDiagram = new HashSet<EntityName>();
     private final Map<String, String> originalFill = new HashMap<String, String>();
 
-    public Diagram getDiagram() {
+    public Entity getDiagram() {
         return diagram;
     }
 
-    private final Diagram diagram;
+    private final Entity diagram;
 
     private final ClientType clientType;
 
-    public DiagramPanel(final Diagram aDiagram, boolean showHeader, final int w, final int h) {
+    public DiagramPanel(final Entity aDiagram, boolean showHeader, final int w, final int h) {
         //final ToolBar toolbar = createToolbar(aDiagram);
         final FlowPanel imagePanel = new FlowPanel();
         final String resourceUrl = Const.PATH_DIAGRAM_SERVICE + "?" + Const.PARAM_BLOB_KEY + "=" + aDiagram.getBlobKey();
         this.diagram = aDiagram;
         this.readOnly = aDiagram.isReadOnly();
-        this.clientType = aDiagram.getClientType();
+        this.clientType = ClientType.other;
 
         //  mainPanel.setTopComponent(toolbar);
 
@@ -195,7 +195,8 @@ public class DiagramPanel extends NavigationEventProvider {
 
                     @Override
                     public void componentSelected(final IconButtonEvent ce) {
-                        notifyDiagramRemovedListener(getDiagram());
+
+                        //notifyDiagramRemovedListener(getDiagram());
                     }
                 });
     }
@@ -305,39 +306,37 @@ public class DiagramPanel extends NavigationEventProvider {
     }
 
     private void getDiagramsUsedInDiagram() throws NimbitsException {
-        final DiagramServiceAsync diagramServiceAsync = GWT.create(DiagramService.class);
-        diagramServiceAsync.getDiagramsByName(diagram.getUserFk(), diagramsInDiagram, new AsyncCallback<Map<EntityName, Diagram>>() {
 
+        EntityServiceAsync serviceAsync = GWT.create(EntityService.class);
 
+        serviceAsync.getEntityNameMap(EntityType.diagram, new AsyncCallback<Map<EntityName, Entity>>() {
             @Override
             public void onFailure(Throwable throwable) {
-
+                //To change body of implemented methods use File | Settings | File Templates.
             }
 
             @Override
-            public void onSuccess(Map<EntityName, Diagram> diagramNameDiagramMap) {
-                diagrams = diagramNameDiagramMap;
+            public void onSuccess(Map<EntityName, Entity> stringEntityMap) {
+                diagrams = stringEntityMap;
             }
-        });
+        } );
     }
 
     private void getPointsUsedInDiagram() throws NimbitsException {
-        final PointServiceAsync pointServiceAsync = GWT.create(PointService.class);
-
-        pointServiceAsync.getPointsByName(diagram.getUserFk(), pointsInDiagram, new AsyncCallback<Map<EntityName, Point>>() {
-
-
-            @Override
-            public void onFailure(Throwable throwable) {
-
-            }
-
-            @Override
-            public void onSuccess(Map<EntityName, Point> stringPointMap) {
-                points = stringPointMap;
-
-            }
-        });
+        //TODO
+//        PointServiceAsync serviceAsync = GWT.create(PointService.class);
+//
+//        serviceAsync.getEntityNamePointMap(EntityType.point, new AsyncCallback<Map<EntityName, Entity>>() {
+//            @Override
+//            public void onFailure(Throwable throwable) {
+//                //To change body of implemented methods use File | Settings | File Templates.
+//            }
+//
+//            @Override
+//            public void onSuccess(Map<EntityName, Entity> stringEntityMap) {
+//                points = stringEntityMap;
+//            }
+//        } );
     }
 
     private void refreshDiagramValues() throws NimbitsException {
@@ -465,8 +464,8 @@ public class DiagramPanel extends NavigationEventProvider {
             @Override
             public void onMouseDown(MouseDownEvent mouseDownEvent) {
                 if (diagrams.containsKey(diagramName)) {
-                    DiagramModel diagramModel = (DiagramModel) diagrams.get(diagramName);
-                    diagramModel.setClientType(clientType);
+                    EntityModel diagramModel = (EntityModel) diagrams.get(diagramName);
+                    //diagramModel.setClientType(clientType);
                     Entity entity = EntityModelFactory.createEntity(diagramModel);
                     notifyEntityClickedListener(entity);
 
@@ -506,7 +505,7 @@ public class DiagramPanel extends NavigationEventProvider {
             final String[] actions = action.split(",");
             final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam);
             if (!Utils.isEmptyString(pointNameParam) && points.containsKey(pointName)) {
-                recordedValueService.getCurrentValue(diagram.getUserFk(), pointName, new AsyncCallback<Value>() {
+                recordedValueService.getCurrentValue(diagram, new AsyncCallback<Value>() {
 
                     @Override
                     public void onFailure(Throwable throwable) {
@@ -641,8 +640,8 @@ public class DiagramPanel extends NavigationEventProvider {
             @Override
             public void onMouseDown(final MouseDownEvent mouseDownEvent) {
                 if (diagrams.containsKey(diagramName)) {
-                    DiagramModel diagramModel = (DiagramModel) diagrams.get(diagramName);
-                    diagramModel.setClientType(clientType);
+                    EntityModel diagramModel = (EntityModel) diagrams.get(diagramName);
+                    //diagramModel.setClientType(clientType);
                     Entity entity = EntityModelFactory.createEntity(diagramModel);
                     notifyEntityClickedListener(entity);
 
@@ -662,7 +661,7 @@ public class DiagramPanel extends NavigationEventProvider {
             final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam);
             if (!Utils.isEmptyString(pointNameParam) && points.containsKey(pointName)) {
 
-                recordedValueService.getCurrentValue(diagram.getUserFk(), pointName, new AsyncCallback<Value>() {
+                recordedValueService.getCurrentValue(diagram, new AsyncCallback<Value>() {
 
                     @Override
                     public void onFailure(Throwable throwable) {
@@ -821,8 +820,8 @@ public class DiagramPanel extends NavigationEventProvider {
             @Override
             public void onMouseDown(MouseDownEvent mouseDownEvent) {
                 if (diagrams.containsKey(diagramName)) {
-                    DiagramModel diagramModel = (DiagramModel) diagrams.get(diagramName);
-                    diagramModel.setClientType(clientType);
+                    EntityModel diagramModel = (EntityModel) diagrams.get(diagramName);
+                    //diagramModel.setClientType(clientType);
                     Entity entity = EntityModelFactory.createEntity(diagramModel);
                     notifyEntityClickedListener(entity);
                 }
@@ -838,7 +837,7 @@ public class DiagramPanel extends NavigationEventProvider {
             final String[] actions = action.split(",");
             final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam);
             if (!Utils.isEmptyString(pointNameParam) && points.containsKey(pointName)) {
-                recordedValueService.getCurrentValue(diagram.getUserFk(), pointName, new AsyncCallback<Value>() {
+                recordedValueService.getCurrentValue(diagram, new AsyncCallback<Value>() {
 
                     @Override
                     public void onFailure(Throwable throwable) {

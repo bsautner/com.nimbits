@@ -50,6 +50,7 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueModelFactory;
 import com.nimbits.client.service.datapoints.PointService;
@@ -75,15 +76,18 @@ class NavigationPanel extends NavigationEventProvider {
     private boolean expanded = false;
     private ClientType clientType;
     private Map<String, String> settings;
+    List<String> parents;
     private GxtModel currentModel;
+    private final User user;
 
 
-    public NavigationPanel(final ClientType clientType,
+    public NavigationPanel(final User user,
+                           final ClientType clientType,
                            final Map<String, String> settings) {
 
         this.settings = settings;
         this.clientType = clientType;
-
+        this.user = user;
         mainPanel = new ContentPanel();
         mainPanel.setHeaderVisible(false);
         mainPanel.setFrame(false);
@@ -101,15 +105,15 @@ class NavigationPanel extends NavigationEventProvider {
     }
 
     private void addEntity(final Entity entity) {
-
-        if (! entityMap.containsKey(entity.getUUID())) {
-            entityMap.put(entity.getUUID(), entity);
+        if (! Utils.isEmptyString(entity.getParent()) && ! parents.contains(entity.getParent())) {
+            parents.add(entity.getParent());
+        }
+        if (! entityMap.containsKey(entity.getEntity())) {
+            entityMap.put(entity.getEntity(), entity);
         }
     }
 
     private void createTree(final List<Entity> result) {
-
-
 
         store = new TreeStore<ModelData>();
         ColumnConfigs columnConfigs = new ColumnConfigs();
@@ -128,12 +132,8 @@ class NavigationPanel extends NavigationEventProvider {
         treeStoreBuilder(result);
         treeDNDBuilder();
 
-
-
         mainPanel.removeAll();
         mainPanel.add(tree);
-
-        // doLayout(true);
 
 
     }
@@ -169,16 +169,11 @@ class NavigationPanel extends NavigationEventProvider {
             public void dragStart(DNDEvent e) {
                 super.dragStart(e);
                 selectedModel = tree.getSelectionModel().getSelectedItem();
+                GxtModel gxtModel = (GxtModel)selectedModel;
 
-//                if (selectedModel != null && selectedModel == tree.getTreeStore().getRootItems().get(0)) {
-//                    e.setCancelled(true);
-//                    e.getStatus().setStatus(false);
-//                } else if (selectedModel != null) {
-//                    if (selectedModel.get(Const.PARAM_ICON).equals(Const.PARAM_CATEGORY)) {
-//                        e.setCancelled(true);
-//                        e.getStatus().setStatus(false);
-//                    }
-//                }
+                e.setCancelled(  gxtModel.isReadOnly());
+                e.getStatus().setStatus(  ! gxtModel.isReadOnly());
+
             }
 
             @Override
@@ -190,7 +185,11 @@ class NavigationPanel extends NavigationEventProvider {
                         selectedModel.set(Const.PARAM_NAME, model.getName().getValue());
                         final Entity draggedEntity = entityMap.get(model.getUUID());
                         final Entity target = getDropTarget(e.getTarget().getInnerText());
-                        if (target != null){
+                        e.setCancelled(  target.isReadOnly());
+                        e.getStatus().setStatus(  ! target.isReadOnly());
+
+
+                        if (target != null && ! model.isReadOnly() && ! target.isReadOnly()){
                             moveEntity(draggedEntity, target);
                         }
 
@@ -213,7 +212,8 @@ class NavigationPanel extends NavigationEventProvider {
 
     private void moveEntity(Entity draggedEntity, Entity target) {
         EntityServiceAsync service = GWT.create(EntityService.class);
-        draggedEntity.setParentUUID(target.getUUID());
+        draggedEntity.setParent(target.getEntity());
+
         service.addUpdateEntity(draggedEntity, new AsyncCallback<Entity>() {
             @Override
             public void onFailure(Throwable caught) {
@@ -240,8 +240,8 @@ class NavigationPanel extends NavigationEventProvider {
         panel.addPointUpdatedListeners(new PointPanel.PointUpdatedListener() {
             @Override
             public void onPointUpdated(Entity result) {
-                entityMap.remove(result.getUUID());
-                entityMap.put(result.getUUID(), result);
+                entityMap.remove(result.getEntity());
+                entityMap.put(result.getEntity(), result);
                 // points.remove(p.getName());
                 // points.put(p.getName(), p) ;
 
@@ -268,13 +268,15 @@ class NavigationPanel extends NavigationEventProvider {
 
 
         for (Entity entity : result) {
-            if (entity.getParentUUID().equals(model.getUUID())) {
-                GxtModel model2 = new GxtModel(entity);
-                if (parents.contains(entity.getUUID())) {
-                    addChildrenToModel(result, parents, model2);
-                }
+            if (! entity.getEntityType().equals(EntityType.user)) {// entity.getEntity().equals(this.user.getUuid()) ) {
+                if (entity.getParent().equals(model.getUUID())) {
+                    GxtModel model2 = new GxtModel(entity);
+                    if (parents.contains(entity.getEntity()) && ! entity.getEntityType().equals(EntityType.user)) {
+                        addChildrenToModel(result, parents, model2);
+                    }
 
-                model.add(model2);
+                    model.add(model2);
+                }
             }
         }
         // return model;
@@ -286,39 +288,32 @@ class NavigationPanel extends NavigationEventProvider {
         }
         entityMap.clear();
         List<ModelData> m = new ArrayList<ModelData>();
-        List<String> parents = new ArrayList<String>();
-        for (Entity entity : result) {
-            if (! Utils.isEmptyString(entity.getParentUUID()) && ! parents.contains(entity.getParentUUID())) {
-                parents.add(entity.getParentUUID());
-            }
-        }
-
+        parents = new ArrayList<String>();
         for (Entity entity : result) {
 
             addEntity(entity);
-            if (entity.getEntityType().equals(EntityType.user)) {
-                GxtModel userModel = new GxtModel(entity);
-                addChildrenToModel(result, parents, userModel);
-
-                m.add(userModel);
-            }
         }
+        // addEntity(entity);
+        GxtModel userModel = new GxtModel(user);
+        addChildrenToModel(result, parents, userModel);
+        m.add(userModel);
 
         store.add(m, true);
+        tree.setExpanded(userModel, true);
 
     }
 
     public void addNewlyCreatedEntityToTree(final Entity result) {
 
 
-        if (! entityMap.containsKey(result.getUUID())) {
-            entityMap.put(result.getUUID(), result);
+        if (! entityMap.containsKey(result.getEntity())) {
+            entityMap.put(result.getEntity(), result);
             if (tree != null && tree.getStore() != null) {
                 GxtModel model = new GxtModel(result);
                 store = tree.getTreeStore();
                 for (ModelData mx : store.getAllItems()) {
                     GxtModel m = (GxtModel)mx;
-                    if (m.getUUID().equals(result.getParentUUID())) {
+                    if (m.getUUID().equals(result.getParent())) {
                         //  ((GxtModel) mx).add(model);
                         store.add(mx, model, true);
                         break;
@@ -338,7 +333,7 @@ class NavigationPanel extends NavigationEventProvider {
 
     private void removeEntity(final Entity result, GxtModel currentModel) {
 
-        entityMap.remove(result.getUUID());
+        entityMap.remove(result.getEntity());
 
         if (tree != null && tree.getStore() != null) {
             GxtModel model = new GxtModel(result);
@@ -375,11 +370,11 @@ class NavigationPanel extends NavigationEventProvider {
     private void updateValues() throws NimbitsException {
         if (tree != null) {
 
-             final PointServiceAsync service = GWT.create(PointService.class);
+            final PointServiceAsync service = GWT.create(PointService.class);
             service.getPoints(entityMap, new AsyncCallback<Map<String, Point>>() {
                 @Override
                 public void onFailure(Throwable throwable) {
-                  GWT.log(throwable.getMessage(), throwable);
+                    GWT.log(throwable.getMessage(), throwable);
                 }
 
                 @Override
@@ -535,8 +530,10 @@ class NavigationPanel extends NavigationEventProvider {
             public void componentSelected(MenuEvent ce) {
                 ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
                 currentModel = (GxtModel)selectedModel;
+                if (! currentModel.isReadOnly()) {
                 MessageBox.confirm("Confirm", "Are you sure you want delete this? Doing so will permanently delete it including all of it's children (points, documents data etc)"
                         , deleteEntityListener);
+                }
 
             }
         });
@@ -560,7 +557,7 @@ class NavigationPanel extends NavigationEventProvider {
                         dp.addEntityDeletedListeners(new EntityDeletedListener() {
                             @Override
                             public void onEntityDeleted(Entity entity1 )  {
-                                entityMap.remove(entity1.getUUID());
+                                entityMap.remove(entity1.getEntity());
                             }
                         });
 
@@ -620,8 +617,9 @@ class NavigationPanel extends NavigationEventProvider {
             public void componentSelected(MenuEvent ce) {
                 ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
                 currentModel = (GxtModel) selectedModel;
+
                 final MessageBox box;
-                if (currentModel.getEntityType().equals(EntityType.point)) {
+                if (currentModel.getEntityType().equals(EntityType.point) && ! currentModel.isReadOnly()) {
 
                     box= MessageBox.prompt(
                             Const.MESSAGE_NEW_POINT,
@@ -629,7 +627,7 @@ class NavigationPanel extends NavigationEventProvider {
                     box.addCallback(copyPointListener);
                 }
                 else {
-                    box = MessageBox.alert("Not supported", "Sorry, for the moment you can only copy a data point", null);
+                    box = MessageBox.alert("Not supported", "Sorry, for the moment you can only copy your data points", null);
 
                 }
                 box.show();
@@ -689,7 +687,7 @@ class NavigationPanel extends NavigationEventProvider {
                 GxtModel model = (GxtModel) selectedModel;
                 if (model.getEntityType().equals(EntityType.point) || model.getEntityType().equals(EntityType.category)) {
                     Entity p = entityMap.get(model.getUUID());
-                    openUrl(p.getUUID(), p.getName().getValue());
+                    openUrl(p.getEntity(), p.getName().getValue());
                 }
 
 
@@ -725,7 +723,7 @@ class NavigationPanel extends NavigationEventProvider {
                 service.copyEntity(entity, name,new AsyncCallback<Entity>() {
                     @Override
                     public void onFailure(Throwable throwable) {
-                      box.close();
+                        box.close();
                     }
 
                     @Override
@@ -853,10 +851,11 @@ class NavigationPanel extends NavigationEventProvider {
             final Window w = new Window();
             w.setAutoWidth(true);
             w.setHeading(Const.MESSAGE_UPLOAD_SVG);
-            DiagramUploadPanel p = new DiagramUploadPanel(UploadType.newFile);
-            p.addDiagramAddedListeners(new DiagramUploadPanel.DiagramAddedListener() {
+            FileUploadPanel p = new FileUploadPanel(UploadType.newFile);
+            p.addFileAddedListeners(new FileUploadPanel.FileAddedListener() {
+                //TODO should pass back the entity and add it instead of reloading
                 @Override
-                public void onDiagramAdded() throws NimbitsException {
+                public void onFileAdded() throws NimbitsException {
                     w.hide();
                     reloadTree();
                 }

@@ -17,9 +17,12 @@ public interface EntityServiceAsync {
 
     void getEntityByUUID(String uuid, AsyncCallback<Entity> async);
 
-    void getEntityMap(EntityType type, boolean includeValues, AsyncCallback<Map<String, Entity>> async);
+
 
     void copyEntity(Entity originalEntity, EntityName newName, AsyncCallback<Entity> async);
 
 
+    void getEntityNameMap(EntityType type, AsyncCallback<Map<EntityName, Entity>> async);
+
+    void getEntityMap(EntityType type, AsyncCallback<Map<String, Entity>> async);
 }

@@ -5,7 +5,6 @@
  */
 
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
@@ -44,8 +43,8 @@ public class DataLoadingTest {
     @Test
     public void TestRecordValueWithGet() throws InterruptedException, IOException, NimbitsException {
         EntityName pointName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
-        EntityName categoryName = CommonFactoryLocator.getInstance().createName(Const.CONST_HIDDEN_CATEGORY);
-        ClientHelper.client().addPoint(categoryName, pointName);
+
+        ClientHelper.client().addPoint( pointName);
 
         for (int i = 0; i < 10; i++) {
 

@@ -2,8 +2,9 @@
  * Copyright (c) 2011. Tonic Solutions, LLC. All Rights Reservered. This Code is distributed under GPL V3 without any warrenty.
  */
 
-import com.nimbits.client.model.category.Category;
+
 import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import org.junit.Assert;
 import org.junit.Test;
@@ -26,15 +27,15 @@ public class CategoryServiceTest {
 
         EntityName n = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
         assertTrue(ClientHelper.client().isLoggedIn());
-        Category c = ClientHelper.client().addCategory(n);
+        Entity c = ClientHelper.client().addCategory(n);
         Assert.assertNotNull(c);
-        Assert.assertTrue(c.getId() > 0);
+        Assert.assertTrue(c.getEntity().length() > 0);
         Thread.sleep(1000);
-        List<Category> l = ClientHelper.client().getCategories(true, true);
+        List<Entity> l = ClientHelper.client().getCategories(true, true);
         Assert.assertNotNull(l);
         Thread.sleep(1000);
         boolean found = false;
-        for (Category cx : l) {
+        for (Entity cx : l) {
             //  System.out.println(cx.getValue());
             if (cx.getName().equals(n)) {
                 found = true;
@@ -44,18 +45,18 @@ public class CategoryServiceTest {
         Assert.assertTrue(found);
 
         Thread.sleep(1000);
-        Category cx2 = ClientHelper.client().getCategory(n, false, false);
+        Entity cx2 = ClientHelper.client().getCategory(n, false, false);
 
         Assert.assertNotNull(cx2);
 
-        Assert.assertEquals(cx2.getId(), c.getId());
+        Assert.assertEquals(cx2.getEntity(), c.getEntity());
 
 
         ClientHelper.client().deleteCategory(n);
         Thread.sleep(1000);
         l = ClientHelper.client().getCategories(true, true);
         found = false;
-        for (Category cx : l) {
+        for (Entity cx : l) {
 
             if (cx.getName().equals(n)) {
                 found = true;

@@ -1,18 +1,10 @@
 package com.nimbits.server.task;
 
-import com.google.gson.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.category.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.pointcategory.*;
-import com.nimbits.shared.*;
-
-import javax.servlet.http.*;
-import java.io.*;
-import java.util.*;
-import java.util.logging.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.logging.Logger;
 
 /**
  * Created by Benjamin Sautner

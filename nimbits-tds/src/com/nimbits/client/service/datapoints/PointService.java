@@ -14,28 +14,28 @@
 package com.nimbits.client.service.datapoints;
 
 
-import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.exceptions.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.category.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.subscription.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
+import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.nimbits.client.enums.ExportType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.Const;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.subscription.Subscription;
+import com.nimbits.client.model.user.User;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @RemoteServiceRelativePath(Const.PARAM_POINT)
 public interface PointService extends RemoteService {
 
     Point addPoint(final User user, final Entity entity);
 
-    boolean checkPointProtection(final User loggedInUser, final User pointOwner, final Point p);
 
-    Point addPoint(final EntityName pointName, final Category category) throws NimbitsException, PointExistsException;
+   // Point addPoint(final EntityName pointName, final Category category) throws NimbitsException, PointExistsException;
 
     Point getPointByName(final User pointOwner, final EntityName name) throws NimbitsException;
 
@@ -43,42 +43,31 @@ public interface PointService extends RemoteService {
 
     List<Point> getPoints() throws NimbitsException;
 
-    List<Point> getPointsByCategory(final Category category) throws NimbitsException;
-
     Point updatePoint(final Point point) throws NimbitsException;
 
     Point updatePoint(final User u, final Point point) throws NimbitsException;
-
-    void deletePoint(final Point p) throws NimbitsException;
 
     void deletePoint(final User u, final Point p) throws NimbitsException;
 
     Map<EntityName, Point> getPointsByName(final long pointOwnerId, final Set<EntityName> names) throws NimbitsException;
 
-    Point movePoint(final Point point, final EntityName newEntityName) throws NimbitsException;
-
     List<Point> getPoints(final User u) throws NimbitsException;
 
     Point getPointByUUID(final String uuid);
 
-    AlertType getPointAlertState(final Point point, final Value value);
-
-    Point copyPoint(final Point point, final EntityName newName) throws NimbitsException, PointExistsException;
-
-    Point addPoint(final EntityName pointName) throws NimbitsException, PointExistsException;
+ //   Point addPoint(final EntityName pointName) throws NimbitsException, PointExistsException;
 
     Point getPointByID(final long id) throws NimbitsException;
 
-
     String exportData(final Map<EntityName, Point> points, ExportType exportType) throws NimbitsException;
 
-    Point movePoint(final User u, final Point point, final EntityName EntityName) throws NimbitsException;
+    //Point movePoint(final User u, final Point point, final EntityName EntityName) throws NimbitsException;
 
-    Point addPoint(final Point point, final Category c, final User u) throws NimbitsException;
+    //Point addPoint(final Point point, final Category c, final User u) throws NimbitsException;
 
-    Point addPoint(final EntityName pointName, final Category c, final User u) throws NimbitsException;
+   // Point addPoint(final EntityName pointName, final Category c, final User u) throws NimbitsException;
 
-    List<Point> getPointsByCategory(final User u, final Category c);
+//    List<Point> getPointsByCategory(final User u, final Category c);
 
     List<Point> getAllPoints(int start, int end);
 

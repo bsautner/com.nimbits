@@ -40,8 +40,7 @@ public interface Point extends Serializable {
     boolean getAlarmToFacebook();
     @Deprecated
     AlertType getAlertState();
-    @Deprecated
-    long getCatID();
+
 
     ClientType getClientType();
 
@@ -75,7 +74,7 @@ public interface Point extends Serializable {
     double getLowAlarm();
     @Deprecated
     EntityName getName();
-
+    @Deprecated
     boolean getReadOnly();
 
     boolean getSendAlarmIM();
@@ -131,8 +130,6 @@ public interface Point extends Serializable {
     void setAlarmToFacebook(final boolean alarmToFacebook);
 
     void setAlertState(final AlertType alertState);
-
-    void setCatID(final long catID);
 
     void setClientType(final ClientType clientType);
 

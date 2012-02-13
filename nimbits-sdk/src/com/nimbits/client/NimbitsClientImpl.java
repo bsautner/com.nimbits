@@ -18,15 +18,13 @@ import com.google.gson.JsonSyntaxException;
 import com.nimbits.client.enums.Action;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
-import com.nimbits.client.model.category.Category;
-
-import com.nimbits.client.model.category.impl.CategoryModel;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
-
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueModel;
@@ -37,7 +35,7 @@ import com.nimbits.server.http.HttpCommonFactory;
 import com.nimbits.user.GoogleAuthentication;
 import com.nimbits.user.GoogleUser;
 import com.nimbits.user.NimbitsUser;
-import org.apache.commons.lang3.*;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.cookie.Cookie;
 
 import java.io.*;
@@ -257,12 +255,12 @@ public class NimbitsClientImpl implements NimbitsClient {
      * @param EntityName the name of the new category
      * @throws UnsupportedEncodingException
      */
-    public Category addCategory(final EntityName EntityName) throws UnsupportedEncodingException {
+    public Entity addCategory(final EntityName EntityName) throws UnsupportedEncodingException {
 
         final String u = host + Const.PATH_CATEGORY_SERVICE;
         final String params = "name=" + URLEncoder.encode(EntityName.getValue(), Const.CONST_ENCODING);
         final String result = doGPost(u, params);
-        return gson.fromJson(result, CategoryModel.class);
+        return gson.fromJson(result, EntityModel.class);
 
 
     }
@@ -285,14 +283,13 @@ public class NimbitsClientImpl implements NimbitsClient {
 
     }
 
-    public Point addPoint(final EntityName categoryName, final EntityName pointName) {
+    public Point addPoint(final EntityName pointName) {
         Point point = null;
 
         try {
             final String u = host + Const.PATH_POINT_SERVICE;
             final String params = Const.PARAM_NAME + "=" +
-                    URLEncoder.encode(pointName.getValue(), Const.CONST_ENCODING) +
-                    "&" + Const.PARAM_CATEGORY + "=" + URLEncoder.encode(categoryName.getValue(), Const.CONST_ENCODING);
+                    URLEncoder.encode(pointName.getValue(), Const.CONST_ENCODING);
             String json = doGPost(u, params);
             point = gson.fromJson(json, PointModel.class);
         } catch (JsonSyntaxException ignored) {
@@ -306,12 +303,15 @@ public class NimbitsClientImpl implements NimbitsClient {
     }
 
     @Override
-    public Point addPoint(final String pointName) {
-        final EntityName EntityName = CommonFactoryLocator.getInstance().createName(Const.CONST_HIDDEN_CATEGORY);
-        final EntityName name = CommonFactoryLocator.getInstance().createName(pointName);
-        return addPoint(EntityName, name);
-
+    public Point addPoint(String pointName) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
+
+    @Override
+    public List<Entity> getCategories(boolean includePoints, boolean includeDiagrams) throws NimbitsException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
 
     public Point getPoint(final EntityName name) throws NimbitsException {
         Point retObj = null;
@@ -374,32 +374,9 @@ public class NimbitsClientImpl implements NimbitsClient {
 
     }
 
-    public List<Category> getCategories(final boolean includePoints, final boolean includeDiagrams) throws NimbitsException {
-        final String u = host + Const.PATH_CATEGORY_SERVICE;
-        String params = "";
-        //  final String categories = doGGet(u, params);
 
-
-        if (includePoints) {
-            params = Const.PARAM_INCLUDE_POINTS + "=" + Const.WORD_TRUE;
-        }
-        if (includeDiagrams) {
-            params += "&" + Const.PARAM_INCLUDE_DIAGRAMS + "=" + Const.WORD_TRUE;
-        }
-
-        final String json = doGGet(u, params);
-
-
-        List<Category> retObj = gson.fromJson(json, GsonFactory.categoryListType);
-
-
-        return retObj;
-
-
-    }
-
-    public Category getCategory(final EntityName EntityName, final boolean includePoints, final boolean includeDiagrams) throws NimbitsException {
-        Category c = null;
+    public Entity getCategory(final EntityName EntityName, final boolean includePoints, final boolean includeDiagrams) throws NimbitsException {
+        Entity c = null;
         final String u = host + Const.PATH_CATEGORY_SERVICE;
         String params = Const.PARAM_NAME + "=" + EntityName.getValue();
 
@@ -412,22 +389,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
         final String json = doGGet(u, params);
 
-        c = gson.fromJson(json, CategoryModel.class);
-        //  if (!(json.trim().length() == 0)) {
-
-
-//            if (c.getJsonPointCollection() != null) {
-//                List<Point> points = gson.fromJson(c.getJsonPointCollection(), GsonFactory.categoryListType);
-//                c.setPoints(points);
-//
-//            }
-//            if (c.getJsonDiagramCollection() != null) {
-//                List<Diagram> diagrams = gson.fromJson(c.getJsonDiagramCollection(), GsonFactory.diagramListType);
-//                c.setDiagrams(diagrams);
-//
-//            }
-
-        //  }
+        c = gson.fromJson(json, EntityModel.class);
 
 
         return c;

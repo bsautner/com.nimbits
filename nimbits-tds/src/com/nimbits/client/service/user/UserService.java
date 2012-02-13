@@ -39,4 +39,6 @@ public interface UserService extends RemoteService {
 
 
     User getUserByUUID(String subscriberUUID);
+
+    List<User> getConnectionRequests(List<String> connections);
 }

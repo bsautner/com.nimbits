@@ -17,11 +17,8 @@ package com.nimbits.server.orm;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.nimbits.client.enums.ClientType;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.diagram.Diagram;
 import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.user.User;
 
 import javax.jdo.annotations.*;
 import java.util.Date;
@@ -34,7 +31,7 @@ import java.util.UUID;
  * Time: 3:59 PM
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
-public class DiagramEntity implements Diagram {
+public class DiagramEntity  {
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Long id;
@@ -45,12 +42,12 @@ public class DiagramEntity implements Diagram {
     @Persistent
     private long categoryFk;
 
+    @Persistent
+    private BlobKey blobKey;
+
     public void setBlobKey(BlobKey blobKey) {
         this.blobKey = blobKey;
     }
-
-    @Persistent
-    private BlobKey blobKey;
 
     @Persistent
     private String name;
@@ -81,27 +78,27 @@ public class DiagramEntity implements Diagram {
         return readOnly;
     }
 
-    @Override
+
     public boolean isFullScreenView() {
         return fullScreenView;
     }
 
-    @Override
+
     public void setFullScreenView(boolean fullScreenView) {
         this.fullScreenView = fullScreenView;
     }
 
-    @Override
+
     public void setClientType(ClientType clientType) {
 
     }
 
-    @Override
+
     public ClientType getClientType() {
         return null;
     }
 
-    @Override
+
     public EntityType getEntityType() {
         return EntityType.get(this.entityType);
     }
@@ -110,7 +107,7 @@ public class DiagramEntity implements Diagram {
         return dateCreated;
     }
 
-    @Override
+
     public String getUuid() {
         return uuid;
     }
@@ -141,17 +138,8 @@ public class DiagramEntity implements Diagram {
     public DiagramEntity() {
     }
 
-    public DiagramEntity(User u, BlobKey blobKey, EntityName name, Category category) {
-        this.userFk = u.getId();
-        this.blobKey = blobKey;
-        this.name = name.getValue();
-        this.categoryFk = category.getId();
-        this.uuid = UUID.randomUUID().toString();
-        this.dateCreated = new Date();
-        this.protectionLevel = 0;
-    }
 
-    @Override
+
     public long getId() {
 
         return this.id != null ? this.id : 0;
@@ -162,27 +150,27 @@ public class DiagramEntity implements Diagram {
         return this.categoryFk;
     }
 
-    @Override
+
     public void setCategoryFk(long id) {
         this.categoryFk = id;
     }
 
-    @Override
+
     public void setReadOnly(boolean readOnly) {
         this.readOnly = readOnly;
     }
 
-    @Override
+
     public long getUserFk() {
         return this.userFk;
     }
 
-    @Override
+
     public String getBlobKey() {
         return blobKey.getKeyString();
     }
 
-    @Override
+
     public EntityName getName() {
         return CommonFactoryLocator.getInstance().createName(this.name);
     }

@@ -53,7 +53,7 @@ public class Const {
     public static final String ANDROID_TABLE_SETTINGS = "Settings";
     public static final String CONST_AH = "ah";
     public static final String CONST_ENCODING = "UTF-8";
-    public static final String CONST_HIDDEN_CATEGORY = "Nimbits_Unsorted";
+    //public static final String CONST_HIDDEN_CATEGORY = "Nimbits_Unsorted";
     public static final String CONST_SERVER_NAME = "Nimbits Server";
     // ------------------------------ FIELDS ------------------------------
 
@@ -109,6 +109,7 @@ public class Const {
     public static final String PARAM_COOKIE = "cookie";
     public static final String PARAM_COUNT = "count";
     public static final String PARAM_DIAGRAM = "diagram";
+    public static final String PARAM_BLOB = "blob";
     public static final String PARAM_EMAIL = "email";
     public static final String SETTING_ENABLE_CONNECTIONS = "enableConnections";
     public static final String PARAM_END_DATE = "ed";
@@ -232,7 +233,7 @@ public class Const {
     public static final String PATH_AH_LOGIN = "/_ah/login";
     public static final String PARAM_ACSID = "ACSID";
     public static final String PARAM_MY_FILE = "myFile";
-    public static final String PARAM_DIAGRAM_ID = "diagramId";
+    public static final String PARAM_FILE_ID = "diagramId";
     public static final String PARAM_UPLOAD_TYPE_HIDDEN_FIELD = "uploadTypeHiddenField";
     public static final String PARAM_EMAIL_HIDDEN_FIELD = "emailHiddenField";
     public static final String PARAM_GENKEY = "genkey";
@@ -333,6 +334,8 @@ public class Const {
     public static final String ACTION_REPORT = "report";
     public static final String ACTION_DIAGRAM = "diagram";
     public static final String PATH_GOOGLE_URL_SHORTENER =  "https://www.googleapis.com/urlshortener/v1/url";;
+    public static final String PARAM_DESCRIPTION = "description";
+    public static final String PARAM_FILE_NAME = "fn";
 
     public static String getConnectionInviteEmail(final EmailAddress email) {
         return "<P STYLE=\"margin-bottom: 0in\"> " + email.getValue() +

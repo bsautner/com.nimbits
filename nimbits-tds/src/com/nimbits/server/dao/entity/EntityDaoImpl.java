@@ -5,13 +5,11 @@ import com.nimbits.PMF;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
 import com.nimbits.server.entity.EntityTransactions;
 import com.nimbits.server.orm.entity.EntityStore;
 import com.nimbits.server.point.PointServiceFactory;
-import com.nimbits.server.recordedvalue.RecordedValueServiceFactory;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
@@ -31,12 +29,18 @@ public class EntityDaoImpl implements EntityTransactions {
 
     private final User user;
 
+
+
+    public EntityDaoImpl(User user) {
+        this.user = user;
+    }
+
     @Override
     public Map<String, Entity> getEntityMap(EntityType type) {
         Map<String, Entity> retObj = new HashMap<String, Entity>();
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final Query q1 = pm.newQuery(EntityStore.class, "ownerUUID==b && entityType=t");
+        final Query q1 = pm.newQuery(EntityStore.class, "owner==b && entityType==t");
         q1.declareParameters("String b, Integer t");
         try {
 
@@ -44,7 +48,7 @@ public class EntityDaoImpl implements EntityTransactions {
             List<Entity> models = EntityModelFactory.createEntities(user, result);
             for (Entity e : models) {
 
-                retObj.put(e.getUUID(), e);
+                retObj.put(e.getEntity(), e);
             }
             return retObj;
 
@@ -56,22 +60,43 @@ public class EntityDaoImpl implements EntityTransactions {
     }
 
 
+    @Override
+    public Map<EntityName, Entity> getEntityNameMap(EntityType type) {
 
-    public EntityDaoImpl(User user) {
-        this.user = user;
+        Map<EntityName, Entity> retObj = new HashMap<EntityName, Entity>();
+
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final Query q1 = pm.newQuery(EntityStore.class, "owner==b && entityType==t");
+        q1.declareParameters("String b, Integer t");
+        try {
+
+            final List<Entity> result = (List<Entity>) q1.execute(user.getUuid(), type.getCode());
+            List<Entity> models = EntityModelFactory.createEntities(user, result);
+            for (Entity e : models) {
+
+                retObj.put(e.getName(), e);
+            }
+            return retObj;
+
+        } finally {
+            pm.close();
+        }
+
+
     }
+
 
     @Override
     public Entity addUpdateEntity(Entity entity) {
-        Entity retObj = null;
+
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final Query q1 = pm.newQuery(EntityStore.class, "entityUUID==b");
-        q1.declareParameters("String b");
+        final Query q1 = pm.newQuery(EntityStore.class, "owner==o && entity==b");
+        q1.declareParameters("String o, String b");
         q1.setRange(0, 1);
 
         try {
 
-            final List<Entity> c = (List<Entity>) q1.execute(entity.getUUID());
+            final List<Entity> c = (List<Entity>) q1.execute(user.getUuid(), entity.getEntity());
             if (c.size() > 0) {
                 Transaction tx = pm.currentTransaction();
                 Entity result = c.get(0);
@@ -79,7 +104,7 @@ public class EntityDaoImpl implements EntityTransactions {
                 result.setDescription(entity.getDescription());
                 result.setName(entity.getName());
                 result.setProtectionLevel(entity.getProtectionLevel());
-                result.setParentUUID(entity.getParentUUID());
+                result.setParent(entity.getParent());
                 tx.commit();
                 return EntityModelFactory.createEntity(result);
             }
@@ -106,10 +131,21 @@ public class EntityDaoImpl implements EntityTransactions {
     public List<Entity> getEntities() {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        List<String> uuids = user.getUserConnections();
+        List<String> uuids = new ArrayList<String>();
+        Map<String, Entity> connections = getEntityMap(EntityType.userConnection);
+
+
+        //TODO - need to write a dts to move all users, connections etc to entiities
+
         uuids.add(user.getUuid());
 
-        final Query q1 = pm.newQuery(EntityStore.class, ":p.contains(ownerUUID)");
+
+        for (Entity e : connections.values()) {
+
+            uuids.add(e.getEntity());
+        }
+
+        final Query q1 = pm.newQuery(EntityStore.class, ":p.contains(owner)");
 
         try {
             final List<Entity> result = (List<Entity>) q1.execute(uuids);
@@ -123,16 +159,16 @@ public class EntityDaoImpl implements EntityTransactions {
 
     private List<Entity> getEntityChildren(PersistenceManager pm, Entity entity) {
 
-        final Query q1 = pm.newQuery(EntityStore.class, "parentUUID==b");
+        final Query q1 = pm.newQuery(EntityStore.class, "parent==b");
         q1.declareParameters("String b");
         final List<Entity> retObj = new ArrayList<Entity>();
 
 
 
-        final List<Entity> c = (List<Entity>) q1.execute(entity.getUUID());
-        if (c.size() > 0) {
-            retObj.addAll(c);
-            for (Entity e : c) {
+        final List<Entity> result = (List<Entity>) q1.execute(entity.getEntity());
+        if (result.size() > 0) {
+            retObj.addAll(result);
+            for (Entity e : result) {
                 List<Entity> children = getEntityChildren(pm, e);
                 retObj.addAll(children);
             }
@@ -145,13 +181,13 @@ public class EntityDaoImpl implements EntityTransactions {
     @Override
     public void deleteEntity(Entity entity) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final Query q1 = pm.newQuery(EntityStore.class, "entityUUID==b");
+        final Query q1 = pm.newQuery(EntityStore.class, "entity==b");
         q1.declareParameters("String b");
         q1.setRange(0, 1);
 
         try {
 
-            final List<Entity> c = (List<Entity>) q1.execute(entity.getUUID());
+            final List<Entity> c = (List<Entity>) q1.execute(entity.getEntity());
 
             if (c.size() > 0) {
                 List<Entity> entities = getEntityChildren(pm, c.get(0));
@@ -169,7 +205,7 @@ public class EntityDaoImpl implements EntityTransactions {
 
 
         try {
-            final Query q1 = pm.newQuery(EntityStore.class, "entityUUID==b");
+            final Query q1 = pm.newQuery(EntityStore.class, "entity==b");
             q1.declareParameters("String b");
             q1.setRange(0, 1);
             final List<Entity> c = (List<Entity>) q1.execute(uuid);

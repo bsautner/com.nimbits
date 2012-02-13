@@ -31,7 +31,7 @@ public interface RecordedValueService extends RemoteService {
 
     List<Value> getCache(final Point point);
 
-    Value getCurrentValue(final long pointOwnerId, final EntityName pointName) throws NimbitsException;
+    Value getCurrentValue(final Entity entity) throws NimbitsException;
 
     Value getCurrentValue(final Point p);
 

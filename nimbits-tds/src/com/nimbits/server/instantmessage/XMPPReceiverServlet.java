@@ -21,21 +21,23 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.nimbits.client.enums.Action;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.server.entity.EntityTransactionFactory;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.json.JsonHelper;
 import com.nimbits.server.point.PointServiceFactory;
-import com.nimbits.server.pointcategory.CategoryServiceFactory;
 import com.nimbits.server.recordedvalue.RecordedValueServiceFactory;
 import com.nimbits.server.user.UserTransactionFactory;
 import com.nimbits.shared.Utils;
@@ -46,6 +48,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 
@@ -145,13 +148,16 @@ public class XMPPReceiverServlet extends HttpServlet {
 
 
         EntityName pointName = CommonFactoryLocator.getInstance().createName(body.substring(1).trim());
-        Point r = PointServiceFactory.getInstance().addPoint(pointName, null, u);
-        if (r != null) {
+        Entity entity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone, UUID.randomUUID().toString(),
+                u.getUuid(), u.getUuid());
+        EntityTransactionFactory.getInstance(u).addUpdateEntity(entity);
+      //  Point r = PointServiceFactory.getInstance().addPoint(pointName, null, u);
+        //if (r != null) {
             IMFactory.getInstance().sendMessage(pointName.getValue() + " created", u.getEmail());
-
-        } else {
-            IMFactory.getInstance().sendMessage("Could not create " + pointName.getValue(), u.getEmail());
-        }
+      // /
+       // } else {
+       //     IMFactory.getInstance().sendMessage("Could not create " + pointName.getValue(), u.getEmail());
+        //}
 
 
     }
@@ -185,45 +191,45 @@ public class XMPPReceiverServlet extends HttpServlet {
         List<Point> l;
         //StringBuilder sb = new StringBuilder();
         IMFactory.getInstance().sendMessage("Point List:", u.getEmail());
-
-        try {
-            final List<Category> c = CategoryServiceFactory.getInstance().getCategories(u, true, false, false);
-            if (c.size() == 0) {
-                IMFactory.getInstance().sendMessage("None found", u.getEmail());
-
-            } else {
-                for (Category x : c) {
-                    l = x.getPoints();
-                    if (x.getName() != null) {
-                        if (!x.getName().getValue().equals(Const.CONST_HIDDEN_CATEGORY)) {
-                            //sb.append(x.getValue() + "\n");
-                            IMFactory.getInstance().sendMessage(x.getName().getValue(), u.getEmail());
-                            //	sb.append(x.getValue() + "\n");
-                            for (Point p : l) {
-                                //sb.append("     " + p.getValue() + "\n");
-                                IMFactory.getInstance().sendMessage("     " + p.getName().getValue(), u.getEmail());
-                                //sb.append( + "\n");
-
-                            }
-                        } else {
-                            for (Point p : l) {
-                                //sb.append(p.getValue() + "\n");
-                                IMFactory.getInstance().sendMessage(p.getName().getValue(), u.getEmail());
-                                //sb.append( + "\n");
-
-                            }
-                        }
-                    }
-                }
-                //IMFactory.getInstance().sendMessage(sb.toString(), u.getValue());
-            }
-        }
-        //IMFactory.getInstance().sendMessage(sb.toString(), u.getValue());
-
-        catch (Exception e) {
-            IMFactory.getInstance().sendMessage(e.getMessage(), u.getEmail());
-
-        }
+//
+//        try {
+//            final List<Category> c = CategoryServiceFactory.getInstance().getCategories(u, true, false, false);
+//            if (c.size() == 0) {
+//                IMFactory.getInstance().sendMessage("None found", u.getEmail());
+//
+//            } else {
+//                for (Category x : c) {
+//                    l = x.getPoints();
+//                    if (x.getName() != null) {
+//                        if (!x.getName().getValue().equals(Const.CONST_HIDDEN_CATEGORY)) {
+//                            //sb.append(x.getValue() + "\n");
+//                            IMFactory.getInstance().sendMessage(x.getName().getValue(), u.getEmail());
+//                            //	sb.append(x.getValue() + "\n");
+//                            for (Point p : l) {
+//                                //sb.append("     " + p.getValue() + "\n");
+//                                IMFactory.getInstance().sendMessage("     " + p.getName().getValue(), u.getEmail());
+//                                //sb.append( + "\n");
+//
+//                            }
+//                        } else {
+//                            for (Point p : l) {
+//                                //sb.append(p.getValue() + "\n");
+//                                IMFactory.getInstance().sendMessage(p.getName().getValue(), u.getEmail());
+//                                //sb.append( + "\n");
+//
+//                            }
+//                        }
+//                    }
+//                }
+//                //IMFactory.getInstance().sendMessage(sb.toString(), u.getValue());
+//            }
+//        }
+//        //IMFactory.getInstance().sendMessage(sb.toString(), u.getValue());
+//
+//        catch (Exception e) {
+//            IMFactory.getInstance().sendMessage(e.getMessage(), u.getEmail());
+//
+//        }
     }
 
     private void sendCurrentValue(final String body, final User u) throws NimbitsException {

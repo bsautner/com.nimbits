@@ -42,8 +42,6 @@ public class PointModel implements Serializable, Point {
 
     private String host;
 
-    private long catID;
-
     private boolean isSystemPoint;
 
     private long userFK;
@@ -128,7 +126,7 @@ public class PointModel implements Serializable, Point {
 
         this.lastChecked = p.getLastChecked().getTime();
         this.host = p.getHost();
-        this.catID = p.getCatID();
+
         this.isSystemPoint = p.isSystemPoint();
         this.userFK = p.getUserFK();
         this.name = p.getName().getValue();
@@ -190,7 +188,7 @@ public class PointModel implements Serializable, Point {
         this();
         this.userFK = userFK;
         this.name = pointName.getValue();
-        this.catID = catID;
+
         this.uuid = uuid;
 
 
@@ -249,10 +247,7 @@ public class PointModel implements Serializable, Point {
 
     }
 
-    @Override
-    public long getCatID() {
-        return catID;
-    }
+
 
     @Override
     public double getCompression() {
@@ -424,11 +419,6 @@ public class PointModel implements Serializable, Point {
     @Override
     public void setAlarmToFacebook(final boolean alarmToFacebook) {
         this.alarmToFacebook = alarmToFacebook;
-    }
-
-    @Override
-    public void setCatID(final long catID) {
-        this.catID = catID;
     }
 
     @Override

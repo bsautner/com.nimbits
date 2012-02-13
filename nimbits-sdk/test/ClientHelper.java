@@ -6,7 +6,6 @@
 
 import com.nimbits.client.NimbitsClient;
 import com.nimbits.client.NimbitsClientFactory;
-import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.EntityName;
@@ -66,9 +65,9 @@ class ClientHelper {
 
 
     public static Point createSeedPoint() {
-        EntityName categoryName = CommonFactoryLocator.getInstance().createName(Const.CONST_HIDDEN_CATEGORY);
+
         EntityName pointName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
-        Point point = client().addPoint(categoryName, pointName);
+        Point point = client().addPoint(pointName);
         Random r = new Random();
 
 

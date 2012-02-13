@@ -17,7 +17,6 @@ import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
-import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
@@ -26,7 +25,6 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.datapoints.PointTransactions;
 import com.nimbits.server.memcache.MemCacheHelper;
 import com.nimbits.server.point.PointTransactionsFactory;
-import com.nimbits.server.pointcategory.CategoryTransactionFactory;
 import com.nimbits.server.user.UserTransactionFactory;
 
 import javax.servlet.http.HttpServletRequest;
@@ -82,7 +80,7 @@ public class PointMemCacheImpl implements PointTransactions {
         if (cache.contains(MemCacheHelper.defaultPointCache())) {
             cache.delete(MemCacheHelper.defaultPointCache());
         }
-        CategoryTransactionFactory.getInstance(u).purgeMemCache();
+        //CategoryTransactionFactory.getInstance(u).purgeMemCache();
 
 
     }
@@ -205,37 +203,37 @@ public class PointMemCacheImpl implements PointTransactions {
 
     }
 
-    @Override
-    public Point movePoint(final Point point, final EntityName newEntityName) throws NimbitsException {
-        Point movedPoint = PointTransactionsFactory.getDaoInstance(u).movePoint(point, newEntityName);
-        purgeMemCache(movedPoint);
-        updateMap(movedPoint);
-        return movedPoint;
+//    @Override
+//    public Point movePoint(final Point point, final EntityName newEntityName) throws NimbitsException {
+//        Point movedPoint = PointTransactionsFactory.getDaoInstance(u).movePoint(point, newEntityName);
+//        purgeMemCache(movedPoint);
+//        updateMap(movedPoint);
+//        return movedPoint;
+//
+//    }
 
-    }
+//    @Override
+//    public Point addPoint(final Point point, final Category c) throws NimbitsException {
+//        final Point retObj = PointTransactionsFactory.getDaoInstance(u).addPoint(point, c);
+//        purgeMemCache(retObj);
+//        updateMap(retObj);
+//        return retObj;
+//    }
 
-    @Override
-    public Point addPoint(final Point point, final Category c) throws NimbitsException {
-        final Point retObj = PointTransactionsFactory.getDaoInstance(u).addPoint(point, c);
-        purgeMemCache(retObj);
-        updateMap(retObj);
-        return retObj;
-    }
-
-    @Override
-    public Point addPoint(final EntityName pointName, final Category c) throws NimbitsException {
-
-        final Point retObj = PointTransactionsFactory.getDaoInstance(u).addPoint(pointName, c);
-        purgeMemCache(retObj);
-        updateMap(retObj);
-        return retObj;
-    }
+//    @Override
+//    public Point addPoint(final EntityName pointName, final Category c) throws NimbitsException {
+//
+//        final Point retObj = PointTransactionsFactory.getDaoInstance(u).addPoint(pointName, c);
+//        purgeMemCache(retObj);
+//        updateMap(retObj);
+//        return retObj;
+//    }
 
 
-    @Override
-    public List<Point> getPointsByCategory(final Category c) {
-        return PointTransactionsFactory.getDaoInstance(u).getPointsByCategory(c);
-    }
+//    @Override
+//    public List<Point> getPointsByCategory(final Category c) {
+//        return PointTransactionsFactory.getDaoInstance(u).getPointsByCategory(c);
+//    }
 
     @Override
     public Point publishPoint(final Point p) throws NimbitsException {

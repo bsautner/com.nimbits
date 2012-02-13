@@ -49,14 +49,14 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
 
     @Override
     public Entity addUpdateEntity(Entity entity) {
-        if (entity.getOwnerUUID() == null) {
-            entity.setOwnerUUID(getUser().getUuid());
+        if (entity.getOwner() == null) {
+            entity.setOwner(getUser().getUuid());
         }
-        if (entity.getParentUUID() == null) {
-            entity.setParentUUID(getUser().getUuid());
+        if (entity.getParent() == null) {
+            entity.setParent(getUser().getUuid());
         }
-        if (entity.getUUID() == null) {
-            entity.setUUID(UUID.randomUUID().toString());
+        if (entity.getEntity() == null) {
+            entity.setEntity(UUID.randomUUID().toString());
         }
         return EntityTransactionFactory.getInstance(getUser()).addUpdateEntity(entity);
     }
@@ -72,14 +72,21 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
     }
 
     @Override
-    public Map<String, Entity> getEntityMap(EntityType type, boolean includeValues) {
+    public Map<String, Entity> getEntityMap(EntityType type) {
        return EntityTransactionFactory.getInstance(getUser()).getEntityMap(type);
     }
 
     @Override
+    public Map<EntityName, Entity> getEntityNameMap(EntityType type) {
+        return EntityTransactionFactory.getInstance(getUser()).getEntityNameMap(type);
+    }
+
+
+
+    @Override
     public Entity copyEntity(Entity originalEntity, EntityName newName) {
         Entity newEntity = new EntityStore(originalEntity);
-        newEntity.setUUID(UUID.randomUUID().toString());
+        newEntity.setEntity(UUID.randomUUID().toString());
         switch (newEntity.getEntityType()) {
 
 

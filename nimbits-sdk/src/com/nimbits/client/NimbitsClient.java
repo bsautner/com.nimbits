@@ -15,7 +15,7 @@ package com.nimbits.client;
 
 
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.category.Category;
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
@@ -61,7 +61,7 @@ public interface NimbitsClient {
 
     Value recordValue(final EntityName pointName, double d);
 
-    Category addCategory(final EntityName categoryName) throws UnsupportedEncodingException;
+    Entity addCategory(final EntityName categoryName) throws UnsupportedEncodingException;
 
     String deleteCategory(final EntityName categoryName);
 
@@ -76,15 +76,15 @@ public interface NimbitsClient {
 
     Point addPoint(final Point p, final EntityName categoryName);
 
-    Point addPoint(final EntityName categoryName, final EntityName pointName);
+    Point addPoint(final EntityName pointName);
 
     Point addPoint(final String pointName);
 
-    @SuppressWarnings({"SameParameterValue", "SameParameterValue"})
-    List<Category> getCategories(final boolean includePoints, final boolean includeDiagrams) throws NimbitsException;
 
-    @SuppressWarnings({"SameParameterValue"})
-    Category getCategory(final EntityName categoryName, final boolean includePoints, final boolean includeDiagrams) throws NimbitsException;
+
+    List<Entity> getCategories(final boolean includePoints, final boolean includeDiagrams) throws NimbitsException;
+
+    Entity getCategory(final EntityName categoryName, final boolean includePoints, final boolean includeDiagrams) throws NimbitsException;
 
     String currentValue(final EntityName pointName) throws IOException, NimbitsException;
 

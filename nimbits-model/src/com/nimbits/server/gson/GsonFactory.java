@@ -4,10 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.nimbits.client.model.Const;
-import com.nimbits.client.model.category.impl.CategoryModel;
-import com.nimbits.client.model.diagram.Diagram;
-import com.nimbits.client.model.diagram.DiagramModel;
+
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityDescriptionModel;
+import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.intelligence.Intelligence;
 import com.nimbits.client.model.point.Calculation;
 import com.nimbits.client.model.point.Point;
@@ -27,11 +27,10 @@ import java.util.List;
  */
 public class GsonFactory {
     private static Gson instance;
-    public final static Type categoryListType = new TypeToken<List<CategoryModel>>() {
-    }.getType();
+
     public final static Type pointListType = new TypeToken<List<PointModel>>() {
     }.getType();
-    public final static Type diagramListType = new TypeToken<List<DiagramModel>>() {
+    public final static Type entityListType = new TypeToken<List<EntityModel>>() {
     }.getType();
     public final static Type userListType = new TypeToken<List<UserModel>>() {
     }.getType();
@@ -57,8 +56,8 @@ public class GsonFactory {
                 .registerTypeAdapter(Value.class, new ValueSerializer())
                 .registerTypeAdapter(Point.class, new PointSerializer())
                 .registerTypeAdapter(Point.class, new PointDeserializer())
-                .registerTypeAdapter(Diagram.class, new DiagramSerializer())
-                .registerTypeAdapter(Diagram.class, new DiagramDeserializer())
+                .registerTypeAdapter(Entity.class, new EntitySerializer())
+                .registerTypeAdapter(Entity.class, new EntityDeserializer())
                 .registerTypeAdapter(Calculation.class, new CalculationSerializer())
                 .registerTypeAdapter(Calculation.class, new CalculationDeserializer())
                         // .registerTypeAdapter(Date.class, new DateDeserializer())

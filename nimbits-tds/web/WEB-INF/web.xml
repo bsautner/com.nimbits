@@ -18,14 +18,14 @@
 		  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
          version="2.5">
 
-    <filter>
-        <filter-name>appstats</filter-name>
-        <filter-class>com.google.appengine.tools.appstats.AppstatsFilter</filter-class>
-        <init-param>
-            <param-name>logMessage</param-name>
-            <param-value>Appstats available: /appstats/details?time={ID}</param-value>
-        </init-param>
-    </filter>
+    <!--<filter>-->
+        <!--<filter-name>appstats</filter-name>-->
+        <!--<filter-class>com.google.appengine.tools.appstats.AppstatsFilter</filter-class>-->
+        <!--<init-param>-->
+            <!--<param-name>logMessage</param-name>-->
+            <!--<param-value>Appstats available: /appstats/details?time={ID}</param-value>-->
+        <!--</init-param>-->
+    <!--</filter>-->
     <!--<filter-mapping>-->
     <!--<filter-name>appstats</filter-name>-->
     <!--<url-pattern>/*</url-pattern>-->
@@ -118,15 +118,15 @@
     </servlet-mapping>
 
 
+
     <servlet>
-        <servlet-name>diagramService</servlet-name>
-        <servlet-class>com.nimbits.server.diagram.DiagramServiceImpl</servlet-class>
+        <servlet-name>blobService</servlet-name>
+        <servlet-class>com.nimbits.server.blob.BlobServiceImpl</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>diagramService</servlet-name>
-        <url-pattern>/nimbits/diagram</url-pattern>
+        <servlet-name>blobService</servlet-name>
+        <url-pattern>/nimbits/blob</url-pattern>
     </servlet-mapping>
-
 
     <servlet-mapping>
         <servlet-name>userService</servlet-name>
@@ -397,12 +397,12 @@
 
 
     <servlet>
-        <servlet-name>diagramServlet</servlet-name>
-        <servlet-class>com.nimbits.server.diagram.DiagramServlet</servlet-class>
+        <servlet-name>blobServlet</servlet-name>
+        <servlet-class>com.nimbits.server.blob.BlobServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>diagramServlet</servlet-name>
-        <url-pattern>/service/diagram</url-pattern>
+        <servlet-name>blobServlet</servlet-name>
+        <url-pattern>/service/blob</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -411,10 +411,7 @@
     </servlet>
 
 
-    <servlet>
-        <servlet-name>com.nimbits.nimbits CategoryService</servlet-name>
-        <servlet-class>com.nimbits.server.pointcategory.CategoryServiceImpl</servlet-class>
-    </servlet>
+
     <servlet>
         <servlet-name>com.nimbits.nimbits FacebookService</servlet-name>
         <servlet-class>com.nimbits.server.facebook.FacebookImpl</servlet-class>
@@ -432,10 +429,7 @@
         <servlet-class>com.nimbits.server.timespan.TimespanServiceImpl</servlet-class>
     </servlet>
 
-    <servlet-mapping>
-        <servlet-name>com.nimbits.nimbits CategoryService</servlet-name>
-        <url-pattern>/nimbits/category</url-pattern>
-    </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>com.nimbits.nimbits FacebookService</servlet-name>
         <url-pattern>/nimbits/facebook</url-pattern>

@@ -14,7 +14,6 @@
 package com.nimbits.client.panels;
 
 import com.extjs.gxt.ui.client.widget.LayoutContainer;
-import com.nimbits.client.model.diagram.Diagram;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.value.Value;
 
@@ -31,7 +30,6 @@ public abstract class NavigationEventProvider extends LayoutContainer {
     private final List<UrlClickedListener> urlClickedListeners = new ArrayList<UrlClickedListener>();
     private final List<ValueEnteredListener> valueEnteredListeners = new ArrayList<ValueEnteredListener>();
     private final List<ChartRemovedListener> chartRemovedListeners = new ArrayList<ChartRemovedListener>();
-    private final List<DiagramRemovedListener> diagramRemovedListeners = new ArrayList<DiagramRemovedListener>();
 
     private final List<SubscriptionAddedListener> subscriptionAddedListeners = new ArrayList<SubscriptionAddedListener>();
 
@@ -147,19 +145,7 @@ public abstract class NavigationEventProvider extends LayoutContainer {
 
 
 
-    public interface DiagramRemovedListener {
-        void onDiagramRemovedClicked(final Diagram diagram);
-    }
 
-    void addDiagramRemovedClickedListeners(final DiagramRemovedListener listener) {
-        diagramRemovedListeners.add(listener);
-    }
-
-    void notifyDiagramRemovedListener(final Diagram diagram) {
-        for (DiagramRemovedListener diagramRemovedClickedListener : diagramRemovedListeners) {
-            diagramRemovedClickedListener.onDiagramRemovedClicked(diagram);
-        }
-    }
 
 
 

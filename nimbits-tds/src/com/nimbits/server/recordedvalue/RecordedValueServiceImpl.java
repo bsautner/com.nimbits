@@ -17,9 +17,11 @@ import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.exceptions.CalculationFailedException;
-import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.user.User;
@@ -29,7 +31,6 @@ import com.nimbits.server.math.EquationSolver;
 import com.nimbits.server.point.PointServiceFactory;
 import com.nimbits.server.task.TaskFactoryLocator;
 import com.nimbits.server.user.UserServiceFactory;
-import com.nimbits.server.user.UserTransactionFactory;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -55,15 +56,14 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
 
     @Override
-    public Value getCurrentValue(final long pointOwnerId,
-                                 final EntityName pointName) throws NimbitsException {
+    public Value getCurrentValue(final Entity entity) throws NimbitsException {
 
-        final User u = UserServiceFactory.getInstance().getAppUserUsingGoogleAuth();
-        final User pointOwner = UserTransactionFactory.getInstance().getNimbitsUserByID(pointOwnerId);
-        final Point p = PointServiceFactory.getInstance().getPointByName(pointOwner, pointName);
+       // final User u = UserServiceFactory.getInstance().getAppUserUsingGoogleAuth();
+      //  final User pointOwner = UserTransactionFactory.getInstance().getNimbitsUserByID(pointOwnerId);
+        final Point p = PointServiceFactory.getInstance().getPointByUUID(entity.getEntity());
 
 
-        return (PointServiceFactory.getInstance().checkPointProtection(u, pointOwner, p)) ? getCurrentValue(p) : null;
+        return getCurrentValue(p);
 
 
     }
@@ -105,7 +105,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
         final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
                 this.getThreadLocalRequest());
 
-        final Point px = PointServiceFactory.getInstance().getPointByUUID(point.getUUID());
+        final Point px = PointServiceFactory.getInstance().getPointByUUID(point.getEntity());
         return recordValue(u, px, value, false);
 
 
@@ -173,7 +173,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
             retObj = getPrevValue(p, new Date());
             if (retObj != null) {
-                retObj.setAlertState(PointServiceFactory.getInstance().getPointAlertState(p, retObj));
+                retObj.setAlertState(getAlertType(p, retObj));
             }
 
         }
@@ -181,7 +181,33 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
         return retObj;
 
     }
+    private AlertType getAlertType(final Point point, final Value value)  {
+        AlertType retObj = AlertType.OK;
 
+        if (point.isHighAlarmOn() || point.isLowAlarmOn()) {
+
+            if (point.isHighAlarmOn() && (value.getNumberValue() >= point.getHighAlarm())) {
+                retObj = AlertType.HighAlert;
+            }
+            if (point.isLowAlarmOn() && value.getNumberValue() <= point.getLowAlarm()) {
+                retObj = AlertType.LowAlert;
+            }
+
+        }
+        if (point.isIdleAlarmOn()) {
+            final Calendar c = Calendar.getInstance();
+            c.add(Calendar.SECOND, point.getIdleSeconds() * -1);
+
+            if (point.getIdleSeconds() > 0 && value != null &&
+                    value.getTimestamp().getTime() <= c.getTimeInMillis()) {
+
+                retObj = AlertType.IdleAlert;
+            }
+
+        }
+        return retObj;
+
+    }
 
     @Override
     public void onResponseReceived(final Request request, final Response response) {
@@ -246,7 +272,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
         }
         //ChannelService channelService = ChannelServiceFactory.getChannelService();
         if (retObj != null) {
-            retObj.setAlertState(PointServiceFactory.getInstance().getPointAlertState(point, retObj));
+            retObj.setAlertState(getAlertType(point, retObj));
         }
 
         return retObj == null ? value : retObj;

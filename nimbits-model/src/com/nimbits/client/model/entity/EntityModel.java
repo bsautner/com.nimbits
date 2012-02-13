@@ -1,10 +1,11 @@
 package com.nimbits.client.model.entity;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.value.*;
+import com.nimbits.client.enums.AlertType;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.model.common.CommonFactoryLocator;
 
-import java.io.*;
+import java.io.Serializable;
 
 /**
  * Created by Benjamin Sautner
@@ -21,29 +22,31 @@ public class EntityModel  implements Serializable, Entity {
     private int entityType;
     private int protectionLevel;
     private int alertType;
-    private String entityUUID;
-    private String parentUUID;
-    private String ownerUUID;
+    private String entity;
+    private String parent;
+    private String owner;
     private String[] metadata = null;
     private String[] accessKeys = null;
     private boolean readOnly = false;
-
+    private String blobKey;
 
     public EntityModel(final EntityName name,
                        final String description,
                        final EntityType entityType,
                        final ProtectionLevel protectionLevel,
-                       final String entityUUID,
-                       final String parentUUID,
-                       final String ownerUUID) {
+                       final String entity,
+                       final String parent,
+                       final String owner,
+                       final String blobKey) {
         this.name = name.getValue();
         this.description = description;
         this.entityType = entityType.getCode();
-        this.entityUUID =entityUUID;
-        this.parentUUID = parentUUID;
-        this.ownerUUID = ownerUUID;
+        this.entity =entity;
+        this.parent = parent;
+        this.owner = owner;
         this.protectionLevel = protectionLevel.getCode();
         this.alertType = AlertType.OK.getCode();
+        this.blobKey = blobKey;
 
     }
 
@@ -51,9 +54,9 @@ public class EntityModel  implements Serializable, Entity {
         this.name = entity.getName().getValue();
         this.description = entity.getDescription();
         this.entityType = entity.getEntityType().getCode();
-        this.entityUUID =entity.getUUID();
-        this.parentUUID = entity.getParentUUID();
-        this.ownerUUID = entity.getOwnerUUID();
+        this.entity =entity.getEntity();
+        this.parent = entity.getParent();
+        this.owner = entity.getOwner();
         this.protectionLevel = entity.getProtectionLevel().getCode();
         this.alertType = entity.getAlertType().getCode();
 
@@ -94,23 +97,23 @@ public class EntityModel  implements Serializable, Entity {
     }
 
     @Override
-    public String getUUID() {
-        return (this.entityUUID);
+    public String getEntity() {
+        return (this.entity);
     }
 
     @Override
-    public void setUUID(String entityUUID) {
-        this.entityUUID = entityUUID;
+    public void setEntity(String entity) {
+        this.entity = entity;
     }
 
     @Override
-    public String getParentUUID() {
-        return (parentUUID);
+    public String getParent() {
+        return (parent);
     }
 
     @Override
-    public void setParentUUID(String parentUUID) {
-        this.parentUUID = parentUUID;
+    public void setParent(String parent) {
+        this.parent = parent;
     }
 
     @Override
@@ -124,13 +127,13 @@ public class EntityModel  implements Serializable, Entity {
     }
 
     @Override
-    public String getOwnerUUID() {
-        return (ownerUUID);
+    public String getOwner() {
+        return (owner);
     }
 
     @Override
-    public void setOwnerUUID(String ownerUUID) {
-        this.ownerUUID = ownerUUID;
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     @Override
@@ -153,5 +156,22 @@ public class EntityModel  implements Serializable, Entity {
         this.readOnly = readOnly;
     }
 
+    @Override
+    public String getUUID() {
+        return this.entity;
 
+    }
+
+    @Override
+    public void setUUID(String newUUID) {
+        this.entity = newUUID;
+    }
+
+    public String getBlobKey() {
+        return blobKey;
+    }
+
+    public void setBlobKey(String blobKey) {
+        this.blobKey = blobKey;
+    }
 }

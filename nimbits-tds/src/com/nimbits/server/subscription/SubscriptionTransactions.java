@@ -32,9 +32,9 @@ public interface SubscriptionTransactions {
 
     Subscription readSubscription(final Entity entity);
 
-    void deleteSubscription(Point point);
 
-    Point moveSubscription(Point point, EntityName newEntityName);
+
+
 
     List<Subscription> getSubscriptionsToPoint(Point point);
 

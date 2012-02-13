@@ -13,6 +13,7 @@
 
 package com.nimbits.server.orm.entity;
 
+import com.google.appengine.api.blobstore.BlobKey;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
@@ -50,13 +51,13 @@ public class EntityStore implements Entity {
     private Integer protectionLevel;
 
     @Persistent
-    private String entityUUID;
+    private String entity;
 
     @Persistent
-    private String parentUUID;
+    private String parent;
 
     @Persistent
-    private String ownerUUID;
+    private String owner;
 
     @NotPersistent
     private int alertType;
@@ -67,8 +68,12 @@ public class EntityStore implements Entity {
     @Persistent
     private String[] accessKeys;
 
+    @Persistent
+    private BlobKey blobKey;
+
     @NotPersistent
     private boolean readOnly;
+
 
     public EntityStore() {
 
@@ -78,15 +83,15 @@ public class EntityStore implements Entity {
                        final String description,
                        final EntityType entityType,
                        final ProtectionLevel protectionLevel,
-                       final String entityUUID,
-                       final String parentUUID,
-                       final String ownerUUID) {
+                       final String entity,
+                       final String parent,
+                       final String owner) {
         this.name = name.getValue();
         this.description = description;
         this.entityType = entityType.getCode();
-        this.entityUUID =entityUUID;
-        this.parentUUID = parentUUID== null ? null : parentUUID;
-        this.ownerUUID = ownerUUID;
+        this.entity =entity;
+        this.parent = parent== null ? null : parent;
+        this.owner = owner;
         this.protectionLevel = protectionLevel.getCode();
 
 
@@ -96,10 +101,10 @@ public class EntityStore implements Entity {
         this.name = entity.getName().getValue();
         this.description = entity.getDescription();
         this.entityType = entity.getEntityType().getCode();
-        this.entityUUID =entity.getUUID();
+        this.entity =entity.getEntity();
 
-        this.parentUUID = entity.getParentUUID();
-        this.ownerUUID = entity.getOwnerUUID();
+        this.parent = entity.getParent();
+        this.owner = entity.getOwner();
         this.protectionLevel = entity.getProtectionLevel().getCode();
 
 
@@ -136,23 +141,23 @@ public class EntityStore implements Entity {
     }
 
     @Override
-    public String getUUID() {
-        return (this.entityUUID);
+    public String getEntity() {
+        return (this.entity);
     }
 
     @Override
-    public void setUUID(String entityUUID) {
-        this.entityUUID = entityUUID;
+    public void setEntity(String entity) {
+        this.entity = entity;
     }
 
     @Override
-    public String getParentUUID() {
-        return (parentUUID);
+    public String getParent() {
+        return (parent);
     }
 
     @Override
-    public void setParentUUID(String parentUUID) {
-        this.parentUUID = parentUUID;
+    public void setParent(String parent) {
+        this.parent = parent;
     }
 
     @Override
@@ -166,13 +171,13 @@ public class EntityStore implements Entity {
     }
 
     @Override
-    public String getOwnerUUID() {
-        return (ownerUUID);
+    public String getOwner() {
+        return (owner);
     }
 
     @Override
-    public void setOwnerUUID(String ownerUUID) {
-        this.ownerUUID = ownerUUID;
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     @Override
@@ -195,6 +200,27 @@ public class EntityStore implements Entity {
         this.readOnly = readOnly;
     }
 
+    @Override
+    public String getUUID() {
+        return this.entity;
+
+    }
+
+    @Override
+    public void setUUID(String newUUID) {
+        this.entity = newUUID;
+    }
+
+    @Override
+    public String getBlobKey() {
+       return blobKey != null ? this.blobKey.getKeyString() : null;
+    }
+
+    @Override
+    public void setBlobKey(String blobKey) {
+      this.blobKey = new BlobKey(blobKey);
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -206,11 +232,11 @@ public class EntityStore implements Entity {
         if (!Arrays.equals(accessKeys, that.accessKeys)) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
         if (entityType != null ? !entityType.equals(that.entityType) : that.entityType != null) return false;
-        if (entityUUID != null ? !entityUUID.equals(that.entityUUID) : that.entityUUID != null) return false;
+        if (entity != null ? !entity.equals(that.entity) : that.entity != null) return false;
         if (!Arrays.equals(metadata, that.metadata)) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (ownerUUID != null ? !ownerUUID.equals(that.ownerUUID) : that.ownerUUID != null) return false;
-        if (parentUUID != null ? !parentUUID.equals(that.parentUUID) : that.parentUUID != null) return false;
+        if (owner != null ? !owner.equals(that.owner) : that.owner != null) return false;
+        if (parent != null ? !parent.equals(that.parent) : that.parent != null) return false;
         if (protectionLevel != null ? !protectionLevel.equals(that.protectionLevel) : that.protectionLevel != null)
             return false;
 
@@ -223,9 +249,9 @@ public class EntityStore implements Entity {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (entityType != null ? entityType.hashCode() : 0);
         result = 31 * result + (protectionLevel != null ? protectionLevel.hashCode() : 0);
-        result = 31 * result + (entityUUID != null ? entityUUID.hashCode() : 0);
-        result = 31 * result + (parentUUID != null ? parentUUID.hashCode() : 0);
-        result = 31 * result + (ownerUUID != null ? ownerUUID.hashCode() : 0);
+        result = 31 * result + (entity != null ? entity.hashCode() : 0);
+        result = 31 * result + (parent != null ? parent.hashCode() : 0);
+        result = 31 * result + (owner != null ? owner.hashCode() : 0);
         result = 31 * result + (metadata != null ? Arrays.hashCode(metadata) : 0);
         result = 31 * result + (accessKeys != null ? Arrays.hashCode(accessKeys) : 0);
         return result;

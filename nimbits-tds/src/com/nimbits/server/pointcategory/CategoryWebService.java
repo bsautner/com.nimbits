@@ -14,24 +14,14 @@
 package com.nimbits.server.pointcategory;
 
 import com.google.gson.Gson;
-import com.google.gwt.core.client.GWT;
 import com.nimbits.client.enums.Action;
-import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
-import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.user.User;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.user.UserServiceFactory;
 import com.nimbits.shared.Utils;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
 
 public class CategoryWebService extends HttpServlet {
 
@@ -60,40 +50,43 @@ public class CategoryWebService extends HttpServlet {
     @Override
     public void doPost(final HttpServletRequest req,
                        final HttpServletResponse resp) {
-        try {
-            final PrintWriter out = resp.getWriter();
-            final String categoryNameParam = req.getParameter(Const.PARAM_NAME);
-            final String actionParam = req.getParameter(Const.PARAM_ACTION);
-            final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
-            final Action action = getAction(actionParam);
-            // delete me UserContext context = UserContextFactory.createUserContext(CategoryWebService.class.getName());
-
-            if (u != null && !u.isRestricted() && !Utils.isEmptyString(categoryNameParam)) {
-
-                final EntityName name = CommonFactoryLocator.getInstance().createName(categoryNameParam);
-                switch (action) {
-                    case create:
-                        if (CategoryServiceFactory.getInstance().categoryExists(u, name)) {
-                            out.println(Const.RESPONSE_CATEGORY_EXISTS);
-                        } else {
-                            final Category c = CategoryServiceFactory.getInstance().addCategory(u, name);
-                            out.print(gson.toJson(c));
-                        }
-                        return;
-                    case delete: {
-                        final Category c = CategoryServiceFactory.getInstance().getCategory(u, name);
-                        if (c != null) {
-                            CategoryServiceFactory.getInstance().deleteCategory(u, c);
-                            out.println(gson.toJson(c));
-                        }
-                    }
-                }
-            }
-        } catch (IOException e) {
-            GWT.log(e.getMessage(), e);
-        } catch (NimbitsException e) {
-            GWT.log(e.getMessage(), e);
-        }
+//        try {
+//            final PrintWriter out = resp.getWriter();
+//            final String categoryNameParam = req.getParameter(Const.PARAM_NAME);
+//            final String actionParam = req.getParameter(Const.PARAM_ACTION);
+//            final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
+//            final Action action = getAction(actionParam);
+//            // delete me UserContext context = UserContextFactory.createUserContext(CategoryWebService.class.getName());
+//
+//            if (u != null && !u.isRestricted() && !Utils.isEmptyString(categoryNameParam)) {
+//
+//                final EntityName name = CommonFactoryLocator.getInstance().createName(categoryNameParam);
+//                switch (action) {
+//                    case create:
+//
+//                        if (CategoryServiceFactory.getInstance().categoryExists(u, name)) {
+//                            out.println(Const.RESPONSE_CATEGORY_EXISTS);
+//                        } else {
+//                            final Category c = CategoryServiceFactory.getInstance().addCategory(u, name);
+//                            out.print(gson.toJson(c));
+//                        }
+//                        return;
+//                    case delete: {
+//
+////                        final Category c = CategoryServiceFactory.getInstance().getCategory(u, name);
+////                        if (c != null) {
+////                            EntityTransactionFactory.getInstance(u).deleteEntity(c.getUUID());
+////                            CategoryServiceFactory.getInstance().deleteCategory(u, c);
+////                            out.println(gson.toJson(c));
+////                        }
+//                    }
+//                }
+//            }
+//        } catch (IOException e) {
+//            GWT.log(e.getMessage(), e);
+//        } catch (NimbitsException e) {
+//            GWT.log(e.getMessage(), e);
+//        }
 
     }
 
@@ -113,54 +106,54 @@ public class CategoryWebService extends HttpServlet {
         final boolean includeDiagrams = includeDiagramsStr != null && includeDiagramsStr.equalsIgnoreCase(Const.WORD_TRUE);
         final boolean includeSubscriptions = includeSubscriptionsStr != null && includeSubscriptionsStr.equalsIgnoreCase(Const.WORD_TRUE);
 
-        try {
-            final PrintWriter out = resp.getWriter();
-            final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
-            if (categoryNameParam == null) {
-
-                final List<Category> categories = CategoryServiceFactory.getInstance().getCategories(u,
-                        includePoints, includeDiagrams,includeSubscriptions);
-
-//                for (final Category category : Categories) {
-//                    if (includePoints && category.getPoints() != null) {
-//                        final String j = gson.toJson(category.getPoints(), GsonFactory.pointListType);
-//                        category.setPoints(null);
-//                        category.setJsonPointCollection(j);
-//                    }
+//        try {
+//            final PrintWriter out = resp.getWriter();
+//            final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
+//            if (categoryNameParam == null) {
 //
-//                    if (includeDiagrams && category.getDiagrams() != null) {
-//                        final String j = gson.toJson(category.getDiagrams(), GsonFactory.diagramListType);
-//                        category.setDiagrams(null);
-//                        category.setJsonDiagramCollection(j);
+//                final List<Category> categories = CategoryServiceFactory.getInstance().getCategories(u,
+//                        includePoints, includeDiagrams,includeSubscriptions);
 //
-//                    }
+////                for (final Category category : Categories) {
+////                    if (includePoints && category.getPoints() != null) {
+////                        final String j = gson.toJson(category.getPoints(), GsonFactory.pointListType);
+////                        category.setPoints(null);
+////                        category.setJsonPointCollection(j);
+////                    }
+////
+////                    if (includeDiagrams && category.getDiagrams() != null) {
+////                        final String j = gson.toJson(category.getDiagrams(), GsonFactory.diagramListType);
+////                        category.setDiagrams(null);
+////                        category.setJsonDiagramCollection(j);
+////
+////                    }
+////
+////
+////                }
+//
+//                result = gson.toJson(categories, GsonFactory.categoryListType);
+//                out.println(result);
+//            } else {
+//
+//                final EntityName categoryName = CommonFactoryLocator.getInstance().createName(categoryNameParam);
+//
+//                final Category c = CategoryServiceFactory.getInstance().getCategory(u, categoryName);
+//
+////                if (includePoints) {
+////                    final List<Point> points = PointTransactionsFactory.getInstance().getPointsByCategory(c, u);
+////                    final String j = gson.toJson(points, GsonFactory.pointListType);
+////                    c.setJsonPointCollection(j);
+////                }
+//                result = gson.toJson(c);
+//                out.println(result);
+////            }
 //
 //
-//                }
-
-                result = gson.toJson(categories, GsonFactory.categoryListType);
-                out.println(result);
-            } else {
-
-                final EntityName categoryName = CommonFactoryLocator.getInstance().createName(categoryNameParam);
-
-                final Category c = CategoryServiceFactory.getInstance().getCategory(u, categoryName);
-
-//                if (includePoints) {
-//                    final List<Point> points = PointTransactionsFactory.getInstance().getPointsByCategory(c, u);
-//                    final String j = gson.toJson(points, GsonFactory.pointListType);
-//                    c.setJsonPointCollection(j);
-//                }
-                result = gson.toJson(c);
-                out.println(result);
-            }
-
-
-        } catch (IOException e) {
-            GWT.log(e.getMessage(), e);
-        } catch (NimbitsException e) {
-            GWT.log(e.getMessage(), e);
-        }
+//        } catch (IOException e) {
+//            GWT.log(e.getMessage(), e);
+//        } catch (NimbitsException e) {
+//            GWT.log(e.getMessage(), e);
+//        }
 
     }
 

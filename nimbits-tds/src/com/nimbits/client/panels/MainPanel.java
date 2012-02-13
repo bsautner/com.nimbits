@@ -33,7 +33,8 @@ public class MainPanel extends NavigationEventProvider {
     private Map<String, String> settings;
 
     final NavigationPanel createNavigationPanel(ClientType clientType) {
-        final NavigationPanel navTree = new NavigationPanel(clientType, settings);
+        final NavigationPanel navTree =
+                new NavigationPanel(user, clientType, settings);
 
 
         navTree.addEntityClickedListeners(new EntityClickedListener() {

@@ -25,21 +25,21 @@ public interface Entity  extends Serializable {
 
     void setEntityType(EntityType entityType);
 
-    String getUUID();
+    String getEntity();
 
-    void setUUID(String entityUUID);
+    void setEntity(String entity);
 
-    String getParentUUID();
+    String getParent();
 
-    void setParentUUID(String parentUUID);
+    void setParent(String parent);
 
      ProtectionLevel getProtectionLevel();
 
     void setProtectionLevel(ProtectionLevel protectionLevel);
 
-    String getOwnerUUID();
+    String getOwner();
 
-    void setOwnerUUID(String ownerUUID);
+    void setOwner(String owner);
 
     AlertType getAlertType();
 
@@ -48,4 +48,14 @@ public interface Entity  extends Serializable {
     boolean isReadOnly();
 
     void setReadOnly(boolean readOnly);
+
+    @Deprecated
+    String getUUID();
+
+    @Deprecated
+    void setUUID(String newUUID);
+
+    String getBlobKey();
+
+    void setBlobKey(String blobKey);
 }

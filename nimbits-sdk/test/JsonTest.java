@@ -12,8 +12,8 @@
  */
 
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.server.gson.GsonFactory;
@@ -52,9 +52,9 @@ public class JsonTest {
 
         EntityName pointName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
         EntityName cName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
-        Category c = ClientHelper.client().addCategory(cName);
+        Entity c = ClientHelper.client().addCategory(cName);
 
-        Point point = ClientHelper.client().addPoint(cName, pointName);
+        Point point = ClientHelper.client().addPoint(cName);
         point.setCompression(-1);
         ClientHelper.client().updatePoint(point);
         Robot robot = new Robot();

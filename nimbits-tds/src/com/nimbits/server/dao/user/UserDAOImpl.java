@@ -13,22 +13,26 @@
 
 package com.nimbits.server.dao.user;
 
-import com.nimbits.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.connection.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.connections.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.orm.*;
-import com.nimbits.server.pointcategory.*;
-import com.nimbits.server.user.*;
-import twitter4j.auth.*;
+import com.nimbits.PMF;
+import com.nimbits.client.model.Const;
+import com.nimbits.client.model.connection.Connection;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.user.UserModelFactory;
+import com.nimbits.server.connections.ConnectionRequestModelFactory;
+import com.nimbits.server.entity.EntityTransactionFactory;
+import com.nimbits.server.orm.ConnectionRequest;
+import com.nimbits.server.orm.NimbitsUser;
+import com.nimbits.server.user.UserTransactions;
+import twitter4j.auth.AccessToken;
 
-import javax.jdo.*;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
 import java.util.*;
-import java.util.logging.*;
+import java.util.logging.Logger;
 
 
 public class UserDAOImpl implements UserTransactions {
@@ -77,9 +81,9 @@ public class UserDAOImpl implements UserTransactions {
             pm.close();
         }
 
-        if (isNew) {
-            CategoryServiceFactory.getInstance().createHiddenCategory(retObj);
-        }
+      //  if (isNew) {
+            //CategoryServiceFactory.getInstance().createHiddenCategory(retObj);
+        //}
         return retObj;
     }
 
@@ -91,7 +95,7 @@ public class UserDAOImpl implements UserTransactions {
             final NimbitsUser u = new NimbitsUser(internetAddress, UUID.randomUUID().toString());
             u.setSecret(UUID.randomUUID().toString());
             pm.makePersistent(u);
-            CategoryServiceFactory.getInstance().createHiddenCategory(u);
+
             retObj = UserModelFactory.createUserModel(u);
             Entity entity = EntityModelFactory.createEntity(retObj);
             EntityTransactionFactory.getInstance(retObj).addUpdateEntity(entity);
@@ -307,26 +311,7 @@ public class UserDAOImpl implements UserTransactions {
             c.setApproved(accepted);
             c.setApprovedDate(new Date());
             tx.commit();
-            if (accepted) {
-                NimbitsUser r = pm.getObjectById(NimbitsUser.class, requestor.getId());
 
-                if (r != null) {
-                    Transaction txr = pm.currentTransaction();
-                    txr.begin();
-                    r.addConnection(acceptor.getUuid());
-                    txr.commit();
-                    affectedUsers.add(UserModelFactory.createUserModel(r));
-                }
-                NimbitsUser a = pm.getObjectById(NimbitsUser.class, acceptor.getId());
-
-                if (a != null) {
-                    Transaction txr = pm.currentTransaction();
-                    txr.begin();
-                    a.addConnection(requestor.getUuid());
-                    txr.commit();
-                    affectedUsers.add(UserModelFactory.createUserModel(a));
-                }
-            }
         }
         pm.close();
         return affectedUsers;
@@ -422,6 +407,31 @@ public class UserDAOImpl implements UserTransactions {
         }
 
 
+
+    }
+
+    @Override
+    public List<User> getConnectionRequests(List<String> connections) {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final Query q = pm.newQuery(ConnectionRequest.class,":p.contains(uuid)");
+
+        List<User> retObj = new ArrayList<User>();
+        try {
+
+            final List<ConnectionRequest> result = (List<ConnectionRequest>) q.execute(connections);
+            if (result.size() > 0) {
+                for (Connection c : result) {
+                    User u = getNimbitsUser(c.getTargetEmail());
+                    retObj.add( UserModelFactory.createUserModel(u));
+
+                }
+
+
+            }
+            return retObj;
+        } finally {
+            pm.close();
+        }
 
     }
 

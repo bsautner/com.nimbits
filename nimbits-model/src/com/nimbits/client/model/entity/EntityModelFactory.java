@@ -1,13 +1,14 @@
 package com.nimbits.client.model.entity;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.diagram.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.server.*;
-import com.nimbits.client.model.user.*;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.server.Server;
+import com.nimbits.client.model.user.User;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by bsautner
@@ -29,8 +30,20 @@ public class EntityModelFactory {
                                       final String parentUUID,
                                       final String ownerUUID) {
         return new EntityModel(name, description, entityType, protectionLevel, entityUUID, parentUUID,
-                ownerUUID);
+                ownerUUID, "");
     }
+    public static Entity createEntity(final EntityName name,
+                                      final String description,
+                                      final EntityType entityType,
+                                      final ProtectionLevel protectionLevel,
+                                      final String entityUUID,
+                                      final String parentUUID,
+                                      final String ownerUUID,
+                                      final String blobKey) {
+        return new EntityModel(name, description, entityType, protectionLevel, entityUUID, parentUUID,
+                ownerUUID, blobKey);
+    }
+
 
     public static Entity createEntity(User user) {
         EntityName name = CommonFactoryLocator.getInstance().createName(user.getEmail().getValue());
@@ -64,20 +77,36 @@ public class EntityModelFactory {
     public static List<Entity> createEntities(User user, List<Entity> result) {
         ArrayList<Entity> entities = new ArrayList<Entity>();
         for (Entity e : result) {
-            boolean isOwner = e.getOwnerUUID().equals(user.getUuid());
+            boolean isOwner = e.getOwner().equals(user.getUuid());
 
-            e.setReadOnly(! isOwner);
-            if (
-                    e.getEntityType().equals(EntityType.user) ||
-                    isOwner ||
-                    e.getProtectionLevel().equals(ProtectionLevel.everyone) ||
-                    e.getProtectionLevel().equals(ProtectionLevel.onlyConnection))
+
+            if (entityIsReadable(user, e, isOwner))
             {
-                entities.add(createEntity(e));
+
+                Entity r = createEntity(e);
+                r.setReadOnly(!isOwner);
+                entities.add(r);
             }
 
         }
         return entities;
+
+    }
+
+    private static boolean entityIsReadable(User user, Entity e, boolean owner) {
+        boolean retVal =  ((e.getEntityType().equals(EntityType.user) ||
+                owner ||
+                e.getProtectionLevel().equals(ProtectionLevel.everyone) ||
+                e.getProtectionLevel().equals(ProtectionLevel.onlyConnection))
+
+        );
+
+        if (e.getEntityType().equals(EntityType.userConnection) && ! e.getOwner().equals(user.getUuid())) {
+            retVal = false;
+        }
+
+        return retVal;
+
 
     }
 
@@ -86,6 +115,7 @@ public class EntityModelFactory {
                 "",
                 entityType,
                 ProtectionLevel.everyone,
+                null,
                 null,
                 null,
                 null);
@@ -98,16 +128,10 @@ public class EntityModelFactory {
                 ProtectionLevel.everyone,
                 p.getUUID(),
                 null,
-                null);
-    }
-    @Deprecated
-    public static Entity createEntity(Diagram d) {
-        return new EntityModel(d.getName(),
-                "",
-                EntityType.diagram,
-                ProtectionLevel.everyone,
-                d.getUuid(),
                 null,
                 null);
     }
+
+
+
 }

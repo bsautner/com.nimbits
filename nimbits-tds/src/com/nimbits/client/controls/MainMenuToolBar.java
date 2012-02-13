@@ -136,11 +136,14 @@ public class MainMenuToolBar extends NavigationEventProvider {
 
         toolBar.add(secretButton);
 
+        toolBar.add(new SeparatorMenuItem());
+        toolBar.add(connectionButton());
+        toolBar.add(pendingConnectionsButton());
+
+        toolBar.add(new SeparatorMenuItem());
         toolBar.add(logoutButton);
         toolBar.add(new SeparatorMenuItem());
 
-        toolBar.add(connectionButton());
-        toolBar.add(pendingConnectionsButton());
         if (loginInfo.isUserAdmin()) {
             //toolBar.add(adminButton);
         }
@@ -177,43 +180,47 @@ public class MainMenuToolBar extends NavigationEventProvider {
                 final MessageBox box = MessageBox.prompt("Connect to Friends",
                         "Enter an email address to invite a friend to connect their Data Points to yours. After they approve your request " +
                                 "you'll be able to see each others data points and diagrams (based on permission levels).");
-                box.addCallback(new Listener<MessageBoxEvent>() {
-                    @Override
-                    public void handleEvent(MessageBoxEvent be) {
-                        final String email;
-                        email = be.getValue();
-                        if (email != null) {
-                            if (email.length() > 0) {
-                                UserServiceAsync userService;
-                                userService = GWT.create(UserService.class);
-                                EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
-                                userService.sendConnectionRequest(emailAddress, new AsyncCallback<Void>() {
-
-                                    @Override
-                                    public void onFailure(Throwable caught) {
-
-
-                                    }
-
-                                    @Override
-                                    public void onSuccess(Void result) {
-
-                                        Info.display("Connection Request", "Connection Request Sent!");
-
-                                    }
-
-                                });
-
-
-                            }
-                        }
-                    }
-
-                });
+                 box.addCallback(sendInviteLisenter());
 
             }
         });
         return b;
+    }
+
+    private Listener<MessageBoxEvent> sendInviteLisenter() {
+        return new Listener<MessageBoxEvent>() {
+            @Override
+            public void handleEvent(MessageBoxEvent be) {
+                final String email;
+                email = be.getValue();
+                if (email != null) {
+                    if (email.length() > 0) {
+                        UserServiceAsync userService;
+                        userService = GWT.create(UserService.class);
+                        EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
+                        userService.sendConnectionRequest(emailAddress, new AsyncCallback<Void>() {
+
+                            @Override
+                            public void onFailure(Throwable caught) {
+
+
+                            }
+
+                            @Override
+                            public void onSuccess(Void result) {
+
+                                Info.display("Connection Request", "Connection Request Sent!");
+
+                            }
+
+                        });
+
+
+                    }
+                }
+            }
+
+        };
     }
 
     private Button newKeyButton(final Listener<MessageBoxEvent> l) {
@@ -367,78 +374,11 @@ public class MainMenuToolBar extends NavigationEventProvider {
             public void onSuccess(final List<Connection> result) {
 
 
+                if (result.size() > 0) {
                 final Menu scrollMenu = new Menu();
                 scrollMenu.setMaxHeight(200);
                 for (final Connection r : result) {
-                    final MenuItem m = new MenuItem(r.getRequestorEmail().getValue());
-                    m.addListener(Events.Select, new Listener<BaseEvent>() {
-
-                        @Override
-                        public void handleEvent(final BaseEvent be) {
-                            //	final Dialog simple = new Dialog();
-                            //simple.setHeading(");
-                            final MessageBox box = new MessageBox();
-                            box.setButtons(MessageBox.YESNOCANCEL);
-                            box.setIcon(MessageBox.QUESTION);
-                            box.setTitle("Connection request approval");
-                            box.addCallback(new Listener<MessageBoxEvent>() {
-
-                                @Override
-                                public void handleEvent(final MessageBoxEvent be) {
-
-                                    final Button btn = be.getButtonClicked();
-
-                                        if (btn.getText().equals("Yes")) {
-
-                                            acceptConnection(r, true);
-
-                                            scrollMenu.remove(m);
-                                        } else if (btn.getText().equals("No")) {
-                                            scrollMenu.remove(m);
-
-                                            acceptConnection(r, false);
-
-                                        }
-
-
-                                }
-
-                                private void acceptConnection(
-                                        final Connection r,
-                                        boolean accepted)  {
-                                    UserServiceAsync userService;
-                                    userService = GWT.create(UserService.class);
-                                    userService.connectionRequestReply(r.getTargetEmail(), r.getRequestorEmail(), r.getUUID(), accepted, new AsyncCallback<Void>() {
-
-                                        @Override
-                                        public void onFailure(Throwable e) {
-                                            GWT.log(e.getMessage(), e);
-
-                                        }
-
-                                        @Override
-                                        public void onSuccess(Void result) {
-
-                                            connectionCount += (-1);
-
-                                            connectionRequest.setText("Requests(" + connectionCount + ")");
-                                            notifyReloadListener();
-
-                                        }
-
-                                    });
-                                }
-
-
-                            });
-
-                            box.setMessage("The owner of the email address: '" + r.getRequestorEmail().getValue() + "' would like to connect with you. You will have read only access to each others data points. Is that OK?");
-                            box.show();
-
-
-                        }
-
-                    });
+                    final MenuItem m = acceptConnectionMenuItem(scrollMenu, r);
                     scrollMenu.add(m);
                 }
 
@@ -447,10 +387,80 @@ public class MainMenuToolBar extends NavigationEventProvider {
                 connectionCount = result.size();
 
                 connectionRequest.setText("Requests(" + connectionCount + ")");
-
+                }
+                else {
+                    connectionRequest.setVisible(false);
+                }
                 //	Window.alert("" + result.size());
 
 
+            }
+
+            private MenuItem acceptConnectionMenuItem(final Menu scrollMenu, final Connection r) {
+                final MenuItem m = new MenuItem(r.getRequestorEmail().getValue());
+                m.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.connection()));
+                m.addListener(Events.Select, new Listener<BaseEvent>() {
+
+                    @Override
+                    public void handleEvent(final BaseEvent be) {
+                        //	final Dialog simple = new Dialog();
+                        //simple.setHeading(");
+                        final MessageBox box = new MessageBox();
+                        box.setButtons(MessageBox.YESNOCANCEL);
+                        box.setIcon(MessageBox.QUESTION);
+                        box.setTitle("Connection request approval");
+                        box.addCallback(new Listener<MessageBoxEvent>() {
+                            @Override
+                            public void handleEvent(final MessageBoxEvent be) {
+
+                                final Button btn = be.getButtonClicked();
+
+                                    if (btn.getText().equals("Yes")) {
+                                        acceptConnection(r, true);
+                                        scrollMenu.remove(m);
+                                    } else if (btn.getText().equals("No")) {
+                                        scrollMenu.remove(m);
+                                        acceptConnection(r, false);
+                                    }
+                            }
+
+                            private void acceptConnection(
+                                    final Connection r,
+                                    boolean accepted)  {
+                                UserServiceAsync userService;
+                                userService = GWT.create(UserService.class);
+                                userService.connectionRequestReply(r.getTargetEmail(), r.getRequestorEmail(), r.getUUID(), accepted, new AsyncCallback<Void>() {
+
+                                    @Override
+                                    public void onFailure(Throwable e) {
+                                        GWT.log(e.getMessage(), e);
+
+                                    }
+
+                                    @Override
+                                    public void onSuccess(Void result) {
+
+                                        connectionCount += (-1);
+
+                                        connectionRequest.setText("Requests(" + connectionCount + ")");
+                                        notifyReloadListener();
+
+                                    }
+
+                                });
+                            }
+
+
+                        });
+
+                        box.setMessage("The owner of the email address: '" + r.getRequestorEmail().getValue() + "' would like to connect with you. You will have read only access to each others data points. Is that OK?");
+                        box.show();
+
+
+                    }
+
+                });
+                return m;
             }
 
 

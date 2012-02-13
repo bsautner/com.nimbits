@@ -23,7 +23,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.nimbits.client.enums.UploadType;
-import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.LoginInfo;
 import com.nimbits.client.model.email.EmailAddress;
@@ -100,7 +99,7 @@ public class FileUploadPanel extends LayoutContainer {
 
         BlobServiceAsync service = GWT.create(BlobService.class);
         //  diagramService.getBlobStoreUrl("http://" + Window.Location.getHost() +  "/service/diagram", new AsyncCallback<String>() {
-        service.getBlobStoreUrl("/service/blob", new AsyncCallback<String>() {
+        service.getBlobStoreUrl(Const.PATH_BLOB_SERVICE, new AsyncCallback<String>() {
             @Override
             public void onFailure(Throwable throwable) {
                 GWT.log(throwable.getMessage());

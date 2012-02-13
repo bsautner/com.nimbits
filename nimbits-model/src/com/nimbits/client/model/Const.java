@@ -170,7 +170,7 @@ public class Const {
     public static final String PATH_CONNECTION_IMAGE = "/resources/images/network.jpg";
     public static final String PATH_CURRENT_VALUE = "/service/currentvalue";
     public static final String PATH_DELETE_DATA_TASK = "/task/DeleteRecordedValuesTask";
-    public static final String PATH_DIAGRAM_SERVICE = "/service/diagram";
+    public static final String PATH_BLOB_SERVICE = "/service/blob";
     public static final String PATH_GOOGLE_CLIENT_LOGIN = "https://www.google.com/accounts/ClientLogin";
     public static final String PATH_INCOMING_MAIL_QUEUE = "/task/incommingmail";
     public static final String PATH_NIMBITS_HOME = "http://www.nimbits.com";

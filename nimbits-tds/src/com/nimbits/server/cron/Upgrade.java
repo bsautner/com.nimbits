@@ -22,7 +22,7 @@ public class Upgrade {
 
         //make connections from user into connection entities
 
-        //create entities for diagrams with type of file
+        //create entities for diagrams with type of file - make entity name end with .svg
 
         //sync with core - all shared entities
 

@@ -119,6 +119,7 @@ public class EntityDaoImpl implements EntityTransactions {
                 result.setName(entity.getName());
                 result.setProtectionLevel(entity.getProtectionLevel());
                 result.setParent(entity.getParent());
+                result.setBlobKey(entity.getBlobKey());
                 tx.commit();
                 return EntityModelFactory.createEntity(result);
             }

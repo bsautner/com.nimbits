@@ -22,6 +22,7 @@ import com.extjs.gxt.ui.client.widget.layout.*;
 import com.extjs.gxt.ui.client.widget.toolbar.*;
 import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.*;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 import com.nimbits.client.exception.*;
@@ -263,6 +264,11 @@ class CenterPanel extends NavigationEventProvider {
             case category:
                  break;
             case file:
+                final String resourceUrl =
+                        Const.PATH_BLOB_SERVICE +
+                                "?" + Const.PARAM_BLOB_KEY + "=" + entity.getBlobKey();
+                Window.open(resourceUrl, entity.getName().getValue(), "");
+
                 break;
             case subscription:
                 displaySubscription(entity);

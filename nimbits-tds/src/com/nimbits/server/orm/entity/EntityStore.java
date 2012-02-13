@@ -106,7 +106,7 @@ public class EntityStore implements Entity {
         this.parent = entity.getParent();
         this.owner = entity.getOwner();
         this.protectionLevel = entity.getProtectionLevel().getCode();
-
+        this.blobKey = new BlobKey(entity.getBlobKey());
 
     }
 

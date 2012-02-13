@@ -37,7 +37,6 @@ import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
-import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.entity.EntityServiceAsync;
@@ -90,7 +89,7 @@ public class DiagramPanel extends NavigationEventProvider {
         //final ToolBar toolbar = createToolbar(aDiagram);
 
         final FlowPanel imagePanel = new FlowPanel();
-        final String resourceUrl = Const.PATH_DIAGRAM_SERVICE + "?" + Const.PARAM_BLOB_KEY + "=" + aDiagram.getBlobKey();
+        final String resourceUrl = Const.PATH_BLOB_SERVICE + "?" + Const.PARAM_BLOB_KEY + "=" + aDiagram.getBlobKey();
         this.diagram = aDiagram;
         this.readOnly = aDiagram.isReadOnly();
         this.clientType = ClientType.other;

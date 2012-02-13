@@ -78,7 +78,8 @@ public class BlobServlet extends HttpServlet {
             if (uploadType.equals(UploadType.newFile.name())) {
                 Entity entity = EntityModelFactory.createEntity(diagramName, "", EntityType.file, ProtectionLevel.everyone, UUID.randomUUID().toString(),
                         u.getUuid(), u.getUuid(),blobKey.getKeyString());
-                PointServiceFactory.getInstance().addPoint(u, entity);
+                EntityTransactionFactory.getInstance(u).addUpdateEntity(entity);
+               // PointServiceFactory.getInstance().addPoint(u, entity);
 
 
             //    DiagramTransactionFactory.getInstance(u).addDiagram(blobKey, diagramName);

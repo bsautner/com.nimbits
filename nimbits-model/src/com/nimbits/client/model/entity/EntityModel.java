@@ -62,7 +62,7 @@ public class EntityModel  implements Serializable, Entity {
         this.owner = entity.getOwner();
         this.protectionLevel = entity.getProtectionLevel().getCode();
         this.alertType = entity.getAlertType().getCode();
-
+        this.blobKey = entity.getBlobKey();
 
     }
 

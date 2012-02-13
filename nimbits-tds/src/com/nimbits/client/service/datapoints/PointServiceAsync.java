@@ -81,4 +81,6 @@ public interface PointServiceAsync {
 
 
     void addPoint(User user, Entity entity, Point point, AsyncCallback<Point> async);
+
+    void addPoint(EntityName name, AsyncCallback<Point> async);
 }

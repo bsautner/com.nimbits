@@ -26,6 +26,8 @@ public class Upgrade {
 
         //sync with core - all shared entities
 
+        //recognise andriod client type - put links back in tree grid
+
     }
 
 }

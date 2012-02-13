@@ -233,7 +233,7 @@ class NavigationPanel extends NavigationEventProvider {
         final Window window = new Window();
 
 
-        final PointPanel panel = new PointPanel(entity);
+        final PointPanel panel = new PointPanel(user, entity);
 
         panel.addPointUpdatedListeners(new PointPanel.PointUpdatedListener() {
             @Override
@@ -786,11 +786,10 @@ class NavigationPanel extends NavigationEventProvider {
                 final MessageBox box = MessageBox.wait("Progress",
                         "Creating your data point channel into the cloud", "Creating: " + newEntityName);
                 box.show();
-                EntityServiceAsync service = GWT.create(EntityService.class);
+                PointServiceAsync service = GWT.create(PointService.class);
                 EntityName name = CommonFactoryLocator.getInstance().createName(newEntityName);
                 Entity entity = EntityModelFactory.createEntity(name, EntityType.point);
-
-                service.addUpdateEntity(entity, new AsyncCallback<Entity>() {
+                service.addPoint(name, new AsyncCallback<Point>() {
                     @Override
                     public void onFailure(Throwable caught) {
                         Info.display("Could not create "
@@ -800,11 +799,13 @@ class NavigationPanel extends NavigationEventProvider {
                     }
 
                     @Override
-                    public void onSuccess(Entity result) {
-                        addNewlyCreatedEntityToTree(result);
+                    public void onSuccess(Point result) {
+                        Entity e = EntityModelFactory.createEntity(user, result);
+                        addNewlyCreatedEntityToTree(e);
                         box.close();
                     }
                 });
+
 
             }
         }

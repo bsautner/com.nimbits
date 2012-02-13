@@ -36,6 +36,7 @@ import com.nimbits.client.model.Const;
 import com.nimbits.client.model.LoginInfo;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.*;
 import com.nimbits.client.panels.*;
 import com.nimbits.client.service.LoginService;
 import com.nimbits.client.service.LoginServiceAsync;
@@ -363,7 +364,7 @@ public class nimbits implements EntryPoint {
         service.getEntityByUUID(diagramName, new AsyncCallback<Entity>() {
             @Override
             public void onFailure(Throwable throwable) {
-                //To change body of implemented methods use File | Settings | File Templates.
+
             }
 
             @Override

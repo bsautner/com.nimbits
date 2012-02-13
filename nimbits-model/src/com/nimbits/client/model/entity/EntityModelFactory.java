@@ -120,16 +120,29 @@ public class EntityModelFactory {
                 null,
                 null);
     }
-    @Deprecated
-    public static Entity createEntity(Point p) {
-        return new EntityModel(p.getName(),
-                "",
-                EntityType.point,
-                ProtectionLevel.everyone,
-                p.getUUID(),
-                null,
-                null,
-                null);
+
+
+    public static Entity createEntity(User u, Point p) {
+        if (u != null) {
+            return new EntityModel(p.getName(),
+                    "",
+                    EntityType.point,
+                    ProtectionLevel.everyone,
+                    p.getUUID(),
+                    u.getUuid(),
+                    u.getUuid(),
+                    u.getUuid());
+        }
+        else {
+            return new EntityModel(p.getName(),
+                    "",
+                    EntityType.point,
+                    ProtectionLevel.everyone,
+                    p.getUUID(),
+                    null,
+                    null,
+                    null);
+        }
     }
 
 

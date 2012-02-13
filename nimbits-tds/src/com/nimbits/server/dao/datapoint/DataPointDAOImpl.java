@@ -249,6 +249,7 @@ public class DataPointDAOImpl implements PointTransactions {
         jdoPoint.setCompression(0.1);
         jdoPoint.setExpire(90);
         jdoPoint.setLastChecked(new Date());
+        jdoPoint.setCreateDate(new Date());
         pm.makePersistent(jdoPoint);
 
         return PointModelFactory.createPointModel(jdoPoint);

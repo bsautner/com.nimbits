@@ -56,31 +56,7 @@ public class CoreImpl implements Core {
 
     }
 
-    //    public void reportCategoryUpdateToCore(final HttpServletRequest req, Category category)  {
-//        String json = GsonFactory.getInstance().toJson(category);
-//        try {
-//            if (SettingTransactionsFactory.getInstance().getSetting(Const.SETTING_SERVER_IS_DISCOVERABLE).equals("1")) {
-//                final String email = SettingTransactionsFactory.getInstance().getSetting(Const.SETTING_ADMIN);
-//                final EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
-//                final Server server = ServerModelFactory.createServer(ServerInfoImpl.getFullServerURL(req), emailAddress, Const.CONST_SERVER_VERSION);
-//                final String serverJson = GsonFactory.getInstance().toJson(server);
-//
-//                final String params = Const.PARAM_SERVER + "=" + serverJson
-//                        + "&" + Const.PARAM_ENTITY + "=" + json
-//                        + "&" + Const.PARAM_ENTITY_TYPE + "=" + EntityType.category.getCode()
-//                        + "&" + Const.PARAM_ACTION + "=" + Action.update.name();
-//
-//
-//                String response = HttpCommonFactory.getInstance().doPost(Const.PATH_NIMBITS_CORE_ENTITY_DESC_URL, params);
-//
-//
-//            }
-//        } catch (NimbitsException e) {
-//            log.severe(e.getMessage());
-//
-//        }
-//
-//    }
+
     public void reportUpdateToCore(final String serverUrl, final String json, final EntityType entityType) {
         try {
             if (!Utils.isEmptyString(serverUrl) && SettingTransactionsFactory.getInstance().getSetting(Const.SETTING_SERVER_IS_DISCOVERABLE).equals("1")) {

@@ -53,6 +53,7 @@ import com.nimbits.client.model.point.Calculation;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.point.PointModelFactory;
+import com.nimbits.client.model.user.*;
 import com.nimbits.client.service.datapoints.PointService;
 import com.nimbits.client.service.datapoints.PointServiceAsync;
 import com.nimbits.client.service.entity.EntityService;
@@ -131,7 +132,7 @@ class PointPanel extends LayoutContainer {
     private PointCombo Z;
     private final CheckBox calcEnabled = new CheckBox();
     //calcs
-    private final PointCombo calcTarget = new PointCombo();
+    private final PointCombo calcTarget;
 
 //     private final Icons ICONS = GWT.create(Icons.class);
 
@@ -173,10 +174,13 @@ class PointPanel extends LayoutContainer {
 
     private final CheckBox intelEnabled = new CheckBox();
     private final CheckBox intelPlainText = new CheckBox();
+    private final User user;
 
-    public PointPanel(final Entity x)   {
-        entity = x;
-        protectionLevelOptions = new ProtectionLevelOptions(x);
+    public PointPanel(final User user, final Entity entity)   {
+        this.entity = entity;
+        this.user = user;
+        calcTarget= new PointCombo(user);
+        protectionLevelOptions = new ProtectionLevelOptions(entity);
 
         SettingsServiceAsync settings = GWT.create(SettingsService.class);
         settings.getSettings(new AsyncCallback<Map<String, String>>() {
@@ -211,9 +215,9 @@ class PointPanel extends LayoutContainer {
 
             private void buildForm(final Point p) {
                 point = p;
-                CalcXCombo = new PointCombo();
-                Y = new PointCombo();
-                Z = new PointCombo();
+                CalcXCombo = new PointCombo(user);
+                Y = new PointCombo(user);
+                Z = new PointCombo(user);
 
 
                 setSize(FORM_HEIGHT, "475");
@@ -275,7 +279,7 @@ class PointPanel extends LayoutContainer {
                                         CalcXCombo.setValue(CalcXCombo.getStore().findModel(Const.PARAM_ID, point.getCalculation().getX()));
                                         CalcXCombo.repaint();
                                     } else {
-                                        GxtModel xModel = new GxtModel(point);
+                                        GxtModel xModel = new GxtModel(user, point);
                                         CalcXCombo.setValue(xModel);
                                     }
 

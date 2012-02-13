@@ -34,6 +34,8 @@ public interface PointService extends RemoteService {
 
     Point addPoint(User user, Entity entity, Point point);
 
+    Point addPoint(EntityName name);
+
     Point addPoint(final User user, final Entity entity);
 
     Point getPointByName(final User pointOwner, final EntityName name) throws NimbitsException;

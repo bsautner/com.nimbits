@@ -37,6 +37,7 @@ import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
+import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.entity.EntityServiceAsync;
@@ -87,6 +88,7 @@ public class DiagramPanel extends NavigationEventProvider {
 
     public DiagramPanel(final Entity aDiagram, boolean showHeader, final int w, final int h) {
         //final ToolBar toolbar = createToolbar(aDiagram);
+
         final FlowPanel imagePanel = new FlowPanel();
         final String resourceUrl = Const.PATH_DIAGRAM_SERVICE + "?" + Const.PARAM_BLOB_KEY + "=" + aDiagram.getBlobKey();
         this.diagram = aDiagram;
@@ -431,7 +433,7 @@ public class DiagramPanel extends NavigationEventProvider {
                         PointModel p = (PointModel) points.get(pointName);
                         p.setReadOnly(readOnly);
                         p.setClientType(clientType);
-                        Entity entity = EntityModelFactory.createEntity(p);
+                        Entity entity = EntityModelFactory.createEntity(null,p);
                         notifyEntityClickedListener(entity);
 
 
@@ -609,7 +611,7 @@ public class DiagramPanel extends NavigationEventProvider {
             public void onMouseDown(MouseDownEvent mouseDownEvent) {
                 if (points.containsKey(pointName)) {
                     PointModel p = (PointModel) points.get(pointName);
-                    Entity entity = EntityModelFactory.createEntity(p);
+                    Entity entity = EntityModelFactory.createEntity(null, p);
                     notifyEntityClickedListener(entity);
 
                 }
@@ -789,7 +791,7 @@ public class DiagramPanel extends NavigationEventProvider {
                     PointModel p = (PointModel) points.get(pointName);
                     p.setReadOnly(readOnly);
                     p.setClientType(clientType);
-                    Entity entity = EntityModelFactory.createEntity(p);
+                    Entity entity = EntityModelFactory.createEntity(null, p);
                   notifyEntityClickedListener(entity);
 
                 }

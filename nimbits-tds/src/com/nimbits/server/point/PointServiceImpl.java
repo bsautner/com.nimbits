@@ -15,9 +15,7 @@ package com.nimbits.server.point;
 
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.nimbits.client.enums.AlertType;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ExportType;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
@@ -249,6 +247,16 @@ public class PointServiceImpl extends RemoteServiceServlet implements
         return PointTransactionsFactory.getInstance(user).addPoint(entity, point);
     }
 
+    @Override
+    public Point addPoint(EntityName name) {
+        User u = getUser();
+
+        Entity r = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.everyone,
+                UUID.randomUUID().toString(), u.getUuid(), u.getUuid());
+        return addPoint(u, r);
+
+
+    }
 
 
 //    @Override

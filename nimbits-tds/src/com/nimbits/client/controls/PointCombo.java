@@ -19,6 +19,7 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
 import com.nimbits.client.service.datapoints.*;
 
 import java.util.*;
@@ -43,7 +44,7 @@ public class PointCombo extends ComboBox<GxtModel> {
 
     }
 
-    public PointCombo() {
+    public PointCombo(final User user ) {
         setEmptyText(Const.MESSAGE_LOADING_POINTS);
         final ListStore<GxtModel> cbStore = new ListStore<GxtModel>();
         setStore(cbStore);
@@ -67,7 +68,7 @@ public class PointCombo extends ComboBox<GxtModel> {
                 setEmptyText(Const.MESSAGE_SELECT_POINT);
 
                 for (Point p : result) {
-                    GxtModel model = new GxtModel(p);
+                    GxtModel model = new GxtModel(user, p);
                     cbStore.add(model);
 
                 }

@@ -28,13 +28,9 @@ import java.util.List;
 public interface SubscriptionTransactions {
 
 
-    Entity subscribe(Subscription subscription);
+    void subscribe(Entity entity, Subscription subscription);
 
     Subscription readSubscription(final Entity entity);
-
-
-
-
 
     List<Subscription> getSubscriptionsToPoint(Point point);
 

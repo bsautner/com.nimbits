@@ -30,9 +30,9 @@ public class CalcTest {
         EntityName zName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
 
 
-        EntityName cName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
-      //  Category c = ClientHelper.client().addCategory(cName);
-       // assertNotNull(c);
+       EntityName cName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
+      // Category c = ClientHelper.client().addCategory(cName);
+      // assertNotNull(c);
         Point trigger = ClientHelper.client().addPoint(triggerName);
         Point target = ClientHelper.client().addPoint(targetName);
 

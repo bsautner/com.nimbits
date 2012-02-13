@@ -64,7 +64,7 @@ public class FileUploadPanel extends LayoutContainer {
 
 
     public interface FileAddedListener {
-        void onFileAdded() throws NimbitsException;
+        void onFileAdded();
 
     }
 
@@ -72,7 +72,7 @@ public class FileUploadPanel extends LayoutContainer {
         FileAddedListeners.add(listener);
     }
 
-    void notifyFileAddedListener() throws NimbitsException {
+    void notifyFileAddedListener()   {
         for (FileAddedListener FileAddedListener : FileAddedListeners) {
             FileAddedListener.onFileAdded();
         }
@@ -91,11 +91,8 @@ public class FileUploadPanel extends LayoutContainer {
 
             @Override
             public void handleEvent(FormEvent formEvent) {
-                try {
                     notifyFileAddedListener();
-                } catch (NimbitsException ignored) {
 
-                }
             }
         });
         panel.setHeaderVisible(false);

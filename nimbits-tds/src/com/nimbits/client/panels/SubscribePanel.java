@@ -28,9 +28,9 @@ import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.subscription.*;
 import com.nimbits.client.service.datapoints.*;
+import com.nimbits.client.service.entity.*;
 import com.nimbits.shared.*;
 
 import java.util.*;
@@ -63,7 +63,15 @@ public class SubscribePanel extends NavigationEventProvider {
         vp.setSpacing(10);
 
         if (entity != null) {
-            getExistingSubscription();
+            if (entity.getEntityType().equals(EntityType.subscription)) {
+                getExistingSubscription();
+            }
+            else {
+                createForm();
+                add(vp);
+                doLayout();
+            }
+
         }
         else {
             createNotFoundForm();
@@ -73,7 +81,7 @@ public class SubscribePanel extends NavigationEventProvider {
 
     }
     private void getExistingSubscription() {
-        PointServiceAsync service = GWT.create(PointService.class);
+       EntityServiceAsync service = GWT.create(EntityService.class);
         service.readSubscription(entity, new AsyncCallback<Subscription>() {
             @Override
             public void onFailure(Throwable caught) {
@@ -98,7 +106,7 @@ public class SubscribePanel extends NavigationEventProvider {
 
         Option none = (new Option(SubscriptionDeliveryMethod.none));
         ops.add(none);
-
+        ops.add(new Option(SubscriptionDeliveryMethod.stream));
 
         ops.add(new Option(SubscriptionDeliveryMethod.email));
 
@@ -140,7 +148,7 @@ public class SubscribePanel extends NavigationEventProvider {
         simple.setBodyBorder(false);
         simple.setFrame(false);
         final Radio csvSeparateColumns = new Radio();
-        int alertSelected = (subscription == null) ? SubscriptionDeliveryMethod.none.getCode() : subscription.getAlertStateChangeMethod().getCode();
+        int alertSelected = (subscription == null) ? SubscriptionDeliveryMethod.none.getCode() : subscription.getAlertNotifyMethod().getCode();
         final ComboBox<Option> alertGroup = alertOptionGroup("Alerts", alertSelected);
 
         final SpinnerField spinnerField = new SpinnerField();
@@ -152,12 +160,21 @@ public class SubscribePanel extends NavigationEventProvider {
 
         spinnerField.setValue(subscription == null ? 30 : subscription.getMaxRepeat());
         spinnerField.setMaxValue(1000d);
-        int newSelected = (subscription == null) ? SubscriptionDeliveryMethod.none.getCode() : subscription.getDataUpdateAlertMethod().getCode();
+        int newSelected = (subscription == null) ? SubscriptionDeliveryMethod.none.getCode() : subscription.getDataNotifyMethod().getCode();
 
         final ComboBox<Option> newValueGroup= alertOptionGroup("New Values",newSelected);
 
         csvSeparateColumns.setValue(true);
         csvSeparateColumns.setBoxLabel("Export to Spreadsheet (CSV with separate columns)");
+
+        final CheckBox machine = new CheckBox();
+        machine.setBoxLabel("Alert message machine readable (JSON format)");
+        machine.setValue(subscription != null && subscription.getNotifyFormatJson());
+        machine.setLabelSeparator("");
+        final CheckBox enabled = new CheckBox();
+        enabled.setValue(subscription != null && subscription.getEnabled());
+        enabled.setBoxLabel("Enabled");
+        enabled.setLabelSeparator("");
 
         Button submit = new Button("Submit");
         Button cancel = new Button("Cancel");
@@ -173,7 +190,7 @@ public class SubscribePanel extends NavigationEventProvider {
         submit.addSelectionListener(new SelectionListener<ButtonEvent>() {
             @Override
             public void componentSelected(ButtonEvent buttonEvent) {
-                PointServiceAsync pointService = GWT.create(PointService.class);
+                EntityServiceAsync service = GWT.create(EntityService.class);
                 final MessageBox box = MessageBox.wait("Progress",
                         "Subscribing to your point", "loading...");
                 box.show();
@@ -186,9 +203,12 @@ public class SubscribePanel extends NavigationEventProvider {
                         alertStateChangeMethod,
                         propertyChangeMethod,
                         spinnerField.getValue().doubleValue(),
-                        new Date());
+                        new Date(),
+                        machine.getValue(),
+                        enabled.getValue());
 
-                pointService.subscribe(entity, subscription , new AsyncCallback<Entity>() {
+
+                service.subscribe(entity, subscription , new AsyncCallback<Entity>() {
                     @Override
                     public void onFailure(Throwable e) {
                         GWT.log(e.getMessage(), e);
@@ -218,7 +238,7 @@ public class SubscribePanel extends NavigationEventProvider {
                 "you must enable them on the main menu.");
 
 
-        Html pn = new Html("<p><b>Point Name: </b>" + entity.getName().getValue() + "</p>");
+        Html pn = new Html("<p><b>Name: </b>" + entity.getName().getValue() + "</p>");
 
 
 
@@ -229,7 +249,8 @@ public class SubscribePanel extends NavigationEventProvider {
         simple.add(alertGroup, formdata);
         simple.add(newValueGroup, formdata);
         simple.add(spinnerField, formdata);
-
+        simple.add(enabled, formdata);
+        simple.add(machine, formdata);
 
         LayoutContainer c = new LayoutContainer();
         HBoxLayout layout = new HBoxLayout();

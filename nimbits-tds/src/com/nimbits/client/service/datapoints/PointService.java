@@ -32,10 +32,9 @@ import java.util.Set;
 @RemoteServiceRelativePath(Const.PARAM_POINT)
 public interface PointService extends RemoteService {
 
+    Point addPoint(User user, Entity entity, Point point);
+
     Point addPoint(final User user, final Entity entity);
-
-
-   // Point showEntityData(final EntityName pointName, final Category category) throws NimbitsException, PointExistsException;
 
     Point getPointByName(final User pointOwner, final EntityName name) throws NimbitsException;
 
@@ -55,19 +54,9 @@ public interface PointService extends RemoteService {
 
     Point getPointByUUID(final String uuid);
 
- //   Point showEntityData(final EntityName pointName) throws NimbitsException, PointExistsException;
-
     Point getPointByID(final long id) throws NimbitsException;
 
     String exportData(final Map<EntityName, Point> points, ExportType exportType) throws NimbitsException;
-
-    //Point movePoint(final User u, final Point point, final EntityName EntityName) throws NimbitsException;
-
-    //Point showEntityData(final Point point, final Category c, final User u) throws NimbitsException;
-
-   // Point showEntityData(final EntityName pointName, final Category c, final User u) throws NimbitsException;
-
-//    List<Point> getPointsByCategory(final User u, final Category c);
 
     List<Point> getAllPoints(int start, int end);
 
@@ -79,16 +68,11 @@ public interface PointService extends RemoteService {
 
     List<Point> getAllPoints();
 
-    Entity subscribe(Entity entity, Subscription subscription) throws NimbitsException;
-
-    Subscription readSubscription(final Entity point) throws NimbitsException;
-
     void deleteSubscription(final Point point) throws NimbitsException;
 
     List<Subscription> getSubscriptionsToPoint(Point point);
 
     void updateSubscriptionLastSent(Subscription subscription);
-
 
     Entity copyPoint(User u, Entity originalEntity, EntityName newName);
 

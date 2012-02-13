@@ -72,8 +72,10 @@ public interface Point extends Serializable {
     boolean getIgnoreIncomingCompressedValues();
 
     double getLowAlarm();
-    @Deprecated
+
+
     EntityName getName();
+
     @Deprecated
     boolean getReadOnly();
 
@@ -167,7 +169,7 @@ public interface Point extends Serializable {
 
     void setLowAlarmOn(final boolean lowAlarmOn);
 
-    @Deprecated
+
     void setName(final EntityName name);
 
     void setPostToFacebook(final boolean postToFacebook);

@@ -33,14 +33,12 @@ import com.extjs.gxt.ui.client.widget.menu.MenuItem;
 import com.extjs.gxt.ui.client.widget.toolbar.SeparatorToolItem;
 import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.nimbits.client.controls.EntityTree;
-import com.nimbits.client.enums.AlertType;
-import com.nimbits.client.enums.ClientType;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.UploadType;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.icons.Icons;
 import com.nimbits.client.model.Const;
@@ -59,7 +57,7 @@ import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.entity.EntityServiceAsync;
 import com.nimbits.client.service.recordedvalues.RecordedValueService;
 import com.nimbits.client.service.recordedvalues.RecordedValueServiceAsync;
-import com.nimbits.client.windows.WindowHelper;
+
 import com.nimbits.shared.Utils;
 
 import java.util.*;
@@ -227,7 +225,7 @@ class NavigationPanel extends NavigationEventProvider {
         });
     }
 
-    private void reloadTree() throws NimbitsException {
+    private void reloadTree()  {
         getUserEntities();
     }
 
@@ -462,7 +460,7 @@ class NavigationPanel extends NavigationEventProvider {
         toolBar.add(new SeparatorToolItem());
 
         if (! clientType.equals(ClientType.android)) {
-            toolBar.add(addNewDiagramButton());
+            toolBar.add(addNewFileButton());
             toolBar.add(addNewCategoryButton());
         }
         toolBar.add(expandAllButton());
@@ -470,12 +468,12 @@ class NavigationPanel extends NavigationEventProvider {
         return toolBar;
     }
 
-    private Button addNewDiagramButton() {
+    private Button addNewFileButton() {
         Button newDiagram = new Button();
         newDiagram.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.diagram()));
-        newDiagram.setToolTip("Upload an SVG process diagram");
+        newDiagram.setToolTip("Upload a file");
 
-        newDiagram.addListener(Events.OnClick, addDiagramListener);
+        newDiagram.addListener(Events.OnClick, addFileListener);
         return newDiagram;
     }
 
@@ -579,11 +577,11 @@ class NavigationPanel extends NavigationEventProvider {
                     }
 
                     case subscription: {
-                        WindowHelper.showSubscriptionPanel(entity, settings);
+                        showSubscriptionPanel(entity);
                         break;
                     }
-                    case diagram: {
-                        DiagramPropertyPanel dp = new DiagramPropertyPanel(entity);
+                    case file: {
+                        FilePropertyPanel dp = new FilePropertyPanel(entity);
                         final Window w = new Window();
                         w.setWidth(500);
                         w.setHeight(400);
@@ -598,14 +596,56 @@ class NavigationPanel extends NavigationEventProvider {
         return retObj;
     }
 
+    public void showSubscriptionPanel(final Entity entity) {
+        SubscribePanel dp = new SubscribePanel(entity, settings);
+
+        final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
+        w.setWidth(500);
+        w.setHeight(500);
+        w.setHeading("Subscribe");
+        w.add(dp);
+        dp.addSubscriptionAddedListener(new NavigationEventProvider.SubscriptionAddedListener() {
+            @Override
+            public void onSubscriptionAdded(Entity entity) {
+                w.hide();
+                Cookies.removeCookie(Action.subscribe.name());
+                addEntity(entity);
+                addNewlyCreatedEntityToTree(entity);
+            }
+        });
+
+        w.show();
+    }
+
     private Menu createContextMenu() {
         Menu contextMenu = new Menu();
+        contextMenu.add(subscribeContext());
         contextMenu.add(publishContext());
         contextMenu.add(currentStatusContext());
         contextMenu.add(propertyContext());
         contextMenu.add(copyContext());
         contextMenu.add(deleteContext());
         return contextMenu;
+    }
+
+    private MenuItem subscribeContext() {
+        MenuItem retObj = new MenuItem();
+        retObj.setText("Subscribe");
+        retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.plugin()));
+        retObj.addSelectionListener(new SelectionListener<MenuEvent>() {
+            public void componentSelected(MenuEvent ce) {
+                ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
+                currentModel = (GxtModel) selectedModel;
+                Entity entity = entityMap.get(currentModel.getUUID());
+                //TODO for now...
+                if (entity.getEntityType().equals(EntityType.subscription)  ||
+                    entity.getEntityType().equals(EntityType.point)) {
+                showSubscriptionPanel(entity);
+                }
+
+            }
+        });
+        return retObj;
     }
 
     private MenuItem copyContext() {
@@ -786,7 +826,8 @@ class NavigationPanel extends NavigationEventProvider {
         }
 
     };
-    void addEntityChildren(Entity entity, GxtModel model) {
+
+    private void addEntityChildren(Entity entity, GxtModel model) {
         if (model.getChildCount() > 0)
             for (int i = 0; i < model.getChildCount(); i++) {
                 GxtModel m = (GxtModel) model.getChild(i);
@@ -855,7 +896,7 @@ class NavigationPanel extends NavigationEventProvider {
         }
     };
 
-    private final Listener<BaseEvent> addDiagramListener = new Listener<BaseEvent>() {
+    private final Listener<BaseEvent> addFileListener = new Listener<BaseEvent>() {
         @Override
         public void handleEvent(final BaseEvent be) {
             final Window w = new Window();
@@ -865,7 +906,7 @@ class NavigationPanel extends NavigationEventProvider {
             p.addFileAddedListeners(new FileUploadPanel.FileAddedListener() {
                 //TODO should pass back the entity and add it instead of reloading
                 @Override
-                public void onFileAdded() throws NimbitsException {
+                public void onFileAdded()  {
                     w.hide();
                     reloadTree();
                 }

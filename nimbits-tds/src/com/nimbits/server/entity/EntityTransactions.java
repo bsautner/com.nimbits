@@ -29,4 +29,6 @@ public interface EntityTransactions {
     Map<EntityName,Entity> getEntityNameMap(EntityType type);
 
     List<Entity> getEntityChildren(Entity parentEntity, EntityType type);
+
+    Entity getEntityByName(EntityName name);
 }

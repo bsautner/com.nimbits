@@ -209,7 +209,7 @@ public class UserDAOImpl implements UserTransactions {
 ////
 ////            for (User u : a) {
 ////                tx.begin();
-////                if (u.getUUID() == null) {
+////                if (u.getUuid() == null) {
 ////                    u.setUuid(UUID.randomUUID().toString());
 ////                }
 ////                if (u.getLastLoggedIn() == null) {

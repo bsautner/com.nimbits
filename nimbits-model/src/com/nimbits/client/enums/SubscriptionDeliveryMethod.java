@@ -26,7 +26,8 @@ public enum SubscriptionDeliveryMethod {
     email(0),
     facebook(1),
     twitter(2),
-    instantMessage(3);
+    instantMessage(3),
+    stream(4);
 
 
 

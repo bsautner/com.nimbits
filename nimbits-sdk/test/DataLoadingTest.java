@@ -75,6 +75,7 @@ public class DataLoadingTest {
         String pointName = ("large" + UUID.randomUUID().toString());
 
         Point p = ClientHelper.client().addPoint(pointName);
+        assertNotNull(p);
         p.setCompression(-1);
         ClientHelper.client().updatePoint(p);
         Random r = new Random();

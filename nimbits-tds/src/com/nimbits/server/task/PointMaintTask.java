@@ -62,17 +62,17 @@ public class PointMaintTask extends HttpServlet {
         if (n != null) {
            // if (p.getCatID() != 0) {
            // Category category = CategoryServiceFactory.getInstance().getCategory(n, p.getCatID());
-            try {
-                PointTransactionsFactory.getInstance(null).checkPoint(req, n.getEmail(), p);
+         //   try {
+               // PointTransactionsFactory.getInstance(null).checkPoint(req, n.getEmail(), p);
 
 
-            } catch (NimbitsException e) {
-                log.severe(e.getMessage());
-            }
+           // } catch (NimbitsException e) {
+            //    log.severe(e.getMessage());
+            //}
 
-            log.info("reporting point to core:" + p.getName().getValue());
-            String url = ServerInfoImpl.getFullServerURL(req);
-            CoreFactory.getInstance().reportUpdateToCore(url, pointJson, EntityType.point);
+            ///log.info("reporting point to core:" + p.getName().getValue());
+           // String url = ServerInfoImpl.getFullServerURL(req);
+           // CoreFactory.getInstance().reportUpdateToCore(url, pointJson, EntityType.point);
 
 
 

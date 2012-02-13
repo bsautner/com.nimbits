@@ -31,6 +31,7 @@ import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.service.datapoints.*;
+import com.nimbits.client.service.entity.*;
 
 import java.util.*;
 
@@ -261,11 +262,10 @@ class CenterPanel extends NavigationEventProvider {
                 break;
             case category:
                  break;
-            case diagram:
-                break;
             case file:
                 break;
             case subscription:
+                displaySubscription(entity);
                 break;
             case userConnection:
                 break;
@@ -281,6 +281,22 @@ class CenterPanel extends NavigationEventProvider {
 //                line2.showEntityData(point);
 //            }
 
+
+    }
+
+    private void displaySubscription(final Entity entity) {
+        EntityServiceAsync service = GWT.create(EntityService.class);
+        service.getSubscribedEntity(entity, new AsyncCallback<Entity>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                //auto generated
+            }
+
+            @Override
+            public void onSuccess(Entity result) {
+              addEntity(result);
+            }
+        });
 
     }
 

@@ -21,12 +21,15 @@ public class SubscriptionFactory {
                                                   final SubscriptionDeliveryMethod alertStateChangeMethod,
                                                   final SubscriptionDeliveryMethod propertyChangeMethod,
                                                   final double maxRepeat,
-                                                  final Date lastSent) {
+                                                  final Date lastSent,
+                                                  final boolean formatJson,
+                                                  final boolean enabled) {
         return new SubscriptionModel(
                 dataUpdateAlertMethod,
                 alertStateChangeMethod,
                 propertyChangeMethod,
-                maxRepeat, lastSent
+                maxRepeat, lastSent,
+                formatJson, enabled
                 );
 
     }

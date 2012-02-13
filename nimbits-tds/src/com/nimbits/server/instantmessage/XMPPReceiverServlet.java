@@ -150,7 +150,7 @@ public class XMPPReceiverServlet extends HttpServlet {
         EntityName pointName = CommonFactoryLocator.getInstance().createName(body.substring(1).trim());
         Entity entity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone, UUID.randomUUID().toString(),
                 u.getUuid(), u.getUuid());
-        EntityTransactionFactory.getInstance(u).addUpdateEntity(entity);
+        PointServiceFactory.getInstance().addPoint(u, entity);
       //  Point r = PointServiceFactory.getInstance().showEntityData(pointName, null, u);
         //if (r != null) {
             IMFactory.getInstance().sendMessage(pointName.getValue() + " created", u.getEmail());

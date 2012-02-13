@@ -33,19 +33,19 @@ public class PointCatagory   {
 
 
     @Persistent
-    private Long userFK;
+    public Long userFK;
 
     @Persistent
-    private String name;
+    public String name;
 
     @Persistent
-    private String description;
+    public String description;
 
     @Persistent
-    private String uuid;
+    public String uuid;
 
     @Persistent
-    private Integer protectionLevel;
+    public Integer protectionLevel;
 
 
 

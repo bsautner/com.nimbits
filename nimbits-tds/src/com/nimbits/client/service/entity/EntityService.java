@@ -6,6 +6,7 @@ import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.subscription.*;
 
 import java.util.*;
 
@@ -33,5 +34,9 @@ public interface EntityService extends RemoteService {
 
     List<Entity> getChildren(Entity parentEntity, EntityType type);
 
+    Entity subscribe(Entity entity, Subscription subscription);
 
+    Subscription readSubscription(final Entity point) throws NimbitsException;
+
+    Entity getSubscribedEntity(final Entity entity);
 }

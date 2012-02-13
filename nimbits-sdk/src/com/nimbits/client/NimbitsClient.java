@@ -74,7 +74,7 @@ public interface NimbitsClient {
 
     void deletePoint(final String pointName);
 
-    Point addPoint(final Point p, final EntityName categoryName);
+    Point addPoint(final Point p);
 
     Point addPoint(final EntityName pointName);
 

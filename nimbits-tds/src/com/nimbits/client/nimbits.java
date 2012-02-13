@@ -165,11 +165,7 @@ public class nimbits implements EntryPoint {
                 w.show();
             }
         });
-
-
-
-
-    }
+  }
     private void loadDiagramView(final Entity diagram,
                                  final ClientType clientType) {
 
@@ -194,7 +190,7 @@ public class nimbits implements EntryPoint {
                     switch (p.getEntityType()) {
                         case point:
                           //TODO  showAnnotatedTimeLine(p);
-                        case diagram:
+                        case file:
                          //TODO  loadDiagramView(d, clientType);
                     }
 

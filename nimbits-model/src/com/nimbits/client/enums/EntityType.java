@@ -12,7 +12,6 @@ public enum EntityType {
     user(0),
     point(1),
     category(2),
-    diagram(3),
     file(4),
     subscription(5),
     userConnection(6);

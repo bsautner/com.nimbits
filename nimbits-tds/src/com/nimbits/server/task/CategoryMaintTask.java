@@ -47,9 +47,9 @@ public class CategoryMaintTask extends HttpServlet {
 //            EntityTransactionFactory.getInstance(u).addUpdateEntity(userEntity);
 //            List<Category> categories = CategoryServiceFactory.getInstance().getCategories(u, true,true, false);
 //            for (Category c : categories) {
-//                if (Utils.isEmptyString(c.getUUID())) {
+//                if (Utils.isEmptyString(c.getUuid())) {
 //                    log.info("Fixing category " + c.getName().getValue());
-//                    c.setUUID(UUID.randomUUID().toString());
+//                    c.setUuid(UUID.randomUUID().toString());
 //                    c.setDescription("");
 //                    c.setProtectionLevel(ProtectionLevel.onlyMe);
 //                    CategoryServiceFactory.getInstance().updateCategory(u, c);
@@ -62,7 +62,7 @@ public class CategoryMaintTask extends HttpServlet {
 //                                c.getDescription(),
 //                                EntityType.category,
 //                                c.getProtectionLevel(),
-//                                c.getUUID(),
+//                                c.getUuid(),
 //                                u.getUuid(),
 //                                u.getUuid());
 //                        EntityTransactionFactory.getInstance(u).addUpdateEntity(entity);
@@ -77,13 +77,13 @@ public class CategoryMaintTask extends HttpServlet {
 //                                protectionLevel = ProtectionLevel.onlyMe;
 //                            }
 //                            String parentUUID = c.getName().getValue().equals(Const.CONST_HIDDEN_CATEGORY) ?
-//                                    u.getUuid() : c.getUUID();
+//                                    u.getUuid() : c.getUuid();
 //                            Entity entity = EntityModelFactory.createEntity(
 //                                    p.getName(),
 //                                    p.getDescription(),
 //                                    EntityType.point,
 //                                    protectionLevel,
-//                                    p.getUUID(),
+//                                    p.getUuid(),
 //                                    parentUUID,
 //                                    u.getUuid());
 //
@@ -97,7 +97,7 @@ public class CategoryMaintTask extends HttpServlet {
 //                            ProtectionLevel protectionLevel = ProtectionLevel.get(p.getProtectionLevel());
 //
 //                            String parentUUID = c.getName().getValue().equals(Const.CONST_HIDDEN_CATEGORY) ?
-//                                    u.getUuid() : c.getUUID();
+//                                    u.getUuid() : c.getUuid();
 //                            Entity entity = EntityModelFactory.createEntity(
 //                                    p.getName(),
 //                                    "",

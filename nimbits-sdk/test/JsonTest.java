@@ -51,10 +51,9 @@ public class JsonTest {
     public void testM2M() throws IOException, InterruptedException, NimbitsException {
 
         EntityName pointName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
-        EntityName cName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
-        Entity c = ClientHelper.client().addCategory(cName);
 
-        Point point = ClientHelper.client().addPoint(cName);
+
+        Point point = ClientHelper.client().addPoint(pointName);
         point.setCompression(-1);
         ClientHelper.client().updatePoint(point);
         Robot robot = new Robot();

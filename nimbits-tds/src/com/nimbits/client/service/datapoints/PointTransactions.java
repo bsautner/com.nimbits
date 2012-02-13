@@ -40,14 +40,6 @@ public interface PointTransactions {
 
     void deletePoint(final Point p) throws NimbitsException;
 
-    //Point showEntityData(final Point point, final Category c) throws NimbitsException;
-
-    Point addPoint(final Point point);
-
-   // Point showEntityData(final EntityName pointName, final Category c) throws NimbitsException;
-
-   //  List<Point> getPointsByCategory(final Category c);
-
     Point checkPoint(final HttpServletRequest req, final EmailAddress email, final Point point) throws NimbitsException;
 
     Point publishPoint(Point p) throws NimbitsException;
@@ -62,6 +54,7 @@ public interface PointTransactions {
 
     Point addPoint(Entity entity);
 
+    Point addPoint(Entity entity, Point point);
 
     List<Point>  getPoints(List<Entity> entities);
 }

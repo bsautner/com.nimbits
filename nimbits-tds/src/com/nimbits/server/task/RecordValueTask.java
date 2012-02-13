@@ -192,11 +192,11 @@ public class RecordValueTask extends HttpServlet {
 //            if (subscription.getLastSent().getTime() + (subscription.getMaxRepeat() * 60 * 1000) < new Date().getTime()) {
 //                User subscriber = UserServiceFactory.getInstance().getUserByUUID(subscription.getSubscriberUUID());
 //                AlertType alert = null;
-//                if (! subscription.getAlertStateChangeMethod().equals(SubscriptionDeliveryMethod.none)){
+//                if (! subscription.getAlertNotifyMethod().equals(SubscriptionDeliveryMethod.none)){
 //                    alert = PointServiceFactory.getInstance().getPointAlertState(point, v);
 //                    if (! alert.equals(AlertType.OK)) {
 //                        PointServiceFactory.getInstance().updateSubscriptionLastSent(subscription);
-//                        switch (subscription.getAlertStateChangeMethod()) {
+//                        switch (subscription.getAlertNotifyMethod()) {
 //                            case none:
 //                                break;
 //                            case email:
@@ -215,10 +215,10 @@ public class RecordValueTask extends HttpServlet {
 //                        }
 //                    }
 //                }
-//                if (! subscription.getDataUpdateAlertMethod().equals(SubscriptionDeliveryMethod.none)) {
+//                if (! subscription.getDataNotifyMethod().equals(SubscriptionDeliveryMethod.none)) {
 //                    PointServiceFactory.getInstance().updateSubscriptionLastSent(subscription);
 //
-//                    switch (subscription.getDataUpdateAlertMethod()) {
+//                    switch (subscription.getDataNotifyMethod()) {
 //
 //                        case none:
 //                            break;
@@ -363,7 +363,7 @@ public class RecordValueTask extends HttpServlet {
             picture.append("http://app.nimbits.com/resources/images/logo.png");
         }
         log.info(picture.toString());
-        // String link = "http://app.nimbits.com?view=chart&uuid=" + p.getUUID();
+        // String link = "http://app.nimbits.com?view=chart&uuid=" + p.getUuid();
         String link = "http://app.nimbits.com?uuid=" + p.getUUID();
         String d = Utils.isEmptyString(p.getDescription()) ? "" : p.getDescription();
         FacebookFactory.getInstance().updateStatus(u.getFacebookToken(), m, picture.toString(), link, "Subscribe to this data feed.",

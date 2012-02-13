@@ -13,21 +13,21 @@ import java.util.*;
  */
 public interface Subscription extends Serializable {
 
-    String getUUID();
+    String getUuid();
 
-    void setUUID(String uuid);
+    void setUuid(String uuid);
 
-    SubscriptionDeliveryMethod getDataUpdateAlertMethod();
+    SubscriptionDeliveryMethod getDataNotifyMethod();
 
-    void setDataUpdateAlertMethod(SubscriptionDeliveryMethod dataUpdateAlertMethod);
+    void setDataNotifyMethod(SubscriptionDeliveryMethod dataUpdateAlertMethod);
 
-    SubscriptionDeliveryMethod getAlertStateChangeMethod();
+    SubscriptionDeliveryMethod getAlertNotifyMethod();
 
-    void setAlertStateChangeMethod(SubscriptionDeliveryMethod alertStateChangeMethod);
+    void setAlertNotifyMethod(SubscriptionDeliveryMethod alertStateChangeMethod);
 
-    SubscriptionDeliveryMethod getPropertyChangeMethod();
+    SubscriptionDeliveryMethod getChangeNotifyMethod();
 
-    void setPropertyChangeMethod(SubscriptionDeliveryMethod propertyChangeMethod);
+    void setChangeNotifyMethod(SubscriptionDeliveryMethod propertyChangeMethod);
 
     double getMaxRepeat();
 
@@ -37,7 +37,15 @@ public interface Subscription extends Serializable {
 
     void setLastSent(Date lastSent);
 
-    String getSubscribedEntityUUID();
+    String getSubscribedEntity();
 
-    void setSubscribedEntityUUID(String uuid);
+    void setSubscribedEntity(String uuid);
+
+    public boolean getNotifyFormatJson();
+
+    public void setNotifyFormatJson(boolean notifyFormatJson);
+
+    public boolean getEnabled();
+
+    public void setEnabled(boolean enabled);
 }

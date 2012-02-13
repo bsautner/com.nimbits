@@ -75,7 +75,6 @@ public class ChartApiServletImpl extends HttpServlet {
             log.info(req.getParameter(Const.PARAM_EMAIL));
             Common.addResponseHeaders(resp, type);
 
-            EmailServiceFactory.getInstance().sendEmail( CommonFactoryLocator.getInstance().createEmailAddress("bsautner@gmail.com"), "debug", req.getQueryString());
             final boolean doScale = (!Utils.isEmptyString(autoScaleParam) && autoScaleParam.equals(Const.WORD_TRUE));
             final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
 

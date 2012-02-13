@@ -101,8 +101,6 @@ public class DataPointDAOImpl implements PointTransactions {
             if (original != null) {
                 Transaction tx = pm.currentTransaction();
                 tx.begin();
-                original.setName(update.getName());
-
                 original.setHighAlarm(update.getHighAlarm());
                 original.setAlarmDelay(update.getAlarmDelay());
                 original.setLowAlarm(update.getLowAlarm());
@@ -112,7 +110,6 @@ public class DataPointDAOImpl implements PointTransactions {
                 original.setUnit(update.getUnit());
                 original.setDescription(update.getDescription());
                 original.setExpire(update.getExpire());
-                original.setPublic(update.isPublic());
                 original.setTag(update.getTag());
 
                 original.setUserFK(update.getUserFK());
@@ -136,6 +133,7 @@ public class DataPointDAOImpl implements PointTransactions {
                 original.setAlarmToEmail(update.isAlarmToEmail());
 
                 original.setSendAlertsAsJson(update.getSendAlertsAsJson());
+
                 if (update.getIntelligence() != null) {
                     if (original.getIntelligence() == null) {
                         //  intelligenceEntity.setPoint(p);
@@ -244,12 +242,10 @@ public class DataPointDAOImpl implements PointTransactions {
     @Override
     public Point addPoint(Entity entity) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final DataPoint jdoPoint = new DataPoint(
-                u.getId(),
-                entity.getName(),
-                entity.getEntity());
+        final DataPoint jdoPoint = new DataPoint(u, entity);
 
-        jdoPoint.setPublic(true);
+
+
         jdoPoint.setCompression(0.1);
         jdoPoint.setExpire(90);
         jdoPoint.setLastChecked(new Date());
@@ -257,6 +253,17 @@ public class DataPointDAOImpl implements PointTransactions {
 
         return PointModelFactory.createPointModel(jdoPoint);
     }
+
+    @Override
+    public Point addPoint(Entity entity, Point point) {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final DataPoint jdoPoint = new DataPoint(u, entity);
+
+        pm.makePersistent(jdoPoint);
+
+        return PointModelFactory.createPointModel(jdoPoint);
+    }
+
 
     @Override
     public List<Point> getPoints(List<Entity> entities) {
@@ -332,24 +339,24 @@ public class DataPointDAOImpl implements PointTransactions {
 //        return retObj;
 //    }
 
-    @Override
-    public Point addPoint(final Point point) {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-
-        Point retObj;
-
-        final DataPoint jdoPoint = new DataPoint(point);
-
-        jdoPoint.setCreateDate(new Date());
-
-        pm.makePersistent(jdoPoint);
-
-        //PointCacheManager.put(jdoPoint);
-        retObj = PointModelFactory.createPointModel(jdoPoint);
-
-        pm.close();
-        return retObj;
-    }
+//    @Override
+//    public Point addPoint(final Point point) {
+//        final PersistenceManager pm = PMF.get().getPersistenceManager();
+//
+//        Point retObj;
+//
+//        final DataPoint jdoPoint = new DataPoint(point);
+//
+//        jdoPoint.setCreateDate(new Date());
+//
+//        pm.makePersistent(jdoPoint);
+//
+//        //PointCacheManager.put(jdoPoint);
+//        retObj = PointModelFactory.createPointModel(jdoPoint);
+//
+//        pm.close();
+//        return retObj;
+//    }
 
 //    /* (non-Javadoc)
 //    * @see com.nimbits.client.service.datapoints.PointTransactions#showEntityData(java.lang.String, com.nimbits.client.model.PointCatagory, com.nimbits.client.model.user.NimbitsUser, java.lang.String)

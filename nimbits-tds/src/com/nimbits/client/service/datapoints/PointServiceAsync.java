@@ -63,9 +63,9 @@ public interface PointServiceAsync {
 
     void getAllPoints(final AsyncCallback<List<Point>> async);
 
-    void subscribe(Entity entity, Subscription subscription, AsyncCallback<Entity> async);
 
-    void readSubscription(final Entity point, AsyncCallback<Subscription> async);
+
+
 
     void deleteSubscription(final Point point, AsyncCallback<Void> async);
 
@@ -80,4 +80,5 @@ public interface PointServiceAsync {
     void getPoints(Map<String, Entity> entities, AsyncCallback<Map<String, Point>> async);
 
 
+    void addPoint(User user, Entity entity, Point point, AsyncCallback<Point> async);
 }

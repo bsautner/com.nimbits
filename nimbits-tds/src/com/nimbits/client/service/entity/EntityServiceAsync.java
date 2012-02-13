@@ -4,6 +4,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.subscription.*;
 
 import java.util.List;
 import java.util.Map;
@@ -27,4 +28,10 @@ public interface EntityServiceAsync {
     void getEntityMap(EntityType type, AsyncCallback<Map<String, Entity>> async);
 
     void getChildren(Entity parentEntity, EntityType type, AsyncCallback<List<Entity>> async);
+
+    void subscribe(Entity entity, Subscription subscription, AsyncCallback<Entity> async);
+
+    void readSubscription(final Entity point, AsyncCallback<Subscription> async);
+
+    void getSubscribedEntity(final Entity entity, AsyncCallback<Entity> async);
 }

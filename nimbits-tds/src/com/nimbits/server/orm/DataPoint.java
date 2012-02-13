@@ -15,9 +15,10 @@ package com.nimbits.server.orm;
 
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.intelligence.*;
 import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.Value;
 
 import javax.jdo.annotations.*;
@@ -169,54 +170,15 @@ public class DataPoint implements Point {
     }
 
 
-    public DataPoint(final long userFK, final EntityName pointName, final String uuid) {
+    public DataPoint(User user, Entity entity) {
         this();
-        this.userFK = userFK;
-        this.name = pointName.getValue();
-        this.uuid = uuid;
-    }
-    public DataPoint(final Point p) {
+        this.userFK = user.getId();
+        this.name = entity.getName().getValue();
+        this.uuid = entity.getEntity();
+        this.LastChecked= new Date();
+        this.createDate = new Date();
+     }
 
-        this.uuid = p.getUUID();
-        this.LastChecked = p.getLastChecked();
-        this.host = p.getHost();
-
-        this.isSystemPoint = p.isSystemPoint();
-        this.userFK = p.getUserFK();
-        this.name = p.getName().getValue();
-        this.createDate = p.getCreateDate();
-        this.X = p.getX();
-        this.Y = p.getY();
-        this.Z = p.getZ();
-        this.target = p.getTarget();
-        this.formula = p.getFormula();
-        this.highAlarm = p.getHighAlarm();
-        this.expire = p.getExpire();
-        this.unit = p.getUnit();
-        this.compression = p.getCompression();
-        this.lowAlarm = p.getLowAlarm();
-        this.highAlarmOn = p.isHighAlarmOn();
-        this.lowAlarmOn = p.isLowAlarmOn();
-        this.alarmDelay = p.getAlarmDelay();
-        this.description = p.getDescription();
-        this.isPublic = p.isPublic();
-        this.postToFacebook = p.isPostToFacebook();
-        this.alarmToFacebook = p.getAlarmToFacebook();
-        this.sendIM = p.getSendIM();
-        this.sendAlarmIM = p.getSendAlarmIM();
-        this.sendTweet = p.getSendTweet();
-        this.sendAlarmTweet = p.getSendAlarmTweet();
-        this.tag = p.getTag();
-        this.idleAlarmOn = p.isIdleAlarmOn();
-        this.idleSeconds = p.getIdleSeconds();
-        this.idleAlarmSent = p.getIdleAlarmSent();
-        this.ignoreIncomingCompressedValues = p.getIgnoreIncomingCompressedValues();
-        this.readOnly = p.getReadOnly();
-        this.TargetValue = p.getTargetValue();
-        this.values = p.getValues();
-        this.value = p.getValue();
-        this.sendAlertsAsJson = p.getSendAlertsAsJson();
-    }
 
     @Persistent
     private Double TargetValue;

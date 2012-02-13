@@ -56,7 +56,7 @@ public class DiagramEntity  {
     private String uuid;
 
     @NotPersistent
-    private int entityType = EntityType.diagram.getCode();
+    private int entityType = EntityType.file.getCode();
 
 
     public void setName(EntityName name) {

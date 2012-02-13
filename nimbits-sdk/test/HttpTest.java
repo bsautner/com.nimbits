@@ -1,5 +1,5 @@
 import com.nimbits.server.http.HttpCommonFactory;
-import org.junit.Test;
+import org.junit.*;
 
 import java.util.Random;
 
@@ -15,6 +15,7 @@ public class HttpTest {
     String params = "appid=WL9JKJ-LYH57Y53TG";
 
     @Test
+    @Ignore
     public void testTimeout() {
         Random random = new Random();
 

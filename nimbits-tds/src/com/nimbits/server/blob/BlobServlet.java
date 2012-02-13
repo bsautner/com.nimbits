@@ -27,6 +27,7 @@ import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.user.User;
 import com.nimbits.server.entity.EntityTransactionFactory;
+import com.nimbits.server.point.*;
 import com.nimbits.server.user.UserServiceFactory;
 
 import javax.servlet.ServletException;
@@ -77,7 +78,8 @@ public class BlobServlet extends HttpServlet {
             if (uploadType.equals(UploadType.newFile.name())) {
                 Entity entity = EntityModelFactory.createEntity(diagramName, "", EntityType.file, ProtectionLevel.everyone, UUID.randomUUID().toString(),
                         u.getUuid(), u.getUuid(),blobKey.getKeyString());
-                EntityTransactionFactory.getInstance(u).addUpdateEntity(entity);
+                PointServiceFactory.getInstance().addPoint(u, entity);
+
 
             //    DiagramTransactionFactory.getInstance(u).addDiagram(blobKey, diagramName);
             }

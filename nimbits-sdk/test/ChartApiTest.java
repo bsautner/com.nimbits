@@ -19,7 +19,8 @@ public class ChartApiTest {
     public void testChartApi() throws InterruptedException, IOException, NimbitsException {
         Point point = ClientHelper.createSeedPoint();
         assertNotNull(point);
-
+        Point result = ClientHelper.client().getPoint(point.getName());
+        assertNotNull(result);
         String params = "points=" + point.getName() +
                 "&cht=lc&chs=200x200" +
                 "&chxt=y&autoscale=true" +

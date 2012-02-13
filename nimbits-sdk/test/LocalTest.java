@@ -40,14 +40,7 @@ public class LocalTest {
 
     NimbitsClient c = ClientHelper.client();
 
-    @Before
-    @Ignore
-    public void setup() throws NimbitsException {
-        List<Entity> categoryList = c.getCategories(true, true);
-        for (Entity x : categoryList) {
-            c.deleteCategory(x.getName());
-        }
-    }
+
 
 
     @Test

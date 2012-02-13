@@ -32,6 +32,7 @@ public class EntityModel  implements Serializable, Entity {
     private String blobKey;
     private List<Entity> children;
 
+
     public EntityModel(final EntityName name,
                        final String description,
                        final EntityType entityType,

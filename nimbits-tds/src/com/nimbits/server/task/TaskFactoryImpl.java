@@ -178,20 +178,5 @@ public class TaskFactoryImpl implements TaskFactory {
                 .param(Const.PARAM_POINT, json));
     }
 
-    @Override
-    public void startUpdatePointStatsTask(final User u, final Point point, final Value v) {
 
-        final com.google.appengine.api.taskqueue.Queue queue = QueueFactory.getQueue(Const.QUEUE_UPDATE_POINT_STATS);
-        final String jsonUser = gson.toJson(u);
-        final String jsonPoint = gson.toJson(point);
-        final String jsonValue = gson.toJson(v);
-
-
-        queue.add(TaskOptions.Builder.withUrl(Const.PATH_TASK_UPDATE_POINT_STATS)
-                .param(Const.PARAM_POINT, jsonPoint)
-                .param(Const.PARAM_USER, jsonUser)
-                .param(Const.PARAM_VALUE, jsonValue));
-
-
-    }
 }

@@ -309,7 +309,7 @@ public class DiagramPanel extends NavigationEventProvider {
 
         EntityServiceAsync serviceAsync = GWT.create(EntityService.class);
 
-        serviceAsync.getEntityNameMap(EntityType.diagram, new AsyncCallback<Map<EntityName, Entity>>() {
+        serviceAsync.getEntityNameMap(EntityType.file, new AsyncCallback<Map<EntityName, Entity>>() {
             @Override
             public void onFailure(Throwable throwable) {
                 //To change body of implemented methods use File | Settings | File Templates.

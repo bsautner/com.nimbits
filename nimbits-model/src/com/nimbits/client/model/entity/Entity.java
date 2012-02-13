@@ -34,7 +34,7 @@ public interface Entity  extends Serializable {
 
     void setParent(String parent);
 
-     ProtectionLevel getProtectionLevel();
+    ProtectionLevel getProtectionLevel();
 
     void setProtectionLevel(ProtectionLevel protectionLevel);
 
@@ -63,5 +63,7 @@ public interface Entity  extends Serializable {
     List<Entity> getChildren();
 
     void addChild(Entity entity);
+
+
 
 }

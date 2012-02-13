@@ -1,14 +1,15 @@
 package com.nimbits.server.entity;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.subscription.*;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.server.orm.entity.EntityStore;
 import com.nimbits.server.point.PointServiceFactory;
+import com.nimbits.server.subscription.*;
 import com.nimbits.server.user.UserServiceFactory;
 
 import javax.servlet.http.HttpSession;
@@ -96,8 +97,6 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
                 return PointServiceFactory.getInstance().copyPoint(getUser(), originalEntity, newName);
             case category:
                 return null;
-            case diagram:
-                return null;
             case file:
                 return null;
             case subscription:
@@ -110,6 +109,45 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
     @Override
     public List<Entity> getChildren(Entity parentEntity, EntityType type) {
         return EntityTransactionFactory.getInstance(getUser()).getEntityChildren(parentEntity, type);
+    }
+
+    @Override
+    public Entity subscribe(Entity entity, Subscription subscription) {
+        User user = getUser();
+        if (entity.getEntityType().equals(EntityType.subscription)) {   //update
+            SubscriptionTransactionFactory.getInstance(user).subscribe(entity,subscription);
+            return entity;
+
+        }
+        else { //new
+          subscription.setUuid(UUID.randomUUID().toString());
+          if (entity.getOwner().equals(user.getUuid())) {   //subscribe to your own data
+              Entity s = EntityModelFactory.createEntity(entity.getName(), "",EntityType.subscription,
+                      ProtectionLevel.onlyMe, subscription.getUuid(), entity.getEntity(), user.getUuid());
+              SubscriptionTransactionFactory.getInstance(user).subscribe(s, subscription);
+              return EntityTransactionFactory.getInstance(user).addUpdateEntity(s);
+          }
+          else { //subscribe to some elses data
+              Entity s = EntityModelFactory.createEntity(entity.getName(), "",EntityType.subscription,
+                      ProtectionLevel.onlyMe, subscription.getUuid(), user.getUuid(), user.getUuid());
+              SubscriptionTransactionFactory.getInstance(user).subscribe(s, subscription);
+              return EntityTransactionFactory.getInstance(user).addUpdateEntity(s);
+          }
+        }
+
+    }
+
+    @Override
+    public Subscription readSubscription(Entity entity) throws NimbitsException {
+      return SubscriptionTransactionFactory.getInstance(getUser()).readSubscription(entity);
+    }
+
+    @Override
+    public Entity getSubscribedEntity(Entity entity) {
+        Subscription subscription =
+                SubscriptionTransactionFactory.getInstance(getUser()).readSubscription(entity);
+        return EntityTransactionFactory.getInstance(getUser()).getEntityByUUID(subscription.getSubscribedEntity());
+
     }
 
 

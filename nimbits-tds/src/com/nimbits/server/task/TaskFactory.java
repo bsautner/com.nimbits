@@ -42,8 +42,6 @@ public interface TaskFactory {
 
     void startMoveCachedValuesToStoreTask(final Point point);
 
-    void startUpdatePointStatsTask(final User u, final Point point, final Value v);
-
     void startCategoryMaintTask(final User user);
 
     void startUpgradeTask();

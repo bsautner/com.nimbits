@@ -41,8 +41,8 @@ public class PointMemCacheImpl implements PointTransactions {
     private final MemcacheService cache;
 
     @Override
-    public Point addPoint(Point point) {
-        final Point retObj = PointTransactionsFactory.getDaoInstance(u).addPoint(point);
+    public Point addPoint(Entity entity, Point point) {
+        final Point retObj = PointTransactionsFactory.getDaoInstance(u).addPoint(entity, point);
         purgeMemCache(retObj);
         updateMap(retObj);
         return retObj;
@@ -81,7 +81,6 @@ public class PointMemCacheImpl implements PointTransactions {
             cache.delete(MemCacheHelper.defaultPointCache());
         }
         //CategoryTransactionFactory.getInstance(u).purgeMemCache();
-
 
     }
 

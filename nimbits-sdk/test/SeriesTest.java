@@ -37,7 +37,7 @@ public class SeriesTest {
         p.setName(CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString()));
         EntityName categoryName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
        // Category c = ClientHelper.client().addCategory(categoryName);
-        Point rp = ClientHelper.client().addPoint(p, categoryName);
+        Point rp = ClientHelper.client().addPoint(p);
        // assertNotNull(c);
         assertNotNull(rp);
 

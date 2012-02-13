@@ -35,19 +35,19 @@ public class SubscriptionEntity implements Serializable, Subscription {
     private com.google.appengine.api.datastore.Key id;
 
     @Persistent
-    private String UUID;
+    private String uuid;
 
     @Persistent
-    private String subscribedEntityUUID;
+    private String subscribedEntity;
 
     @Persistent
-    private Integer dataUpdateAlertMethod = SubscriptionDeliveryMethod.none.getCode();
+    private Integer dataNotifyMethod = SubscriptionDeliveryMethod.none.getCode();
 
     @Persistent
-    private Integer alertStateChangeMethod = SubscriptionDeliveryMethod.none.getCode();
+    private Integer alertNotifyMethod = SubscriptionDeliveryMethod.none.getCode();
 
     @Persistent
-    private Integer propertyChangeMethod = SubscriptionDeliveryMethod.none.getCode();
+    private Integer changeNotifyMethod = SubscriptionDeliveryMethod.none.getCode();
 
     @Persistent
     private Double maxRepeat;
@@ -55,58 +55,65 @@ public class SubscriptionEntity implements Serializable, Subscription {
     @Persistent
     private Date lastSent;
 
+    @Persistent
+    private Boolean notifyFormatJson;
+
+    @Persistent
+    private Boolean enabled;
 
     public SubscriptionEntity() {
     }
 
     public SubscriptionEntity(final Subscription subscription) {
 
-        this.dataUpdateAlertMethod = subscription.getDataUpdateAlertMethod().getCode();
-        this.alertStateChangeMethod = subscription.getAlertStateChangeMethod().getCode();
-        this.propertyChangeMethod = subscription.getPropertyChangeMethod().getCode();
-        this.UUID = subscription.getUUID();
+        this.dataNotifyMethod = subscription.getDataNotifyMethod().getCode();
+        this.alertNotifyMethod = subscription.getAlertNotifyMethod().getCode();
+        this.changeNotifyMethod = subscription.getChangeNotifyMethod().getCode();
+        this.uuid = subscription.getUuid();
         this.maxRepeat = subscription.getMaxRepeat();
         this.lastSent = subscription.getLastSent();
+        this.notifyFormatJson = subscription.getNotifyFormatJson();
+        this.enabled = subscription.getEnabled();
     }
 
     @Override
-    public SubscriptionDeliveryMethod getDataUpdateAlertMethod() {
-        return SubscriptionDeliveryMethod.get(dataUpdateAlertMethod);
+    public SubscriptionDeliveryMethod getDataNotifyMethod() {
+        return SubscriptionDeliveryMethod.get(dataNotifyMethod);
     }
 
     @Override
-    public void setDataUpdateAlertMethod(SubscriptionDeliveryMethod dataUpdateAlertMethod) {
-        this.dataUpdateAlertMethod = dataUpdateAlertMethod.getCode();
+    public void setDataNotifyMethod(SubscriptionDeliveryMethod dataUpdateAlertMethod) {
+        this.dataNotifyMethod = dataUpdateAlertMethod.getCode();
     }
 
     @Override
-    public SubscriptionDeliveryMethod getAlertStateChangeMethod() {
-        return SubscriptionDeliveryMethod.get(alertStateChangeMethod);
+    public SubscriptionDeliveryMethod getAlertNotifyMethod() {
+        return SubscriptionDeliveryMethod.get(alertNotifyMethod);
     }
 
     @Override
-    public void setAlertStateChangeMethod(SubscriptionDeliveryMethod alertStateChangeMethod) {
-        this.alertStateChangeMethod = alertStateChangeMethod.getCode();
+    public void setAlertNotifyMethod(SubscriptionDeliveryMethod alertNotifyMethod) {
+        this.alertNotifyMethod = alertNotifyMethod.getCode();
     }
 
     @Override
-    public SubscriptionDeliveryMethod getPropertyChangeMethod() {
-        return SubscriptionDeliveryMethod.get(propertyChangeMethod);
+    public SubscriptionDeliveryMethod getChangeNotifyMethod() {
+        return SubscriptionDeliveryMethod.get(changeNotifyMethod);
     }
 
     @Override
-    public void setPropertyChangeMethod(SubscriptionDeliveryMethod propertyChangeMethod) {
-        this.propertyChangeMethod = propertyChangeMethod.getCode();
+    public void setChangeNotifyMethod(SubscriptionDeliveryMethod propertyChangeMethod) {
+        this.changeNotifyMethod = propertyChangeMethod.getCode();
     }
 
     @Override
-    public String getUUID() {
-      return this.UUID;
+    public String getUuid() {
+      return this.uuid;
     }
 
     @Override
-    public void setUUID(String uuid) {
-      this.UUID = uuid;
+    public void setUuid(String uuid) {
+      this.uuid = uuid;
     }
 
     @Override
@@ -129,11 +136,27 @@ public class SubscriptionEntity implements Serializable, Subscription {
        this.lastSent = lastSent;
     }
 
-    public String getSubscribedEntityUUID() {
-        return subscribedEntityUUID;
+    public String getSubscribedEntity() {
+        return subscribedEntity;
     }
 
-    public void setSubscribedEntityUUID(String subscribedEntityUUID) {
-        this.subscribedEntityUUID = subscribedEntityUUID;
+    public void setSubscribedEntity(String subscribedEntity) {
+        this.subscribedEntity = subscribedEntity;
+    }
+
+    public boolean getNotifyFormatJson() {
+        return notifyFormatJson;
+    }
+
+    public void setNotifyFormatJson(boolean notifyFormatJson) {
+        this.notifyFormatJson = notifyFormatJson;
+    }
+
+    public boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

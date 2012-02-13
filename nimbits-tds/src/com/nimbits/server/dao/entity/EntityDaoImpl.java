@@ -125,13 +125,8 @@ public class EntityDaoImpl implements EntityTransactions {
             else {
                 Entity commit = new EntityStore(entity);
                 pm.makePersistent(commit);
-                switch (entity.getEntityType()) {
-                    case point:
-                        PointServiceFactory.getInstance().addPoint(user, entity);
-                        break;
-                }
-                return EntityModelFactory.createEntity(commit);
 
+                return EntityModelFactory.createEntity(commit);
             }
         } finally {
             pm.close();
@@ -260,4 +255,31 @@ public class EntityDaoImpl implements EntityTransactions {
             pm.close();
         }
     }
+
+    @Override
+    public Entity getEntityByName(EntityName name) {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+
+
+        try {
+            final Query q1 = pm.newQuery(EntityStore.class, "name==b");
+            q1.declareParameters("String b");
+            q1.setRange(0, 1);
+            final List<Entity> c = (List<Entity>) q1.execute(name.getValue());
+            if (c.size() > 0) {
+
+                Entity result = c.get(0);
+                return EntityModelFactory.createEntity(result);
+
+            }
+            else {
+                return null;
+            }
+
+        } finally {
+            pm.close();
+        }
+    }
+
+
 }

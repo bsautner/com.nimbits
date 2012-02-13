@@ -304,7 +304,8 @@ public class NimbitsClientImpl implements NimbitsClient {
 
     @Override
     public Point addPoint(String pointName) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        EntityName name = CommonFactoryLocator.getInstance().createName(pointName);
+        return addPoint(name);
     }
 
     @Override
@@ -355,15 +356,13 @@ public class NimbitsClientImpl implements NimbitsClient {
     }
 
 
-    public Point addPoint(final Point p, final EntityName EntityName) {
+    public Point addPoint(final Point p) {
         Point retObj = null;
         final String newPointJson = gson.toJson(p);
         try {
             String u = host + Const.PATH_POINT_SERVICE;
             String params;
             params = Const.PARAM_JSON + "=" + URLEncoder.encode(newPointJson, Const.CONST_ENCODING);
-            params += "&" + Const.PARAM_CATEGORY + "=" +
-                    URLEncoder.encode(EntityName.getValue(), Const.CONST_ENCODING);
             String result = doGPost(u, params);
             retObj = gson.fromJson(result, PointModel.class);
         } catch (UnsupportedEncodingException e) {
@@ -464,7 +463,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
     public List<Value> getSeries(final String name, final int count) throws NimbitsException {
         EntityName name1 = CommonFactoryLocator.getInstance().createName(name);
-        return getSeries(name, count);
+        return getSeries(name1, count);
 
     }
 

@@ -35,7 +35,7 @@ public interface PointService extends RemoteService {
     Point addPoint(final User user, final Entity entity);
 
 
-   // Point addPoint(final EntityName pointName, final Category category) throws NimbitsException, PointExistsException;
+   // Point showEntityData(final EntityName pointName, final Category category) throws NimbitsException, PointExistsException;
 
     Point getPointByName(final User pointOwner, final EntityName name) throws NimbitsException;
 
@@ -55,7 +55,7 @@ public interface PointService extends RemoteService {
 
     Point getPointByUUID(final String uuid);
 
- //   Point addPoint(final EntityName pointName) throws NimbitsException, PointExistsException;
+ //   Point showEntityData(final EntityName pointName) throws NimbitsException, PointExistsException;
 
     Point getPointByID(final long id) throws NimbitsException;
 
@@ -63,9 +63,9 @@ public interface PointService extends RemoteService {
 
     //Point movePoint(final User u, final Point point, final EntityName EntityName) throws NimbitsException;
 
-    //Point addPoint(final Point point, final Category c, final User u) throws NimbitsException;
+    //Point showEntityData(final Point point, final Category c, final User u) throws NimbitsException;
 
-   // Point addPoint(final EntityName pointName, final Category c, final User u) throws NimbitsException;
+   // Point showEntityData(final EntityName pointName, final Category c, final User u) throws NimbitsException;
 
 //    List<Point> getPointsByCategory(final User u, final Category c);
 

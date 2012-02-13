@@ -248,15 +248,52 @@ class CenterPanel extends NavigationEventProvider {
     }
 
     public void addEntity(final Entity entity) {
-        if (!entities.containsKey(entity.getUUID())) {
-            entities.put(entity.getUUID(), entity);
-            grid.addPoint(entity);
+
+        for (Entity e : entity.getChildren()) {
+            addEntity(e);
+        }
+
+        switch (entity.getEntityType()) {
+            case user:
+                break;
+            case point:
+                displayPoint(entity);
+                break;
+            case category:
+                 break;
+            case diagram:
+                break;
+            case file:
+                break;
+            case subscription:
+                break;
+            case userConnection:
+                break;
+        }
+
+
+
+//
+//            if (! line1.containsPoint(point)) {
+//                line1.showEntityData(point);
+//            }
+//            else if (! line2.containsPoint(point))  {
+//                line2.showEntityData(point);
+//            }
+
+
+    }
+
+    private void displayPoint(final Entity entity) {
+        if (!entities.containsKey(entity.getEntity())) {
+            entities.put(entity.getEntity(), entity);
+
         }
 
         for (final AnnotatedTimeLinePanel line : lines.values()) {
             if (!line.containsPoint(entity) && line.isSelected()) {
                 PointServiceAsync service = GWT.create(PointService.class);
-                service.getPointByUUID(entity.getUUID(), new AsyncCallback<Point>() {
+                service.getPointByUUID(entity.getEntity(), new AsyncCallback<Point>() {
                     @Override
                     public void onFailure(Throwable caught) {
                         //auto generated
@@ -265,22 +302,15 @@ class CenterPanel extends NavigationEventProvider {
                     @Override
                     public void onSuccess(Point result) {
                         line.addPoint(result);
+                        grid.addPoint(entity);
                     }
                 });
 
             }
         }
-//
-//            if (! line1.containsPoint(point)) {
-//                line1.addPoint(point);
-//            }
-//            else if (! line2.containsPoint(point))  {
-//                line2.addPoint(point);
-//            }
 
 
     }
-
 
 //    public void addDiagram(final Diagram d) {
 //        final int w = (bottom.getWidth() / 2);
@@ -290,7 +320,7 @@ class CenterPanel extends NavigationEventProvider {
 //
 //            @Override
 //            public void onPointClicked(final Point p){
-//                addPoint(p);
+//                showEntityData(p);
 //            }
 //
 //        });

@@ -5,6 +5,7 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 
 import java.io.Serializable;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner
@@ -58,4 +59,9 @@ public interface Entity  extends Serializable {
     String getBlobKey();
 
     void setBlobKey(String blobKey);
+
+    List<Entity> getChildren();
+
+    void addChild(Entity entity);
+
 }

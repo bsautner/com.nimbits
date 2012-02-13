@@ -213,17 +213,17 @@ public class PointMemCacheImpl implements PointTransactions {
 //    }
 
 //    @Override
-//    public Point addPoint(final Point point, final Category c) throws NimbitsException {
-//        final Point retObj = PointTransactionsFactory.getDaoInstance(u).addPoint(point, c);
+//    public Point showEntityData(final Point point, final Category c) throws NimbitsException {
+//        final Point retObj = PointTransactionsFactory.getDaoInstance(u).showEntityData(point, c);
 //        purgeMemCache(retObj);
 //        updateMap(retObj);
 //        return retObj;
 //    }
 
 //    @Override
-//    public Point addPoint(final EntityName pointName, final Category c) throws NimbitsException {
+//    public Point showEntityData(final EntityName pointName, final Category c) throws NimbitsException {
 //
-//        final Point retObj = PointTransactionsFactory.getDaoInstance(u).addPoint(pointName, c);
+//        final Point retObj = PointTransactionsFactory.getDaoInstance(u).showEntityData(pointName, c);
 //        purgeMemCache(retObj);
 //        updateMap(retObj);
 //        return retObj;

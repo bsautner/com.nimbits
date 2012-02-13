@@ -85,6 +85,20 @@ public class EntityDaoImpl implements EntityTransactions {
 
     }
 
+    @Override
+    public List<Entity> getEntityChildren(Entity parentEntity, EntityType type) {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        try {
+            return getEntityChildren(pm, parentEntity, type);
+        }
+        finally {
+            pm.close();
+        }
+
+
+
+    }
+
 
     @Override
     public Entity addUpdateEntity(Entity entity) {
@@ -177,6 +191,29 @@ public class EntityDaoImpl implements EntityTransactions {
         return retObj;
 
     }
+
+    private List<Entity> getEntityChildren(PersistenceManager pm, Entity entity, EntityType type) {
+
+        final Query q1 = pm.newQuery(EntityStore.class, "parent==b && entityType==t");
+        q1.declareParameters("String b, Integer t");
+        final List<Entity> retObj = new ArrayList<Entity>();
+
+
+
+        final List<Entity> result = (List<Entity>) q1.execute(entity.getEntity(), type.getCode());
+        if (result.size() > 0) {
+            retObj.addAll(result);
+            for (Entity e : result) {
+                List<Entity> children = getEntityChildren(pm, e);
+                retObj.addAll(children);
+            }
+        }
+
+        return retObj;
+
+    }
+
+
 
     @Override
     public void deleteEntity(Entity entity) {

@@ -25,4 +25,6 @@ public interface EntityServiceAsync {
     void getEntityNameMap(EntityType type, AsyncCallback<Map<EntityName, Entity>> async);
 
     void getEntityMap(EntityType type, AsyncCallback<Map<String, Entity>> async);
+
+    void getChildren(Entity parentEntity, EntityType type, AsyncCallback<List<Entity>> async);
 }

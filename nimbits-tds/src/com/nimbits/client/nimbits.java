@@ -119,7 +119,7 @@ public class nimbits implements EntryPoint {
             mainPanel = new MainPanel(loginInfo, false, settings);
             contentPanel.add(mainPanel);
             contentPanel.setLayout(new FillLayout());
-            addListeners();
+            //addListeners();
             viewport.add(contentPanel, new BorderLayoutData(LayoutRegion.CENTER));
             if (action.equals(Action.subscribe)) {
                 Cookies.removeCookie(Action.subscribe.name());
@@ -263,31 +263,31 @@ public class nimbits implements EntryPoint {
 //        });
     }
 
-    private void addListeners() {
-
-        mainPanel.addEntityClickedListeners(new NavigationEventProvider.EntityClickedListener() {
-            //need to getInstance a fresh copy here
-            @Override
-            public void onEntityClicked(final Entity c) {
-                switch (c.getEntityType()) {
-                    case category:
-                        //TODO categoryClicked(c);
-                        break;
-                    case point:
-                        //TODO mainPanel.addPoint(c);
-                        break;
-                    case diagram:
-                       //TODO mainPanel.addDiagram(d);
-                        break;
-                }
-
-
-            }
-        });
-
-
-
-    }
+//    private void addListeners() {
+//
+//        mainPanel.addEntityClickedListeners(new NavigationEventProvider.EntityClickedListener() {
+//            //need to getInstance a fresh copy here
+//            @Override
+//            public void onEntityClicked(final Entity c) {
+//                switch (c.getEntityType()) {
+//                    case category:
+//                        //TODO categoryClicked(c);
+//                        break;
+//                    case point:
+//                        mainPanel.showEntityData(c);
+//                        break;
+//                    case diagram:
+//                       //TODO mainPanel.addDiagram(d);
+//                        break;
+//                }
+//
+//
+//            }
+//        });
+//
+//
+//
+//    }
 
 
     @Override

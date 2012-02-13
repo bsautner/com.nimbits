@@ -41,8 +41,8 @@ public class MainPanel extends NavigationEventProvider {
 
             @Override
             public void onEntityClicked(final Entity c)  {
-
-                notifyEntityClickedListener(c);
+                 center.addEntity(c);
+                //notifyEntityClickedListener(c);
 
             }
 
@@ -66,9 +66,6 @@ public class MainPanel extends NavigationEventProvider {
     }
 
 
-    public void addPoint(final Entity entity)  {
-        center.addEntity(entity);
-    }
     public void addPointToTree(final Entity entity) {
         navigationPanel.addNewlyCreatedEntityToTree(entity);
     }

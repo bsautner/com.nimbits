@@ -308,10 +308,10 @@ public class DataPointDAOImpl implements PointTransactions {
       */
 
     /* (non-Javadoc)
-      * @see com.nimbits.client.service.datapoints.PointTransactions#addPoint(com.nimbits.client.model.DataPoint, com.nimbits.client.model.PointCatagory, com.nimbits.client.model.user.NimbitsUser)
+      * @see com.nimbits.client.service.datapoints.PointTransactions#showEntityData(com.nimbits.client.model.DataPoint, com.nimbits.client.model.PointCatagory, com.nimbits.client.model.user.NimbitsUser)
       */
 //    @Override
-//    public Point addPoint(final Point point, final Category c) throws NimbitsException {
+//    public Point showEntityData(final Point point, final Category c) throws NimbitsException {
 //        final PersistenceManager pm = PMF.get().getPersistenceManager();
 //        final Point p = PointServiceFactory.getInstance().getPointByName(u, point.getName());
 //        Point retObj;
@@ -352,10 +352,10 @@ public class DataPointDAOImpl implements PointTransactions {
     }
 
 //    /* (non-Javadoc)
-//    * @see com.nimbits.client.service.datapoints.PointTransactions#addPoint(java.lang.String, com.nimbits.client.model.PointCatagory, com.nimbits.client.model.user.NimbitsUser, java.lang.String)
+//    * @see com.nimbits.client.service.datapoints.PointTransactions#showEntityData(java.lang.String, com.nimbits.client.model.PointCatagory, com.nimbits.client.model.user.NimbitsUser, java.lang.String)
 //    */
 //    @Override
-//    public Point addPoint(final EntityName pointName, final Category c) throws NimbitsException {
+//    public Point showEntityData(final EntityName pointName, final Category c) throws NimbitsException {
 //
 //        Point retObj = null;
 //        Category targetCategory;

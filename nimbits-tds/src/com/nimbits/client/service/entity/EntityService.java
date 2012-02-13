@@ -5,6 +5,7 @@ import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
 
 import java.util.*;
 
@@ -30,7 +31,7 @@ public interface EntityService extends RemoteService {
 
     Entity copyEntity(Entity originalEntity, EntityName newName);
 
-
+    List<Entity> getChildren(Entity parentEntity, EntityType type);
 
 
 }

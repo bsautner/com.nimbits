@@ -32,6 +32,7 @@ import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.icons.Icons;
@@ -194,12 +195,10 @@ class PointGridPanel extends NavigationEventProvider {
         super.onDetach();
     }
 
-    public void addPoint(final Entity point)  {
-        if (!points.containsKey(point.getEntity())) {
-            points.put(point.getEntity(), point);
-
-
-            store.add(new GxtModel(point));
+    public void addPoint(final Entity entity)  {
+        if (!points.containsKey(entity.getEntity())) {
+            points.put(entity.getEntity(), entity);
+            store.add(new GxtModel(entity));
             store.commitChanges();
         }
         updateValues();
@@ -216,35 +215,35 @@ class PointGridPanel extends NavigationEventProvider {
 
             for (final GxtModel model : store.getModels()) {
                 if (!model.isDirty()) {
-                    final Entity point = points.get(model.getName());
+                    final Entity entity = points.get(model.getId());
                       //TODO
-//                    dataService.getCurrentValue(point,
-//                            new AsyncCallback<Value>() {
-//
-//                                @Override
-//                                public void onFailure(final Throwable caught) {
-//
-//                                    notify.setText("There was a problem communicating with the server, you may need to refresh your browser");
-//                                    notify.show();
-//                                    updater.cancel();
-//                                }
-//
-//
-//                                @Override
-//                                public void onSuccess(final Value result) {
-//
-//
-//                                    if (!(result == null)) {
-//                                        Date current = model.get(Const.PARAM_TIMESTAMP) == null ? new Date(0) : (Date) model.get(Const.PARAM_TIMESTAMP);
-//                                        //protects against possible race condition on updates
-//                                        if (model.get(Const.PARAM_TIMESTAMP) == null || (result.getTimestamp().getTime() > current.getTime())) {
-//                                            updateModel(result, model);
-//                                        }
-//                                    }
-//
-//                                }
-//
-//                            });
+                    dataService.getCurrentValue(entity,
+                            new AsyncCallback<Value>() {
+
+                                @Override
+                                public void onFailure(final Throwable caught) {
+
+                                    notify.setText("There was a problem communicating with the server, you may need to refresh your browser");
+                                    notify.show();
+                                    updater.cancel();
+                                }
+
+
+                                @Override
+                                public void onSuccess(final Value result) {
+
+
+                                    if (!(result == null)) {
+                                        Date current = model.get(Const.PARAM_TIMESTAMP) == null ? new Date(0) : (Date) model.get(Const.PARAM_TIMESTAMP);
+                                        //protects against possible race condition on updates
+                                        if (model.get(Const.PARAM_TIMESTAMP) == null || (result.getTimestamp().getTime() > current.getTime())) {
+                                            updateModel(result, model);
+                                        }
+                                    }
+
+                                }
+
+                            });
 
                 }
 

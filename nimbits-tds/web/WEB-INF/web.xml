@@ -323,18 +323,18 @@
         <url-pattern>/service/currentvalue</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>categoryServlet</servlet-name>
-        <servlet-class>com.nimbits.server.pointcategory.CategoryWebService</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>categoryServlet</servlet-name>
-        <url-pattern>/service/catagory</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>categoryServlet</servlet-name>
-        <url-pattern>/service/category</url-pattern>
-    </servlet-mapping>
+    <!--<servlet>-->
+        <!--<servlet-name>categoryServlet</servlet-name>-->
+        <!--<servlet-class>com.nimbits.server.pointcategory.CategoryWebService</servlet-class>-->
+    <!--</servlet>-->
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>categoryServlet</servlet-name>-->
+        <!--<url-pattern>/service/catagory</url-pattern>-->
+    <!--</servlet-mapping>-->
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>categoryServlet</servlet-name>-->
+        <!--<url-pattern>/service/category</url-pattern>-->
+    <!--</servlet-mapping>-->
 
 
     <servlet>

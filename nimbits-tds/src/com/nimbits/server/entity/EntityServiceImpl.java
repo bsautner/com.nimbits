@@ -107,8 +107,10 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
         }
     }
 
-
-
+    @Override
+    public List<Entity> getChildren(Entity parentEntity, EntityType type) {
+        return EntityTransactionFactory.getInstance(getUser()).getEntityChildren(parentEntity, type);
+    }
 
 
 }

@@ -267,7 +267,7 @@ class NavigationPanel extends NavigationEventProvider {
     private void addChildrenToModel(final List<Entity> result, List<String> parents, GxtModel model) {
 
 
-        for (Entity entity : result) {
+        for (final Entity entity : result) {
             if (! entity.getEntityType().equals(EntityType.user)) {// entity.getEntity().equals(this.user.getUuid()) ) {
                 if (entity.getParent().equals(model.getUUID())) {
                     GxtModel model2 = new GxtModel(entity);
@@ -287,19 +287,18 @@ class NavigationPanel extends NavigationEventProvider {
             entityMap = new HashMap<String, Entity>();
         }
         entityMap.clear();
-        List<ModelData> m = new ArrayList<ModelData>();
+        List<ModelData> model = new ArrayList<ModelData>();
         parents = new ArrayList<String>();
         for (Entity entity : result) {
-
             addEntity(entity);
         }
         // addEntity(entity);
         GxtModel userModel = new GxtModel(user);
         addChildrenToModel(result, parents, userModel);
-        m.add(userModel);
+        model.add(userModel);
 
-        store.add(m, true);
-        tree.setExpanded(userModel, true);
+        store.add(model, true);
+        tree.expandAll();
 
     }
 
@@ -531,8 +530,8 @@ class NavigationPanel extends NavigationEventProvider {
                 ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
                 currentModel = (GxtModel)selectedModel;
                 if (! currentModel.isReadOnly()) {
-                MessageBox.confirm("Confirm", "Are you sure you want delete this? Doing so will permanently delete it including all of it's children (points, documents data etc)"
-                        , deleteEntityListener);
+                    MessageBox.confirm("Confirm", "Are you sure you want delete this? Doing so will permanently delete it including all of it's children (points, documents data etc)"
+                            , deleteEntityListener);
                 }
 
             }
@@ -778,14 +777,25 @@ class NavigationPanel extends NavigationEventProvider {
                     .getSelectedItem();
 
             if (selectedFolder != null) {
-
-                final Entity entity = entityMap.get(((GxtModel) selectedFolder).getId());
+                GxtModel model = ((GxtModel) selectedFolder);
+                Entity entity = entityMap.get(model.getId());
+                addEntityChildren(entity, model);
                 notifyEntityClickedListener(entity);
 
             }
         }
 
     };
+    void addEntityChildren(Entity entity, GxtModel model) {
+        if (model.getChildCount() > 0)
+            for (int i = 0; i < model.getChildCount(); i++) {
+                GxtModel m = (GxtModel) model.getChild(i);
+                Entity c =entityMap.get(m.getUUID());
+                addEntityChildren(c, m);
+                entity.addChild(c);
+
+            }
+    }
 
     private final Listener<MessageBoxEvent> deleteEntityListener = new Listener<MessageBoxEvent>() {
         public void handleEvent(MessageBoxEvent ce) {

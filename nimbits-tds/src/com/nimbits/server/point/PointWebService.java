@@ -136,7 +136,7 @@ public class PointWebService extends HttpServlet {
             Entity entity = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.everyone, UUID.randomUUID().toString(),
                     u.getUuid(), u.getUuid());
             EntityTransactionFactory.getInstance(u).addUpdateEntity(entity);
-            //retObj = PointServiceFactory.getInstance().addPoint(point, category, u);
+            //retObj = PointServiceFactory.getInstance().showEntityData(point, category, u);
 
 
       //  }

@@ -129,8 +129,8 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 //    }
 
 //    @Override
-//    public Point addPoint(Point point, Category c, User u) throws NimbitsException {
-//        Point result = PointTransactionsFactory.getInstance(u).addPoint(point, c);
+//    public Point showEntityData(Point point, Category c, User u) throws NimbitsException {
+//        Point result = PointTransactionsFactory.getInstance(u).showEntityData(point, c);
 //        if (result != null) {
 //            TaskFactoryLocator.getInstance().startPointMaintTask(result);
 //        }
@@ -139,8 +139,8 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 //    }
 
 //    @Override
-//    public Point addPoint(final EntityName pointName, final Category c, final User u) throws NimbitsException {
-//        Point result = PointTransactionsFactory.getInstance(u).addPoint(pointName, c);
+//    public Point showEntityData(final EntityName pointName, final Category c, final User u) throws NimbitsException {
+//        Point result = PointTransactionsFactory.getInstance(u).showEntityData(pointName, c);
 //        if (result != null) {
 //            TaskFactoryLocator.getInstance().startPointMaintTask(result);
 //        }
@@ -255,14 +255,14 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
 
 //    @Override
-//    public Point addPoint(final EntityName pointName, final Category c) throws NimbitsException, PointExistsException {
+//    public Point showEntityData(final EntityName pointName, final Category c) throws NimbitsException, PointExistsException {
 //
 //
 //        final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
 //                this.getThreadLocalRequest());
 //
 //
-//        Point result = PointTransactionsFactory.getInstance(u).addPoint(pointName, c);
+//        Point result = PointTransactionsFactory.getInstance(u).showEntityData(pointName, c);
 //        if (result != null) {
 //            TaskFactoryLocator.getInstance().startPointMaintTask(result);
 //        }
@@ -272,7 +272,7 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 //    }
 
 //    @Override
-//    public Point addPoint(final EntityName pointName) throws NimbitsException, PointExistsException {
+//    public Point showEntityData(final EntityName pointName) throws NimbitsException, PointExistsException {
 //
 //        final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
 //                this.getThreadLocalRequest());

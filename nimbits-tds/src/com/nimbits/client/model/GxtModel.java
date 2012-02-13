@@ -13,17 +13,17 @@
 
 package com.nimbits.client.model;
 
-import com.extjs.gxt.ui.client.data.BaseTreeModel;
+import com.extjs.gxt.ui.client.data.*;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 
 import java.io.Serializable;
+import java.util.*;
 
 
 /**
@@ -40,6 +40,8 @@ public class GxtModel extends BaseTreeModel implements Serializable {
     private boolean isReadOnly;
     private boolean isDirty;
     private Value value;
+    private Entity baseEntity;
+
 
     public GxtModel(Entity entity) {
         this.uuid = entity.getEntity();
@@ -47,6 +49,7 @@ public class GxtModel extends BaseTreeModel implements Serializable {
         this.alertType = entity.getAlertType();
         this.entityType = entity.getEntityType();
         this.isReadOnly = entity.isReadOnly();
+        this.baseEntity = entity;
         set(Const.PARAM_ID, this.uuid);
         set(Const.PARAM_NAME, this.name.getValue());
         set(Const.PARAM_ENTITY_TYPE, entity.getEntityType().getCode());
@@ -57,11 +60,13 @@ public class GxtModel extends BaseTreeModel implements Serializable {
         this.alertType = AlertType.OK;
         this.entityType = EntityType.user;
         this.isReadOnly = true;
-
+        this.baseEntity = EntityModelFactory.createEntity(user);
         set(Const.PARAM_ID, this.uuid);
         set(Const.PARAM_NAME, this.name.getValue());
         set(Const.PARAM_ENTITY_TYPE,  this.entityType.getCode());
     }
+
+
 
     @Deprecated
     public GxtModel(Point point) {
@@ -70,6 +75,7 @@ public class GxtModel extends BaseTreeModel implements Serializable {
         this.alertType = point.getAlertState();
         this.entityType = point.getEntityType();
         this.isReadOnly = point.getReadOnly();
+        this.baseEntity = EntityModelFactory.createEntity(point);
         set(Const.PARAM_ID, this.uuid);
         set(Const.PARAM_NAME, this.name.getValue());
         // set(Const.PARAM_ICON, Const.PARAM_DIAGRAM);
@@ -132,4 +138,9 @@ public class GxtModel extends BaseTreeModel implements Serializable {
         set(Const.PARAM_VALUE, value.getNumberValue());
         this.value = value;
     }
+
+    public Entity getBaseEntity() {
+        return baseEntity;
+    }
+
 }

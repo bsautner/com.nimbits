@@ -22,7 +22,7 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 
 import javax.jdo.annotations.*;
-import java.util.Arrays;
+import java.util.*;
 
 /**
  * Created by bsautner
@@ -219,6 +219,16 @@ public class EntityStore implements Entity {
     @Override
     public void setBlobKey(String blobKey) {
       this.blobKey = new BlobKey(blobKey);
+    }
+
+    @Override
+    public List<Entity> getChildren() {
+        return null;  //auto generated
+    }
+
+    @Override
+    public void addChild(Entity entity) {
+        //auto generated
     }
 
 

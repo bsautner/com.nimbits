@@ -6,6 +6,7 @@ import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 
 import java.io.Serializable;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner
@@ -29,6 +30,7 @@ public class EntityModel  implements Serializable, Entity {
     private String[] accessKeys = null;
     private boolean readOnly = false;
     private String blobKey;
+    private List<Entity> children;
 
     public EntityModel(final EntityName name,
                        final String description,
@@ -166,12 +168,29 @@ public class EntityModel  implements Serializable, Entity {
     public void setUUID(String newUUID) {
         this.entity = newUUID;
     }
-
+    @Override
     public String getBlobKey() {
         return blobKey;
     }
-
+    @Override
     public void setBlobKey(String blobKey) {
         this.blobKey = blobKey;
     }
+    @Override
+    public List<Entity> getChildren() {
+        if (children == null) {
+            children = new ArrayList<Entity>();
+
+        }
+        return children;
+    }
+
+    public void addChild(Entity entity) {
+        if (children == null) {
+            children = new ArrayList<Entity>();
+
+        }
+        children.add(entity);
+    }
+
 }

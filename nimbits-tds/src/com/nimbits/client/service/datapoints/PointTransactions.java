@@ -40,11 +40,11 @@ public interface PointTransactions {
 
     void deletePoint(final Point p) throws NimbitsException;
 
-    //Point addPoint(final Point point, final Category c) throws NimbitsException;
+    //Point showEntityData(final Point point, final Category c) throws NimbitsException;
 
     Point addPoint(final Point point);
 
-   // Point addPoint(final EntityName pointName, final Category c) throws NimbitsException;
+   // Point showEntityData(final EntityName pointName, final Category c) throws NimbitsException;
 
    //  List<Point> getPointsByCategory(final Category c);
 

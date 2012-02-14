@@ -50,16 +50,17 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
 
     @Override
     public Entity addUpdateEntity(Entity entity) {
+        User u = getUser();
         if (entity.getOwner() == null) {
-            entity.setOwner(getUser().getUuid());
+            entity.setOwner(u.getUuid());
         }
         if (entity.getParent() == null) {
-            entity.setParent(getUser().getUuid());
+            entity.setParent(u.getUuid());
         }
         if (entity.getEntity() == null) {
             entity.setEntity(UUID.randomUUID().toString());
         }
-        return EntityTransactionFactory.getInstance(getUser()).addUpdateEntity(entity);
+        return EntityTransactionFactory.getInstance(u).addUpdateEntity(entity);
     }
 
     @Override
@@ -112,23 +113,24 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
     }
 
     @Override
-    public Entity subscribe(Entity entity, Subscription subscription) {
+    public Entity subscribe(Entity entity, Subscription subscription, EntityName name) {
         User user = getUser();
-        if (entity.getEntityType().equals(EntityType.subscription)) {   //update
+        if (entity.getEntityType().equals(EntityType.subscription)) {
+            entity.setName(name);
             SubscriptionTransactionFactory.getInstance(user).subscribe(entity,subscription);
-            return entity;
+            return  EntityTransactionFactory.getInstance(user).addUpdateEntity(entity);
 
         }
         else { //new
           subscription.setUuid(UUID.randomUUID().toString());
           if (entity.getOwner().equals(user.getUuid())) {   //subscribe to your own data
-              Entity s = EntityModelFactory.createEntity(entity.getName(), "",EntityType.subscription,
+              Entity s = EntityModelFactory.createEntity(name, "",EntityType.subscription,
                       ProtectionLevel.onlyMe, subscription.getUuid(), entity.getEntity(), user.getUuid());
               SubscriptionTransactionFactory.getInstance(user).subscribe(s, subscription);
               return EntityTransactionFactory.getInstance(user).addUpdateEntity(s);
           }
           else { //subscribe to some elses data
-              Entity s = EntityModelFactory.createEntity(entity.getName(), "",EntityType.subscription,
+              Entity s = EntityModelFactory.createEntity(name, "",EntityType.subscription,
                       ProtectionLevel.onlyMe, subscription.getUuid(), user.getUuid(), user.getUuid());
               SubscriptionTransactionFactory.getInstance(user).subscribe(s, subscription);
               return EntityTransactionFactory.getInstance(user).addUpdateEntity(s);

@@ -34,7 +34,7 @@ public interface EntityService extends RemoteService {
 
     List<Entity> getChildren(Entity parentEntity, EntityType type);
 
-    Entity subscribe(Entity entity, Subscription subscription);
+    Entity subscribe(Entity entity, Subscription subscription, EntityName name);
 
     Subscription readSubscription(final Entity point) throws NimbitsException;
 

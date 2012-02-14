@@ -74,6 +74,7 @@ public class SubscriptionEntity implements Serializable, Subscription {
         this.lastSent = subscription.getLastSent();
         this.notifyFormatJson = subscription.getNotifyFormatJson();
         this.enabled = subscription.getEnabled();
+        this.subscribedEntity = subscription.getSubscribedEntity();
     }
 
     @Override

@@ -19,9 +19,20 @@ import java.util.List;
 public class EntityModelFactory {
 
 
-    public static Entity createEntity(Entity entity) {
-        return new EntityModel(entity);
+    public static Entity createEntity(User user, Entity entity) {
+        Entity r = new EntityModel(entity);
+        boolean isOwner = entity.getOwner().equals(user.getUuid());
+        r.setReadOnly(!isOwner);
+        return r;
+
     }
+
+    public static Entity createEntity(Entity entity) {
+
+        return new EntityModel(entity);
+
+    }
+
     public static Entity createEntity(final EntityName name,
                                       final String description,
                                       final EntityType entityType,
@@ -77,14 +88,14 @@ public class EntityModelFactory {
     public static List<Entity> createEntities(User user, List<Entity> result) {
         ArrayList<Entity> entities = new ArrayList<Entity>();
         for (Entity e : result) {
-            boolean isOwner = e.getOwner().equals(user.getUuid());
 
+            boolean isOwner = e.getOwner().equals(user.getUuid());
 
             if (entityIsReadable(user, e, isOwner))
             {
 
-                Entity r = createEntity(e);
-                r.setReadOnly(!isOwner);
+                Entity r = createEntity(user, e);
+
                 entities.add(r);
             }
 

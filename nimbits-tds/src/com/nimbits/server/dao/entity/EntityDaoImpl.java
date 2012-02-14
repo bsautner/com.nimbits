@@ -121,13 +121,13 @@ public class EntityDaoImpl implements EntityTransactions {
                 result.setParent(entity.getParent());
                 result.setBlobKey(entity.getBlobKey());
                 tx.commit();
-                return EntityModelFactory.createEntity(result);
+                return EntityModelFactory.createEntity(user,result);
             }
             else {
                 Entity commit = new EntityStore(entity);
                 pm.makePersistent(commit);
 
-                return EntityModelFactory.createEntity(commit);
+                return EntityModelFactory.createEntity(user, commit);
             }
         } finally {
             pm.close();
@@ -245,7 +245,7 @@ public class EntityDaoImpl implements EntityTransactions {
             if (c.size() > 0) {
 
                 Entity result = c.get(0);
-                return EntityModelFactory.createEntity(result);
+                return EntityModelFactory.createEntity(user,result);
 
             }
             else {
@@ -270,7 +270,7 @@ public class EntityDaoImpl implements EntityTransactions {
             if (c.size() > 0) {
 
                 Entity result = c.get(0);
-                return EntityModelFactory.createEntity(result);
+                return EntityModelFactory.createEntity(user,  result);
 
             }
             else {

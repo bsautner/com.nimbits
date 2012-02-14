@@ -30,6 +30,7 @@ import java.util.UUID;
  * Date: 5/20/11
  * Time: 3:59 PM
  */
+@Deprecated
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 public class DiagramEntity  {
     @PrimaryKey

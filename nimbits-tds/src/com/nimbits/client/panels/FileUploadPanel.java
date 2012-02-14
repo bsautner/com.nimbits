@@ -44,9 +44,9 @@ import java.util.List;
 public class FileUploadPanel extends LayoutContainer {
 
     private final List<FileAddedListener> FileAddedListeners = new ArrayList<FileAddedListener>();
-  //  private File diagram;
+    //  private File diagram;
     private EmailAddress email;
-   Entity entity;
+    Entity entity;
 
     public FileUploadPanel(UploadType uploadType) {
         this.uploadType = uploadType;
@@ -85,12 +85,13 @@ public class FileUploadPanel extends LayoutContainer {
 
 
         final FormPanel panel = new FormPanel();
+        panel.setEncoding(FormPanel.Encoding.MULTIPART);
         panel.addListener(Events.Submit, new Listener<FormEvent>() {
 
 
             @Override
             public void handleEvent(FormEvent formEvent) {
-                    notifyFileAddedListener();
+                 notifyFileAddedListener();
 
             }
         });
@@ -111,7 +112,7 @@ public class FileUploadPanel extends LayoutContainer {
             }
         });
 
-       // panel.setAction("http://" + Window.Location.getHost() + "/service/file");
+        // panel.setAction("http://" + Window.Location.getHost() + "/service/file");
         panel.setEncoding(Encoding.MULTIPART);
         panel.setMethod(Method.POST);
         //  panel.setButtonAlign(HorizontalAlignment.CENTER);
@@ -156,7 +157,6 @@ public class FileUploadPanel extends LayoutContainer {
 
                     @Override
                     public void onSuccess(LoginInfo result) {
-
                         email = result.getEmailAddress();
                         emailAddressHiddenField.setValue(email.getValue());
                     }
@@ -194,8 +194,8 @@ public class FileUploadPanel extends LayoutContainer {
                 if (!panel.isValid()) {
                     return;
                 }
-                    fileNameHiddenField.setValue(file.getValue());
-                    panel.submit();
+                fileNameHiddenField.setValue(file.getValue());
+                panel.submit();
 
 
 

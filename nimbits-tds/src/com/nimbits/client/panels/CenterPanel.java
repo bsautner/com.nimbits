@@ -249,6 +249,12 @@ class CenterPanel extends NavigationEventProvider {
         return bottom;
     }
 
+    private void showCategory(Entity entity) {
+       for (Entity e : entity.getChildren()) {
+             addEntity(e);
+       }
+    }
+
     public void addEntity(final Entity entity) {
 
         for (Entity e : entity.getChildren()) {
@@ -262,13 +268,10 @@ class CenterPanel extends NavigationEventProvider {
                 displayPoint(entity);
                 break;
             case category:
-                 break;
+                showCategory(entity);
+                break;
             case file:
-                final String resourceUrl =
-                        Const.PATH_BLOB_SERVICE +
-                                "?" + Const.PARAM_BLOB_KEY + "=" + entity.getBlobKey();
-                Window.open(resourceUrl, entity.getName().getValue(), "");
-
+                showFile(entity);
                 break;
             case subscription:
                 displaySubscription(entity);
@@ -277,17 +280,13 @@ class CenterPanel extends NavigationEventProvider {
                 break;
         }
 
+    }
 
-
-//
-//            if (! line1.containsPoint(point)) {
-//                line1.showEntityData(point);
-//            }
-//            else if (! line2.containsPoint(point))  {
-//                line2.showEntityData(point);
-//            }
-
-
+    private void showFile(Entity entity) {
+        final String resourceUrl =
+                Const.PATH_BLOB_SERVICE +
+                        "?" + Const.PARAM_BLOB_KEY + "=" + entity.getBlobKey();
+        Window.open(resourceUrl, entity.getName().getValue(), "");
     }
 
     private void displaySubscription(final Entity entity) {
@@ -295,12 +294,12 @@ class CenterPanel extends NavigationEventProvider {
         service.getSubscribedEntity(entity, new AsyncCallback<Entity>() {
             @Override
             public void onFailure(Throwable caught) {
-                //auto generated
+               GWT.log(caught.getMessage(), caught);
             }
 
             @Override
             public void onSuccess(Entity result) {
-              addEntity(result);
+                 addEntity(result);
             }
         });
 
@@ -324,7 +323,7 @@ class CenterPanel extends NavigationEventProvider {
                     @Override
                     public void onSuccess(Point result) {
                         line.addPoint(result);
-                        grid.addPoint(entity);
+                        grid.addEntity(entity);
                     }
                 });
 

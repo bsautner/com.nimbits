@@ -68,7 +68,7 @@ public class PointServiceImpl extends RemoteServiceServlet implements
         newPoint.setName(newName);
         newPoint.setUuid(newUUID);
 
-        final Entity newEntity = EntityModelFactory.createEntity(originalEntity);
+        final Entity newEntity = EntityModelFactory.createEntity(u, originalEntity);
         newEntity.setName(newName);
         newEntity.setUUID(newUUID);
 

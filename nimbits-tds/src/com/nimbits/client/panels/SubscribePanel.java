@@ -27,9 +27,9 @@ import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.*;
+import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.subscription.*;
-import com.nimbits.client.service.datapoints.*;
 import com.nimbits.client.service.entity.*;
 import com.nimbits.shared.*;
 
@@ -81,7 +81,7 @@ public class SubscribePanel extends NavigationEventProvider {
 
     }
     private void getExistingSubscription() {
-       EntityServiceAsync service = GWT.create(EntityService.class);
+        EntityServiceAsync service = GWT.create(EntityService.class);
         service.readSubscription(entity, new AsyncCallback<Subscription>() {
             @Override
             public void onFailure(Throwable caught) {
@@ -151,6 +151,17 @@ public class SubscribePanel extends NavigationEventProvider {
         int alertSelected = (subscription == null) ? SubscriptionDeliveryMethod.none.getCode() : subscription.getAlertNotifyMethod().getCode();
         final ComboBox<Option> alertGroup = alertOptionGroup("Alerts", alertSelected);
 
+        final TextField<String> subscriptionName = new TextField<String>();
+        subscriptionName.setFieldLabel("Subscription Name:");
+
+        if (subscription != null && entity.getEntityType().equals(EntityType.subscription)) {
+            subscriptionName.setValue(entity.getName().getValue());
+        }
+        else {
+            subscriptionName.setValue(entity.getName().getValue() + " Alerts");
+        }
+
+
         final SpinnerField spinnerField = new SpinnerField();
         spinnerField.setIncrement(5d);
         spinnerField.getPropertyEditor().setType(Double.class);
@@ -183,7 +194,7 @@ public class SubscribePanel extends NavigationEventProvider {
 
             @Override
             public void componentSelected(ButtonEvent buttonEvent) {
-                notifySubscriptionAddedListener(null);
+                notifyEntityAddedListener(null);
             }
         });
 
@@ -198,29 +209,48 @@ public class SubscribePanel extends NavigationEventProvider {
                 SubscriptionDeliveryMethod alertStateChangeMethod =alertGroup.getValue().getMethod();
                 SubscriptionDeliveryMethod dataUpdateAlertMethod = newValueGroup.getValue().getMethod();
                 SubscriptionDeliveryMethod propertyChangeMethod = SubscriptionDeliveryMethod.none;
-                Subscription subscription = SubscriptionFactory.createSubscription(
-                        dataUpdateAlertMethod,
-                        alertStateChangeMethod,
-                        propertyChangeMethod,
-                        spinnerField.getValue().doubleValue(),
-                        new Date(),
-                        machine.getValue(),
-                        enabled.getValue());
 
 
-                service.subscribe(entity, subscription , new AsyncCallback<Entity>() {
+                final Subscription update;
+
+                if (entity.getEntityType().equals(EntityType.subscription) && subscription != null) {
+
+                    update = SubscriptionFactory.createSubscription(
+                            subscription.getSubscribedEntity(),
+                            dataUpdateAlertMethod,
+                            alertStateChangeMethod,
+                            propertyChangeMethod,
+                            spinnerField.getValue().doubleValue(),
+                            new Date(),
+                            machine.getValue(),
+                            enabled.getValue());
+                }
+                else {
+                    update = SubscriptionFactory.createSubscription(
+                            entity.getEntity(),
+                            dataUpdateAlertMethod,
+                            alertStateChangeMethod,
+                            propertyChangeMethod,
+                            spinnerField.getValue().doubleValue(),
+                            new Date(),
+                            machine.getValue(),
+                            enabled.getValue());
+                }
+                EntityName name = CommonFactoryLocator.getInstance().createName(subscriptionName.getValue());
+                service.subscribe(entity, update ,name, new AsyncCallback<Entity>() {
                     @Override
                     public void onFailure(Throwable e) {
                         GWT.log(e.getMessage(), e);
                         box.close();
                         MessageBox.alert("Error", e.getMessage(), null);
-                        notifySubscriptionAddedListener(null);
+                        notifyEntityAddedListener(null);
                     }
 
                     @Override
                     public void onSuccess(final Entity result) {
                         box.close();
-                        notifySubscriptionAddedListener(result);
+
+                        notifyEntityAddedListener(result);
                     }
                 });
 
@@ -246,6 +276,7 @@ public class SubscribePanel extends NavigationEventProvider {
 
         vp.add(h);
         vp.add(pn);
+        simple.add(subscriptionName, formdata);
         simple.add(alertGroup, formdata);
         simple.add(newValueGroup, formdata);
         simple.add(spinnerField, formdata);

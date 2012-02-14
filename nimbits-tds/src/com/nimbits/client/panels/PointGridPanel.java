@@ -51,7 +51,7 @@ class PointGridPanel extends NavigationEventProvider {
 
     private final ListStore<GxtModel> store = new ListStore<GxtModel>();
     private final EditorGrid<GxtModel> grid;
-    private final Map<String, Entity> points = new HashMap<String, Entity>();
+    // private final Map<String, Entity> points = new HashMap<String, Entity>();
     private final CheckBox saveToNowCheckBox = new CheckBox();
     private final CheckBox autoSaveCheckBox = new CheckBox();
     private final CheckBoxSelectionModel<GxtModel> sm = new CheckBoxSelectionModel<GxtModel>();
@@ -79,7 +79,7 @@ class PointGridPanel extends NavigationEventProvider {
 
                     if (be.getColIndex() == valueColumnIndex && autoSaveCheckBox.getValue()) { //only save when the value is updated
                         notify.hide();
-                        final Entity point = points.get(model.getUUID());
+                        final Entity entity =  model.getBaseEntity();
                         final Date timestamp = saveToNowCheckBox.getValue() ? new Date() : (Date) model.get(Const.PARAM_TIMESTAMP);
                         final Double v = model.get(Const.PARAM_VALUE);
                         final String note = model.get(Const.PARAM_NOTE);
@@ -89,22 +89,22 @@ class PointGridPanel extends NavigationEventProvider {
                         GWT.log(value.getNote());
                         GWT.log(String.valueOf(value.getNumberValue()));
                         RecordedValueServiceAsync service = GWT.create(RecordedValueService.class);
-                        //TODO
-//                        service.recordValue(point, value, new AsyncCallback<Value>() {
-//                            @Override
-//                            public void onFailure(final Throwable throwable) {
-//                                be.getRecord().reject(false);
-//                                updater.cancel();
-//                            }
-//
-//                            @Override
-//                            public void onSuccess(final Value value) {
-//                                be.getRecord().commit(false);
-//                                model.setDirty(false);
-//                                updateModel(value, model);
-//
-//                            }
-//                        });
+
+                        service.recordValue(entity, value, new AsyncCallback<Value>() {
+                            @Override
+                            public void onFailure(final Throwable throwable) {
+                                be.getRecord().reject(false);
+                                updater.cancel();
+                            }
+
+                            @Override
+                            public void onSuccess(final Value value) {
+                                be.getRecord().commit(false);
+                                model.setDirty(false);
+                                updateModel(value, model);
+
+                            }
+                        });
                     } else {
                         notify.show();
                     }
@@ -148,7 +148,7 @@ class PointGridPanel extends NavigationEventProvider {
         final List<Entity> retObj = new ArrayList<Entity>();
 
         for (final GxtModel model : models) {
-            retObj.add(points.get(model.getId()));
+            retObj.add(model.getBaseEntity());
         }
         return retObj;
 
@@ -160,7 +160,7 @@ class PointGridPanel extends NavigationEventProvider {
         ColumnConfigs columnConfigs = new ColumnConfigs();
         configs.add(sm.getColumn());
         //  columnConfigs.addPropertyColumn(configs);
-        configs.add(columnConfigs.alertColumn(points));
+        configs.add(columnConfigs.alertColumn());
         configs.add(columnConfigs.pointNameColumn(false));
         //columnConfigs.addEntityNameColumn(configs);
         configs.add(columnConfigs.currentValueColumn());
@@ -178,7 +178,7 @@ class PointGridPanel extends NavigationEventProvider {
         updater = new Timer() {
             @Override
             public void run() {
-              updateValues();
+                updateValues();
 
             }
         };
@@ -195,13 +195,17 @@ class PointGridPanel extends NavigationEventProvider {
         super.onDetach();
     }
 
-    public void addPoint(final Entity entity)  {
-        if (!points.containsKey(entity.getEntity())) {
-            points.put(entity.getEntity(), entity);
-            store.add(new GxtModel(entity));
-            store.commitChanges();
+    public void addEntity(final Entity entity)  {
+        GxtModel model = new GxtModel(entity);
+        ModelData mx = store.findModel(Const.PARAM_ID, entity.getEntity());
+        if (mx != null) {
+            GxtModel m = (GxtModel)mx;
+            m.update(entity);
+            store.update(m);
         }
-        updateValues();
+        else {
+            store.add(model);
+        }
     }
 
 
@@ -215,8 +219,8 @@ class PointGridPanel extends NavigationEventProvider {
 
             for (final GxtModel model : store.getModels()) {
                 if (!model.isDirty()) {
-                    final Entity entity = points.get(model.getId());
-                      //TODO
+                    final Entity entity = model.getBaseEntity();
+
                     dataService.getCurrentValue(entity,
                             new AsyncCallback<Value>() {
 
@@ -255,7 +259,6 @@ class PointGridPanel extends NavigationEventProvider {
 
     }
 
-
     private ToolBar gridToolBar() {
         final ToolBar t = new ToolBar();
 
@@ -267,8 +270,8 @@ class PointGridPanel extends NavigationEventProvider {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
-                     updateValues();
-             }
+                updateValues();
+            }
 
         });
 
@@ -297,22 +300,12 @@ class PointGridPanel extends NavigationEventProvider {
 
     }
 
-    public void removePoint(final Entity p) {
+    public void removePoint(final Entity entity) {
+        ModelData mx = store.findModel(Const.PARAM_ID, entity.getEntity());
+        final GxtModel model = (GxtModel) mx;
+        store.remove(model);
 
-        for (final ModelData m : store.getModels()) {
-
-            final GxtModel model = (GxtModel) m;
-            points.remove(((GxtModel) m).getName());
-            if (model.getName().getValue().equals(p.getName().getValue())) {
-                store.remove(model);
-                break;
-            }
-        }
-
-
-        //To change body of created methods use File | Settings | File Templates.
     }
-
 
     public List<Entity> saveSelectedPoints() throws NimbitsException {
         final List<GxtModel> models = grid.getSelectionModel().getSelectedItems();
@@ -327,23 +320,23 @@ class PointGridPanel extends NavigationEventProvider {
                 final String note = model.get(Const.PARAM_NOTE);
                 final String data = model.get(Const.PARAM_DATA);
                 final Value value = ValueModelFactory.createValueModel(0.0, 0.0, v, timestamp, model.getId(), note, data);
-                 //TODO
-//                service.recordValue(points.get(model.getName()), value, new AsyncCallback<Value>() {
-//                    @Override
-//                    public void onFailure(final Throwable throwable) {
-//
-//                        Info.display("Error Saving", throwable.getMessage());
-//                    }
-//
-//                    @Override
-//                    public void onSuccess(final Value value) {
-//                        updateModel(value, model);
-//
-//                    }
-//                });
+                //TODO
+                service.recordValue(model.getBaseEntity(), value, new AsyncCallback<Value>() {
+                    @Override
+                    public void onFailure(final Throwable throwable) {
+
+                        GWT.log(throwable.getMessage(), throwable);
+                    }
+
+                    @Override
+                    public void onSuccess(final Value value) {
+                        updateModel(value, model);
+
+                    }
+                });
                 model.setDirty(false);
             }
-            retObj.add(points.get(model.getUUID()));
+            retObj.add((model.getBaseEntity()));
         }
         return retObj;
 
@@ -360,10 +353,8 @@ class PointGridPanel extends NavigationEventProvider {
 //be.getRecord().commit(false);
         model.setDirty(false);
         store.update(model);
-        notifyValueEnteredListener(points.get(model.getUUID()), value);
+        notifyValueEnteredListener(model.getBaseEntity(), value);
     }
 
-    public Map<String, Entity> getPoints() {
-        return points;
-    }
+
 }

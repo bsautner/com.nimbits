@@ -17,7 +17,9 @@ public class SubscriptionFactory {
 
     }
 
-    public static Subscription createSubscription(final SubscriptionDeliveryMethod dataUpdateAlertMethod,
+    public static Subscription createSubscription(
+            final String subscribedEntity,
+            final SubscriptionDeliveryMethod dataUpdateAlertMethod,
                                                   final SubscriptionDeliveryMethod alertStateChangeMethod,
                                                   final SubscriptionDeliveryMethod propertyChangeMethod,
                                                   final double maxRepeat,
@@ -25,6 +27,7 @@ public class SubscriptionFactory {
                                                   final boolean formatJson,
                                                   final boolean enabled) {
         return new SubscriptionModel(
+                subscribedEntity,
                 dataUpdateAlertMethod,
                 alertStateChangeMethod,
                 propertyChangeMethod,

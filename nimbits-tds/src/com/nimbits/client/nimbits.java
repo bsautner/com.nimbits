@@ -36,7 +36,6 @@ import com.nimbits.client.model.Const;
 import com.nimbits.client.model.LoginInfo;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.user.*;
 import com.nimbits.client.panels.*;
 import com.nimbits.client.service.LoginService;
 import com.nimbits.client.service.LoginServiceAsync;
@@ -152,9 +151,9 @@ public class nimbits implements EntryPoint {
                 w.setHeight(500);
                 w.setHeading("Subscribe");
                 w.add(dp);
-                dp.addSubscriptionAddedListener(new NavigationEventProvider.SubscriptionAddedListener() {
+                dp.addSubscriptionAddedListener(new NavigationEventProvider.EntityAddedListener() {
                     @Override
-                    public void onSubscriptionAdded(Entity model) {
+                    public void onEntityAdded(Entity model) {
                         w.hide();
                         Cookies.removeCookie(Action.subscribe.name());
                       //  mainPanel.addEntity(result);

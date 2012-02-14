@@ -39,7 +39,7 @@ class ClientHelper {
     // private final static String hostURL2 = "http://nimbits1.appspot.com";
     //  private final static String hostURLSpecific = "http://147.nimbits1.appspot.com";
     //  private static final String accountPath = "/mnt/raid/nimbits/test";
-    private final static String email = "test@example.com";
+    private final static String email = "testx@example.com";
 
     private final static String password = "37c42818-4bd4-4d7f-b748-95ad6bceb67b";
 

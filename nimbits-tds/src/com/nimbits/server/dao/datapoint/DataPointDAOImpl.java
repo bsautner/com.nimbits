@@ -341,7 +341,7 @@ public class DataPointDAOImpl implements PointTransactions {
 //    }
 
 //    @Override
-//    public Point addPoint(final Point point) {
+//    public Point addEntity(final Point point) {
 //        final PersistenceManager pm = PMF.get().getPersistenceManager();
 //
 //        Point retObj;

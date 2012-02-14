@@ -20,6 +20,7 @@ import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.shared.*;
 
 import javax.jdo.annotations.*;
 import java.util.*;
@@ -79,23 +80,6 @@ public class EntityStore implements Entity {
 
     }
 
-    public EntityStore(final EntityName name,
-                       final String description,
-                       final EntityType entityType,
-                       final ProtectionLevel protectionLevel,
-                       final String entity,
-                       final String parent,
-                       final String owner) {
-        this.name = name.getValue();
-        this.description = description;
-        this.entityType = entityType.getCode();
-        this.entity =entity;
-        this.parent = parent== null ? null : parent;
-        this.owner = owner;
-        this.protectionLevel = protectionLevel.getCode();
-
-
-    }
 
     public EntityStore(final Entity entity)  {
         this.name = entity.getName().getValue();
@@ -106,7 +90,9 @@ public class EntityStore implements Entity {
         this.parent = entity.getParent();
         this.owner = entity.getOwner();
         this.protectionLevel = entity.getProtectionLevel().getCode();
+        if (! Utils.isEmptyString(entity.getBlobKey()))  {
         this.blobKey = new BlobKey(entity.getBlobKey());
+        }
 
     }
 
@@ -218,7 +204,10 @@ public class EntityStore implements Entity {
 
     @Override
     public void setBlobKey(String blobKey) {
-      this.blobKey = new BlobKey(blobKey);
+        if (! Utils.isEmptyString(blobKey)) {
+            this.blobKey = new BlobKey(blobKey);
+        }
+
     }
 
     @Override

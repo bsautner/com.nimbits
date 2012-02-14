@@ -44,15 +44,7 @@ public class GxtModel extends BaseTreeModel implements Serializable {
 
 
     public GxtModel(Entity entity) {
-        this.uuid = entity.getEntity();
-        this.name = entity.getName();
-        this.alertType = entity.getAlertType();
-        this.entityType = entity.getEntityType();
-        this.isReadOnly = entity.isReadOnly();
-        this.baseEntity = entity;
-        set(Const.PARAM_ID, this.uuid);
-        set(Const.PARAM_NAME, this.name.getValue());
-        set(Const.PARAM_ENTITY_TYPE, entity.getEntityType().getCode());
+        setEntityValues(entity);
     }
     public GxtModel(User user) {
         this.uuid = user.getUuid();
@@ -64,6 +56,7 @@ public class GxtModel extends BaseTreeModel implements Serializable {
         set(Const.PARAM_ID, this.uuid);
         set(Const.PARAM_NAME, this.name.getValue());
         set(Const.PARAM_ENTITY_TYPE,  this.entityType.getCode());
+
     }
 
 
@@ -143,4 +136,19 @@ public class GxtModel extends BaseTreeModel implements Serializable {
         return baseEntity;
     }
 
+    public void update(Entity entity) {
+       setEntityValues(entity);
+    }
+
+    private void setEntityValues(Entity entity) {
+        this.uuid = entity.getEntity();
+        this.name = entity.getName();
+        this.alertType = entity.getAlertType();
+        this.entityType = entity.getEntityType();
+        this.isReadOnly = entity.isReadOnly();
+        this.baseEntity = entity;
+        set(Const.PARAM_ID, this.uuid);
+        set(Const.PARAM_NAME, this.name.getValue());
+        set(Const.PARAM_ENTITY_TYPE, entity.getEntityType().getCode());
+    }
 }

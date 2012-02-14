@@ -29,7 +29,7 @@ public interface EntityServiceAsync {
 
     void getChildren(Entity parentEntity, EntityType type, AsyncCallback<List<Entity>> async);
 
-    void subscribe(Entity entity, Subscription subscription, AsyncCallback<Entity> async);
+    void subscribe(Entity entity, Subscription subscription, EntityName name, AsyncCallback<Entity> async);
 
     void readSubscription(final Entity point, AsyncCallback<Subscription> async);
 

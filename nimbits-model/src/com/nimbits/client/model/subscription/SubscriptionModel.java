@@ -38,12 +38,15 @@ public class SubscriptionModel implements Serializable, Subscription  {
         this.enabled = subscription.getEnabled();
     }
 
-    public SubscriptionModel(SubscriptionDeliveryMethod dataUpdateAlertMethod,
+    public SubscriptionModel(String subscribedEntity,
+                             SubscriptionDeliveryMethod dataUpdateAlertMethod,
                              SubscriptionDeliveryMethod alertStateChangeMethod,
                              SubscriptionDeliveryMethod propertyChangeMethod,
                              double maxRepeat,
-                             Date lastSent, boolean formatJson, boolean enabled) {
-
+                             Date lastSent,
+                             boolean formatJson,
+                             boolean enabled) {
+        this.subscribedEntity = subscribedEntity;
         this.dataNotifyMethod = dataUpdateAlertMethod.getCode();
         this.alertNotifyMethod = alertStateChangeMethod.getCode();
         this.changeNotifyMethod = propertyChangeMethod.getCode();
@@ -122,7 +125,7 @@ public class SubscriptionModel implements Serializable, Subscription  {
 
     @Override
     public void setUuid(String uuid) {
-        subscribedEntity = uuid;
+       this.uuid = uuid;
     }
 
 

@@ -27,6 +27,7 @@ import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.user.User;
 import com.nimbits.server.entity.EntityTransactionFactory;
+import com.nimbits.server.gson.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.user.UserServiceFactory;
 
@@ -35,7 +36,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -70,32 +71,39 @@ public class BlobServlet extends HttpServlet {
 
 
             final EntityName diagramName = CommonFactoryLocator.getInstance().createName(fileName);
+            PrintWriter out = res.getWriter();
 
 
 
 
-
+            Entity entity = null;
             if (uploadType.equals(UploadType.newFile.name())) {
-                Entity entity = EntityModelFactory.createEntity(diagramName, "", EntityType.file, ProtectionLevel.everyone, UUID.randomUUID().toString(),
+                entity = EntityModelFactory.createEntity(diagramName, "", EntityType.file, ProtectionLevel.everyone, UUID.randomUUID().toString(),
                         u.getUuid(), u.getUuid(),blobKey.getKeyString());
-                EntityTransactionFactory.getInstance(u).addUpdateEntity(entity);
-               // PointServiceFactory.getInstance().addPoint(u, entity);
 
-
-            //    DiagramTransactionFactory.getInstance(u).addDiagram(blobKey, diagramName);
             }
             else if (uploadType.equals(UploadType.updatedFile.name()) && entityId != null) {
 
-                Entity entity = EntityTransactionFactory.getInstance(u).getEntityByUUID(entityId);
+                entity = EntityTransactionFactory.getInstance(u).getEntityByUUID(entityId);
                 entity.setBlobKey(blobKey.getKeyString());
 
-                EntityTransactionFactory.getInstance(u).addUpdateEntity(entity);
-              //  DiagramTransactionFactory.getInstance(u).updateDiagram(blobKey, diagramName, diagramId);
+
 
             }
+            if (entity != null) {
+                Entity response = EntityTransactionFactory.getInstance(u).addUpdateEntity(entity);
+                String json = GsonFactory.getInstance().toJson(response);
+                res.setContentType("text/plain");
+                res.setStatus(HttpServletResponse.SC_OK);
+                out.print(json);
+                out.flush();
+               // out.close();
+            }
+
         } catch (NimbitsException e) {
             log.severe(e.getMessage());
         }
+
 
     }
 

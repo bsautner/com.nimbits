@@ -113,7 +113,7 @@ public class ColumnConfigs {
     }
 
 
-    public ColumnConfig alertColumn(final Map<String, Entity> points) {
+    public ColumnConfig alertColumn() {
 
         final GridCellRenderer<GxtModel> propertyButtonRenderer = new GridCellRenderer<GxtModel>() {
 
@@ -123,7 +123,7 @@ public class ColumnConfigs {
                 final Button b = new Button((String) model.get(property), new SelectionListener<ButtonEvent>() {
                     @Override
                     public void componentSelected(final ButtonEvent ce) {
-                        final Entity p = points.get(model.getUUID());
+                        final Entity p = model.getBaseEntity();
                         String u = Window.Location.getHref()
                                 + "?uuid=" + p.getUUID()
                                 + "&count=10";

@@ -48,8 +48,6 @@ public class MainPanel extends NavigationEventProvider {
 
         });
 
-
-
         navTree.addEntityDeletedListeners(new EntityDeletedListener() {
 
             @Override
@@ -66,9 +64,9 @@ public class MainPanel extends NavigationEventProvider {
     }
 
 
-    public void addPointToTree(final Entity entity) {
-        navigationPanel.addNewlyCreatedEntityToTree(entity);
-    }
+//    public void addPointToTree(final Entity entity) {
+//        navigationPanel.addUpdateTreeModel(entity);
+//    }
 
     public MainPanel(final LoginInfo l,
                      final boolean doAndroid,

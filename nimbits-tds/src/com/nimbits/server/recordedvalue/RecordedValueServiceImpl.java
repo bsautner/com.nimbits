@@ -107,8 +107,6 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
         final Point px = PointServiceFactory.getInstance().getPointByUUID(point.getEntity());
         return recordValue(u, px, value, false);
-
-
     }
 
 

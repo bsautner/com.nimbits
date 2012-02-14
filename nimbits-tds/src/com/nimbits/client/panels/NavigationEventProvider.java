@@ -24,14 +24,11 @@ public abstract class NavigationEventProvider extends LayoutContainer {
 
     private final List<EntityDeletedListener> entityDeletedListeners = new ArrayList<EntityDeletedListener>();
     private final List<ReloadListener> reloadListeners = new ArrayList<ReloadListener>();
-
-
     private final List<EntityClickedListener> entityClickedListeners = new ArrayList<EntityClickedListener>();
     private final List<UrlClickedListener> urlClickedListeners = new ArrayList<UrlClickedListener>();
     private final List<ValueEnteredListener> valueEnteredListeners = new ArrayList<ValueEnteredListener>();
     private final List<ChartRemovedListener> chartRemovedListeners = new ArrayList<ChartRemovedListener>();
-
-    private final List<SubscriptionAddedListener> subscriptionAddedListeners = new ArrayList<SubscriptionAddedListener>();
+    private final List<EntityAddedListener> entityAddedListeners = new ArrayList<EntityAddedListener>();
 
 
     public interface ReloadListener {
@@ -47,18 +44,18 @@ public abstract class NavigationEventProvider extends LayoutContainer {
     public void addReloadListener(final ReloadListener listener) {
         reloadListeners.add(listener);
     }
-    public interface SubscriptionAddedListener {
-        void onSubscriptionAdded(final Entity model);
+    public interface EntityAddedListener {
+        void onEntityAdded(final Entity entity);
     }
 
-    public void addSubscriptionAddedListener(final SubscriptionAddedListener listener) {
-        subscriptionAddedListeners.add(listener);
+    public void addSubscriptionAddedListener(final EntityAddedListener listener) {
+        entityAddedListeners.add(listener);
     }
 
 
-    void notifySubscriptionAddedListener(final Entity model)  {
-        for (SubscriptionAddedListener SubscriptionAddedListener : subscriptionAddedListeners) {
-            SubscriptionAddedListener.onSubscriptionAdded(model);
+    void notifyEntityAddedListener(final Entity model)  {
+        for (EntityAddedListener listener : entityAddedListeners) {
+            listener.onEntityAdded(model);
         }
     }
 

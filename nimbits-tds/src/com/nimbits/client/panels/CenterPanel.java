@@ -249,11 +249,7 @@ class CenterPanel extends NavigationEventProvider {
         return bottom;
     }
 
-    private void showCategory(Entity entity) {
-       for (Entity e : entity.getChildren()) {
-             addEntity(e);
-       }
-    }
+
 
     public void addEntity(final Entity entity) {
 
@@ -268,7 +264,6 @@ class CenterPanel extends NavigationEventProvider {
                 displayPoint(entity);
                 break;
             case category:
-                showCategory(entity);
                 break;
             case file:
                 showFile(entity);

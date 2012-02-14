@@ -67,7 +67,6 @@ class NavigationPanel extends NavigationEventProvider {
 
     private final ContentPanel mainPanel;
     private EntityTree<ModelData> tree;
-
     private TreeStore<ModelData> store;
     private Timer updater;
     private boolean expanded = false;
@@ -76,7 +75,6 @@ class NavigationPanel extends NavigationEventProvider {
     List<String> parents;
     private GxtModel currentModel;
     private final User user;
-
 
     public NavigationPanel(final User user,
                            final ClientType clientType,
@@ -321,7 +319,6 @@ class NavigationPanel extends NavigationEventProvider {
 
         }
     }
-
 
     @Override
     protected void afterRender() {

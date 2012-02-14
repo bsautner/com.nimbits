@@ -36,9 +36,9 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.ui.Label;
-import com.nimbits.client.controls.PointCombo;
+import com.nimbits.client.controls.EntityCombo;
 import com.nimbits.client.controls.ProtectionLevelOptions;
-import com.nimbits.client.enums.IntelligenceResultTarget;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.exceptions.CalculationFailedException;
 import com.nimbits.client.icons.Icons;
@@ -79,22 +79,15 @@ class PointPanel extends LayoutContainer {
     private ProtectionLevelOptions protectionLevelOptions;
 
 
-
-
-    private final CheckBox checkFB = new CheckBox();
-    private final CheckBox checkIM = new CheckBox();
-    private final CheckBox checkTwitter = new CheckBox();
-    private final CheckBox alertToFacebookCheckbox = new CheckBox();
-    private final CheckBox alertToEmailCheckbox = new CheckBox();
     private final CheckBox he = new CheckBox();
-    private final CheckBox sendAlertAsJson = new CheckBox();
+
 
     //idle
     private final CheckBox idleOn = new CheckBox();
     private final CheckBox ignoreCompressedValues = new CheckBox();
-    private final CheckBox im = new CheckBox();
+   // private final CheckBox im = new CheckBox();
     private final CheckBox le = new CheckBox();
-    private final CheckBox tw = new CheckBox();
+    //private final CheckBox tw = new CheckBox();
     private final Hyperlink hyperlinkRest = new Hyperlink("New hyperlink", false, "newHistoryToken");
     private final Hyperlink uuidLink = new Hyperlink("New hyperlink", false, "newHistoryToken");
 
@@ -127,12 +120,14 @@ class PointPanel extends LayoutContainer {
     // private final TextField<String> High = new TextField<String>();
     ///private final TextField<String> Low = new TextField<String>();
     private final NumberField targetValue = new NumberField();
-    private PointCombo CalcXCombo;
-    private PointCombo Y;
-    private PointCombo Z;
+
+    private final EntityCombo calcTarget;
+    private EntityCombo CalcXCombo;
+    private EntityCombo Y;
+    private EntityCombo Z;
     private final CheckBox calcEnabled = new CheckBox();
     //calcs
-    private final PointCombo calcTarget;
+
 
 //     private final Icons ICONS = GWT.create(Icons.class);
 
@@ -159,7 +154,7 @@ class PointPanel extends LayoutContainer {
 
 
     private final Entity entity;
-    private Point point;
+     private Point point;
     private Point intelligenceTargetPoint = null;
 
 
@@ -179,7 +174,7 @@ class PointPanel extends LayoutContainer {
     public PointPanel(final User user, final Entity entity)   {
         this.entity = entity;
         this.user = user;
-        calcTarget= new PointCombo(user);
+        calcTarget= new EntityCombo(EntityType.point);
         protectionLevelOptions = new ProtectionLevelOptions(entity);
 
         SettingsServiceAsync settings = GWT.create(SettingsService.class);
@@ -215,9 +210,9 @@ class PointPanel extends LayoutContainer {
 
             private void buildForm(final Point p) {
                 point = p;
-                CalcXCombo = new PointCombo(user);
-                Y = new PointCombo(user);
-                Z = new PointCombo(user);
+                CalcXCombo = new EntityCombo(EntityType.point);
+                Y = new EntityCombo(EntityType.point);
+                Z = new EntityCombo(EntityType.point);
 
 
                 setSize(FORM_HEIGHT, "475");
@@ -279,8 +274,9 @@ class PointPanel extends LayoutContainer {
                                         CalcXCombo.setValue(CalcXCombo.getStore().findModel(Const.PARAM_ID, point.getCalculation().getX()));
                                         CalcXCombo.repaint();
                                     } else {
-                                        GxtModel xModel = new GxtModel(user, point);
-                                        CalcXCombo.setValue(xModel);
+                                        CalcXCombo.setValue(CalcXCombo.getStore().findModel(Const.PARAM_ID, entity.getEntity()));
+//                                        GxtModel xModel = new GxtModel(user, point);
+//                                        CalcXCombo.setValue(xModel);
                                     }
 
                                     if (!(Utils.isEmptyString(point.getCalculation().getY()))) {
@@ -432,9 +428,9 @@ class PointPanel extends LayoutContainer {
         point.setExpire(expires.getValue().intValue());
         point.setUnit(unit.getValue());
         point.setDescription(description.getValue());
-        point.setSendIM(checkIM.getValue());
-        point.setSendTweet(checkTwitter.getValue());
-        point.setPostToFacebook(checkFB.getValue());
+     //   point.setSendIM(checkIM.getValue());
+       // point.setSendTweet(checkTwitter.getValue());
+       // point.setPostToFacebook(checkFB.getValue());
         point.setTargetValue(targetValue.getValue().doubleValue());
 
         //Alerts
@@ -444,10 +440,10 @@ class PointPanel extends LayoutContainer {
         point.setLowAlarm(low.getValue().doubleValue());
         point.setHighAlarmOn(he.getValue());
         point.setLowAlarmOn(le.getValue());
-        point.setAlarmToFacebook(alertToFacebookCheckbox.getValue());
-        point.setAlarmToEmail(alertToEmailCheckbox.getValue());
-        point.setSendAlarmIM(im.getValue());
-        point.setSendAlarmTweet(tw.getValue());
+       // point.setAlarmToFacebook(alertToFacebookCheckbox.getValue());
+       // point.setAlarmToEmail(alertToEmailCheckbox.getValue());
+       // point.setSendAlarmIM(im.getValue());
+       // point.setSendAlarmTweet(tw.getValue());
 
         //idlealarm
         point.setIdleAlarmOn(idleOn.getValue());
@@ -455,7 +451,7 @@ class PointPanel extends LayoutContainer {
         point.setIdleAlarmSent(false);
 //
 
-        point.setSendAlertsAsJson(sendAlertAsJson.getValue());
+       // point.setSendAlertsAsJson(sendAlertAsJson.getValue());
 
 
         String f = formula.getValue();
@@ -847,28 +843,28 @@ class PointPanel extends LayoutContainer {
         le.setValue(point.isLowAlarmOn());
         simple.add(le, new FormData("0% -395"));
 
-        alertToFacebookCheckbox.setVisible(settingMap.containsKey(Const.SETTING_FACEBOOK_CLIENT_ID) && !Utils.isEmptyString(settingMap.get(Const.SETTING_FACEBOOK_CLIENT_ID)));
-        alertToFacebookCheckbox.setBoxLabel("Post alerts to facebook");
-        alertToFacebookCheckbox.setLabelSeparator("");
-        alertToFacebookCheckbox.setValue(point.getAlarmToFacebook());
-        simple.add(alertToFacebookCheckbox);
+       // alertToFacebookCheckbox.setVisible(settingMap.containsKey(Const.SETTING_FACEBOOK_CLIENT_ID) && !Utils.isEmptyString(settingMap.get(Const.SETTING_FACEBOOK_CLIENT_ID)));
+      //  alertToFacebookCheckbox.setBoxLabel("Post alerts to facebook");
+       // alertToFacebookCheckbox.setLabelSeparator("");
+       // alertToFacebookCheckbox.setValue(point.getAlarmToFacebook());
+       // simple.add(alertToFacebookCheckbox);
 
 
-        alertToEmailCheckbox.setBoxLabel("Send alerts to email");
-        alertToEmailCheckbox.setLabelSeparator("");
-        alertToEmailCheckbox.setValue(point.isAlarmToEmail());
-        simple.add(alertToEmailCheckbox);
+        //alertToEmailCheckbox.setBoxLabel("Send alerts to email");
+        //alertToEmailCheckbox.setLabelSeparator("");
+        //alertToEmailCheckbox.setValue(point.isAlarmToEmail());
+        //simple.add(alertToEmailCheckbox);
 
-        im.setBoxLabel("Send alerts to IM");
-        im.setLabelSeparator("");
-        im.setValue(point.getSendAlarmIM());
-        simple.add(im);
+        //im.setBoxLabel("Send alerts to IM");
+       // im.setLabelSeparator("");
+       // im.setValue(point.getSendAlarmIM());
+      //  simple.add(im);
 
-        tw.setVisible(settingMap.containsKey(Const.SETTING_TWITTER_SECRET) && !Utils.isEmptyString(settingMap.get(Const.SETTING_TWITTER_SECRET)));
-        tw.setBoxLabel("Post alerts to twitter");
-        tw.setLabelSeparator("");
-        tw.setValue(point.getSendAlarmTweet());
-        simple.add(tw);
+       // tw.setVisible(settingMap.containsKey(Const.SETTING_TWITTER_SECRET) && !Utils.isEmptyString(settingMap.get(Const.SETTING_TWITTER_SECRET)));
+       // tw.setBoxLabel("Post alerts to twitter");
+       // tw.setLabelSeparator("");
+       // tw.setValue(point.getSendAlarmTweet());
+        //simple.add(tw);
 
         // final TextField<Integer> delay = new TextField<Integer>();
 
@@ -970,35 +966,35 @@ class PointPanel extends LayoutContainer {
         simple.add(protectionLevelOptions, new FormData("-20"));
 
 
-        checkFB.setBoxLabel("facebook");
-        checkFB.setValue(point.isPostToFacebook());
-        checkFB.setVisible(settingMap.containsKey(Const.SETTING_FACEBOOK_CLIENT_ID) && !Utils.isEmptyString(settingMap.get(Const.SETTING_FACEBOOK_CLIENT_ID)));
+       // checkFB.setBoxLabel("facebook");
+       // checkFB.setValue(point.isPostToFacebook());
+       // checkFB.setVisible(settingMap.containsKey(Const.SETTING_FACEBOOK_CLIENT_ID) && !Utils.isEmptyString(settingMap.get(Const.SETTING_FACEBOOK_CLIENT_ID)));
 
-        checkIM.setBoxLabel("Instant Message");
-        checkIM.setValue(point.getSendIM());
+       // checkIM.setBoxLabel("Instant Message");
+       // checkIM.setValue(point.getSendIM());
+       //
+       // checkTwitter.setVisible(settingMap.containsKey(Const.SETTING_TWITTER_SECRET) && !Utils.isEmptyString(settingMap.get(Const.SETTING_TWITTER_SECRET)));
+       // checkTwitter.setBoxLabel("Twitter");
+       // checkTwitter.setValue(point.getSendTweet());
 
-        checkTwitter.setVisible(settingMap.containsKey(Const.SETTING_TWITTER_SECRET) && !Utils.isEmptyString(settingMap.get(Const.SETTING_TWITTER_SECRET)));
-        checkTwitter.setBoxLabel("Twitter");
-        checkTwitter.setValue(point.getSendTweet());
 
 
+       // CheckBoxGroup checkGroupFB = new CheckBoxGroup();
+      //  checkGroupFB.setFieldLabel("Messaging");
+       // checkGroupFB.add(checkFB);
+        //checkFB.setWidth("108px");
 
-        CheckBoxGroup checkGroupFB = new CheckBoxGroup();
-        checkGroupFB.setFieldLabel("Messaging");
-        checkGroupFB.add(checkFB);
-        checkFB.setWidth("108px");
+       // checkGroupFB.add(checkIM);
+       // checkIM.setWidth("132px");
+       // checkGroupFB.add(checkTwitter);
+       // checkTwitter.setWidth("82px");
+        //simple.add(checkGroupFB, new FormData("-115"));
+       //checkGroupFB.setWidth("400");
 
-        checkGroupFB.add(checkIM);
-        checkIM.setWidth("132px");
-        checkGroupFB.add(checkTwitter);
-        checkTwitter.setWidth("82px");
-        simple.add(checkGroupFB, new FormData("-115"));
-        checkGroupFB.setWidth("400");
-
-        sendAlertAsJson.setFieldLabel("M2M");
-        sendAlertAsJson.setBoxLabel("Make IM (XMPP) Alerts and Messages Machine Readable");
-        sendAlertAsJson.setValue(point.getSendAlertsAsJson());
-        simple.add(sendAlertAsJson);
+        //sendAlertAsJson.setFieldLabel("M2M");
+       // sendAlertAsJson.setBoxLabel("Make IM (XMPP) Alerts and Messages Machine Readable");
+        //sendAlertAsJson.setValue(point.getSendAlertsAsJson());
+        //simple.add(sendAlertAsJson);
 
 
         description.setPreventScrollbars(true);

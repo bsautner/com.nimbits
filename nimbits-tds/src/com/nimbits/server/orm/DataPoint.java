@@ -61,16 +61,22 @@ public class DataPoint implements Point {
     @Persistent
     private Date createDate;
     @Persistent
+    @Deprecated
     private Long X;
     @Persistent
+    @Deprecated
     private Long Y;
     @Persistent
+    @Deprecated
     private Long Z;
     @Persistent
+    @Deprecated
     private Long target;
     @Persistent
+    @Deprecated
     private String formula;
     @Persistent
+    @Deprecated
     private Double highAlarm = 0.0;
     @Persistent
     private int expire = 90;
@@ -83,8 +89,10 @@ public class DataPoint implements Point {
     @Persistent
     private Boolean highAlarmOn;
     @Persistent
+    @Deprecated
     private Boolean lowAlarmOn;
     @Persistent
+    @Deprecated
     private int alarmDelay = 1;
     @Persistent
     private String description;
@@ -92,18 +100,25 @@ public class DataPoint implements Point {
     @Deprecated
     private Boolean isPublic;
     @Persistent
+    @Deprecated
     private Boolean postToFacebook;
     @Persistent
+    @Deprecated
     private Boolean alarmToFacebook;
     @Persistent
+    @Deprecated
     private Boolean alarmToEmail;
     @Persistent
+    @Deprecated
     private Boolean sendIM;
     @Persistent
+    @Deprecated
     private Boolean sendAlarmIM;
     @Persistent
+    @Deprecated
     private Boolean sendTweet;
     @Persistent
+    @Deprecated
     private Boolean sendAlarmTweet;
     @Persistent
     private String tag;
@@ -112,6 +127,7 @@ public class DataPoint implements Point {
     private Boolean idleAlarmOn;
 
     @Persistent
+    @Deprecated
     private Boolean sendAlertsAsJson;
 
     @Persistent
@@ -121,18 +137,20 @@ public class DataPoint implements Point {
     @Persistent
     private Boolean idleAlarmSent;
 
-    //reset on any data write
+
     @Persistent
     private Boolean ignoreIncomingCompressedValues;
 
-    //reset on any data write
+    @Deprecated
     @NotPersistent
     private boolean readOnly;
 
     @NotPersistent
+    @Deprecated
     private AlertType alertState;
 
     @NotPersistent
+    @Deprecated
     private int entityType = EntityType.point.getCode();
 
     @Override

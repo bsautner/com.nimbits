@@ -269,13 +269,13 @@ class NavigationPanel extends NavigationEventProvider {
 
     private void treeStoreBuilder(final List<Entity> result) {
 
-        List<ModelData> model = new ArrayList<ModelData>();
+        final List<ModelData> model = new ArrayList<ModelData>();
         parents = new ArrayList<String>();
-        for (Entity entity : result) {
+        for (final Entity entity : result) {
             addEntity(entity);
         }
         // addEntity(entity);
-        GxtModel userModel = new GxtModel(user);
+        final GxtModel userModel = new GxtModel(user);
         addChildrenToModel(result, parents, userModel);
         model.add(userModel);
 
@@ -284,22 +284,22 @@ class NavigationPanel extends NavigationEventProvider {
 
     }
 
-    public void addUpdateTreeModel(final Entity result, boolean refresh) {
+    public void addUpdateTreeModel(final Entity result, final boolean refresh) {
 
         if (tree != null && tree.getStore() != null) {
-            GxtModel model = new GxtModel(result);
+            final GxtModel model = new GxtModel(result);
             store = tree.getTreeStore();
-            ModelData mx = store.findModel(Const.PARAM_ID, result.getEntity());
+            final ModelData mx = store.findModel(Const.PARAM_ID, result.getEntity());
             if (mx != null) {
-                GxtModel m = (GxtModel)mx;
+                final GxtModel m = (GxtModel)mx;
                 m.update(result);
                 store.update(m);
                 if (! refresh) {
-                tree.setExpanded(mx, true);
+                    tree.setExpanded(mx, true);
                 }
             }
             else {
-                ModelData parent = store.findModel(Const.PARAM_ID, result.getParent());
+                final ModelData parent = store.findModel(Const.PARAM_ID, result.getParent());
                 if (parent != null) {
                     store.add(parent, model, true);
 
@@ -922,9 +922,9 @@ class NavigationPanel extends NavigationEventProvider {
             @Override
             public void onSuccess(List<Entity> result) {
                 if (refresh) {
-                  for (Entity e : result) {
-                      addUpdateTreeModel(e, true);
-                  }
+                    for (Entity e : result) {
+                        addUpdateTreeModel(e, true);
+                    }
                 }
                 else {
                     createTree(result);

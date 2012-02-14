@@ -59,22 +59,6 @@ public class GxtModel extends BaseTreeModel implements Serializable {
 
     }
 
-
-
-    @Deprecated
-    public GxtModel(User u, Point point) {
-        this.uuid = point.getUUID();
-        this.name = point.getName();
-        this.alertType = point.getAlertState();
-        this.entityType = point.getEntityType();
-        this.isReadOnly = point.getReadOnly();
-        this.baseEntity = EntityModelFactory.createEntity(u, point);
-        set(Const.PARAM_ID, this.uuid);
-        set(Const.PARAM_NAME, this.name.getValue());
-        // set(Const.PARAM_ICON, Const.PARAM_DIAGRAM);
-        set(Const.PARAM_ENTITY_TYPE, point.getEntityType().getCode());
-    }
-
     public AlertType getAlertType() {
         return alertType;
     }

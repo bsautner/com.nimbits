@@ -16,9 +16,8 @@ public class SubscriptionModel implements Serializable, Subscription  {
     private String key;
     private String uuid;
     private String subscribedEntity;
-    private int dataNotifyMethod;
-    private int alertNotifyMethod;
-    private int changeNotifyMethod;
+    private int notifyMethod;
+    private int subscriptionType;
     private double maxRepeat;
     private Date lastSent;
     private boolean notifyFormatJson;
@@ -29,9 +28,8 @@ public class SubscriptionModel implements Serializable, Subscription  {
     public SubscriptionModel(Subscription subscription) {
         this.uuid = subscription.getUuid();
         this.subscribedEntity = subscription.getSubscribedEntity();
-        this.dataNotifyMethod = subscription.getDataNotifyMethod().getCode();
-        this.alertNotifyMethod = subscription.getAlertNotifyMethod().getCode();
-        this.changeNotifyMethod = subscription.getChangeNotifyMethod().getCode();
+        this.notifyMethod = subscription.getNotifyMethod().getCode();
+        this.subscriptionType = subscription.getSubscriptionType().getCode();
         this.maxRepeat = subscription.getMaxRepeat();
         this.lastSent = subscription.getLastSent();
         this.notifyFormatJson = subscription.getNotifyFormatJson();
@@ -39,17 +37,15 @@ public class SubscriptionModel implements Serializable, Subscription  {
     }
 
     public SubscriptionModel(String subscribedEntity,
-                             SubscriptionDeliveryMethod dataUpdateAlertMethod,
-                             SubscriptionDeliveryMethod alertStateChangeMethod,
-                             SubscriptionDeliveryMethod propertyChangeMethod,
+                             SubscriptionType subscriptionType,
+                             SubscriptionNotifyMethod subscriptionNotifyMethod,
                              double maxRepeat,
                              Date lastSent,
                              boolean formatJson,
                              boolean enabled) {
         this.subscribedEntity = subscribedEntity;
-        this.dataNotifyMethod = dataUpdateAlertMethod.getCode();
-        this.alertNotifyMethod = alertStateChangeMethod.getCode();
-        this.changeNotifyMethod = propertyChangeMethod.getCode();
+        this.subscriptionType = subscriptionType.getCode();
+        this.notifyMethod = subscriptionNotifyMethod.getCode();
         this.maxRepeat = maxRepeat;
         this.lastSent = lastSent;
         this.enabled = enabled;
@@ -57,36 +53,6 @@ public class SubscriptionModel implements Serializable, Subscription  {
     }
 
 
-
-    @Override
-    public SubscriptionDeliveryMethod getDataNotifyMethod() {
-      return SubscriptionDeliveryMethod.get(dataNotifyMethod);
-    }
-
-    @Override
-    public void setDataNotifyMethod(SubscriptionDeliveryMethod dataNotifyMethod) {
-      this.dataNotifyMethod = dataNotifyMethod.getCode();
-    }
-
-    @Override
-    public SubscriptionDeliveryMethod getAlertNotifyMethod() {
-       return SubscriptionDeliveryMethod.get(alertNotifyMethod);
-    }
-
-    @Override
-    public void setAlertNotifyMethod(SubscriptionDeliveryMethod alertStateChangeMethod) {
-       this.alertNotifyMethod = alertStateChangeMethod.getCode();
-    }
-
-    @Override
-    public SubscriptionDeliveryMethod getChangeNotifyMethod() {
-      return  SubscriptionDeliveryMethod.get(this.changeNotifyMethod);
-    }
-
-    @Override
-    public void setChangeNotifyMethod(SubscriptionDeliveryMethod changeNotifyMethod) {
-       this.changeNotifyMethod = changeNotifyMethod.getCode();
-    }
 
     @Override
     public String getSubscribedEntity() {
@@ -117,7 +83,22 @@ public class SubscriptionModel implements Serializable, Subscription  {
     public void setEnabled(boolean enabled) {
        this.enabled = enabled;
     }
-
+    @Override
+    public SubscriptionNotifyMethod getNotifyMethod() {
+        return SubscriptionNotifyMethod.get(this.notifyMethod);
+    }
+    @Override
+    public void setNotifyMethod(SubscriptionNotifyMethod notifyMethod) {
+        this.notifyMethod = notifyMethod.getCode();
+    }
+    @Override
+    public SubscriptionType getSubscriptionType() {
+        return SubscriptionType.get(subscriptionType);
+    }
+    @Override
+    public void setSubscriptionType(SubscriptionType subscriptionType) {
+        this.subscriptionType = subscriptionType.getCode();
+    }
     @Override
     public String getUuid() {
         return this.uuid;

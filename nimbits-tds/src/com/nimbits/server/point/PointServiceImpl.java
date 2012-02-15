@@ -363,23 +363,6 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
 
     @Override
-    public void deleteSubscription(Point point) throws NimbitsException {
-        //final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
-          //      this.getThreadLocalRequest());
-        //SubscriptionTransactionFactory.getInstance(u).deleteSubscription(point);
-    }
-
-    @Override
-    public List<Subscription> getSubscriptionsToPoint(Point point) {
-        return SubscriptionTransactionFactory.getInstance(null).getSubscriptionsToPoint(point);
-    }
-
-    @Override
-    public void updateSubscriptionLastSent(Subscription subscription) {
-        SubscriptionTransactionFactory.getInstance(null).updateSubscriptionLastSent(subscription);
-    }
-
-    @Override
     public List<Point> getIdlePoints() {
         return PointTransactionsFactory.getInstance(null).getIdlePoints();
     }

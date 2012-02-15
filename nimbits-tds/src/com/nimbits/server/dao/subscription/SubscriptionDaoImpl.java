@@ -14,6 +14,7 @@
 package com.nimbits.server.dao.subscription;
 
 import com.nimbits.PMF;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.subscription.Subscription;
@@ -63,9 +64,8 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
                 SubscriptionEntity result = results.get(0);
                 Transaction tx = pm.currentTransaction();
                 tx.begin();
-                result.setAlertNotifyMethod(subscription.getAlertNotifyMethod());
-                result.setChangeNotifyMethod(subscription.getChangeNotifyMethod());
-                result.setDataNotifyMethod(subscription.getDataNotifyMethod());
+                result.setNotifyMethod(subscription.getNotifyMethod());
+                result.setSubscriptionType(subscription.getSubscriptionType());
                 result.setLastSent(subscription.getLastSent());
                 result.setMaxRepeat(subscription.getMaxRepeat());
                 result.setEnabled(subscription.getEnabled());
@@ -131,6 +131,22 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
         }
     }
 
+    @Override
+    public List<Subscription> getSubscriptionsToPointByType(final Point point, final SubscriptionType type) {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        List<Subscription> results;
+        List<Subscription> retObj;
+        try {
+            Query q = pm.newQuery(SubscriptionEntity.class, "subscribedEntity==p && subscriptionType==t" );
+            q.declareParameters("String p, Integer t");
+            results = (List<Subscription>) q.execute(point.getUUID(), type.getCode());
+            retObj = SubscriptionFactory.createSubscriptions(results);
+            return retObj;
+        }
+        finally {
+            pm.close();
+        }
+    }
     @Override
     public void updateSubscriptionLastSent(Subscription subscription) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();

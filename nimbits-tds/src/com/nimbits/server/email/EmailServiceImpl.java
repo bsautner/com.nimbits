@@ -18,7 +18,9 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.value.*;
 import com.nimbits.server.settings.SettingServiceImpl;
+import org.apache.commons.lang3.*;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -34,6 +36,19 @@ import java.util.logging.Logger;
 public class EmailServiceImpl implements EmailService {
 
     private static final Logger log = Logger.getLogger(EmailServiceImpl.class.getName());
+
+   private String getUrl() {
+       String hostUrl;
+       String environment = System.getProperty("com.google.appengine.runtime.environment");
+       if (StringUtils.equals("Production", environment)) {
+           String applicationId = System.getProperty("com.google.appengine.application.id");
+           String version = System.getProperty("com.google.appengine.application.version");
+           hostUrl = "http://"+version+"."+applicationId+".appspot.com/";
+       } else {
+           hostUrl = "http://localhost:8888";
+       }
+       return hostUrl;
+   }
 
 
     private void send(final Message msg) {
@@ -107,8 +122,7 @@ public class EmailServiceImpl implements EmailService {
 
     public void sendAlert(final Point point,
                           final EmailAddress emailAddress,
-                          final Double value,
-                          final AlertType alertType) {
+                          final Value value) {
 
         final Properties props = new Properties();
         final Session session = Session.getDefaultInstance(props, null);
@@ -117,17 +131,17 @@ public class EmailServiceImpl implements EmailService {
                 .append("<p>Data Point: ").append(point.getName().getValue()).append("</p>");
 
 
-        switch (alertType) {
+        switch (value.getAlertState()) {
             case HighAlert: {
                 message.append("<P>Alarm Status: High</P>")
                         .append("<P>Alarm Setting: ").append(point.getHighAlarm()).append("</P>")
-                        .append("<p>Value Recorded: ").append(value).append("</p>");
+                        .append("<p>Value Recorded: ").append(value.getNumberValue()).append("</p>");
                 break;
             }
             case LowAlert: {
                 message.append("<P>Alarm Status: Low</P>")
                         .append("<P>Alarm Setting: ").append(point.getLowAlarm()).append("</P>")
-                        .append("<p>Value Recorded: ").append(value).append("</p>");
+                        .append("<p>Value Recorded: ").append(value.getNumberValue()).append("</p>");
                 break;
             }
             case IdleAlert: {
@@ -137,13 +151,19 @@ public class EmailServiceImpl implements EmailService {
             }
             case OK: {
                 message.append("<P>Alarm Status: OK</P>");
-
             }
 
         }
 
 
-        message.append("<p></p>");
+        message.append("<p></p>")
+                .append("<p><a href =\"http://" +
+                        getUrl() +
+                        "?uuid=" +
+                        point.getUUID() +
+                        "\">Go to Current Status Report</a></p>");
+
+
 
 
         try {

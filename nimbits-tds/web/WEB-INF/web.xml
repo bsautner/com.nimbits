@@ -99,6 +99,17 @@
     </servlet-mapping>
 
 
+
+
+    <servlet>
+        <servlet-name>subscribeService</servlet-name>
+        <servlet-class>com.nimbits.server.subscription.SubscriptionServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>subscribeService</servlet-name>
+        <url-pattern>/nimbits/subscribe</url-pattern>
+    </servlet-mapping>
+
     <servlet>
         <servlet-name>channelService</servlet-name>
         <servlet-class>com.nimbits.server.channel.ChannelApiServiceImpl</servlet-class>

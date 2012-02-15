@@ -41,7 +41,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
     }
 
     @Override
-    public void setAlertState(final AlertType alertState) {
+    public void setAlertType(final AlertType alertState) {
         this.alertState = alertState.getCode();
     }
 

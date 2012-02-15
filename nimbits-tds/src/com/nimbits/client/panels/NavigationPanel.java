@@ -584,7 +584,7 @@ class NavigationPanel extends NavigationEventProvider {
     }
 
     public void showSubscriptionPanel(final Entity entity) {
-        SubscribePanel dp = new SubscribePanel(entity, settings);
+        SubscriptionPanel dp = new SubscriptionPanel(entity, settings);
 
         final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
         w.setWidth(500);

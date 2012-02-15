@@ -253,7 +253,7 @@ class CenterPanel extends NavigationEventProvider {
 
     public void addEntity(final Entity entity) {
 
-        for (Entity e : entity.getChildren()) {
+        for (final Entity e : entity.getChildren()) {
             addEntity(e);
         }
 

@@ -22,7 +22,7 @@ import com.nimbits.client.model.email.EmailAddress;
  * Time: 10:35 AM
  */
 public class Const {
-    public static final String CONST_SERVER_VERSION = "3.3.1.20";
+    public static final String CONST_SERVER_VERSION = "3.3.2.0";
     public static final long DEFAULT_SERIAL_VERSION = 12L;
     public static final String CACHE_KEY_PREFIX = CONST_SERVER_VERSION + DEFAULT_SERIAL_VERSION;
     public static final String PATH_NIMBITS_CORE_SERVERS_URL = "http://nimbits.com:8080/core/servers";

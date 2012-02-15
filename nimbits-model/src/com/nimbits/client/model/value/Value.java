@@ -45,7 +45,7 @@ public interface Value extends Serializable {
 
     AlertType getAlertState();
 
-    void setAlertState(final AlertType alertState);
+    void setAlertType(final AlertType alertState);
 
     String getData();
 

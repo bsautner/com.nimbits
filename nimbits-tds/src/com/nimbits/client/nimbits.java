@@ -144,7 +144,7 @@ public class nimbits implements EntryPoint {
 
             @Override
             public void onSuccess(Entity result) {
-                SubscribePanel dp = new SubscribePanel(result, settings);
+                SubscriptionPanel dp = new SubscriptionPanel(result, settings);
 
                 final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
                 w.setWidth(500);

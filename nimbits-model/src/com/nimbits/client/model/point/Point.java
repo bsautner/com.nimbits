@@ -120,15 +120,15 @@ public interface Point extends Serializable {
     boolean isIdleAlarmOn();
 
     boolean isLowAlarmOn();
-
+    @Deprecated
     boolean isPostToFacebook();
     @Deprecated
     boolean isPublic();
-
+    @Deprecated
     boolean isSystemPoint();
 
     void setAlarmDelay(final int alarmDelay);
-
+    @Deprecated
     void setAlarmToFacebook(final boolean alarmToFacebook);
 
     void setAlertState(final AlertType alertState);
@@ -177,13 +177,13 @@ public interface Point extends Serializable {
     void setPublic(final boolean isPublic);
 
     void setReadOnly(final boolean readOnly);
-
+    @Deprecated
     void setSendAlarmIM(final boolean sendAlarmIM);
-
+    @Deprecated
     void setSendAlarmTweet(final boolean sendAlarmTweet);
-
+    @Deprecated
     void setSendIM(final boolean sendIM);
-
+    @Deprecated
     void setSendTweet(final boolean sendTweet);
 
     void setSystemPoint(final boolean isSystemPoint);
@@ -203,13 +203,13 @@ public interface Point extends Serializable {
     void setValue(final Value value);
 
     void setValues(final List<Value> values);
-
+    @Deprecated
     boolean isAlarmToEmail();
-
+    @Deprecated
     void setAlarmToEmail(boolean alarmToEmail);
-
+    @Deprecated
     boolean getSendAlertsAsJson();
-
+    @Deprecated
     void setSendAlertsAsJson(boolean sendAlertsAsJson);
 
     Calculation getCalculation();

@@ -126,7 +126,7 @@ public class RecordedValue implements com.nimbits.client.model.value.Value {
     }
 
     @Override
-    public void setAlertState(final AlertType alertState) {
+    public void setAlertType(final AlertType alertState) {
         this.alertState = alertState;
     }
 

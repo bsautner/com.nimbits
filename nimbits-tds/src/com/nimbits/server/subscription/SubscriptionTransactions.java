@@ -13,6 +13,7 @@
 
 package com.nimbits.server.subscription;
 
+import com.nimbits.client.enums.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.subscription.Subscription;
@@ -31,6 +32,8 @@ public interface SubscriptionTransactions {
     void subscribe(Entity entity, Subscription subscription);
 
     Subscription readSubscription(final Entity entity);
+
+    List<Subscription> getSubscriptionsToPointByType(final Point point, final SubscriptionType type);
 
     List<Subscription> getSubscriptionsToPoint(Point point);
 

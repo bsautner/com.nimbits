@@ -19,21 +19,19 @@ public class SubscriptionFactory {
 
     public static Subscription createSubscription(
             final String subscribedEntity,
-            final SubscriptionDeliveryMethod dataUpdateAlertMethod,
-                                                  final SubscriptionDeliveryMethod alertStateChangeMethod,
-                                                  final SubscriptionDeliveryMethod propertyChangeMethod,
-                                                  final double maxRepeat,
-                                                  final Date lastSent,
-                                                  final boolean formatJson,
-                                                  final boolean enabled) {
+            final SubscriptionType type,
+            final SubscriptionNotifyMethod method,
+            final double maxRepeat,
+            final Date lastSent,
+            final boolean formatJson,
+            final boolean enabled) {
         return new SubscriptionModel(
                 subscribedEntity,
-                dataUpdateAlertMethod,
-                alertStateChangeMethod,
-                propertyChangeMethod,
+                type,
+                method,
                 maxRepeat, lastSent,
                 formatJson, enabled
-                );
+        );
 
     }
     public static List<Subscription> createSubscriptions(List<Subscription> subscriptions) {

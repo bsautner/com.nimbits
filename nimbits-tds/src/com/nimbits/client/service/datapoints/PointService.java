@@ -70,12 +70,6 @@ public interface PointService extends RemoteService {
 
     List<Point> getAllPoints();
 
-    void deleteSubscription(final Point point) throws NimbitsException;
-
-    List<Subscription> getSubscriptionsToPoint(Point point);
-
-    void updateSubscriptionLastSent(Subscription subscription);
-
     Entity copyPoint(User u, Entity originalEntity, EntityName newName);
 
     Map<String,Point> getPoints(Map<String, Entity> entities);

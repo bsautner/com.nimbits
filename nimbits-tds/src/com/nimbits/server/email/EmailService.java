@@ -17,11 +17,12 @@ import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.value.*;
 
 public interface EmailService {
     void sendEmail(final EmailAddress email, final String message) throws NimbitsException;
 
     void sendEmail(final EmailAddress email, final String message, final String subject) throws NimbitsException;
 
-    void sendAlert(final Point point, final EmailAddress email, final Double value, final AlertType anAlertType);
+    void sendAlert(final Point point, final EmailAddress email, final Value value);
 }

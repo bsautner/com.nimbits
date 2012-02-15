@@ -13,15 +13,15 @@
 
 package com.nimbits.server.cron;
 
-import com.nimbits.client.enums.AlertType;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.server.email.EmailServiceFactory;
 import com.nimbits.server.point.PointServiceFactory;
 import com.nimbits.server.recordedvalue.RecordedValueServiceFactory;
+import com.nimbits.server.subscription.*;
 import com.nimbits.server.user.UserTransactionFactory;
 
 import javax.servlet.http.HttpServlet;
@@ -68,9 +68,11 @@ public class IdlePointCron extends HttpServlet {
             p.setIdleAlarmSent(true);
             final User u = UserTransactionFactory.getInstance().getNimbitsUserByID(p.getUserFK());
             PointServiceFactory.getInstance().updatePoint(u, p);
+            v.setAlertType(AlertType.IdleAlert);
+            SubscriptionServiceFactory.getInstance().processSubscriptions(p,v);
 
 
-            EmailServiceFactory.getInstance().sendAlert(p, u.getEmail(), 0.0, AlertType.IdleAlert);
+
         }
     }
 

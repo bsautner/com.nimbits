@@ -17,18 +17,6 @@ public interface Subscription extends Serializable {
 
     void setUuid(String uuid);
 
-    SubscriptionDeliveryMethod getDataNotifyMethod();
-
-    void setDataNotifyMethod(SubscriptionDeliveryMethod dataUpdateAlertMethod);
-
-    SubscriptionDeliveryMethod getAlertNotifyMethod();
-
-    void setAlertNotifyMethod(SubscriptionDeliveryMethod alertStateChangeMethod);
-
-    SubscriptionDeliveryMethod getChangeNotifyMethod();
-
-    void setChangeNotifyMethod(SubscriptionDeliveryMethod propertyChangeMethod);
-
     double getMaxRepeat();
 
     void setMaxRepeat(double maxRepeat);
@@ -41,11 +29,19 @@ public interface Subscription extends Serializable {
 
     void setSubscribedEntity(String uuid);
 
-    public boolean getNotifyFormatJson();
+    boolean getNotifyFormatJson();
 
-    public void setNotifyFormatJson(boolean notifyFormatJson);
+    void setNotifyFormatJson(boolean notifyFormatJson);
 
-    public boolean getEnabled();
+    boolean getEnabled();
 
-    public void setEnabled(boolean enabled);
+    void setEnabled(boolean enabled);
+
+    SubscriptionNotifyMethod getNotifyMethod();
+
+    void setNotifyMethod(SubscriptionNotifyMethod notifyMethod);
+
+    SubscriptionType getSubscriptionType();
+
+    void setSubscriptionType(SubscriptionType subscriptionType);
 }

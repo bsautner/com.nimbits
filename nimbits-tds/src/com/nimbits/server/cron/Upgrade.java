@@ -18,7 +18,7 @@ public class Upgrade {
 
         //fix calcs to use uuids
 
-        //make alerts into multiple subscriptions
+        //make alerts into multiple subscriptions - include different alerts (high and idle) as new subscriptios
 
         //make connections from user into connection entities
 
@@ -27,6 +27,8 @@ public class Upgrade {
         //sync with core - all shared entities
 
         //recognise andriod client type - put links back in tree grid
+
+
 
     }
 

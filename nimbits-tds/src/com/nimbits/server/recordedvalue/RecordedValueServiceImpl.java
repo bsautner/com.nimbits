@@ -171,7 +171,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
             retObj = getPrevValue(p, new Date());
             if (retObj != null) {
-                retObj.setAlertState(getAlertType(p, retObj));
+                retObj.setAlertType(getAlertType(p, retObj));
             }
 
         }
@@ -265,13 +265,10 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
         if (!ignoredByDate && !ignoredByOwnership && !ignoredByCompression) {
 
             retObj = RecordedValueTransactionFactory.getInstance(point).recordValue(value);
-
+            retObj.setAlertType(getAlertType(point, retObj));
             TaskFactoryLocator.getInstance().startRecordValueTask(u, point, value, loopFlag);
         }
-        //ChannelService channelService = ChannelServiceFactory.getChannelService();
-        if (retObj != null) {
-            retObj.setAlertState(getAlertType(point, retObj));
-        }
+
 
         return retObj == null ? value : retObj;
 

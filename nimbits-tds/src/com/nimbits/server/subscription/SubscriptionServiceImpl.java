@@ -59,6 +59,8 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
             if (subscription.getLastSent().getTime() + (subscription.getMaxRepeat() * 60 * 1000) < new Date().getTime()) {
 
+
+
                 Entity subscriptionEntity = EntityTransactionFactory.getInstance(null).getEntityByUUID(subscription.getUuid());
                 User subscriber = UserServiceFactory.getInstance().getUserByUUID(subscriptionEntity.getOwner());
                 AlertType alert = v.getAlertState();

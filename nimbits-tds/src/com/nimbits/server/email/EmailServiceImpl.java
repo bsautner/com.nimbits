@@ -16,6 +16,7 @@ package com.nimbits.server.email;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
+import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.value.*;
@@ -115,7 +116,7 @@ public class EmailServiceImpl implements EmailService {
             fromEmail = new SettingServiceImpl().getSetting(Const.PARAM_ADMIN);
             return new InternetAddress(fromEmail, Const.WORD_NIMBITS);
         } catch (NimbitsException e) {
-          return null;
+          return  new InternetAddress(Const.TEST_ACCOUNT, Const.WORD_NIMBITS);
         }
 
     }
@@ -157,7 +158,7 @@ public class EmailServiceImpl implements EmailService {
 
 
         message.append("<p></p>")
-                .append("<p><a href =\"http://" +
+                .append("<p><a href =\"" +
                         getUrl() +
                         "?uuid=" +
                         point.getUUID() +

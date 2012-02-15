@@ -120,9 +120,9 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
         List<Subscription> results;
         List<Subscription> retObj;
         try {
-            Query q = pm.newQuery(SubscriptionEntity.class, "subscribedEntity==p");
-            q.declareParameters("String p");
-            results = (List<Subscription>) q.execute(point.getUUID());
+            Query q = pm.newQuery(SubscriptionEntity.class, "subscribedEntity==p && enabled==e");
+            q.declareParameters("String p, Boolean e");
+            results = (List<Subscription>) q.execute(point.getUUID(), true);
             retObj = SubscriptionFactory.createSubscriptions(results);
             return retObj;
         }
@@ -137,9 +137,9 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
         List<Subscription> results;
         List<Subscription> retObj;
         try {
-            Query q = pm.newQuery(SubscriptionEntity.class, "subscribedEntity==p && subscriptionType==t" );
-            q.declareParameters("String p, Integer t");
-            results = (List<Subscription>) q.execute(point.getUUID(), type.getCode());
+            Query q = pm.newQuery(SubscriptionEntity.class, "subscribedEntity==p && subscriptionType==t && enabled==e" );
+            q.declareParameters("String p, Integer t, Boolean e");
+            results = (List<Subscription>) q.execute(point.getUUID(), type.getCode(), true);
             retObj = SubscriptionFactory.createSubscriptions(results);
             return retObj;
         }

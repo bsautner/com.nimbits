@@ -249,7 +249,7 @@ public class SubscriptionPanel extends NavigationEventProvider {
                             subscriptionType,
                             subscriptionNotifyMethod,
                             spinnerField.getValue().doubleValue(),
-                            new Date(),
+                            new Date(0),
                             machine.getValue(),
                             enabled.getValue());
                 }
@@ -259,7 +259,7 @@ public class SubscriptionPanel extends NavigationEventProvider {
                             subscriptionType,
                             subscriptionNotifyMethod,
                             spinnerField.getValue().doubleValue(),
-                            new Date(),
+                            new Date(0),
                             machine.getValue(),
                             enabled.getValue());
                 }

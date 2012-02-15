@@ -21,7 +21,7 @@ public class EntityModelFactory {
 
     public static Entity createEntity(User user, Entity entity) {
         Entity r = new EntityModel(entity);
-        boolean isOwner = entity.getOwner().equals(user.getUuid());
+        boolean isOwner =  (user != null && entity.getOwner().equals(user.getUuid()));
         r.setReadOnly(!isOwner);
         return r;
 

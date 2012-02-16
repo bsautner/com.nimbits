@@ -13,6 +13,7 @@
 
 package com.nimbits.server.cron;
 
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
@@ -59,7 +60,7 @@ public class SystemMaint extends HttpServlet {
             processSetting(Const.SETTING_VERSION, Const.CONST_SERVER_VERSION, true);
 
             processSetting(Const.PARAM_SECRET, UUID.randomUUID().toString(), false);
-            processSetting(Const.SETTING_ADMIN, "test@example.com", false);
+            processSetting(Const.SETTING_ADMIN, Const.TEST_ACCOUNT, false);
             processSetting(Const.SETTING_ENABLE_CONNECTIONS, "1", false);
             processSetting(Const.SETTING_FACEBOOK_CLIENT_ID, "", false);
             processSetting(Const.SETTING_FACEBOOK_REDIRECT_URL, Const.PATH_FACEBOOK_REDIRECT, false);
@@ -75,8 +76,6 @@ public class SystemMaint extends HttpServlet {
             out.println(e.getMessage());
         }
 
-        out.print("<p>Kicked off task to upgrade data structures to new version</p>");
-        TaskFactoryLocator.getInstance().startUpgradeTask();
         out.println("<span class=\"label success\">A new Nimbits server has properly initialised!</span>");
         out.println("<p>You now may want to <A href = \"https://appengine.google.com/\">log into the admin console on App Engine</a> and edit these values to meet your needs.</p>");
         out.println("</body></html>");
@@ -115,7 +114,15 @@ public class SystemMaint extends HttpServlet {
 
             if (update) {
                 SettingTransactionsFactory.getInstance().updateSetting(name, value);
+
                 out.println("<p>" + name + " updated to " + value + " (was " + s + ")</p>");
+                if (name.equals(Const.SETTING_VERSION) && ! s.equals(Const.CONST_SERVER_VERSION) ) {
+                    out.println("<p>New Version detected, starting upgrade. This may take up to an hour after " +
+                            "after seeing this message. You can monitor this on the app engine console " +
+                            "under the task queue. Upgrade is completed after all upgrade tasks have stopped.</p>");
+                    TaskFactoryLocator.getInstance().startUpgradeTask(Action.start, null);
+                }
+
             }
         } catch (NimbitsException e) {
             SettingTransactionsFactory.getInstance().addSetting(name, value);
@@ -124,5 +131,9 @@ public class SystemMaint extends HttpServlet {
 
 
     }
+
+
+
+
 
 }

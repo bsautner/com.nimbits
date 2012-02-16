@@ -45,18 +45,9 @@ public class PointModel implements Serializable, Point {
     private boolean isSystemPoint;
 
     private long userFK;
+
     @Deprecated
     private String name;
-
-    private long X;
-
-    private long Y;
-
-    private long Z;
-
-    private long target;
-
-    private String formula;
 
     private double highAlarm = 0.0;
 
@@ -131,11 +122,7 @@ public class PointModel implements Serializable, Point {
         this.userFK = p.getUserFK();
         this.name = p.getName().getValue();
         this.createDate = p.getCreateDate().getTime();
-        this.X = p.getX();
-        this.Y = p.getY();
-        this.Z = p.getZ();
-        this.target = p.getTarget();
-        this.formula = p.getFormula();
+
         this.highAlarm = p.getHighAlarm();
         this.expire = p.getExpire();
         this.unit = p.getUnit();
@@ -271,11 +258,6 @@ public class PointModel implements Serializable, Point {
     }
 
     @Override
-    public String getFormula() {
-        return this.formula;
-    }
-
-    @Override
     public double getHighAlarm() {
         return highAlarm;
     }
@@ -336,11 +318,6 @@ public class PointModel implements Serializable, Point {
     }
 
     @Override
-    public long getTarget() {
-        return target;
-    }
-
-    @Override
     public String getUnit() {
         return unit;
     }
@@ -372,51 +349,42 @@ public class PointModel implements Serializable, Point {
     }
 
     @Override
-    public long getX() {
-        return X;
-    }
-
-    @Override
-    public long getY() {
-        return Y;
-    }
-
-    @Override
-    public long getZ() {
-        return Z;
-    }
-
-    @Override
     public boolean isHighAlarmOn() {
         return highAlarmOn;
     }
 
     @Override
+
     public boolean isLowAlarmOn() {
         return lowAlarmOn;
     }
 
     @Override
+    @Deprecated
     public boolean isPostToFacebook() {
         return postToFacebook;
     }
 
     @Override
+    @Deprecated
     public boolean isPublic() {
         return isPublic;
     }
 
     @Override
+    @Deprecated
     public boolean isSystemPoint() {
         return isSystemPoint;
     }
 
     @Override
+    @Deprecated
     public void setAlarmDelay(final int alarmDelay) {
         this.alarmDelay = alarmDelay;
     }
 
     @Override
+    @Deprecated
     public void setAlarmToFacebook(final boolean alarmToFacebook) {
         this.alarmToFacebook = alarmToFacebook;
     }
@@ -441,11 +409,6 @@ public class PointModel implements Serializable, Point {
     public void setExpire(final int expire) {
         this.expire = expire;
     }
-
-//    @Override
-//    public void setFormula(final String formula) {
-//        this.formula = formula;
-//    }
 
     @Override
     public void setHighAlarm(double highAlarm) {

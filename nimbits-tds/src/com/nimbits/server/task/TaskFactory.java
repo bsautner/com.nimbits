@@ -13,8 +13,9 @@
 
 package com.nimbits.server.task;
 
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
@@ -44,6 +45,6 @@ public interface TaskFactory {
 
     void startCategoryMaintTask(final User user);
 
-    void startUpgradeTask();
+    void startUpgradeTask(Action action, Entity entity);
 
 }

@@ -70,7 +70,7 @@ public class XMPPReceiverServlet extends HttpServlet {
             final String email = j[0].toLowerCase();
             final EmailAddress internetAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
             log.info("XMPP Message recieved " + email + ":   " + message);
-            User u = null;
+            User u;
 
             u = UserTransactionFactory.getInstance().getNimbitsUser(internetAddress);
             if (u != null) {

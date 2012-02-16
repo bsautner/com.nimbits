@@ -40,16 +40,20 @@ public class CalculationEntity implements Calculation {
     private Boolean enabled;
 
     @Persistent
-    private Long target;
+    @Deprecated
+    public Long target;
 
     @Persistent
-    private Long x;
+    @Deprecated
+    public Long x;
 
     @Persistent
-    private Long y;
+    @Deprecated
+    public Long y;
 
     @Persistent
-    private Long z;
+    @Deprecated
+    public Long z;
 
     @Persistent
     private String xVar;

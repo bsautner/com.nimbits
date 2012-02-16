@@ -150,7 +150,7 @@
         <url-pattern>/nimbits/xmpp</url-pattern>
     </servlet-mapping>
 
-    <!--
+
     <servlet>
         <servlet-name>remote_api</servlet-name>
         <servlet-class>com.google.apphosting.utils.remoteapi.RemoteApiServlet</servlet-class>
@@ -159,7 +159,7 @@
         <servlet-name>remote_api</servlet-name>
         <url-pattern>/remote_api</url-pattern>
     </servlet-mapping>
-    -->
+
 
     <servlet>
         <servlet-name>mailhandler</servlet-name>
@@ -168,16 +168,6 @@
     <servlet-mapping>
         <servlet-name>mailhandler</servlet-name>
         <url-pattern>/_ah/mail/*</url-pattern>
-    </servlet-mapping>
-
-
-    <servlet>
-        <servlet-name>NimbitsStats</servlet-name>
-        <servlet-class>com.nimbits.server.cron.NimbitsStats</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>NimbitsStats</servlet-name>
-        <url-pattern>/cron/NimbitsStats</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -198,23 +188,6 @@
         <url-pattern>/cron/SessionMaint</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>UserMaint</servlet-name>
-        <servlet-class>com.nimbits.server.cron.UserMaint</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>UserMaint</servlet-name>
-        <url-pattern>/cron/UserMaint</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>DataScrubberCron</servlet-name>
-        <servlet-class>com.nimbits.server.cron.DataScrubberCron</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>DataScrubberCron</servlet-name>
-        <url-pattern>/cron/DataScrubberCron</url-pattern>
-    </servlet-mapping>
     <servlet>
         <servlet-name>SystemMaint</servlet-name>
         <servlet-class>com.nimbits.server.cron.SystemMaint</servlet-class>

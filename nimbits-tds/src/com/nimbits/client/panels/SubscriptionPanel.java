@@ -136,7 +136,7 @@ public class SubscriptionPanel extends NavigationEventProvider {
 
         DeliveryMethodOption none = (new DeliveryMethodOption(SubscriptionNotifyMethod.none));
         ops.add(none);
-        ops.add(new DeliveryMethodOption(SubscriptionNotifyMethod.stream));
+       // ops.add(new DeliveryMethodOption(SubscriptionNotifyMethod.stream));
 
         ops.add(new DeliveryMethodOption(SubscriptionNotifyMethod.email));
 

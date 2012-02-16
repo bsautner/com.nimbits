@@ -56,9 +56,6 @@ public interface Point extends Serializable {
 
     int getExpire();
 
-    @Deprecated
-    String getFormula();
-
     double getHighAlarm();
 
     String getHost();
@@ -89,9 +86,6 @@ public interface Point extends Serializable {
 
     String getTag();
 
-    @Deprecated
-    long getTarget();
-
     double getTargetValue();
 
     String getUnit();
@@ -105,15 +99,6 @@ public interface Point extends Serializable {
 
 
     List<Value> getValues();
-
-    @Deprecated
-    long getX();
-
-    @Deprecated
-    long getY();
-
-    @Deprecated
-    long getZ();
 
     boolean isHighAlarmOn();
 

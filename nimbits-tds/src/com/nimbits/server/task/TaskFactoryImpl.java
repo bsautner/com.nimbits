@@ -17,9 +17,10 @@ import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.gson.Gson;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
-import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
@@ -159,12 +160,17 @@ public class TaskFactoryImpl implements TaskFactory {
 //    }
 
     @Override
-    public void startUpgradeTask() {
+    public void startUpgradeTask(Action action, Entity entity) {
 
 
         final Queue queue = QueueFactory.getQueue(Const.TASK_UPGRADE);
-
-        queue.add(TaskOptions.Builder.withUrl(Const.PATH_UPGRADE_TASK));
+        String json = "";
+        if (entity != null) {
+            json = GsonFactory.getInstance().toJson(entity);
+        }
+        queue.add(TaskOptions.Builder.withUrl(Const.PATH_UPGRADE_TASK)
+        .param(Const.PARAM_JSON, json)
+        .param(Const.PARAM_ACTION, action.getCode()));
 
     }
 

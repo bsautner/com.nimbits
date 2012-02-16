@@ -34,7 +34,6 @@ import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueModelFactory;
-import com.nimbits.server.entity.EntityTransactionFactory;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.json.JsonHelper;
 import com.nimbits.server.point.PointServiceFactory;
@@ -70,7 +69,7 @@ public class XMPPReceiverServlet extends HttpServlet {
             final String email = j[0].toLowerCase();
             final EmailAddress internetAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
             log.info("XMPP Message recieved " + email + ":   " + message);
-            User u = null;
+            User u;
 
             u = UserTransactionFactory.getInstance().getNimbitsUser(internetAddress);
             if (u != null) {

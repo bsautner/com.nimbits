@@ -43,10 +43,7 @@ public class NimbitsUser implements User {
 
     @Persistent
     @Deprecated
-    private List<Long> connections;
-
-    @Persistent
-    private List<String> userConnections;
+    public List<Long> connections;
 
     @Persistent
     private Long facebookID;
@@ -91,12 +88,7 @@ public class NimbitsUser implements User {
         return connections;
     }
 
-    public List<String> getUserConnections() {
-        if (userConnections == null) {
-            userConnections = new LinkedList<String>();
-        }
-        return userConnections;
-    }
+
 
     public void setId(final long id) {
         this.id = id;
@@ -215,15 +207,6 @@ public class NimbitsUser implements User {
         this.restricted = restricted;
     }
 
-    public void addConnection(final String connectionUuid) {
-        if (!userConnections.contains(connectionUuid)) {
-            userConnections.add(connectionUuid);
-        }
-    }
-
-    public void removeConnection(final String id) {
-        userConnections.remove(id);
-    }
 
     public boolean getSendEmail() {
         return sendEmail != null && sendEmail;

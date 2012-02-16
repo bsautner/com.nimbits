@@ -22,17 +22,13 @@ import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
-import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.service.datapoints.PointService;
 import com.nimbits.server.blobstore.BlobStoreFactory;
-import com.nimbits.server.core.CoreFactory;
-import com.nimbits.server.entity.EntityTransactionFactory;
+import com.nimbits.server.entity.EntityServiceFactory;
 import com.nimbits.server.export.ExportHelperFactory;
-import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.recordedvalue.RecordedValueServiceFactory;
-import com.nimbits.server.subscription.SubscriptionTransactionFactory;
 import com.nimbits.server.task.TaskFactoryLocator;
 import com.nimbits.server.user.UserServiceFactory;
 import com.nimbits.server.user.UserTransactionFactory;
@@ -95,53 +91,6 @@ public class PointServiceImpl extends RemoteServiceServlet implements
         return retObj;
 
     }
-
-
-
-    public void deletePoint(final User u, final Point p) throws NimbitsException {
-
-        PointTransactionsFactory.getInstance(u).deletePoint(p);
-        String j = GsonFactory.getInstance().toJson(p);
-
-        CoreFactory.getInstance().reportDeleteToCore(j, EntityType.point);
-
-    }
-
-//
-//    @Override
-//    public Point movePoint(User u, Point point, EntityName EntityName) throws NimbitsException {
-//
-//        return PointTransactionsFactory.getInstance(u).movePoint(point, EntityName);
-//    }
-
-//    @Override
-//    public Point showEntityData(Point point, Category c, User u) throws NimbitsException {
-//        Point result = PointTransactionsFactory.getInstance(u).showEntityData(point, c);
-//        if (result != null) {
-//            TaskFactoryLocator.getInstance().startPointMaintTask(result);
-//        }
-//        return result;
-//
-//    }
-
-//    @Override
-//    public Point showEntityData(final EntityName pointName, final Category c, final User u) throws NimbitsException {
-//        Point result = PointTransactionsFactory.getInstance(u).showEntityData(pointName, c);
-//        if (result != null) {
-//            TaskFactoryLocator.getInstance().startPointMaintTask(result);
-//        }
-//        return result;
-//    }
-//
-//    @Override
-//    public List<Point> getPointsByCategory(final User u, final Category c) {
-//        return PointTransactionsFactory.getInstance(u).getPointsByCategory(c);
-//    }
-
-//    @Override
-//    public Point checkPoint(HttpServletRequest req, EmailAddress email, Point point) {
-//      return PointTransactionsFactory.getInstance().checkPoint(req, email, point);
-//    }
 
 
     @Override
@@ -211,7 +160,7 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     public Point getPointByName(final User pointOwner, final EntityName name) throws NimbitsException {
         final User u = pointOwner == null ? UserServiceFactory.getServerInstance().getHttpRequestUser(
                 this.getThreadLocalRequest()) : pointOwner;
-        Entity entity = EntityTransactionFactory.getInstance(u).getEntityByName(name);
+        Entity entity = EntityServiceFactory.getInstance().getEntityByName(u, name);
         return PointTransactionsFactory.getInstance(u).getPointByUUID(entity.getEntity());
 
 
@@ -237,13 +186,13 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
     @Override
         public Point addPoint(User user, Entity entity) {
-        Entity r = EntityTransactionFactory.getInstance(user).addUpdateEntity(entity);
+        Entity r = EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
         return PointTransactionsFactory.getInstance(user).addPoint(r);
     }
 
     @Override
     public Point addPoint(User user, Entity entity, Point point) {
-        Entity r = EntityTransactionFactory.getInstance(user).addUpdateEntity(entity);
+        Entity r = EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
         return PointTransactionsFactory.getInstance(user).addPoint(entity, point);
     }
 
@@ -306,6 +255,11 @@ public class PointServiceImpl extends RemoteServiceServlet implements
                 this.getThreadLocalRequest());
         return getPoints(u);
 
+    }
+
+    @Override
+    public List<Point> getPoints(User u, List<Entity> entities) {
+        return PointTransactionsFactory.getInstance(u).getPoints(entities);
     }
     //End RPC Calls
 

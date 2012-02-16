@@ -22,7 +22,7 @@ import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModelFactory;
 import com.nimbits.server.connections.ConnectionRequestModelFactory;
-import com.nimbits.server.entity.EntityTransactionFactory;
+import com.nimbits.server.entity.EntityServiceFactory;
 import com.nimbits.server.orm.ConnectionRequest;
 import com.nimbits.server.orm.NimbitsUser;
 import com.nimbits.server.user.UserTransactions;
@@ -98,7 +98,7 @@ public class UserDAOImpl implements UserTransactions {
 
             retObj = UserModelFactory.createUserModel(u);
             Entity entity = EntityModelFactory.createEntity(retObj);
-            EntityTransactionFactory.getInstance(retObj).addUpdateEntity(entity);
+            EntityServiceFactory.getInstance().addUpdateEntity(retObj, entity);
         } finally {
             pm.close();
         }

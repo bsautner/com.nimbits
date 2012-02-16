@@ -19,7 +19,7 @@
     </queue>
     <queue>
         <name>upgrade</name>
-        <rate>1/s</rate>
+        <rate>10/s</rate>
     </queue>
     <queue>
         <name>recordvaluequeue</name>

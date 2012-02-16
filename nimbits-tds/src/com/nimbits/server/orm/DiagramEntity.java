@@ -35,145 +35,32 @@ import java.util.UUID;
 public class DiagramEntity  {
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    private Long id;
+    public Long id;
 
     @Persistent
-    private long userFk;
+    public long userFk;
 
     @Persistent
-    private long categoryFk;
+    public long categoryFk;
 
     @Persistent
-    private BlobKey blobKey;
-
-    public void setBlobKey(BlobKey blobKey) {
-        this.blobKey = blobKey;
-    }
+    public BlobKey blobKey;
 
     @Persistent
-    private String name;
+    public String name;
 
     @Persistent
-    private String uuid;
-
-    @NotPersistent
-    private int entityType = EntityType.file.getCode();
-
-
-    public void setName(EntityName name) {
-        this.name = name.getValue();
-    }
-
-    public void setProtectionLevel(int protectionLevel) {
-        this.protectionLevel = protectionLevel;
-    }
-
-    public int getProtectionLevel() {
-        if (protectionLevel == null) {
-            protectionLevel = 0;
-        }
-        return protectionLevel;
-    }
-
-    public boolean isReadOnly() {
-        return readOnly;
-    }
-
-
-    public boolean isFullScreenView() {
-        return fullScreenView;
-    }
-
-
-    public void setFullScreenView(boolean fullScreenView) {
-        this.fullScreenView = fullScreenView;
-    }
-
-
-    public void setClientType(ClientType clientType) {
-
-    }
-
-
-    public ClientType getClientType() {
-        return null;
-    }
-
-
-    public EntityType getEntityType() {
-        return EntityType.get(this.entityType);
-    }
-
-    public Date getDateCreated() {
-        return dateCreated;
-    }
-
-
-    public String getUuid() {
-        return uuid;
-    }
+    public String uuid;
 
     @Persistent
-    private Integer protectionLevel;
+    public Integer protectionLevel;
 
     @Persistent
-    private Date dateCreated;
-
-    @NotPersistent
-    private boolean fullScreenView;
-
-    @NotPersistent
-    private boolean readOnly;
-
-    public DiagramEntity(long userFk, BlobKey blobKey, EntityName name, long categoryFk) {
-        this.userFk = userFk;
-        this.blobKey = blobKey;
-        this.name = name.getValue();
-        this.uuid = UUID.randomUUID().toString();
-        this.categoryFk = categoryFk;
-        this.dateCreated = new Date();
-        this.protectionLevel = 0;
-    }
-
+    public Date dateCreated;
 
     public DiagramEntity() {
     }
 
 
-
-    public long getId() {
-
-        return this.id != null ? this.id : 0;
-
-    }
-
-    public long getCategoryFk() {
-        return this.categoryFk;
-    }
-
-
-    public void setCategoryFk(long id) {
-        this.categoryFk = id;
-    }
-
-
-    public void setReadOnly(boolean readOnly) {
-        this.readOnly = readOnly;
-    }
-
-
-    public long getUserFk() {
-        return this.userFk;
-    }
-
-
-    public String getBlobKey() {
-        return blobKey.getKeyString();
-    }
-
-
-    public EntityName getName() {
-        return CommonFactoryLocator.getInstance().createName(this.name);
-    }
 
 }

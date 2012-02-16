@@ -237,22 +237,25 @@ function loadGraph(data, obj) {
 function callback(obj) {
     var data = [];
 
+    var uuid = (obj.entityType == 1) ? obj.uuid : obj.entity;
+
+
     responseObject = obj;
     document.getElementById("all").style.display = "block";
     document.getElementById("loading").style.display = "none";
 
     document.getElementById("name").innerHTML = obj.name;
     document.getElementById("desc").innerHTML = obj.description;
-    document.getElementById("uuid").innerHTML = "<a href='report.html?uuid=" + obj.uuid + "'>" + obj.uuid + "</a>";
+    document.getElementById("uuid").innerHTML = "<a href='report.html?uuid=" + uuid + "'>" + uuid + "</a>";
 
     document.getElementById("QR").src = "https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl=" +
             obj.host + "?uuid=" + obj.uuid;
 
-    document.getElementById("s1").innerHTML = obj.host + "/service/point?format=json&uuid=" + obj.uuid;
-    document.getElementById("a1").href = obj.host + "/service/point?format=json&uuid=" + obj.uuid;
+    document.getElementById("s1").innerHTML = obj.host + "/service/point?format=json&uuid=" + uuid;
+    document.getElementById("a1").href = obj.host + "/service/point?format=json&uuid=" + uuid;
 
-    document.getElementById("s2").innerHTML = obj.host + "/service/point?count=100&uuid=" + obj.uuid;
-    document.getElementById("a2").href = obj.host + "/service/point?count=20&uuid=" + obj.uuid;
+    document.getElementById("s2").innerHTML = obj.host + "/service/point?count=100&uuid=" + uuid;
+    document.getElementById("a2").href = obj.host + "/service/point?count=20&uuid=" + uuid;
 
 
 

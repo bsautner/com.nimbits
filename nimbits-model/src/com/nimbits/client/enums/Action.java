@@ -37,7 +37,13 @@ public enum Action {
     twitter(Const.ACTION_TWITTER),
     twitterFinishReg(Const.ACTION_TWITTER_FINISH_REG),
     none(Const.ACTION_NONE),
-    report(Const.ACTION_REPORT), diagram(Const.ACTION_DIAGRAM);
+    report(Const.ACTION_REPORT),
+    diagram(Const.ACTION_DIAGRAM),
+    start(Const.ACTION_START),
+    user(Const.ACTION_USER),
+    category(Const.ACTION_CATEGORY),
+    point(Const.ACTION_POINT)
+    ;
     private static final Map<String, Action> lookup = new HashMap<String, Action>();
 
     static {

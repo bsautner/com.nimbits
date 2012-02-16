@@ -44,11 +44,11 @@ public interface PointService extends RemoteService {
 
     List<Point> getPoints() throws NimbitsException;
 
+    List<Point> getPoints(final User u, List<Entity> entities);
+
     Point updatePoint(final Point point) throws NimbitsException;
 
     Point updatePoint(final User u, final Point point) throws NimbitsException;
-
-    void deletePoint(final User u, final Point p) throws NimbitsException;
 
     Map<EntityName, Point> getPointsByName(final long pointOwnerId, final Set<EntityName> names) throws NimbitsException;
 

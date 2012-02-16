@@ -52,7 +52,7 @@ public class EntityDescriptionServletImpl extends HttpServlet {
         final String serverJson = request.getParameter(Const.PARAM_SERVER);
         final String json = request.getParameter(Const.PARAM_ENTITY);
         final String action = request.getParameter(Const.PARAM_ACTION);
-        final String entityTypeParam = request.getParameter(Const.PARAM_ENTITY_TYPE);
+
         final PrintWriter out = response.getWriter();
 
 
@@ -61,18 +61,17 @@ public class EntityDescriptionServletImpl extends HttpServlet {
         if (StringUtils.isNotEmpty(json) && StringUtils.isNotEmpty(action)) {
             final Server server = GsonFactory.getInstance().fromJson(serverJson, ServerModel.class);
             final Server currentServer = ServerTransactionFactory.getInstance().readServer(server.getBaseUrl());
-            ProtectionLevel protectionLevel;
 
             final EntityDescription entityDescription;
-            EntityType type = EntityType.get(Integer.valueOf(entityTypeParam));
 
-                final Entity point = GsonFactory.getInstance().fromJson(json, EntityModel.class);
-                final String desc = StringUtils.isEmpty(point.getDescription()) ? point.getName().getValue() : point.getDescription();
-                entityDescription =
+                final Entity entity = GsonFactory.getInstance().fromJson(json, EntityModel.class);
+                final String desc = StringUtils.isEmpty(entity.getDescription()) ? entity.getName().getValue() : entity.getDescription();
+               entity.setDescription(desc);
+               entityDescription =
                         EntityModelFactory.createEntityDescription(
-                                currentServer, point.getName(), point.getEntity(), desc, type
+                                currentServer,entity
                         );
-            protectionLevel = point.getProtectionLevel();
+
 
 
 
@@ -80,7 +79,7 @@ public class EntityDescriptionServletImpl extends HttpServlet {
 
                 if (currentServer != null && entityDescription != null) {
 
-                    if (protectionLevel.equals(ProtectionLevel.everyone)) {
+                    if (  entity.getProtectionLevel().equals(ProtectionLevel.everyone)) {
 
                         final EntityDescription retObj = EntityJPATransactionFactory.getInstance().addUpdateEntityDescription(entityDescription);
 

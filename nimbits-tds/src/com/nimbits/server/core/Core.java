@@ -14,6 +14,7 @@
 package com.nimbits.server.core;
 
 import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.model.entity.*;
 
 /**
  * Created by bsautner
@@ -23,9 +24,7 @@ import com.nimbits.client.enums.EntityType;
  */
 public interface Core {
 
-    void reportDeleteToCore(final String json, final EntityType entityType);
-
-    //void reportCategoryUpdateToCore(final HttpServletRequest req, Category category);
-    public void reportUpdateToCore(final String url, final String json, final EntityType entityType);
+    void reportDeleteToCore(final Entity entity);
+    void reportUpdateToCore(final String url, Entity entity);
 
 }

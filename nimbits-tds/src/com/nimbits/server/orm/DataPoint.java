@@ -35,7 +35,7 @@ public class DataPoint implements Point {
     private DataPointIntelligenceEntity dataPointIntelligenceEntity;
 
     @Persistent(defaultFetchGroup = "true")
-    private CalculationEntity calculationEntity;
+    public CalculationEntity calculationEntity;
 
     @Persistent
     private String uuid;
@@ -60,23 +60,7 @@ public class DataPoint implements Point {
     private String name;
     @Persistent
     private Date createDate;
-    @Persistent
-    @Deprecated
-    private Long X;
-    @Persistent
-    @Deprecated
-    private Long Y;
-    @Persistent
-    @Deprecated
-    private Long Z;
-    @Persistent
-    @Deprecated
-    private Long target;
-    @Persistent
-    @Deprecated
-    private String formula;
-    @Persistent
-    @Deprecated
+
     private Double highAlarm = 0.0;
     @Persistent
     private int expire = 90;
@@ -251,10 +235,6 @@ public class DataPoint implements Point {
         return expire;
     }
 
-    @Override
-    public String getFormula() {
-        return this.formula;
-    }
 
     @Override
     public double getHighAlarm() {
@@ -319,12 +299,6 @@ public class DataPoint implements Point {
     }
 
     @Override
-    public long getTarget() {
-        return (target == null) ? 0 : target;
-
-    }
-
-    @Override
     public String getUnit() {
         return unit;
     }
@@ -348,21 +322,6 @@ public class DataPoint implements Point {
     @NotPersistent
     public List<Value> getValues() {
         return values;
-    }
-
-    @Override
-    public long getX() {
-        return X == null ? 0 : X;
-    }
-
-    @Override
-    public long getY() {
-        return Y == null ? 0 : Y;
-    }
-
-    @Override
-    public long getZ() {
-        return Z == null ? 0 : Z;
     }
 
     @Override

@@ -25,15 +25,15 @@ public class Upgrade {
     private void doUpgrade() {
 
 
-        //make categories entities
+        //x make categories entities
 
-        //make points entities with cat as a parent
+        //x make points entities with cat as a parent
 
         //fix calcs to use uuids
 
-        //make alerts into multiple subscriptions - include different alerts (high and idle) as new subscriptios
+        //x make alerts into multiple subscriptions - include different alerts (high and idle) as new subscriptios
 
-        //make connections from user into connection entities
+        //x make connections from user into connection entities
 
         //create entities for diagrams with type of file - make entity name end with .svg
 

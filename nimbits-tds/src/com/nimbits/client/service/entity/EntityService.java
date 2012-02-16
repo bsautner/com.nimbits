@@ -7,6 +7,7 @@ import com.nimbits.client.model.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.subscription.*;
+import com.nimbits.client.model.user.*;
 
 import java.util.*;
 
@@ -18,9 +19,9 @@ import java.util.*;
  */
 @RemoteServiceRelativePath(Const.PARAM_ENTITY)
 public interface EntityService extends RemoteService {
-    List<Entity> getEntities() throws NimbitsException;
+    List<Entity> getEntities();
 
-    Entity addUpdateEntity(final Entity entity) throws NimbitsException;
+    Entity addUpdateEntity(final Entity entity);
 
     void deleteEntity(Entity entity);
 
@@ -34,9 +35,17 @@ public interface EntityService extends RemoteService {
 
     List<Entity> getChildren(Entity parentEntity, EntityType type);
 
-    Entity subscribe(Entity entity, Subscription subscription, EntityName name);
+    List<Entity> getEntityChildren(Entity parentEntity, EntityType type);
 
-    Subscription readSubscription(final Entity point) throws NimbitsException;
+    Entity getEntityByName(EntityName name);
 
-    Entity getSubscribedEntity(final Entity entity);
+    Entity addUpdateEntity(User user, Entity aConnection);
+
+    Entity getEntityByUUID(User u, String entityId);
+
+    Entity getEntityByName(User u, EntityName name);
+
+    void deleteEntity(User u, Entity entity);
+
+    List<Entity> getEntityChildren(User u, Entity c, EntityType point);
 }

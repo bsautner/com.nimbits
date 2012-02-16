@@ -57,8 +57,6 @@ public interface PointServiceAsync {
 
     void updatePoint(final User u, final Point point, AsyncCallback<Point> async);
 
-    void deletePoint(final User u, final Point p, AsyncCallback<Void> async);
-
     void publishPoint(final User u, final Point p, final AsyncCallback<Point> async);
 
     void getAllPoints(final AsyncCallback<List<Point>> async);
@@ -72,4 +70,6 @@ public interface PointServiceAsync {
     void addPoint(User user, Entity entity, Point point, AsyncCallback<Point> async);
 
     void addPoint(EntityName name, AsyncCallback<Point> async);
+
+    void getPoints(final User u, List<Entity> entities, AsyncCallback<List<Point>> async);
 }

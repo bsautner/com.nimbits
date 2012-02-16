@@ -606,8 +606,8 @@ class NavigationPanel extends NavigationEventProvider {
     private Menu createContextMenu() {
         Menu contextMenu = new Menu();
         contextMenu.add(subscribeContext());
-        contextMenu.add(publishContext());
-        contextMenu.add(currentStatusContext());
+      //  contextMenu.add(publishContext());
+        contextMenu.add(reportContext());
         contextMenu.add(propertyContext());
         contextMenu.add(copyContext());
         contextMenu.add(deleteContext());
@@ -702,9 +702,9 @@ class NavigationPanel extends NavigationEventProvider {
         return retObj;
     }
 
-    private MenuItem currentStatusContext() {
+    private MenuItem reportContext() {
         MenuItem retObj = new MenuItem();
-        retObj.setText("Current Status");
+        retObj.setText("Report");
         retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.form()));
         retObj.addSelectionListener(new SelectionListener<MenuEvent>() {
             public void componentSelected(MenuEvent ce) {

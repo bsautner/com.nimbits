@@ -31,6 +31,7 @@ import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.subscription.*;
 import com.nimbits.client.service.entity.*;
+import com.nimbits.client.service.subscription.*;
 import com.nimbits.shared.*;
 
 import java.util.*;
@@ -81,7 +82,7 @@ public class SubscriptionPanel extends NavigationEventProvider {
 
     }
     private void getExistingSubscription() {
-        EntityServiceAsync service = GWT.create(EntityService.class);
+        SubscriptionServiceAsync service = GWT.create(SubscriptionService.class);
         service.readSubscription(entity, new AsyncCallback<Subscription>() {
             @Override
             public void onFailure(Throwable caught) {
@@ -136,7 +137,7 @@ public class SubscriptionPanel extends NavigationEventProvider {
 
         DeliveryMethodOption none = (new DeliveryMethodOption(SubscriptionNotifyMethod.none));
         ops.add(none);
-        ops.add(new DeliveryMethodOption(SubscriptionNotifyMethod.stream));
+       // ops.add(new DeliveryMethodOption(SubscriptionNotifyMethod.stream));
 
         ops.add(new DeliveryMethodOption(SubscriptionNotifyMethod.email));
 
@@ -231,7 +232,7 @@ public class SubscriptionPanel extends NavigationEventProvider {
         submit.addSelectionListener(new SelectionListener<ButtonEvent>() {
             @Override
             public void componentSelected(ButtonEvent buttonEvent) {
-                EntityServiceAsync service = GWT.create(EntityService.class);
+                SubscriptionServiceAsync service = GWT.create(SubscriptionService.class);
                 final MessageBox box = MessageBox.wait("Progress",
                         "Subscribing to your point", "loading...");
                 box.show();

@@ -20,6 +20,7 @@ import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.*;
 import com.nimbits.shared.*;
 
 import javax.jdo.annotations.*;
@@ -217,7 +218,17 @@ public class EntityStore implements Entity {
 
     @Override
     public void addChild(Entity entity) {
-        //auto generated
+        //not implemented
+    }
+
+    @Override
+    public void setPoints(List<Point> points) {
+        //not implemented
+    }
+
+    @Override
+    public void setHost(String host) {
+        //not implemented
     }
 
 

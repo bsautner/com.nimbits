@@ -28,7 +28,7 @@ public class PointCatagory   {
 
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    private Long id;
+    public Long id;
 
 
 

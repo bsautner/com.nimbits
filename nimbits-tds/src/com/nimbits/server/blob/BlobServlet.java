@@ -26,9 +26,8 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.user.User;
-import com.nimbits.server.entity.EntityTransactionFactory;
+import com.nimbits.server.entity.EntityServiceFactory;
 import com.nimbits.server.gson.*;
-import com.nimbits.server.point.*;
 import com.nimbits.server.user.UserServiceFactory;
 
 import javax.servlet.ServletException;
@@ -84,14 +83,14 @@ public class BlobServlet extends HttpServlet {
             }
             else if (uploadType.equals(UploadType.updatedFile.name()) && entityId != null) {
 
-                entity = EntityTransactionFactory.getInstance(u).getEntityByUUID(entityId);
+                entity = EntityServiceFactory.getInstance().getEntityByUUID(u, entityId);
                 entity.setBlobKey(blobKey.getKeyString());
 
 
 
             }
             if (entity != null) {
-                Entity response = EntityTransactionFactory.getInstance(u).addUpdateEntity(entity);
+                Entity response = EntityServiceFactory.getInstance().addUpdateEntity(u, entity);
                 String json = GsonFactory.getInstance().toJson(response);
                 res.setContentType("text/plain");
                 res.setStatus(HttpServletResponse.SC_OK);

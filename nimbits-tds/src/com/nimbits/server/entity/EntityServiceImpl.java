@@ -25,6 +25,20 @@ import java.util.UUID;
  */
 public class EntityServiceImpl  extends RemoteServiceServlet implements EntityService {
 
+    @Override
+    public Entity getEntityByName(User user, EntityName name) {
+       return EntityServiceFactory.getDaoInstance(user).getEntityByName(name);
+    }
+
+    @Override
+    public void deleteEntity(User user, Entity entity) {
+         EntityServiceFactory.getDaoInstance(user).deleteEntity(entity);
+    }
+
+    @Override
+    public List<Entity> getEntityChildren(User user, Entity c, EntityType type) {
+        return EntityServiceFactory.getDaoInstance(user).getEntityChildren(c, type);
+    }
 
     private HttpSession getSession() {
              // Get the current request and then return its session
@@ -45,7 +59,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
     @Override
     public List<Entity> getEntities() {
 
-         return EntityTransactionFactory.getInstance(getUser()).getEntities();
+         return EntityServiceFactory.getDaoInstance(getUser()).getEntities();
     }
 
     @Override
@@ -60,27 +74,27 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
         if (entity.getEntity() == null) {
             entity.setEntity(UUID.randomUUID().toString());
         }
-        return EntityTransactionFactory.getInstance(u).addUpdateEntity(entity);
+        return EntityServiceFactory.getDaoInstance(u).addUpdateEntity(entity);
     }
 
     @Override
     public void deleteEntity(Entity entity) {
-        EntityTransactionFactory.getInstance(getUser()).deleteEntity(entity);
+        EntityServiceFactory.getDaoInstance(getUser()).deleteEntity(entity);
     }
 
     @Override
     public Entity getEntityByUUID(String uuid) {
-       return EntityTransactionFactory.getInstance(getUser()).getEntityByUUID(uuid);
+       return EntityServiceFactory.getDaoInstance(getUser()).getEntityByUUID(uuid);
     }
 
     @Override
     public Map<String, Entity> getEntityMap(EntityType type) {
-       return EntityTransactionFactory.getInstance(getUser()).getEntityMap(type);
+       return EntityServiceFactory.getDaoInstance(getUser()).getEntityMap(type);
     }
 
     @Override
     public Map<EntityName, Entity> getEntityNameMap(EntityType type) {
-        return EntityTransactionFactory.getInstance(getUser()).getEntityNameMap(type);
+        return EntityServiceFactory.getDaoInstance(getUser()).getEntityNameMap(type);
     }
 
 
@@ -90,7 +104,6 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
         Entity newEntity = new EntityStore(originalEntity);
         newEntity.setEntity(UUID.randomUUID().toString());
         switch (newEntity.getEntityType()) {
-
 
             case user:
                  return null;
@@ -109,47 +122,28 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
 
     @Override
     public List<Entity> getChildren(Entity parentEntity, EntityType type) {
-        return EntityTransactionFactory.getInstance(getUser()).getEntityChildren(parentEntity, type);
+        return EntityServiceFactory.getDaoInstance(getUser()).getEntityChildren(parentEntity, type);
+    }
+
+
+    @Override
+    public List<Entity> getEntityChildren(Entity parentEntity, EntityType type) {
+        return EntityServiceFactory.getDaoInstance(getUser()).getEntityChildren(parentEntity, type);
     }
 
     @Override
-    public Entity subscribe(Entity entity, Subscription subscription, EntityName name) {
-        User user = getUser();
-        if (entity.getEntityType().equals(EntityType.subscription)) {
-            entity.setName(name);
-            SubscriptionTransactionFactory.getInstance(user).subscribe(entity,subscription);
-            return  EntityTransactionFactory.getInstance(user).addUpdateEntity(entity);
-
-        }
-        else { //new
-          subscription.setUuid(UUID.randomUUID().toString());
-          if (entity.getOwner().equals(user.getUuid())) {   //subscribe to your own data
-              Entity s = EntityModelFactory.createEntity(name, "",EntityType.subscription,
-                      ProtectionLevel.onlyMe, subscription.getUuid(), entity.getEntity(), user.getUuid());
-              SubscriptionTransactionFactory.getInstance(user).subscribe(s, subscription);
-              return EntityTransactionFactory.getInstance(user).addUpdateEntity(s);
-          }
-          else { //subscribe to some elses data
-              Entity s = EntityModelFactory.createEntity(name, "",EntityType.subscription,
-                      ProtectionLevel.onlyMe, subscription.getUuid(), user.getUuid(), user.getUuid());
-              SubscriptionTransactionFactory.getInstance(user).subscribe(s, subscription);
-              return EntityTransactionFactory.getInstance(user).addUpdateEntity(s);
-          }
-        }
-
+    public Entity getEntityByName(EntityName name) {
+       return EntityServiceFactory.getDaoInstance(getUser()).getEntityByName(name);
     }
 
     @Override
-    public Subscription readSubscription(Entity entity) throws NimbitsException {
-      return SubscriptionTransactionFactory.getInstance(getUser()).readSubscription(entity);
+    public Entity addUpdateEntity(User user, Entity entity) {
+        return EntityServiceFactory.getDaoInstance(user).addUpdateEntity(entity);
     }
 
     @Override
-    public Entity getSubscribedEntity(Entity entity) {
-        Subscription subscription =
-                SubscriptionTransactionFactory.getInstance(getUser()).readSubscription(entity);
-        return EntityTransactionFactory.getInstance(getUser()).getEntityByUUID(subscription.getSubscribedEntity());
-
+    public Entity getEntityByUUID(User user, String entityId) {
+        return EntityServiceFactory.getDaoInstance(user).getEntityByUUID(entityId);
     }
 
 

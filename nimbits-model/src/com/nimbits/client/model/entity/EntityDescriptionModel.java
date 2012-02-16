@@ -25,12 +25,12 @@ public class EntityDescriptionModel implements Serializable, EntityDescription {
 
     private int entityType;
 
-    public EntityDescriptionModel(Server server, EntityName name, String uuid, String pointDesc, EntityType entityType) {
+    public EntityDescriptionModel(Server server, Entity entity) {
         this.server = server;
-        this.pointName = name.getValue();
-        this.uuid = uuid;
-        this.pointDesc = pointDesc;
-        this.entityType = entityType.getCode();
+        this.pointName = entity.getName().getValue();
+        this.uuid = entity.getEntity();
+        this.pointDesc = entity.getDescription();
+        this.entityType = entity.getEntityType().getCode();
     }
 
 //    public EntityDescriptionModel(Server server, EntityName name, String uuid, String pointDesc, EntityType entityType) {

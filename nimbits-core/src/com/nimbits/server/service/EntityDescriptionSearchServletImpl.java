@@ -72,7 +72,7 @@ public class EntityDescriptionSearchServletImpl extends HttpServlet {
 
         final String safeSearch = safeSearchText(dangerousSearchText);
         try {
-            SearchLogTransactionFactory.getInstance().addUpdateSearchLog(safeSearch);
+            SearchLogTransactionFactory.getInstance().addUpdateSearchLog(dangerousSearchText);
         } catch (NimbitsException ignored) {
 
         }

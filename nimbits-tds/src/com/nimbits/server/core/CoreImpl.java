@@ -19,6 +19,7 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.server.ServerModelFactory;
 import com.nimbits.server.gson.GsonFactory;
@@ -37,13 +38,13 @@ import java.util.logging.Logger;
 public class CoreImpl implements Core {
     private static final Logger log = Logger.getLogger(CoreImpl.class.getName());
 
-    public void reportDeleteToCore(final String json, final EntityType entityType) {
+    public void reportDeleteToCore(final Entity entity) {
         try {
             if (SettingTransactionsFactory.getInstance().getSetting(Const.SETTING_SERVER_IS_DISCOVERABLE).equals("1")) {
-
+                String json = GsonFactory.getInstance().toJson(entity);
 
                 final String params = Const.PARAM_ENTITY + "=" + json
-                        + "&" + Const.PARAM_ENTITY_TYPE + "=" + entityType.getCode()
+                        + "&" + Const.PARAM_ENTITY_TYPE + "=" + entity.getEntityType()
                         + "&" + Const.PARAM_ACTION + "=" + Action.delete.name();
 
 
@@ -57,17 +58,17 @@ public class CoreImpl implements Core {
     }
 
 
-    public void reportUpdateToCore(final String serverUrl, final String json, final EntityType entityType) {
+    public void reportUpdateToCore(final String serverUrl, final Entity entity) {
         try {
             if (!Utils.isEmptyString(serverUrl) && SettingTransactionsFactory.getInstance().getSetting(Const.SETTING_SERVER_IS_DISCOVERABLE).equals("1")) {
                 final String email = SettingTransactionsFactory.getInstance().getSetting(Const.SETTING_ADMIN);
                 final EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
                 final Server server = ServerModelFactory.createServer(serverUrl, emailAddress, Const.CONST_SERVER_VERSION);
                 final String serverJson = GsonFactory.getInstance().toJson(server);
-
+                String json = GsonFactory.getInstance().toJson(entity);
                 final String params = Const.PARAM_SERVER + "=" + serverJson
                         + "&" + Const.PARAM_ENTITY + "=" + json
-                        + "&" + Const.PARAM_ENTITY_TYPE + "=" + entityType.getCode()
+                        + "&" + Const.PARAM_ENTITY_TYPE + "=" + entity.getEntityType()
                         + "&" + Const.PARAM_ACTION + "=" + Action.update.name();
 
                 log.info(Const.PATH_NIMBITS_CORE_ENTITY_DESC_URL + "?" + params);

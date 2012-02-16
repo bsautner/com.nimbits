@@ -19,17 +19,11 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.Calculation;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.subscription.*;
 import com.nimbits.client.model.user.User;
-import com.nimbits.server.dao.datapoint.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.orm.*;
-import com.nimbits.server.orm.entity.*;
-import com.nimbits.server.point.PointTransactionsFactory;
 import com.nimbits.server.subscription.*;
 import com.nimbits.server.user.UserTransactionFactory;
 import com.nimbits.shared.*;
@@ -217,7 +211,7 @@ public class UpgradeTask  extends HttpServlet
         Entity entity = EntityModelFactory.createEntity(name, "",EntityType.subscription,
                 ProtectionLevel.onlyMe,subscription.getUuid(), p.getUUID(), u.getUuid());
         log.info("created subscription " + name.getValue());
-        Entity r = EntityTransactionFactory.getInstance(u).addUpdateEntity(entity);
+        Entity r = EntityServiceFactory.getInstance().addUpdateEntity(u, entity);
         SubscriptionTransactionFactory.getInstance(u).subscribe(r, subscription);
     }
 
@@ -254,7 +248,7 @@ public class UpgradeTask  extends HttpServlet
                 EntityName name = CommonFactoryLocator.getInstance().createName(p.getName().getValue());
                 Entity pointEntity = EntityModelFactory.createEntity(name, p.getDescription(), EntityType.point,
                         protectionLevel, p.getUUID(), parent, u.getUuid());
-                Entity r = EntityTransactionFactory.getInstance(u).addUpdateEntity(pointEntity);
+                Entity r = EntityServiceFactory.getInstance().addUpdateEntity(u, pointEntity);
                 log.info("created point " + name.getValue());
                 TaskFactoryLocator.getInstance().startUpgradeTask(Action.point,r );
 
@@ -279,7 +273,7 @@ public class UpgradeTask  extends HttpServlet
                 Entity pointEntity = EntityModelFactory.createEntity(name, "", EntityType.file,
                         protectionLevel, UUID.randomUUID().toString(), parent, u.getUuid(), e.blobKey.getKeyString());
 
-                Entity r = EntityTransactionFactory.getInstance(u).addUpdateEntity(pointEntity);
+                Entity r = EntityServiceFactory.getInstance().addUpdateEntity(u, pointEntity);
                 log.info("created diagram " + name.getValue());
                 // TaskFactoryLocator.getInstance().startUpgradeTask(Action.point,r );
 
@@ -314,7 +308,7 @@ public class UpgradeTask  extends HttpServlet
                         UUID.randomUUID().toString(), userEntity.getEntity(), userEntity.getEntity());
                 Entity r = entity;
                 if (! name.getValue().equals(N)) {
-                    r = EntityTransactionFactory.getInstance(user).addUpdateEntity(entity);
+                    r = EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
                 }
                 log.info("created category " + name.getValue());
                 TaskFactoryLocator.getInstance().startUpgradeTask(Action.category,r );
@@ -328,7 +322,7 @@ public class UpgradeTask  extends HttpServlet
                     Entity entity = EntityModelFactory.createEntity(name, "",EntityType.userConnection, ProtectionLevel.onlyMe,
                             connection.getUuid(), user.getUuid(), user.getUuid());
                     log.info("created connection " + name.getValue());
-                    Entity r =   EntityTransactionFactory.getInstance(user).addUpdateEntity(entity);
+                    Entity r =   EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
 
                 }
             }
@@ -347,7 +341,7 @@ public class UpgradeTask  extends HttpServlet
             set += Const.CONST_QUERY_CHUNK_SIZE;
             for (User u : users) {
                 Entity entity = EntityModelFactory.createEntity(u);
-                Entity r = EntityTransactionFactory.getInstance(u).addUpdateEntity(entity);
+                Entity r = EntityServiceFactory.getInstance().addUpdateEntity(u, entity);
                 TaskFactoryLocator.getInstance().startUpgradeTask(Action.user,r );
 
             }

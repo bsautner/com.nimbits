@@ -29,7 +29,7 @@ import com.nimbits.client.service.user.UserService;
 import com.nimbits.server.counter.CounterFactory;
 import com.nimbits.server.dao.counter.ShardedCounter;
 import com.nimbits.server.email.EmailServiceFactory;
-import com.nimbits.server.entity.EntityTransactionFactory;
+import com.nimbits.server.entity.EntityServiceFactory;
 import com.nimbits.server.settings.SettingsServiceFactory;
 import com.nimbits.shared.Utils;
 
@@ -240,8 +240,8 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
         Entity aConnection = EntityModelFactory.createEntity(requester.getName(), "", EntityType.userConnection, ProtectionLevel.onlyMe, requester.getUuid(), acceptor.getUuid(), acceptor.getUuid());
 
-        EntityTransactionFactory.getInstance(acceptor).addUpdateEntity(aConnection);
-        EntityTransactionFactory.getInstance(requester).addUpdateEntity(rConnection);
+        EntityServiceFactory.getInstance().addUpdateEntity(acceptor, aConnection);
+        EntityServiceFactory.getInstance().addUpdateEntity(requester,rConnection);
 
         UserTransactionFactory.getInstance().updateConnectionRequest(uuid, requester, acceptor, accepted);
 

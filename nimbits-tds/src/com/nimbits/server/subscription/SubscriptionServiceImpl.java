@@ -14,7 +14,6 @@ import com.nimbits.server.entity.*;
 import com.nimbits.server.facebook.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.instantmessage.*;
-import com.nimbits.server.point.*;
 import com.nimbits.server.recordedvalue.*;
 import com.nimbits.server.twitter.*;
 import com.nimbits.server.user.*;
@@ -30,6 +29,15 @@ import java.util.*;
  */
 public class SubscriptionServiceImpl extends RemoteServiceServlet implements
         SubscriptionService {
+
+    private User getUser() {
+        try {
+            return UserServiceFactory.getServerInstance().getHttpRequestUser(
+                    this.getThreadLocalRequest());
+        } catch (NimbitsException e) {
+            return null;
+        }
+    }
 
     @Override
     public void deleteSubscription(Point point) throws NimbitsException {
@@ -61,7 +69,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
 
 
-                Entity subscriptionEntity = EntityTransactionFactory.getInstance(null).getEntityByUUID(subscription.getUuid());
+                Entity subscriptionEntity = EntityServiceFactory.getDaoInstance(null).getEntityByUUID(subscription.getUuid());
                 User subscriber = UserServiceFactory.getInstance().getUserByUUID(subscriptionEntity.getOwner());
                 AlertType alert = v.getAlertState();
 
@@ -107,6 +115,46 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
     }
 
+
+    @Override
+    public Entity subscribe(Entity entity, Subscription subscription, EntityName name) {
+        User user = getUser();
+        if (entity.getEntityType().equals(EntityType.subscription)) {
+            entity.setName(name);
+            SubscriptionTransactionFactory.getInstance(user).subscribe(entity,subscription);
+            return  EntityServiceFactory.getDaoInstance(user).addUpdateEntity(entity);
+
+        }
+        else { //new
+            subscription.setUuid(UUID.randomUUID().toString());
+            if (entity.getOwner().equals(user.getUuid())) {   //subscribe to your own data
+                Entity s = EntityModelFactory.createEntity(name, "",EntityType.subscription,
+                        ProtectionLevel.onlyMe, subscription.getUuid(), entity.getEntity(), user.getUuid());
+                SubscriptionTransactionFactory.getInstance(user).subscribe(s, subscription);
+                return EntityServiceFactory.getDaoInstance(user).addUpdateEntity(s);
+            }
+            else { //subscribe to some elses data
+                Entity s = EntityModelFactory.createEntity(name, "",EntityType.subscription,
+                        ProtectionLevel.onlyMe, subscription.getUuid(), user.getUuid(), user.getUuid());
+                SubscriptionTransactionFactory.getInstance(user).subscribe(s, subscription);
+                return EntityServiceFactory.getDaoInstance(user).addUpdateEntity(s);
+            }
+        }
+
+    }
+
+    @Override
+    public Subscription readSubscription(Entity entity) throws NimbitsException {
+        return SubscriptionTransactionFactory.getInstance(getUser()).readSubscription(entity);
+    }
+
+    @Override
+    public Entity getSubscribedEntity(Entity entity) {
+        Subscription subscription =
+                SubscriptionTransactionFactory.getInstance(getUser()).readSubscription(entity);
+        return EntityServiceFactory.getDaoInstance(getUser()).getEntityByUUID(subscription.getSubscribedEntity());
+
+    }
     private void sendNotification(User user, Subscription subscription, Point point, Value value) {
         switch (subscription.getNotifyMethod()) {
             case none:

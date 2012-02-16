@@ -2,6 +2,7 @@ package com.nimbits.client.service.subscription;
 
 import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.exception.*;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.subscription.*;
 import com.nimbits.client.model.value.*;
@@ -20,4 +21,8 @@ public interface SubscriptionService  extends RemoteService {
     void deleteSubscription(final Point point) throws NimbitsException;
     List<Subscription> getSubscriptionsToPoint(Point point);
     void updateSubscriptionLastSent(Subscription subscription);
+    Entity subscribe(Entity entity, Subscription subscription, EntityName name);
+    Subscription readSubscription(final Entity point) throws NimbitsException;
+    Entity getSubscribedEntity(final Entity entity);
+
 }

@@ -3,6 +3,7 @@ package com.nimbits.client.model.entity;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.model.point.*;
 
 import java.io.Serializable;
 import java.util.*;
@@ -65,5 +66,7 @@ public interface Entity  extends Serializable {
     void addChild(Entity entity);
 
 
+    void setPoints(List<Point> points);
 
+    void setHost(String host);
 }

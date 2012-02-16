@@ -65,8 +65,8 @@ public class EntityModelFactory {
     }
 
 
-    public static EntityDescription createEntityDescription(Server server, EntityName name, String uuid, String pointDesc, EntityType type) {
-        return new EntityDescriptionModel(server, name, uuid, pointDesc, type);
+    public static EntityDescription createEntityDescription(Server server, Entity entity) {
+        return new EntityDescriptionModel(server, entity);
     }
 
     public static List<EntityDescription> createPointDescriptions(List<EntityDescription> entityDescriptions) {

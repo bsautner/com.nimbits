@@ -3,11 +3,14 @@ package com.nimbits.server.dao.entity;
 
 import com.nimbits.PMF;
 import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.subscription.*;
 import com.nimbits.client.model.user.User;
-import com.nimbits.server.entity.EntityTransactions;
+import com.nimbits.client.service.entity.*;
+import com.nimbits.server.entity.*;
 import com.nimbits.server.orm.entity.EntityStore;
 import com.nimbits.server.point.PointServiceFactory;
 
@@ -25,7 +28,7 @@ import java.util.Map;
  * Date: 2/7/12
  * Time: 10:46 AM
  */
-public class EntityDaoImpl implements EntityTransactions {
+public class EntityDaoImpl implements EntityService {
 
     private final User user;
 
@@ -84,6 +87,18 @@ public class EntityDaoImpl implements EntityTransactions {
 
 
     }
+
+    @Override
+    public Entity copyEntity(Entity originalEntity, EntityName newName) {
+        return null;  //auto generated
+    }
+
+    @Override
+    public List<Entity> getChildren(Entity parentEntity, EntityType type) {
+        return null;  //auto generated
+    }
+
+
 
     @Override
     public List<Entity> getEntityChildren(Entity parentEntity, EntityType type) {
@@ -263,10 +278,10 @@ public class EntityDaoImpl implements EntityTransactions {
 
 
         try {
-            final Query q1 = pm.newQuery(EntityStore.class, "name==b");
-            q1.declareParameters("String b");
+            final Query q1 = pm.newQuery(EntityStore.class, "name==b && owner==o");
+            q1.declareParameters("String b, String o");
             q1.setRange(0, 1);
-            final List<Entity> c = (List<Entity>) q1.execute(name.getValue());
+            final List<Entity> c = (List<Entity>) q1.execute(name.getValue(), user.getUuid());
             if (c.size() > 0) {
 
                 Entity result = c.get(0);
@@ -280,6 +295,21 @@ public class EntityDaoImpl implements EntityTransactions {
         } finally {
             pm.close();
         }
+    }
+
+    @Override
+    public Entity addUpdateEntity(User user, Entity aConnection) {
+        return null;  //auto generated
+    }
+
+    @Override
+    public Entity getEntityByUUID(User u, String entityId) {
+        return null;  //auto generated
+    }
+
+    @Override
+    public Entity getEntityByName(User u, EntityName name) {
+        return null;  //auto generated
     }
 
 

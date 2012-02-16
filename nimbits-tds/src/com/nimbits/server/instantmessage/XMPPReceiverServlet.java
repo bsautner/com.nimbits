@@ -34,7 +34,6 @@ import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueModelFactory;
-import com.nimbits.server.entity.EntityTransactionFactory;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.json.JsonHelper;
 import com.nimbits.server.point.PointServiceFactory;

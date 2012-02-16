@@ -56,14 +56,13 @@ public class UpgradeTask  extends HttpServlet
 
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
-        int set = 0;
-        int results = -1;
+
         Action action = Action.get(req.getParameter(Const.PARAM_ACTION));
 
         try {
             if (action.equals(Action.start)){
                 log.info("Started upgrade task");
-                doStart(set, results);
+                doStart();
             }
             else if (action.equals(Action.user)) {
                 try {
@@ -338,7 +337,9 @@ public class UpgradeTask  extends HttpServlet
         pm.close();
     }
 
-    private void doStart(int set, int results) {
+    private void doStart() {
+        int set = 0;
+        int results = -1;
         while (results != 0) {
             final List<User> users = UserTransactionFactory.getInstance().getUsers(set, set + Const.CONST_QUERY_CHUNK_SIZE);
             results = users.size();

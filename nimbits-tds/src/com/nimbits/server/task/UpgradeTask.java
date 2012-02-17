@@ -52,42 +52,33 @@ public class UpgradeTask  extends HttpServlet
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
 
         Action action = Action.get(req.getParameter(Const.PARAM_ACTION));
-
         try {
-            if (action.equals(Action.start)){
-                log.info("Started upgrade task");
-                doStart();
-            }
-            else if (action.equals(Action.user)) {
-                try {
+            switch (action) {
+                case start:
+                    log.info("Started upgrade task");
+                    doStart();
+                    break;
+                case user:
                     log.info("Started upgrade user task");
                     doUser(req);
-                } catch (NimbitsException e) {
-                    log.severe(e.getMessage());
-                }
+                    break;
+                case category:
+                    log.info("Started upgrade category task");
+                    doCategory(req);
+                    break;
+                case point:
+                    log.info("Started upgrade Point task");
 
-            }
-            else if (action.equals(Action.category)) {
-                log.info("Started upgrade category task");
-                doCategory(req);
-
-            }
-            else if (action.equals(Action.point)) {
-                log.info("Started upgrade Point task");
-                try {
                     doPoint(req);
-                } catch (NimbitsException e) {
-                    log.severe(e.getMessage());
-                }
 
+                    break;
             }
-        } catch (Exception e) {
+        } catch (NimbitsException e) {
             log.severe(e.getMessage());
-            e.printStackTrace();
         }
 
-
     }
+
 
     private void doPoint(HttpServletRequest req) throws NimbitsException {
 
@@ -114,50 +105,50 @@ public class UpgradeTask  extends HttpServlet
                 if (p.calculationEntity.x != null && p.calculationEntity.x > 0) {
                     try {
                         DataPoint px = pm.getObjectById(DataPoint.class, p.calculationEntity.x);
-                     if (px != null) {
-                       x=(px.getUUID());
-                    }
-                } catch (JDOObjectNotFoundException ex) {
-                    log.info("Point not found");
+                        if (px != null) {
+                            x=(px.getUUID());
+                        }
+                    } catch (JDOObjectNotFoundException ex) {
+                        log.info("Point not found");
 
-                }
+                    }
                 }
                 if (p.calculationEntity.y != null && p.calculationEntity.y > 0) {
-                  try {
-                    DataPoint py =  pm.getObjectById(DataPoint.class, p.calculationEntity.y);
-                    if (py != null) {
-                       y=(py.getUUID());
-                    }
-                  } catch (JDOObjectNotFoundException ex) {
-                      log.info("Point not found");
+                    try {
+                        DataPoint py =  pm.getObjectById(DataPoint.class, p.calculationEntity.y);
+                        if (py != null) {
+                            y=(py.getUUID());
+                        }
+                    } catch (JDOObjectNotFoundException ex) {
+                        log.info("Point not found");
 
-                  }
+                    }
                 }
                 if (p.calculationEntity.z != null && p.calculationEntity.z > 0) {
-                  try {
-                      DataPoint pz =  pm.getObjectById(DataPoint.class, p.calculationEntity.z);
+                    try {
+                        DataPoint pz =  pm.getObjectById(DataPoint.class, p.calculationEntity.z);
 
-                    if (pz != null) {
-                        z=(pz.getUUID());
+                        if (pz != null) {
+                            z=(pz.getUUID());
+                        }
+                    } catch (JDOObjectNotFoundException ex) {
+                        log.info("Point not found");
+
                     }
-                  } catch (JDOObjectNotFoundException ex) {
-                      log.info("Point not found");
-
-                  }
                 }
                 if (p.calculationEntity.target != null && p.calculationEntity.target > 0) {
-                   try {
-                    DataPoint pt = pm.getObjectById(DataPoint.class, p.calculationEntity.target);
-                    if (pt != null && ! pt.getUUID().equals(p.getUUID())) {
-                       target= (pt.getUUID());
-                    }
-                   } catch (JDOObjectNotFoundException ex) {
-                       log.info("Point not found");
+                    try {
+                        DataPoint pt = pm.getObjectById(DataPoint.class, p.calculationEntity.target);
+                        if (pt != null && ! pt.getUUID().equals(p.getUUID())) {
+                            target= (pt.getUUID());
+                        }
+                    } catch (JDOObjectNotFoundException ex) {
+                        log.info("Point not found");
 
-                   }
+                    }
                 }
                 else {
-                   // p.calculationEntity.setEnabled(false);
+                    // p.calculationEntity.setEnabled(false);
                 }
                 Transaction tx = pm.currentTransaction();
                 tx.begin();
@@ -332,19 +323,21 @@ public class UpgradeTask  extends HttpServlet
     }
 
     private void doStart() {
-        int set = 0;
+      //  int set = 0;
         int results = -1;
-        while (results != 0) {
-            final List<User> users = UserTransactionFactory.getInstance().getUsers(set, set + Const.CONST_QUERY_CHUNK_SIZE);
-            results = users.size();
+      //  while (results != 0) {
+           // final List<User> users = UserTransactionFactory.getInstance().getUsers(set, set + Const.CONST_QUERY_CHUNK_SIZE);
+        final List<User> users = UserTransactionFactory.getInstance().getAllUsers("lastLoggedIn desc", 3000);
+        //    results = users.size();
 
-            set += Const.CONST_QUERY_CHUNK_SIZE;
+          //  set += Const.CONST_QUERY_CHUNK_SIZE;
             for (User u : users) {
+                log.info("Upgrading user: " + u.getEmail().getValue());
                 Entity entity = EntityModelFactory.createEntity(u);
                 Entity r = EntityServiceFactory.getInstance().addUpdateEntity(u, entity);
                 TaskFactoryLocator.getInstance().startUpgradeTask(Action.user,r );
 
-            }
+      //     }
 
         }
     }

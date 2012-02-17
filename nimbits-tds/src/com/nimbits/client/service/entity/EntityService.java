@@ -23,6 +23,8 @@ public interface EntityService extends RemoteService {
 
     Entity addUpdateEntity(final Entity entity);
 
+    Entity addUpdateEntity(final EntityName entity, final EntityType type);
+
     void deleteEntity(Entity entity);
 
     Entity getEntityByUUID(String uuid);

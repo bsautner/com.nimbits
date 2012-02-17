@@ -45,7 +45,7 @@ import com.nimbits.client.service.entity.EntityServiceAsync;
  * Date: 5/31/11
  * Time: 1:05 PM
  */
-class CategoryPropertyPanel extends NavigationEventProvider {
+public class CategoryPropertyPanel extends NavigationEventProvider {
 
     private final Entity entity;
 
@@ -58,7 +58,7 @@ class CategoryPropertyPanel extends NavigationEventProvider {
     private final TextArea description = new TextArea();
 
 
-    CategoryPropertyPanel(final Entity entity) {
+    public CategoryPropertyPanel(final Entity entity) {
         this.entity = entity;
         this.readOnly = entity.isReadOnly();
     }

@@ -13,52 +13,30 @@
 
 package com.nimbits.client.panels;
 
-import com.extjs.gxt.ui.client.Style.Scroll;
-import com.extjs.gxt.ui.client.data.ModelData;
-import com.extjs.gxt.ui.client.dnd.DND.Feedback;
-import com.extjs.gxt.ui.client.dnd.TreeGridDragSource;
-import com.extjs.gxt.ui.client.dnd.TreeGridDropTarget;
+import com.extjs.gxt.ui.client.Style.*;
+import com.extjs.gxt.ui.client.data.*;
+import com.extjs.gxt.ui.client.dnd.DND.*;
+import com.extjs.gxt.ui.client.dnd.*;
 import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.store.TreeStore;
-import com.extjs.gxt.ui.client.widget.ContentPanel;
-import com.extjs.gxt.ui.client.widget.Info;
-import com.extjs.gxt.ui.client.widget.MessageBox;
-import com.extjs.gxt.ui.client.widget.Window;
-import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.grid.ColumnModel;
-import com.extjs.gxt.ui.client.widget.grid.EditorGrid;
-import com.extjs.gxt.ui.client.widget.layout.FillLayout;
-import com.extjs.gxt.ui.client.widget.menu.Menu;
-import com.extjs.gxt.ui.client.widget.menu.MenuItem;
-import com.extjs.gxt.ui.client.widget.toolbar.SeparatorToolItem;
-import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.*;
+import com.extjs.gxt.ui.client.store.*;
+import com.extjs.gxt.ui.client.widget.*;
+import com.extjs.gxt.ui.client.widget.grid.*;
+import com.extjs.gxt.ui.client.widget.layout.*;
+import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.nimbits.client.controls.EntityTree;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.controls.*;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.icons.Icons;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.GxtModel;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModelFactory;
-import com.nimbits.client.service.datapoints.PointService;
-import com.nimbits.client.service.datapoints.PointServiceAsync;
-import com.nimbits.client.service.entity.EntityService;
-import com.nimbits.client.service.entity.EntityServiceAsync;
-import com.nimbits.client.service.recordedvalues.RecordedValueService;
-import com.nimbits.client.service.recordedvalues.RecordedValueServiceAsync;
-
-import com.nimbits.shared.Utils;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.client.service.datapoints.*;
+import com.nimbits.client.service.entity.*;
+import com.nimbits.client.service.recordedvalues.*;
+import com.nimbits.shared.*;
 
 import java.util.*;
 
@@ -70,10 +48,9 @@ class NavigationPanel extends NavigationEventProvider {
     private TreeStore<ModelData> store;
     private Timer updater;
     private boolean expanded = false;
-    private ClientType clientType;
     private Map<String, String> settings;
     List<String> parents;
-    private GxtModel currentModel;
+
     private final User user;
 
     public NavigationPanel(final User user,
@@ -81,7 +58,7 @@ class NavigationPanel extends NavigationEventProvider {
                            final Map<String, String> settings) {
 
         this.settings = settings;
-        this.clientType = clientType;
+       // this.clientType = clientType;
         this.user = user;
         mainPanel = new ContentPanel();
         mainPanel.setHeaderVisible(false);
@@ -89,14 +66,49 @@ class NavigationPanel extends NavigationEventProvider {
         mainPanel.setBodyBorder(false);
         mainPanel.setScrollMode(Scroll.AUTOY);
         mainPanel.setLayout(new FillLayout());
-        mainPanel.setTopComponent(treeToolBar());
-        add(mainPanel);
 
+        add(mainPanel);
+        NavigationToolBar toolBar = createToolbar(settings);
+
+        mainPanel.setTopComponent(toolBar);
         setBorders(false);
         setScrollMode(Scroll.NONE);
         getUserEntities(false);
 
 
+    }
+
+    private NavigationToolBar createToolbar(Map<String, String> settings) {
+        NavigationToolBar toolBar = new NavigationToolBar(tree, settings);
+
+        toolBar.addEntityModifiedListeners(new NavigationToolBar.EntityModifiedListener() {
+            @Override
+            public void onEntityModified(GxtModel model, Action action) {
+                switch (action) {
+                    case update: case create:
+                        addUpdateTreeModel(model, false);
+                        break;
+                    case refresh:
+                        getUserEntities(true);
+                        break;
+                }
+            }
+        });
+
+        toolBar.addExpandListeners(new NavigationToolBar.ExpandListener() {
+            @Override
+            public void onExpand() {
+                if (!expanded) {
+                    tree.expandAll();
+                    expanded=true;
+                }
+                else {
+                    tree.collapseAll();
+                    expanded=false;
+                }
+            }
+        });
+        return toolBar;
     }
 
     private void addEntity(final Entity entity) {
@@ -143,14 +155,27 @@ class NavigationPanel extends NavigationEventProvider {
     }
 
     private void treePropertyBuilder() {
-
-        tree.setContextMenu(createContextMenu());
+        EntityContextMenu context = new EntityContextMenu(tree, settings);
+        context.addEntityModifiedListeners(new EntityContextMenu.EntityModifiedListener() {
+            @Override
+            public void onEntityModified(GxtModel model, Action action) {
+                switch (action) {
+                    case delete: {
+                        removeEntity(model);
+                        break;
+                    }
+                    case update: case create:
+                        addUpdateTreeModel(model, false);
+                        break;
+                }
+            }
+        });
+        tree.setContextMenu(context);
         tree.setStateful(true);
         tree.setClicksToEdit(EditorGrid.ClicksToEdit.ONE);
         tree.setTrackMouseOver(true);
         tree.getView().setAutoFill(true);
         tree.addListener(Events.RowDoubleClick, treeDoubleClickListener);
-
     }
 
     private void treeDNDBuilder() {
@@ -219,34 +244,6 @@ class NavigationPanel extends NavigationEventProvider {
         });
     }
 
-    private void createPointPropertyWindow(Entity entity) {
-        final Window window = new Window();
-
-
-        final PointPanel panel = new PointPanel(user, entity);
-
-        panel.addPointUpdatedListeners(new PointPanel.PointUpdatedListener() {
-            @Override
-            public void onPointUpdated(Entity result) {
-                addUpdateTreeModel(result, false);
-            }
-        });
-
-
-
-        window.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.connect()));
-        window.setSize(466, 520);
-        window.setPlain(false);
-        window.setModal(true);
-        window.setBlinkModal(true);
-        window.setHeading(entity.getName().getValue() + " Properties");
-        window.setHeaderVisible(true);
-        window.setBodyBorder(true);
-//	window.setLayout(new FitLayout());
-        window.add(panel);
-        window.show();
-    }
-
     private void addChildrenToModel(final List<Entity> result, List<String> parents, GxtModel model) {
 
 
@@ -282,22 +279,22 @@ class NavigationPanel extends NavigationEventProvider {
 
     }
 
-    public void addUpdateTreeModel(final Entity result, final boolean refresh) {
+    public void addUpdateTreeModel(final GxtModel model, final boolean refresh) {
 
         if (tree != null && tree.getStore() != null) {
-            final GxtModel model = new GxtModel(result);
+
             store = tree.getTreeStore();
-            final ModelData mx = store.findModel(Const.PARAM_ID, result.getEntity());
+            final ModelData mx = store.findModel(Const.PARAM_ID, model.getBaseEntity().getEntity());
             if (mx != null) {
                 final GxtModel m = (GxtModel)mx;
-                m.update(result);
+                m.update(model.getBaseEntity());
                 store.update(m);
                 if (! refresh) {
                     tree.setExpanded(mx, true);
                 }
             }
             else {
-                final ModelData parent = store.findModel(Const.PARAM_ID, result.getParent());
+                final ModelData parent = store.findModel(Const.PARAM_ID, model.getBaseEntity().getParent());
                 if (parent != null) {
                     store.add(parent, model, true);
 
@@ -305,17 +302,15 @@ class NavigationPanel extends NavigationEventProvider {
             }
             tree.setExpanded(model, true);
         }
-
-
-
     }
 
-    private void removeEntity(final Entity result, GxtModel currentModel) {
+    private void removeEntity(GxtModel currentModel) {
 
         if (tree != null && tree.getStore() != null) {
-            // GxtModel model = new GxtModel(result);
+
             store = tree.getTreeStore();
-            store.remove(currentModel);
+            GxtModel m = (GxtModel) tree.getTreeStore().findModel(Const.PARAM_ID, currentModel.getBaseEntity().getEntity());
+            store.remove(m);
 
         }
     }
@@ -399,403 +394,6 @@ class NavigationPanel extends NavigationEventProvider {
 
     //toolbars
 
-    private Button addNewPointButton() {
-        final Button newPoint = new Button("");
-        newPoint.setText("New Data Point");
-        newPoint.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.addNew()));
-        newPoint.setToolTip(Const.MESSAGE_NEW_POINT);
-        newPoint.addListener(Events.OnClick, new Listener<BaseEvent>() {
-            @Override
-            public void handleEvent(BaseEvent be) {
-                final MessageBox box = MessageBox.prompt(
-                        Const.MESSAGE_NEW_POINT,
-                        Const.MESSAGE_NEW_POINT_PROMPT);
-                box.addCallback(createNewPointListener);
-            }
-        });
-        return newPoint;
-    }
-
-    private Button expandAllButton() {
-        final Button button = new Button("");
-        // newPoint.setText("New Data Point");
-        button.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.expand()));
-        button.setToolTip("expand all");
-        button.addListener(Events.OnClick, new Listener<BaseEvent>() {
-            @Override
-            public void handleEvent(BaseEvent be) {
-                if (!expanded) {
-                    tree.expandAll();
-                    expanded=true;
-                    button.setToolTip("expand all");
-                }
-                else {
-                    button.setToolTip("collapse all");
-                    tree.collapseAll();
-                    expanded=false;
-                }
-
-            }
-        });
-        return button;
-    }
-
-    private ToolBar treeToolBar() {
-        final ToolBar toolBar = new ToolBar();
-        toolBar.add(addNewPointButton());
-
-        toolBar.add(new SeparatorToolItem());
-
-        if (! clientType.equals(ClientType.android)) {
-            toolBar.add(addNewFileButton());
-            toolBar.add(addNewCategoryButton());
-        }
-        toolBar.add(expandAllButton());
-
-        return toolBar;
-    }
-
-    private Button addNewFileButton() {
-        Button newDiagram = new Button();
-        newDiagram.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.diagram()));
-        newDiagram.setToolTip("Upload a file");
-
-        newDiagram.addListener(Events.OnClick, addFileListener);
-        return newDiagram;
-    }
-
-    private Button addNewCategoryButton() {
-        final Button newCategory = new Button();
-        newCategory.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.category()));
-        newCategory.setToolTip(Const.MESSAGE_ADD_CATEGORY);
-        newCategory.addListener(Events.OnClick, new Listener<BaseEvent>() {
-            @Override
-            public void handleEvent(final BaseEvent be) {
-                final MessageBox box = MessageBox.prompt(Const.MESSAGE_NEW_CATEGORY,
-                        Const.MESSAGE_NEW_CATEGORY_PROMPT);
-                box.addCallback(new Listener<MessageBoxEvent>() {
-                    @Override
-                    public void handleEvent(final MessageBoxEvent be) {
-                        final String newEntityName = be.getValue();
-                        final EntityName categoryName = CommonFactoryLocator.getInstance().createName(newEntityName);
-
-                        final EntityServiceAsync service = GWT.create(EntityService.class);
-                        Entity entity = EntityModelFactory.createEntity(categoryName, EntityType.category);
-
-                        service.addUpdateEntity(entity,
-                                new AsyncCallback<Entity>() {
-                                    @Override
-                                    public void onFailure(Throwable caught) {
-                                        updater.cancel();
-                                        Info.display(Const.WORD_ERROR,
-                                                caught.getMessage());
-                                    }
-
-                                    @Override
-                                    public void onSuccess(final Entity c) {
-                                        addUpdateTreeModel(c, false);
-                                    }
-                                });
-
-                    }
-                });
-            }
-        });
-        return newCategory;
-    }
-
-    private MenuItem deleteContext() {
-        MenuItem retObj = new MenuItem();
-
-
-        retObj.setText("Delete");
-        retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.delete()));
-        retObj.addSelectionListener(new SelectionListener<MenuEvent>() {
-            public void componentSelected(MenuEvent ce) {
-                ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
-                currentModel = (GxtModel)selectedModel;
-                if (! currentModel.isReadOnly()) {
-                    MessageBox.confirm("Confirm", "Are you sure you want delete this? Doing so will permanently delete it including all of it's children (points, documents data etc)"
-                            , deleteEntityListener);
-                }
-
-            }
-        });
-        return retObj;
-    }
-
-    private MenuItem propertyContext() {
-        MenuItem retObj = new MenuItem();
-
-        retObj.setText(Const.WORD_PROPERTIES);
-        retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.edit()));
-        retObj.addSelectionListener(new SelectionListener<MenuEvent>() {
-            public void componentSelected(MenuEvent ce) {
-                GxtModel selectedModel = (GxtModel) tree.getSelectionModel().getSelectedItem();
-                Entity entity = selectedModel.getBaseEntity();
-                switch (selectedModel.getEntityType()) {
-                    case category:  {
-
-
-                        CategoryPropertyPanel dp = new CategoryPropertyPanel(entity);
-                        dp.addEntityDeletedListeners(new EntityDeletedListener() {
-                            @Override
-                            public void onEntityDeleted(Entity entity1 )  {
-                                //entityMap.remove(entity1.getEntity());
-                            }
-                        });
-
-                        final Window w = new Window();
-                        w.setWidth(500);
-                        w.setHeight(400);
-                        w.setHeading(entity.getName().getValue() + " " + Const.WORD_PROPERTIES);
-                        w.add(dp);
-                        w.show();
-                        break;
-
-                    }
-                    case point: {
-
-                        createPointPropertyWindow(entity);
-
-                        break;
-
-
-                    }
-
-                    case subscription: {
-                        showSubscriptionPanel(entity);
-                        break;
-                    }
-                    case file: {
-                        FilePropertyPanel dp = new FilePropertyPanel(entity);
-                        final Window w = new Window();
-                        w.setWidth(500);
-                        w.setHeight(400);
-                        w.setHeading(entity.getName().getValue() + " " + Const.WORD_PROPERTIES);
-                        w.add(dp);
-                        w.show();
-                        break;
-                    }
-                }
-            }
-        });
-        return retObj;
-    }
-
-    public void showSubscriptionPanel(final Entity entity) {
-        SubscriptionPanel dp = new SubscriptionPanel(entity, settings);
-
-        final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
-        w.setWidth(500);
-        w.setHeight(500);
-        w.setHeading("Subscribe");
-        w.add(dp);
-        dp.addSubscriptionAddedListener(new EntityAddedListener() {
-            @Override
-            public void onEntityAdded(Entity entity) {
-                w.hide();
-                Cookies.removeCookie(Action.subscribe.name());
-                addUpdateTreeModel(entity, false);
-            }
-        });
-
-        w.show();
-    }
-
-    private Menu createContextMenu() {
-        Menu contextMenu = new Menu();
-        contextMenu.add(subscribeContext());
-      //  contextMenu.add(publishContext());
-        contextMenu.add(reportContext());
-        contextMenu.add(propertyContext());
-        contextMenu.add(copyContext());
-        contextMenu.add(deleteContext());
-        return contextMenu;
-    }
-
-    private MenuItem subscribeContext() {
-        MenuItem retObj = new MenuItem();
-        retObj.setText("Subscribe");
-        retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.plugin()));
-        retObj.addSelectionListener(new SelectionListener<MenuEvent>() {
-            public void componentSelected(MenuEvent ce) {
-                ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
-                currentModel = (GxtModel) selectedModel;
-                Entity entity =  currentModel.getBaseEntity();
-                //TODO for now only subscribe to points
-                if (entity.getEntityType().equals(EntityType.subscription)  ||
-                        entity.getEntityType().equals(EntityType.point)) {
-                    showSubscriptionPanel(entity);
-                }
-
-            }
-        });
-        return retObj;
-    }
-
-    private MenuItem copyContext() {
-        MenuItem retObj = new MenuItem();
-        retObj.setText("Copy");
-        retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.album()));
-        retObj.addSelectionListener(new SelectionListener<MenuEvent>() {
-            public void componentSelected(MenuEvent ce) {
-                ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
-                currentModel = (GxtModel) selectedModel;
-
-                final MessageBox box;
-                if (currentModel.getEntityType().equals(EntityType.point) && ! currentModel.isReadOnly()) {
-
-                    box= MessageBox.prompt(
-                            Const.MESSAGE_NEW_POINT,
-                            Const.MESSAGE_NEW_POINT_PROMPT);
-                    box.addCallback(copyPointListener);
-                }
-                else {
-                    box = MessageBox.alert("Not supported", "Sorry, for the moment you can only copy your data points", null);
-
-                }
-                box.show();
-            }
-        });
-        return retObj;
-    }
-
-    private MenuItem publishContext() {
-        MenuItem retObj = new MenuItem();
-        retObj.setText("Publish");
-        retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.publish()));
-        retObj.addSelectionListener(new SelectionListener<MenuEvent>() {
-            public void componentSelected(MenuEvent ce) {
-                ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
-                GxtModel model = (GxtModel) selectedModel;
-                publishEntity(model); //TODO handle different types
-
-            }
-
-            private void publishEntity(GxtModel model) {
-
-                Entity p = model.getBaseEntity();
-                PointServiceAsync pointService = GWT.create(PointService.class);
-                //TODO
-//                pointService.publishPoint(p, new AsyncCallback<Point>() {
-//
-//                    @Override
-//                    public void onFailure(Throwable e) {
-//                        updater.cancel();
-//                        Info.display(Const.WORD_ERROR,
-//                                e.getMessage());
-//                    }
-//
-//                    @Override
-//                    public void onSuccess(Point point) {
-//                        com.google.gwt.user.client.Window.alert("Your data points is now set to public, people can now discover it by" +
-//                                " searching for its name or description on nimbits.com. Please select the property option to edit these values.");
-//
-//                    }
-//                });
-
-            }
-
-
-        });
-        return retObj;
-    }
-
-    private MenuItem reportContext() {
-        MenuItem retObj = new MenuItem();
-        retObj.setText("Report");
-        retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.form()));
-        retObj.addSelectionListener(new SelectionListener<MenuEvent>() {
-            public void componentSelected(MenuEvent ce) {
-                ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
-                GxtModel model = (GxtModel) selectedModel;
-                if (model.getEntityType().equals(EntityType.point) || model.getEntityType().equals(EntityType.category)) {
-                    Entity p =  model.getBaseEntity();
-                    openUrl(p.getEntity(), p.getName().getValue());
-                }
-
-
-
-            }
-
-            private void openUrl(String uuid, String title) {
-                String u = com.google.gwt.user.client.Window.Location.getHref()
-                        + "?uuid=" + uuid
-                        + "&count=10";
-                com.google.gwt.user.client.Window.open(u, title, Const.PARAM_DEFAULT_WINDOW_OPTIONS);
-            }
-        });
-
-        return retObj;
-    }
-
-    //listeners
-    private final Listener<MessageBoxEvent> copyPointListener  = new Listener<MessageBoxEvent>() {
-        private String newEntityName;
-
-
-        public void handleEvent(MessageBoxEvent be) {
-            newEntityName = be.getValue();
-            if (!Utils.isEmptyString(newEntityName)) {
-                final MessageBox box = MessageBox.wait("Progress",
-                        "Creating your data point channel into the cloud", "Creating: " + newEntityName);
-                box.show();
-                EntityServiceAsync service = GWT.create(EntityService.class);
-                EntityName name = CommonFactoryLocator.getInstance().createName(newEntityName);
-                Entity entity =  currentModel.getBaseEntity();
-
-                service.copyEntity(entity, name,new AsyncCallback<Entity>() {
-                    @Override
-                    public void onFailure(Throwable throwable) {
-                        box.close();
-                    }
-
-                    @Override
-                    public void onSuccess(Entity entity) {
-                        box.close();
-                        addUpdateTreeModel(entity, false);
-                    }
-                });
-
-            }
-        }
-    };
-
-    private final Listener<MessageBoxEvent> createNewPointListener = new Listener<MessageBoxEvent>() {
-        private String newEntityName;
-
-        @Override
-        public void handleEvent(MessageBoxEvent be) {
-            newEntityName = be.getValue();
-            if (!Utils.isEmptyString(newEntityName)) {
-                final MessageBox box = MessageBox.wait("Progress",
-                        "Creating your data point channel into the cloud", "Creating: " + newEntityName);
-                box.show();
-                PointServiceAsync service = GWT.create(PointService.class);
-                EntityName name = CommonFactoryLocator.getInstance().createName(newEntityName);
-                Entity entity = EntityModelFactory.createEntity(name, EntityType.point);
-                service.addPoint(name, new AsyncCallback<Point>() {
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        Info.display("Could not create "
-                                + newEntityName,
-                                caught.getMessage());
-                        box.close();
-                    }
-
-                    @Override
-                    public void onSuccess(Point result) {
-                        Entity e = EntityModelFactory.createEntity(user, result);
-                        addUpdateTreeModel(e, false);
-                        box.close();
-                    }
-                });
-
-
-            }
-        }
-    };
 
     private final Listener<TreeGridEvent<ModelData>> treeDoubleClickListener = new Listener<TreeGridEvent<ModelData>>() {
         @Override
@@ -824,29 +422,6 @@ class NavigationPanel extends NavigationEventProvider {
 
             }
     }
-
-    private final Listener<MessageBoxEvent> deleteEntityListener = new Listener<MessageBoxEvent>() {
-        public void handleEvent(MessageBoxEvent ce) {
-            Button btn = ce.getButtonClicked();
-            final EntityServiceAsync service = GWT.create(EntityService.class);
-
-            if (btn.getText().equals(Const.WORD_YES)) {
-                final Entity entityToDelete = currentModel.getBaseEntity();
-                service.deleteEntity(entityToDelete, new AsyncCallback<Void>() {
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        GWT.log("Error Deleting Point", caught);
-                    }
-
-                    @Override
-                    public void onSuccess(Void result) {
-                        removeEntity(entityToDelete, currentModel);
-                    }
-                });
-
-            }
-        }
-    };
 
     private final Listener<GridEvent> afterEditListener = new Listener<GridEvent>() {
 
@@ -883,28 +458,6 @@ class NavigationPanel extends NavigationEventProvider {
             }
         }
     };
-
-    private final Listener<BaseEvent> addFileListener = new Listener<BaseEvent>() {
-        @Override
-        public void handleEvent(final BaseEvent be) {
-            final Window w = new Window();
-            w.setAutoWidth(true);
-            w.setHeading(Const.MESSAGE_UPLOAD_SVG);
-            FileUploadPanel p = new FileUploadPanel(UploadType.newFile);
-            p.addFileAddedListeners(new FileUploadPanel.FileAddedListener() {
-
-                @Override
-                public void onFileAdded()  {
-                    w.hide();
-                    getUserEntities(true);
-                }
-            });
-
-            w.add(p);
-            w.show();
-        }
-    };
-
     //service calls
     private void getUserEntities(final boolean refresh)  {
 
@@ -920,7 +473,7 @@ class NavigationPanel extends NavigationEventProvider {
             public void onSuccess(List<Entity> result) {
                 if (refresh) {
                     for (Entity e : result) {
-                        addUpdateTreeModel(e, true);
+                        addUpdateTreeModel(new GxtModel(e), true);
                     }
                 }
                 else {

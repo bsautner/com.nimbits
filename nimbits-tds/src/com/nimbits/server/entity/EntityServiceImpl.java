@@ -25,6 +25,23 @@ import java.util.UUID;
  */
 public class EntityServiceImpl  extends RemoteServiceServlet implements EntityService {
 
+
+    @Override
+    public Entity addUpdateEntity(EntityName name, EntityType type) {
+        User u = getUser();
+        Entity e = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.everyone,
+                UUID.randomUUID().toString(), u.getUuid(), u.getUuid());
+        Entity r = EntityServiceFactory.getDaoInstance(u).addUpdateEntity(e);
+        switch (type) {
+            case point:
+                PointServiceFactory.getInstance().addPoint(u, r);
+
+
+        }
+
+        return r;
+    }
+
     @Override
     public Entity getEntityByName(User user, EntityName name) {
        return EntityServiceFactory.getDaoInstance(user).getEntityByName(name);

@@ -42,8 +42,8 @@ public enum Action {
     start(Const.ACTION_START),
     user(Const.ACTION_USER),
     category(Const.ACTION_CATEGORY),
-    point(Const.ACTION_POINT)
-    ;
+    point(Const.ACTION_POINT),
+    refresh(Const.ACTION_REFRESH);
     private static final Map<String, Action> lookup = new HashMap<String, Action>();
 
     static {

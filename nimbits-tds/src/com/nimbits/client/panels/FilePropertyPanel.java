@@ -41,7 +41,7 @@ import com.nimbits.client.service.entity.EntityServiceAsync;
  * Date: 5/31/11
  * Time: 1:05 PM
  */
-class FilePropertyPanel extends NavigationEventProvider {
+public class FilePropertyPanel extends NavigationEventProvider {
 
     //private final Diagram diagram;
     private final Entity entity;
@@ -51,7 +51,7 @@ class FilePropertyPanel extends NavigationEventProvider {
 
 
 
-    FilePropertyPanel(final Entity entity) {
+    public FilePropertyPanel(final Entity entity) {
         this.entity = entity;
         this.protectionLevelOptions = new ProtectionLevelOptions(entity);
       //  this.diagram = d;

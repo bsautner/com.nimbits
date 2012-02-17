@@ -15,6 +15,8 @@ public interface EntityServiceAsync {
 
     void addUpdateEntity(final Entity entity, AsyncCallback<Entity> async);
 
+    void addUpdateEntity(final EntityName name ,EntityType type,  AsyncCallback<Entity> async);
+
     void deleteEntity(Entity entity, AsyncCallback<Void> asyncCallback);
 
     void getEntityByUUID(String uuid, AsyncCallback<Entity> async);

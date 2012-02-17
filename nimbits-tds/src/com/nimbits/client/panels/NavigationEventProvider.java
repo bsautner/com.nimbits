@@ -60,7 +60,7 @@ public abstract class NavigationEventProvider extends LayoutContainer {
     }
 
 
-    void addEntityDeletedListeners(final EntityDeletedListener listener) {
+    public void addEntityDeletedListeners(final EntityDeletedListener listener) {
         entityDeletedListeners.add(listener);
     }
 

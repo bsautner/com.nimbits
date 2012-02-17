@@ -70,18 +70,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-class PointPanel extends LayoutContainer {
+public class PointPanel extends LayoutContainer {
 
     private static final String XML_LABEL_STYLE = "xmlLabel";
 
     //  private final Button btnHelp = new Button("Help");
     private final Button btnTestCalc = new Button("Test Calc");
     private ProtectionLevelOptions protectionLevelOptions;
-
-
     private final CheckBox he = new CheckBox();
-
-
     //idle
     private final CheckBox idleOn = new CheckBox();
     private final CheckBox ignoreCompressedValues = new CheckBox();
@@ -129,16 +125,6 @@ class PointPanel extends LayoutContainer {
     //calcs
 
 
-//     private final Icons ICONS = GWT.create(Icons.class);
-
-
-    // private Point point;
-
-//    void setPoint(Point aPoint) {
-//        this.point = aPoint;
-//    }
-
-
     private final PointServiceAsync pointService = GWT.create(PointService.class);
 
     private final SeparatorToolItem separatorToolItem = new SeparatorToolItem();
@@ -169,11 +155,11 @@ class PointPanel extends LayoutContainer {
 
     private final CheckBox intelEnabled = new CheckBox();
     private final CheckBox intelPlainText = new CheckBox();
-    private final User user;
+  //  private final User user;
 
-    public PointPanel(final User user, final Entity entity)   {
+    public PointPanel(final Entity entity)   {
         this.entity = entity;
-        this.user = user;
+       // this.user = user;
         calcTarget= new EntityCombo(EntityType.point);
         protectionLevelOptions = new ProtectionLevelOptions(entity);
 

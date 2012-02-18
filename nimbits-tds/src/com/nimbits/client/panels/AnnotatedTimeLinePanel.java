@@ -13,39 +13,47 @@
 
 package com.nimbits.client.panels;
 
-import com.extjs.gxt.ui.client.dnd.*;
+import com.extjs.gxt.ui.client.dnd.DropTarget;
 import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.store.*;
+import com.extjs.gxt.ui.client.store.TreeStoreModel;
 import com.extjs.gxt.ui.client.widget.*;
-import com.extjs.gxt.ui.client.widget.Label;
-import com.extjs.gxt.ui.client.widget.Window;
 import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.button.*;
-import com.extjs.gxt.ui.client.widget.form.*;
-import com.extjs.gxt.ui.client.widget.toolbar.*;
-import com.google.gwt.core.client.*;
-import com.google.gwt.i18n.client.*;
-import com.google.gwt.user.client.*;
-import static com.google.gwt.user.client.Window.*;
-import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
-import com.google.gwt.visualization.client.AbstractDataTable.*;
-import com.google.gwt.visualization.client.*;
-import com.google.gwt.visualization.client.visualizations.*;
-import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.icons.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.timespan.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.client.service.datapoints.*;
-import com.nimbits.client.service.recordedvalues.*;
-import com.nimbits.shared.*;
+import com.extjs.gxt.ui.client.widget.button.ToolButton;
+import com.extjs.gxt.ui.client.widget.form.NumberField;
+import com.extjs.gxt.ui.client.widget.form.TextField;
+import com.extjs.gxt.ui.client.widget.toolbar.SeparatorToolItem;
+import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.google.gwt.visualization.client.AbstractDataTable.ColumnType;
+import com.google.gwt.visualization.client.DataTable;
+import com.google.gwt.visualization.client.VisualizationUtils;
+import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine;
+import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine.Options;
+import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine.WindowMode;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.icons.Icons;
+import com.nimbits.client.model.Const;
+import com.nimbits.client.model.GxtModel;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.timespan.Timespan;
+import com.nimbits.client.model.timespan.TimespanModelFactory;
+import com.nimbits.client.model.timespan.TimespanServiceClientImpl;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.service.datapoints.PointService;
+import com.nimbits.client.service.datapoints.PointServiceAsync;
+import com.nimbits.client.service.recordedvalues.RecordedValueService;
+import com.nimbits.client.service.recordedvalues.RecordedValueServiceAsync;
+import com.nimbits.shared.Utils;
 
 import java.util.*;
+
+import static com.google.gwt.user.client.Window.alert;
 
 public class AnnotatedTimeLinePanel extends NavigationEventProvider {
     private final DateTimeFormat fmt = DateTimeFormat.getFormat(Const.FORMAT_DATE_TIME);
@@ -54,8 +62,8 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
     private ContentPanel mainPanel;
     private DataTable dataTable = null;
 
-    private final Map<EntityName, Point> points = new HashMap<EntityName, Point>();
-
+    private final Map<EntityName, Entity> points = new HashMap<EntityName, Entity>();
+    private final Map<EntityName, List<Value>> valueMap = new HashMap<EntityName, List<Value>>();
     private final TextField endDateSelector = new TextField();
     private final TextField startDateSelector = new TextField();
     private Timespan timespan;
@@ -71,7 +79,7 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
 
     //data
 
-    private void addPointDataToTable(final Point p, final List<Value> values) {
+    private void addPointDataToTable(final Entity entity, final List<Value> values) {
         int PointColumn;
 
         boolean found = false;
@@ -85,7 +93,7 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
 
         for (int i = 0; i < r; i++) {
             String s = dataTable.getColumnLabel(i);
-            if (s.equals(p.getName().getValue())) {
+            if (s.equals(entity.getName().getValue())) {
                 PointColumn = i;
                 found = true;
                 break;
@@ -94,21 +102,28 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
 
 
         if (!found) {
-            dataTable.addColumn(ColumnType.NUMBER, p.getName().getValue());
+            dataTable.addColumn(ColumnType.NUMBER, entity.getName().getValue());
             dataTable.addColumn(ColumnType.STRING, "title" + r);
             dataTable.addColumn(ColumnType.STRING, "text" + r);
         }
 
         if (values != null) {
+            if (! valueMap.containsKey(entity.getName())) {
+                valueMap.get(entity.getName()).addAll(values);
+            }
+            else {
+                valueMap.put(entity.getName(), values);
+            }
             for (Value v : values) {
-                points.get(p.getName()).getValues().add(v);
+
+//                points.get(entity.getName()).getValues().add(v);
 
                 dataTable.addRow();
                 dataTable.setValue(CurrentRow, 0, v.getTimestamp());
                 dataTable.setValue(CurrentRow, PointColumn, v.getNumberValue());
 
                 String note = v.getNote();
-                String name = p.getName().getValue();
+                String name =entity.getName().getValue();
 
                 if (Utils.isEmptyString(note)) {
                     note = null;
@@ -162,18 +177,7 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
         }
         startDateSelector.setValue(fmt.format(this.timespan.getStart()));
         endDateSelector.setValue(fmt.format(this.timespan.getEnd()));
-        PointServiceAsync service = GWT.create(PointService.class);
-        service.getPointByUUID(entity.getUUID(), new AsyncCallback<Point>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                //auto generated
-            }
-
-            @Override
-            public void onSuccess(Point result) {
-                addPointDataToTable(result, Arrays.asList(value));
-            }
-        });
+        addPointDataToTable(entity, Arrays.asList(value));
 
         drawChart();
     }
@@ -269,7 +273,7 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
                     w.setHeading("Export Options");
                     w.setWidth(500);
                     w.setHeight(300);
-                    w.add((new ExportPanel(points)));
+                    w.add((new ExportPanel(points, valueMap)));
                     w.show();
                 } else {
                     alert("Please select a point, and load some data into the chart. Then you can use this button");
@@ -401,11 +405,11 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
 
     }
 
-    public void addPoint(Point point) {
+    public void addPoint(Entity point) {
         addPointToChart(point);
     }
 
-    private void addPointToChart(final Point point) {
+    private void addPointToChart(final Entity point) {
         if (!points.containsKey(point.getName())) {
             points.put(point.getName(), point);
         }
@@ -421,7 +425,7 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
         }
     }
 
-    private void loadValuesThatExist(final Point p) {
+    private void loadValuesThatExist(final Entity p) {
         final RecordedValueServiceAsync dataService = GWT.create(RecordedValueService.class);
 
         dataService.getTopDataSeries(p, 100, new Date(), new AsyncCallback<List<Value>>() {
@@ -462,7 +466,7 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
         this.endDateSelector.setValue(fmt.format(ts.getEnd()));
     }
 
-    private void loadDataSegment(final Point p, final int start, final int end) {
+    private void loadDataSegment(final Entity p, final int start, final int end) {
         final RecordedValueServiceAsync dataService = GWT.create(RecordedValueService.class);
         final MessageBox box = MessageBox.wait("Progress",
                 "Loading " + p.getName().getValue() + " archived values " + start + " to " + end, "Loading...");
@@ -488,7 +492,7 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
         });
     }
 
-    private void loadMemCache(final Point p) {
+    private void loadMemCache(final Entity p) {
         final RecordedValueServiceAsync dataService = GWT.create(RecordedValueService.class);
         final MessageBox box = MessageBox.wait("Progress",
                 "Loading Buffered Data", "Loading...");
@@ -528,20 +532,9 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
 
                 for (final TreeStoreModel a : t) {
                     final GxtModel p = (GxtModel) a.getModel();
-
+                    addPointToChart(p.getBaseEntity());
                     final PointServiceAsync pointService = GWT.create(PointService.class);
-                    pointService.getPointByUUID(p.getId(), new AsyncCallback<Point>() {
-                        @Override
-                        public void onFailure(final Throwable throwable) {
 
-                        }
-
-                        @Override
-                        public void onSuccess(final Point point) {
-                            points.put(point.getName(), point);
-                            addPointToChart(point);
-                        }
-                    });
                 }
             }
         };

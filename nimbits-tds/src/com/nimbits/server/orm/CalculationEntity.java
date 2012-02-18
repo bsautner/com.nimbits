@@ -13,7 +13,7 @@
 
 package com.nimbits.server.orm;
 
-import com.nimbits.client.model.point.Calculation;
+import com.nimbits.client.model.calculation.Calculation;
 
 import javax.jdo.annotations.*;
 
@@ -35,6 +35,9 @@ public class CalculationEntity implements Calculation {
 
     @Persistent
     private String formula;
+
+    @Persistent
+    private String trigger;
 
     @Persistent
     private Boolean enabled;
@@ -67,20 +70,17 @@ public class CalculationEntity implements Calculation {
     @Persistent
     private String targetVar;
 
+    @Persistent
+    private String uuid;
+
+    @Deprecated
     @Persistent(mappedBy = "calculationEntity")
     private DataPoint point;
 
     public CalculationEntity() {
     }
 
-    public CalculationEntity(String formula, Boolean enabled, Long target, Long x, Long y, Long z) {
-        this.formula = formula;
-        this.enabled = enabled;
-        this.target = target;
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
+
 
     public CalculationEntity(Calculation calculation) {
         this.formula = calculation.getFormula();
@@ -89,6 +89,19 @@ public class CalculationEntity implements Calculation {
         this.xVar = calculation.getX();
         this.yVar = calculation.getY();
         this.zVar = calculation.getZ();
+        this.uuid = calculation.getUUID();
+        this.trigger = calculation.getTrigger();
+    }
+
+
+    @Override
+    public String getUUID() {
+        return uuid;
+    }
+
+    @Override
+    public String getTrigger() {
+        return this.trigger;
     }
 
 
@@ -140,6 +153,11 @@ public class CalculationEntity implements Calculation {
     @Override
     public String getZ() {
         return zVar;
+    }
+
+    @Override
+    public void setEnabled(boolean b) {
+        this.enabled = b;
     }
 
     public void setZ(String z) {

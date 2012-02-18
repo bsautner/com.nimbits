@@ -18,7 +18,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Random;
-import java.util.UUID;
 
 /**
  * Created by bsautner
@@ -39,12 +38,12 @@ class ClientHelper {
     // private final static String hostURL2 = "http://nimbits1.appspot.com";
     //  private final static String hostURLSpecific = "http://147.nimbits1.appspot.com";
     //  private static final String accountPath = "/mnt/raid/nimbits/test";
-    private final static String email = "testx@example.com";
+    private final static String email = "test@example.com";
 
-    private final static String password = "37c42818-4bd4-4d7f-b748-95ad6bceb67b";
+    private final static String password = "b65daff9-0cac-4be8-8f62-73556fe5e4e0";
 
     //  private final static String appscale =  "http://127.0.0.1:8888";
-    public final static String url = "http://localhost:8081";
+    public final static String url = "http://192.168.1.2:8081";
 
     public static NimbitsClient client() {
         if (instance == null) {
@@ -64,16 +63,16 @@ class ClientHelper {
     }
 
 
-    public static Point createSeedPoint() {
+    public static Point createSeedPoint(EntityName name) {
 
-        EntityName pointName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
-        Point point = client().addPoint(pointName);
+
+        Point point = client().addPoint(name);
         Random r = new Random();
 
 
         for (int i = 0; i < 10; i++) {
 
-            client().recordValue(pointName, r.nextDouble(), new Date());
+            client().recordValue(name, r.nextDouble(), new Date());
 
         }
 

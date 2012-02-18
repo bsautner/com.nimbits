@@ -168,25 +168,26 @@ public class UpgradeTask  extends HttpServlet
 
     private void createSubscriptions(User u, DataPoint p) {
         boolean enabled = p.isHighAlarmOn() || p.isLowAlarmOn() || p.isIdleAlarmOn();
-        int delay = p.getAlarmDelay() > 5 ?  p.getAlarmDelay() : 5;
-        EntityName name = CommonFactoryLocator.getInstance().createName(p.getName().getValue() + " alert");
-        if (p.getAlarmToFacebook()) {
+
+        int delay = (p.alarmDelay > 5) ?  p.alarmDelay : 5;
+        EntityName name = CommonFactoryLocator.getInstance().createName(p.name + " alert");
+        if (p.alarmToFacebook != null && p.alarmToFacebook) {
             createSubscription(u, p, enabled, delay, name, SubscriptionType.anyAlert, SubscriptionNotifyMethod.facebook);
         }
-        if (p.getSendAlarmTweet()) {
+        if (p.sendAlarmTweet != null && p.sendAlarmTweet) {
             createSubscription(u, p, enabled, delay, name, SubscriptionType.anyAlert, SubscriptionNotifyMethod.twitter);
         }
-        if (p.getSendAlarmIM()) {
+        if (p.sendAlarmIM != null && p.sendAlarmIM) {
             createSubscription(u, p, enabled, delay, name, SubscriptionType.anyAlert, SubscriptionNotifyMethod.instantMessage);
         }
-        if (p.isAlarmToEmail()) {
+        if (p.alarmToEmail != null && p.alarmToEmail) {
             createSubscription(u, p, enabled, delay, name, SubscriptionType.anyAlert, SubscriptionNotifyMethod.email);
         }
-        if (p.isIdleAlarmOn()) {
+        if (p.idleAlarmOn != null && p.idleAlarmOn) {
             createSubscription(u, p, p.isIdleAlarmOn(),
                     delay, name, SubscriptionType.idle, SubscriptionNotifyMethod.email);
         }
-        if (p.isPostToFacebook()) {
+        if (p.postToFacebook != null && p.postToFacebook) {
             createSubscription(u, p, enabled, delay, name, SubscriptionType.newValue, SubscriptionNotifyMethod.facebook);
         }
     }
@@ -235,9 +236,9 @@ public class UpgradeTask  extends HttpServlet
                 if (Utils.isEmptyString(parent)) {
                     parent = u.getUuid();
                 }
-                ProtectionLevel protectionLevel = p.isPublic() ? ProtectionLevel.everyone : ProtectionLevel.onlyMe;
-                EntityName name = CommonFactoryLocator.getInstance().createName(p.getName().getValue());
-                Entity pointEntity = EntityModelFactory.createEntity(name, p.getDescription(), EntityType.point,
+                ProtectionLevel protectionLevel = p.isPublic ? ProtectionLevel.everyone : ProtectionLevel.onlyMe;
+                EntityName name = CommonFactoryLocator.getInstance().createName(p.name);
+                Entity pointEntity = EntityModelFactory.createEntity(name, p.description, EntityType.point,
                         protectionLevel, p.getUUID(), parent, u.getUuid());
                 Entity r = EntityServiceFactory.getInstance().addUpdateEntity(u, pointEntity);
                 log.info("created point " + name.getValue());

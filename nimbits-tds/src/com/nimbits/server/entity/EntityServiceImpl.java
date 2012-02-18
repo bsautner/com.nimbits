@@ -1,15 +1,16 @@
 package com.nimbits.server.entity;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.nimbits.client.enums.*;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.subscription.*;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.server.orm.entity.EntityStore;
 import com.nimbits.server.point.PointServiceFactory;
-import com.nimbits.server.subscription.*;
 import com.nimbits.server.user.UserServiceFactory;
 
 import javax.servlet.http.HttpSession;
@@ -91,7 +92,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
         if (entity.getEntity() == null) {
             entity.setEntity(UUID.randomUUID().toString());
         }
-        return EntityServiceFactory.getDaoInstance(u).addUpdateEntity(entity);
+        return addUpdateEntity(u, entity);
     }
 
     @Override

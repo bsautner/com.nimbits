@@ -14,27 +14,30 @@
 package com.nimbits.server.export;
 
 import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.intelligence.IntelligenceServiceFactory;
 
+import java.util.List;
 import java.util.Map;
 
 
 public class ExportHelperImpl implements ExportHelper {
 
-    public String exportPointDataToCSVSeparateColumns(final Map<EntityName, Point> points) {
+    public String exportPointDataToCSVSeparateColumns(final Map<EntityName, Entity> points,
+                                                      final Map<EntityName, List<Value>> values) {
         final StringBuilder sb = new StringBuilder();
         int max = 0;
         int i = 0;
         Value v;
-        Point p;
+        Entity p;
 
         for (final EntityName name : points.keySet()) {
             sb.append(name.toString()).append(",,");
-            if (points.get(name).getValues().size() > max) {
-                max = points.get(name).getValues().size();
+            if (values.get(name).size() > max) {
+                max = values.get(name).size();
             }
         }
         sb.deleteCharAt(sb.length() - 1);
@@ -44,8 +47,9 @@ public class ExportHelperImpl implements ExportHelper {
         while (i < max) {
             for (final EntityName name : points.keySet()) {
                 p = points.get(name);
-                if (p.getValues().size() >= i) {
-                    v = p.getValues().get(i);
+                List<Value> vx = values.get(name);
+                if (vx.size() >= i) {
+                    v = vx.get(i);
                     sb.append(v.getTimestamp()).append(",").append(v.getNumberValue()).append(",");
                 }
             }

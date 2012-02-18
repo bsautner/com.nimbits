@@ -39,12 +39,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
         }
     }
 
-    @Override
-    public void deleteSubscription(Point point) throws NimbitsException {
-        //final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
-        //      this.getThreadLocalRequest());
-        //SubscriptionTransactionFactory.getInstance(u).deleteSubscription(point);
-    }
+
 
     @Override
     public List<Subscription> getSubscriptionsToPoint(Point point) {
@@ -69,7 +64,9 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
 
 
-                Entity subscriptionEntity = EntityServiceFactory.getDaoInstance(null).getEntityByUUID(subscription.getUuid());
+                Entity subscriptionEntity = EntityServiceFactory.getInstance().getEntityByUUID(subscription.getUuid());
+                Entity entity = EntityServiceFactory.getInstance().getEntityByUUID(point.getUUID());
+
                 User subscriber = UserServiceFactory.getInstance().getUserByUUID(subscriptionEntity.getOwner());
                 AlertType alert = v.getAlertState();
 
@@ -80,26 +77,26 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
                         break;
                     case anyAlert:
                         if (! alert.equals(AlertType.OK) && (point.isHighAlarmOn() || point.isLowAlarmOn())) {
-                            sendNotification(subscriber, subscription, point, v);
+                            sendNotification(subscriber, entity, subscription, point, v);
                         }
                         break;
                     case high:
                         if (alert.equals(AlertType.HighAlert) && point.isHighAlarmOn() ) {
-                            sendNotification(subscriber, subscription, point, v);
+                            sendNotification(subscriber, entity, subscription, point, v);
                         }
                         break;
                     case low:
                         if (alert.equals(AlertType.LowAlert) && point.isLowAlarmOn()) {
-                            sendNotification(subscriber, subscription, point, v);
+                            sendNotification(subscriber, entity, subscription, point, v);
                         }
                         break;
                     case idle:
                         if (alert.equals(AlertType.IdleAlert) && point.isIdleAlarmOn()) {
-                            sendNotification(subscriber, subscription, point, v);
+                            sendNotification(subscriber, entity, subscription, point, v);
                         }
                         break;
                     case newValue:
-                        sendNotification(subscriber, subscription, point, v);
+                        sendNotification(subscriber, entity, subscription, point, v);
                     case changed:
                         break;
                 }
@@ -155,34 +152,34 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
         return EntityServiceFactory.getDaoInstance(getUser()).getEntityByUUID(subscription.getSubscribedEntity());
 
     }
-    private void sendNotification(User user, Subscription subscription, Point point, Value value) {
+    private void sendNotification(User user, Entity entity, Subscription subscription, Point point, Value value) {
         switch (subscription.getNotifyMethod()) {
             case none:
                 break;
             case email:
-                EmailServiceFactory.getInstance().sendAlert(point, user.getEmail(), value);
+                EmailServiceFactory.getInstance().sendAlert(entity, point, user.getEmail(), value);
                 break;
             case facebook:
-                postToFB(point, user, value);
+                postToFB(point,entity, user, value);
                 break;
             case twitter:
-                sendTweet(user, point, value);
+                sendTweet(user, entity, point, value);
                 break;
             case instantMessage:
-                doXMPP(user, point, value);
+                doXMPP(user, subscription, entity, point, value);
                 break;
             case stream:
                 break;
         }
     }
-    private void doXMPP(final User u, final Point point, final Value v) {
+    private void doXMPP(final User u, Subscription subscription, Entity entity, final Point point, final Value v) {
         final String message;
 
-        if (point.getSendAlertsAsJson()) {
+        if (subscription.getNotifyFormatJson()) {
             point.setValue(v);
             message = GsonFactory.getInstance().toJson(point);
         } else {
-            message = "Nimbits Data Point [" + point.getName().getValue()
+            message = "Nimbits Data Point [" + entity.getName().getValue()
                     + "] updated to new value: " + v.getNumberValue();
         }
 
@@ -191,9 +188,9 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
     }
 
 
-    private void sendTweet(User u, Point point, Value v)  {
+    private void sendTweet(User u, Entity entity, Point point, Value v)  {
         StringBuilder message = new StringBuilder();
-        message.append("#").append(point.getName().getValue()).append(" ");
+        message.append("#").append(entity.getName().getValue()).append(" ");
         message.append("Value=").append(v.getNumberValue());
         if (!Utils.isEmptyString(v.getNote())) {
             message.append(" ").append(v.getNote());
@@ -202,9 +199,9 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
         TwitterServiceFactory.getInstance().sendTweet(u, message.toString());
     }
 
-    private void postToFB(final Point p, final User u, final Value v) {
+    private void postToFB(final Point p, Entity entity, final User u, final Value v) {
 
-        String m = ("Data Point #" + p.getName().getValue() + " = " + v);
+        String m = ("Data Point #" + entity.getName().getValue() + " = " + v);
         if (v.getNote() != null) {
             m += " " + v.getNote();
         }
@@ -213,7 +210,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
 
 
-        if (p.isPublic()) {
+        if (entity.getProtectionLevel().equals(ProtectionLevel.everyone)) {
 
             List<Value> values = RecordedValueServiceFactory.getInstance().getTopDataSeries(p, 10).getValues();
             if (values.size() > 0) {
@@ -244,7 +241,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
         // String link = "http://app.nimbits.com?view=chart&uuid=" + p.getUuid();
         String link = "http://app.nimbits.com?uuid=" + p.getUUID();
-        String d = Utils.isEmptyString(p.getDescription()) ? "" : p.getDescription();
+        String d = Utils.isEmptyString(entity.getDescription()) ? "" : entity.getDescription();
         FacebookFactory.getInstance().updateStatus(u.getFacebookToken(), m, picture.toString(), link, "Subscribe to this data feed.",
                 "nimbits.com", d);
 

@@ -1,11 +1,9 @@
 import com.nimbits.client.enums.Action;
-import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.EntityDescription;
-import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
@@ -22,7 +20,8 @@ import org.junit.Test;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Benjamin Sautner  hello
@@ -146,8 +145,8 @@ public class TestPointDesc {
     public void testHTTP() {
         Point point = PointModelFactory.createPointModel(0, 1);
         point.setUuid(UUID.randomUUID().toString());
-        point.setName(CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString()));
-        point.setDescription("A Description");
+       // point.setName(CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString()));
+
 
         String json = GsonFactory.getInstance().toJson(point);
         String params = Const.PARAM_JSON + "=" + json;

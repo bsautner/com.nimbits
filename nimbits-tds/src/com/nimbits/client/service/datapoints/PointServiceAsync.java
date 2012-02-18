@@ -19,8 +19,8 @@ import com.nimbits.client.enums.ExportType;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
 
 import java.util.List;
 import java.util.Map;
@@ -46,18 +46,14 @@ public interface PointServiceAsync {
 
     void getPointByID(final User u, final long id, final AsyncCallback<Point> async);
 
-    void exportData(final Map<EntityName, Point> points, ExportType exportType, AsyncCallback<String> async);
+    void exportData(final Map<EntityName, Entity> points, ExportType exportType, final Map<EntityName, List<Value>> values, AsyncCallback<String> async);
 
     void getAllPoints(final int start, final int end, AsyncCallback<List<Point>> async);
 
     void getIdlePoints(final AsyncCallback<List<Point>> async);
 
+   void updatePoint(final User u, final Point point, AsyncCallback<Point> async);
 
-    void publishPoint(Point p, AsyncCallback<Point> asyncCallback);
-
-    void updatePoint(final User u, final Point point, AsyncCallback<Point> async);
-
-    void publishPoint(final User u, final Point p, final AsyncCallback<Point> async);
 
     void getAllPoints(final AsyncCallback<List<Point>> async);
 

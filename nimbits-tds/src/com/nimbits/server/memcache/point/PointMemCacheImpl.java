@@ -71,9 +71,7 @@ public class PointMemCacheImpl implements PointTransactions {
         if (cache.contains(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + p.getUUID())) {
             cache.delete(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + p.getUUID());
         }
-        if (cache.contains(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + p.getName().getValue())) {
-            cache.delete(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + p.getName().getValue());
-        }
+
         if (cache.contains(pointListKey)) {
             cache.delete(pointListKey);
         }
@@ -89,23 +87,11 @@ public class PointMemCacheImpl implements PointTransactions {
             purgeMemCache(p);
             cache.put(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + p.getUUID(), p);
             cache.put(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + p.getId(), p);
-            cache.put(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + p.getName().getValue(), p);
+
         }
     }
 
-    private Point getPointFromMap(final EntityName name) {
-        try {
-            if (cache.contains(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + name.getValue())) {
-                return (Point) cache.get(Const.CONST_SERVER_VERSION + Const.CACHE_KEY_POINT_PREFIX + name.getValue());
-            }
-            else {
-                return null;
-            }
-        } catch (com.google.appengine.api.memcache.InvalidValueException e) {
 
-            return null;
-        }
-    }
 
     private Point getPointFromMap(final long id) {
         try {
@@ -177,19 +163,8 @@ public class PointMemCacheImpl implements PointTransactions {
 
     @Override
     public Point getPointByName(final EntityName name) throws NimbitsException {
-        Point point = getPointFromMap(name);
 
-        if (point != null) {
-            return  point;
-
-        } else {
-            Point p = PointTransactionsFactory.getDaoInstance(u).getPointByName(name);
-            if (p != null) {
-                updateMap(p);
-            }
-            return p;
-        }
-
+     return PointTransactionsFactory.getDaoInstance(u).getPointByName(name);
 
     }
 
@@ -200,46 +175,6 @@ public class PointMemCacheImpl implements PointTransactions {
         purgeMemCache(point);
         PointTransactionsFactory.getDaoInstance(u).deletePoint(point);
 
-    }
-
-//    @Override
-//    public Point movePoint(final Point point, final EntityName newEntityName) throws NimbitsException {
-//        Point movedPoint = PointTransactionsFactory.getDaoInstance(u).movePoint(point, newEntityName);
-//        purgeMemCache(movedPoint);
-//        updateMap(movedPoint);
-//        return movedPoint;
-//
-//    }
-
-//    @Override
-//    public Point showEntityData(final Point point, final Category c) throws NimbitsException {
-//        final Point retObj = PointTransactionsFactory.getDaoInstance(u).showEntityData(point, c);
-//        purgeMemCache(retObj);
-//        updateMap(retObj);
-//        return retObj;
-//    }
-
-//    @Override
-//    public Point showEntityData(final EntityName pointName, final Category c) throws NimbitsException {
-//
-//        final Point retObj = PointTransactionsFactory.getDaoInstance(u).showEntityData(pointName, c);
-//        purgeMemCache(retObj);
-//        updateMap(retObj);
-//        return retObj;
-//    }
-
-
-//    @Override
-//    public List<Point> getPointsByCategory(final Category c) {
-//        return PointTransactionsFactory.getDaoInstance(u).getPointsByCategory(c);
-//    }
-
-    @Override
-    public Point publishPoint(final Point p) throws NimbitsException {
-        purgeMemCache(p);
-        Point retObj = PointTransactionsFactory.getDaoInstance(u).publishPoint(p);
-        updateMap(p);
-        return retObj;
     }
 
     //these should not use the cache, since we don't know the user

@@ -1,11 +1,10 @@
+import com.nimbits.client.model.calculation.Calculation;
+import com.nimbits.client.model.calculation.CalculationModelFactory;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Calculation;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.value.Value;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 
 import java.io.IOException;
 import java.util.Random;
@@ -23,6 +22,9 @@ public class CalcTest {
 
     @Test
     public void testCalc1() throws IOException, InterruptedException {
+
+        //TODO pass test
+
         EntityName targetName = CommonFactoryLocator.getInstance().createName("TARGET" + UUID.randomUUID().toString());
         EntityName triggerName = CommonFactoryLocator.getInstance().createName("TRIGGER" + UUID.randomUUID().toString());
 
@@ -49,8 +51,15 @@ public class CalcTest {
         double r2 = r.nextDouble();
         double ry = r.nextDouble();
         double rz = r.nextDouble();
-        Calculation calc = PointModelFactory.createCalculation(true, "x+y+z+" + r1, target.getUUID(), trigger.getUUID(), y.getUUID(), z.getUUID());
-        trigger.setCalculation(calc);
+
+        Calculation calculation = CalculationModelFactory.createCalculation(trigger.getUUID(), UUID.randomUUID().toString(),
+        true, "x+y+z+" + r1, target.getUUID(), trigger.getUUID(), y.getUUID(), z.getUUID());
+
+
+        ClientHelper.client().addCalculation(calculation, cName);
+//
+//        Calculation calc = PointModelFactory.createCalculation(true, "x+y+z+" + r1, target.getUUID(), trigger.getUUID(), y.getUUID(), z.getUUID());
+//        trigger.setCalculation(calc);
 
 //        trigger.setX(trigger.getId());
 //        trigger.setY(y.getId());
@@ -80,5 +89,7 @@ public class CalcTest {
 
 
     }
+
+
 
 }

@@ -102,24 +102,17 @@ public class DataPointDAOImpl implements PointTransactions {
                 Transaction tx = pm.currentTransaction();
                 tx.begin();
                 original.setHighAlarm(update.getHighAlarm());
-                original.setAlarmDelay(update.getAlarmDelay());
                 original.setLowAlarm(update.getLowAlarm());
                 original.setLowAlarmOn(update.isLowAlarmOn());
                 original.setHighAlarmOn(update.isHighAlarmOn());
                 original.setCompression(update.getCompression());
                 original.setUnit(update.getUnit());
-                original.setDescription(update.getDescription());
+
                 original.setExpire(update.getExpire());
                 original.setTag(update.getTag());
 
                 original.setUserFK(update.getUserFK());
-                original.setSystemPoint(update.isSystemPoint());
-                original.setPostToFacebook(update.isPostToFacebook());
-                original.setAlarmToFacebook(update.getAlarmToFacebook());
-                original.setSendIM(update.getSendIM());
-                original.setSendAlarmIM(update.getSendAlarmIM());
-                original.setSendTweet(update.getSendTweet());
-                original.setSendAlarmTweet(update.getSendAlarmTweet());
+
                 original.setHost(update.getHost());
                 original.setLastChecked(update.getLastChecked());
                 original.setTargetValue(update.getTargetValue());
@@ -130,9 +123,6 @@ public class DataPointDAOImpl implements PointTransactions {
 
                 original.setIgnoreIncomingCompressedValues(update.getIgnoreIncomingCompressedValues());
 
-                original.setAlarmToEmail(update.isAlarmToEmail());
-
-                original.setSendAlertsAsJson(update.getSendAlertsAsJson());
 
                 if (update.getIntelligence() != null) {
                     if (original.getIntelligence() == null) {
@@ -140,15 +130,6 @@ public class DataPointDAOImpl implements PointTransactions {
                         original.setIntelligence(update.getIntelligence());
                     } else {
                         original.updateIntelligence(update.getIntelligence());
-                    }
-                }
-
-                if (update.getCalculation() != null) {
-                    if (original.getCalculation() == null) {
-                        //  intelligenceEntity.setPoint(p);
-                        original.setCalculation(update.getCalculation());
-                    } else {
-                        original.updateCalculation(update.getCalculation());
                     }
                 }
 
@@ -213,7 +194,6 @@ public class DataPointDAOImpl implements PointTransactions {
 
             if (points.size() > 0) {
                 DataPoint result = points.get(0);
-                result.setReadOnly(true);
                 retObj = PointModelFactory.createPointModel(result);
             } else {
                 retObj = null;
@@ -305,7 +285,7 @@ public class DataPointDAOImpl implements PointTransactions {
             q.setFilter("id==k");
             q.declareParameters("long k");
             q.deletePersistentAll(p.getId());
-            TaskFactoryLocator.getInstance().startDeleteDataTask(p.getId(), false, 0, p.getName());
+            TaskFactoryLocator.getInstance().startDeleteDataTask(p, false, 0);
         } finally {
             pm.close();
         }
@@ -543,14 +523,11 @@ public class DataPointDAOImpl implements PointTransactions {
                 p.setCreateDate(new Date());
 
             }
-            p.setAlarmToEmail(p.isAlarmToEmail());
-
 
             if (p.getExpire() > 0) {
                 TaskFactoryLocator.getInstance().startDeleteDataTask(
-                        p.getId(),
-                        true, p.getExpire(),
-                        p.getName());
+                        p,
+                        true, p.getExpire());
             }
             retObj = PointModelFactory.createPointModel(p);
 
@@ -615,27 +592,7 @@ public class DataPointDAOImpl implements PointTransactions {
 
     }
 
-    @Override
-    public Point publishPoint(Point point) {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final Transaction tx = pm.currentTransaction();
-        Point retObj;
 
-        try {
-            tx.begin();
-            {
-                final DataPoint p = pm.getObjectById(DataPoint.class, point.getId());
-                p.setLastChecked(new Date());
-                p.setPublic(true);
-                retObj = PointModelFactory.createPointModel(p);
-            }
-            tx.commit();
-            return retObj;
-        } finally {
-            pm.close();
-        }
-
-    }
 
 
 }

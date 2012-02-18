@@ -32,11 +32,13 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.nimbits.client.enums.ExportType;
 import com.nimbits.client.model.Const;
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.value.Value;
 import com.nimbits.client.service.datapoints.PointService;
 import com.nimbits.client.service.datapoints.PointServiceAsync;
 
+import java.util.List;
 import java.util.Map;
 
 import static com.google.gwt.user.client.Window.alert;
@@ -46,10 +48,11 @@ public class ExportPanel extends LayoutContainer {
 
     VerticalPanel vp;
 
-    private Map<EntityName, Point> points;
-
-    public ExportPanel(Map<EntityName, Point> points) {
+    private Map<EntityName, Entity> points;
+    private Map<EntityName, List<Value>> valueMap;
+    public ExportPanel(Map<EntityName, Entity> points, Map<EntityName, List<Value>> valueMap) {
         this.points = points;
+        this.valueMap = valueMap;
     }
 
     @Override
@@ -126,7 +129,7 @@ public class ExportPanel extends LayoutContainer {
                 }
 
 
-                pointService.exportData(points, exportType, new AsyncCallback<String>() {
+                pointService.exportData(points, exportType, valueMap, new AsyncCallback<String>() {
                     @Override
                     public void onFailure(Throwable e) {
                         GWT.log(e.getMessage(), e);

@@ -18,6 +18,7 @@ import com.google.gson.JsonSyntaxException;
 import com.nimbits.client.enums.Action;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
+import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
@@ -46,6 +47,7 @@ import java.util.List;
 
 
 public class NimbitsClientImpl implements NimbitsClient {
+
 
 
     final private static Gson gson = GsonFactory.getInstance();
@@ -301,7 +303,26 @@ public class NimbitsClientImpl implements NimbitsClient {
 
 
     }
+    @Override
+    public void addCalculation(Calculation calculation, EntityName name) {
+        final String u = host + Const.PATH_CALC_SERVICE;
 
+        final String params;
+        final String json = GsonFactory.getInstance().toJson(calculation);
+        try {
+            params = Const.PARAM_NAME + "=" +
+                    URLEncoder.encode(name.getValue(), Const.CONST_ENCODING)
+            + "&" + Const.PARAM_JSON + "=" + URLEncoder.encode(json, Const.CONST_ENCODING);
+
+            doGPost(u, params);
+
+
+        } catch (UnsupportedEncodingException e) {
+
+
+        }
+
+    }
     @Override
     public Point addPoint(String pointName) {
         EntityName name = CommonFactoryLocator.getInstance().createName(pointName);
@@ -356,13 +377,14 @@ public class NimbitsClientImpl implements NimbitsClient {
     }
 
 
-    public Point addPoint(final Point p) {
+    public Point addPoint(final EntityName pointName, final Point p) {
         Point retObj = null;
         final String newPointJson = gson.toJson(p);
         try {
             String u = host + Const.PATH_POINT_SERVICE;
             String params;
-            params = Const.PARAM_JSON + "=" + URLEncoder.encode(newPointJson, Const.CONST_ENCODING);
+            params = Const.PARAM_JSON + "=" + URLEncoder.encode(newPointJson, Const.CONST_ENCODING) +
+            "&" + Const.PARAM_NAME + "=" + pointName.getValue();
             String result = doGPost(u, params);
             retObj = gson.fromJson(result, PointModel.class);
         } catch (UnsupportedEncodingException e) {

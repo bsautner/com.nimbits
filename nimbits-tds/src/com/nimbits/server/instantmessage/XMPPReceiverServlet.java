@@ -34,6 +34,7 @@ import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.server.entity.EntityServiceFactory;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.json.JsonHelper;
 import com.nimbits.server.point.PointServiceFactory;
@@ -120,7 +121,7 @@ public class XMPPReceiverServlet extends HttpServlet {
 
         switch (action) {
             case record:
-                Point point = PointServiceFactory.getInstance().getPointByName(u, p.getName());
+                Point point = PointServiceFactory.getInstance().getPointByUUID(p.getUUID());
 
                 if (point != null) {
                     log.info("xmpp found point" + point.getId());
@@ -235,6 +236,7 @@ public class XMPPReceiverServlet extends HttpServlet {
         if (!Utils.isEmptyString(body) && body.endsWith("?")) {
             final EntityName pointName = CommonFactoryLocator.getInstance().createName(body.replace("?", ""));
             final Point p = PointServiceFactory.getInstance().getPointByName(u, pointName);
+            Entity entity = EntityServiceFactory.getInstance().getEntityByUUID(p.getUUID());
             String t = "";
 
             final Value v = RecordedValueServiceFactory.getInstance().getPrevValue(p, new Date());
@@ -242,7 +244,7 @@ public class XMPPReceiverServlet extends HttpServlet {
                 if (v.getNote() != null && v.getNote().length() > 0) {
                     t = v.getNote();
                 }
-                IMFactory.getInstance().sendMessage(p.getName().getValue() + "="
+                IMFactory.getInstance().sendMessage(entity.getName().getValue() + "="
                         + v.getNumberValue() + " " + t, u.getEmail());
             } else {
                 IMFactory.getInstance().sendMessage(pointName.getValue() + " has no data", u.getEmail());

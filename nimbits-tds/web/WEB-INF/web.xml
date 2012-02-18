@@ -88,6 +88,14 @@
         <url-pattern>/nimbits/data</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>calcService</servlet-name>
+        <servlet-class>com.nimbits.server.calculation.CalculationServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>calcService</servlet-name>
+        <url-pattern>/nimbits/calculation</url-pattern>
+    </servlet-mapping>
 
     <servlet>
         <servlet-name>entityService</servlet-name>
@@ -306,6 +314,17 @@
         <servlet-name>currentValueServlet</servlet-name>
         <url-pattern>/service/currentvalue</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>calculationServlet</servlet-name>
+        <servlet-class>com.nimbits.server.calculation.CalculationServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>calculationServlet</servlet-name>
+        <url-pattern>/service/calculation</url-pattern>
+    </servlet-mapping>
+
+
 
     <!--<servlet>-->
         <!--<servlet-name>categoryServlet</servlet-name>-->

@@ -13,14 +13,15 @@
 
 package com.nimbits.client.model.point;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.intelligence.*;
-import com.nimbits.client.model.value.*;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.model.intelligence.Intelligence;
+import com.nimbits.client.model.intelligence.IntelligenceModelFactory;
+import com.nimbits.client.model.value.Value;
 
-import java.io.*;
-import java.util.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 public class PointModel implements Serializable, Point {
@@ -29,8 +30,6 @@ public class PointModel implements Serializable, Point {
     private int entityType = EntityType.point.getCode();
 
     private long id;
-
-    private AlertType alertState;
 
     private String uuid;
 
@@ -42,12 +41,8 @@ public class PointModel implements Serializable, Point {
 
     private String host;
 
-    private boolean isSystemPoint;
-
     private long userFK;
 
-    @Deprecated
-    private String name;
 
     private double highAlarm = 0.0;
 
@@ -63,25 +58,7 @@ public class PointModel implements Serializable, Point {
 
     private boolean lowAlarmOn;
 
-    private int alarmDelay = 1;
-
     private String description;
-
-    private boolean isPublic;
-
-    private boolean postToFacebook;
-
-    private boolean alarmToFacebook;
-
-    private boolean alarmToEmail;
-
-    private boolean sendIM;
-
-    private boolean sendAlarmIM;
-
-    private boolean sendTweet;
-
-    private boolean sendAlarmTweet;
 
     private String tag;
 
@@ -91,24 +68,12 @@ public class PointModel implements Serializable, Point {
 
     //reset on any data write
     private boolean idleAlarmSent;
-    //reset on any data write
+
     private boolean ignoreIncomingCompressedValues;
-    //reset on any data write
-    private boolean readOnly;
+
 
     private Intelligence intelligence;
 
-    private Calculation calculation;
-
-    private boolean sendAlertAsJson;
-
-    private boolean isSubscription;
-
-    public void setClientType(ClientType clientType) {
-        this.clientType = clientType;
-    }
-
-    private ClientType clientType;
 
     // Constructors
     public PointModel(final Point p) {
@@ -118,11 +83,8 @@ public class PointModel implements Serializable, Point {
         this.lastChecked = p.getLastChecked().getTime();
         this.host = p.getHost();
 
-        this.isSystemPoint = p.isSystemPoint();
         this.userFK = p.getUserFK();
-        this.name = p.getName().getValue();
         this.createDate = p.getCreateDate().getTime();
-
         this.highAlarm = p.getHighAlarm();
         this.expire = p.getExpire();
         this.unit = p.getUnit();
@@ -130,40 +92,21 @@ public class PointModel implements Serializable, Point {
         this.lowAlarm = p.getLowAlarm();
         this.highAlarmOn = p.isHighAlarmOn();
         this.lowAlarmOn = p.isLowAlarmOn();
-        this.alarmDelay = p.getAlarmDelay();
-
-        this.description = p.getDescription();
-        this.isPublic = p.isPublic();
-        this.postToFacebook = p.isPostToFacebook();
-        this.alarmToFacebook = p.getAlarmToFacebook();
-        this.sendIM = p.getSendIM();
-        this.sendAlarmIM = p.getSendAlarmIM();
-        this.sendTweet = p.getSendTweet();
-        this.sendAlarmTweet = p.getSendAlarmTweet();
         this.tag = p.getTag();
-
-
         this.idleAlarmOn = p.isIdleAlarmOn();
         this.idleSeconds = p.getIdleSeconds();
         this.idleAlarmSent = p.getIdleAlarmSent();
         this.ignoreIncomingCompressedValues = p.getIgnoreIncomingCompressedValues();
-        this.readOnly = p.getReadOnly();
+
         this.targetValue = p.getTargetValue();
         this.values = p.getValues();
         this.value = p.getValue();
-        this.sendAlertAsJson = p.getSendAlertsAsJson();
-        this.alarmToEmail = p.isAlarmToEmail();
 
-
-        this.lastAlarmSent = p.getLastAlarmSent().getTime();
 
         if (p.getIntelligence() != null) {
             this.intelligence = IntelligenceModelFactory.createIntelligenceModel(p.getIntelligence());
         }
 
-        if (p.getCalculation() != null) {
-            this.calculation = PointModelFactory.createCalculation(p.getCalculation());
-        }
 
 
     }
@@ -171,34 +114,7 @@ public class PointModel implements Serializable, Point {
     public PointModel() {
     }
 
-    public PointModel(final long userFK, final EntityName pointName, final long catID, final String uuid) {
-        this();
-        this.userFK = userFK;
-        this.name = pointName.getValue();
 
-        this.uuid = uuid;
-
-
-    }
-
-    public PointModel(final long userFK, final EntityName pointName, final String uuid) {
-        this();
-        this.userFK = userFK;
-        this.name = pointName.getValue();
-        this.uuid = uuid;
-    }
-
-    public PointModel(final EntityName name, final String uuid) {
-        this.name = name.getValue();
-        this.uuid = uuid;
-
-    }
-
-    public PointModel(final long id, final long userFk) {
-        this.id = id;
-        this.userFK = userFk;
-
-    }
     // End Constructors
 
     private double targetValue;
@@ -218,25 +134,6 @@ public class PointModel implements Serializable, Point {
     }
 
     @Override
-    public void setCalculation(Calculation calculation) {
-        this.calculation = calculation;
-    }
-
-    @Override
-    public int getAlarmDelay() {
-        return alarmDelay;
-    }
-
-    @Override
-    public boolean getAlarmToFacebook() {
-
-        return alarmToFacebook;
-
-    }
-
-
-
-    @Override
     public double getCompression() {
         return this.compression;
     }
@@ -246,11 +143,7 @@ public class PointModel implements Serializable, Point {
         return new Date(this.createDate);
     }
 
-    @Override
-    public String getDescription() {
 
-        return this.description == null ? "" : this.description;
-    }
 
     @Override
     public int getExpire() {
@@ -283,34 +176,7 @@ public class PointModel implements Serializable, Point {
         return lowAlarm;
     }
 
-    @Override
-    public EntityName getName() {
-        return CommonFactoryLocator.getInstance().createName(this.name);
-    }
 
-    @Override
-    public boolean getSendAlarmIM() {
-
-        return sendAlarmIM;
-    }
-
-    @Override
-    public boolean getSendAlarmTweet() {
-
-        return sendAlarmTweet;
-    }
-
-    @Override
-    public boolean getSendIM() {
-
-        return sendIM;
-    }
-
-    @Override
-    public boolean getSendTweet() {
-
-        return sendTweet;
-    }
 
     @Override
     public String getTag() {
@@ -359,35 +225,7 @@ public class PointModel implements Serializable, Point {
         return lowAlarmOn;
     }
 
-    @Override
-    @Deprecated
-    public boolean isPostToFacebook() {
-        return postToFacebook;
-    }
 
-    @Override
-    @Deprecated
-    public boolean isPublic() {
-        return isPublic;
-    }
-
-    @Override
-    @Deprecated
-    public boolean isSystemPoint() {
-        return isSystemPoint;
-    }
-
-    @Override
-    @Deprecated
-    public void setAlarmDelay(final int alarmDelay) {
-        this.alarmDelay = alarmDelay;
-    }
-
-    @Override
-    @Deprecated
-    public void setAlarmToFacebook(final boolean alarmToFacebook) {
-        this.alarmToFacebook = alarmToFacebook;
-    }
 
     @Override
     public void setCompression(final double compression) {
@@ -397,12 +235,6 @@ public class PointModel implements Serializable, Point {
     @Override
     public void setCreateDate(final Date createDate) {
         this.createDate = createDate.getTime();
-    }
-
-    @Override
-    public void setDescription(final String value) {
-        this.description = value;
-
     }
 
     @Override
@@ -444,46 +276,6 @@ public class PointModel implements Serializable, Point {
     public void setLowAlarmOn(final boolean lowAlarmOn) {
         this.lowAlarmOn = lowAlarmOn;
     }
-    @Deprecated
-    @Override
-    public void setName(final EntityName name) {
-        this.name = name.getValue();
-    }
-
-    @Override
-    public void setPostToFacebook(final boolean postToFacebook) {
-        this.postToFacebook = postToFacebook;
-    }
-
-    @Override
-    public void setPublic(final boolean isPublic) {
-        this.isPublic = isPublic;
-    }
-
-    @Override
-    public void setSendAlarmIM(final boolean sendAlarmIM) {
-        this.sendAlarmIM = sendAlarmIM;
-    }
-
-    @Override
-    public void setSendAlarmTweet(final boolean sendAlarmTweet) {
-        this.sendAlarmTweet = sendAlarmTweet;
-    }
-
-    @Override
-    public void setSendIM(final boolean sendIM) {
-        this.sendIM = sendIM;
-    }
-
-    @Override
-    public void setSendTweet(final boolean sendTweet) {
-        this.sendTweet = sendTweet;
-    }
-
-    @Override
-    public void setSystemPoint(final boolean isSystemPoint) {
-        this.isSystemPoint = isSystemPoint;
-    }
 
     @Override
     public void setTag(final String tag) {
@@ -517,12 +309,6 @@ public class PointModel implements Serializable, Point {
 
 
     @Override
-    public String toString() {
-        return name;
-
-    }
-
-    @Override
     public void setTargetValue(final double targetValue) {
         this.targetValue = targetValue;
     }
@@ -545,65 +331,12 @@ public class PointModel implements Serializable, Point {
         return ignoreIncomingCompressedValues;
     }
 
-    @Override
-    public void setReadOnly(final boolean readOnly) {
-        this.readOnly = readOnly;
-    }
-
-    @Override
-    public boolean getReadOnly() {
-
-        return readOnly;
-    }
-
-    public ClientType getClientType() {
-        return clientType;
-    }
-
-    @Override
-    public boolean isAlarmToEmail() {
-        return alarmToEmail;
-    }
-
-    @Override
-    public void setAlarmToEmail(boolean alarmToEmail) {
-        this.alarmToEmail = alarmToEmail;
-    }
-
-    @Override
-    public boolean getSendAlertsAsJson() {
-        return this.sendAlertAsJson;
-    }
-
-    @Override
-    public void setSendAlertsAsJson(boolean sendAlertsAsJson) {
-        this.sendAlertAsJson = sendAlertsAsJson;
-    }
-
-    @Override
-    public Calculation getCalculation() {
-        return this.calculation;
-    }
-
-    @Override
-    public Date getLastAlarmSent() {
-        return new Date(this.lastAlarmSent);
-    }
 
     @Override
     public boolean isIdleAlarmOn() {
         return idleAlarmOn;
     }
-    @Deprecated
-    @Override
-    public AlertType getAlertState() {
-        return this.alertState;
-    }
 
-    @Override
-    public void setAlertState(final AlertType alertState) {
-        this.alertState = alertState;
-    }
 
     @Override
     public void setIdleAlarmOn(final boolean idleAlarmOn) {
@@ -634,10 +367,6 @@ public class PointModel implements Serializable, Point {
         return EntityType.get(this.entityType);
     }
 
-    @Override
-    public void setEntityType(EntityType entityType) {
-       this.entityType = entityType.getCode();
-    }
 
 
 }

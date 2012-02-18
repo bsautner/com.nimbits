@@ -13,13 +13,16 @@
 
 package com.nimbits.server.service;
 
+import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.server.entity.EntityServiceFactory;
 import com.nimbits.server.point.PointServiceFactory;
 import com.nimbits.server.recordedvalue.RecordedValueServiceFactory;
 import com.nimbits.server.user.UserServiceFactory;
@@ -80,7 +83,8 @@ public class ChartAPIValueService extends HttpServlet {
         }
 
         if (p != null) {
-            if (u.isRestricted() && !p.isPublic()) {
+            Entity e = EntityServiceFactory.getInstance().getEntityByUUID(p.getUUID());
+            if (u.isRestricted() && !e.getProtectionLevel().equals(ProtectionLevel.everyone)) {
                 //	result = ("Unable to process. You didn't provide an oauth token or secret, and the point you requested is not public");
             } else {
                 String s;

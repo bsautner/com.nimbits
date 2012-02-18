@@ -39,17 +39,19 @@ public class MoveRecordedValuesToStoreCron extends HttpServlet {
             throws IOException {
         PrintWriter out = resp.getWriter();
         int count = 0;
+       //todo limit to active points
+
         final List<Point> points = PointServiceFactory.getInstance().getAllPoints();
 
         StringBuilder sb = new StringBuilder();
         for (final Point point : points) {
             count++;
-           sb.append("<p>" + point.getName() + "</p>");
+        //   sb.append("<p>" + point.getName() + "</p>");
             TaskFactoryLocator.getInstance().startMoveCachedValuesToStoreTask(point);
         }
 
         out.print("<h4> Total Points (using datastore): " + count + "</h4>");
         out.print(sb.toString());
-
+        out.close();
     }
 }

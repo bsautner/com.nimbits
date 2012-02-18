@@ -14,15 +14,18 @@
 package com.nimbits.server.service;
 
 import com.nimbits.client.enums.ExportType;
+import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueModel;
 import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.server.entity.EntityServiceFactory;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.point.PointServiceFactory;
 import com.nimbits.server.recordedvalue.RecordedValueServiceFactory;
@@ -193,8 +196,9 @@ public class CurrentValueService extends HttpServlet {
 
         if (p != null) {
             final Value value;
+            Entity e = EntityServiceFactory.getInstance().getEntityByUUID(p.getUUID());
 
-            if ((u == null || u.isRestricted()) && !p.isPublic()) {
+            if ((u == null || u.isRestricted()) && ! e.getProtectionLevel().equals(ProtectionLevel.everyone)) {
                 throw new NimbitsException(Const.RESPONSE_PROTECTED_POINT);
             } else {
                 if (nv != null && (u != null && !u.isRestricted())) {

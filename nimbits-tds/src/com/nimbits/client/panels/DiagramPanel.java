@@ -430,9 +430,8 @@ public class DiagramPanel extends NavigationEventProvider {
                     if (points.containsKey(pointName)) {
                         //  com.google.gwt.user.client.Window.alert(pointName);
                         PointModel p = (PointModel) points.get(pointName);
-                        p.setReadOnly(readOnly);
-                        p.setClientType(clientType);
-                        Entity entity = EntityModelFactory.createEntity(null,p);
+
+                        Entity entity = EntityModelFactory.createEntity(null,p, pointName);
                         notifyEntityClickedListener(entity);
 
 
@@ -610,7 +609,7 @@ public class DiagramPanel extends NavigationEventProvider {
             public void onMouseDown(MouseDownEvent mouseDownEvent) {
                 if (points.containsKey(pointName)) {
                     PointModel p = (PointModel) points.get(pointName);
-                    Entity entity = EntityModelFactory.createEntity(null, p);
+                    Entity entity = EntityModelFactory.createEntity(null, p, pointName);
                     notifyEntityClickedListener(entity);
 
                 }
@@ -788,9 +787,8 @@ public class DiagramPanel extends NavigationEventProvider {
             public void onMouseDown(MouseDownEvent mouseDownEvent) {
                 if (points.containsKey(pointName)) {
                     PointModel p = (PointModel) points.get(pointName);
-                    p.setReadOnly(readOnly);
-                    p.setClientType(clientType);
-                    Entity entity = EntityModelFactory.createEntity(null, p);
+
+                    Entity entity = EntityModelFactory.createEntity(null, p, pointName);
                   notifyEntityClickedListener(entity);
 
                 }

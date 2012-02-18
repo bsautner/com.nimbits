@@ -65,6 +65,8 @@ public class EntityTree<ModelData extends com.extjs.gxt.ui.client.data.ModelData
                         return AbstractImagePrototype.create(Icons.INSTANCE.diagram());
                     case subscription:
                         return AbstractImagePrototype.create(Icons.INSTANCE.plugin());
+                    case calculation:
+                        return AbstractImagePrototype.create(Icons.INSTANCE.formula());
                     default:
                         return AbstractImagePrototype.create(Icons.INSTANCE.point_ok());
 

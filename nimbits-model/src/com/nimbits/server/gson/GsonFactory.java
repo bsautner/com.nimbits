@@ -5,11 +5,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.nimbits.client.model.Const;
 
+import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityDescriptionModel;
 import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.intelligence.Intelligence;
-import com.nimbits.client.model.point.Calculation;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.UserModel;

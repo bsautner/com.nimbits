@@ -61,12 +61,11 @@ public class PointServiceImpl extends RemoteServiceServlet implements
         final Point storedPoint = PointServiceFactory.getInstance().getPointByUUID(originalEntity.getUUID());
         final Point newPoint = PointModelFactory.createPointModel(storedPoint);
         final String newUUID = UUID.randomUUID().toString();
-        newPoint.setName(newName);
         newPoint.setUuid(newUUID);
 
         final Entity newEntity = EntityModelFactory.createEntity(u, originalEntity);
         newEntity.setName(newName);
-        newEntity.setUUID(newUUID);
+        newEntity.setEntity(newUUID);
 
 
         addPoint(u, newEntity, newPoint);
@@ -93,22 +92,6 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     }
 
 
-    @Override
-    public Point publishPoint(final Point p) throws NimbitsException {
-        final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
-                this.getThreadLocalRequest());
-        return publishPoint(u, p);
-    }
-
-    @Override
-    public Point publishPoint(final User u, final Point p) throws NimbitsException {
-
-        Point result = PointTransactionsFactory.getInstance(u).publishPoint(p);
-        if (result != null) {
-            TaskFactoryLocator.getInstance().startPointMaintTask(result);
-        }
-        return result;
-    }
 
     @Override
     public Point updatePoint(final Point point) throws NimbitsException {
@@ -275,21 +258,22 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
 
     @Override
-    public String exportData(final Map<EntityName, Point> points, final ExportType exportType) throws NimbitsException {
+    public String exportData(final Map<EntityName, Entity> points, final ExportType exportType, final Map<EntityName, List<Value>> values)  {
+
         final String data;
 
         switch (exportType) {
             case csvSeparateColumns:
-                data = ExportHelperFactory.getInstance().exportPointDataToCSVSeparateColumns(points);
+                data = ExportHelperFactory.getInstance().exportPointDataToCSVSeparateColumns(points, values);
                 return BlobStoreFactory.getInstance().createFile(data, exportType);
 
-            case descriptiveStatistics:
-                data = ExportHelperFactory.getInstance().exportPointDataToDescriptiveStatistics(points);
-                return BlobStoreFactory.getInstance().createFile(data, exportType);
-
-            case possibleContinuation:
-                data = ExportHelperFactory.getInstance().exportPointDataToPossibleContinuation(points);
-                return BlobStoreFactory.getInstance().createFile(data, exportType);
+//            case descriptiveStatistics:
+//                data = ExportHelperFactory.getInstance().exportPointDataToDescriptiveStatistics(points);
+//                return BlobStoreFactory.getInstance().createFile(data, exportType);
+//
+//            case possibleContinuation:
+//                data = ExportHelperFactory.getInstance().exportPointDataToPossibleContinuation(points);
+//                return BlobStoreFactory.getInstance().createFile(data, exportType);
 
 
             default:

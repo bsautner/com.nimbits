@@ -130,7 +130,7 @@ public interface Icons extends ClientBundle {
     ImageResource SaveAll();
 
     @Source("PlayHS.png")
-    ImageResource Play();
+    ImageResource play();
 
     @Source("PauseHS.png")
     ImageResource Pause();
@@ -151,7 +151,7 @@ public interface Icons extends ClientBundle {
     ImageResource PieChart();
 
     @Source("FormulaEvaluatorHS.png")
-    ImageResource Formula();
+    ImageResource formula();
 
     @Source("WarningHS.png")
     ImageResource Warning();

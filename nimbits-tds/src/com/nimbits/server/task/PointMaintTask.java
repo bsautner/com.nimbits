@@ -14,15 +14,10 @@
 package com.nimbits.server.task;
 
 import com.google.gson.Gson;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.User;
-import com.nimbits.server.common.ServerInfoImpl;
-import com.nimbits.server.core.CoreFactory;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.point.PointTransactionsFactory;
 import com.nimbits.server.user.UserTransactionFactory;
 
 import javax.servlet.http.HttpServlet;
@@ -52,9 +47,6 @@ public class PointMaintTask extends HttpServlet {
         try {
             n = UserTransactionFactory.getInstance().getNimbitsUserByID(p.getUserFK());
         } catch (Exception e) {
-            log.severe(e.getMessage());
-            log.severe("Error getting user with id: " + p.getUserFK());
-            log.severe("I'd like to delete point: " + p.getName().getValue() + "   " + p.getId());
 
         }
 
@@ -84,7 +76,6 @@ public class PointMaintTask extends HttpServlet {
 
         } else {
 
-            log.severe("Point Maint Task could not find user - would like to delete point :" + p.getName().getValue());
 
 
         }

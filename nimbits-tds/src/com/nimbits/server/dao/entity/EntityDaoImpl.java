@@ -3,16 +3,12 @@ package com.nimbits.server.dao.entity;
 
 import com.nimbits.PMF;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.subscription.*;
 import com.nimbits.client.model.user.User;
-import com.nimbits.client.service.entity.*;
-import com.nimbits.server.entity.*;
+import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.server.orm.entity.EntityStore;
-import com.nimbits.server.point.PointServiceFactory;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
@@ -151,6 +147,8 @@ public class EntityDaoImpl implements EntityService {
 
 
     }
+
+
 
     @Override
     public List<Entity> getEntities() {
@@ -312,5 +310,18 @@ public class EntityDaoImpl implements EntityService {
         return null;  //auto generated
     }
 
+    @Override
+    public void deleteEntity(User u, Entity entity) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public List<Entity> getEntityChildren(User u, Entity c, EntityType point) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+    @Override
+    public Entity addUpdateEntity(EntityName entity, EntityType type) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 
 }

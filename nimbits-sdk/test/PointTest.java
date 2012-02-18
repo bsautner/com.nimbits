@@ -34,13 +34,14 @@ public class PointTest {
             EntityName pointName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
             Point p = ClientHelper.client().addPoint( pointName);
             assertNotNull(p);
-            System.out.println(p.getName().toString());
+
         }
     }
 
     @Test
     public void testPointId() {
-        ClientHelper.createSeedPoint();
+        EntityName name = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
+        Point point = ClientHelper.createSeedPoint(name);
     }
 
     @Test

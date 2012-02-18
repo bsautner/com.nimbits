@@ -20,6 +20,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.exceptions.CalculationFailedException;
+import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
@@ -45,14 +46,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
     private static final long serialVersionUID = 1L;
 
 
-    //Section - Calls from RPC Client
-    @Override
-    public double solveEquation(final Point point) throws CalculationFailedException, NimbitsException {
 
-        final User u = UserServiceFactory.getInstance().getAppUserUsingGoogleAuth();
-
-        return EquationSolver.solveEquation(point, u);
-    }
 
 
     @Override
@@ -74,7 +68,12 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
         return RecordedValueTransactionFactory.getInstance(point).getTopDataSeries(maxValues, endDate);
     }
 
-
+    public List<Value> getTopDataSeries(final Entity entity,
+                                        final int maxValues,
+                                        final Date endDate) {
+        Point p = PointServiceFactory.getInstance().getPointByUUID(entity.getEntity());
+        return RecordedValueTransactionFactory.getInstance(p).getTopDataSeries(maxValues, endDate);
+    }
     //called from RPC Client
     public List<Point> getDataSeries(final List<Point> points,
                                      final Timespan timespan) {
@@ -88,12 +87,25 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
     public List<Value> getCache(Point point) {
         return RecordedValueTransactionFactory.getInstance(point).getCache();
     }
-
+    @Override
+    public List<Value> getCache(Entity entity) {
+        Point point = PointServiceFactory.getInstance().getPointByUUID(entity.getEntity());
+        return RecordedValueTransactionFactory.getInstance(point).getCache();
+    }
 
     public List<Value> getPieceOfDataSegment(final Point point,
                                              final Timespan timespan,
                                              final int start,
                                              final int end) {
+
+        return RecordedValueTransactionFactory.getInstance(point).getDataSegment(timespan, start, end);
+    }
+
+    public List<Value> getPieceOfDataSegment(final Entity entity,
+                                             final Timespan timespan,
+                                             final int start,
+                                             final int end) {
+        Point point = PointServiceFactory.getInstance().getPointByUUID(entity.getEntity());
 
         return RecordedValueTransactionFactory.getInstance(point).getDataSegment(timespan, start, end);
     }

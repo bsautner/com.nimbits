@@ -30,13 +30,6 @@ public class PointModelFactory {
     }
 
 
-    public static Calculation createCalculation(Calculation calculation) {
-
-        return new CalculationModel(calculation);
-
-
-    }
-
     public static List<Point> createPointModels(final List<Point> points) {
         final List<Point> retObj = new ArrayList<Point>();
 
@@ -49,10 +42,7 @@ public class PointModelFactory {
 
     }
 
-    public static Calculation createCalculation(boolean enabled, String f, String target, String x, String y, String z) {
-        return new CalculationModel(enabled, f, target, x, y, z);
 
-    }
 
 //    public static Point createPoint()
 //    {

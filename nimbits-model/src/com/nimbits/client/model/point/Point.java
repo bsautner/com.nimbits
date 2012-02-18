@@ -13,13 +13,12 @@
 
 package com.nimbits.client.model.point;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.intelligence.*;
-import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.intelligence.Intelligence;
+import com.nimbits.client.model.value.Value;
 
-import java.io.*;
-import java.util.*;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by bsautner
@@ -33,26 +32,11 @@ public interface Point extends Serializable {
 
     void setIntelligence(final Intelligence intelligence);
 
-    void setCalculation(final Calculation calculation);
-
-    int getAlarmDelay();
-
-    boolean getAlarmToFacebook();
-    @Deprecated
-    AlertType getAlertState();
-
-
-    ClientType getClientType();
-
     double getCompression();
 
     Date getCreateDate();
 
-    Date getLastAlarmSent();
-
     Date getLastChecked();
-
-    String getDescription();
 
     int getExpire();
 
@@ -70,20 +54,6 @@ public interface Point extends Serializable {
 
     double getLowAlarm();
 
-
-    EntityName getName();
-
-    @Deprecated
-    boolean getReadOnly();
-
-    boolean getSendAlarmIM();
-
-    boolean getSendAlarmTweet();
-
-    boolean getSendIM();
-
-    boolean getSendTweet();
-
     String getTag();
 
     double getTargetValue();
@@ -94,9 +64,7 @@ public interface Point extends Serializable {
 
     String getUUID();
 
-
     Value getValue();
-
 
     List<Value> getValues();
 
@@ -105,36 +73,16 @@ public interface Point extends Serializable {
     boolean isIdleAlarmOn();
 
     boolean isLowAlarmOn();
-    @Deprecated
-    boolean isPostToFacebook();
-    @Deprecated
-    boolean isPublic();
-    @Deprecated
-    boolean isSystemPoint();
-
-    void setAlarmDelay(final int alarmDelay);
-    @Deprecated
-    void setAlarmToFacebook(final boolean alarmToFacebook);
-
-    void setAlertState(final AlertType alertState);
-
-    void setClientType(final ClientType clientType);
 
     void setCompression(final double compression);
 
     void setCreateDate(final Date createDate);
 
-    void setDescription(final String value);
-
     void setExpire(final int expire);
-
-    // void setFormula(final String formula);
 
     void setHighAlarm(final double highAlarm);
 
     void setHighAlarmOn(final boolean highAlarmOn);
-
-    //   void setHighestRecordedValue(final double highestRecordedValue);
 
     void setHost(final String host);
 
@@ -154,28 +102,7 @@ public interface Point extends Serializable {
 
     void setLowAlarmOn(final boolean lowAlarmOn);
 
-
-    void setName(final EntityName name);
-
-    void setPostToFacebook(final boolean postToFacebook);
-    @Deprecated
-    void setPublic(final boolean isPublic);
-
-    void setReadOnly(final boolean readOnly);
-    @Deprecated
-    void setSendAlarmIM(final boolean sendAlarmIM);
-    @Deprecated
-    void setSendAlarmTweet(final boolean sendAlarmTweet);
-    @Deprecated
-    void setSendIM(final boolean sendIM);
-    @Deprecated
-    void setSendTweet(final boolean sendTweet);
-
-    void setSystemPoint(final boolean isSystemPoint);
-
     void setTag(final String tag);
-
-    // void setTarget(final long long1);
 
     void setTargetValue(final double targetValue);
 
@@ -188,19 +115,8 @@ public interface Point extends Serializable {
     void setValue(final Value value);
 
     void setValues(final List<Value> values);
-    @Deprecated
-    boolean isAlarmToEmail();
-    @Deprecated
-    void setAlarmToEmail(boolean alarmToEmail);
-    @Deprecated
-    boolean getSendAlertsAsJson();
-    @Deprecated
-    void setSendAlertsAsJson(boolean sendAlertsAsJson);
 
-    Calculation getCalculation();
 
-    EntityType getEntityType();
 
-    void setEntityType(final EntityType entityType);
 
 }

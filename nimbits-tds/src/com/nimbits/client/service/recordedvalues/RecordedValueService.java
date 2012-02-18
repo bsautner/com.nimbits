@@ -13,16 +13,18 @@
 
 package com.nimbits.client.service.recordedvalues;
 
-import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.exceptions.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.timespan.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
+import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.timespan.Timespan;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 @RemoteServiceRelativePath("data")
 public interface RecordedValueService extends RemoteService {
@@ -31,13 +33,16 @@ public interface RecordedValueService extends RemoteService {
 
     List<Value> getCache(final Point point);
 
+    List<Value> getCache(final Entity entity);
+
     Value getCurrentValue(final Entity entity) throws NimbitsException;
 
     Value getCurrentValue(final Point p);
 
-    double solveEquation(final Point point) throws CalculationFailedException, NimbitsException;
 
     List<Value> getPieceOfDataSegment(final Point point, final Timespan timespan, final int start, final int end);
+
+    List<Value> getPieceOfDataSegment(final Entity entity, final Timespan timespan, final int start, final int end);
 
 
     Value recordValue(final User u, final Point target, final Value value, final boolean loopFlag) throws NimbitsException;
@@ -53,6 +58,8 @@ public interface RecordedValueService extends RemoteService {
     Date getLastRecordedDate(final List<Point> points);
 
     List<Value> getTopDataSeries(final Point point, final int maxValues, final Date endDate);
+
+    List<Value> getTopDataSeries(final Entity point, final int maxValues, final Date endDate);
 
     Point getTopDataSeries(final Point point, final int maxValues);
 

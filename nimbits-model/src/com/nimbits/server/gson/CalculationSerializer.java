@@ -17,7 +17,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import com.nimbits.client.model.point.Calculation;
+import com.nimbits.client.model.calculation.Calculation;
 
 import java.lang.reflect.Type;
 

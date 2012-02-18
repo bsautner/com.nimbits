@@ -133,9 +133,9 @@ public class EntityModelFactory {
     }
 
 
-    public static Entity createEntity(User u, Point p) {
+    public static Entity createEntity(User u, Point p, EntityName name) {
         if (u != null) {
-            return new EntityModel(p.getName(),
+            return new EntityModel(name,
                     "",
                     EntityType.point,
                     ProtectionLevel.everyone,
@@ -145,7 +145,7 @@ public class EntityModelFactory {
                     u.getUuid());
         }
         else {
-            return new EntityModel(p.getName(),
+            return new EntityModel(name,
                     "",
                     EntityType.point,
                     ProtectionLevel.everyone,

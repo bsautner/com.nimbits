@@ -1,26 +1,47 @@
+/*
+ * Copyright (c) 2010 Tonic Solutions LLC.
+ *
+ * http://www.nimbits.com
+ *
+ *
+ * Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.gnu.org/licenses/gpl.html
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+ */
+
 package com.nimbits.client.controls;
 
-import com.extjs.gxt.ui.client.data.*;
-import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.widget.*;
+import com.extjs.gxt.ui.client.data.ModelData;
+import com.extjs.gxt.ui.client.event.Listener;
+import com.extjs.gxt.ui.client.event.MenuEvent;
+import com.extjs.gxt.ui.client.event.MessageBoxEvent;
+import com.extjs.gxt.ui.client.event.SelectionListener;
+import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.Window;
-import com.extjs.gxt.ui.client.widget.menu.*;
+import com.extjs.gxt.ui.client.widget.menu.Menu;
 import com.extjs.gxt.ui.client.widget.menu.MenuItem;
-import com.google.gwt.core.client.*;
-import com.google.gwt.user.client.*;
-import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.icons.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.nimbits.client.enums.Action;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.icons.Icons;
+import com.nimbits.client.model.Const;
+import com.nimbits.client.model.GxtModel;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.panels.*;
-import com.nimbits.client.service.datapoints.*;
-import com.nimbits.client.service.entity.*;
-import com.nimbits.shared.*;
+import com.nimbits.client.service.entity.EntityService;
+import com.nimbits.client.service.entity.EntityServiceAsync;
+import com.nimbits.shared.Utils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Benjamin Sautner
@@ -90,7 +111,7 @@ public class EntityContextMenu extends Menu {
         reportContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) ||
                 currentModel.getEntityType().equals(EntityType.category));
         copyContext.setEnabled(currentModel.getEntityType().equals(EntityType.point));
-
+        calcContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.calculation));
         propertyContext().setEnabled(!currentModel.isReadOnly());
 
 
@@ -119,53 +140,17 @@ public class EntityContextMenu extends Menu {
     }
 
     private MenuItem calcContext() {
-        MenuItem retObj = new MenuItem();
+        final MenuItem retObj = new MenuItem();
 
-        retObj.setText("Edit");
-        retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.edit()));
+        retObj.setText("Calculation");
+        retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.formula()));
         retObj.addSelectionListener(new SelectionListener<MenuEvent>() {
             public void componentSelected(MenuEvent ce) {
                 GxtModel selectedModel = (GxtModel) tree.getSelectionModel().getSelectedItem();
                 Entity entity = selectedModel.getBaseEntity();
-                switch (selectedModel.getEntityType()) {
-                    case category:  {
-
-
-                        CategoryPropertyPanel dp = new CategoryPropertyPanel(entity);
-                        final Window w = new Window();
-                        w.setWidth(500);
-                        w.setHeight(400);
-                        w.setHeading(entity.getName().getValue() + " " + Const.WORD_PROPERTIES);
-                        w.add(dp);
-                        w.show();
-                        break;
-
-                    }
-                    case point: {
-
-                        createPointPropertyWindow(entity);
-
-                        break;
-
-
-                    }
-
-                    case subscription: {
-                        showSubscriptionPanel(entity);
-                        break;
-                    }
-                    case file: {
-                        FilePropertyPanel dp = new FilePropertyPanel(entity);
-                        final Window w = new Window();
-                        w.setWidth(500);
-                        w.setHeight(400);
-                        w.setHeading(entity.getName().getValue() + " " + Const.WORD_PROPERTIES);
-                        w.add(dp);
-                        w.show();
-                        break;
-                    }
-                }
+                showCalcPanel(entity);
             }
+
         });
         return retObj;
     }
@@ -205,6 +190,10 @@ public class EntityContextMenu extends Menu {
 
                     case subscription: {
                         showSubscriptionPanel(entity);
+                        break;
+                    }
+                    case calculation: {
+                        showCalcPanel(entity);
                         break;
                     }
                     case file: {
@@ -271,46 +260,7 @@ public class EntityContextMenu extends Menu {
         return retObj;
     }
 
-    private MenuItem publishContext() {
-        MenuItem retObj = new MenuItem();
-        retObj.setText("Publish");
-        retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.publish()));
-        retObj.addSelectionListener(new SelectionListener<MenuEvent>() {
-            public void componentSelected(MenuEvent ce) {
-                ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
-                GxtModel model = (GxtModel) selectedModel;
-                publishEntity(model); //TODO handle different types
 
-            }
-
-            private void publishEntity(GxtModel model) {
-
-                Entity p = model.getBaseEntity();
-                PointServiceAsync pointService = GWT.create(PointService.class);
-                //TODO
-//                pointService.publishPoint(p, new AsyncCallback<Point>() {
-//
-//                    @Override
-//                    public void onFailure(Throwable e) {
-//                        updater.cancel();
-//                        Info.display(Const.WORD_ERROR,
-//                                e.getMessage());
-//                    }
-//
-//                    @Override
-//                    public void onSuccess(Point point) {
-//                        com.google.gwt.user.client.Window.alert("Your data points is now set to public, people can now discover it by" +
-//                                " searching for its name or description on nimbits.com. Please select the property option to edit these values.");
-//
-//                    }
-//                });
-
-            }
-
-
-        });
-        return retObj;
-    }
 
     private MenuItem reportContext() {
         MenuItem retObj = new MenuItem();
@@ -389,7 +339,7 @@ public class EntityContextMenu extends Menu {
                         box.close();
                         GxtModel model = new GxtModel(entity);
                         notifyEntityModifiedListener(model, Action.create);
-                      //  addUpdateTreeModel(entity, false);
+                        //  addUpdateTreeModel(entity, false);
                     }
                 });
 
@@ -437,6 +387,32 @@ public class EntityContextMenu extends Menu {
             public void onEntityAdded(Entity entity) {
                 w.hide();
                 Cookies.removeCookie(Action.subscribe.name());
+                notifyEntityModifiedListener(new GxtModel(entity), Action.create);
+
+            }
+        });
+
+        w.show();
+    }
+
+    public void showCalcPanel(final Entity entity) {
+        CalculationPanel dp = new CalculationPanel(entity, settings);
+
+        final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
+        w.setWidth(600);
+        w.setHeight(600);
+        if (entity.getEntityType().equals(EntityType.point)) {
+        w.setHeading("Calculations triggered when data is recorded to " + entity.getName().getValue());
+        }
+        else {
+            w.setHeading("Edit Calculation");
+
+        }
+        w.add(dp);
+        dp.addSubscriptionAddedListener(new NavigationEventProvider.EntityAddedListener() {
+            @Override
+            public void onEntityAdded(Entity entity) {
+                w.hide();
                 notifyEntityModifiedListener(new GxtModel(entity), Action.create);
 
             }

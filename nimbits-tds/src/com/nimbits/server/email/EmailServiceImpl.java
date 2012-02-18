@@ -13,15 +13,14 @@
 
 package com.nimbits.server.email;
 
-import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
-import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.value.Value;
 import com.nimbits.server.settings.SettingServiceImpl;
-import org.apache.commons.lang3.*;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -121,7 +120,8 @@ public class EmailServiceImpl implements EmailService {
 
     }
 
-    public void sendAlert(final Point point,
+    public void sendAlert(final Entity entity,
+                          final Point point,
                           final EmailAddress emailAddress,
                           final Value value) {
 
@@ -129,7 +129,7 @@ public class EmailServiceImpl implements EmailService {
         final Session session = Session.getDefaultInstance(props, null);
         final StringBuilder message = new StringBuilder();
         message.append("<p>This is an alert email from <A HREF=www.nimbits.com>Nimbits Data Logger</A></p>")
-                .append("<p>Data Point: ").append(point.getName().getValue()).append("</p>");
+                .append("<p>Data Point: ").append(entity.getName().getValue()).append("</p>");
 
 
         switch (value.getAlertState()) {

@@ -13,47 +13,42 @@
 
 package com.nimbits.client.controls;
 
-import com.extjs.gxt.ui.client.store.*;
-import com.extjs.gxt.ui.client.widget.form.*;
-import com.google.gwt.core.client.*;
-import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.service.datapoints.*;
-import com.nimbits.client.service.entity.*;
+import com.extjs.gxt.ui.client.store.ListStore;
+import com.extjs.gxt.ui.client.widget.form.ComboBox;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.model.Const;
+import com.nimbits.client.model.GxtModel;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.service.entity.EntityService;
+import com.nimbits.client.service.entity.EntityServiceAsync;
 
-import java.util.*;
+import java.util.Map;
 
 public class EntityCombo extends ComboBox<GxtModel> {
 
-    public String getText() {
-        List<GxtModel> s = getSelection();
-        if (s.size() > 0) {
-            GxtModel si = s.get(0);
-            return si.getName().getValue();
-        } else {
-            return null;
+//    public String getText() {
+//        List<GxtModel> s = getSelection();
+//        if (s.size() > 0) {
+//            GxtModel si = s.get(0);
+//            return si.getName().getValue();
+//        } else {
+//            return null;
+//
+//        }
+//
+//    }
+//
 
-        }
-
-    }
-
-    public GxtModel getPoint() {
-        List<GxtModel> s = getSelection();
-        return s.get(0);
-
-    }
-
-    public EntityCombo(final EntityType type) {
+    public EntityCombo(final EntityType type, final String selectedUUID) {
         setEmptyText(Const.MESSAGE_LOADING_POINTS);
         final ListStore<GxtModel> cbStore = new ListStore<GxtModel>();
         setStore(cbStore);
         setDisplayField(Const.PARAM_NAME);
         setValueField(Const.PARAM_ID);
-        setEditable(false);
+        setEditable(true);
+        setAutoValidate(true);
 
         EntityServiceAsync service = GWT.create(EntityService.class);
 
@@ -70,6 +65,9 @@ public class EntityCombo extends ComboBox<GxtModel> {
                 for (Entity e : result.values()) {
                     GxtModel model = new GxtModel(e);
                     cbStore.add(model);
+                    if (model.getBaseEntity().getEntity().equals(selectedUUID)) {
+                       setValue(model);
+                    }
 
                 }
             }

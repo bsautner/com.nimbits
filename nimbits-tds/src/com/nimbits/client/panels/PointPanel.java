@@ -23,8 +23,8 @@ import com.extjs.gxt.ui.client.widget.TabPanel;
 import com.extjs.gxt.ui.client.widget.VerticalPanel;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.CheckBox;
-import com.extjs.gxt.ui.client.widget.form.*;
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
+import com.extjs.gxt.ui.client.widget.form.*;
 import com.extjs.gxt.ui.client.widget.form.TextArea;
 import com.extjs.gxt.ui.client.widget.layout.FillLayout;
 import com.extjs.gxt.ui.client.widget.layout.FormData;
@@ -36,32 +36,23 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.ui.Label;
-import com.nimbits.client.controls.EntityCombo;
 import com.nimbits.client.controls.ProtectionLevelOptions;
-import com.nimbits.client.enums.*;
+import com.nimbits.client.enums.IntelligenceResultTarget;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.exceptions.CalculationFailedException;
 import com.nimbits.client.icons.Icons;
 import com.nimbits.client.model.Const;
-import com.nimbits.client.model.GxtModel;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.intelligence.Intelligence;
 import com.nimbits.client.model.intelligence.IntelligenceModelFactory;
-import com.nimbits.client.model.point.Calculation;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointModel;
-import com.nimbits.client.model.point.PointModelFactory;
-import com.nimbits.client.model.user.*;
 import com.nimbits.client.service.datapoints.PointService;
 import com.nimbits.client.service.datapoints.PointServiceAsync;
 import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.entity.EntityServiceAsync;
 import com.nimbits.client.service.intelligence.IntelligenceService;
 import com.nimbits.client.service.intelligence.IntelligenceServiceAsync;
-import com.nimbits.client.service.recordedvalues.RecordedValueService;
-import com.nimbits.client.service.recordedvalues.RecordedValueServiceAsync;
 import com.nimbits.client.service.settings.SettingsService;
 import com.nimbits.client.service.settings.SettingsServiceAsync;
 import com.nimbits.shared.Utils;
@@ -75,7 +66,7 @@ public class PointPanel extends LayoutContainer {
     private static final String XML_LABEL_STYLE = "xmlLabel";
 
     //  private final Button btnHelp = new Button("Help");
-    private final Button btnTestCalc = new Button("Test Calc");
+
     private ProtectionLevelOptions protectionLevelOptions;
     private final CheckBox he = new CheckBox();
     //idle
@@ -87,14 +78,6 @@ public class PointPanel extends LayoutContainer {
     private final Hyperlink hyperlinkRest = new Hyperlink("New hyperlink", false, "newHistoryToken");
     private final Hyperlink uuidLink = new Hyperlink("New hyperlink", false, "newHistoryToken");
 
-    private final LabelField lblfldTips = new LabelField("<p>Whenever the <b>Trigger</b> data point records a new value, " +
-            "the formula entered above will be executed. The resulting value will then be stored in the <b>Target</b> data point. " +
-            "Your formula can contain a <b>lowercase</b> x, y, and z variable. The current value of the point assigned to that " +
-            "variable will be used. Supported symbols are: *, +, -, *, /, ^, %, cos, sin, tan, acos, asin, atan, sqrt, sqr, log, min, " +
-            "max, ceil, floor, abs, neg, rndr.</p>" +
-            "<p>Example: Typically you will use the current Trigger Point as the x variable - so if your point was named mypoint and was " +
-            "set as both the x and trigger value. And you had a target point call mytarget. A formula of x+1 would take whatever new " +
-            "value was recorded into mypoint and save the result mypoint+1 into mytarget</p>");
     private final Label lblQrCodesThe = new Label("QR Codes: The QR Bar code below represents a link to a data screen for this point. Any device capable of reading barcodes can read this, such as a barcode app on your smart phone.");
     private final Label lblTheQrBarcode = new Label("The QR Barcode above links to this URL, which you can also use as a universal way to view this point's data:");
     private final Label lblYouCanPull = new Label("You can pull this point's data using http post and getInstance commands using the REST API Web service. This example uses this points unique UUID, but there are many ways to access this point's data. See the REST API documents to learn more. ");
@@ -104,7 +87,7 @@ public class PointPanel extends LayoutContainer {
 
     //General Properties
     private final NumberField compression = new NumberField();
-    private final NumberField delay = new NumberField();
+
     private final NumberField expires = new NumberField();
 
     //Alerts
@@ -117,12 +100,7 @@ public class PointPanel extends LayoutContainer {
     ///private final TextField<String> Low = new TextField<String>();
     private final NumberField targetValue = new NumberField();
 
-    private final EntityCombo calcTarget;
-    private EntityCombo CalcXCombo;
-    private EntityCombo Y;
-    private EntityCombo Z;
-    private final CheckBox calcEnabled = new CheckBox();
-    //calcs
+
 
 
     private final PointServiceAsync pointService = GWT.create(PointService.class);
@@ -135,12 +113,11 @@ public class PointPanel extends LayoutContainer {
     private final TextArea description = new TextArea();
     private final TextField<String> formula = new TextField<String>();
 
-    private final TextField<String> trigger = new TextField<String>();
     private final TextField<String> unit = new TextField<String>();
 
 
     private final Entity entity;
-     private Point point;
+    private Point point;
     private Point intelligenceTargetPoint = null;
 
 
@@ -160,7 +137,7 @@ public class PointPanel extends LayoutContainer {
     public PointPanel(final Entity entity)   {
         this.entity = entity;
        // this.user = user;
-        calcTarget= new EntityCombo(EntityType.point);
+
         protectionLevelOptions = new ProtectionLevelOptions(entity);
 
         SettingsServiceAsync settings = GWT.create(SettingsService.class);
@@ -196,9 +173,6 @@ public class PointPanel extends LayoutContainer {
 
             private void buildForm(final Point p) {
                 point = p;
-                CalcXCombo = new EntityCombo(EntityType.point);
-                Y = new EntityCombo(EntityType.point);
-                Z = new EntityCombo(EntityType.point);
 
 
                 setSize(FORM_HEIGHT, "475");
@@ -221,7 +195,7 @@ public class PointPanel extends LayoutContainer {
                 TabItem tabGeneral = new TabItem("General");
                 tabGeneral.setHeight("425");
                 // TabItem tabRelay = new TabItem("Relay");
-                TabItem tabCalcs = new TabItem("Calculations");
+
                 TabItem tabIdle = new TabItem("Idle Alarm");
                 TabItem tabLinks = new TabItem("Links");
                 //tabGeneral.setWidth("450");
@@ -235,7 +209,7 @@ public class PointPanel extends LayoutContainer {
                     tabPanel.add(tabIntelligence);
                 }
                 tabPanel.add(tabAlerts);
-                tabPanel.add(tabCalcs);
+
                 tabPanel.add(tabIdle);
                 // tabPanel.add(tabRelay);
                 tabPanel.add(tabLinks);
@@ -244,38 +218,10 @@ public class PointPanel extends LayoutContainer {
                 tabIntelligence.add(intelForm());
                 tabAlerts.add(alertForm(settingMap));
                 tabGeneral.add(generalForm(settingMap));
-                tabCalcs.add(calcForm());
-                //    tabRelay.add(relayForm());
+
                 tabLinks.add(linkForm());
                 tabIdle.add(idleForm());
-                tabPanel.addListener(Events.Select,
-                        new Listener<BaseEvent>() {
-                            public void handleEvent(BaseEvent tpe) {
-                                if (point.getCalculation() != null) {
-                                    if (!(Utils.isEmptyString(point.getCalculation().getTarget()))) {
-                                        calcTarget.setValue(calcTarget.getStore().findModel(Const.PARAM_ID,
-                                                point.getCalculation().getTarget()));
-                                    }
-                                    if (!(Utils.isEmptyString(point.getCalculation().getX()))) {
-                                        CalcXCombo.setValue(CalcXCombo.getStore().findModel(Const.PARAM_ID, point.getCalculation().getX()));
-                                        CalcXCombo.repaint();
-                                    } else {
-                                        CalcXCombo.setValue(CalcXCombo.getStore().findModel(Const.PARAM_ID, entity.getEntity()));
-//                                        GxtModel xModel = new GxtModel(user, point);
-//                                        CalcXCombo.setValue(xModel);
-                                    }
 
-                                    if (!(Utils.isEmptyString(point.getCalculation().getY()))) {
-                                        Y.setValue(Y.getStore().findModel(Const.PARAM_ID, point.getCalculation().getY()));
-                                    }
-
-                                    if (!(Utils.isEmptyString(point.getCalculation().getZ()))) {
-                                        Z.setValue(Z.getStore().findModel(Const.PARAM_ID, point.getCalculation().getZ()));
-                                    }
-                                }
-
-                            }
-                        });
                 add(verticalPanel);
                 doLayout();
             }
@@ -292,17 +238,6 @@ public class PointPanel extends LayoutContainer {
         Button buttonSave = saveButtonInit();
 
 
-        btnTestCalc.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.Play()));
-
-        btnTestCalc.addSelectionListener(new SelectionListener<ButtonEvent>() {
-            public void componentSelected(ButtonEvent ce) {
-                try {
-                    runEquation(true);
-                } catch (CalculationFailedException e) {
-                    Window.alert(e.getMessage());
-                }
-            }
-        });
 
         separatorToolItem.setWidth("25px");
 
@@ -310,7 +245,7 @@ public class PointPanel extends LayoutContainer {
 
         toolBar.add(new SeparatorToolItem());
         toolBar.add(btnTestIntel);
-        toolBar.add(btnTestCalc);
+
         toolBar.add(separatorToolItem);
 
         return toolBar;
@@ -413,23 +348,15 @@ public class PointPanel extends LayoutContainer {
         point.setIgnoreIncomingCompressedValues(ignoreCompressedValues.getValue());
         point.setExpire(expires.getValue().intValue());
         point.setUnit(unit.getValue());
-        point.setDescription(description.getValue());
-     //   point.setSendIM(checkIM.getValue());
-       // point.setSendTweet(checkTwitter.getValue());
-       // point.setPostToFacebook(checkFB.getValue());
+
         point.setTargetValue(targetValue.getValue().doubleValue());
 
         //Alerts
-        int d = delay.getValue().intValue();
-        point.setAlarmDelay(d);
+
         point.setHighAlarm(high.getValue().doubleValue());
         point.setLowAlarm(low.getValue().doubleValue());
         point.setHighAlarmOn(he.getValue());
         point.setLowAlarmOn(le.getValue());
-       // point.setAlarmToFacebook(alertToFacebookCheckbox.getValue());
-       // point.setAlarmToEmail(alertToEmailCheckbox.getValue());
-       // point.setSendAlarmIM(im.getValue());
-       // point.setSendAlarmTweet(tw.getValue());
 
         //idlealarm
         point.setIdleAlarmOn(idleOn.getValue());
@@ -445,21 +372,7 @@ public class PointPanel extends LayoutContainer {
         String x = "";
         String y = "";
         String z = "";
-        boolean enabled = calcEnabled.getValue();
 
-
-        //calcs
-
-
-        t = (calcTarget.getValue() != null) ? calcTarget.getPoint().getId() : "";
-        x = (CalcXCombo.getValue() != null) ? CalcXCombo.getPoint().getId() : "";
-        y = (Y.getValue() != null) ? Y.getPoint().getId() : "";
-        z = (Z.getValue() != null) ? Z.getPoint().getId() : "";
-
-        if (!Utils.isEmptyString(f)) {
-            Calculation calculation = PointModelFactory.createCalculation(enabled, f, t, x, y, z);
-            point.setCalculation(calculation);
-        }
 
 
         if (intelligenceTargetPoint != null) {
@@ -500,107 +413,6 @@ public class PointPanel extends LayoutContainer {
         }
     }
 
-    private boolean runEquation(final boolean showFeedback) throws CalculationFailedException {
-        final PointModel testPoint = new PointModel();
-        final RecordedValueServiceAsync dataService;
-        dataService = GWT.create(RecordedValueService.class);
-
-        if (calcTarget.getValue() == null) {
-            if (showFeedback) {
-                final Dialog d = new Dialog();
-                d.setHeading("Error");
-                d.setButtons(Dialog.OK);
-                d.setBodyStyleName("pad-text");
-                d.addText("You must select a target that the result of this calculation will be recorded to.");
-                d.setScrollMode(Scroll.AUTO);
-                d.setHideOnButtonClick(true);
-                d.show();
-            }
-            return false;
-        }
-
-        if (calcTarget.getText().equals(point.getName().getValue())) {
-            if (showFeedback) {
-                final Dialog d = new Dialog();
-                d.setHeading("Error");
-                d.setButtons(Dialog.OK);
-                d.setBodyStyleName("pad-text");
-                d.addText("Infinite Loop Error");
-                d.setScrollMode(Scroll.AUTO);
-                d.setHideOnButtonClick(true);
-                d.show();
-            }
-            return false;
-        }
-
-
-        if (formula.getValue() == null) {
-            if (showFeedback) {
-                final Dialog d = new Dialog();
-                d.setHeading("Error");
-                d.setButtons(Dialog.OK);
-                d.setBodyStyleName("pad-text");
-                d.addText("Please enter an equation.");
-                d.setScrollMode(Scroll.AUTO);
-                d.setHideOnButtonClick(true);
-                d.show();
-            }
-            return false;
-        }
-
-
-        String f = formula.getValue();
-        String t = "";
-        String x = "";
-        String y = "";
-        String z = "";
-        boolean enabled = false;
-
-
-        //calcs
-
-
-        t = (calcTarget.getValue() != null) ? calcTarget.getPoint().getId() : "";
-        x = (CalcXCombo.getValue() != null) ? CalcXCombo.getPoint().getId() : "";
-        y = (Y.getValue() != null) ? Y.getPoint().getId() : "";
-        z = (Z.getValue() != null) ? Z.getPoint().getId() : "";
-
-
-        Calculation calculation = PointModelFactory.createCalculation(enabled, f, t, x, y, z);
-        testPoint.setCalculation(calculation);
-
-
-        dataService.solveEquation(testPoint, new AsyncCallback<Double>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                if (showFeedback) {
-                    final Dialog simple = new Dialog();
-                    simple.setHeading("formula Error");
-                    simple.setButtons(Dialog.OK);
-                    simple.setBodyStyleName("pad-text");
-                    simple.addText(caught.getMessage());
-                    simple.setScrollMode(Scroll.AUTO);
-                    simple.setHideOnButtonClick(true);
-                    simple.show();
-                }
-            }
-
-            @Override
-            public void onSuccess(Double result) {
-                if (showFeedback) {
-                    final Dialog d = new Dialog();
-                    d.setHeading("formula Success");
-                    d.setButtons(Dialog.OK);
-                    d.setBodyStyleName("pad-text");
-                    d.addText("Result: " + result);
-                    d.setScrollMode(Scroll.AUTO);
-                    d.setHideOnButtonClick(true);
-                    d.show();
-                }
-            }
-        });
-        return true;
-    }
 
     private FormPanel intelForm() {
         FormPanel simple = new FormPanel();
@@ -694,7 +506,8 @@ public class PointPanel extends LayoutContainer {
 
                 @Override
                 public void onSuccess(Point point) {
-                    intelTargetPoint.setValue(point.getName().getValue());
+                    //TODO fix
+                  //  intelTargetPoint.setValue(point.getName().getValue());
                 }
             });
         }
@@ -716,7 +529,7 @@ public class PointPanel extends LayoutContainer {
     }
 
     private void intelligenceTestButtonInit() {
-        btnTestIntel.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.Play()));
+        btnTestIntel.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.play()));
         btnTestIntel.addListener(Events.OnClick, new Listener<BaseEvent>() {
 
 
@@ -829,37 +642,6 @@ public class PointPanel extends LayoutContainer {
         le.setValue(point.isLowAlarmOn());
         simple.add(le, new FormData("0% -395"));
 
-       // alertToFacebookCheckbox.setVisible(settingMap.containsKey(Const.SETTING_FACEBOOK_CLIENT_ID) && !Utils.isEmptyString(settingMap.get(Const.SETTING_FACEBOOK_CLIENT_ID)));
-      //  alertToFacebookCheckbox.setBoxLabel("Post alerts to facebook");
-       // alertToFacebookCheckbox.setLabelSeparator("");
-       // alertToFacebookCheckbox.setValue(point.getAlarmToFacebook());
-       // simple.add(alertToFacebookCheckbox);
-
-
-        //alertToEmailCheckbox.setBoxLabel("Send alerts to email");
-        //alertToEmailCheckbox.setLabelSeparator("");
-        //alertToEmailCheckbox.setValue(point.isAlarmToEmail());
-        //simple.add(alertToEmailCheckbox);
-
-        //im.setBoxLabel("Send alerts to IM");
-       // im.setLabelSeparator("");
-       // im.setValue(point.getSendAlarmIM());
-      //  simple.add(im);
-
-       // tw.setVisible(settingMap.containsKey(Const.SETTING_TWITTER_SECRET) && !Utils.isEmptyString(settingMap.get(Const.SETTING_TWITTER_SECRET)));
-       // tw.setBoxLabel("Post alerts to twitter");
-       // tw.setLabelSeparator("");
-       // tw.setValue(point.getSendAlarmTweet());
-        //simple.add(tw);
-
-        // final TextField<Integer> delay = new TextField<Integer>();
-
-
-        delay.setAllowBlank(false);
-
-        delay.setFieldLabel("Repeat email Delay (Minutes)");
-        delay.setValue(point.getAlarmDelay());
-        simple.add(delay);
 
 
         return simple;
@@ -867,12 +649,6 @@ public class PointPanel extends LayoutContainer {
 
     //general
     private FormPanel generalForm(Map<String, String> settingMap) {
-        //ContentPanel vp = new ContentPanel();
-
-        //		vpoint.setHeaderVisible(false);
-        //		vpoint.setFrame(false);
-        //		vpoint.setBorders(false);
-        //		vpoint.setBodyBorder(false);
 
         FormPanel simple = new FormPanel();
         simple.setHeaderVisible(false);
@@ -952,39 +728,8 @@ public class PointPanel extends LayoutContainer {
         simple.add(protectionLevelOptions, new FormData("-20"));
 
 
-       // checkFB.setBoxLabel("facebook");
-       // checkFB.setValue(point.isPostToFacebook());
-       // checkFB.setVisible(settingMap.containsKey(Const.SETTING_FACEBOOK_CLIENT_ID) && !Utils.isEmptyString(settingMap.get(Const.SETTING_FACEBOOK_CLIENT_ID)));
-
-       // checkIM.setBoxLabel("Instant Message");
-       // checkIM.setValue(point.getSendIM());
-       //
-       // checkTwitter.setVisible(settingMap.containsKey(Const.SETTING_TWITTER_SECRET) && !Utils.isEmptyString(settingMap.get(Const.SETTING_TWITTER_SECRET)));
-       // checkTwitter.setBoxLabel("Twitter");
-       // checkTwitter.setValue(point.getSendTweet());
-
-
-
-       // CheckBoxGroup checkGroupFB = new CheckBoxGroup();
-      //  checkGroupFB.setFieldLabel("Messaging");
-       // checkGroupFB.add(checkFB);
-        //checkFB.setWidth("108px");
-
-       // checkGroupFB.add(checkIM);
-       // checkIM.setWidth("132px");
-       // checkGroupFB.add(checkTwitter);
-       // checkTwitter.setWidth("82px");
-        //simple.add(checkGroupFB, new FormData("-115"));
-       //checkGroupFB.setWidth("400");
-
-        //sendAlertAsJson.setFieldLabel("M2M");
-       // sendAlertAsJson.setBoxLabel("Make IM (XMPP) Alerts and Messages Machine Readable");
-        //sendAlertAsJson.setValue(point.getSendAlertsAsJson());
-        //simple.add(sendAlertAsJson);
-
-
         description.setPreventScrollbars(true);
-        description.setValue(point.getDescription());
+        description.setValue(entity.getDescription());
         description.setFieldLabel("Description");
         simple.add(description, new FormData("-20"));
         description.setSize("400", "100");
@@ -993,66 +738,7 @@ public class PointPanel extends LayoutContainer {
         return simple;
     }
 
-    private FormPanel calcForm() {
-        FormPanel simple = new FormPanel();
-        simple.setHeaderVisible(false);
-        simple.setFrame(false);
-        simple.setBorders(false);
-        simple.setBodyBorder(false);
-        simple.setSize(MAIN_WIDTH, FORM_HEIGHT);
-        trigger.setReadOnly(true);
-        trigger.setValue(point.getName().getValue());
-        trigger.setFieldLabel("Trigger:");
-        simple.add(trigger);
 
-        formula.setFieldLabel("Formula");
-
-        formula.setAllowBlank(false);
-        if (point.getCalculation() != null) {
-            formula.setValue(point.getCalculation().getFormula());
-        }
-
-        simple.add(formula);
-        calcTarget.setEditable(true);
-        calcTarget.setAllowBlank(true);
-
-        calcTarget.setFieldLabel("Target:");
-        calcTarget.setForceSelection(true);
-        calcTarget.setReadOnly(false);
-
-        // target.setValue(point.getTarget()));
-        // if (point.getTarget() > 0)
-        // {
-        // for (Point p : target.getItemSelector().)
-        // }
-
-        calcEnabled.setBoxLabel("Enabled");
-        calcEnabled.setLabelSeparator("");
-        calcEnabled.setValue(point.getCalculation() != null ? point.getCalculation().getEnabled() : false);
-
-        CalcXCombo.setEditable(true);
-        CalcXCombo.setFieldLabel("x");
-        CalcXCombo.setAllowBlank(true);
-
-        Y.setAllowBlank(true);
-        Y.setEditable(true);
-        Y.setFieldLabel("y");
-
-        Z.setEditable(true);
-        Z.setAllowBlank(true);
-        Z.setFieldLabel("z");
-
-        simple.add(calcTarget);
-        simple.add(CalcXCombo);
-        simple.add(Y);
-        simple.add(Z);
-        simple.add(calcEnabled);
-        lblfldTips.setFieldLabel("Tips:");
-
-        simple.add(lblfldTips, new FormData("100%"));
-
-        return simple;
-    }
 
 
     private VerticalPanel linkForm() {

@@ -42,8 +42,6 @@ public interface PointTransactions {
 
     Point checkPoint(final HttpServletRequest req, final EmailAddress email, final Point point) throws NimbitsException;
 
-    Point publishPoint(Point p) throws NimbitsException;
-
     List<Point> getAllPoints(int start, int end);
 
     List<Point> getIdlePoints();

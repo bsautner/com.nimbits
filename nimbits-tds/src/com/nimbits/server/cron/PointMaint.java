@@ -54,16 +54,8 @@ public class PointMaint extends HttpServlet {
             set += Const.CONST_QUERY_CHUNK_SIZE;
 
             for (final Point p : points) {
-                String c;
+
                 count++;
-                if (p.isPublic()) {
-                    c = "label success";
-                } else {
-                    c = "label";
-                }
-
-
-                out.println("<li><span class = \"" + c + "\">" + p.getName().getValue() + "  " + p.getDescription() + " " + p.getUUID() + "</span></li>");
                 TaskFactoryLocator.getInstance().startPointMaintTask(p);
             }
         }

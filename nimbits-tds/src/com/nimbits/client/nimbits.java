@@ -29,7 +29,6 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.nimbits.client.controls.MainMenuToolBar;
 import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.ClientType;
-import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.exceptions.NotLoggedInException;
 import com.nimbits.client.exceptions.ObjectProtectionException;
 import com.nimbits.client.model.Const;
@@ -51,7 +50,6 @@ import com.nimbits.client.service.twitter.TwitterService;
 import com.nimbits.client.service.twitter.TwitterServiceAsync;
 import com.nimbits.shared.Utils;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -219,45 +217,45 @@ public class nimbits implements EntryPoint {
 
     }
 
-    void showAnnotatedTimeLine(final Point point) {
-
-        final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
-     //   final RecordedValueServiceAsync dataService = GWT.create(RecordedValueService.class);
-        final ContentPanel p = new ContentPanel();
-        p.setHeading(point.getName().getValue());
-
-       // final List<Point> points = Arrays.asList(point);
-        //the chart panel will determine the end date for the first show
-        final AnnotatedTimeLinePanel annotatedTimeLinePanel = new AnnotatedTimeLinePanel(false, Const.DEFAULT_CHART_NAME);
-        //  final Date start = new Date(result.getTime() - (1000 * 60 * 60 * 24) );
-        // annotatedTimeLinePanel.setTimespan(new TimespanModel(start, result));
-        //  annotatedTimeLinePanel.setPoints(points);
-
-        p.add(annotatedTimeLinePanel);
-        p.setWidth(600);
-        p.setHeight(400);
-        annotatedTimeLinePanel.initChart();
-        annotatedTimeLinePanel.addPoint(point);
-        w.add(p);
-        w.setHeight(400);
-        w.setWidth(600);
-        w.show();
-
-//        dataService.getLastRecordedDate(points, new AsyncCallback<Date>() {
-//            @Override
-//            public void onFailure(Throwable caught) {
+//    void showAnnotatedTimeLine(final Point point) {
 //
-//            }
+//        final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
+//     //   final RecordedValueServiceAsync dataService = GWT.create(RecordedValueService.class);
+//        final ContentPanel p = new ContentPanel();
+//        p.setHeading(point.getName().getValue());
 //
-//            @Override
-//            public void onSuccess(final Date result) {
+//       // final List<Point> points = Arrays.asList(point);
+//        //the chart panel will determine the end date for the first show
+//        final AnnotatedTimeLinePanel annotatedTimeLinePanel = new AnnotatedTimeLinePanel(false, Const.DEFAULT_CHART_NAME);
+//        //  final Date start = new Date(result.getTime() - (1000 * 60 * 60 * 24) );
+//        // annotatedTimeLinePanel.setTimespan(new TimespanModel(start, result));
+//        //  annotatedTimeLinePanel.setPoints(points);
 //
+//        p.add(annotatedTimeLinePanel);
+//        p.setWidth(600);
+//        p.setHeight(400);
+//        annotatedTimeLinePanel.initChart();
+//        annotatedTimeLinePanel.addPoint(point);
+//        w.add(p);
+//        w.setHeight(400);
+//        w.setWidth(600);
+//        w.show();
 //
-//            }
-//
-//
-//        });
-    }
+////        dataService.getLastRecordedDate(points, new AsyncCallback<Date>() {
+////            @Override
+////            public void onFailure(Throwable caught) {
+////
+////            }
+////
+////            @Override
+////            public void onSuccess(final Date result) {
+////
+////
+////            }
+////
+////
+////        });
+//    }
 
 //    private void addListeners() {
 //
@@ -535,38 +533,38 @@ public class nimbits implements EntryPoint {
                 });
     }
 
-    private void loadData(final Point point) throws NimbitsException {
-        final List<Point> points = new ArrayList<Point>();
-        final ContentPanel mainContentPanel = new ContentPanel();
-        points.add(point);
-        getViewport();
-
-        mainContentPanel.setHeading(point.getName() + "  " + point.getDescription());
-        viewport.add(mainContentPanel);
-        RootPanel.get("main").add(viewport);
-        LoginServiceAsync loginService = GWT.create(LoginService.class);
-
-        loginService.login(GWT.getHostPageBaseURL(),
-                new AsyncCallback<LoginInfo>() {
-                    @Override
-                    public void onFailure(Throwable error) {
-                        handleError(error);
-                    }
-
-                    @Override
-                    public void onSuccess(LoginInfo result) {
-                        loginInfo = result;
-                        if ((loginInfo.isLoggedIn() && loginInfo.getUser().getId() == point.getUserFK()) || point.isPublic()) {
-                            loadChart(points, mainContentPanel);
-                        } else {
-                            loadLogin();
-                        }
-                    }
-
-                });
-
-
-    }
+//    private void loadData(final Point point) throws NimbitsException {
+//        final List<Point> points = new ArrayList<Point>();
+//        final ContentPanel mainContentPanel = new ContentPanel();
+//        points.add(point);
+//        getViewport();
+//
+//        mainContentPanel.setHeading(point.getName() + "  " + point.getDescription());
+//        viewport.add(mainContentPanel);
+//        RootPanel.get("main").add(viewport);
+//        LoginServiceAsync loginService = GWT.create(LoginService.class);
+//
+//        loginService.login(GWT.getHostPageBaseURL(),
+//                new AsyncCallback<LoginInfo>() {
+//                    @Override
+//                    public void onFailure(Throwable error) {
+//                        handleError(error);
+//                    }
+//
+//                    @Override
+//                    public void onSuccess(LoginInfo result) {
+//                        loginInfo = result;
+//                        if ((loginInfo.isLoggedIn() && loginInfo.getUser().getId() == point.getUserFK()) || point.isPublic()) {
+//                            loadChart(points, mainContentPanel);
+//                        } else {
+//                            loadLogin();
+//                        }
+//                    }
+//
+//                });
+//
+//
+//    }
 
     private void loadChart(final List<Point> points, final ContentPanel p) {
         RecordedValueServiceAsync dataService;

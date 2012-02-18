@@ -107,7 +107,7 @@ public class ProcessBatchTask extends HttpServlet {
 
                         RecordedValueServiceFactory.getInstance().recordValue(b.u, point, v, false);
                     } catch (JDOException e) {
-                        log.severe("restart? :" + b.value + " " + b.timestamp + " " + point.getName() + " " + b.u.getEmail());
+
                         log.severe(Const.ERROR_BATCH_SERVICE_JDO + e.getMessage());
 
                     }

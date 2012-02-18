@@ -14,7 +14,6 @@
 package com.nimbits.server.blobstore;
 
 import com.nimbits.client.enums.ExportType;
-import com.nimbits.client.exception.NimbitsException;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,5 +23,5 @@ import com.nimbits.client.exception.NimbitsException;
  * To change this template use File | Settings | File Templates.
  */
 public interface BlobStore {
-    String createFile(final String data, final ExportType exportType) throws NimbitsException;
+    String createFile(final String data, final ExportType exportType) ;
 }

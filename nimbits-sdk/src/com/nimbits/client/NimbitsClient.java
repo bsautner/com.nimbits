@@ -15,6 +15,7 @@ package com.nimbits.client;
 
 
 import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
@@ -74,7 +75,7 @@ public interface NimbitsClient {
 
     void deletePoint(final String pointName);
 
-    Point addPoint(final Point p);
+    Point addPoint(final EntityName pointName, final Point p);
 
     Point addPoint(final EntityName pointName);
 
@@ -114,4 +115,6 @@ public interface NimbitsClient {
 
 
     byte[] getChartImage(final String baseURL, final String params);
+
+    void addCalculation(Calculation calculation, EntityName name);
 }

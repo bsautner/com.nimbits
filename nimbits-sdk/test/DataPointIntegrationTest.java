@@ -5,7 +5,6 @@
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
@@ -50,14 +49,13 @@ public class DataPointIntegrationTest extends TestCase {
     @Test
     public void testNoCompression() throws Exception {
         Point p = new PointModel();
-
-        p.setName(CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString()));
+        EntityName name = CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString());
         p.setExpire(1);
         p.setCompression(0);
-        Point r = ClientHelper.client().addPoint(p);
+        Point r = ClientHelper.client().addPoint(name, p);
 
-        double x = testCompression(p);
-        ClientHelper.client().deletePoint(p.getName());
+        double x = testCompression(name);
+        ClientHelper.client().deletePoint(name);
 
         Assert.assertEquals(345.0, x);
 
@@ -67,9 +65,9 @@ public class DataPointIntegrationTest extends TestCase {
     @Test
     public void testCompressionSeparatePostsNoDate() throws Exception {
         Point p = new PointModel();
-        p.setName(CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString()));
+        EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString()));
         p.setCompression(0.1);
-        ClientHelper.client().addPoint(p);
+        ClientHelper.client().addPoint(name);
 
         double rx = 0.0;
 
@@ -79,7 +77,7 @@ public class DataPointIntegrationTest extends TestCase {
                 StringBuilder b = new StringBuilder();
                 rx += 0.1;
 
-                b.append("&p1=").append(URLEncoder.encode(p.getName().getValue(), Const.CONST_ENCODING)).append("&v1=").append(rx);
+                b.append("&p1=").append(URLEncoder.encode(name.getValue(), Const.CONST_ENCODING)).append("&v1=").append(rx);
                 // System.out.println( b.toString());
                 ClientHelper.client().recordBatch(b.toString());
                 System.out.println(rx);
@@ -87,7 +85,7 @@ public class DataPointIntegrationTest extends TestCase {
             }
 
             Thread.sleep(2000);
-            List<Value> v = ClientHelper.client().getSeries(p.getName(), 10);
+            List<Value> v = ClientHelper.client().getSeries(name.getValue(), 10);
             double retVal = 0.0;
             for (Value x : v) {
                 retVal += x.getNumberValue();
@@ -96,7 +94,7 @@ public class DataPointIntegrationTest extends TestCase {
 
             DecimalFormat twoDForm = new DecimalFormat("#.##");
             retVal = Double.valueOf(twoDForm.format(retVal));
-            ClientHelper.client().deletePoint(p.getName());
+            ClientHelper.client().deletePoint(name.getValue());
 
             assertEquals(30.0, retVal, 0.0);
 
@@ -112,9 +110,9 @@ public class DataPointIntegrationTest extends TestCase {
 
         Point p = new PointModel();
 
-        p.setName(CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString()));
+        EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString()));
         p.setCompression(0.1);
-        Point result = ClientHelper.client().addPoint(p);
+        Point result = ClientHelper.client().addPoint(name);
         assertNotNull(result);
 
         double rx = 0.0;
@@ -130,14 +128,14 @@ public class DataPointIntegrationTest extends TestCase {
                     rx = 0.0;
                 }
 
-                b.append("&p2=").append(URLEncoder.encode(p.getName().getValue(), Const.CONST_ENCODING)).append("&v2=").append(rx);
+                b.append("&p2=").append(URLEncoder.encode(name.getValue(), Const.CONST_ENCODING)).append("&v2=").append(rx);
                 // System.out.println( b.toString());
                 System.out.println(ClientHelper.client().recordBatch(b.toString()));
                 Thread.sleep(100);
 
             }
             Thread.sleep(3000);
-            List<Value> v = ClientHelper.client().getSeries(p.getName(), 40);
+            List<Value> v = ClientHelper.client().getSeries(name, 40);
             double retVal = 0.0;
             for (Value x : v) {
                 retVal += x.getNumberValue();
@@ -146,7 +144,7 @@ public class DataPointIntegrationTest extends TestCase {
 
             DecimalFormat twoDForm = new DecimalFormat("#.##");
             retVal = Double.valueOf(twoDForm.format(retVal));
-            ClientHelper.client().deletePoint(p.getName());
+            ClientHelper.client().deletePoint(name);
             Assert.assertEquals(20.0, retVal);
 
         } catch (IOException e) {
@@ -159,13 +157,13 @@ public class DataPointIntegrationTest extends TestCase {
     public void testCompression() throws NimbitsException {
         Point p = new PointModel();
 
-        p.setName(CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString()));
+       EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString()));
         p.setCompression(2.0);
-        Point result = ClientHelper.client().addPoint(p);
+        Point result = ClientHelper.client().addPoint(name, p);
         assertNotNull(result);
-        Point test = ClientHelper.client().getPoint(p.getName());
+        Point test = ClientHelper.client().getPoint(name);
         assertNotNull(test);
-        double x = testCompression(p);
+        double x = testCompression(name);
 
        // Assert.assertEquals(255.0, x);
        // ClientHelper.client().deletePoint(p.getName());
@@ -175,19 +173,19 @@ public class DataPointIntegrationTest extends TestCase {
     public void testChangeCompression() throws NimbitsException {
         Point p = new PointModel();
 
-        p.setName(CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString()));
+       EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString()));
         p.setCompression(0.0);
-        ClientHelper.client().addPoint(p);
+        ClientHelper.client().addPoint(name, p);
 
 
-        Point px = ClientHelper.client().getPoint(p.getName());
+        Point px = ClientHelper.client().getPoint(name);
 
         Assert.assertNotNull(px);
         px.setCompression(2.0);
         ClientHelper.client().updatePoint(px);
 
 
-        Point px2 = ClientHelper.client().getPoint(p.getName());
+        Point px2 = ClientHelper.client().getPoint(name);
         Assert.assertEquals(2.0, px2.getCompression());
         Assert.assertEquals(px.getId(), px2.getId());
         try {
@@ -196,7 +194,7 @@ public class DataPointIntegrationTest extends TestCase {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         //double x2 = testCompression(p);
-        ClientHelper.client().deletePoint(p.getName());
+        ClientHelper.client().deletePoint(name);
         // Assert.assertEquals(255.0, x2);
 
 
@@ -207,9 +205,9 @@ public class DataPointIntegrationTest extends TestCase {
     public void TestZeroCompressionWithBatch() throws NimbitsException {
         Point p = new PointModel();
 
-        p.setName(CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString()));
+       EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString()));
         p.setCompression(0.0);
-        ClientHelper.client().addPoint(p);
+        ClientHelper.client().addPoint(name, p);
         System.out.println("Starting batch compression integration test compression = " + p.getCompression());
 
         StringBuilder b = new StringBuilder();
@@ -217,7 +215,7 @@ public class DataPointIntegrationTest extends TestCase {
         try {
 
             for (int i = 0; i < 40; i++) {
-                b.append("&p").append(i).append("=").append(URLEncoder.encode(p.getName().getValue(), Const.CONST_ENCODING)).append("&v").append(i).append("=").append(i).append("&t").append(i).append("=").append(new Date().getTime());
+                b.append("&p").append(i).append("=").append(URLEncoder.encode(name.getValue(), Const.CONST_ENCODING)).append("&v").append(i).append("=").append(i).append("&t").append(i).append("=").append(new Date().getTime());
 
                 Thread.sleep(100);
 
@@ -228,13 +226,13 @@ public class DataPointIntegrationTest extends TestCase {
             double retVal = 0.0;
 
             Thread.sleep(1000);
-            List<Value> v = ClientHelper.client().getSeries(p.getName(), 10);
+            List<Value> v = ClientHelper.client().getSeries(name, 10);
             for (Value x : v) {
                 retVal += x.getNumberValue();
                 System.out.println(x.getNumberValue() + "  " + x.getTimestamp());
             }
             Assert.assertEquals(345.0, retVal);
-            ClientHelper.client().deletePoint(p.getName());
+            ClientHelper.client().deletePoint(name);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -258,15 +256,15 @@ public class DataPointIntegrationTest extends TestCase {
     public void TestCompressionWithBatch() throws NimbitsException {
         Point p = new PointModel();
 
-        p.setName(CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString()));
+       EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString()));
         p.setCompression(2.0);
-        ClientHelper.client().addPoint(p);
+        ClientHelper.client().addPoint(name, p);
         StringBuilder b = new StringBuilder();
 
         try {
 
             for (int i = 0; i < 40; i++) {
-                b.append("&p").append(i).append("=").append(URLEncoder.encode(p.getName().getValue(), Const.CONST_ENCODING)).append("&v").append(i).append("=").append(i).append("&t").append(i).append("=").append(new Date().getTime());
+                b.append("&p").append(i).append("=").append(URLEncoder.encode(name.getValue(), Const.CONST_ENCODING)).append("&v").append(i).append("=").append(i).append("&t").append(i).append("=").append(new Date().getTime());
 
                 Thread.sleep(1000);
 
@@ -276,14 +274,14 @@ public class DataPointIntegrationTest extends TestCase {
             double retVal = 0.0;
 
             Thread.sleep(1000);
-            List<Value> v = ClientHelper.client().getSeries(p.getName(), 10);
+            List<Value> v = ClientHelper.client().getSeries(name, 10);
             for (Value x : v) {
                 retVal += x.getNumberValue();
                 System.out.println(x.getNumberValue() + "  " + x.getTimestamp());
 
             }
             Assert.assertEquals(255.0, retVal);
-            ClientHelper.client().deletePoint(p.getName());
+            ClientHelper.client().deletePoint(name);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -319,10 +317,10 @@ public class DataPointIntegrationTest extends TestCase {
     public void TestCompressionWithBatchWithMissingPoints() throws NimbitsException {
         Point p = new PointModel();
 
-        p.setName(CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString()));
+        EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString()));
 
         p.setCompression(2.0);
-        ClientHelper.client().addPoint(p);
+        ClientHelper.client().addPoint(name, p);
         StringBuilder b = new StringBuilder();
 
         try {
@@ -331,7 +329,7 @@ public class DataPointIntegrationTest extends TestCase {
                 b.append("&p");
                 b.append(i);
                 b.append("=");
-                b.append(URLEncoder.encode(p.getName().getValue(), Const.CONST_ENCODING));
+                b.append(URLEncoder.encode(name.getValue(), Const.CONST_ENCODING));
                 b.append("&v");
                 b.append(i);
                 b.append("=");
@@ -345,13 +343,13 @@ public class DataPointIntegrationTest extends TestCase {
             double retVal = 0.0;
 
             Thread.sleep(1000);
-            List<Value> v = ClientHelper.client().getSeries(p.getName(), 10);
+            List<Value> v = ClientHelper.client().getSeries(name, 10);
             for (Value x : v) {
                 retVal += x.getNumberValue();
                 System.out.println(x.getNumberValue() + "  " + x.getTimestamp());
             }
             Assert.assertEquals(216.0, retVal);
-            ClientHelper.client().deletePoint(p.getName());
+            ClientHelper.client().deletePoint(name);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -362,22 +360,19 @@ public class DataPointIntegrationTest extends TestCase {
     }
 
 
-    private double testCompression(Point p) throws NimbitsException {
-        System.out.println("Starting compression integration test compression = "
-                + p.getCompression()
-                + "  " + p.getName().getValue()
-                + "  " + p.getId());
+    private double testCompression(EntityName name) throws NimbitsException {
+
 
         double retVal = 0.0;
 
         try {
             for (int i = 0; i < 40; i++) {
                 Thread.sleep(10);
-                Value v = ClientHelper.client().recordValue(p.getName(), i, new Date());
+                Value v = ClientHelper.client().recordValue(name, i, new Date());
                 assertNotNull(v);
             }
             // Thread.sleep(2000);
-            List<Value> v = ClientHelper.client().getSeries(p.getName(), 10);
+            List<Value> v = ClientHelper.client().getSeries(name, 10);
             for (Value x : v) {
                 retVal += x.getNumberValue();
             }

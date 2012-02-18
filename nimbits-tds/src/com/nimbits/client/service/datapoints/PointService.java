@@ -22,8 +22,8 @@ import com.nimbits.client.model.Const;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
 
 import java.util.List;
 import java.util.Map;
@@ -58,15 +58,11 @@ public interface PointService extends RemoteService {
 
     Point getPointByID(final long id) throws NimbitsException;
 
-    String exportData(final Map<EntityName, Point> points, ExportType exportType) throws NimbitsException;
+    String exportData(final Map<EntityName, Entity> points, final ExportType exportType, final Map<EntityName, List<Value>> values) ;
 
     List<Point> getAllPoints(int start, int end);
 
     List<Point> getIdlePoints();
-
-    Point publishPoint(Point p) throws NimbitsException;
-
-    Point publishPoint(User u, Point p) throws NimbitsException;
 
     List<Point> getAllPoints();
 

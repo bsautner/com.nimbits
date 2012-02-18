@@ -16,8 +16,8 @@ package com.nimbits.server.task;
 import com.google.appengine.api.datastore.*;
 import com.google.gwt.core.client.GWT;
 import com.nimbits.client.model.Const;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.server.point.PointServiceFactory;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -37,21 +37,17 @@ public class DeleteRecordedValuesTask extends HttpServlet {
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
 
         final String pointID = req.getParameter(Const.PARAM_POINT_ID);
-        final String name = req.getParameter(Const.PARAM_NAME);
         final String exp = req.getParameter(Const.PARAM_EXP);
 
 
-        // delete me context.addTrace(DeleteRecordedValuesTask.class.getName());
-        final EntityName pointName = CommonFactoryLocator.getInstance().createName(name);
-        int expDays = 0;
+          int expDays = 0;
         try {
-            final long id = Long.parseLong(pointID);
 
             if (exp != null) {
                 expDays = Integer.parseInt(exp);
-                deleteData(id, true, expDays, pointName);
+                deleteData(true, expDays, pointID);
             } else {
-                deleteData(id, false, expDays, pointName);
+                deleteData(false, expDays, pointID);
 
             }
         } catch (NumberFormatException e) {
@@ -60,14 +56,17 @@ public class DeleteRecordedValuesTask extends HttpServlet {
     }
 
 
-    private void deleteData(final long pointId, final boolean expOnly, final int expDays, final EntityName name) {
+    private void deleteData(final boolean expOnly, final int expDays, final String uuid) {
         long count = 0;
         final Set<Key> keys = new HashSet<Key>();
         final Calendar d = Calendar.getInstance();
         d.add(Calendar.DATE, (expDays * -1));
         final DatastoreService store = DatastoreServiceFactory.getDatastoreService();
+        Point p = PointServiceFactory.getInstance().getPointByUUID(uuid);
+
         final Query q = new Query("RecordedValue").setKeysOnly();
-        q.addFilter("pointFK", Query.FilterOperator.EQUAL, pointId);
+
+        q.addFilter("pointFK", Query.FilterOperator.EQUAL, p.getId());
         if (expOnly) {
             q.addFilter(Const.PARAM_TIMESTAMP, Query.FilterOperator.LESS_THAN, d.getTime());
         }
@@ -77,7 +76,7 @@ public class DeleteRecordedValuesTask extends HttpServlet {
         }
         if (count > 0) {
             store.delete(keys);
-            TaskFactoryLocator.getInstance().startDeleteDataTask(pointId, expOnly, expDays, name);
+            TaskFactoryLocator.getInstance().startDeleteDataTask(p, expOnly, expDays);
         }
 
     }

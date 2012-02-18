@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public interface TaskFactory {
 
-    void startDeleteDataTask(final long pointID, final boolean onlyExpired, final int exp, final EntityName name);
+    void startDeleteDataTask(final Point point, final boolean onlyExpired, final int exp);
 
     void startProcessBatchTask(final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException;
 
@@ -42,8 +42,6 @@ public interface TaskFactory {
     void startPointMaintTask(final Point point);
 
     void startMoveCachedValuesToStoreTask(final Point point);
-
-    void startCategoryMaintTask(final User user);
 
     void startUpgradeTask(Action action, Entity entity);
 

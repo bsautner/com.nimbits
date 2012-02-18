@@ -87,8 +87,9 @@ public class PointWebService extends HttpServlet {
                             final String retJson = gson.toJson(point);
                             out.println(retJson);
 
-                        } else if (!Utils.isEmptyString(json)) {
-                            final Point point = createPointWithJson(u, categoryName, json);
+                        } else if (!Utils.isEmptyString(pointNameParam) && !Utils.isEmptyString(json)) {
+                            final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam);
+                            final Point point = createPointWithJson(u,pointName, categoryName, json);
                             final String retJson = gson.toJson(point);
                             out.println(retJson);
                         }
@@ -131,13 +132,13 @@ public class PointWebService extends HttpServlet {
         return retObj;
     }
 
-    private Point createPointWithJson(final User u, final EntityName categoryName, final String json) throws NimbitsException {
+    private Point createPointWithJson(final User u, final EntityName name, final EntityName categoryName, final String json) throws NimbitsException {
         Point retObj = null;
         final Entity category = getCategoryWithParam(categoryName, u);
 
         if (category != null) {
             final Point point = gson.fromJson(json, PointModel.class);
-            Entity entity = EntityModelFactory.createEntity(point.getName(),"", EntityType.point,
+            Entity entity = EntityModelFactory.createEntity(name,"", EntityType.point,
                     ProtectionLevel.everyone, UUID.randomUUID().toString(),
                     category.getEntity(), u.getUuid() );
             point.setUserFK(u.getId());

@@ -182,6 +182,7 @@ public class Const {
     public static final String PATH_UPGRADE_TASK = "/task/upgrade";
     public static final String PATH_MOVE_TASK = "/task/move";
     public static final String PATH_POINT_SERVICE = "/service/point";
+    public static final String PATH_CALC_SERVICE = "/service/calculation";
     public static final String PATH_SERIES_SERVICE = "/service/series";
     public static final String PATH_TASK_RECORD_VALUE = "/task/recordvaluetask";
     public static final String PATH_TASK_PROCESS_BATCH = "/task/processbatchtask";

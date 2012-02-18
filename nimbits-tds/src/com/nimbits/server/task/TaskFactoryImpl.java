@@ -42,23 +42,21 @@ public class TaskFactoryImpl implements TaskFactory {
     private final Gson gson = GsonFactory.getInstance();
 
     @Override
-    public void startDeleteDataTask(final long pointID,
+    public void startDeleteDataTask(final Point point,
                                     final boolean onlyExpired,
-                                    final int exp,
-                                    final EntityName pointName) {
+                                    final int exp) {
 
 
         final Queue queue = QueueFactory.getQueue(Const.QUEUE_DELETE_DATA);
         if (onlyExpired) {
             queue.add(TaskOptions.Builder.withUrl(Const.PATH_DELETE_DATA_TASK)
-                    .param(Const.PARAM_POINT_ID, Long.toString(pointID))
+                    .param(Const.PARAM_POINT_ID,  point.getUUID())
                     .param(Const.PARAM_EXP, Long.toString(exp))
-                    .param(Const.PARAM_NAME, pointName.getValue())
 
             );
         } else {
             queue.add(TaskOptions.Builder.withUrl(Const.PATH_DELETE_DATA_TASK)
-                    .param(Const.PARAM_POINT_ID, Long.toString(pointID))
+                    .param(Const.PARAM_POINT_ID, (point.getUUID()))
             );
         }
 
@@ -107,9 +105,6 @@ public class TaskFactoryImpl implements TaskFactory {
                 .param(Const.PARAM_JSON_USER, userJson)
                 .param(Const.PARAM_JSON_POINT, pointJson)
                 .param(Const.PARAM_JSON_VALUE, valueJson)
-                .param(Const.PARAM_LAT, String.valueOf(value.getLatitude()))
-                .param(Const.PARAM_LNG, String.valueOf(value.getLongitude()))
-                .param(Const.PARAM_NOTE, value.getNote())
                 .param(Const.PARAM_LOOP, String.valueOf(loopFlag))
 
         );
@@ -137,16 +132,7 @@ public class TaskFactoryImpl implements TaskFactory {
 
     }
 
-    @Override
-    public void startCategoryMaintTask(final User user) {
-        final String json = gson.toJson(user);
 
-        final Queue queue = QueueFactory.getQueue(Const.TASK_CATEGORY_MAINT);
-
-        queue.add(TaskOptions.Builder.withUrl(Const.PATH_CATEGORY_MAINT_TASK)
-                .param(Const.PARAM_USER, json));
-
-    }
 
 //    @Override
 //    public void startEntityMaintTask(final User user, ) {

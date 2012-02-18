@@ -14,15 +14,17 @@
 package com.nimbits.server.service.impl;
 
 import com.nimbits.client.enums.ExportType;
+import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.server.email.EmailServiceFactory;
+import com.nimbits.server.entity.EntityServiceFactory;
 import com.nimbits.server.point.PointServiceFactory;
 import com.nimbits.server.recordedvalue.RecordedValueServiceFactory;
 import com.nimbits.server.timespan.TimespanServiceFactory;
@@ -129,7 +131,8 @@ public class ChartApiServletImpl extends HttpServlet {
 
             final Point p = PointServiceFactory.getInstance().getPointByName(u, pointName);
             if (p != null) {
-                if (p.isPublic() || !u.isRestricted()) {
+                Entity e = EntityServiceFactory.getInstance().getEntityByUUID(p.getUUID());
+                if (e.getProtectionLevel().equals(ProtectionLevel.everyone) || !u.isRestricted()) {
 
 
                     final List<Value> values = (timespan != null) ?

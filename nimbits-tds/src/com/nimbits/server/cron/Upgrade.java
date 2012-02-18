@@ -35,19 +35,27 @@ public class Upgrade {
 
         //x make connections from user into connection entities
 
-        //create entities for diagrams with type of file - make entity name end with .svg
+        //x create entities for diagrams with type of file - make entity name end with .svg
 
-        //sync with core - all shared entities
+        //x sync with core - all shared entities
 
         //recognise andriod client type - put links back in tree grid
 
-       //xmpp single points
+        //xmpp single points
 
         //publish on hrd for users to test with
 
         //xmpp server configurable
 
-        //
+        //new context menus: read / write keys per point - make calcs / wolfram alpha intelligence entities
+        //create a summary point, options of 1, 8 and 24 hour - to create averaged avalues stored in a summary data point
+
+
+        //add wolfram alha results to search
+
+        //fix move task to only work with active points
+
+
 
     }
 

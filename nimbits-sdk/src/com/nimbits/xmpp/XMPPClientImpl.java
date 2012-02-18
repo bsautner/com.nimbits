@@ -181,7 +181,7 @@ public class XMPPClientImpl extends Observable implements XMPPClient {
     public void sendValue(EntityName pointName, Value value) {
         Collection collection = new ArrayList();
         Point point = PointModelFactory.createPointModel(0, 0);
-        point.setName(pointName);
+       // point.setName(pointName);
         point.setValue(value);
         collection.add(Action.record);
         collection.add(point);

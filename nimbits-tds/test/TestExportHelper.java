@@ -15,7 +15,7 @@ public class TestExportHelper {
         final EntityName name1 = CommonFactoryLocator.getInstance().createName("point1");
 
         Point p1 = PointModelFactory.createPointModel(1, 0);
-        p1.setName(name1);
+
 
         for (int i = 0; i < 10; i++) {
             p1.getValues().add(ValueModelFactory.createValueModel(i * 3.6));
@@ -26,7 +26,7 @@ public class TestExportHelper {
         EntityName name2 = CommonFactoryLocator.getInstance().createName("point2");
 
         Point p2 = PointModelFactory.createPointModel(1, 0);
-        p2.setName(name2);
+
 
         for (int i = 0; i < 10; i++) {
             p2.getValues().add(ValueModelFactory.createValueModel(i * 100));

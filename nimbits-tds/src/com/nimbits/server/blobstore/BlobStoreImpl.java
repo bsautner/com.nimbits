@@ -19,17 +19,15 @@ import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.files.*;
 import com.nimbits.client.enums.ExportType;
-import com.nimbits.client.exception.NimbitsException;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.channels.Channels;
 
 public class BlobStoreImpl implements BlobStore {
 
     @Override
-    public String createFile(final String data,final ExportType exportType) throws NimbitsException {
+    public String createFile(final String data,final ExportType exportType)   {
         // Get a file service
 
         try {
@@ -84,8 +82,10 @@ public class BlobStoreImpl implements BlobStore {
             String segment = new String(blobStoreService.fetchData(blobKey, 30, 40));
 
             return blobKey.getKeyString();
-        } catch (IOException e) {
-            throw new NimbitsException(e.getMessage());
-        }
+        }   catch (Exception e) {
+            return null;
+
+            }
+
     }
 }

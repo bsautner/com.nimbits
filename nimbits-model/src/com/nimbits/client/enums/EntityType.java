@@ -14,7 +14,8 @@ public enum EntityType {
     category(2),
     file(4),
     subscription(5),
-    userConnection(6);
+    userConnection(6),
+    calculation(7);
 
     private static final Map<Integer, EntityType> lookup = new HashMap<Integer, EntityType>();
 

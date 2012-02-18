@@ -13,16 +13,19 @@
 
 package com.nimbits.server.orm;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.intelligence.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
+import com.nimbits.client.enums.AlertType;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.model.calculation.Calculation;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.intelligence.Intelligence;
+import com.nimbits.client.model.intelligence.IntelligenceModelFactory;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 
 import javax.jdo.annotations.*;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 public class DataPoint implements Point {
@@ -35,6 +38,7 @@ public class DataPoint implements Point {
     private DataPointIntelligenceEntity dataPointIntelligenceEntity;
 
     @Persistent(defaultFetchGroup = "true")
+    @Deprecated
     public CalculationEntity calculationEntity;
 
     @Persistent
@@ -43,7 +47,8 @@ public class DataPoint implements Point {
     private Date LastChecked;
 
     @Persistent
-    private Date lastAlarmSent;
+    @Deprecated
+    public Date lastAlarmSent;
 
     @Persistent
     @Deprecated
@@ -57,7 +62,7 @@ public class DataPoint implements Point {
     private Long userFK;
     @Persistent
     @Deprecated
-    private String name;
+    public String name;
     @Persistent
     private Date createDate;
 
@@ -77,42 +82,43 @@ public class DataPoint implements Point {
     private Boolean lowAlarmOn;
     @Persistent
     @Deprecated
-    private int alarmDelay = 1;
-    @Persistent
-    private String description;
+    public int alarmDelay = 1;
     @Persistent
     @Deprecated
-    private Boolean isPublic;
+    public String description;
     @Persistent
     @Deprecated
-    private Boolean postToFacebook;
+    public Boolean isPublic;
     @Persistent
     @Deprecated
-    private Boolean alarmToFacebook;
+    public Boolean postToFacebook;
     @Persistent
     @Deprecated
-    private Boolean alarmToEmail;
+    public Boolean alarmToFacebook;
     @Persistent
     @Deprecated
-    private Boolean sendIM;
+    public Boolean alarmToEmail;
     @Persistent
     @Deprecated
-    private Boolean sendAlarmIM;
+    public Boolean sendIM;
     @Persistent
     @Deprecated
-    private Boolean sendTweet;
+    public Boolean sendAlarmIM;
     @Persistent
     @Deprecated
-    private Boolean sendAlarmTweet;
+    public Boolean sendTweet;
+    @Persistent
+    @Deprecated
+    public Boolean sendAlarmTweet;
     @Persistent
     private String tag;
 
     @Persistent
-    private Boolean idleAlarmOn;
+    public Boolean idleAlarmOn;
 
     @Persistent
     @Deprecated
-    private Boolean sendAlertsAsJson;
+    public Boolean sendAlertsAsJson;
 
     @Persistent
     private Integer idleSeconds = 0;
@@ -203,15 +209,6 @@ public class DataPoint implements Point {
 
     }
 
-    @Override
-    public int getAlarmDelay() {
-        return alarmDelay;
-    }
-
-    @Override
-    public boolean getAlarmToFacebook() {
-        return (alarmToFacebook != null) && alarmToFacebook;
-    }
 
 
     @Override
@@ -223,11 +220,6 @@ public class DataPoint implements Point {
     @Override
     public Date getCreateDate() {
         return this.createDate != null ? this.createDate : new Date(0);
-    }
-
-    @Override
-    public String getDescription() {
-        return this.description;
     }
 
     @Override
@@ -265,34 +257,6 @@ public class DataPoint implements Point {
     }
 
 
-    @Override
-    public EntityName getName() {
-        return CommonFactoryLocator.getInstance().createName(this.name);
-    }
-
-
-    @Override
-    public boolean getSendAlarmIM() {
-        return (sendAlarmIM == null) ? false : sendAlarmIM;
-    }
-
-    @Override
-    public boolean getSendAlarmTweet() {
-        return (sendAlarmTweet == null) ? false : sendAlarmTweet;
-
-    }
-
-    @Override
-    public boolean getSendIM() {
-        return (sendIM == null) ? false : sendIM;
-
-    }
-
-    @Override
-    public boolean getSendTweet() {
-        return (sendTweet == null) ? false : sendTweet;
-
-    }
 
     public String getTag() {
         return tag;
@@ -335,35 +299,6 @@ public class DataPoint implements Point {
         return (lowAlarmOn == null) ? false : lowAlarmOn;
     }
 
-    @Override
-    public boolean isPostToFacebook() {
-        return (postToFacebook == null) ? false : postToFacebook;
-    }
-
-    @Override
-    @Deprecated
-    public boolean isPublic() {
-        return (isPublic == null) ? false : isPublic;
-
-    }
-
-    @Override
-    public boolean isSystemPoint() {
-
-        return isSystemPoint;
-    }
-
-    @Override
-    public void setAlarmDelay(final int alarmDelay) {
-        this.alarmDelay = alarmDelay;
-    }
-
-    @Override
-    public void setAlarmToFacebook(final boolean alarmToFacebook) {
-        this.alarmToFacebook = alarmToFacebook;
-    }
-
-
 
     @Override
     public void setCompression(final double compression) {
@@ -375,11 +310,6 @@ public class DataPoint implements Point {
         this.createDate = createDate;
     }
 
-    @Override
-    public void setDescription(final String value) {
-        this.description = value;
-
-    }
 
     @Override
     public void setExpire(final int expire) {
@@ -431,46 +361,8 @@ public class DataPoint implements Point {
         this.lowAlarmOn = lowAlarmOn;
     }
 
-    @Override
-    public void setName(final EntityName name) {
-        this.name = name.getValue();
-    }
 
-    @Override
-    public void setPostToFacebook(final boolean postToFacebook) {
-        this.postToFacebook = postToFacebook;
-    }
 
-    @Override
-    @Deprecated
-    public void setPublic(final boolean isPublic) {
-        this.isPublic = isPublic;
-    }
-
-    @Override
-    public void setSendAlarmIM(final boolean sendAlarmIM) {
-        this.sendAlarmIM = sendAlarmIM;
-    }
-
-    @Override
-    public void setSendAlarmTweet(final boolean sendAlarmTweet) {
-        this.sendAlarmTweet = sendAlarmTweet;
-    }
-
-    @Override
-    public void setSendIM(final boolean sendIM) {
-        this.sendIM = sendIM;
-    }
-
-    @Override
-    public void setSendTweet(final boolean sendTweet) {
-        this.sendTweet = sendTweet;
-    }
-
-    @Override
-    public void setSystemPoint(final boolean isSystemPoint) {
-        this.isSystemPoint = isSystemPoint;
-    }
 
     @Override
     public void setTag(final String tag) {
@@ -507,35 +399,6 @@ public class DataPoint implements Point {
         this.values = values;
     }
 
-//    @Override
-//    public void setX(long x) {
-//        X = x;
-//    }
-//
-//    @Override
-//    public void setY(long y) {
-//        Y = y;
-//    }
-//
-//    @Override
-//    public void setZ(long z) {
-//        Z = z;
-//    }
-
-    @Override
-    public boolean isAlarmToEmail() {
-        if (alarmToEmail == null) {
-            alarmToEmail = true;
-        }
-
-        return alarmToEmail;
-
-    }
-
-    @Override
-    public void setAlarmToEmail(boolean alarmToEmail) {
-        this.alarmToEmail = alarmToEmail;
-    }
 
     @Override
     public String toString() {
@@ -570,44 +433,6 @@ public class DataPoint implements Point {
 
     }
 
-    @Override
-    public void setReadOnly(boolean readOnly) {
-        this.readOnly = readOnly;
-    }
-
-    @Override
-    public boolean getReadOnly() {
-        return readOnly;
-    }
-
-    @Override
-    public void setClientType(final ClientType clientType) {
-        //not implementented
-    }
-
-    @Override
-    public ClientType getClientType() {
-        return null;
-    }
-
-    @Override
-    public AlertType getAlertState() {
-        return alertState;
-    }
-
-    @Override
-    public void setAlertState(final AlertType alertState) {
-        this.alertState = alertState;
-    }
-
-
-    @Override
-    public Date getLastAlarmSent() {
-        if (lastAlarmSent == null) {
-            lastAlarmSent = new Date(0);
-        }
-        return new Date(lastAlarmSent.getTime());
-    }
 
     public boolean getSendAlertsAsJson() {
         return sendAlertsAsJson == null ? false : sendAlertsAsJson;
@@ -617,27 +442,7 @@ public class DataPoint implements Point {
         this.sendAlertsAsJson = sendAlertsAsJson;
     }
 
-    @Override
-    public Calculation getCalculation() {
-        return calculationEntity != null ? PointModelFactory.createCalculation(this.calculationEntity) : null;
-    }
 
-    @Override
-    public EntityType getEntityType() {
-        return EntityType.get(this.entityType);
-    }
-
-    @Override
-    public void setEntityType(EntityType entityType) {
-        this.entityType = entityType.getCode();
-    }
-
-
-    @Override
-    public void setCalculation(Calculation calculation) {
-        this.calculationEntity = new CalculationEntity(calculation);
-
-    }
 
 
 

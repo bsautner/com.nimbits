@@ -50,6 +50,6 @@ public class MoveCachedValuesToStoreTask extends HttpServlet
         } catch (NimbitsException e) {
             log.severe(e.getMessage());
         }
-        log.info("Moved Mem Cache to Store: " + point.getName().getValue());
+
     }
 }

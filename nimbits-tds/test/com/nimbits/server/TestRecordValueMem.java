@@ -5,6 +5,7 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.appengine.tools.development.testing.LocalTaskQueueTestConfig;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.value.Value;
@@ -48,7 +49,7 @@ public class TestRecordValueMem {
     public void testMem1() throws NimbitsException, InterruptedException {
 
         Point p = PointModelFactory.createPointModel(0, 0);
-        p.setName(CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString()));
+        EntityName name = (CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString()));
         long ts = new Date().getTime();
 
         Random r = new Random();

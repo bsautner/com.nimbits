@@ -14,8 +14,8 @@
 package com.nimbits.server.gson;
 
 import com.google.gson.*;
-import com.nimbits.client.model.point.Calculation;
-import com.nimbits.client.model.point.CalculationModel;
+import com.nimbits.client.model.calculation.Calculation;
+import com.nimbits.client.model.calculation.CalculationModel;
 
 import java.lang.reflect.Type;
 

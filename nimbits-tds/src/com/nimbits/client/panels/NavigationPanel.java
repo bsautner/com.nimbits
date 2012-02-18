@@ -50,7 +50,7 @@ class NavigationPanel extends NavigationEventProvider {
     private boolean expanded = false;
     private Map<String, String> settings;
     List<String> parents;
-
+    EntityContextMenu context;
     private final User user;
 
     public NavigationPanel(final User user,
@@ -155,7 +155,7 @@ class NavigationPanel extends NavigationEventProvider {
     }
 
     private void treePropertyBuilder() {
-        EntityContextMenu context = new EntityContextMenu(tree, settings);
+       context = new EntityContextMenu(tree, settings);
         context.addEntityModifiedListeners(new EntityContextMenu.EntityModifiedListener() {
             @Override
             public void onEntityModified(GxtModel model, Action action) {
@@ -398,14 +398,40 @@ class NavigationPanel extends NavigationEventProvider {
     private final Listener<TreeGridEvent<ModelData>> treeDoubleClickListener = new Listener<TreeGridEvent<ModelData>>() {
         @Override
         public void handleEvent(TreeGridEvent<ModelData> be) {
-            ModelData selectedFolder = tree.getSelectionModel()
+            ModelData mx = tree.getSelectionModel()
                     .getSelectedItem();
 
-            if (selectedFolder != null) {
-                GxtModel model = ((GxtModel) selectedFolder);
+            if (mx != null) {
+                GxtModel model = ((GxtModel) mx);
                 Entity entity =  model.getBaseEntity();
-                addEntityChildren(entity, model);
-                notifyEntityClickedListener(entity);
+
+                switch (entity.getEntityType()) {
+
+                    case user:
+                        break;
+                    case point:
+                        addEntityChildren(entity, model);
+                        notifyEntityClickedListener(entity);
+                        break;
+                    case category:
+                        addEntityChildren(entity, model);
+                        notifyEntityClickedListener(entity);
+                        break;
+                    case file:
+                        notifyEntityClickedListener(entity);
+                        break;
+                    case subscription:
+                        addEntityChildren(entity, model);
+                        notifyEntityClickedListener(entity);
+                        break;
+                    case userConnection:
+                        break;
+                    case calculation:
+                        context.showCalcPanel(entity);
+                        break;
+                }
+
+
 
             }
         }

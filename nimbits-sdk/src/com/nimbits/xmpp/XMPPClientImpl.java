@@ -15,14 +15,11 @@ package com.nimbits.xmpp;
 
 
 import com.nimbits.client.NimbitsClient;
-import com.nimbits.client.enums.Action;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
-import com.nimbits.client.model.point.PointModelFactory;
-
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.gson.GsonFactory;
 import org.jivesoftware.smack.*;
@@ -44,7 +41,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Observable;
 
@@ -179,14 +175,15 @@ public class XMPPClientImpl extends Observable implements XMPPClient {
     }
 
     public void sendValue(EntityName pointName, Value value) {
-        Collection collection = new ArrayList();
-        Point point = PointModelFactory.createPointModel(0, 0);
-       // point.setName(pointName);
-        point.setValue(value);
-        collection.add(Action.record);
-        collection.add(point);
-        String gson = GsonFactory.getInstance().toJson(collection);
-        sendMessage(gson);
+//        Collection collection = new ArrayList();
+//        //Point point = PointModelFactory.createPointModel(0, 0);
+//       // point.setName(pointName);
+//        Point point = PointServiceF
+//        point.setValue(value);
+//        collection.add(Action.record);
+//        collection.add(point);
+//        String gson = GsonFactory.getInstance().toJson(collection);
+//        sendMessage(gson);
     }
 
 }

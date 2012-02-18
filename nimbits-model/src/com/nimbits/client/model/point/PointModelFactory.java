@@ -18,9 +18,7 @@ import java.util.List;
 public class PointModelFactory {
 
 
-    public static Point createPointModel(final long id, final long userFk) {
-        return new PointModel(id, userFk);
-    }
+
 
 
     public static PointModel createPointModel(final Point p) {

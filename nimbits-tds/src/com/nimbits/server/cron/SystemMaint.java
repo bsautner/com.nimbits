@@ -13,6 +13,8 @@
 
 package com.nimbits.server.cron;
 
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
@@ -32,6 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 public class SystemMaint extends HttpServlet {
@@ -40,7 +43,8 @@ public class SystemMaint extends HttpServlet {
      */
     private static final long serialVersionUID = 1L;
     private PrintWriter out = null;
-
+    private final String I = "UPGRADE_TASK_KEY";
+    private final MemcacheService cache = MemcacheServiceFactory.getMemcacheService("UPGRADE_TASK");
     @SuppressWarnings(Const.WARNING_UNCHECKED)
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -78,6 +82,22 @@ public class SystemMaint extends HttpServlet {
 
         out.println("<span class=\"label success\">A new Nimbits server has properly initialised!</span>");
         out.println("<p>You now may want to <A href = \"https://appengine.google.com/\">log into the admin console on App Engine</a> and edit these values to meet your needs.</p>");
+
+
+        out.println("<HTML><BODY>");
+        if (cache.contains(I)) {
+            out.println("<P>" + "Upgrade Task Dump" + "</P>");
+            List<String> log = (List<String>) cache.get(I);
+            for (String s : log) {
+                out.println("<P>" + s + "</P>");
+            }
+        }
+
+
+
+        out.println("</BODY></HTML>");
+
+
         out.println("</body></html>");
 
 

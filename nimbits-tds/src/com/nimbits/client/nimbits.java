@@ -13,46 +13,31 @@
 
 package com.nimbits.client;
 
-import com.extjs.gxt.ui.client.Style.LayoutRegion;
-import com.extjs.gxt.ui.client.widget.ContentPanel;
-import com.extjs.gxt.ui.client.widget.Viewport;
-import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
-import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
-import com.extjs.gxt.ui.client.widget.layout.FillLayout;
-import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Cookies;
+import com.extjs.gxt.ui.client.Style.*;
+import com.extjs.gxt.ui.client.widget.*;
+import com.extjs.gxt.ui.client.widget.layout.*;
+import com.google.gwt.core.client.*;
+import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.Window.Location;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.nimbits.client.controls.MainMenuToolBar;
-import com.nimbits.client.enums.Action;
-import com.nimbits.client.enums.ClientType;
-import com.nimbits.client.exceptions.NotLoggedInException;
-import com.nimbits.client.exceptions.ObjectProtectionException;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.LoginInfo;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.point.Point;
+import com.google.gwt.user.client.Window.*;
+import com.google.gwt.user.client.rpc.*;
+import com.google.gwt.user.client.ui.*;
+import com.nimbits.client.controls.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exceptions.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
 import com.nimbits.client.panels.*;
-import com.nimbits.client.service.LoginService;
-import com.nimbits.client.service.LoginServiceAsync;
-import com.nimbits.client.service.blob.BlobService;
-import com.nimbits.client.service.blob.BlobServiceAsync;
-import com.nimbits.client.service.entity.EntityService;
-import com.nimbits.client.service.entity.EntityServiceAsync;
-import com.nimbits.client.service.recordedvalues.RecordedValueService;
-import com.nimbits.client.service.recordedvalues.RecordedValueServiceAsync;
-import com.nimbits.client.service.settings.SettingsService;
-import com.nimbits.client.service.settings.SettingsServiceAsync;
-import com.nimbits.client.service.twitter.TwitterService;
-import com.nimbits.client.service.twitter.TwitterServiceAsync;
-import com.nimbits.shared.Utils;
+import com.nimbits.client.service.*;
+import com.nimbits.client.service.blob.*;
+import com.nimbits.client.service.entity.*;
+import com.nimbits.client.service.recordedvalues.*;
+import com.nimbits.client.service.settings.*;
+import com.nimbits.client.service.twitter.*;
+import com.nimbits.shared.*;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>

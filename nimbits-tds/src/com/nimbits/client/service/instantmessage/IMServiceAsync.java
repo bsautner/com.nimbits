@@ -13,9 +13,8 @@
 
 package com.nimbits.client.service.instantmessage;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.email.EmailAddress;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.model.email.*;
 
 public interface IMServiceAsync {
     void sendInvite(AsyncCallback<Void> asyncCallback);

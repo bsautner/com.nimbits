@@ -29,8 +29,6 @@ import com.nimbits.client.icons.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.entity.*;
 
-import java.util.*;
-
 public class ColumnConfigs {
 
 

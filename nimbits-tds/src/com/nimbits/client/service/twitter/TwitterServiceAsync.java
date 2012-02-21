@@ -13,10 +13,9 @@
 
 package com.nimbits.client.service.twitter;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.user.User;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.user.*;
 
 /**
  * Created by bsautner

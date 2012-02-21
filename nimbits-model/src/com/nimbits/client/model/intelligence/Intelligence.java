@@ -14,6 +14,7 @@
 package com.nimbits.client.model.intelligence;
 
 import com.nimbits.client.enums.IntelligenceResultTarget;
+import com.nimbits.client.model.entity.*;
 
 import java.io.Serializable;
 
@@ -27,15 +28,25 @@ public interface Intelligence extends Serializable {
 
     boolean getEnabled();
 
+    String getTrigger();
+
+    void setTrigger(String trigger);
+
+    String getUuid();
+
+    void setUuid(String uuid);
+
+    String getUUID();
+
     void setEnabled(final boolean enabled);
 
     IntelligenceResultTarget getResultTarget();
 
     void setResultTarget(final IntelligenceResultTarget resultTarget);
 
-    long getTargetPointId();
+    String getTarget();
 
-    void setTargetPointId(final long targetPointId);
+    void setTarget(final String target);
 
     String getInput();
 

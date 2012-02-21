@@ -13,6 +13,8 @@
 
 package com.nimbits.client.model.intelligence;
 
+import java.util.*;
+
 /**
  * Created by bsautner
  * User: benjamin
@@ -24,5 +26,13 @@ public class IntelligenceFactory {
     public static Intelligence createIntelligence(Intelligence intelligence) {
         return new IntelligenceModel(intelligence);
 
+    }
+
+    public static List<Intelligence> createIntelligences(List<Intelligence> results) {
+        List<Intelligence> retObj = new ArrayList<Intelligence>();
+        for (Intelligence i : results) {
+            retObj.add(createIntelligence(i));
+        }
+        return retObj;
     }
 }

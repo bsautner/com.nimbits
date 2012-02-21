@@ -13,30 +13,22 @@
 
 package com.nimbits.server.recordedvalue;
 
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.nimbits.client.enums.AlertType;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.exceptions.CalculationFailedException;
-import com.nimbits.client.model.calculation.Calculation;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.timespan.Timespan;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.service.recordedvalues.RecordedValueService;
-import com.nimbits.server.math.EquationSolver;
-import com.nimbits.server.point.PointServiceFactory;
-import com.nimbits.server.task.TaskFactoryLocator;
-import com.nimbits.server.user.UserServiceFactory;
+import com.google.gwt.http.client.*;
+import com.google.gwt.user.server.rpc.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.timespan.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.client.service.recordedvalues.*;
+import com.nimbits.server.point.*;
+import com.nimbits.server.task.*;
+import com.nimbits.server.user.*;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.logging.Logger;
+import java.util.*;
+import java.util.logging.*;
 
 public class RecordedValueServiceImpl extends RemoteServiceServlet implements
         RecordedValueService, RequestCallback {

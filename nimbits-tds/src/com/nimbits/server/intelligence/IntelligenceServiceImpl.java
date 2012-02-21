@@ -13,40 +13,33 @@
 
 package com.nimbits.server.intelligence;
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.nimbits.client.enums.IntelligenceResultTarget;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModelFactory;
-import com.nimbits.client.service.intelligence.IntelligenceService;
-import com.nimbits.server.http.HttpCommonFactory;
-import com.nimbits.server.point.PointServiceFactory;
-import com.nimbits.server.recordedvalue.RecordedValueServiceFactory;
-import com.nimbits.server.settings.SettingsServiceFactory;
-import com.nimbits.server.user.UserServiceFactory;
-import com.nimbits.shared.Utils;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
+import com.google.gwt.user.server.rpc.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.intelligence.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.client.service.intelligence.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.http.*;
+import com.nimbits.server.point.*;
+import com.nimbits.server.recordedvalue.*;
+import com.nimbits.server.settings.*;
+import com.nimbits.server.user.*;
+import com.nimbits.shared.*;
+import org.w3c.dom.*;
+import org.xml.sax.*;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Logger;
+import javax.xml.parsers.*;
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import java.util.logging.*;
 
 /**
  * Created by Benjamin Sautner
@@ -56,7 +49,14 @@ import java.util.logging.Logger;
  */
 public class IntelligenceServiceImpl extends RemoteServiceServlet implements IntelligenceService {
     private static final Logger log = Logger.getLogger(IntelligenceServiceImpl.class.getName());
-
+    private User getUser() {
+        try {
+            return UserServiceFactory.getServerInstance().getHttpRequestUser(
+                    this.getThreadLocalRequest());
+        } catch (NimbitsException e) {
+            return null;
+        }
+    }
 
     private String key() {
         try {
@@ -171,61 +171,101 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
         return HttpCommonFactory.getInstance().doGet(Const.PATH_WOLFRAM_ALPHA, params);
     }
 
+
+
+    public String addDataToInput(final User u, final Intelligence i) throws NimbitsException {
+        return addDataToInput(u, i.getInput());
+    }
+
     @Override
-    public String processInput(final Point point,
-                               final String input,
-                               final String podId,
-                               final IntelligenceResultTarget intelligenceResultTarget,
-                               final EntityName targetEntityName,
-                               final boolean getPlainText) throws NimbitsException {
+    public Intelligence getIntelligence(Entity entity) {
+        return IntelligenceServiceFactory.getDaoInstance().getIntelligence(entity);
+    }
+
+    @Override
+    public Entity addUpdateIntelligence(Entity entity, EntityName name, Intelligence update) {
+
+        Entity retObj = null;
+        User u = getUser();
+        if (entity == null) {
+
+            String uuid = UUID.randomUUID().toString();
+            Entity e = EntityModelFactory.createEntity(name, "", EntityType.intelligence, ProtectionLevel.onlyMe, uuid,
+                    update.getTrigger(), u.getUuid());
+            retObj = EntityServiceFactory.getInstance().addUpdateEntity(u, e);
+            Intelligence c = IntelligenceModelFactory.createIntelligenceModel(uuid,
+                    update.getEnabled(), update.getResultTarget(), update.getTarget(), update.getInput(), update.getNodeId(),
+                    update.getResultsInPlainText(), update.getTrigger());
+
+            IntelligenceServiceFactory.getDaoInstance().addUpdateIntelligence(c);
 
 
-        final User loggedInUser = UserServiceFactory.getServerInstance().getHttpRequestUser(
-                this.getThreadLocalRequest());
-        final String retVal;
-
-        final String processedInput = addDataToInput(loggedInUser, input);
-
-        final Point targetPoint = PointServiceFactory.getInstance().getPointByName(loggedInUser, targetEntityName);
-
-
-        if (targetPoint == null) {
-            retVal = "Could not find the target point:" + targetEntityName.getValue() + " . You'll want to create it first.";
-
-        } else if (targetPoint.getId() == point.getId()) {
-            retVal = "Infinite loop error. You can't set the target point as the source point.";
-        } else if (intelligenceResultTarget == IntelligenceResultTarget.value) {
-
-
-            if (getPlainText) {
-                retVal = getDataResult(processedInput, Const.PARAM_RESULT);
-            } else {
-                retVal = getRawResult(processedInput, Const.PARAM_RESULT, false);
-            }
-
-
-        } else {
-            if (!Utils.isEmptyString(podId)) {
-                if (getPlainText) {
-                    retVal = getDataResult(processedInput, podId);
-                } else {
-                    retVal = getRawResult(processedInput, podId, false);
-                }
-            } else {
-                retVal = getRawResult(processedInput, podId, false);
-            }
         }
-        return retVal;
+        else if (entity.getEntityType().equals(EntityType.point) && Utils.isEmptyString(update.getUUID())) {
+            String uuid = UUID.randomUUID().toString();
+            Entity e = EntityModelFactory.createEntity(name, "", EntityType.intelligence, ProtectionLevel.onlyMe, uuid,
+                    entity.getEntity(), u.getUuid());
+            retObj = EntityServiceFactory.getInstance().addUpdateEntity(e);
+            Intelligence c = IntelligenceModelFactory.createIntelligenceModel(uuid,
+                    update.getEnabled(), update.getResultTarget(), update.getTarget(), update.getInput(), update.getNodeId(),
+                    update.getResultsInPlainText(), update.getTrigger());
 
+            IntelligenceServiceFactory.getDaoInstance().addUpdateIntelligence(c);
+
+
+        }
+        else if (entity.getEntityType().equals(EntityType.intelligence)) {
+            entity.setName(name);
+            IntelligenceServiceFactory.getDaoInstance().addUpdateIntelligence(update);
+
+            return EntityServiceFactory.getInstance().addUpdateEntity(entity);
+
+
+        }
+
+        return retObj;
+
+//        Entity e = EntityServiceFactory.getDaoInstance(getUser()).addUpdateEntity(entity);
+//        IntelligenceServiceFactory.getDaoInstance().addUpdateIntelligence(update);
+//        return e;
 
     }
 
-    public String addDataToInput(final User u, final Point point) throws NimbitsException {
-        return addDataToInput(u, point.getIntelligence().getInput());
+    @Override
+    public void processIntelligence(User u, Point point) {
+        List<Intelligence> list = IntelligenceServiceFactory.getDaoInstance().getIntelligence(point);
+
+        for (Intelligence i : list) {
+            try {
+            Point target = PointServiceFactory.getInstance().getPointByUUID(i.getTarget());
+
+            if (target!= null) {
+
+                    Value v = processInput(i);
+                    RecordedValueServiceFactory.getInstance().recordValue(u, target, v, true);
+
+            }
+            } catch (NimbitsException e) {
+                 i.setEnabled(false);
+                 //TODO notify user
+                 IntelligenceServiceFactory.getDaoInstance().addUpdateIntelligence(i);
+
+            }
+
+        }
+
+    }
+
+    @Override
+    public Value processInput(Intelligence update) throws NimbitsException {
+        String processedInput = addDataToInput(getUser(), update.getInput());
+        Point target = PointServiceFactory.getInstance().getPointByUUID(update.getTarget());
+        return processInput(update, target, processedInput);
+
     }
 
 
-    private String addDataToInput(final User u, final String input) throws NimbitsException {
+    private String addDataToInput(final User u, final String input)  {
 
         String retStr = input;
 
@@ -242,7 +282,12 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
                     a = a.substring(0, a.indexOf("]"));
                     String r = "[" + pointName + "." + a + "]";
-                    Point inputPoint = PointServiceFactory.getInstance().getPointByName(u, pointName);
+                    Point inputPoint;
+                    try {
+                        inputPoint = PointServiceFactory.getInstance().getPointByName(u, pointName);
+                    } catch (NimbitsException e) {
+                        inputPoint = null;
+                    }
                     if (inputPoint != null) {
                         Value inputValue = RecordedValueServiceFactory.getInstance().getCurrentValue(inputPoint);
                         if (a.equals(Const.PARAM_VALUE)) {
@@ -269,27 +314,23 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
 
     @Override
-    public Value processInput(final Point point, final Point targetPoint, final String processedInput) throws NimbitsException {
+    public Value processInput(final Intelligence intelligence, final Point targetPoint, final String processedInput) throws NimbitsException {
 
         final String result;
 
 
-        String podId = point.getIntelligence().getNodeId();
+        String podId = intelligence.getNodeId();
         Double v = 0.0;
         String data = "";
 
 
         if (targetPoint == null) {
-            throw new NimbitsException("Intelligence Processing Error, could not find target point with id " + point.getIntelligence().getTargetPointId());
+            throw new NimbitsException("Intelligence Processing Error, could not find target point");
+
+        } else if (intelligence.getResultTarget() == IntelligenceResultTarget.value) {
 
 
-        } else if (targetPoint.getId() == point.getId()) {
-            throw new NimbitsException("Infinite loop error. You can't set the target point as the source point.");
-
-        } else if (point.getIntelligence().getResultTarget() == IntelligenceResultTarget.value) {
-
-
-            if (point.getIntelligence().getResultsInPlainText()) {
+            if (intelligence.getResultsInPlainText()) {
                 result = getDataResult(processedInput, Const.PARAM_RESULT);
             } else {
                 result = getRawResult(processedInput, Const.PARAM_RESULT, false);
@@ -298,7 +339,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
         } else {
             if (!Utils.isEmptyString(podId)) {
-                if (point.getIntelligence().getResultsInPlainText()) {
+                if (intelligence.getResultsInPlainText()) {
                     result = getDataResult(processedInput, podId);
                 } else {
                     result = getRawResult(processedInput, podId, false);
@@ -307,7 +348,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
                 result = getRawResult(processedInput, podId, false);
             }
         }
-        if (point.getIntelligence().getResultTarget().equals(IntelligenceResultTarget.value)) {
+        if (intelligence.getResultTarget().equals(IntelligenceResultTarget.value)) {
             try {
                 v = Double.valueOf(result);
             } catch (NumberFormatException e) {

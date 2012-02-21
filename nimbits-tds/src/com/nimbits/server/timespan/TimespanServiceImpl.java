@@ -14,15 +14,13 @@
 package com.nimbits.server.timespan;
 
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.google.gwt.user.server.rpc.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.timespan.*;
-import com.nimbits.client.service.timespan.TimespanService;
+import com.nimbits.client.service.timespan.*;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.text.*;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner

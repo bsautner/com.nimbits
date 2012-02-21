@@ -13,17 +13,15 @@
 
 package com.nimbits.server.memcache.value;
 
-import com.google.appengine.api.memcache.MemcacheService;
-import com.google.appengine.api.memcache.MemcacheServiceFactory;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.timespan.Timespan;
-import com.nimbits.client.model.value.Value;
+import com.google.appengine.api.memcache.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.timespan.*;
+import com.nimbits.client.model.value.*;
 import com.nimbits.server.memcache.*;
-import com.nimbits.server.recordedvalue.RecordedValueTransactionFactory;
-import com.nimbits.server.recordedvalue.RecordedValueTransactions;
-import com.nimbits.server.task.TaskFactoryLocator;
+import com.nimbits.server.recordedvalue.*;
+import com.nimbits.server.task.*;
 
 import java.util.*;
 

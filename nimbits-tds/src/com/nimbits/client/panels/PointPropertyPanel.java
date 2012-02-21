@@ -13,7 +13,7 @@
 
 package com.nimbits.client.panels;
 
-import com.extjs.gxt.ui.client.widget.LayoutContainer;
+import com.extjs.gxt.ui.client.widget.*;
 
 /**
  * Created by bsautner

@@ -13,7 +13,6 @@
 
 package com.nimbits.server.core;
 
-import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.entity.*;
 
 /**

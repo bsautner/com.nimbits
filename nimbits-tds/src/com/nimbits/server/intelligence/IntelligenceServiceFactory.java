@@ -13,7 +13,8 @@
 
 package com.nimbits.server.intelligence;
 
-import com.nimbits.client.service.intelligence.IntelligenceService;
+import com.nimbits.client.service.intelligence.*;
+import com.nimbits.server.dao.intelligence.*;
 
 /**
  * Created by bsautner
@@ -30,4 +31,14 @@ public class IntelligenceServiceFactory {
         }
         return instance;
     }
+
+    public static IntelligenceTransactions daoInstance;
+
+    public static IntelligenceTransactions getDaoInstance() {
+        if (daoInstance == null) {
+            daoInstance = new IntelligenceDAOImpl();
+        }
+        return daoInstance;
+    }
+
 }

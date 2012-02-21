@@ -21,11 +21,9 @@ package com.nimbits.server.google;
  */
 
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.logging.Logger;
+import javax.servlet.http.*;
+import java.io.*;
+import java.util.logging.*;
 
 /**
  * A servlet which handles the OAuth 2.0 flow. Once authenticated, the OAuth token is stored in session.accessToken.

@@ -13,15 +13,13 @@
 
 package com.nimbits.server.orm;
 
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.user.*;
 
 import javax.jdo.annotations.*;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 
 //import com.google.appengine.api.users.User;

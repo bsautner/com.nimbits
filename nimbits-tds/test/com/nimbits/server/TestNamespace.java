@@ -2,9 +2,8 @@ package com.nimbits.server;
 
 import com.nimbits.client.model.*;
 import com.nimbits.server.memcache.*;
+import static org.junit.Assert.*;
 import org.junit.*;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Benjamin Sautner

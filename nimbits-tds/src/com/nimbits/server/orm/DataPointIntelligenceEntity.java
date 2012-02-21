@@ -13,9 +13,8 @@
 
 package com.nimbits.server.orm;
 
-import com.nimbits.client.enums.IntelligenceResultTarget;
-import com.nimbits.client.model.intelligence.Intelligence;
-import com.nimbits.client.model.point.Point;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.model.intelligence.*;
 
 import javax.jdo.annotations.*;
 
@@ -32,6 +31,7 @@ public class DataPointIntelligenceEntity implements Intelligence {
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private com.google.appengine.api.datastore.Key id;
 
+    @Deprecated
     @Persistent(mappedBy = "dataPointIntelligenceEntity")
     private DataPoint point;
 
@@ -44,13 +44,23 @@ public class DataPointIntelligenceEntity implements Intelligence {
     private Integer resultTarget;
 
     @Persistent
-    private Long targetPointId;
+    @Deprecated
+    public Long targetPointId;
+
+    @Persistent
+    private String target;
 
     @Persistent
     private String input;
 
     @Persistent
     private String nodeId;
+
+    @Persistent
+    private String trigger;
+
+    @Persistent
+    private String uuid;
 
     @Persistent
     private Boolean resultsInPlainText;
@@ -62,25 +72,44 @@ public class DataPointIntelligenceEntity implements Intelligence {
     public DataPointIntelligenceEntity(Intelligence intelligence) {
         this.enabled = intelligence.getEnabled();
         this.resultTarget = intelligence.getResultTarget().getCode();
-        this.targetPointId = intelligence.getTargetPointId();
+        this.target = intelligence.getTarget();
         this.input = intelligence.getInput();
         this.nodeId = intelligence.getNodeId();
         this.resultsInPlainText = intelligence.getResultsInPlainText();
-
+        this.trigger = intelligence.getTrigger();
+        this.uuid = intelligence.getUUID();
 
     }
 
-    public Point getPoint() {
-        return point;
-    }
-
-    public void setPoint(final DataPoint point) {
-        this.point = point;
-    }
 
     @Override
     public boolean getEnabled() {
         return enabled;
+    }
+
+    @Override
+    public String getTrigger() {
+        return trigger;
+    }
+
+    @Override
+    public void setTrigger(String trigger) {
+      this.trigger = trigger;
+    }
+
+    @Override
+    public String getUuid() {
+        return uuid;
+    }
+
+    @Override
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    @Override
+    public String getUUID() {
+        return uuid;
     }
 
     @Override
@@ -96,16 +125,6 @@ public class DataPointIntelligenceEntity implements Intelligence {
     @Override
     public void setResultTarget(final IntelligenceResultTarget resultTarget) {
         this.resultTarget = resultTarget.getCode();
-    }
-
-    @Override
-    public long getTargetPointId() {
-        return targetPointId;
-    }
-
-    @Override
-    public void setTargetPointId(final long targetPointId) {
-        this.targetPointId = targetPointId;
     }
 
     @Override
@@ -138,5 +157,11 @@ public class DataPointIntelligenceEntity implements Intelligence {
         this.resultsInPlainText = resultsInPlainText;
     }
 
+    public String getTarget() {
+        return target;
+    }
 
+    public void setTarget(String target) {
+        this.target = target;
+    }
 }

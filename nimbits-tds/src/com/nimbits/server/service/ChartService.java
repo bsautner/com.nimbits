@@ -13,9 +13,7 @@
 
 package com.nimbits.server.service;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 
 public class ChartService extends HttpServlet {
 

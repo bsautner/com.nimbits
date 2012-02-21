@@ -13,30 +13,27 @@
 
 package com.nimbits.server.service.impl;
 
-import com.google.gwt.core.client.GWT;
-import com.nimbits.client.enums.ExportType;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.timespan.Timespan;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.point.PointServiceFactory;
-import com.nimbits.server.recordedvalue.RecordedValueServiceFactory;
-import com.nimbits.server.timespan.TimespanServiceFactory;
-import com.nimbits.server.user.UserServiceFactory;
-import com.nimbits.shared.Utils;
+import com.google.gwt.core.client.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.timespan.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.server.gson.*;
+import com.nimbits.server.point.*;
+import com.nimbits.server.recordedvalue.*;
+import com.nimbits.server.timespan.*;
+import com.nimbits.server.user.*;
+import com.nimbits.shared.*;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
-import java.util.logging.Logger;
+import javax.servlet.http.*;
+import java.io.*;
+import java.util.*;
+import java.util.logging.*;
 
 public class SeriesServletImpl extends HttpServlet {
     private static final Logger log = Logger.getLogger(SeriesServletImpl.class.getName());

@@ -13,30 +13,22 @@
 
 package com.nimbits.server.dao.datapoint;
 
-import com.nimbits.PMF;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointModelFactory;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.service.datapoints.PointTransactions;
-import com.nimbits.server.orm.DataPoint;
-import com.nimbits.server.task.TaskFactoryLocator;
+import com.nimbits.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.service.datapoints.*;
+import com.nimbits.server.orm.*;
+import com.nimbits.server.task.*;
 
-import javax.jdo.JDOObjectNotFoundException;
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-import java.util.logging.Logger;
+import javax.jdo.*;
+import javax.servlet.http.*;
+import java.util.*;
+import java.util.logging.*;
 
 public class DataPointDAOImpl implements PointTransactions {
     private final Logger log = Logger.getLogger(DataPointDAOImpl.class.getName());
@@ -122,17 +114,6 @@ public class DataPointDAOImpl implements PointTransactions {
                 original.setIdleSeconds(update.getIdleSeconds());
 
                 original.setIgnoreIncomingCompressedValues(update.getIgnoreIncomingCompressedValues());
-
-
-                if (update.getIntelligence() != null) {
-                    if (original.getIntelligence() == null) {
-                        //  intelligenceEntity.setPoint(p);
-                        original.setIntelligence(update.getIntelligence());
-                    } else {
-                        original.updateIntelligence(update.getIntelligence());
-                    }
-                }
-
 
                 tx.commit();
                 retObj = PointModelFactory.createPointModel(original);

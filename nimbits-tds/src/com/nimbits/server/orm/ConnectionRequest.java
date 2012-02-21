@@ -13,12 +13,12 @@
 
 package com.nimbits.server.orm;
 
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.connection.Connection;
-import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.connection.*;
+import com.nimbits.client.model.email.*;
 
 import javax.jdo.annotations.*;
-import java.util.Date;
+import java.util.*;
 
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")

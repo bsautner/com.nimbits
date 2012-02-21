@@ -13,7 +13,7 @@
 
 package com.nimbits.server.facebook;
 
-import com.nimbits.client.service.facebook.FacebookService;
+import com.nimbits.client.service.facebook.*;
 
 /**
  * Created by bsautner

@@ -13,7 +13,7 @@
 
 package com.nimbits.server.instantmessage;
 
-import com.nimbits.client.service.instantmessage.IMService;
+import com.nimbits.client.service.instantmessage.*;
 
 public class IMFactory {
 

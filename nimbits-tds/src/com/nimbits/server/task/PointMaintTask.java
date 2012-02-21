@@ -13,18 +13,16 @@
 
 package com.nimbits.server.task;
 
-import com.google.gson.Gson;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.point.PointModel;
-import com.nimbits.client.model.user.User;
-import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.user.UserTransactionFactory;
+import com.google.gson.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.server.gson.*;
+import com.nimbits.server.user.*;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.logging.Logger;
+import javax.servlet.http.*;
+import java.io.*;
+import java.util.logging.*;
 
 public class PointMaintTask extends HttpServlet {
 

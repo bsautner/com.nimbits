@@ -13,29 +13,22 @@
 
 package com.nimbits.server.cron;
 
-import com.google.appengine.api.memcache.MemcacheService;
-import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import com.google.appengine.api.memcache.*;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.server.Server;
-import com.nimbits.client.model.server.ServerModelFactory;
-import com.nimbits.server.common.ServerInfoImpl;
-import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.http.HttpCommonFactory;
-import com.nimbits.server.settings.SettingTransactionsFactory;
-import com.nimbits.server.task.TaskFactoryLocator;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.server.*;
+import com.nimbits.server.common.*;
+import com.nimbits.server.gson.*;
+import com.nimbits.server.http.*;
+import com.nimbits.server.settings.*;
+import com.nimbits.server.task.*;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import javax.servlet.http.*;
+import java.io.*;
+import java.util.*;
 
 public class SystemMaint extends HttpServlet {
     /**
@@ -70,7 +63,7 @@ public class SystemMaint extends HttpServlet {
             processSetting(Const.SETTING_FACEBOOK_REDIRECT_URL, Const.PATH_FACEBOOK_REDIRECT, false);
             processSetting(Const.SETTING_FACEBOOK_API_KEY, "", false);
             processSetting(Const.SETTING_FACEBOOK_SECRET, "", false);
-            processSetting(Const.SETTING_WOLFRAM, Const.CONST_UNKNOWN, false);
+            processSetting(Const.SETTING_WOLFRAM, Const.CONST_UNKNOWN, true); //TODO false for deploy and change const
             processSetting(Const.SETTING_TWITTER_CLIENT_ID, "", false);
             processSetting(Const.SETTING_TWITTER_SECRET, "", false);
             processSetting(Const.SETTING_SERVER_IS_DISCOVERABLE, "1", false);

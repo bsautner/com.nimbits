@@ -13,10 +13,9 @@
 
 package com.nimbits.client.service.timespan;
 
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.timespan.Timespan;
+import com.nimbits.client.model.timespan.*;
 
 /**
  * Created by Benjamin Sautner

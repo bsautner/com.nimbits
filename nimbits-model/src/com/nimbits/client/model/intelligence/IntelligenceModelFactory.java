@@ -29,14 +29,16 @@ public class IntelligenceModelFactory {
     }
 
 
-    public static Intelligence createIntelligenceModel(final boolean enabled,
+    public static Intelligence createIntelligenceModel(final String uuid,
+                                                       final boolean enabled,
                                                        final IntelligenceResultTarget resultTarget,
-                                                       final long targetPointId,
+                                                       final String targetPoint,
                                                        final String input,
                                                        final String nodeId,
-                                                       final boolean resultsInPlainText) {
+                                                       final boolean resultsInPlainText,
+                                                       final String trigger) {
 
-        return new IntelligenceModel(enabled, resultTarget, targetPointId, input, nodeId, resultsInPlainText);
+        return new IntelligenceModel(uuid, enabled, resultTarget, targetPoint, input, nodeId, resultsInPlainText, trigger);
 
     }
 

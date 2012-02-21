@@ -12,7 +12,7 @@ package com.nimbits.client;/*
  */
 
 
-import com.google.gwt.junit.client.GWTTestCase;
+import com.google.gwt.junit.client.*;
 
 /**
  * Created by bsautner

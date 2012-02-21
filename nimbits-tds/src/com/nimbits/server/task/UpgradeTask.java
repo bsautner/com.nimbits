@@ -13,45 +13,35 @@
 
 package com.nimbits.server.task;
 
-import com.google.appengine.api.memcache.MemcacheService;
-import com.google.appengine.api.memcache.MemcacheServiceFactory;
-import com.google.gson.JsonSyntaxException;
-import com.nimbits.PMF;
+import com.google.appengine.api.memcache.*;
+import com.google.gson.*;
+import com.nimbits.*;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.Const;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.calculation.*;
 import com.nimbits.client.model.calculation.Calculation;
-import com.nimbits.client.model.calculation.CalculationModelFactory;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModel;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.subscription.Subscription;
-import com.nimbits.client.model.subscription.SubscriptionFactory;
-import com.nimbits.client.model.user.User;
-import com.nimbits.server.calculation.CalculationServiceFactory;
-import com.nimbits.server.entity.EntityServiceFactory;
-import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.orm.DataPoint;
-import com.nimbits.server.orm.DiagramEntity;
-import com.nimbits.server.orm.NimbitsUser;
-import com.nimbits.server.orm.PointCatagory;
-import com.nimbits.server.subscription.SubscriptionTransactionFactory;
-import com.nimbits.server.user.UserTransactionFactory;
-import com.nimbits.shared.Utils;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.intelligence.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.subscription.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.server.calculation.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.gson.*;
+import com.nimbits.server.intelligence.*;
+import com.nimbits.server.orm.*;
+import com.nimbits.server.point.*;
+import com.nimbits.server.subscription.*;
+import com.nimbits.server.user.*;
+import com.nimbits.shared.*;
 
-import javax.jdo.JDOObjectNotFoundException;
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-import java.util.logging.Logger;
+import javax.jdo.*;
+import javax.servlet.http.*;
+import java.util.*;
+import java.util.logging.*;
 
 /**
  * Created by bsautner
@@ -63,9 +53,6 @@ public class UpgradeTask  extends HttpServlet
 
 {
     private final String N= "Nimbits_Unsorted";
-    private final String I = "UPGRADE_TASK_KEY";
-    private final MemcacheService cache = MemcacheServiceFactory.getMemcacheService("UPGRADE_TASK");
-    EmailAddress email = CommonFactoryLocator.getInstance().createEmailAddress("bsautner@gmail.com");
 
     private static final Logger log = Logger.getLogger(UpgradeTask.class.getName());
     private static final long serialVersionUID = 1L;
@@ -105,15 +92,7 @@ public class UpgradeTask  extends HttpServlet
 
 
     private void clog(String string) {
-        if (cache.contains(I)) {
-            List<String> log = (List<String>) cache.get(I);
-            log.add(string);
-            cache.delete(I);
-            cache.put(I, log);
-        }
-        else {
-
-        }
+       log.info(string);
     }
 
     private void doPoint(HttpServletRequest req) throws NimbitsException {
@@ -139,6 +118,23 @@ public class UpgradeTask  extends HttpServlet
                 createSubscriptions(u, p);
                 clog("fixing calculations");
                 createCalcs(pm, u, p);
+                if (p.dataPointIntelligenceEntity != null) {
+                    EntityName name = CommonFactoryLocator.getInstance().createName(p.name + "Intelligence");
+                    String uuid = UUID.randomUUID().toString();
+                    Point target = PointServiceFactory.getInstance().getPointByID(p.dataPointIntelligenceEntity.targetPointId);
+                    if (target != null) {
+                    Entity iEntity = EntityModelFactory.createEntity(name,"",EntityType.intelligence,
+                            ProtectionLevel.onlyMe, uuid, p.getUUID(), u.getUuid() );
+                    EntityServiceFactory.getDaoInstance(u).addUpdateEntity(iEntity);
+
+                    Intelligence i = IntelligenceModelFactory.createIntelligenceModel(uuid, p.dataPointIntelligenceEntity.getEnabled(),
+                            p.dataPointIntelligenceEntity.getResultTarget(),target.getUUID(), p.dataPointIntelligenceEntity.getInput(),
+                            p.dataPointIntelligenceEntity.getNodeId(), p.dataPointIntelligenceEntity.getResultsInPlainText(),
+                            p.getUUID());
+                        IntelligenceServiceFactory.getDaoInstance().addUpdateIntelligence(i);
+                    }
+                }
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -264,7 +260,7 @@ public class UpgradeTask  extends HttpServlet
                                     SubscriptionType type, SubscriptionNotifyMethod method ) {
         Subscription subscription = SubscriptionFactory.createSubscription(p.getUUID(),
                 type,method ,delay,
-                new Date(), p.getSendAlertsAsJson(), enabled);
+                new Date(), p.sendAlertsAsJson, enabled);
 
         subscription.setUuid(UUID.randomUUID().toString());
 

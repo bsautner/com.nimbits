@@ -13,13 +13,10 @@
 
 package com.nimbits.server.orm.entity;
 
-import com.google.appengine.api.blobstore.BlobKey;
-import com.nimbits.client.enums.AlertType;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityName;
+import com.google.appengine.api.blobstore.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.shared.*;
 

@@ -13,7 +13,7 @@
 
 package com.nimbits.client.service.blob;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.rpc.*;
 
 public interface BlobServiceAsync {
 

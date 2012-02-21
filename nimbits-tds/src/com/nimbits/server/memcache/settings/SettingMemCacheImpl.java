@@ -13,18 +13,13 @@
 
 package com.nimbits.server.memcache.settings;
 
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.Const;
-import com.nimbits.server.settings.SettingTransactions;
-import com.nimbits.server.settings.SettingTransactionsFactory;
-import com.nimbits.shared.Utils;
-import net.sf.jsr107cache.Cache;
-import net.sf.jsr107cache.CacheException;
-import net.sf.jsr107cache.CacheManager;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.*;
+import com.nimbits.server.settings.*;
+import com.nimbits.shared.*;
+import net.sf.jsr107cache.*;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by bsautner

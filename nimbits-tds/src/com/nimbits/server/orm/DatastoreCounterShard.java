@@ -19,11 +19,8 @@ package com.nimbits.server.orm;
  * Date: 12/19/11
  * Time: 4:59 PM
  */
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.PrimaryKey;
+
+import javax.jdo.annotations.*;
 
 /**
  * One shard belonging to the named counter.

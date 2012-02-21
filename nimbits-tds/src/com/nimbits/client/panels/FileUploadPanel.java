@@ -14,26 +14,21 @@
 package com.nimbits.client.panels;
 
 import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.widget.LayoutContainer;
-import com.extjs.gxt.ui.client.widget.button.Button;
+import com.extjs.gxt.ui.client.widget.*;
+import com.extjs.gxt.ui.client.widget.button.*;
 import com.extjs.gxt.ui.client.widget.form.*;
-import com.extjs.gxt.ui.client.widget.form.FormPanel.Encoding;
-import com.extjs.gxt.ui.client.widget.form.FormPanel.Method;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.client.enums.UploadType;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.LoginInfo;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.service.LoginService;
-import com.nimbits.client.service.LoginServiceAsync;
-import com.nimbits.client.service.blob.BlobService;
-import com.nimbits.client.service.blob.BlobServiceAsync;
+import com.extjs.gxt.ui.client.widget.form.FormPanel.*;
+import com.google.gwt.core.client.*;
+import com.google.gwt.user.client.*;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.service.*;
+import com.nimbits.client.service.blob.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by bsautner

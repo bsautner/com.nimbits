@@ -13,18 +13,16 @@
 
 package com.nimbits.server.dao.settings;
 
-import com.nimbits.PMF;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.Const;
-import com.nimbits.server.orm.ServerSetting;
-import com.nimbits.server.settings.SettingTransactions;
-import com.nimbits.shared.Utils;
+import com.nimbits.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.*;
+import com.nimbits.server.orm.*;
+import com.nimbits.server.settings.*;
+import com.nimbits.shared.*;
 
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
+import javax.jdo.*;
 import java.util.*;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 public class SettingsDAOImpl implements SettingTransactions {
 
@@ -110,9 +108,6 @@ public class SettingsDAOImpl implements SettingTransactions {
         }finally {
             pm.close();
         }
-
-
-
 
     }
 

@@ -14,16 +14,13 @@
 package com.nimbits.client.model;
 
 import com.extjs.gxt.ui.client.data.*;
-import com.nimbits.client.enums.AlertType;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
 
-import java.io.Serializable;
-import java.util.*;
+import java.io.*;
 
 
 /**

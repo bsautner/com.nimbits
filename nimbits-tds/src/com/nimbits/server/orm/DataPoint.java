@@ -13,19 +13,14 @@
 
 package com.nimbits.server.orm;
 
-import com.nimbits.client.enums.AlertType;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.model.calculation.Calculation;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.intelligence.Intelligence;
-import com.nimbits.client.model.intelligence.IntelligenceModelFactory;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.user.User;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.Value;
 
 import javax.jdo.annotations.*;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 public class DataPoint implements Point {
@@ -35,7 +30,8 @@ public class DataPoint implements Point {
     private Long id;
 
     @Persistent(defaultFetchGroup = "true")
-    private DataPointIntelligenceEntity dataPointIntelligenceEntity;
+    @Deprecated
+    public DataPointIntelligenceEntity dataPointIntelligenceEntity;
 
     @Persistent(defaultFetchGroup = "true")
     @Deprecated
@@ -195,21 +191,6 @@ public class DataPoint implements Point {
     private List<Value> values;
     @NotPersistent
     private Value value;
-
-    @Override
-    public Intelligence getIntelligence() {
-
-        return dataPointIntelligenceEntity != null ? IntelligenceModelFactory.createIntelligenceModel(dataPointIntelligenceEntity) : null;
-
-    }
-
-    @Override
-    public void setIntelligence(Intelligence intelligence) {
-        this.dataPointIntelligenceEntity = new DataPointIntelligenceEntity(intelligence);
-
-    }
-
-
 
     @Override
     public double getCompression() {
@@ -433,41 +414,6 @@ public class DataPoint implements Point {
 
     }
 
-
-    public boolean getSendAlertsAsJson() {
-        return sendAlertsAsJson == null ? false : sendAlertsAsJson;
-    }
-
-    public void setSendAlertsAsJson(boolean sendAlertsAsJson) {
-        this.sendAlertsAsJson = sendAlertsAsJson;
-    }
-
-
-
-
-
-    public void updateCalculation(final Calculation calculation) {
-        if (this.calculationEntity != null) {
-            this.calculationEntity.setEnabled(calculation.getEnabled());
-            this.calculationEntity.setFormula(calculation.getFormula());
-            this.calculationEntity.setTarget(calculation.getTarget());
-            this.calculationEntity.setX(calculation.getX());
-            this.calculationEntity.setY(calculation.getY());
-            this.calculationEntity.setZ(calculation.getZ());
-        }
-    }
-
-    public void updateIntelligence(Intelligence intelligence) {
-        if (this.dataPointIntelligenceEntity != null) {
-            this.dataPointIntelligenceEntity.setEnabled(intelligence.getEnabled());
-            this.dataPointIntelligenceEntity.setInput(intelligence.getInput());
-            this.dataPointIntelligenceEntity.setNodeId(intelligence.getNodeId());
-            this.dataPointIntelligenceEntity.setResultsInPlainText(intelligence.getResultsInPlainText());
-            this.dataPointIntelligenceEntity.setResultTarget(intelligence.getResultTarget());
-            this.dataPointIntelligenceEntity.setTargetPointId(intelligence.getTargetPointId());
-        }
-        //To change body of created methods use File | Settings | File Templates.
-    }
 
 
 }

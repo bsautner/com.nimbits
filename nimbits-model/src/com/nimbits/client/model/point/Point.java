@@ -28,10 +28,6 @@ import java.util.List;
  */
 public interface Point extends Serializable {
 
-    Intelligence getIntelligence();
-
-    void setIntelligence(final Intelligence intelligence);
-
     double getCompression();
 
     Date getCreateDate();

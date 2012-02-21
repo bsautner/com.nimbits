@@ -1,7 +1,7 @@
 package com.nimbits.client;
 
-import com.google.gwt.junit.client.GWTTestCase;
-import com.nimbits.server.http.HttpCommonFactory;
+import com.google.gwt.junit.client.*;
+import com.nimbits.server.http.*;
 
 /**
  * Created by Benjamin Sautner

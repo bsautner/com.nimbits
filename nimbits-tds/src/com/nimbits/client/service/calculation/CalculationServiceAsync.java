@@ -13,15 +13,14 @@
 
 package com.nimbits.client.service.calculation;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.model.calculation.Calculation;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
 
-import java.util.List;
+import java.util.*;
 
 public interface CalculationServiceAsync {
     void getCalculation(Entity entity, AsyncCallback<Calculation> async);

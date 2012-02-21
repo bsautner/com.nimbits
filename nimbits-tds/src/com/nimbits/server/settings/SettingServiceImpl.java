@@ -14,11 +14,11 @@
 package com.nimbits.server.settings;
 
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.service.settings.SettingsService;
+import com.google.gwt.user.server.rpc.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.service.settings.*;
 
-import java.util.Map;
+import java.util.*;
 
 public class SettingServiceImpl extends RemoteServiceServlet implements
         SettingsService {

@@ -14,30 +14,26 @@
 package com.nimbits.server.user;
 
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.connection.Connection;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
+import com.google.gwt.user.server.rpc.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.connection.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.user.UserService;
-import com.nimbits.server.counter.CounterFactory;
-import com.nimbits.server.dao.counter.ShardedCounter;
-import com.nimbits.server.email.EmailServiceFactory;
-import com.nimbits.server.entity.EntityServiceFactory;
-import com.nimbits.server.settings.SettingsServiceFactory;
-import com.nimbits.shared.Utils;
+import com.nimbits.server.counter.*;
+import com.nimbits.server.dao.counter.*;
+import com.nimbits.server.email.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.settings.*;
+import com.nimbits.shared.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.List;
-import java.util.UUID;
-import java.util.logging.Logger;
+import javax.servlet.http.*;
+import java.util.*;
+import java.util.logging.*;
 
 
 public class UserServiceImpl extends RemoteServiceServlet implements

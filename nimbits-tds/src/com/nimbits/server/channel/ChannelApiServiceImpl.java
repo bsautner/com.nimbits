@@ -13,16 +13,12 @@
 
 package com.nimbits.server.channel;
 
-import com.google.appengine.api.channel.ChannelMessage;
-import com.google.appengine.api.channel.ChannelService;
-import com.google.appengine.api.channel.ChannelServiceFactory;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.nimbits.client.enums.Action;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.service.channel.ChannelApiService;
+import com.google.appengine.api.channel.*;
+import com.google.gwt.http.client.*;
+import com.google.gwt.user.server.rpc.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.service.channel.*;
 
 /**
  * Created by bsautner

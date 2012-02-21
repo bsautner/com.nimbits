@@ -14,8 +14,8 @@
 package com.nimbits.client.service.intelligence;
 
 import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.intelligence.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
@@ -30,20 +30,20 @@ import java.util.*;
  */
 public interface IntelligenceServiceAsync {
 
-    void processInput(final Point point,
-                      final String input,
-                      final String value,
-                      final IntelligenceResultTarget intelligenceResultTarget,
-                      final EntityName targetEntityName,
-                      final boolean getPlainText,
-                      final AsyncCallback<String> async);
-
-
-    void processInput(final Point point, final Point targetPoint, final String processedInput, AsyncCallback<Value> async);
 
     void getRawResult(final String query, final String podId, final boolean htmlOutput, AsyncCallback<String> async);
 
     void getHTMLContent(final String responseXML, AsyncCallback<Map<String, String>> async);
 
-    void addDataToInput(User u, Point point, AsyncCallback<String> async);
+    void getIntelligence(Entity entity, AsyncCallback<Intelligence> asyncCallback);
+
+    void addUpdateIntelligence(Entity entity, EntityName name, Intelligence update, AsyncCallback<Entity> error);
+
+    void processIntelligence(User u, Point point, AsyncCallback<Void> async);
+
+    void processInput(final Intelligence intelligence, final Point targetPoint, final String processedInput, AsyncCallback<Value> async);
+
+    void addDataToInput(User user, Intelligence intelligence, AsyncCallback<String> async);
+
+    void processInput(Intelligence update, AsyncCallback<Value> async);
 }

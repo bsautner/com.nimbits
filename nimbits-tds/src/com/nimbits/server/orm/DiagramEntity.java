@@ -14,15 +14,10 @@
 package com.nimbits.server.orm;
 
 
-import com.google.appengine.api.blobstore.BlobKey;
-import com.nimbits.client.enums.ClientType;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.EntityName;
+import com.google.appengine.api.blobstore.*;
 
 import javax.jdo.annotations.*;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner

@@ -13,12 +13,10 @@
 
 package com.nimbits.client.panels;
 
-import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
-import com.extjs.gxt.ui.client.Style.Orientation;
-import com.extjs.gxt.ui.client.Style.Scroll;
+import com.extjs.gxt.ui.client.Style.*;
 import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.widget.*;
 import com.extjs.gxt.ui.client.widget.HorizontalPanel;
+import com.extjs.gxt.ui.client.widget.*;
 import com.extjs.gxt.ui.client.widget.TabPanel;
 import com.extjs.gxt.ui.client.widget.VerticalPanel;
 import com.extjs.gxt.ui.client.widget.button.Button;
@@ -26,40 +24,23 @@ import com.extjs.gxt.ui.client.widget.form.CheckBox;
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
 import com.extjs.gxt.ui.client.widget.form.*;
 import com.extjs.gxt.ui.client.widget.form.TextArea;
-import com.extjs.gxt.ui.client.widget.layout.FillLayout;
-import com.extjs.gxt.ui.client.widget.layout.FormData;
-import com.extjs.gxt.ui.client.widget.layout.TableData;
-import com.extjs.gxt.ui.client.widget.toolbar.SeparatorToolItem;
-import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
-import com.google.gwt.core.client.GWT;
+import com.extjs.gxt.ui.client.widget.layout.*;
+import com.extjs.gxt.ui.client.widget.toolbar.*;
+import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.ui.Label;
-import com.nimbits.client.controls.ProtectionLevelOptions;
-import com.nimbits.client.enums.IntelligenceResultTarget;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.icons.Icons;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.intelligence.Intelligence;
-import com.nimbits.client.model.intelligence.IntelligenceModelFactory;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.service.datapoints.PointService;
-import com.nimbits.client.service.datapoints.PointServiceAsync;
-import com.nimbits.client.service.entity.EntityService;
-import com.nimbits.client.service.entity.EntityServiceAsync;
-import com.nimbits.client.service.intelligence.IntelligenceService;
-import com.nimbits.client.service.intelligence.IntelligenceServiceAsync;
-import com.nimbits.client.service.settings.SettingsService;
-import com.nimbits.client.service.settings.SettingsServiceAsync;
-import com.nimbits.shared.Utils;
+import com.nimbits.client.controls.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.icons.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.service.datapoints.*;
+import com.nimbits.client.service.entity.*;
+import com.nimbits.client.service.settings.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class PointPanel extends LayoutContainer {
 
@@ -118,20 +99,8 @@ public class PointPanel extends LayoutContainer {
 
     private final Entity entity;
     private Point point;
-    private Point intelligenceTargetPoint = null;
 
 
-    private final TextArea intelFormula = new TextArea();
-    private final Button btnTestIntel = new Button("Test Intelligence");
-    private final TextField<String> intelNodeId = new TextField<String>();
-    private final TextField<String> intelTargetPoint = new TextField<String>();
-    private final RadioGroup targetOption = new RadioGroup();
-    private final Radio intelTargetRadioNumber = new Radio();
-    private final Radio intelTargetRadioData = new Radio();
-
-
-    private final CheckBox intelEnabled = new CheckBox();
-    private final CheckBox intelPlainText = new CheckBox();
   //  private final User user;
 
     public PointPanel(final Entity entity)   {
@@ -189,9 +158,6 @@ public class PointPanel extends LayoutContainer {
                 TabPanel tabPanel = new TabPanel();
                 TabItem tabAlerts = new TabItem("Alerts");
 
-                TabItem tabIntelligence = new TabItem("Intelligence (beta)");
-
-
                 TabItem tabGeneral = new TabItem("General");
                 tabGeneral.setHeight("425");
                 // TabItem tabRelay = new TabItem("Relay");
@@ -205,17 +171,13 @@ public class PointPanel extends LayoutContainer {
                 tabPanel.setSize(FORM_HEIGHT, "435");
 
                 tabPanel.add(tabGeneral);
-                if (settingMap.containsKey(Const.SETTING_WOLFRAM) && !Utils.isEmptyString(settingMap.get(Const.SETTING_WOLFRAM))) {
-                    tabPanel.add(tabIntelligence);
-                }
+
                 tabPanel.add(tabAlerts);
 
                 tabPanel.add(tabIdle);
                 // tabPanel.add(tabRelay);
                 tabPanel.add(tabLinks);
 
-
-                tabIntelligence.add(intelForm());
                 tabAlerts.add(alertForm(settingMap));
                 tabGeneral.add(generalForm(settingMap));
 
@@ -231,11 +193,7 @@ public class PointPanel extends LayoutContainer {
     private ToolBar mainToolBar(final Map<String, String> settingMap) {
         ToolBar toolBar = new ToolBar();
         toolBar.setHeight("");
-        intelligenceTestButtonInit();
-
-        btnTestIntel.setVisible(settingMap.containsKey(Const.SETTING_WOLFRAM) && !Utils.isEmptyString(settingMap.get(Const.SETTING_WOLFRAM)));
-
-        Button buttonSave = saveButtonInit();
+         Button buttonSave = saveButtonInit();
 
 
 
@@ -244,7 +202,7 @@ public class PointPanel extends LayoutContainer {
         toolBar.add(buttonSave);
 
         toolBar.add(new SeparatorToolItem());
-        toolBar.add(btnTestIntel);
+
 
         toolBar.add(separatorToolItem);
 
@@ -259,44 +217,9 @@ public class PointPanel extends LayoutContainer {
 
             buttonSave.addSelectionListener(new SelectionListener<ButtonEvent>() {
                 public void componentSelected(ButtonEvent ce) {
-                    try {
-                        if (!Utils.isEmptyString(intelTargetPoint.getValue()) && !Utils.isEmptyString(intelFormula.getValue())) {
-                            pointService.getPointByName(null, CommonFactoryLocator.getInstance().createName(intelTargetPoint.getValue()), new AsyncCallback<Point>() {
-                                @Override
-                                public void onFailure(Throwable throwable) {
-                                    final MessageBox box = MessageBox.alert("Target Point Not Found", "There was an error trying to find the data point name entered in the" +
-                                            " Intelligence target, please enter a valid point name or nothing to not use the intelligence function", null);
-                                    box.show();
-                                }
 
-                                @Override
-                                public void onSuccess(Point point) {
-                                    try {
-                                        if (point != null) {
+                           savePoint();
 
-                                            intelligenceTargetPoint = point;
-
-                                            savePoint();
-
-                                        } else {
-                                            final MessageBox box = MessageBox.alert("Target Point Not Found", "There was an error trying to find the data point name entered in the" +
-                                                    " Intelligence target, please enter a valid point name or nothing to not use the intelligence function", null);
-                                            box.show();
-                                        }
-                                    } catch (NimbitsException e) {
-                                        GWT.log(e.getMessage(), e);
-                                    }
-                                }
-                            });
-                        } else {
-                            intelligenceTargetPoint = null;
-                            savePoint();
-                        }
-
-
-                    } catch (NimbitsException e) {
-                        GWT.log(e.getMessage(), e);
-                    }
                 }
             });
 
@@ -315,7 +238,7 @@ public class PointPanel extends LayoutContainer {
 //
 //    }
 
-    private void savePoint() throws NimbitsException {
+    private void savePoint()  {
         final MessageBox box = MessageBox.wait("Progress",
                 "Saving your data, please wait...", "Saving...");
         box.show();
@@ -367,28 +290,7 @@ public class PointPanel extends LayoutContainer {
        // point.setSendAlertsAsJson(sendAlertAsJson.getValue());
 
 
-        String f = formula.getValue();
-        String t = "";
-        String x = "";
-        String y = "";
-        String z = "";
 
-
-
-        if (intelligenceTargetPoint != null) {
-            IntelligenceResultTarget intelligenceResultTarget = intelTargetRadioData.getValue() ? IntelligenceResultTarget.data : IntelligenceResultTarget.value;
-
-            point.setIntelligence(IntelligenceModelFactory.createIntelligenceModel(
-                    this.intelEnabled.getValue(),
-                    intelligenceResultTarget,
-                    intelligenceTargetPoint.getId(),
-                    intelFormula.getValue(),
-                    intelNodeId.getValue(),
-                    intelPlainText.getValue()));
-
-
-        }
-        //
 
 
         pointService.updatePoint(point, new AsyncCallback<Point>() {
@@ -414,196 +316,9 @@ public class PointPanel extends LayoutContainer {
     }
 
 
-    private FormPanel intelForm() {
-        FormPanel simple = new FormPanel();
 
 
-        simple.setHeaderVisible(false);
 
-        simple.setFrame(false);
-        simple.setBorders(false);
-        simple.setBodyBorder(false);
-        simple.setSize(MAIN_WIDTH, FORM_HEIGHT);
-
-        Html h = new Html();
-
-
-        h.setHtml("<p>When this point receives a new number or data value the input text below will be process " +
-                "and the result will be stored in the target point's value or data channel. Your input can contain data from " +
-                "any other point (including this one) by including it's data using this format: [pointName.value], [pointName.data]</p>" +
-                "<br />");
-
-
-        intelFormula.setFieldLabel("Input");
-        intelNodeId.setFieldLabel("Pod ID");
-
-
-        intelTargetRadioNumber.setBoxLabel("Number Value");
-        intelTargetRadioData.setBoxLabel("Text Data");
-        intelTargetRadioNumber.setValue(true);
-
-        intelTargetRadioNumber.addListener(Events.OnClick, new Listener<BaseEvent>() {
-            @Override
-            public void handleEvent(BaseEvent be) {
-                if (intelTargetRadioNumber.getValue()) {
-                    intelNodeId.setValue(Const.PARAM_RESULT);
-                    intelPlainText.setValue(intelTargetRadioNumber.getValue());
-                }
-                intelNodeId.setReadOnly(intelTargetRadioNumber.getValue());
-                intelPlainText.setReadOnly(intelTargetRadioNumber.getValue());
-            }
-        });
-
-        intelTargetRadioData.addListener(Events.OnClick, new Listener<BaseEvent>() {
-            @Override
-            public void handleEvent(BaseEvent be) {
-                if (intelTargetRadioNumber.getValue()) {
-                    intelNodeId.setValue(Const.PARAM_RESULT);
-                    intelPlainText.setValue(intelTargetRadioNumber.getValue());
-
-                }
-                intelNodeId.setReadOnly(intelTargetRadioNumber.getValue());
-                intelPlainText.setReadOnly(intelTargetRadioNumber.getValue());
-
-
-            }
-        });
-
-
-        intelTargetPoint.setFieldLabel("Target Point");
-
-
-        targetOption.setFieldLabel("Cell Result As");
-        targetOption.add(intelTargetRadioNumber);
-        targetOption.add(intelTargetRadioData);
-
-        boolean enabled = (point.getIntelligence() != null) && point.getIntelligence().getEnabled();
-
-        intelEnabled.setValue(enabled);
-
-
-        intelEnabled.setBoxLabel("Enabled");
-        intelEnabled.setLabelSeparator("");
-        intelPlainText.setBoxLabel("<i>(Requires a Pod Id)</i>");
-        intelPlainText.setFieldLabel("Results in Plain Text");
-        intelPlainText.setValue(true);
-
-        final Intelligence i = point.getIntelligence();
-        if (i != null) {
-
-            intelEnabled.setValue(i.getEnabled());
-            intelPlainText.setValue(i.getResultsInPlainText());
-            intelTargetRadioData.setValue(i.getResultTarget() == IntelligenceResultTarget.data);
-            intelTargetRadioNumber.setValue(i.getResultTarget() == IntelligenceResultTarget.value);
-            intelFormula.setValue(i.getInput());
-            intelNodeId.setValue(i.getNodeId());
-
-            pointService.getPointByID(i.getTargetPointId(), new AsyncCallback<Point>() {
-                @Override
-                public void onFailure(Throwable throwable) {
-                    intelTargetPoint.setValue("");
-                }
-
-                @Override
-                public void onSuccess(Point point) {
-                    //TODO fix
-                  //  intelTargetPoint.setValue(point.getName().getValue());
-                }
-            });
-        }
-
-
-        simple.add(h);
-        //    simple.add(btnTestIntel);
-        simple.add(intelFormula);
-        simple.add(intelNodeId);
-        simple.add(targetOption);
-        simple.add(intelTargetPoint);
-        simple.add(intelPlainText);
-        simple.add(intelEnabled);
-
-
-        return simple;
-
-
-    }
-
-    private void intelligenceTestButtonInit() {
-        btnTestIntel.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.play()));
-        btnTestIntel.addListener(Events.OnClick, new Listener<BaseEvent>() {
-
-
-            @Override
-            public void handleEvent(BaseEvent be) {
-
-                final IntelligenceServiceAsync service;
-                service = GWT.create(IntelligenceService.class);
-                final IntelligenceResultTarget intelligenceResultTarget;
-                if (intelTargetRadioData.getValue()) {
-                    intelligenceResultTarget = IntelligenceResultTarget.data;
-                } else {
-                    intelligenceResultTarget = IntelligenceResultTarget.value;
-                }
-                if (!Utils.isEmptyString(intelTargetPoint.getValue())) {
-
-
-                    EntityName targetEntityName = CommonFactoryLocator.getInstance().createName(intelTargetPoint.getValue());
-                    boolean getPlainText = intelPlainText.getValue();
-
-                    service.processInput(point, intelFormula.getValue(), intelNodeId.getValue(), intelligenceResultTarget, targetEntityName, getPlainText, new AsyncCallback<String>() {
-                        @Override
-                        public void onFailure(Throwable throwable) {
-                            final MessageBox box = MessageBox.alert("Error", throwable.getMessage(), null);
-                            box.show();
-                        }
-
-                        @Override
-                        public void onSuccess(String s) {
-                            if (s.length() < 100) {
-                                final MessageBox box = MessageBox.info("Your result", "[" + s + "]", null);
-                                box.show();
-                            } else if (Utils.isEmptyString(s)) {
-                                final MessageBox box = MessageBox.alert("Error", "The results were empty, this may have been due to an error in the input or a timeout on the server" +
-                                        ". If you see this error frequently, please report it.", null);
-                                box.show();
-                            } else {
-                                com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
-
-                                s = s.replaceAll("<", "\n &#60;");
-                                s = s.replaceAll(">", "&#62;");
-                                Label xml = new HTML("<pre>" + s + "</pre>", false);
-                                xml.setStyleName(XML_LABEL_STYLE);
-                                ContentPanel contentPanel = new ContentPanel();
-                                contentPanel.setFrame(true);
-                                contentPanel.setScrollMode(Scroll.AUTOY);
-
-
-                                final FlowPanel panel = new FlowPanel();
-
-                                panel.add(xml);
-                                contentPanel.add(panel);
-
-                                //  Html h = new Html(s);
-                                w.setHeading("XML Results");
-                                w.setWidth(800);
-                                w.setHeight(700);
-                                w.add(contentPanel);
-                                w.show();
-
-                            }
-
-
-                        }
-                    });
-                } else {
-                    final MessageBox box = MessageBox.info("Error", "Please enter the name of an existing data point values will be saved to.", null);
-                    box.show();
-                }
-
-
-            }
-        });
-    }
 
 
     private FormPanel alertForm(Map<String, String> settingMap) {

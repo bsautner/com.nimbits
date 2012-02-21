@@ -14,24 +14,20 @@
 package com.nimbits.server.point;
 
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.google.gwt.user.server.rpc.*;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointModelFactory;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.service.datapoints.PointService;
-import com.nimbits.server.blobstore.BlobStoreFactory;
-import com.nimbits.server.entity.EntityServiceFactory;
-import com.nimbits.server.export.ExportHelperFactory;
-import com.nimbits.server.recordedvalue.RecordedValueServiceFactory;
-import com.nimbits.server.task.TaskFactoryLocator;
-import com.nimbits.server.user.UserServiceFactory;
-import com.nimbits.server.user.UserTransactionFactory;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.client.service.datapoints.*;
+import com.nimbits.server.blobstore.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.export.*;
+import com.nimbits.server.recordedvalue.*;
+import com.nimbits.server.task.*;
+import com.nimbits.server.user.*;
 
 import java.util.*;
 

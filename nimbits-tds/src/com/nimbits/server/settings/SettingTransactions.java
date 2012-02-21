@@ -14,9 +14,9 @@
 package com.nimbits.server.settings;
 
 
-import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.exception.*;
 
-import java.util.Map;
+import java.util.*;
 
 public interface SettingTransactions {
 

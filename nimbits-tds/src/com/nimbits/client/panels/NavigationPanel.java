@@ -429,6 +429,9 @@ class NavigationPanel extends NavigationEventProvider {
                     case calculation:
                         context.showCalcPanel(entity);
                         break;
+                    case intelligence:
+                        context.showIntelligencePanel(entity);
+                        break;
                 }
 
 

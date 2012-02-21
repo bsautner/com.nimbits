@@ -13,15 +13,13 @@
 
 package com.nimbits.server.user;
 
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.connection.Connection;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.user.User;
-import twitter4j.auth.AccessToken;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.connection.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.user.*;
+import twitter4j.auth.*;
 
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public interface UserTransactions {
 

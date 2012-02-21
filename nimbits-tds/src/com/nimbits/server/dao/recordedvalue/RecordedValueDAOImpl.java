@@ -13,20 +13,18 @@
 
 package com.nimbits.server.dao.recordedvalue;
 
-import com.nimbits.PMF;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.timespan.Timespan;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModelFactory;
-import com.nimbits.server.orm.RecordedValue;
-import com.nimbits.server.recordedvalue.RecordedValueTransactions;
+import com.nimbits.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.timespan.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.server.orm.*;
+import com.nimbits.server.recordedvalue.*;
 
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
+import javax.jdo.*;
 import java.util.*;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 public class RecordedValueDAOImpl implements RecordedValueTransactions {
     private static final Logger log = Logger.getLogger(RecordedValueDAOImpl.class.getName());

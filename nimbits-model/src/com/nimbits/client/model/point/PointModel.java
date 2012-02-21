@@ -103,12 +103,6 @@ public class PointModel implements Serializable, Point {
         this.value = p.getValue();
 
 
-        if (p.getIntelligence() != null) {
-            this.intelligence = IntelligenceModelFactory.createIntelligenceModel(p.getIntelligence());
-        }
-
-
-
     }
 
     public PointModel() {
@@ -122,16 +116,6 @@ public class PointModel implements Serializable, Point {
     private List<Value> values;
 
     private Value value;
-
-    @Override
-    public Intelligence getIntelligence() {
-        return intelligence;
-    }
-
-    @Override
-    public void setIntelligence(final Intelligence intelligence) {
-        this.intelligence = intelligence;
-    }
 
     @Override
     public double getCompression() {

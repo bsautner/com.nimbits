@@ -13,10 +13,9 @@
 
 package com.nimbits.client.service.instantmessage;
 
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.email.EmailAddress;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.email.*;
 
 @RemoteServiceRelativePath("xmpp")
 public interface IMService extends RemoteService {

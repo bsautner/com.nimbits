@@ -13,26 +13,21 @@
 
 package com.nimbits.server.dao.user;
 
-import com.nimbits.PMF;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.connection.Connection;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.user.UserModelFactory;
-import com.nimbits.server.connections.ConnectionRequestModelFactory;
-import com.nimbits.server.entity.EntityServiceFactory;
-import com.nimbits.server.orm.ConnectionRequest;
-import com.nimbits.server.orm.NimbitsUser;
-import com.nimbits.server.user.UserTransactions;
-import twitter4j.auth.AccessToken;
+import com.nimbits.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.connection.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.server.connections.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.orm.*;
+import com.nimbits.server.user.*;
+import twitter4j.auth.*;
 
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
+import javax.jdo.*;
 import java.util.*;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 
 public class UserDAOImpl implements UserTransactions {

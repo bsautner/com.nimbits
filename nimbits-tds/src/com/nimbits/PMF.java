@@ -13,8 +13,7 @@
 
 package com.nimbits;
 
-import javax.jdo.JDOHelper;
-import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.*;
 
 public final class PMF {
     private static PersistenceManagerFactory pmfInstance;

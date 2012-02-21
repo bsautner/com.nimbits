@@ -1,22 +1,17 @@
 package com.nimbits.server.entity;
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.service.entity.EntityService;
-import com.nimbits.server.orm.entity.EntityStore;
-import com.nimbits.server.point.PointServiceFactory;
-import com.nimbits.server.user.UserServiceFactory;
+import com.google.gwt.user.server.rpc.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.service.entity.*;
+import com.nimbits.server.orm.entity.*;
+import com.nimbits.server.point.*;
+import com.nimbits.server.user.*;
 
-import javax.servlet.http.HttpSession;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import javax.servlet.http.*;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner

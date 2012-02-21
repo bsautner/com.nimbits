@@ -13,31 +13,21 @@
 
 package com.nimbits.server.task;
 
-import com.google.gson.Gson;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointModel;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.user.UserModel;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModel;
-import com.nimbits.server.calculation.CalculationServiceFactory;
-import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.intelligence.IntelligenceServiceFactory;
-import com.nimbits.server.point.PointServiceFactory;
-import com.nimbits.server.recordedvalue.RecordedValueServiceFactory;
-import com.nimbits.server.subscription.SubscriptionServiceFactory;
-import com.nimbits.shared.Utils;
+import com.google.gson.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.server.calculation.*;
+import com.nimbits.server.gson.*;
+import com.nimbits.server.intelligence.*;
+import com.nimbits.server.subscription.*;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.logging.Logger;
+import javax.servlet.http.*;
 
 public class RecordValueTask extends HttpServlet {
 
-    private static final Logger log = Logger.getLogger(RecordValueTask.class.getName());
+    //private static final Logger log = Logger.getLogger(RecordValueTask.class.getName());
     private static final long serialVersionUID = 1L;
 
     @Override
@@ -57,63 +47,20 @@ public class RecordValueTask extends HttpServlet {
 
         final User u = gson.fromJson(userJson, UserModel.class);
 
-
-
-        try {
-
-
             if (!loopFlag) {
 
                 CalculationServiceFactory.getInstance().processCalculations(u, point, value);
-
-
-
-
-
-                if (point.getIntelligence() != null && point.getIntelligence().getEnabled()) {
-                    processIntelligence(u, point);
-                }
+                IntelligenceServiceFactory.getInstance().processIntelligence(u, point);
+                SubscriptionServiceFactory.getInstance().processSubscriptions(point, value);
 
             }
 
 
-        } catch (NimbitsException e) {
-            log.severe(e.getMessage());
-
-        }
-
-
-        SubscriptionServiceFactory.getInstance().processSubscriptions(point, value);
 
 
     }
 
-    private void processCalculations(Point point, Value value) {
-        //todo
-    }
 
-    private void processIntelligence(final User u,
-                                     final Point point) throws NimbitsException {
-
-        log.info("Processing Intelligence");
-
-        final String input = IntelligenceServiceFactory.getInstance().addDataToInput(u, point);
-        if (!Utils.isEmptyString(input)) {
-            Point targetPoint = PointServiceFactory.getInstance().getPointByID(u, point.getIntelligence().getTargetPointId());
-            if (targetPoint != null && targetPoint.getUserFK() == u.getId()) {
-                final Value result = IntelligenceServiceFactory.getInstance().processInput(point, targetPoint, input);
-
-                if (result != null) {
-                    log.info("got result:" + result.getData());
-                    RecordedValueServiceFactory.getInstance().recordValue(u, targetPoint, result, true);
-                }
-
-            }
-        }
-
-
-
-    }
 
 
 

@@ -13,17 +13,15 @@
 
 package com.nimbits.client.service.intelligence;
 
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.nimbits.client.enums.IntelligenceResultTarget;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.intelligence.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
 
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
-
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by bsautner
@@ -35,12 +33,17 @@ import java.util.Map;
 public interface IntelligenceService extends RemoteService {
     String getRawResult(final String query, final String podId, final boolean htmlOutput) throws NimbitsException;
 
-    String processInput(Point point, String input, String value, IntelligenceResultTarget intelligenceResultTarget, EntityName targetEntityName, boolean getPlainText) throws NimbitsException;
-
-    Value processInput(final Point point, final Point targetPoint, final String processedInput) throws NimbitsException;
+    Value processInput(final Intelligence intelligence, final Point targetPoint, final String processedInput) throws NimbitsException;
 
     Map<String, String> getHTMLContent(final String responseXML);
 
-    String addDataToInput(User u, Point point) throws NimbitsException;
+    String addDataToInput(User user, Intelligence intelligence) throws NimbitsException;
 
+    Intelligence getIntelligence(Entity entity);
+
+    Entity addUpdateIntelligence(Entity entity, EntityName name, Intelligence update);
+
+    void processIntelligence(User u, Point point);
+
+    Value processInput(Intelligence update) throws NimbitsException;
 }

@@ -24,7 +24,7 @@ import com.nimbits.*;
 import com.nimbits.server.dao.counter.*;
 import com.nimbits.server.orm.*;
 
-import javax.jdo.PersistenceManager;
+import javax.jdo.*;
 
 /**
  * Finds or creates a sharded counter with the desired name.

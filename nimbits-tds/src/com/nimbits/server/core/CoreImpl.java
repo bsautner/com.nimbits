@@ -13,21 +13,19 @@
 
 package com.nimbits.server.core;
 
-import com.nimbits.client.enums.Action;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.server.Server;
-import com.nimbits.client.model.server.ServerModelFactory;
-import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.http.HttpCommonFactory;
-import com.nimbits.server.settings.SettingTransactionsFactory;
-import com.nimbits.shared.Utils;
+import com.nimbits.client.model.server.*;
+import com.nimbits.server.gson.*;
+import com.nimbits.server.http.*;
+import com.nimbits.server.settings.*;
+import com.nimbits.shared.*;
 
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 /**
  * Created by bsautner

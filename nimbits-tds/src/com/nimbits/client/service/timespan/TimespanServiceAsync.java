@@ -14,7 +14,7 @@
 package com.nimbits.client.service.timespan;
 
 import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.timespan.*;
 
 public interface TimespanServiceAsync {

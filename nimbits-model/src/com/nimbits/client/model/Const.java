@@ -267,7 +267,7 @@ public class Const {
     public static final String PARAM_D = "d";
     public static final String PARAM_POINT_FK = "pointFK";
     public static final String SETTING_WOLFRAM = "wolframAlphaKey";
-    public static final String CONST_UNKNOWN = "";
+    public static final String CONST_UNKNOWN = "WL9JKJ-LYH57Y53TG";
     public static final String WORD_COOKIE = "Cookie";
     public static final int DEFAULT_HTTP_TIMEOUT = 15000;
     public static final String DEFAULT_XMPP_SERVER = "gmail.com";

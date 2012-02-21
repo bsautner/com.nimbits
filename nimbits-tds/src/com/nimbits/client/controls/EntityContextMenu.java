@@ -13,35 +13,26 @@
 
 package com.nimbits.client.controls;
 
-import com.extjs.gxt.ui.client.data.ModelData;
-import com.extjs.gxt.ui.client.event.Listener;
-import com.extjs.gxt.ui.client.event.MenuEvent;
-import com.extjs.gxt.ui.client.event.MessageBoxEvent;
-import com.extjs.gxt.ui.client.event.SelectionListener;
-import com.extjs.gxt.ui.client.widget.MessageBox;
+import com.extjs.gxt.ui.client.data.*;
+import com.extjs.gxt.ui.client.event.*;
+import com.extjs.gxt.ui.client.widget.*;
 import com.extjs.gxt.ui.client.widget.Window;
-import com.extjs.gxt.ui.client.widget.menu.Menu;
+import com.extjs.gxt.ui.client.widget.menu.*;
 import com.extjs.gxt.ui.client.widget.menu.MenuItem;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Cookies;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.nimbits.client.enums.Action;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.icons.Icons;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.GxtModel;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityName;
+import com.google.gwt.core.client.*;
+import com.google.gwt.user.client.*;
+import com.google.gwt.user.client.rpc.*;
+import com.google.gwt.user.client.ui.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.icons.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.panels.*;
-import com.nimbits.client.service.entity.EntityService;
-import com.nimbits.client.service.entity.EntityServiceAsync;
-import com.nimbits.shared.Utils;
+import com.nimbits.client.service.entity.*;
+import com.nimbits.shared.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner
@@ -61,6 +52,7 @@ public class EntityContextMenu extends Menu {
     private MenuItem propertyContext;
     private MenuItem copyContext;
     private MenuItem calcContext;
+    private MenuItem intelligenceContext;
     private Map<String, String> settings;
     private List<EntityModifiedListener> entityModifiedListeners;
 
@@ -91,13 +83,23 @@ public class EntityContextMenu extends Menu {
         propertyContext = propertyContext();
         copyContext = copyContext();
         calcContext = calcContext();
+        intelligenceContext = intelligenceContext();
         add(propertyContext);
-        add(subscribeContext);
-        add(calcContext);
-        add(reportContext);
         add(copyContext);
         add(deleteContext);
+
+        add(subscribeContext);
+        add(reportContext);
+        add(calcContext);
+        if (settings.containsKey(Const.SETTING_WOLFRAM) && ! Utils.isEmptyString(settings.get(Const.SETTING_WOLFRAM))) {
+            add(intelligenceContext);
+        }
+
+
+
     }
+
+
 
     @Override
     public void showAt(int x, int y) {
@@ -112,6 +114,8 @@ public class EntityContextMenu extends Menu {
                 currentModel.getEntityType().equals(EntityType.category));
         copyContext.setEnabled(currentModel.getEntityType().equals(EntityType.point));
         calcContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.calculation));
+        intelligenceContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.intelligence));
+
         propertyContext().setEnabled(!currentModel.isReadOnly());
 
 
@@ -154,7 +158,47 @@ public class EntityContextMenu extends Menu {
         });
         return retObj;
     }
+    private MenuItem intelligenceContext() {
+        final MenuItem retObj = new MenuItem();
 
+        retObj.setText("Intelligence");
+        retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.connect()));
+        retObj.addSelectionListener(new SelectionListener<MenuEvent>() {
+            public void componentSelected(MenuEvent ce) {
+                GxtModel selectedModel = (GxtModel) tree.getSelectionModel().getSelectedItem();
+                Entity entity = selectedModel.getBaseEntity();
+                showIntelligencePanel(entity);
+            }
+
+        });
+        return retObj;
+    }
+
+    public void showIntelligencePanel(Entity entity) {
+        IntelligencePanel dp = new IntelligencePanel(entity);
+
+        final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
+        w.setWidth(500);
+        w.setHeight(500);
+        if (entity.getEntityType().equals(EntityType.point)) {
+            w.setHeading("Intelligence triggered when data is recorded to " + entity.getName().getValue());
+        }
+        else {
+            w.setHeading("Edit Intelligence");
+
+        }
+        w.add(dp);
+        dp.addSubscriptionAddedListener(new NavigationEventProvider.EntityAddedListener() {
+            @Override
+            public void onEntityAdded(Entity entity) {
+                w.hide();
+                notifyEntityModifiedListener(new GxtModel(entity), Action.create);
+
+            }
+        });
+
+        w.show();
+    }
 
     private MenuItem propertyContext() {
         MenuItem retObj = new MenuItem();
@@ -194,6 +238,10 @@ public class EntityContextMenu extends Menu {
                     }
                     case calculation: {
                         showCalcPanel(entity);
+                        break;
+                    }
+                    case intelligence: {
+                        showIntelligencePanel(entity);
                         break;
                     }
                     case file: {
@@ -241,18 +289,15 @@ public class EntityContextMenu extends Menu {
             public void componentSelected(MenuEvent ce) {
                 ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
                 currentModel = (GxtModel) selectedModel;
-
                 final MessageBox box;
                 if (currentModel.getEntityType().equals(EntityType.point) && ! currentModel.isReadOnly()) {
-
-                    box= MessageBox.prompt(
+                     box= MessageBox.prompt(
                             Const.MESSAGE_NEW_POINT,
                             Const.MESSAGE_NEW_POINT_PROMPT);
                     box.addCallback(copyPointListener);
                 }
                 else {
                     box = MessageBox.alert("Not supported", "Sorry, for the moment you can only copy your data points", null);
-
                 }
                 box.show();
             }

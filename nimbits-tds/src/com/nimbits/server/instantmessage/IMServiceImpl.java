@@ -14,12 +14,12 @@
 package com.nimbits.server.instantmessage;
 
 import com.google.appengine.api.xmpp.*;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.service.instantmessage.IMService;
-import com.nimbits.server.user.UserServiceFactory;
+import com.google.gwt.user.server.rpc.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.service.instantmessage.*;
+import com.nimbits.server.user.*;
 
 public class IMServiceImpl extends RemoteServiceServlet implements IMService {
 

@@ -13,7 +13,7 @@
 
 package com.nimbits.server.recordedvalue;
 
-import com.nimbits.client.service.recordedvalues.RecordedValueService;
+import com.nimbits.client.service.recordedvalues.*;
 
 public class RecordedValueServiceFactory {
 

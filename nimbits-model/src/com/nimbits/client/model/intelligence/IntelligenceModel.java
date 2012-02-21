@@ -16,6 +16,8 @@ package com.nimbits.client.model.intelligence;
 
 import com.nimbits.client.enums.IntelligenceResultTarget;
 import com.nimbits.client.model.Const;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.*;
 
 import java.io.Serializable;
 
@@ -26,7 +28,7 @@ public class IntelligenceModel implements Serializable, Intelligence {
 
     private int resultTarget;
 
-    private long targetPointId;
+    private String target;
 
     private String input;
 
@@ -34,37 +36,51 @@ public class IntelligenceModel implements Serializable, Intelligence {
 
     private boolean resultsInPlainText;
 
+    private String uuid;
+
+    private String trigger;
 
     public IntelligenceModel() {
     }
 
-    public IntelligenceModel(final boolean enabled,
+    public IntelligenceModel(final String uuid,
+                             final boolean enabled,
                              final IntelligenceResultTarget resultTarget,
-                             final long targetPointId,
+                             final String target,
                              final String input,
                              final String nodeId,
-                             final boolean resultsInPlainText) {
+                             final boolean resultsInPlainText,
+                             final String trigger) {
         this.enabled = enabled;
         this.resultTarget = resultTarget.getCode();
-        this.targetPointId = targetPointId;
+        this.target = target;
         this.input = input;
         this.nodeId = nodeId;
         this.resultsInPlainText = resultsInPlainText;
-
+        this.trigger = trigger;
+        this.uuid = uuid;
     }
 
     public IntelligenceModel(final Intelligence intelligence) {
         this.enabled = intelligence.getEnabled();
         this.resultTarget = intelligence.getResultTarget().getCode();
-        this.targetPointId = intelligence.getTargetPointId();
+        this.target = intelligence.getTarget();
         this.input = intelligence.getInput();
         this.nodeId = intelligence.getNodeId();
         this.resultsInPlainText = intelligence.getResultsInPlainText();
+        this.uuid = intelligence.getUUID();
+        this.trigger = intelligence.getTrigger();
+        this.uuid = intelligence.getUUID();
     }
 
     @Override
     public boolean getEnabled() {
         return enabled;
+    }
+
+    @Override
+    public String getUUID() {
+        return uuid;
     }
 
     @Override
@@ -83,14 +99,15 @@ public class IntelligenceModel implements Serializable, Intelligence {
     }
 
     @Override
-    public long getTargetPointId() {
-        return targetPointId;
+    public String getTarget() {
+       return this.target;
     }
 
     @Override
-    public void setTargetPointId(long targetPointId) {
-        this.targetPointId = targetPointId;
+    public void setTarget(String target) {
+       this.target = target;
     }
+
 
     @Override
     public String getInput() {
@@ -121,33 +138,20 @@ public class IntelligenceModel implements Serializable, Intelligence {
     public void setResultsInPlainText(boolean resultsInPlainText) {
         this.resultsInPlainText = resultsInPlainText;
     }
-
-//    @Override
-//    public String toString() {
-////        JSONObject object = new JSONObject();
-////        object.put("enabled",enabled);
-////
-////        object.put("resultTarget",resultTarget);
-////
-////        object.put("targetPointId",targetPointId);
-////
-////        object.put("input",input);
-////
-////        object.put("nodeId",nodeId);
-////
-////        object.put("resultsInPlainText",resultsInPlainText);
-////
-////
-////        return  object.toString();
-//        return "";
-//
-////        return "IntelligenceModel{" +
-////                "enabled=" + enabled +
-////                ", resultTarget=" + resultTarget +
-////                ", targetPointId=" + targetPointId +
-////                ", input='" + input + '\'' +
-////                ", nodeId='" + nodeId + '\'' +
-////                ", resultsInPlainText=" + resultsInPlainText +
-////                '}';
-//    }
+    @Override
+    public String getTrigger() {
+        return trigger;
+    }
+    @Override
+    public void setTrigger(String trigger) {
+        this.trigger = trigger;
+    }
+    @Override
+    public String getUuid() {
+        return uuid;
+    }
+    @Override
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 }

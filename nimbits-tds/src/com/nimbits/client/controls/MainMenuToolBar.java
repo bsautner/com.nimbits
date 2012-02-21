@@ -28,7 +28,7 @@ import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.connection.*;
 import com.nimbits.client.model.email.*;
-import com.nimbits.client.panels.NavigationEventProvider;
+import com.nimbits.client.panels.*;
 import com.nimbits.client.service.instantmessage.*;
 import com.nimbits.client.service.twitter.*;
 import com.nimbits.client.service.user.*;

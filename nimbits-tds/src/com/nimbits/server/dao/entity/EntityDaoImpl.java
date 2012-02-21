@@ -1,22 +1,15 @@
 package com.nimbits.server.dao.entity;
 
 
-import com.nimbits.PMF;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.service.entity.EntityService;
-import com.nimbits.server.orm.entity.EntityStore;
+import com.nimbits.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.service.entity.*;
+import com.nimbits.server.orm.entity.*;
 
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.jdo.*;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner

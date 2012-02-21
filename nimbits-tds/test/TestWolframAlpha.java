@@ -11,15 +11,14 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.server.intelligence.IntelligenceServiceImpl;
-import org.junit.Test;
-import org.xml.sax.SAXException;
+import com.nimbits.client.exception.*;
+import com.nimbits.server.intelligence.*;
+import static org.junit.Assert.*;
+import org.junit.*;
+import org.xml.sax.*;
 
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-
-import static org.junit.Assert.assertEquals;
+import javax.xml.parsers.*;
+import java.io.*;
 
 /**
  * Created by Benjamin Sautner

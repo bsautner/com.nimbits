@@ -67,6 +67,8 @@ public class EntityTree<ModelData extends com.extjs.gxt.ui.client.data.ModelData
                         return AbstractImagePrototype.create(Icons.INSTANCE.plugin());
                     case calculation:
                         return AbstractImagePrototype.create(Icons.INSTANCE.formula());
+                    case intelligence:
+                        return AbstractImagePrototype.create(Icons.INSTANCE.connect());
                     default:
                         return AbstractImagePrototype.create(Icons.INSTANCE.point_ok());
 
@@ -75,19 +77,19 @@ public class EntityTree<ModelData extends com.extjs.gxt.ui.client.data.ModelData
 
         });
     }
-
-    @Override
-    protected boolean hasChildren(com.extjs.gxt.ui.client.data.ModelData model) {
-//        final String entityTypeVal = model.get(Const.PARAM_ENTITY_TYPE);
 //
-//        final EntityType entityType = EntityType.get (Integer.valueOf(entityTypeVal));
+//    @Override
+//    protected boolean hasChildren(com.extjs.gxt.ui.client.data.ModelData model) {
+////        final String entityTypeVal = model.get(Const.PARAM_ENTITY_TYPE);
+////
+////        final EntityType entityType = EntityType.get (Integer.valueOf(entityTypeVal));
+////
+////        return entityType.equals(EntityType.category) ||  super.hasChildren((ModelData) model);
 //
-//        return entityType.equals(EntityType.category) ||  super.hasChildren((ModelData) model);
-
-        return model instanceof GxtModel ||
-                !(model instanceof GxtModel)
-                        && super.hasChildren((ModelData) model);
-    }
+//        return  true;(model instanceof GxtModel) ||
+//                (!(model instanceof GxtModel)
+//                        && super.hasChildren((ModelData) model));
+//    }
 
 
 }

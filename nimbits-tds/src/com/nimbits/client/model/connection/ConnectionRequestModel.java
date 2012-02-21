@@ -13,11 +13,11 @@
 
 package com.nimbits.client.model.connection;
 
-import com.extjs.gxt.ui.client.data.BaseModelData;
-import com.nimbits.client.model.email.EmailAddress;
+import com.extjs.gxt.ui.client.data.*;
+import com.nimbits.client.model.email.*;
 
-import java.io.Serializable;
-import java.util.Date;
+import java.io.*;
+import java.util.*;
 
 
 public class ConnectionRequestModel extends BaseModelData implements Serializable, Connection {

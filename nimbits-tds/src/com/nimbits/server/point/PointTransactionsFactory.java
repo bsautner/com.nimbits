@@ -14,8 +14,8 @@
 package com.nimbits.server.point;
 
 import com.nimbits.client.model.user.*;
-import com.nimbits.client.service.datapoints.PointTransactions;
-import com.nimbits.server.dao.datapoint.DataPointDAOImpl;
+import com.nimbits.client.service.datapoints.*;
+import com.nimbits.server.dao.datapoint.*;
 import com.nimbits.server.memcache.point.*;
 
 /**

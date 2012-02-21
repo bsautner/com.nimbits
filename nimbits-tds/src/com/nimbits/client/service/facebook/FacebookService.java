@@ -13,12 +13,11 @@
 
 package com.nimbits.client.service.facebook;
 
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.email.EmailAddress;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.email.*;
 
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 
 /**
  * Created by bsautner

@@ -13,29 +13,38 @@
 
 package com.nimbits.client.panels;
 
-import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.util.*;
+import com.extjs.gxt.ui.client.event.ButtonEvent;
+import com.extjs.gxt.ui.client.event.SelectionListener;
+import com.extjs.gxt.ui.client.util.Margins;
+import com.extjs.gxt.ui.client.util.Padding;
 import com.extjs.gxt.ui.client.widget.*;
-import com.extjs.gxt.ui.client.widget.VerticalPanel;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.CheckBox;
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
-import com.extjs.gxt.ui.client.widget.form.*;
-import com.extjs.gxt.ui.client.widget.layout.*;
-import com.google.gwt.core.client.*;
-import com.google.gwt.user.client.*;
-import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
-import com.nimbits.client.controls.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.icons.*;
-import com.nimbits.client.model.calculation.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.client.service.calculation.*;
+import com.extjs.gxt.ui.client.widget.form.TextField;
+import com.extjs.gxt.ui.client.widget.layout.BoxLayout;
+import com.extjs.gxt.ui.client.widget.layout.FormData;
+import com.extjs.gxt.ui.client.widget.layout.HBoxLayout;
+import com.extjs.gxt.ui.client.widget.layout.HBoxLayoutData;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.nimbits.client.controls.EntityCombo;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.icons.Icons;
+import com.nimbits.client.model.calculation.Calculation;
+import com.nimbits.client.model.calculation.CalculationModelFactory;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.service.calculation.CalculationService;
+import com.nimbits.client.service.calculation.CalculationServiceAsync;
+import com.nimbits.client.service.entity.EntityService;
+import com.nimbits.client.service.entity.EntityServiceAsync;
 
-import java.util.*;
+import java.util.Map;
 
 /**
  * Created by Benjamin Sautner
@@ -208,14 +217,36 @@ public class CalculationPanel extends NavigationEventProvider {
         "<br><p>Example:Adding a formula to a point named FOO x+5 with the x var drop down set to FOO and a target named BAR - if this point (FOO) receives a new " +
                 "value of 10, the value of 15 will be recorded into BAR</p>");
 
-
-        Html pn = new Html("<p><b>Name: </b>" + entity.getName().getValue() + "</p>");
-
-
-
-
-
         vp.add(h);
+
+        final Html pn = new Html();
+
+        if (entity.getEntityType().equals(EntityType.point)) {
+            pn.setHtml("<p><b>Trigger Point Name: </b>" + entity.getName().getValue() + "</p>");
+
+        }
+        else {
+            EntityServiceAsync svc = GWT.create(EntityService.class);
+
+            svc.getEntityByUUID(calculation.getTrigger(), new AsyncCallback<Entity>() {
+                @Override
+                public void onFailure(Throwable throwable) {
+                    //To change body of implemented methods use File | Settings | File Templates.
+                }
+
+                @Override
+                public void onSuccess(Entity point) {
+                    pn.setHtml("<p><b>Trigger Point Name: </b>" + point.getName().getValue() + "</p>");
+                }
+            });
+
+        }
+
+
+
+
+
+
         vp.add(pn);
         simple.add(nameField, formdata);
         simple.add(formula, formdata);

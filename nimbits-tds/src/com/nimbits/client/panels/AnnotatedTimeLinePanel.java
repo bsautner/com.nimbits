@@ -13,38 +13,47 @@
 
 package com.nimbits.client.panels;
 
-import com.extjs.gxt.ui.client.dnd.*;
+import com.extjs.gxt.ui.client.dnd.DropTarget;
 import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.store.*;
+import com.extjs.gxt.ui.client.store.TreeStoreModel;
 import com.extjs.gxt.ui.client.widget.*;
-import com.extjs.gxt.ui.client.widget.Label;
-import com.extjs.gxt.ui.client.widget.Window;
 import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.button.*;
-import com.extjs.gxt.ui.client.widget.form.*;
-import com.extjs.gxt.ui.client.widget.toolbar.*;
-import com.google.gwt.core.client.*;
-import com.google.gwt.i18n.client.*;
-import com.google.gwt.user.client.*;
-import static com.google.gwt.user.client.Window.*;
-import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
-import com.google.gwt.visualization.client.AbstractDataTable.*;
-import com.google.gwt.visualization.client.*;
-import com.google.gwt.visualization.client.visualizations.*;
-import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.icons.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.timespan.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.client.service.datapoints.*;
-import com.nimbits.client.service.recordedvalues.*;
-import com.nimbits.shared.*;
+import com.extjs.gxt.ui.client.widget.button.ToolButton;
+import com.extjs.gxt.ui.client.widget.form.NumberField;
+import com.extjs.gxt.ui.client.widget.form.TextField;
+import com.extjs.gxt.ui.client.widget.toolbar.SeparatorToolItem;
+import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.google.gwt.visualization.client.AbstractDataTable.ColumnType;
+import com.google.gwt.visualization.client.DataTable;
+import com.google.gwt.visualization.client.VisualizationUtils;
+import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine;
+import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine.Options;
+import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine.WindowMode;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.icons.Icons;
+import com.nimbits.client.model.Const;
+import com.nimbits.client.model.GxtModel;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.timespan.Timespan;
+import com.nimbits.client.model.timespan.TimespanModelFactory;
+import com.nimbits.client.model.timespan.TimespanServiceClientImpl;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.service.datapoints.PointService;
+import com.nimbits.client.service.datapoints.PointServiceAsync;
+import com.nimbits.client.service.recordedvalues.RecordedValueService;
+import com.nimbits.client.service.recordedvalues.RecordedValueServiceAsync;
+import com.nimbits.shared.Utils;
 
 import java.util.*;
+
+import static com.google.gwt.user.client.Window.alert;
 
 public class AnnotatedTimeLinePanel extends NavigationEventProvider {
     private final DateTimeFormat fmt = DateTimeFormat.getFormat(Const.FORMAT_DATE_TIME);
@@ -382,16 +391,16 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
 
     private void refreshChart() throws NimbitsException {
 
-            timespan = TimespanServiceClientImpl.createTimespan(startDateSelector.getValue().toString(), endDateSelector.getValue().toString());
-            if (line != null && timespan != null) {
-                line.setVisibleChartRange(timespan.getStart(), timespan.getEnd());
-                dataTable = DataTable.create();
-                dataTable.addColumn(ColumnType.DATETIME, "Date");
+        timespan = TimespanServiceClientImpl.createTimespan(startDateSelector.getValue().toString(), endDateSelector.getValue().toString());
+        if (line != null && timespan != null) {
+            line.setVisibleChartRange(timespan.getStart(), timespan.getEnd());
+            dataTable = DataTable.create();
+            dataTable.addColumn(ColumnType.DATETIME, "Date");
 
-                for (EntityName pointName : points.keySet()) {
-                    addPointToChart(points.get(pointName));
-                }
+            for (EntityName pointName : points.keySet()) {
+                addPointToChart(points.get(pointName));
             }
+        }
 
 
     }

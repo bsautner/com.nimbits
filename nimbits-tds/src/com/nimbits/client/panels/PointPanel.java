@@ -13,34 +13,37 @@
 
 package com.nimbits.client.panels;
 
-import com.extjs.gxt.ui.client.Style.*;
-import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.widget.HorizontalPanel;
+import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
+import com.extjs.gxt.ui.client.Style.Orientation;
+import com.extjs.gxt.ui.client.event.ButtonEvent;
+import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.widget.*;
-import com.extjs.gxt.ui.client.widget.TabPanel;
-import com.extjs.gxt.ui.client.widget.VerticalPanel;
 import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.form.CheckBox;
-import com.extjs.gxt.ui.client.widget.form.FormPanel;
 import com.extjs.gxt.ui.client.widget.form.*;
-import com.extjs.gxt.ui.client.widget.form.TextArea;
-import com.extjs.gxt.ui.client.widget.layout.*;
-import com.extjs.gxt.ui.client.widget.toolbar.*;
-import com.google.gwt.core.client.*;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
-import com.google.gwt.user.client.ui.Label;
-import com.nimbits.client.controls.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.icons.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.service.datapoints.*;
-import com.nimbits.client.service.entity.*;
-import com.nimbits.client.service.settings.*;
+import com.extjs.gxt.ui.client.widget.layout.FillLayout;
+import com.extjs.gxt.ui.client.widget.layout.FormData;
+import com.extjs.gxt.ui.client.widget.layout.TableData;
+import com.extjs.gxt.ui.client.widget.toolbar.SeparatorToolItem;
+import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.google.gwt.user.client.ui.Image;
+import com.nimbits.client.controls.ProtectionLevelOptions;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.icons.Icons;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.service.datapoints.PointService;
+import com.nimbits.client.service.datapoints.PointServiceAsync;
+import com.nimbits.client.service.entity.EntityService;
+import com.nimbits.client.service.entity.EntityServiceAsync;
+import com.nimbits.client.service.settings.SettingsService;
+import com.nimbits.client.service.settings.SettingsServiceAsync;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class PointPanel extends LayoutContainer {
 
@@ -55,13 +58,6 @@ public class PointPanel extends LayoutContainer {
     private final CheckBox ignoreCompressedValues = new CheckBox();
    // private final CheckBox im = new CheckBox();
     private final CheckBox le = new CheckBox();
-    //private final CheckBox tw = new CheckBox();
-    private final Hyperlink hyperlinkRest = new Hyperlink("New hyperlink", false, "newHistoryToken");
-    private final Hyperlink uuidLink = new Hyperlink("New hyperlink", false, "newHistoryToken");
-
-    private final Label lblQrCodesThe = new Label("QR Codes: The QR Bar code below represents a link to a data screen for this point. Any device capable of reading barcodes can read this, such as a barcode app on your smart phone.");
-    private final Label lblTheQrBarcode = new Label("The QR Barcode above links to this URL, which you can also use as a universal way to view this point's data:");
-    private final Label lblYouCanPull = new Label("You can pull this point's data using http post and getInstance commands using the REST API Web service. This example uses this points unique UUID, but there are many ways to access this point's data. See the REST API documents to learn more. ");
 
     private final List<PointDeletedListener> pointDeletedListeners = new ArrayList<PointDeletedListener>();
     private final List<PointUpdatedListener> pointUpdatedListeners = new ArrayList<PointUpdatedListener>();
@@ -160,12 +156,6 @@ public class PointPanel extends LayoutContainer {
 
                 TabItem tabGeneral = new TabItem("General");
                 tabGeneral.setHeight("425");
-                // TabItem tabRelay = new TabItem("Relay");
-
-                TabItem tabIdle = new TabItem("Idle Alarm");
-                TabItem tabLinks = new TabItem("Links");
-                //tabGeneral.setWidth("450");
-
 
                 verticalPanel.add(tabPanel);
                 tabPanel.setSize(FORM_HEIGHT, "435");
@@ -174,15 +164,9 @@ public class PointPanel extends LayoutContainer {
 
                 tabPanel.add(tabAlerts);
 
-                tabPanel.add(tabIdle);
-                // tabPanel.add(tabRelay);
-                tabPanel.add(tabLinks);
 
                 tabAlerts.add(alertForm(settingMap));
                 tabGeneral.add(generalForm(settingMap));
-
-                tabLinks.add(linkForm());
-                tabIdle.add(idleForm());
 
                 add(verticalPanel);
                 doLayout();
@@ -323,6 +307,16 @@ public class PointPanel extends LayoutContainer {
 
     private FormPanel alertForm(Map<String, String> settingMap) {
         FormPanel simple = new FormPanel();
+        Html h = new Html();
+
+
+        h.setHtml("<P>Enter values that will trigger an high or low alert if the value of this point goes above or below a value. </p>" +
+                "<P>Enter the number of minutes this point can go without recieving a new value before it goes into an idle alert state. </p>" +
+                "<P>Right click on this point and select \"subscribe\" to configure how you'd like to be alerted to changes in this point's alert state.</p>" +
+                "other users who subscribe to this point will also receive alerts based on their settings.</P><BR><BR>");
+
+
+        simple.add(h);
 
 
         simple.setHeaderVisible(false);
@@ -331,7 +325,7 @@ public class PointPanel extends LayoutContainer {
         simple.setBorders(false);
         simple.setBodyBorder(false);
         simple.setSize(MAIN_WIDTH, FORM_HEIGHT);
-
+        simple.add(h);
 
         high.setFieldLabel("High Value");
         high.setValue(point.getHighAlarm());
@@ -357,7 +351,30 @@ public class PointPanel extends LayoutContainer {
         le.setValue(point.isLowAlarmOn());
         simple.add(le, new FormData("0% -395"));
 
+        idleOn.setBoxLabel("Idle alert enabled");
+        idleOn.setLabelSeparator("");
 
+        idleOn.setValue(point.isIdleAlarmOn());
+        idleMinutes.setFieldLabel("Idle Minutes");
+        idleMinutes.setValue(point.getIdleSeconds() / 60);
+
+
+        simple.add(idleMinutes);
+        simple.add(idleOn);
+        if (point.isIdleAlarmOn()) {
+            Html h2 = new Html();
+
+            String s = "<P>Based on the current settings, this point is currently ";
+            if (point.getIdleAlarmSent()) {
+                s += "idle.";
+            } else {
+                s += "not idle.";
+            }
+            //  s += " Last recorded timestamp was: " + point.getLastRecordedTimestamp() + "</p>";
+            h2.setHtml(s);
+
+            simple.add(h2);
+        }
 
         return simple;
     }
@@ -456,90 +473,6 @@ public class PointPanel extends LayoutContainer {
 
 
 
-    private VerticalPanel linkForm() {
-        VerticalPanel simple = new VerticalPanel();
-        String u = Window.Location.getHost();
-
-        String infoURL = "http://" + u + "?" +
-                "uuid=" + point.getUUID();
-
-
-        String bcURL;
-
-        bcURL = "http://chart.apis.google.com/chart?chs=150x150&cht=qr&chl=" +
-                infoURL +
-                "&chld=L|1&choe=UTF-8";
-
-        final Image image = new Image(bcURL);
-
-        simple.add(lblQrCodesThe);
-        simple.add(image);
-        image.setSize("100", "100");
-
-        image.setUrl(bcURL);
-
-        simple.add(lblTheQrBarcode);
-        uuidLink.setHeight("44px");
-        uuidLink.setHTML("UUID Link");
-        uuidLink.setText(infoURL);
-
-        simple.add(uuidLink);
-
-        simple.add(lblYouCanPull);
-
-
-        hyperlinkRest.setText("http://" + u + "/service/currentvalue?uuid=" + point.getUUID());
-
-        simple.add(hyperlinkRest);
-
-        return simple;
-    }
-
-    private FormPanel idleForm() {
-        FormPanel simple = new FormPanel();
-        simple.setHeaderVisible(false);
-        simple.setFrame(false);
-        simple.setBorders(false);
-        simple.setBodyBorder(false);
-        simple.setSize(MAIN_WIDTH, FORM_HEIGHT);
-
-        idleOn.setBoxLabel("Alarm On");
-        idleOn.setLabelSeparator("");
-
-        idleOn.setValue(point.isIdleAlarmOn());
-        idleMinutes.setFieldLabel("Idle Minutes");
-        idleMinutes.setValue(point.getIdleSeconds() / 60);
-
-        Html h = new Html();
-
-
-        h.setHtml("<P>Enter the number of minutes needed to elapse for a point to be considered idle if it does not recieve a value. </P>" +
-                "<BR><P>If a point does not record a value in the elapsed number of minutes, an email alert will be sent to you. </P>" +
-                "<BR><P>Please note: Regardless of the idle setting, you may not get an alert for 1 to 10 minutes after the elapsed time passes, depending on system load.</P><BR><BR>");
-
-
-        simple.add(h);
-
-        simple.add(idleMinutes);
-        simple.add(idleOn);
-        if (point.isIdleAlarmOn()) {
-            Html h2 = new Html();
-
-            String s = "<P>Based on the current settings, this point is currently ";
-            if (point.getIdleAlarmSent()) {
-                s += "idle.";
-            } else {
-                s += "not idle.";
-            }
-            //  s += " Last recorded timestamp was: " + point.getLastRecordedTimestamp() + "</p>";
-            h2.setHtml(s);
-
-            simple.add(h2);
-        }
-
-
-        return simple;
-    }
 
     public interface PointDeletedListener {
         void onPointDeleted(Point p);

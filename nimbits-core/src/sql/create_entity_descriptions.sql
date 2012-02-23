@@ -13,6 +13,7 @@ create table nimbits_schema.SEARCH_LOG (
   TS timestamp not null
  ) ENGINE=MyISAM;
 
+drop table if exists nimbits_schema.SERVERS;
 
 create unique index ID_SEARCH_LOG_UNIQUE on nimbits_schema.SEARCH_LOG  (ID_SEARCH_LOG);
 create unique index SEARCH_TEXT_UNIQUE on nimbits_schema.SEARCH_LOG  (SEARCH_TEXT);

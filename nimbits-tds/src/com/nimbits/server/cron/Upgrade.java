@@ -41,15 +41,17 @@ public class Upgrade {
 
         //recognise andriod client type - put links back in tree grid
 
-        //xmpp single points
-
         //publish on hrd for users to test with
+
+
 
         //xmpp server configurable
 
-        //new context menus: read / write keys per point - make calcs / wolfram alpha intelligence entities
-        //create a summary point, options of 1, 8 and 24 hour - to create averaged avalues stored in a summary data point
+        //xmpp single points
 
+        //new context menus: read / write keys per point - make calcs / wolfram alpha intelligence entities
+
+        //create a summary point, options of 1, 8 and 24 hour - to create averaged avalues stored in a summary data point
 
         //add wolfram alha results to search
 

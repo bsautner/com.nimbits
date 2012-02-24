@@ -73,7 +73,7 @@ public class ExportPanel extends LayoutContainer {
 
         //  descriptiveStatistics.setBoxLabel("Descriptive Statistics (Beta)");
         // descriptiveStatistics.setValue(true);
-         final Radio dataView = new Radio();
+        final Radio dataView = new Radio();
         dataView.setBoxLabel("Current Status Report");
         dataView.setValue(true);
 
@@ -108,8 +108,8 @@ public class ExportPanel extends LayoutContainer {
 
                 if (csvSeparateColumns.getValue()) {
                     exportType = ExportType.csvSeparateColumns;
-                 } else if (dataView.getValue()) {
-                          exportType = ExportType.currentStatusReport;
+                } else if (dataView.getValue()) {
+                    exportType = ExportType.currentStatusReport;
 
                     //  } else if (possibleContinuation.getValue()) {
                     //      exportType = ExportType.possibleContinuation;

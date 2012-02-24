@@ -42,30 +42,21 @@ public class MainMenuBar extends ToolBar {
         addFileMenu();
         addNavigateMenu();
         addActionMenu();
-        addHelpMenu();
+        addOptionsMenu();
+
         if (loginInfo.isUserAdmin()) {
             addAdminMenu();
         }
-
+        addHelpMenu();
         add(new SeparatorMenuItem());
-        add(connectionButton());
-        add(pendingConnectionsButton());
+
         add(saveButton());
         add(addChartButton());
 
+        add(connectionButton());
+        add(pendingConnectionsButton());
 
 
-        CheckBox saveToNowCheckBox = new CheckBox();
-        CheckBox autoSaveCheckBox = new CheckBox();
-
-
-        add(saveToNowCheckBox);
-
-        saveToNowCheckBox.setBoxLabel("Save with Current Time");
-        saveToNowCheckBox.setValue(true);
-        autoSaveCheckBox.setBoxLabel("Auto-Save on new number value entry");
-        autoSaveCheckBox.setValue(true);
-        add(autoSaveCheckBox);
     }
 
     private void addFileMenu() {
@@ -81,6 +72,8 @@ public class MainMenuBar extends ToolBar {
         fileButton.setMenu(fileMenu);
         add(fileButton);
     }
+
+
     private void addNavigateMenu() {
         Button button = new Button("Navigate");
         Menu menu = new Menu();
@@ -92,12 +85,29 @@ public class MainMenuBar extends ToolBar {
         button.setMenu(menu);
         add(button);
     }
+    private void addOptionsMenu() {
+        Button button = new Button("Options");
+        Menu menu = new Menu();
+
+
+        CheckBox saveToNowCheckBox = new CheckBox();
+        CheckBox autoSaveCheckBox = new CheckBox();
+
+        menu.add(saveToNowCheckBox);
+        saveToNowCheckBox.setBoxLabel("Save with Current Time");
+        saveToNowCheckBox.setValue(true);
+        autoSaveCheckBox.setBoxLabel("Auto-Save on new number value entry");
+        autoSaveCheckBox.setValue(true);
+        menu.add(autoSaveCheckBox);
+        button.setMenu(menu);
+        add(button);
+    }
     private void addAdminMenu() {
         Button button = new Button("Admin");
         Menu menu = new Menu();
         menu.add(urlMenuItem("Run System Maintenance Service",
                 AbstractImagePrototype.create(Icons.INSTANCE.expand()),
-                com.google.gwt.user.client.Window.Location.getPath() + "/cron/SystemMaint"));
+                "http://" + com.google.gwt.user.client.Window.Location.getHostName()+ "/cron/SystemMaint"));
 
 
         button.setMenu(menu);
@@ -525,7 +535,7 @@ public class MainMenuBar extends ToolBar {
     }
 
     private Button connectionButton() {
-        final Button b = new Button("New Connection");
+        final Button b = new Button("Send Connection Request");
         b.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.addFriend()));
 
         b.addListener(Events.OnClick, new Listener<BaseEvent>() {
@@ -534,7 +544,7 @@ public class MainMenuBar extends ToolBar {
             public void handleEvent(BaseEvent be) {
 
 
-                final MessageBox box = MessageBox.prompt("Connect to Friends",
+                final MessageBox box = MessageBox.prompt("Connect to other Nimbits Users",
                         "Enter an email address to invite a friend to connect their Data Points to yours. After they approve your request " +
                                 "you'll be able to see each others data points and diagrams (based on permission levels).");
                 box.addCallback(sendInviteLisenter());

@@ -69,18 +69,20 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
             CenterPanel center = new CenterPanel(loginInfo, settings);
             BorderLayoutData centerData = new BorderLayoutData(LayoutRegion.CENTER);
             center.setHeight("100%");
+            center.setLayout(new FillLayout());
             centerData.setMargins(new Margins(5));
 
-            ContentPanel  east = new ContentPanel();
 
+            FeedPanel east = new FeedPanel();
             east.setHeight("100%");
-            east.setHeading("Data Feed");
-            east.setHeaderVisible(true);
             east.setWidth(250);
-            BorderLayoutData eastData = new BorderLayoutData(LayoutRegion.EAST, 175);
+            east.setLayout(new FillLayout());
+            BorderLayoutData eastData = new BorderLayoutData(LayoutRegion.EAST, 250);
             eastData.setSplit(true);
             eastData.setCollapsible(true);
             eastData.setMargins(new Margins(5));
+
+
 
             viewport.add(east, eastData);
             viewport.add(center, centerData);

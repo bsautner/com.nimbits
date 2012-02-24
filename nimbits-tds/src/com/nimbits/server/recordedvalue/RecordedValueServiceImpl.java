@@ -254,7 +254,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
     public Value recordValue(final User u,
                              final Point point,
                              final Value value,
-                             final boolean loopFlag) throws NimbitsException {
+                             final boolean loopFlag)  {
 
 
         //	RecordedValue prevValue = null;

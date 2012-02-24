@@ -42,11 +42,4 @@ public class PointModelFactory {
 
 
 
-//    public static Point createPoint()
-//    {
-//        return new PointModel();
-//
-//    }
-
-
 }

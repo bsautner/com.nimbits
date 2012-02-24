@@ -14,6 +14,8 @@
 package com.nimbits.shared;
 
 
+import org.apache.commons.lang3.*;
+
 /**
  * Created by bsautner
  * User: benjamin
@@ -32,5 +34,6 @@ public class Utils {
         int ix = (int) (d * 100.0); // scale it
         return ((double) ix) / 100.0;
     }
+
 
 }

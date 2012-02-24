@@ -16,7 +16,8 @@ public enum EntityType {
     subscription(5),
     userConnection(6),
     calculation(7),
-    intelligence(8);
+    intelligence(8),
+    feed(9);
 
     private static final Map<Integer, EntityType> lookup = new HashMap<Integer, EntityType>();
 

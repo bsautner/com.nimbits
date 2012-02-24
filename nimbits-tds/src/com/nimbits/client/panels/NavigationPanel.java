@@ -109,6 +109,7 @@ class NavigationPanel extends NavigationEventProvider {
         target.setAllowSelfAsSource(true);
         target.setFeedback(Feedback.BOTH);
         tree.addListener(Events.AfterEdit, afterEditListener);
+
         treePropertyBuilder();
         treeStoreBuilder(result);
         treeDNDBuilder();
@@ -151,7 +152,7 @@ class NavigationPanel extends NavigationEventProvider {
 
         tree.setClicksToEdit(EditorGrid.ClicksToEdit.ONE);
         tree.setTrackMouseOver(true);
-        tree.getView().setAutoFill(true);
+        //tree.getView().setAutoFill(true);
         tree.addListener(Events.RowDoubleClick, treeDoubleClickListener);
     }
 

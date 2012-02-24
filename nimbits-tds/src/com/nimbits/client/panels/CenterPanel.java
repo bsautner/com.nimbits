@@ -64,30 +64,6 @@ public class CenterPanel extends NavigationEventProvider {
 
     protected void onRender(final Element target, final int index) {
         super.onRender(target, index);
-//        grid.addEntityClickedListeners(new EntityClickedListener() {
-//
-//            @Override
-//            public void onEntityClicked(final GxtModel entity) {
-//
-//                addEntity(entity);
-//
-//
-//            }
-//        });
-//
-//        grid.addValueEnteredListeners(new ValueEnteredListener() {
-//
-//            @Override
-//            public void onValueEntered(final Entity entity, final Value value) {
-//                for (AnnotatedTimeLinePanel line : lines.values()) {
-//                    if (line.containsPoint(entity)) {
-//                        line.addValue(entity, value);
-//                    }
-//                }
-//            }
-//        });
-
-
         loadLayout();
 
     }
@@ -146,7 +122,7 @@ public class CenterPanel extends NavigationEventProvider {
             double w = 1.0 / (double) lines.size();
             l.initChart();
             //   l.refreshChart();
-            bottom.add(l, new RowData(w, 1, new Margins(4)));
+            bottom.add(l, new RowData(w, 1, new Margins(0)));
         }
         add(bottom, new FlowData(0));
         doLayout(true);
@@ -195,30 +171,27 @@ public class CenterPanel extends NavigationEventProvider {
 
     private void loadLayout() {
 
-        final ContentPanel panel = new ContentPanel(new FillLayout());
+        final ContentPanel panel = new ContentPanel( );
         final String logoutUrl = (loginInfo != null) ? loginInfo.getLogoutUrl() : Const.PATH_NIMBITS_HOME;
 
         MainMenuBar toolBar = initToolbar(loginInfo, settings, logoutUrl);
         panel.setTopComponent(toolBar);
-        // panel.setHeading("Data Channels");
         panel.setLayout(new RowLayout(Style.Orientation.VERTICAL));
         panel.setHeaderVisible(true);
         panel.setHeading(Const.CONST_SERVER_NAME + " " + Const.CONST_SERVER_VERSION);
-        panel.setFrame(true);
+        panel.setFrame(false);
+       // panel.setHeight("100%");
         panel.setCollapsible(true);
-        // panel.setHeight("100%");
 
         navigationPanel = createNavigationPanel();
         navigationPanel.setLayout(new FillLayout());
         navigationPanel.setHeight(400);
-        panel.add(navigationPanel, new RowData(1, 1, new Margins(4)));
-        // panel.setTopComponent(toolbar());
+        panel.add(navigationPanel, new RowData(1, 1, new Margins(0)));
+
         add(panel, new FlowData(0));
 
-        //  final private AnnotatedTimeLinePanel line1 = new AnnotatedTimeLinePanel(true);
         addBlankLineToBottom();
 
-        // add(bottom, new FlowData(0));
         layout(true);
 
     }
@@ -314,6 +287,7 @@ public class CenterPanel extends NavigationEventProvider {
         final AnnotatedTimeLinePanel line = createLine(Const.DEFAULT_CHART_NAME);
         lines.put(Const.DEFAULT_CHART_NAME, line);
         line.setHeight(400);
+
         addLinesToBottom();
     }
 
@@ -324,6 +298,7 @@ public class CenterPanel extends NavigationEventProvider {
         bottom.setFrame(false);
         bottom.setCollapsible(true);
         bottom.setHeaderVisible(false);
+
         bottom.setHeight(400);
         return bottom;
     }

@@ -12,6 +12,7 @@ import com.nimbits.client.service.subscription.*;
 import com.nimbits.server.email.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.facebook.*;
+import com.nimbits.server.feed.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.instantmessage.*;
 import com.nimbits.server.recordedvalue.*;
@@ -169,6 +170,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
                 doXMPP(user, subscription, entity, point, value);
                 break;
             case feed:
+                FeedServiceFactory.getInstance().postToFeed(user, value);
                 break;
         }
     }

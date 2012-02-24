@@ -107,6 +107,14 @@
     </servlet-mapping>
 
 
+    <servlet>
+        <servlet-name>feedService</servlet-name>
+        <servlet-class>com.nimbits.server.feed.FeedImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>feedService</servlet-name>
+        <url-pattern>/nimbits/feed</url-pattern>
+    </servlet-mapping>
 
 
     <servlet>

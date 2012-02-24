@@ -53,7 +53,7 @@ public class GxtModel extends BaseTreeModel implements Serializable {
         set(Const.PARAM_ID, this.uuid);
         set(Const.PARAM_NAME, this.name.getValue());
         set(Const.PARAM_ENTITY_TYPE,  this.entityType.getCode());
-
+        set(Const.PARAM_DIRTY, "no");
     }
 
     public AlertType getAlertType() {
@@ -97,10 +97,12 @@ public class GxtModel extends BaseTreeModel implements Serializable {
     }
 
     public boolean isDirty() {
+
         return isDirty;
     }
 
     public void setDirty(boolean dirty) {
+        set(Const.PARAM_DIRTY, dirty ? "yes" : "no");
         isDirty = dirty;
     }
 

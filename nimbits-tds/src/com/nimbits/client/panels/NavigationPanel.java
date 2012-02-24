@@ -19,9 +19,7 @@ import com.extjs.gxt.ui.client.dnd.DND.*;
 import com.extjs.gxt.ui.client.dnd.*;
 import com.extjs.gxt.ui.client.event.*;
 import com.extjs.gxt.ui.client.store.*;
-import com.extjs.gxt.ui.client.widget.*;
 import com.extjs.gxt.ui.client.widget.grid.*;
-import com.extjs.gxt.ui.client.widget.layout.*;
 import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.*;
@@ -43,7 +41,6 @@ import java.util.*;
 
 class NavigationPanel extends NavigationEventProvider {
 
-    private final ContentPanel mainPanel;
     private EntityTree<ModelData> tree;
     private TreeStore<ModelData> store;
     private Timer updater;
@@ -52,63 +49,38 @@ class NavigationPanel extends NavigationEventProvider {
     List<String> parents;
     EntityContextMenu context;
     private final User user;
-
+    private boolean saveWithCurrentTime;
+    private boolean autoSaveNumbers;
+    private final static int valueColumnIndex = 1;
     public NavigationPanel(final User user,
-                           final ClientType clientType,
                            final Map<String, String> settings) {
 
         this.settings = settings;
-       // this.clientType = clientType;
         this.user = user;
-        mainPanel = new ContentPanel();
-        mainPanel.setHeaderVisible(false);
-        mainPanel.setFrame(false);
-        mainPanel.setBodyBorder(false);
-        mainPanel.setScrollMode(Scroll.AUTOY);
-        mainPanel.setLayout(new FillLayout());
-
-        add(mainPanel);
-        NavigationToolBar toolBar = createToolbar(settings);
-
-        mainPanel.setTopComponent(toolBar);
         setBorders(false);
-        setScrollMode(Scroll.NONE);
+        setScrollMode(Scroll.AUTO);
         getUserEntities(false);
-
-
+        this.saveWithCurrentTime = true;
+        this.autoSaveNumbers = true;
     }
 
-    private NavigationToolBar createToolbar(Map<String, String> settings) {
-        NavigationToolBar toolBar = new NavigationToolBar(tree, settings);
+    public void setAutoSaveNumbers(boolean autoSaveNumbers) {
+        this.autoSaveNumbers = autoSaveNumbers;
+    }
 
-        toolBar.addEntityModifiedListeners(new NavigationToolBar.EntityModifiedListener() {
-            @Override
-            public void onEntityModified(GxtModel model, Action action) {
-                switch (action) {
-                    case update: case create:
-                        addUpdateTreeModel(model, false);
-                        break;
-                    case refresh:
-                        getUserEntities(true);
-                        break;
-                }
-            }
-        });
+    public void setSaveWithCurrentTime(boolean saveWithCurrentTime) {
+        this.saveWithCurrentTime = saveWithCurrentTime;
+    }
 
-        toolBar.addExpandListeners(new NavigationToolBar.ExpandListener() {
-            @Override
-            public void onExpand() {
-                if (!expanded) {
-                    tree.expandAll();
-                    expanded=true;
-                }
-                else {
-                    tree.collapseAll();
-                    expanded=false;
-                }
-            }
-        });
-        return toolBar;
+    public void toggleExpansion() {
+        if (!expanded) {
+            tree.expandAll();
+            expanded=true;
+        }
+        else {
+            tree.collapseAll();
+            expanded=false;
+        }
     }
 
     private void addEntity(final Entity entity) {
@@ -122,10 +94,14 @@ class NavigationPanel extends NavigationEventProvider {
 
         store = new TreeStore<ModelData>();
         ColumnConfigs columnConfigs = new ColumnConfigs();
+
         ColumnModel cm = new ColumnModel(
                 Arrays.asList(
                         columnConfigs.pointNameColumn(true),
-                        columnConfigs.currentValueColumn())
+                        columnConfigs.currentValueColumn(),
+                        columnConfigs.timestampColumn(),
+                        columnConfigs.noteColumn(),
+                        columnConfigs.dataColumn())
         );
         tree = new EntityTree<ModelData>(store, cm);
 
@@ -137,8 +113,8 @@ class NavigationPanel extends NavigationEventProvider {
         treeStoreBuilder(result);
         treeDNDBuilder();
 
-        mainPanel.removeAll();
-        mainPanel.add(tree);
+        removeAll();
+        add(tree);
 
 
     }
@@ -155,7 +131,7 @@ class NavigationPanel extends NavigationEventProvider {
     }
 
     private void treePropertyBuilder() {
-       context = new EntityContextMenu(tree, settings);
+        context = new EntityContextMenu(tree, settings);
         context.addEntityModifiedListeners(new EntityContextMenu.EntityModifiedListener() {
             @Override
             public void onEntityModified(GxtModel model, Action action) {
@@ -172,6 +148,7 @@ class NavigationPanel extends NavigationEventProvider {
         });
         tree.setContextMenu(context);
         tree.setStateful(true);
+
         tree.setClicksToEdit(EditorGrid.ClicksToEdit.ONE);
         tree.setTrackMouseOver(true);
         tree.getView().setAutoFill(true);
@@ -362,10 +339,7 @@ class NavigationPanel extends NavigationEventProvider {
 
 
                     for (final ModelData m : models.getAllItems()) {
-
                         final GxtModel model = (GxtModel) m;
-
-
                         if (!model.isDirty() && model.getEntityType().equals(EntityType.point)) {
 
                             if (stringPointMap.containsKey(model.getUUID())) {
@@ -387,8 +361,6 @@ class NavigationPanel extends NavigationEventProvider {
                     }
                 }
             });
-
-
         }
     }
 
@@ -403,34 +375,34 @@ class NavigationPanel extends NavigationEventProvider {
 
             if (mx != null) {
                 GxtModel model = ((GxtModel) mx);
-                Entity entity =  model.getBaseEntity();
 
-                switch (entity.getEntityType()) {
+
+                switch (model.getBaseEntity().getEntityType()) {
 
                     case user:
                         break;
                     case point:
-                        addEntityChildren(entity, model);
-                        notifyEntityClickedListener(entity);
+//                        addEntityChildren(entity, model);
+                        notifyEntityClickedListener(model);
                         break;
                     case category:
-                        addEntityChildren(entity, model);
-                        notifyEntityClickedListener(entity);
+//                        addEntityChildren(entity, model);
+                        notifyEntityClickedListener(model);
                         break;
                     case file:
-                        notifyEntityClickedListener(entity);
+                        notifyEntityClickedListener(model);
                         break;
                     case subscription:
-                        addEntityChildren(entity, model);
-                        notifyEntityClickedListener(entity);
+//                        addEntityChildren(entity, model);
+                        notifyEntityClickedListener(model);
                         break;
                     case userConnection:
                         break;
                     case calculation:
-                        context.showCalcPanel(entity);
+                        context.showCalcPanel(model.getBaseEntity());
                         break;
                     case intelligence:
-                        context.showIntelligencePanel(entity);
+                        context.showIntelligencePanel(model.getBaseEntity());
                         break;
                 }
 
@@ -441,54 +413,65 @@ class NavigationPanel extends NavigationEventProvider {
 
     };
 
-    private void addEntityChildren(Entity entity, GxtModel model) {
-        if (model.getChildCount() > 0)
-            for (int i = 0; i < model.getChildCount(); i++) {
-                GxtModel m = (GxtModel) model.getChild(i);
-                Entity c =model.getBaseEntity();
-                addEntityChildren(c, m);
-                entity.addChild(c);
-
-            }
-    }
+//    private void addEntityChildren(Entity entity, GxtModel model) {
+//        if (model.getChildCount() > 0)
+//            for (int i = 0; i < model.getChildCount(); i++) {
+//                GxtModel m = (GxtModel) model.getChild(i);
+//                Entity c =model.getBaseEntity();
+//                addEntityChildren(c, m);
+//                entity.addChild(c);
+//
+//            }
+//    }
 
     private final Listener<GridEvent> afterEditListener = new Listener<GridEvent>() {
 
         @Override
         public void handleEvent(final GridEvent be) {
             final GxtModel model = (GxtModel) be.getModel();
-            if (!model.isReadOnly()) {
+
+            if (be.getColIndex() == valueColumnIndex && autoSaveNumbers ) { //only save when the value is updated
+
+                if (!model.isReadOnly()) {
+                    model.setDirty(true);
+
+
+                    final Entity entity =model.getBaseEntity();
+
+
+                    final Date timestamp = saveWithCurrentTime ? new Date() : (Date) model.get(Const.PARAM_TIMESTAMP);
+
+                    final Double v = model.get(Const.PARAM_VALUE);
+                    final String note = model.get(Const.PARAM_NOTE);
+                    final String data = model.get(Const.PARAM_DATA);
+                    final Value value = ValueModelFactory.createValueModel(0.0, 0.0, v, timestamp, model.getId(), note, data);
+
+                    RecordedValueServiceAsync service = GWT.create(RecordedValueService.class);
+                    service.recordValue(entity, value, new AsyncCallback<Value>() {
+                        @Override
+                        public void onFailure(final Throwable throwable) {
+                            be.getRecord().reject(false);
+                            updater.cancel();
+                        }
+
+                        @Override
+                        public void onSuccess(final Value value) {
+                            be.getRecord().commit(false);
+                            model.setDirty(false);
+                            updateModel(value, model);
+
+                        }
+                    });
+
+                }
+            }
+            else {
                 model.setDirty(true);
-
-
-                final Entity entity =model.getBaseEntity();
-
-                final Date timestamp = new Date();
-                final Double v = model.get(Const.PARAM_VALUE);
-
-                final Value value = ValueModelFactory.createValueModel(v, timestamp);
-                RecordedValueServiceAsync service = GWT.create(RecordedValueService.class);
-                service.recordValue(entity, value, new AsyncCallback<Value>() {
-                    @Override
-                    public void onFailure(final Throwable throwable) {
-                        be.getRecord().reject(false);
-                        updater.cancel();
-                    }
-
-                    @Override
-                    public void onSuccess(final Value value) {
-                        be.getRecord().commit(false);
-                        model.setDirty(false);
-                        updateModel(value, model);
-
-                    }
-                });
-
             }
         }
     };
     //service calls
-    private void getUserEntities(final boolean refresh)  {
+    public void getUserEntities(final boolean refresh)  {
 
 
         final EntityServiceAsync service = GWT.create(EntityService.class);
@@ -515,5 +498,40 @@ class NavigationPanel extends NavigationEventProvider {
 
     }
 
+
+    public void saveAll() {
+
+        //  final List<GxtModel> models = grid.getSelectionModel().getSelectedItems();
+        RecordedValueServiceAsync service = GWT.create(RecordedValueService.class);
+
+        for (final ModelData x :  tree.getTreeStore().findModels(Const.PARAM_DIRTY, "yes")) {
+            final GxtModel model = (GxtModel)x;
+            Date date = model.get(Const.PARAM_TIMESTAMP) == null ? new Date() : (Date) model.get(Const.PARAM_TIMESTAMP);
+            final Date timestamp = saveWithCurrentTime ? new Date() : date;
+            final double v = model.get(Const.PARAM_VALUE) == null ? 0.0 : Double.valueOf(model.get(Const.PARAM_VALUE).toString());
+            final String note = model.get(Const.PARAM_NOTE);
+            final String data = model.get(Const.PARAM_DATA);
+            final Value value = ValueModelFactory.createValueModel(0.0, 0.0, v, timestamp, model.getId(), note, data);
+
+            service.recordValue(model.getBaseEntity(), value, new AsyncCallback<Value>() {
+                @Override
+                public void onFailure(final Throwable throwable) {
+
+                    GWT.log(throwable.getMessage(), throwable);
+                }
+
+                @Override
+                public void onSuccess(final Value value) {
+                    updateModel(value, model);
+                    notifyValueEnteredListener(model.getBaseEntity(), value);
+                }
+            });
+            model.setDirty(false);
+        }
+        tree.getTreeStore().commitChanges();
+
+
+
+    }
 
 }

@@ -168,7 +168,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
             case instantMessage:
                 doXMPP(user, subscription, entity, point, value);
                 break;
-            case stream:
+            case feed:
                 break;
         }
     }

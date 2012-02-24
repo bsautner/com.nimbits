@@ -43,7 +43,10 @@ public enum Action {
     user(Const.ACTION_USER),
     category(Const.ACTION_CATEGORY),
     point(Const.ACTION_POINT),
-    refresh(Const.ACTION_REFRESH);
+    refresh(Const.ACTION_REFRESH),
+    expand(Const.ACTION_EXPAND),
+    logout(Const.ACTION_LOGOUT),
+    xmpp(Const.ACTION_XMPP), addChart(Const.ACTION_ADD_CHART), save(Const.ACTION_SAVE);
     private static final Map<String, Action> lookup = new HashMap<String, Action>();
 
     static {

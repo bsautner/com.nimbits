@@ -139,7 +139,7 @@ public class SubscriptionPanel extends NavigationEventProvider {
        // ops.add(new DeliveryMethodOption(SubscriptionNotifyMethod.stream));
 
         ops.add(new DeliveryMethodOption(SubscriptionNotifyMethod.email));
-
+        ops.add(new DeliveryMethodOption(SubscriptionNotifyMethod.feed));
         if (settings.containsKey(Const.SETTING_TWITTER_CLIENT_ID) && !Utils.isEmptyString(settings.get(Const.SETTING_TWITTER_CLIENT_ID))) {
             ops.add(new DeliveryMethodOption(SubscriptionNotifyMethod.twitter));
         }

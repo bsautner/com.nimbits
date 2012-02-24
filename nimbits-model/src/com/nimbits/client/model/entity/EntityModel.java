@@ -31,7 +31,7 @@ public class EntityModel  implements Serializable, Entity {
     private String[] accessKeys = null;
     private boolean readOnly = false;
     private String blobKey;
-    private List<Entity> children;
+   // private List<Entity> children;
     private List<Point> points;
     private String host;
 
@@ -179,22 +179,22 @@ public class EntityModel  implements Serializable, Entity {
     public void setBlobKey(String blobKey) {
         this.blobKey = blobKey;
     }
-    @Override
-    public List<Entity> getChildren() {
-        if (children == null) {
-            children = new ArrayList<Entity>();
-
-        }
-        return children;
-    }
-
-    public void addChild(Entity entity) {
-        if (children == null) {
-            children = new ArrayList<Entity>();
-
-        }
-        children.add(entity);
-    }
+//    @Override
+//    public List<Entity> getChildren() {
+//        if (children == null) {
+//            children = new ArrayList<Entity>();
+//
+//        }
+//        return children;
+//    }
+//
+//    public void addChild(Entity entity) {
+//        if (children == null) {
+//            children = new ArrayList<Entity>();
+//
+//        }
+//        children.add(entity);
+//    }
 
     @Override
     public void setPoints(List<Point> points) {

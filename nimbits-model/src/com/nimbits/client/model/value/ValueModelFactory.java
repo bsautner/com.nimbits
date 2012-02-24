@@ -87,7 +87,11 @@ public class ValueModelFactory {
         return new ValueModel(0.0, 0.0, d, timestamp, null, "", "");
 
     }
+    public static ValueModel createValueModel(final double d, final String note, final Date timestamp) {
 
+        return new ValueModel(0.0, 0.0, d, timestamp, null,note, "");
+
+    }
     public static List<Value> createValueModels(final List<Value> values) {
         final LinkedList<Value> retObj = new LinkedList<Value>();
 

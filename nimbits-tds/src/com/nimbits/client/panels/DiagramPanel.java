@@ -421,7 +421,7 @@ public class DiagramPanel extends NavigationEventProvider {
                         PointModel p = (PointModel) points.get(pointName);
 
                         Entity entity = EntityModelFactory.createEntity(null,p, pointName);
-                        notifyEntityClickedListener(entity);
+                        notifyEntityClickedListener(new GxtModel(entity));
 
 
                     }
@@ -456,7 +456,7 @@ public class DiagramPanel extends NavigationEventProvider {
                     EntityModel diagramModel = (EntityModel) diagrams.get(diagramName);
                     //diagramModel.setClientType(clientType);
                     Entity entity = EntityModelFactory.createEntity(diagramModel);
-                    notifyEntityClickedListener(entity);
+                    notifyEntityClickedListener(new GxtModel(entity));
 
                 }
             }
@@ -599,7 +599,7 @@ public class DiagramPanel extends NavigationEventProvider {
                 if (points.containsKey(pointName)) {
                     PointModel p = (PointModel) points.get(pointName);
                     Entity entity = EntityModelFactory.createEntity(null, p, pointName);
-                    notifyEntityClickedListener(entity);
+                    notifyEntityClickedListener(new GxtModel(entity));
 
                 }
             }
@@ -632,7 +632,7 @@ public class DiagramPanel extends NavigationEventProvider {
                     EntityModel diagramModel = (EntityModel) diagrams.get(diagramName);
                     //diagramModel.setClientType(clientType);
                     Entity entity = EntityModelFactory.createEntity(diagramModel);
-                    notifyEntityClickedListener(entity);
+                    notifyEntityClickedListener(new GxtModel(entity));
 
                 }
             }
@@ -778,7 +778,7 @@ public class DiagramPanel extends NavigationEventProvider {
                     PointModel p = (PointModel) points.get(pointName);
 
                     Entity entity = EntityModelFactory.createEntity(null, p, pointName);
-                  notifyEntityClickedListener(entity);
+                  notifyEntityClickedListener(new GxtModel(entity));
 
                 }
             }
@@ -811,7 +811,7 @@ public class DiagramPanel extends NavigationEventProvider {
                     EntityModel diagramModel = (EntityModel) diagrams.get(diagramName);
                     //diagramModel.setClientType(clientType);
                     Entity entity = EntityModelFactory.createEntity(diagramModel);
-                    notifyEntityClickedListener(entity);
+                    notifyEntityClickedListener(new GxtModel(entity));
                 }
             }
         });

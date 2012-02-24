@@ -63,7 +63,7 @@ public class ColumnConfigs {
         return (columnNote);
     }
 
-    public ColumnConfig addDataColumn( ) {
+    public ColumnConfig dataColumn() {
         final ColumnConfig columnData = new ColumnConfig();
         columnData.setId(Const.PARAM_DATA);
         columnData.setHeader(Const.WORD_DATA);

@@ -342,6 +342,12 @@ public class Const {
     public static final String ACTION_CATEGORY = "category";
     public static final String ACTION_POINT = "point";
     public static final String ACTION_REFRESH = "refresh" ;
+    public static final String ACTION_EXPAND = "expand";
+    public static final String ACTION_LOGOUT = "logout";
+    public static final String ACTION_XMPP = "xmpp";
+    public static final String ACTION_ADD_CHART = "addchart";
+    public static final String ACTION_SAVE = "save";
+    public static final String PARAM_DIRTY = "dirty";
 
     public static String getConnectionInviteEmail(final EmailAddress email) {
         return "<P STYLE=\"margin-bottom: 0in\"> " + email.getValue() +

@@ -225,9 +225,6 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
         return retObj;
 
-//        Entity e = EntityServiceFactory.getDaoInstance(getUser()).addUpdateEntity(entity);
-//        IntelligenceServiceFactory.getDaoInstance().addUpdateIntelligence(update);
-//        return e;
 
     }
 

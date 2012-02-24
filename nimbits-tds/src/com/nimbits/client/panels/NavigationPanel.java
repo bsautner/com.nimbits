@@ -111,11 +111,12 @@ class NavigationPanel extends NavigationEventProvider {
         tree.addListener(Events.AfterEdit, afterEditListener);
 
         treePropertyBuilder();
-        treeStoreBuilder(result);
+       GxtModel userModel =  treeStoreBuilder(result);
         treeDNDBuilder();
 
         removeAll();
         add(tree);
+        tree.setExpanded(userModel, true);
 
 
     }
@@ -240,20 +241,21 @@ class NavigationPanel extends NavigationEventProvider {
         // return model;
     }
 
-    private void treeStoreBuilder(final List<Entity> result) {
+    private GxtModel treeStoreBuilder(final List<Entity> result) {
 
         final List<ModelData> model = new ArrayList<ModelData>();
         parents = new ArrayList<String>();
         for (final Entity entity : result) {
             addEntity(entity);
         }
-        // addEntity(entity);
+
         final GxtModel userModel = new GxtModel(user);
         addChildrenToModel(result, parents, userModel);
         model.add(userModel);
 
         store.add(model, true);
-        tree.expandAll();
+
+       return userModel;
 
     }
 

@@ -61,11 +61,6 @@ public interface Entity  extends Serializable {
 
     void setBlobKey(String blobKey);
 
-    List<Entity> getChildren();
-
-    void addChild(Entity entity);
-
-
     void setPoints(List<Point> points);
 
     void setHost(String host);

@@ -21,6 +21,7 @@ import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.button.ToolButton;
 import com.extjs.gxt.ui.client.widget.form.NumberField;
 import com.extjs.gxt.ui.client.widget.form.TextField;
+import com.extjs.gxt.ui.client.widget.layout.*;
 import com.extjs.gxt.ui.client.widget.toolbar.SeparatorToolItem;
 import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
 import com.google.gwt.core.client.GWT;
@@ -185,20 +186,22 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
     private void drawChart() {
         layout();
         line.draw(dataTable, createOptions());
+
     }
 
     @Override
     protected void onRender(final Element parent, final int index) {
         super.onRender(parent, index);
-
+        setLayout(new FillLayout());
         mainPanel = new ContentPanel();
-        mainPanel.setBodyBorder(true);
+        mainPanel.setBodyBorder(false);
         mainPanel.setHeaderVisible(headerVisible);
 
-        mainPanel.setFrame(true);
+        mainPanel.setFrame(false);
         mainPanel.setTopComponent(toolbar());
-        //   mainPanel.setLayout(new FillLayout());
-        mainPanel.setHeight(400);
+
+       // mainPanel.setHeight(400);
+
         if (headerVisible) {
             mainPanel.getHeader().addTool(
                     maximizeToolbarButton());
@@ -208,7 +211,7 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
         setDropTarget(mainPanel);
         add(mainPanel);
         initChart();
-        //  layout(true);
+           layout(true);
     }
 
     private ToolBar toolbar() {
@@ -229,11 +232,9 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
             @Override
             public void handleEvent(FieldEvent be) {
                 if (be.getKeyCode() == 13) {
-                    try {
+
                         refreshChart();
-                    } catch (NimbitsException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                    }
+
                 }
             }
         });
@@ -248,11 +249,9 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
             @Override
             public void handleEvent(FieldEvent be) {
                 if (be.getKeyCode() == 13) {
-                    try {
+
                         refreshChart();
-                    } catch (NimbitsException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                    }
+
                 }
             }
         });
@@ -292,11 +291,9 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
         refresh.addListener(Events.OnClick, new Listener<BaseEvent>() {
             @Override
             public void handleEvent(final BaseEvent be) {
-                try {
+
                     refreshChart();
-                } catch (NimbitsException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                }
+
             }
         });
 
@@ -370,11 +367,9 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
                 //  mainPanel.add(h);
                 layout();
                 if (points != null && points.size() > 0) {
-                    try {
+
                         refreshChart();
-                    } catch (NimbitsException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                    }
+
                 }
             }
         };
@@ -389,9 +384,11 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
         dataTable.addColumn(ColumnType.STRING, "text0");
     }
 
-    private void refreshChart() throws NimbitsException {
+    private void refreshChart()   {
 
-        timespan = TimespanServiceClientImpl.createTimespan(startDateSelector.getValue().toString(), endDateSelector.getValue().toString());
+        try {
+            timespan = TimespanServiceClientImpl.createTimespan(startDateSelector.getValue().toString(), endDateSelector.getValue().toString());
+
         if (line != null && timespan != null) {
             line.setVisibleChartRange(timespan.getStart(), timespan.getEnd());
             dataTable = DataTable.create();
@@ -401,7 +398,9 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
                 addPointToChart(points.get(pointName));
             }
         }
-
+        } catch (NimbitsException e) {
+           GWT.log(e.getMessage(), e);
+        }
 
     }
 

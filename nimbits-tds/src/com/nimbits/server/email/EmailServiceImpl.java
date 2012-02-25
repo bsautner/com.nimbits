@@ -32,19 +32,18 @@ public class EmailServiceImpl implements EmailService {
 
     private static final Logger log = Logger.getLogger(EmailServiceImpl.class.getName());
 
-   private String getUrl() {
-       String hostUrl;
-       String environment = System.getProperty("com.google.appengine.runtime.environment");
-       if (StringUtils.equals("Production", environment)) {
-           String applicationId = System.getProperty("com.google.appengine.application.id");
-           String version = System.getProperty("com.google.appengine.application.version");
-           hostUrl = "http://"+version+"."+applicationId+".appspot.com/";
-       } else {
-           hostUrl = "http://localhost:8888";
-       }
-       return hostUrl;
-   }
-
+    private String getUrl() {
+        String hostUrl;
+        String environment = System.getProperty("com.google.appengine.runtime.environment");
+        if (StringUtils.equals("Production", environment)) {
+            String applicationId = System.getProperty("com.google.appengine.application.id");
+            String version = System.getProperty("com.google.appengine.application.version");
+            hostUrl = "http://"+version+"."+applicationId+".appspot.com/";
+        } else {
+            hostUrl = "http://localhost:8888";
+        }
+        return hostUrl;
+    }
 
     private void send(final Message msg) {
 

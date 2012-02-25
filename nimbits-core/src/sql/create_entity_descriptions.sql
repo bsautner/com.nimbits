@@ -1,6 +1,21 @@
-drop table if exists nimbits_schema.ENTITY_DESCRIPTIONS;
+create schema if not exists nimbits_schema;
+grant all privileges on nimbits_schema.* to root@localhost;
 
+drop table if exists nimbits_schema.ENTITY_DESCRIPTIONS;
 drop table if exists nimbits_schema.SERVERS;
+drop table if exists nimbits_schema.SEARCH_LOG;
+
+create table nimbits_schema.SEARCH_LOG (
+  ID_SEARCH_LOG INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  SEARCH_TEXT varchar(200) not null,
+  SEARCH_COUNT INT NOT NULL default 1,
+  TS timestamp not null
+ ) ENGINE=MyISAM;
+
+
+
+create unique index ID_SEARCH_LOG_UNIQUE on nimbits_schema.SEARCH_LOG  (ID_SEARCH_LOG);
+create unique index SEARCH_TEXT_UNIQUE on nimbits_schema.SEARCH_LOG  (SEARCH_TEXT);
 
 drop table if exists nimbits_schema.SEARCH_LOG;
 
@@ -16,9 +31,6 @@ create table nimbits_schema.SERVERS (
 
 create unique index ID_SERVERS_UNIQUE on nimbits_schema.SERVERS (ID_SERVER);
 create unique index base_url_servers_UNIQUE on nimbits_schema.SERVERS (BASE_URL);
-
-
-
 
 create table nimbits_schema.ENTITY_DESCRIPTIONS (
   FK_SERVER INT NOT NULL,

@@ -88,7 +88,7 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
     }
 
     @Override
-    public Value recordValue(final Value v) throws NimbitsException {
+    public Value recordValue(final Value v)  {
 
         final String k = MemCacheHelper.currentValueCacheKey(p.getUUID());
         final String b = MemCacheHelper.valueBufferCacheKey(p);

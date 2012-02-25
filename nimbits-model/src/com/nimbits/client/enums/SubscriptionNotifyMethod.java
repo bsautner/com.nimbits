@@ -27,7 +27,7 @@ public enum SubscriptionNotifyMethod {
     facebook(1, "Facebook"),
     twitter(2, "Twitter"),
     instantMessage(3, "Instant Message (XMPP)"),
-    stream(4, "Nimbits Stream");
+    feed(4, "Nimbits Data Feed");
 
 
 

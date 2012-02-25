@@ -14,6 +14,7 @@
 package com.nimbits.client.panels;
 
 import com.extjs.gxt.ui.client.widget.*;
+import com.nimbits.client.model.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.value.*;
 
@@ -107,7 +108,7 @@ public abstract class NavigationEventProvider extends LayoutContainer {
 
     // Point Click Handlers
     public interface EntityClickedListener {
-        void onEntityClicked(final Entity entity);
+        void onEntityClicked(final GxtModel entity);
 
     }
 
@@ -115,7 +116,7 @@ public abstract class NavigationEventProvider extends LayoutContainer {
         entityClickedListeners.add(listener);
     }
 
-    void notifyEntityClickedListener(final Entity entity)  {
+    void notifyEntityClickedListener(final GxtModel entity)  {
 
         for (EntityClickedListener clickedListener :entityClickedListeners) {
             clickedListener.onEntityClicked(entity);

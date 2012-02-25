@@ -209,16 +209,6 @@ public class EntityStore implements Entity {
     }
 
     @Override
-    public List<Entity> getChildren() {
-        return null;  //auto generated
-    }
-
-    @Override
-    public void addChild(Entity entity) {
-        //not implemented
-    }
-
-    @Override
     public void setPoints(List<Point> points) {
         //not implemented
     }

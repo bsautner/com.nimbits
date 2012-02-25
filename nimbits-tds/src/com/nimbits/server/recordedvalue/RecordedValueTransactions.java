@@ -24,7 +24,7 @@ public interface RecordedValueTransactions {
     Value getRecordedValuePrecedingTimestamp(final Date timestamp);
 
 
-    Value recordValue(final Value v) throws NimbitsException;
+    Value recordValue(final Value v) ;
 
     // this can throw an exception if the indexes are building on prod
     List<Value> getTopDataSeries(final int maxValues);

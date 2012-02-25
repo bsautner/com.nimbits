@@ -193,8 +193,8 @@ public class RecordedValueDAOImpl implements RecordedValueTransactions {
     }
 
     @Override
-    public Value recordValue(final Value v) throws NimbitsException {
-        throw new NimbitsException("Not Implemented");
+    public Value recordValue(final Value v)   {
+         return null;
 
     }
 

@@ -25,13 +25,18 @@ import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
+import com.nimbits.client.controls.*;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.icons.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.service.datapoints.*;
+import com.nimbits.client.service.instantmessage.*;
 import com.nimbits.client.service.subscription.*;
+import com.nimbits.client.service.twitter.*;
 
 import java.util.*;
 
@@ -41,101 +46,29 @@ import java.util.*;
  * Date: 7/23/11
  * Time: 10:37 AM
  */
-class CenterPanel extends NavigationEventProvider {
+public class CenterPanel extends NavigationEventProvider {
 
     final private Map<String, Entity> entities = new HashMap<String, Entity>();
-    final private PointGridPanel grid = new PointGridPanel();
+    //final private PointGridPanel grid = new PointGridPanel();
     private final Map<String, AnnotatedTimeLinePanel> lines = new HashMap<String, AnnotatedTimeLinePanel>();
     private ContentPanel bottom;
+    private NavigationPanel navigationPanel;
+    private Map<String, String> settings;
+    private LoginInfo loginInfo;
+
+
+    public CenterPanel(LoginInfo info, Map<String, String> settings) {
+        this.loginInfo = info;
+        this.settings = settings;
+    }
 
     protected void onRender(final Element target, final int index) {
         super.onRender(target, index);
-        grid.addEntityClickedListeners(new EntityClickedListener() {
-
-            @Override
-            public void onEntityClicked(final Entity entity) {
-
-                addEntity(entity);
-
-
-            }
-        });
-
-        grid.addValueEnteredListeners(new ValueEnteredListener() {
-
-            @Override
-            public void onValueEntered(final Entity entity, final Value value) {
-                for (AnnotatedTimeLinePanel line : lines.values()) {
-                    if (line.containsPoint(entity)) {
-                        line.addValue(entity, value);
-                    }
-                }
-            }
-        });
-
-
         loadLayout();
 
     }
 
-    private ToolBar toolbar() {
-        ToolBar toolBar = new ToolBar();
 
-
-        Button addChartButton = new Button("Add Chart");
-        addChartButton.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.chart24()));
-        addChartButton.setToolTip("Add another chart");
-
-        addChartButton.addListener(Events.OnClick, new Listener<BaseEvent>() {
-            @Override
-            public void handleEvent(BaseEvent baseEvent) {
-                final String name = (lines.size() == 0) ? Const.DEFAULT_CHART_NAME : "line" + lines.size() + 1;
-                lines.put(name, createLine(name));
-                addLinesToBottom();
-            }
-        });
-        toolBar.add(addChartButton);
-
-
-        Button removeButton = new Button("Hide Point");
-        removeButton.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.delete()));
-        removeButton.setToolTip("Remove Point from display");
-
-        removeButton.addListener(Events.OnClick, new Listener<BaseEvent>() {
-            @Override
-            public void handleEvent(BaseEvent baseEvent) {
-                List<Entity> selectedPoints = grid.getSelectedPoints();
-                for (Entity px : selectedPoints) {
-                    removePoint(px);
-                }
-                addLinesToBottom();
-            }
-        });
-        toolBar.add(removeButton);
-
-
-        Button saveButton = new Button("Save");
-        saveButton.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.SaveAll()));
-        saveButton.setToolTip("Save checked rows");
-
-        saveButton.addListener(Events.OnClick, new Listener<BaseEvent>() {
-            @Override
-            public void handleEvent(BaseEvent baseEvent) {
-                try {
-                    grid.saveSelectedPoints();
-                } catch (NimbitsException e) {
-                    Info.display("Error Saving", e.getMessage());
-                }
-
-
-            }
-        });
-        toolBar.add(saveButton);
-
-
-        return toolBar;
-
-    }
 
     private AnnotatedTimeLinePanel createLine(final String name) {
         final AnnotatedTimeLinePanel line = new AnnotatedTimeLinePanel(true, name);
@@ -189,7 +122,7 @@ class CenterPanel extends NavigationEventProvider {
             double w = 1.0 / (double) lines.size();
             l.initChart();
             //   l.refreshChart();
-            bottom.add(l, new RowData(w, 1, new Margins(4)));
+            bottom.add(l, new RowData(w, 1, new Margins(0)));
         }
         add(bottom, new FlowData(0));
         doLayout(true);
@@ -199,42 +132,162 @@ class CenterPanel extends NavigationEventProvider {
         if (bottom != null && getItems().contains(bottom)) {
             remove(bottom);
         }
+
         bottom = bottomPanel();
     }
 
-    public void removePoint(final Entity entity) {
-        for (AnnotatedTimeLinePanel line : lines.values()) {
-            line.removePoint(entity);
-            entities.remove(entity.getUUID());
-        }
-        grid.removePoint(entity);
+
+
+    final NavigationPanel createNavigationPanel() {
+        final NavigationPanel navTree =
+                new NavigationPanel(loginInfo.getUser(), settings);
+
+
+        navTree.addEntityClickedListeners(new EntityClickedListener() {
+
+            @Override
+            public void onEntityClicked(final GxtModel c)  {
+                //  center.addEntity(c);
+                //notifyEntityClickedListener(c);
+
+            }
+
+        });
+
+        navTree.addEntityDeletedListeners(new EntityDeletedListener() {
+
+            @Override
+            public void onEntityDeleted(final Entity c)  {
+                notifyEntityDeletedListener(c);
+                //TODO center.removePoint(c);
+            }
+
+        });
+
+
+        return navTree;
+
     }
 
     private void loadLayout() {
 
-        final ContentPanel panel = new ContentPanel();
-        panel.setHeading("Data Channels");
-        panel.setLayout(new RowLayout(Style.Orientation.VERTICAL));
+        final ContentPanel panel = new ContentPanel( );
+        final String logoutUrl = (loginInfo != null) ? loginInfo.getLogoutUrl() : Const.PATH_NIMBITS_HOME;
 
-        // panel.setSize(400, 300);
-        panel.setFrame(true);
+        MainMenuBar toolBar = initToolbar(loginInfo, settings, logoutUrl);
+        panel.setTopComponent(toolBar);
+        panel.setLayout(new RowLayout(Style.Orientation.VERTICAL));
+        panel.setHeaderVisible(true);
+        panel.setHeading(Const.CONST_SERVER_NAME + " " + Const.CONST_SERVER_VERSION);
+        panel.setFrame(false);
+       // panel.setHeight("100%");
         panel.setCollapsible(true);
-        panel.setHeight("100%");
-        panel.add(grid, new RowData(1, 1, new Margins(4)));
-        panel.setTopComponent(toolbar());
+
+        navigationPanel = createNavigationPanel();
+        navigationPanel.setLayout(new FillLayout());
+        navigationPanel.setHeight(400);
+        panel.add(navigationPanel, new RowData(1, 1, new Margins(0)));
+
         add(panel, new FlowData(0));
 
-        //  final private AnnotatedTimeLinePanel line1 = new AnnotatedTimeLinePanel(true);
         addBlankLineToBottom();
 
-        // add(bottom, new FlowData(0));
         layout(true);
 
+    }
+
+    private MainMenuBar initToolbar(final LoginInfo loginInfo, Map<String, String> settings, String logoutUrl) {
+        MainMenuBar toolBar = new MainMenuBar(loginInfo, settings);
+        toolBar.addEntityModifiedListeners(new MainMenuBar.EntityModifiedListener() {
+            @Override
+            public void onEntityModified(GxtModel model, Action action) {
+                switch (action) {
+                    case update: case create:
+                        navigationPanel.addUpdateTreeModel(model, false);
+                        break;
+                    case refresh:
+                        navigationPanel.getUserEntities(true);
+                }
+
+
+            }
+        } );
+        toolBar.addActionListeners(new MainMenuBar.ActionListener() {
+            @Override
+            public void onAction(Action action) {
+                switch (action) {
+                    case expand:
+                        navigationPanel.toggleExpansion();
+                        break;
+                    case logout:
+                        Window.Location.replace(loginInfo.getLogoutUrl());
+                        break;
+                    case xmpp:
+                        sendXMPPInvite();
+                        break;
+                    case facebook:
+                        Window.Location.replace("http://apps.facebook.com/Nimbits");
+                        break;
+                    case twitter:
+                        twitterAuthorise();
+                        break;
+                    case addChart:
+                        final String name = (lines.size() == 0) ? Const.DEFAULT_CHART_NAME : "line" + lines.size() + 1;
+                        lines.put(name, createLine(name));
+                        addLinesToBottom();
+                        break;
+                    case save:
+                        navigationPanel.saveAll();
+                        break;
+                }
+            }
+        });
+        return toolBar;
+    }
+
+    private void sendXMPPInvite() {
+        IMServiceAsync IMService = GWT.create(IMService.class);
+        IMService.sendInvite(new AsyncCallback<Void>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+
+
+            }
+
+            @Override
+            public void onSuccess(Void result) {
+                Window.alert("Please check your instant messaging client for an invite to chat from nimbits1.appspot.com. You must accept the invitation in order for Nimbits to IM you.");
+
+            }
+
+        });
+    }
+
+    private void twitterAuthorise() {
+        TwitterServiceAsync twitterService = GWT.create(TwitterService.class);
+        twitterService.twitterAuthorise(loginInfo.getEmailAddress(), new AsyncCallback<String>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                GWT.log(caught.getMessage(), caught);
+            }
+
+            @Override
+            public void onSuccess(String result) {
+                //	Window.alert(result);
+                Window.Location.replace(result);
+
+            }
+
+        });
     }
 
     private void addBlankLineToBottom() {
         final AnnotatedTimeLinePanel line = createLine(Const.DEFAULT_CHART_NAME);
         lines.put(Const.DEFAULT_CHART_NAME, line);
+        line.setHeight(400);
+
         addLinesToBottom();
     }
 
@@ -245,30 +298,32 @@ class CenterPanel extends NavigationEventProvider {
         bottom.setFrame(false);
         bottom.setCollapsible(true);
         bottom.setHeaderVisible(false);
+
+        bottom.setHeight(400);
         return bottom;
     }
 
 
 
-    public void addEntity(final Entity entity) {
+    public void addEntity(final GxtModel entity) {
 
-        for (final Entity e : entity.getChildren()) {
-            addEntity(e);
-        }
+//        for (final Entity e : entity.getChildren()) {
+//            addEntity(e);
+//        }
 
         switch (entity.getEntityType()) {
             case user:
                 break;
             case point:
-                displayPoint(entity);
+                displayPoint(entity.getBaseEntity());
                 break;
             case category:
                 break;
             case file:
-                showFile(entity);
+                showFile(entity.getBaseEntity());
                 break;
             case subscription:
-                displaySubscription(entity);
+                displaySubscription(entity.getBaseEntity());
                 break;
             case userConnection:
                 break;
@@ -286,14 +341,15 @@ class CenterPanel extends NavigationEventProvider {
     private void displaySubscription(final Entity entity) {
         SubscriptionServiceAsync service = GWT.create(SubscriptionService.class);
         service.getSubscribedEntity(entity, new AsyncCallback<Entity>() {
+
             @Override
             public void onFailure(Throwable caught) {
-               GWT.log(caught.getMessage(), caught);
+                GWT.log(caught.getMessage(), caught);
             }
 
             @Override
             public void onSuccess(Entity result) {
-                 addEntity(result);
+                addEntity( new GxtModel(result));
             }
         });
 
@@ -309,7 +365,7 @@ class CenterPanel extends NavigationEventProvider {
             if (!line.containsPoint(entity) && line.isSelected()) {
                 PointServiceAsync service = GWT.create(PointService.class);
                 line.addPoint(entity);
-                grid.addEntity(entity);
+                //id.addEntity(entity);
 
             }
         }
@@ -317,48 +373,4 @@ class CenterPanel extends NavigationEventProvider {
 
     }
 
-//    public void addDiagram(final Diagram d) {
-//        final int w = (bottom.getWidth() / 2);
-//        final AnnotatedTimeLinePanel line = createLine(Const.DEFAULT_CHART_NAME);
-//        final DiagramPanel diagramPanel = new DiagramPanel(d, true, w, bottom.getHeight());
-//        diagramPanel.addPointClickedListeners(new EntityClickedListener() {
-//
-//            @Override
-//            public void onPointClicked(final Point p){
-//                showEntityData(p);
-//            }
-//
-//        });
-//        diagramPanel.addEntityClickedListeners(new EntityClickedListener() {
-//
-//            @Override
-//            public void onDiagramClicked(Diagram d) {
-//                bottom.remove(diagramPanel);
-//                addDiagram(d);
-//            }
-//        });
-//
-//        diagramPanel.addDiagramRemovedClickedListeners(new DiagramRemovedListener() {
-//            @Override
-//            public void onDiagramRemovedClicked(Diagram diagram) {
-//                bottom.remove(diagramPanel);
-//                line.resize(bottom.getHeight(), bottom.getWidth());
-//
-//                line.setWidth(bottom.getWidth());
-//                line.setHeight(bottom.getHeight());
-//                bottom.remove(line);
-//                bottom.add(line, new RowData(1, 1, new Margins(4)));
-//                layout(true);
-//            }
-//        });
-//        bottom.removeAll();
-//        lines.clear();
-//
-//        line.setSelected(true);
-//        lines.put(Const.DEFAULT_CHART_NAME, line);
-//
-//        bottom.add(diagramPanel, new RowData(w, 1, new Margins(4)));
-//        bottom.add(line, new RowData(w, 1, new Margins(4)));
-//        layout(true);
-//    }
 }

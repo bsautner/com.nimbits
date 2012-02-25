@@ -14,6 +14,7 @@
 package com.nimbits.client;
 
 import com.extjs.gxt.ui.client.Style.*;
+import com.extjs.gxt.ui.client.util.*;
 import com.extjs.gxt.ui.client.widget.*;
 import com.extjs.gxt.ui.client.widget.layout.*;
 import com.google.gwt.core.client.*;
@@ -28,6 +29,7 @@ import com.nimbits.client.exceptions.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.point.Point;
 import com.nimbits.client.panels.*;
 import com.nimbits.client.service.*;
 import com.nimbits.client.service.blob.*;
@@ -42,14 +44,13 @@ import java.util.*;
 /**
  * Entry point classes define <code>onModuleLoad()</code>
  */
-public class nimbits implements EntryPoint {
+public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
-    private MainPanel mainPanel;
+
     private LoginInfo loginInfo = null;
     private Viewport viewport;
     private final static String heading = (Const.CONST_SERVER_NAME + " " + Const.CONST_SERVER_VERSION);
     private ClientType clientType;
-
 
 
     private void loadLayout(final LoginInfo loginInfo,
@@ -57,64 +58,49 @@ public class nimbits implements EntryPoint {
                             final Map<String, String> settings,
                             final String uuid)  {
 
-        final ContentPanel contentPanel = new ContentPanel(new FillLayout());
-
-
-        final String logoutUrl = (loginInfo != null) ? loginInfo.getLogoutUrl() : Const.PATH_NIMBITS_HOME;
-
-
-        final boolean loadConnections = (settings != null && settings.containsKey(Const.SETTING_ENABLE_CONNECTIONS)
-                && settings.get(Const.SETTING_ENABLE_CONNECTIONS).equals("1"));
-
 
         viewport = new Viewport();
-        if (action.equals(Action.android)) {
-            viewport.setLayout(new FillLayout());
-            viewport.setBorders(false);
-            mainPanel = new MainPanel(loginInfo, true, settings);
-            contentPanel.add(mainPanel);
-            contentPanel.setHeaderVisible(false);
-            contentPanel.setLayout(new FillLayout());
-            viewport.add(contentPanel);
-        }
-        else {
-            viewport.setLayout(new BorderLayout());
-            viewport.setBorders(false);
+        viewport.setLayout(new BorderLayout());
+        viewport.setBorders(false);
 
-            contentPanel.setHeaderVisible(true);
-            MainMenuToolBar toolBar = new MainMenuToolBar(logoutUrl, loginInfo, settings);
-            toolBar.addReloadListener(new NavigationEventProvider.ReloadListener() {
-                @Override
-                public void onReload() {
-                    contentPanel.removeAll();
-                    mainPanel = new MainPanel(loginInfo, false, settings);
-                    contentPanel.add(mainPanel);
-                    viewport.layout(true);
 
-                }
-            });
-            contentPanel.setTopComponent(toolBar);
 
-            if (loginInfo != null) {
-                contentPanel.setHeading(heading + " " + loginInfo.getEmailAddress().getValue());
-            }
+        if (loginInfo != null) {
+            CenterPanel center = new CenterPanel(loginInfo, settings);
+            BorderLayoutData centerData = new BorderLayoutData(LayoutRegion.CENTER);
+            center.setHeight("100%");
+            center.setLayout(new FillLayout());
+            centerData.setMargins(new Margins(5));
 
-            mainPanel = new MainPanel(loginInfo, false, settings);
-            contentPanel.add(mainPanel);
-            contentPanel.setLayout(new FillLayout());
-            //addListeners();
-            viewport.add(contentPanel, new BorderLayoutData(LayoutRegion.CENTER));
+
+            FeedPanel east = new FeedPanel();
+            east.setHeight("100%");
+            east.setWidth(250);
+            east.setLayout(new FillLayout());
+            BorderLayoutData eastData = new BorderLayoutData(LayoutRegion.EAST, 250);
+            eastData.setSplit(true);
+            eastData.setCollapsible(true);
+            eastData.setMargins(new Margins(5));
+
+
+
+            viewport.add(east, eastData);
+            viewport.add(center, centerData);
             if (action.equals(Action.subscribe)) {
                 Cookies.removeCookie(Action.subscribe.name());
-                 showSubscriptionPanel(uuid, settings);
+                showSubscriptionPanel(uuid, settings);
             }
+
+
+
+            viewport.setHeight("100%");
+            RootPanel.get("main").add(viewport);
         }
-
-
-        viewport.setHeight("100%");
-        RootPanel.get("main").add(viewport);
-
     }
+
+
+
+
     public void showSubscriptionPanel(final String uuid, final Map<String, String> settings) {
 
         EntityServiceAsync service = GWT.create(EntityService.class);
@@ -139,8 +125,8 @@ public class nimbits implements EntryPoint {
                     public void onEntityAdded(Entity model) {
                         w.hide();
                         Cookies.removeCookie(Action.subscribe.name());
-                      //  mainPanel.addEntity(result);
-                     //TODO   mainPanel.addEnToTree(result);
+                        //  mainPanel.addEntity(result);
+                        //TODO   mainPanel.addEnToTree(result);
 
                     }
                 });
@@ -148,7 +134,7 @@ public class nimbits implements EntryPoint {
                 w.show();
             }
         });
-  }
+    }
     private void loadDiagramView(final Entity diagram,
                                  final ClientType clientType) {
 
@@ -161,23 +147,24 @@ public class nimbits implements EntryPoint {
         contentPanel.setHeading(Const.HTML_HOME_LINK + " | " + heading + " "
                 + diagram.getName());
 
-      //  diagram.setFullScreenView(true);
+        //  diagram.setFullScreenView(true);
 
         final DiagramPanel diagramPanel = new DiagramPanel(diagram, false, Window.getClientWidth(), Window.getClientHeight());
         diagramPanel.addEntityClickedListeners(new NavigationEventProvider.EntityClickedListener() {
 
             @Override
-            public void onEntityClicked(final Entity p) {
+            public void onEntityClicked(final GxtModel p) {
 
                 if (clientType == ClientType.other) {
                     switch (p.getEntityType()) {
                         case point:
-                          //TODO  showAnnotatedTimeLine(p);
+                            //TODO  showAnnotatedTimeLine(p);
                         case file:
-                         //TODO  loadDiagramView(d, clientType);
+                            //TODO  loadDiagramView(d, clientType);
                     }
 
-                } else {
+                }
+                else {
                     Window.Location.replace("?" + Const.PARAM_CLIENT + "=" + Const.WORD_ANDROID + "&" + Const.PARAM_POINT + "=" + p.getName());
                 }
 
@@ -202,78 +189,9 @@ public class nimbits implements EntryPoint {
 
     }
 
-//    void showAnnotatedTimeLine(final Point point) {
-//
-//        final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
-//     //   final RecordedValueServiceAsync dataService = GWT.create(RecordedValueService.class);
-//        final ContentPanel p = new ContentPanel();
-//        p.setHeading(point.getName().getValue());
-//
-//       // final List<Point> points = Arrays.asList(point);
-//        //the chart panel will determine the end date for the first show
-//        final AnnotatedTimeLinePanel annotatedTimeLinePanel = new AnnotatedTimeLinePanel(false, Const.DEFAULT_CHART_NAME);
-//        //  final Date start = new Date(result.getTime() - (1000 * 60 * 60 * 24) );
-//        // annotatedTimeLinePanel.setTimespan(new TimespanModel(start, result));
-//        //  annotatedTimeLinePanel.setPoints(points);
-//
-//        p.add(annotatedTimeLinePanel);
-//        p.setWidth(600);
-//        p.setHeight(400);
-//        annotatedTimeLinePanel.initChart();
-//        annotatedTimeLinePanel.addPoint(point);
-//        w.add(p);
-//        w.setHeight(400);
-//        w.setWidth(600);
-//        w.show();
-//
-////        dataService.getLastRecordedDate(points, new AsyncCallback<Date>() {
-////            @Override
-////            public void onFailure(Throwable caught) {
-////
-////            }
-////
-////            @Override
-////            public void onSuccess(final Date result) {
-////
-////
-////            }
-////
-////
-////        });
-//    }
-
-//    private void addListeners() {
-//
-//        mainPanel.addEntityClickedListeners(new NavigationEventProvider.EntityClickedListener() {
-//            //need to getInstance a fresh copy here
-//            @Override
-//            public void onEntityClicked(final Entity c) {
-//                switch (c.getEntityType()) {
-//                    case category:
-//                        //TODO categoryClicked(c);
-//                        break;
-//                    case point:
-//                        mainPanel.showEntityData(c);
-//                        break;
-//                    case diagram:
-//                       //TODO mainPanel.addDiagram(d);
-//                        break;
-//                }
-//
-//
-//            }
-//        });
-//
-//
-//
-//    }
-
-
     @Override
     public void onModuleLoad() {
         final String clientTypeParam = Location.getParameter(Const.PARAM_CLIENT);
-        GWT.log("onModuleLoad");
-
         String uuid = Location.getParameter(Const.PARAM_UUID);
         final String actionParam = Location.getParameter(Const.PARAM_ACTION);
         final String fb = Location.getParameter(Const.PARAM_FACEBOOK);
@@ -380,7 +298,10 @@ public class nimbits implements EntryPoint {
             @Override
             public void onFailure(Throwable caught) {
                 GWT.log(caught.getMessage(), caught);
+                if (loginInfo != null) {
                 Window.Location.replace(loginInfo.getLogoutUrl());
+                }
+
             }
 
             @Override
@@ -518,64 +439,6 @@ public class nimbits implements EntryPoint {
                 });
     }
 
-//    private void loadData(final Point point) throws NimbitsException {
-//        final List<Point> points = new ArrayList<Point>();
-//        final ContentPanel mainContentPanel = new ContentPanel();
-//        points.add(point);
-//        getViewport();
-//
-//        mainContentPanel.setHeading(point.getName() + "  " + point.getDescription());
-//        viewport.add(mainContentPanel);
-//        RootPanel.get("main").add(viewport);
-//        LoginServiceAsync loginService = GWT.create(LoginService.class);
-//
-//        loginService.login(GWT.getHostPageBaseURL(),
-//                new AsyncCallback<LoginInfo>() {
-//                    @Override
-//                    public void onFailure(Throwable error) {
-//                        handleError(error);
-//                    }
-//
-//                    @Override
-//                    public void onSuccess(LoginInfo result) {
-//                        loginInfo = result;
-//                        if ((loginInfo.isLoggedIn() && loginInfo.getUser().getId() == point.getUserFK()) || point.isPublic()) {
-//                            loadChart(points, mainContentPanel);
-//                        } else {
-//                            loadLogin();
-//                        }
-//                    }
-//
-//                });
-//
-//
-//    }
-
-    private void loadChart(final List<Point> points, final ContentPanel p) {
-        RecordedValueServiceAsync dataService;
-        dataService = GWT.create(RecordedValueService.class);
-
-        dataService.getLastRecordedDate(points, new AsyncCallback<Date>() {
-
-            @Override
-            public void onFailure(Throwable caught) {
-
-
-            }
-
-            @Override
-            public void onSuccess(Date result) {
-
-                final AnnotatedTimeLinePanel annotatedTimeLinePanel = new AnnotatedTimeLinePanel(false, Const.DEFAULT_CHART_NAME);
-                // annotatedTimeLinePanel.setPoints(points);
-                p.add(annotatedTimeLinePanel);
-                p.setWidth(viewport.getWidth());
-                p.setHeight(viewport.getHeight());
-                annotatedTimeLinePanel.initChart();
-                viewport.layout(true);
-            }
-        });
-    }
 
     private void loadLogin() {
 

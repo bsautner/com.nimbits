@@ -39,8 +39,6 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
 
 
-
-
     @Override
     public Value getCurrentValue(final Entity entity) throws NimbitsException {
 

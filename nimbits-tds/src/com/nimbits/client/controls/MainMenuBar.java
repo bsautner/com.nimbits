@@ -2,9 +2,7 @@ package com.nimbits.client.controls;
 
 import com.extjs.gxt.ui.client.event.*;
 import com.extjs.gxt.ui.client.widget.*;
-import com.extjs.gxt.ui.client.widget.Window;
 import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.form.*;
 import com.extjs.gxt.ui.client.widget.form.CheckBox;
 import com.extjs.gxt.ui.client.widget.menu.*;
 import com.extjs.gxt.ui.client.widget.menu.MenuItem;
@@ -96,7 +94,7 @@ public class MainMenuBar extends ToolBar {
         menu.add(saveToNowCheckBox);
         saveToNowCheckBox.setBoxLabel("Save with Current Time");
         saveToNowCheckBox.setValue(true);
-        autoSaveCheckBox.setBoxLabel("Auto-Save on new number value entry");
+        autoSaveCheckBox.setBoxLabel("Auto-Save when a number is entered");
         autoSaveCheckBox.setValue(true);
         menu.add(autoSaveCheckBox);
         button.setMenu(menu);

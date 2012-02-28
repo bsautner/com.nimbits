@@ -22,12 +22,12 @@ import java.util.*;
  * Time: 1:00 PM
  */
 public enum SubscriptionNotifyMethod {
-    none(-1, "None"),
-    email(0, "Email"),
-    facebook(1, "Facebook"),
-    twitter(2, "Twitter"),
-    instantMessage(3, "Instant Message (XMPP)"),
-    feed(4, "Nimbits Data Feed");
+    none(-1, "None", true),
+    email(0, "Email", true),
+    facebook(1, "Facebook", false),
+    twitter(2, "Twitter", false),
+    instantMessage(3, "Instant Message (XMPP)", true),
+    feed(4, "Nimbits Data Feed", false);
 
 
 
@@ -40,10 +40,11 @@ public enum SubscriptionNotifyMethod {
 
     private final int code;
     private final String text;
-
-    private SubscriptionNotifyMethod(int code, String text) {
+    private final boolean isJsonCompatible;
+    private SubscriptionNotifyMethod(int code, String text, boolean isJsonCompatible) {
         this.code = code;
         this.text = text;
+        this.isJsonCompatible = isJsonCompatible;
     }
 
     public String getText() {
@@ -52,6 +53,10 @@ public enum SubscriptionNotifyMethod {
 
     public int getCode() {
         return code;
+    }
+
+    public boolean isJsonCompatible() {
+        return isJsonCompatible;
     }
 
     public static SubscriptionNotifyMethod get(int code) {

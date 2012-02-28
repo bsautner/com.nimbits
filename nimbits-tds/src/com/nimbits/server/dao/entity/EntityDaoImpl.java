@@ -6,6 +6,7 @@ import com.nimbits.client.enums.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.service.entity.*;
+import com.nimbits.server.entity.*;
 import com.nimbits.server.orm.entity.*;
 
 import javax.jdo.*;
@@ -17,7 +18,7 @@ import java.util.*;
  * Date: 2/7/12
  * Time: 10:46 AM
  */
-public class EntityDaoImpl implements EntityService {
+public class EntityDaoImpl implements  EntityTransactions {
 
     private final User user;
 
@@ -75,16 +76,6 @@ public class EntityDaoImpl implements EntityService {
         }
 
 
-    }
-
-    @Override
-    public Entity copyEntity(Entity originalEntity, EntityName newName) {
-        return null;  //auto generated
-    }
-
-    @Override
-    public List<Entity> getChildren(Entity parentEntity, EntityType type) {
-        return null;  //auto generated
     }
 
 
@@ -288,33 +279,5 @@ public class EntityDaoImpl implements EntityService {
         }
     }
 
-    @Override
-    public Entity addUpdateEntity(User user, Entity aConnection) {
-        return null;  //auto generated
-    }
-
-    @Override
-    public Entity getEntityByUUID(User u, String entityId) {
-        return null;  //auto generated
-    }
-
-    @Override
-    public Entity getEntityByName(User u, EntityName name) {
-        return null;  //auto generated
-    }
-
-    @Override
-    public void deleteEntity(User u, Entity entity) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public List<Entity> getEntityChildren(User u, Entity c, EntityType point) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-    @Override
-    public Entity addUpdateEntity(EntityName entity, EntityType type) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
 
 }

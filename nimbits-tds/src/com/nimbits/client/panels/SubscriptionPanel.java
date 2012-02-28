@@ -129,7 +129,7 @@ public class SubscriptionPanel extends NavigationEventProvider {
 
     }
 
-    private ComboBox<DeliveryMethodOption> delieverMethodComboBox(final String title, final SubscriptionNotifyMethod selectedValue) {
+    private ComboBox<DeliveryMethodOption> deliveryMethodComboBox(final String title, final SubscriptionNotifyMethod selectedValue) {
         ComboBox<DeliveryMethodOption> combo = new ComboBox<DeliveryMethodOption>();
 
         ArrayList<DeliveryMethodOption> ops = new ArrayList<DeliveryMethodOption>();
@@ -182,7 +182,10 @@ public class SubscriptionPanel extends NavigationEventProvider {
         SubscriptionType type =  (subscription == null) ? SubscriptionType.none : subscription.getSubscriptionType() ;
         SubscriptionNotifyMethod method = (subscription==null) ? SubscriptionNotifyMethod.none : subscription.getNotifyMethod();
         final ComboBox<SubscriptionTypeOption> typeCombo = subscriptionTypeOptionComboBox("When this happens", type);
-        final ComboBox<DeliveryMethodOption> methodCombo = delieverMethodComboBox("Relay Data To", method);
+        final ComboBox<DeliveryMethodOption> methodCombo = deliveryMethodComboBox("Relay Data To", method);
+
+
+
 
         final TextField<String> subscriptionName = new TextField<String>();
         subscriptionName.setFieldLabel("Subscription Name");
@@ -191,7 +194,7 @@ public class SubscriptionPanel extends NavigationEventProvider {
             subscriptionName.setValue(entity.getName().getValue());
         }
         else {
-            subscriptionName.setValue(entity.getName().getValue() + " Alerts");
+            subscriptionName.setValue(entity.getName().getValue() + " Subscription");
         }
 
 
@@ -208,9 +211,12 @@ public class SubscriptionPanel extends NavigationEventProvider {
 
 
         final CheckBox machine = new CheckBox();
-        machine.setBoxLabel("Alert message machine readable (JSON)");
+        machine.setBoxLabel("Send message in JSON format");
         machine.setValue(subscription != null && subscription.getNotifyFormatJson());
         machine.setLabelSeparator("");
+        if (subscription != null) {
+            machine.setEnabled(subscription.getNotifyMethod().isJsonCompatible());
+        }
         final CheckBox enabled = new CheckBox();
         enabled.setValue(subscription != null && subscription.getEnabled());
         enabled.setBoxLabel("Enabled");
@@ -297,7 +303,19 @@ public class SubscriptionPanel extends NavigationEventProvider {
         Html pn = new Html("<p><b>Name: </b>" + entity.getName().getValue() + "</p>");
 
 
+        methodCombo.addSelectionChangedListener(new SelectionChangedListener<DeliveryMethodOption>() {
+            @Override
+            public void selectionChanged(SelectionChangedEvent<DeliveryMethodOption> deliveryMethodOptionSelectionChangedEvent) {
+                setMachineEnabled(deliveryMethodOptionSelectionChangedEvent.getSelectedItem().getMethod());
+            }
 
+            private void setMachineEnabled(SubscriptionNotifyMethod method) {
+                machine.setEnabled( method.isJsonCompatible());
+                if (! method.isJsonCompatible()) {
+                   machine.setValue(false);
+                }
+            }
+        });
 
 
         vp.add(h);

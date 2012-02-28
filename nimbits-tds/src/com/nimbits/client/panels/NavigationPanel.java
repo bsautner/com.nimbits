@@ -97,7 +97,7 @@ class NavigationPanel extends NavigationEventProvider {
 
         ColumnModel cm = new ColumnModel(
                 Arrays.asList(
-                        columnConfigs.pointNameColumn(true),
+                        columnConfigs.pointNameColumn(),
                         columnConfigs.currentValueColumn(),
                         columnConfigs.timestampColumn(),
                         columnConfigs.noteColumn(),
@@ -111,7 +111,7 @@ class NavigationPanel extends NavigationEventProvider {
         tree.addListener(Events.AfterEdit, afterEditListener);
 
         treePropertyBuilder();
-       GxtModel userModel =  treeStoreBuilder(result);
+        GxtModel userModel =  treeStoreBuilder(result);
         treeDNDBuilder();
 
         removeAll();
@@ -246,7 +246,9 @@ class NavigationPanel extends NavigationEventProvider {
         final List<ModelData> model = new ArrayList<ModelData>();
         parents = new ArrayList<String>();
         for (final Entity entity : result) {
-            addEntity(entity);
+            if (! entity.getEntityType().equals(EntityType.feed)) {
+                addEntity(entity);
+            }
         }
 
         final GxtModel userModel = new GxtModel(user);
@@ -255,7 +257,7 @@ class NavigationPanel extends NavigationEventProvider {
 
         store.add(model, true);
 
-       return userModel;
+        return userModel;
 
     }
 
@@ -306,11 +308,9 @@ class NavigationPanel extends NavigationEventProvider {
         updater = new Timer() {
             @Override
             public void run() {
-                try {
-                    updateValues();
-                } catch (NimbitsException e) {
-                    GWT.log(e.getMessage(), e);
-                }
+
+                updateValues();
+
             }
         };
         updater.scheduleRepeating(Const.DEFAULT_TIMER_UPDATE_SPEED);
@@ -318,53 +318,66 @@ class NavigationPanel extends NavigationEventProvider {
         super.onAttach();
     }
 
-    private void updateValues() throws NimbitsException {
+    private void updateValues()  {
         if (tree != null) {
-            Map<String, Entity> entityMap = new HashMap<String, Entity>();
 
-            for (ModelData m : tree.getTreeStore().getAllItems()) {
-                final GxtModel model = (GxtModel) m;
-                if (model.getEntityType().equals(EntityType.point)) {
+            reloadCurrentValues( getVisiblePoints());
+        }
+    }
+
+    private Map<String, Entity> getVisiblePoints() {
+        final Map<String, Entity> entityMap = new HashMap<String, Entity>();
+        for (final ModelData m : tree.getTreeStore().getAllItems()) {
+            final GxtModel model = (GxtModel) m;
+            try {
+                if (model != null
+                        && !model.isDirty()
+                        && model.getEntityType().equals(EntityType.point)
+                        && tree.isExpanded(model.getParent()))  {
                     entityMap.put(model.getUUID(), model.getBaseEntity());
                 }
+            } catch (Exception ignored) {
+
+            }
+        }
+        return entityMap;
+    }
+
+    private void reloadCurrentValues(Map<String, Entity> entityMap) {
+        final PointServiceAsync service = GWT.create(PointService.class);
+        service.getPoints(entityMap, new AsyncCallback<Map<String, Point>>() {
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                GWT.log(throwable.getMessage(), throwable);
             }
 
-            final PointServiceAsync service = GWT.create(PointService.class);
-            service.getPoints(entityMap, new AsyncCallback<Map<String, Point>>() {
-                @Override
-                public void onFailure(Throwable throwable) {
-                    GWT.log(throwable.getMessage(), throwable);
-                }
+            @Override
+            public void onSuccess(Map<String, Point> stringPointMap) {
+                final TreeStore<ModelData> models = tree.getTreeStore();
+                for (final ModelData m : models.getAllItems()) {
+                    final GxtModel model = (GxtModel) m;
+                    if (!model.isDirty() && model.getEntityType().equals(EntityType.point)) {
 
-                @Override
-                public void onSuccess(Map<String, Point> stringPointMap) {
-                    final TreeStore<ModelData> models = tree.getTreeStore();
-
-
-                    for (final ModelData m : models.getAllItems()) {
-                        final GxtModel model = (GxtModel) m;
-                        if (!model.isDirty() && model.getEntityType().equals(EntityType.point)) {
-
-                            if (stringPointMap.containsKey(model.getUUID())) {
-                                Point p = stringPointMap.get(model.getUUID());
-                                if (p.getValue() == null) {
-                                    model.setAlertType(AlertType.OK);
-                                    model.setValue(ValueModelFactory.createValueModel(0.0));
-                                }
-                                else {
-                                    model.setAlertType(p.getValue().getAlertState());
-                                    model.setValue(p.getValue());
-                                }
-
-
+                        if (stringPointMap.containsKey(model.getUUID())) {
+                            Point p = stringPointMap.get(model.getUUID());
+                            if (p.getValue() == null) {
+                                model.setAlertType(AlertType.OK);
+                                model.setValue(ValueModelFactory.createValueModel(0.0));
                             }
-                            models.update(m);
-                        }
+                            else {
+                                model.setAlertType(p.getValue().getAlertState());
+                                model.setValue(p.getValue());
+                            }
 
+
+                        }
+                        models.update(m);
                     }
+
                 }
-            });
-        }
+            }
+        });
     }
 
     //toolbars
@@ -381,22 +394,18 @@ class NavigationPanel extends NavigationEventProvider {
 
 
                 switch (model.getBaseEntity().getEntityType()) {
-
                     case user:
                         break;
                     case point:
-//                        addEntityChildren(entity, model);
                         notifyEntityClickedListener(model);
                         break;
                     case category:
-//                        addEntityChildren(entity, model);
                         notifyEntityClickedListener(model);
                         break;
                     case file:
                         notifyEntityClickedListener(model);
                         break;
                     case subscription:
-//                        addEntityChildren(entity, model);
                         notifyEntityClickedListener(model);
                         break;
                     case userConnection:
@@ -415,17 +424,6 @@ class NavigationPanel extends NavigationEventProvider {
         }
 
     };
-
-//    private void addEntityChildren(Entity entity, GxtModel model) {
-//        if (model.getChildCount() > 0)
-//            for (int i = 0; i < model.getChildCount(); i++) {
-//                GxtModel m = (GxtModel) model.getChild(i);
-//                Entity c =model.getBaseEntity();
-//                addEntityChildren(c, m);
-//                entity.addChild(c);
-//
-//            }
-//    }
 
     private final Listener<GridEvent> afterEditListener = new Listener<GridEvent>() {
 
@@ -488,7 +486,9 @@ class NavigationPanel extends NavigationEventProvider {
             public void onSuccess(List<Entity> result) {
                 if (refresh) {
                     for (Entity e : result) {
-                        addUpdateTreeModel(new GxtModel(e), true);
+                        if (! e.getEntityType().equals(EntityType.feed)) {
+                            addUpdateTreeModel(new GxtModel(e), true);
+                        }
                     }
                 }
                 else {
@@ -500,7 +500,6 @@ class NavigationPanel extends NavigationEventProvider {
         });
 
     }
-
 
     public void saveAll() {
 

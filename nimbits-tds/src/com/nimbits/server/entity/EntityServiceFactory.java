@@ -16,7 +16,7 @@ public class EntityServiceFactory {
         return new EntityServiceImpl();
     }
 
-    public static EntityService getDaoInstance(User user) {
+    public static EntityTransactions getDaoInstance(User user) {
         return new EntityDaoImpl(user);
     }
 

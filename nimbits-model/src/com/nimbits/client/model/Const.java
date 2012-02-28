@@ -58,7 +58,7 @@ public class Const {
     // ------------------------------ FIELDS ------------------------------
 
     public static final String COPYRIGHT = "Copyright (c) 2010 Tonic Solutions LLC.  Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an \\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.";
-    public static final String DEFAULT_CHART_NAME = "Chart1";
+    public static final String DEFAULT_CHART_NAME = "Chart";
 
     public static final String DEFAULT_EMAIL_SUBJECT = "Nimbits Messaging";
     public static final String DEFAULT_EMPTY_COL = "EMPTY";
@@ -348,6 +348,9 @@ public class Const {
     public static final String ACTION_ADD_CHART = "addchart";
     public static final String ACTION_SAVE = "save";
     public static final String PARAM_DIRTY = "dirty";
+    public static final String PATH_FACEBOOK_APP = "http://apps.facebook.com/Nimbits";
+    public static final double CONST_IGNORED_NUMBER_VALUE = -9999999.9999999;
+    public static final String PARAM_HTML = "html";
 
     public static String getConnectionInviteEmail(final EmailAddress email) {
         return "<P STYLE=\"margin-bottom: 0in\"> " + email.getValue() +

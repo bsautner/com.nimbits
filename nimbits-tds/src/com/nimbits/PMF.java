@@ -17,7 +17,7 @@ import javax.jdo.*;
 
 public final class PMF {
     private static PersistenceManagerFactory pmfInstance;
-    public static final String PMF_TRANSACTIONS_OPTIONAL = "transactions-optional";
+    private static final String PMF_TRANSACTIONS_OPTIONAL = "transactions-optional";
 
     private PMF() {
     }

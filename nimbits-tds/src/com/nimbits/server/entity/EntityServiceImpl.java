@@ -19,7 +19,7 @@ import java.util.*;
  * Date: 2/7/12
  * Time: 12:05 PM
  */
-public class EntityServiceImpl  extends RemoteServiceServlet implements EntityService {
+public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTransactions, EntityService {
 
 
     @Override
@@ -103,6 +103,11 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
     @Override
     public Map<String, Entity> getEntityMap(EntityType type) {
        return EntityServiceFactory.getDaoInstance(getUser()).getEntityMap(type);
+    }
+
+    @Override
+    public Map<String, Entity> getEntityMap(User user, EntityType type) {
+        return EntityServiceFactory.getDaoInstance(user).getEntityMap(type);
     }
 
     @Override

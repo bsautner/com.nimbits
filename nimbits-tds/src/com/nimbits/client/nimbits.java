@@ -23,18 +23,14 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
-import com.nimbits.client.controls.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exceptions.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.point.Point;
 import com.nimbits.client.panels.*;
 import com.nimbits.client.service.*;
 import com.nimbits.client.service.blob.*;
 import com.nimbits.client.service.entity.*;
-import com.nimbits.client.service.recordedvalues.*;
 import com.nimbits.client.service.settings.*;
 import com.nimbits.client.service.twitter.*;
 import com.nimbits.shared.*;
@@ -72,7 +68,6 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
             center.setLayout(new FillLayout());
             centerData.setMargins(new Margins(5));
 
-
             FeedPanel east = new FeedPanel();
             east.setHeight("100%");
             east.setWidth(250);
@@ -81,6 +76,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
             eastData.setSplit(true);
             eastData.setCollapsible(true);
             eastData.setMargins(new Margins(5));
+            eastData.setCollapsible(true);
 
 
 
@@ -251,7 +247,10 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         }
 
         Cookies.setCookie(Const.PARAM_CLIENT, clientType.name());
-        loadPortalView(uuid, code, oauth_token, action);
+
+
+
+        decideWhatViewToLoad(uuid, code, oauth_token, action);
 
     }
 
@@ -288,10 +287,10 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
     }
 
 
-    private void loadPortalView(final String uuid,
-                                final String code,
-                                final String oauth_token,
-                                final Action action){
+    private void decideWhatViewToLoad(final String uuid,
+                                      final String code,
+                                      final String oauth_token,
+                                      final Action action){
         SettingsServiceAsync settingService = GWT.create(SettingsService.class);
         settingService.getSettings(new AsyncCallback<Map<String, String>>() {
 

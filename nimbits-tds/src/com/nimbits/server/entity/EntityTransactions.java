@@ -1,20 +1,22 @@
 package com.nimbits.server.entity;
 
+import com.nimbits.client.enums.*;
+import com.nimbits.client.model.entity.*;
 
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityName;
-
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner
- * User: BSautner
- * Date: 2/7/12
- * Time: 10:48 AM
+ * User: bsautner
+ * Date: 2/28/12
+ * Time: 11:46 AM
  */
 public interface EntityTransactions {
+    Map<String, Entity> getEntityMap(EntityType type);
+
+    Map<EntityName, Entity> getEntityNameMap(EntityType type);
+
+    List<Entity> getEntityChildren(Entity parentEntity, EntityType type);
 
     Entity addUpdateEntity(Entity entity);
 
@@ -23,12 +25,6 @@ public interface EntityTransactions {
     void deleteEntity(Entity entity);
 
     Entity getEntityByUUID(String uuid);
-
-    Map<String,Entity> getEntityMap(EntityType type);
-
-    Map<EntityName,Entity> getEntityNameMap(EntityType type);
-
-    List<Entity> getEntityChildren(Entity parentEntity, EntityType type);
 
     Entity getEntityByName(EntityName name);
 }

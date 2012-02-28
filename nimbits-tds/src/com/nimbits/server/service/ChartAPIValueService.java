@@ -43,9 +43,6 @@ public class ChartAPIValueService extends HttpServlet {
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp) {
         String pointNameParam = req.getParameter(Const.PARAM_POINT);
         String uuid = req.getParameter(Const.PARAM_UUID);
-//        Value nv;
-//        OutputStream out;
-
 
         try {
             final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);

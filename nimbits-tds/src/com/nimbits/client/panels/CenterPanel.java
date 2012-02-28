@@ -50,7 +50,7 @@ public class CenterPanel extends NavigationEventProvider {
     private LoginInfo loginInfo;
     private LayoutContainer chartContainer;
     private int chartHeight;
-    private HBoxLayoutData flex;
+
 
     public CenterPanel(LoginInfo info, Map<String, String> settings) {
         this.loginInfo = info;
@@ -178,7 +178,11 @@ public class CenterPanel extends NavigationEventProvider {
     private void addChart() {
 
         if (chartContainer.getItemCount() < 2) {
+            for (int i = 0; i < chartContainer.getItemCount(); i++) {
+                AnnotatedTimeLinePanel p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
+                p.setSelected(false);
 
+            }
 
             List<AnnotatedTimeLinePanel> list = new ArrayList<AnnotatedTimeLinePanel>();
             HBoxLayoutData flex = new HBoxLayoutData(new Margins(1, 1, 1, 1));
@@ -327,50 +331,18 @@ public class CenterPanel extends NavigationEventProvider {
 
     //chart
     private void chartEntity(final GxtModel model) {
-//        for (final AnnotatedTimeLinePanel line : lines.values()) {
-//            if (line.isSelected()) {
-//                addEntityToLine(model, line);
-//                break;
-//            }
-//        }
 
+        for (int i = 0; i < chartContainer.getItemCount(); i++) {
+            AnnotatedTimeLinePanel p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
+            if (p.isSelected()) {
+                p.addEntityModel(model);
+            }
 
-    }
-
-
-    private boolean isOneLineSelected() {
-//        for (AnnotatedTimeLinePanel l : lines.values()) {
-//            if (l.isSelected()) {
-//                return true;
-//            }
-//        }
-        return false;
-    }
-
-    //    private void addLinesToBottom() {
-//
-//        if (!isOneLineSelected() && lines.values().iterator().hasNext()) {
-//            lines.values().iterator().next().setSelected(true);
-//        }
-//        for (final AnnotatedTimeLinePanel l : lines.values()) {
-//            if (lines.size() == 1) {
-//                l.setSelected(true);
-//            }
-//            double w = 1.0 / (double) lines.size();
-//            l.initChart();
-//           // bottom.add(l, new RowData(w, 1, new Margins(0)));
-//        }
-//
-//        doLayout(true);
-//    }
-    private void addEntityToLine(GxtModel model, AnnotatedTimeLinePanel line) {
-        if (model.getEntityType().equals(EntityType.point)) {
-            line.addEntityModel(model);
-        }
-        for ( ModelData m : model.getChildren()) {
-            addEntityToLine((GxtModel) m, line);
         }
 
+
     }
+
+
 
 }

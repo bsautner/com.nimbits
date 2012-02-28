@@ -83,7 +83,7 @@ public class FeedPanel  extends LayoutContainer {
        // panel.setFrame(true);
         panel.setId("images-view");
         panel.setHeaderVisible(true);
-        panel.setHeading("Subscription Channel Feed");
+        panel.setHeading("Subscription Channel");
         panel.setWidth(175);
         // panel.setHeight("100%");
         //  panel.setAutoHeight(true);

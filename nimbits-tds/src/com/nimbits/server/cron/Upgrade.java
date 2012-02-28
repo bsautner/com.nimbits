@@ -43,8 +43,12 @@ public class Upgrade {
 
         //publish on hrd for users to test with
 
+        //test all buttons, export etc
+
+        //
 
 
+        //next version
         //xmpp server configurable
 
         //xmpp single points

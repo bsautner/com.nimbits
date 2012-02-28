@@ -246,9 +246,8 @@ class NavigationPanel extends NavigationEventProvider {
         final List<ModelData> model = new ArrayList<ModelData>();
         parents = new ArrayList<String>();
         for (final Entity entity : result) {
-            if (! entity.getEntityType().equals(EntityType.feed)) {
                 addEntity(entity);
-            }
+
         }
 
         final GxtModel userModel = new GxtModel(user);
@@ -416,6 +415,10 @@ class NavigationPanel extends NavigationEventProvider {
                     case intelligence:
                         context.showIntelligencePanel(model.getBaseEntity());
                         break;
+                    case feed:
+                        notifyEntityClickedListener(model);
+                        break;
+
                 }
 
 
@@ -486,9 +489,9 @@ class NavigationPanel extends NavigationEventProvider {
             public void onSuccess(List<Entity> result) {
                 if (refresh) {
                     for (Entity e : result) {
-                        if (! e.getEntityType().equals(EntityType.feed)) {
+
                             addUpdateTreeModel(new GxtModel(e), true);
-                        }
+
                     }
                 }
                 else {

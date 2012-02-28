@@ -5,6 +5,7 @@ import com.google.gwt.user.server.rpc.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
+import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.feed.*;
 import com.nimbits.client.model.point.*;
@@ -137,6 +138,8 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
         final Point point = getFeedPoint(user);
         List<Value> values = RecordedValueServiceFactory.getInstance().getTopDataSeries(point, count, new Date());
         List<FeedValue> retObj = new ArrayList<FeedValue>();
+
+
         for (Value v : values) {
             if (! Utils.isEmptyString(v.getData())) {
                 try {
@@ -152,13 +155,16 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
 
     private Point createFeedPoint(final User user) {
         final String uuid = UUID.randomUUID().toString();
-        final Entity entity = EntityModelFactory.createEntity(user.getName(), "", EntityType.feed,
+
+        EntityName name = CommonFactoryLocator.getInstance().createName("Subscription Data Feed");
+
+        final Entity entity = EntityModelFactory.createEntity(name, "", EntityType.feed,
                 ProtectionLevel.onlyMe, uuid, user.getUuid(), user.getUuid());
         final Entity r = EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
 
         Point point =  PointServiceFactory.getInstance().addPoint(user, r);
 
-        postToFeed(user, "A new data points has been created for your data feed. Your data feed is just " +
+        postToFeed(user, "A new data point has been created for your data feed. Your data feed is just " +
                 "a data point. Points are capable of storing numbers, text, json and xml data. Nimbits uses " +
                 "a single data point to drive this feed.");
         return point;

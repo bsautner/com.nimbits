@@ -1,6 +1,7 @@
 package com.nimbits.client.model.feed;
 
 import java.io.*;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner
@@ -12,9 +13,11 @@ public class FeedValueModel  implements Serializable, FeedValue {
     private String feedHtml;
     private String originalData;
 
-    public FeedValueModel(String feedHtml, String originalData) {
+
+    public FeedValueModel( String feedHtml, String originalData) {
         this.feedHtml = feedHtml;
         this.originalData = originalData;
+
     }
 
     public FeedValueModel() {

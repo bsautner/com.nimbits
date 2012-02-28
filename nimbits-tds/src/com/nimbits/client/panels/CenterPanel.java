@@ -72,7 +72,7 @@ public class CenterPanel extends NavigationEventProvider {
 
             @Override
             public void onEntityClicked(final GxtModel c)  {
-                chartEntity(c);
+                addEntity(c);
 
             }
 
@@ -290,6 +290,9 @@ public class CenterPanel extends NavigationEventProvider {
                 displaySubscription(entity.getBaseEntity());
                 break;
             case userConnection:
+                break;
+            case feed:
+                notifyEntityClickedListener(entity);
                 break;
         }
 

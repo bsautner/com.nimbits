@@ -59,10 +59,11 @@ public class FeedPanel  extends LayoutContainer {
                 for (final FeedValue v : result) {
                     final GxtFeedModel model = new GxtFeedModel(v);
                     if (store.findModel(Const.PARAM_HTML, model.getHtml()) == null) {
-                        store.add(model);
+                        store.insert(model, 0);
+                       // store.add(model);
                     }
                 }
-                if (store.getModels().size() > 20) {
+                if (store.getModels().size() > 8) {
                     panel.setScrollMode(Style.Scroll.AUTO);
                 }
                 layout(true);
@@ -77,12 +78,12 @@ public class FeedPanel  extends LayoutContainer {
         super.onRender(parent, index);
         final ContentPanel panel = new ContentPanel( );
 
-        panel.setCollapsible(false);
-        panel.setAnimCollapse(false);
-        panel.setFrame(true);
+      //  panel.setCollapsible(false);
+       // panel.setAnimCollapse(false);
+       // panel.setFrame(true);
         panel.setId("images-view");
         panel.setHeaderVisible(true);
-        panel.setHeading("Data Feed");
+        panel.setHeading("Subscription Channel Feed");
         panel.setWidth(175);
         // panel.setHeight("100%");
         //  panel.setAutoHeight(true);
@@ -126,8 +127,8 @@ public class FeedPanel  extends LayoutContainer {
                 new Listener<SelectionChangedEvent<BeanModel>>() {
 
                     public void handleEvent(SelectionChangedEvent<BeanModel> be) {
-                        panel.setHeading("Simple ListView (" + be.getSelection().size()
-                                + " items selected)");
+//                        panel.setHeading("Simple ListView (" + be.getSelection().size()
+//                                + " items selected)");
                     }
 
                 });
@@ -139,10 +140,18 @@ public class FeedPanel  extends LayoutContainer {
 
     private native String getTemplate() /*-{
         return ['<tpl for=".">',
-            '<p">{html}</p>',
-            '</tpl></hr>',
+            '<table border = 0>',
+            '<tr><td>{html}</td></tr>',
+            '</table>',
+            '<hr />',
+            '</tpl>',
             '<div class="x-clear"></div>'].join("");
 
     }-*/;
+
+    public void reload() {
+        view.getStore().removeAll();
+        updateValues();
+    }
 }
 

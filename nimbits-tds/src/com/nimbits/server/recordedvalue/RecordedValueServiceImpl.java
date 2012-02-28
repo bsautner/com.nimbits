@@ -70,7 +70,6 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
         return getDataSeries1(points, timespan);
 
-
     }
 
     @Override

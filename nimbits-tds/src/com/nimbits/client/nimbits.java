@@ -59,25 +59,34 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         viewport.setLayout(new BorderLayout());
         viewport.setBorders(false);
 
+        final FeedPanel east = new FeedPanel();
+        east.setHeight("100%");
+        east.setWidth(250);
+        east.setLayout(new FillLayout());
 
 
         if (loginInfo != null) {
             CenterPanel center = new CenterPanel(loginInfo, settings);
+
+            center.addEntityClickedListeners(new EntityClickedListener() {
+                @Override
+                public void onEntityClicked(GxtModel entity) {
+                    if (entity.getEntityType().equals(EntityType.feed)) {
+                        east.reload();
+                    }
+                }
+            });
+
             BorderLayoutData centerData = new BorderLayoutData(LayoutRegion.CENTER);
             center.setHeight("100%");
             center.setLayout(new FillLayout());
             centerData.setMargins(new Margins(5));
 
-            FeedPanel east = new FeedPanel();
-            east.setHeight("100%");
-            east.setWidth(250);
-            east.setLayout(new FillLayout());
+
             BorderLayoutData eastData = new BorderLayoutData(LayoutRegion.EAST, 250);
             eastData.setSplit(true);
             eastData.setCollapsible(true);
             eastData.setMargins(new Margins(5));
-            eastData.setCollapsible(true);
-
 
 
             viewport.add(east, eastData);
@@ -86,9 +95,6 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
                 Cookies.removeCookie(Action.subscribe.name());
                 showSubscriptionPanel(uuid, settings);
             }
-
-
-
             viewport.setHeight("100%");
             RootPanel.get("main").add(viewport);
         }
@@ -425,8 +431,6 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
                                     loadLogin();
 
                             }
-
-
                         } else {
                             if (action.equals(Action.subscribe)) {
                                 Cookies.setCookie(Action.subscribe.name(), uuid);

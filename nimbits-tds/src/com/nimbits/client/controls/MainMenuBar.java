@@ -53,7 +53,9 @@ public class MainMenuBar extends ToolBar {
 
         add(connectionButton());
         add(pendingConnectionsButton());
-
+        add(actionMenuItem("Logout",
+                AbstractImagePrototype.create(Icons.INSTANCE.deleteFriend()),
+                Action.logout));
 
     }
 
@@ -63,9 +65,7 @@ public class MainMenuBar extends ToolBar {
         fileMenu.add(newDataPoint());
         fileMenu.add(newFolder());
         fileMenu.add(uploadFile());
-        fileMenu.add(actionMenuItem("Logout",
-                AbstractImagePrototype.create(Icons.INSTANCE.deleteFriend()),
-                Action.logout));
+
 
         fileButton.setMenu(fileMenu);
         add(fileButton);

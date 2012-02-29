@@ -42,7 +42,7 @@ import java.util.*;
 class NavigationPanel extends NavigationEventProvider {
 
     private EntityTree<ModelData> tree;
-    private TreeStore<ModelData> store;
+
     private Timer updater;
     private boolean expanded = false;
     private Map<String, String> settings;
@@ -52,6 +52,7 @@ class NavigationPanel extends NavigationEventProvider {
     private boolean saveWithCurrentTime;
     private boolean autoSaveNumbers;
     private final static int valueColumnIndex = 1;
+
     public NavigationPanel(final User user,
                            final Map<String, String> settings) {
 
@@ -62,6 +63,7 @@ class NavigationPanel extends NavigationEventProvider {
         getUserEntities(false);
         this.saveWithCurrentTime = true;
         this.autoSaveNumbers = true;
+        tree = new EntityTree<ModelData>();
     }
 
     public void setAutoSaveNumbers(boolean autoSaveNumbers) {
@@ -91,20 +93,6 @@ class NavigationPanel extends NavigationEventProvider {
     }
 
     private void createTree(final List<Entity> result) {
-
-        store = new TreeStore<ModelData>();
-        ColumnConfigs columnConfigs = new ColumnConfigs();
-
-        ColumnModel cm = new ColumnModel(
-                Arrays.asList(
-                        columnConfigs.pointNameColumn(),
-                        columnConfigs.currentValueColumn(),
-                        columnConfigs.timestampColumn(),
-                        columnConfigs.noteColumn(),
-                        columnConfigs.dataColumn())
-        );
-        tree = new EntityTree<ModelData>(store, cm);
-
         final TreeGridDropTarget target = new TreeGridDropTarget(tree);
         target.setAllowSelfAsSource(true);
         target.setFeedback(Feedback.BOTH);
@@ -128,7 +116,7 @@ class NavigationPanel extends NavigationEventProvider {
         model.set(Const.PARAM_NOTE, value.getNote());
         model.setAlertType(value.getAlertState());
         model.setDirty(false);
-        store.update(model);
+        tree.getTreeStore().update(model);
         notifyValueEnteredListener(model.getBaseEntity(), value);
     }
 
@@ -246,7 +234,7 @@ class NavigationPanel extends NavigationEventProvider {
         final List<ModelData> model = new ArrayList<ModelData>();
         parents = new ArrayList<String>();
         for (final Entity entity : result) {
-                addEntity(entity);
+            addEntity(entity);
 
         }
 
@@ -254,7 +242,7 @@ class NavigationPanel extends NavigationEventProvider {
         addChildrenToModel(result, parents, userModel);
         model.add(userModel);
 
-        store.add(model, true);
+        tree.getTreeStore().add(model, true);
 
         return userModel;
 
@@ -264,20 +252,19 @@ class NavigationPanel extends NavigationEventProvider {
 
         if (tree != null && tree.getStore() != null) {
 
-            store = tree.getTreeStore();
-            final ModelData mx = store.findModel(Const.PARAM_ID, model.getBaseEntity().getEntity());
+            final ModelData mx = tree.getTreeStore().findModel(Const.PARAM_ID, model.getBaseEntity().getEntity());
             if (mx != null) {
                 final GxtModel m = (GxtModel)mx;
                 m.update(model.getBaseEntity());
-                store.update(m);
+                tree.getTreeStore().update(m);
                 if (! refresh) {
                     tree.setExpanded(mx, true);
                 }
             }
             else {
-                final ModelData parent = store.findModel(Const.PARAM_ID, model.getBaseEntity().getParent());
+                final ModelData parent = tree.getTreeStore().findModel(Const.PARAM_ID, model.getBaseEntity().getParent());
                 if (parent != null) {
-                    store.add(parent, model, true);
+                    tree.getTreeStore().add(parent, model, true);
 
                 }
             }
@@ -289,18 +276,18 @@ class NavigationPanel extends NavigationEventProvider {
 
         if (tree != null && tree.getStore() != null) {
 
-            store = tree.getTreeStore();
+
             GxtModel m = (GxtModel) tree.getTreeStore().findModel(Const.PARAM_ID, currentModel.getBaseEntity().getEntity());
-            store.remove(m);
+            tree.getTreeStore().remove(m);
 
         }
     }
 
-    @Override
-    protected void afterRender() {
-        super.afterRender();
-        layout(true);
-    }
+//    @Override
+//    protected void afterRender() {
+//        super.afterRender();
+//        layout(true);
+//    }
 
     @Override
     protected void onAttach() {
@@ -326,17 +313,23 @@ class NavigationPanel extends NavigationEventProvider {
 
     private Map<String, Entity> getVisiblePoints() {
         final Map<String, Entity> entityMap = new HashMap<String, Entity>();
-        for (final ModelData m : tree.getTreeStore().getAllItems()) {
-            final GxtModel model = (GxtModel) m;
-            try {
-                if (model != null
-                        && !model.isDirty()
-                        && model.getEntityType().equals(EntityType.point)
-                        && tree.isExpanded(model.getParent()))  {
-                    entityMap.put(model.getUUID(), model.getBaseEntity());
-                }
-            } catch (Exception ignored) {
 
+        if (tree != null) {
+            for (final ModelData m : tree.getTreeStore().getAllItems()) {
+                final GxtModel model = (GxtModel) m;
+                try {
+                    if (model != null
+                            && model.getParent() != null
+                            && !model.isDirty()
+                            && model.getEntityType().equals(EntityType.point)
+                            )  {
+                        if (tree.isExpanded(model.getParent())) {
+                            entityMap.put(model.getUUID(), model.getBaseEntity());
+                        }
+                    }
+                } catch (Exception e) {
+                    GWT.log(e.getMessage(), e);
+                }
             }
         }
         return entityMap;
@@ -379,9 +372,6 @@ class NavigationPanel extends NavigationEventProvider {
         });
     }
 
-    //toolbars
-
-
     private final Listener<TreeGridEvent<ModelData>> treeDoubleClickListener = new Listener<TreeGridEvent<ModelData>>() {
         @Override
         public void handleEvent(TreeGridEvent<ModelData> be) {
@@ -395,16 +385,7 @@ class NavigationPanel extends NavigationEventProvider {
                 switch (model.getBaseEntity().getEntityType()) {
                     case user:
                         break;
-                    case point:
-                        notifyEntityClickedListener(model);
-                        break;
-                    case category:
-                        notifyEntityClickedListener(model);
-                        break;
-                    case file:
-                        notifyEntityClickedListener(model);
-                        break;
-                    case subscription:
+                    case point:  case category: case file: case subscription: case feed:
                         notifyEntityClickedListener(model);
                         break;
                     case userConnection:
@@ -415,9 +396,7 @@ class NavigationPanel extends NavigationEventProvider {
                     case intelligence:
                         context.showIntelligencePanel(model.getBaseEntity());
                         break;
-                    case feed:
-                        notifyEntityClickedListener(model);
-                        break;
+
 
                 }
 
@@ -448,7 +427,8 @@ class NavigationPanel extends NavigationEventProvider {
                     final Double v = model.get(Const.PARAM_VALUE);
                     final String note = model.get(Const.PARAM_NOTE);
                     final String data = model.get(Const.PARAM_DATA);
-                    final Value value = ValueModelFactory.createValueModel(0.0, 0.0, v, timestamp, model.getId(), note, data);
+                    String uuid = model.getId();
+                    final Value value = ValueModelFactory.createValueModel(0.0, 0.0, v, timestamp, uuid, note, data);
 
                     RecordedValueServiceAsync service = GWT.create(RecordedValueService.class);
                     service.recordValue(entity, value, new AsyncCallback<Value>() {
@@ -474,6 +454,7 @@ class NavigationPanel extends NavigationEventProvider {
             }
         }
     };
+
     //service calls
     public void getUserEntities(final boolean refresh)  {
 
@@ -490,7 +471,7 @@ class NavigationPanel extends NavigationEventProvider {
                 if (refresh) {
                     for (Entity e : result) {
 
-                            addUpdateTreeModel(new GxtModel(e), true);
+                        addUpdateTreeModel(new GxtModel(e), true);
 
                     }
                 }

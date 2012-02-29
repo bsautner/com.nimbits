@@ -26,7 +26,7 @@ import java.util.*;
 public class FeedPanel  extends LayoutContainer {
     private Timer updater;
     ListView<GxtFeedModel> view;
-    ContentPanel panel;
+    //ContentPanel panel;
 
     @Override
     protected void onAttach() {
@@ -44,31 +44,33 @@ public class FeedPanel  extends LayoutContainer {
     }
 
     private void updateValues() {
+        final ListStore<GxtFeedModel> store  = view.getStore();
+        if (store != null) {
+            FeedAsync service = GWT.create(Feed.class);
+            service.getFeed(10, new AsyncCallback<List<FeedValue>>() {
+                @Override
+                public void onFailure(Throwable caught) {
+
+                }
+
+                @Override
+                public void onSuccess(final List<FeedValue> result) {
 
 
-        FeedAsync service = GWT.create(Feed.class);
-        service.getFeed(10, new AsyncCallback<List<FeedValue>>() {
-            @Override
-            public void onFailure(Throwable caught) {
-
-            }
-
-            @Override
-            public void onSuccess(final List<FeedValue> result) {
-                final ListStore<GxtFeedModel> store  = view.getStore();
-                for (final FeedValue v : result) {
-                    final GxtFeedModel model = new GxtFeedModel(v);
-                    if (store.findModel(Const.PARAM_HTML, model.getHtml()) == null) {
-                        store.insert(model, 0);
-                       // store.add(model);
+                    for (final FeedValue v : result) {
+                        final GxtFeedModel model = new GxtFeedModel(v);
+                        if (store.findModel(Const.PARAM_HTML, model.getHtml()) == null) {
+                            store.insert(model, 0);
+                            // store.add(model);
+                        }
                     }
+                    if (store.getModels() != null && store.getModels().size() > 8) {
+                        setScrollMode(Style.Scroll.AUTO);
+                    }
+                    layout(true);
                 }
-                if (store.getModels().size() > 8) {
-                    panel.setScrollMode(Style.Scroll.AUTO);
-                }
-                layout(true);
-            }
-        });
+            });
+        }
     }
 
 
@@ -76,19 +78,7 @@ public class FeedPanel  extends LayoutContainer {
     @Override
     protected void onRender(Element parent, int index) {
         super.onRender(parent, index);
-        final ContentPanel panel = new ContentPanel( );
-
-      //  panel.setCollapsible(false);
-       // panel.setAnimCollapse(false);
-       // panel.setFrame(true);
-        panel.setId("images-view");
-        panel.setHeaderVisible(true);
-        panel.setHeading("Subscription Channel");
-        panel.setWidth(175);
-        // panel.setHeight("100%");
-        //  panel.setAutoHeight(true);
-        panel.setBodyBorder(false);
-
+        setBorders(false);
         view = new ListView<GxtFeedModel>() {
             @Override
             protected GxtFeedModel prepareData(GxtFeedModel model) {
@@ -121,7 +111,7 @@ public class FeedPanel  extends LayoutContainer {
         });
 
         view.setTemplate(getTemplate());
-        view.setHeight("100%");
+
         view.setItemSelector("div.thumb-wrap");
         view.getSelectionModel().addListener(Events.SelectionChange,
                 new Listener<SelectionChangedEvent<BeanModel>>() {
@@ -132,8 +122,8 @@ public class FeedPanel  extends LayoutContainer {
                     }
 
                 });
-        panel.add(view);
-        add(panel);
+
+        add(view);
 
 
     }

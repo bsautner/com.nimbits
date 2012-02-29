@@ -69,20 +69,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
     @Override
     protected void onResize(int width, int height) {
         super.onResize(width, height);
-        if (width > 0 && line != null) {
-            Runnable onLoadCallback = new Runnable() {
-                @Override
-                public void run() {
-                    mainPanel.remove(line);
-                    line = new AnnotatedTimeLine(dataTable, createOptions(), "100%", "100%");
-                    mainPanel.add(line);
-                    doLayout();
-                }
-            };
-
-            VisualizationUtils.loadVisualizationApi(onLoadCallback,
-                    AnnotatedTimeLine.PACKAGE);
-        }
+        refreshSize(width, height);
     }
 
     // ChartRemoved Click Handlers
@@ -290,11 +277,20 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
         dataTable.addColumn(ColumnType.STRING, "text0");
     }
 
-    public void refreshSize() {
-        if (line!= null) {
-            line.setHeight("100%");
-            line.setWidth("100%");
-            doLayout(true);
+    public void refreshSize(int width, int height) {
+        if (width > 0 && line != null) {
+            Runnable onLoadCallback = new Runnable() {
+                @Override
+                public void run() {
+                    mainPanel.remove(line);
+                    line = new AnnotatedTimeLine(dataTable, createOptions(), "100%", "100%");
+                    mainPanel.add(line);
+                    doLayout();
+                }
+            };
+
+            VisualizationUtils.loadVisualizationApi(onLoadCallback,
+                    AnnotatedTimeLine.PACKAGE);
         }
     }
     private void refreshChart()   {
@@ -320,9 +316,13 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
     public void addEntityModel(GxtModel model) {
         //  Entity entity = model.getBaseEntity();
         if (!points.containsKey(model.getName()) && points.size() < 10) {
-
-            points.put(model.getName(), model.getBaseEntity());
-            addPointToChart(model);
+            if (model.getEntityType().equals(EntityType.point)) {
+                points.put(model.getName(), model.getBaseEntity());
+                addPointToChart(model);
+            }
+        }
+        for (ModelData child : model.getChildren()) {
+             addEntityModel((GxtModel) child);
         }
     }
 

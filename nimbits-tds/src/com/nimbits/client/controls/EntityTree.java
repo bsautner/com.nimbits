@@ -22,6 +22,8 @@ import com.nimbits.client.enums.*;
 import com.nimbits.client.icons.*;
 import com.nimbits.client.model.*;
 
+import java.util.*;
+
 /**
  * Created by Benjamin Sautner
  * User: BSautner
@@ -30,8 +32,17 @@ import com.nimbits.client.model.*;
  */
 public class EntityTree<ModelData extends com.extjs.gxt.ui.client.data.ModelData> extends EditorTreeGrid<ModelData> {
 
-    public EntityTree(TreeStore store, ColumnModel cm) {
-        super(store, cm);
+    public EntityTree() {
+        super(new TreeStore<com.extjs.gxt.ui.client.data.ModelData>(), new ColumnModel(
+                Arrays.asList(
+                        ColumnConfigs.pointNameColumn(),
+                        ColumnConfigs.currentValueColumn(),
+                        ColumnConfigs.timestampColumn(),
+                        ColumnConfigs.noteColumn(),
+                        ColumnConfigs.dataColumn())
+        ));
+
+
 
         setIconProvider( new ModelIconProvider<ModelData>() {
             @Override
@@ -77,19 +88,7 @@ public class EntityTree<ModelData extends com.extjs.gxt.ui.client.data.ModelData
 
         });
     }
-//
-//    @Override
-//    protected boolean hasChildren(com.extjs.gxt.ui.client.data.ModelData model) {
-////        final String entityTypeVal = model.get(Const.PARAM_ENTITY_TYPE);
-////
-////        final EntityType entityType = EntityType.get (Integer.valueOf(entityTypeVal));
-////
-////        return entityType.equals(EntityType.category) ||  super.hasChildren((ModelData) model);
-//
-//        return  true;(model instanceof GxtModel) ||
-//                (!(model instanceof GxtModel)
-//                        && super.hasChildren((ModelData) model));
-//    }
+
 
 
 }

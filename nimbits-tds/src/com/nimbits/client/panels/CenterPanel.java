@@ -50,11 +50,13 @@ public class CenterPanel extends NavigationEventProvider {
     private LoginInfo loginInfo;
     private LayoutContainer chartContainer;
     private int chartHeight;
+    HBoxLayoutData flex = new HBoxLayoutData(new Margins(0, 5, 0, 0));
 
 
     public CenterPanel(LoginInfo info, Map<String, String> settings) {
         this.loginInfo = info;
         this.settings = settings;
+
     }
 
     protected void onRender(final Element target, final int index) {
@@ -97,34 +99,37 @@ public class CenterPanel extends NavigationEventProvider {
 
         final ContentPanel panel = new ContentPanel( );
         chartHeight  = Double.valueOf((Window.getClientHeight() * .9)  / 2).intValue();
-
+        int navHeight  = Double.valueOf((Window.getClientHeight())  / 2).intValue()-50;
         MainMenuBar toolBar = initToolbar(loginInfo, settings);
         panel.setTopComponent(toolBar);
         panel.setLayout(new RowLayout(Style.Orientation.VERTICAL));
-        panel.setHeaderVisible(true);
-        panel.setHeading(Const.CONST_SERVER_NAME + " " + Const.CONST_SERVER_VERSION);
-        panel.setFrame(false);
+        panel.setHeaderVisible(false);
 
+        panel.setFrame(false);
+        panel.setBodyBorder(true);
         panel.setCollapsible(true);
 
         navigationPanel = createNavigationPanel();
         navigationPanel.setLayout(new FillLayout());
-        navigationPanel.setHeight(chartHeight);
-        panel.add(navigationPanel, new RowData(1, 1, new Margins(0)));
+        navigationPanel.setHeight(navHeight);
+        panel.add(navigationPanel, new RowData(1, .5, new Margins(0)));
+        ContentPanel chartPanel = new ContentPanel();
+        chartPanel.setHeight(450);
+        chartPanel.setFrame(true);
+        chartPanel.setHeaderVisible(false);
+        HBoxLayout layout = new HBoxLayout();
+        layout.setPadding(new Padding(0));
+        layout.setHBoxLayoutAlign(HBoxLayout.HBoxLayoutAlign.MIDDLE);
+        chartContainer = new LayoutContainer();
+        chartContainer.setLayout(layout);
+        flex.setFlex(1);
+        addChart();
+       // addChart();
+        chartPanel.add(chartContainer);
+        panel.add(chartPanel, new RowData(1, 5, new Margins(0)));
 
         add(panel, new FlowData(0));
-
-        chartContainer = new LayoutContainer();
-        HBoxLayout layout = new HBoxLayout();
-
-        layout.setPadding(new Padding(5));
-        layout.setHBoxLayoutAlign(HBoxLayout.HBoxLayoutAlign.MIDDLE);
-        chartContainer.setLayout(layout);
-
-        addChart();
-        add(chartContainer);
-
-
+        chartPanel.layout();
         layout(true);
 
     }
@@ -177,18 +182,27 @@ public class CenterPanel extends NavigationEventProvider {
 
     private void addChart() {
 
-        if (chartContainer.getItemCount() < 2) {
-            for (int i = 0; i < chartContainer.getItemCount(); i++) {
-                AnnotatedTimeLinePanel p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
-                p.setSelected(false);
+//        AnnotatedTimeLinePanel chart = null;
+//        if (chartContainer.getItemCount() > 0) {
+//            chart = (AnnotatedTimeLinePanel) chartContainer.getItem(0);
+//        }
+//        chartContainer.removeAll();
 
-            }
+       // if (chartContainer.getItemCount() < 2) {
+//            for (int i = 0; i < chartContainer.getItemCount(); i++) {
+//                AnnotatedTimeLinePanel p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
+//                p.setSelected(false);
+//                if (chartContainer.getItemCount() > 0) {
+//                p.refreshSize(300, 300);
+//                }
+//            }
 
-            List<AnnotatedTimeLinePanel> list = new ArrayList<AnnotatedTimeLinePanel>();
-            HBoxLayoutData flex = new HBoxLayoutData(new Margins(1, 1, 1, 1));
-            flex.setFlex(1);
+            //List<AnnotatedTimeLinePanel> list = new ArrayList<AnnotatedTimeLinePanel>();
+
+
             final AnnotatedTimeLinePanel line = new AnnotatedTimeLinePanel(true, Const.DEFAULT_CHART_NAME + (chartContainer.getItemCount() + 1));
             line.setHeight(chartHeight);
+
             line.setSelected(true);
             line.addListener(Events.OnClick, new Listener<BaseEvent>() {
                 @Override
@@ -212,26 +226,16 @@ public class CenterPanel extends NavigationEventProvider {
                     }
                     for (int i = 0; i < chartContainer.getItemCount(); i ++) {
                         AnnotatedTimeLinePanel p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
-
-                        p.refreshSize();
-
-                    }
+                   }
                     chartContainer.layout(true);
-
                 }
             });
-
-            for (int i = 0; i < chartContainer.getItemCount(); i ++) {
-                list.add((AnnotatedTimeLinePanel) chartContainer.getItem(i));
-            }
-            list.add(line);
-            chartContainer.removeAll();
-            for (AnnotatedTimeLinePanel l : list) {
-                l.refreshSize();
-                chartContainer.add(l, flex);
-            }
+//        if (chart != null) {
+//
+//        }
+            chartContainer.add(line, flex);
             layout(true);
-        }
+      //  }
     }
 
 
@@ -282,11 +286,9 @@ public class CenterPanel extends NavigationEventProvider {
         switch (entity.getEntityType()) {
             case user:
                 break;
-            case point:
+            case point: case category:
                 chartEntity(entity);
                 break;
-            case category:
-                chartEntity(entity);
             case file:
                 showFile(entity.getBaseEntity());
                 break;

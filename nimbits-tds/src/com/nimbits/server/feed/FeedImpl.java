@@ -102,9 +102,9 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
 
 
         if (! (Double.compare(value.getNumberValue(), Const.CONST_IGNORED_NUMBER_VALUE) == 0)) {
-            sb.append("Alert State:")
+            sb.append("Alert&nbsp;Status:")
                     .append(value.getAlertState().name());
-            sb.append("&nbsp; &nbsp; Value:")
+            sb.append("&nbsp;&nbsp;Value:")
                     .append(value.getNumberValue());
         }
 

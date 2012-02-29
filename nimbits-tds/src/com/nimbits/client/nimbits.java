@@ -13,6 +13,7 @@
 
 package com.nimbits.client;
 
+import com.extjs.gxt.ui.client.*;
 import com.extjs.gxt.ui.client.Style.*;
 import com.extjs.gxt.ui.client.util.*;
 import com.extjs.gxt.ui.client.widget.*;
@@ -48,148 +49,6 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
     private final static String heading = (Const.CONST_SERVER_NAME + " " + Const.CONST_SERVER_VERSION);
     private ClientType clientType;
 
-
-    private void loadLayout(final LoginInfo loginInfo,
-                            final Action action,
-                            final Map<String, String> settings,
-                            final String uuid)  {
-
-
-        viewport = new Viewport();
-        viewport.setLayout(new BorderLayout());
-        viewport.setBorders(false);
-
-        final FeedPanel east = new FeedPanel();
-        east.setHeight("100%");
-        east.setWidth(250);
-        east.setLayout(new FillLayout());
-
-
-        if (loginInfo != null) {
-            CenterPanel center = new CenterPanel(loginInfo, settings);
-
-            center.addEntityClickedListeners(new EntityClickedListener() {
-                @Override
-                public void onEntityClicked(GxtModel entity) {
-                    if (entity.getEntityType().equals(EntityType.feed)) {
-                        east.reload();
-                    }
-                }
-            });
-
-            BorderLayoutData centerData = new BorderLayoutData(LayoutRegion.CENTER);
-            center.setHeight("100%");
-            center.setLayout(new FillLayout());
-            centerData.setMargins(new Margins(5));
-
-
-            BorderLayoutData eastData = new BorderLayoutData(LayoutRegion.EAST, 250);
-            eastData.setSplit(true);
-            eastData.setCollapsible(true);
-            eastData.setMargins(new Margins(5));
-
-
-            viewport.add(east, eastData);
-            viewport.add(center, centerData);
-            if (action.equals(Action.subscribe)) {
-                Cookies.removeCookie(Action.subscribe.name());
-                showSubscriptionPanel(uuid, settings);
-            }
-            viewport.setHeight("100%");
-            RootPanel.get("main").add(viewport);
-        }
-    }
-
-
-
-
-    public void showSubscriptionPanel(final String uuid, final Map<String, String> settings) {
-
-        EntityServiceAsync service = GWT.create(EntityService.class);
-
-        service.getEntityByUUID(uuid, new AsyncCallback<Entity>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                //auto generated
-            }
-
-            @Override
-            public void onSuccess(Entity result) {
-                SubscriptionPanel dp = new SubscriptionPanel(result, settings);
-
-                final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
-                w.setWidth(500);
-                w.setHeight(500);
-                w.setHeading("Subscribe");
-                w.add(dp);
-                dp.addSubscriptionAddedListener(new NavigationEventProvider.EntityAddedListener() {
-                    @Override
-                    public void onEntityAdded(Entity model) {
-                        w.hide();
-                        Cookies.removeCookie(Action.subscribe.name());
-                        //  mainPanel.addEntity(result);
-                        //TODO   mainPanel.addEnToTree(result);
-
-                    }
-                });
-
-                w.show();
-            }
-        });
-    }
-    private void loadDiagramView(final Entity diagram,
-                                 final ClientType clientType) {
-
-        viewport = new Viewport();
-        viewport.setLayout(new BorderLayout());
-        viewport.setBorders(false);
-
-        final ContentPanel contentPanel = new ContentPanel(new FillLayout());
-        contentPanel.setHeaderVisible(true);
-        contentPanel.setHeading(Const.HTML_HOME_LINK + " | " + heading + " "
-                + diagram.getName());
-
-        //  diagram.setFullScreenView(true);
-
-        final DiagramPanel diagramPanel = new DiagramPanel(diagram, false, Window.getClientWidth(), Window.getClientHeight());
-        diagramPanel.addEntityClickedListeners(new NavigationEventProvider.EntityClickedListener() {
-
-            @Override
-            public void onEntityClicked(final GxtModel p) {
-
-                if (clientType == ClientType.other) {
-                    switch (p.getEntityType()) {
-                        case point:
-                            //TODO  showAnnotatedTimeLine(p);
-                        case file:
-                            //TODO  loadDiagramView(d, clientType);
-                    }
-
-                }
-                else {
-                    Window.Location.replace("?" + Const.PARAM_CLIENT + "=" + Const.WORD_ANDROID + "&" + Const.PARAM_POINT + "=" + p.getName());
-                }
-
-            }
-
-        });
-
-
-
-        diagramPanel.addUrlClickedListeners(new NavigationEventProvider.UrlClickedListener() {
-
-            @Override
-            public void onUrlClicked(String url, String target) {
-                Window.Location.replace(url);
-            }
-        });
-        diagramPanel.setHeight("100%");
-        contentPanel.add(diagramPanel);
-        contentPanel.setLayout(new FillLayout());
-        viewport.add(contentPanel, new BorderLayoutData(LayoutRegion.CENTER));
-        RootPanel.get().add(viewport);
-
-    }
 
     @Override
     public void onModuleLoad() {
@@ -261,6 +120,259 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
     }
 
 
+    private void decideWhatViewToLoad(final String uuid,
+                                      final String code,
+                                      final String oauth_token,
+                                      final Action action){
+        SettingsServiceAsync settingService = GWT.create(SettingsService.class);
+        settingService.getSettings(new AsyncCallback<Map<String, String>>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                GWT.log(caught.getMessage(), caught);
+                if (loginInfo != null) {
+                    Window.Location.replace(loginInfo.getLogoutUrl());
+                }
+
+            }
+
+            @Override
+            public void onSuccess(final Map<String, String> settings) {
+                switch (action) {
+                    case report:
+                        loadSinglePointDisplay(uuid);
+                        break;
+                    case diagram:
+                        processDiagramRequest(uuid, clientType);
+                        break;
+                    case facebook:
+                        finishFacebookAuthentication(settings, code);
+                        break;
+                    case twitterFinishReg:
+                        finishTwitterAuthentication(settings, oauth_token, action);
+                        break;
+                    case subscribe: case none:
+                        decidedWhatViewToLoadSecondStep(action, settings, uuid);
+                        break;
+                    default:
+                        loadLogin();
+                }
+            }
+
+        });
+    }
+
+
+
+
+    private void decidedWhatViewToLoadSecondStep(final Action action, final Map<String, String> settings, final String uuid)   {
+        LoginServiceAsync loginService = GWT
+                .create(LoginService.class);
+        loginService.login(GWT.getHostPageBaseURL(),
+                new AsyncCallback<LoginInfo>() {
+                    @Override
+                    public void onFailure(Throwable error) {
+                        GWT.log(error.getMessage(), error);
+                        handleError(error);
+                    }
+
+                    @Override
+                    public void onSuccess(LoginInfo result) {
+                        loginInfo = result;
+                        if (loginInfo.isLoggedIn()) {
+                            switch (action) {
+                                case android:  case subscribe: case none:
+                                    loadPortalView(loginInfo, action, settings, uuid);
+                                    break;
+                                case twitter:
+                                    doTwitterRedirectForAuthorisation();
+                                    break;
+                                default:
+                                    loadLogin();
+                            }
+                        } else {
+                            if (action.equals(Action.subscribe)) {
+                                Cookies.setCookie(Action.subscribe.name(), uuid);
+                            }
+                            loadLogin();
+                        }
+                    }
+
+                });
+    }
+
+    private void doTwitterRedirectForAuthorisation() {
+        final TwitterServiceAsync twitterService = GWT.create(TwitterService.class);
+        twitterService.twitterAuthorise(loginInfo.getEmailAddress(), new AsyncCallback<String>() {
+
+            @Override
+            public void onFailure(Throwable caught) {
+                GWT.log(caught.getMessage(), caught);
+            }
+
+            @Override
+            public void onSuccess(String result) {
+
+                Location.replace(result);
+            }
+
+        });
+    }
+
+
+
+    private void loadPortalView(final LoginInfo loginInfo,
+                                    final Action action,
+                                    final Map<String, String> settings,
+                                    final String uuid)  {
+
+
+        viewport = new Viewport();
+        viewport.setLayout(new BorderLayout());
+        viewport.setBorders(false);
+        final FeedPanel feedPanel = new FeedPanel();
+        //feedPanel.setLayout(new FitLayout());
+        //feedPanel.setHeight("100%");
+
+
+
+        if (loginInfo != null) {
+            CenterPanel centerPanel = new CenterPanel(loginInfo, settings);
+
+            centerPanel.addEntityClickedListeners(new EntityClickedListener() {
+                @Override
+                public void onEntityClicked(GxtModel entity) {
+                    if (entity.getEntityType().equals(EntityType.feed)) {
+                        feedPanel.reload();
+                    }
+                }
+            });
+
+            ContentPanel center = new ContentPanel();
+            center.setHeading(Const.CONST_SERVER_NAME + " " + Const.CONST_SERVER_VERSION);
+            center.setScrollMode(Style.Scroll.AUTOX);
+
+            ContentPanel east = new ContentPanel();
+            east.setHeading("Subscription Channel");
+            BorderLayoutData centerData = new BorderLayoutData(LayoutRegion.CENTER);
+            centerData.setMargins(new Margins(0,0,5,0));
+
+            BorderLayoutData eastData = new BorderLayoutData(LayoutRegion.EAST, 250);
+            eastData.setSplit(true);
+            eastData.setCollapsible(true);
+            eastData.setMargins(new Margins(0,0,5,5));
+
+            center.add(centerPanel);
+            east.add(feedPanel);
+
+            viewport.add(center, centerData);
+            viewport.add(east, eastData);
+
+
+            if (action.equals(Action.subscribe)) {
+                Cookies.removeCookie(Action.subscribe.name());
+                showSubscriptionPanel(uuid, settings);
+            }
+            viewport.setHeight("100%");
+            RootPanel.get("main").add(viewport);
+        }
+    }
+
+
+
+
+    public void showSubscriptionPanel(final String uuid, final Map<String, String> settings) {
+
+        EntityServiceAsync service = GWT.create(EntityService.class);
+
+        service.getEntityByUUID(uuid, new AsyncCallback<Entity>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                //auto generated
+            }
+
+            @Override
+            public void onSuccess(Entity result) {
+                SubscriptionPanel dp = new SubscriptionPanel(result, settings);
+
+                final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
+                w.setWidth(500);
+                w.setHeight(500);
+                w.setHeading("Subscribe");
+                w.add(dp);
+                dp.addSubscriptionAddedListener(new NavigationEventProvider.EntityAddedListener() {
+                    @Override
+                    public void onEntityAdded(Entity model) {
+                        w.hide();
+                        Cookies.removeCookie(Action.subscribe.name());
+                        //  mainPanel.addEntity(result);
+                        //TODO   mainPanel.addEnToTree(result);
+
+                    }
+                });
+
+                w.show();
+            }
+        });
+    }
+
+    private void loadDiagramView(final Entity diagram,
+                                 final ClientType clientType) {
+
+        viewport = new Viewport();
+        viewport.setLayout(new BorderLayout());
+        viewport.setBorders(false);
+
+        final ContentPanel contentPanel = new ContentPanel(new FillLayout());
+        contentPanel.setHeaderVisible(true);
+        contentPanel.setHeading(Const.HTML_HOME_LINK + " | " + heading + " "
+                + diagram.getName());
+
+        //  diagram.setFullScreenView(true);
+
+        final DiagramPanel diagramPanel = new DiagramPanel(diagram, false, Window.getClientWidth(), Window.getClientHeight());
+        diagramPanel.addEntityClickedListeners(new NavigationEventProvider.EntityClickedListener() {
+
+            @Override
+            public void onEntityClicked(final GxtModel p) {
+
+                if (clientType == ClientType.other) {
+                    switch (p.getEntityType()) {
+                        case point:
+                            //TODO  showAnnotatedTimeLine(p);
+                        case file:
+                            //TODO  loadDiagramView(d, clientType);
+                    }
+
+                }
+                else {
+                    Window.Location.replace("?" + Const.PARAM_CLIENT + "=" + Const.WORD_ANDROID + "&" + Const.PARAM_POINT + "=" + p.getName());
+                }
+
+            }
+
+        });
+
+
+
+        diagramPanel.addUrlClickedListeners(new NavigationEventProvider.UrlClickedListener() {
+
+            @Override
+            public void onUrlClicked(String url, String target) {
+                Window.Location.replace(url);
+            }
+        });
+        diagramPanel.setHeight("100%");
+        contentPanel.add(diagramPanel);
+        contentPanel.setLayout(new FillLayout());
+        viewport.add(contentPanel, new BorderLayoutData(LayoutRegion.CENTER));
+        RootPanel.get().add(viewport);
+
+    }
+
+
+
+
     private void processDiagramRequest(final String diagramName, final ClientType clientType) {
         BlobServiceAsync diagramService = GWT.create(BlobService.class);
 
@@ -292,56 +404,6 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
     }
 
-
-    private void decideWhatViewToLoad(final String uuid,
-                                      final String code,
-                                      final String oauth_token,
-                                      final Action action){
-        SettingsServiceAsync settingService = GWT.create(SettingsService.class);
-        settingService.getSettings(new AsyncCallback<Map<String, String>>() {
-
-            @Override
-            public void onFailure(Throwable caught) {
-                GWT.log(caught.getMessage(), caught);
-                if (loginInfo != null) {
-                Window.Location.replace(loginInfo.getLogoutUrl());
-                }
-
-            }
-
-            @Override
-            public void onSuccess(final Map<String, String> settings) {
-                switch (action) {
-                    case report:
-                        loadSinglePointDisplay(uuid);
-                        break;
-                    case diagram:
-                        processDiagramRequest(uuid, clientType);
-                        break;
-                    case facebook:
-                        finishFacebookAuthentication(settings, code);
-                        break;
-                    case twitterFinishReg:
-                        finishTwitterAuthentication(settings, oauth_token, action);
-                        break;
-                    case subscribe:
-                        loadPortal(action, settings, uuid);
-                        break;
-
-                    case none:
-                        loadPortal(action, settings, uuid);
-                        break;
-                    default:
-                        loadLogin();
-                }
-            }
-
-        });
-    }
-
-
-
-
     private void finishFacebookAuthentication(final Map<String, String> settings, final String code) {
         getViewport();
         FacebookPanel fbPanel = new FacebookPanel(code, settings);
@@ -367,7 +429,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
                     @Override
                     public void onSuccess(Void result) {
                         Window.alert(Const.MESSAGE_TWITTER_ADDED);
-                        loadPortal(action, settings, null);
+                        decidedWhatViewToLoadSecondStep(action, settings, null);
 
                     }
 
@@ -384,64 +446,6 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
     private void loadSinglePointDisplay(final String uuid) {
         Location.replace("report.html?uuid=" + uuid);
     }
-
-    private void loadPortal(final Action action, final Map<String, String> settings, final String uuid)   {
-        LoginServiceAsync loginService = GWT
-                .create(LoginService.class);
-        loginService.login(GWT.getHostPageBaseURL(),
-                new AsyncCallback<LoginInfo>() {
-                    @Override
-                    public void onFailure(Throwable error) {
-                        GWT.log(error.getMessage(), error);
-                        handleError(error);
-                    }
-
-                    @Override
-                    public void onSuccess(LoginInfo result) {
-                        loginInfo = result;
-                        if (loginInfo.isLoggedIn()) {
-                            switch (action) {
-                                case android: case none:
-                                    loadLayout(loginInfo, action, settings, uuid);
-                                    break;
-                                case twitter:
-                                    final TwitterServiceAsync twitterService = GWT.create(TwitterService.class);
-                                    twitterService.twitterAuthorise(loginInfo.getEmailAddress(), new AsyncCallback<String>() {
-
-                                        @Override
-                                        public void onFailure(Throwable caught) {
-                                            GWT.log(caught.getMessage(), caught);
-                                        }
-
-                                        @Override
-                                        public void onSuccess(String result) {
-
-                                            Location.replace(result);
-                                        }
-
-                                    });
-                                    break;
-                                case subscribe:
-
-                                    loadLayout(loginInfo, action, settings, uuid);
-                                    break;
-
-                                default:
-
-                                    loadLogin();
-
-                            }
-                        } else {
-                            if (action.equals(Action.subscribe)) {
-                                Cookies.setCookie(Action.subscribe.name(), uuid);
-                            }
-                            loadLogin();
-                        }
-                    }
-
-                });
-    }
-
 
     private void loadLogin() {
 

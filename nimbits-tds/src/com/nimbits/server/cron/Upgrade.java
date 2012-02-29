@@ -45,10 +45,11 @@ public class Upgrade {
 
         //test all buttons, export etc
 
-        //
+        //review memcache
 
 
         //next version
+
         //xmpp server configurable
 
         //xmpp single points
@@ -61,7 +62,7 @@ public class Upgrade {
 
         //fix move task to only work with active points
 
-        //review memcache
+
 
     }
 

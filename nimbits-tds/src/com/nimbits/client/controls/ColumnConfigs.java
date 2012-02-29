@@ -33,7 +33,7 @@ public class ColumnConfigs {
 
 
 
-    public ColumnConfig timestampColumn() {
+    public static ColumnConfig timestampColumn() {
         final DateField dateField = new DateField();
         dateField.getPropertyEditor().setFormat(
                 DateTimeFormat.getFormat(Const.FORMAT_DATE_TIME));
@@ -42,7 +42,7 @@ public class ColumnConfigs {
         columnTime.setId(Const.PARAM_TIMESTAMP);
         columnTime.setHeader(Const.WORD_TIMESTAMP);
         columnTime.setAlignment(Style.HorizontalAlignment.LEFT);
-        columnTime.setWidth(200);
+        columnTime.setWidth(175);
         columnTime.setDateTimeFormat(DateTimeFormat
                 .getFormat(Const.FORMAT_DATE_TIME));
         columnTime.setEditor(new CellEditor(dateField));
@@ -50,7 +50,7 @@ public class ColumnConfigs {
         return columnTime;
     }
 
-    public ColumnConfig noteColumn( ) {
+    public static ColumnConfig noteColumn( ) {
         final ColumnConfig columnNote = new ColumnConfig();
         columnNote.setId(Const.PARAM_NOTE);
         columnNote.setHeader(Const.WORD_ANNOTATION);
@@ -63,7 +63,7 @@ public class ColumnConfigs {
         return (columnNote);
     }
 
-    public ColumnConfig dataColumn() {
+    public static ColumnConfig dataColumn() {
         final ColumnConfig columnData = new ColumnConfig();
         columnData.setId(Const.PARAM_DATA);
         columnData.setHeader(Const.WORD_DATA);
@@ -76,7 +76,7 @@ public class ColumnConfigs {
         return (columnData);
     }
 
-    public ColumnConfig currentValueColumn() {
+    public static ColumnConfig currentValueColumn() {
         final NumberField n = new NumberField();
         n.getPropertyEditor().setFormat(NumberFormat.getDecimalFormat());
         n.setSelectOnFocus(true);
@@ -86,7 +86,7 @@ public class ColumnConfigs {
         columnValue.setId(Const.PARAM_VALUE);
         columnValue.setHeader(Const.WORD_VALUE);
         columnValue.setAlignment(Style.HorizontalAlignment.CENTER);
-        columnValue.setWidth(50);
+        columnValue.setWidth(100);
         columnValue.setNumberFormat(NumberFormat.getDecimalFormat());
         CellEditor ce = new CellEditor(n);
         columnValue.setEditor(ce);
@@ -94,12 +94,12 @@ public class ColumnConfigs {
         return (columnValue);
     }
 
-    public ColumnConfig pointNameColumn() {
+    public static ColumnConfig pointNameColumn() {
         final ColumnConfig nameColumn =  new ColumnConfig(Const.PARAM_NAME, Const.MESSAGE_DATA_POINT, 150);
         nameColumn.setId(Const.PARAM_NAME);
-        nameColumn.setHeader(Const.MESSAGE_DATA_POINT);
+        nameColumn.setHeader("Objects");
         nameColumn.setAlignment(Style.HorizontalAlignment.LEFT);
-        nameColumn.setWidth(150);
+        nameColumn.setWidth(225);
         nameColumn.setRenderer(new TreeGridCellRenderer<ModelData>());
 
         TextField<String> nameText = new TextField<String>();
@@ -110,57 +110,7 @@ public class ColumnConfigs {
     }
 
 
-    public ColumnConfig alertColumn() {
 
-        final GridCellRenderer<GxtModel> propertyButtonRenderer = new GridCellRenderer<GxtModel>() {
-
-            public Object render(final GxtModel model, final String property, final ColumnData config, final int rowIndex,
-                                 final int colIndex, final ListStore<GxtModel> store, final Grid<GxtModel> grid) {
-
-                final Button b = new Button((String) model.get(property), new SelectionListener<ButtonEvent>() {
-                    @Override
-                    public void componentSelected(final ButtonEvent ce) {
-                        final Entity p = model.getBaseEntity();
-                        String u = Window.Location.getHref()
-                                + "?uuid=" + p.getUUID()
-                                + "&count=10";
-                        Window.open(u, p.getName().getValue(), Const.PARAM_DEFAULT_WINDOW_OPTIONS);
-
-                    }
-                });
-
-                b.setWidth(22);
-                b.setToolTip(Const.MESSAGE_CLICK_TO_TREND);
-                b.setEnabled(!model.isReadOnly());
-
-                b.setBorders(false);
-                switch (model.getAlertType()) {
-                    case IdleAlert:
-                        b.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.point_idle()));
-                        break;
-                    case HighAlert:
-                        b.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.point_high()));
-                        break;
-                    case LowAlert:
-                        b.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.point_low()));
-                        break;
-                    default:
-                        b.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.point_ok()));
-
-                }
-
-                return b;
-            }
-        };
-
-        final ColumnConfig c = new ColumnConfig();
-        c.setId(Const.PARAM_STATE);
-        c.setHeader("state");
-        c.setWidth(35);
-        c.setAlignment(Style.HorizontalAlignment.LEFT);
-        c.setRenderer(propertyButtonRenderer);
-        return (c);
-    }
 
 
 }

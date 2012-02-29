@@ -20,6 +20,7 @@ import com.extjs.gxt.ui.client.dnd.*;
 import com.extjs.gxt.ui.client.event.*;
 import com.extjs.gxt.ui.client.store.*;
 import com.extjs.gxt.ui.client.widget.grid.*;
+import com.extjs.gxt.ui.client.widget.treegrid.*;
 import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.*;
@@ -103,8 +104,8 @@ class NavigationPanel extends NavigationEventProvider {
         treeDNDBuilder();
 
         removeAll();
+
         add(tree);
-        tree.setExpanded(userModel, true);
 
 
     }
@@ -239,7 +240,9 @@ class NavigationPanel extends NavigationEventProvider {
         }
 
         final GxtModel userModel = new GxtModel(user);
+
         addChildrenToModel(result, parents, userModel);
+
         model.add(userModel);
 
         tree.getTreeStore().add(model, true);

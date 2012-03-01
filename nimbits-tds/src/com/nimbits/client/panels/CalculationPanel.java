@@ -223,7 +223,7 @@ public class CalculationPanel extends NavigationEventProvider {
             svc.getEntityByUUID(calculation.getTrigger(), new AsyncCallback<Entity>() {
                 @Override
                 public void onFailure(Throwable throwable) {
-                    //To change body of implemented methods use File | Settings | File Templates.
+                    GWT.log(throwable.getMessage(), throwable);
                 }
 
                 @Override

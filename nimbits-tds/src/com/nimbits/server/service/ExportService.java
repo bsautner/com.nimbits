@@ -31,11 +31,11 @@ public class ExportService extends HttpServlet {
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
 
-        final String pointNameParam = req.getParameter(Const.PARAM_POINT);
-        final String countStr = req.getParameter(Const.PARAM_COUNT);
-        String segStr = req.getParameter(Const.PARAM_SEGMENT);
-        final String startDate = req.getParameter(Const.PARAM_START_DATE);
-        final String endDate = req.getParameter(Const.PARAM_END_DATE);
+        final String pointNameParam = req.getParameter(Const.Params.PARAM_POINT);
+        final String countStr = req.getParameter(Const.Params.PARAM_COUNT);
+        String segStr = req.getParameter(Const.Params.PARAM_SEGMENT);
+        final String startDate = req.getParameter(Const.Params.PARAM_START_DATE);
+        final String endDate = req.getParameter(Const.Params.PARAM_END_DATE);
 
         resp.setContentType("text/plain");
         resp.setStatus(HttpServletResponse.SC_OK);
@@ -49,7 +49,7 @@ public class ExportService extends HttpServlet {
 
     @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
-        BlobKey blobKey = new BlobKey(req.getParameter(Const.PARAM_BLOB_KEY));
+        BlobKey blobKey = new BlobKey(req.getParameter(Const.Params.PARAM_BLOB_KEY));
         blobstoreService.serve(blobKey, resp);
     }
 }

@@ -30,16 +30,12 @@ public interface PointServiceAsync {
 
     void updatePoint(final Point point, final AsyncCallback<Point> asyncCallback);
 
-    void getPointByName(final User pointOwner, final EntityName name,
-                        final AsyncCallback<Point> asyncCallback);
 
     void getPointByID(final long id, final AsyncCallback<Point> asyncCallback);
 
     void getPoints(final User u, final AsyncCallback<List<Point>> callback);
 
     void getPointByUUID(final String uuid, final AsyncCallback<Point> asyncCallback);
-
-    void getPointsByName(final long pointOwnerId, final Set<EntityName> names, final AsyncCallback<Map<EntityName, Point>> async);
 
     void getPointByID(final User u, final long id, final AsyncCallback<Point> async);
 
@@ -49,9 +45,7 @@ public interface PointServiceAsync {
 
     void getIdlePoints(final AsyncCallback<List<Point>> async);
 
-   void updatePoint(final User u, final Point point, AsyncCallback<Point> async);
-
-
+    void updatePoint(final User u, final Point point, AsyncCallback<Point> async);
     void getAllPoints(final AsyncCallback<List<Point>> async);
 
     void addPoint(final User user, final Entity entity, AsyncCallback<Point> async);

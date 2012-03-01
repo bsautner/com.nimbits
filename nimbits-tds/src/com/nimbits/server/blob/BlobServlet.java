@@ -52,7 +52,7 @@ public class BlobServlet extends HttpServlet {
         String diagramNameParam = req.getParameter(Const.PARAM_FILE_NAME);
         final int lastIndex = diagramNameParam.lastIndexOf('\\');
         final String fileName = diagramNameParam.substring(lastIndex + 1);
-        session.setAttribute(Const.PARAM_EMAIL, CommonFactoryLocator.getInstance().createEmailAddress(email));
+        session.setAttribute(Const.Params.PARAM_EMAIL, CommonFactoryLocator.getInstance().createEmailAddress(email));
         final User u;
         try {
             u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
@@ -96,7 +96,7 @@ public class BlobServlet extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        BlobKey blobKey = new BlobKey(req.getParameter(Const.PARAM_BLOB_KEY));
+        BlobKey blobKey = new BlobKey(req.getParameter(Const.Params.PARAM_BLOB_KEY));
         blobstoreService.serve(blobKey, res);
     }
 

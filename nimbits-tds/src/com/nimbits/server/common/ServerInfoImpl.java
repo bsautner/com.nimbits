@@ -25,13 +25,11 @@ import java.util.logging.*;
  * Time: 9:35 AM
  */
 public class ServerInfoImpl {
-    private static final Logger log = Logger.getLogger(ServerInfoImpl.class.getName());
+
 
     public static String getFullServerURL(final HttpServletRequest req) {
+        return (req == null) ? getUrl() : req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort();
 
-        String retVal =  req == null ? getUrl() : req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort();
-         log.severe(retVal);
-        return retVal;
     }
     private  static String getUrl() {
         String hostUrl;

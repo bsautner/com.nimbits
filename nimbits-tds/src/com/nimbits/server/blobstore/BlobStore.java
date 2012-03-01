@@ -16,11 +16,11 @@ package com.nimbits.server.blobstore;
 import com.nimbits.client.enums.*;
 
 /**
- * Created by IntelliJ IDEA.
+ * Created by Benjamin Sautner
  * User: ubuntu
  * Date: 11/15/11
  * Time: 5:05 PM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public interface BlobStore {
     String createFile(final String data, final ExportType exportType) ;

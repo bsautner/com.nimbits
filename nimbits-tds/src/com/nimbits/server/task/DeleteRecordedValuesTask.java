@@ -32,8 +32,8 @@ public class DeleteRecordedValuesTask extends HttpServlet {
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
 
-        final String pointID = req.getParameter(Const.PARAM_POINT_ID);
-        final String exp = req.getParameter(Const.PARAM_EXP);
+        final String pointID = req.getParameter(Const.Params.PARAM_POINT_ID);
+        final String exp = req.getParameter(Const.Params.PARAM_EXP);
 
 
           int expDays = 0;
@@ -64,7 +64,7 @@ public class DeleteRecordedValuesTask extends HttpServlet {
 
         q.addFilter("pointFK", Query.FilterOperator.EQUAL, p.getId());
         if (expOnly) {
-            q.addFilter(Const.PARAM_TIMESTAMP, Query.FilterOperator.LESS_THAN, d.getTime());
+            q.addFilter(Const.Params.PARAM_TIMESTAMP, Query.FilterOperator.LESS_THAN, d.getTime());
         }
         for (final Entity e : store.prepare(q).asList(FetchOptions.Builder.withLimit(5000))) {
             count++;

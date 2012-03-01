@@ -14,11 +14,9 @@
 package com.nimbits.client.panels;
 
 import com.extjs.gxt.ui.client.*;
-import com.extjs.gxt.ui.client.data.*;
 import com.extjs.gxt.ui.client.event.*;
 import com.extjs.gxt.ui.client.util.*;
 import com.extjs.gxt.ui.client.widget.*;
-import com.extjs.gxt.ui.client.widget.button.*;
 import com.extjs.gxt.ui.client.widget.layout.*;
 import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.*;
@@ -307,7 +305,7 @@ public class CenterPanel extends NavigationEventProvider {
     private void showFile(Entity entity) {
         final String resourceUrl =
                 Const.PATH_BLOB_SERVICE +
-                        "?" + Const.PARAM_BLOB_KEY + "=" + entity.getBlobKey();
+                        "?" + Const.Params.PARAM_BLOB_KEY + "=" + entity.getBlobKey();
         Window.open(resourceUrl, entity.getName().getValue(), "");
     }
 

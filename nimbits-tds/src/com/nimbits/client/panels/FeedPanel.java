@@ -79,6 +79,7 @@ public class FeedPanel  extends LayoutContainer {
     protected void onRender(Element parent, int index) {
         super.onRender(parent, index);
         setBorders(false);
+
         view = new ListView<GxtFeedModel>() {
             @Override
             protected GxtFeedModel prepareData(GxtFeedModel model) {
@@ -111,7 +112,7 @@ public class FeedPanel  extends LayoutContainer {
         });
 
         view.setTemplate(getTemplate());
-
+        view.setBorders(false);
         view.setItemSelector("div.thumb-wrap");
         view.getSelectionModel().addListener(Events.SelectionChange,
                 new Listener<SelectionChangedEvent<BeanModel>>() {

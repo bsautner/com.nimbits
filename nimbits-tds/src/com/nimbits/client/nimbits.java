@@ -52,14 +52,14 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
     @Override
     public void onModuleLoad() {
-        final String clientTypeParam = Location.getParameter(Const.PARAM_CLIENT);
+        final String clientTypeParam = Location.getParameter(Const.Params.PARAM_CLIENT);
         String uuid = Location.getParameter(Const.PARAM_UUID);
-        final String actionParam = Location.getParameter(Const.PARAM_ACTION);
-        final String fb = Location.getParameter(Const.PARAM_FACEBOOK);
-        final String code = Location.getParameter(Const.PARAM_CODE);
-        final String tw = Location.getParameter(Const.PARAM_TWITTER);
-        final String oauth_token = Location.getParameter(Const.PARAM_OAUTH);
-        final String diagramUUID = Location.getParameter(Const.PARAM_DIAGRAM);
+        final String actionParam = Location.getParameter(Const.Params.PARAM_ACTION);
+        final String fb = Location.getParameter(Const.Params.PARAM_FACEBOOK);
+        final String code = Location.getParameter(Const.Params.PARAM_CODE);
+        final String tw = Location.getParameter(Const.Params.PARAM_TWITTER);
+        final String oauth_token = Location.getParameter(Const.Params.PARAM_OAUTH);
+        final String diagramUUID = Location.getParameter(Const.Params.PARAM_DIAGRAM);
 
 //        final String debug = Location.getParameter(Const.PARAM_DEBUG);
         boolean doAndroid = false;
@@ -71,8 +71,8 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         boolean doSubscribe = (uuid != null && actionParam != null && actionParam.equals(Action.subscribe.name()));
         Action action = Action.none;
 
-        if (Cookies.getCookieNames().contains(Const.PARAM_CLIENT) && Utils.isEmptyString(clientTypeParam)) {
-            clientType = ClientType.valueOf(Cookies.getCookie(Const.PARAM_CLIENT));
+        if (Cookies.getCookieNames().contains(Const.Params.PARAM_CLIENT) && Utils.isEmptyString(clientTypeParam)) {
+            clientType = ClientType.valueOf(Cookies.getCookie(Const.Params.PARAM_CLIENT));
         }
         else if (!Utils.isEmptyString(clientTypeParam) && clientTypeParam.equals(Const.WORD_ANDROID)) {
             clientType = ClientType.android;
@@ -111,7 +111,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
             action = Action.facebook;
         }
 
-        Cookies.setCookie(Const.PARAM_CLIENT, clientType.name());
+        Cookies.setCookie(Const.Params.PARAM_CLIENT, clientType.name());
 
 
 
@@ -346,7 +346,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
                 }
                 else {
-                    Window.Location.replace("?" + Const.PARAM_CLIENT + "=" + Const.WORD_ANDROID + "&" + Const.PARAM_POINT + "=" + p.getName());
+                    Window.Location.replace("?" + Const.Params.PARAM_CLIENT + "=" + Const.WORD_ANDROID + "&" + Const.Params.PARAM_POINT + "=" + p.getName());
                 }
 
             }

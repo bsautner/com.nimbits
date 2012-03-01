@@ -22,7 +22,7 @@ import com.nimbits.client.model.*;
  * Date: 5/20/11
  * Time: 5:38 PM
  */
-@RemoteServiceRelativePath(Const.PARAM_BLOB)
+@RemoteServiceRelativePath(Const.Params.PARAM_BLOB)
 public interface BlobService extends RemoteService {
 
     String getBlobStoreUrl(String url);

@@ -38,8 +38,8 @@ public class CalculationServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         super.doPost(req, resp);
 
-        String json = req.getParameter(Const.PARAM_JSON);
-        String nameParam = req.getParameter(Const.PARAM_NAME);
+        String json = req.getParameter(Const.Params.PARAM_JSON);
+        String nameParam = req.getParameter(Const.Params.PARAM_NAME);
 
 
         Calculation c = GsonFactory.getInstance().fromJson(json, CalculationModel.class);

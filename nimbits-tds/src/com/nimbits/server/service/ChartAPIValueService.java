@@ -41,7 +41,7 @@ public class ChartAPIValueService extends HttpServlet {
 
     @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp) {
-        String pointNameParam = req.getParameter(Const.PARAM_POINT);
+        String pointNameParam = req.getParameter(Const.Params.PARAM_POINT);
         String uuid = req.getParameter(Const.PARAM_UUID);
 
         try {
@@ -57,7 +57,7 @@ public class ChartAPIValueService extends HttpServlet {
         }
     }
 
-    private void processRequest(HttpServletResponse resp, EntityName point, String uuid, User u) throws IOException, NimbitsException {
+    private void processRequest(HttpServletResponse resp, EntityName pointName, String uuid, User u) throws IOException, NimbitsException {
         OutputStream out;
         Value nv;
         out = resp.getOutputStream();
@@ -65,8 +65,10 @@ public class ChartAPIValueService extends HttpServlet {
 
         if (uuid != null) {
             p = PointServiceFactory.getInstance().getPointByUUID(uuid);
-        } else if (point != null) {
-            p = PointServiceFactory.getInstance().getPointByName(u, point);
+        } else if (pointName != null) {
+            Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
+            p = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
+
         } else {
             p = null;
         }

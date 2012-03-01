@@ -141,9 +141,6 @@ public class EntityDaoImpl implements  EntityTransactions {
         List<String> uuids = new ArrayList<String>();
         Map<String, Entity> connections = getEntityMap(EntityType.userConnection);
 
-
-        //TODO - need to write a dts to move all users, connections etc to entiities
-
         uuids.add(user.getUuid());
 
 

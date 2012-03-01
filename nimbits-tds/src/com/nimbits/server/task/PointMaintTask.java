@@ -36,7 +36,7 @@ public class PointMaintTask extends HttpServlet {
         final Gson gson = GsonFactory.getInstance();
         resp.setContentType(Const.CONTENT_TYPE_HTML);
 
-        final String pointJson = req.getParameter(Const.PARAM_POINT);
+        final String pointJson = req.getParameter(Const.Params.PARAM_POINT);
         final PointModel p = gson.fromJson(pointJson, PointModel.class);
         // final UserContext context = gson.fromJson(jsonContext, UserContextImpl.class);
 
@@ -45,7 +45,7 @@ public class PointMaintTask extends HttpServlet {
         try {
             n = UserTransactionFactory.getInstance().getNimbitsUserByID(p.getUserFK());
         } catch (Exception e) {
-
+           log.severe(e.getMessage());
         }
 
 

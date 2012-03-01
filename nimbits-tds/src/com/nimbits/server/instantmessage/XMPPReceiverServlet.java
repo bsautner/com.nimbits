@@ -220,16 +220,18 @@ public class XMPPReceiverServlet extends HttpServlet {
     private void sendCurrentValue(final String body, final User u) throws NimbitsException {
         if (!Utils.isEmptyString(body) && body.endsWith("?")) {
             final EntityName pointName = CommonFactoryLocator.getInstance().createName(body.replace("?", ""));
-            final Point p = PointServiceFactory.getInstance().getPointByName(u, pointName);
-            Entity entity = EntityServiceFactory.getInstance().getEntityByUUID(p.getUUID());
+
+            Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
+            Point point = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
+
             String t = "";
 
-            final Value v = RecordedValueServiceFactory.getInstance().getPrevValue(p, new Date());
+            final Value v = RecordedValueServiceFactory.getInstance().getPrevValue(point, new Date());
             if (v != null) {
                 if (v.getNote() != null && v.getNote().length() > 0) {
                     t = v.getNote();
                 }
-                IMFactory.getInstance().sendMessage(entity.getName().getValue() + "="
+                IMFactory.getInstance().sendMessage(e.getName().getValue() + "="
                         + v.getNumberValue() + " " + t, u.getEmail());
             } else {
                 IMFactory.getInstance().sendMessage(pointName.getValue() + " has no data", u.getEmail());

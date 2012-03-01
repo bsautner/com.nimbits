@@ -21,7 +21,6 @@ import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.server.common.*;
 import com.nimbits.server.settings.*;
-import org.apache.commons.lang3.*;
 
 import javax.mail.*;
 import javax.mail.internet.*;
@@ -96,7 +95,7 @@ public class EmailServiceImpl implements EmailService {
     private static InternetAddress getFromEmail() throws UnsupportedEncodingException {
         final String fromEmail;
         try {
-            fromEmail = new SettingServiceImpl().getSetting(Const.PARAM_ADMIN);
+            fromEmail = new SettingServiceImpl().getSetting(Const.Params.PARAM_ADMIN);
             return new InternetAddress(fromEmail, Const.WORD_NIMBITS);
         } catch (NimbitsException e) {
           return  new InternetAddress(Const.TEST_ACCOUNT, Const.WORD_NIMBITS);

@@ -26,6 +26,7 @@ import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.service.intelligence.*;
 import com.nimbits.server.entity.*;
+import com.nimbits.server.feed.*;
 import com.nimbits.server.http.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.recordedvalue.*;
@@ -234,18 +235,19 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
         for (Intelligence i : list) {
             try {
-            Point target = PointServiceFactory.getInstance().getPointByUUID(i.getTarget());
+                Point target = PointServiceFactory.getInstance().getPointByUUID(i.getTarget());
 
-            if (target!= null) {
+                if (target!= null) {
 
                     Value v = processInput(i);
                     RecordedValueServiceFactory.getInstance().recordValue(u, target, v, true);
 
-            }
+                }
             } catch (NimbitsException e) {
-                 i.setEnabled(false);
-                 //TODO notify user
-                 IntelligenceServiceFactory.getDaoInstance().addUpdateIntelligence(i);
+                i.setEnabled(false);
+                FeedServiceFactory.getInstance().postToFeed(u, "<p>An error occured when processing an intelligence" +
+                        " expression - intelligence on data point has been disabled  " + e.getMessage() + " </p>" );
+                IntelligenceServiceFactory.getDaoInstance().addUpdateIntelligence(i);
 
             }
 
@@ -280,11 +282,11 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
                     a = a.substring(0, a.indexOf("]"));
                     String r = "[" + pointName + "." + a + "]";
                     Point inputPoint;
-                    try {
-                        inputPoint = PointServiceFactory.getInstance().getPointByName(u, pointName);
-                    } catch (NimbitsException e) {
-                        inputPoint = null;
-                    }
+
+
+                    Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
+                    inputPoint= PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
+
                     if (inputPoint != null) {
                         Value inputValue = RecordedValueServiceFactory.getInstance().getCurrentValue(inputPoint);
                         if (a.equals(Const.PARAM_VALUE)) {
@@ -292,7 +294,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
                         } else if (a.equals(Const.PARAM_DATA)) {
                             retStr = retStr.replace(r, String.valueOf(inputValue.getData()));
 
-                        } else if (a.equals(Const.PARAM_NOTE)) {
+                        } else if (a.equals(Const.Params.PARAM_NOTE)) {
                             retStr = retStr.replace(r, String.valueOf(inputValue.getNote()));
 
                         }

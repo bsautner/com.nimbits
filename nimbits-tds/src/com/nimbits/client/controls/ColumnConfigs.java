@@ -15,19 +15,11 @@ package com.nimbits.client.controls;
 
 import com.extjs.gxt.ui.client.*;
 import com.extjs.gxt.ui.client.data.*;
-import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.store.*;
-import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.*;
 import com.extjs.gxt.ui.client.widget.grid.*;
-import com.extjs.gxt.ui.client.widget.grid.Grid;
 import com.extjs.gxt.ui.client.widget.treegrid.*;
 import com.google.gwt.i18n.client.*;
-import com.google.gwt.user.client.*;
-import com.google.gwt.user.client.ui.*;
-import com.nimbits.client.icons.*;
 import com.nimbits.client.model.*;
-import com.nimbits.client.model.entity.*;
 
 public class ColumnConfigs {
 
@@ -39,7 +31,7 @@ public class ColumnConfigs {
                 DateTimeFormat.getFormat(Const.FORMAT_DATE_TIME));
 
         final ColumnConfig columnTime = new ColumnConfig();
-        columnTime.setId(Const.PARAM_TIMESTAMP);
+        columnTime.setId(Const.Params.PARAM_TIMESTAMP);
         columnTime.setHeader(Const.WORD_TIMESTAMP);
         columnTime.setAlignment(Style.HorizontalAlignment.LEFT);
         columnTime.setWidth(175);
@@ -52,7 +44,7 @@ public class ColumnConfigs {
 
     public static ColumnConfig noteColumn( ) {
         final ColumnConfig columnNote = new ColumnConfig();
-        columnNote.setId(Const.PARAM_NOTE);
+        columnNote.setId(Const.Params.PARAM_NOTE);
         columnNote.setHeader(Const.WORD_ANNOTATION);
         columnNote.setWidth(250);
 
@@ -95,8 +87,8 @@ public class ColumnConfigs {
     }
 
     public static ColumnConfig pointNameColumn() {
-        final ColumnConfig nameColumn =  new ColumnConfig(Const.PARAM_NAME, Const.MESSAGE_DATA_POINT, 150);
-        nameColumn.setId(Const.PARAM_NAME);
+        final ColumnConfig nameColumn =  new ColumnConfig(Const.Params.PARAM_NAME, Const.MESSAGE_DATA_POINT, 150);
+        nameColumn.setId(Const.Params.PARAM_NAME);
         nameColumn.setHeader("Objects");
         nameColumn.setAlignment(Style.HorizontalAlignment.LEFT);
         nameColumn.setWidth(225);

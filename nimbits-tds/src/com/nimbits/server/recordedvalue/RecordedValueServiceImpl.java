@@ -23,6 +23,7 @@ import com.nimbits.client.model.timespan.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.service.recordedvalues.*;
+import com.nimbits.server.entity.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.task.*;
 import com.nimbits.server.user.*;
@@ -136,7 +137,8 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
                              final Value value) throws NimbitsException {
 
 
-        final Point point = PointServiceFactory.getInstance().getPointByName(u, pointName);
+        Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
+        Point point = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
 
         return (point != null) ? recordValue(u, point, value, false) : null;
 

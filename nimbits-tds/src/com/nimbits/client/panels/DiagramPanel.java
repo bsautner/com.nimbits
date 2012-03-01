@@ -78,7 +78,7 @@ public class DiagramPanel extends NavigationEventProvider {
         //final ToolBar toolbar = createToolbar(aDiagram);
 
         final FlowPanel imagePanel = new FlowPanel();
-        final String resourceUrl = Const.PATH_BLOB_SERVICE + "?" + Const.PARAM_BLOB_KEY + "=" + aDiagram.getBlobKey();
+        final String resourceUrl = Const.PATH_BLOB_SERVICE + "?" + Const.Params.PARAM_BLOB_KEY + "=" + aDiagram.getBlobKey();
         this.diagram = aDiagram;
         this.readOnly = aDiagram.isReadOnly();
         this.clientType = ClientType.other;
@@ -302,7 +302,7 @@ public class DiagramPanel extends NavigationEventProvider {
         serviceAsync.getEntityNameMap(EntityType.file, new AsyncCallback<Map<EntityName, Entity>>() {
             @Override
             public void onFailure(Throwable throwable) {
-                //To change body of implemented methods use File | Settings | File Templates.
+              GWT.log(throwable.getMessage(), throwable);
             }
 
             @Override
@@ -378,9 +378,9 @@ public class DiagramPanel extends NavigationEventProvider {
     //OMSVGTextElement
 
     private void processOMSVGTextElement(final OMSVGTextElement o) {
-        final String pointNameParam = o.getAttribute(Const.PARAM_POINT);
-        final String action = o.getAttribute(Const.PARAM_ACTION);
-        final String diagramNameParam = o.getAttribute(Const.PARAM_DIAGRAM);
+        final String pointNameParam = o.getAttribute(Const.Params.PARAM_POINT);
+        final String action = o.getAttribute(Const.Params.PARAM_ACTION);
+        final String diagramNameParam = o.getAttribute(Const.Params.PARAM_DIAGRAM);
         final String url = o.getAttribute(Const.PARAM_URL);
         if (!Utils.isEmptyString(action)) {
             final String[] actions = action.split(",");
@@ -474,7 +474,7 @@ public class DiagramPanel extends NavigationEventProvider {
                 if (actions.length > 0) {
                     target = actions[0];
                 } else {
-                    target = Const.PARAM_SELF;
+                    target = Const.Params.PARAM_SELF;
                 }
 
                 notifyUrlClickedListener(url, target);
@@ -487,8 +487,8 @@ public class DiagramPanel extends NavigationEventProvider {
     }
 
     private void updateTextBoxValue(final OMSVGTextElement o) throws NimbitsException {
-        final String pointNameParam = o.getAttribute(Const.PARAM_POINT);
-        final String action = o.getAttribute(Const.PARAM_ACTION);
+        final String pointNameParam = o.getAttribute(Const.Params.PARAM_POINT);
+        final String action = o.getAttribute(Const.Params.PARAM_ACTION);
 
         if (!Utils.isEmptyString(action)) {
             final String[] actions = action.split(",");
@@ -562,9 +562,9 @@ public class DiagramPanel extends NavigationEventProvider {
     //PATH
 
     private void processOMSVGPathElement(final OMSVGPathElement o) {
-        final String pointNameParam = o.getAttribute(Const.PARAM_POINT);
-        final String action = o.getAttribute(Const.PARAM_ACTION);
-        final String diagramNameParam = o.getAttribute(Const.PARAM_DIAGRAM);
+        final String pointNameParam = o.getAttribute(Const.Params.PARAM_POINT);
+        final String action = o.getAttribute(Const.Params.PARAM_ACTION);
+        final String diagramNameParam = o.getAttribute(Const.Params.PARAM_DIAGRAM);
         final String url = o.getAttribute(Const.PARAM_URL);
         if (!Utils.isEmptyString(action)) {
             final String[] actions = action.split(",");
@@ -642,8 +642,8 @@ public class DiagramPanel extends NavigationEventProvider {
     }
 
     private void updatePathValue(final OMSVGPathElement o) throws NimbitsException {
-        final String pointNameParam = o.getAttribute(Const.PARAM_POINT);
-        final String action = o.getAttribute(Const.PARAM_ACTION);
+        final String pointNameParam = o.getAttribute(Const.Params.PARAM_POINT);
+        final String action = o.getAttribute(Const.Params.PARAM_ACTION);
 
         if (!Utils.isEmptyString(action)) {
             final String[] actions = action.split(",");
@@ -724,7 +724,7 @@ public class DiagramPanel extends NavigationEventProvider {
                 if (actions.length > 0) {
                     target = actions[0];
                 } else {
-                    target = Const.PARAM_SELF;
+                    target = Const.Params.PARAM_SELF;
                 }
 
                 notifyUrlClickedListener(url, target);
@@ -739,9 +739,9 @@ public class DiagramPanel extends NavigationEventProvider {
     //rect
 
     private void processOMSVGRectElement(OMSVGRectElement o) {
-        final String pointNameParam = o.getAttribute(Const.PARAM_POINT);
-        final String action = o.getAttribute(Const.PARAM_ACTION);
-        final String diagramNameParam = o.getAttribute(Const.PARAM_DIAGRAM);
+        final String pointNameParam = o.getAttribute(Const.Params.PARAM_POINT);
+        final String action = o.getAttribute(Const.Params.PARAM_ACTION);
+        final String diagramNameParam = o.getAttribute(Const.Params.PARAM_DIAGRAM);
         final String url = o.getAttribute(Const.PARAM_URL);
         if (!Utils.isEmptyString(action)) {
             final String[] actions = action.split(",");
@@ -818,8 +818,8 @@ public class DiagramPanel extends NavigationEventProvider {
     }
 
     private void updateRectValue(final OMSVGRectElement o) throws NimbitsException {
-        final String pointNameParam = o.getAttribute(Const.PARAM_POINT);
-        final String action = o.getAttribute(Const.PARAM_ACTION);
+        final String pointNameParam = o.getAttribute(Const.Params.PARAM_POINT);
+        final String action = o.getAttribute(Const.Params.PARAM_ACTION);
 
         if (!Utils.isEmptyString(action)) {
             final String[] actions = action.split(",");
@@ -862,7 +862,7 @@ public class DiagramPanel extends NavigationEventProvider {
                         o.getStyle().setSVGProperty(SVGConstants.CSS_FILL_VALUE,
                                 originalFill.get(o.getId()));
                     }
-                } else if (action.equals(Const.PARAM_IDLE) && p.isIdleAlarmOn()) {
+                } else if (action.equals(Const.Params.PARAM_IDLE) && p.isIdleAlarmOn()) {
                     DateWrapper n = new DateWrapper();
                     long last = result.getTimestamp().getTime();
                     long current = n.getTime();
@@ -896,7 +896,7 @@ public class DiagramPanel extends NavigationEventProvider {
                 if (actions.length > 0) {
                     target = actions[0];
                 } else {
-                    target = Const.PARAM_SELF;
+                    target = Const.Params.PARAM_SELF;
                 }
 
                 notifyUrlClickedListener(url, target);

@@ -25,6 +25,74 @@ public class Const {
     public static final String CONST_SERVER_VERSION = "3.3.2.2";
     public static final long DEFAULT_SERIAL_VERSION = 12L;
     public static final String CACHE_KEY_PREFIX = CONST_SERVER_VERSION + DEFAULT_SERIAL_VERSION;
+
+
+    public class Params {
+
+        public static final String PARAM_ACTION = "action";
+        public static final String PARAM_ADMIN = "admin";
+        public static final String PARAM_AUTO_SCALE = "autoscale";
+        public static final String PARAM_BASE_URL = "baseURL";
+        public static final String PARAM_BLOB_KEY = "blob-key";
+        public static final String PARAM_CATEGORY = "category";
+        public static final String PARAM_CHART_DATA = "chartData";
+        public static final String PARAM_CLIENT = "client";
+        public static final String PARAM_CODE = "code";
+        public static final String PARAM_COOKIE = "cookie";
+        public static final String PARAM_COUNT = "count";
+        public static final String PARAM_DIAGRAM = "diagram";
+        public static final String PARAM_BLOB = "blob";
+        public static final String PARAM_EMAIL = "email";
+        public static final String SETTING_ENABLE_CONNECTIONS = "enableConnections";
+        public static final String PARAM_END_DATE = "ed";
+        public static final String PARAM_EXP = "exp";
+        public static final String PARAM_FACEBOOK = "FB";
+        public static final String PARAM_FOLDER = "folder";
+        public static final String PARAM_FORMAT = "format";
+        public static final String PARAM_FROM_ADDRESS = "fromAddress";
+        public static final String PARAM_GOOGLE_COM = "com.google";
+        public static final String PARAM_HOST = "host";
+        public static final String PARAM_ICON = "icon";
+        public static final String PARAM_ID = "id";
+        public static final String PARAM_IDLE = "idle";
+        public static final String PARAM_INCLUDE_DIAGRAMS = "includediagrams";
+        public static final String PARAM_INCLUDE_SUBSCRIPTIONS = "includesubscriptions";
+        public static final String PARAM_INCLUDE_POINTS = "includepoints";
+        public static final String PARAM_IN_CONTENT = "inContent";
+        public static final String PARAM_IS_LOGGED_IN = "isLoggedIn";
+        public static final String PARAM_JSON = "json";
+        public static final String PARAM_JSON_POINT = "pointJson";
+        public static final String PARAM_JSON_USER = "pointUser";
+        public static final String PARAM_JSON_VALUE = "valueJson";
+        public static final String PARAM_KEY = "key";
+        public static final String PARAM_LAT = "lat";
+        public static final String PARAM_LNG = "lng";
+        public static final String PARAM_LOGGED_IN = "loggedin";
+        public static final String PARAM_NAME = "name";
+        public static final String PARAM_NOTE = "note";
+        public static final String PARAM_OAUTH = "oauth_token";
+        public static final String PARAM_PASSWORD = "password";
+        public static final String PARAM_PATH = "path";
+        public static final String PARAM_POINT = "point";
+        public static final String PARAM_POINTS = "points";
+        public static final String PARAM_POINT_COUNT = "pointcount";
+        public static final String PARAM_POINT_ID = "pointID";
+        public static final String PARAM_PROPERTY = "property";
+        public static final String PARAM_RELOAD = "reload";
+        public static final String PARAM_SECRET = "secret";
+        public static final String PARAM_SEGMENT = "seg";
+        public static final String PARAM_SELF = "self";
+        public static final String PARAM_START_DATE = "sd";
+        public static final String PARAM_STATE = "state";
+        public static final String PARAM_TIMESTAMP = "timestamp";
+        public static final String PARAM_TOKEN = "rToken";
+        public static final String PARAM_TOTAL = "total";
+        public static final String PARAM_TWITTER = "TW";
+    }
+
+
+
+
     public static final String PATH_NIMBITS_CORE_SERVERS_URL = "http://nimbits.com:8080/core/servers";
     public static final String PATH_NIMBITS_CORE_ENTITY_DESC_URL = "http://nimbits.com:8080/core/entity";
     public static final String REGEX_NAMESPACE = "[0-9A-Za-z._-]{0,100}";
@@ -53,9 +121,8 @@ public class Const {
     public static final String ANDROID_TABLE_SETTINGS = "Settings";
     public static final String CONST_AH = "ah";
     public static final String CONST_ENCODING = "UTF-8";
-    //public static final String CONST_HIDDEN_CATEGORY = "Nimbits_Unsorted";
+
     public static final String CONST_SERVER_NAME = "Nimbits Server";
-    // ------------------------------ FIELDS ------------------------------
 
     public static final String COPYRIGHT = "Copyright (c) 2010 Tonic Solutions LLC.  Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an \\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.";
     public static final String DEFAULT_CHART_NAME = "Chart";
@@ -97,66 +164,7 @@ public class Const {
 
     public static final String N = "NimbitsV";
     public static final String NAMESPACE_DEFAULT = "default";
-    public static final String PARAM_ACTION = "action";
-    public static final String PARAM_ADMIN = "admin";
-    public static final String PARAM_AUTO_SCALE = "autoscale";
-    public static final String PARAM_BASE_URL = "baseURL";
-    public static final String PARAM_BLOB_KEY = "blob-key";
-    public static final String PARAM_CATEGORY = "category";
-    public static final String PARAM_CHART_DATA = "chartData";
-    public static final String PARAM_CLIENT = "client";
-    public static final String PARAM_CODE = "code";
-    public static final String PARAM_COOKIE = "cookie";
-    public static final String PARAM_COUNT = "count";
-    public static final String PARAM_DIAGRAM = "diagram";
-    public static final String PARAM_BLOB = "blob";
-    public static final String PARAM_EMAIL = "email";
-    public static final String SETTING_ENABLE_CONNECTIONS = "enableConnections";
-    public static final String PARAM_END_DATE = "ed";
-    public static final String PARAM_EXP = "exp";
-    public static final String PARAM_FACEBOOK = "FB";
-    public static final String PARAM_FOLDER = "folder";
-    public static final String PARAM_FORMAT = "format";
-    public static final String PARAM_FROM_ADDRESS = "fromAddress";
-    public static final String PARAM_GOOGLE_COM = "com.google";
-    public static final String PARAM_HOST = "host";
-    public static final String PARAM_ICON = "icon";
-    public static final String PARAM_ID = "id";
-    public static final String PARAM_IDLE = "idle";
-    public static final String PARAM_INCLUDE_DIAGRAMS = "includediagrams";
-    public static final String PARAM_INCLUDE_SUBSCRIPTIONS = "includesubscriptions";
-    public static final String PARAM_INCLUDE_POINTS = "includepoints";
-    public static final String PARAM_IN_CONTENT = "inContent";
-    public static final String PARAM_IS_LOGGED_IN = "isLoggedIn";
-    public static final String PARAM_JSON = "json";
-    public static final String PARAM_JSON_POINT = "pointJson";
-    public static final String PARAM_JSON_USER = "pointUser";
-    public static final String PARAM_JSON_VALUE = "valueJson";
-    public static final String PARAM_KEY = "key";
-    public static final String PARAM_LAT = "lat";
-    public static final String PARAM_LNG = "lng";
-    public static final String PARAM_LOGGED_IN = "loggedin";
-    public static final String PARAM_NAME = "name";
-    public static final String PARAM_NOTE = "note";
-    public static final String PARAM_OAUTH = "oauth_token";
-    public static final String PARAM_PASSWORD = "password";
-    public static final String PARAM_PATH = "path";
-    public static final String PARAM_POINT = "point";
-    public static final String PARAM_POINTS = "points";
-    public static final String PARAM_POINT_COUNT = "pointcount";
-    public static final String PARAM_POINT_ID = "pointID";
-    public static final String PARAM_PROPERTY = "property";
-    public static final String PARAM_RELOAD = "reload";
 
-    public static final String PARAM_SECRET = "secret";
-    public static final String PARAM_SEGMENT = "seg";
-    public static final String PARAM_SELF = "self";
-    public static final String PARAM_START_DATE = "sd";
-    public static final String PARAM_STATE = "state";
-    public static final String PARAM_TIMESTAMP = "timestamp";
-    public static final String PARAM_TOKEN = "rToken";
-    public static final String PARAM_TOTAL = "total";
-    public static final String PARAM_TWITTER = "TW";
     public static final String SETTING_TWITTER_CLIENT_ID = "twitterClientId";
     public static final String SETTING_TWITTER_SECRET = "twitterSecret";
     public static final String PARAM_TYPE = "type";
@@ -267,7 +275,7 @@ public class Const {
     public static final String PARAM_D = "d";
     public static final String PARAM_POINT_FK = "pointFK";
     public static final String SETTING_WOLFRAM = "wolframAlphaKey";
-    public static final String CONST_UNKNOWN = "WL9JKJ-LYH57Y53TG";
+    public static final String CONST_UNKNOWN = "";
     public static final String WORD_COOKIE = "Cookie";
     public static final int DEFAULT_HTTP_TIMEOUT = 15000;
     public static final String DEFAULT_XMPP_SERVER = "gmail.com";
@@ -351,6 +359,8 @@ public class Const {
     public static final String PATH_FACEBOOK_APP = "http://apps.facebook.com/Nimbits";
     public static final double CONST_IGNORED_NUMBER_VALUE = -9999999.9999999;
     public static final String PARAM_HTML = "html";
+    public static final int DEFAULT_DATA_EXPIRE_DAYS = 90;
+    public static final double DEFAULT_POINT_COMPRESSION = 0.1;
 
     public static String getConnectionInviteEmail(final EmailAddress email) {
         return "<P STYLE=\"margin-bottom: 0in\"> " + email.getValue() +

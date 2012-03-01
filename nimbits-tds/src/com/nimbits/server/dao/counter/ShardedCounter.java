@@ -19,6 +19,7 @@ import net.sf.jsr107cache.*;
 
 import javax.jdo.*;
 import java.util.*;
+import java.util.logging.*;
 
 /**
  * A counter which can be incremented rapidly.
@@ -35,6 +36,8 @@ import java.util.*;
  *
  */
 public class ShardedCounter {
+    private static final Logger log = Logger.getLogger(ShardedCounter.class.getName());
+
     private String counterName;
     private Cache cache;
     private final String COUNT = "count";
@@ -46,6 +49,7 @@ public class ShardedCounter {
             cache = CacheManager.getInstance().getCacheFactory().createCache(
                     Collections.emptyMap());
         } catch (CacheException e) {
+            log.severe(e.getMessage());
         }
     }
 

@@ -71,8 +71,8 @@ public class TwitterImpl extends RemoteServiceServlet implements
             final HttpServletRequest request = this.getThreadLocalRequest();
             final HttpSession session = request.getSession();
 
-            session.setAttribute(Const.PARAM_TOKEN, requestToken);
-            session.setAttribute(Const.PARAM_EMAIL, email);
+            session.setAttribute(Const.Params.PARAM_TOKEN, requestToken);
+            session.setAttribute(Const.Params.PARAM_EMAIL, email);
 
         } catch (Exception e) {
             log.severe(e.getMessage());
@@ -96,8 +96,8 @@ public class TwitterImpl extends RemoteServiceServlet implements
         final Twitter twitter = new TwitterFactory().getInstance();
         twitter.setOAuthConsumer(twitter_client_id, twitter_Secret);
 
-        final RequestToken requestToken = (RequestToken) session.getAttribute(Const.PARAM_TOKEN);
-        final EmailAddress email = (EmailAddress) session.getAttribute(Const.PARAM_EMAIL);
+        final RequestToken requestToken = (RequestToken) session.getAttribute(Const.Params.PARAM_TOKEN);
+        final EmailAddress email = (EmailAddress) session.getAttribute(Const.Params.PARAM_EMAIL);
 
         log.info("Twitter: Updating user token " + email.getValue() + "  " + request);
 

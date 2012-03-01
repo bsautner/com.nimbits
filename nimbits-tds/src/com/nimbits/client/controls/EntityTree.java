@@ -47,12 +47,8 @@ public class EntityTree<ModelData extends com.extjs.gxt.ui.client.data.ModelData
         setIconProvider( new ModelIconProvider<ModelData>() {
             @Override
             public AbstractImagePrototype getIcon(com.extjs.gxt.ui.client.data.ModelData model) {
-                // if (model.getInstance("icon") != null) {
 
-                EntityType type = ((GxtModel) model).getEntityType();
-              //  AlertType alert = ((GxtModel) model).getAlertType();
-                switch (type) {
-
+                switch (((GxtModel) model).getEntityType()) {
                     case point:
                         switch (((GxtModel) model).getAlertType()) {
                             case IdleAlert:
@@ -70,7 +66,7 @@ public class EntityTree<ModelData extends com.extjs.gxt.ui.client.data.ModelData
 
                     case category:
                         return AbstractImagePrototype.create(Icons.INSTANCE.category());
-                     case userConnection:
+                    case userConnection:
                         return AbstractImagePrototype.create(Icons.INSTANCE.connection());
                     case file:
                         return AbstractImagePrototype.create(Icons.INSTANCE.diagram());
@@ -80,6 +76,8 @@ public class EntityTree<ModelData extends com.extjs.gxt.ui.client.data.ModelData
                         return AbstractImagePrototype.create(Icons.INSTANCE.formula());
                     case intelligence:
                         return AbstractImagePrototype.create(Icons.INSTANCE.connect());
+                    case feed:
+                        return AbstractImagePrototype.create(Icons.INSTANCE.radial());
                     default:
                         return AbstractImagePrototype.create(Icons.INSTANCE.point_ok());
 

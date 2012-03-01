@@ -54,7 +54,7 @@ public class FacebookImpl extends RemoteServiceServlet implements FacebookServic
 
         final HttpServletRequest request = this.getThreadLocalRequest();
         final HttpSession session = request.getSession();
-        session.setAttribute(Const.PARAM_EMAIL, u.getEmail());
+        session.setAttribute(Const.Params.PARAM_EMAIL, u.getEmail());
 
         UserTransactionFactory.getInstance().setFacebookToken(u.getEmail(), token, f.getId());
 

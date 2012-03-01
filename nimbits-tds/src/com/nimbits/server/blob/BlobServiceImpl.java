@@ -36,11 +36,11 @@ public class BlobServiceImpl  extends RemoteServiceServlet implements
 
     @Override
     public void onResponseReceived(Request request, Response response) {
-        //To change body of implemented methods use File | Settings | File Templates.
+
     }
 
     @Override
     public void onError(Request request, Throwable throwable) {
-        //To change body of implemented methods use File | Settings | File Templates.
+
     }
 }

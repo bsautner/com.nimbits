@@ -25,7 +25,7 @@ import com.nimbits.client.model.value.*;
 
 import java.util.*;
 
-@RemoteServiceRelativePath(Const.PARAM_POINT)
+@RemoteServiceRelativePath(Const.Params.PARAM_POINT)
 public interface PointService extends RemoteService {
 
     Point addPoint(User user, Entity entity, Point point);
@@ -33,8 +33,6 @@ public interface PointService extends RemoteService {
     Point addPoint(EntityName name);
 
     Point addPoint(final User user, final Entity entity);
-
-    Point getPointByName(final User pointOwner, final EntityName name) throws NimbitsException;
 
     Point getPointByID(final User u, final long id) throws NimbitsException;
 
@@ -45,8 +43,6 @@ public interface PointService extends RemoteService {
     Point updatePoint(final Point point) throws NimbitsException;
 
     Point updatePoint(final User u, final Point point) throws NimbitsException;
-
-    Map<EntityName, Point> getPointsByName(final long pointOwnerId, final Set<EntityName> names) throws NimbitsException;
 
     List<Point> getPoints(final User u) throws NimbitsException;
 

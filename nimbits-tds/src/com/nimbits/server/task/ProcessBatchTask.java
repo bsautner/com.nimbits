@@ -21,6 +21,7 @@ import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.server.entity.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.recordedvalue.*;
@@ -63,7 +64,7 @@ public class ProcessBatchTask extends HttpServlet {
     private void processBatch(final HttpServletRequest req, final HttpServletResponse resp) throws IOException, NimbitsException {
 
         final Gson gson = GsonFactory.getInstance();
-        final String userJson = req.getParameter(Const.PARAM_JSON_USER);
+        final String userJson = req.getParameter(Const.Params.PARAM_JSON_USER);
         final User u = gson.fromJson(userJson, UserModel.class);
 
 
@@ -74,34 +75,34 @@ public class ProcessBatchTask extends HttpServlet {
         final Enumeration enumeration = req.getParameterNames();
         final Map m = req.getParameterMap();
 
-        final Map<EntityName, Point> points = new HashMap<EntityName, Point>();
+        final Map<EntityName, Entity> points = new HashMap<EntityName, Entity>();
 
         if (u != null) {
             while (enumeration.hasMoreElements()) {
                 //noinspection unchecked
                 processQueryString(enumeration, m, u);
             }
-            Point point;
+            Entity entity;
             Collections.sort(ts);
 
             for (final long l : ts) {
                 final BR b = ht.get(l);
                 if (points.containsKey(b.pointName)) {
-                    point = points.get(b.pointName);
+                    entity = points.get(b.pointName);
 
                 } else {
+                    entity = EntityServiceFactory.getInstance().getEntityByName(u, b.pointName);
+                   //
 
-                    point = PointServiceFactory.getInstance().getPointByName(u, b.pointName);
-
-                    if (point != null) {
-                        points.put(b.pointName, point);
+                    if (entity != null) {
+                        points.put(b.pointName, entity);
                     }
                 }
-                if (point != null) {
+                if (entity != null) {
                     try {
-                        final Value v = ValueModelFactory.createValueModel(0.0, 0.0, b.value, b.timestamp, point.getUUID(), b.note);
-
-                        RecordedValueServiceFactory.getInstance().recordValue(b.u, point, v, false);
+                        final Value v = ValueModelFactory.createValueModel(0.0, 0.0, b.value, b.timestamp, entity.getUUID(), b.note);
+                        Point p = PointServiceFactory.getInstance().getPointByUUID(entity.getEntity());
+                        RecordedValueServiceFactory.getInstance().recordValue(b.u, p, v, false);
                     } catch (JDOException e) {
 
                         log.severe(Const.ERROR_BATCH_SERVICE_JDO + e.getMessage());

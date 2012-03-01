@@ -280,7 +280,7 @@ public class MainMenuBar extends ToolBar {
                 service.getSecret(new AsyncCallback<String>() {
                     @Override
                     public void onFailure(Throwable throwable) {
-                        //To change body of implemented methods use File | Settings | File Templates.
+                        GWT.log(throwable.getMessage(), throwable);
                     }
 
                     @Override

@@ -117,7 +117,7 @@ public class SubscriptionPanel extends NavigationEventProvider {
         store.add(ops);
 
         combo.setFieldLabel(title);
-        combo.setDisplayField(Const.PARAM_NAME);
+        combo.setDisplayField(Const.Params.PARAM_NAME);
         combo.setValueField(Const.PARAM_VALUE);
         combo.setTriggerAction(ComboBox.TriggerAction.ALL);
         combo.setStore(store);
@@ -156,7 +156,7 @@ public class SubscriptionPanel extends NavigationEventProvider {
         store.add(ops);
 
         combo.setFieldLabel(title);
-        combo.setDisplayField(Const.PARAM_NAME);
+        combo.setDisplayField(Const.Params.PARAM_NAME);
         combo.setValueField(Const.PARAM_VALUE);
         combo.setTriggerAction(ComboBox.TriggerAction.ALL);
         combo.setStore(store);
@@ -367,7 +367,7 @@ public class SubscriptionPanel extends NavigationEventProvider {
         public DeliveryMethodOption(SubscriptionNotifyMethod value) {
             this.method = value;
             set(Const.PARAM_VALUE, value.getCode());
-            set(Const.PARAM_NAME, value.getText());
+            set(Const.Params.PARAM_NAME, value.getText());
         }
 
         public SubscriptionNotifyMethod getMethod() {
@@ -382,7 +382,7 @@ public class SubscriptionPanel extends NavigationEventProvider {
         public SubscriptionTypeOption(SubscriptionType value) {
             this.type = value;
             set(Const.PARAM_VALUE, value.getCode());
-            set(Const.PARAM_NAME, value.getText());
+            set(Const.Params.PARAM_NAME, value.getText());
         }
 
         public SubscriptionType getMethod() {

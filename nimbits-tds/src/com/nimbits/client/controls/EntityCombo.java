@@ -26,42 +26,32 @@ import java.util.*;
 
 public class EntityCombo extends ComboBox<GxtModel> {
 
-//    public String getText() {
-//        List<GxtModel> s = getSelection();
-//        if (s.size() > 0) {
-//            GxtModel si = s.get(0);
-//            return si.getName().getValue();
-//        } else {
-//            return null;
-//
-//        }
-//
-//    }
-//
 
     public EntityCombo(final EntityType type, final String selectedUUID) {
-        setEmptyText(Const.MESSAGE_LOADING_POINTS);
+
         final ListStore<GxtModel> cbStore = new ListStore<GxtModel>();
+        final EntityServiceAsync service = GWT.create(EntityService.class);
+        setEmptyText(Const.MESSAGE_LOADING_POINTS);
         setStore(cbStore);
-        setDisplayField(Const.PARAM_NAME);
-        setValueField(Const.PARAM_ID);
+        setDisplayField(Const.Params.PARAM_NAME);
+        setValueField(Const.Params.PARAM_ID);
         setEditable(true);
         setAutoValidate(true);
 
-        EntityServiceAsync service = GWT.create(EntityService.class);
+
 
         service.getEntityMap(type, new AsyncCallback<Map<String, Entity>>() {
             @Override
-            public void onFailure(Throwable caught) {
-                //auto generated
+            public void onFailure(final Throwable caught) {
+                GWT.log(caught.getMessage(), caught);
             }
 
             @Override
-            public void onSuccess(Map<String, Entity> result) {
+            public void onSuccess(final Map<String, Entity> result) {
                 setEmptyText(Const.MESSAGE_SELECT_POINT);
 
-                for (Entity e : result.values()) {
-                    GxtModel model = new GxtModel(e);
+                for (final Entity e : result.values()) {
+                    final GxtModel model = new GxtModel(e);
                     cbStore.add(model);
                     if (model.getBaseEntity().getEntity().equals(selectedUUID)) {
                        setValue(model);

@@ -160,13 +160,6 @@ public class PointMemCacheImpl implements PointTransactions {
     }
 
     @Override
-    public Point getPointByName(final EntityName name) throws NimbitsException {
-
-     return PointTransactionsFactory.getDaoInstance(u).getPointByName(name);
-
-    }
-
-    @Override
     public void deletePoint(final Point point) throws NimbitsException {
         final User u = UserTransactionFactory.getInstance().getNimbitsUserByID(point.getUserFK());
 
@@ -192,7 +185,6 @@ public class PointMemCacheImpl implements PointTransactions {
             }
         }
         return retObj;
-
     }
 
     @Override

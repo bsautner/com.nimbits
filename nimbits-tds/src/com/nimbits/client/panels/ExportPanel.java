@@ -128,7 +128,7 @@ public class ExportPanel extends LayoutContainer {
 
                     @Override
                     public void onSuccess(final String result) {
-                        final String url = GWT.getModuleBaseURL() + "export?" + Const.PARAM_BLOB_KEY
+                        final String url = GWT.getModuleBaseURL() + "export?" + Const.Params.PARAM_BLOB_KEY
                                 + "=" + result;
                         box.close();
                         Window.open(url, "Export", "");

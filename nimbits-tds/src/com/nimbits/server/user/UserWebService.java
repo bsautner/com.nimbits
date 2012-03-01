@@ -29,7 +29,7 @@ public class UserWebService extends HttpServlet {
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
         final String result;
         final PrintWriter out;
-        final String action = req.getParameter(Const.PARAM_ACTION);
+        final String action = req.getParameter(Const.Params.PARAM_ACTION);
 
         if (!(action == null) && action.equals(Const.ACTION_DOWNLOAD)) {
             out = resp.getWriter();

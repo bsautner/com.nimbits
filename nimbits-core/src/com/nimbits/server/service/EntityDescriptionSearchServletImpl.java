@@ -64,7 +64,7 @@ public class EntityDescriptionSearchServletImpl extends HttpServlet {
 
 
         final String dangerousSearchText = request.getParameter(Const.PARAM_SEARCH);
-        final String format = request.getParameter(Const.PARAM_FORMAT);
+        final String format = request.getParameter(Const.Params.PARAM_FORMAT);
         final ExportType type = StringUtils.isEmpty(format) ?
              ExportType.json :  ExportType.valueOf(format);
 

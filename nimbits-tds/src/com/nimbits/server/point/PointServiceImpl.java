@@ -25,6 +25,7 @@ import com.nimbits.client.service.datapoints.*;
 import com.nimbits.server.blobstore.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.export.*;
+import com.nimbits.server.feed.*;
 import com.nimbits.server.recordedvalue.*;
 import com.nimbits.server.task.*;
 import com.nimbits.server.user.*;
@@ -87,8 +88,6 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
     }
 
-
-
     @Override
     public Point updatePoint(final Point point) throws NimbitsException {
         final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
@@ -107,71 +106,23 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     }
 
 
-    public AlertType getPointAlertState(final Point point, final Value value)  {
-        AlertType retObj = AlertType.OK;
-
-        if (point.isHighAlarmOn() || point.isLowAlarmOn()) {
-
-            if (point.isHighAlarmOn() && (value.getNumberValue() >= point.getHighAlarm())) {
-                retObj = AlertType.HighAlert;
-            }
-            if (point.isLowAlarmOn() && value.getNumberValue() <= point.getLowAlarm()) {
-                retObj = AlertType.LowAlert;
-            }
-
-        }
-        if (point.isIdleAlarmOn()) {
-            final Calendar c = Calendar.getInstance();
-            c.add(Calendar.SECOND, point.getIdleSeconds() * -1);
-
-            if (point.getIdleSeconds() > 0 && value != null &&
-                    value.getTimestamp().getTime() <= c.getTimeInMillis()) {
-
-                retObj = AlertType.IdleAlert;
-            }
-
-        }
-        return retObj;
-
-    }
-
-    @Override
-    public Point getPointByName(final User pointOwner, final EntityName name) throws NimbitsException {
-        final User u = pointOwner == null ? UserServiceFactory.getServerInstance().getHttpRequestUser(
-                this.getThreadLocalRequest()) : pointOwner;
-        Entity entity = EntityServiceFactory.getInstance().getEntityByName(u, name);
-        return PointTransactionsFactory.getInstance(u).getPointByUUID(entity.getEntity());
-
-
-    }
-
-    @Deprecated
-    @Override
-    public Map<EntityName, Point> getPointsByName(final long pointOwnerId, final Set<EntityName> names) throws NimbitsException {
-
-        final User loggedInUser = UserServiceFactory.getServerInstance().getHttpRequestUser(
-                this.getThreadLocalRequest());
-        final User pointOwner = UserTransactionFactory.getInstance().getNimbitsUserByID(pointOwnerId);
-
-        final Map<EntityName, Point> retObj = new HashMap<EntityName, Point>();
-        for (final EntityName name : names) {
-            final Point p = PointTransactionsFactory.getInstance(pointOwner).getPointByName(name);
-            retObj.put(name, p);
-
-        }
-        return retObj;
-
-    }
-
     @Override
         public Point addPoint(User user, Entity entity) {
         Entity r = EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
+        notifyFeedOfNewPoint(user, entity);
         return PointTransactionsFactory.getInstance(user).addPoint(r);
+    }
+
+    private void notifyFeedOfNewPoint(User user, Entity entity) {
+        FeedServiceFactory.getInstance().postToFeed(user, "<p>A new data point named " + entity.getName().getValue() +
+        " has been created with a default compression of 0.1, expiration of 90 days and security set to public. Right " +
+                "click your data point to edit its properties.</p>");
     }
 
     @Override
     public Point addPoint(User user, Entity entity, Point point) {
-        Entity r = EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
+        EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
+        notifyFeedOfNewPoint(user, entity);
         return PointTransactionsFactory.getInstance(user).addPoint(entity, point);
     }
 
@@ -185,40 +136,6 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
 
     }
-
-
-//    @Override
-//    public Point showEntityData(final EntityName pointName, final Category c) throws NimbitsException, PointExistsException {
-//
-//
-//        final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
-//                this.getThreadLocalRequest());
-//
-//
-//        Point result = PointTransactionsFactory.getInstance(u).showEntityData(pointName, c);
-//        if (result != null) {
-//            TaskFactoryLocator.getInstance().startPointMaintTask(result);
-//        }
-//        return result;
-//
-//
-//    }
-
-//    @Override
-//    public Point showEntityData(final EntityName pointName) throws NimbitsException, PointExistsException {
-//
-//        final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
-//                this.getThreadLocalRequest());
-//
-//        Entity entity = EntityModelFactory.createEntity(pointName, EntityType.point);
-//        Entity result = EntityTransactionFactory.getInstance(u).addUpdateEntity(entity);
-//
-//        if (result != null) {
-//           // TaskFactoryLocator.getInstance().startPointMaintTask(result);
-//        }
-//        return result;
-//
-//    }
 
     @Override
     public Point getPointByID(final long id) throws NimbitsException {

@@ -40,7 +40,7 @@ public class MoveCachedValuesToStoreTask extends HttpServlet
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
 
-        final String pointJson = req.getParameter(Const.PARAM_POINT);
+        final String pointJson = req.getParameter(Const.Params.PARAM_POINT);
         final Point point = GsonFactory.getInstance().fromJson(pointJson, PointModel.class);
         try {
             RecordedValueTransactionFactory.getInstance(point).moveValuesFromCacheToStore();

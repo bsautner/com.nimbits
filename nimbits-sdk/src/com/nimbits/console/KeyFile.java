@@ -30,17 +30,17 @@ public class KeyFile {
 
         final String filename = argsMap.get(Const.PARAM_OUT);
         final StringBuilder sb = new StringBuilder();
-        if (argsMap.containsKey(Const.PARAM_KEY)) {
-            sb.append("-key=").append(argsMap.get(Const.PARAM_KEY)).append(" ");
+        if (argsMap.containsKey(Const.Params.PARAM_KEY)) {
+            sb.append("-key=").append(argsMap.get(Const.Params.PARAM_KEY)).append(" ");
         }
-        if (argsMap.containsKey(Const.PARAM_EMAIL)) {
-            sb.append("-email=").append(argsMap.get(Const.PARAM_EMAIL)).append(" ");
+        if (argsMap.containsKey(Const.Params.PARAM_EMAIL)) {
+            sb.append("-email=").append(argsMap.get(Const.Params.PARAM_EMAIL)).append(" ");
         }
-        if (argsMap.containsKey(Const.PARAM_PASSWORD)) {
-            sb.append("-password=").append(argsMap.get(Const.PARAM_PASSWORD)).append(" ");
+        if (argsMap.containsKey(Const.Params.PARAM_PASSWORD)) {
+            sb.append("-password=").append(argsMap.get(Const.Params.PARAM_PASSWORD)).append(" ");
         }
-        if (argsMap.containsKey(Const.PARAM_HOST)) {
-            sb.append("-host=").append(argsMap.get(Const.PARAM_HOST)).append(" ");
+        if (argsMap.containsKey(Const.Params.PARAM_HOST)) {
+            sb.append("-host=").append(argsMap.get(Const.Params.PARAM_HOST)).append(" ");
         }
 
         final File file = new File(filename);

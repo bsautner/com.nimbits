@@ -13,7 +13,10 @@
 
 package com.nimbits.server.common;
 
+import org.apache.commons.lang3.*;
+
 import javax.servlet.http.*;
+import java.util.logging.*;
 
 /**
  * Created by bsautner
@@ -23,9 +26,21 @@ import javax.servlet.http.*;
  */
 public class ServerInfoImpl {
 
+
     public static String getFullServerURL(final HttpServletRequest req) {
+        return (req == null) ? getUrl() : req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort();
 
-        return req == null ? null : req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort();
     }
-
+    private  static String getUrl() {
+        String hostUrl;
+        String environment = System.getProperty("com.google.appengine.runtime.environment");
+        if (StringUtils.equals("Production", environment)) {
+            String applicationId = System.getProperty("com.google.appengine.application.id");
+            String version = System.getProperty("com.google.appengine.application.version");
+            hostUrl = "http://"+version+"."+applicationId+".appspot.com/";
+        } else {
+            hostUrl = "http://localhost:8081";
+        }
+        return hostUrl;
+    }
 }

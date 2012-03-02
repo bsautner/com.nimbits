@@ -56,14 +56,14 @@ public class SystemMaint extends HttpServlet {
             processSetting(Const.SETTING_LAST_CHECKED, new Date().toString(), true);
             processSetting(Const.SETTING_VERSION, Const.CONST_SERVER_VERSION, true);
 
-            processSetting(Const.PARAM_SECRET, UUID.randomUUID().toString(), false);
+            processSetting(Const.Params.PARAM_SECRET, UUID.randomUUID().toString(), false);
             processSetting(Const.SETTING_ADMIN, Const.TEST_ACCOUNT, false);
-            processSetting(Const.SETTING_ENABLE_CONNECTIONS, "1", false);
+            processSetting(Const.Params.SETTING_ENABLE_CONNECTIONS, "1", false);
             processSetting(Const.SETTING_FACEBOOK_CLIENT_ID, "", false);
             processSetting(Const.SETTING_FACEBOOK_REDIRECT_URL, Const.PATH_FACEBOOK_REDIRECT, false);
             processSetting(Const.SETTING_FACEBOOK_API_KEY, "", false);
             processSetting(Const.SETTING_FACEBOOK_SECRET, "", false);
-            processSetting(Const.SETTING_WOLFRAM, Const.CONST_UNKNOWN, true); //TODO false for deploy and change const
+            processSetting(Const.SETTING_WOLFRAM, Const.CONST_UNKNOWN, false);
             processSetting(Const.SETTING_TWITTER_CLIENT_ID, "", false);
             processSetting(Const.SETTING_TWITTER_SECRET, "", false);
             processSetting(Const.SETTING_SERVER_IS_DISCOVERABLE, "1", false);
@@ -108,7 +108,7 @@ public class SystemMaint extends HttpServlet {
             final EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
             final Server server = ServerModelFactory.createServer(ServerInfoImpl.getFullServerURL(req), emailAddress, Const.CONST_SERVER_VERSION);
             final String json = GsonFactory.getInstance().toJson(server);
-            final String params = Const.PARAM_JSON + "=" + json;
+            final String params = Const.Params.PARAM_JSON + "=" + json;
             out.println("<p>");
             out.println(HttpCommonFactory.getInstance().doPost(Const.PATH_NIMBITS_CORE_SERVERS_URL, params));
             out.println("</p>");

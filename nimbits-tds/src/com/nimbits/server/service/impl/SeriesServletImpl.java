@@ -23,6 +23,7 @@ import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.timespan.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.server.entity.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.recordedvalue.*;
@@ -54,11 +55,11 @@ public class SeriesServletImpl extends HttpServlet {
 
         int count;
 
-        final String pointNameParam = req.getParameter(Const.PARAM_POINT);
-        final String countStr = req.getParameter(Const.PARAM_COUNT);
-        String segStr = req.getParameter(Const.PARAM_SEGMENT);
-        final String startDate = req.getParameter(Const.PARAM_START_DATE);
-        final String endDate = req.getParameter(Const.PARAM_END_DATE);
+        final String pointNameParam = req.getParameter(Const.Params.PARAM_POINT);
+        final String countStr = req.getParameter(Const.Params.PARAM_COUNT);
+        String segStr = req.getParameter(Const.Params.PARAM_SEGMENT);
+        final String startDate = req.getParameter(Const.Params.PARAM_START_DATE);
+        final String endDate = req.getParameter(Const.Params.PARAM_END_DATE);
 
         Common.addResponseHeaders(resp, ExportType.plain);
         Timespan timespan = null;
@@ -102,7 +103,9 @@ public class SeriesServletImpl extends HttpServlet {
 
 
                 final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam);
-                final Point point = PointServiceFactory.getInstance().getPointByName(u, pointName);
+                Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
+                final Point point = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
+
                 if (point == null) {
                     out.println("Point not found");
                 } else {
@@ -129,8 +132,6 @@ public class SeriesServletImpl extends HttpServlet {
         } catch (IOException e) {
             GWT.log(e.getMessage(), e);
 
-        } catch (NimbitsException e) {
-            GWT.log(e.getMessage(), e);
         }
     }
 

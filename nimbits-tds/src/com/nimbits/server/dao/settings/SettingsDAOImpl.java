@@ -143,7 +143,7 @@ public class SettingsDAOImpl implements SettingTransactions {
                 q.setRange(0, 1);
                 q.declareParameters("String n");
                 @SuppressWarnings(Const.WARNING_UNCHECKED)
-                List<ServerSetting> a = (List<ServerSetting>) q.execute(Const.PARAM_SECRET);
+                List<ServerSetting> a = (List<ServerSetting>) q.execute(Const.Params.PARAM_SECRET);
                 if (a.size() > 0) {
                     s = a.get(0);
                     retVal = s.getValue();

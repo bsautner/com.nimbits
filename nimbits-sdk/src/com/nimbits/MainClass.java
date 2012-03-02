@@ -65,11 +65,11 @@ public class MainClass {
 
         final boolean verbose = argsMap.containsKey(Const.PARAM_VERBOSE);
         final boolean listen = argsMap.containsKey(Const.PARAM_LISTEN);
-        final String host = argsMap.containsKey(Const.PARAM_HOST) ? argsMap.get(Const.PARAM_HOST) : Const.PATH_NIMBITS_PUBLIC_SERVER;
-        final String emailParam = argsMap.containsKey(Const.PARAM_EMAIL) ? argsMap.get(Const.PARAM_EMAIL) : null;
-        final String key = argsMap.containsKey(Const.PARAM_KEY) ? argsMap.get(Const.PARAM_KEY) : null;
+        final String host = argsMap.containsKey(Const.Params.PARAM_HOST) ? argsMap.get(Const.Params.PARAM_HOST) : Const.PATH_NIMBITS_PUBLIC_SERVER;
+        final String emailParam = argsMap.containsKey(Const.Params.PARAM_EMAIL) ? argsMap.get(Const.Params.PARAM_EMAIL) : null;
+        final String key = argsMap.containsKey(Const.Params.PARAM_KEY) ? argsMap.get(Const.Params.PARAM_KEY) : null;
         final String appId = argsMap.containsKey(Const.PARAM_APP_ID) ? argsMap.get(Const.PARAM_APP_ID) : null;
-        final String password = argsMap.containsKey(Const.PARAM_PASSWORD) ? argsMap.get(Const.PARAM_PASSWORD) : null;
+        final String password = argsMap.containsKey(Const.Params.PARAM_PASSWORD) ? argsMap.get(Const.Params.PARAM_PASSWORD) : null;
         final EmailAddress email = CommonFactoryLocator.getInstance().createEmailAddress(emailParam);
         final NimbitsClient client = createClient(host, email, key, password);
 
@@ -97,8 +97,8 @@ public class MainClass {
                 }
             }
         } else {
-            if (argsMap.containsKey(Const.PARAM_ACTION) && loggedIn) {
-                Action action = Action.valueOf(argsMap.get(Const.PARAM_ACTION));
+            if (argsMap.containsKey(Const.Params.PARAM_ACTION) && loggedIn) {
+                Action action = Action.valueOf(argsMap.get(Const.Params.PARAM_ACTION));
 
                 switch (action) {
                     case read:
@@ -146,7 +146,7 @@ public class MainClass {
     }
 
     private static void readValue(final NimbitsClient client, final Map<String, String> argsMap, Action action) {
-        final EntityName pointName = CommonFactoryLocator.getInstance().createName(argsMap.get(Const.PARAM_POINT));
+        final EntityName pointName = CommonFactoryLocator.getInstance().createName(argsMap.get(Const.Params.PARAM_POINT));
         final Value v = client.getCurrentRecordedValue(pointName);
 
         switch (action) {
@@ -168,9 +168,9 @@ public class MainClass {
 
     private static Value buildValue(final Map<String, String> argsMap) {
         final double d = argsMap.containsKey(Const.PARAM_VALUE) ? Double.valueOf(argsMap.get(Const.PARAM_VALUE)) : 0.0;
-        final String note = argsMap.containsKey(Const.PARAM_NOTE) ? argsMap.get(Const.PARAM_NOTE) : null;
-        final double lat = argsMap.containsKey(Const.PARAM_LAT) ? Double.valueOf(argsMap.get(Const.PARAM_LAT)) : 0.0;
-        final double lng = argsMap.containsKey(Const.PARAM_LNG) ? Double.valueOf(argsMap.get(Const.PARAM_LNG)) : 0.0;
+        final String note = argsMap.containsKey(Const.Params.PARAM_NOTE) ? argsMap.get(Const.Params.PARAM_NOTE) : null;
+        final double lat = argsMap.containsKey(Const.Params.PARAM_LAT) ? Double.valueOf(argsMap.get(Const.Params.PARAM_LAT)) : 0.0;
+        final double lng = argsMap.containsKey(Const.Params.PARAM_LNG) ? Double.valueOf(argsMap.get(Const.Params.PARAM_LNG)) : 0.0;
 
         return ValueModelFactory.createValueModel(lat, lng, d, new Date(), "", note, "");
 
@@ -180,7 +180,7 @@ public class MainClass {
         out(verbose, "Recording values");
 
         final Value v = buildValue(argsMap);
-        final EntityName pointName = CommonFactoryLocator.getInstance().createName(argsMap.get(Const.PARAM_POINT));
+        final EntityName pointName = CommonFactoryLocator.getInstance().createName(argsMap.get(Const.Params.PARAM_POINT));
         final Value result = client.recordValue(pointName, v);
         if (result == null) {
             out(verbose, "An error occurred recording your data");

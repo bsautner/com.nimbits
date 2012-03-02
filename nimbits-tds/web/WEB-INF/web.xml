@@ -173,7 +173,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>remote_api</servlet-name>
-        <url-pattern>/remote_api</url-pattern>
+        <url-pattern>/_ah/remote_api</url-pattern>
     </servlet-mapping>
 
 
@@ -295,15 +295,6 @@
     <servlet-mapping>
         <servlet-name>PointMaintTask</servlet-name>
         <url-pattern>/task/pointmaint</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>CategoryMaintTask</servlet-name>
-        <servlet-class>com.nimbits.server.task.CategoryMaintTask</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>CategoryMaintTask</servlet-name>
-        <url-pattern>/task/categorymaint</url-pattern>
     </servlet-mapping>
 
     <servlet>

@@ -2,9 +2,7 @@ package com.nimbits.client.controls;
 
 import com.extjs.gxt.ui.client.event.*;
 import com.extjs.gxt.ui.client.widget.*;
-import com.extjs.gxt.ui.client.widget.Window;
 import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.form.*;
 import com.extjs.gxt.ui.client.widget.form.CheckBox;
 import com.extjs.gxt.ui.client.widget.menu.*;
 import com.extjs.gxt.ui.client.widget.menu.MenuItem;
@@ -55,7 +53,9 @@ public class MainMenuBar extends ToolBar {
 
         add(connectionButton());
         add(pendingConnectionsButton());
-
+        add(actionMenuItem("Logout",
+                AbstractImagePrototype.create(Icons.INSTANCE.deleteFriend()),
+                Action.logout));
 
     }
 
@@ -65,9 +65,7 @@ public class MainMenuBar extends ToolBar {
         fileMenu.add(newDataPoint());
         fileMenu.add(newFolder());
         fileMenu.add(uploadFile());
-        fileMenu.add(actionMenuItem("Logout",
-                AbstractImagePrototype.create(Icons.INSTANCE.deleteFriend()),
-                Action.logout));
+
 
         fileButton.setMenu(fileMenu);
         add(fileButton);
@@ -96,7 +94,7 @@ public class MainMenuBar extends ToolBar {
         menu.add(saveToNowCheckBox);
         saveToNowCheckBox.setBoxLabel("Save with Current Time");
         saveToNowCheckBox.setValue(true);
-        autoSaveCheckBox.setBoxLabel("Auto-Save on new number value entry");
+        autoSaveCheckBox.setBoxLabel("Auto-Save when a number is entered");
         autoSaveCheckBox.setValue(true);
         menu.add(autoSaveCheckBox);
         button.setMenu(menu);
@@ -282,7 +280,7 @@ public class MainMenuBar extends ToolBar {
                 service.getSecret(new AsyncCallback<String>() {
                     @Override
                     public void onFailure(Throwable throwable) {
-                        //To change body of implemented methods use File | Settings | File Templates.
+                        GWT.log(throwable.getMessage(), throwable);
                     }
 
                     @Override

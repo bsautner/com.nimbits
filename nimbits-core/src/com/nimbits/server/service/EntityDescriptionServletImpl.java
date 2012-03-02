@@ -14,7 +14,6 @@
 package com.nimbits.server.service;
 
 import com.nimbits.client.enums.Action;
-import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.entity.Entity;
@@ -51,7 +50,7 @@ public class EntityDescriptionServletImpl extends HttpServlet {
     public void doPost(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
         final String serverJson = request.getParameter(Const.PARAM_SERVER);
         final String json = request.getParameter(Const.PARAM_ENTITY);
-        final String action = request.getParameter(Const.PARAM_ACTION);
+        final String action = request.getParameter(Const.Params.PARAM_ACTION);
 
         final PrintWriter out = response.getWriter();
 

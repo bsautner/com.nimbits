@@ -43,7 +43,12 @@ public class Upgrade {
 
         //publish on hrd for users to test with
 
+        //test all buttons, export etc
 
+        //review memcache
+
+
+        //next version
 
         //xmpp server configurable
 
@@ -57,7 +62,7 @@ public class Upgrade {
 
         //fix move task to only work with active points
 
-        //review memcache
+
 
     }
 

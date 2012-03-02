@@ -25,6 +25,8 @@ public interface Icons extends ClientBundle {
     @Source("web.png")
     ImageResource web();
 
+    @Source("radial.png")
+    ImageResource radial();
 
     @Source("link_web.png")
     ImageResource connection();

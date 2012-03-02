@@ -38,15 +38,11 @@ public interface Point extends Serializable {
 
     double getHighAlarm();
 
-    String getHost();
-
     long getId();
 
     boolean getIdleAlarmSent();
 
     int getIdleSeconds();
-
-    boolean getIgnoreIncomingCompressedValues();
 
     double getLowAlarm();
 
@@ -80,8 +76,6 @@ public interface Point extends Serializable {
 
     void setHighAlarmOn(final boolean highAlarmOn);
 
-    void setHost(final String host);
-
     void setId(final long id);
 
     void setIdleAlarmOn(boolean idleAlarmOn);
@@ -89,8 +83,6 @@ public interface Point extends Serializable {
     void setIdleAlarmSent(final boolean idleAlarmSent);
 
     void setIdleSeconds(int idleSeconds);
-
-    void setIgnoreIncomingCompressedValues(final boolean ignoreIncomingCompressedValues);
 
     void setLastChecked(final Date lastChecked);
 
@@ -111,8 +103,5 @@ public interface Point extends Serializable {
     void setValue(final Value value);
 
     void setValues(final List<Value> values);
-
-
-
 
 }

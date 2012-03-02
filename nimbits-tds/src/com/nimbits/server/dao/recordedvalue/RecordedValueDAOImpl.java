@@ -132,8 +132,8 @@ public class RecordedValueDAOImpl implements RecordedValueTransactions {
         args.put("k", point.getId());
         //args.put(Const.PARAM_START_DATE, timespan.getStart());
         //args.put(Const.PARAM_END_DATE, timespan.getEnd());
-        args.put(Const.PARAM_START_DATE, new Date(timespan.getStart().getTime() - 1000));
-        args.put(Const.PARAM_END_DATE, new Date(timespan.getEnd().getTime() + 1000));
+        args.put(Const.Params.PARAM_START_DATE, new Date(timespan.getStart().getTime() - 1000));
+        args.put(Const.Params.PARAM_END_DATE, new Date(timespan.getEnd().getTime() + 1000));
 
         q.declareParameters("String k, Date sd, Date ed");
         q.setOrdering("timestamp descending");
@@ -167,8 +167,8 @@ public class RecordedValueDAOImpl implements RecordedValueTransactions {
         q.setRange(start, end);
 
         args.put("k", point.getId());
-        args.put(Const.PARAM_START_DATE, new Date(timespan.getStart().getTime() - 1000));
-        args.put(Const.PARAM_END_DATE, new Date(timespan.getEnd().getTime() + 1000));
+        args.put(Const.Params.PARAM_START_DATE, new Date(timespan.getStart().getTime() - 1000));
+        args.put(Const.Params.PARAM_END_DATE, new Date(timespan.getEnd().getTime() + 1000));
 
 
         q.declareParameters("String k, Date sd, Date ed");

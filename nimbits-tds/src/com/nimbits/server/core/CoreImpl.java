@@ -43,7 +43,7 @@ public class CoreImpl implements Core {
 
                 final String params = Const.PARAM_ENTITY + "=" + json
                         + "&" + Const.PARAM_ENTITY_TYPE + "=" + entity.getEntityType()
-                        + "&" + Const.PARAM_ACTION + "=" + Action.delete.name();
+                        + "&" + Const.Params.PARAM_ACTION + "=" + Action.delete.name();
 
 
                 HttpCommonFactory.getInstance().doPost(Const.PATH_NIMBITS_CORE_ENTITY_DESC_URL, params);
@@ -67,7 +67,7 @@ public class CoreImpl implements Core {
                 final String params = Const.PARAM_SERVER + "=" + serverJson
                         + "&" + Const.PARAM_ENTITY + "=" + json
                         + "&" + Const.PARAM_ENTITY_TYPE + "=" + entity.getEntityType()
-                        + "&" + Const.PARAM_ACTION + "=" + Action.update.name();
+                        + "&" + Const.Params.PARAM_ACTION + "=" + Action.update.name();
 
                 log.info(Const.PATH_NIMBITS_CORE_ENTITY_DESC_URL + "?" + params);
                 String response = HttpCommonFactory.getInstance().doPost(Const.PATH_NIMBITS_CORE_ENTITY_DESC_URL, params);

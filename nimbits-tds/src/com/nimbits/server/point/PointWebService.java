@@ -23,7 +23,6 @@ import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.timespan.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
-import com.nimbits.server.common.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.recordedvalue.*;
@@ -57,13 +56,13 @@ public class PointWebService extends HttpServlet {
 
             if ((u != null) && (!u.isRestricted())) {
 
-                String pointNameParam = req.getParameter(Const.PARAM_NAME);
+                String pointNameParam = req.getParameter(Const.Params.PARAM_NAME);
                 if (pointNameParam == null) {
-                    pointNameParam = req.getParameter(Const.PARAM_POINT);
+                    pointNameParam = req.getParameter(Const.Params.PARAM_POINT);
                 }
-                final String categoryNameParam = req.getParameter(Const.PARAM_CATEGORY);
-                final String json = req.getParameter(Const.PARAM_JSON);
-                final String actionParam = req.getParameter(Const.PARAM_ACTION);
+                final String categoryNameParam = req.getParameter(Const.Params.PARAM_CATEGORY);
+                final String json = req.getParameter(Const.Params.PARAM_JSON);
+                final String actionParam = req.getParameter(Const.Params.PARAM_ACTION);
                 final Action action = (Utils.isEmptyString(actionParam)) ? Action.create : Action.get(actionParam);
                 final EntityName categoryName = CommonFactoryLocator.getInstance().createName(categoryNameParam);
 
@@ -164,20 +163,20 @@ public class PointWebService extends HttpServlet {
     @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp) {
 
-        final String categoryNameParam = req.getParameter(Const.PARAM_CATEGORY);
-        String pointNameParam = req.getParameter(Const.PARAM_NAME);
-        final String countParam = req.getParameter(Const.PARAM_COUNT);
-        final String format = req.getParameter(Const.PARAM_FORMAT);
+        final String categoryNameParam = req.getParameter(Const.Params.PARAM_CATEGORY);
+        String pointNameParam = req.getParameter(Const.Params.PARAM_NAME);
+        final String countParam = req.getParameter(Const.Params.PARAM_COUNT);
+        final String format = req.getParameter(Const.Params.PARAM_FORMAT);
         final String uuidParam = req.getParameter(Const.PARAM_UUID);
-        final String startParam = req.getParameter(Const.PARAM_START_DATE);
-        final String endParam = req.getParameter(Const.PARAM_END_DATE);
+        final String startParam = req.getParameter(Const.Params.PARAM_START_DATE);
+        final String endParam = req.getParameter(Const.Params.PARAM_END_DATE);
         final String offsetParam = req.getParameter(Const.PARAM_OFFSET);
 
 
         Common.addResponseHeaders(resp, ExportType.plain);
 
         if (Utils.isEmptyString(pointNameParam)) {
-            pointNameParam = req.getParameter(Const.PARAM_POINT);
+            pointNameParam = req.getParameter(Const.Params.PARAM_POINT);
         }
         User u;
         try {
@@ -189,13 +188,13 @@ public class PointWebService extends HttpServlet {
         try {
             final PrintWriter out = resp.getWriter();
 
-            final String host = ServerInfoImpl.getFullServerURL(req);
+
             if (Utils.isEmptyString(uuidParam)) {
                 getPointObjects(req, categoryNameParam, pointNameParam, out);
             } else {
                 final Point point = PointServiceFactory.getInstance().getPointByUUID(uuidParam);
                 if (point != null) {
-                    outputPoint(u, host, countParam, format, startParam, endParam, offsetParam, out, point);
+                    outputPoint(u, countParam, format, startParam, endParam, offsetParam, out, point);
                 }
                 else {
                     final Entity category = EntityServiceFactory.getInstance().getEntityByUUID(u, uuidParam);
@@ -213,12 +212,12 @@ public class PointWebService extends HttpServlet {
                             for (final Point p : points) {
                                     p.setValues(getRecordedValues(countParam, startParam, endParam, offsetParam, p).getValues());
                                     p.setValue(RecordedValueServiceFactory.getInstance().getCurrentValue(p));
-                                    p.setHost(host);
+
 
 
                             }
                             category.setPoints(points);
-                            category.setHost(host);
+
                             final String json = GsonFactory.getInstance().toJson(category);
                             out.print(json);
 
@@ -236,16 +235,14 @@ public class PointWebService extends HttpServlet {
 
     }
 
-    private void outputPoint(User u, String host, String countParam, String format, String startParam, String endParam, String offsetParam, PrintWriter out, Point point) throws NimbitsException {
+    private void outputPoint(User u, String countParam, String format, String startParam, String endParam, String offsetParam, PrintWriter out, Point point) throws NimbitsException {
 
 
             point = getRecordedValues(countParam, startParam, endParam, offsetParam, point);
 
             Value current = RecordedValueServiceFactory.getInstance().getCurrentValue(point);
             point.setValue(current);
-            point.setHost(host);
             final ExportType type = getOutputType(format);
-
             if (type.equals(ExportType.json)) {
                 String json = gson.toJson(point);
                 out.print(json);
@@ -307,7 +304,9 @@ public class PointWebService extends HttpServlet {
             final String result;
             if (!Utils.isEmptyString(pointNameParam)) {
                 final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam);
-                final Point p = PointServiceFactory.getInstance().getPointByName(u, pointName);
+                final Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
+                final Point p= PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
+
                 result = gson.toJson(p);
                 out.println(result);
             } else if (!Utils.isEmptyString(categoryNameParam)) {

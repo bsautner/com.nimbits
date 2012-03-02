@@ -13,78 +13,108 @@
 
 package com.nimbits.client.panels;
 
-import com.extjs.gxt.ui.client.dnd.DropTarget;
+import com.extjs.gxt.ui.client.data.*;
+import com.extjs.gxt.ui.client.dnd.*;
 import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.store.TreeStoreModel;
+import com.extjs.gxt.ui.client.store.*;
 import com.extjs.gxt.ui.client.widget.*;
+import com.extjs.gxt.ui.client.widget.Label;
+import com.extjs.gxt.ui.client.widget.Window;
 import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.button.ToolButton;
-import com.extjs.gxt.ui.client.widget.form.NumberField;
-import com.extjs.gxt.ui.client.widget.form.TextField;
+import com.extjs.gxt.ui.client.widget.button.*;
+import com.extjs.gxt.ui.client.widget.form.*;
 import com.extjs.gxt.ui.client.widget.layout.*;
-import com.extjs.gxt.ui.client.widget.toolbar.SeparatorToolItem;
-import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.visualization.client.AbstractDataTable.ColumnType;
-import com.google.gwt.visualization.client.DataTable;
-import com.google.gwt.visualization.client.VisualizationUtils;
-import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine;
-import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine.Options;
-import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine.WindowMode;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.icons.Icons;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.GxtModel;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.timespan.Timespan;
-import com.nimbits.client.model.timespan.TimespanModelFactory;
-import com.nimbits.client.model.timespan.TimespanServiceClientImpl;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.service.datapoints.PointService;
-import com.nimbits.client.service.datapoints.PointServiceAsync;
-import com.nimbits.client.service.recordedvalues.RecordedValueService;
-import com.nimbits.client.service.recordedvalues.RecordedValueServiceAsync;
-import com.nimbits.shared.Utils;
+import com.extjs.gxt.ui.client.widget.toolbar.*;
+import com.google.gwt.core.client.*;
+import com.google.gwt.i18n.client.*;
+import com.google.gwt.user.client.*;
+import static com.google.gwt.user.client.Window.*;
+import com.google.gwt.user.client.rpc.*;
+import com.google.gwt.user.client.ui.*;
+import com.google.gwt.visualization.client.AbstractDataTable.*;
+import com.google.gwt.visualization.client.*;
+import com.google.gwt.visualization.client.visualizations.*;
+import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.icons.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.timespan.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.client.service.datapoints.*;
+import com.nimbits.client.service.recordedvalues.*;
+import com.nimbits.shared.*;
 
 import java.util.*;
 
-import static com.google.gwt.user.client.Window.alert;
-
-public class AnnotatedTimeLinePanel extends NavigationEventProvider {
+public class AnnotatedTimeLinePanel extends LayoutContainer {
     private final DateTimeFormat fmt = DateTimeFormat.getFormat(Const.FORMAT_DATE_TIME);
 
     private AnnotatedTimeLine line;
     private ContentPanel mainPanel;
     private DataTable dataTable = null;
-
-    private final Map<EntityName, Entity> points = new HashMap<EntityName, Entity>();
-    private final Map<EntityName, List<Value>> valueMap = new HashMap<EntityName, List<Value>>();
-    private final TextField endDateSelector = new TextField();
-    private final TextField startDateSelector = new TextField();
+    private final Map<EntityName, Entity> points;
+    private final Map<EntityName, List<Value>> valueMap;
+    private final TextField endDateSelector;
+    private final TextField startDateSelector;
+    private final List<ChartRemovedListener> chartRemovedListeners;
     private Timespan timespan;
     private boolean headerVisible;
     private final String name;
     private boolean selected;
 
-    public AnnotatedTimeLinePanel(final boolean showHeader, final String name) {
-        this.headerVisible = showHeader;
 
-        this.name = name;
+    @Override
+    protected void onResize(int width, int height) {
+        super.onResize(width, height);
+        refreshSize(width, height);
     }
 
+    // ChartRemoved Click Handlers
+    public interface ChartRemovedListener {
+        void onChartRemovedClicked();
+    }
+
+    void addChartRemovedClickedListeners(final ChartRemovedListener listener) {
+        chartRemovedListeners.add(listener);
+    }
+
+    void notifyChartRemovedListener() {
+        for (ChartRemovedListener ChartRemovedClickedListener : chartRemovedListeners) {
+            ChartRemovedClickedListener.onChartRemovedClicked();
+        }
+    }
+
+    public AnnotatedTimeLinePanel(final boolean showHeader, final String name) {
+        this.headerVisible = showHeader;
+        this.name = name;
+        points = new HashMap<EntityName, Entity>();
+        valueMap = new HashMap<EntityName, List<Value>>();
+        endDateSelector = new TextField();
+        startDateSelector = new TextField();
+        chartRemovedListeners = new ArrayList<ChartRemovedListener>();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+        setBorders(selected);
+
+    }
     //data
 
-    private void addPointDataToTable(final Entity entity, final List<Value> values) {
+    private void addPointDataToTable(final GxtModel entity, final List<Value> values) {
         int PointColumn;
-
         boolean found = false;
-
 
         removePointDataFromTable(CommonFactoryLocator.getInstance().createName(Const.DEFAULT_EMPTY_COL));
 
@@ -109,13 +139,13 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
         }
 
         if (values != null) {
-            if (! valueMap.containsKey(entity.getName())) {
+            if (valueMap.containsKey(entity.getName())) {
                 valueMap.get(entity.getName()).addAll(values);
             }
             else {
                 valueMap.put(entity.getName(), values);
             }
-            for (Value v : values) {
+            for (final Value v : values) {
 
 //                points.get(entity.getName()).getValues().add(v);
 
@@ -155,11 +185,7 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
     //end data
 
 
-    public boolean containsPoint(final Entity point) {
-        return points.containsKey(point.getName());
-    }
-
-    public void addValue(final Entity entity, final Value value) {
+    public void addValue(final GxtModel model, final Value value) {
         if (timespan != null) {
             Date end = (timespan.getEnd().getTime() > value.getTimestamp().getTime()) ? value.getTimestamp() : timespan.getEnd();
             Date start = (timespan.getStart().getTime() < value.getTimestamp().getTime()) ? value.getTimestamp() : timespan.getStart();
@@ -178,7 +204,7 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
         }
         startDateSelector.setValue(fmt.format(this.timespan.getStart()));
         endDateSelector.setValue(fmt.format(this.timespan.getEnd()));
-        addPointDataToTable(entity, Arrays.asList(value));
+        addPointDataToTable(model, Arrays.asList(value));
 
         drawChart();
     }
@@ -192,6 +218,9 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
     @Override
     protected void onRender(final Element parent, final int index) {
         super.onRender(parent, index);
+
+
+
         setLayout(new FillLayout());
         mainPanel = new ContentPanel();
         mainPanel.setBodyBorder(false);
@@ -199,153 +228,23 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
 
         mainPanel.setFrame(false);
         mainPanel.setTopComponent(toolbar());
-
-       // mainPanel.setHeight(400);
+        mainPanel.setHeight("100%");
 
         if (headerVisible) {
-            mainPanel.getHeader().addTool(
-                    maximizeToolbarButton());
+            mainPanel.setHeading(name);
+//            mainPanel.getHeader().addTool(
+//                    maximizeToolbarButton());
             mainPanel.getHeader().addTool(
                     closeToolbarButton());
         }
         setDropTarget(mainPanel);
         add(mainPanel);
         initChart();
-           layout(true);
+        layout(true);
     }
 
-    private ToolBar toolbar() {
-        final ToolBar toolBar = new ToolBar();
 
-
-        final Button startDateMenu = new Button();
-        startDateMenu.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.calendar()));
-
-
-        startDateSelector.setSelectOnFocus(false);
-        if (timespan != null) {
-            startDateSelector.setValue(fmt.format(timespan.getStart()));
-        }
-        startDateSelector.setToolTip("Start Date");
-
-        startDateSelector.addListener(Events.KeyPress, new Listener<FieldEvent>() {
-            @Override
-            public void handleEvent(FieldEvent be) {
-                if (be.getKeyCode() == 13) {
-
-                        refreshChart();
-
-                }
-            }
-        });
-
-
-        if (timespan != null) {
-            endDateSelector.setValue(fmt.format(timespan.getEnd()));
-        }
-        endDateSelector.setSelectOnFocus(false);
-        endDateSelector.setToolTip("End Date");
-        endDateSelector.addListener(Events.KeyPress, new Listener<FieldEvent>() {
-            @Override
-            public void handleEvent(FieldEvent be) {
-                if (be.getKeyCode() == 13) {
-
-                        refreshChart();
-
-                }
-            }
-        });
-
-
-        final Button refresh = new Button();
-        refresh.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.refresh2()));
-
-
-        final Button export = new Button();
-        export.setText("Export and Report");
-        export.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.plugin()));
-        export.addListener(Events.OnClick, new Listener<BaseEvent>() {
-            @Override
-            public void handleEvent(final BaseEvent be) {
-                if (points.size() > 0) {
-                    Window w = new Window();
-                    w.setHeading("Export Options");
-                    w.setWidth(500);
-                    w.setHeight(300);
-                    w.add((new ExportPanel(points, valueMap)));
-                    w.show();
-                } else {
-                    alert("Please select a point, and load some data into the chart. Then you can use this button");
-                }
-            }
-        });
-
-
-        toolBar.add(startDateSelector);
-        // toolBar.add(startDateMenu);
-        //  toolBar.add(new SeparatorToolItem());
-
-        toolBar.add(endDateSelector);
-        //   toolBar.add(new SeparatorToolItem());
-
-        refresh.addListener(Events.OnClick, new Listener<BaseEvent>() {
-            @Override
-            public void handleEvent(final BaseEvent be) {
-
-                    refreshChart();
-
-            }
-        });
-
-        toolBar.add(refresh);
-
-        toolBar.add(new SeparatorToolItem());
-
-        final NumberField min = new NumberField();
-        final NumberField max = new NumberField();
-        Label minY = new Label("MinY:");
-        Label maxY = new Label("MaxY:");
-        min.setWidth(30);
-        max.setWidth(30);
-
-        min.setValue(0);
-        max.setValue(100);
-
-        toolBar.add(minY);
-        toolBar.add(min);
-        toolBar.add(maxY);
-        toolBar.add(max);
-
-
-        Button refreshRange = new Button();
-        refreshRange.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.refresh2()));
-        refreshRange.addListener(Events.OnClick, new Listener<BaseEvent>() {
-            @Override
-            public void handleEvent(BaseEvent be) {
-                Options options = Options.create();
-                options.setDisplayAnnotations(true);
-                options.setWindowMode(WindowMode.OPAQUE);
-                options.setAllowRedraw(true);
-                options.setDisplayRangeSelector(true);
-
-                int mn = min.getValue().intValue();
-                int mx = max.getValue().intValue();
-
-                options.setMax(mx);
-                options.setMin(mn);
-
-
-                line.draw(dataTable, options);
-            }
-        });
-        toolBar.add(refreshRange);
-        toolBar.add(new SeparatorToolItem());
-        toolBar.add(export);
-
-        return toolBar;
-    }
-
-    public void initChart() {
+    private void initChart() {
         Runnable onLoadCallback = new Runnable() {
             @Override
             public void run() {
@@ -353,22 +252,16 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
                     mainPanel.remove(line);
                     line = null;
                 }
-
                 dataTable = DataTable.create();
                 dataTable.addColumn(ColumnType.DATETIME, Const.WORD_DATE);
-//                line = new AnnotatedTimeLine(dataTable, createOptions(), w + "px",
-//                        (h - heightMod) + "px");
                 line = new AnnotatedTimeLine(dataTable, createOptions(), "100%", "100%");
-                //  	line.setVisibleChartRange(startDate, endDate);
                 mainPanel.add(line);
-
                 addEmptyDataToTable();
-                //emptyPanel.setLayout(new FillLayout());
-                //  mainPanel.add(h);
+
                 layout();
                 if (points != null && points.size() > 0) {
 
-                        refreshChart();
+                    refreshChart();
 
                 }
             }
@@ -384,50 +277,72 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
         dataTable.addColumn(ColumnType.STRING, "text0");
     }
 
+    public void refreshSize(int width, int height) {
+        if (width > 0 && line != null) {
+            Runnable onLoadCallback = new Runnable() {
+                @Override
+                public void run() {
+                    mainPanel.remove(line);
+                    line = new AnnotatedTimeLine(dataTable, createOptions(), "100%", "100%");
+                    mainPanel.add(line);
+                    doLayout();
+                }
+            };
+
+            VisualizationUtils.loadVisualizationApi(onLoadCallback,
+                    AnnotatedTimeLine.PACKAGE);
+        }
+    }
     private void refreshChart()   {
 
         try {
             timespan = TimespanServiceClientImpl.createTimespan(startDateSelector.getValue().toString(), endDateSelector.getValue().toString());
 
-        if (line != null && timespan != null) {
-            line.setVisibleChartRange(timespan.getStart(), timespan.getEnd());
-            dataTable = DataTable.create();
-            dataTable.addColumn(ColumnType.DATETIME, "Date");
+            if (line != null && timespan != null) {
+                line.setVisibleChartRange(timespan.getStart(), timespan.getEnd());
+                dataTable = DataTable.create();
+                dataTable.addColumn(ColumnType.DATETIME, "Date");
 
-            for (EntityName pointName : points.keySet()) {
-                addPointToChart(points.get(pointName));
+                for (Entity entity : points.values()) {
+                    addEntityModel(new GxtModel(entity));
+                }
+            }
+        } catch (NimbitsException e) {
+            GWT.log(e.getMessage(), e);
+        }
+
+    }
+
+    public void addEntityModel(GxtModel model) {
+        //  Entity entity = model.getBaseEntity();
+        if (!points.containsKey(model.getName()) && points.size() < 10) {
+            if (model.getEntityType().equals(EntityType.point)) {
+                points.put(model.getName(), model.getBaseEntity());
+                addPointToChart(model);
             }
         }
-        } catch (NimbitsException e) {
-           GWT.log(e.getMessage(), e);
+        for (ModelData child : model.getChildren()) {
+             addEntityModel((GxtModel) child);
         }
-
     }
 
-    public void addPoint(Entity point) {
-        addPointToChart(point);
-    }
-
-    private void addPointToChart(final Entity point) {
-        if (!points.containsKey(point.getName())) {
-            points.put(point.getName(), point);
-        }
+    private void addPointToChart(final GxtModel model) {
 
         final int start = 0;
         final int end = 1000;
 
         if (timespan == null) {
-            loadValuesThatExist(point);
+            loadValuesThatExist(model);
         } else {
-            loadMemCache(point);
-            loadDataSegment(point, start, end);
+            loadMemCache(model);
+            loadDataSegment(model, start, end);
         }
     }
 
-    private void loadValuesThatExist(final Entity p) {
+    private void loadValuesThatExist(final GxtModel model) {
         final RecordedValueServiceAsync dataService = GWT.create(RecordedValueService.class);
 
-        dataService.getTopDataSeries(p, 100, new Date(), new AsyncCallback<List<Value>>() {
+        dataService.getTopDataSeries(model.getBaseEntity(), 100, new Date(), new AsyncCallback<List<Value>>() {
             @Override
             public void onFailure(Throwable caught) {
                 GWT.log(caught.getMessage());
@@ -449,7 +364,7 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
                 }
 
 
-                addPointDataToTable(p, result);
+                addPointDataToTable(model, result);
 
                 drawChart();
 
@@ -465,13 +380,13 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
         this.endDateSelector.setValue(fmt.format(ts.getEnd()));
     }
 
-    private void loadDataSegment(final Entity p, final int start, final int end) {
+    private void loadDataSegment(final GxtModel p, final int start, final int end) {
         final RecordedValueServiceAsync dataService = GWT.create(RecordedValueService.class);
         final MessageBox box = MessageBox.wait("Progress",
                 "Loading " + p.getName().getValue() + " archived values " + start + " to " + end, "Loading...");
         box.show();
         //   Timespan timespan = new TimespanModel(startDate, endDate);
-        dataService.getPieceOfDataSegment(p, timespan, start, end, new AsyncCallback<List<Value>>() {
+        dataService.getPieceOfDataSegment(p.getBaseEntity(), timespan, start, end, new AsyncCallback<List<Value>>() {
             @Override
             public void onFailure(final Throwable caught) {
                 box.close();
@@ -491,13 +406,13 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
         });
     }
 
-    private void loadMemCache(final Entity p) {
+    private void loadMemCache(final GxtModel model) {
         final RecordedValueServiceAsync dataService = GWT.create(RecordedValueService.class);
         final MessageBox box = MessageBox.wait("Progress",
                 "Loading Buffered Data", "Loading...");
         box.show();
         //   Timespan timespan = new TimespanModel(startDate, endDate);
-        dataService.getCache(p, new AsyncCallback<List<Value>>() {
+        dataService.getCache(model.getBaseEntity(), new AsyncCallback<List<Value>>() {
             @Override
             public void onFailure(final Throwable caught) {
                 box.close();
@@ -505,20 +420,13 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
 
             @Override
             public void onSuccess(final List<Value> result) {
-                addPointDataToTable(p, result);
+                addPointDataToTable(model, result);
 
                 box.close();
             }
         });
 
 
-    }
-
-    void resize(final int h, final int w) {
-        mainPanel.setHeight(h);
-        mainPanel.setWidth(w);
-        line.setHeight("100%");
-        line.setWidth("100%");
     }
 
     private void setDropTarget(final Component container) {
@@ -528,15 +436,21 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
             protected void onDragDrop(final DNDEvent event) {
                 super.onDragDrop(event);
                 List<TreeStoreModel> t = event.getData();
-
                 for (final TreeStoreModel a : t) {
                     final GxtModel p = (GxtModel) a.getModel();
-                    addPointToChart(p.getBaseEntity());
-                    final PointServiceAsync pointService = GWT.create(PointService.class);
-
+                    handleDrop(p);
                 }
             }
         };
+    }
+
+    private void handleDrop(final GxtModel p) {
+        if (p.getEntityType().equals(EntityType.point)) {
+            addEntityModel(p);
+        }
+        for (final ModelData x : p.getChildren()) {
+            handleDrop((GxtModel)x);
+        }
     }
 
     private Options createOptions() {
@@ -550,7 +464,7 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
         return options;
     }
 
-    public void removePoint(Entity entity) {
+    public void removePoint(final Entity entity) {
         removePointDataFromTable(entity.getName());
         if (points.containsKey(entity.getName())) {
             points.remove(entity.getName());
@@ -563,48 +477,6 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
         drawChart();
     }
 
-    //getters setters
-    public String getName() {
-        return name;
-    }
-
-    public boolean isSelected() {
-        return selected;
-    }
-
-    public void setSelected(boolean selected) {
-        this.selected = selected;
-        setBorders(selected);
-
-    }
-
-    // header tools
-    private ToolButton maximizeToolbarButton() {
-        return new ToolButton("x-tool-maximize",
-                new SelectionListener<IconButtonEvent>() {
-                    boolean isMax;
-
-                    @Override
-                    public void componentSelected(final IconButtonEvent ce) {
-                        final Window window = new Window();
-
-                        final AnnotatedTimeLinePanel panel = new AnnotatedTimeLinePanel(false, name);
-
-                        // panel.hideHeader();
-                        window.add(panel);
-                        window.setWidth(800);
-                        window.setHeight(800);
-
-                        window.show();
-                        panel.resize(770, 790);
-                        for (final EntityName pointName : points.keySet()) {
-                            panel.addPoint(points.get(pointName));
-                        }
-
-                    }
-                });
-    }
-
     private ToolButton closeToolbarButton() {
         return new ToolButton("x-tool-close",
                 new SelectionListener<IconButtonEvent>() {
@@ -612,9 +484,166 @@ public class AnnotatedTimeLinePanel extends NavigationEventProvider {
 
                     @Override
                     public void componentSelected(final IconButtonEvent ce) {
-                        notifyChartRemovedListener(name);
+                        notifyChartRemovedListener();
                     }
                 });
     }
+    private ToolBar toolbar() {
+        final ToolBar toolBar = new ToolBar();
+        final Button export = exportButton();
+        final Button resetChartButton = resetChartButton();
+        final Button refresh = refreshButton();
 
+
+        final Button startDateMenu = new Button();
+        startDateMenu.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.calendar()));
+        initStartDateSelector();
+        initEndDateSelector();
+
+        toolBar.add(startDateSelector);
+
+        toolBar.add(endDateSelector);
+
+        toolBar.add(refresh);
+
+        toolBar.add(new SeparatorToolItem());
+
+        final NumberField min = new NumberField();
+        final NumberField max = new NumberField();
+        Label minY = new Label("MinY:");
+        Label maxY = new Label("MaxY:");
+        min.setWidth(30);
+        max.setWidth(30);
+
+        min.setValue(0);
+        max.setValue(100);
+
+        toolBar.add(minY);
+        toolBar.add(min);
+        toolBar.add(maxY);
+        toolBar.add(max);
+
+
+        Button refreshRange = refreshRangeButton(min, max);
+        toolBar.add(refreshRange);
+        toolBar.add(new SeparatorToolItem());
+        toolBar.add(resetChartButton);
+
+        toolBar.add(export);
+        return toolBar;
+    }
+
+    private Button resetChartButton() {
+        Button button = new Button();
+        button.setToolTip("Reset Chart");
+        button.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.delete()));
+        button.addListener(Events.OnClick, new Listener<BaseEvent>() {
+            @Override
+            public void handleEvent(BaseEvent be) {
+                for (Entity entity : points.values()) {
+                    removePoint(entity);
+                }
+
+            }
+        });
+        return button;
+    }
+
+    private Button refreshRangeButton(final NumberField min, final NumberField max) {
+        Button refreshRange = new Button();
+        refreshRange.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.refresh2()));
+        refreshRange.addListener(Events.OnClick, new Listener<BaseEvent>() {
+            @Override
+            public void handleEvent(BaseEvent be) {
+                Options options = Options.create();
+                options.setDisplayAnnotations(true);
+                options.setWindowMode(WindowMode.OPAQUE);
+                options.setAllowRedraw(true);
+                options.setDisplayRangeSelector(true);
+
+                int mn = min.getValue().intValue();
+                int mx = max.getValue().intValue();
+
+                options.setMax(mx);
+                options.setMin(mn);
+
+
+                line.draw(dataTable, options);
+            }
+        });
+        return refreshRange;
+    }
+
+    private void initEndDateSelector() {
+        if (timespan != null) {
+            endDateSelector.setValue(fmt.format(timespan.getEnd()));
+        }
+        endDateSelector.setSelectOnFocus(false);
+        endDateSelector.setToolTip("End Date");
+        endDateSelector.addListener(Events.KeyPress, new Listener<FieldEvent>() {
+            @Override
+            public void handleEvent(FieldEvent be) {
+                if (be.getKeyCode() == 13) {
+
+                    refreshChart();
+
+                }
+            }
+        });
+    }
+
+    private void initStartDateSelector() {
+        startDateSelector.setSelectOnFocus(false);
+        if (timespan != null) {
+            startDateSelector.setValue(fmt.format(timespan.getStart()));
+        }
+        startDateSelector.setToolTip("Start Date");
+
+        startDateSelector.addListener(Events.KeyPress, new Listener<FieldEvent>() {
+            @Override
+            public void handleEvent(FieldEvent be) {
+                if (be.getKeyCode() == 13) {
+
+                    refreshChart();
+
+                }
+            }
+        });
+    }
+
+    private Button refreshButton() {
+        final Button refresh = new Button();
+        refresh.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.refresh2()));
+        refresh.addListener(Events.OnClick, new Listener<BaseEvent>() {
+            @Override
+            public void handleEvent(final BaseEvent be) {
+
+                refreshChart();
+
+            }
+        });
+        return refresh;
+    }
+
+    private Button exportButton() {
+        final Button export = new Button();
+        export.setText("Export and Report");
+        export.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.table()));
+        export.addListener(Events.OnClick, new Listener<BaseEvent>() {
+            @Override
+            public void handleEvent(final BaseEvent be) {
+                if (points.size() > 0) {
+                    Window w = new Window();
+                    w.setHeading("Export Options");
+                    w.setWidth(500);
+                    w.setHeight(300);
+                    w.add((new ExportPanel(points, valueMap)));
+                    w.show();
+                } else {
+                    alert("Please select a point, and load some data into the chart. Then you can use this button");
+                }
+            }
+        });
+        return export;
+    }
 }

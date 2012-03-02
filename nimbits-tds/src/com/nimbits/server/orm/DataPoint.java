@@ -48,9 +48,6 @@ public class DataPoint implements Point {
 
     @Persistent
     @Deprecated
-    private String host;
-    @Persistent
-    @Deprecated
     private Long catID;
     @Persistent
     private boolean isSystemPoint;
@@ -123,10 +120,6 @@ public class DataPoint implements Point {
     @Persistent
     private Boolean idleAlarmSent;
 
-
-    @Persistent
-    private Boolean ignoreIncomingCompressedValues;
-
     @Deprecated
     @NotPersistent
     private boolean readOnly;
@@ -177,7 +170,6 @@ public class DataPoint implements Point {
     public DataPoint(User user, Entity entity) {
         this();
         this.userFK = user.getId();
-        this.name = entity.getName().getValue();
         this.uuid = entity.getEntity();
         this.LastChecked= new Date();
         this.createDate = new Date();
@@ -213,12 +205,6 @@ public class DataPoint implements Point {
     public double getHighAlarm() {
         return (highAlarm == null) ? 0.0 : highAlarm;
 
-    }
-
-
-    @Override
-    public String getHost() {
-        return host;
     }
 
     @Override
@@ -313,15 +299,6 @@ public class DataPoint implements Point {
     }
 
 
-    //
-//    public void setHighestRecordedValue(final double highestRecordedValue) {
-//        this.highestRecordedValue = highestRecordedValue;
-//    }
-    @Override
-    public void setHost(final String host) {
-        this.host = host;
-    }
-
     @Override
     public void setId(final long id) {
         this.id = id;
@@ -343,17 +320,10 @@ public class DataPoint implements Point {
     }
 
 
-
-
     @Override
     public void setTag(final String tag) {
         this.tag = tag;
     }
-
-//    @Override
-//    public void setTarget(final long long1) {
-//        this.target = long1;
-//    }
 
     @Override
     public void setUnit(final String unit) {
@@ -402,17 +372,7 @@ public class DataPoint implements Point {
         return retVal;
     }
 
-    @Override
-    public void setIgnoreIncomingCompressedValues(
-            final boolean ignoreIncomingCompressedValues) {
-        this.ignoreIncomingCompressedValues = ignoreIncomingCompressedValues;
-    }
 
-    @Override
-    public boolean getIgnoreIncomingCompressedValues() {
-        return (ignoreIncomingCompressedValues == null) ? true : ignoreIncomingCompressedValues;
-
-    }
 
 
 

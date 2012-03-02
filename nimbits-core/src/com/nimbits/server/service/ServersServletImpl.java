@@ -40,7 +40,7 @@ public class ServersServletImpl  extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse  response) throws IOException {
-        String json = request.getParameter(Const.PARAM_JSON);
+        String json = request.getParameter(Const.Params.PARAM_JSON);
         PrintWriter out = response.getWriter();
         Server server = GsonFactory.getInstance().fromJson(json, ServerModel.class);
         Server retObj = null;

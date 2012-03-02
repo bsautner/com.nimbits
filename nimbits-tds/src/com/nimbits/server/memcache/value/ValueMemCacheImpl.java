@@ -14,7 +14,6 @@
 package com.nimbits.server.memcache.value;
 
 import com.google.appengine.api.memcache.*;
-import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.timespan.*;

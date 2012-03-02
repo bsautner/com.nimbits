@@ -45,13 +45,13 @@ public class CurrentValueService extends HttpServlet {
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
 
 
-        final String pointNameParam = req.getParameter(Const.PARAM_POINT);
+        final String pointNameParam = req.getParameter(Const.Params.PARAM_POINT);
         final String valueStr = req.getParameter(Const.PARAM_VALUE);
-        final String json = req.getParameter(Const.PARAM_JSON);
-        final String note = req.getParameter(Const.PARAM_NOTE);
-        final String lat = req.getParameter(Const.PARAM_LAT);
-        final String lng = req.getParameter(Const.PARAM_LNG);
-        final String timestampStr = req.getParameter(Const.PARAM_TIMESTAMP);
+        final String json = req.getParameter(Const.Params.PARAM_JSON);
+        final String note = req.getParameter(Const.Params.PARAM_NOTE);
+        final String lat = req.getParameter(Const.Params.PARAM_LAT);
+        final String lng = req.getParameter(Const.Params.PARAM_LNG);
+        final String timestampStr = req.getParameter(Const.Params.PARAM_TIMESTAMP);
         final String jsonData = req.getParameter(Const.PARAM_DATA);
 
         //   final PrintWriter out = resp.getWriter();
@@ -61,7 +61,8 @@ public class CurrentValueService extends HttpServlet {
 //
             final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
             final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam);
-            final Point point = PointServiceFactory.getInstance().getPointByName(u, pointName);
+            Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
+            final Point point = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
 
 
             if (point == null) {
@@ -119,14 +120,14 @@ public class CurrentValueService extends HttpServlet {
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
 
 
-        final String pointNameParam = req.getParameter(Const.PARAM_POINT);
+        final String pointNameParam = req.getParameter(Const.Params.PARAM_POINT);
         final String uuid = req.getParameter(Const.PARAM_UUID);
-        final String formatParam = req.getParameter(Const.PARAM_FORMAT);
+        final String formatParam = req.getParameter(Const.Params.PARAM_FORMAT);
         final String valueStr = req.getParameter(Const.PARAM_VALUE);
-        final String json = req.getParameter(Const.PARAM_JSON);
-        final String note = req.getParameter(Const.PARAM_NOTE);
-        final String lat = req.getParameter(Const.PARAM_LAT);
-        final String lng = req.getParameter(Const.PARAM_LNG);
+        final String json = req.getParameter(Const.Params.PARAM_JSON);
+        final String note = req.getParameter(Const.Params.PARAM_NOTE);
+        final String lat = req.getParameter(Const.Params.PARAM_LAT);
+        final String lng = req.getParameter(Const.Params.PARAM_LNG);
         final String jsonData = req.getParameter(Const.PARAM_DATA);
 
 
@@ -140,7 +141,7 @@ public class CurrentValueService extends HttpServlet {
 
             final String format = (Utils.isEmptyString(formatParam)) ? Const.WORD_DOUBLE : formatParam;
 
-            if (format.equals(Const.PARAM_JSON) && !Utils.isEmptyString(json)) {
+            if (format.equals(Const.Params.PARAM_JSON) && !Utils.isEmptyString(json)) {
                 nv = GsonFactory.getInstance().fromJson(json, ValueModel.class);
             } else if (format.equals(Const.WORD_DOUBLE) && !Utils.isEmptyString(valueStr)) {
                 nv = ValueModelFactory.createValueModel(valueStr, note, lat, lng, jsonData);
@@ -181,7 +182,9 @@ public class CurrentValueService extends HttpServlet {
 
         } else if (!Utils.isEmptyString(pointNameParam)) {
             EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam);
-            p = PointServiceFactory.getInstance().getPointByName(u, pointName);
+            Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
+            p = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
+
         } else {
 
             throw new NimbitsException(Const.ERROR_POINT_NOT_FOUND);
@@ -206,7 +209,7 @@ public class CurrentValueService extends HttpServlet {
                 } else {
                     value = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
                 }
-                if (format.equals(Const.PARAM_JSON)) {
+                if (format.equals(Const.Params.PARAM_JSON)) {
                     result = GsonFactory.getInstance().toJson(value);
                 } else {
                     result = String.valueOf(value.getNumberValue());

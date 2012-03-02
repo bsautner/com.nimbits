@@ -50,21 +50,21 @@ public class ChartApiServletImpl extends HttpServlet {
         log.info(req.getQueryString());
         log.info("Chart API Request");
 
-        log.info(req.getParameter(Const.PARAM_EMAIL));
-        final String pointsListParam = req.getParameter(Const.PARAM_POINTS);
+        log.info(req.getParameter(Const.Params.PARAM_EMAIL));
+        final String pointsListParam = req.getParameter(Const.Params.PARAM_POINTS);
 
-        final String pointParamName = req.getParameter(Const.PARAM_POINT);
-        final String countParam = req.getParameter(Const.PARAM_COUNT);
-        final String autoScaleParam = req.getParameter(Const.PARAM_AUTO_SCALE);
+        final String pointParamName = req.getParameter(Const.Params.PARAM_POINT);
+        final String countParam = req.getParameter(Const.Params.PARAM_COUNT);
+        final String autoScaleParam = req.getParameter(Const.Params.PARAM_AUTO_SCALE);
         final Timespan timespan;
         try {
             timespan = getTimestamp(req);
 
-            final String formatParam = req.getParameter(Const.PARAM_FORMAT);
+            final String formatParam = req.getParameter(Const.Params.PARAM_FORMAT);
 
             final ExportType type = getContentType(formatParam);
             log.info(req.getQueryString());
-            log.info(req.getParameter(Const.PARAM_EMAIL));
+            log.info(req.getParameter(Const.Params.PARAM_EMAIL));
             Common.addResponseHeaders(resp, type);
 
             final boolean doScale = (!Utils.isEmptyString(autoScaleParam) && autoScaleParam.equals(Const.WORD_TRUE));
@@ -119,9 +119,12 @@ public class ChartApiServletImpl extends HttpServlet {
 
         for (final EntityName pointName : pointList) {
 
-            final Point p = PointServiceFactory.getInstance().getPointByName(u, pointName);
+
+            Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
+            final Point p = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
+
             if (p != null) {
-                Entity e = EntityServiceFactory.getInstance().getEntityByUUID(p.getUUID());
+                //Entity e = EntityServiceFactory.getInstance().getEntityByUUID(p.getUUID());
                 if (e.getProtectionLevel().equals(ProtectionLevel.everyone) || !u.isRestricted()) {
 
 
@@ -195,8 +198,8 @@ public class ChartApiServletImpl extends HttpServlet {
 
     private Timespan getTimestamp(HttpServletRequest req) throws NimbitsException {
         Timespan timespan = null;
-        String startDate = req.getParameter(Const.PARAM_START_DATE);
-        String endDate = req.getParameter(Const.PARAM_END_DATE);
+        String startDate = req.getParameter(Const.Params.PARAM_START_DATE);
+        String endDate = req.getParameter(Const.Params.PARAM_END_DATE);
         //support for legacy st param
         if (startDate == null) {
             startDate = req.getParameter("st");

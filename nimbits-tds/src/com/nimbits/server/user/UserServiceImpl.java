@@ -28,6 +28,7 @@ import com.nimbits.server.counter.*;
 import com.nimbits.server.dao.counter.*;
 import com.nimbits.server.email.*;
 import com.nimbits.server.entity.*;
+import com.nimbits.server.feed.*;
 import com.nimbits.server.settings.*;
 import com.nimbits.shared.*;
 
@@ -64,8 +65,8 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         final com.google.appengine.api.users.UserService googleUserService = UserServiceFactory.getUserService();
 
         if (req != null) {
-            emailParam = req.getParameter(Const.PARAM_EMAIL);
-            secret = req.getParameter(Const.PARAM_SECRET);
+            emailParam = req.getParameter(Const.Params.PARAM_EMAIL);
+            secret = req.getParameter(Const.Params.PARAM_SECRET);
             session = req.getSession();
         }
 
@@ -78,8 +79,8 @@ public class UserServiceImpl extends RemoteServiceServlet implements
             email = (!Utils.isEmptyString(emailParam)) ?
                     CommonFactoryLocator.getInstance().createEmailAddress(emailParam) : null;
 
-            if (email == null && session != null && (session.getAttribute(Const.PARAM_EMAIL) != null)) {
-                email = (EmailAddress) session.getAttribute(Const.PARAM_EMAIL);
+            if (email == null && session != null && (session.getAttribute(Const.Params.PARAM_EMAIL) != null)) {
+                email = (EmailAddress) session.getAttribute(Const.Params.PARAM_EMAIL);
             }
 
             if (email == null && googleUserService.getCurrentUser() != null) {
@@ -200,12 +201,17 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
 
     public void sendConnectionRequest(final EmailAddress email) throws NimbitsException {
-        final User n = getAppUserUsingGoogleAuth();
-        final Connection f = UserTransactionFactory.getInstance().makeConnectionRequest(n, email);
+        final User user = getAppUserUsingGoogleAuth();
+        final Connection f = UserTransactionFactory.getInstance().makeConnectionRequest(user, email);
 
 
         if (f != null) {
-            EmailServiceFactory.getInstance().sendEmail(email, Const.getConnectionInviteEmail(n.getEmail()));
+            EmailServiceFactory.getInstance().sendEmail(email, Const.getConnectionInviteEmail(user.getEmail()));
+            FeedServiceFactory.getInstance().postToFeed(user, "<p>A connection request has been emailed to " +
+                    email.getValue() + ". If they approve, you will see any data object of theirs that have " +
+                    "their permission set to be viewable by the public or connections</p>");
+
+
         }
 
 

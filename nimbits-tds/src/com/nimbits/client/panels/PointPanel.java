@@ -13,118 +13,59 @@
 
 package com.nimbits.client.panels;
 
-import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
-import com.extjs.gxt.ui.client.Style.Orientation;
-import com.extjs.gxt.ui.client.event.ButtonEvent;
-import com.extjs.gxt.ui.client.event.SelectionListener;
+import com.extjs.gxt.ui.client.Style.*;
+import com.extjs.gxt.ui.client.event.*;
 import com.extjs.gxt.ui.client.widget.*;
+import com.extjs.gxt.ui.client.widget.TabPanel;
+import com.extjs.gxt.ui.client.widget.VerticalPanel;
 import com.extjs.gxt.ui.client.widget.button.Button;
+import com.extjs.gxt.ui.client.widget.form.CheckBox;
+import com.extjs.gxt.ui.client.widget.form.FormPanel;
 import com.extjs.gxt.ui.client.widget.form.*;
-import com.extjs.gxt.ui.client.widget.layout.FillLayout;
-import com.extjs.gxt.ui.client.widget.layout.FormData;
-import com.extjs.gxt.ui.client.widget.layout.TableData;
-import com.extjs.gxt.ui.client.widget.toolbar.SeparatorToolItem;
-import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.Image;
-import com.nimbits.client.controls.ProtectionLevelOptions;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.icons.Icons;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.service.datapoints.PointService;
-import com.nimbits.client.service.datapoints.PointServiceAsync;
-import com.nimbits.client.service.entity.EntityService;
-import com.nimbits.client.service.entity.EntityServiceAsync;
-import com.nimbits.client.service.settings.SettingsService;
-import com.nimbits.client.service.settings.SettingsServiceAsync;
+import com.extjs.gxt.ui.client.widget.form.TextArea;
+import com.extjs.gxt.ui.client.widget.layout.*;
+import com.extjs.gxt.ui.client.widget.toolbar.*;
+import com.google.gwt.core.client.*;
+import com.google.gwt.user.client.rpc.*;
+import com.google.gwt.user.client.ui.*;
+import com.nimbits.client.controls.*;
+import com.nimbits.client.icons.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.service.datapoints.*;
+import com.nimbits.client.service.entity.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class PointPanel extends LayoutContainer {
 
-    private static final String XML_LABEL_STYLE = "xmlLabel";
-
-    //  private final Button btnHelp = new Button("Help");
-
     private ProtectionLevelOptions protectionLevelOptions;
     private final CheckBox he = new CheckBox();
-    //idle
     private final CheckBox idleOn = new CheckBox();
-    private final CheckBox ignoreCompressedValues = new CheckBox();
-   // private final CheckBox im = new CheckBox();
     private final CheckBox le = new CheckBox();
-
-    private final List<PointDeletedListener> pointDeletedListeners = new ArrayList<PointDeletedListener>();
     private final List<PointUpdatedListener> pointUpdatedListeners = new ArrayList<PointUpdatedListener>();
-
-    //General Properties
     private final NumberField compression = new NumberField();
-
     private final NumberField expires = new NumberField();
-
-    //Alerts
     private final NumberField high = new NumberField();
     private final NumberField idleMinutes = new NumberField();
-    //    private final NumberField lat = new NumberField();
-//    private final NumberField lng = new NumberField();
     private final NumberField low = new NumberField();
-    // private final TextField<String> High = new TextField<String>();
-    ///private final TextField<String> Low = new TextField<String>();
     private final NumberField targetValue = new NumberField();
-
-
-
-
     private final PointServiceAsync pointService = GWT.create(PointService.class);
-
     private final SeparatorToolItem separatorToolItem = new SeparatorToolItem();
-
-    private final static String FORM_HEIGHT = "450";
-
-    private final static String MAIN_WIDTH = "450";
     private final TextArea description = new TextArea();
-    private final TextField<String> formula = new TextField<String>();
-
     private final TextField<String> unit = new TextField<String>();
-
-
     private final Entity entity;
     private Point point;
 
-
-  //  private final User user;
-
     public PointPanel(final Entity entity)   {
         this.entity = entity;
-       // this.user = user;
+         protectionLevelOptions = new ProtectionLevelOptions(entity);
+         loadForm();
 
-        protectionLevelOptions = new ProtectionLevelOptions(entity);
-
-        SettingsServiceAsync settings = GWT.create(SettingsService.class);
-        settings.getSettings(new AsyncCallback<Map<String, String>>() {
-            @Override
-            public void onFailure(Throwable e) {
-                GWT.log(e.getMessage(), e);
-            }
-
-            @Override
-            public void onSuccess(Map<String, String> settingMap) {
-                try {
-                    loadForm(settingMap);
-                } catch (NimbitsException e) {
-                    GWT.log(e.getMessage());
-                }
-            }
-        });
 
     }
 
-    private void loadForm(final Map<String, String> settingMap) throws NimbitsException {
+    private void loadForm()  {
         pointService.getPointByUUID(entity.getEntity(), new AsyncCallback<Point>() {
             @Override
             public void onFailure(Throwable caught) {
@@ -140,7 +81,7 @@ public class PointPanel extends LayoutContainer {
                 point = p;
 
 
-                setSize(FORM_HEIGHT, "475");
+                setSize("475", "475");
                 setLayout(new FillLayout(Orientation.VERTICAL));
                 //setLayout(new FitLayout());
 
@@ -148,7 +89,7 @@ public class PointPanel extends LayoutContainer {
                 add(verticalPanel);
                 verticalPanel.setSize("460", "450");
                 verticalPanel.setBorderWidth(0);
-                ToolBar mainToolBar = mainToolBar(settingMap);
+                ToolBar mainToolBar = mainToolBar();
                 verticalPanel.add(mainToolBar);
 
                 TabPanel tabPanel = new TabPanel();
@@ -158,15 +99,15 @@ public class PointPanel extends LayoutContainer {
                 tabGeneral.setHeight("425");
 
                 verticalPanel.add(tabPanel);
-                tabPanel.setSize(FORM_HEIGHT, "435");
+                tabPanel.setSize("475", "435");
 
                 tabPanel.add(tabGeneral);
 
                 tabPanel.add(tabAlerts);
 
 
-                tabAlerts.add(alertForm(settingMap));
-                tabGeneral.add(generalForm(settingMap));
+                tabAlerts.add(alertForm());
+                tabGeneral.add(generalForm());
 
                 add(verticalPanel);
                 doLayout();
@@ -174,7 +115,7 @@ public class PointPanel extends LayoutContainer {
         });
     }
 
-    private ToolBar mainToolBar(final Map<String, String> settingMap) {
+    private ToolBar mainToolBar() {
         ToolBar toolBar = new ToolBar();
         toolBar.setHeight("");
          Button buttonSave = saveButtonInit();
@@ -210,17 +151,6 @@ public class PointPanel extends LayoutContainer {
         return buttonSave;
     }
 
-    private void notifyPointDeletedListener(Point p) {
-        for (PointDeletedListener pointDeletedListener : pointDeletedListeners) {
-            pointDeletedListener.onPointDeleted(p);
-        }
-    }
-
-//    private Point point() {
-//
-//        return point;
-//
-//    }
 
     private void savePoint()  {
         final MessageBox box = MessageBox.wait("Progress",
@@ -252,7 +182,6 @@ public class PointPanel extends LayoutContainer {
             }
         });
         point.setCompression(compression.getValue().doubleValue());
-        point.setIgnoreIncomingCompressedValues(ignoreCompressedValues.getValue());
         point.setExpire(expires.getValue().intValue());
         point.setUnit(unit.getValue());
 
@@ -287,13 +216,13 @@ public class PointPanel extends LayoutContainer {
             @Override
             public void onSuccess(Point result) {
                 MessageBox.alert("Success", "Point Updated", null);
-                notifyPointUpdatedListener(entity);
+                notifyPointUpdatedListener();
                 box.close();
             }
         });
     }
 
-    private void notifyPointUpdatedListener(Entity p) {
+    private void notifyPointUpdatedListener() {
         for (final PointUpdatedListener pointUpdatedListener : pointUpdatedListeners) {
             pointUpdatedListener.onPointUpdated(entity);
         }
@@ -305,7 +234,7 @@ public class PointPanel extends LayoutContainer {
 
 
 
-    private FormPanel alertForm(Map<String, String> settingMap) {
+    private FormPanel alertForm() {
         FormPanel simple = new FormPanel();
         Html h = new Html();
 
@@ -324,7 +253,7 @@ public class PointPanel extends LayoutContainer {
         simple.setFrame(false);
         simple.setBorders(false);
         simple.setBodyBorder(false);
-        simple.setSize(MAIN_WIDTH, FORM_HEIGHT);
+        simple.setSize("450","450");
         simple.add(h);
 
         high.setFieldLabel("High Value");
@@ -380,63 +309,29 @@ public class PointPanel extends LayoutContainer {
     }
 
     //general
-    private FormPanel generalForm(Map<String, String> settingMap) {
+    private FormPanel generalForm( ) {
 
         FormPanel simple = new FormPanel();
         simple.setHeaderVisible(false);
 
         simple.setFrame(false);
-        //simple.setWidth(600);
         simple.setBorders(false);
         simple.setBodyBorder(false);
         simple.setSize("450", "408");
-        Image i = new Image();
-        // i.setStyleName("#images-view .thumb img");
-        i.setUrl("http://chart.apis.google.com/chart?chs=100x100&cht=qr&chl=" + "http://" + point.getHost() + "?uuid="
-                + point.getUUID() + "&chld=L|1&choe=UTF-8");
-        //i.setSize("75px", "75px");
-
-
-        HorizontalPanel titlebar = new HorizontalPanel();
-//        String host;
-//
-//        if (point.getHost().contains("127.0.0.1")) {
-//            host = point.getHost() + ":8888";
-//        } else {
-//            host = point.getHost();
-//        }
-        String host = GWT.getModuleBaseURL();
-
-        String ht = "<A href = \"http://" + host + "?uuid=" + point.getUUID() + "\" target=\"_blank\"> UUID:" + point.getUUID() + "</A>";
-
-
-        titlebar.add(i);
 
         VerticalPanel verticalPanel = new VerticalPanel();
         verticalPanel.setSpacing(10);
         verticalPanel.setHeight(80);
 
-
-        Html h = new Html(ht);
-        verticalPanel.add(h);
         TableData tdVerticalPanel = new TableData();
         tdVerticalPanel.setHorizontalAlign(HorizontalAlignment.CENTER);
         tdVerticalPanel.setMargin(5);
-        titlebar.add(verticalPanel, tdVerticalPanel);
-
-
-        //	vpoint.add(titlebar);
-        //	titlebar.setSize("450", "100");
-
 
         compression.setFieldLabel("Compression");
         compression.setValue(point.getCompression());
         compression.setAllowBlank(false);
         simple.add(compression);
 
-        ignoreCompressedValues.setFieldLabel("Apply compression to incoming data");
-        ignoreCompressedValues.setValue(point.getIgnoreIncomingCompressedValues());
-        //simple.add(ignoreCompressedValues);
 
 
         targetValue.setFieldLabel("Target");
@@ -470,17 +365,6 @@ public class PointPanel extends LayoutContainer {
         return simple;
     }
 
-
-
-
-
-    public interface PointDeletedListener {
-        void onPointDeleted(Point p);
-    }
-
-    public void addPointDeletedListeners(PointDeletedListener listener) {
-        pointDeletedListeners.add(listener);
-    }
 
     public interface PointUpdatedListener {
         void onPointUpdated(Entity entity);

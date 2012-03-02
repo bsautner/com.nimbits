@@ -27,7 +27,7 @@ public abstract class NavigationEventProvider extends LayoutContainer {
     private final List<EntityClickedListener> entityClickedListeners = new ArrayList<EntityClickedListener>();
     private final List<UrlClickedListener> urlClickedListeners = new ArrayList<UrlClickedListener>();
     private final List<ValueEnteredListener> valueEnteredListeners = new ArrayList<ValueEnteredListener>();
-    private final List<ChartRemovedListener> chartRemovedListeners = new ArrayList<ChartRemovedListener>();
+
     private final List<EntityAddedListener> entityAddedListeners = new ArrayList<EntityAddedListener>();
 
 
@@ -75,20 +75,7 @@ public abstract class NavigationEventProvider extends LayoutContainer {
 
     }
 
-    // ChartRemoved Click Handlers
-    public interface ChartRemovedListener {
-        void onChartRemovedClicked(final String chartName);
-    }
 
-    void addChartRemovedClickedListeners(final ChartRemovedListener listener) {
-        chartRemovedListeners.add(listener);
-    }
-
-    void notifyChartRemovedListener(final String chartName) {
-        for (ChartRemovedListener ChartRemovedClickedListener : chartRemovedListeners) {
-            ChartRemovedClickedListener.onChartRemovedClicked(chartName);
-        }
-    }
 
     // Value entered Handlers
     public interface ValueEnteredListener {

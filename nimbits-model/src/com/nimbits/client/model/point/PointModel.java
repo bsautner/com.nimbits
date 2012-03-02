@@ -69,20 +69,14 @@ public class PointModel implements Serializable, Point {
     //reset on any data write
     private boolean idleAlarmSent;
 
-    private boolean ignoreIncomingCompressedValues;
 
-
-    private Intelligence intelligence;
 
 
     // Constructors
     public PointModel(final Point p) {
         this.id = p.getId();
         this.uuid = p.getUUID();
-
         this.lastChecked = p.getLastChecked().getTime();
-        this.host = p.getHost();
-
         this.userFK = p.getUserFK();
         this.createDate = p.getCreateDate().getTime();
         this.highAlarm = p.getHighAlarm();
@@ -96,7 +90,6 @@ public class PointModel implements Serializable, Point {
         this.idleAlarmOn = p.isIdleAlarmOn();
         this.idleSeconds = p.getIdleSeconds();
         this.idleAlarmSent = p.getIdleAlarmSent();
-        this.ignoreIncomingCompressedValues = p.getIgnoreIncomingCompressedValues();
 
         this.targetValue = p.getTargetValue();
         this.values = p.getValues();
@@ -137,11 +130,6 @@ public class PointModel implements Serializable, Point {
     @Override
     public double getHighAlarm() {
         return highAlarm;
-    }
-
-    @Override
-    public String getHost() {
-        return host;
     }
 
     @Override
@@ -237,11 +225,6 @@ public class PointModel implements Serializable, Point {
     }
 
     @Override
-    public void setHost(final String host) {
-        this.host = host;
-    }
-
-    @Override
     public void setId(final long id) {
         this.id = id;
     }
@@ -303,17 +286,7 @@ public class PointModel implements Serializable, Point {
         return targetValue;
     }
 
-    @Override
-    public void setIgnoreIncomingCompressedValues(
-            final boolean ignoreIncomingCompressedValues) {
-        this.ignoreIncomingCompressedValues = ignoreIncomingCompressedValues;
-    }
 
-    @Override
-    public boolean getIgnoreIncomingCompressedValues() {
-
-        return ignoreIncomingCompressedValues;
-    }
 
 
     @Override

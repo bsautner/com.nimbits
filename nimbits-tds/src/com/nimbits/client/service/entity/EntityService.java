@@ -28,6 +28,8 @@ public interface EntityService extends RemoteService {
 
     Map<String, Entity> getEntityMap(EntityType type);
 
+    Map<String, Entity> getEntityMap(User user, EntityType type);
+
     Map<EntityName, Entity> getEntityNameMap(EntityType type);
 
     Entity copyEntity(Entity originalEntity, EntityName newName);

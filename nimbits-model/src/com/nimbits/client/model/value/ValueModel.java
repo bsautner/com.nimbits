@@ -63,6 +63,18 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
 
     }
 
+    public ValueModel(final Value v, final String dataOverride) {
+        this.id = v.getId();
+        this.lat = v.getLatitude();
+        this.lng = v.getLongitude();
+        this.d = v.getNumberValue();
+        this.timestamp = v.getTimestamp().getTime();
+        this.pointUUID = v.getPointUUID();
+        this.note = v.getNote();
+        this.data = dataOverride;
+
+    }
+
     public ValueModel(final double lat,
                       final double lng,
                       final double d,

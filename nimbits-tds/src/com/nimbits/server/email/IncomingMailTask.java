@@ -21,6 +21,7 @@ import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.server.entity.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.recordedvalue.*;
 import com.nimbits.server.user.*;
@@ -42,8 +43,8 @@ public class IncomingMailTask extends HttpServlet {
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
 
-        final String fromAddress = req.getParameter(Const.PARAM_FROM_ADDRESS);
-        final String inContent = req.getParameter(Const.PARAM_IN_CONTENT);
+        final String fromAddress = req.getParameter(Const.Params.PARAM_FROM_ADDRESS);
+        final String inContent = req.getParameter(Const.Params.PARAM_IN_CONTENT);
 
         final EmailAddress internetAddress = CommonFactoryLocator.getInstance().createEmailAddress(fromAddress);
         final User u;
@@ -75,7 +76,9 @@ public class IncomingMailTask extends HttpServlet {
     void processLine(final User u, final String s) throws NimbitsException {
         final String emailLine[] = s.split(",");
         final EntityName pointName = CommonFactoryLocator.getInstance().createName(emailLine[0]);
-        final Point point = PointServiceFactory.getInstance().getPointByName(u, pointName);
+
+        Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
+        final Point point = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
 
         if (point != null) {
             sendValue(u, point, emailLine);

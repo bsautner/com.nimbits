@@ -33,7 +33,11 @@ public class ValueModelFactory {
 
     }
 
+    public static ValueModel createValueModel(final Value v, final String value) {
 
+        return new ValueModel(v, value);
+
+    }
     public static ValueModel createValueModel(final double lat,
                                               final double lng,
                                               final double d,

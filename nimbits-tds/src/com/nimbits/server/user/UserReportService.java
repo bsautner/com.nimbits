@@ -40,8 +40,8 @@ public class UserReportService extends HttpServlet {
     @Override
     public void doGet(final HttpServletRequest req,final HttpServletResponse resp) throws IOException {
 
-        String c = req.getParameter(Const.PARAM_COUNT);
-        String email = req.getParameter(Const.PARAM_EMAIL);
+        String c = req.getParameter(Const.Params.PARAM_COUNT);
+        String email = req.getParameter(Const.Params.PARAM_EMAIL);
         final PrintWriter out = resp.getWriter();
         int count = 100;
 
@@ -69,7 +69,7 @@ public class UserReportService extends HttpServlet {
             try {
                 RecordedValueServiceFactory.getInstance().recordValue(me, pointName, value);
             } catch (NimbitsException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                 e.printStackTrace();
             }
 
 

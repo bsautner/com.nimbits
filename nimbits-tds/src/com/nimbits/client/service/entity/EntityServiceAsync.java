@@ -39,4 +39,6 @@ public interface EntityServiceAsync {
     void deleteEntity(User u, Entity entity, AsyncCallback<Void> async);
 
     void getEntityChildren(User u, Entity c, EntityType point, AsyncCallback<List<Entity>> async);
+
+    void getEntityMap(User user, EntityType type, AsyncCallback<Map<String, Entity>> async);
 }

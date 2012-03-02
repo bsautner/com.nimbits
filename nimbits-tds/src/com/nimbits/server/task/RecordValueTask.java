@@ -34,9 +34,9 @@ public class RecordValueTask extends HttpServlet {
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
 
         final Gson gson = GsonFactory.getInstance();
-        final String userJson = req.getParameter(Const.PARAM_JSON_USER);
-        final String pointJson = req.getParameter(Const.PARAM_JSON_POINT);
-        final String valueJson = req.getParameter(Const.PARAM_JSON_VALUE);
+        final String userJson = req.getParameter(Const.Params.PARAM_JSON_USER);
+        final String pointJson = req.getParameter(Const.Params.PARAM_JSON_POINT);
+        final String valueJson = req.getParameter(Const.Params.PARAM_JSON_VALUE);
         final String loopFlagParam = req.getParameter(Const.PARAM_LOOP);
 
         final Point point = gson.fromJson(pointJson, PointModel.class);

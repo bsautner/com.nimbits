@@ -22,6 +22,8 @@ import com.nimbits.client.enums.*;
 import com.nimbits.client.icons.*;
 import com.nimbits.client.model.*;
 
+import java.util.*;
+
 /**
  * Created by Benjamin Sautner
  * User: BSautner
@@ -30,18 +32,23 @@ import com.nimbits.client.model.*;
  */
 public class EntityTree<ModelData extends com.extjs.gxt.ui.client.data.ModelData> extends EditorTreeGrid<ModelData> {
 
-    public EntityTree(TreeStore store, ColumnModel cm) {
-        super(store, cm);
+    public EntityTree() {
+        super(new TreeStore<com.extjs.gxt.ui.client.data.ModelData>(), new ColumnModel(
+                Arrays.asList(
+                        ColumnConfigs.pointNameColumn(),
+                        ColumnConfigs.currentValueColumn(),
+                        ColumnConfigs.timestampColumn(),
+                        ColumnConfigs.noteColumn(),
+                        ColumnConfigs.dataColumn())
+        ));
+
+
 
         setIconProvider( new ModelIconProvider<ModelData>() {
             @Override
             public AbstractImagePrototype getIcon(com.extjs.gxt.ui.client.data.ModelData model) {
-                // if (model.getInstance("icon") != null) {
 
-                EntityType type = ((GxtModel) model).getEntityType();
-              //  AlertType alert = ((GxtModel) model).getAlertType();
-                switch (type) {
-
+                switch (((GxtModel) model).getEntityType()) {
                     case point:
                         switch (((GxtModel) model).getAlertType()) {
                             case IdleAlert:
@@ -59,7 +66,7 @@ public class EntityTree<ModelData extends com.extjs.gxt.ui.client.data.ModelData
 
                     case category:
                         return AbstractImagePrototype.create(Icons.INSTANCE.category());
-                     case userConnection:
+                    case userConnection:
                         return AbstractImagePrototype.create(Icons.INSTANCE.connection());
                     case file:
                         return AbstractImagePrototype.create(Icons.INSTANCE.diagram());
@@ -69,6 +76,8 @@ public class EntityTree<ModelData extends com.extjs.gxt.ui.client.data.ModelData
                         return AbstractImagePrototype.create(Icons.INSTANCE.formula());
                     case intelligence:
                         return AbstractImagePrototype.create(Icons.INSTANCE.connect());
+                    case feed:
+                        return AbstractImagePrototype.create(Icons.INSTANCE.radial());
                     default:
                         return AbstractImagePrototype.create(Icons.INSTANCE.point_ok());
 
@@ -77,19 +86,7 @@ public class EntityTree<ModelData extends com.extjs.gxt.ui.client.data.ModelData
 
         });
     }
-//
-//    @Override
-//    protected boolean hasChildren(com.extjs.gxt.ui.client.data.ModelData model) {
-////        final String entityTypeVal = model.get(Const.PARAM_ENTITY_TYPE);
-////
-////        final EntityType entityType = EntityType.get (Integer.valueOf(entityTypeVal));
-////
-////        return entityType.equals(EntityType.category) ||  super.hasChildren((ModelData) model);
-//
-//        return  true;(model instanceof GxtModel) ||
-//                (!(model instanceof GxtModel)
-//                        && super.hasChildren((ModelData) model));
-//    }
+
 
 
 }

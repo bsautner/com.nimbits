@@ -44,8 +44,7 @@ public class CategoryPropertyPanel extends NavigationEventProvider {
 
     private final Entity entity;
 
-    //    private final Icons ICONS = GWT.create(Icons.class);
-    private final boolean readOnly;
+
     private final RadioGroup radioGroup = new RadioGroup();
     private final Radio radioProtection0 = new Radio();
     private final Radio radioProtection1 = new Radio();
@@ -55,7 +54,7 @@ public class CategoryPropertyPanel extends NavigationEventProvider {
 
     public CategoryPropertyPanel(final Entity entity) {
         this.entity = entity;
-        this.readOnly = entity.isReadOnly();
+
     }
 
     private VerticalPanel vp;

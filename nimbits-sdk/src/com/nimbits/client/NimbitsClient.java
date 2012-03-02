@@ -66,7 +66,6 @@ public interface NimbitsClient {
 
     String deleteCategory(final EntityName categoryName);
 
-
     Point getPoint(final EntityName pointName) throws NimbitsException;
 
     Point updatePoint(final Point p);
@@ -80,8 +79,6 @@ public interface NimbitsClient {
     Point addPoint(final EntityName pointName);
 
     Point addPoint(final String pointName);
-
-
 
     List<Entity> getCategories(final boolean includePoints, final boolean includeDiagrams) throws NimbitsException;
 

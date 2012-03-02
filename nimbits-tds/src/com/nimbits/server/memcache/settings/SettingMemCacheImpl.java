@@ -89,13 +89,13 @@ public class SettingMemCacheImpl implements SettingTransactions {
     public String getServerSecret() throws NimbitsException {
         try {
             cache = CacheManager.getInstance().getCacheFactory().createCache(Collections.emptyMap());
-            if (cache.containsKey(SettingCacheKey(Const.PARAM_SECRET))) {
-                return (String) cache.get(SettingCacheKey(Const.PARAM_SECRET));
+            if (cache.containsKey(SettingCacheKey(Const.Params.PARAM_SECRET))) {
+                return (String) cache.get(SettingCacheKey(Const.Params.PARAM_SECRET));
 
             } else {
                 String storedVal = SettingTransactionsFactory.getDaoInstance().getServerSecret();
                 if (!Utils.isEmptyString(storedVal)) {
-                    cache.put(SettingCacheKey(Const.PARAM_SECRET), storedVal);
+                    cache.put(SettingCacheKey(Const.Params.PARAM_SECRET), storedVal);
                     return storedVal;
                 } else {
                     throw new NimbitsException("Server Secret not found " + UUID.randomUUID().toString());

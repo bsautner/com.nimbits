@@ -47,13 +47,13 @@ public class TaskFactoryImpl implements TaskFactory {
         final Queue queue = QueueFactory.getQueue(Const.QUEUE_DELETE_DATA);
         if (onlyExpired) {
             queue.add(TaskOptions.Builder.withUrl(Const.PATH_DELETE_DATA_TASK)
-                    .param(Const.PARAM_POINT_ID,  point.getUUID())
-                    .param(Const.PARAM_EXP, Long.toString(exp))
+                    .param(Const.Params.PARAM_POINT_ID,  point.getUUID())
+                    .param(Const.Params.PARAM_EXP, Long.toString(exp))
 
             );
         } else {
             queue.add(TaskOptions.Builder.withUrl(Const.PATH_DELETE_DATA_TASK)
-                    .param(Const.PARAM_POINT_ID, (point.getUUID()))
+                    .param(Const.Params.PARAM_POINT_ID, (point.getUUID()))
             );
         }
 
@@ -80,7 +80,7 @@ public class TaskFactoryImpl implements TaskFactory {
             options.param(param, value);
         }
 
-        options.param(Const.PARAM_JSON_USER, userJson);
+        options.param(Const.Params.PARAM_JSON_USER, userJson);
 
         queue.add(options);
 
@@ -99,9 +99,9 @@ public class TaskFactoryImpl implements TaskFactory {
         final String valueJson = gson.toJson(value);
 
         queue.add(TaskOptions.Builder.withUrl(Const.PATH_TASK_RECORD_VALUE)
-                .param(Const.PARAM_JSON_USER, userJson)
-                .param(Const.PARAM_JSON_POINT, pointJson)
-                .param(Const.PARAM_JSON_VALUE, valueJson)
+                .param(Const.Params.PARAM_JSON_USER, userJson)
+                .param(Const.Params.PARAM_JSON_POINT, pointJson)
+                .param(Const.Params.PARAM_JSON_VALUE, valueJson)
                 .param(Const.PARAM_LOOP, String.valueOf(loopFlag))
 
         );
@@ -112,7 +112,7 @@ public class TaskFactoryImpl implements TaskFactory {
 
         final Queue queue = QueueFactory.getQueue(Const.QUEUE_INCOMING_MAIL);
         queue.add(TaskOptions.Builder.withUrl(Const.PATH_INCOMING_MAIL_QUEUE)
-                .param(Const.PARAM_FROM_ADDRESS, fromAddress)
+                .param(Const.Params.PARAM_FROM_ADDRESS, fromAddress)
                 .param(Const.IN_CONTENT, inContent));
 
 
@@ -125,7 +125,7 @@ public class TaskFactoryImpl implements TaskFactory {
         final Queue queue = QueueFactory.getQueue(Const.TASK_POINT_MAINT);
 
         queue.add(TaskOptions.Builder.withUrl(Const.PATH_POINT_MAINT_TASK)
-                .param(Const.PARAM_POINT, json));
+                .param(Const.Params.PARAM_POINT, json));
 
     }
 
@@ -152,8 +152,8 @@ public class TaskFactoryImpl implements TaskFactory {
             json = GsonFactory.getInstance().toJson(entity);
         }
         queue.add(TaskOptions.Builder.withUrl(Const.PATH_UPGRADE_TASK)
-        .param(Const.PARAM_JSON, json)
-        .param(Const.PARAM_ACTION, action.getCode()));
+        .param(Const.Params.PARAM_JSON, json)
+        .param(Const.Params.PARAM_ACTION, action.getCode()));
 
     }
 
@@ -164,7 +164,7 @@ public class TaskFactoryImpl implements TaskFactory {
         final Queue queue = QueueFactory.getQueue(Const.TASK_MOVE);
 
         queue.add(TaskOptions.Builder.withUrl(Const.PATH_MOVE_TASK)
-                .param(Const.PARAM_POINT, json));
+                .param(Const.Params.PARAM_POINT, json));
     }
 
 

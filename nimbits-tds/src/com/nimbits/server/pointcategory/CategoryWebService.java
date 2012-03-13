@@ -97,10 +97,10 @@ public class CategoryWebService extends HttpServlet {
         String result;
 
 
-        final String includePointsStr = req.getParameter(Const.PARAM_INCLUDE_POINTS);
-        final String includeDiagramsStr = req.getParameter(Const.PARAM_INCLUDE_DIAGRAMS);
-        final String includeSubscriptionsStr = req.getParameter(Const.PARAM_INCLUDE_SUBSCRIPTIONS);
-        final String categoryNameParam = req.getParameter(Const.PARAM_NAME);
+        final String includePointsStr = req.getParameter(Const.Params.PARAM_INCLUDE_POINTS);
+        final String includeDiagramsStr = req.getParameter(Const.Params.PARAM_INCLUDE_DIAGRAMS);
+        final String includeSubscriptionsStr = req.getParameter(Const.Params.PARAM_INCLUDE_SUBSCRIPTIONS);
+        final String categoryNameParam = req.getParameter(Const.Params.PARAM_NAME);
 
         final boolean includePoints = includePointsStr != null && includePointsStr.equalsIgnoreCase(Const.WORD_TRUE);
         final boolean includeDiagrams = includeDiagramsStr != null && includeDiagramsStr.equalsIgnoreCase(Const.WORD_TRUE);

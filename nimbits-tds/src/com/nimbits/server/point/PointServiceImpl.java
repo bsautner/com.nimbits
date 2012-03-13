@@ -107,10 +107,11 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
 
     @Override
-        public Point addPoint(User user, Entity entity) {
-        Entity r = EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
+        public Point addPoint(final User user,final Entity entity) {
+        final Entity r = EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
+        final Point newPoint =  PointTransactionsFactory.getInstance(user).addPoint(r);
         notifyFeedOfNewPoint(user, entity);
-        return PointTransactionsFactory.getInstance(user).addPoint(r);
+        return newPoint;
     }
 
     private void notifyFeedOfNewPoint(User user, Entity entity) {

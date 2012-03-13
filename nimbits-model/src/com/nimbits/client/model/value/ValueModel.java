@@ -16,8 +16,6 @@ package com.nimbits.client.model.value;
 
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.model.Const;
-import org.apache.commons.lang3.*;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -160,7 +158,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
         if ( this.d != Const.CONST_IGNORED_NUMBER_VALUE) {
             sb.append(this.d);
         }
-        if (StringUtils.isNotEmpty(this.note)) {
+        if (this.note != null && this.note.length() > 0) {
             sb.append(" ");
             sb.append(this.note);
         }

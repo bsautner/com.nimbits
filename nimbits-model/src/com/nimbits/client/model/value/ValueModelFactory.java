@@ -16,8 +16,6 @@ package com.nimbits.client.model.value;
 
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.*;
-import org.apache.commons.lang3.*;
-
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -106,7 +104,7 @@ public class ValueModelFactory {
         double d = 0;
         String note = null;
         String sample = valueAndNote.trim();
-        if (StringUtils.isNotEmpty(sample)) {
+        if (sample != null && sample.length() > 0) {
 
             if (sample.contains(" ")) {
                 String a[] = sample.split(" ");

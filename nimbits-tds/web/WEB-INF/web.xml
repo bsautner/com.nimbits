@@ -43,6 +43,12 @@
         <servlet-name>loginService</servlet-name>
         <servlet-class>com.nimbits.server.login.LoginServiceImpl</servlet-class>
     </servlet>
+
+    <servlet-mapping>
+        <servlet-name>pointService</servlet-name>
+        <url-pattern>/nimbits/point</url-pattern>
+    </servlet-mapping>
+
     <servlet>
         <servlet-name>pointService</servlet-name>
         <servlet-class>com.nimbits.server.point.PointServiceImpl</servlet-class>
@@ -72,11 +78,6 @@
     <servlet-mapping>
         <servlet-name>loginService</servlet-name>
         <url-pattern>/nimbits/login</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>pointService</servlet-name>
-        <url-pattern>/nimbits/point</url-pattern>
     </servlet-mapping>
 
     <servlet>

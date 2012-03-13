@@ -224,7 +224,7 @@ public class Const {
     public static final String TRANSACTION_OPTIONAL = "transactions-optional";
     public static final String WARNING_UNCHECKED = "unchecked";
     public static final String WORD_ANDROID = "android";
-    public static final String WORD_ANNOTATION = "Annotation";
+    public static final String WORD_ANNOTATION = "Current Value";
     public static final String WORD_BLANK = "blank";
     public static final String WORD_CATEGORY = "Category";
     public static final String WORD_DATE = "Date";

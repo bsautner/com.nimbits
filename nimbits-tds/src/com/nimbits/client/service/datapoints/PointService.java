@@ -17,7 +17,6 @@ package com.nimbits.client.service.datapoints;
 import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
@@ -25,7 +24,7 @@ import com.nimbits.client.model.value.*;
 
 import java.util.*;
 
-@RemoteServiceRelativePath(Const.Params.PARAM_POINT)
+@RemoteServiceRelativePath("point")
 public interface PointService extends RemoteService {
 
     Point addPoint(User user, Entity entity, Point point);

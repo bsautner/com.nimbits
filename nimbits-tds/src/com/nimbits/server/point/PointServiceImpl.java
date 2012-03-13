@@ -48,27 +48,16 @@ public class PointServiceImpl extends RemoteServiceServlet implements
         return u;
     }
 
-
-
-
     @Override
     public Entity copyPoint(User u, Entity originalEntity, EntityName newName) {
-
-
-        final Point storedPoint = PointServiceFactory.getInstance().getPointByUUID(originalEntity.getUUID());
+        final Point storedPoint = PointServiceFactory.getInstance().getPointByUUID(originalEntity.getEntity());
         final Point newPoint = PointModelFactory.createPointModel(storedPoint);
         final String newUUID = UUID.randomUUID().toString();
         newPoint.setUuid(newUUID);
-
         final Entity newEntity = EntityModelFactory.createEntity(u, originalEntity);
         newEntity.setName(newName);
         newEntity.setEntity(newUUID);
-
-
         addPoint(u, newEntity, newPoint);
-
-
-
         return newEntity;
     }
 

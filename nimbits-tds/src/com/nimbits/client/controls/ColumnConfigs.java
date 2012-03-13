@@ -46,7 +46,7 @@ public class ColumnConfigs {
         final ColumnConfig columnNote = new ColumnConfig();
         columnNote.setId(Const.Params.PARAM_NOTE);
         columnNote.setHeader(Const.WORD_ANNOTATION);
-        columnNote.setWidth(250);
+        columnNote.setWidth(400);
 
         final TextField<String> noteText = new TextField<String>();
         noteText.setAllowBlank(true);
@@ -63,28 +63,29 @@ public class ColumnConfigs {
 
         final TextField<String> dataText = new TextField<String>();
         dataText.setAllowBlank(true);
+        dataText.setReadOnly(true);
         columnData.setEditor(new CellEditor(dataText));
         columnData.setAlignment(Style.HorizontalAlignment.LEFT);
         return (columnData);
     }
 
-    public static ColumnConfig currentValueColumn() {
-        final NumberField n = new NumberField();
-        n.getPropertyEditor().setFormat(NumberFormat.getDecimalFormat());
-        n.setSelectOnFocus(true);
-        n.setEditable(true);
-
-        final ColumnConfig columnValue = new ColumnConfig();
-        columnValue.setId(Const.PARAM_VALUE);
-        columnValue.setHeader(Const.WORD_VALUE);
-        columnValue.setAlignment(Style.HorizontalAlignment.CENTER);
-        columnValue.setWidth(100);
-        columnValue.setNumberFormat(NumberFormat.getDecimalFormat());
-        CellEditor ce = new CellEditor(n);
-        columnValue.setEditor(ce);
-
-        return (columnValue);
-    }
+//    public static ColumnConfig currentValueColumn() {
+//        final NumberField n = new NumberField();
+//        n.getPropertyEditor().setFormat(NumberFormat.getDecimalFormat());
+//        n.setSelectOnFocus(true);
+//        n.setEditable(true);
+//
+//        final ColumnConfig columnValue = new ColumnConfig();
+//        columnValue.setId(Const.PARAM_VALUE);
+//        columnValue.setHeader(Const.WORD_VALUE);
+//        columnValue.setAlignment(Style.HorizontalAlignment.CENTER);
+//        columnValue.setWidth(100);
+//        columnValue.setNumberFormat(NumberFormat.getDecimalFormat());
+//        CellEditor ce = new CellEditor(n);
+//        columnValue.setEditor(ce);
+//
+//        return (columnValue);
+//    }
 
     public static ColumnConfig pointNameColumn() {
         final ColumnConfig nameColumn =  new ColumnConfig(Const.Params.PARAM_NAME, Const.MESSAGE_DATA_POINT, 150);

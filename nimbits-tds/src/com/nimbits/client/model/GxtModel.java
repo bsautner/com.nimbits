@@ -19,6 +19,7 @@ import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.shared.*;
 
 import java.io.*;
 
@@ -111,7 +112,16 @@ public class GxtModel extends BaseTreeModel implements Serializable {
     }
 
     public void setValue(Value value) {
-        set(Const.PARAM_VALUE, value.getNumberValue());
+
+        StringBuilder sb = new StringBuilder();
+        if ( value.getNumberValue() != Const.CONST_IGNORED_NUMBER_VALUE) {
+            sb.append(value.getNumberValue());
+        }
+        if (! Utils.isEmptyString(value.getNote())) {
+            sb.append(" ");
+            sb.append(value.getNote());
+        }
+        set(Const.PARAM_VALUE, sb.toString().trim());
         this.value = value;
     }
 

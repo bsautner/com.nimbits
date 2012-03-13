@@ -13,7 +13,6 @@
 
 package com.nimbits.server.common;
 
-import org.apache.commons.lang3.*;
 
 import javax.servlet.http.*;
 import java.util.logging.*;
@@ -34,7 +33,7 @@ public class ServerInfoImpl {
     private  static String getUrl() {
         String hostUrl;
         String environment = System.getProperty("com.google.appengine.runtime.environment");
-        if (StringUtils.equals("Production", environment)) {
+        if (environment.equals("Production")) {
             String applicationId = System.getProperty("com.google.appengine.application.id");
             String version = System.getProperty("com.google.appengine.application.version");
             hostUrl = "http://"+version+"."+applicationId+".appspot.com/";

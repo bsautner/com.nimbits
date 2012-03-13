@@ -41,6 +41,8 @@ public interface Value extends Serializable {
 
     double getNumberValue();
 
+    String getValueWithNote();
+
     Date getTimestamp();
 
     AlertType getAlertState();

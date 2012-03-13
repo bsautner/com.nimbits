@@ -94,9 +94,9 @@ public class MainMenuBar extends ToolBar {
         menu.add(saveToNowCheckBox);
         saveToNowCheckBox.setBoxLabel("Save with Current Time");
         saveToNowCheckBox.setValue(true);
-        autoSaveCheckBox.setBoxLabel("Auto-Save when a number is entered");
-        autoSaveCheckBox.setValue(true);
-        menu.add(autoSaveCheckBox);
+//        autoSaveCheckBox.setBoxLabel("Auto-Save when a number is entered");
+//        autoSaveCheckBox.setValue(true);
+       // menu.add(autoSaveCheckBox);
         button.setMenu(menu);
         add(button);
     }

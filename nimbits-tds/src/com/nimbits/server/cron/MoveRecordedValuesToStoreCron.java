@@ -36,22 +36,20 @@ public class MoveRecordedValuesToStoreCron extends HttpServlet {
      */
     private static final long serialVersionUID = 1L;
 
-    MemcacheService cacheShared;
+
 
     @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp)
             throws IOException {
-        PrintWriter out = resp.getWriter();
-        int count = 0; cacheShared = MemcacheServiceFactory.getMemcacheService();
+
+        final MemcacheService cacheShared = MemcacheServiceFactory.getMemcacheService();
         if (cacheShared.contains(MemCacheKey.activePoints)) {
-            Map<String, Point> points = (Map<String, Point>) cacheShared.get(MemCacheKey.activePoints);
+            final Map<String, Point> points = (Map<String, Point>) cacheShared.get(MemCacheKey.activePoints);
             cacheShared.delete(MemCacheKey.activePoints); //TODO possible race condition with record value service
             for (final Point point : points.values()) {
-                count++;
-                TaskFactoryLocator.getInstance().startMoveCachedValuesToStoreTask(point);
+                  TaskFactoryLocator.getInstance().startMoveCachedValuesToStoreTask(point);
             }
-            out.print("<h4> Total Points (using datastore): " + count + "</h4>");
-            out.close();
+
         }
 
     }

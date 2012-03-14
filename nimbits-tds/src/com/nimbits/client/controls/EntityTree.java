@@ -62,7 +62,6 @@ public class EntityTree<ModelData extends com.extjs.gxt.ui.client.data.ModelData
 
                     case user:
                         return AbstractImagePrototype.create(Icons.INSTANCE.web());
-
                     case category:
                         return AbstractImagePrototype.create(Icons.INSTANCE.category());
                     case userConnection:
@@ -86,6 +85,9 @@ public class EntityTree<ModelData extends com.extjs.gxt.ui.client.data.ModelData
         });
     }
 
-
+    @Override
+    protected boolean hasChildren(com.extjs.gxt.ui.client.data.ModelData model) {
+         return true;
+    }
 
 }

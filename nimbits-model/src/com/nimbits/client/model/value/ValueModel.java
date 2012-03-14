@@ -25,7 +25,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
     /**
      *
      */
-    private static final long serialVersionUID = Const.DEFAULT_SERIAL_VERSION;
+    private static final long serialVersionUID = 1l;
     private long id;
     private double lat;
     private double lng;

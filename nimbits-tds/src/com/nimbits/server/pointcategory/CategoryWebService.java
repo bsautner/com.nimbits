@@ -17,7 +17,7 @@ import com.google.gson.Gson;
 import com.nimbits.client.enums.Action;
 import com.nimbits.client.model.Const;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.shared.Utils;
+import com.nimbits.client.common.Utils;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

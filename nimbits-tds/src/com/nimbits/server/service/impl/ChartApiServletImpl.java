@@ -13,6 +13,7 @@
 
 package com.nimbits.server.service.impl;
 
+import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
@@ -27,7 +28,6 @@ import com.nimbits.server.point.*;
 import com.nimbits.server.recordedvalue.*;
 import com.nimbits.server.timespan.*;
 import com.nimbits.server.user.*;
-import com.nimbits.shared.*;
 
 import javax.servlet.http.*;
 import java.io.*;

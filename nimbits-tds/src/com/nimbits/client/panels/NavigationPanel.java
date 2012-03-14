@@ -23,6 +23,7 @@ import com.extjs.gxt.ui.client.widget.grid.*;
 import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.common.*;
 import com.nimbits.client.controls.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.*;
@@ -33,7 +34,6 @@ import com.nimbits.client.model.value.*;
 import com.nimbits.client.service.datapoints.*;
 import com.nimbits.client.service.entity.*;
 import com.nimbits.client.service.recordedvalues.*;
-import com.nimbits.shared.*;
 
 import java.util.*;
 
@@ -93,7 +93,7 @@ class NavigationPanel extends NavigationEventProvider {
         target.setFeedback(Feedback.BOTH);
         tree.addListener(Events.AfterEdit, afterEditListener);
         treePropertyBuilder();
-        GxtModel userModel =  treeStoreBuilder(result);
+        treeStoreBuilder(result);
         treeDNDBuilder();
         removeAll();
         add(tree);
@@ -107,7 +107,7 @@ class NavigationPanel extends NavigationEventProvider {
         model.setAlertType(value.getAlertState());
         model.setDirty(false);
         tree.getTreeStore().update(model);
-        notifyValueEnteredListener(model.getBaseEntity(), value);
+        notifyValueEnteredListener(model, value);
     }
 
     private void treePropertyBuilder() {
@@ -414,7 +414,7 @@ class NavigationPanel extends NavigationEventProvider {
                     final Entity entity =model.getBaseEntity();
                     final Date timestamp = saveWithCurrentTime ? new Date() : (Date) model.get(Const.Params.PARAM_TIMESTAMP);
                     final String valueAndNote = model.get(Const.PARAM_VALUE);
-                    final String data = model.get(Const.PARAM_DATA);
+                    //final String data = model.get(Const.PARAM_DATA);
                     String uuid = model.getId();
                     final Value value = ValueModelFactory.createValueModel(valueAndNote, timestamp, uuid);
 
@@ -497,7 +497,7 @@ class NavigationPanel extends NavigationEventProvider {
                 @Override
                 public void onSuccess(final Value value) {
                     updateModel(value, model);
-                    notifyValueEnteredListener(model.getBaseEntity(), value);
+
                 }
             });
             model.setDirty(false);

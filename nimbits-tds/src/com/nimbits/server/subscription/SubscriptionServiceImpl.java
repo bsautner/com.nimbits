@@ -1,6 +1,7 @@
 package com.nimbits.server.subscription;
 
 import com.google.gwt.user.server.rpc.*;
+import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
@@ -18,7 +19,6 @@ import com.nimbits.server.instantmessage.*;
 import com.nimbits.server.recordedvalue.*;
 import com.nimbits.server.twitter.*;
 import com.nimbits.server.user.*;
-import com.nimbits.shared.*;
 
 import java.util.*;
 

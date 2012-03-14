@@ -14,11 +14,11 @@
 package com.nimbits.server.orm.entity;
 
 import com.google.appengine.api.blobstore.*;
+import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
-import com.nimbits.shared.*;
 
 import javax.jdo.annotations.*;
 import java.util.*;

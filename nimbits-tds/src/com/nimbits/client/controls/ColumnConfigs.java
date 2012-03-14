@@ -44,7 +44,7 @@ public class ColumnConfigs {
 
     public static ColumnConfig noteColumn( ) {
         final ColumnConfig columnNote = new ColumnConfig();
-        columnNote.setId(Const.Params.PARAM_NOTE);
+        columnNote.setId(Const.PARAM_VALUE);
         columnNote.setHeader(Const.WORD_ANNOTATION);
         columnNote.setWidth(400);
 

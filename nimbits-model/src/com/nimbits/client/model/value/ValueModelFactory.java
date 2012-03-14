@@ -130,7 +130,7 @@ public class ValueModelFactory {
         }
 
 
-        return new ValueModel(0.0, 0.0, d, timestamp, null,note, "");
+        return new ValueModel(0.0, 0.0, d, timestamp, uuid,note, "");
     }
     public static List<Value> createValueModels(final List<Value> values) {
         final LinkedList<Value> retObj = new LinkedList<Value>();

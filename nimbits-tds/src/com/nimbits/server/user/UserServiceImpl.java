@@ -15,6 +15,7 @@ package com.nimbits.server.user;
 
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.*;
+import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
@@ -30,7 +31,6 @@ import com.nimbits.server.email.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.feed.*;
 import com.nimbits.server.settings.*;
-import com.nimbits.shared.*;
 
 import javax.servlet.http.*;
 import java.util.*;

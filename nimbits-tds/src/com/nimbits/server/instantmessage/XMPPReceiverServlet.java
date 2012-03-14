@@ -15,6 +15,7 @@ package com.nimbits.server.instantmessage;
 
 import com.google.appengine.api.xmpp.*;
 import com.google.gson.*;
+import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
@@ -29,7 +30,6 @@ import com.nimbits.server.json.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.recordedvalue.*;
 import com.nimbits.server.user.*;
-import com.nimbits.shared.*;
 
 import javax.servlet.http.*;
 import java.io.*;

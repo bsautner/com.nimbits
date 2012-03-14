@@ -13,6 +13,7 @@
 
 package com.nimbits.server.core;
 
+import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
@@ -23,7 +24,6 @@ import com.nimbits.client.model.server.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.http.*;
 import com.nimbits.server.settings.*;
-import com.nimbits.shared.*;
 
 import java.util.logging.*;
 

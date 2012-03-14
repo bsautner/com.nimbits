@@ -14,11 +14,11 @@
 package com.nimbits.server.dao.settings;
 
 import com.nimbits.*;
+import com.nimbits.client.common.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
 import com.nimbits.server.orm.*;
 import com.nimbits.server.settings.*;
-import com.nimbits.shared.*;
 
 import javax.jdo.*;
 import java.util.*;

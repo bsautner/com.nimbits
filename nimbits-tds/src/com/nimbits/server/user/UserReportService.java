@@ -13,6 +13,7 @@
 
 package com.nimbits.server.user;
 
+import com.nimbits.client.common.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
@@ -23,7 +24,6 @@ import com.nimbits.client.model.value.*;
 import com.nimbits.server.counter.*;
 import com.nimbits.server.dao.counter.*;
 import com.nimbits.server.recordedvalue.*;
-import com.nimbits.shared.*;
 
 import javax.servlet.http.*;
 import java.io.*;

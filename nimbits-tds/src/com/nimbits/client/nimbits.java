@@ -24,6 +24,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
+import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exceptions.*;
 import com.nimbits.client.model.*;
@@ -34,7 +35,6 @@ import com.nimbits.client.service.blob.*;
 import com.nimbits.client.service.entity.*;
 import com.nimbits.client.service.settings.*;
 import com.nimbits.client.service.twitter.*;
-import com.nimbits.shared.*;
 
 import java.util.*;
 

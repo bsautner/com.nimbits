@@ -13,10 +13,10 @@
 
 package com.nimbits.server.memcache.settings;
 
+import com.nimbits.client.common.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
 import com.nimbits.server.settings.*;
-import com.nimbits.shared.*;
 import net.sf.jsr107cache.*;
 
 import java.util.*;

@@ -14,12 +14,12 @@
 package com.nimbits.client.model;
 
 import com.extjs.gxt.ui.client.data.*;
+import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
-import com.nimbits.shared.*;
 
 import java.io.*;
 

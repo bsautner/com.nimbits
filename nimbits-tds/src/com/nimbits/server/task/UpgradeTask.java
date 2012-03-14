@@ -15,6 +15,7 @@ package com.nimbits.server.task;
 
 import com.google.gson.*;
 import com.nimbits.*;
+import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
@@ -34,7 +35,6 @@ import com.nimbits.server.orm.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.subscription.*;
 import com.nimbits.server.user.*;
-import com.nimbits.shared.*;
 
 import javax.jdo.*;
 import javax.servlet.http.*;

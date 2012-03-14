@@ -26,6 +26,7 @@ import com.nimbits.client.controls.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.value.*;
 import com.nimbits.client.service.instantmessage.*;
 import com.nimbits.client.service.subscription.*;
 import com.nimbits.client.service.twitter.*;
@@ -50,7 +51,6 @@ public class CenterPanel extends NavigationEventProvider {
     private int chartHeight;
     HBoxLayoutData flex = new HBoxLayoutData(new Margins(0, 5, 0, 0));
 
-
     public CenterPanel(LoginInfo info, Map<String, String> settings) {
         this.loginInfo = info;
         this.settings = settings;
@@ -64,8 +64,7 @@ public class CenterPanel extends NavigationEventProvider {
     }
 
     final NavigationPanel createNavigationPanel() {
-        final NavigationPanel navTree =
-                new NavigationPanel(loginInfo.getUser(), settings);
+        final NavigationPanel navTree = new NavigationPanel(loginInfo.getUser(), settings);
 
 
         navTree.addEntityClickedListeners(new EntityClickedListener() {
@@ -83,12 +82,20 @@ public class CenterPanel extends NavigationEventProvider {
             @Override
             public void onEntityDeleted(final Entity c)  {
                 notifyEntityDeletedListener(c);
-                //TODO center.removePoint(c);
+
             }
 
         });
 
-
+        navTree.addValueEnteredListeners(new ValueEnteredListener() {
+            @Override
+            public void onValueEntered(GxtModel model, Value value) {
+              for (int i = 0; i < chartContainer.getItemCount(); i++) {
+                  AnnotatedTimeLinePanel p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
+                  p.addValue(model, value);
+              }
+            }
+        });
         return navTree;
 
     }
@@ -122,7 +129,7 @@ public class CenterPanel extends NavigationEventProvider {
         chartContainer.setLayout(layout);
         flex.setFlex(1);
         addChart();
-       // addChart();
+        // addChart();
         chartPanel.add(chartContainer);
         panel.add(chartPanel, new RowData(1, 5, new Margins(0)));
 
@@ -179,63 +186,37 @@ public class CenterPanel extends NavigationEventProvider {
     }
 
     private void addChart() {
-
-//        AnnotatedTimeLinePanel chart = null;
-//        if (chartContainer.getItemCount() > 0) {
-//            chart = (AnnotatedTimeLinePanel) chartContainer.getItem(0);
-//        }
-//        chartContainer.removeAll();
-
-       // if (chartContainer.getItemCount() < 2) {
-//            for (int i = 0; i < chartContainer.getItemCount(); i++) {
-//                AnnotatedTimeLinePanel p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
-//                p.setSelected(false);
-//                if (chartContainer.getItemCount() > 0) {
-//                p.refreshSize(300, 300);
-//                }
-//            }
-
-            //List<AnnotatedTimeLinePanel> list = new ArrayList<AnnotatedTimeLinePanel>();
-
-
-            final AnnotatedTimeLinePanel line = new AnnotatedTimeLinePanel(true, Const.DEFAULT_CHART_NAME + (chartContainer.getItemCount() + 1));
-            line.setHeight(chartHeight);
-
-            line.setSelected(true);
-            line.addListener(Events.OnClick, new Listener<BaseEvent>() {
-                @Override
-                public void handleEvent(BaseEvent baseEvent) {
-                    for (int i = 0; i < chartContainer.getItemCount(); i ++) {
-                        AnnotatedTimeLinePanel p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
-                        line.setSelected(p.getName().equals(line.getName()));
+        final AnnotatedTimeLinePanel line = new AnnotatedTimeLinePanel(true, Const.DEFAULT_CHART_NAME + (chartContainer.getItemCount() + 1));
+        line.setHeight(chartHeight);
+        line.setSelected(true);
+        line.addListener(Events.OnClick, new Listener<BaseEvent>() {
+            @Override
+            public void handleEvent(BaseEvent baseEvent) {
+                for (int i = 0; i < chartContainer.getItemCount(); i ++) {
+                    AnnotatedTimeLinePanel p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
+                    line.setSelected(p.getName().equals(line.getName()));
+                }
+            }
+        });
+        line.addChartRemovedClickedListeners(new AnnotatedTimeLinePanel.ChartRemovedListener() {
+            @Override
+            public void onChartRemovedClicked() {
+                for (int i = 0; i < chartContainer.getItemCount(); i ++) {
+                    AnnotatedTimeLinePanel p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
+                    if (p.getName().equals(line.getName())) {
+                        chartContainer.remove(p);
+                        break;
                     }
                 }
-            });
-
-            line.addChartRemovedClickedListeners(new AnnotatedTimeLinePanel.ChartRemovedListener() {
-                @Override
-                public void onChartRemovedClicked() {
-                    for (int i = 0; i < chartContainer.getItemCount(); i ++) {
-                        AnnotatedTimeLinePanel p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
-                        if (p.getName().equals(line.getName())) {
-                            chartContainer.remove(p);
-                            break;
-                        }
-                    }
-                    for (int i = 0; i < chartContainer.getItemCount(); i ++) {
-                        AnnotatedTimeLinePanel p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
-                   }
-                    chartContainer.layout(true);
+                for (int i = 0; i < chartContainer.getItemCount(); i ++) {
+                    AnnotatedTimeLinePanel p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
                 }
-            });
-//        if (chart != null) {
-//
-//        }
-            chartContainer.add(line, flex);
-            layout(true);
-      //  }
+                chartContainer.layout(true);
+            }
+        });
+        chartContainer.add(line, flex);
+        layout(true);
     }
-
 
     private void sendXMPPInvite() {
         IMServiceAsync IMService = GWT.create(IMService.class);
@@ -274,10 +255,6 @@ public class CenterPanel extends NavigationEventProvider {
 
         });
     }
-
-
-
-
 
     public void addEntity(final GxtModel entity) {
 
@@ -326,10 +303,7 @@ public class CenterPanel extends NavigationEventProvider {
 
     }
 
-
-
-
-    //chart
+   //chart
     private void chartEntity(final GxtModel model) {
 
         for (int i = 0; i < chartContainer.getItemCount(); i++) {

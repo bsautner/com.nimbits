@@ -35,6 +35,7 @@ import com.google.gwt.visualization.client.AbstractDataTable.*;
 import com.google.gwt.visualization.client.*;
 import com.google.gwt.visualization.client.visualizations.*;
 import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine.*;
+import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.icons.*;
@@ -43,9 +44,7 @@ import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.timespan.*;
 import com.nimbits.client.model.value.*;
-import com.nimbits.client.service.datapoints.*;
 import com.nimbits.client.service.recordedvalues.*;
-import com.nimbits.shared.*;
 
 import java.util.*;
 
@@ -186,27 +185,29 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
 
 
     public void addValue(final GxtModel model, final Value value) {
-        if (timespan != null) {
-            Date end = (timespan.getEnd().getTime() > value.getTimestamp().getTime()) ? value.getTimestamp() : timespan.getEnd();
-            Date start = (timespan.getStart().getTime() < value.getTimestamp().getTime()) ? value.getTimestamp() : timespan.getStart();
-            if (value.getTimestamp().getTime() < start.getTime()) {
-                start = value.getTimestamp();
+        if (points.size() == 0 || points.containsKey(model.getName()))  {
+            if (timespan != null) {
+                Date end = (timespan.getEnd().getTime() > value.getTimestamp().getTime()) ? value.getTimestamp() : timespan.getEnd();
+                Date start = (timespan.getStart().getTime() < value.getTimestamp().getTime()) ? value.getTimestamp() : timespan.getStart();
+                if (value.getTimestamp().getTime() < start.getTime()) {
+                    start = value.getTimestamp();
+                }
+                if (value.getTimestamp().getTime() > end.getTime()) {
+                    end = value.getTimestamp();
+                }
+                this.timespan = TimespanModelFactory.createTimespan(start, end);
+
+            } else {
+                this.timespan =TimespanModelFactory.createTimespan(value.getTimestamp(), new Date());
+
+
             }
-            if (value.getTimestamp().getTime() > end.getTime()) {
-                end = value.getTimestamp();
-            }
-            this.timespan = TimespanModelFactory.createTimespan(start, end);
+            startDateSelector.setValue(fmt.format(this.timespan.getStart()));
+            endDateSelector.setValue(fmt.format(this.timespan.getEnd()));
+            addPointDataToTable(model, Arrays.asList(value));
 
-        } else {
-            this.timespan =TimespanModelFactory.createTimespan(value.getTimestamp(), new Date());
-
-
+            drawChart();
         }
-        startDateSelector.setValue(fmt.format(this.timespan.getStart()));
-        endDateSelector.setValue(fmt.format(this.timespan.getEnd()));
-        addPointDataToTable(model, Arrays.asList(value));
-
-        drawChart();
     }
 
     private void drawChart() {
@@ -322,7 +323,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
             }
         }
         for (ModelData child : model.getChildren()) {
-             addEntityModel((GxtModel) child);
+            addEntityModel((GxtModel) child);
         }
     }
 

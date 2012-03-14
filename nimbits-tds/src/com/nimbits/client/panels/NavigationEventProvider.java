@@ -79,7 +79,7 @@ public abstract class NavigationEventProvider extends LayoutContainer {
 
     // Value entered Handlers
     public interface ValueEnteredListener {
-        void onValueEntered(final Entity point, final Value value);
+        void onValueEntered(final GxtModel model, final Value value);
 
     }
 
@@ -87,9 +87,9 @@ public abstract class NavigationEventProvider extends LayoutContainer {
         valueEnteredListeners.add(listener);
     }
 
-    void notifyValueEnteredListener(final Entity point, final Value value) {
+    void notifyValueEnteredListener(final GxtModel model, final Value value) {
         for (final ValueEnteredListener valueEnteredListener : valueEnteredListeners) {
-            valueEnteredListener.onValueEntered(point, value);
+            valueEnteredListener.onValueEntered(model, value);
         }
     }
 

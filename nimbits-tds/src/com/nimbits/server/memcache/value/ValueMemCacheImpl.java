@@ -14,6 +14,7 @@
 package com.nimbits.server.memcache.value;
 
 import com.google.appengine.api.memcache.*;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.timespan.*;
@@ -33,6 +34,7 @@ import java.util.*;
 public class ValueMemCacheImpl implements RecordedValueTransactions {
 
     MemcacheService cache;
+    MemcacheService cacheShared;
    // MemcacheService systemCache;
     // private EntityName pointName;
     private final Point p;
@@ -40,9 +42,26 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
     public ValueMemCacheImpl(final Point point) {
         this.p = point;
         cache = MemcacheServiceFactory.getMemcacheService(MemCacheHelper.valueMemCacheNamespace(point));
-     }
+        cacheShared = MemcacheServiceFactory.getMemcacheService();
+    }
 
+    private void addPointToActiveList() {
+        if (cacheShared.contains(MemCacheKey.activePoints)) {
+            Map<String, Point> points = (Map<String, Point>) cacheShared.get(MemCacheKey.activePoints);
+            if (! points.containsKey(p.getUUID())) {
+                points.put(p.getUUID(), p);
+                cacheShared.delete(MemCacheKey.activePoints);
+                cacheShared.put(MemCacheKey.activePoints, points);
 
+            }
+
+        }
+        else {
+            Map<String, Point> points = new HashMap<String, Point>();
+            points.put(p.getUUID(), p);
+            cacheShared.put(MemCacheKey.activePoints, points);
+        }
+    }
 
 
     @Override
@@ -91,7 +110,7 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
 
         final String k = MemCacheHelper.currentValueCacheKey(p.getUUID());
         final String b = MemCacheHelper.valueBufferCacheKey(p);
-
+        addPointToActiveList();
         try {
             final List<Long> stored;
             if (cache.contains(b)) {
@@ -163,7 +182,6 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
         return RecordedValueTransactionFactory.getDaoInstance(p).getDataSegment(timespan, start, end);
     }
 
-
     @Override
     public void recordValues(List<Value> values) {
         RecordedValueTransactionFactory.getDaoInstance(p).recordValues(values);
@@ -230,8 +248,7 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
                     }
                     RecordedValueTransactionFactory.getDaoInstance(p).recordValues(values);
                 }
-
-            }
+             }
         } catch (Exception e) {
             cache.delete(b);
         }

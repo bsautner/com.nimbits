@@ -143,7 +143,7 @@ public class TaskFactoryImpl implements TaskFactory {
 //    }
 
     @Override
-    public void startUpgradeTask(Action action, Entity entity) {
+    public void startUpgradeTask(final Action action,final  Entity entity) {
 
 
         final Queue queue = QueueFactory.getQueue(Const.TASK_UPGRADE);
@@ -158,7 +158,7 @@ public class TaskFactoryImpl implements TaskFactory {
     }
 
     @Override
-    public void startMoveCachedValuesToStoreTask(Point point) {
+    public void startMoveCachedValuesToStoreTask(final Point point) {
         final String json = gson.toJson(point);
 
         final Queue queue = QueueFactory.getQueue(Const.TASK_MOVE);

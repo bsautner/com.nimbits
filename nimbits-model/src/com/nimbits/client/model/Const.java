@@ -26,6 +26,8 @@ public class Const {
     public static final long DEFAULT_SERIAL_VERSION = 12L;
     public static final String CACHE_KEY_PREFIX = CONST_SERVER_VERSION + DEFAULT_SERIAL_VERSION;
     public static final String CONTENT_TYPE_JSON = "application/json";
+    public static final String KEY_ACTIVE_POINTS = "KEY_ACTIVE_POINTS";
+    public static final String KEY_VALUE = "KEY_VALUE";
 
 
     public class Params {

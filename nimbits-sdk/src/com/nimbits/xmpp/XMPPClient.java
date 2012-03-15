@@ -16,6 +16,7 @@ package com.nimbits.xmpp;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.xmpp.*;
 
 /**
  * Created by Benjamin Sautner
@@ -24,6 +25,11 @@ import com.nimbits.client.model.value.Value;
  * Time: 3:56 PM
  */
 public interface XMPPClient {
+
+    boolean connect(EntityName resourceName) throws NimbitsException;
+
+    boolean connect(String resourceName) throws NimbitsException;
+    @Deprecated
     boolean connect() throws NimbitsException;
 
     void sendMessage(final String outgoingMessage);

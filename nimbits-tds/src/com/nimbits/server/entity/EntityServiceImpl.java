@@ -1,6 +1,7 @@
 package com.nimbits.server.entity;
 
 import com.google.gwt.user.server.rpc.*;
+import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
@@ -79,13 +80,13 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     @Override
     public Entity addUpdateEntity(Entity entity) throws NimbitsException {
         User u = getUser();
-        if (entity.getOwner() == null) {
+        if (Utils.isEmptyString(entity.getOwner())) {
             entity.setOwner(u.getUuid());
         }
-        if (entity.getParent() == null) {
+        if (Utils.isEmptyString(entity.getParent())) {
             entity.setParent(u.getUuid());
         }
-        if (entity.getEntity() == null) {
+        if (Utils.isEmptyString(entity.getEntity())) {
             entity.setEntity(UUID.randomUUID().toString());
         }
         return addUpdateEntity(u, entity);
@@ -94,6 +95,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     @Override
     public void deleteEntity(Entity entity) {
         EntityServiceFactory.getDaoInstance(getUser()).deleteEntity(entity);
+        //TODO - delete any other data
     }
 
     @Override

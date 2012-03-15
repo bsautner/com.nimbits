@@ -61,12 +61,12 @@
 
     <servlet>
         <servlet-name>IMService</servlet-name>
-        <servlet-class>com.nimbits.server.instantmessage.XmppServiceImpl</servlet-class>
+        <servlet-class>com.nimbits.server.xmpp.XmppServiceImpl</servlet-class>
     </servlet>
 
     <servlet>
         <servlet-name>xmppreceiver</servlet-name>
-        <servlet-class>com.nimbits.server.instantmessage.XMPPReceiverServlet</servlet-class>
+        <servlet-class>com.nimbits.server.xmpp.XMPPReceiverServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>

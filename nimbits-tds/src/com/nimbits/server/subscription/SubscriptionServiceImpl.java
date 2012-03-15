@@ -16,12 +16,13 @@ import com.nimbits.server.entity.*;
 import com.nimbits.server.facebook.*;
 import com.nimbits.server.feed.*;
 import com.nimbits.server.gson.*;
-import com.nimbits.server.instantmessage.*;
+import com.nimbits.server.xmpp.*;
 import com.nimbits.server.recordedvalue.*;
 import com.nimbits.server.twitter.*;
 import com.nimbits.server.user.*;
 
 import java.util.*;
+import java.util.logging.*;
 
 /**
  * Created by Benjamin Sautner
@@ -31,7 +32,7 @@ import java.util.*;
  */
 public class SubscriptionServiceImpl extends RemoteServiceServlet implements
         SubscriptionService {
-
+    private static final Logger log = Logger.getLogger(SubscriptionServiceImpl.class.getName());
     private User getUser() {
         try {
             return UserServiceFactory.getServerInstance().getHttpRequestUser(
@@ -188,6 +189,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
         List<XmppResource> resources =  XmppServiceFactory.getInstance().getPointXmppResources(u, point);
         if (resources.size() > 0) {
+            log.info("Sending XMPP with resources count: " + resources.size());
             XmppServiceFactory.getInstance().sendMessage(resources, message, u.getEmail());
         }
         else {

@@ -185,7 +185,7 @@ public class EntityContextMenu extends Menu {
                                         "over an XMPP instant message, the default transmission uses your bare account address. " +
                                         "</p><p>You can configure " +
                                         "a point to only send a message to a client listening to a specific resource " +
-                                        "i.e <b>test@example.com\\resourceName</b></p><BR>");
+                                        "i.e <b>test@example.com/resourceName</b></p><BR>");
                         box.addCallback(xmppResourceListener);
                         box.show();
                     }

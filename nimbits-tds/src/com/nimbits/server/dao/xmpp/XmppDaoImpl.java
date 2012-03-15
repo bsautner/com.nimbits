@@ -1,12 +1,10 @@
 package com.nimbits.server.dao.xmpp;
 
 import com.nimbits.*;
-import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.subscription.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.xmpp.*;
-import com.nimbits.server.instantmessage.*;
+import com.nimbits.server.xmpp.*;
 import com.nimbits.server.orm.*;
 
 import javax.jdo.*;

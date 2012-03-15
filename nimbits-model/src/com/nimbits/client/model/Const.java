@@ -28,6 +28,7 @@ public class Const {
     public static final String CONTENT_TYPE_JSON = "application/json";
     public static final String KEY_ACTIVE_POINTS = "KEY_ACTIVE_POINTS";
     public static final String KEY_VALUE = "KEY_VALUE";
+    public static final String FILE_TYPE_SVG = ".svg";
 
 
     public class Params {

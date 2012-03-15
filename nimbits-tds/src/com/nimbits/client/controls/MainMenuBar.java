@@ -18,7 +18,7 @@ import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.connection.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.entity.*;
-import com.nimbits.client.panels.*;
+import com.nimbits.client.ui.panels.*;
 import com.nimbits.client.service.entity.*;
 import com.nimbits.client.service.user.*;
 

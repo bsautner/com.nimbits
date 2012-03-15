@@ -29,9 +29,9 @@ import com.nimbits.client.enums.*;
 import com.nimbits.client.exceptions.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.entity.*;
-import com.nimbits.client.panels.*;
+import com.nimbits.client.ui.helper.*;
+import com.nimbits.client.ui.panels.*;
 import com.nimbits.client.service.*;
-import com.nimbits.client.service.blob.*;
 import com.nimbits.client.service.entity.*;
 import com.nimbits.client.service.settings.*;
 import com.nimbits.client.service.twitter.*;
@@ -59,7 +59,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         final String code = Location.getParameter(Const.Params.PARAM_CODE);
         final String tw = Location.getParameter(Const.Params.PARAM_TWITTER);
         final String oauth_token = Location.getParameter(Const.Params.PARAM_OAUTH);
-        final String diagramUUID = Location.getParameter(Const.Params.PARAM_DIAGRAM);
+        //final String diagramUUID = Location.getParameter(Const.Params.PARAM_DIAGRAM);
 
 //        final String debug = Location.getParameter(Const.PARAM_DEBUG);
         boolean doAndroid = false;
@@ -67,7 +67,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         final boolean doFacebook = ((fb != null) || (code != null));
         final boolean doTwitter = ((tw != null) && (oauth_token == null));
         final boolean doTwitterFinish = ((tw != null) && (oauth_token != null));
-        final boolean doDiagram = (diagramUUID != null);
+        //final boolean doDiagram = (diagramUUID != null);
         boolean doSubscribe = (uuid != null && actionParam != null && actionParam.equals(Action.subscribe.name()));
         Action action = Action.none;
 
@@ -97,9 +97,6 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         }
         else if (doAndroid) {
             action = Action.android;
-        }
-        else if (doDiagram) {
-            action = Action.diagram;
         }
         else if (doTwitter) {
             action = Action.twitter;
@@ -140,10 +137,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
             public void onSuccess(final Map<String, String> settings) {
                 switch (action) {
                     case report:
-                        loadSinglePointDisplay(uuid);
-                        break;
-                    case diagram:
-                        processDiagramRequest(uuid, clientType);
+                        loadEntityDisplay(uuid);
                         break;
                     case facebook:
                         finishFacebookAuthentication(settings, code);
@@ -222,9 +216,9 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
 
     private void loadPortalView(final LoginInfo loginInfo,
-                                    final Action action,
-                                    final Map<String, String> settings,
-                                    final String uuid)  {
+                                final Action action,
+                                final Map<String, String> settings,
+                                final String uuid)  {
 
 
         viewport = new Viewport();
@@ -327,41 +321,11 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         contentPanel.setHeaderVisible(true);
         contentPanel.setHeading(Const.HTML_HOME_LINK + " | " + heading + " "
                 + diagram.getName());
+         contentPanel.setFrame(false);
 
-        //  diagram.setFullScreenView(true);
 
         final DiagramPanel diagramPanel = new DiagramPanel(diagram, false, Window.getClientWidth(), Window.getClientHeight());
-        diagramPanel.addEntityClickedListeners(new NavigationEventProvider.EntityClickedListener() {
 
-            @Override
-            public void onEntityClicked(final GxtModel p) {
-
-                if (clientType == ClientType.other) {
-                    switch (p.getEntityType()) {
-                        case point:
-                            //TODO  showAnnotatedTimeLine(p);
-                        case file:
-                            //TODO  loadDiagramView(d, clientType);
-                    }
-
-                }
-                else {
-                    Window.Location.replace("?" + Const.Params.PARAM_CLIENT + "=" + Const.WORD_ANDROID + "&" + Const.Params.PARAM_POINT + "=" + p.getName());
-                }
-
-            }
-
-        });
-
-
-
-        diagramPanel.addUrlClickedListeners(new NavigationEventProvider.UrlClickedListener() {
-
-            @Override
-            public void onUrlClicked(String url, String target) {
-                Window.Location.replace(url);
-            }
-        });
         diagramPanel.setHeight("100%");
         contentPanel.add(diagramPanel);
         contentPanel.setLayout(new FillLayout());
@@ -372,37 +336,6 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
 
 
-
-    private void processDiagramRequest(final String diagramName, final ClientType clientType) {
-        BlobServiceAsync diagramService = GWT.create(BlobService.class);
-
-        EntityServiceAsync service = GWT.create(EntityService.class);
-
-        service.getEntityByUUID(diagramName, new AsyncCallback<Entity>() {
-            @Override
-            public void onFailure(Throwable throwable) {
-
-            }
-
-            @Override
-            public void onSuccess(Entity entity) {
-                loadDiagramView(entity, clientType);
-            }
-        });
-
-//        diagramService.getDiagramByUuid(diagramName, new AsyncCallback<Diagram>() {
-//            @Override
-//            public void onFailure(Throwable throwable) {
-//                handleError(throwable);
-//            }
-//
-//            @Override
-//            public void onSuccess(final Diagram diagram) {
-//
-//            }
-//        });
-
-    }
 
     private void finishFacebookAuthentication(final Map<String, String> settings, final String code) {
         getViewport();
@@ -443,8 +376,52 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         viewport.setBorders(false);
     }
 
-    private void loadSinglePointDisplay(final String uuid) {
-        Location.replace("report.html?uuid=" + uuid);
+    private void loadEntityDisplay(final String uuid) {
+
+
+        EntityServiceAsync service = GWT.create(EntityService.class);
+
+        service.getEntityByUUID(uuid, new AsyncCallback<Entity>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+
+            }
+
+            @Override
+            public void onSuccess(Entity entity) {
+                switch (entity.getEntityType()) {
+
+                    case user:
+                        break;
+                    case point: case category:
+                        Location.replace("report.html?uuid=" + uuid);
+                        break;
+                    case file:
+                      if (EntityOpenHelper.isSVG(entity)) {
+                          loadDiagramView(entity, ClientType.other);
+                      }
+                      else {
+                          EntityOpenHelper.showBlob(entity);
+                      }
+                        break;
+                    case subscription:
+                        break;
+                    case userConnection:
+                        break;
+                    case calculation:
+                        break;
+                    case intelligence:
+                        break;
+                    case feed:
+                        break;
+                }
+
+
+            }
+        });
+
+
+
     }
 
     private void loadLogin() {

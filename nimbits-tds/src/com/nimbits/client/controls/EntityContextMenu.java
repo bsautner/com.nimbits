@@ -29,7 +29,7 @@ import com.nimbits.client.icons.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
-import com.nimbits.client.panels.*;
+import com.nimbits.client.ui.panels.*;
 import com.nimbits.client.service.entity.*;
 
 import java.util.*;

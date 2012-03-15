@@ -22,12 +22,12 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.controls.*;
+import com.nimbits.client.ui.controls.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.value.*;
-import com.nimbits.client.service.instantmessage.*;
+import com.nimbits.client.service.xmpp.*;
 import com.nimbits.client.service.subscription.*;
 import com.nimbits.client.service.twitter.*;
 import com.nimbits.client.ui.helper.*;
@@ -220,7 +220,7 @@ public class CenterPanel extends NavigationEventProvider {
     }
 
     private void sendXMPPInvite() {
-        IMServiceAsync IMService = GWT.create(IMService.class);
+        XMPPServiceAsync IMService = GWT.create(XMPPService.class);
         IMService.sendInvite(new AsyncCallback<Void>() {
 
             @Override

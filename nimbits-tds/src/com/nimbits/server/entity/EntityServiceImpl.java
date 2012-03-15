@@ -23,9 +23,10 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
 
 
     @Override
-    public Entity addUpdateEntity(EntityName name, EntityType type) {
+    public Entity addUpdateEntity(EntityName name, EntityType type) throws NimbitsException {
         User u = getUser();
-        Entity e = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.everyone,
+
+        Entity e = EntityModelFactory.createEntity(name, "", type, ProtectionLevel.everyone,
                 UUID.randomUUID().toString(), u.getUuid(), u.getUuid());
         Entity r = EntityServiceFactory.getDaoInstance(u).addUpdateEntity(e);
         switch (type) {
@@ -76,7 +77,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     }
 
     @Override
-    public Entity addUpdateEntity(Entity entity) {
+    public Entity addUpdateEntity(Entity entity) throws NimbitsException {
         User u = getUser();
         if (entity.getOwner() == null) {
             entity.setOwner(u.getUuid());
@@ -118,7 +119,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
 
 
     @Override
-    public Entity copyEntity(Entity originalEntity, EntityName newName) {
+    public Entity copyEntity(Entity originalEntity, EntityName newName) throws NimbitsException {
         Entity newEntity = new EntityStore(originalEntity);
         newEntity.setEntity(UUID.randomUUID().toString());
         switch (newEntity.getEntityType()) {
@@ -155,7 +156,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     }
 
     @Override
-    public Entity addUpdateEntity(User user, Entity entity) {
+    public Entity addUpdateEntity(User user, Entity entity) throws NimbitsException {
         return EntityServiceFactory.getDaoInstance(user).addUpdateEntity(entity);
     }
 

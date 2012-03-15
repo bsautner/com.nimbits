@@ -49,7 +49,7 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public Entity copyPoint(User u, Entity originalEntity, EntityName newName) {
+    public Entity copyPoint(User u, Entity originalEntity, EntityName newName) throws NimbitsException {
         final Point storedPoint = PointServiceFactory.getInstance().getPointByUUID(originalEntity.getEntity());
         final Point newPoint = PointModelFactory.createPointModel(storedPoint);
         final String newUUID = UUID.randomUUID().toString();
@@ -96,28 +96,28 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
 
     @Override
-        public Point addPoint(final User user,final Entity entity) {
+        public Point addPoint(final User user,final Entity entity) throws NimbitsException {
         final Entity r = EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
         final Point newPoint =  PointTransactionsFactory.getInstance(user).addPoint(r);
         notifyFeedOfNewPoint(user, entity);
         return newPoint;
     }
 
-    private void notifyFeedOfNewPoint(User user, Entity entity) {
+    private void notifyFeedOfNewPoint(User user, Entity entity) throws NimbitsException {
         FeedServiceFactory.getInstance().postToFeed(user, "<p>A new data point named " + entity.getName().getValue() +
         " has been created with a default compression of 0.1, expiration of 90 days and security set to public. Right " +
                 "click your data point to edit its properties.</p>");
     }
 
     @Override
-    public Point addPoint(User user, Entity entity, Point point) {
+    public Point addPoint(User user, Entity entity, Point point) throws NimbitsException {
         EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
         notifyFeedOfNewPoint(user, entity);
         return PointTransactionsFactory.getInstance(user).addPoint(entity, point);
     }
 
     @Override
-    public Point addPoint(EntityName name) {
+    public Point addPoint(EntityName name) throws NimbitsException {
         User u = getUser();
 
         Entity r = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.everyone,

@@ -14,6 +14,7 @@
 package com.nimbits.client.service.intelligence;
 
 import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.intelligence.*;
 import com.nimbits.client.model.point.*;
@@ -39,7 +40,7 @@ public interface IntelligenceServiceAsync {
 
     void addUpdateIntelligence(Entity entity, EntityName name, Intelligence update, AsyncCallback<Entity> error);
 
-    void processIntelligence(User u, Point point, AsyncCallback<Void> async);
+    void processIntelligence(User u, Point point, AsyncCallback<Void> async) throws NimbitsException;
 
     void processInput(final Intelligence intelligence, final Point targetPoint, final String processedInput, AsyncCallback<Value> async);
 

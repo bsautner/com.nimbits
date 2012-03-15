@@ -184,7 +184,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
     }
 
     @Override
-    public Entity addUpdateIntelligence(Entity entity, EntityName name, Intelligence update) {
+    public Entity addUpdateIntelligence(Entity entity, EntityName name, Intelligence update) throws NimbitsException {
 
         Entity retObj = null;
         User u = getUser();
@@ -230,7 +230,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
     }
 
     @Override
-    public void processIntelligence(User u, Point point) {
+    public void processIntelligence(User u, Point point) throws NimbitsException {
         List<Intelligence> list = IntelligenceServiceFactory.getDaoInstance().getIntelligence(point);
 
         for (Intelligence i : list) {

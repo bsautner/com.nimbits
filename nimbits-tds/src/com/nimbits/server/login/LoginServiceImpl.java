@@ -70,7 +70,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
         return loginInfo;
     }
 
-    private void sendWelcomeFeed(com.nimbits.client.model.user.User u) {
+    private void sendWelcomeFeed(com.nimbits.client.model.user.User u) throws NimbitsException {
 
         final String message =
                 ("<b>Welcome To Nimbits!</b> <br> <p>This is your data feed channel, you can subscribe " +
@@ -83,7 +83,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
                 "you can see each others data.</p>");
         FeedServiceFactory.getInstance().postToFeed(u, message);
     }
-    private void sendUserCreatedFeed(com.nimbits.client.model.user.User u) {
+    private void sendUserCreatedFeed(com.nimbits.client.model.user.User u) throws NimbitsException {
 
         final String message =
                 ("New Nimbits user registered successfully");

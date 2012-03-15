@@ -3,6 +3,7 @@ package com.nimbits.server.dao.entity;
 
 import com.nimbits.*;
 import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.service.entity.*;
@@ -96,7 +97,7 @@ public class EntityDaoImpl implements  EntityTransactions {
 
 
     @Override
-    public Entity addUpdateEntity(Entity entity) {
+    public Entity addUpdateEntity(Entity entity) throws NimbitsException {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final Query q1 = pm.newQuery(EntityStore.class, "owner==o && entity==b");
@@ -119,6 +120,10 @@ public class EntityDaoImpl implements  EntityTransactions {
                 return EntityModelFactory.createEntity(user,result);
             }
             else {
+                if (entity.getEntityType().isUniqueNameFlag()) {
+                   checkDuplicateEntity(entity);
+
+                }
                 Entity commit = new EntityStore(entity);
                 pm.makePersistent(commit);
 
@@ -276,5 +281,30 @@ public class EntityDaoImpl implements  EntityTransactions {
         }
     }
 
+    private void checkDuplicateEntity(Entity entity) throws NimbitsException {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
 
+
+        try {
+            final Query q1 = pm.newQuery(EntityStore.class, "name==b && owner==o && entityType==t");
+            q1.declareParameters("String b, String o, Integer t");
+            q1.setRange(0, 1);
+            final List<Entity> c = (List<Entity>) q1.execute(
+                    entity.getName().getValue(),
+                    user.getUuid(),
+                    entity.getEntityType().getCode());
+            if (c.size() > 0) {
+
+                throw new NimbitsException("An Entity with the name " + entity.getName().getValue() +
+                        " already exists. Entities of type [" + entity.getEntityType().name() + "] must have a " +
+                        "unique name on your account");
+
+            }
+
+
+
+        } finally {
+            pm.close();
+        }
+    }
 }

@@ -39,7 +39,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
     }
 
     @Override
-    public void postToFeed(final User user, Entity entity, Point originalPoint, final Value value) {
+    public void postToFeed(final User user, Entity entity, Point originalPoint, final Value value) throws NimbitsException {
         final Point point = getFeedPoint(user);
         if (point != null) {
             FeedValue feedValue = new FeedValueModel(valueToHtml(user,entity, originalPoint, value), value.getData());
@@ -49,7 +49,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
         }
     }
 
-    public void postToFeed(final User user, final String html) {
+    public void postToFeed(final User user, final String html) throws NimbitsException {
         final Point point = getFeedPoint(user);
         StringBuilder sb = new StringBuilder() ;
         sb.append("<p><img src=\"" + ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest()) +
@@ -118,7 +118,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
         return sb.toString();
     }
 
-    private Point getFeedPoint(User user) {
+    private Point getFeedPoint(User user) throws NimbitsException {
         final Point point;
         final Map<String, Entity> map =  EntityServiceFactory.getInstance().getEntityMap(user, EntityType.feed);
 
@@ -133,7 +133,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
     }
 
     @Override
-    public List<FeedValue> getFeed(int count) {
+    public List<FeedValue> getFeed(int count) throws NimbitsException {
         User user = getUser();
         final Point point = getFeedPoint(user);
         List<Value> values = RecordedValueServiceFactory.getInstance().getTopDataSeries(point, count, new Date());
@@ -153,7 +153,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
         return retObj;
     }
 
-    private Point createFeedPoint(final User user) {
+    private Point createFeedPoint(final User user) throws NimbitsException {
         final String uuid = UUID.randomUUID().toString();
 
         EntityName name = CommonFactoryLocator.getInstance().createName("Subscription Data Feed");

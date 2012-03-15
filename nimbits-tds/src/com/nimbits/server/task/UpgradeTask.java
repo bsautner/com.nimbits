@@ -147,7 +147,7 @@ public class UpgradeTask  extends HttpServlet
 
     }
 
-    private void createCalcs(PersistenceManager pm, User u, DataPoint p) {
+    private void createCalcs(PersistenceManager pm, User u, DataPoint p) throws NimbitsException {
         if (p.calculationEntity != null) {
 
             String x = null, y = null, z = null, target = null;
@@ -255,7 +255,7 @@ public class UpgradeTask  extends HttpServlet
     }
 
     private void createSubscription(User u, DataPoint p, boolean enabled, int delay, EntityName name,
-                                    SubscriptionType type, SubscriptionNotifyMethod method ) {
+                                    SubscriptionType type, SubscriptionNotifyMethod method ) throws NimbitsException {
         Subscription subscription = SubscriptionFactory.createSubscription(p.getUUID(),
                 type,method ,delay,
                 new Date(), p.sendAlertsAsJson, enabled);
@@ -269,7 +269,7 @@ public class UpgradeTask  extends HttpServlet
         SubscriptionTransactionFactory.getInstance(u).subscribe(r, subscription);
     }
 
-    private void doCategory(HttpServletRequest req) {
+    private void doCategory(HttpServletRequest req) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         try {
@@ -404,7 +404,7 @@ public class UpgradeTask  extends HttpServlet
 
     }
 
-    private void doStart() {
+    private void doStart() throws NimbitsException {
         int set = 0;
         int results = -1;
         while (results != 0) {

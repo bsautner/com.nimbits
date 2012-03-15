@@ -24,7 +24,7 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.common.*;
-import com.nimbits.client.controls.*;
+import com.nimbits.client.ui.controls.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.entity.*;

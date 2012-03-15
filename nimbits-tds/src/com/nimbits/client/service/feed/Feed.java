@@ -1,6 +1,7 @@
 package com.nimbits.client.service.feed;
 
 import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.feed.*;
 import com.nimbits.client.model.point.*;
@@ -17,9 +18,9 @@ import java.util.*;
  */
 @RemoteServiceRelativePath("feed")
 public interface Feed extends RemoteService{
-    void postToFeed(User user, Entity entity, Point originalPoint, Value value);
+    void postToFeed(User user, Entity entity, Point originalPoint, Value value) throws NimbitsException;
 
-    List<FeedValue> getFeed(int count);
+    List<FeedValue> getFeed(int count) throws NimbitsException;
 
-    void postToFeed(final User user, final String html);
+    void postToFeed(final User user, final String html) throws NimbitsException;
 }

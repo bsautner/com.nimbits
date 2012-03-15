@@ -27,11 +27,11 @@ import java.util.*;
 @RemoteServiceRelativePath("point")
 public interface PointService extends RemoteService {
 
-    Point addPoint(User user, Entity entity, Point point);
+    Point addPoint(User user, Entity entity, Point point) throws NimbitsException;
 
-    Point addPoint(EntityName name);
+    Point addPoint(EntityName name) throws NimbitsException;
 
-    Point addPoint(final User user, final Entity entity);
+    Point addPoint(final User user, final Entity entity) throws NimbitsException;
 
     Point getPointByID(final User u, final long id) throws NimbitsException;
 
@@ -57,7 +57,7 @@ public interface PointService extends RemoteService {
 
     List<Point> getAllPoints();
 
-    Entity copyPoint(User u, Entity originalEntity, EntityName newName);
+    Entity copyPoint(User u, Entity originalEntity, EntityName newName) throws NimbitsException;
 
     Map<String,Point> getPoints(Map<String, Entity> entities);
 }

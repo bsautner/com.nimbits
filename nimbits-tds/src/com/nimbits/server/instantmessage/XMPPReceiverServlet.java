@@ -70,7 +70,7 @@ public class XMPPReceiverServlet extends HttpServlet {
                     sendCurrentValue(body, u);
 
                 } else if (body.toLowerCase().startsWith("c ")) {
-                    IMFactory.getInstance().sendMessage("creating point...", u.getEmail());
+                    XmppServiceFactory.getInstance().sendMessage("creating point...", u.getEmail());
 
                     createPoint(body, u);
 
@@ -80,7 +80,7 @@ public class XMPPReceiverServlet extends HttpServlet {
                 } else if (JsonHelper.isJson(body)) { //it's json from the sdk
                     processJson(u, body);
                 } else {
-                    IMFactory.getInstance().sendMessage("I received your message but couldn't understand it.", u.getEmail());
+                    XmppServiceFactory.getInstance().sendMessage("I received your message but couldn't understand it.", u.getEmail());
                 }
             }
         } catch (NimbitsException e) {
@@ -113,7 +113,7 @@ public class XMPPReceiverServlet extends HttpServlet {
                     final Value v = RecordedValueServiceFactory.getInstance().recordValue(u, point, p.getValue(), false);
                     point.setValue(v);
                     String result = gson.toJson(point);
-                    IMFactory.getInstance().sendMessage(result, u.getEmail());
+                    XmppServiceFactory.getInstance().sendMessage(result, u.getEmail());
                 }
 
                 break;
@@ -121,12 +121,12 @@ public class XMPPReceiverServlet extends HttpServlet {
     }
 
     private void sendHelp(User u) {
-        IMFactory.getInstance().sendMessage("Usage:", u.getEmail());
-        IMFactory.getInstance().sendMessage("? | Help", u.getEmail());
-        IMFactory.getInstance().sendMessage("c pointname | Create a data point", u.getEmail());
-        IMFactory.getInstance().sendMessage("pointname? | getInstance the current value of a point", u.getEmail());
-        IMFactory.getInstance().sendMessage("pointname=3.14 | record a value to that point", u.getEmail());
-        IMFactory.getInstance().sendMessage("pointname=Foo Bar | record a text value to that point", u.getEmail());
+        XmppServiceFactory.getInstance().sendMessage("Usage:", u.getEmail());
+        XmppServiceFactory.getInstance().sendMessage("? | Help", u.getEmail());
+        XmppServiceFactory.getInstance().sendMessage("c pointname | Create a data point", u.getEmail());
+        XmppServiceFactory.getInstance().sendMessage("pointname? | getInstance the current value of a point", u.getEmail());
+        XmppServiceFactory.getInstance().sendMessage("pointname=3.14 | record a value to that point", u.getEmail());
+        XmppServiceFactory.getInstance().sendMessage("pointname=Foo Bar | record a text value to that point", u.getEmail());
     }
 
     private void createPoint(final String body, final User u) throws NimbitsException {
@@ -138,7 +138,7 @@ public class XMPPReceiverServlet extends HttpServlet {
         PointServiceFactory.getInstance().addPoint(u, entity);
       //  Point r = PointServiceFactory.getInstance().showEntityData(pointName, null, u);
         //if (r != null) {
-            IMFactory.getInstance().sendMessage(pointName.getValue() + " created", u.getEmail());
+            XmppServiceFactory.getInstance().sendMessage(pointName.getValue() + " created", u.getEmail());
       // /
        // } else {
        //     IMFactory.getInstance().sendMessage("Could not create " + pointName.getValue(), u.getEmail());
@@ -175,7 +175,7 @@ public class XMPPReceiverServlet extends HttpServlet {
     private void sendPointList(final User u) {
         List<Point> l;
         //StringBuilder sb = new StringBuilder();
-        IMFactory.getInstance().sendMessage("Point List:", u.getEmail());
+        XmppServiceFactory.getInstance().sendMessage("Point List:", u.getEmail());
 //
 //        try {
 //            final List<Category> c = CategoryServiceFactory.getInstance().getCategories(u, true, false, false);
@@ -231,14 +231,14 @@ public class XMPPReceiverServlet extends HttpServlet {
                 if (v.getNote() != null && v.getNote().length() > 0) {
                     t = v.getNote();
                 }
-                IMFactory.getInstance().sendMessage(e.getName().getValue() + "="
+                XmppServiceFactory.getInstance().sendMessage(e.getName().getValue() + "="
                         + v.getNumberValue() + " " + t, u.getEmail());
             } else {
-                IMFactory.getInstance().sendMessage(pointName.getValue() + " has no data", u.getEmail());
+                XmppServiceFactory.getInstance().sendMessage(pointName.getValue() + " has no data", u.getEmail());
 
             }
         } else {
-            IMFactory.getInstance().sendMessage("I don't understand " + body, u.getEmail());
+            XmppServiceFactory.getInstance().sendMessage("I don't understand " + body, u.getEmail());
 
         }
 

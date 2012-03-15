@@ -14,6 +14,7 @@
 package com.nimbits.server.dao.user;
 
 import com.nimbits.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.connection.*;
 import com.nimbits.client.model.email.*;
@@ -83,7 +84,7 @@ public class UserDAOImpl implements UserTransactions {
     }
 
 
-    public User createNimbitsUser(final EmailAddress internetAddress) {
+    public User createNimbitsUser(final EmailAddress internetAddress) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         User retObj = null;
         try {

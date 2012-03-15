@@ -56,7 +56,7 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
     }
 
     @Override
-    public Entity addUpdateCalculation(User u, Entity entity, EntityName name, Calculation calculation) {
+    public Entity addUpdateCalculation(User u, Entity entity, EntityName name, Calculation calculation) throws NimbitsException {
         Entity retObj = null;
 
         if (entity == null) {
@@ -99,7 +99,7 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
     }
 
     @Override
-    public Entity addUpdateCalculation(Entity entity, EntityName name, Calculation calculation) {
+    public Entity addUpdateCalculation(Entity entity, EntityName name, Calculation calculation) throws NimbitsException {
          User u = getUser();
          return addUpdateCalculation(u, entity, name, calculation);
     }

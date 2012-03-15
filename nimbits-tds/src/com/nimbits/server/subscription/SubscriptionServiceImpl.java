@@ -9,6 +9,7 @@ import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.subscription.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.xmpp.*;
 import com.nimbits.client.service.subscription.*;
 import com.nimbits.server.email.*;
 import com.nimbits.server.entity.*;
@@ -55,7 +56,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
 
     @Override
-    public void processSubscriptions(final Point point, final Value v) {
+    public void processSubscriptions(final Point point, final Value v) throws NimbitsException {
 
 
         List<Subscription> subscriptions= getSubscriptionsToPoint(point);
@@ -115,7 +116,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
 
     @Override
-    public Entity subscribe(Entity entity, Subscription subscription, EntityName name) {
+    public Entity subscribe(Entity entity, Subscription subscription, EntityName name) throws NimbitsException {
         User user = getUser();
         if (entity.getEntityType().equals(EntityType.subscription)) {
             entity.setName(name);
@@ -153,7 +154,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
         return EntityServiceFactory.getDaoInstance(getUser()).getEntityByUUID(subscription.getSubscribedEntity());
 
     }
-    private void sendNotification(User user, Entity entity, Subscription subscription, Point point, Value value) {
+    private void sendNotification(User user, Entity entity, Subscription subscription, Point point, Value value) throws NimbitsException {
         switch (subscription.getNotifyMethod()) {
             case none:
                 break;
@@ -185,8 +186,14 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
                     + "] updated to new value: " + v.getNumberValue();
         }
 
+        List<XmppResource> resources =  XmppServiceFactory.getInstance().getPointXmppResources(u, point);
+        if (resources.size() > 0) {
+            XmppServiceFactory.getInstance().sendMessage(resources, message, u.getEmail());
+        }
+        else {
+            XmppServiceFactory.getInstance().sendMessage(message, u.getEmail());
+        }
 
-        IMFactory.getInstance().sendMessage(message, u.getEmail());
     }
 
 

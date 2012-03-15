@@ -53,7 +53,11 @@ public class CalculationServlet extends HttpServlet {
 
 
         if ((u != null) && (!u.isRestricted()) && (c != null)) {
-         CalculationServiceFactory.getInstance().addUpdateCalculation(u, null, name, c);
+            try {
+                CalculationServiceFactory.getInstance().addUpdateCalculation(u, null, name, c);
+            } catch (NimbitsException ignored) {
+
+            }
 
         }
 

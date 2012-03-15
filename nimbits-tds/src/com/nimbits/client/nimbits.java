@@ -201,7 +201,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
             @Override
             public void onFailure(Throwable caught) {
-                GWT.log(caught.getMessage(), caught);
+                showError(caught);
             }
 
             @Override
@@ -282,7 +282,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         service.getEntityByUUID(uuid, new AsyncCallback<Entity>() {
             @Override
             public void onFailure(Throwable caught) {
-                //auto generated
+                showError(caught);
             }
 
             @Override
@@ -383,8 +383,8 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
         service.getEntityByUUID(uuid, new AsyncCallback<Entity>() {
             @Override
-            public void onFailure(Throwable throwable) {
-
+            public void onFailure(Throwable caught) {
+                 showError(caught);
             }
 
             @Override
@@ -442,5 +442,9 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
             // Window.Location.replace(Const.PATH_NIMBITS_HOME);
         }
+    }
+    private void showError(Throwable caught) {
+        final MessageBox box = MessageBox.alert("Error", caught.getMessage(), null);
+        box.show();
     }
 }

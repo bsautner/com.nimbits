@@ -38,7 +38,7 @@ import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine.*;
 import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.icons.*;
+import com.nimbits.client.ui.icons.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;

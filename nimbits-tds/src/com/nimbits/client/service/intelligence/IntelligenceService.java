@@ -41,9 +41,9 @@ public interface IntelligenceService extends RemoteService {
 
     Intelligence getIntelligence(Entity entity);
 
-    Entity addUpdateIntelligence(Entity entity, EntityName name, Intelligence update);
+    Entity addUpdateIntelligence(Entity entity, EntityName name, Intelligence update) throws NimbitsException;
 
-    void processIntelligence(User u, Point point);
+    void processIntelligence(User u, Point point) throws NimbitsException;
 
     Value processInput(Intelligence update) throws NimbitsException;
 }

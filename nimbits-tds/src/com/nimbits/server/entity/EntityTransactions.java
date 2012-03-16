@@ -28,4 +28,6 @@ public interface EntityTransactions {
     Entity getEntityByUUID(String uuid);
 
     Entity getEntityByName(EntityName name);
+
+    Map<String, Entity> getSystemWideEntityMap(EntityType type);
 }

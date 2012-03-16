@@ -50,4 +50,8 @@ public interface EntityService extends RemoteService {
     void deleteEntity(User u, Entity entity);
 
     List<Entity> getEntityChildren(User u, Entity c, EntityType point);
+
+    Map<String, Entity> getSystemWideEntityMap(EntityType type);
+
+
 }

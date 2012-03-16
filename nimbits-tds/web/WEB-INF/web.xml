@@ -272,15 +272,24 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>com.nimbits.server.task.UpdatePointStatsTask</servlet-name>
-        <servlet-class>com.nimbits.server.task.UpdatePointStatsTask</servlet-class>
+        <servlet-name>summaryCron</servlet-name>
+        <servlet-class>com.nimbits.server.cron.SummaryCron</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>com.nimbits.server.task.UpdatePointStatsTask</servlet-name>
-        <url-pattern>/task/updatepointstats</url-pattern>
+        <servlet-name>summaryCron</servlet-name>
+        <url-pattern>/cron/summary</url-pattern>
     </servlet-mapping>
 
 
+
+    <servlet>
+        <servlet-name>summaryTask</servlet-name>
+        <servlet-class>com.nimbits.server.task.SummaryTask</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>summaryTask</servlet-name>
+        <url-pattern>/task/summary</url-pattern>
+    </servlet-mapping>
     <servlet>
         <servlet-name>ProcessBatchTask</servlet-name>
         <servlet-class>com.nimbits.server.task.ProcessBatchTask</servlet-class>

@@ -58,7 +58,7 @@ public class BlobServlet extends HttpServlet {
             u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
 
 
-            final EntityName diagramName = CommonFactoryLocator.getInstance().createName(fileName);
+            final EntityName diagramName = CommonFactoryLocator.getInstance().createName(fileName, EntityType.file);
             PrintWriter out = res.getWriter();
 
 

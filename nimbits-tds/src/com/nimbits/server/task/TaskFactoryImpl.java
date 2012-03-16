@@ -59,6 +59,14 @@ public class TaskFactoryImpl implements TaskFactory {
 
 
     }
+    @Override
+    public void startSummaryTask(final Entity entity) {
+        final Queue queue = QueueFactory.getQueue(Const.QUEUE_DELETE_SUMMARY);
+        String json = GsonFactory.getInstance().toJson(entity);
+        queue.add(TaskOptions.Builder.withUrl(Const.PATH_SUMMARY_TASK)
+                .param(Const.Params.PARAM_JSON, json)
+        );
+    }
 
 
     @Override

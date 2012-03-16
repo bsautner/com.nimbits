@@ -10,8 +10,6 @@ import com.nimbits.client.service.entity.*;
 import com.nimbits.server.orm.entity.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.user.*;
-
-import javax.servlet.http.*;
 import java.util.*;
 
 /**
@@ -54,12 +52,6 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     public List<Entity> getEntityChildren(User user, Entity c, EntityType type) {
         return EntityServiceFactory.getDaoInstance(user).getEntityChildren(c, type);
     }
-
-    private HttpSession getSession() {
-             // Get the current request and then return its session
-             return this.getThreadLocalRequest().getSession();
-    }
-
 
     private User getUser() {
         try {
@@ -155,6 +147,11 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     @Override
     public Entity getEntityByName(EntityName name) {
        return EntityServiceFactory.getDaoInstance(getUser()).getEntityByName(name);
+    }
+
+    @Override
+    public Map<String, Entity> getSystemWideEntityMap(EntityType type) {
+        return EntityServiceFactory.getDaoInstance(null).getSystemWideEntityMap(type);
     }
 
     @Override

@@ -44,4 +44,5 @@ public interface TaskFactory {
 
     void startUpgradeTask(Action action, Entity entity);
 
+    void startSummaryTask(Entity entity);
 }

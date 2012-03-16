@@ -6,7 +6,6 @@ import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
-import com.nimbits.client.service.entity.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.orm.entity.*;
 
@@ -19,6 +18,8 @@ import java.util.*;
  * Date: 2/7/12
  * Time: 10:46 AM
  */
+
+@SuppressWarnings("unchecked")
 public class EntityDaoImpl implements  EntityTransactions {
 
     private final User user;
@@ -211,7 +212,8 @@ public class EntityDaoImpl implements  EntityTransactions {
 
 
     @Override
-    public void deleteEntity(Entity entity) {
+
+    public void deleteEntity(final Entity entity) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final Query q1 = pm.newQuery(EntityStore.class, "entity==b");
         q1.declareParameters("String b");
@@ -232,7 +234,8 @@ public class EntityDaoImpl implements  EntityTransactions {
     }
 
     @Override
-    public Entity getEntityByUUID(String uuid) {
+
+    public Entity getEntityByUUID(final String uuid) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
 
@@ -257,7 +260,8 @@ public class EntityDaoImpl implements  EntityTransactions {
     }
 
     @Override
-    public Entity getEntityByName(EntityName name) {
+
+    public Entity getEntityByName(final EntityName name) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
 
@@ -307,4 +311,31 @@ public class EntityDaoImpl implements  EntityTransactions {
             pm.close();
         }
     }
+
+    @Override
+
+    public Map<String, Entity> getSystemWideEntityMap(EntityType type) {
+        Map<String, Entity> retObj = new HashMap<String, Entity>();
+
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final Query q1 = pm.newQuery(EntityStore.class, "entityType==t");
+        q1.declareParameters("Integer t");
+        try {
+
+            final List<Entity> result = (List<Entity>) q1.execute(type.getCode());
+            List<Entity> models = EntityModelFactory.createEntities(null, result);
+            for (final Entity e : models) {
+               retObj.put(e.getEntity(), e);
+            }
+            return retObj;
+
+        } finally {
+            pm.close();
+        }
+
+
+    }
+
+
+
 }

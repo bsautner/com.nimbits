@@ -22,7 +22,7 @@ public interface Icons extends ClientBundle {
 
     static final Icons INSTANCE = GWT.create(Icons.class);
 
-    @Source("sigma.jpg")
+    @Source("sigma.gif")
     ImageResource summary();
 
     @Source("web.png")

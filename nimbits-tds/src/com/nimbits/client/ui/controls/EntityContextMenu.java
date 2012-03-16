@@ -226,14 +226,17 @@ public class EntityContextMenu extends Menu {
         final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
         w.setWidth(500);
         w.setHeight(500);
-        w.setHeading("New Summary Data Point");
+        w.setHeading("Summary");
         w.add(dp);
         dp.addEntityAddedListener(new NavigationEventProvider.EntityAddedListener() {
             @Override
             public void onEntityAdded(Entity entity) {
                 w.hide();
                 Cookies.removeCookie(Action.subscribe.name());
+//                if (entity.getEntityType().equals(EntityType.point)) {
                 notifyEntityModifiedListener(new GxtModel(entity), Action.create);
+//                }
+
 
             }
         });
@@ -327,6 +330,9 @@ public class EntityContextMenu extends Menu {
                         showIntelligencePanel(entity);
                         break;
                     }
+                    case summary:
+                        showSummaryPanel(entity);
+                        break;
                     case file: {
                         FilePropertyPanel dp = new FilePropertyPanel(entity);
                         final Window w = new Window();

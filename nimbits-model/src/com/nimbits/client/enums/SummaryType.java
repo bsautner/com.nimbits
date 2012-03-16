@@ -9,7 +9,17 @@ import java.util.*;
  * Time: 9:54 AM
  */
 public enum SummaryType {
-    average(0), standardDeviation(1);
+    average(0, "Average"),
+    standardDeviation(1, "Standard Deviation"),
+    skewness(2, "Skewness"),
+    sum(3, "Sum"),
+    variance(4, "Variance"),
+//    kurtosis(5, "Kurtosis"),
+    max(6, "Max"),
+    min(7, "Min")
+
+
+    ;
 
     private static final Map<Integer, SummaryType> lookup = new HashMap<Integer, SummaryType>();
 
@@ -19,9 +29,11 @@ public enum SummaryType {
     }
 
     private final int code;
+    private final String text;
 
-    private SummaryType(int code) {
+    private SummaryType(int code, String text) {
         this.code = code;
+        this.text = text;
     }
 
     public int getCode() {
@@ -32,4 +44,7 @@ public enum SummaryType {
         return lookup.get(code);
     }
 
+    public String getText() {
+        return text;
+    }
 }

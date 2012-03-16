@@ -12,6 +12,8 @@ import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.ui.helper.*;
 import com.nimbits.client.ui.icons.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
@@ -89,7 +91,6 @@ public class MainMenuBar extends ToolBar {
 
 
         CheckBox saveToNowCheckBox = new CheckBox();
-        CheckBox autoSaveCheckBox = new CheckBox();
 
         menu.add(saveToNowCheckBox);
         saveToNowCheckBox.setBoxLabel("Save with Current Time");
@@ -279,7 +280,7 @@ public class MainMenuBar extends ToolBar {
                 service.getSecret(new AsyncCallback<String>() {
                     @Override
                     public void onFailure(Throwable caught) {
-                        showError(caught);
+                        FeedbackHelper.showError(caught);
                     }
 
                     @Override
@@ -303,7 +304,13 @@ public class MainMenuBar extends ToolBar {
         public void handleEvent(final MessageBoxEvent be) {
             final String newEntityName = be.getValue();
             if (! Utils.isEmptyString(newEntityName))  {
-                final EntityName categoryName = CommonFactoryLocator.getInstance().createName(newEntityName);
+                final EntityName categoryName;
+                try {
+                    categoryName = CommonFactoryLocator.getInstance().createName(newEntityName, EntityType.category);
+                } catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
+                    return;
+                }
 
                 final EntityServiceAsync service = GWT.create(EntityService.class);
                 Entity entity = EntityModelFactory.createEntity(categoryName, EntityType.category);
@@ -312,7 +319,7 @@ public class MainMenuBar extends ToolBar {
                         new AsyncCallback<Entity>() {
                             @Override
                             public void onFailure(Throwable caught) {
-                                showError(caught);
+                                FeedbackHelper.showError(caught);
                             }
 
                             @Override
@@ -338,12 +345,18 @@ public class MainMenuBar extends ToolBar {
                         "Creating your data point channel into the cloud", "Creating: " + newEntityName);
                 box.show();
                 EntityServiceAsync service = GWT.create(EntityService.class);
-                EntityName name = CommonFactoryLocator.getInstance().createName(newEntityName);
+                EntityName name;
+                try {
+                    name = CommonFactoryLocator.getInstance().createName(newEntityName, EntityType.point);
+                } catch (NimbitsException caught) {
+                    FeedbackHelper.showError(caught);
+                    return;
+                }
                 //     Entity entity = EntityModelFactory.createEntity(name, EntityType.point);
                 service.addUpdateEntity(name, EntityType.point,  new AsyncCallback<Entity>() {
                     @Override
                     public void onFailure(Throwable caught) {
-                        showError(caught);
+                        FeedbackHelper.showError(caught);
                         box.close();
                     }
 
@@ -372,7 +385,7 @@ public class MainMenuBar extends ToolBar {
                         @Override
                         public void onFailure(Throwable caught) {
 
-                            showError(caught);
+                            FeedbackHelper.showError(caught);
                         }
 
                         @Override
@@ -397,7 +410,7 @@ public class MainMenuBar extends ToolBar {
 
             @Override
             public void onFailure(Throwable caught) {
-                showError(caught);
+                FeedbackHelper.showError(caught);
 
             }
 
@@ -461,7 +474,7 @@ public class MainMenuBar extends ToolBar {
 
                                     @Override
                                     public void onFailure(Throwable caught) {
-                                        showError(caught);
+                                        FeedbackHelper.showError(caught);
                                     }
 
                                     @Override
@@ -561,7 +574,7 @@ public class MainMenuBar extends ToolBar {
 
                             @Override
                             public void onFailure(Throwable caught) {
-                                showError(caught);
+                                FeedbackHelper.showError(caught);
 
                             }
 
@@ -611,8 +624,5 @@ public class MainMenuBar extends ToolBar {
 
     }
 
-    private void showError(Throwable caught) {
-        final MessageBox box = MessageBox.alert("Error", caught.getMessage(), null);
-        box.show();
-    }
+
 }

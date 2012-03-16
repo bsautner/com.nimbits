@@ -42,4 +42,7 @@ public interface EntityServiceAsync {
     void getEntityChildren(User u, Entity c, EntityType point, AsyncCallback<List<Entity>> async);
 
     void getEntityMap(User user, EntityType type, AsyncCallback<Map<String, Entity>> async);
+
+
+    void getSystemWideEntityMap(EntityType type, AsyncCallback<Map<String, Entity>> async);
 }

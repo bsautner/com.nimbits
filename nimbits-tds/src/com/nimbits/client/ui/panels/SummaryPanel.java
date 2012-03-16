@@ -98,7 +98,7 @@ public class SummaryPanel extends NavigationEventProvider {
     }
 
 
-    private ComboBox<SummaryTypeOption> subscriptionTypeOptionComboBox(final String title,final SummaryType selectedValue) {
+    private ComboBox<SummaryTypeOption> summaryTypeOptionComboBox(final String title,final SummaryType selectedValue) {
         ComboBox<SummaryTypeOption> combo = new ComboBox<SummaryTypeOption>();
 
         ArrayList<SummaryTypeOption> ops = new ArrayList<SummaryTypeOption>();
@@ -106,6 +106,14 @@ public class SummaryPanel extends NavigationEventProvider {
 
         ops.add(new SummaryTypeOption(SummaryType.average));
         ops.add(new SummaryTypeOption(SummaryType.standardDeviation));
+        ops.add(new SummaryTypeOption(SummaryType.min));
+        ops.add(new SummaryTypeOption(SummaryType.max));
+        ops.add(new SummaryTypeOption(SummaryType.skewness));
+        ops.add(new SummaryTypeOption(SummaryType.sum));
+        ops.add(new SummaryTypeOption(SummaryType.variance));
+
+
+
 
         ListStore<SummaryTypeOption> store = new ListStore<SummaryTypeOption>();
 
@@ -155,7 +163,7 @@ public class SummaryPanel extends NavigationEventProvider {
        // int alertSelected = (subscription == null) ? SubscriptionNotifyMethod.none.getCode() : subscription.getAlertNotifyMethod().getCode();
 
         SummaryType type =  (summary == null) ? SummaryType.average : summary.getSummaryType() ;
-        final ComboBox<SummaryTypeOption> typeCombo = subscriptionTypeOptionComboBox("Summary Type", type);
+        final ComboBox<SummaryTypeOption> typeCombo = summaryTypeOptionComboBox("Summary Type", type);
 
 
 
@@ -291,7 +299,7 @@ public class SummaryPanel extends NavigationEventProvider {
         public SummaryTypeOption(SummaryType value) {
             this.type = value;
             set(Const.PARAM_VALUE, value.getCode());
-            set(Const.Params.PARAM_NAME, value.name());
+            set(Const.Params.PARAM_NAME, value.getText());
         }
 
         public SummaryType getMethod() {

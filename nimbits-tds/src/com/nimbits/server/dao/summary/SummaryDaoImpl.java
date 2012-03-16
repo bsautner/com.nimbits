@@ -30,9 +30,7 @@ public class SummaryDaoImpl implements SummaryTransactions {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         List<SummaryEntity> results;
 
-
         try {
-
             Query q = pm.newQuery(SummaryEntity.class, "uuid==u");
             q.declareParameters("String u");
             q.setRange(0, 1);
@@ -50,15 +48,11 @@ public class SummaryDaoImpl implements SummaryTransactions {
             else {
                 SummaryEntity s = new SummaryEntity(summary);
                 pm.makePersistent(s);
-
-            }
-
-
+             }
         }
         finally {
             pm.close();
         }
-
     }
 
     @Override
@@ -80,6 +74,31 @@ public class SummaryDaoImpl implements SummaryTransactions {
             else {
                 return null;
             }
+        }
+        finally {
+            pm.close();
+        }
+    }
+
+    @Override
+    public void updateLastProcessed(Entity entity) {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        List<SummaryEntity> results;
+
+        try {
+            Query q = pm.newQuery(SummaryEntity.class, "uuid==u");
+            q.declareParameters("String u");
+            q.setRange(0, 1);
+            results = (List<SummaryEntity>) q.execute(entity.getEntity());
+            if (results.size() > 0) {
+                SummaryEntity result = results.get(0);
+                Transaction tx = pm.currentTransaction();
+                tx.begin();
+                result.setLastProcessed(new Date());
+                tx.commit();
+                pm.flush();
+            }
+
         }
         finally {
             pm.close();

@@ -14,4 +14,6 @@ public interface SummaryTransactions {
     void addOrUpdateSummary(final Entity entity,final Summary summary);
 
     Summary readSummary(final Entity entity);
+
+    void updateLastProcessed(Entity entity);
 }

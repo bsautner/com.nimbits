@@ -17,4 +17,6 @@ public interface SummaryService  extends RemoteService {
     Summary readSummary(Entity entity) throws NimbitsException;
 
     Entity addUpdateSummary(Entity entity, Summary update, EntityName name) throws NimbitsException;
+
+    void updateLastProcessed(Entity entity);
 }

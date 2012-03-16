@@ -10,4 +10,5 @@ public interface SummaryServiceAsync {
 
     void addUpdateSummary(Entity entity, Summary update, EntityName name, AsyncCallback<Entity> asyncCallback);
 
+    void updateLastProcessed(Entity entity, AsyncCallback<Void> async);
 }

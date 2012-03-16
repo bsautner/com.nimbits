@@ -24,6 +24,7 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.common.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.ui.controls.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.*;
@@ -34,6 +35,7 @@ import com.nimbits.client.model.value.*;
 import com.nimbits.client.service.datapoints.*;
 import com.nimbits.client.service.entity.*;
 import com.nimbits.client.service.recordedvalues.*;
+import com.nimbits.client.ui.helper.*;
 
 import java.util.*;
 
@@ -66,6 +68,7 @@ class NavigationPanel extends NavigationEventProvider {
 
 
     public void setSaveWithCurrentTime(boolean saveWithCurrentTime) {
+        //TODO wire up to menu
         this.saveWithCurrentTime = saveWithCurrentTime;
     }
 
@@ -87,7 +90,7 @@ class NavigationPanel extends NavigationEventProvider {
 
     }
 
-    private void createTree(final List<Entity> result) {
+    private void createTree(final List<Entity> result) throws NimbitsException {
         final TreeGridDropTarget target = new TreeGridDropTarget(tree);
         target.setAllowSelfAsSource(true);
         target.setFeedback(Feedback.BOTH);
@@ -219,7 +222,7 @@ class NavigationPanel extends NavigationEventProvider {
         // return model;
     }
 
-    private GxtModel treeStoreBuilder(final List<Entity> result) {
+    private GxtModel treeStoreBuilder(final List<Entity> result) throws NimbitsException {
 
         final List<ModelData> model = new ArrayList<ModelData>();
         parents = new ArrayList<String>();
@@ -387,6 +390,7 @@ class NavigationPanel extends NavigationEventProvider {
                         break;
                     case summary:
                         context.showSummaryPanel(model.getBaseEntity());
+                        break;
                     case intelligence:
                         context.showIntelligencePanel(model.getBaseEntity());
                         break;
@@ -466,7 +470,11 @@ class NavigationPanel extends NavigationEventProvider {
                     }
                 }
                 else {
-                    createTree(result);
+                    try {
+                        createTree(result);
+                    } catch (NimbitsException e) {
+                        FeedbackHelper.showError(e);
+                    }
                     doLayout();
                 }
 

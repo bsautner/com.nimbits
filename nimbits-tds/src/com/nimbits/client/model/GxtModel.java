@@ -16,6 +16,7 @@ package com.nimbits.client.model;
 import com.extjs.gxt.ui.client.data.*;
 import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
@@ -44,9 +45,9 @@ public class GxtModel extends BaseTreeModel implements Serializable {
     public GxtModel(Entity entity) {
         setEntityValues(entity);
     }
-    public GxtModel(User user) {
+    public GxtModel(User user) throws NimbitsException {
         this.uuid = user.getUuid();
-        this.name = CommonFactoryLocator.getInstance().createName(user.getEmail().getValue());
+        this.name = CommonFactoryLocator.getInstance().createName(user.getEmail().getValue(), EntityType.user);
         this.alertType = AlertType.OK;
         this.entityType = EntityType.user;
         this.isReadOnly = true;

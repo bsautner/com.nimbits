@@ -13,6 +13,7 @@
 
 package com.nimbits.server.calculation;
 
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.calculation.*;
@@ -40,27 +41,18 @@ public class CalculationServlet extends HttpServlet {
 
         String json = req.getParameter(Const.Params.PARAM_JSON);
         String nameParam = req.getParameter(Const.Params.PARAM_NAME);
-
-
         Calculation c = GsonFactory.getInstance().fromJson(json, CalculationModel.class);
-        EntityName name = CommonFactoryLocator.getInstance().createName(nameParam);
+        EntityName name;
         User u;
         try {
             u = getServerInstance().getHttpRequestUser(req);
-        } catch (NimbitsException e) {
-            u = null;
-        }
-
-
-        if ((u != null) && (!u.isRestricted()) && (c != null)) {
-            try {
+            name = CommonFactoryLocator.getInstance().createName(nameParam, EntityType.calculation);
+            if ((u != null) && (!u.isRestricted()) && (c != null)) {
                 CalculationServiceFactory.getInstance().addUpdateCalculation(u, null, name, c);
-            } catch (NimbitsException ignored) {
-
             }
+        } catch (NimbitsException ignored) {
 
         }
-
 
 
     }

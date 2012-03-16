@@ -14,21 +14,16 @@
 package com.nimbits.server.dao.settings;
 
 import com.nimbits.*;
-import com.nimbits.client.common.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
 import com.nimbits.server.orm.*;
 import com.nimbits.server.settings.*;
 
 import javax.jdo.*;
 import java.util.*;
-import java.util.logging.*;
 
+
+@SuppressWarnings("unchecked")
 public class SettingsDAOImpl implements SettingTransactions {
-
-    private static final Logger log = Logger.getLogger(SettingsDAOImpl.class.getName());
-
-    private static String serverSecret = "";
 
 
     @Override
@@ -40,7 +35,6 @@ public class SettingsDAOImpl implements SettingTransactions {
             Query q = pm.newQuery(ServerSetting.class, "name == n");
             q.setRange(0, 1);
             q.declareParameters("String n");
-            @SuppressWarnings(Const.WARNING_UNCHECKED)
             List<ServerSetting> a = (List<ServerSetting>) q.execute(paramName);
             if (a.size() > 0) {
                 s = a.get(0);
@@ -71,7 +65,6 @@ public class SettingsDAOImpl implements SettingTransactions {
             Query q = pm.newQuery(ServerSetting.class, "name == n");
             q.setRange(0, 1);
             q.declareParameters("String n");
-            @SuppressWarnings(Const.WARNING_UNCHECKED)
             List<ServerSetting> a = (List<ServerSetting>) q.execute(name);
             if (a.size() > 0) {
                 Transaction tx = pm.currentTransaction();
@@ -126,43 +119,5 @@ public class SettingsDAOImpl implements SettingTransactions {
 
     }
 
-    @Override
-    public String getServerSecret() {
-        String retVal = UUID.randomUUID() + Const.MESSAGE_SERVER_SECRET_ERROR;
 
-
-        if (!Utils.isEmptyString(serverSecret)) {
-            retVal = serverSecret;
-        } else {
-
-            final PersistenceManager pm = PMF.get().getPersistenceManager();
-
-            try {
-                ServerSetting s;
-                Query q = pm.newQuery(ServerSetting.class, "name == n");
-                q.setRange(0, 1);
-                q.declareParameters("String n");
-                @SuppressWarnings(Const.WARNING_UNCHECKED)
-                List<ServerSetting> a = (List<ServerSetting>) q.execute(Const.Params.PARAM_SECRET);
-                if (a.size() > 0) {
-                    s = a.get(0);
-                    retVal = s.getValue();
-                    if (!Utils.isEmptyString(retVal)) {
-                        serverSecret = retVal;
-                    }
-                } else {
-                    // just in case someone tried to submit the error message as the
-                    // secret, we generate a random return string with the error.
-                    retVal = UUID.randomUUID() + Const.MESSAGE_SERVER_SECRET_ERROR;
-                }
-
-            }  finally {
-                pm.close();
-            }
-
-        }
-
-        return retVal;
-
-    }
 }

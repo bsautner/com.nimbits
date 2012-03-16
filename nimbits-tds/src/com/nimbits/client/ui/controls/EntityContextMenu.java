@@ -26,14 +26,14 @@ import com.google.gwt.user.client.ui.*;
 import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.service.xmpp.*;
-import com.nimbits.client.ui.helper.*;
-import com.nimbits.client.ui.icons.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
-import com.nimbits.client.ui.panels.*;
 import com.nimbits.client.service.entity.*;
+import com.nimbits.client.service.xmpp.*;
+import com.nimbits.client.ui.helper.*;
+import com.nimbits.client.ui.icons.*;
+import com.nimbits.client.ui.panels.*;
 
 import java.util.*;
 
@@ -502,7 +502,7 @@ public class EntityContextMenu extends Menu {
                 try {
                     name = CommonFactoryLocator.getInstance().createName(newEntityName, EntityType.resource);
                 } catch (NimbitsException caught) {
-                    FeedbackHelper.showError(caught);;
+                    FeedbackHelper.showError(caught);
                 }
                 serviceAsync.createXmppResource(currentModel.getBaseEntity(), name, new AsyncCallback<Entity>() {
                     @Override
@@ -572,7 +572,7 @@ public class EntityContextMenu extends Menu {
     }
 
     public void showCalcPanel(final Entity entity) {
-        CalculationPanel dp = new CalculationPanel(entity, settings);
+        CalculationPanel dp = new CalculationPanel(entity);
 
         final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
         w.setWidth(600);

@@ -12,7 +12,9 @@ import java.util.*;
  */
 public enum MemCacheKey {
     activePoints(0, Const.CONST_SERVER_VERSION + Const.KEY_ACTIVE_POINTS),
-    valueCache(1, Const.CONST_SERVER_VERSION + Const.KEY_VALUE)
+    valueCache(1, Const.CONST_SERVER_VERSION + Const.KEY_VALUE),
+    allSettings(2, Const.CONST_SERVER_VERSION + Const.KEY_ALL_SETTINGS),
+    setting(3, Const.CONST_SERVER_VERSION + Const.KEY_SETTING)
     ;
 
     private static final Map<Integer, MemCacheKey> lookup = new HashMap<Integer, MemCacheKey>();

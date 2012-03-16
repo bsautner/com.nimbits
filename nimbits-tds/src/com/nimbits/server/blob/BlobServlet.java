@@ -43,7 +43,7 @@ public class BlobServlet extends HttpServlet {
             throws ServletException, IOException {
         final Map<String,List<BlobKey>> blobs = blobstoreService.getUploads(req);
         final BlobKey blobKey = blobs.get(Const.PARAM_MY_FILE).get(0);
-        String diagramDescParam = req.getParameter(Const.PARAM_DESCRIPTION);
+//        String diagramDescParam = req.getParameter(Const.PARAM_DESCRIPTION);
         final String entityId = req.getParameter(Const.PARAM_FILE_ID);
         final String uploadType = req.getParameter(Const.PARAM_UPLOAD_TYPE_HIDDEN_FIELD);
         final String email = req.getParameter(Const.PARAM_EMAIL_HIDDEN_FIELD);

@@ -26,15 +26,14 @@ import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exceptions.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.entity.*;
-import com.nimbits.client.ui.helper.*;
-import com.nimbits.client.ui.panels.*;
 import com.nimbits.client.service.*;
 import com.nimbits.client.service.entity.*;
 import com.nimbits.client.service.settings.*;
 import com.nimbits.client.service.twitter.*;
+import com.nimbits.client.ui.helper.*;
+import com.nimbits.client.ui.panels.*;
 
 import java.util.*;
 
@@ -165,9 +164,9 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         loginService.login(GWT.getHostPageBaseURL(),
                 new AsyncCallback<LoginInfo>() {
                     @Override
-                    public void onFailure(Throwable error) {
-                        GWT.log(error.getMessage(), error);
-                        handleError(error);
+                    public void onFailure(Throwable caught) {
+                        GWT.log(caught.getMessage(), caught);
+                        FeedbackHelper.showError(caught);
                     }
 
                     @Override
@@ -201,7 +200,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
             @Override
             public void onFailure(Throwable caught) {
-                showError(caught);
+                FeedbackHelper.showError(caught);
             }
 
             @Override
@@ -282,7 +281,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         service.getEntityByUUID(uuid, new AsyncCallback<Entity>() {
             @Override
             public void onFailure(Throwable caught) {
-                showError(caught);
+                FeedbackHelper.showError(caught);
             }
 
             @Override
@@ -310,8 +309,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         });
     }
 
-    private void loadDiagramView(final Entity diagram,
-                                 final ClientType clientType) {
+    private void loadDiagramView(final Entity diagram) {
 
         viewport = new Viewport();
         viewport.setLayout(new BorderLayout());
@@ -324,7 +322,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
          contentPanel.setFrame(false);
 
 
-        final DiagramPanel diagramPanel = new DiagramPanel(diagram, false, Window.getClientWidth(), Window.getClientHeight());
+        final DiagramPanel diagramPanel = new DiagramPanel(diagram, false);
 
         diagramPanel.setHeight("100%");
         contentPanel.add(diagramPanel);
@@ -355,7 +353,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
                     @Override
                     public void onFailure(Throwable caught) {
-                        handleError(caught);
+                        FeedbackHelper.showError(caught);
 
                     }
 
@@ -384,7 +382,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         service.getEntityByUUID(uuid, new AsyncCallback<Entity>() {
             @Override
             public void onFailure(Throwable caught) {
-                 showError(caught);
+                FeedbackHelper.showError(caught);
             }
 
             @Override
@@ -398,7 +396,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
                         break;
                     case file:
                       if (EntityOpenHelper.isSVG(entity)) {
-                          loadDiagramView(entity, ClientType.other);
+                          loadDiagramView(entity);
                       }
                       else {
                           EntityOpenHelper.showBlob(entity);
@@ -430,21 +428,6 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
     }
 
-    private void handleError(Throwable error) {
 
 
-        if (error instanceof NotLoggedInException) {
-            Window.Location.replace(loginInfo.getLogoutUrl());
-        } else if (error instanceof ObjectProtectionException) {
-            Window.Location.replace(Const.PATH_OBJECT_PROTECTION_URL);
-        } else {
-            Window.alert(error.getMessage());
-
-            // Window.Location.replace(Const.PATH_NIMBITS_HOME);
-        }
-    }
-    private void showError(Throwable caught) {
-        final MessageBox box = MessageBox.alert("Error", caught.getMessage(), null);
-        box.show();
-    }
 }

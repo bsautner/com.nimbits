@@ -38,16 +38,17 @@ import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine.*;
 import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.ui.icons.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.timespan.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.service.recordedvalues.*;
+import com.nimbits.client.ui.helper.*;
+import com.nimbits.client.ui.icons.*;
 
 import java.util.*;
-
+ @SuppressWarnings("unchecked")
 public class AnnotatedTimeLinePanel extends LayoutContainer {
     private final DateTimeFormat fmt = DateTimeFormat.getFormat(Const.FORMAT_DATE_TIME);
 
@@ -68,7 +69,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
     @Override
     protected void onResize(int width, int height) {
         super.onResize(width, height);
-        refreshSize(width, height);
+        refreshSize(width);
     }
 
     // ChartRemoved Click Handlers
@@ -111,11 +112,11 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
     }
     //data
 
-    private void addPointDataToTable(final GxtModel entity, final List<Value> values) {
+    private void addPointDataToTable(final GxtModel entity, final List<Value> values) throws NimbitsException {
         int PointColumn;
         boolean found = false;
 
-        removePointDataFromTable(CommonFactoryLocator.getInstance().createName(Const.DEFAULT_EMPTY_COL));
+        removePointDataFromTable(CommonFactoryLocator.getInstance().createName(Const.DEFAULT_EMPTY_COL, EntityType.point));
 
         int r = dataTable.getNumberOfColumns();
         int CurrentRow = dataTable.getNumberOfRows();
@@ -184,7 +185,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
     //end data
 
 
-    public void addValue(final GxtModel model, final Value value) {
+    public void addValue(final GxtModel model, final Value value) throws NimbitsException {
         if (points.size() == 0 || points.containsKey(model.getName()))  {
             if (timespan != null) {
                 Date end = (timespan.getEnd().getTime() > value.getTimestamp().getTime()) ? value.getTimestamp() : timespan.getEnd();
@@ -278,7 +279,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
         dataTable.addColumn(ColumnType.STRING, "text0");
     }
 
-    public void refreshSize(int width, int height) {
+    public void refreshSize(int width) {
         if (width > 0 && line != null) {
             Runnable onLoadCallback = new Runnable() {
                 @Override
@@ -365,7 +366,11 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
                 }
 
 
-                addPointDataToTable(model, result);
+                try {
+                    addPointDataToTable(model, result);
+                } catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
+                }
 
                 drawChart();
 
@@ -391,11 +396,16 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
             @Override
             public void onFailure(final Throwable caught) {
                 box.close();
+                FeedbackHelper.showError(caught);
             }
 
             @Override
             public void onSuccess(final List<Value> result) {
-                addPointDataToTable(p, result);
+                try {
+                    addPointDataToTable(p, result);
+                } catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
+                }
                 if (result.size() > 0) {
                     loadDataSegment(p, end + 1, end + 1000);
                 } else {
@@ -416,12 +426,17 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
         dataService.getCache(model.getBaseEntity(), new AsyncCallback<List<Value>>() {
             @Override
             public void onFailure(final Throwable caught) {
+                FeedbackHelper.showError(caught);
                 box.close();
             }
 
             @Override
             public void onSuccess(final List<Value> result) {
-                addPointDataToTable(model, result);
+                try {
+                    addPointDataToTable(model, result);
+                } catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
+                }
 
                 box.close();
             }
@@ -471,8 +486,13 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
             points.remove(entity.getName());
         }
         if (points.size() == 0) {
-            removePointDataFromTable(CommonFactoryLocator.getInstance().createName(Const.DEFAULT_EMPTY_COL));
-            addEmptyDataToTable();
+            try {
+                removePointDataFromTable(CommonFactoryLocator.getInstance().createName(Const.DEFAULT_EMPTY_COL, EntityType.point));
+                addEmptyDataToTable();
+            } catch (NimbitsException e) {
+                FeedbackHelper.showError(e);
+            }
+
         }
 
         drawChart();

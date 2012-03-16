@@ -2,7 +2,6 @@ package com.nimbits.client.service.entity;
 
 import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
 

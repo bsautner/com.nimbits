@@ -28,12 +28,12 @@ import com.extjs.gxt.ui.client.widget.toolbar.*;
 import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
-import com.nimbits.client.ui.controls.*;
-import com.nimbits.client.ui.icons.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.service.datapoints.*;
 import com.nimbits.client.service.entity.*;
+import com.nimbits.client.ui.controls.*;
+import com.nimbits.client.ui.icons.*;
 
 import java.util.*;
 

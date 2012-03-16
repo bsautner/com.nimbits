@@ -13,16 +13,16 @@ import com.google.gwt.user.client.ui.*;
 import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.ui.helper.*;
-import com.nimbits.client.ui.icons.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.connection.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.entity.*;
-import com.nimbits.client.ui.panels.*;
 import com.nimbits.client.service.entity.*;
 import com.nimbits.client.service.user.*;
+import com.nimbits.client.ui.helper.*;
+import com.nimbits.client.ui.icons.*;
+import com.nimbits.client.ui.panels.*;
 
 import java.util.*;
 

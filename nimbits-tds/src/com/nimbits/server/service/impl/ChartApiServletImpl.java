@@ -182,15 +182,15 @@ public class ChartApiServletImpl extends HttpServlet {
         out.close();
     }
 
-    private List<EntityName> createPointList(String pointsListParam, String pointParamName) {
+    private List<EntityName> createPointList(String pointsListParam, String pointParamName) throws NimbitsException {
         final List<EntityName> pointList = new ArrayList<EntityName>();
         if (!Utils.isEmptyString(pointParamName)) {
-            pointList.add(CommonFactoryLocator.getInstance().createName(pointParamName));
+            pointList.add(CommonFactoryLocator.getInstance().createName(pointParamName, EntityType.point));
         } else if (!Utils.isEmptyString(pointsListParam)) {
             final String[] p1 = (pointsListParam.split(","));
             final List<String> pointsParams = Arrays.asList(p1);
             for (String pn : pointsParams) {
-                pointList.add(CommonFactoryLocator.getInstance().createName(pn));
+                pointList.add(CommonFactoryLocator.getInstance().createName(pn, EntityType.point));
             }
         }
         return pointList;

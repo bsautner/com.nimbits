@@ -26,17 +26,18 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
-import com.nimbits.client.ui.controls.*;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.ui.icons.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.calculation.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.service.calculation.*;
 import com.nimbits.client.service.entity.*;
+import com.nimbits.client.ui.controls.*;
+import com.nimbits.client.ui.helper.*;
+import com.nimbits.client.ui.icons.*;
 
-import java.util.*;
 
 /**
  * Created by Benjamin Sautner
@@ -51,10 +52,10 @@ public class CalculationPanel extends NavigationEventProvider {
 
     private Entity entity;
     private Calculation calculation;
-    private Map<String, String> settings;
-    public CalculationPanel(Entity entity, Map<String, String> settings) {
+
+    public CalculationPanel(Entity entity) {
         this.entity = entity;
-        this.settings = settings;
+
 
     }
     @Override
@@ -176,7 +177,13 @@ public class CalculationPanel extends NavigationEventProvider {
                 final MessageBox box = MessageBox.wait("Progress",
                         "Creating Calculation", "please wait...");
                 box.show();
-                EntityName name = CommonFactoryLocator.getInstance().createName(nameField.getValue());
+                EntityName name;
+                try {
+                    name = CommonFactoryLocator.getInstance().createName(nameField.getValue(), EntityType.calculation);
+                } catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
+                    return;
+                }
 
 
                 final Calculation update = createCalculation(xCombo, yCombo, zCombo, targetcombo, enabled, formula);

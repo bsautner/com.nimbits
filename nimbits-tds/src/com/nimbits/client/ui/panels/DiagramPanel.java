@@ -23,6 +23,7 @@ import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
@@ -37,7 +38,6 @@ import org.vectomatic.dom.svg.ui.*;
 import org.vectomatic.dom.svg.utils.*;
 
 import java.util.*;
-import java.util.logging.*;
 
 
 /**
@@ -50,30 +50,25 @@ public class DiagramPanel extends LayoutContainer {
 
     private SVGImage image;
     private OMSVGSVGElement svg;
-    private final ContentPanel mainPanel = new ContentPanel();
     private Map<EntityName, Entity> pointEntityMap = new HashMap<EntityName, Entity>();
     private Map<EntityName, Point> pointMap = new HashMap<EntityName, Point>();
     private Map<EntityName, Entity> diagrams = new HashMap<EntityName, Entity>();
 
-    private final boolean readOnly;
     private final RecordedValueServiceAsync recordedValueService = GWT.create(RecordedValueService.class);
     //private final Set<EntityName> pointsInDiagram = new HashSet<EntityName>();
     private final Set<EntityName> diagramsInDiagram = new HashSet<EntityName>();
     private final Map<String, String> originalFill = new HashMap<String, String>();
 
-    public Entity getDiagram() {
-        return diagram;
-    }
 
     private final Entity diagram;
 
 
 
-    public DiagramPanel(final Entity aDiagram, boolean showHeader, final int w, final int h) {
+    public DiagramPanel(final Entity aDiagram, boolean showHeader) {
         final FlowPanel imagePanel = new FlowPanel();
         final String resourceUrl = Const.PATH_BLOB_SERVICE + "?" + Const.Params.PARAM_BLOB_KEY + "=" + aDiagram.getBlobKey();
         this.diagram = aDiagram;
-        this.readOnly = aDiagram.isReadOnly();
+        ContentPanel mainPanel = new ContentPanel();
         mainPanel.setFrame(true);
         mainPanel.add(imagePanel);
         mainPanel.setHeaderVisible(showHeader);
@@ -105,8 +100,13 @@ public class DiagramPanel extends LayoutContainer {
                             bBox.assignTo(viewBox);
                         }
 
-                        addHandlers();
-                        refreshDiagramValues();
+                        try {
+                            addHandlers();
+                            refreshDiagramValues();
+                        } catch (NimbitsException e) {
+                          FeedbackHelper.showError(e);
+                        }
+
 
 
 
@@ -132,11 +132,17 @@ public class DiagramPanel extends LayoutContainer {
 
 
     private void createRefreshTimer() {
-        Timer updater = new Timer() {
+        final Timer updater = new Timer() {
             @Override
             public void run() {
 
-                refreshDiagramValues();
+                try {
+                    refreshDiagramValues();
+                } catch (NimbitsException e) {
+
+
+                    FeedbackHelper.showError(e);
+                }
 
             }
         };
@@ -146,7 +152,7 @@ public class DiagramPanel extends LayoutContainer {
     }
 
 
-    private void addHandler(final OMNode node) {
+    private void addHandler(final OMNode node) throws NimbitsException {
 
         if (node instanceof OMSVGTextElement) {
             processOMSVGTextElement((OMSVGTextElement) node);
@@ -165,7 +171,7 @@ public class DiagramPanel extends LayoutContainer {
 
     }
 
-    private void addHandlers()  {
+    private void addHandlers() throws NimbitsException {
 
         for (OMNode node : svg.getChildNodes()) {
             addHandler(node);
@@ -216,7 +222,7 @@ public class DiagramPanel extends LayoutContainer {
 
 
 
-    private void refreshDiagramValues() {
+    private void refreshDiagramValues() throws NimbitsException {
 
         for (final OMNode node : svg.getChildNodes()) {
             refreshNodeValue(node);
@@ -226,7 +232,7 @@ public class DiagramPanel extends LayoutContainer {
 
     }
 
-    private void refreshNodeValue(final OMNode node)  {
+    private void refreshNodeValue(final OMNode node) throws NimbitsException {
         if (node != null) {
 
             if (node instanceof OMSVGTextElement) {
@@ -255,34 +261,34 @@ public class DiagramPanel extends LayoutContainer {
 
     //OMSVGTextElement
 
-    private void processOMSVGTextElement(final OMSVGTextElement o) {
+    private void processOMSVGTextElement(final OMSVGTextElement o) throws NimbitsException {
         final String pointNameParam = o.getAttribute(Const.Params.PARAM_POINT);
         final String action = o.getAttribute(Const.Params.PARAM_ACTION);
         final String diagramNameParam = o.getAttribute(Const.Params.PARAM_DIAGRAM);
         final String url = o.getAttribute(Const.PARAM_URL);
         if (!Utils.isEmptyString(action)) {
-            final String[] actions = action.split(",");
+           // final String[] actions = action.split(",");
             if (!Utils.isEmptyString(pointNameParam)) {
-                EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam);
+                EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
 
-                addTextPointActions(o, pointName, actions);
+                addTextPointActions(o, pointName);
             }
             if (!Utils.isEmptyString(diagramNameParam)) {
-                EntityName diagramName = CommonFactoryLocator.getInstance().createName(diagramNameParam);
+                EntityName diagramName = CommonFactoryLocator.getInstance().createName(diagramNameParam, EntityType.file);
                 if (!diagramsInDiagram.contains(diagramName)) {
                     diagramsInDiagram.add(diagramName);
                 }
-                addNestedTextDiagramActions(o, diagramName, actions);
+                addNestedTextDiagramActions(o, diagramName);
             }
             if (!Utils.isEmptyString(url)) {
-                addNestedTextUrlActions(o, url, actions);
+                addNestedTextUrlActions(o, url);
             }
         }
 
 
     }
 
-    private void addTextPointActions(final OMSVGTextElement t, final EntityName name, final String[] actions) {
+    private void addTextPointActions(final OMSVGTextElement t, final EntityName name) {
         originalFill.put(t.getId(), t.getStyle().getSVGProperty(SVGConstants.CSS_FILL_VALUE));
         // com.google.gwt.user.client.Window.alert("Adding handler " + t.getId());
 
@@ -321,7 +327,7 @@ public class DiagramPanel extends LayoutContainer {
 
     }
 
-    private void addNestedTextDiagramActions(final OMSVGTextElement t, final EntityName diagramName, final String[] actions) {
+    private void addNestedTextDiagramActions(final OMSVGTextElement t, final EntityName diagramName) {
         t.addMouseDownHandler(new MouseDownHandler() {
             @Override
             public void onMouseDown(MouseDownEvent mouseDownEvent) {
@@ -338,7 +344,7 @@ public class DiagramPanel extends LayoutContainer {
 
     }
 
-    private void addNestedTextUrlActions(final OMSVGTextElement t, final String url, final String[] actions) {
+    private void addNestedTextUrlActions(final OMSVGTextElement t, final String url) {
         t.addMouseDownHandler(new MouseDownHandler() {
             @Override
             public void onMouseDown(MouseDownEvent mouseDownEvent) {
@@ -351,13 +357,13 @@ public class DiagramPanel extends LayoutContainer {
 
     }
 
-    private void updateTextBoxValue(final OMSVGTextElement o) {
+    private void updateTextBoxValue(final OMSVGTextElement o) throws NimbitsException {
         final String pointNameParam = o.getAttribute(Const.Params.PARAM_POINT);
         final String action = o.getAttribute(Const.Params.PARAM_ACTION);
 
         if (!Utils.isEmptyString(action)) {
             final String[] actions = action.split(",");
-            final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam);
+            final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
             Entity entity = pointEntityMap.get(pointName);
             if (entity != null) {
                 if (!Utils.isEmptyString(pointNameParam) && pointEntityMap.containsKey(pointName)) {
@@ -450,33 +456,33 @@ public class DiagramPanel extends LayoutContainer {
     }
     //PATH
 
-    private void processOMSVGPathElement(final OMSVGPathElement o) {
+    private void processOMSVGPathElement(final OMSVGPathElement o) throws NimbitsException {
         final String pointNameParam = o.getAttribute(Const.Params.PARAM_POINT);
         final String action = o.getAttribute(Const.Params.PARAM_ACTION);
         final String diagramNameParam = o.getAttribute(Const.Params.PARAM_DIAGRAM);
         final String url = o.getAttribute(Const.PARAM_URL);
         if (!Utils.isEmptyString(action)) {
-            final String[] actions = action.split(",");
+           /// final String[] actions = action.split(",");
             if (!Utils.isEmptyString(pointNameParam)) {
-                EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam);
-                addPathPointActions(o, pointName, actions);
+                EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
+                addPathPointActions(o, pointName);
             }
             if (!Utils.isEmptyString(diagramNameParam)) {
-                EntityName diagramName = CommonFactoryLocator.getInstance().createName(diagramNameParam);
+                EntityName diagramName = CommonFactoryLocator.getInstance().createName(diagramNameParam, EntityType.file);
                 if (!diagramsInDiagram.contains(diagramName)) {
                     diagramsInDiagram.add(diagramName);
                 }
-                addNestedPathDiagramActions(o, diagramName, actions);
+                addNestedPathDiagramActions(o, diagramName);
             }
             if (!Utils.isEmptyString(url)) {
-                addPathUrlActions(o, url, actions);
+                addPathUrlActions(o, url);
             }
         }
 
 
     }
 
-    private void addPathPointActions(final OMSVGPathElement t, final EntityName pointName, final String[] actions) {
+    private void addPathPointActions(final OMSVGPathElement t, final EntityName pointName) {
         originalFill.put(t.getId(), t.getStyle().getSVGProperty(SVGConstants.CSS_FILL_VALUE));
         t.addMouseDownHandler(new MouseDownHandler() {
 
@@ -510,7 +516,7 @@ public class DiagramPanel extends LayoutContainer {
 
     }
 
-    private void addNestedPathDiagramActions(final OMSVGPathElement t, final EntityName diagramName, final String[] actions) {
+    private void addNestedPathDiagramActions(final OMSVGPathElement t, final EntityName diagramName) {
         t.addMouseDownHandler(new MouseDownHandler() {
             @Override
             public void onMouseDown(final MouseDownEvent mouseDownEvent) {
@@ -527,13 +533,13 @@ public class DiagramPanel extends LayoutContainer {
 
     }
 
-    private void updatePathValue(final OMSVGPathElement o)  {
+    private void updatePathValue(final OMSVGPathElement o) throws NimbitsException {
         final String pointNameParam = o.getAttribute(Const.Params.PARAM_POINT);
         final String action = o.getAttribute(Const.Params.PARAM_ACTION);
 
         if (!Utils.isEmptyString(action)) {
             final String[] actions = action.split(",");
-            final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam);
+            final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
             if (!Utils.isEmptyString(pointNameParam) && pointEntityMap.containsKey(pointName)) {
 
                 recordedValueService.getCurrentValue(diagram, new AsyncCallback<Value>() {
@@ -613,7 +619,7 @@ public class DiagramPanel extends LayoutContainer {
         }
     }
 
-    private void addPathUrlActions(final OMSVGPathElement t, final String url, final String[] actions) {
+    private void addPathUrlActions(final OMSVGPathElement t, final String url) {
         t.addMouseDownHandler(new MouseDownHandler() {
             @Override
             public void onMouseDown(MouseDownEvent mouseDownEvent) {
@@ -627,31 +633,31 @@ public class DiagramPanel extends LayoutContainer {
 
     //rect
 
-    private void processOMSVGRectElement(OMSVGRectElement o) {
+    private void processOMSVGRectElement(OMSVGRectElement o) throws NimbitsException {
         final String pointNameParam = o.getAttribute(Const.Params.PARAM_POINT);
         final String action = o.getAttribute(Const.Params.PARAM_ACTION);
         final String diagramNameParam = o.getAttribute(Const.Params.PARAM_DIAGRAM);
         final String url = o.getAttribute(Const.PARAM_URL);
         if (!Utils.isEmptyString(action)) {
-            final String[] actions = action.split(",");
+//            final String[] actions = action.split(",");
             if (!Utils.isEmptyString(pointNameParam)) {
-                final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam);
-                addRectPointActions(o, pointName, actions);
+                final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
+                addRectPointActions(o, pointName);
             }
             if (!Utils.isEmptyString(diagramNameParam)) {
-                EntityName diagramName = CommonFactoryLocator.getInstance().createName(diagramNameParam);
+                EntityName diagramName = CommonFactoryLocator.getInstance().createName(diagramNameParam, EntityType.file);
                 if (!diagramsInDiagram.contains(diagramName)) {
                     diagramsInDiagram.add(diagramName);
                 }
-                addNestedRectDiagramActions(o, diagramName, actions);
+                addNestedRectDiagramActions(o, diagramName);
             }
             if (!Utils.isEmptyString(url)) {
-                addRectUrlActions(o, url, actions);
+                addRectUrlActions(o, url);
             }
         }
     }
 
-    private void addRectPointActions(final OMSVGRectElement t, final EntityName pointName, final String[] actions) {
+    private void addRectPointActions(final OMSVGRectElement t, final EntityName pointName) {
         originalFill.put(t.getId(), t.getStyle().getSVGProperty(SVGConstants.CSS_FILL_VALUE));
         t.addMouseDownHandler(new MouseDownHandler() {
 
@@ -685,7 +691,7 @@ public class DiagramPanel extends LayoutContainer {
 
     }
 
-    private void addNestedRectDiagramActions(final OMSVGRectElement t, final EntityName diagramName, final String[] actions) {
+    private void addNestedRectDiagramActions(final OMSVGRectElement t, final EntityName diagramName) {
         t.addMouseDownHandler(new MouseDownHandler() {
             @Override
             public void onMouseDown(MouseDownEvent mouseDownEvent) {
@@ -700,13 +706,13 @@ public class DiagramPanel extends LayoutContainer {
         });
     }
 
-    private void updateRectValue(final OMSVGRectElement o)  {
+    private void updateRectValue(final OMSVGRectElement o) throws NimbitsException {
         final String pointNameParam = o.getAttribute(Const.Params.PARAM_POINT);
         final String action = o.getAttribute(Const.Params.PARAM_ACTION);
 
         if (!Utils.isEmptyString(action)) {
             final String[] actions = action.split(",");
-            final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam);
+            final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
             if (!Utils.isEmptyString(pointNameParam) && pointEntityMap.containsKey(pointName)) {
                 recordedValueService.getCurrentValue(diagram, new AsyncCallback<Value>() {
 
@@ -781,7 +787,7 @@ public class DiagramPanel extends LayoutContainer {
         }
     }
 
-    private void addRectUrlActions(final OMSVGRectElement t, final String url, final String[] actions) {
+    private void addRectUrlActions(final OMSVGRectElement t, final String url) {
         t.addMouseDownHandler(new MouseDownHandler() {
             @Override
             public void onMouseDown(MouseDownEvent mouseDownEvent) {

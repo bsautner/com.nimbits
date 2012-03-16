@@ -16,6 +16,7 @@ import java.util.*;
  * Date: 3/16/12
  * Time: 11:13 AM
  */
+@SuppressWarnings("unchecked")
 public class SummaryDaoImpl implements SummaryTransactions {
 
     private final User u;

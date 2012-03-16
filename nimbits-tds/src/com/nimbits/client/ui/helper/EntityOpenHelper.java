@@ -17,7 +17,7 @@ public class EntityOpenHelper {
         if (isSVG(entity)) {
             openNewEntityWindow(entity);
         }
-        else if (entity.getEntity().equals(EntityType.file)) {
+        else if (entity.getEntityType().equals(EntityType.file)) {
            showBlob(entity);
         }
         else {

@@ -29,6 +29,8 @@ public class Const {
     public static final String KEY_ACTIVE_POINTS = "KEY_ACTIVE_POINTS";
     public static final String KEY_VALUE = "KEY_VALUE";
     public static final String FILE_TYPE_SVG = ".svg";
+    public static final String KEY_ALL_SETTINGS = "KEY_ALL_SETTINGS";
+    public static final String KEY_SETTING = "KEY_SETTING";
 
 
     public class Params {
@@ -93,6 +95,9 @@ public class Const {
         public static final String PARAM_TOTAL = "total";
         public static final String PARAM_TWITTER = "TW";
         public static final String PARAM_CONTENT_TYPE = "Content-Type";
+        public static final String PARAM_HTML = "html";
+        public static final String PARAM_NO = "no";
+        public static final String PARAM_YES = "no";
     }
 
 

@@ -31,7 +31,10 @@ import java.util.*;
  * Date: 1/17/12
  * Time: 4:18 PM
  */
+@SuppressWarnings("unchecked")
 public class SubscriptionDaoImpl implements SubscriptionTransactions {
+
+    @SuppressWarnings("unused")
     final private User user;
 
     public SubscriptionDaoImpl(User u) {

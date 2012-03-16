@@ -22,14 +22,15 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.ui.controls.*;
 import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.value.*;
-import com.nimbits.client.service.xmpp.*;
 import com.nimbits.client.service.subscription.*;
 import com.nimbits.client.service.twitter.*;
+import com.nimbits.client.service.xmpp.*;
+import com.nimbits.client.ui.controls.*;
 import com.nimbits.client.ui.helper.*;
 
 import java.util.*;
@@ -93,7 +94,11 @@ public class CenterPanel extends NavigationEventProvider {
             public void onValueEntered(GxtModel model, Value value) {
               for (int i = 0; i < chartContainer.getItemCount(); i++) {
                   AnnotatedTimeLinePanel p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
-                  p.addValue(model, value);
+                  try {
+                      p.addValue(model, value);
+                  } catch (NimbitsException e) {
+                      FeedbackHelper.showError(e);
+                  }
               }
             }
         });
@@ -209,9 +214,9 @@ public class CenterPanel extends NavigationEventProvider {
                         break;
                     }
                 }
-                for (int i = 0; i < chartContainer.getItemCount(); i ++) {
-                    AnnotatedTimeLinePanel p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
-                }
+//                for (int i = 0; i < chartContainer.getItemCount(); i ++) {
+//                    AnnotatedTimeLinePanel p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
+//                }
                 chartContainer.layout(true);
             }
         });

@@ -20,7 +20,6 @@ import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
-import com.nimbits.client.service.datapoints.*;
 import com.nimbits.server.memcache.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.user.*;

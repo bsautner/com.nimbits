@@ -31,6 +31,7 @@ import java.io.*;
  * Date: 7/8/11
  * Time: 5:42 PM
  */
+@SuppressWarnings("unused")
 public class GxtModel extends BaseTreeModel implements Serializable {
     private String uuid;
     private EntityName name;
@@ -55,7 +56,7 @@ public class GxtModel extends BaseTreeModel implements Serializable {
         set(Const.Params.PARAM_ID, this.uuid);
         set(Const.Params.PARAM_NAME, this.name.getValue());
         set(Const.PARAM_ENTITY_TYPE,  this.entityType.getCode());
-        set(Const.PARAM_DIRTY, "no");
+        set(Const.PARAM_DIRTY, Const.Params.PARAM_NO);
     }
 
     public AlertType getAlertType() {
@@ -70,9 +71,6 @@ public class GxtModel extends BaseTreeModel implements Serializable {
         return entityType;
     }
 
-    public void setEntityType(EntityType entityType) {
-        this.entityType = entityType;
-    }
 
     public String getId() {
         return uuid;
@@ -104,7 +102,7 @@ public class GxtModel extends BaseTreeModel implements Serializable {
     }
 
     public void setDirty(boolean dirty) {
-        set(Const.PARAM_DIRTY, dirty ? "yes" : "no");
+        set(Const.PARAM_DIRTY, dirty ? Const.Params.PARAM_YES : Const.Params.PARAM_NO);
         isDirty = dirty;
     }
 

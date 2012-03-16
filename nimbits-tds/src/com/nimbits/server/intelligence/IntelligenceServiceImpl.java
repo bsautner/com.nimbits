@@ -264,7 +264,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
     }
 
 
-    private String addDataToInput(final User u, final String input)  {
+    private String addDataToInput(final User u, final String input) throws NimbitsException {
 
         String retStr = input;
 
@@ -276,7 +276,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
                 // System.out.println(k);
                 if (k.contains(".data]") || k.contains(".value]") || k.contains(".note]")) {
                     String p = k.split("\\.")[0];
-                    EntityName pointName = CommonFactoryLocator.getInstance().createName(p);
+                    EntityName pointName = CommonFactoryLocator.getInstance().createName(p, EntityType.point);
                     String a = k.split("\\.")[1];
 
                     a = a.substring(0, a.indexOf("]"));

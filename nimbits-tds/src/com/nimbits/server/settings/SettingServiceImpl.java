@@ -27,11 +27,6 @@ public class SettingServiceImpl extends RemoteServiceServlet implements
     private static final long serialVersionUID = 1L;
 
 
-    @Override
-    public String getServerSecret() throws NimbitsException {
-        return SettingTransactionsFactory.getInstance().getServerSecret();
-    }
-
 
     @Override
     public Map<String, String> getSettings() throws NimbitsException {

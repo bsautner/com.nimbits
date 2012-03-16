@@ -24,9 +24,8 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.common.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.ui.controls.*;
 import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
@@ -35,6 +34,7 @@ import com.nimbits.client.model.value.*;
 import com.nimbits.client.service.datapoints.*;
 import com.nimbits.client.service.entity.*;
 import com.nimbits.client.service.recordedvalues.*;
+import com.nimbits.client.ui.controls.*;
 import com.nimbits.client.ui.helper.*;
 
 import java.util.*;

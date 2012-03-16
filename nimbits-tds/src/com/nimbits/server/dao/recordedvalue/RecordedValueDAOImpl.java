@@ -25,7 +25,7 @@ import com.nimbits.server.recordedvalue.*;
 import javax.jdo.*;
 import java.util.*;
 import java.util.logging.*;
-
+@SuppressWarnings("unchecked")
 public class RecordedValueDAOImpl implements RecordedValueTransactions {
     private static final Logger log = Logger.getLogger(RecordedValueDAOImpl.class.getName());
     private final Point point;

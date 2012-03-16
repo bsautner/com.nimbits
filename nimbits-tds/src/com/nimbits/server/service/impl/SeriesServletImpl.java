@@ -102,7 +102,7 @@ public class SeriesServletImpl extends HttpServlet {
             } else {
 
 
-                final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam);
+                final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
                 Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
                 final Point point = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
 
@@ -130,8 +130,10 @@ public class SeriesServletImpl extends HttpServlet {
             }
 
         } catch (IOException e) {
-            GWT.log(e.getMessage(), e);
+            log.severe(e.getMessage());
 
+        } catch (NimbitsException e) {
+            log.severe(e.getMessage());
         }
     }
 

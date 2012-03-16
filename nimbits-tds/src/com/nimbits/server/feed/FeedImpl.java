@@ -156,7 +156,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
     private Point createFeedPoint(final User user) throws NimbitsException {
         final String uuid = UUID.randomUUID().toString();
 
-        EntityName name = CommonFactoryLocator.getInstance().createName("Subscription Data Feed");
+        EntityName name = CommonFactoryLocator.getInstance().createName("Subscription Data Feed", EntityType.point);
 
         final Entity entity = EntityModelFactory.createEntity(name, "", EntityType.feed,
                 ProtectionLevel.onlyMe, uuid, user.getUuid(), user.getUuid());

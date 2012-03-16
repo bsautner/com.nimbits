@@ -38,9 +38,9 @@ class ClientHelper {
     // private final static String hostURL2 = "http://nimbits1.appspot.com";
     //  private final static String hostURLSpecific = "http://147.nimbits1.appspot.com";
     //  private static final String accountPath = "/mnt/raid/nimbits/test";
-    private final static String email = "test@example.com";
+    private final static String email = "test2@example.com";
 
-    private final static String password = "b65daff9-0cac-4be8-8f62-73556fe5e4e0";
+    private final static String password = "feaf7947-47f7-459c-a2ab-27b59ea62455";
 
     //  private final static String appscale =  "http://127.0.0.1:8888";
     public final static String url = "http://192.168.1.2:8081";

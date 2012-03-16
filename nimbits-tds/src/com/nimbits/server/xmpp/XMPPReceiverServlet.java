@@ -60,7 +60,7 @@ public class XMPPReceiverServlet extends HttpServlet {
             u = UserTransactionFactory.getInstance().getNimbitsUser(internetAddress);
             if (u != null) {
                 if (body.toLowerCase().trim().equals("ls")) {
-                    sendPointList(u);
+                    //sendPointList(u);
                 } else if (body.indexOf("=") > 0) {
 
                     recordNewValue(body, u);
@@ -132,17 +132,12 @@ public class XMPPReceiverServlet extends HttpServlet {
     private void createPoint(final String body, final User u) throws NimbitsException {
 
 
-        EntityName pointName = CommonFactoryLocator.getInstance().createName(body.substring(1).trim());
+        EntityName pointName = CommonFactoryLocator.getInstance().createName(body.substring(1).trim(), EntityType.point);
         Entity entity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone, UUID.randomUUID().toString(),
                 u.getUuid(), u.getUuid());
         PointServiceFactory.getInstance().addPoint(u, entity);
-      //  Point r = PointServiceFactory.getInstance().showEntityData(pointName, null, u);
-        //if (r != null) {
-            XmppServiceFactory.getInstance().sendMessage(pointName.getValue() + " created", u.getEmail());
-      // /
-       // } else {
-       //     IMFactory.getInstance().sendMessage("Could not create " + pointName.getValue(), u.getEmail());
-        //}
+        XmppServiceFactory.getInstance().sendMessage(pointName.getValue() + " created", u.getEmail());
+
 
 
     }
@@ -151,75 +146,29 @@ public class XMPPReceiverServlet extends HttpServlet {
         String b[] = body.split("=");
         if (b.length == 2) {
 
-            EntityName pointName = CommonFactoryLocator.getInstance().createName(b[0]);
+            EntityName pointName = CommonFactoryLocator.getInstance().createName(b[0], EntityType.point);
             String sval = b[1];
-            double v = 0.0;
-            String t = "";
 
             try {
-                v = Double.parseDouble(sval);
-            } catch (NumberFormatException e) {
-                t = sval;
-            }
+                double v = Double.parseDouble(sval);
 
-            if (u != null) {
-                Value value = ValueModelFactory.createValueModel(0.0, 0.0, v, new Date(), null, "");
-                RecordedValueServiceFactory.getInstance().recordValue(u, pointName, value);
+
+                if (u != null) {
+                    Value value = ValueModelFactory.createValueModel(0.0, 0.0, v, new Date(), null, "");
+                    RecordedValueServiceFactory.getInstance().recordValue(u, pointName, value);
+                }
+            } catch (NumberFormatException ignored) {
+
             }
-            // email.sendEmail(Global.AdminEmail,"2" + pointname +
-            // body);
 
         }
     }
 
-    private void sendPointList(final User u) {
-        List<Point> l;
-        //StringBuilder sb = new StringBuilder();
-        XmppServiceFactory.getInstance().sendMessage("Point List:", u.getEmail());
-//
-//        try {
-//            final List<Category> c = CategoryServiceFactory.getInstance().getCategories(u, true, false, false);
-//            if (c.size() == 0) {
-//                IMFactory.getInstance().sendMessage("None found", u.getEmail());
-//
-//            } else {
-//                for (Category x : c) {
-//                    l = x.getPoints();
-//                    if (x.getName() != null) {
-//                        if (!x.getName().getValue().equals(Const.CONST_HIDDEN_CATEGORY)) {
-//                            //sb.append(x.getValue() + "\n");
-//                            IMFactory.getInstance().sendMessage(x.getName().getValue(), u.getEmail());
-//                            //	sb.append(x.getValue() + "\n");
-//                            for (Point p : l) {
-//                                //sb.append("     " + p.getValue() + "\n");
-//                                IMFactory.getInstance().sendMessage("     " + p.getName().getValue(), u.getEmail());
-//                                //sb.append( + "\n");
-//
-//                            }
-//                        } else {
-//                            for (Point p : l) {
-//                                //sb.append(p.getValue() + "\n");
-//                                IMFactory.getInstance().sendMessage(p.getName().getValue(), u.getEmail());
-//                                //sb.append( + "\n");
-//
-//                            }
-//                        }
-//                    }
-//                }
-//                //IMFactory.getInstance().sendMessage(sb.toString(), u.getValue());
-//            }
-//        }
-//        //IMFactory.getInstance().sendMessage(sb.toString(), u.getValue());
-//
-//        catch (Exception e) {
-//            IMFactory.getInstance().sendMessage(e.getMessage(), u.getEmail());
-//
-//        }
-    }
+
 
     private void sendCurrentValue(final String body, final User u) throws NimbitsException {
         if (!Utils.isEmptyString(body) && body.endsWith("?")) {
-            final EntityName pointName = CommonFactoryLocator.getInstance().createName(body.replace("?", ""));
+            final EntityName pointName = CommonFactoryLocator.getInstance().createName(body.replace("?", ""), EntityType.point);
 
             Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
             Point point = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());

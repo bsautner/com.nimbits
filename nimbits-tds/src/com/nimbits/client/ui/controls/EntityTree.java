@@ -18,8 +18,8 @@ import com.extjs.gxt.ui.client.store.*;
 import com.extjs.gxt.ui.client.widget.grid.*;
 import com.extjs.gxt.ui.client.widget.treegrid.*;
 import com.google.gwt.user.client.ui.*;
-import com.nimbits.client.ui.icons.*;
 import com.nimbits.client.model.*;
+import com.nimbits.client.ui.icons.*;
 
 import java.util.*;
 

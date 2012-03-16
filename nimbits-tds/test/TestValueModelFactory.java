@@ -1,8 +1,7 @@
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.value.*;
+import static org.junit.Assert.*;
 import org.junit.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 import java.util.*;
 

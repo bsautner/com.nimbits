@@ -1,11 +1,8 @@
 package com.nimbits.server.task;
 
 import com.nimbits.client.enums.*;
-import com.nimbits.client.model.value.*;
+import static org.junit.Assert.*;
 import org.junit.*;
-import static org.junit.Assert.assertEquals;
-
-import java.util.*;
 
 /**
  * Created by Benjamin Sautner

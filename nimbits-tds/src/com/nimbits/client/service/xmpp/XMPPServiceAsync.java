@@ -14,7 +14,6 @@
 package com.nimbits.client.service.xmpp;
 
 import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.exception.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;

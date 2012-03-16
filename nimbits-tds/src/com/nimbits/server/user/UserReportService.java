@@ -14,16 +14,12 @@
 package com.nimbits.server.user;
 
 import com.nimbits.client.common.*;
-import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
 import com.nimbits.server.counter.*;
 import com.nimbits.server.dao.counter.*;
-import com.nimbits.server.recordedvalue.*;
 
 import javax.servlet.http.*;
 import java.io.*;
@@ -53,24 +49,6 @@ public class UserReportService extends HttpServlet {
         if (Utils.isEmptyString(email)) {
 
             final List<User> users = UserTransactionFactory.getInstance().getAllUsers("lastLoggedIn desc", count);
-
-
-            final User me;
-            try {
-                me = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
-            } catch (NimbitsException e) {
-                return;
-            }
-            final EntityName pointName = CommonFactoryLocator.getInstance().createName("User Count");
-
-            // Point p = PointServiceFactory.getInstance().getPointByName(me, pointName);
-            final Value value = ValueModelFactory.createValueModel((double) users.size());
-
-            try {
-                RecordedValueServiceFactory.getInstance().recordValue(me, pointName, value);
-            } catch (NimbitsException e) {
-                 e.printStackTrace();
-            }
 
 
             out.println("<p>Total number of users: " + users.size() + "</p>");

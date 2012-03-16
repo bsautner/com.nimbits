@@ -32,21 +32,8 @@ public class ConnectionRequestModel extends BaseModelData implements Serializabl
     private Boolean rejected;
     private static final long serialVersionUID = 1L;
 
-    public ConnectionRequestModel() {
-    }
-
-    public ConnectionRequestModel(final long requestorID,
-                                  final EmailAddress requestorEmail,
-                                  final EmailAddress targetEmail,
-                                  final String uuid) {
-        this.requestorID = requestorID;
-        this.targetEmail = targetEmail;
-        this.requestorEmail = requestorEmail;
-        this.requestDate = new Date();
-        this.approved = false;
-        this.rejected = false;
-        this.uuid = uuid;
-
+    @SuppressWarnings("unused")
+    protected ConnectionRequestModel() {
     }
 
     public ConnectionRequestModel(Connection c) {
@@ -57,6 +44,7 @@ public class ConnectionRequestModel extends BaseModelData implements Serializabl
         this.approved = c.getApproved();
         this.rejected = c.getRejected();
         this.uuid = c.getUUID();
+        this.key = c.getKey();
     }
 
     @Override

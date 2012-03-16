@@ -15,7 +15,6 @@ package com.nimbits.server.common;
 
 
 import javax.servlet.http.*;
-import java.util.logging.*;
 
 /**
  * Created by bsautner

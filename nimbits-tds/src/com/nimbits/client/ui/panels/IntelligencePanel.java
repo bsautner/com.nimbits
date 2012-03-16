@@ -27,15 +27,17 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
-import com.nimbits.client.ui.controls.*;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.ui.icons.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.intelligence.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.service.intelligence.*;
+import com.nimbits.client.ui.controls.*;
+import com.nimbits.client.ui.helper.*;
+import com.nimbits.client.ui.icons.*;
 
 /**
  * Created by Benjamin Sautner
@@ -188,7 +190,13 @@ public class IntelligencePanel extends NavigationEventProvider {
                 final MessageBox box = MessageBox.wait("Progress",
                         "Creating Calculation", "please wait...");
                 box.show();
-                EntityName name = CommonFactoryLocator.getInstance().createName(nameField.getValue());
+                EntityName name;
+                try {
+                    name = CommonFactoryLocator.getInstance().createName(nameField.getValue(), EntityType.calculation);
+                } catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
+                    return;
+                }
                 //    simple.add(btnTestIntel);
 
                 IntelligenceResultTarget target = intelTargetRadioNumber.getValue() ? IntelligenceResultTarget.value

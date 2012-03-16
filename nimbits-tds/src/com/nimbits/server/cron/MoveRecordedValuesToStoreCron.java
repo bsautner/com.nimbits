@@ -16,8 +16,6 @@ package com.nimbits.server.cron;
 import com.google.appengine.api.memcache.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.point.*;
-import com.nimbits.server.memcache.*;
-import com.nimbits.server.point.*;
 import com.nimbits.server.task.*;
 
 import javax.servlet.http.*;

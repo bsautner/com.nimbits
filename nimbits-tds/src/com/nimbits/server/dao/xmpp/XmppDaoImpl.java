@@ -4,8 +4,8 @@ import com.nimbits.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.xmpp.*;
-import com.nimbits.server.xmpp.*;
 import com.nimbits.server.orm.*;
+import com.nimbits.server.xmpp.*;
 
 import javax.jdo.*;
 import java.util.*;
@@ -16,6 +16,7 @@ import java.util.*;
  * Date: 3/15/12
  * Time: 1:13 PM
  */
+@SuppressWarnings("unchecked")
 public class XmppDaoImpl implements XmppTransaction {
     final private User user;
 

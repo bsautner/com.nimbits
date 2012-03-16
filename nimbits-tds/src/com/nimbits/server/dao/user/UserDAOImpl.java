@@ -30,36 +30,36 @@ import javax.jdo.*;
 import java.util.*;
 import java.util.logging.*;
 
-
+@SuppressWarnings("unchecked")
 public class UserDAOImpl implements UserTransactions {
     private static final Logger log = Logger.getLogger(UserDAOImpl.class.getName());
 
 
 
-    @SuppressWarnings(Const.WARNING_UNCHECKED)
-    public User setFacebookToken(final EmailAddress internetAddress, final String token, final long fbid) {
+
+    public User setFacebookToken(final EmailAddress internetAddress, final String token, final long facebookId) {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         NimbitsUser u;
         Query q = pm.newQuery(NimbitsUser.class, "email == u");
         q.declareParameters("String u");
         q.setRange(0, 1);
-        boolean isNew;
+
         User retObj;
         try {
             List<NimbitsUser> result = (List<NimbitsUser>) q.execute(internetAddress.getValue());
-            isNew = false;
+
 
             if (result.size() > 0) {
                 final Transaction tx = pm.currentTransaction();
                 tx.begin();
                 u = result.get(0);
                 u.setFacebookToken(token);
-                u.setFacebookID(fbid);
+                u.setFacebookID(facebookId);
                 tx.commit();
 
             } else {
-                isNew = true;
+
                 u = new NimbitsUser(internetAddress, UUID
                         .randomUUID().toString());
                 u.setHost("setFacebookToken");
@@ -67,7 +67,7 @@ public class UserDAOImpl implements UserTransactions {
                 u.setSecret(UUID.randomUUID().toString());
                 u.setSendEmail(true);
                 u.setFacebookToken(token);
-                u.setFacebookID(fbid);
+                u.setFacebookID(facebookId);
                 pm.makePersistent(u);
 
             }
@@ -77,9 +77,6 @@ public class UserDAOImpl implements UserTransactions {
             pm.close();
         }
 
-      //  if (isNew) {
-            //CategoryServiceFactory.getInstance().createHiddenCategory(retObj);
-        //}
         return retObj;
     }
 
@@ -108,7 +105,6 @@ public class UserDAOImpl implements UserTransactions {
     * @see com.nimbits.server.user.UserTransactions#getNimbitsUser(java.lang.String, boolean, java.lang.String)
     */
     @Override
-    @SuppressWarnings(Const.WARNING_UNCHECKED)
     public User getNimbitsUser(final EmailAddress internetAddress) {
         User retObj = null;
         final PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -186,47 +182,6 @@ public class UserDAOImpl implements UserTransactions {
 
     }
 
-//    /* (non-Javadoc)
-//    * @see com.nimbits.server.user.UserTransactions#doUserMaint(java.lang.String)
-//    */
-//    @Override
-//    @SuppressWarnings(Const.WARNING_UNCHECKED)
-//    public void doUserMaint(final String serverName) {
-//        final PersistenceManager pm = PMF.get().getPersistenceManager();
-//        List<NimbitsUser> a;
-//        Transaction tx;
-//        tx = pm.currentTransaction();
-//
-//        try {
-//
-////            Query q = pm.newQuery(NimbitsUser.class);
-////            // q.setOrdering("LastChecked ascending");
-////            a = (List<NimbitsUser>) q.execute();
-////
-////            for (User u : a) {
-////                tx.begin();
-////                if (u.getUuid() == null) {
-////                    u.setUuid(UUID.randomUUID().toString());
-////                }
-////                if (u.getLastLoggedIn() == null) {
-////                    u.setLastLoggedIn(u.getDateCreated());
-////                }
-////                // u.setHost(serverName);
-////                // String e = u.getValue().toLowerCase();
-////                // u.setEmail(e);
-////                tx.commit();
-////
-////
-////            }
-//
-//        } catch (Exception e) {
-//            log.severe(e.getMessage());
-//        } finally {
-//
-//            pm.close();
-//
-//        }
-//    }
 
     @Override
     @SuppressWarnings(Const.WARNING_UNCHECKED)
@@ -249,7 +204,6 @@ public class UserDAOImpl implements UserTransactions {
     }
 
     @Override
-    @SuppressWarnings(Const.WARNING_UNCHECKED)
     public List<User> getUsers(int start, int end) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         List<User> result;
@@ -268,7 +222,7 @@ public class UserDAOImpl implements UserTransactions {
         return retObj;
     }
 
-    @SuppressWarnings(Const.WARNING_UNCHECKED)
+    @Override
     public List<Connection> getPendingConnectionRequests(final EmailAddress internetAddress) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final Query q = pm.newQuery(ConnectionRequest.class, "approved == a && targetEmail==e && rejected == r");
@@ -285,7 +239,7 @@ public class UserDAOImpl implements UserTransactions {
 
     }
 
-    @SuppressWarnings(Const.WARNING_UNCHECKED)
+    @Override
     public List<User> updateConnectionRequest(final String uuid, final User requestor, final User acceptor, final boolean accepted) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final Query q = pm.newQuery(ConnectionRequest.class, "uuid == u");// && targetEmail==e && rejected != r");
@@ -316,7 +270,7 @@ public class UserDAOImpl implements UserTransactions {
 
 
 
-
+    @Override
     public Connection makeConnectionRequest(final User u, final EmailAddress emailAddress) {
         final ConnectionRequest f = new ConnectionRequest(u.getId(), u.getEmail(), emailAddress, UUID.randomUUID().toString());
         Connection retObj;
@@ -334,7 +288,7 @@ public class UserDAOImpl implements UserTransactions {
 
     }
 
-    @SuppressWarnings(Const.WARNING_UNCHECKED)
+    @Override
     public User updateTwitter(final EmailAddress internetAddress, final AccessToken token) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final Query q = pm.newQuery(NimbitsUser.class, "email == u");

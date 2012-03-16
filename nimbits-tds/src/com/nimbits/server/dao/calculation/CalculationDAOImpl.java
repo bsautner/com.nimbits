@@ -29,6 +29,7 @@ import java.util.*;
  * Date: 2/18/12
  * Time: 12:24 PM
  */
+@SuppressWarnings("unchecked")
 public class CalculationDAOImpl implements CalculationTransactions {
     private final User user;
 

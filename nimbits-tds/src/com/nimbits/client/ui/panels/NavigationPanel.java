@@ -385,6 +385,8 @@ class NavigationPanel extends NavigationEventProvider {
                     case calculation:
                         context.showCalcPanel(model.getBaseEntity());
                         break;
+                    case summary:
+                        context.showSummaryPanel(model.getBaseEntity());
                     case intelligence:
                         context.showIntelligencePanel(model.getBaseEntity());
                         break;

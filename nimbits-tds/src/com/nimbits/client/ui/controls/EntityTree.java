@@ -77,6 +77,8 @@ public class EntityTree<ModelData extends com.extjs.gxt.ui.client.data.ModelData
                         return AbstractImagePrototype.create(Icons.INSTANCE.radial());
                     case resource:
                         return AbstractImagePrototype.create(Icons.INSTANCE.filter());
+                    case summary:
+                        return AbstractImagePrototype.create(Icons.INSTANCE.summary());
                     default:
                         return AbstractImagePrototype.create(Icons.INSTANCE.point_ok());
 

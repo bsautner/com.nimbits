@@ -29,24 +29,24 @@ public class ProtectionLevelOptions extends RadioGroup {
     private final Radio radioProtectionConnections;
     private final Radio radioProtectionPublic;
 
-    public ProtectionLevelOptions(Entity entity) {
+    public ProtectionLevelOptions(final Entity entity) {
 
         radioProtectionMe = new Radio();
         radioProtectionConnections = new Radio();
         radioProtectionPublic = new Radio();
 
         radioProtectionMe.setBoxLabel(ProtectionLevel.onlyMe.getText());
-        radioProtectionMe.setValue((entity.getProtectionLevel().equals(ProtectionLevel.onlyMe)));
-
-
         radioProtectionConnections.setBoxLabel(ProtectionLevel.onlyConnection.getText());
-        radioProtectionConnections.setValue((entity.getProtectionLevel().equals(ProtectionLevel.onlyConnection)));
-
-
         radioProtectionPublic.setBoxLabel(ProtectionLevel.everyone.getText());
-        radioProtectionPublic.setValue((entity.getProtectionLevel().equals(ProtectionLevel.everyone)));
 
-
+        if (entity != null) {
+            radioProtectionConnections.setValue((entity.getProtectionLevel().equals(ProtectionLevel.onlyConnection)));
+            radioProtectionMe.setValue((entity.getProtectionLevel().equals(ProtectionLevel.onlyMe)));
+            radioProtectionPublic.setValue((entity.getProtectionLevel().equals(ProtectionLevel.everyone)));
+        }
+        else {
+            radioProtectionPublic.setValue(true);
+        }
         setFieldLabel("Who can view");
 
         add(radioProtectionMe);

@@ -27,6 +27,7 @@ import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.service.xmpp.*;
+import com.nimbits.client.ui.helper.*;
 import com.nimbits.client.ui.icons.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
@@ -55,8 +56,10 @@ public class EntityContextMenu extends Menu {
     private MenuItem copyContext;
     private MenuItem calcContext;
     private MenuItem xmppContext;
+    private MenuItem summaryContext;
     private MenuItem intelligenceContext;
     private Map<String, String> settings;
+
     private List<EntityModifiedListener> entityModifiedListeners;
 
     public void addEntityModifiedListeners(final EntityModifiedListener listener) {
@@ -88,6 +91,7 @@ public class EntityContextMenu extends Menu {
         calcContext = calcContext();
         intelligenceContext = intelligenceContext();
         xmppContext = xmppResourceContext();
+         summaryContext = summaryContext();
         add(propertyContext);
         add(copyContext);
         add(deleteContext);
@@ -95,6 +99,7 @@ public class EntityContextMenu extends Menu {
         add(subscribeContext);
         add(reportContext);
         add(calcContext);
+        add(summaryContext);
         add(xmppContext);
         if (settings.containsKey(Const.SETTING_WOLFRAM) && ! Utils.isEmptyString(settings.get(Const.SETTING_WOLFRAM))) {
             add(intelligenceContext);
@@ -106,22 +111,20 @@ public class EntityContextMenu extends Menu {
 
 
 
+
     @Override
     public void showAt(int x, int y) {
         super.showAt(x, y);
         ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
         currentModel = (GxtModel)selectedModel;
         deleteContext.setEnabled(!currentModel.getEntityType().equals(EntityType.user) || ! currentModel.isReadOnly());
-        subscribeContext.setEnabled(
-                currentModel.getEntityType().equals(EntityType.point) ||
-                        currentModel.getEntityType().equals(EntityType.category));
-        reportContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) ||
-                currentModel.getEntityType().equals(EntityType.category));
+        subscribeContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) ||currentModel.getEntityType().equals(EntityType.category));
+        reportContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.category));
         copyContext.setEnabled(currentModel.getEntityType().equals(EntityType.point));
         calcContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.calculation));
         intelligenceContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.intelligence));
-
         xmppContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.resource));
+        summaryContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.summary));
 
 
         propertyContext().setEnabled(!currentModel.isReadOnly());
@@ -197,7 +200,46 @@ public class EntityContextMenu extends Menu {
         });
         return retObj;
     }
+    private MenuItem summaryContext() {
+        MenuItem retObj = new MenuItem();
+        retObj.setText("New Summary Point");
+        retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.summary()));
+        retObj.addSelectionListener(new SelectionListener<MenuEvent>() {
+            public void componentSelected(MenuEvent ce) {
+                ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
+                currentModel = (GxtModel) selectedModel;
+                Entity entity =  currentModel.getBaseEntity();
 
+                if (entity.getEntityType().equals(EntityType.subscription)  ||
+                        entity.getEntityType().equals(EntityType.point)) {
+                    showSummaryPanel(entity);
+                }
+
+            }
+        });
+        return retObj;
+
+    }
+
+    public void showSummaryPanel(Entity entity) {
+        SummaryPanel dp = new SummaryPanel(entity);
+        final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
+        w.setWidth(500);
+        w.setHeight(500);
+        w.setHeading("New Summary Data Point");
+        w.add(dp);
+        dp.addEntityAddedListener(new NavigationEventProvider.EntityAddedListener() {
+            @Override
+            public void onEntityAdded(Entity entity) {
+                w.hide();
+                Cookies.removeCookie(Action.subscribe.name());
+                notifyEntityModifiedListener(new GxtModel(entity), Action.create);
+
+            }
+        });
+
+        w.show();
+    }
 
     private MenuItem intelligenceContext() {
         final MenuItem retObj = new MenuItem();
@@ -229,7 +271,7 @@ public class EntityContextMenu extends Menu {
 
         }
         w.add(dp);
-        dp.addSubscriptionAddedListener(new NavigationEventProvider.EntityAddedListener() {
+        dp.addEntityAddedListener(new NavigationEventProvider.EntityAddedListener() {
             @Override
             public void onEntityAdded(Entity entity) {
                 w.hide();
@@ -386,7 +428,7 @@ public class EntityContextMenu extends Menu {
                 service.deleteEntity(entityToDelete, new AsyncCallback<Void>() {
                     @Override
                     public void onFailure(Throwable caught) {
-                        showError(caught);
+                        FeedbackHelper.showError(caught);
                     }
 
                     @Override
@@ -414,8 +456,8 @@ public class EntityContextMenu extends Menu {
                 EntityName name = null;
                 try {
                     name = CommonFactoryLocator.getInstance().createName(newEntityName, EntityType.point);
-                } catch (NimbitsException e) {
-                    showError(e);
+                } catch (NimbitsException caught) {
+                    FeedbackHelper.showError(caught);
                 }
                 Entity entity =  currentModel.getBaseEntity();
 
@@ -423,7 +465,7 @@ public class EntityContextMenu extends Menu {
                     @Override
                     public void onFailure(Throwable caught) {
                         box.close();
-                        showError(caught);
+                        FeedbackHelper.showError(caught);
                     }
 
                     @Override
@@ -453,14 +495,14 @@ public class EntityContextMenu extends Menu {
                 EntityName name = null;
                 try {
                     name = CommonFactoryLocator.getInstance().createName(newEntityName, EntityType.resource);
-                } catch (NimbitsException e) {
-                    showError(e);
+                } catch (NimbitsException caught) {
+                    FeedbackHelper.showError(caught);;
                 }
                 serviceAsync.createXmppResource(currentModel.getBaseEntity(), name, new AsyncCallback<Entity>() {
                     @Override
                     public void onFailure(Throwable caught) {
                         box.close();
-                        showError(caught);
+                        FeedbackHelper.showError(caught);
                     }
 
                     @Override
@@ -510,7 +552,7 @@ public class EntityContextMenu extends Menu {
         w.setHeight(500);
         w.setHeading("Subscribe");
         w.add(dp);
-        dp.addSubscriptionAddedListener(new NavigationEventProvider.EntityAddedListener() {
+        dp.addEntityAddedListener(new NavigationEventProvider.EntityAddedListener() {
             @Override
             public void onEntityAdded(Entity entity) {
                 w.hide();
@@ -537,7 +579,7 @@ public class EntityContextMenu extends Menu {
 
         }
         w.add(dp);
-        dp.addSubscriptionAddedListener(new NavigationEventProvider.EntityAddedListener() {
+        dp.addEntityAddedListener(new NavigationEventProvider.EntityAddedListener() {
             @Override
             public void onEntityAdded(Entity entity) {
                 w.hide();
@@ -549,8 +591,5 @@ public class EntityContextMenu extends Menu {
         w.show();
     }
 
-    private void showError(Throwable caught) {
-        final MessageBox box = MessageBox.alert("Error", caught.getMessage(), null);
-        box.show();
-    }
+
 }

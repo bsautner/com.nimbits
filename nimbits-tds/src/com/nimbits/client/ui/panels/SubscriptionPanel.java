@@ -27,11 +27,13 @@ import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.subscription.*;
 import com.nimbits.client.service.subscription.*;
+import com.nimbits.client.ui.helper.*;
 
 import java.util.*;
 
@@ -268,7 +270,13 @@ public class SubscriptionPanel extends NavigationEventProvider {
                             machine.getValue(),
                             enabled.getValue());
                 }
-                EntityName name = CommonFactoryLocator.getInstance().createName(subscriptionName.getValue());
+                EntityName name = null;
+                try {
+                    name = CommonFactoryLocator.getInstance().createName(subscriptionName.getValue(), EntityType.subscription);
+                } catch (NimbitsException caught) {
+                    FeedbackHelper.showError(caught);
+                    return;
+                }
                 service.subscribe(entity, update ,name, new AsyncCallback<Entity>() {
                     @Override
                     public void onFailure(Throwable e) {

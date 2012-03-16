@@ -294,7 +294,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
                 w.setHeight(500);
                 w.setHeading("Subscribe");
                 w.add(dp);
-                dp.addSubscriptionAddedListener(new NavigationEventProvider.EntityAddedListener() {
+                dp.addEntityAddedListener(new NavigationEventProvider.EntityAddedListener() {
                     @Override
                     public void onEntityAdded(Entity model) {
                         w.hide();

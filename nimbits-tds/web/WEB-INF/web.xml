@@ -45,6 +45,16 @@
     </servlet>
 
     <servlet-mapping>
+        <servlet-name>summaryService</servlet-name>
+        <url-pattern>/nimbits/summary</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>summaryService</servlet-name>
+        <servlet-class>com.nimbits.server.summary.SummaryServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
         <servlet-name>pointService</servlet-name>
         <url-pattern>/nimbits/point</url-pattern>
     </servlet-mapping>

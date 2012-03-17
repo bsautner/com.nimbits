@@ -14,8 +14,7 @@
 package com.nimbits.server.point;
 
 import com.nimbits.client.model.user.*;
-import com.nimbits.client.service.datapoints.*;
-import com.nimbits.server.dao.datapoint.*;
+import com.nimbits.server.dao.point.*;
 import com.nimbits.server.memcache.point.*;
 
 /**
@@ -33,6 +32,6 @@ public class PointTransactionsFactory {
 
     public static PointTransactions getDaoInstance(User u) {
 
-        return new DataPointDAOImpl(u);
+        return new PointDaoImpl(u);
     }
 }

@@ -13,6 +13,7 @@
 
 package com.nimbits.server.email;
 
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
@@ -75,7 +76,7 @@ public class IncomingMailTask extends HttpServlet {
 
     void processLine(final User u, final String s) throws NimbitsException {
         final String emailLine[] = s.split(",");
-        final EntityName pointName = CommonFactoryLocator.getInstance().createName(emailLine[0]);
+        final EntityName pointName = CommonFactoryLocator.getInstance().createName(emailLine[0], EntityType.point);
 
         Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
         final Point point = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());

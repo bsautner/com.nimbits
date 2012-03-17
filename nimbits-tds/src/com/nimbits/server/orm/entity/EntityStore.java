@@ -14,11 +14,12 @@
 package com.nimbits.server.orm.entity;
 
 import com.google.appengine.api.blobstore.*;
+import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
-import com.nimbits.shared.*;
 
 import javax.jdo.annotations.*;
 import java.util.*;
@@ -62,25 +63,20 @@ public class EntityStore implements Entity {
     private int alertType;
 
     @Persistent
-    private String[] metadata;
-
-    @Persistent
-    private String[] accessKeys;
-
-    @Persistent
     private BlobKey blobKey;
 
     @NotPersistent
     private boolean readOnly;
 
-
-    public EntityStore() {
+    @SuppressWarnings("unused")
+    protected EntityStore() {
 
     }
 
 
-    public EntityStore(final Entity entity)  {
-        this.name = entity.getName().getValue();
+    public EntityStore(final Entity entity) throws NimbitsException {
+        EntityName saferName = CommonFactoryLocator.getInstance().createName(entity.getName().getValue(), entity.getEntityType());
+        this.name = saferName.getValue();
         this.description = entity.getDescription();
         this.entityType = entity.getEntityType().getCode();
         this.entity =entity.getEntity();
@@ -96,12 +92,17 @@ public class EntityStore implements Entity {
 
     @Override
     public EntityName getName() {
-        return CommonFactoryLocator.getInstance().createName(name);
+        try {
+            return CommonFactoryLocator.getInstance().createName(name, EntityType.get(this.entityType));
+        } catch (NimbitsException e) {
+            return null;
+        }
     }
 
     @Override
-    public void setName(EntityName name) {
-        this.name = name.getValue();
+    public void setName(EntityName name) throws NimbitsException {
+        EntityName saferName = CommonFactoryLocator.getInstance().createName(name.getValue(), EntityType.get(this.entityType));
+        this.name = saferName.getValue();
     }
 
     @Override
@@ -222,35 +223,40 @@ public class EntityStore implements Entity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof EntityStore)) return false;
 
         EntityStore that = (EntityStore) o;
 
-        if (!Arrays.equals(accessKeys, that.accessKeys)) return false;
+        if (alertType != that.alertType) return false;
+        if (readOnly != that.readOnly) return false;
+
+        if (blobKey != null ? !blobKey.equals(that.blobKey) : that.blobKey != null) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
-        if (entityType != null ? !entityType.equals(that.entityType) : that.entityType != null) return false;
         if (entity != null ? !entity.equals(that.entity) : that.entity != null) return false;
-        if (!Arrays.equals(metadata, that.metadata)) return false;
+        if (entityType != null ? !entityType.equals(that.entityType) : that.entityType != null) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (owner != null ? !owner.equals(that.owner) : that.owner != null) return false;
         if (parent != null ? !parent.equals(that.parent) : that.parent != null) return false;
-        if (protectionLevel != null ? !protectionLevel.equals(that.protectionLevel) : that.protectionLevel != null)
-            return false;
+        return !(protectionLevel != null ? !protectionLevel.equals(that.protectionLevel) : that.protectionLevel != null);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (entityType != null ? entityType.hashCode() : 0);
         result = 31 * result + (protectionLevel != null ? protectionLevel.hashCode() : 0);
         result = 31 * result + (entity != null ? entity.hashCode() : 0);
         result = 31 * result + (parent != null ? parent.hashCode() : 0);
         result = 31 * result + (owner != null ? owner.hashCode() : 0);
-        result = 31 * result + (metadata != null ? Arrays.hashCode(metadata) : 0);
-        result = 31 * result + (accessKeys != null ? Arrays.hashCode(accessKeys) : 0);
+        result = 31 * result + alertType;
+
+        result = 31 * result + (blobKey != null ? blobKey.hashCode() : 0);
+        result = 31 * result + (readOnly ? 1 : 0);
         return result;
     }
 }

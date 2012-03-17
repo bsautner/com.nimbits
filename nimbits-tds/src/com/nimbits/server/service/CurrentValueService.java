@@ -13,6 +13,7 @@
 
 package com.nimbits.server.service;
 
+import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
@@ -27,7 +28,6 @@ import com.nimbits.server.point.*;
 import com.nimbits.server.recordedvalue.*;
 import com.nimbits.server.service.impl.*;
 import com.nimbits.server.user.*;
-import com.nimbits.shared.*;
 
 import javax.servlet.http.*;
 import java.io.*;
@@ -60,7 +60,7 @@ public class CurrentValueService extends HttpServlet {
 //
 //
             final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
-            final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam);
+            final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
             Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
             final Point point = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
 
@@ -181,7 +181,7 @@ public class CurrentValueService extends HttpServlet {
             p = PointServiceFactory.getInstance().getPointByUUID(uuid);
 
         } else if (!Utils.isEmptyString(pointNameParam)) {
-            EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam);
+            EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
             Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
             p = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
 

@@ -56,9 +56,9 @@ public class FeedPanel  extends LayoutContainer {
                 @Override
                 public void onSuccess(final List<FeedValue> result) {
 
-
+                    GxtFeedModel model;
                     for (final FeedValue v : result) {
-                        final GxtFeedModel model = new GxtFeedModel(v);
+                        model = new GxtFeedModel(v);
                         if (store.findModel(Const.PARAM_HTML, model.getHtml()) == null) {
                             store.insert(model, 0);
                             // store.add(model);

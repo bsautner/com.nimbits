@@ -1,6 +1,7 @@
 package com.nimbits.server.subscription;
 
 import com.google.gwt.user.server.rpc.*;
+import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
@@ -8,19 +9,20 @@ import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.subscription.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.xmpp.*;
 import com.nimbits.client.service.subscription.*;
 import com.nimbits.server.email.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.facebook.*;
 import com.nimbits.server.feed.*;
 import com.nimbits.server.gson.*;
-import com.nimbits.server.instantmessage.*;
 import com.nimbits.server.recordedvalue.*;
 import com.nimbits.server.twitter.*;
 import com.nimbits.server.user.*;
-import com.nimbits.shared.*;
+import com.nimbits.server.xmpp.*;
 
 import java.util.*;
+import java.util.logging.*;
 
 /**
  * Created by Benjamin Sautner
@@ -30,7 +32,7 @@ import java.util.*;
  */
 public class SubscriptionServiceImpl extends RemoteServiceServlet implements
         SubscriptionService {
-
+    private static final Logger log = Logger.getLogger(SubscriptionServiceImpl.class.getName());
     private User getUser() {
         try {
             return UserServiceFactory.getServerInstance().getHttpRequestUser(
@@ -55,7 +57,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
 
     @Override
-    public void processSubscriptions(final Point point, final Value v) {
+    public void processSubscriptions(final Point point, final Value v) throws NimbitsException {
 
 
         List<Subscription> subscriptions= getSubscriptionsToPoint(point);
@@ -115,7 +117,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
 
     @Override
-    public Entity subscribe(Entity entity, Subscription subscription, EntityName name) {
+    public Entity subscribe(Entity entity, Subscription subscription, EntityName name) throws NimbitsException {
         User user = getUser();
         if (entity.getEntityType().equals(EntityType.subscription)) {
             entity.setName(name);
@@ -153,7 +155,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
         return EntityServiceFactory.getDaoInstance(getUser()).getEntityByUUID(subscription.getSubscribedEntity());
 
     }
-    private void sendNotification(User user, Entity entity, Subscription subscription, Point point, Value value) {
+    private void sendNotification(User user, Entity entity, Subscription subscription, Point point, Value value) throws NimbitsException {
         switch (subscription.getNotifyMethod()) {
             case none:
                 break;
@@ -185,8 +187,15 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
                     + "] updated to new value: " + v.getNumberValue();
         }
 
+        List<XmppResource> resources =  XmppServiceFactory.getInstance().getPointXmppResources(u, point);
+        if (resources.size() > 0) {
+            log.info("Sending XMPP with resources count: " + resources.size());
+            XmppServiceFactory.getInstance().sendMessage(resources, message, u.getEmail());
+        }
+        else {
+            XmppServiceFactory.getInstance().sendMessage(message, u.getEmail());
+        }
 
-        IMFactory.getInstance().sendMessage(message, u.getEmail());
     }
 
 

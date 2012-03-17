@@ -14,9 +14,10 @@
 package com.nimbits.server.http;
 
 
+import com.nimbits.client.common.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
-import org.apache.commons.lang3.StringUtils;
+
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -44,7 +45,7 @@ public class HttpCommonImpl implements HttpCommon {
             connection.setRequestMethod(Const.METHOD_POST);
             connection.setReadTimeout(Const.DEFAULT_HTTP_TIMEOUT);
 
-            if (StringUtils.isNotEmpty(authCookie)) {
+            if (Utils.isNotEmpty(authCookie)) {
                 connection.addRequestProperty(Const.WORD_COOKIE, authCookie);
             }
 
@@ -95,7 +96,7 @@ public class HttpCommonImpl implements HttpCommon {
         connection.setDoOutput(true);
         connection.setRequestMethod(Const.METHOD_GET);
         //  connection.setReadTimeout(Const.DEFAULT_HTTP_TIMEOUT);
-        if (StringUtils.isNotEmpty(authCookie)) {
+        if (Utils.isNotEmpty(authCookie)) {
             connection.addRequestProperty(Const.WORD_COOKIE, authCookie);
         }
 
@@ -121,7 +122,7 @@ public class HttpCommonImpl implements HttpCommon {
             connection.setDoOutput(true);
             connection.setRequestMethod(Const.METHOD_POST);
             connection.setReadTimeout(Const.DEFAULT_HTTP_TIMEOUT);
-            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty(Const.Params.PARAM_CONTENT_TYPE, Const.CONTENT_TYPE_JSON);
 
 
             final OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
@@ -160,7 +161,7 @@ public class HttpCommonImpl implements HttpCommon {
             connection.setDoOutput(true);
             connection.setRequestMethod(Const.METHOD_GET);
             // connection.setReadTimeout(Const.DEFAULT_HTTP_TIMEOUT);
-            if (StringUtils.isNotEmpty(authCookie)) {
+            if (Utils.isNotEmpty(authCookie)) {
                 connection.addRequestProperty(Const.WORD_COOKIE, authCookie);
             }
             //  connection.addRequestProperty("Host", postUrl);

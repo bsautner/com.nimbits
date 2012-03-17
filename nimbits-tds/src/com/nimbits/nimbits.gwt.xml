@@ -31,7 +31,7 @@
     <inherits name="com.extjs.gxt.themes.Themes"/>
 
     <source path='client'/>
-    <source path='shared'/>
+
 
 
 </module>

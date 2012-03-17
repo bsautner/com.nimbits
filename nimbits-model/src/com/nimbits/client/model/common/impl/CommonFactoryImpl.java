@@ -13,7 +13,9 @@
 
 package com.nimbits.client.model.common.impl;
 
-import com.nimbits.client.exception.NimbitsRuntimeException;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.email.impl.EmailAddressImpl;
@@ -42,8 +44,57 @@ public class CommonFactoryImpl implements CommonFactory {
 
 
     @Override
+    @Deprecated
     public EntityName createName(final String value) {
+
         return new EntityNameImpl(value);
     }
+
+    @Override
+    public EntityName createName(final String name, final EntityType type) throws NimbitsException {
+        nameTest(name,  type);
+        return new EntityNameImpl(name);
+    }
+
+
+   private void nameTest(final String name, final EntityType type) throws NimbitsException {
+       if (name.contains(Const.REGEX_SPECIAL_CHARS)) {
+          throw new NimbitsException("A name cannot contain these chars" + Const.REGEX_SPECIAL_CHARS);
+       }
+       if (name.length() > 500) {
+           throw new NimbitsException("Whoa! That's a long name. Names must be less than 500 chars!");
+
+       }
+       switch (type) {
+
+           case user:
+               if (! name.contains("@")) {
+                   throw new NimbitsException("Invalid Name");
+               }
+               break;
+           case point:
+               break;
+           case category:
+               break;
+           case file:
+               break;
+           case subscription:
+               break;
+           case userConnection:
+               break;
+           case calculation:
+               break;
+           case intelligence:
+               break;
+           case feed:
+               break;
+           case resource:
+               if (name.contains(" ")) {
+                   throw new NimbitsException("XMPP Resource names must not contain spaces");
+               }
+               break;
+       }
+   }
+
 
 }

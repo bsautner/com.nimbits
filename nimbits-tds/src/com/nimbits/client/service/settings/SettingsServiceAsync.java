@@ -23,5 +23,4 @@ public interface SettingsServiceAsync {
 
     void getSettings(final AsyncCallback<Map<String, String>> asyncCallback);
 
-    void getServerSecret(final AsyncCallback<String> async);
 }

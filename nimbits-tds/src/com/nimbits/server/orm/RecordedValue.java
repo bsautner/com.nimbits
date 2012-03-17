@@ -13,7 +13,9 @@
 
 package com.nimbits.server.orm;
 
+import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
+import com.nimbits.client.model.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.value.Value;
 
@@ -113,6 +115,19 @@ public class RecordedValue implements com.nimbits.client.model.value.Value {
 
     public double getNumberValue() {
         return d == null ? 0.0 : d;
+    }
+
+    @Override
+    public String getValueWithNote() {
+        StringBuilder sb = new StringBuilder();
+        if ( this.d != Const.CONST_IGNORED_NUMBER_VALUE) {
+            sb.append(this.d);
+        }
+        if ( ! Utils.isEmptyString(this.note)) {
+            sb.append(" ");
+            sb.append(this.note);
+        }
+        return sb.toString().trim();
     }
 
 

@@ -29,7 +29,6 @@ public class LoginInfo implements Serializable {
     private String loginUrl;
     private String logoutUrl;
     private String emailAddress;
-    private String nickname;
     private User user;
     private boolean userAdmin;
 
@@ -71,14 +70,6 @@ public class LoginInfo implements Serializable {
 
     public void setEmailAddress(final EmailAddress emailAddress) {
         this.emailAddress = emailAddress.getValue();
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(final String nickname) {
-        this.nickname = nickname;
     }
 
     public User getUser() {

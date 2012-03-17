@@ -14,6 +14,7 @@
 package com.nimbits.server.calculation;
 
 import com.google.gwt.user.server.rpc.*;
+import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.calculation.Calculation;
@@ -27,7 +28,6 @@ import com.nimbits.server.entity.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.recordedvalue.*;
 import com.nimbits.server.user.*;
-import com.nimbits.shared.*;
 
 import java.util.*;
 
@@ -56,7 +56,7 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
     }
 
     @Override
-    public Entity addUpdateCalculation(User u, Entity entity, EntityName name, Calculation calculation) {
+    public Entity addUpdateCalculation(User u, Entity entity, EntityName name, Calculation calculation) throws NimbitsException {
         Entity retObj = null;
 
         if (entity == null) {
@@ -99,7 +99,7 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
     }
 
     @Override
-    public Entity addUpdateCalculation(Entity entity, EntityName name, Calculation calculation) {
+    public Entity addUpdateCalculation(Entity entity, EntityName name, Calculation calculation) throws NimbitsException {
          User u = getUser();
          return addUpdateCalculation(u, entity, name, calculation);
     }

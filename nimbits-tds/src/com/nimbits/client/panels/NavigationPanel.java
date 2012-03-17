@@ -23,6 +23,7 @@ import com.extjs.gxt.ui.client.widget.grid.*;
 import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.common.*;
 import com.nimbits.client.controls.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.*;
@@ -33,7 +34,6 @@ import com.nimbits.client.model.value.*;
 import com.nimbits.client.service.datapoints.*;
 import com.nimbits.client.service.entity.*;
 import com.nimbits.client.service.recordedvalues.*;
-import com.nimbits.shared.*;
 
 import java.util.*;
 
@@ -45,11 +45,10 @@ class NavigationPanel extends NavigationEventProvider {
     private Timer updater;
     private boolean expanded = false;
     private Map<String, String> settings;
-    List<String> parents;
-    EntityContextMenu context;
+    private List<String> parents;
+    private EntityContextMenu context;
     private final User user;
     private boolean saveWithCurrentTime;
-    private boolean autoSaveNumbers;
     private final static int valueColumnIndex = 1;
 
     public NavigationPanel(final User user,
@@ -61,13 +60,10 @@ class NavigationPanel extends NavigationEventProvider {
         setScrollMode(Scroll.AUTO);
         getUserEntities(false);
         this.saveWithCurrentTime = true;
-        this.autoSaveNumbers = true;
         tree = new EntityTree<ModelData>();
     }
 
-    public void setAutoSaveNumbers(boolean autoSaveNumbers) {
-        this.autoSaveNumbers = autoSaveNumbers;
-    }
+
 
     public void setSaveWithCurrentTime(boolean saveWithCurrentTime) {
         this.saveWithCurrentTime = saveWithCurrentTime;
@@ -96,27 +92,22 @@ class NavigationPanel extends NavigationEventProvider {
         target.setAllowSelfAsSource(true);
         target.setFeedback(Feedback.BOTH);
         tree.addListener(Events.AfterEdit, afterEditListener);
-
         treePropertyBuilder();
-        GxtModel userModel =  treeStoreBuilder(result);
+        treeStoreBuilder(result);
         treeDNDBuilder();
-
         removeAll();
-
         add(tree);
-
-
     }
 
     private void updateModel(Value value, GxtModel model) {
-        model.set(Const.PARAM_VALUE, value.getNumberValue());
+        model.set(Const.PARAM_VALUE, value.getValueWithNote());
         model.set(Const.PARAM_DATA, value.getData());
         model.set(Const.Params.PARAM_TIMESTAMP, value.getTimestamp());
         model.set(Const.Params.PARAM_NOTE, value.getNote());
         model.setAlertType(value.getAlertState());
         model.setDirty(false);
         tree.getTreeStore().update(model);
-        notifyValueEnteredListener(model.getBaseEntity(), value);
+        notifyValueEnteredListener(model, value);
     }
 
     private void treePropertyBuilder() {
@@ -414,22 +405,18 @@ class NavigationPanel extends NavigationEventProvider {
         public void handleEvent(final GridEvent be) {
             final GxtModel model = (GxtModel) be.getModel();
 
-            if (be.getColIndex() == valueColumnIndex && autoSaveNumbers ) { //only save when the value is updated
+            if (be.getColIndex() == valueColumnIndex) { //only save when the value is updated
 
                 if (!model.isReadOnly()) {
                     model.setDirty(true);
 
 
                     final Entity entity =model.getBaseEntity();
-
-
                     final Date timestamp = saveWithCurrentTime ? new Date() : (Date) model.get(Const.Params.PARAM_TIMESTAMP);
-
-                    final Double v = model.get(Const.PARAM_VALUE);
-                    final String note = model.get(Const.Params.PARAM_NOTE);
-                    final String data = model.get(Const.PARAM_DATA);
+                    final String valueAndNote = model.get(Const.PARAM_VALUE);
+                    //final String data = model.get(Const.PARAM_DATA);
                     String uuid = model.getId();
-                    final Value value = ValueModelFactory.createValueModel(0.0, 0.0, v, timestamp, uuid, note, data);
+                    final Value value = ValueModelFactory.createValueModel(valueAndNote, timestamp, uuid);
 
                     RecordedValueServiceAsync service = GWT.create(RecordedValueService.class);
                     service.recordValue(entity, value, new AsyncCallback<Value>() {
@@ -495,10 +482,10 @@ class NavigationPanel extends NavigationEventProvider {
             final GxtModel model = (GxtModel)x;
             Date date = model.get(Const.Params.PARAM_TIMESTAMP) == null ? new Date() : (Date) model.get(Const.Params.PARAM_TIMESTAMP);
             final Date timestamp = saveWithCurrentTime ? new Date() : date;
-            final double v = model.get(Const.PARAM_VALUE) == null ? 0.0 : Double.valueOf(model.get(Const.PARAM_VALUE).toString());
-            final String note = model.get(Const.Params.PARAM_NOTE);
-            final String data = model.get(Const.PARAM_DATA);
-            final Value value = ValueModelFactory.createValueModel(0.0, 0.0, v, timestamp, model.getId(), note, data);
+            final String v = model.get(Const.PARAM_VALUE);
+//            final String note = model.get(Const.Params.PARAM_NOTE);
+//            final String data = model.get(Const.PARAM_DATA);
+            final Value value = ValueModelFactory.createValueModel(v, timestamp, model.getId());
 
             service.recordValue(model.getBaseEntity(), value, new AsyncCallback<Value>() {
                 @Override
@@ -510,7 +497,7 @@ class NavigationPanel extends NavigationEventProvider {
                 @Override
                 public void onSuccess(final Value value) {
                     updateModel(value, model);
-                    notifyValueEnteredListener(model.getBaseEntity(), value);
+
                 }
             });
             model.setDirty(false);

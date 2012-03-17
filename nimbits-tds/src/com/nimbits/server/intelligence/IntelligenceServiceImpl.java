@@ -14,6 +14,7 @@
 package com.nimbits.server.intelligence;
 
 import com.google.gwt.user.server.rpc.*;
+import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
@@ -32,7 +33,6 @@ import com.nimbits.server.point.*;
 import com.nimbits.server.recordedvalue.*;
 import com.nimbits.server.settings.*;
 import com.nimbits.server.user.*;
-import com.nimbits.shared.*;
 import org.w3c.dom.*;
 import org.xml.sax.*;
 
@@ -184,7 +184,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
     }
 
     @Override
-    public Entity addUpdateIntelligence(Entity entity, EntityName name, Intelligence update) {
+    public Entity addUpdateIntelligence(Entity entity, EntityName name, Intelligence update) throws NimbitsException {
 
         Entity retObj = null;
         User u = getUser();
@@ -230,7 +230,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
     }
 
     @Override
-    public void processIntelligence(User u, Point point) {
+    public void processIntelligence(User u, Point point) throws NimbitsException {
         List<Intelligence> list = IntelligenceServiceFactory.getDaoInstance().getIntelligence(point);
 
         for (Intelligence i : list) {
@@ -264,7 +264,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
     }
 
 
-    private String addDataToInput(final User u, final String input)  {
+    private String addDataToInput(final User u, final String input) throws NimbitsException {
 
         String retStr = input;
 
@@ -276,7 +276,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
                 // System.out.println(k);
                 if (k.contains(".data]") || k.contains(".value]") || k.contains(".note]")) {
                     String p = k.split("\\.")[0];
-                    EntityName pointName = CommonFactoryLocator.getInstance().createName(p);
+                    EntityName pointName = CommonFactoryLocator.getInstance().createName(p, EntityType.point);
                     String a = k.split("\\.")[1];
 
                     a = a.substring(0, a.indexOf("]"));

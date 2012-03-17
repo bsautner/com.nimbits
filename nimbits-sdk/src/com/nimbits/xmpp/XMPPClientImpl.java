@@ -15,12 +15,15 @@ package com.nimbits.xmpp;
 
 
 import com.nimbits.client.NimbitsClient;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
+import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.xmpp.*;
 import com.nimbits.server.gson.GsonFactory;
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.filter.AndFilter;
@@ -103,7 +106,21 @@ public class XMPPClientImpl extends Observable implements XMPPClient {
     }
 
     @Override
+    @Deprecated
     public boolean connect() throws NimbitsException {
+        EntityName name = null;
+        return connect(name);
+    }
+    @Override
+
+
+    public boolean connect(String resourceName) throws NimbitsException {
+        EntityName name = CommonFactoryLocator.getInstance().createName(resourceName, EntityType.resource);
+        return connect(name);
+    }
+
+    @Override
+    public boolean connect(EntityName resourceName) throws NimbitsException {
         final boolean connected;
 
         if (client.getGoogleUser() == null) {
@@ -113,8 +130,16 @@ public class XMPPClientImpl extends Observable implements XMPPClient {
             try {
                 connection.connect();
 
-                connection.login(client.getGoogleUser().getGoogleEmailAddress().getValue()
-                        , client.getGoogleUser().getGooglePassword());
+
+                if (resourceName == null) {
+                    connection.login(client.getGoogleUser().getGoogleEmailAddress().getValue(), client.getGoogleUser().getGooglePassword());
+                }
+                else {
+                    connection.login(client.getGoogleUser().getGoogleEmailAddress().getValue() , client.getGoogleUser().getGooglePassword(), resourceName.getValue());
+                }
+
+
+
                 connected = connection.isConnected();
 
                 if (connected) {

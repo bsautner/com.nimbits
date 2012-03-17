@@ -1,6 +1,7 @@
 package com.nimbits.server.entity;
 
 import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 
 import java.util.*;
@@ -18,7 +19,7 @@ public interface EntityTransactions {
 
     List<Entity> getEntityChildren(Entity parentEntity, EntityType type);
 
-    Entity addUpdateEntity(Entity entity);
+    Entity addUpdateEntity(Entity entity) throws NimbitsException;
 
     List<Entity> getEntities();
 
@@ -27,4 +28,6 @@ public interface EntityTransactions {
     Entity getEntityByUUID(String uuid);
 
     Entity getEntityByName(EntityName name);
+
+    Map<String, Entity> getSystemWideEntityMap(EntityType type);
 }

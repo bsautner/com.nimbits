@@ -47,7 +47,7 @@ public class ChartAPIValueService extends HttpServlet {
         try {
             final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
             if (u != null && pointNameParam != null) {
-                EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam);
+                EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
                 processRequest(resp, pointName, uuid, u);
             }
         } catch (IOException ignore) {

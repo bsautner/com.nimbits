@@ -3,9 +3,9 @@ package com.nimbits.server.dao.entity;
 
 import com.nimbits.*;
 import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
-import com.nimbits.client.service.entity.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.orm.entity.*;
 
@@ -18,6 +18,8 @@ import java.util.*;
  * Date: 2/7/12
  * Time: 10:46 AM
  */
+
+@SuppressWarnings("unchecked")
 public class EntityDaoImpl implements  EntityTransactions {
 
     private final User user;
@@ -96,7 +98,7 @@ public class EntityDaoImpl implements  EntityTransactions {
 
 
     @Override
-    public Entity addUpdateEntity(Entity entity) {
+    public Entity addUpdateEntity(Entity entity) throws NimbitsException {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final Query q1 = pm.newQuery(EntityStore.class, "owner==o && entity==b");
@@ -119,6 +121,10 @@ public class EntityDaoImpl implements  EntityTransactions {
                 return EntityModelFactory.createEntity(user,result);
             }
             else {
+                if (entity.getEntityType().isUniqueNameFlag()) {
+                   checkDuplicateEntity(entity);
+
+                }
                 Entity commit = new EntityStore(entity);
                 pm.makePersistent(commit);
 
@@ -206,7 +212,8 @@ public class EntityDaoImpl implements  EntityTransactions {
 
 
     @Override
-    public void deleteEntity(Entity entity) {
+
+    public void deleteEntity(final Entity entity) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final Query q1 = pm.newQuery(EntityStore.class, "entity==b");
         q1.declareParameters("String b");
@@ -227,7 +234,8 @@ public class EntityDaoImpl implements  EntityTransactions {
     }
 
     @Override
-    public Entity getEntityByUUID(String uuid) {
+
+    public Entity getEntityByUUID(final String uuid) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
 
@@ -252,7 +260,8 @@ public class EntityDaoImpl implements  EntityTransactions {
     }
 
     @Override
-    public Entity getEntityByName(EntityName name) {
+
+    public Entity getEntityByName(final EntityName name) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
 
@@ -275,6 +284,58 @@ public class EntityDaoImpl implements  EntityTransactions {
             pm.close();
         }
     }
+
+    private void checkDuplicateEntity(Entity entity) throws NimbitsException {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+
+
+        try {
+            final Query q1 = pm.newQuery(EntityStore.class, "name==b && owner==o && entityType==t");
+            q1.declareParameters("String b, String o, Integer t");
+            q1.setRange(0, 1);
+            final List<Entity> c = (List<Entity>) q1.execute(
+                    entity.getName().getValue(),
+                    user.getUuid(),
+                    entity.getEntityType().getCode());
+            if (c.size() > 0) {
+
+                throw new NimbitsException("An Entity with the name " + entity.getName().getValue() +
+                        " already exists. Entities of type [" + entity.getEntityType().name() + "] must have a " +
+                        "unique name on your account");
+
+            }
+
+
+
+        } finally {
+            pm.close();
+        }
+    }
+
+    @Override
+
+    public Map<String, Entity> getSystemWideEntityMap(EntityType type) {
+        Map<String, Entity> retObj = new HashMap<String, Entity>();
+
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final Query q1 = pm.newQuery(EntityStore.class, "entityType==t");
+        q1.declareParameters("Integer t");
+        try {
+
+            final List<Entity> result = (List<Entity>) q1.execute(type.getCode());
+            List<Entity> models = EntityModelFactory.createEntities(null, result);
+            for (final Entity e : models) {
+               retObj.put(e.getEntity(), e);
+            }
+            return retObj;
+
+        } finally {
+            pm.close();
+        }
+
+
+    }
+
 
 
 }

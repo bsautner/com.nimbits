@@ -41,26 +41,25 @@ public class Upgrade {
 
         //recognise andriod client type - put links back in tree grid
 
-        //publish on hrd for users to test with
+        //x publish on hrd for users to test with
 
-        //test all buttons, export etc
+        //x test all buttons, export etc
 
         //review memcache
 
+        //x create a summary point, options of 1, 8 and 24 hour - to create averaged avalues stored in a summary data point
+        //x xmpp single points
+        //x fix move task to only work with active points
 
         //next version
 
-        //xmpp server configurable
-
-        //xmpp single points
 
         //new context menus: read / write keys per point - make calcs / wolfram alpha intelligence entities
 
-        //create a summary point, options of 1, 8 and 24 hour - to create averaged avalues stored in a summary data point
 
         //add wolfram alha results to search
 
-        //fix move task to only work with active points
+
 
 
 

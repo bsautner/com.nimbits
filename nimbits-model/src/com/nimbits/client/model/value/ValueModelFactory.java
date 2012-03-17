@@ -15,7 +15,7 @@ package com.nimbits.client.model.value;
 
 
 import com.nimbits.client.exception.NimbitsException;
-
+import com.nimbits.client.model.*;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -95,6 +95,42 @@ public class ValueModelFactory {
 
         return new ValueModel(0.0, 0.0, d, timestamp, null,note, "");
 
+    }
+    public static ValueModel createValueModel(final String valueAndNote, final Date timestamp, final String uuid) {
+        return createValueFromString(valueAndNote, timestamp, uuid);
+
+    }
+    private static ValueModel createValueFromString(final String valueAndNote, final Date timestamp, final String uuid) {
+        double d = 0;
+        String note = null;
+        String sample = valueAndNote.trim();
+        if (sample != null && sample.length() > 0) {
+
+            if (sample.contains(" ")) {
+                String a[] = sample.split(" ");
+                try {
+                    d =  Double.parseDouble(a[0]);
+                    note = sample.replace(a[0], "").trim();
+                }
+                catch (NumberFormatException ex) {
+                    note = sample;
+                    d = Const.CONST_IGNORED_NUMBER_VALUE;
+                }
+            }
+            else {
+                try {
+                    d =  Double.parseDouble(sample);
+                    note = null;
+                }
+                catch (NumberFormatException ex) {
+                    note = sample;
+                    d = Const.CONST_IGNORED_NUMBER_VALUE;
+                }
+            }
+        }
+
+
+        return new ValueModel(0.0, 0.0, d, timestamp, uuid,note, "");
     }
     public static List<Value> createValueModels(final List<Value> values) {
         final LinkedList<Value> retObj = new LinkedList<Value>();

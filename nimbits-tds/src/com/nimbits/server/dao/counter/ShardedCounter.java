@@ -35,6 +35,7 @@ import java.util.logging.*;
  * to reconstruct the current count.
  *
  */
+@SuppressWarnings("unchecked")
 public class ShardedCounter {
     private static final Logger log = Logger.getLogger(ShardedCounter.class.getName());
 
@@ -87,7 +88,7 @@ public class ShardedCounter {
         if (cache != null) {
             Integer cachedCount = (Integer) cache.get(COUNT + counterName);
             if (cachedCount != null) {
-                return cachedCount.intValue();
+                return cachedCount;
             }
         }
 
@@ -110,7 +111,7 @@ public class ShardedCounter {
         }
 
         if (cache != null) {
-            cache.put(COUNT + counterName, Integer.valueOf(sum));
+            cache.put(COUNT + counterName, sum);
         }
 
         return sum;
@@ -120,7 +121,7 @@ public class ShardedCounter {
         if (cache != null) {
             Integer cachedCount = (Integer) cache.get(SHARDS + counterName);
             if (cachedCount != null) {
-                return cachedCount.intValue();
+                return cachedCount;
             }
         }
 
@@ -129,14 +130,14 @@ public class ShardedCounter {
         try {
             DatastoreCounter current = getThisCounter(pm);
             if (current != null) {
-                numShards = current.getShardCount().intValue();
+                numShards = current.getShardCount();
             }
         } finally {
             pm.close();
         }
 
         if (cache != null) {
-            cache.put(SHARDS + counterName, Integer.valueOf(numShards));
+            cache.put(SHARDS + counterName, numShards);
         }
 
         return numShards;
@@ -152,7 +153,7 @@ public class ShardedCounter {
         try {
             DatastoreCounter current = getThisCounter(pm);
             if (current != null) {
-                numShards = current.getShardCount().intValue();
+                numShards = current.getShardCount();
                 current.setShardCount(numShards + totalCount);
                 pm.makePersistent(current);
             }
@@ -173,7 +174,7 @@ public class ShardedCounter {
         }
 
         if (cache != null) {
-            cache.put(SHARDS + counterName, Integer.valueOf(numShards));
+            cache.put(SHARDS + counterName, numShards);
         }
 
         return numShards;
@@ -188,7 +189,7 @@ public class ShardedCounter {
             Integer cachedCount = (Integer) cache.get(COUNT + counterName);
             if (cachedCount != null) {
                 cache.put(COUNT + counterName,
-                        Integer.valueOf(totalCount + cachedCount.intValue()));
+                        totalCount + cachedCount);
             }
         }
 

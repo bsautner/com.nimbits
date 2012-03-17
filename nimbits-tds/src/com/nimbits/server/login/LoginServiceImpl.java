@@ -14,7 +14,6 @@
 package com.nimbits.server.login;
 
 import com.google.appengine.api.users.*;
-import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.*;
 import com.nimbits.client.exception.*;
@@ -22,7 +21,6 @@ import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.service.*;
-import com.nimbits.server.common.*;
 import com.nimbits.server.feed.*;
 import com.nimbits.server.user.*;
 
@@ -46,7 +44,6 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
 
             loginInfo.setLoggedIn(true);
             loginInfo.setEmailAddress(internetAddress);
-            loginInfo.setNickname(user.getNickname());
             loginInfo.setUserAdmin(userService.isUserAdmin());
 
             loginInfo.setLogoutUrl(userService.createLogoutURL(requestUri));
@@ -70,7 +67,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
         return loginInfo;
     }
 
-    private void sendWelcomeFeed(com.nimbits.client.model.user.User u) {
+    private void sendWelcomeFeed(com.nimbits.client.model.user.User u) throws NimbitsException {
 
         final String message =
                 ("<b>Welcome To Nimbits!</b> <br> <p>This is your data feed channel, you can subscribe " +
@@ -83,7 +80,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
                 "you can see each others data.</p>");
         FeedServiceFactory.getInstance().postToFeed(u, message);
     }
-    private void sendUserCreatedFeed(com.nimbits.client.model.user.User u) {
+    private void sendUserCreatedFeed(com.nimbits.client.model.user.User u) throws NimbitsException {
 
         final String message =
                 ("New Nimbits user registered successfully");

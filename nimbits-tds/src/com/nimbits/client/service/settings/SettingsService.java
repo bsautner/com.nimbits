@@ -26,6 +26,6 @@ public interface SettingsService extends RemoteService {
 
     Map<String, String> getSettings() throws NimbitsException;
 
-    String getServerSecret() throws NimbitsException;
+
 
 }

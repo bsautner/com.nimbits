@@ -104,43 +104,44 @@ public class SubscriptionEntity implements Serializable, Subscription {
     public void setLastSent(Date lastSent) {
        this.lastSent = lastSent;
     }
-
+    @Override
     public String getSubscribedEntity() {
         return subscribedEntity;
     }
-
+    @Override
     public void setSubscribedEntity(String subscribedEntity) {
         this.subscribedEntity = subscribedEntity;
     }
-
+    @Override
     public boolean getNotifyFormatJson() {
         return notifyFormatJson;
     }
 
+    @Override
     public void setNotifyFormatJson(boolean notifyFormatJson) {
         this.notifyFormatJson = notifyFormatJson;
     }
-
+    @Override
     public boolean getEnabled() {
         return enabled;
     }
-
+    @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
-
+    @Override
     public SubscriptionNotifyMethod getNotifyMethod() {
         return SubscriptionNotifyMethod.get(this.notifyMethod);
     }
-
+    @Override
     public void setNotifyMethod(SubscriptionNotifyMethod notifyMethod) {
         this.notifyMethod = notifyMethod.getCode();
     }
-
+    @Override
     public SubscriptionType getSubscriptionType() {
         return SubscriptionType.get(subscriptionType);
     }
-
+    @Override
     public void setSubscriptionType(SubscriptionType subscriptionType) {
         this.subscriptionType = subscriptionType.getCode();
     }

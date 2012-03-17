@@ -195,7 +195,7 @@ public class GoogleAuthentication {
         urlConnection.setDoInput(true);
         urlConnection.setDoOutput(true);
         urlConnection.setUseCaches(false);
-        urlConnection.setRequestProperty("Content-Type",
+        urlConnection.setRequestProperty(Const.Params.PARAM_CONTENT_TYPE,
                 "application/x-www-form-urlencoded");
         final StringBuilder content = new StringBuilder();
         content.append("Email=")

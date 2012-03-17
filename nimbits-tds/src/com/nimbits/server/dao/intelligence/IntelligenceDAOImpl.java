@@ -16,6 +16,7 @@ import java.util.*;
  * Date: 2/21/12
  * Time: 11:50 AM
  */
+@SuppressWarnings("unchecked")
 public class IntelligenceDAOImpl implements IntelligenceTransactions {
 
 

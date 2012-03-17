@@ -9,15 +9,17 @@ import java.util.*;
  * Time: 1:36 PM
  */
 public enum EntityType {
-    user(0),
-    point(1),
-    category(2),
-    file(4),
-    subscription(5),
-    userConnection(6),
-    calculation(7),
-    intelligence(8),
-    feed(9);
+    user(0, true),
+    point(1, true),
+    category(2, false),
+    file(4, false),
+    subscription(5, false),
+    userConnection(6, false),
+    calculation(7, false),
+    intelligence(8, false),
+    feed(9, false),
+    resource(10, true),
+    summary(11, false);
 
     private static final Map<Integer, EntityType> lookup = new HashMap<Integer, EntityType>();
 
@@ -27,9 +29,10 @@ public enum EntityType {
     }
 
     private final int code;
-
-    private EntityType(int code) {
+    private final boolean uniqueNameFlag;
+    private EntityType(int code, boolean uniqueNameFlag) {
         this.code = code;
+        this.uniqueNameFlag = uniqueNameFlag;
     }
 
     public int getCode() {
@@ -40,4 +43,7 @@ public enum EntityType {
         return lookup.get(code);
     }
 
+    public boolean isUniqueNameFlag() {
+        return uniqueNameFlag;
+    }
 }

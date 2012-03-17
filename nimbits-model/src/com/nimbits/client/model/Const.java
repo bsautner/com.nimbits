@@ -25,6 +25,12 @@ public class Const {
     public static final String CONST_SERVER_VERSION = "3.3.2.2";
     public static final long DEFAULT_SERIAL_VERSION = 12L;
     public static final String CACHE_KEY_PREFIX = CONST_SERVER_VERSION + DEFAULT_SERIAL_VERSION;
+    public static final String CONTENT_TYPE_JSON = "application/json";
+    public static final String KEY_ACTIVE_POINTS = "KEY_ACTIVE_POINTS";
+    public static final String KEY_VALUE = "KEY_VALUE";
+    public static final String FILE_TYPE_SVG = ".svg";
+    public static final String KEY_ALL_SETTINGS = "KEY_ALL_SETTINGS";
+    public static final String KEY_SETTING = "KEY_SETTING";
 
 
     public class Params {
@@ -88,6 +94,10 @@ public class Const {
         public static final String PARAM_TOKEN = "rToken";
         public static final String PARAM_TOTAL = "total";
         public static final String PARAM_TWITTER = "TW";
+        public static final String PARAM_CONTENT_TYPE = "Content-Type";
+        public static final String PARAM_HTML = "html";
+        public static final String PARAM_NO = "no";
+        public static final String PARAM_YES = "no";
     }
 
 
@@ -178,6 +188,7 @@ public class Const {
     public static final String PATH_CONNECTION_IMAGE = "/resources/images/network.jpg";
     public static final String PATH_CURRENT_VALUE = "/service/currentvalue";
     public static final String PATH_DELETE_DATA_TASK = "/task/DeleteRecordedValuesTask";
+    public static final String PATH_SUMMARY_TASK = "/task/summary";
     public static final String PATH_BLOB_SERVICE = "/service/blob";
     public static final String PATH_GOOGLE_CLIENT_LOGIN = "https://www.google.com/accounts/ClientLogin";
     public static final String PATH_INCOMING_MAIL_QUEUE = "/task/incommingmail";
@@ -200,6 +211,7 @@ public class Const {
     public static final String PATH_WA_URL = "./wa.html";
     public static final String Path_CHART_API = "/service/chartapi";
     public static final String QUEUE_DELETE_DATA = "deletedata";
+    public static final String QUEUE_DELETE_SUMMARY = "summary";
     public static final String QUEUE_INCOMING_MAIL = "incommingmail";
     public static final String QUEUE_RECORD_VALUE = "recordvaluequeue";
     public static final String QUEUE_PROCESS_BATCH = "processbatchqueue";
@@ -224,7 +236,7 @@ public class Const {
     public static final String TRANSACTION_OPTIONAL = "transactions-optional";
     public static final String WARNING_UNCHECKED = "unchecked";
     public static final String WORD_ANDROID = "android";
-    public static final String WORD_ANNOTATION = "Annotation";
+    public static final String WORD_ANNOTATION = "Current Value";
     public static final String WORD_BLANK = "blank";
     public static final String WORD_CATEGORY = "Category";
     public static final String WORD_DATE = "Date";

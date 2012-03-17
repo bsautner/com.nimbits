@@ -22,8 +22,6 @@ public interface SettingTransactions {
 
     String getSetting(final String paramName) throws NimbitsException;
 
-    String getServerSecret() throws NimbitsException;
-
     Map<String, String> getSettings() throws NimbitsException;
 
     void addSetting(final String name, final String value);

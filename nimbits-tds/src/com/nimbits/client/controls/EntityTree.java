@@ -33,16 +33,15 @@ import java.util.*;
 public class EntityTree<ModelData extends com.extjs.gxt.ui.client.data.ModelData> extends EditorTreeGrid<ModelData> {
 
     public EntityTree() {
+
+
         super(new TreeStore<com.extjs.gxt.ui.client.data.ModelData>(), new ColumnModel(
                 Arrays.asList(
                         ColumnConfigs.pointNameColumn(),
-                        ColumnConfigs.currentValueColumn(),
-                        ColumnConfigs.timestampColumn(),
                         ColumnConfigs.noteColumn(),
+                        ColumnConfigs.timestampColumn(),
                         ColumnConfigs.dataColumn())
         ));
-
-
 
         setIconProvider( new ModelIconProvider<ModelData>() {
             @Override
@@ -63,7 +62,6 @@ public class EntityTree<ModelData extends com.extjs.gxt.ui.client.data.ModelData
 
                     case user:
                         return AbstractImagePrototype.create(Icons.INSTANCE.web());
-
                     case category:
                         return AbstractImagePrototype.create(Icons.INSTANCE.category());
                     case userConnection:
@@ -87,6 +85,9 @@ public class EntityTree<ModelData extends com.extjs.gxt.ui.client.data.ModelData
         });
     }
 
-
+    @Override
+    protected boolean hasChildren(com.extjs.gxt.ui.client.data.ModelData model) {
+         return true;
+    }
 
 }

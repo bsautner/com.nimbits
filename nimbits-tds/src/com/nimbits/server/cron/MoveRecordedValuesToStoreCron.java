@@ -13,8 +13,9 @@
 
 package com.nimbits.server.cron;
 
+import com.google.appengine.api.memcache.*;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.model.point.*;
-import com.nimbits.server.point.*;
 import com.nimbits.server.task.*;
 
 import javax.servlet.http.*;
@@ -32,26 +33,22 @@ public class MoveRecordedValuesToStoreCron extends HttpServlet {
      *
      */
     private static final long serialVersionUID = 1L;
-    // MemcacheService systemCache;
+
+
 
     @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp)
             throws IOException {
-        PrintWriter out = resp.getWriter();
-        int count = 0;
-       //todo limit to active points
 
-        final List<Point> points = PointServiceFactory.getInstance().getAllPoints();
+        final MemcacheService cacheShared = MemcacheServiceFactory.getMemcacheService();
+        if (cacheShared.contains(MemCacheKey.activePoints)) {
+            final Map<String, Point> points = (Map<String, Point>) cacheShared.get(MemCacheKey.activePoints);
+            cacheShared.delete(MemCacheKey.activePoints); //TODO possible race condition with record value service
+            for (final Point point : points.values()) {
+                  TaskFactoryLocator.getInstance().startMoveCachedValuesToStoreTask(point);
+            }
 
-        StringBuilder sb = new StringBuilder();
-        for (final Point point : points) {
-            count++;
-        //   sb.append("<p>" + point.getName() + "</p>");
-            TaskFactoryLocator.getInstance().startMoveCachedValuesToStoreTask(point);
         }
 
-        out.print("<h4> Total Points (using datastore): " + count + "</h4>");
-        out.print(sb.toString());
-        out.close();
     }
 }

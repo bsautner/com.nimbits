@@ -40,7 +40,7 @@ public class DatastoreCounter {
 
     public DatastoreCounter(final String counterName) {
         this.counterName = counterName;
-        this.numShards = Integer.valueOf(0);
+        this.numShards = 0;
     }
 
     public DatastoreCounter(final String counterName, final Integer numShards) {

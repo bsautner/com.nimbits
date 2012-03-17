@@ -23,14 +23,14 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
+import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.icons.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
-import com.nimbits.client.panels.*;
+import com.nimbits.client.ui.panels.*;
 import com.nimbits.client.service.entity.*;
-import com.nimbits.shared.*;
 
 import java.util.*;
 

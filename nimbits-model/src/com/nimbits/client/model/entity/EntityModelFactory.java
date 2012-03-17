@@ -2,6 +2,7 @@ package com.nimbits.client.model.entity;
 
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.server.Server;
@@ -19,7 +20,7 @@ import java.util.List;
 public class EntityModelFactory {
 
 
-    public static Entity createEntity(User user, Entity entity) {
+    public static Entity createEntity(final User user, final Entity entity) {
         Entity r = new EntityModel(entity);
         boolean isOwner =  (user != null && entity.getOwner().equals(user.getUuid()));
         r.setReadOnly(!isOwner);
@@ -27,7 +28,7 @@ public class EntityModelFactory {
 
     }
 
-    public static Entity createEntity(Entity entity) {
+    public static Entity createEntity(final Entity entity) {
 
         return new EntityModel(entity);
 
@@ -56,8 +57,8 @@ public class EntityModelFactory {
     }
 
 
-    public static Entity createEntity(User user) {
-        EntityName name = CommonFactoryLocator.getInstance().createName(user.getEmail().getValue());
+    public static Entity createEntity(final User user) throws NimbitsException {
+        EntityName name = CommonFactoryLocator.getInstance().createName(user.getEmail().getValue(), EntityType.user);
 
         return createEntity(name, "", EntityType.user, ProtectionLevel.onlyMe,
                 user.getUuid(), user.getUuid(), user.getUuid());
@@ -65,11 +66,11 @@ public class EntityModelFactory {
     }
 
 
-    public static EntityDescription createEntityDescription(Server server, Entity entity) {
+    public static EntityDescription createEntityDescription(final Server server, Entity entity) {
         return new EntityDescriptionModel(server, entity);
     }
 
-    public static List<EntityDescription> createPointDescriptions(List<EntityDescription> entityDescriptions) {
+    public static List<EntityDescription> createPointDescriptions(final List<EntityDescription> entityDescriptions) {
         List<EntityDescription> retObj = new ArrayList<EntityDescription>();
         for (EntityDescription entityDescription : entityDescriptions) {
             retObj.add(createPointDescription(entityDescription));
@@ -78,18 +79,18 @@ public class EntityModelFactory {
 
     }
 
-    public static EntityDescription createPointDescription(EntityDescription entityDesc) {
+    public static EntityDescription createPointDescription(final EntityDescription entityDesc) {
 
         return new EntityDescriptionModel(entityDesc);
 
 
     }
 
-    public static List<Entity> createEntities(User user, List<Entity> result) {
+    public static List<Entity> createEntities(final User user,final  List<Entity> result) {
         ArrayList<Entity> entities = new ArrayList<Entity>();
-        for (Entity e : result) {
+        for (final Entity e : result) {
 
-            boolean isOwner = e.getOwner().equals(user.getUuid());
+            final boolean isOwner = (user != null) && e.getOwner().equals(user.getUuid());
 
             if (entityIsReadable(user, e, isOwner))
             {
@@ -104,7 +105,7 @@ public class EntityModelFactory {
 
     }
 
-    private static boolean entityIsReadable(User user, Entity e, boolean owner) {
+    private static boolean entityIsReadable(final User user, final Entity e, final boolean owner) {
         boolean retVal =  ((e.getEntityType().equals(EntityType.user) ||
                 owner ||
                 e.getProtectionLevel().equals(ProtectionLevel.everyone) ||
@@ -115,13 +116,15 @@ public class EntityModelFactory {
         if (e.getEntityType().equals(EntityType.userConnection) && ! e.getOwner().equals(user.getUuid())) {
             retVal = false;
         }
-
+        if (e.getEntityType().equals(EntityType.summary) && user == null) {
+            retVal = true; //this is a system request from the summary cron job.
+        }
         return retVal;
 
 
     }
 
-    public static Entity createEntity(EntityName name, EntityType entityType) {
+    public static Entity createEntity(final EntityName name, final EntityType entityType) {
         return new EntityModel(name,
                 "",
                 entityType,
@@ -133,7 +136,7 @@ public class EntityModelFactory {
     }
 
 
-    public static Entity createEntity(User u, Point p, EntityName name) {
+    public static Entity createEntity(final User u, final Point p, final EntityName name) {
         if (u != null) {
             return new EntityModel(name,
                     "",

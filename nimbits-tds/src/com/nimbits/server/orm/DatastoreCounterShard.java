@@ -54,8 +54,8 @@ public class DatastoreCounterShard {
     public DatastoreCounterShard(String counterName, int shardNumber,
                                  int count) {
         this.counterName = counterName;
-        this.shardNumber = Integer.valueOf(shardNumber);
-        this.count = Integer.valueOf(count);
+        this.shardNumber = shardNumber;
+        this.count = count;
     }
 
     public Long getId() {
@@ -79,11 +79,11 @@ public class DatastoreCounterShard {
     }
 
     public void increment(int amount) {
-        count = Integer.valueOf(count.intValue() + amount);
+        count = count + amount;
     }
 
     public void incrementWolframAlpha(int amount) {
-        count = Integer.valueOf(count.intValue() + amount);
+        count = count + amount;
     }
     public int getWolframApiCount() {
         return wolframApiCount;

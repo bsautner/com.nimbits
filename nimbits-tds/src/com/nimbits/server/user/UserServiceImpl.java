@@ -15,6 +15,7 @@ package com.nimbits.server.user;
 
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.*;
+import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
@@ -29,8 +30,6 @@ import com.nimbits.server.dao.counter.*;
 import com.nimbits.server.email.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.feed.*;
-import com.nimbits.server.settings.*;
-import com.nimbits.shared.*;
 
 import javax.servlet.http.*;
 import java.util.*;
@@ -104,12 +103,12 @@ public class UserServiceImpl extends RemoteServiceServlet implements
                     }
 
                     //a secret was provided but it wasn't the user secret, maybe the global sever secret
-                    if (user.isRestricted() && !Utils.isEmptyString(secret)) {
-                        final String serverSecret = SettingsServiceFactory.getInstance().getServerSecret();
-                        if (!Utils.isEmptyString(serverSecret) && serverSecret.equals(secret)) {
-                            user.setRestricted(false);
-                        }
-                    }
+//                    if (user.isRestricted() && !Utils.isEmptyString(secret)) {
+//                        final String serverSecret = SettingsServiceFactory.getInstance().getServerSecret();
+//                        if (!Utils.isEmptyString(serverSecret) && serverSecret.equals(secret)) {
+//                            user.setRestricted(false);
+//                        }
+//                    }
                     //can we authenticate them with google auth?
                     //log.info("Is user authenticated with google account?" + (googleUserService.getCurrentUser() != null));
                     if (user.isRestricted()) {

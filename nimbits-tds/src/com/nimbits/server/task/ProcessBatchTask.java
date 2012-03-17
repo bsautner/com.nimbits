@@ -14,6 +14,7 @@
 package com.nimbits.server.task;
 
 import com.google.gson.*;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
@@ -100,7 +101,7 @@ public class ProcessBatchTask extends HttpServlet {
                 }
                 if (entity != null) {
                     try {
-                        final Value v = ValueModelFactory.createValueModel(0.0, 0.0, b.value, b.timestamp, entity.getUUID(), b.note);
+                        final Value v = ValueModelFactory.createValueModel(0.0, 0.0, b.value, b.timestamp, entity.getEntity(), b.note);
                         Point p = PointServiceFactory.getInstance().getPointByUUID(entity.getEntity());
                         RecordedValueServiceFactory.getInstance().recordValue(b.u, p, v, false);
                     } catch (JDOException e) {
@@ -117,7 +118,7 @@ public class ProcessBatchTask extends HttpServlet {
 
     private void processQueryString(final Enumeration<String> enumeration,
                                     final Map m,
-                                    final User u) {
+                                    final User u) throws NimbitsException {
 
         int x;
 
@@ -132,7 +133,7 @@ public class ProcessBatchTask extends HttpServlet {
         }
     }
 
-    private void getValuesFromParam(final Map m, final User u, final int x) {
+    private void getValuesFromParam(final Map m, final User u, final int x) throws NimbitsException {
 
         final String[] values = (String[]) m.get("v" + x);
         final String valStr = values[0];
@@ -148,7 +149,7 @@ public class ProcessBatchTask extends HttpServlet {
 
         Date timestamp;
         final String[] points = (String[]) m.get("p" + x);
-        final EntityName pointName = CommonFactoryLocator.getInstance().createName(points[0]);
+        final EntityName pointName = CommonFactoryLocator.getInstance().createName(points[0], EntityType.point);
         String note = "";
 
         if (m.containsKey("n" + x)) {

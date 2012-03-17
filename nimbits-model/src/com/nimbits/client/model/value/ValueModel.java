@@ -16,7 +16,6 @@ package com.nimbits.client.model.value;
 
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.model.Const;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -26,7 +25,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
     /**
      *
      */
-    private static final long serialVersionUID = Const.DEFAULT_SERIAL_VERSION;
+    private static final long serialVersionUID = 1l;
     private long id;
     private double lat;
     private double lng;
@@ -150,6 +149,20 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
     @Override
     public double getNumberValue() {
         return this.d;
+
+    }
+
+    @Override
+    public String getValueWithNote() {
+        StringBuilder sb = new StringBuilder();
+        if ( this.d != Const.CONST_IGNORED_NUMBER_VALUE) {
+            sb.append(this.d);
+        }
+        if (this.note != null && this.note.length() > 0) {
+            sb.append(" ");
+            sb.append(this.note);
+        }
+        return sb.toString().trim();
 
     }
 

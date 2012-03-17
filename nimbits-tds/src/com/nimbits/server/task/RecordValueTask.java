@@ -14,6 +14,7 @@
 package com.nimbits.server.task;
 
 import com.google.gson.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
@@ -24,10 +25,11 @@ import com.nimbits.server.intelligence.*;
 import com.nimbits.server.subscription.*;
 
 import javax.servlet.http.*;
+import java.util.logging.*;
 
 public class RecordValueTask extends HttpServlet {
 
-    //private static final Logger log = Logger.getLogger(RecordValueTask.class.getName());
+     private static final Logger log = Logger.getLogger(RecordValueTask.class.getName());
     private static final long serialVersionUID = 1L;
 
     @Override
@@ -50,8 +52,13 @@ public class RecordValueTask extends HttpServlet {
             if (!loopFlag) {
 
                 CalculationServiceFactory.getInstance().processCalculations(u, point, value);
-                IntelligenceServiceFactory.getInstance().processIntelligence(u, point);
-                SubscriptionServiceFactory.getInstance().processSubscriptions(point, value);
+                try {
+                    IntelligenceServiceFactory.getInstance().processIntelligence(u, point);
+                    SubscriptionServiceFactory.getInstance().processSubscriptions(point, value);
+                } catch (NimbitsException e) {
+                   log.severe(e.getMessage());
+                }
+
 
             }
 

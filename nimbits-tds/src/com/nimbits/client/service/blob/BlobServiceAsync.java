@@ -14,9 +14,11 @@
 package com.nimbits.client.service.blob;
 
 import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.model.entity.*;
 
 public interface BlobServiceAsync {
 
-
     void getBlobStoreUrl(String url, AsyncCallback<String> async);
+
+    void deleteBlob(Entity entity, AsyncCallback<Void> async);
 }

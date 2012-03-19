@@ -142,11 +142,8 @@ public class CategoryPropertyPanel extends NavigationEventProvider {
         buttonSave.addSelectionListener(new SelectionListener<ButtonEvent>() {
             public void componentSelected(ButtonEvent ce) {
 
-                try {
                     save();
-                } catch (NimbitsException ignored) {
 
-                }
             }
         });
 
@@ -159,7 +156,7 @@ public class CategoryPropertyPanel extends NavigationEventProvider {
 
     }
 
-    private void save() throws NimbitsException {
+    private void save() {
 
         final EntityServiceAsync service = GWT.create(EntityService.class);
         if (radioProtection0.getValue()) {

@@ -57,7 +57,7 @@ public class SummaryDaoImpl implements SummaryTransactions {
     }
 
     @Override
-    public Summary readSummary(Entity entity) {
+    public Summary readSummary(final Entity entity) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         List<SummaryEntity> results;
 
@@ -82,7 +82,7 @@ public class SummaryDaoImpl implements SummaryTransactions {
     }
 
     @Override
-    public void updateLastProcessed(Entity entity) {
+    public void updateLastProcessed(final Entity entity) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         List<SummaryEntity> results;
 
@@ -100,6 +100,24 @@ public class SummaryDaoImpl implements SummaryTransactions {
                 pm.flush();
             }
 
+        }
+        finally {
+            pm.close();
+        }
+    }
+
+    @Override
+    public void deleteSummary(final Entity entity) {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        List<SummaryEntity> results;
+
+
+        try {
+
+            Query q = pm.newQuery(SummaryEntity.class, "uuid==u");
+            q.declareParameters("String u");
+            results = (List<SummaryEntity>) q.execute(entity.getEntity());
+            pm.deletePersistentAll(results);
         }
         finally {
             pm.close();

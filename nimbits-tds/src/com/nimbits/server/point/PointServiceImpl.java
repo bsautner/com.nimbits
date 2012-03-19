@@ -78,6 +78,12 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
+    public void deletePoint(User u, Entity entity) {
+          Point deleted = PointTransactionsFactory.getInstance(u).deletePoint(entity);
+          TaskFactoryLocator.getInstance().startDeleteDataTask(deleted, false, 0);
+    }
+
+    @Override
     public Point updatePoint(final Point point) throws NimbitsException {
         final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
                 this.getThreadLocalRequest());

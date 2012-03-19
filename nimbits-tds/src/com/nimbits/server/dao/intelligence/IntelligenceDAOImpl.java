@@ -85,7 +85,7 @@ public class IntelligenceDAOImpl implements IntelligenceTransactions {
 
     @Override
     public List<Intelligence> getIntelligence(Point point) {
-        Intelligence retObj = null;
+
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         try {
@@ -94,6 +94,23 @@ public class IntelligenceDAOImpl implements IntelligenceTransactions {
             q.setRange(0,1);
             final List<Intelligence> results = (List<Intelligence>) q.execute(point.getUUID(), true);
             return  IntelligenceFactory.createIntelligences(results);
+
+        } finally {
+            pm.close();
+        }
+    }
+
+    @Override
+    public void deleteIntelligence(Entity entity) {
+
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+
+        try {
+            final Query q = pm.newQuery(DataPointIntelligenceEntity.class, "uuid == k");
+            q.declareParameters("String k");
+            q.setRange(0,1);
+            final List<Intelligence> results = (List<Intelligence>) q.execute(entity.getEntity());
+            pm.deletePersistentAll(results);
 
         } finally {
             pm.close();

@@ -51,13 +51,15 @@ public interface PointService extends RemoteService {
 
     String exportData(final Map<EntityName, Entity> points, final ExportType exportType, final Map<EntityName, List<Value>> values) ;
 
-    List<Point> getAllPoints(int start, int end);
+    List<Point> getAllPoints(final int start, final int end);
 
     List<Point> getIdlePoints();
 
     List<Point> getAllPoints();
 
-    Entity copyPoint(User u, Entity originalEntity, EntityName newName) throws NimbitsException;
+    Entity copyPoint(final User u, final Entity originalEntity, final EntityName newName) throws NimbitsException;
 
-    Map<String,Point> getPoints(Map<String, Entity> entities);
+    Map<String,Point> getPoints(final Map<String, Entity> entities);
+
+    void deletePoint(final User user, final Entity entity);
 }

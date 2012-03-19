@@ -4,6 +4,7 @@ import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.summary.*;
+import com.nimbits.client.model.user.*;
 
 /**
  * Created by Benjamin Sautner
@@ -14,9 +15,11 @@ import com.nimbits.client.model.summary.*;
 @RemoteServiceRelativePath("summary")
 public interface SummaryService  extends RemoteService {
 
-    Summary readSummary(Entity entity) throws NimbitsException;
+    Summary readSummary(final Entity entity) throws NimbitsException;
 
-    Entity addUpdateSummary(Entity entity, Summary update, EntityName name) throws NimbitsException;
+    Entity addUpdateSummary(final Entity entity, final Summary update, final EntityName name) throws NimbitsException;
 
-    void updateLastProcessed(Entity entity);
+    void updateLastProcessed(final Entity entity);
+
+    void deleteSummary(final User u, final Entity entity);
 }

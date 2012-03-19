@@ -19,4 +19,6 @@ public interface IntelligenceTransactions {
     Intelligence addUpdateIntelligence(Intelligence update);
 
     List<Intelligence> getIntelligence(Point point);
+
+    void deleteIntelligence(Entity entity);
 }

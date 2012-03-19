@@ -42,4 +42,5 @@ public interface PointServiceAsync {
     void addPoint(User user, Entity entity, Point point, AsyncCallback<Point> async) throws NimbitsException;
     void addPoint(EntityName name, AsyncCallback<Point> async) throws NimbitsException;
     void getPoints(final User u, List<Entity> entities, AsyncCallback<List<Point>> async);
+    void deletePoint(final User user, final Entity entity, AsyncCallback<Void> async);
 }

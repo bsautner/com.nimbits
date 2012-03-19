@@ -29,14 +29,15 @@ import java.util.*;
 public interface SubscriptionTransactions {
 
 
-    void subscribe(Entity entity, Subscription subscription);
+    void subscribe(final Entity entity, final Subscription subscription);
 
     Subscription readSubscription(final Entity entity);
 
     List<Subscription> getSubscriptionsToPointByType(final Point point, final SubscriptionType type);
 
-    List<Subscription> getSubscriptionsToPoint(Point point);
+    List<Subscription> getSubscriptionsToPoint(final Point point);
 
-    void updateSubscriptionLastSent(Subscription subscription);
+    void updateSubscriptionLastSent(final Subscription subscription);
 
+    void deleteSubscription(final Entity entity);
 }

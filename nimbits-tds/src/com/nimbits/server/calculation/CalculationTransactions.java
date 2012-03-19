@@ -26,9 +26,11 @@ import java.util.*;
  */
 public interface CalculationTransactions {
 
-    Calculation getCalculation(Entity entity);
+    Calculation getCalculation(final Entity entity);
 
-    Calculation addUpdateCalculation(Calculation calculation);
+    Calculation addUpdateCalculation(final Calculation calculation);
 
-    List<Calculation> getCalculations(Entity entity);
+    List<Calculation> getCalculations(final Entity entity);
+
+    void deleteCalculation(final Entity entity);
 }

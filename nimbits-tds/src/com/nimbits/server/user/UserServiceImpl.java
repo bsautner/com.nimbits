@@ -39,7 +39,7 @@ import java.util.logging.*;
 public class UserServiceImpl extends RemoteServiceServlet implements
         UserService, UserServerService {
     private static final long serialVersionUID = 1L;
-    private static final Logger log = Logger.getLogger(UserServiceImpl.class.getName());
+    //private static final Logger log = Logger.getLogger(UserServiceImpl.class.getName());
 
     private ShardedCounter getOrCreateCounter(final EmailAddress email) {
         CounterFactory factory = new CounterFactory();
@@ -152,10 +152,6 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
     }
 
-    @Override
-    public User getUserByID(long id) throws NimbitsException {
-        return UserTransactionFactory.getInstance().getNimbitsUserByID(id);
-    }
 
     @Override
     public User getAppUserUsingGoogleAuth() throws NimbitsException {
@@ -225,6 +221,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     public List<User> getConnectionRequests(List<String> connections) {
         return UserTransactionFactory.getInstance().getConnectionRequests(connections);
     }
+
 
 
 

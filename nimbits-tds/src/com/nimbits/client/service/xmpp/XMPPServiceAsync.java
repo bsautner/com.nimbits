@@ -25,11 +25,13 @@ import java.util.*;
 public interface XMPPServiceAsync {
     void sendInvite(AsyncCallback<Void> asyncCallback);
 
-    void sendMessage(String msgBody, EmailAddress email, AsyncCallback<Void> callback);
+    void sendMessage(final String msgBody, final EmailAddress email, final AsyncCallback<Void> callback);
 
-    void createXmppResource(final Entity targetPointEntity, final EntityName resourceName, AsyncCallback<Entity> async);
+    void createXmppResource(final Entity targetPointEntity, final EntityName resourceName, final AsyncCallback<Entity> async);
 
-    void getPointXmppResources(User user, final Point point, AsyncCallback<List<XmppResource>> async);
+    void getPointXmppResources(final User user, final Point point, final AsyncCallback<List<XmppResource>> async);
 
-    void sendMessage(List<XmppResource> resources, String message, EmailAddress email, AsyncCallback<Void> async);
+    void sendMessage(final List<XmppResource> resources, final String message, final EmailAddress email, final AsyncCallback<Void> async);
+
+    void deleteResource(final User u, final Entity entity, final AsyncCallback<Void> async);
 }

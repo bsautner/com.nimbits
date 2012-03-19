@@ -45,11 +45,6 @@ public class MemCacheHelper {
     }
 
 
-    public static String pointListKey(final User u) {
-        return Const.CACHE_KEY_USER_PREFIX + "PointList" + Const.CONST_SERVER_VERSION + u.getEmail().getValue();
-
-    }
-
 
     public static String allUsersCacheKey = Const.CACHE_KEY_PREFIX + Const.PARAM_USER + Const.CONST_SERVER_VERSION + "ALLUSERS";
 

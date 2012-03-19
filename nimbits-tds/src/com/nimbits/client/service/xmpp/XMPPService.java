@@ -29,9 +29,11 @@ public interface XMPPService extends RemoteService {
 
     void sendMessage(final String msgBody, final EmailAddress email);
 
-    List<XmppResource> getPointXmppResources(User user, final Point point);
+    List<XmppResource> getPointXmppResources(final User user, final Point point);
 
-    Entity createXmppResource(final Entity targetPointEntity,  final EntityName resourceName) throws NimbitsException;
+    Entity createXmppResource(final Entity targetPointEntity, final EntityName resourceName) throws NimbitsException;
 
-    void sendMessage(List<XmppResource> resources, String message, EmailAddress email);
+    void sendMessage(final List<XmppResource> resources, final String message, final EmailAddress email);
+
+    void deleteResource(final User u, final Entity entity);
 }

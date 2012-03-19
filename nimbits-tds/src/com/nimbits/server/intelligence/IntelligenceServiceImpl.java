@@ -63,7 +63,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
         try {
             return SettingsServiceFactory.getInstance().getSetting(Const.SETTING_WOLFRAM);
         } catch (NimbitsException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            log.severe(e.getMessage());
             return "";
         }
 
@@ -184,7 +184,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
     }
 
     @Override
-    public Entity addUpdateIntelligence(Entity entity, EntityName name, Intelligence update) throws NimbitsException {
+    public Entity addUpdateIntelligence(final Entity entity, final EntityName name, final Intelligence update) throws NimbitsException {
 
         Entity retObj = null;
         User u = getUser();
@@ -230,7 +230,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
     }
 
     @Override
-    public void processIntelligence(User u, Point point) throws NimbitsException {
+    public void processIntelligence(final User u, final Point point) throws NimbitsException {
         List<Intelligence> list = IntelligenceServiceFactory.getDaoInstance().getIntelligence(point);
 
         for (Intelligence i : list) {
@@ -256,10 +256,16 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
     }
 
     @Override
-    public Value processInput(Intelligence update) throws NimbitsException {
+    public Value processInput(final Intelligence update) throws NimbitsException {
         String processedInput = addDataToInput(getUser(), update.getInput());
         Point target = PointServiceFactory.getInstance().getPointByUUID(update.getTarget());
         return processInput(update, target, processedInput);
+
+    }
+
+    @Override
+    public void deleteIntelligence(final User u, final Entity entity) {
+        IntelligenceServiceFactory.getDaoInstance().deleteIntelligence(entity);
 
     }
 

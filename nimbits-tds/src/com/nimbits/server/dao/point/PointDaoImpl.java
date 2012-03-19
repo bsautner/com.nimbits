@@ -29,7 +29,7 @@ import javax.jdo.*;
 import javax.servlet.http.*;
 import java.util.*;
 import java.util.logging.*;
-
+@SuppressWarnings(Const.WARNING_UNCHECKED)
 public class PointDaoImpl implements PointTransactions {
     private final Logger log = Logger.getLogger(PointDaoImpl.class.getName());
     private final User u;
@@ -42,8 +42,7 @@ public class PointDaoImpl implements PointTransactions {
     * @see com.nimbits.server.point.PointTransactions#getPoints(com.nimbits.client.model.user.NimbitsUser)
     */
     @Override
-    @SuppressWarnings(Const.WARNING_UNCHECKED)
-    public List<Point> getPoints() {
+     public List<Point> getPoints() {
 
         List<Point> retObj = null;
         final PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -228,23 +227,49 @@ public class PointDaoImpl implements PointTransactions {
         }
     }
 
-
-    /* (non-Javadoc)
-    * @see com.nimbits.server.point.PointTransactions#deletePoint(com.nimbits.client.model.DataPoint)
-    */
     @Override
-    public void deletePoint(final Point p) {
+    public Point deletePoint(final Entity entity) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
+
+        List<DataPoint> points;
         try {
-            final Query q = pm.newQuery(DataPoint.class);
-            q.setFilter("id==k");
-            q.declareParameters("long k");
-            q.deletePersistentAll(p.getId());
-            TaskFactoryLocator.getInstance().startDeleteDataTask(p, false, 0);
+            Query q = pm.newQuery(DataPoint.class, "uuid == k");
+            q.declareParameters("String k");
+            q.setRange(0, 1);
+            points = (List<DataPoint>) q.execute(entity.getEntity());
+            if (points.size() > 0) {
+                Point p = points.get(0);
+                pm.deletePersistentAll(points);
+                return PointModelFactory.createPointModel(p);
+            }
+            else {
+                return null;
+            }
+
+
         } finally {
             pm.close();
         }
+
     }
+
+
+//    /* (non-Javadoc)
+//    * @see com.nimbits.server.point.PointTransactions#deletePoint(com.nimbits.client.model.DataPoint)
+//    */
+//    @Override
+//    public void deletePoint(final Point p) {
+//        final PersistenceManager pm = PMF.get().getPersistenceManager();
+//        try {
+//            final Query q = pm.newQuery(DataPoint.class);
+//            q.setFilter("id==k");
+//            q.declareParameters("long k");
+//            q.deletePersistentAll(p.getId());
+//
+//        } finally {
+//            pm.close();
+//        }
+//    }
 
 
 

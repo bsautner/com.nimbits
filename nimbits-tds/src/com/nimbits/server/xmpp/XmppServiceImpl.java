@@ -75,6 +75,12 @@ public class XmppServiceImpl extends RemoteServiceServlet implements XMPPService
             }
         }
     }
+
+    @Override
+    public void deleteResource(User u, Entity entity) {
+      XmppTransactionFactory.getInstance(u).deleteResource(entity);
+    }
+
     @Override
     public List<XmppResource> getPointXmppResources(User user, Point point) {
         return XmppTransactionFactory.getInstance(user).getPointXmppResources(point);

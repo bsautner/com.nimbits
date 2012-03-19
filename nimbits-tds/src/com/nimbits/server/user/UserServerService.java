@@ -14,6 +14,7 @@
 package com.nimbits.server.user;
 
 import com.nimbits.client.exception.*;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
 
 import javax.servlet.http.*;
@@ -26,5 +27,6 @@ import javax.servlet.http.*;
  */
 public interface UserServerService {
     User getHttpRequestUser(final HttpServletRequest req) throws NimbitsException;
-    User getUserByID(final long id) throws NimbitsException;
+
+
 }

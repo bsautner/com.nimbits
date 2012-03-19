@@ -61,7 +61,7 @@ public class CurrentValueService extends HttpServlet {
 //
             final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
             final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
-            Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
+            final Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
             final Point point = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
 
 
@@ -146,17 +146,7 @@ public class CurrentValueService extends HttpServlet {
             } else if (format.equals(Const.WORD_DOUBLE) && !Utils.isEmptyString(valueStr)) {
                 nv = ValueModelFactory.createValueModel(valueStr, note, lat, lng, jsonData);
             }
-
-
-
-            //if (u != null) {
-                out.println(processRequest(pointNameParam, uuid, format, nv, u));
-           // }
-
-
-           // else {
-             //   throw new NimbitsException(Const.ERROR_USER_NOT_FOUND);
-          //  }
+         out.println(processRequest(pointNameParam, uuid, format, nv, u));
 
         } catch (NimbitsException e) {
             out.println(e.getMessage());

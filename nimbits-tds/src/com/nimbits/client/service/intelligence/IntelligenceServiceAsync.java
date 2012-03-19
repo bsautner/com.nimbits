@@ -47,4 +47,6 @@ public interface IntelligenceServiceAsync {
     void addDataToInput(User user, Intelligence intelligence, AsyncCallback<String> async);
 
     void processInput(Intelligence update, AsyncCallback<Value> async);
+
+    void deleteIntelligence(final User u, final Entity entity, AsyncCallback<Void> async);
 }

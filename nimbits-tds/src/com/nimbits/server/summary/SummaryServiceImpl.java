@@ -40,6 +40,11 @@ public class SummaryServiceImpl  extends RemoteServiceServlet implements Summary
     }
 
     @Override
+    public void deleteSummary(User u, Entity entity) {
+       SummaryTransactionFactory.getInstance(u).deleteSummary(entity);
+    }
+
+    @Override
     public Entity addUpdateSummary(final Entity entity,final Summary update,final EntityName name) throws NimbitsException {
         User u = getUser();
 

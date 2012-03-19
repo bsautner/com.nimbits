@@ -16,6 +16,7 @@ package com.nimbits.client.service.user;
 import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.model.connection.*;
 import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
 
 import java.util.*;
@@ -30,11 +31,12 @@ public interface UserServiceAsync {
 
     void getPendingConnectionRequests(final EmailAddress email, final AsyncCallback<List<Connection>> asyncCallback);
 
-    void connectionRequestReply(final EmailAddress targetEmail, final EmailAddress requestorEmail, final String uuid, boolean accepted, AsyncCallback<Void> asyncCallback);
+    void connectionRequestReply(final EmailAddress targetEmail, final EmailAddress requestorEmail, final String uuid, final boolean accepted, final AsyncCallback<Void> asyncCallback);
 
-    void getAppUserUsingGoogleAuth(AsyncCallback<User> async);
+    void getAppUserUsingGoogleAuth(final AsyncCallback<User> async);
 
-    void getUserByUUID(String subscriberUUID, AsyncCallback<User> async);
+    void getUserByUUID(final String subscriberUUID, final AsyncCallback<User> async);
 
-    void getConnectionRequests(List<String> connections, AsyncCallback<List<User>> async);
+    void getConnectionRequests(final List<String> connections, final AsyncCallback<List<User>> async);
+
 }

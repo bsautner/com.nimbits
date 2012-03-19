@@ -25,7 +25,6 @@ import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.service.blob.*;
 import com.nimbits.client.service.entity.*;
@@ -113,11 +112,8 @@ public class FilePropertyPanel extends NavigationEventProvider {
         buttonSave.addSelectionListener(new SelectionListener<ButtonEvent>() {
             public void componentSelected(ButtonEvent ce) {
 
-                try {
                     saveFile();
-                } catch (NimbitsException ignored) {
 
-                }
             }
         });
 
@@ -163,7 +159,7 @@ public class FilePropertyPanel extends NavigationEventProvider {
         return buttonUpdate;
     }
 
-    private void saveFile() throws NimbitsException {
+    private void saveFile() {
 
         final EntityServiceAsync serviceAsync = GWT.create(BlobService.class);
         entity.setProtectionLevel(protectionLevelOptions.getProtectionLevel());

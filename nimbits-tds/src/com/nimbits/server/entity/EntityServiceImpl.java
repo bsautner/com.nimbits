@@ -1,15 +1,24 @@
 package com.nimbits.server.entity;
 
+import com.google.appengine.api.files.*;
 import com.google.gwt.user.server.rpc.*;
 import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.intelligence.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.service.entity.*;
+import com.nimbits.server.blob.*;
+import com.nimbits.server.calculation.*;
+import com.nimbits.server.dao.calculation.*;
+import com.nimbits.server.intelligence.*;
 import com.nimbits.server.orm.entity.*;
 import com.nimbits.server.point.*;
+import com.nimbits.server.subscription.*;
+import com.nimbits.server.summary.*;
 import com.nimbits.server.user.*;
+import com.nimbits.server.xmpp.*;
 
 import java.util.*;
 
@@ -19,6 +28,7 @@ import java.util.*;
  * Date: 2/7/12
  * Time: 12:05 PM
  */
+@SuppressWarnings("unchecked")
 public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTransactions, EntityService {
 
 
@@ -28,7 +38,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
 
         Entity e = EntityModelFactory.createEntity(name, "", type, ProtectionLevel.everyone,
                 UUID.randomUUID().toString(), u.getUuid(), u.getUuid());
-        Entity r = EntityServiceFactory.getDaoInstance(u).addUpdateEntity(e);
+        Entity r = EntityTransactionFactory.getInstance(u).addUpdateEntity(e);
         switch (type) {
             case point:
                 PointServiceFactory.getInstance().addPoint(u, r);
@@ -41,17 +51,17 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
 
     @Override
     public Entity getEntityByName(User user, EntityName name) {
-       return EntityServiceFactory.getDaoInstance(user).getEntityByName(name);
+       return EntityTransactionFactory.getInstance(user).getEntityByName(name);
     }
 
     @Override
     public void deleteEntity(User user, Entity entity) {
-         EntityServiceFactory.getDaoInstance(user).deleteEntity(entity);
+        EntityTransactionFactory.getInstance(user).deleteEntity(entity);
     }
 
     @Override
     public List<Entity> getEntityChildren(User user, Entity c, EntityType type) {
-        return EntityServiceFactory.getDaoInstance(user).getEntityChildren(c, type);
+        return EntityTransactionFactory.getInstance(user).getEntityChildren(c, type);
     }
 
     private User getUser() {
@@ -67,7 +77,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     @Override
     public List<Entity> getEntities() {
 
-         return EntityServiceFactory.getDaoInstance(getUser()).getEntities();
+         return EntityTransactionFactory.getInstance(getUser()).getEntities();
     }
 
     @Override
@@ -87,28 +97,63 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
 
     @Override
     public void deleteEntity(Entity entity) {
-        EntityServiceFactory.getDaoInstance(getUser()).deleteEntity(entity);
-        //TODO - delete any other data
+        User u = getUser();
+        if (u == null)  {
+            u = UserServiceFactory.getInstance().getUserByUUID(entity.getOwner());
+        }
+        EntityTransactionFactory.getInstance(u).deleteEntity(entity);
+        switch (entity.getEntityType()) {
+
+            case user:
+                break;
+            case point:
+                PointServiceFactory.getInstance().deletePoint(u, entity);
+                break;
+            case category:
+                break;
+            case file:
+                BlobServiceFactory.getInstance().deleteBlob(entity);
+                break;
+            case subscription:
+                SubscriptionServiceFactory.getInstance().deleteSubscription(u, entity);
+                break;
+            case userConnection:
+                 break;
+            case calculation:
+                CalculationServiceFactory.getInstance().deleteCalculation(u, entity);
+                break;
+            case intelligence:
+                IntelligenceServiceFactory.getInstance().deleteIntelligence(u, entity);
+                break;
+            case feed:
+                break;
+            case resource:
+                XmppServiceFactory.getInstance().deleteResource(u, entity);
+                break;
+            case summary:
+                SummaryServiceFactory.getInstance().deleteSummary(u, entity);
+                break;
+        }
     }
 
     @Override
     public Entity getEntityByUUID(String uuid) {
-       return EntityServiceFactory.getDaoInstance(getUser()).getEntityByUUID(uuid);
+       return EntityTransactionFactory.getInstance(getUser()).getEntityByUUID(uuid);
     }
 
     @Override
     public Map<String, Entity> getEntityMap(EntityType type) {
-       return EntityServiceFactory.getDaoInstance(getUser()).getEntityMap(type);
+       return EntityTransactionFactory.getInstance(getUser()).getEntityMap(type);
     }
 
     @Override
     public Map<String, Entity> getEntityMap(User user, EntityType type) {
-        return EntityServiceFactory.getDaoInstance(user).getEntityMap(type);
+        return EntityTransactionFactory.getInstance(user).getEntityMap(type);
     }
 
     @Override
     public Map<EntityName, Entity> getEntityNameMap(EntityType type) {
-        return EntityServiceFactory.getDaoInstance(getUser()).getEntityNameMap(type);
+        return EntityTransactionFactory.getInstance(getUser()).getEntityNameMap(type);
     }
 
 
@@ -136,33 +181,33 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
 
     @Override
     public List<Entity> getChildren(Entity parentEntity, EntityType type) {
-        return EntityServiceFactory.getDaoInstance(getUser()).getEntityChildren(parentEntity, type);
+        return EntityTransactionFactory.getInstance(getUser()).getEntityChildren(parentEntity, type);
     }
 
 
     @Override
     public List<Entity> getEntityChildren(Entity parentEntity, EntityType type) {
-        return EntityServiceFactory.getDaoInstance(getUser()).getEntityChildren(parentEntity, type);
+        return EntityTransactionFactory.getInstance(getUser()).getEntityChildren(parentEntity, type);
     }
 
     @Override
     public Entity getEntityByName(EntityName name) {
-       return EntityServiceFactory.getDaoInstance(getUser()).getEntityByName(name);
+       return EntityTransactionFactory.getInstance(getUser()).getEntityByName(name);
     }
 
     @Override
     public Map<String, Entity> getSystemWideEntityMap(EntityType type) {
-        return EntityServiceFactory.getDaoInstance(null).getSystemWideEntityMap(type);
+        return EntityTransactionFactory.getInstance(null).getSystemWideEntityMap(type);
     }
 
     @Override
     public Entity addUpdateEntity(User user, Entity entity) throws NimbitsException {
-        return EntityServiceFactory.getDaoInstance(user).addUpdateEntity(entity);
+        return EntityTransactionFactory.getInstance(user).addUpdateEntity(entity);
     }
 
     @Override
     public Entity getEntityByUUID(User user, String entityId) {
-        return EntityServiceFactory.getDaoInstance(user).getEntityByUUID(entityId);
+        return EntityTransactionFactory.getInstance(user).getEntityByUUID(entityId);
     }
 
 

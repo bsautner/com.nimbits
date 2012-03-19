@@ -293,7 +293,7 @@ public class PointWebService extends HttpServlet {
 
 
     //todo make ok for connections
-    private boolean okToReport(User u, Entity c) throws NimbitsException {
+    private boolean okToReport(User u, Entity c) {
         return c.getProtectionLevel().equals(ProtectionLevel.everyone) || !(u == null || u.isRestricted());
     }
 

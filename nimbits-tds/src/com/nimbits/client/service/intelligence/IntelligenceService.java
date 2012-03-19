@@ -37,13 +37,15 @@ public interface IntelligenceService extends RemoteService {
 
     Map<String, String> getHTMLContent(final String responseXML);
 
-    String addDataToInput(User user, Intelligence intelligence) throws NimbitsException;
+    String addDataToInput(final User user, final Intelligence intelligence) throws NimbitsException;
 
-    Intelligence getIntelligence(Entity entity);
+    Intelligence getIntelligence(final Entity entity);
 
-    Entity addUpdateIntelligence(Entity entity, EntityName name, Intelligence update) throws NimbitsException;
+    Entity addUpdateIntelligence(final Entity entity, final EntityName name, final Intelligence update) throws NimbitsException;
 
-    void processIntelligence(User u, Point point) throws NimbitsException;
+    void processIntelligence(final User u, final Point point) throws NimbitsException;
 
-    Value processInput(Intelligence update) throws NimbitsException;
+    Value processInput(final Intelligence update) throws NimbitsException;
+
+    void deleteIntelligence(final User u, final Entity entity);
 }

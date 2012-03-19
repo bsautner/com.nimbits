@@ -122,7 +122,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
         if (entity.getEntityType().equals(EntityType.subscription)) {
             entity.setName(name);
             SubscriptionTransactionFactory.getInstance(user).subscribe(entity,subscription);
-            return  EntityServiceFactory.getDaoInstance(user).addUpdateEntity(entity);
+            return  EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
 
         }
         else { //new
@@ -131,13 +131,13 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
                 Entity s = EntityModelFactory.createEntity(name, "",EntityType.subscription,
                         ProtectionLevel.onlyMe, subscription.getUuid(), entity.getEntity(), user.getUuid());
                 SubscriptionTransactionFactory.getInstance(user).subscribe(s, subscription);
-                return EntityServiceFactory.getDaoInstance(user).addUpdateEntity(s);
+                return  EntityServiceFactory.getInstance().addUpdateEntity(user, s);
             }
             else { //subscribe to some elses data
                 Entity s = EntityModelFactory.createEntity(name, "",EntityType.subscription,
                         ProtectionLevel.onlyMe, subscription.getUuid(), user.getUuid(), user.getUuid());
                 SubscriptionTransactionFactory.getInstance(user).subscribe(s, subscription);
-                return EntityServiceFactory.getDaoInstance(user).addUpdateEntity(s);
+                return  EntityServiceFactory.getInstance().addUpdateEntity(user, s);
             }
         }
 
@@ -152,9 +152,15 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
     public Entity getSubscribedEntity(Entity entity) {
         Subscription subscription =
                 SubscriptionTransactionFactory.getInstance(getUser()).readSubscription(entity);
-        return EntityServiceFactory.getDaoInstance(getUser()).getEntityByUUID(subscription.getSubscribedEntity());
+        return EntityServiceFactory.getInstance().getEntityByUUID(getUser(), subscription.getSubscribedEntity());
 
     }
+
+    @Override
+    public void deleteSubscription(User u, Entity entity) {
+        SubscriptionTransactionFactory.getInstance(u).deleteSubscription(entity);
+    }
+
     private void sendNotification(User user, Entity entity, Subscription subscription, Point point, Value value) throws NimbitsException {
         switch (subscription.getNotifyMethod()) {
             case none:
@@ -237,20 +243,12 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
                 picture.append("http://app.nimbits.com/resources/images/logo.png");
             }
 
-//                picture = "http://app.nimbits.com" +
-//                        "/service/chartapi?" +
-//                        "point=" +  URLEncoder.encode(p.getName().getValue(), Const.CONST_ENCODING) +
-//                        "&email=" + URLEncoder.encode(u.getEmail().getValue(), Const.CONST_ENCODING) +
-//                        "&cht=lc" +
-//                        "&chs=100x100" +
-//                        "&chds=a";
 
 
         } else {
             picture.append("http://app.nimbits.com/resources/images/logo.png");
         }
 
-        // String link = "http://app.nimbits.com?view=chart&uuid=" + p.getUuid();
         String link = "http://app.nimbits.com?uuid=" + p.getUUID();
         String d = Utils.isEmptyString(entity.getDescription()) ? "" : entity.getDescription();
         FacebookFactory.getInstance().updateStatus(u.getFacebookToken(), m, picture.toString(), link, "Subscribe to this data feed.",

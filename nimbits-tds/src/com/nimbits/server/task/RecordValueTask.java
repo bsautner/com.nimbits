@@ -29,7 +29,7 @@ import java.util.logging.*;
 
 public class RecordValueTask extends HttpServlet {
 
-     private static final Logger log = Logger.getLogger(RecordValueTask.class.getName());
+    private static final Logger log = Logger.getLogger(RecordValueTask.class.getName());
     private static final long serialVersionUID = 1L;
 
     @Override
@@ -40,19 +40,15 @@ public class RecordValueTask extends HttpServlet {
         final String pointJson = req.getParameter(Const.Params.PARAM_JSON_POINT);
         final String valueJson = req.getParameter(Const.Params.PARAM_JSON_VALUE);
         final String loopFlagParam = req.getParameter(Const.PARAM_LOOP);
-
         final Point point = gson.fromJson(pointJson, PointModel.class);
         final Value value = gson.fromJson(valueJson, ValueModel.class);
-
         final boolean loopFlag = Boolean.valueOf(loopFlagParam);
-
-
         final User u = gson.fromJson(userJson, UserModel.class);
 
             if (!loopFlag) {
 
-                CalculationServiceFactory.getInstance().processCalculations(u, point, value);
                 try {
+                    CalculationServiceFactory.getInstance().processCalculations(u, point, value);
                     IntelligenceServiceFactory.getInstance().processIntelligence(u, point);
                     SubscriptionServiceFactory.getInstance().processSubscriptions(point, value);
                 } catch (NimbitsException e) {

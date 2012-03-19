@@ -147,7 +147,7 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
         }
     }
     @Override
-    public void updateSubscriptionLastSent(Subscription subscription) {
+    public void updateSubscriptionLastSent(final Subscription subscription) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
             try {
@@ -167,6 +167,28 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
                 pm.close();
             }
 
+
+    }
+
+    @Override
+    public void deleteSubscription(Entity entity) {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        List<SubscriptionEntity> results;
+        Subscription retObj = null;
+        try {
+            Query q = pm.newQuery(SubscriptionEntity.class, "uuid==u");
+            q.declareParameters("String u");
+            q.setRange(0, 1);
+            results = (List<SubscriptionEntity>) q.execute(entity.getEntity());
+            if (results.size() > 0) {
+                SubscriptionEntity result = results.get(0);
+                pm.deletePersistent(result);
+            }
+
+        }
+        finally {
+            pm.close();
+        }
 
     }
 

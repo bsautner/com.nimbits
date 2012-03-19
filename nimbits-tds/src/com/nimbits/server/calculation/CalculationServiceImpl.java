@@ -99,6 +99,11 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
     }
 
     @Override
+    public void deleteCalculation(final User u, final Entity entity) {
+      CalculationServiceFactory.getDaoInstance(u).deleteCalculation(entity);
+    }
+
+    @Override
     public Entity addUpdateCalculation(Entity entity, EntityName name, Calculation calculation) throws NimbitsException {
          User u = getUser();
          return addUpdateCalculation(u, entity, name, calculation);

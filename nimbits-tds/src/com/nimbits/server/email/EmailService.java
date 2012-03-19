@@ -13,16 +13,15 @@
 
 package com.nimbits.server.email;
 
-import com.nimbits.client.exception.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.value.*;
 
 public interface EmailService {
-    void sendEmail(final EmailAddress email, final String message) throws NimbitsException;
+    void sendEmail(final EmailAddress email, final String message);
 
-    void sendEmail(final EmailAddress email, final String message, final String subject) throws NimbitsException;
+    void sendEmail(final EmailAddress email, final String message, final String subject);
 
     void sendAlert(final Entity entity, final Point point, final EmailAddress email, final Value value);
 }

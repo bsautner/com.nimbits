@@ -16,6 +16,7 @@ package com.nimbits.server.user;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.connection.*;
 import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
 import twitter4j.auth.*;
 
@@ -47,7 +48,9 @@ public interface UserTransactions {
 
     User updateLastLoggedIn(final User user, final Date LastLoggedIn) throws NimbitsException;
 
-    User getUserByUUID(String subscriberUUID);
+    User getUserByUUID(final String subscriberUUID);
 
-    List<User>  getConnectionRequests(List<String> connections);
+    List<User>  getConnectionRequests(final List<String> connections);
+
+
 }

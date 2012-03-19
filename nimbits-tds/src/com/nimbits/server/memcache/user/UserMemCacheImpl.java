@@ -30,6 +30,7 @@ import java.util.*;
  * Date: 9/27/11
  * Time: 11:18 AM
  */
+@SuppressWarnings("unchecked")
 public class UserMemCacheImpl implements UserTransactions {
     private final MemcacheService cache;
 
@@ -39,7 +40,7 @@ public class UserMemCacheImpl implements UserTransactions {
 
 
 
-    private void addUserToCache(final User user) throws NimbitsException {
+    private void addUserToCache(final User user) {
         if (cache.contains(MemCacheHelper.allUsersCacheKey)) {
             HashMap<EmailAddress, User> users = (HashMap<EmailAddress, User>) cache.get(MemCacheHelper.allUsersCacheKey);
             if (users.containsKey(user.getEmail())) {
@@ -60,7 +61,7 @@ public class UserMemCacheImpl implements UserTransactions {
 
     }
 
-    private User getUserFromCache(final EmailAddress emailAddress) throws NimbitsException {
+    private User getUserFromCache(final EmailAddress emailAddress) {
 
         try {
             if (cache.contains(MemCacheHelper.UserCacheKey(emailAddress))) {
@@ -76,7 +77,7 @@ public class UserMemCacheImpl implements UserTransactions {
 
     }
 
-    private User getUserFromCache(long id) throws NimbitsException {
+    private User getUserFromCache(long id) {
         try {
             if (cache.contains(MemCacheHelper.UserCacheKey(id))) {
                 return (User) cache.get(MemCacheHelper.UserCacheKey(id));
@@ -219,4 +220,5 @@ public class UserMemCacheImpl implements UserTransactions {
     public List<User> getConnectionRequests(List<String> connections) {
         return UserTransactionFactory.getDAOInstance().getConnectionRequests(connections);
     }
+
 }

@@ -93,7 +93,7 @@ public class UpgradeTask  extends HttpServlet
        log.info(string);
     }
 
-    private void doPoint(HttpServletRequest req) throws NimbitsException {
+    private void doPoint(HttpServletRequest req) {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
@@ -123,7 +123,7 @@ public class UpgradeTask  extends HttpServlet
                     if (target != null) {
                     Entity iEntity = EntityModelFactory.createEntity(name,"",EntityType.intelligence,
                             ProtectionLevel.onlyMe, uuid, p.getUUID(), u.getUuid() );
-                    EntityServiceFactory.getDaoInstance(u).addUpdateEntity(iEntity);
+                    EntityServiceFactory.getInstance().addUpdateEntity(u, iEntity);
 
                     Intelligence i = IntelligenceModelFactory.createIntelligenceModel(uuid, p.dataPointIntelligenceEntity.getEnabled(),
                             p.dataPointIntelligenceEntity.getResultTarget(),target.getUUID(), p.dataPointIntelligenceEntity.getInput(),
@@ -214,7 +214,7 @@ public class UpgradeTask  extends HttpServlet
                     uuid, true, p.calculationEntity.getFormula(), target, x, y, z);
 
             clog("saving entity");
-            EntityServiceFactory.getDaoInstance(u).addUpdateEntity(entity);
+            EntityServiceFactory.getInstance().addUpdateEntity(u, entity);
 
             clog("saving calc");
             CalculationServiceFactory.getDaoInstance(u).addUpdateCalculation(calc);
@@ -355,7 +355,7 @@ public class UpgradeTask  extends HttpServlet
 
     }
 
-    private void doUser(HttpServletRequest req) throws NimbitsException {
+    private void doUser(HttpServletRequest req) {
         Entity userEntity = GsonFactory.getInstance().fromJson(req.getParameter(Const.Params.PARAM_JSON), EntityModel.class);
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final Query userQuery = pm.newQuery(NimbitsUser.class, "uuid==o");
@@ -375,7 +375,7 @@ public class UpgradeTask  extends HttpServlet
                             UUID.randomUUID().toString(), userEntity.getEntity(), userEntity.getEntity());
                     Entity r = entity;
                     if (! name.getValue().equals(N)) {
-                        r = EntityServiceFactory.getDaoInstance(user).addUpdateEntity(entity);
+                        r = EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
                     }
                     clog("created category " + name.getValue());
                     TaskFactoryLocator.getInstance().startUpgradeTask(Action.category,r );
@@ -389,7 +389,7 @@ public class UpgradeTask  extends HttpServlet
                         Entity entity = EntityModelFactory.createEntity(name, "",EntityType.userConnection, ProtectionLevel.onlyMe,
                                 connection.getUuid(), user.getUuid(), user.getUuid());
                         clog("created connection " + name.getValue());
-                        EntityServiceFactory.getDaoInstance(user).addUpdateEntity(entity);
+                        EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
 
                     }
                 }

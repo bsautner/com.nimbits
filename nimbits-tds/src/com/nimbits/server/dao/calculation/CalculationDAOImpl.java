@@ -33,12 +33,12 @@ import java.util.*;
 public class CalculationDAOImpl implements CalculationTransactions {
     private final User user;
 
-    public CalculationDAOImpl(User user) {
+    public CalculationDAOImpl(final User user) {
         this.user = user;
     }
 
     @Override
-    public Calculation getCalculation(Entity entity) {
+    public Calculation getCalculation(final Entity entity) {
 
 
         Calculation retObj = null;
@@ -63,7 +63,7 @@ public class CalculationDAOImpl implements CalculationTransactions {
     }
 
     @Override
-    public List<Calculation> getCalculations(Entity entity) {
+    public List<Calculation> getCalculations(final Entity entity) {
 
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -85,7 +85,23 @@ public class CalculationDAOImpl implements CalculationTransactions {
     }
 
     @Override
-    public Calculation addUpdateCalculation( Calculation calculation) {
+    public void deleteCalculation(final Entity entity) {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+
+        try {
+            final Query q = pm.newQuery(CalculationEntity.class, "trigger == k");
+            q.declareParameters("String k");
+            q.setRange(0,1);
+            final List<Calculation> results = (List<Calculation>) q.execute(entity.getEntity());
+            pm.deletePersistentAll(results);
+
+        } finally {
+            pm.close();
+        }
+    }
+
+    @Override
+    public Calculation addUpdateCalculation(final Calculation calculation) {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         List<CalculationEntity> results;

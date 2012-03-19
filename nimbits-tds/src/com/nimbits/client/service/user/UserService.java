@@ -17,6 +17,7 @@ import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.connection.*;
 import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
 
 import java.util.*;
@@ -32,4 +33,7 @@ public interface UserService extends RemoteService {
     String getSecret() throws NimbitsException;
     User getUserByUUID(String subscriberUUID);
     List<User> getConnectionRequests(List<String> connections);
+
+
+
 }

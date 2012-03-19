@@ -1,6 +1,7 @@
 package com.nimbits.server.dao.xmpp;
 
 import com.nimbits.*;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.xmpp.*;
@@ -20,10 +21,10 @@ import java.util.*;
 public class XmppDaoImpl implements XmppTransaction {
     final private User user;
 
-    public XmppDaoImpl(User u) {
+    public XmppDaoImpl(final User u) {
         this.user = u;
     }
-    public void addResource(XmppResource resource)  {
+    public void addResource(final XmppResource resource)  {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
@@ -40,7 +41,7 @@ public class XmppDaoImpl implements XmppTransaction {
     }
 
     @Override
-    public List<XmppResource> getPointXmppResources(Point point) {
+    public List<XmppResource> getPointXmppResources(final Point point) {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         List<XmppResource> results;
@@ -55,6 +56,24 @@ public class XmppDaoImpl implements XmppTransaction {
                 retObj.add(XmppResourceFactory.createXmppResource(resource));
             }
             return retObj;
+        }
+        finally {
+            pm.close();
+        }
+    }
+
+    @Override
+    public void deleteResource(final Entity entity) {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        List<XmppResource> results;
+
+
+        try {
+            Query q = pm.newQuery(XmppResourceEntity.class, "entity==u");
+            q.declareParameters("String u");
+            results = (List<XmppResource>) q.execute(entity.getEntity());
+            pm.deletePersistentAll(results);
+
         }
         finally {
             pm.close();

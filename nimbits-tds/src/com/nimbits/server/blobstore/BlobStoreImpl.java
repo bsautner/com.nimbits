@@ -82,7 +82,7 @@ public class BlobStoreImpl implements BlobStore {
         }   catch (Exception e) {
             return null;
 
-            }
+        }
 
     }
 }

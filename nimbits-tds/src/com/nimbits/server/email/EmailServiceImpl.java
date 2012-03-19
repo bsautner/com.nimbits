@@ -46,7 +46,7 @@ public class EmailServiceImpl implements EmailService {
 
     }
 
-    public void sendEmail(final EmailAddress emailAddress, final String message) throws NimbitsException {
+    public void sendEmail(final EmailAddress emailAddress, final String message) {
         final Properties props = new Properties();
         final Session session = Session.getDefaultInstance(props, null);
 
@@ -70,7 +70,7 @@ public class EmailServiceImpl implements EmailService {
 
     public void sendEmail(final EmailAddress emailAddress,
                           final String message,
-                          final String subject) throws NimbitsException {
+                          final String subject) {
         final Properties props = new Properties();
         final Session session = Session.getDefaultInstance(props, null);
         try {

@@ -88,8 +88,7 @@ public class IncomingMailTask extends HttpServlet {
 
     private static void sendValue(final User u,
                                   final Point point,
-                                  final String k[]
-    ) throws NimbitsException {
+                                  final String k[]) {
 
 
         long timestamp;

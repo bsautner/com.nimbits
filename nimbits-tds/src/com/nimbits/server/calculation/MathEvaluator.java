@@ -16,7 +16,7 @@ package com.nimbits.server.calculation;
 import com.google.gwt.core.client.*;
 
 import java.util.*;
-
+@SuppressWarnings("unchecked")
 public class MathEvaluator {
     private static Operator[] operators = null;
     private Node node = null;

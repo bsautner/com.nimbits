@@ -35,7 +35,7 @@ public interface PointTransactions {
 
     Point updatePoint(final Point point) throws NimbitsException;
 
-    void deletePoint(final Point p) throws NimbitsException;
+  //  void deletePoint(final Point p) throws NimbitsException;
 
     Point checkPoint(final HttpServletRequest req, final EmailAddress email, final Point point) throws NimbitsException;
 
@@ -52,4 +52,6 @@ public interface PointTransactions {
     Point addPoint(Entity entity, Point point);
 
     List<Point>  getPoints(List<Entity> entities);
+
+    Point deletePoint(Entity entity);
 }

@@ -23,15 +23,17 @@ import com.nimbits.client.model.value.*;
 import java.util.*;
 
 public interface CalculationServiceAsync {
-    void getCalculation(Entity entity, AsyncCallback<Calculation> async);
+    void getCalculation(final Entity entity, final AsyncCallback<Calculation> async);
 
-    void addUpdateCalculation(Entity entity, EntityName name, Calculation calculation, AsyncCallback<Entity> async);
+    void addUpdateCalculation(final Entity entity, final EntityName name, final Calculation calculation, final AsyncCallback<Entity> async);
 
-    void solveEquation(final Calculation calculation, AsyncCallback<Value> async);
+    void solveEquation(final Calculation calculation, final AsyncCallback<Value> async);
 
-    void getCalculations(Entity entity, AsyncCallback<List<Calculation>> async);
+    void getCalculations(final Entity entity, final AsyncCallback<List<Calculation>> async);
 
-    void processCalculations(User u, Point point, Value value, AsyncCallback<Void> async);
+    void processCalculations(final User u, final Point point, final Value value, final AsyncCallback<Void> async);
 
-    void addUpdateCalculation(User u, Entity entity, EntityName name, Calculation calculation, AsyncCallback<Entity> async);
+    void addUpdateCalculation(final User u, final Entity entity, final EntityName name, final Calculation calculation, final AsyncCallback<Entity> async);
+
+    void deleteCalculation(final User u, final Entity entity, final AsyncCallback<Void> async);
 }

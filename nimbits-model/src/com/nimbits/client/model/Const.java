@@ -31,7 +31,10 @@ public class Const {
     public static final String FILE_TYPE_SVG = ".svg";
     public static final String KEY_ALL_SETTINGS = "KEY_ALL_SETTINGS";
     public static final String KEY_SETTING = "KEY_SETTING";
-
+    public static final String KEY_USER_NAMESPACE = "KEY_USER_NAMESPACE";
+    public static final String KEY_DEFAULT_NAMESPACE = "KEY_DEFAULT_NAMESPACE";
+    public static final String KEY_ENTITY_MAP = "KEY_ENTITY_MAP";
+    public static final String KEY_USER_POINT_NAMESPACE = "KEY_USER_POINT_NAMESPACE";
 
     public class Params {
 

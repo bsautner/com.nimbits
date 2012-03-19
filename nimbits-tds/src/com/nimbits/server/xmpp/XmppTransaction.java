@@ -1,5 +1,6 @@
 package com.nimbits.server.xmpp;
 
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.xmpp.*;
 
@@ -15,4 +16,7 @@ public interface XmppTransaction  {
   void addResource(XmppResource resource);
 
     List<XmppResource> getPointXmppResources(Point point);
+
+    void deleteResource(Entity entity);
+
 }

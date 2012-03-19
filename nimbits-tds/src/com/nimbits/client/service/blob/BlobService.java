@@ -15,6 +15,7 @@ package com.nimbits.client.service.blob;
 
 import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.model.*;
+import com.nimbits.client.model.entity.*;
 
 /**
  * Created by bsautner
@@ -25,8 +26,8 @@ import com.nimbits.client.model.*;
 @RemoteServiceRelativePath(Const.Params.PARAM_BLOB)
 public interface BlobService extends RemoteService {
 
-    String getBlobStoreUrl(String url);
-
+    String getBlobStoreUrl(final String url);
+    void deleteBlob(final Entity entity);
 
 
 }

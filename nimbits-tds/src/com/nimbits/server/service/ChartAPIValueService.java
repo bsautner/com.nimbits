@@ -57,7 +57,7 @@ public class ChartAPIValueService extends HttpServlet {
         }
     }
 
-    private void processRequest(HttpServletResponse resp, EntityName pointName, String uuid, User u) throws IOException, NimbitsException {
+    private void processRequest(HttpServletResponse resp, EntityName pointName, String uuid, User u) throws IOException {
         OutputStream out;
         Value nv;
         out = resp.getOutputStream();

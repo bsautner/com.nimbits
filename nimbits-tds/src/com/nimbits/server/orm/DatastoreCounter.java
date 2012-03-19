@@ -61,7 +61,7 @@ public class DatastoreCounter {
     }
 
     public void setShardCount(final int count) {
-        this.numShards = Integer.valueOf(count);
+        this.numShards = count;
     }
 
 

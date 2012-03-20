@@ -16,6 +16,7 @@ package com.nimbits.server.login;
 import com.google.appengine.api.users.*;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.*;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
@@ -78,13 +79,13 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
                 "target=\"_blank\" >nimbits.com</a> and subscribe to their " +
                 "alerts. Use the connection request button to invite other Nimbits users to connect to your account so " +
                 "you can see each others data.</p>");
-        FeedServiceFactory.getInstance().postToFeed(u, message);
+        FeedServiceFactory.getInstance().postToFeed(u, message, FeedType.info);
     }
     private void sendUserCreatedFeed(com.nimbits.client.model.user.User u) throws NimbitsException {
 
         final String message =
                 ("New Nimbits user registered successfully");
-        FeedServiceFactory.getInstance().postToFeed(u, message);
+        FeedServiceFactory.getInstance().postToFeed(u, message, FeedType.info);
     }
 
 }

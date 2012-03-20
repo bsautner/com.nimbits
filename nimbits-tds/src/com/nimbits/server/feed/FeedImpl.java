@@ -45,10 +45,10 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
     }
 
     @Override
-    public void postToFeed(final User user, final Entity entity, final Point originalPoint, final Value value) throws NimbitsException {
+    public void postToFeed(final User user, final Entity entity, final Point originalPoint, final Value value, final FeedType type) throws NimbitsException {
         final Point point = getFeedPoint(user);
         if (point != null) {
-            final FeedValue feedValue = new FeedValueModel(shortenFeedHTML(valueToHtml(user, entity, originalPoint, value)), value.getData());
+            final FeedValue feedValue = new FeedValueModel(shortenFeedHTML(valueToHtml(user, entity, originalPoint, value)), value.getData(), type);
             final String json = GsonFactory.getSimpleInstance().toJson(feedValue);
             final Value v = ValueModelFactory.createValueModel(value, json);
             RecordedValueServiceFactory.getInstance().recordValue(user, point, v, false);
@@ -67,7 +67,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
                 sb.append("<p style=\"color:red\">Error reported<p>");
                 sb.append("<p style=\"color:red\">" + ex.getMessage() + "<p>");
                 sb.append("<p>" + ExceptionUtils.getStackTrace(ex) + "<p>");
-                final FeedValue feedValue = new FeedValueModel(shortenFeedHTML(sb.toString()), "");
+                final FeedValue feedValue = new FeedValueModel(shortenFeedHTML(sb.toString()), "", FeedType.error);
                 final String json = GsonFactory.getSimpleInstance().toJson(feedValue);
                 final Value value = ValueModelFactory.createValueModel(0.0, 0.0, Const.CONST_IGNORED_NUMBER_VALUE,
                         new Date(), point.getUUID(), "", json);
@@ -80,14 +80,14 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
 
     }
 
-    public void postToFeed(final User user, final String html) throws NimbitsException {
+    public void postToFeed(final User user, final String html, final FeedType type) throws NimbitsException {
         final Point point = getFeedPoint(user);
         final StringBuilder sb = new StringBuilder() ;
         sb.append("<p><img src=\"" + ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest()) +
                 "/resources/images/logo.png\" align=\"left\" width=\"40\" height=\"40\">");
         sb.append(html);
         sb.append("</p>");
-        final FeedValue feedValue = new FeedValueModel(shortenFeedHTML(sb.toString()), "");
+        final FeedValue feedValue = new FeedValueModel(shortenFeedHTML(sb.toString()), "", type);
         final String json = GsonFactory.getSimpleInstance().toJson(feedValue);
         final Value value = ValueModelFactory.createValueModel(0.0, 0.0, Const.CONST_IGNORED_NUMBER_VALUE,
                 new Date(), point.getUUID(), "", json);
@@ -220,7 +220,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
 
         postToFeed(user, "A new data point has been created for your data feed. Your data feed is just " +
                 "a data point. Points are capable of storing numbers, text, json and xml data. Nimbits uses " +
-                "a single data point to drive this feed.");
+                "a single data point to drive this feed.", FeedType.info);
         return point;
 
     }

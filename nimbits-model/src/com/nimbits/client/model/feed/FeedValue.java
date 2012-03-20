@@ -1,5 +1,7 @@
 package com.nimbits.client.model.feed;
 
+import com.nimbits.client.enums.*;
+
 import java.io.*;
 
 /**
@@ -9,6 +11,8 @@ import java.io.*;
  * Time: 12:37 PM
  */
 public interface FeedValue  extends Serializable {
+
+    FeedType getFeedType();
 
     String getFeedHtml();
 

@@ -18,7 +18,7 @@ public class GxtFeedModel extends BaseTreeModel implements Serializable {
     public GxtFeedModel(FeedValue v) {
         this.html = v.getFeedHtml();
         set(Const.Params.PARAM_HTML,html);
-
+        set(Const.Params.PARAM_TYPE,v.getFeedType().getCode());
 
     }
 

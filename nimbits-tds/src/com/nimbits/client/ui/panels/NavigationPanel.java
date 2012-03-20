@@ -60,9 +60,10 @@ class NavigationPanel extends NavigationEventProvider {
         this.user = user;
         setBorders(false);
         setScrollMode(Scroll.AUTO);
-        getUserEntities(false);
-        this.saveWithCurrentTime = true;
         tree = new EntityTree<ModelData>();
+
+        getUserEntities(false);
+
     }
 
 

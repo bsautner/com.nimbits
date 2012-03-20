@@ -1,5 +1,6 @@
 package com.nimbits.client.model.feed;
 
+import com.nimbits.client.enums.*;
 import com.nimbits.client.model.*;
 
 import java.io.*;
@@ -15,15 +16,20 @@ import java.io.*;
 public class FeedValueModel  implements Serializable, FeedValue {
     private String feedHtml;
     private String originalData;
+    private int feedType;
 
-
-    public FeedValueModel( String feedHtml, String originalData) {
+    public FeedValueModel(final String feedHtml,final String originalData, FeedType feedType) {
         this.feedHtml = feedHtml;
         this.originalData = originalData;
-
+        this.feedType = feedType.getCode();
     }
 
     public FeedValueModel() {
+    }
+
+    @Override
+    public FeedType getFeedType() {
+        return FeedType.get(this.feedType);
     }
 
     @Override

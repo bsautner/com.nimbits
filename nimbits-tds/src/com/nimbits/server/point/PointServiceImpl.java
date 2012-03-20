@@ -112,7 +112,7 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     private void notifyFeedOfNewPoint(User user, Entity entity) throws NimbitsException {
         FeedServiceFactory.getInstance().postToFeed(user, "<p>A new data point named " + entity.getName().getValue() +
         " has been created with a default compression of 0.1, expiration of 90 days and security set to public. Right " +
-                "click your data point to edit its properties.</p>");
+                "click your data point to edit its properties.</p>", FeedType.info);
     }
 
     @Override

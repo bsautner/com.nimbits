@@ -102,6 +102,7 @@ public class Const {
         public static final String PARAM_HTML = "html";
         public static final String PARAM_NO = "no";
         public static final String PARAM_YES = "no";
+        public static final String PARAM_TYPE = "type";
     }
 
 
@@ -181,7 +182,7 @@ public class Const {
 
     public static final String SETTING_TWITTER_CLIENT_ID = "twitterClientId";
     public static final String SETTING_TWITTER_SECRET = "twitterSecret";
-    public static final String PARAM_TYPE = "type";
+
     public static final String PARAM_URL = "url";
     public static final String PARAM_UUID = "uuid";
     public static final String PARAM_VALUE = "value";

@@ -190,7 +190,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
             EmailServiceFactory.getInstance().sendEmail(email, Const.getConnectionInviteEmail(user.getEmail()));
             FeedServiceFactory.getInstance().postToFeed(user, "<p>A connection request has been emailed to " +
                     email.getValue() + ". If they approve, you will see any data object of theirs that have " +
-                    "their permission set to be viewable by the public or connections</p>");
+                    "their permission set to be viewable by the public or connections</p>", FeedType.info);
 
 
         }

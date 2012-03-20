@@ -178,7 +178,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
                 doXMPP(user, subscription, entity, point, value);
                 break;
             case feed:
-                FeedServiceFactory.getInstance().postToFeed(user, entity, point, value);
+                FeedServiceFactory.getInstance().postToFeed(user, entity, point, value, FeedType.data);
                 break;
         }
     }

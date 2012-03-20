@@ -54,9 +54,51 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
        return EntityTransactionFactory.getInstance(user).getEntityByName(name);
     }
 
+    private void deleteChildren(final User user, final Entity entity) {
+        //TODO - kick of a task to recursivly delete children - all types, and their children etc.
+    }
+
+
     @Override
     public void deleteEntity(final User user, final Entity entity) {
         EntityTransactionFactory.getInstance(user).deleteEntity(entity);
+
+        switch (entity.getEntityType()) {
+
+            case user:
+                break;
+            case point:
+                PointServiceFactory.getInstance().deletePoint(user, entity);
+
+                break;
+            case category:
+
+                break;
+            case file:
+                BlobServiceFactory.getInstance().deleteBlob(entity);
+                break;
+            case subscription:
+                SubscriptionServiceFactory.getInstance().deleteSubscription(user, entity);
+                break;
+            case userConnection:
+                break;
+            case calculation:
+                CalculationServiceFactory.getInstance().deleteCalculation(user, entity);
+                break;
+            case intelligence:
+                IntelligenceServiceFactory.getInstance().deleteIntelligence(user, entity);
+                break;
+            case feed:
+                break;
+            case resource:
+                XmppServiceFactory.getInstance().deleteResource(user, entity);
+                break;
+            case summary:
+                SummaryServiceFactory.getInstance().deleteSummary(user, entity);
+                break;
+        }
+        deleteChildren(user, entity);
+
     }
 
     @Override
@@ -101,39 +143,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
         if (u == null)  {
             u = UserServiceFactory.getInstance().getUserByUUID(entity.getOwner());
         }
-        EntityTransactionFactory.getInstance(u).deleteEntity(entity);
-        switch (entity.getEntityType()) {
-
-            case user:
-                break;
-            case point:
-                PointServiceFactory.getInstance().deletePoint(u, entity);
-                break;
-            case category:
-                break;
-            case file:
-                BlobServiceFactory.getInstance().deleteBlob(entity);
-                break;
-            case subscription:
-                SubscriptionServiceFactory.getInstance().deleteSubscription(u, entity);
-                break;
-            case userConnection:
-                 break;
-            case calculation:
-                CalculationServiceFactory.getInstance().deleteCalculation(u, entity);
-                break;
-            case intelligence:
-                IntelligenceServiceFactory.getInstance().deleteIntelligence(u, entity);
-                break;
-            case feed:
-                break;
-            case resource:
-                XmppServiceFactory.getInstance().deleteResource(u, entity);
-                break;
-            case summary:
-                SummaryServiceFactory.getInstance().deleteSummary(u, entity);
-                break;
-        }
+        deleteEntity(u, entity);
     }
 
     @Override

@@ -47,13 +47,13 @@ public class TaskFactoryImpl implements TaskFactory {
         final Queue queue = QueueFactory.getQueue(Const.QUEUE_DELETE_DATA);
         if (onlyExpired) {
             queue.add(TaskOptions.Builder.withUrl(Const.PATH_DELETE_DATA_TASK)
-                    .param(Const.Params.PARAM_POINT_ID,  point.getUUID())
+                    .param(Const.Params.PARAM_JSON,  GsonFactory.getInstance().toJson(point))
                     .param(Const.Params.PARAM_EXP, Long.toString(exp))
 
             );
         } else {
             queue.add(TaskOptions.Builder.withUrl(Const.PATH_DELETE_DATA_TASK)
-                    .param(Const.Params.PARAM_POINT_ID, (point.getUUID()))
+                    .param(Const.Params.PARAM_JSON,  GsonFactory.getInstance().toJson(point))
             );
         }
 

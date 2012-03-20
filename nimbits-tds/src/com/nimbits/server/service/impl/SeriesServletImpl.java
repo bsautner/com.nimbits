@@ -13,7 +13,6 @@
 
 package com.nimbits.server.service.impl;
 
-import com.google.gwt.core.client.*;
 import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
@@ -27,8 +26,8 @@ import com.nimbits.client.model.value.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.point.*;
-import com.nimbits.server.recordedvalue.*;
-import com.nimbits.server.timespan.*;
+import com.nimbits.server.value.*;
+import com.nimbits.server.time.*;
 import com.nimbits.server.user.*;
 
 import javax.servlet.http.*;

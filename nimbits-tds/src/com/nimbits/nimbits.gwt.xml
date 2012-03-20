@@ -29,7 +29,7 @@
     <inherits name="com.nimbits.NimbitsModel"/>
     <inherits name="org.vectomatic.libgwtsvg"/>
     <inherits name="com.extjs.gxt.themes.Themes"/>
-
+    <inherits name="com.google.gwt.http.HTTP"/>
     <source path='client'/>
 
 

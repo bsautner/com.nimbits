@@ -20,7 +20,7 @@ import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.timespan.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.server.memcache.*;
-import com.nimbits.server.recordedvalue.*;
+import com.nimbits.server.value.*;
 import com.nimbits.server.task.*;
 
 import java.util.*;
@@ -31,6 +31,7 @@ import java.util.*;
  * Date: 11/27/11
  * Time: 12:40 PM
  */
+@SuppressWarnings("unchecked")
 public class ValueMemCacheImpl implements RecordedValueTransactions {
 
     MemcacheService cache;
@@ -229,7 +230,7 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
         return retObj;
     }
 
-    //TODO need to do a big refactor to make a point's uuid they pk - then do key only queries
+    //TODO need to do a big refactor to make a point's uuid the pk - then do key only queries
     public void moveValuesFromCacheToStore() {
 
         final String b = MemCacheHelper.valueBufferCacheKey(p);
@@ -242,7 +243,7 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
                     final Map<Long, Object> valueMap = cache.getAll(x);
                     cache.deleteAll(x);
                     final List<Value> values = new ArrayList<Value>();
-                    int count = values.size();
+                  //  int count = values.size();
                     for (final Long ts : valueMap.keySet()) {
                         values.add((Value) valueMap.get(ts));
                     }
@@ -311,17 +312,10 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
         TreeMap<Long, Object> sorted_map = new TreeMap(bvc);
         sorted_map.putAll(valueMap);
 
-
         for (final Long ts : sorted_map.keySet()) {
-
-            Date start = timespan.getStart();
-            Date end = timespan.getEnd();
-            Date vts = new Date(ts);
             if ((ts >= timespan.getStart().getTime() - 1000) && (ts <= timespan.getEnd().getTime() + 1000)) {
                 retObj.add((Value) sorted_map.get(ts));
             }
-
-
         }
         return retObj;
     }

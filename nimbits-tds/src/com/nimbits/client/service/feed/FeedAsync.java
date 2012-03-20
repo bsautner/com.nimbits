@@ -9,12 +9,14 @@ import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 
 import java.util.*;
-
+@SuppressWarnings("unused")
 public interface FeedAsync {
 
     void getFeed(int count, AsyncCallback<List<FeedValue>> async);
 
-    void postToFeed(User user, Entity entity, Point originalPoint, Value value, AsyncCallback<Void> async) throws NimbitsException;
+    void postToFeed(User user, Entity entity, Point originalPoint, Value value, AsyncCallback<Void> async);
 
-    void postToFeed(final User user, final String html, AsyncCallback<Void> async) throws NimbitsException;
+    void postToFeed(final User user, final String html, AsyncCallback<Void> async);
+
+    void postToFeed(User user, NimbitsException ex, AsyncCallback<Void> async);
 }

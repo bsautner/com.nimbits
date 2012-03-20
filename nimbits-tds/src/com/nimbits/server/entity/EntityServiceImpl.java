@@ -50,17 +50,17 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     }
 
     @Override
-    public Entity getEntityByName(User user, EntityName name) {
+    public Entity getEntityByName(final User user, final EntityName name) {
        return EntityTransactionFactory.getInstance(user).getEntityByName(name);
     }
 
     @Override
-    public void deleteEntity(User user, Entity entity) {
+    public void deleteEntity(final User user, final Entity entity) {
         EntityTransactionFactory.getInstance(user).deleteEntity(entity);
     }
 
     @Override
-    public List<Entity> getEntityChildren(User user, Entity c, EntityType type) {
+    public List<Entity> getEntityChildren(final User user, final Entity c,final  EntityType type) {
         return EntityTransactionFactory.getInstance(user).getEntityChildren(c, type);
     }
 

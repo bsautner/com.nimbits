@@ -26,7 +26,7 @@ import com.nimbits.client.model.value.*;
 import com.nimbits.client.service.calculation.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.point.*;
-import com.nimbits.server.recordedvalue.*;
+import com.nimbits.server.value.*;
 import com.nimbits.server.user.*;
 
 import java.util.*;

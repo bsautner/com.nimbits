@@ -25,7 +25,7 @@ import com.nimbits.client.model.value.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.point.*;
-import com.nimbits.server.recordedvalue.*;
+import com.nimbits.server.value.*;
 
 import javax.jdo.*;
 import javax.servlet.http.*;

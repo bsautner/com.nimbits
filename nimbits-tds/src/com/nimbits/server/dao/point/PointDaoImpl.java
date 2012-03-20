@@ -239,8 +239,9 @@ public class PointDaoImpl implements PointTransactions {
             points = (List<DataPoint>) q.execute(entity.getEntity());
             if (points.size() > 0) {
                 Point p = points.get(0);
+                Point retObj =PointModelFactory.createPointModel(p);
                 pm.deletePersistentAll(points);
-                return PointModelFactory.createPointModel(p);
+                return retObj;
             }
             else {
                 return null;

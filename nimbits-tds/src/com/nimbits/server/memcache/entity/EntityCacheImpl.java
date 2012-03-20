@@ -107,7 +107,9 @@ public class EntityCacheImpl implements EntityTransactions {
         }
         else {
             Entity result =  EntityTransactionFactory.getDaoInstance(user).getEntityByName(name);
+            if (result != null) {
             addEntityToCache(result);
+            }
             return result;
         }
 

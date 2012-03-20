@@ -92,7 +92,7 @@
 
     <servlet>
         <servlet-name>dataService</servlet-name>
-        <servlet-class>com.nimbits.server.recordedvalue.RecordedValueServiceImpl</servlet-class>
+        <servlet-class>com.nimbits.server.value.RecordedValueServiceImpl</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>dataService</servlet-name>
@@ -389,6 +389,24 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>storageServlet</servlet-name>
+        <servlet-class>com.nimbits.server.storage.StorageServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>storageServlet</servlet-name>
+        <url-pattern>/service/storage</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>timeServlet</servlet-name>
+        <servlet-class>com.nimbits.server.time.TimeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>timeServlet</servlet-name>
+        <url-pattern>/service/time</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>exportServlet</servlet-name>
         <servlet-class>com.nimbits.server.service.ExportService</servlet-class>
     </servlet>
@@ -448,7 +466,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>com.nimbits.nimbits TimespanService</servlet-name>
-        <servlet-class>com.nimbits.server.timespan.TimespanServiceImpl</servlet-class>
+        <servlet-class>com.nimbits.server.time.TimespanServiceImpl</servlet-class>
     </servlet>
 
 

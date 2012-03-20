@@ -23,4 +23,6 @@ public interface Feed extends RemoteService{
     List<FeedValue> getFeed(int count) throws NimbitsException;
 
     void postToFeed(final User user, final String html) throws NimbitsException;
+
+    void postToFeed(User user, NimbitsException ex);
 }

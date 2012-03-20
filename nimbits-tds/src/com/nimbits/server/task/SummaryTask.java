@@ -10,7 +10,7 @@ import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.point.*;
-import com.nimbits.server.recordedvalue.*;
+import com.nimbits.server.value.*;
 import com.nimbits.server.summary.*;
 import com.nimbits.server.user.*;
 import org.apache.commons.math3.stat.descriptive.*;

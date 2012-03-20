@@ -16,7 +16,7 @@ import com.nimbits.server.entity.*;
 import com.nimbits.server.facebook.*;
 import com.nimbits.server.feed.*;
 import com.nimbits.server.gson.*;
-import com.nimbits.server.recordedvalue.*;
+import com.nimbits.server.value.*;
 import com.nimbits.server.twitter.*;
 import com.nimbits.server.user.*;
 import com.nimbits.server.xmpp.*;

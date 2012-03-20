@@ -1,7 +1,10 @@
 package com.nimbits.client.model.feed;
 
+import com.nimbits.client.model.*;
+
 import java.io.*;
-import java.util.*;
+
+
 
 /**
  * Created by Benjamin Sautner
@@ -25,6 +28,7 @@ public class FeedValueModel  implements Serializable, FeedValue {
 
     @Override
     public String getFeedHtml() {
+
         return feedHtml;
     }
     @Override

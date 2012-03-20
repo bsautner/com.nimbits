@@ -25,8 +25,8 @@ import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.point.*;
-import com.nimbits.server.recordedvalue.*;
-import com.nimbits.server.timespan.*;
+import com.nimbits.server.value.*;
+import com.nimbits.server.time.*;
 import com.nimbits.server.user.*;
 
 import javax.servlet.http.*;

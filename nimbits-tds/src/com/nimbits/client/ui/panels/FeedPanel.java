@@ -23,13 +23,12 @@ import java.util.*;
  * Time: 2:27 PM
  */
 public class FeedPanel  extends LayoutContainer {
-    private Timer updater;
     ListView<GxtFeedModel> view;
     //ContentPanel panel;
 
     @Override
     protected void onAttach() {
-        updater = new Timer() {
+        Timer updater = new Timer() {
             @Override
             public void run() {
 
@@ -64,7 +63,7 @@ public class FeedPanel  extends LayoutContainer {
                         }
                     }
                     if (store.getModels() != null && store.getModels().size() > 8) {
-                        setScrollMode(Style.Scroll.AUTO);
+                        setScrollMode(Style.Scroll.ALWAYS);
                     }
                     layout(true);
                 }
@@ -82,9 +81,9 @@ public class FeedPanel  extends LayoutContainer {
         view = new ListView<GxtFeedModel>() {
             @Override
             protected GxtFeedModel prepareData(GxtFeedModel model) {
-                String s = model.get("name");
+               // String s = model.get(Const.Params.PARAM_NAME);
                 //  model.set("shortName", Format.ellipse(s, 15));
-                model.set("path", GWT.getHostPageBaseURL() + model.get("path"));
+                model.set(Const.Params.PARAM_PATH, GWT.getHostPageBaseURL() + model.get(Const.Params.PARAM_PATH));
                 return model;
             }
 
@@ -92,7 +91,8 @@ public class FeedPanel  extends LayoutContainer {
 
 
         FeedAsync service = GWT.create(Feed.class);
-        service.getFeed(30, new AsyncCallback<List<FeedValue>>() {
+        final int FEED_COUNT = 30;
+        service.getFeed(FEED_COUNT, new AsyncCallback<List<FeedValue>>() {
             @Override
             public void onFailure(Throwable caught) {
 

@@ -17,7 +17,7 @@ import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.server.gson.*;
-import com.nimbits.server.recordedvalue.*;
+import com.nimbits.server.value.*;
 
 import javax.servlet.http.*;
 import java.io.*;

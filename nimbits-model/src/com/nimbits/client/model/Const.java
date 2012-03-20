@@ -35,6 +35,7 @@ public class Const {
     public static final String KEY_DEFAULT_NAMESPACE = "KEY_DEFAULT_NAMESPACE";
     public static final String KEY_ENTITY_MAP = "KEY_ENTITY_MAP";
     public static final String KEY_USER_POINT_NAMESPACE = "KEY_USER_POINT_NAMESPACE";
+    public static final int DEFAULT_FEED_LENGTH = 250;
 
     public class Params {
 
@@ -253,7 +254,7 @@ public class Const {
     public static final String WORD_TRUE = "true";
     public static final String WORD_VALUE = "Value";
     public static final String WORD_YES = "Yes";
-    public static final int DEFAULT_TIMER_UPDATE_SPEED = 5000;
+    public static final int DEFAULT_TIMER_UPDATE_SPEED = 10000;
     public static final String PATH_AH_LOGIN = "/_ah/login";
     public static final String PARAM_ACSID = "ACSID";
     public static final String PARAM_MY_FILE = "myFile";

@@ -23,9 +23,10 @@ import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.server.entity.*;
+import com.nimbits.server.feed.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.point.*;
-import com.nimbits.server.recordedvalue.*;
+import com.nimbits.server.value.*;
 import com.nimbits.server.service.impl.*;
 import com.nimbits.server.user.*;
 
@@ -118,8 +119,6 @@ public class CurrentValueService extends HttpServlet {
 
     @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
-
-
         final String pointNameParam = req.getParameter(Const.Params.PARAM_POINT);
         final String uuid = req.getParameter(Const.PARAM_UUID);
         final String formatParam = req.getParameter(Const.Params.PARAM_FORMAT);
@@ -130,14 +129,12 @@ public class CurrentValueService extends HttpServlet {
         final String lng = req.getParameter(Const.Params.PARAM_LNG);
         final String jsonData = req.getParameter(Const.PARAM_DATA);
 
-
-        Value nv = null;
-
         final PrintWriter out = resp.getWriter();
-
+        Value nv = null;
+        User u = null;
         try {
             Common.addResponseHeaders(resp, ExportType.plain);
-            final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
+            u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
 
             final String format = (Utils.isEmptyString(formatParam)) ? Const.WORD_DOUBLE : formatParam;
 
@@ -149,10 +146,9 @@ public class CurrentValueService extends HttpServlet {
          out.println(processRequest(pointNameParam, uuid, format, nv, u));
 
         } catch (NimbitsException e) {
-            out.println(e.getMessage());
-            log.severe("Current Value Service Error");
-            log.severe(e.getMessage());
-
+            if (u != null) {
+                FeedServiceFactory.getInstance().postToFeed(u, e);
+            }
         }
 
     }
@@ -173,7 +169,12 @@ public class CurrentValueService extends HttpServlet {
         } else if (!Utils.isEmptyString(pointNameParam)) {
             EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
             Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
+            if (e != null) {
             p = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
+            }
+            else {
+                throw new NimbitsException(Const.ERROR_POINT_NOT_FOUND);
+            }
 
         } else {
 
@@ -205,6 +206,10 @@ public class CurrentValueService extends HttpServlet {
                     result = String.valueOf(value.getNumberValue());
                 }
             }
+        }
+        else {
+
+            throw new NimbitsException(Const.ERROR_POINT_NOT_FOUND);
         }
         return result;
     }

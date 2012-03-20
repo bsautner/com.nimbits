@@ -30,7 +30,7 @@ import com.nimbits.server.entity.*;
 import com.nimbits.server.feed.*;
 import com.nimbits.server.http.*;
 import com.nimbits.server.point.*;
-import com.nimbits.server.recordedvalue.*;
+import com.nimbits.server.value.*;
 import com.nimbits.server.settings.*;
 import com.nimbits.server.user.*;
 import org.w3c.dom.*;

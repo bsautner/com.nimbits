@@ -20,7 +20,7 @@ import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.timespan.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.server.orm.*;
-import com.nimbits.server.recordedvalue.*;
+import com.nimbits.server.value.*;
 
 import javax.jdo.*;
 import java.util.*;

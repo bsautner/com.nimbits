@@ -14,7 +14,7 @@
 import com.google.gwt.junit.client.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.timespan.*;
-import com.nimbits.server.timespan.*;
+import com.nimbits.server.time.*;
 import org.junit.*;
 
 /**

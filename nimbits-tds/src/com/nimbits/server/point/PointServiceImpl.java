@@ -26,7 +26,7 @@ import com.nimbits.server.blobstore.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.export.*;
 import com.nimbits.server.feed.*;
-import com.nimbits.server.recordedvalue.*;
+import com.nimbits.server.value.*;
 import com.nimbits.server.task.*;
 import com.nimbits.server.user.*;
 

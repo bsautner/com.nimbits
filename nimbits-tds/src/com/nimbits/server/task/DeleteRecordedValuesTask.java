@@ -17,6 +17,7 @@ import com.google.appengine.api.datastore.*;
 import com.google.gwt.core.client.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.point.*;
+import com.nimbits.server.gson.*;
 import com.nimbits.server.point.*;
 
 import javax.servlet.http.*;
@@ -32,18 +33,18 @@ public class DeleteRecordedValuesTask extends HttpServlet {
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
 
-        final String pointID = req.getParameter(Const.Params.PARAM_POINT_ID);
+        final String pointJson = req.getParameter(Const.Params.PARAM_JSON);
         final String exp = req.getParameter(Const.Params.PARAM_EXP);
-
+        Point point = GsonFactory.getInstance().fromJson(pointJson, PointModel.class);
 
           int expDays = 0;
         try {
 
             if (exp != null) {
                 expDays = Integer.parseInt(exp);
-                deleteData(true, expDays, pointID);
+                deleteData(point, true, expDays);
             } else {
-                deleteData(false, expDays, pointID);
+                deleteData(point, false, expDays);
 
             }
         } catch (NumberFormatException e) {
@@ -52,17 +53,17 @@ public class DeleteRecordedValuesTask extends HttpServlet {
     }
 
 
-    private void deleteData(final boolean expOnly, final int expDays, final String uuid) {
+    private void deleteData(final Point point, final boolean expOnly, final int expDays) {
         long count = 0;
         final Set<Key> keys = new HashSet<Key>();
         final Calendar d = Calendar.getInstance();
         d.add(Calendar.DATE, (expDays * -1));
         final DatastoreService store = DatastoreServiceFactory.getDatastoreService();
-        Point p = PointServiceFactory.getInstance().getPointByUUID(uuid);
+//        Point p = PointServiceFactory.getInstance().getPointByUUID(uuid);
 
         final Query q = new Query("RecordedValue").setKeysOnly();
 
-        q.addFilter("pointFK", Query.FilterOperator.EQUAL, p.getId());
+        q.addFilter("pointFK", Query.FilterOperator.EQUAL, point.getId());
         if (expOnly) {
             q.addFilter(Const.Params.PARAM_TIMESTAMP, Query.FilterOperator.LESS_THAN, d.getTime());
         }
@@ -72,7 +73,7 @@ public class DeleteRecordedValuesTask extends HttpServlet {
         }
         if (count > 0) {
             store.delete(keys);
-            TaskFactoryLocator.getInstance().startDeleteDataTask(p, expOnly, expDays);
+            TaskFactoryLocator.getInstance().startDeleteDataTask(point, expOnly, expDays);
         }
 
     }

@@ -1,17 +1,4 @@
 <!DOCTYPE html>
-<!--
-  ~ Copyright (c) 2010 Tonic Solutions LLC.
-  ~
-  ~ http://www.nimbits.com
-  ~
-  ~
-  ~ Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
-  ~
-  ~ http://www.gnu.org/licenses/gpl.html
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
-  -->
-
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -97,6 +84,7 @@
                         </li>
                         <li><a href="#" onclick="getContent('pages/current_value_service.html')">Current Values</a></li>
                         <li><a href="#" onclick="getContent('pages/batch_service.html')">Batch</a></li>
+                        <li><a href="#" onclick="getContent('pages/category_service.html')">Category</a></li>
                         <li><a href="#" onclick="getContent('pages/point_service.html')">Data Point</a></li>
                         <li><a href="#" onclick="getContent('pages/series_service.html')">Data Series</a></li>
                         <li><a href="#" onclick="getContent('pages/chart_service.html')">Chart Image Service</a></li>
@@ -176,16 +164,22 @@
 
             <p class="lead">
                 Nimbits is a service you can use to record and share data on the cloud.
-                It is a free, social and open source platform for the Internet of Things.
+                It is a
+                free, social and open source platform for the Internet of Things.
             </p>
 
             <p style="text-align: left">
                 Nimbits Server is a free and open source <em><a
                     href="http://en.wikipedia.org/wiki/Operational_historian">Operational Process Data
-                Historian</a></em> you can use to record software and sensor data to the cloud,
-                upload and share files and process control diagrams, share and connect your data streams to other users and
-                services such as WolframAlpha, Google Talk, email alerts, calculation services, Chart APIs and more.
-
+                Historian</a></em> you can use to create and share
+                <a href="#" onclick="getContent('pages/walkthrough.html')">data
+                    points</a>
+                on a public or private cloud and record your changing numeric, text based, GPS, json or xml values
+                into them.
+                Nimbits is software platform you can use to develop your own cloud, android and micro-controller
+                applications. With our
+                open source software development kit, we greatly simplify your requirements for logging, alerts
+                and more.
 
 
         </div>
@@ -243,12 +237,12 @@
 
 
 <div style="margin-top: 10px;" class="row">
-    <div class="span14">
+    <div class="span9">
         <p style="text-align: left">
             <span class="label success">What's New!</span>
         <ul>
-        <li>A new <a href="https://market.android.com/details?id=com.nimbits.android" target="_blank">
-            Android App</a> is out that makes it easier to chart and record data</li>
+            <li>A new <a href="https://market.android.com/details?id=com.nimbits.android" target="_blank">
+                Android App</a> is out that makes it easier to chart and record data</li>
             <li><a href="#" onclick="getContent('pages/javascript.html')">JavaScript and Interactive Charts!</a> Learn
                 to embed
                 live Nimbits data in web pages and use highly interactive visualizations like the charts, gauges and
@@ -269,47 +263,45 @@
             </li>
         </ul>
 
-
     </div>
-    <!--<div class="span7">-->
-        <!--<div id="graphdiv4"  style="width:350px; height:200px;border: 1px">-->
-            <!--<script type="text/javascript">-->
+    <div class="span7">
+        <div id="graphdiv4"  style="width:350px; height:200px;border: 1px">
+            <script type="text/javascript">
 
-                <!--var chartData = "Date,Series1,Series2\n";-->
-                <!--var now = new Date().getTime();-->
-                <!--now = now - (10 * 1000 * 60);-->
-                <!--for (var i = 0; i < 10; i++) {-->
-                    <!--var value1 = Math.floor(Math.random() * 110);-->
-                    <!--var value2 = Math.floor(Math.random() * 110);-->
-
-
-                    <!--var date = new Date(now);-->
-                    <!--now += 60000;-->
-                    <!--var ds = date.getFullYear() + "-" + date.getMonth()+1 + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();-->
-                    <!--chartData += ds + "," + value1 + ",10," + value2 + ",20" + "\n";-->
+                var chartData = "Date,Series1,Series2\n";
+                var now = new Date().getTime();
+                now = now - (10 * 1000 * 60);
+                for (var i = 0; i < 10; i++) {
+                    var value1 = Math.floor(Math.random() * 110);
+                    var value2 = Math.floor(Math.random() * 110);
 
 
-                <!--}-->
+                    var date = new Date(now);
+                    now += 60000;
+                    var ds = date.getFullYear() + "-" + date.getMonth()+1 + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+                    chartData += ds + "," + value1 + ",10," + value2 + ",20" + "\n";
 
-                <!--g4 = new Dygraph(-->
-                        <!--document.getElementById("graphdiv4"),-->
-                        <!--chartData,-->
-                        <!--{-->
-                            <!--rollPeriod:7,-->
-                            <!--//  showRoller: false,-->
-                            <!--errorBars:true,-->
-                            <!--valueRange:[-1, 100],-->
-                            <!--drawXAxis:false,-->
-                            <!--drawYAxis:false-->
-                        <!--}-->
-                <!--);-->
 
-            <!--</script>-->
-        <!--</div>-->
-        <!--<p><a href="#" onclick="getContent('pages/javascript_chart.html')">Graph your data on your own web site with-->
-            <!--javascript and a huge selection of charts, gauges and more.</a></p>-->
-    <!--</div>-->
->>>>>>> 59a330515baccc8cdd37f18041b4a578d460e751
+                }
+
+                g4 = new Dygraph(
+                        document.getElementById("graphdiv4"),
+                        chartData,
+                        {
+                            rollPeriod:7,
+                            //  showRoller: false,
+                            errorBars:true,
+                            valueRange:[-1, 100],
+                            drawXAxis:false,
+                            drawYAxis:false
+                        }
+                );
+
+            </script>
+        </div>
+        <p><a href="#" onclick="getContent('pages/javascript_chart.html')">Graph your data on your own web site with
+            javascript and a huge selection of charts, gauges and more.</a></p>
+    </div>
 </div>
 
 <div class="row">

@@ -2,6 +2,7 @@
  * Copyright (c) 2011. Tonic Solutions, LLC. All Rights Reservered. This Code is distributed under GPL V3 without any warrenty.
  */
 
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
@@ -46,13 +47,13 @@ public class DataPointIntegrationTest extends TestCase {
         System.out.println("tear down complete");
     }
 
-    @Test
     public void testNoCompression() throws Exception {
         Point p = new PointModel();
-        EntityName name = CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString());
+        EntityName name = CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString(), EntityType.point);
         p.setExpire(1);
         p.setCompression(0);
-        Point r = ClientHelper.client().addPoint(name, p);
+        Point point =  ClientHelper.client().addPoint(name, p);
+        assertNotNull(point);
 
         double x = testCompression(name);
         ClientHelper.client().deletePoint(name);
@@ -62,10 +63,10 @@ public class DataPointIntegrationTest extends TestCase {
         //   gClient.DeletePoint(p.getValue());
     }
 
-    @Test
+
     public void testCompressionSeparatePostsNoDate() throws Exception {
         Point p = new PointModel();
-        EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString()));
+        EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString(), EntityType.point));
         p.setCompression(0.1);
         ClientHelper.client().addPoint(name);
 
@@ -105,12 +106,12 @@ public class DataPointIntegrationTest extends TestCase {
         }
     }
 
-    @Test
+
     public void testCompressionSeperateAlternatingValuesPostsNoDate() throws Exception {
 
         Point p = new PointModel();
 
-        EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString()));
+        EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString(), EntityType.point));
         p.setCompression(0.1);
         Point result = ClientHelper.client().addPoint(name);
         assertNotNull(result);
@@ -169,7 +170,7 @@ public class DataPointIntegrationTest extends TestCase {
        // ClientHelper.client().deletePoint(p.getName());
     }
 
-    @Test
+
     public void testChangeCompression() throws NimbitsException {
         Point p = new PointModel();
 
@@ -191,7 +192,7 @@ public class DataPointIntegrationTest extends TestCase {
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+          fail();
         }
         //double x2 = testCompression(p);
         ClientHelper.client().deletePoint(name);
@@ -201,7 +202,7 @@ public class DataPointIntegrationTest extends TestCase {
         // gClient.DeletePoint(p.getValue());
     }
 
-    @Test
+
     public void TestZeroCompressionWithBatch() throws NimbitsException {
         Point p = new PointModel();
 
@@ -286,7 +287,7 @@ public class DataPointIntegrationTest extends TestCase {
             // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (InterruptedException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+           fail();
         }
 
     }
@@ -313,11 +314,11 @@ public class DataPointIntegrationTest extends TestCase {
 //        }
 //    }
 
-    @Test
+
     public void TestCompressionWithBatchWithMissingPoints() throws NimbitsException {
         Point p = new PointModel();
 
-        EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString()));
+        EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString(), EntityType.point));
 
         p.setCompression(2.0);
         ClientHelper.client().addPoint(name, p);
@@ -351,10 +352,9 @@ public class DataPointIntegrationTest extends TestCase {
             Assert.assertEquals(216.0, retVal);
             ClientHelper.client().deletePoint(name);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+         fail();
         } catch (InterruptedException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            fail();
         }
 
     }

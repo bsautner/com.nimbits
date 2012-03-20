@@ -9,7 +9,7 @@
 
     <servlet>
         <servlet-name>ServersServlet</servlet-name>
-        <servlet-class>com.nimbits.server.service.ServersServletImpl</servlet-class>
+        <servlet-class>com.nimbits.server.api.ServersServletImpl</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ServersServlet</servlet-name>
@@ -18,7 +18,7 @@
 
     <servlet>
         <servlet-name>DescServlet</servlet-name>
-        <servlet-class>com.nimbits.server.service.EntityDescriptionServletImpl</servlet-class>
+        <servlet-class>com.nimbits.server.api.EntityDescriptionServletImpl</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>DescServlet</servlet-name>
@@ -27,7 +27,7 @@
 
     <servlet>
         <servlet-name>SearchServlet</servlet-name>
-        <servlet-class>com.nimbits.server.service.EntityDescriptionSearchServletImpl</servlet-class>
+        <servlet-class>com.nimbits.server.api.EntityDescriptionSearchServletImpl</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>SearchServlet</servlet-name>

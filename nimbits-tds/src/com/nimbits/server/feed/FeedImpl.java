@@ -99,8 +99,10 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
     private String shortenFeedHTML(final String html) {
         if (html.length() > Const.DEFAULT_FEED_LENGTH) {
             try {
+                String shorterHtml;
+                shorterHtml =  (html.length() > 2000) ?  html.substring(0, 2000) : html;
                 return html.substring(0, Const.DEFAULT_FEED_LENGTH)
-                        + "<a href=\"#\" onclick=\"window.open('feed.html?content=" + URLEncoder.encode(html, Const.CONST_ENCODING) + "', 'Feed'," +
+                        + "<a href=\"#\" onclick=\"window.open('feed.html?content=" + URLEncoder.encode(shorterHtml, Const.CONST_ENCODING) + "', 'Feed'," +
                         "'height=400,width=400,toolbar=0,status=0,location=0' );\" >" +
                         "&nbsp;[more]</a>";
 //                        + "<a href=\"feed.html?content=" + URLEncoder.encode(html, Const.CONST_ENCODING) + "\" " +

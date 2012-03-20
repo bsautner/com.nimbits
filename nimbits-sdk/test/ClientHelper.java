@@ -38,12 +38,12 @@ class ClientHelper {
     // private final static String hostURL2 = "http://nimbits1.appspot.com";
     //  private final static String hostURLSpecific = "http://147.nimbits1.appspot.com";
     //  private static final String accountPath = "/mnt/raid/nimbits/test";
-    private final static String email = "test2@example.com";
+    private final static String email = "test@example.com";
 
-    private final static String password = "feaf7947-47f7-459c-a2ab-27b59ea62455";
+    private final static String password = "ca5e0245-31e0-4981-8145-7bb7136895e4";
 
     //  private final static String appscale =  "http://127.0.0.1:8888";
-    public final static String url = "http://192.168.1.2:8081";
+    public final static String url = "http://localhost:8081";
 
     public static NimbitsClient client() {
         if (instance == null) {
@@ -69,13 +69,13 @@ class ClientHelper {
         Point point = client().addPoint(name);
         Random r = new Random();
 
+        if (point != null) {
+            for (int i = 0; i < 10; i++) {
 
-        for (int i = 0; i < 10; i++) {
+                client().recordValue(name, r.nextDouble(), new Date());
 
-            client().recordValue(name, r.nextDouble(), new Date());
-
+            }
         }
-
         return point;
     }
 

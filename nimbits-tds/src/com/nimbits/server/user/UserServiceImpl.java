@@ -41,16 +41,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     private static final long serialVersionUID = 1L;
     //private static final Logger log = Logger.getLogger(UserServiceImpl.class.getName());
 
-    private ShardedCounter getOrCreateCounter(final EmailAddress email) {
-        CounterFactory factory = new CounterFactory();
-        ShardedCounter counter = factory.getCounter(email.getValue());
-        if (counter == null) {
-            counter = factory.createCounter(email.getValue());
-            counter.addShard();
 
-        }
-        return counter;
-    }
 
     @Override
     public User getHttpRequestUser(final HttpServletRequest req) throws NimbitsException {
@@ -143,11 +134,6 @@ public class UserServiceImpl extends RemoteServiceServlet implements
                     " Please report this error to support@nimbits.com");
         }
 
-        ShardedCounter counter = getOrCreateCounter(user.getEmail());
-        counter.increment();
-
-
-//        log.info("Returning a nimbits user:" + user.getEmail().getValue());
         return user;
 
     }

@@ -18,6 +18,7 @@ public enum ExportType {
     plain("text/plain"),
     html(Const.CONTENT_TYPE_HTML),
     json("text/plain"),
+    unknown(""),
     currentStatusReport(Const.CONTENT_TYPE_HTML);
 
     private static final Map<String, ExportType> lookup = new HashMap<String, ExportType>();

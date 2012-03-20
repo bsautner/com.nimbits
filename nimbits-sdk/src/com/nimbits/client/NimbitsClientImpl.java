@@ -397,7 +397,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
 
     public Entity getCategory(final EntityName EntityName, final boolean includePoints, final boolean includeDiagrams) throws NimbitsException {
-        Entity c = null;
+        Entity c;
         final String u = host + Const.PATH_CATEGORY_SERVICE;
         String params = Const.Params.PARAM_NAME + "=" + EntityName.getValue();
 

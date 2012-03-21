@@ -83,8 +83,32 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
     public void postToFeed(final User user, final String html, final FeedType type) throws NimbitsException {
         final Point point = getFeedPoint(user);
         final StringBuilder sb = new StringBuilder() ;
-        sb.append("<p><img src=\"" + ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest()) +
-                "/resources/images/logo.png\" align=\"left\" width=\"40\" height=\"40\">");
+        switch (type) {
+
+            case error:
+                sb.append("<p><img src=\"" + ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest()) +
+                        "/resources/images/symbol-error.png\" align=\"left\" width=\"35\" height=\"35\">");
+                sb.append("<p style=\"color:red\">Error reported<p>");
+                break;
+            case system:
+                sb.append("<p><img src=\"" + ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest()) +
+                        "/resources/images/logo.png\" align=\"left\" width=\"40\" height=\"40\">");
+                break;
+            case info:
+                sb.append("<p><img src=\"" + ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest()) +
+                        "/resources/images/info.png\" align=\"left\" width=\"35\" height=\"35\">");
+                break;
+            case data:
+                sb.append("<p><img src=\"" + ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest()) +
+                        "/resources/images/point_ok.png\" align=\"left\" width=\"40\" height=\"40\">");
+                break;
+            default:
+                sb.append("<p><img src=\"" + ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest()) +
+                        "/resources/images/logo.png\" align=\"left\" width=\"40\" height=\"40\">");
+        }
+
+
+
         sb.append(html);
         sb.append("</p>");
         final FeedValue feedValue = new FeedValueModel(shortenFeedHTML(sb.toString()), "", type);
@@ -187,8 +211,9 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
     }
 
     @Override
-    public List<FeedValue> getFeed(final int count) throws NimbitsException {
-        User user = getUser();
+    public List<FeedValue> getFeed(final int count, final String feedOwnersUUID) throws NimbitsException {
+        //User user = getUser();
+        final User user = UserServiceFactory.getInstance().getUserByUUID(feedOwnersUUID);
         final Point point = getFeedPoint(user);
         List<Value> values = RecordedValueServiceFactory.getInstance().getTopDataSeries(point, count, new Date());
         List<FeedValue> retObj = new ArrayList<FeedValue>();
@@ -210,13 +235,16 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
     private Point createFeedPoint(final User user) throws NimbitsException {
         final String uuid = UUID.randomUUID().toString();
 
-        final EntityName name = CommonFactoryLocator.getInstance().createName("Subscription Data Feed", EntityType.point);
+        final EntityName name = CommonFactoryLocator.getInstance().createName(Const.TEXT_DATA_FEED, EntityType.point);
 
         final Entity entity = EntityModelFactory.createEntity(name, "", EntityType.feed,
-                ProtectionLevel.onlyMe, uuid, user.getUuid(), user.getUuid());
+                ProtectionLevel.onlyConnection, uuid, user.getUuid(), user.getUuid());
         final Entity r = EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
 
+
+
         final Point point =  PointServiceFactory.getInstance().addPoint(user, r);
+
 
         postToFeed(user, "A new data point has been created for your data feed. Your data feed is just " +
                 "a data point. Points are capable of storing numbers, text, json and xml data. Nimbits uses " +

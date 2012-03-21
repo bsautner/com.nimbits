@@ -23,7 +23,7 @@ public interface EntityService extends RemoteService {
 
     Entity addUpdateEntity(final EntityName entity, final EntityType type) throws NimbitsException;
 
-    void deleteEntity(Entity entity);
+    void deleteEntity(Entity entity) throws NimbitsException;
 
     Entity getEntityByUUID(String uuid);
 
@@ -47,7 +47,7 @@ public interface EntityService extends RemoteService {
 
     Entity getEntityByName(User u, EntityName name);
 
-    void deleteEntity(User u, Entity entity);
+    void deleteEntity(User u, Entity entity) throws NimbitsException;
 
     List<Entity> getEntityChildren(User u, Entity c, EntityType point);
 

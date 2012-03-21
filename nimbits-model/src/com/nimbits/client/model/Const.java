@@ -36,6 +36,7 @@ public class Const {
     public static final String KEY_ENTITY_MAP = "KEY_ENTITY_MAP";
     public static final String KEY_USER_POINT_NAMESPACE = "KEY_USER_POINT_NAMESPACE";
     public static final int DEFAULT_FEED_LENGTH = 250;
+    public static final String TEXT_DATA_FEED = "Data Feed Channel";
 
     public class Params {
 

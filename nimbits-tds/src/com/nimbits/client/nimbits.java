@@ -223,52 +223,49 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         viewport = new Viewport();
         viewport.setLayout(new BorderLayout());
         viewport.setBorders(false);
-        final FeedPanel feedPanel = new FeedPanel();
+        final FeedPanel feedPanel = new FeedPanel(loginInfo.getUser());
         //feedPanel.setLayout(new FitLayout());
         //feedPanel.setHeight("100%");
 
+        CenterPanel centerPanel = new CenterPanel(loginInfo, settings);
 
-
-        if (loginInfo != null) {
-            CenterPanel centerPanel = new CenterPanel(loginInfo, settings);
-
-            centerPanel.addEntityClickedListeners(new EntityClickedListener() {
-                @Override
-                public void onEntityClicked(GxtModel entity) {
-                    if (entity.getEntityType().equals(EntityType.feed)) {
-                        feedPanel.reload();
-                    }
+        centerPanel.addEntityClickedListeners(new EntityClickedListener() {
+            @Override
+            public void onEntityClicked(GxtModel entity) {
+                if (entity.getEntityType().equals(EntityType.feed)) {
+                    feedPanel.reload();
                 }
-            });
-
-            ContentPanel center = new ContentPanel();
-            center.setHeading(Const.CONST_SERVER_NAME + " " + Const.CONST_SERVER_VERSION);
-            center.setScrollMode(Style.Scroll.AUTOX);
-
-            ContentPanel east = new ContentPanel();
-            east.setHeading("Subscription Channel");
-            BorderLayoutData centerData = new BorderLayoutData(LayoutRegion.CENTER);
-            centerData.setMargins(new Margins(0,0,5,0));
-
-            BorderLayoutData eastData = new BorderLayoutData(LayoutRegion.EAST, 250);
-            eastData.setSplit(true);
-            eastData.setCollapsible(true);
-            eastData.setMargins(new Margins(0,0,5,5));
-
-            center.add(centerPanel);
-            east.add(feedPanel);
-
-            viewport.add(center, centerData);
-            viewport.add(east, eastData);
-
-
-            if (action.equals(Action.subscribe)) {
-                Cookies.removeCookie(Action.subscribe.name());
-                showSubscriptionPanel(uuid, settings);
             }
-            viewport.setHeight("100%");
-            RootPanel.get("main").add(viewport);
+        });
+
+        ContentPanel center = new ContentPanel();
+        center.setHeading(Const.CONST_SERVER_NAME + " " + Const.CONST_SERVER_VERSION);
+        center.setScrollMode(Style.Scroll.AUTOX);
+
+        ContentPanel east = new ContentPanel();
+        east.setHeading(Const.TEXT_DATA_FEED);
+        BorderLayoutData centerData = new BorderLayoutData(LayoutRegion.CENTER);
+        centerData.setMargins(new Margins(0,0,5,0));
+
+        BorderLayoutData eastData = new BorderLayoutData(LayoutRegion.EAST, 250);
+        eastData.setSplit(true);
+        eastData.setCollapsible(true);
+        eastData.setMargins(new Margins(0,0,5,5));
+
+        center.add(centerPanel);
+        east.add(feedPanel);
+
+        viewport.add(center, centerData);
+        viewport.add(east, eastData);
+
+
+        if (action.equals(Action.subscribe)) {
+            Cookies.removeCookie(Action.subscribe.name());
+            showSubscriptionPanel(uuid, settings);
         }
+        viewport.setHeight("100%");
+        RootPanel.get("main").add(viewport);
+
     }
 
 
@@ -319,7 +316,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         contentPanel.setHeaderVisible(true);
         contentPanel.setHeading(Const.HTML_HOME_LINK + " | " + heading + " "
                 + diagram.getName());
-         contentPanel.setFrame(false);
+        contentPanel.setFrame(false);
 
 
         final DiagramPanel diagramPanel = new DiagramPanel(diagram, false);
@@ -395,12 +392,12 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
                         Location.replace("report.html?uuid=" + uuid);
                         break;
                     case file:
-                      if (EntityOpenHelper.isSVG(entity)) {
-                          loadDiagramView(entity);
-                      }
-                      else {
-                          EntityOpenHelper.showBlob(entity);
-                      }
+                        if (EntityOpenHelper.isSVG(entity)) {
+                            loadDiagramView(entity);
+                        }
+                        else {
+                            EntityOpenHelper.showBlob(entity);
+                        }
                         break;
                     case subscription:
                         break;

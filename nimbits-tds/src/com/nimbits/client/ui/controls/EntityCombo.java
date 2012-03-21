@@ -27,11 +27,13 @@ import java.util.*;
 public class EntityCombo extends ComboBox<GxtModel> {
 
 
-    public EntityCombo(final EntityType type, final String selectedUUID) {
+    public EntityCombo(final EntityType type,
+                       final String selectedUUID,
+                       final String emptyText) {
 
         final ListStore<GxtModel> cbStore = new ListStore<GxtModel>();
         final EntityServiceAsync service = GWT.create(EntityService.class);
-        setEmptyText(Const.MESSAGE_LOADING_POINTS);
+        setEmptyText(emptyText);
         setStore(cbStore);
         setDisplayField(Const.Params.PARAM_NAME);
         setValueField(Const.Params.PARAM_ID);
@@ -48,7 +50,7 @@ public class EntityCombo extends ComboBox<GxtModel> {
 
             @Override
             public void onSuccess(final Map<String, Entity> result) {
-                setEmptyText(Const.MESSAGE_SELECT_POINT);
+                setEmptyText(emptyText);
 
                 for (final Entity e : result.values()) {
                     final GxtModel model = new GxtModel(e);

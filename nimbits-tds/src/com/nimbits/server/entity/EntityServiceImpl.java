@@ -12,6 +12,7 @@ import com.nimbits.client.service.entity.*;
 import com.nimbits.server.blob.*;
 import com.nimbits.server.calculation.*;
 import com.nimbits.server.dao.calculation.*;
+import com.nimbits.server.feed.*;
 import com.nimbits.server.intelligence.*;
 import com.nimbits.server.orm.entity.*;
 import com.nimbits.server.point.*;
@@ -60,7 +61,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
 
 
     @Override
-    public void deleteEntity(final User user, final Entity entity) {
+    public void deleteEntity(final User user, final Entity entity) throws NimbitsException {
         EntityTransactionFactory.getInstance(user).deleteEntity(entity);
 
         switch (entity.getEntityType()) {
@@ -97,6 +98,10 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
                 SummaryServiceFactory.getInstance().deleteSummary(user, entity);
                 break;
         }
+
+            FeedServiceFactory.getInstance().postToFeed(user,entity.getEntityType().name() +
+                    " " + entity.getName().toString() + " deleted ", FeedType.info);
+
         deleteChildren(user, entity);
 
     }
@@ -138,7 +143,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     }
 
     @Override
-    public void deleteEntity(Entity entity) {
+    public void deleteEntity(Entity entity) throws NimbitsException {
         User u = getUser();
         if (u == null)  {
             u = UserServiceFactory.getInstance().getUserByUUID(entity.getOwner());

@@ -9,10 +9,11 @@ import java.util.*;
  * Time: 4:06 PM
  */
 public enum FeedType {
-    error(0),
-    system(1),
-    info(2),
-    data(3);
+    error(0, "Errors"),
+    system(1, "System Messages"),
+    info(2, "Info"),
+    data(3, "Subscription Data"),
+    all(4, "Everything");
 
 
     private static final Map<Integer, FeedType> lookup = new HashMap<Integer, FeedType>();
@@ -23,9 +24,12 @@ public enum FeedType {
     }
 
     private final int code;
+    private final String text;
 
-    private FeedType(int code) {
+    private FeedType(int code, String text) {
         this.code = code;
+        this.text = text;
+
 
     }
 
@@ -37,4 +41,7 @@ public enum FeedType {
         return lookup.get(code);
     }
 
+    public String getText() {
+        return text;
+    }
 }

@@ -13,6 +13,7 @@ import java.util.*;
  * Time: 11:46 AM
  */
 public interface EntityTransactions {
+
     Map<String, Entity> getEntityMap(EntityType type);
 
     Map<EntityName, Entity> getEntityNameMap(EntityType type);
@@ -23,7 +24,7 @@ public interface EntityTransactions {
 
     List<Entity> getEntities();
 
-    void deleteEntity(Entity entity);
+    void deleteEntity(Entity entity) throws NimbitsException;
 
     Entity getEntityByUUID(String uuid);
 

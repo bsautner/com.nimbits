@@ -13,7 +13,7 @@ import java.util.*;
 @SuppressWarnings("unused")
 public interface FeedAsync {
 
-    void getFeed(final int count, final AsyncCallback<List<FeedValue>> async);
+    void getFeed(final int count, final String feedOwnersUUID, final AsyncCallback<List<FeedValue>> async);
 
     void postToFeed(final User user, final Entity entity, final Point originalPoint, final Value value, final FeedType type, AsyncCallback<Void> async);
 

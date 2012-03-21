@@ -5,13 +5,23 @@ import com.extjs.gxt.ui.client.data.*;
 import com.extjs.gxt.ui.client.event.*;
 import com.extjs.gxt.ui.client.store.*;
 import com.extjs.gxt.ui.client.widget.*;
+import com.extjs.gxt.ui.client.widget.button.*;
+import com.extjs.gxt.ui.client.widget.button.Button;
+import com.extjs.gxt.ui.client.widget.form.*;
+import com.extjs.gxt.ui.client.widget.layout.*;
+import com.extjs.gxt.ui.client.widget.toolbar.*;
 import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.*;
+import com.google.gwt.user.client.ui.*;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.feed.*;
+import com.nimbits.client.model.user.*;
 import com.nimbits.client.service.feed.*;
+import com.nimbits.client.ui.controls.*;
+import com.nimbits.client.ui.icons.*;
 
 import java.util.*;
 
@@ -25,6 +35,16 @@ import java.util.*;
 public class FeedPanel  extends LayoutContainer {
     ListView<GxtFeedModel> view;
     //ContentPanel panel;
+    private ComboBox<FeedTypeOption> feedType;
+
+    private String feedOwnersUUID;
+    private final User user;
+
+    public FeedPanel(final User user) {
+
+        this.user = user;
+        feedOwnersUUID = user.getUuid();
+    }
 
     @Override
     protected void onAttach() {
@@ -32,7 +52,7 @@ public class FeedPanel  extends LayoutContainer {
             @Override
             public void run() {
 
-                updateValues();
+                updateValues(false);
 
             }
         };
@@ -41,11 +61,42 @@ public class FeedPanel  extends LayoutContainer {
         super.onAttach();
     }
 
-    private void updateValues() {
+    private ComboBox<FeedTypeOption> optionComboBox(final FeedType selectedValue) {
+        ComboBox<FeedTypeOption> combo = new ComboBox<FeedTypeOption>();
+
+        ArrayList<FeedTypeOption> ops = new ArrayList<FeedTypeOption>();
+
+        ops.add(new FeedTypeOption(FeedType.all));
+        ops.add(new FeedTypeOption(FeedType.info));
+        ops.add(new FeedTypeOption(FeedType.data));
+        ops.add(new FeedTypeOption(FeedType.error));
+        ops.add(new FeedTypeOption(FeedType.system));
+
+        ListStore<FeedTypeOption> store = new ListStore<FeedTypeOption>();
+
+        store.add(ops);
+
+        //  combo.setFieldLabel(title);
+        combo.setDisplayField(Const.Params.PARAM_NAME);
+        combo.setValueField(Const.PARAM_VALUE);
+        combo.setTriggerAction(ComboBox.TriggerAction.ALL);
+        combo.setStore(store);
+
+        FeedTypeOption selected = combo.getStore().findModel(Const.PARAM_VALUE, selectedValue.getCode());
+        combo.setValue(selected);
+
+        return combo;
+
+    }
+
+    private void updateValues(boolean reset) {
         final ListStore<GxtFeedModel> store  = view.getStore();
+        if (reset) {
+            store.removeAll();
+        }
         if (store != null) {
             FeedAsync service = GWT.create(Feed.class);
-            service.getFeed(10, new AsyncCallback<List<FeedValue>>() {
+            service.getFeed(10, feedOwnersUUID, new AsyncCallback<List<FeedValue>>() {
                 @Override
                 public void onFailure(Throwable caught) {
 
@@ -56,15 +107,16 @@ public class FeedPanel  extends LayoutContainer {
 
                     GxtFeedModel model;
                     for (final FeedValue v : result) {
+
                         model = new GxtFeedModel(v);
-                        if (store.findModel(Const.PARAM_HTML, model.getHtml()) == null) {
-                            store.insert(model, 0);
-                            // store.add(model);
+                        FeedType type = feedType.getValue().type;
+                        if (type.equals(FeedType.all) || type.equals(v.getFeedType())) {
+                            if (store.findModel(Const.PARAM_HTML, model.getHtml()) == null) {
+                                store.insert(model, 0);
+                           }
                         }
                     }
-                    if (store.getModels() != null && store.getModels().size() > 8) {
-                        setScrollMode(Style.Scroll.ALWAYS);
-                    }
+
                     layout(true);
                 }
             });
@@ -81,7 +133,7 @@ public class FeedPanel  extends LayoutContainer {
         view = new ListView<GxtFeedModel>() {
             @Override
             protected GxtFeedModel prepareData(GxtFeedModel model) {
-               // String s = model.get(Const.Params.PARAM_NAME);
+                // String s = model.get(Const.Params.PARAM_NAME);
                 //  model.set("shortName", Format.ellipse(s, 15));
                 model.set(Const.Params.PARAM_PATH, GWT.getHostPageBaseURL() + model.get(Const.Params.PARAM_PATH));
                 return model;
@@ -92,7 +144,7 @@ public class FeedPanel  extends LayoutContainer {
 
         FeedAsync service = GWT.create(Feed.class);
         final int FEED_COUNT = 30;
-        service.getFeed(FEED_COUNT, new AsyncCallback<List<FeedValue>>() {
+        service.getFeed(FEED_COUNT, feedOwnersUUID, new AsyncCallback<List<FeedValue>>() {
             @Override
             public void onFailure(Throwable caught) {
 
@@ -123,7 +175,61 @@ public class FeedPanel  extends LayoutContainer {
 
                 });
 
-        add(view);
+        ToolBar bar = new ToolBar();
+
+        ButtonGroup group = new ButtonGroup(1);
+        group.setHeading("Feed Options");
+        group.setHeaderVisible(false);
+        group.setBodyBorder(false);
+        group.setAutoWidth(true);
+        Button btn = new Button("Refresh");
+        btn.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.refresh()));
+        btn.setIconAlign(Style.IconAlign.LEFT);
+
+        btn.addSelectionListener(new SelectionListener<ButtonEvent>() {
+            @Override
+            public void componentSelected(ButtonEvent buttonEvent) {
+                 feedOwnersUUID = user.getUuid();
+            }
+        });
+
+
+        feedType = optionComboBox(FeedType.all);
+        feedType.addSelectionChangedListener(new SelectionChangedListener<FeedTypeOption>() {
+            @Override
+            public void selectionChanged(SelectionChangedEvent<FeedTypeOption> feedTypeOptionSelectionChangedEvent) {
+
+                updateValues(true);
+            }
+        });
+        group.add(new LabelToolItem("Filter:"));
+        group.add(feedType);
+        group.setBodyBorder(true);
+
+        group.add(new LabelToolItem("Switch to connected user's Feed:"));
+        EntityCombo entityCombo = new EntityCombo(EntityType.userConnection, "", "");
+        entityCombo.addSelectionChangedListener(new SelectionChangedListener<GxtModel>() {
+            @Override
+            public void selectionChanged(SelectionChangedEvent<GxtModel> gxtModelSelectionChangedEvent) {
+               feedOwnersUUID =gxtModelSelectionChangedEvent.getSelectedItem().getUUID();
+                updateValues(true);
+            }
+        });
+        group.add(entityCombo);
+        group.add(btn);
+        bar.add(group);
+
+        ContentPanel main = new ContentPanel();
+        main.setBorders(false);
+        main.setBodyBorder(false);
+        main.setLayout(new FillLayout());
+        main.setHeaderVisible(false);
+        main.setTopComponent(bar);
+        main.setScrollMode(Style.Scroll.AUTOY);
+        main.add(view);
+        main.setHeight(800);
+
+        add(main);
 
 
     }
@@ -140,8 +246,40 @@ public class FeedPanel  extends LayoutContainer {
     }-*/;
 
     public void reload() {
-        view.getStore().removeAll();
-        updateValues();
+        updateValues(true);
+
     }
+
+    private class FeedTypeOption extends BaseModelData {
+        FeedType type;
+
+
+        public FeedTypeOption(FeedType value) {
+            this.type = value;
+            set(Const.PARAM_VALUE, value.getCode());
+            set(Const.Params.PARAM_NAME, value.getText());
+        }
+
+        public FeedType getMethod() {
+            return type;
+        }
+    }
+
+
+//    private class UserOption extends BaseModelData {
+//        User user;
+//
+//
+//        public UserOption(User value) {
+//            this.user = value;
+//            set(Const.PARAM_VALUE,value.getUuid());
+//            set(Const.Params.PARAM_NAME, value.getEmail());
+//        }
+//
+//        public User getUser() {
+//            return user;
+//        }
+//    }
+
 }
 

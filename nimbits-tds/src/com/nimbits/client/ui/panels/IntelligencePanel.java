@@ -129,7 +129,7 @@ public class IntelligencePanel extends NavigationEventProvider {
 
         String target = intelligence == null ? null : intelligence.getTarget();
 
-        final EntityCombo intelTargetPoint = new EntityCombo(EntityType.point, target);
+        final EntityCombo intelTargetPoint = new EntityCombo(EntityType.point, target,Const.MESSAGE_SELECT_POINT);
         intelTargetPoint.setFieldLabel("Target");
 
 

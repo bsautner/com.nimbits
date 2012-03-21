@@ -21,7 +21,7 @@ import java.util.*;
 public interface Feed extends RemoteService{
     void postToFeed(final User user, final Entity entity, final Point originalPoint, final Value value,final FeedType type) throws NimbitsException;
 
-    List<FeedValue> getFeed(final int count) throws NimbitsException;
+    List<FeedValue> getFeed(final int count, final String feedOwnersUUID) throws NimbitsException;
 
     void postToFeed(final User user, final String html, final FeedType type) throws NimbitsException;
 

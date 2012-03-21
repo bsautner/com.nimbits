@@ -181,7 +181,7 @@ public class SummaryPanel extends NavigationEventProvider {
         spinnerField.setValue(summary == null ? 8 : summary.getSummaryIntervalHours());
 
         String target = summary == null ? null : summary.getTargetPointUUID();
-        final EntityCombo targetCombo = new EntityCombo(EntityType.point, target );
+        final EntityCombo targetCombo = new EntityCombo(EntityType.point, target,Const.MESSAGE_SELECT_POINT );
         targetCombo.setFieldLabel("Target");
 
         Button submit = new Button("Submit");

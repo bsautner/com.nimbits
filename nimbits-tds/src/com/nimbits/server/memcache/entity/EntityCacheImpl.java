@@ -82,7 +82,7 @@ public class EntityCacheImpl implements EntityTransactions {
     }
 
     @Override
-    public void deleteEntity(Entity entity) {
+    public void deleteEntity(Entity entity) throws NimbitsException {
         EntityTransactionFactory.getDaoInstance(user).deleteEntity(entity);
         removeEntityFromCache(entity);
     }

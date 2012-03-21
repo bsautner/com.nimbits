@@ -1,27 +1,30 @@
 package com.nimbits.server.entity;
 
-import com.google.appengine.api.files.*;
-import com.google.gwt.user.server.rpc.*;
-import com.nimbits.client.common.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.intelligence.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.service.entity.*;
-import com.nimbits.server.blob.*;
-import com.nimbits.server.calculation.*;
-import com.nimbits.server.dao.calculation.*;
-import com.nimbits.server.feed.*;
-import com.nimbits.server.intelligence.*;
-import com.nimbits.server.orm.entity.*;
-import com.nimbits.server.point.*;
-import com.nimbits.server.subscription.*;
-import com.nimbits.server.summary.*;
-import com.nimbits.server.user.*;
-import com.nimbits.server.xmpp.*;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.FeedType;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.service.entity.EntityService;
+import com.nimbits.server.blob.BlobServiceFactory;
+import com.nimbits.server.calculation.CalculationServiceFactory;
+import com.nimbits.server.feed.FeedServiceFactory;
+import com.nimbits.server.intelligence.IntelligenceServiceFactory;
+import com.nimbits.server.orm.entity.EntityStore;
+import com.nimbits.server.point.PointServiceFactory;
+import com.nimbits.server.subscription.SubscriptionServiceFactory;
+import com.nimbits.server.summary.SummaryServiceFactory;
+import com.nimbits.server.user.UserServiceFactory;
+import com.nimbits.server.xmpp.XmppServiceFactory;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by Benjamin Sautner

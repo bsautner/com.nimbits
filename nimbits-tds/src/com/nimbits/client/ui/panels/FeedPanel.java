@@ -202,7 +202,7 @@ public class FeedPanel  extends LayoutContainer {
                 updateValues(true);
             }
         });
-        group.add(new LabelToolItem("Filter:"));
+        group.add(new LabelToolItem("Show:"));
         group.add(feedType);
         group.setBodyBorder(true);
 

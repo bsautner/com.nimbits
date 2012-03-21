@@ -32,6 +32,14 @@ import java.util.*;
 @SuppressWarnings("unchecked")
 public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTransactions, EntityService {
 
+    private User getUser() {
+        try {
+            return UserServiceFactory.getServerInstance().getHttpRequestUser(
+                    this.getThreadLocalRequest());
+        } catch (NimbitsException e) {
+            return null;
+        }
+    }
 
     @Override
     public Entity addUpdateEntity(EntityName name, EntityType type) throws NimbitsException {
@@ -54,11 +62,6 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     public Entity getEntityByName(final User user, final EntityName name) {
        return EntityTransactionFactory.getInstance(user).getEntityByName(name);
     }
-
-    private void deleteChildren(final User user, final Entity entity) {
-        //TODO - kick of a task to recursivly delete children - all types, and their children etc.
-    }
-
 
     @Override
     public void deleteEntity(final User user, final Entity entity) throws NimbitsException {
@@ -111,15 +114,9 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
         return EntityTransactionFactory.getInstance(user).getEntityChildren(c, type);
     }
 
-    private User getUser() {
-        try {
-            return UserServiceFactory.getServerInstance().getHttpRequestUser(
-                     this.getThreadLocalRequest());
-        } catch (NimbitsException e) {
-           return null;
-        }
+    private void deleteChildren(final User user, final Entity entity) {
+        //TODO - kick of a task to recursivly delete children - all types, and their children etc.
     }
-
 
     @Override
     public List<Entity> getEntities() {
@@ -171,8 +168,6 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
         return EntityTransactionFactory.getInstance(getUser()).getEntityNameMap(type);
     }
 
-
-
     @Override
     public Entity copyEntity(Entity originalEntity, EntityName newName) throws NimbitsException {
         Entity newEntity = new EntityStore(originalEntity);
@@ -198,7 +193,6 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     public List<Entity> getChildren(Entity parentEntity, EntityType type) {
         return EntityTransactionFactory.getInstance(getUser()).getEntityChildren(parentEntity, type);
     }
-
 
     @Override
     public List<Entity> getEntityChildren(Entity parentEntity, EntityType type) {

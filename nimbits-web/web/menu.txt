@@ -1,0 +1,116 @@
+
+    <div class='topbar-inner'>
+        <div class='container'>
+            <h3><a href='index.html'>nimbits.com</a></h3>
+
+
+            <ul class='nav'>
+                <li><a href='#store' onclick='getContent('pages/store.html')'>Store</a></li>
+                <li><a href='#forum' onclick='popUp('http://groups.google.com/group/nimbits')'>Forum</a></li>
+                <li><a href='#terms' onclick='getContent('pages/terms.html')'>Terms</a></li>
+                <li><a href='#service' onclick='getContent('pages/support.html')'>Services</a></li>
+                <li><a href='#terms' onclick='getContent('pages/source.html')'>Source</a></li>
+                <li><a href='http://app.nimbits.com' target='_blank'>Login</a></li>
+            </ul>
+
+
+            <ul class='nav secondary-nav'>
+                <li class='dropdown'>
+                    <a href='#' class='menu'>Download</a>
+
+                    <ul class='dropdown-menu'>
+                        <li><a href='#download' onclick='getContent('pages/download.html')'>Server / SDK</a></li>
+                        <li><a href='#'
+                               onclick='popUp('http://www.google.com/ig/directory?type=gadgets&url=www.gigamegablog.com/gadgets/nimbits.xml')'>
+                            Google Gadget</a></li>
+                        <li><a
+                                href='https://chrome.google.com/webstore/detail/fmhbpieakkkhcajlpbeffhfihenafhbl'
+                                target='_blank'>Google Chrome
+                            App</a></li>
+                        <li><a href='http://www.nimbits.com/downloads/nimbits_sdk.jar'>nimbits_sdk.jar</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+
+            <ul class='nav secondary-nav'>
+                <li class='dropdown'>
+                    <a href='#' class='menu'>Web Services</a>
+
+                    <ul class='dropdown-menu'>
+                        <!--<li><a href='#'>Nimbits Server Overview</a></li>-->
+                        <!--<li class='divider'></li>-->
+                        <li><a href='#' onclick='getContent('pages/web_service_primer.html')'>Getting Started</a></li>
+                        <li><a href='#' onclick='getContent('pages/timespan.html')'>Understanding Date/Time Ranges</a>
+                        </li>
+                        <li><a href='#' onclick='getContent('pages/current_value_service.html')'>Current Values</a></li>
+                        <li><a href='#' onclick='getContent('pages/batch_service.html')'>Batch</a></li>
+                        <li><a href='#' onclick='getContent('pages/time_service.html')'>Batch</a></li>
+                        <li><a href='#' onclick='getContent('pages/category_service.html')'>Category</a></li>
+                        <li><a href='#' onclick='getContent('pages/point_service.html')'>Data Point</a></li>
+                        <li><a href='#' onclick='getContent('pages/series_service.html')'>Data Series</a></li>
+                        <li><a href='#' onclick='getContent('pages/chart_service.html')'>Chart Image Service</a></li>
+                        <li><a href='#' onclick='getContent('pages/xmpp.html')'>M2M with XMPP</a></li>
+
+                        <li class='divider'></li>
+
+                        <li><a href='#' onclick='getContent('pages/email_service.html')'>Bulk Email</a></li>
+                        <li><a href='#' onclick='getContent('pages/im_service.html')'>Instant Messaging</a></li>
+                        <li><a href='#' onclick='getContent('pages/facebook_service.html')'>Facebook</a></li>
+                        <li><a href='#' onclick='getContent('pages/twitter_service.html')'>Twitter</a></li>
+
+
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class='nav secondary-nav'>
+                <li class='dropdown'>
+                    <a href='#' class='menu'>Tutorials</a>
+
+                    <ul class='dropdown-menu'>
+                        <!--<li><a href='#'>Nimbits Server Overview</a></li>-->
+                        <li><a href='#' onclick='getContent('pages/python.html')'>Python</a></li>
+                        <li><a href='#' onclick='getContent('pages/curl.html')'>cURL</a></li>
+                        <li><a href='#' onclick='getContent('pages/XMPP_WA.html')'>Intelligent M2M</a></li>
+                        <li><a href='#' onclick='getContent('pages/javascript.html')'>Javascript Library</a></li>
+                        <li><a href='#' onclick='getContent('pages/javascript_chart.html')'>Interactive Charts</a></li>
+                        <li><a href='#'
+                               onclick='popUp('http://nimbits.blogspot.com/2010/02/connecting-spreadsheets-to-nimbits.html')'>Spreadsheets</a>
+                        </li>
+                        <li><a href='#'
+                               onclick='popUp('http://nimbits.blogspot.com/2010/02/create-visio-diagram-with-nimbits-data.html')'>Visio</a>
+                        </li>
+                        <li><a href='#'
+                               onclick='popUp('http://nimbits.blogspot.com/2010/11/data-out-barcodes.html')'>Barcodes</a>
+                        </li>
+                        <li><a href='#'
+                               onclick='popUp('http://nimbits.blogspot.com/2010/07/data-in-connect-arduino-to-nimbits-data.html')'>Arduino</a>
+                        </li>
+                        <li><a href='#'
+                               onclick='popUp('http://nimbits.blogspot.com/2010/06/read-values-from-parallax-micro.html')'>Parallax
+                            Stamp</a></li>
+
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class='nav secondary-nav'>
+                <li class='dropdown'>
+                    <a href='#' class='menu'>How it works</a>
+
+                    <ul class='dropdown-menu'>
+                        <!--<li><a href='#'>Nimbits Server Overview</a></li>-->
+                        <!--<li class='divider'></li>-->
+                        <li><a href='#' onclick='getContent('pages/compression.html')'>Compression</a></li>
+                        <li><a href='#' onclick='getContent('pages/wolfram.html')'>Intelligence</a></li>
+                        <li><a href='#' onclick='getContent('pages/alerts.html')'>Alerts</a></li>
+                        <li><a href='#' onclick='getContent('pages/calculations.html')'>Calculations</a></li>
+                        <li><a href='#' onclick='getContent('pages/expiration.html')'>Data Expiration</a></li>
+
+                    </ul>
+                </li>
+            </ul>
+
+        </div>
+    </div>

@@ -189,6 +189,9 @@ class NavigationPanel extends NavigationEventProvider {
     }
 
     private void moveEntity(Entity draggedEntity, Entity target) {
+
+        if (! target.getOwner().equals(draggedEntity.getOwner())) {
+
         EntityServiceAsync service = GWT.create(EntityService.class);
         draggedEntity.setParent(target.getEntity());
 
@@ -203,6 +206,7 @@ class NavigationPanel extends NavigationEventProvider {
 
             }
         });
+        }
     }
 
     private void addChildrenToModel(final List<Entity> result, List<String> parents, GxtModel model) {

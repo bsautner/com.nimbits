@@ -168,13 +168,12 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
         }
 
         if (entity != null && point != null) {
-            sb.append("&nbsp;").append("<a href=\"")
-                    .append(ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest()))
-                    .append("?uuid=")
-                    .append(point.getUUID())
-                    .append("\">")
-                    .append(entity.getName().getValue())
-                    .append("</a>")
+
+            sb.append("&nbsp;")
+                    .append("<a href=\"#\" onclick=\"window.open('report.html?uuid=" +  point.getUUID() + "', 'Report'," +
+                            "'height=800,width=800,toolbar=0,status=0,location=0' );\" >" +
+                            "&nbsp;[more]</a>")
+                    .append("<a href=\"")
                     .append("<br>");
         }
 

@@ -35,6 +35,38 @@
 
 <body style="padding-top: 40px;" onload="loadRequestedPage();">
 
+<div id="fb-root"></div>
+  <!--social media code-->
+<script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=329895269025";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<!-- Place this render call where appropriate -->
+<script type="text/javascript">
+    (function() {
+        var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+        po.src = 'https://apis.google.com/js/plusone.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+</script>
+<script type="text/javascript">
+    function showToolTip()
+    {
+        var tooltip =document.getElementById("myToolTip");
+        tooltip.style.left=event.clientX;
+        tooltip.style.top=event.clientY;
+        tooltip.style.visibility="visible";
+    }
+    function hideToolTip()
+    {
+        var tooltip =document.getElementById("myToolTip");
+        tooltip.style.visibility = "hidden";
+    }
+</script>
 <!-- Topbar
 ================================================== -->
 <div class="topbar">
@@ -153,7 +185,35 @@
         </div>
     </div>
 </div>
+
+
+    <table style="padding:0; border:0; width: 100px; height: 10px; vertical-align:bottom;">
+
+        <tr>
+            <td style="padding-right:4; padding-top: 0; width: 30px" >
+                <a href="" id="link" onmouseout="hideToolTip()" onmouseover="showToolTip()">
+                    <img src="images/link.jpg" width="20" alt="link to this page" /></a>
+
+                <div id="myToolTip" style="position: absolute; z-index: 999; visibility: hidden;">
+                    <span class="label success">Link to this page</span>
+
+                </div>
+            </td>
+            <td style="padding:1px; width:40px" >
+                <g:plusone size="small"></g:plusone>
+            </td>
+
+               <td style="padding:1px;" >
+                   <div class="fb-like" data-href="http://www.nimbits.com" data-send="false" data-layout="button_count" data-width="75" data-show-faces="false"></div>
+
+            </td>
+
+        </tr>
+
+    </table>
+
 <div class="container">
+
 
 <div class="content" id="content">
 <div id="masthead">

@@ -108,7 +108,7 @@ public class ChartApiServletImpl extends ApiServlet {
 
 
 
-    private String generateImageChartParams(final HttpServletRequest req, final Timespan timespan, final int valueCount, final boolean doScale, final User u, final List<EntityName> pointList) {
+    private String generateImageChartParams(final HttpServletRequest req, final Timespan timespan, final int valueCount, final boolean doScale, final User u, final List<EntityName> pointList) throws NimbitsException {
 
         StringBuilder params = new StringBuilder();
         params.append(req.getQueryString());

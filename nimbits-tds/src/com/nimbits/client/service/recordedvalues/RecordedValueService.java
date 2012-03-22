@@ -26,21 +26,21 @@ import java.util.*;
 @RemoteServiceRelativePath("data")
 public interface RecordedValueService extends RemoteService {
 
-    List<Point> getDataSeries(final List<Point> symbol, final Timespan timespan);
+    List<Point> getDataSeries(final List<Point> symbol, final Timespan timespan) throws NimbitsException;
 
-    List<Value> getCache(final Point point);
+    List<Value> getCache(final Point point) throws NimbitsException;
 
-    List<Value> getCache(final Entity entity);
+    List<Value> getCache(final Entity entity) throws NimbitsException;
 
     Value getCurrentValue(final Entity entity) throws NimbitsException;
 
-    Value getCurrentValue(final Point p);
+    Value getCurrentValue(final Point p) throws NimbitsException;
 
-    List<Value> getPieceOfDataSegment(final Point point, final Timespan timespan, final int start, final int end);
+    List<Value> getPieceOfDataSegment(final Point point, final Timespan timespan, final int start, final int end) throws NimbitsException;
 
-    List<Value> getPieceOfDataSegment(final Entity entity, final Timespan timespan, final int start, final int end);
+    List<Value> getPieceOfDataSegment(final Entity entity, final Timespan timespan, final int start, final int end) throws NimbitsException;
 
-    Value recordValue(final User u, final Point target, final Value value, final boolean loopFlag);
+    Value recordValue(final User u, final Point target, final Value value, final boolean loopFlag) throws NimbitsException;
 
     //rpc
     Value recordValue(final User u, final EntityName pointName, final Value value) throws NimbitsException;
@@ -48,23 +48,23 @@ public interface RecordedValueService extends RemoteService {
     Value recordValue(final Entity entity, final Value value) throws NimbitsException;
 
 
-    Value getPrevValue(final Point p, final Date date);
+    Value getPrevValue(final Point p, final Date date) throws NimbitsException;
 
-    Date getLastRecordedDate(final List<Point> points);
+    Date getLastRecordedDate(final List<Point> points) throws NimbitsException;
 
-    List<Value> getTopDataSeries(final Point point, final int maxValues, final Date endDate);
+    List<Value> getTopDataSeries(final Point point, final int maxValues, final Date endDate) throws NimbitsException;
 
-    List<Value> getTopDataSeries(final Entity point, final int maxValues, final Date endDate);
+    List<Value> getTopDataSeries(final Entity point, final int maxValues, final Date endDate) throws NimbitsException;
 
-    Point getTopDataSeries(final Point point, final int maxValues);
+    Point getTopDataSeries(final Point point, final int maxValues) throws NimbitsException;
 
     List<Value> getDataSegment(final Point point,
                                final Timespan timespan,
                                final int start,
-                               final int end);
+                               final int end) throws NimbitsException;
 
     List<Value> getDataSegment(final Point point,
-                               final Timespan timespan);
+                               final Timespan timespan) throws NimbitsException;
 
 
 }

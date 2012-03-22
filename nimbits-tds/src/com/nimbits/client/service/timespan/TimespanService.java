@@ -17,6 +17,8 @@ import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.timespan.*;
 
+import java.util.*;
+
 /**
  * Created by Benjamin Sautner
  * User: benjamin
@@ -25,7 +27,7 @@ import com.nimbits.client.model.timespan.*;
  */
 @RemoteServiceRelativePath("timespan")
 public interface TimespanService extends RemoteService {
-
+    Date zeroOutDate(Date date);
     Timespan createTimespan(final String start, final String end) throws NimbitsException;
     Timespan createTimespan(final String start, final String end, final int offset) throws NimbitsException;
 }

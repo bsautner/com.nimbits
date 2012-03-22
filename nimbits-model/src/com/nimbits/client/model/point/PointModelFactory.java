@@ -18,6 +18,11 @@ import java.util.List;
 public class PointModelFactory {
 
 
+    public static PointModel createPointModel(final String uuid) {
+
+        return new PointModel(uuid);
+
+    }
 
 
 

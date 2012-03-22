@@ -151,4 +151,8 @@ public class RecordedValue implements com.nimbits.client.model.value.Value {
     }
 
 
+    @Override
+    public int compareTo(Value value) {
+        return 0;
+    }
 }

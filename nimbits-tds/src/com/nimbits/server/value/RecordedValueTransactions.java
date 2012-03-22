@@ -21,26 +21,26 @@ import java.util.*;
 
 public interface RecordedValueTransactions {
 
-    Value getRecordedValuePrecedingTimestamp(final Date timestamp);
+    Value getRecordedValuePrecedingTimestamp(final Date timestamp) throws NimbitsException;
 
 
-    Value recordValue(final Value v) ;
+    Value recordValue(final Value v) throws NimbitsException;
 
     // this can throw an exception if the indexes are building on prod
-    List<Value> getTopDataSeries(final int maxValues);
+    List<Value> getTopDataSeries(final int maxValues) throws NimbitsException;
 
     List<Value> getTopDataSeries(final int maxValues,
-                                 final Date endDate);
+                                 final Date endDate) throws NimbitsException;
 
-    List<Value> getDataSegment(final Timespan timespan);
+    List<Value> getDataSegment(final Timespan timespan) throws NimbitsException;
 
     List<Value> getDataSegment(final Timespan timespan,
                                final int start,
-                               final int end);
+                               final int end) throws NimbitsException;
 
-    List<Value> getCache();
+    List<Value> getCache() throws NimbitsException;
 
-    void recordValues(final List<Value> values);
+    void recordValues(final List<Value> values) throws NimbitsException;
 
     void moveValuesFromCacheToStore() throws NimbitsException;
 

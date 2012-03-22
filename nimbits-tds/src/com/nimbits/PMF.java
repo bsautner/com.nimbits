@@ -17,6 +17,8 @@ import javax.jdo.*;
 
 public final class PMF {
     private static PersistenceManagerFactory pmfInstance;
+    private static PersistenceManager persistenceManager;
+
     private static final String PMF_TRANSACTIONS_OPTIONAL = "transactions-optional";
 
     private PMF() {
@@ -27,5 +29,11 @@ public final class PMF {
             pmfInstance = JDOHelper.getPersistenceManagerFactory(PMF_TRANSACTIONS_OPTIONAL);
         }
         return pmfInstance;
+    }
+    public static PersistenceManager getPm() {
+      if (persistenceManager == null) {
+          persistenceManager = JDOHelper.getPersistenceManagerFactory(PMF_TRANSACTIONS_OPTIONAL).getPersistenceManager();
+      }
+         return persistenceManager;
     }
 }

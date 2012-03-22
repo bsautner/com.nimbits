@@ -216,7 +216,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
         TwitterServiceFactory.getInstance().sendTweet(u, message.toString());
     }
 
-    private void postToFB(final Point p, Entity entity, final User u, final Value v) {
+    private void postToFB(final Point p, Entity entity, final User u, final Value v) throws NimbitsException {
 
         String m = ("Data Point #" + entity.getName().getValue() + " = " + v);
         if (v.getNote() != null) {

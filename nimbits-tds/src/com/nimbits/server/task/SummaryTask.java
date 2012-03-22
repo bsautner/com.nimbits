@@ -1,6 +1,7 @@
 package com.nimbits.server.task;
 
 import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
@@ -8,6 +9,7 @@ import com.nimbits.client.model.summary.*;
 import com.nimbits.client.model.timespan.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.server.feed.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.value.*;
@@ -18,6 +20,7 @@ import org.apache.commons.math3.stat.descriptive.*;
 import javax.servlet.http.*;
 import java.io.*;
 import java.util.*;
+import java.util.logging.*;
 
 
 /**
@@ -29,7 +32,7 @@ import java.util.*;
 public class SummaryTask  extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-
+    private static final Logger log = Logger.getLogger(SummaryTask.class.getName());
 
 
     @Override
@@ -45,18 +48,30 @@ public class SummaryTask  extends HttpServlet {
         if (summary.getLastProcessed().getTime() < d) {
             final Point source = PointServiceFactory.getInstance().getPointByUUID(summary.getEntity());
             final Timespan span = TimespanModelFactory.createTimespan(new Date(now.getTime() - summary.getSummaryIntervalMs()), now);
-            final List<Value> values = RecordedValueServiceFactory.getInstance().getDataSegment(source, span);
-            final double[] doubles = new double[values.size()];
-            for (int i = 0; i< values.size(); i++) {
-                doubles[i] = values.get(i).getNumberValue();
-            }
-            if (values.size() > 0) {
-                // final Entity targetEntity = EntityServiceFactory.getInstance().getEntityByUUID(summary.getTargetPointUUID());
-                final Point target = PointServiceFactory.getInstance().getPointByUUID(summary.getTargetPointUUID());
-                final double result = getValue(summary.getSummaryType(), doubles);
-                final Value value = ValueModelFactory.createValueModel(result);
-                RecordedValueServiceFactory.getInstance().recordValue(user, target, value, false);
-                SummaryServiceFactory.getInstance().updateLastProcessed(entity);
+            final List<Value> values;
+            try {
+                values = RecordedValueServiceFactory.getInstance().getDataSegment(source, span);
+
+                final double[] doubles = new double[values.size()];
+                for (int i = 0; i< values.size(); i++) {
+                    doubles[i] = values.get(i).getNumberValue();
+                }
+                if (values.size() > 0) {
+                    // final Entity targetEntity = EntityServiceFactory.getInstance().getEntityByUUID(summary.getTargetPointUUID());
+                    final Point target = PointServiceFactory.getInstance().getPointByUUID(summary.getTargetPointUUID());
+                    final double result = getValue(summary.getSummaryType(), doubles);
+                    final Value value = ValueModelFactory.createValueModel(result);
+
+                    RecordedValueServiceFactory.getInstance().recordValue(user, target, value, false);
+
+                    SummaryServiceFactory.getInstance().updateLastProcessed(entity);
+                }
+            } catch (NimbitsException e) {
+                log.severe(e.getMessage());
+                if (user != null) {
+                    FeedServiceFactory.getInstance().postToFeed(user, e);
+                }
+
             }
 
         }

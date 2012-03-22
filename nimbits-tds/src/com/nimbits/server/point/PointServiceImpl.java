@@ -62,7 +62,7 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public Map<String, Point> getPoints(Map<String, Entity> entities) {
+    public Map<String, Point> getPoints(Map<String, Entity> entities) throws NimbitsException {
         List<Entity> entityList = new ArrayList<Entity>(entities.values());
 
         List<Point> points =  PointTransactionsFactory.getInstance(getUser()).getPoints(entityList);

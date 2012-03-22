@@ -55,30 +55,30 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
     public List<Value> getTopDataSeries(final Point point,
                                         final int maxValues,
-                                        final Date endDate) {
+                                        final Date endDate) throws NimbitsException {
         return RecordedValueTransactionFactory.getInstance(point).getTopDataSeries(maxValues, endDate);
     }
 
     public List<Value> getTopDataSeries(final Entity entity,
                                         final int maxValues,
-                                        final Date endDate) {
+                                        final Date endDate) throws NimbitsException {
         Point p = PointServiceFactory.getInstance().getPointByUUID(entity.getEntity());
         return RecordedValueTransactionFactory.getInstance(p).getTopDataSeries(maxValues, endDate);
     }
     //called from RPC Client
     public List<Point> getDataSeries(final List<Point> points,
-                                     final Timespan timespan) {
+                                     final Timespan timespan) throws NimbitsException {
 
         return getDataSeries1(points, timespan);
 
     }
 
     @Override
-    public List<Value> getCache(Point point) {
+    public List<Value> getCache(Point point) throws NimbitsException {
         return RecordedValueTransactionFactory.getInstance(point).getCache();
     }
     @Override
-    public List<Value> getCache(Entity entity) {
+    public List<Value> getCache(Entity entity) throws NimbitsException {
         Point point = PointServiceFactory.getInstance().getPointByUUID(entity.getEntity());
         return RecordedValueTransactionFactory.getInstance(point).getCache();
     }
@@ -86,7 +86,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
     public List<Value> getPieceOfDataSegment(final Point point,
                                              final Timespan timespan,
                                              final int start,
-                                             final int end) {
+                                             final int end) throws NimbitsException {
 
         return RecordedValueTransactionFactory.getInstance(point).getDataSegment(timespan, start, end);
     }
@@ -94,7 +94,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
     public List<Value> getPieceOfDataSegment(final Entity entity,
                                              final Timespan timespan,
                                              final int start,
-                                             final int end) {
+                                             final int end) throws NimbitsException {
         Point point = PointServiceFactory.getInstance().getPointByUUID(entity.getEntity());
 
         return RecordedValueTransactionFactory.getInstance(point).getDataSegment(timespan, start, end);
@@ -113,7 +113,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
 
     public Point getTopDataSeries(final Point point,
-                                  final int maxValues) {
+                                  final int maxValues) throws NimbitsException {
 
         final List<Value> v = RecordedValueTransactionFactory.getInstance(point).getTopDataSeries(maxValues);
         point.setValues(v);
@@ -122,12 +122,12 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public List<Value> getDataSegment(Point point, Timespan timespan, int start, int end) {
+    public List<Value> getDataSegment(Point point, Timespan timespan, int start, int end) throws NimbitsException {
         return RecordedValueTransactionFactory.getInstance(point).getDataSegment(timespan, start, end);
     }
 
     @Override
-    public List<Value> getDataSegment(Point point, Timespan timespan) {
+    public List<Value> getDataSegment(Point point, Timespan timespan) throws NimbitsException {
         return RecordedValueTransactionFactory.getInstance(point).getDataSegment(timespan);
     }
 
@@ -146,7 +146,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
 
     private List<Point> getDataSeries1(final List<Point> points,
-                                       final Timespan timespan) {
+                                       final Timespan timespan) throws NimbitsException {
 
 
         for (final Point point : points) {
@@ -158,7 +158,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
     }
 
     public Value getPrevValue(final Point point,
-                              final Date timestamp) {
+                              final Date timestamp) throws NimbitsException {
 
 
         return RecordedValueTransactionFactory.getInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
@@ -167,7 +167,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
     }
 
 
-    public Value getCurrentValue(final Point p) {
+    public Value getCurrentValue(final Point p) throws NimbitsException {
 
         Value retObj = null;
         if (p != null) {
@@ -226,7 +226,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
     //determines if a new value should be ignored
     private boolean ignoreByCompression(final User u,
                                         final Point p,
-                                        final Value v) {
+                                        final Value v) throws NimbitsException {
 
         boolean r = false;
 
@@ -253,7 +253,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
     public Value recordValue(final User u,
                              final Point point,
                              final Value value,
-                             final boolean loopFlag)  {
+                             final boolean loopFlag) throws NimbitsException {
 
 
         //	RecordedValue prevValue = null;
@@ -298,7 +298,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
 
     @Override
-    public Date getLastRecordedDate(final List<Point> points) {
+    public Date getLastRecordedDate(final List<Point> points) throws NimbitsException {
         Date retVal = null;
         Value rx;
 

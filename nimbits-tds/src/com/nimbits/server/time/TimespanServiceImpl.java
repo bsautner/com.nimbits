@@ -32,6 +32,17 @@ public class TimespanServiceImpl extends RemoteServiceServlet implements Timespa
     private static final long serialVersionUID = 1L;
 
     @Override
+    public Date zeroOutDate(Date date) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.MILLISECOND, c.get(Calendar.MILLISECOND) * -1);
+        c.add(Calendar.SECOND, c.get(Calendar.SECOND) * -1);
+        c.add(Calendar.MINUTE, c.get(Calendar.MINUTE) * -1);
+        c.add(Calendar.HOUR_OF_DAY, c.get(Calendar.HOUR_OF_DAY) * -1);
+        return c.getTime();
+    }
+
+    @Override
     public Timespan createTimespan(final String start, final String end) throws NimbitsException {
 
         return interpretTimespan(start, end);

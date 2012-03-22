@@ -14,7 +14,7 @@
 package com.nimbits.server.value;
 
 import com.nimbits.client.model.point.*;
-import com.nimbits.server.dao.recordedvalue.*;
+import com.nimbits.server.dao.value.*;
 import com.nimbits.server.memcache.value.*;
 
 public class RecordedValueTransactionFactory {
@@ -30,7 +30,7 @@ public class RecordedValueTransactionFactory {
 
     public static RecordedValueTransactions getDaoInstance(final Point point) {
 
-        return new RecordedValueDAOImpl(point);
+        return new ValueDAOImpl(point);
 
     }
 

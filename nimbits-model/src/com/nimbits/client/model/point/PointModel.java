@@ -70,7 +70,9 @@ public class PointModel implements Serializable, Point {
     private boolean idleAlarmSent;
 
 
-
+    public PointModel(String uuid) {
+        this.uuid = uuid;
+    }
 
     // Constructors
     public PointModel(final Point p) {

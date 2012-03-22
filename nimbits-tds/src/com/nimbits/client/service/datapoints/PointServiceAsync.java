@@ -37,9 +37,9 @@ public interface PointServiceAsync {
     void updatePoint(final User u, final Point point, AsyncCallback<Point> async);
     void getAllPoints(final AsyncCallback<List<Point>> async);
     void addPoint(final User user, final Entity entity, AsyncCallback<Point> async);
-    void copyPoint(User u, Entity originalEntity, EntityName newName, AsyncCallback<Entity> async) throws NimbitsException;
+    void copyPoint(User u, Entity originalEntity, EntityName newName, AsyncCallback<Entity> async);
     void getPoints(Map<String, Entity> entities, AsyncCallback<Map<String, Point>> async);
-    void addPoint(User user, Entity entity, Point point, AsyncCallback<Point> async) throws NimbitsException;
+    void addPoint(User user, Entity entity, Point point, AsyncCallback<Point> async);
     void addPoint(EntityName name, AsyncCallback<Point> async) throws NimbitsException;
     void getPoints(final User u, List<Entity> entities, AsyncCallback<List<Point>> async);
     void deletePoint(final User user, final Entity entity, AsyncCallback<Void> async);

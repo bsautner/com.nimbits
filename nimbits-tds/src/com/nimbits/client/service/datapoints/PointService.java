@@ -59,7 +59,7 @@ public interface PointService extends RemoteService {
 
     Entity copyPoint(final User u, final Entity originalEntity, final EntityName newName) throws NimbitsException;
 
-    Map<String,Point> getPoints(final Map<String, Entity> entities);
+    Map<String,Point> getPoints(final Map<String, Entity> entities) throws NimbitsException;
 
     void deletePoint(final User user, final Entity entity);
 }

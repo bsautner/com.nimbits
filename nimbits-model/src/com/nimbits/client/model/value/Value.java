@@ -24,7 +24,7 @@ import java.util.Date;
  * Date: 4/16/11
  * Time: 2:27 PM
  */
-public interface Value extends Serializable {
+public interface Value extends Serializable, Comparable<Value> {
 
     long getId();
 

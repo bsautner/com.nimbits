@@ -17,8 +17,12 @@ import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.timespan.*;
 
+import java.util.*;
+
 public interface TimespanServiceAsync {
     void createTimespan(final String start, final String end, final AsyncCallback<Timespan> async);
 
     void createTimespan(final String start, final String end, final int offset, AsyncCallback<Timespan> async) throws NimbitsException;
+
+    void zeroOutDate(Date date, AsyncCallback<Date> async);
 }

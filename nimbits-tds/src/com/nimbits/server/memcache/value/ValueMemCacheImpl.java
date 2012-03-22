@@ -15,6 +15,7 @@ package com.nimbits.server.memcache.value;
 
 import com.google.appengine.api.memcache.*;
 import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.timespan.*;
@@ -66,7 +67,7 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
 
 
     @Override
-    public Value getRecordedValuePrecedingTimestamp(final Date timestamp) {
+    public Value getRecordedValuePrecedingTimestamp(final Date timestamp) throws NimbitsException {
         Value retObj;
         final String key =MemCacheHelper.currentValueCacheKey(p.getUUID());
 
@@ -149,14 +150,14 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
     }
 
     @Override
-    public List<Value> getTopDataSeries(final int maxValues) {
+    public List<Value> getTopDataSeries(final int maxValues) throws NimbitsException {
         List<Value> cached = getCache();
         List<Value> stored = RecordedValueTransactionFactory.getDaoInstance(p).getTopDataSeries(maxValues);
         return mergeAndSort(cached, stored, maxValues);
     }
 
     @Override
-    public List<Value> getTopDataSeries(final int maxValues, final Date endDate) {
+    public List<Value> getTopDataSeries(final int maxValues, final Date endDate) throws NimbitsException {
         List<Value> cached = getCache();
         if (cached.size() > maxValues) {
             return cached;
@@ -172,19 +173,19 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
     }
 
     @Override
-    public List<Value> getDataSegment(final Timespan timespan) {
+    public List<Value> getDataSegment(final Timespan timespan) throws NimbitsException {
         List<Value> stored = RecordedValueTransactionFactory.getDaoInstance(p).getDataSegment(timespan);
         List<Value> cached = getCache();
         return mergeAndSort(stored, cached, timespan);
     }
 
     @Override
-    public List<Value> getDataSegment(final Timespan timespan, final int start, final int end) {
+    public List<Value> getDataSegment(final Timespan timespan, final int start, final int end) throws NimbitsException {
         return RecordedValueTransactionFactory.getDaoInstance(p).getDataSegment(timespan, start, end);
     }
 
     @Override
-    public void recordValues(List<Value> values) {
+    public void recordValues(List<Value> values) throws NimbitsException {
         RecordedValueTransactionFactory.getDaoInstance(p).recordValues(values);
     }
 

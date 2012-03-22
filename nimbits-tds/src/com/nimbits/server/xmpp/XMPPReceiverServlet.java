@@ -93,7 +93,7 @@ public class XMPPReceiverServlet extends HttpServlet {
         // ...
     }
 
-    private void processJson(final User u,final String body){
+    private void processJson(final User u,final String body) throws NimbitsException {
         log.info(body);
 
         Gson gson = GsonFactory.getInstance();

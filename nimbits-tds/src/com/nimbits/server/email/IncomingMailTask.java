@@ -23,6 +23,7 @@ import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.server.entity.*;
+import com.nimbits.server.feed.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.value.*;
 import com.nimbits.server.user.*;
@@ -121,7 +122,14 @@ public class IncomingMailTask extends HttpServlet {
                 note = "";
             }
             final Value value = ValueModelFactory.createValueModel(0.0, 0.0, v, new Date(timestamp), point.getUUID(), note);
-            RecordedValueServiceFactory.getInstance().recordValue(u, point, value, false);
+            try {
+                RecordedValueServiceFactory.getInstance().recordValue(u, point, value, false);
+            } catch (NimbitsException e) {
+                log.severe(e.getMessage());
+                if (u != null) {
+                    FeedServiceFactory.getInstance().postToFeed(u, e);
+                }
+            }
         }
 
 

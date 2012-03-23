@@ -152,7 +152,7 @@ public class MainClass {
         switch (action) {
             case read:
             case readValue:
-                out(true, String.valueOf(v.getNumberValue()));
+                out(true, String.valueOf(v.getDoubleValue()));
                 break;
             case readGps:
                 out(true, v.getLatitude() + "," + v.getLongitude());
@@ -185,7 +185,7 @@ public class MainClass {
         if (result == null) {
             out(verbose, "An error occurred recording your data");
         } else {
-            out(verbose, result.getNumberValue() + " recorded to " + pointName);
+            out(verbose, result.getDoubleValue() + " recorded to " + pointName);
         }
     }
 

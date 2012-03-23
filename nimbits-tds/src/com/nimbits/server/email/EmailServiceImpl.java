@@ -119,13 +119,13 @@ public class EmailServiceImpl implements EmailService {
             case HighAlert: {
                 message.append("<P>Alarm Status: High</P>")
                         .append("<P>Alarm Setting: ").append(point.getHighAlarm()).append("</P>")
-                        .append("<p>Value Recorded: ").append(value.getNumberValue()).append("</p>");
+                        .append("<p>Value Recorded: ").append(value.getDoubleValue()).append("</p>");
                 break;
             }
             case LowAlert: {
                 message.append("<P>Alarm Status: Low</P>")
                         .append("<P>Alarm Setting: ").append(point.getLowAlarm()).append("</P>")
-                        .append("<p>Value Recorded: ").append(value.getNumberValue()).append("</p>");
+                        .append("<p>Value Recorded: ").append(value.getDoubleValue()).append("</p>");
                 break;
             }
             case IdleAlert: {

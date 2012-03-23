@@ -101,7 +101,7 @@ public class PointActivity extends Activity implements OnGestureListener {
 
 
             if (rValue != null) {
-                currentValue.setText("Current Value: " + rValue.getNumberValue() + " " + unit);
+                currentValue.setText("Current Value: " + rValue.getDoubleValue() + " " + unit);
                 currentNote.setText("Current Note: " + rValue.getNote());
             }
 

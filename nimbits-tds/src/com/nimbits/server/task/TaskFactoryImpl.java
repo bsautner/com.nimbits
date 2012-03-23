@@ -97,7 +97,7 @@ public class TaskFactoryImpl implements TaskFactory {
 
     @Override
     public void startRecordValueTask(final User u, final Point point, final Value value, final boolean loopFlag) {
-        if (Double.valueOf(value.getNumberValue()).isInfinite()) {
+        if (Double.valueOf(value.getDoubleValue()).isInfinite()) {
             return;
         }
         final Queue queue = QueueFactory.getQueue(Const.QUEUE_RECORD_VALUE);

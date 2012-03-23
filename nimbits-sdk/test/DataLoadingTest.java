@@ -57,7 +57,7 @@ public class DataLoadingTest {
         double t = 0;
         for (Value v : result) {
 
-            t += v.getNumberValue();
+            t += v.getDoubleValue();
         }
         System.out.println(t);
         assertEquals(45.0, t, 0);
@@ -95,7 +95,7 @@ public class DataLoadingTest {
         List<Value> values = ClientHelper.client().getSeries(pointName, 999);
         //System.out.println(values.size());
         for (Value vx : values) {
-            total2 += roundDouble(vx.getNumberValue());
+            total2 += roundDouble(vx.getDoubleValue());
 
         }
         assertEquals(total, total2, 0.001);

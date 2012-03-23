@@ -181,7 +181,7 @@ public class XMPPReceiverServlet extends HttpServlet {
                     t = v.getNote();
                 }
                 XmppServiceFactory.getInstance().sendMessage(e.getName().getValue() + "="
-                        + v.getNumberValue() + " " + t, u.getEmail());
+                        + v.getDoubleValue() + " " + t, u.getEmail());
             } else {
                 XmppServiceFactory.getInstance().sendMessage(pointName.getValue() + " has no data", u.getEmail());
 

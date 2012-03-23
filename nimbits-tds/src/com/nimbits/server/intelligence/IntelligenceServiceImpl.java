@@ -296,7 +296,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
                     if (inputPoint != null) {
                         Value inputValue = RecordedValueServiceFactory.getInstance().getCurrentValue(inputPoint);
                         if (a.equals(Const.PARAM_VALUE)) {
-                            retStr = retStr.replace(r, String.valueOf(inputValue.getNumberValue()));
+                            retStr = retStr.replace(r, String.valueOf(inputValue.getDoubleValue()));
                         } else if (a.equals(Const.PARAM_DATA)) {
                             retStr = retStr.replace(r, String.valueOf(inputValue.getData()));
 

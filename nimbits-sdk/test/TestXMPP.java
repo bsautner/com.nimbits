@@ -144,7 +144,7 @@ public class TestXMPP {
         Action action = gson.fromJson(array.get(0), Action.class);
         assertEquals(action, Action.record);
         assertEquals(px, "foo");
-        assertEquals(vx.getNumberValue(), 1.23, 0.0);
+        assertEquals(vx.getDoubleValue(), 1.23, 0.0);
 
 
     }

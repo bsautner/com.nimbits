@@ -81,6 +81,10 @@ public class UpgradeTask  extends HttpServlet
                     clog("Started upgrade Point task");
                     doPoint(req);
                     break;
+
+                case value:
+
+                    break;
             }
         } catch (NimbitsException e) {
             clog(e.getMessage());
@@ -132,6 +136,7 @@ public class UpgradeTask  extends HttpServlet
                         IntelligenceServiceFactory.getDaoInstance().addUpdateIntelligence(i);
                     }
                 }
+                TaskFactoryLocator.getInstance().startUpgradeTask(Action.value,pointEntity );
 
             }
         } catch (Exception e) {

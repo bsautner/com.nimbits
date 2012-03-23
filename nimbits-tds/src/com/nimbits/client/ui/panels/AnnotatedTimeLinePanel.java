@@ -13,42 +13,50 @@
 
 package com.nimbits.client.ui.panels;
 
-import com.extjs.gxt.ui.client.data.*;
-import com.extjs.gxt.ui.client.dnd.*;
+import com.extjs.gxt.ui.client.data.ModelData;
+import com.extjs.gxt.ui.client.dnd.DropTarget;
 import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.store.*;
+import com.extjs.gxt.ui.client.store.TreeStoreModel;
 import com.extjs.gxt.ui.client.widget.*;
-import com.extjs.gxt.ui.client.widget.Label;
-import com.extjs.gxt.ui.client.widget.Window;
 import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.button.*;
-import com.extjs.gxt.ui.client.widget.form.*;
-import com.extjs.gxt.ui.client.widget.layout.*;
-import com.extjs.gxt.ui.client.widget.toolbar.*;
-import com.google.gwt.core.client.*;
-import com.google.gwt.i18n.client.*;
-import com.google.gwt.user.client.*;
-import static com.google.gwt.user.client.Window.*;
-import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
-import com.google.gwt.visualization.client.AbstractDataTable.*;
-import com.google.gwt.visualization.client.*;
-import com.google.gwt.visualization.client.visualizations.*;
-import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine.*;
-import com.nimbits.client.common.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.timespan.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.client.service.recordedvalues.*;
-import com.nimbits.client.ui.helper.*;
-import com.nimbits.client.ui.icons.*;
+import com.extjs.gxt.ui.client.widget.button.ToolButton;
+import com.extjs.gxt.ui.client.widget.form.NumberField;
+import com.extjs.gxt.ui.client.widget.form.TextField;
+import com.extjs.gxt.ui.client.widget.layout.FillLayout;
+import com.extjs.gxt.ui.client.widget.toolbar.SeparatorToolItem;
+import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.google.gwt.visualization.client.AbstractDataTable.ColumnType;
+import com.google.gwt.visualization.client.DataTable;
+import com.google.gwt.visualization.client.VisualizationUtils;
+import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine;
+import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine.Options;
+import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine.WindowMode;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.Const;
+import com.nimbits.client.model.GxtModel;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.timespan.Timespan;
+import com.nimbits.client.model.timespan.TimespanModelFactory;
+import com.nimbits.client.model.timespan.TimespanServiceClientImpl;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.service.recordedvalues.RecordedValueService;
+import com.nimbits.client.service.recordedvalues.RecordedValueServiceAsync;
+import com.nimbits.client.ui.helper.FeedbackHelper;
+import com.nimbits.client.ui.icons.Icons;
 
 import java.util.*;
- @SuppressWarnings("unchecked")
+
+import static com.google.gwt.user.client.Window.alert;
+@SuppressWarnings("unchecked")
 public class AnnotatedTimeLinePanel extends LayoutContainer {
     private final DateTimeFormat fmt = DateTimeFormat.getFormat(Const.FORMAT_DATE_TIME);
 
@@ -140,7 +148,16 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
 
         if (values != null) {
             if (valueMap.containsKey(entity.getName())) {
-                valueMap.get(entity.getName()).addAll(values);
+                List<Value> list =   valueMap.get(entity.getName());
+                if (list == null) {
+                    list = new ArrayList<Value>();
+                    list.addAll(values);
+                    valueMap.remove(entity.getName());
+                    valueMap.put(entity.getName(), list);
+                }
+                else {
+                    valueMap.get(entity.getName()).addAll(values);
+                }
             }
             else {
                 valueMap.put(entity.getName(), values);
@@ -151,7 +168,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
 
                 dataTable.addRow();
                 dataTable.setValue(CurrentRow, 0, v.getTimestamp());
-                dataTable.setValue(CurrentRow, PointColumn, v.getNumberValue());
+                dataTable.setValue(CurrentRow, PointColumn, v.getDoubleValue());
 
                 String note = v.getNote();
                 String name =entity.getName().getValue();

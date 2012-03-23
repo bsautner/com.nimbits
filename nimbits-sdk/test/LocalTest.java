@@ -12,19 +12,15 @@
  */
 
 import com.nimbits.client.NimbitsClient;
-import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.value.Value;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -60,7 +56,7 @@ public class LocalTest {
         while (then < now) {
             then += 1000;
             d += 1;
-            assertNotNull(c.recordValue(pointName, r.nextDouble() * 100, new Date(then)).getNumberValue());
+            assertNotNull(c.recordValue(pointName, r.nextDouble() * 100, new Date(then)).getDoubleValue());
         }
 
 

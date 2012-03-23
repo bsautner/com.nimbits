@@ -13,9 +13,9 @@
 
 package com.nimbits.server.value;
 
-import com.nimbits.client.model.point.*;
-import com.nimbits.server.dao.value.*;
-import com.nimbits.server.memcache.value.*;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.server.dao.value.ValueDAOImpl;
+import com.nimbits.server.memcache.value.ValueMemCacheImpl;
 
 public class RecordedValueTransactionFactory {
 

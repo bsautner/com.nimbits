@@ -19,6 +19,7 @@ import com.nimbits.client.model.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.timespan.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 import com.nimbits.server.orm.*;
 import com.nimbits.server.value.*;
 
@@ -26,6 +27,7 @@ import javax.jdo.*;
 import java.util.*;
 import java.util.logging.*;
 @SuppressWarnings("unchecked")
+@Deprecated
 public class RecordedValueDAOImpl implements RecordedValueTransactions {
     private static final Logger log = Logger.getLogger(RecordedValueDAOImpl.class.getName());
     private final Point point;
@@ -224,6 +226,16 @@ public class RecordedValueDAOImpl implements RecordedValueTransactions {
 
     @Override
     public List<Value> getCache(Timespan timespan) throws NimbitsException {
+        throw new NimbitsException("Not Implemented");
+    }
+
+    @Override
+    public List<ValueBlobStore> getAllStores() throws NimbitsException {
+        throw new NimbitsException("Not Implemented");
+    }
+
+    @Override
+    public void consolidateDate(Date timestamp) throws NimbitsException {
         throw new NimbitsException("Not Implemented");
     }
 }

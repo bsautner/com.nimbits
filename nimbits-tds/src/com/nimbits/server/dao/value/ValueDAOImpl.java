@@ -1,21 +1,28 @@
 package com.nimbits.server.dao.value;
 
-import com.google.appengine.api.blobstore.*;
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.BlobstoreService;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.files.*;
-import com.nimbits.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.timespan.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.orm.*;
-import com.nimbits.server.time.*;
-import com.nimbits.server.value.*;
+import com.nimbits.PMF;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.Const;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.timespan.Timespan;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.valueblobstore.ValueBlobStore;
+import com.nimbits.client.model.valueblobstore.ValueBlobStoreFactory;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.orm.ValueBlobStoreEntity;
+import com.nimbits.server.time.TimespanServiceFactory;
+import com.nimbits.server.value.RecordedValueTransactions;
 
-import javax.jdo.*;
-import java.io.*;
-import java.nio.channels.*;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.channels.Channels;
 import java.util.*;
 
 /**
@@ -57,17 +64,14 @@ public class ValueDAOImpl implements RecordedValueTransactions {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         try {
-            Map<String, Object> args;
+
             List<Value> retObj = new ArrayList<Value>();
-            Query q = pm.newQuery(ValueBlobStoreEntity.class,
-                    "entity == k && minTimestamp <= :t");
-            q.declareImports("import java.util.Date;");
-            args = new HashMap<String, Object>();
-            args.put("k", point.getUUID());
-            args.put("t", endDate);
-            q.setOrdering("minTimestamp descending");
+            Query q = pm.newQuery(ValueBlobStoreEntity.class);
+            q.setFilter("minTimestamp <= t && entity == k");
+            q.declareParameters("String k, Long t");
+            q.setOrdering("minTimestamp desc");
             q.setRange(0, 1000);
-            List<ValueBlobStoreEntity> result = (List<ValueBlobStoreEntity>) q.executeWithMap(args);
+            List<ValueBlobStoreEntity> result = (List<ValueBlobStoreEntity>) q.execute(point.getUUID(), endDate.getTime());
             for (ValueBlobStoreEntity e : result) {
                 List<Value> values = readValuesFromFile(e.getPath());
                 for (Value vx : values) {
@@ -98,16 +102,15 @@ public class ValueDAOImpl implements RecordedValueTransactions {
             Map<String, Object> args;
             List<Value> retObj = new ArrayList<Value>();
             Query q = pm.newQuery(ValueBlobStoreEntity.class,
-                    "entity == k && minTimestamp <= :et && minTimestamp >= :st ");
-            q.declareImports("import java.util.Date;");
+                    "entity == k && minTimestamp <= et && minTimestamp >= st ");
             args = new HashMap<String, Object>();
             args.put("k", point.getUUID());
-            args.put("et", timespan.getEnd());
-            args.put("st", timespan.getStart());
+            args.put("et", timespan.getEnd().getTime());
+            args.put("st", timespan.getStart().getTime());
             q.setOrdering("minTimestamp descending");
             q.setRange(start, end);
-            List<ValueBlobStoreEntity> result = (List<ValueBlobStoreEntity>) q.executeWithMap(args);
-            for (ValueBlobStoreEntity e : result) {
+            List<ValueBlobStore> result = (List<ValueBlobStore>) q.executeWithMap(args);
+            for (ValueBlobStore e : result) {
                 List<Value> values = readValuesFromFile(e.getPath());
                 for (Value vx : values) {
                     if (vx.getTimestamp().getTime() <= timespan.getEnd().getTime() && vx.getTimestamp().getTime() >= timespan.getStart().getTime()) {
@@ -123,7 +126,48 @@ public class ValueDAOImpl implements RecordedValueTransactions {
         }
     }
 
+    @Override
+    public List<ValueBlobStore> getAllStores() throws NimbitsException {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
 
+        try {
+            Map<String, Object> args;
+            List<Value> retObj = new ArrayList<Value>();
+            Query q = pm.newQuery(ValueBlobStoreEntity.class,
+                    "entity == k");
+            args = new HashMap<String, Object>();
+            args.put("k", point.getUUID());
+            List<ValueBlobStore> result = (List<ValueBlobStore>) q.executeWithMap(args);
+
+            return ValueBlobStoreFactory.createValueBlobStores(result);
+        } finally {
+            pm.close();
+        }
+    }
+
+
+    @Override
+    public void consolidateDate(Date timestamp) throws NimbitsException {
+        List<Value> values = new ArrayList<Value>();
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+        try {
+            Query q = pm.newQuery(ValueBlobStoreEntity.class);
+            q.setFilter("timestamp == t && entity == k");
+            q.declareParameters("String k, Long t");
+            List<ValueBlobStore> result = (List<ValueBlobStore>) q.execute(point.getUUID(), timestamp.getTime());
+            for (ValueBlobStore store : result) {
+                values.addAll(readValuesFromFile(store.getPath()));
+                BlobKey key = new BlobKey(store.getKey());
+                blobstoreService.delete(key);
+            }
+            pm.deletePersistentAll(result);
+            recordValues(values);
+
+        } finally {
+            pm.close();
+        }
+    }
 
     @Override
     public void recordValues(List<Value> values) throws NimbitsException {
@@ -191,19 +235,21 @@ public class ValueDAOImpl implements RecordedValueTransactions {
             ValueBlobStoreEntity currentStoreEntity;
 
             file = fileService.createNewBlobFile(Const.CONTENT_TYPE_PLAIN);
-            key = fileService.getBlobKey(file);
             path = file.getFullPath();
+
             writeChannel = fileService.openWriteChannel(file, true);
             out = new PrintWriter(Channels.newWriter(writeChannel, "UTF8"));
             out.println(json);
             out.close();
             writeChannel.closeFinally();
+            key = fileService.getBlobKey(file);
             Date mostRecentTimeForDay = new Date(maxMap.get(l));
             Date earliestForDay = new Date(minMap.get(l));
 
-            currentStoreEntity = new ValueBlobStoreEntity(point.getUUID(),new Date(l), mostRecentTimeForDay, earliestForDay, key, path );
+            currentStoreEntity = new
+                    ValueBlobStoreEntity(point.getUUID(),new Date(l), mostRecentTimeForDay, earliestForDay, path, key );
             pm.makePersistent(currentStoreEntity);
-
+            pm.flush();
         } finally {
             pm.close();
         }

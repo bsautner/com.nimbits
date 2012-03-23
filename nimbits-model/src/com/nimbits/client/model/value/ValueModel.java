@@ -54,7 +54,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
         this.id = v.getId();
         this.lat = v.getLatitude();
         this.lng = v.getLongitude();
-        this.d = v.getNumberValue();
+        this.d = v.getDoubleValue();
         this.timestamp = v.getTimestamp().getTime();
         this.pointUUID = v.getPointUUID();
         this.note = v.getNote();
@@ -66,7 +66,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
         this.id = v.getId();
         this.lat = v.getLatitude();
         this.lng = v.getLongitude();
-        this.d = v.getNumberValue();
+        this.d = v.getDoubleValue();
         this.timestamp = v.getTimestamp().getTime();
         this.pointUUID = v.getPointUUID();
         this.note = v.getNote();
@@ -85,6 +85,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
         this.lat = lat;
         this.lng = lng;
         this.d = d;
+
         this.timestamp = timestamp.getTime();
         this.pointUUID = pointUUID;
         this.note = note;
@@ -147,7 +148,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
      }
 
     @Override
-    public double getNumberValue() {
+    public double getDoubleValue() {
         return this.d;
 
     }

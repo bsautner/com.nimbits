@@ -60,7 +60,7 @@ public class ValueServletImpl extends ApiServlet {
                     if (!Utils.isEmptyString(getParam(ApiParam.json))) {
                         final Value vx = GsonFactory.getInstance().fromJson(getParam(ApiParam.json), ValueModel.class);
 
-                        v = ValueModelFactory.createValueModel(vx.getLatitude(), vx.getLongitude(), vx.getNumberValue(), vx.getTimestamp(),
+                        v = ValueModelFactory.createValueModel(vx.getLatitude(), vx.getLongitude(), vx.getDoubleValue(), vx.getTimestamp(),
                                 point.getUUID(), vx.getNote(), vx.getData());
                     } else {
                         final double latitude = getDoubleFromParam(getParam(ApiParam.lat));
@@ -170,7 +170,7 @@ public class ValueServletImpl extends ApiServlet {
                     // record the value, but not if this is a public
                     // request
                     final Value newValue = ValueModelFactory.createValueModel(
-                            nv.getLatitude(), nv.getLongitude(), nv.getNumberValue(),
+                            nv.getLatitude(), nv.getLongitude(), nv.getDoubleValue(),
                             nv.getTimestamp(), p.getUUID(), nv.getNote(), nv.getData());
 
 
@@ -181,7 +181,7 @@ public class ValueServletImpl extends ApiServlet {
                 if (format.equals(Const.Params.PARAM_JSON)) {
                     result = GsonFactory.getInstance().toJson(value);
                 } else {
-                    result = String.valueOf(value.getNumberValue());
+                    result = String.valueOf(value.getDoubleValue());
                 }
             }
         }

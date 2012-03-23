@@ -11,13 +11,30 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server.service.impl;
+package com.nimbits.client.model.valueblobstore;
+
+import java.util.Date;
 
 /**
  * Created by bsautner
  * User: benjamin
- * Date: 12/17/11
- * Time: 12:04 PM
+ * Date: 3/23/12
+ * Time: 10:47 AM
  */
-public class ReportServiceImpl {
+public interface ValueBlobStore {
+    String getEntity();
+
+    Date getTimestamp();
+
+    String getPath();
+
+    Date getMaxTimestamp();
+
+    void setMaxTimestamp(Date maxTimestamp);
+
+    Date getMinTimestamp();
+
+    void setMinTimestamp(Date minTimestamp);
+
+    String getKey();
 }

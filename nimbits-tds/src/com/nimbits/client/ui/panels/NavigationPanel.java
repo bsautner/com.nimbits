@@ -50,7 +50,7 @@ class NavigationPanel extends NavigationEventProvider {
     private List<String> parents;
     private EntityContextMenu context;
     private final User user;
-    private boolean saveWithCurrentTime;
+    private boolean saveWithCurrentTime = true;
     private final static int valueColumnIndex = 1;
 
     public NavigationPanel(final User user,
@@ -423,10 +423,16 @@ class NavigationPanel extends NavigationEventProvider {
 
 
                     final Entity entity =model.getBaseEntity();
-                    final Date timestamp = saveWithCurrentTime ? new Date() : (Date) model.get(Const.Params.PARAM_TIMESTAMP);
+                    Date timestamp = saveWithCurrentTime ? new Date() : (Date) model.get(Const.Params.PARAM_TIMESTAMP);
+
+
                     final String valueAndNote = model.get(Const.PARAM_VALUE);
                     //final String data = model.get(Const.PARAM_DATA);
                     String uuid = model.getId();
+                    if (timestamp == null) {
+                        timestamp = new Date();
+                    }
+
                     final Value value = ValueModelFactory.createValueModel(valueAndNote, timestamp, uuid);
 
                     RecordedValueServiceAsync service = GWT.create(RecordedValueService.class);

@@ -74,18 +74,18 @@ public class CalcTest {
         Thread.sleep(100);
         ClientHelper.client().recordValue(triggerName, r2);
         Value vt = ClientHelper.client().getCurrentRecordedValue(triggerName);
-        assertEquals(vt.getNumberValue(), r2, 0.0001);
+        assertEquals(vt.getDoubleValue(), r2, 0.0001);
 
         Value vy = ClientHelper.client().getCurrentRecordedValue(yName);
-        assertEquals(vy.getNumberValue(), ry, 0.0001);
+        assertEquals(vy.getDoubleValue(), ry, 0.0001);
 
         Value vz = ClientHelper.client().getCurrentRecordedValue(zName);
-        assertEquals(vz.getNumberValue(), rz, 0.0001);
+        assertEquals(vz.getDoubleValue(), rz, 0.0001);
 
         Thread.sleep(100);
         Value endResult = ClientHelper.client().getCurrentRecordedValue(targetName);
 
-        assertEquals(r1 + r2 + ry + rz, endResult.getNumberValue(), 0.001);
+        assertEquals(r1 + r2 + ry + rz, endResult.getDoubleValue(), 0.001);
 
 
     }

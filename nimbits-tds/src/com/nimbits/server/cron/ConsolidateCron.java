@@ -11,20 +11,13 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server.service;
+package com.nimbits.server.cron;
 
-import javax.servlet.http.*;
-
-public class ChartService extends HttpServlet {
-
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
-
-
-    @Override
-    public void doGet(HttpServletRequest req, HttpServletResponse resp) {
-
-    }
+/**
+ * Created by bsautner
+ * User: benjamin
+ * Date: 3/23/12
+ * Time: 10:41 AM
+ */
+public class ConsolidateCron {
 }

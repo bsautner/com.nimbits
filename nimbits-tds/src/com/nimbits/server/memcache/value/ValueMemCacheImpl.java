@@ -20,6 +20,7 @@ import com.nimbits.client.model.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.timespan.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 import com.nimbits.server.memcache.*;
 import com.nimbits.server.value.*;
 import com.nimbits.server.task.*;
@@ -207,6 +208,16 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
         }
 
         return retObj;
+    }
+
+    @Override
+    public List<ValueBlobStore> getAllStores() throws NimbitsException {
+        throw new NimbitsException("Not Implemented");
+    }
+
+    @Override
+    public void consolidateDate(Date timestamp) throws NimbitsException {
+        throw new NimbitsException("Not Implemented");
     }
 
     public List<Value> getCache() {

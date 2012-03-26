@@ -22,19 +22,12 @@ import com.nimbits.client.model.email.EmailAddress;
  * Time: 10:35 AM
  */
 public class Const {
-    public static final String CONST_SERVER_VERSION = "3.3.2.2";
-    public static final long DEFAULT_SERIAL_VERSION = 12L;
-    public static final String CACHE_KEY_PREFIX = CONST_SERVER_VERSION + DEFAULT_SERIAL_VERSION;
+
+
     public static final String CONTENT_TYPE_JSON = "application/json";
-    public static final String KEY_ACTIVE_POINTS = "KEY_ACTIVE_POINTS";
-    public static final String KEY_VALUE = "KEY_VALUE";
+
     public static final String FILE_TYPE_SVG = ".svg";
-    public static final String KEY_ALL_SETTINGS = "KEY_ALL_SETTINGS";
-    public static final String KEY_SETTING = "KEY_SETTING";
-    public static final String KEY_USER_NAMESPACE = "KEY_USER_NAMESPACE";
-    public static final String KEY_DEFAULT_NAMESPACE = "KEY_DEFAULT_NAMESPACE";
-    public static final String KEY_ENTITY_MAP = "KEY_ENTITY_MAP";
-    public static final String KEY_USER_POINT_NAMESPACE = "KEY_USER_POINT_NAMESPACE";
+
     public static final int DEFAULT_FEED_LENGTH = 250;
     public static final String TEXT_DATA_FEED = "Data Feed Channel";
 
@@ -54,7 +47,7 @@ public class Const {
         public static final String PARAM_DIAGRAM = "diagram";
         public static final String PARAM_BLOB = "blob";
         public static final String PARAM_EMAIL = "email";
-        public static final String SETTING_ENABLE_CONNECTIONS = "enableConnections";
+
         public static final String PARAM_END_DATE = "ed";
         public static final String PARAM_EXP = "exp";
         public static final String PARAM_FACEBOOK = "FB";
@@ -181,8 +174,7 @@ public class Const {
     public static final String N = "NimbitsV";
     public static final String NAMESPACE_DEFAULT = "default";
 
-    public static final String SETTING_TWITTER_CLIENT_ID = "twitterClientId";
-    public static final String SETTING_TWITTER_SECRET = "twitterSecret";
+
 
     public static final String PARAM_URL = "url";
     public static final String PARAM_UUID = "uuid";
@@ -270,9 +262,7 @@ public class Const {
     public static String PATH_BATCH_SERVICE = "/service/batch";
     public static final String METHOD_GET = "GET";
     public static final String METHOD_POST = "POST";
-    public static final String SETTING_FACEBOOK_CLIENT_ID = "facebookClientId";
-    public static final String SETTING_FACEBOOK_SECRET = "facebookSecret";
-    public static final String SETTING_FACEBOOK_REDIRECT_URL = "facebookRedirectUrl";
+
     public static final String WORD_PROPERTIES = "Properties";
     public static final String HTML_HOME_LINK = "<A href = \"http://www.nimbits.com\">nimbits.com</a>";
     public static final String PATH_FACEBOOK_ME = "https://graph.facebook.com/me";
@@ -292,7 +282,7 @@ public class Const {
     public static final String PARAM_ENABLED = "enabled";
     public static final String PARAM_D = "d";
     public static final String PARAM_POINT_FK = "pointFK";
-    public static final String SETTING_WOLFRAM = "wolframAlphaKey";
+
     public static final String CONST_UNKNOWN = "";
     public static final String WORD_COOKIE = "Cookie";
     public static final int DEFAULT_HTTP_TIMEOUT = 15000;
@@ -308,15 +298,13 @@ public class Const {
     public static final String TEST_ACCOUNT = "test@example.com";
     public static final String PATH_CHART_SERVICE = "/service/chartapi";
     public static final String PARAM_LOOP = "loop";
-    public static final String SETTING_VERSION = "version";
-    public static final String SETTING_FACEBOOK_API_KEY = "facebookApiKey";
+
     public static final String PATH_GOOGLE_CHART_API = "http://chart.apis.google.com/chart";
     public static final String DELIMITER_COMMA = ",";
     public static final String DELIMITER_BAR = "|";
-    public static final String SETTING_SERVER_IS_DISCOVERABLE = "serverIsDiscoverable";
+
     public static final String PATH_FACEBOOK_REDIRECT = "http://apps.facebook.com/nimbits/";
-    public static final String SETTING_ADMIN = "admin";
-    public static final String SETTING_LAST_CHECKED = "lastChecked";
+
     public static final String HTML_BOOTSTRAP = "<html><head>" +
             "<link rel=\"stylesheet\" href=\"http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css\">" +
             "</head><body>";

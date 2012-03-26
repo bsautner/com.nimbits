@@ -89,8 +89,8 @@ public class DataPointIntegrationTest extends TestCase {
             List<Value> v = ClientHelper.client().getSeries(name.getValue(), 10);
             double retVal = 0.0;
             for (Value x : v) {
-                retVal += x.getNumberValue();
-                System.out.println(x.getNumberValue());
+                retVal += x.getDoubleValue();
+                System.out.println(x.getDoubleValue());
             }
 
             DecimalFormat twoDForm = new DecimalFormat("#.##");
@@ -139,7 +139,7 @@ public class DataPointIntegrationTest extends TestCase {
             List<Value> v = ClientHelper.client().getSeries(name, 40);
             double retVal = 0.0;
             for (Value x : v) {
-                retVal += x.getNumberValue();
+                retVal += x.getDoubleValue();
 
             }
 
@@ -229,8 +229,8 @@ public class DataPointIntegrationTest extends TestCase {
             Thread.sleep(1000);
             List<Value> v = ClientHelper.client().getSeries(name, 10);
             for (Value x : v) {
-                retVal += x.getNumberValue();
-                System.out.println(x.getNumberValue() + "  " + x.getTimestamp());
+                retVal += x.getDoubleValue();
+                System.out.println(x.getDoubleValue() + "  " + x.getTimestamp());
             }
             Assert.assertEquals(345.0, retVal);
             ClientHelper.client().deletePoint(name);
@@ -277,8 +277,8 @@ public class DataPointIntegrationTest extends TestCase {
             Thread.sleep(1000);
             List<Value> v = ClientHelper.client().getSeries(name, 10);
             for (Value x : v) {
-                retVal += x.getNumberValue();
-                System.out.println(x.getNumberValue() + "  " + x.getTimestamp());
+                retVal += x.getDoubleValue();
+                System.out.println(x.getDoubleValue() + "  " + x.getTimestamp());
 
             }
             Assert.assertEquals(255.0, retVal);
@@ -346,8 +346,8 @@ public class DataPointIntegrationTest extends TestCase {
             Thread.sleep(1000);
             List<Value> v = ClientHelper.client().getSeries(name, 10);
             for (Value x : v) {
-                retVal += x.getNumberValue();
-                System.out.println(x.getNumberValue() + "  " + x.getTimestamp());
+                retVal += x.getDoubleValue();
+                System.out.println(x.getDoubleValue() + "  " + x.getTimestamp());
             }
             Assert.assertEquals(216.0, retVal);
             ClientHelper.client().deletePoint(name);
@@ -374,7 +374,7 @@ public class DataPointIntegrationTest extends TestCase {
             // Thread.sleep(2000);
             List<Value> v = ClientHelper.client().getSeries(name, 10);
             for (Value x : v) {
-                retVal += x.getNumberValue();
+                retVal += x.getDoubleValue();
             }
         } catch (InterruptedException e) {
 

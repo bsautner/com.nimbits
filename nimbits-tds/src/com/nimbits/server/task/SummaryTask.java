@@ -54,7 +54,7 @@ public class SummaryTask  extends HttpServlet {
 
                 final double[] doubles = new double[values.size()];
                 for (int i = 0; i< values.size(); i++) {
-                    doubles[i] = values.get(i).getNumberValue();
+                    doubles[i] = values.get(i).getDoubleValue();
                 }
                 if (values.size() > 0) {
                     // final Entity targetEntity = EntityServiceFactory.getInstance().getEntityByUUID(summary.getTargetPointUUID());

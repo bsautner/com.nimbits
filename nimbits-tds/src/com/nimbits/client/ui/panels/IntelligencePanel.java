@@ -171,7 +171,7 @@ public class IntelligencePanel extends NavigationEventProvider {
                     @Override
                     public void onSuccess(Value result) {
                         final MessageBox box = MessageBox.alert("Result",
-                                "Value: " + result.getNumberValue() + "<br>" +
+                                "Value: " + result.getDoubleValue() + "<br>" +
                                         "Data: " + result.getData(), null);
                         box.show();
                     }

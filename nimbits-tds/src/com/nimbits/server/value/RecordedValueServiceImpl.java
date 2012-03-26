@@ -187,10 +187,10 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
         if (point.isHighAlarmOn() || point.isLowAlarmOn()) {
 
-            if (point.isHighAlarmOn() && (value.getNumberValue() >= point.getHighAlarm())) {
+            if (point.isHighAlarmOn() && (value.getDoubleValue() >= point.getHighAlarm())) {
                 retObj = AlertType.HighAlert;
             }
-            if (point.isLowAlarmOn() && value.getNumberValue() <= point.getLowAlarm()) {
+            if (point.isLowAlarmOn() && value.getDoubleValue() <= point.getLowAlarm()) {
                 retObj = AlertType.LowAlert;
             }
 
@@ -235,8 +235,8 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
             final Value pv = getPrevValue(p, v.getTimestamp());
             if (pv == null) {
                 r = false;
-            } else if ((v.getNumberValue() <= (pv.getNumberValue() + p.getCompression()))
-                    && (v.getNumberValue() >= (pv.getNumberValue() - p.getCompression()))
+            } else if ((v.getDoubleValue() <= (pv.getDoubleValue() + p.getCompression()))
+                    && (v.getDoubleValue() >= (pv.getDoubleValue() - p.getCompression()))
                     && (v.getNote().equals(pv.getNote()))
                     && (v.getLatitude() == pv.getLatitude())
                     && (v.getLongitude() == pv.getLongitude())

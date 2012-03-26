@@ -11,70 +11,61 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server.orm;
+package com.nimbits.client.model.valueblobstore;
 
-import com.google.appengine.api.blobstore.BlobKey;
-import com.nimbits.client.model.valueblobstore.ValueBlobStore;
-
-
-import javax.jdo.annotations.*;
 import java.util.Date;
 
 /**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 3/22/12
- * Time: 11:08 AM
+ * Created by bsautner
+ * User: benjamin
+ * Date: 3/23/12
+ * Time: 10:47 AM
  */
-@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
-public class ValueBlobStoreEntity  implements ValueBlobStore {
+public class ValueBlobStoreModel implements ValueBlobStore {
 
-    private static final long serialVersionUID = 1L;
 
-    @PrimaryKey
-    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    private com.google.appengine.api.datastore.Key id;
-
-    @Persistent
     private String entity;
 
-    @Persistent
-    private long timestamp;
 
-    @Persistent
+    private Date timestamp;
+
+
     private long maxTimestamp;
 
-    @Persistent
+
     private long minTimestamp;
 
-    @Persistent
+
     private String path;
 
-    @Persistent
-    private BlobKey key;
+    private String key;
 
-    public ValueBlobStoreEntity(String entity, Date timestamp, Date maxTimestamp, Date minTimestamp, String path, BlobKey key) {
+    public ValueBlobStoreModel(String entity, Date timestamp, Date maxTimestamp, Date minTimestamp, String path, String key) {
         this.entity = entity;
-        this.timestamp = timestamp.getTime();
-
+        this.timestamp = timestamp;
         this.path = path;
         this.maxTimestamp = maxTimestamp.getTime();
         this.minTimestamp = minTimestamp.getTime();
         this.key = key;
     }
 
-
-    public ValueBlobStoreEntity() {
+    public ValueBlobStoreModel(ValueBlobStore store) {
+        this.entity = store.getEntity();
+        this.timestamp = store.getTimestamp();
+        this.path = store.getPath();
+        this.maxTimestamp = store.getMaxTimestamp().getTime();
+        this.minTimestamp = store.getMinTimestamp().getTime();
+        this.key = store.getKey();
     }
-
 
     public String getEntity() {
         return entity;
     }
 
     public Date getTimestamp() {
-        return new Date(timestamp);
+        return timestamp;
     }
+
 
     public String getPath() {
         return path;
@@ -96,9 +87,8 @@ public class ValueBlobStoreEntity  implements ValueBlobStore {
         this.minTimestamp = minTimestamp.getTime();
     }
 
+    @Override
     public String getKey() {
-        return key.getKeyString();
+        return key;
     }
-
-
 }

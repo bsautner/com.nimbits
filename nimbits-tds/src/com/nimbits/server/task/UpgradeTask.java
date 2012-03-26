@@ -13,33 +13,52 @@
 
 package com.nimbits.server.task;
 
-import com.google.gson.*;
-import com.nimbits.*;
-import com.nimbits.client.common.*;
+import com.google.gson.JsonSyntaxException;
+import com.nimbits.PMF;
+import com.nimbits.client.common.Utils;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.Const;
 import com.nimbits.client.model.calculation.Calculation;
-import com.nimbits.client.model.calculation.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.intelligence.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.subscription.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.calculation.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.intelligence.*;
-import com.nimbits.server.orm.*;
-import com.nimbits.server.point.*;
-import com.nimbits.server.subscription.*;
-import com.nimbits.server.user.*;
+import com.nimbits.client.model.calculation.CalculationModelFactory;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModel;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.intelligence.Intelligence;
+import com.nimbits.client.model.intelligence.IntelligenceModelFactory;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.subscription.Subscription;
+import com.nimbits.client.model.subscription.SubscriptionFactory;
+import com.nimbits.client.model.timespan.Timespan;
+import com.nimbits.client.model.timespan.TimespanModelFactory;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.server.calculation.CalculationServiceFactory;
+import com.nimbits.server.entity.EntityServiceFactory;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.intelligence.IntelligenceServiceFactory;
+import com.nimbits.server.orm.DataPoint;
+import com.nimbits.server.orm.DiagramEntity;
+import com.nimbits.server.orm.NimbitsUser;
+import com.nimbits.server.orm.PointCatagory;
+import com.nimbits.server.point.PointServiceFactory;
+import com.nimbits.server.subscription.SubscriptionTransactionFactory;
+import com.nimbits.server.user.UserTransactionFactory;
+import com.nimbits.server.value.RecordedValueTransactionFactory;
+import com.nimbits.server.value.RecordedValueTransactions;
 
-import javax.jdo.*;
-import javax.servlet.http.*;
-import java.util.*;
-import java.util.logging.*;
+import javax.jdo.JDOObjectNotFoundException;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  * Created by bsautner
@@ -81,6 +100,10 @@ public class UpgradeTask  extends HttpServlet
                     clog("Started upgrade Point task");
                     doPoint(req);
                     break;
+
+                case value:
+                      doValue(req);
+                    break;
             }
         } catch (NimbitsException e) {
             clog(e.getMessage());
@@ -92,6 +115,42 @@ public class UpgradeTask  extends HttpServlet
     private void clog(String string) {
        log.info(string);
     }
+
+    private void doValue(HttpServletRequest req) {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+
+        try {
+            Entity pointEntity = GsonFactory.getInstance().fromJson(req.getParameter(Const.Params.PARAM_JSON), EntityModel.class);
+            User u = UserTransactionFactory.getDAOInstance().getUserByUUID(pointEntity.getOwner());
+
+            final Query c = pm.newQuery(DataPoint.class, "uuid==o");
+            c.declareParameters("String o");
+            List<DataPoint> pList = (List<DataPoint>) c.execute(pointEntity.getEntity());
+
+            if (pList.size() > 0) {
+                Point point = pList.get(0);
+                RecordedValueTransactions old =  RecordedValueTransactionFactory.getLegacyInstance(point);
+                RecordedValueTransactions dao =  RecordedValueTransactionFactory.getDaoInstance(point);
+                Timespan timespan = TimespanModelFactory.createTimespan(point.getCreateDate(), new Date());
+
+                int count = -1;
+                int seg = 0;
+                while (count > 0) {
+                    seg += 1000;
+                    List<Value> values= dao.getDataSegment(timespan,seg, seg + 1000 );
+                    dao.recordValues(values);
+
+                }
+
+            }
+
+        } catch (NimbitsException e) {
+            log.severe(e.getMessage());
+        } finally {
+            pm.close();
+        }
+
+        }
 
     private void doPoint(HttpServletRequest req) {
 
@@ -132,6 +191,7 @@ public class UpgradeTask  extends HttpServlet
                         IntelligenceServiceFactory.getDaoInstance().addUpdateIntelligence(i);
                     }
                 }
+                TaskFactoryLocator.getInstance().startUpgradeTask(Action.value,pointEntity );
 
             }
         } catch (Exception e) {

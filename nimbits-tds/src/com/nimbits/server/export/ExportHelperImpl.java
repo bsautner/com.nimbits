@@ -48,7 +48,7 @@ public class ExportHelperImpl implements ExportHelper {
                 List<Value> vx = values.get(name);
                 if (vx.size() >= i) {
                     v = vx.get(i);
-                    sb.append(v.getTimestamp()).append(",").append(v.getNumberValue()).append(",");
+                    sb.append(v.getTimestamp()).append(",").append(v.getDoubleValue()).append(",");
                 }
             }
             sb.deleteCharAt(sb.length() - 1);
@@ -66,7 +66,7 @@ public class ExportHelperImpl implements ExportHelper {
 
         sb.append("{");
         for (final Value v : point.getValues()) {
-            sb.append(v.getNumberValue()).append(",");
+            sb.append(v.getDoubleValue()).append(",");
         }
         sb.deleteCharAt(sb.length() - 1);
         sb.append("}");
@@ -81,7 +81,7 @@ public class ExportHelperImpl implements ExportHelper {
 
         sb.append("{");
         for (final Value v : point.getValues()) {
-            sb.append(v.getNumberValue()).append(",");
+            sb.append(v.getDoubleValue()).append(",");
         }
         sb.append("...}");
 

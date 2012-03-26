@@ -15,6 +15,7 @@ package com.nimbits.server.facebook;
 
 import com.google.gwt.http.client.*;
 import com.google.gwt.user.server.rpc.*;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.email.*;
@@ -44,9 +45,9 @@ public class FacebookImpl extends RemoteServiceServlet implements FacebookServic
 
         final User u = UserServiceFactory.getInstance().getAppUserUsingGoogleAuth();
 
-        final String facebookClientId = SettingTransactionsFactory.getInstance().getSetting(Const.SETTING_FACEBOOK_CLIENT_ID);
-        final String facebookSecret = SettingTransactionsFactory.getInstance().getSetting(Const.SETTING_FACEBOOK_SECRET);
-        final String redirect_uri = SettingTransactionsFactory.getInstance().getSetting(Const.SETTING_FACEBOOK_REDIRECT_URL);
+        final String facebookClientId = SettingTransactionsFactory.getInstance().getSetting(SettingType.facebookClientId);
+        final String facebookSecret = SettingTransactionsFactory.getInstance().getSetting(SettingType.facebookSecret);
+        final String redirect_uri = SettingTransactionsFactory.getInstance().getSetting(SettingType.facebookRedirectURL);
         final String token = getToken(code, facebookClientId, redirect_uri, facebookSecret);
         final String jsonEmail = HttpCommonFactory.getInstance().doGet(Const.PATH_FACEBOOK_ME, urlEncodeToken(token) + "&fields=email,name");
 

@@ -113,8 +113,8 @@ public class GxtModel extends BaseTreeModel implements Serializable {
     public void setValue(Value value) {
 
         StringBuilder sb = new StringBuilder();
-        if ( value.getNumberValue() != Const.CONST_IGNORED_NUMBER_VALUE) {
-            sb.append(value.getNumberValue());
+        if ( value.getDoubleValue() != Const.CONST_IGNORED_NUMBER_VALUE) {
+            sb.append(value.getDoubleValue());
         }
         if (! Utils.isEmptyString(value.getNote())) {
             sb.append(" ");

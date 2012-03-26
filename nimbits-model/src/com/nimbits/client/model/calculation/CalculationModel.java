@@ -11,7 +11,7 @@ import java.io.Serializable;
  * Time: 4:53 PM
  */
 public class CalculationModel implements Serializable, Calculation {
-    private static final long serialVersionUID = Const.DEFAULT_SERIAL_VERSION;
+    private static final long serialVersionUID =1L;
     private long id;
     private String target;
     private String formula;

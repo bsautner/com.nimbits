@@ -190,7 +190,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
             message = GsonFactory.getInstance().toJson(point);
         } else {
             message = "Nimbits Data Point [" + entity.getName().getValue()
-                    + "] updated to new value: " + v.getNumberValue();
+                    + "] updated to new value: " + v.getDoubleValue();
         }
 
         List<XmppResource> resources =  XmppServiceFactory.getInstance().getPointXmppResources(u, point);
@@ -208,7 +208,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
     private void sendTweet(User u, Entity entity, Point point, Value v)  {
         StringBuilder message = new StringBuilder();
         message.append("#").append(entity.getName().getValue()).append(" ");
-        message.append("Value=").append(v.getNumberValue());
+        message.append("Value=").append(v.getDoubleValue());
         if (!Utils.isEmptyString(v.getNote())) {
             message.append(" ").append(v.getNote());
         }
@@ -234,7 +234,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
                 picture.append("http://chart.apis.google.com/chart?chd=t:");
                 for (Value vx : values) {
-                    picture.append(vx.getNumberValue()).append(",");
+                    picture.append(vx.getDoubleValue()).append(",");
                 }
                 picture.deleteCharAt(picture.length()-1);
                 picture.append("&chs=100x100&cht=ls&chco=3072F3&chds=0,105&chdlp=b&chls=2,4,1&chma=5,5,5,25&chds=a");

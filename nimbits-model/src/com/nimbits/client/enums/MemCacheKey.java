@@ -11,14 +11,15 @@ import java.util.*;
  * Time: 4:02 PM
  */
 public enum MemCacheKey {
-    activePoints(0, Const.CONST_SERVER_VERSION + Const.KEY_ACTIVE_POINTS),
-    valueCache(1, Const.CONST_SERVER_VERSION + Const.KEY_VALUE),
-    allSettings(2, Const.CONST_SERVER_VERSION + Const.KEY_ALL_SETTINGS),
-    setting(3, Const.CONST_SERVER_VERSION + Const.KEY_SETTING),
-    userNamespace(4, Const.CONST_SERVER_VERSION + Const.KEY_USER_NAMESPACE),
-    defaultNamespace(5, Const.CONST_SERVER_VERSION + Const.KEY_DEFAULT_NAMESPACE),
-    entityMap(6, Const.CONST_SERVER_VERSION + Const.KEY_ENTITY_MAP),
-    userPointNamespace(7, Const.CONST_SERVER_VERSION + Const.KEY_USER_POINT_NAMESPACE);
+
+    activePoints(0, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_ACTIVE_POINTS),
+    valueCache(1,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_VALUE),
+    allSettings(2, SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_ALL_SETTINGS),
+    setting(3,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_SETTING),
+    userNamespace(4, SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_USER_NAMESPACE),
+    defaultNamespace(5, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_DEFAULT_NAMESPACE),
+    entityMap(6, SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_ENTITY_MAP),
+    userPointNamespace(7, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_USER_POINT_NAMESPACE);
 
     private static final Map<Integer, MemCacheKey> lookup = new HashMap<Integer, MemCacheKey>();
 
@@ -48,6 +49,15 @@ public enum MemCacheKey {
         return text;
     }
 
-
+     private class KeyConstants {
+        static final String KEY_ALL_SETTINGS = "KEY_ALL_SETTINGS";
+        static final String KEY_SETTING = "KEY_SETTING";
+        static final String KEY_USER_NAMESPACE = "KEY_USER_NAMESPACE";
+        static final String KEY_DEFAULT_NAMESPACE = "KEY_DEFAULT_NAMESPACE";
+        static final String KEY_ENTITY_MAP = "KEY_ENTITY_MAP";
+        static final String KEY_USER_POINT_NAMESPACE = "KEY_USER_POINT_NAMESPACE";
+        static final String KEY_ACTIVE_POINTS = "KEY_ACTIVE_POINTS";
+        static final String KEY_VALUE = "KEY_VALUE";
+    }
 
 }

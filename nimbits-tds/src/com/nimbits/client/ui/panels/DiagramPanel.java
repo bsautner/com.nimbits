@@ -419,12 +419,12 @@ public class DiagramPanel extends LayoutContainer {
     private void processTextNodeActions(final Point p, final Value result, final String[] actions, final OMSVGTextElement o) {
         for (final String action : actions) {
             if (action.equals(Const.ACTION_VALUE)) {
-                o.getElement().setInnerText(String.valueOf(Utils.roundDouble(result.getNumberValue())));
+                o.getElement().setInnerText(String.valueOf(Utils.roundDouble(result.getDoubleValue())));
             } else if (action.equals(Const.ACTION_ALERT)) {
-                if (result.getNumberValue() <= p.getLowAlarm() && p.isLowAlarmOn()) {
+                if (result.getDoubleValue() <= p.getLowAlarm() && p.isLowAlarmOn()) {
                     o.getStyle().setSVGProperty(SVGConstants.CSS_FILL_VALUE,
                             SVGConstants.CSS_BLUE_VALUE);
-                } else if (result.getNumberValue() >= p.getHighAlarm() && p.isHighAlarmOn()) {
+                } else if (result.getDoubleValue() >= p.getHighAlarm() && p.isHighAlarmOn()) {
                     o.getStyle().setSVGProperty(SVGConstants.CSS_FILL_VALUE,
                             SVGConstants.CSS_RED_VALUE);
                 } else {
@@ -443,7 +443,7 @@ public class DiagramPanel extends LayoutContainer {
                             SVGConstants.CSS_ORANGE_VALUE);
                 }
             } else if (action.equals(Const.ACTION_ONOFF)) {
-                if (result.getNumberValue() == 0.0) {
+                if (result.getDoubleValue() == 0.0) {
                     o.getStyle().setSVGProperty(SVGConstants.CSS_FILL_VALUE,
                             SVGConstants.CSS_BLACK_VALUE);
                 } else {
@@ -578,12 +578,12 @@ public class DiagramPanel extends LayoutContainer {
                     public void onSuccess(Point p) {
                         for (String action : actions) {
                             if (action.equals(Const.ACTION_VALUE)) {
-                                o.getElement().setInnerText(String.valueOf(result.getNumberValue()));
+                                o.getElement().setInnerText(String.valueOf(result.getDoubleValue()));
                             } else if (action.equals(Const.ACTION_ALERT)) {
-                                if (result.getNumberValue() <= p.getLowAlarm() && p.isLowAlarmOn()) {
+                                if (result.getDoubleValue() <= p.getLowAlarm() && p.isLowAlarmOn()) {
                                     o.getStyle().setSVGProperty(SVGConstants.CSS_FILL_VALUE,
                                             SVGConstants.CSS_RED_VALUE);
-                                } else if (result.getNumberValue() >= p.getHighAlarm() && p.isHighAlarmOn()) {
+                                } else if (result.getDoubleValue() >= p.getHighAlarm() && p.isHighAlarmOn()) {
                                     o.getStyle().setSVGProperty(SVGConstants.CSS_FILL_VALUE,
                                             SVGConstants.CSS_RED_VALUE);
                                 } else {
@@ -602,7 +602,7 @@ public class DiagramPanel extends LayoutContainer {
                                             SVGConstants.CSS_GRAY_VALUE);
                                 }
                             } else if (action.equals(Const.ACTION_ONOFF)) {
-                                if (result.getNumberValue() == 0.0) {
+                                if (result.getDoubleValue() == 0.0) {
                                     o.getStyle().setSVGProperty(SVGConstants.CSS_FILL_VALUE,
                                             SVGConstants.CSS_BLACK_VALUE);
                                 } else {
@@ -747,12 +747,12 @@ public class DiagramPanel extends LayoutContainer {
                 public void onSuccess(Point p) {
                     for (String action : actions) {
                         if (action.equals(Const.ACTION_VALUE)) {
-                            o.getElement().setInnerText(String.valueOf(result.getNumberValue()));
+                            o.getElement().setInnerText(String.valueOf(result.getDoubleValue()));
                         } else if (action.equals(Const.ACTION_ALERT)) {
-                            if (result.getNumberValue() <= p.getLowAlarm() && p.isLowAlarmOn()) {
+                            if (result.getDoubleValue() <= p.getLowAlarm() && p.isLowAlarmOn()) {
                                 o.getStyle().setSVGProperty(SVGConstants.CSS_FILL_VALUE,
                                         SVGConstants.CSS_RED_VALUE);
-                            } else if (result.getNumberValue() >= p.getHighAlarm() && p.isHighAlarmOn()) {
+                            } else if (result.getDoubleValue() >= p.getHighAlarm() && p.isHighAlarmOn()) {
                                 o.getStyle().setSVGProperty(SVGConstants.CSS_FILL_VALUE,
                                         SVGConstants.CSS_RED_VALUE);
                             } else {
@@ -771,7 +771,7 @@ public class DiagramPanel extends LayoutContainer {
                                         SVGConstants.CSS_GRAY_VALUE);
                             }
                         } else if (action.equals(Const.ACTION_ONOFF)) {
-                            if (result.getNumberValue() == 0.0) {
+                            if (result.getDoubleValue() == 0.0) {
                                 o.getStyle().setSVGProperty(SVGConstants.CSS_FILL_VALUE,
                                         SVGConstants.CSS_BLACK_VALUE);
                             } else {

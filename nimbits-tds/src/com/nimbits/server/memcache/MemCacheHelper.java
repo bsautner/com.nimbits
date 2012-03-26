@@ -26,10 +26,11 @@ import com.nimbits.client.model.user.*;
  * Time: 12:19 PM
  */
 public class MemCacheHelper {
-    public static final String DEFAULT_CACHE_NAMESPACE = Const.CONST_SERVER_VERSION + "DEFAULT";
+    public static final String DEFAULT_CACHE_NAMESPACE = SettingType.serverVersion.getDefaultValue() + "DEFAULT";
+    private static final String CACHE_KEY_PREFIX = "FOO";
 
     public static String currentValueCacheKey(String uuid) {
-        return Const.CONST_SERVER_VERSION + Const.CACHE_KEY_PREFIX + "MOST_RECENT_VALUE_CACHE" + uuid;
+        return SettingType.serverVersion.getDefaultValue() + CACHE_KEY_PREFIX + "MOST_RECENT_VALUE_CACHE" + uuid;
     }
 
     public static String valueMemCacheNamespace(Point point) {
@@ -37,28 +38,28 @@ public class MemCacheHelper {
     }
 
     public static String valueBufferCacheKey(Point point) {
-        return Const.CONST_SERVER_VERSION + Const.CACHE_KEY_PREFIX + "BUFFERMEM" + point.getUUID();
+        return SettingType.serverVersion.getDefaultValue() +  CACHE_KEY_PREFIX + "BUFFERMEM" + point.getUUID();
     }
 
     public static String defaultPointCache() {
-        return Const.CONST_SERVER_VERSION + "DEFAULT_POINT_NAMESPACE";
+        return SettingType.serverVersion.getDefaultValue() + "DEFAULT_POINT_NAMESPACE";
     }
 
 
 
-    public static String allUsersCacheKey = Const.CACHE_KEY_PREFIX + Const.PARAM_USER + Const.CONST_SERVER_VERSION + "ALLUSERS";
+    public static String allUsersCacheKey =  CACHE_KEY_PREFIX + Const.PARAM_USER + SettingType.serverVersion.getDefaultValue() + "ALLUSERS";
 
     public static String UserCacheKey(final EmailAddress emailAddress) {
-        return Const.CACHE_KEY_PREFIX + Const.PARAM_USER + Const.CONST_SERVER_VERSION +    emailAddress.getValue();
+        return  CACHE_KEY_PREFIX + Const.PARAM_USER + SettingType.serverVersion.getDefaultValue()+    emailAddress.getValue();
     }
 
 
     public static String UserCacheKey(final User u) {
-        return Const.CACHE_KEY_PREFIX + Const.PARAM_USER + Const.CONST_SERVER_VERSION +   u.getEmail().getValue();
+        return CACHE_KEY_PREFIX + Const.PARAM_USER + SettingType.serverVersion.getDefaultValue()+   u.getEmail().getValue();
     }
 
     public static String UserCacheKey(final long id) {
-        return Const.CACHE_KEY_PREFIX + Const.PARAM_USER + Const.CONST_SERVER_VERSION +   id;
+        return  CACHE_KEY_PREFIX + Const.PARAM_USER + SettingType.serverVersion.getDefaultValue() +   id;
     }
     public static String makeSafeNamespace(final String sample) {
 

@@ -38,7 +38,7 @@ public class CoreImpl implements Core {
 
     public void reportDeleteToCore(final Entity entity) {
         try {
-            if (SettingTransactionsFactory.getInstance().getSetting(Const.SETTING_SERVER_IS_DISCOVERABLE).equals("1")) {
+            if (SettingTransactionsFactory.getInstance().getSetting(SettingType.serverIsDiscoverable).equals("1")) {
                 String json = GsonFactory.getInstance().toJson(entity);
 
                 final String params = Const.PARAM_ENTITY + "=" + json
@@ -58,10 +58,10 @@ public class CoreImpl implements Core {
 
     public void reportUpdateToCore(final String serverUrl, final Entity entity) {
         try {
-            if (!Utils.isEmptyString(serverUrl) && SettingTransactionsFactory.getInstance().getSetting(Const.SETTING_SERVER_IS_DISCOVERABLE).equals("1")) {
-                final String email = SettingTransactionsFactory.getInstance().getSetting(Const.SETTING_ADMIN);
+            if (!Utils.isEmptyString(serverUrl) && SettingTransactionsFactory.getInstance().getSetting(SettingType.serverIsDiscoverable).equals("1")) {
+                final String email = SettingTransactionsFactory.getInstance().getSetting(SettingType.admin);
                 final EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
-                final Server server = ServerModelFactory.createServer(serverUrl, emailAddress, Const.CONST_SERVER_VERSION);
+                final Server server = ServerModelFactory.createServer(serverUrl, emailAddress, SettingType.serverVersion.getDefaultValue());
                 final String serverJson = GsonFactory.getInstance().toJson(server);
                 String json = GsonFactory.getInstance().toJson(entity);
                 final String params = Const.PARAM_SERVER + "=" + serverJson

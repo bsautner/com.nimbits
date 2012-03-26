@@ -13,16 +13,22 @@
 
 package com.nimbits.server.task;
 
-import com.google.gson.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.user.*;
+import com.google.gson.Gson;
+import com.nimbits.client.model.Const;
+import com.nimbits.client.model.point.PointModel;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.valueblobstore.ValueBlobStore;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.user.UserTransactionFactory;
+import com.nimbits.server.value.RecordedValueTransactionFactory;
 
-import javax.servlet.http.*;
-import java.io.*;
-import java.util.logging.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 
 public class PointMaintTask extends HttpServlet {
 
@@ -44,6 +50,25 @@ public class PointMaintTask extends HttpServlet {
         User n = null;  // pm.getObjectById(NimbitsUser.class, p.getUserFK());//UserDAL.getNimbitsUserByID(p.getUser());
         try {
             n = UserTransactionFactory.getInstance().getNimbitsUserByID(p.getUserFK());
+            List<ValueBlobStore> stores = RecordedValueTransactionFactory.getDaoInstance(p).getAllStores();
+            if (stores.size() > 0) {
+
+                List<Long> dates = new ArrayList<Long>();
+                for (ValueBlobStore store : stores) {
+                    if (dates.contains(store.getTimestamp().getTime())) {
+                        RecordedValueTransactionFactory.getDaoInstance(p).consolidateDate(store.getTimestamp());
+                    }
+                    else {
+                        dates.add(store.getTimestamp().getTime());
+                    }
+                }
+
+
+
+            }
+
+
+
         } catch (Exception e) {
            log.severe(e.getMessage());
         }

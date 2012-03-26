@@ -45,7 +45,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
     private LoginInfo loginInfo = null;
     private Viewport viewport;
-    private final static String heading = (Const.CONST_SERVER_NAME + " " + Const.CONST_SERVER_VERSION);
+    private final static String heading = (Const.CONST_SERVER_NAME + " " + SettingType.serverVersion.getDefaultValue());
     private ClientType clientType;
 
 
@@ -121,7 +121,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
                                       final String oauth_token,
                                       final Action action){
         SettingsServiceAsync settingService = GWT.create(SettingsService.class);
-        settingService.getSettings(new AsyncCallback<Map<String, String>>() {
+        settingService.getSettings(new AsyncCallback<Map<SettingType, String>>() {
 
             @Override
             public void onFailure(Throwable caught) {
@@ -133,7 +133,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
             }
 
             @Override
-            public void onSuccess(final Map<String, String> settings) {
+            public void onSuccess(final Map<SettingType, String> settings) {
                 switch (action) {
                     case report:
                         loadEntityDisplay(uuid);
@@ -158,7 +158,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
 
 
-    private void decidedWhatViewToLoadSecondStep(final Action action, final Map<String, String> settings, final String uuid)   {
+    private void decidedWhatViewToLoadSecondStep(final Action action, final Map<SettingType, String> settings, final String uuid)   {
         LoginServiceAsync loginService = GWT
                 .create(LoginService.class);
         loginService.login(GWT.getHostPageBaseURL(),
@@ -216,7 +216,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
     private void loadPortalView(final LoginInfo loginInfo,
                                 final Action action,
-                                final Map<String, String> settings,
+                                final Map<SettingType, String> settings,
                                 final String uuid)  {
 
 
@@ -239,7 +239,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         });
 
         ContentPanel center = new ContentPanel();
-        center.setHeading(Const.CONST_SERVER_NAME + " " + Const.CONST_SERVER_VERSION);
+        center.setHeading(Const.CONST_SERVER_NAME + " " + SettingType.serverVersion.getDefaultValue());
         center.setScrollMode(Style.Scroll.AUTOX);
 
         ContentPanel east = new ContentPanel();
@@ -271,7 +271,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
 
 
-    public void showSubscriptionPanel(final String uuid, final Map<String, String> settings) {
+    public void showSubscriptionPanel(final String uuid, final Map<SettingType, String> settings) {
 
         EntityServiceAsync service = GWT.create(EntityService.class);
 
@@ -332,7 +332,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
 
 
-    private void finishFacebookAuthentication(final Map<String, String> settings, final String code) {
+    private void finishFacebookAuthentication(final Map<SettingType, String> settings, final String code) {
         getViewport();
         FacebookPanel fbPanel = new FacebookPanel(code, settings);
         fbPanel.setHeight(500);
@@ -343,7 +343,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         RootPanel.get("main").add(viewport);
     }
 
-    private void finishTwitterAuthentication(final Map<String, String> settings, final String oauth_token, final Action action) {
+    private void finishTwitterAuthentication(final Map<SettingType, String> settings, final String oauth_token, final Action action) {
         TwitterServiceAsync twitterService = GWT.create(TwitterService.class);
         twitterService.updateUserToken(oauth_token,
                 new AsyncCallback<Void>() {

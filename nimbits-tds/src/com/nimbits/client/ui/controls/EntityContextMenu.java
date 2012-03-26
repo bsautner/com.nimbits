@@ -58,7 +58,7 @@ public class EntityContextMenu extends Menu {
     private MenuItem xmppContext;
     private MenuItem summaryContext;
     private MenuItem intelligenceContext;
-    private Map<String, String> settings;
+    private Map<SettingType, String> settings;
 
     private List<EntityModifiedListener> entityModifiedListeners;
 
@@ -78,7 +78,7 @@ public class EntityContextMenu extends Menu {
     }
 
 
-    public EntityContextMenu(EntityTree<ModelData> tree, final Map<String, String> settings) {
+    public EntityContextMenu(EntityTree<ModelData> tree, final Map<SettingType, String> settings) {
         super();
         entityModifiedListeners = new ArrayList<EntityModifiedListener>();
         this.tree = tree;
@@ -101,7 +101,7 @@ public class EntityContextMenu extends Menu {
         add(calcContext);
         add(summaryContext);
         add(xmppContext);
-        if (settings.containsKey(Const.SETTING_WOLFRAM) && ! Utils.isEmptyString(settings.get(Const.SETTING_WOLFRAM))) {
+        if (settings.containsKey(SettingType.wolframKey) && ! Utils.isEmptyString(settings.get(SettingType.wolframKey))) {
             add(intelligenceContext);
         }
 

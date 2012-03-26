@@ -132,7 +132,7 @@ public class ChartApiServletImpl extends ApiServlet {
 
 
                     for (final Value v : values) {
-                        params.append(v.getNumberValue()).append(Const.DELIMITER_COMMA);
+                        params.append(v.getDoubleValue()).append(Const.DELIMITER_COMMA);
 
                     }
                     if (params.lastIndexOf(Const.DELIMITER_COMMA) > 0) {

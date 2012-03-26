@@ -66,7 +66,7 @@ public class RecordedValue implements com.nimbits.client.model.value.Value {
 
         this.lat = v.getLatitude();
         this.lng = v.getLongitude();
-        this.d = v.getNumberValue();
+        this.d = v.getDoubleValue();
         this.timestamp = v.getTimestamp();
         this.pointFK = point.getId();
         this.note = v.getNote();
@@ -113,7 +113,7 @@ public class RecordedValue implements com.nimbits.client.model.value.Value {
         return d == null ? 0.0 : d;
     }
 
-    public double getNumberValue() {
+    public double getDoubleValue() {
         return d == null ? 0.0 : d;
     }
 

@@ -23,7 +23,7 @@ import java.io.Serializable;
 
 
 public class IntelligenceModel implements Serializable, Intelligence {
-    private static final long serialVersionUID = Const.DEFAULT_SERIAL_VERSION;
+    private static final long serialVersionUID =1L;
     private boolean enabled;
 
     private int resultTarget;

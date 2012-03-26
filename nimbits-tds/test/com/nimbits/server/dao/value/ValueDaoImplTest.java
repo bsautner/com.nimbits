@@ -1,27 +1,26 @@
 package com.nimbits.server.dao.value;
 
-import com.google.appengine.api.datastore.*;
-import static com.google.appengine.api.datastore.FetchOptions.Builder.withLimit;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.users.*;
-import com.google.appengine.tools.development.testing.*;
+import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
+import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModelFactory;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.server.time.TimespanServiceFactory;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-import com.nimbits.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.server.orm.*;
-import com.nimbits.server.time.*;
-import com.nimbits.server.value.*;
-import org.junit.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import javax.jdo.*;
 import java.util.*;
+
+import static com.google.appengine.api.datastore.FetchOptions.Builder.withLimit;
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by Benjamin Sautner
@@ -31,12 +30,13 @@ import java.util.*;
  */
 public class ValueDaoImplTest {
     private Point point;
-
+    ValueDAOImpl dao;
     @Before
     public void setUp() {
 
         helper.setUp();
         point = PointModelFactory.createPointModel(UUID.randomUUID().toString());
+        dao = new ValueDAOImpl(point);
     }
 
     @After
@@ -53,16 +53,46 @@ public class ValueDaoImplTest {
 
         for (int i = 0; i < 10; i++) {
             Value v = ValueModelFactory.createValueModel(r.nextDouble());
-            total += v.getNumberValue();
+            total += v.getDoubleValue();
             values.add(v);
         }
         return values;
     }
 
     @Test
+    public void testConsolidateDate() throws NimbitsException {
+        List<Value> values;
+        Date zero = TimespanServiceFactory.getInstance().zeroOutDate(new Date());
+        for (int i = 1; i < 11; i++) {
+        values= new ArrayList<Value>();
+        values.add(ValueModelFactory.createValueModel(1));
+        values.add(ValueModelFactory.createValueModel(1));
+        values.add(ValueModelFactory.createValueModel(1));
+        dao.recordValues(values);
+            assertEquals(i, dao.getAllStores().size());
+        }
+
+
+         dao.consolidateDate(zero);
+        assertEquals(1, dao.getAllStores().size());
+
+        List<Value> result = dao.getTopDataSeries(100);
+        double total = 0.0;
+        for (Value v : result) {
+            total += v.getDoubleValue();
+
+        }
+        assertEquals(30.0, total, 0.0);
+
+
+
+    }
+
+
+    @Test
     public void testGetTopDataSeries(){
         List<Value> values = loadSomeDataOverDays();
-        ValueDAOImpl dao = new ValueDAOImpl(point);
+
 
         try {
             dao.recordValues(values);
@@ -90,7 +120,7 @@ public class ValueDaoImplTest {
                 c1.add(Calendar.DATE, -1 * i);
                 Double d1 = (double) i;
                 Value vx = dao.getRecordedValuePrecedingTimestamp(c1.getTime());
-                assertEquals(d1, vx.getNumberValue(), 0.0);
+                assertEquals(d1, vx.getDoubleValue(), 0.0);
             }
         } catch (NimbitsException e) {
             fail();
@@ -98,6 +128,54 @@ public class ValueDaoImplTest {
         }
 
     }
+
+
+
+    @Test
+    public void testGetRecordedValuePrecedingTimestampMultiplePoints() {
+        List<Value> values = loadSomeDataOverDays();
+        Point point1 = PointModelFactory.createPointModel(UUID.randomUUID().toString());
+        Point point2 = PointModelFactory.createPointModel(UUID.randomUUID().toString());
+        Point point3 = PointModelFactory.createPointModel(UUID.randomUUID().toString());
+
+        ValueDAOImpl dao1 = new ValueDAOImpl(point1);
+        ValueDAOImpl dao2 = new ValueDAOImpl(point2);
+        ValueDAOImpl dao3 = new ValueDAOImpl(point3);
+
+
+        try {
+            dao1.recordValues(values);
+            dao2.recordValues(values);
+            dao3.recordValues(values);
+
+            for (int i = 0; i < 100; i++) {
+                Calendar c1 = Calendar.getInstance();
+                c1.add(Calendar.DATE, -1 * i);
+                Double d1 = (double) i;
+                Value vx = dao1.getRecordedValuePrecedingTimestamp(c1.getTime());
+                assertEquals(d1, vx.getDoubleValue(), 0.0);
+            }
+            for (int i = 0; i < 100; i++) {
+                Calendar c1 = Calendar.getInstance();
+                c1.add(Calendar.DATE, -1 * i);
+                Double d1 = (double) i;
+                Value vx = dao2.getRecordedValuePrecedingTimestamp(c1.getTime());
+                assertEquals(d1, vx.getDoubleValue(), 0.0);
+            }
+            for (int i = 0; i < 100; i++) {
+                Calendar c1 = Calendar.getInstance();
+                c1.add(Calendar.DATE, -1 * i);
+                Double d1 = (double) i;
+                Value vx = dao3.getRecordedValuePrecedingTimestamp(c1.getTime());
+                assertEquals(d1, vx.getDoubleValue(), 0.0);
+            }
+        } catch (NimbitsException e) {
+            fail();
+            e.printStackTrace();
+        }
+
+    }
+
 
     private List<Value> loadSomeDataOverDays() {
         List<Value> values = new ArrayList<Value>();
@@ -127,7 +205,7 @@ public class ValueDaoImplTest {
             assertEquals(result.size(), 10);
             double ret = 0.0;
             for (Value v : result) {
-                ret += v.getNumberValue();
+                ret += v.getDoubleValue();
             }
             assertEquals(total, ret, 0.0);
 

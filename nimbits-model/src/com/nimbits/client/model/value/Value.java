@@ -39,7 +39,7 @@ public interface Value extends Serializable, Comparable<Value> {
     @Deprecated
     double getValue();
 
-    double getNumberValue();
+    double getDoubleValue();
 
     String getValueWithNote();
 

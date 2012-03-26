@@ -14,6 +14,7 @@
 package com.nimbits.server.dao.settings;
 
 import com.nimbits.*;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.server.orm.*;
 import com.nimbits.server.settings.*;
@@ -27,7 +28,7 @@ public class SettingsDAOImpl implements SettingTransactions {
 
 
     @Override
-    public String getSetting(final String paramName) throws NimbitsException {
+    public String getSetting(final SettingType setting) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         String retVal;
         try {
@@ -35,15 +36,12 @@ public class SettingsDAOImpl implements SettingTransactions {
             Query q = pm.newQuery(ServerSetting.class, "name == n");
             q.setRange(0, 1);
             q.declareParameters("String n");
-            List<ServerSetting> a = (List<ServerSetting>) q.execute(paramName);
+            List<ServerSetting> a = (List<ServerSetting>) q.execute(setting.getName());
             if (a.size() > 0) {
                 s = a.get(0);
                 retVal = s.getValue();
             } else {
-                throw new NimbitsException(paramName + new Date().toString() + " setting not found. "
-                        + UUID.randomUUID().toString()
-                        + UUID.randomUUID().toString()
-                        + UUID.randomUUID().toString());
+                throw new NimbitsException(setting.getName() + new Date().toString() + " setting not found.");
 
                 // just in case someone tried to submit the error message as the
                 // secret, we generate a random return string with the error.
@@ -57,7 +55,7 @@ public class SettingsDAOImpl implements SettingTransactions {
     }
 
     @Override
-    public void updateSetting(final String name, final String newValue) {
+    public void updateSetting(final SettingType name, final String newValue) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
             ServerSetting s;
@@ -65,7 +63,7 @@ public class SettingsDAOImpl implements SettingTransactions {
             Query q = pm.newQuery(ServerSetting.class, "name == n");
             q.setRange(0, 1);
             q.declareParameters("String n");
-            List<ServerSetting> a = (List<ServerSetting>) q.execute(name);
+            List<ServerSetting> a = (List<ServerSetting>) q.execute(name.getName());
             if (a.size() > 0) {
                 Transaction tx = pm.currentTransaction();
                 tx.begin();
@@ -87,15 +85,15 @@ public class SettingsDAOImpl implements SettingTransactions {
     }
 
     @Override
-    public Map<String, String> getSettings() {
-        final Map<String, String> settings = new HashMap<String, String>();
+    public Map<SettingType, String> getSettings() {
+        final Map<SettingType, String> settings = new HashMap<SettingType, String>();
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
             final Query q = pm.newQuery(ServerSetting.class);
             final List<ServerSetting> l = (List<ServerSetting>) q.execute();
 
             for (final ServerSetting s : l) {
-                settings.put(s.getName(), s.getValue());
+                settings.put(s.getSetting(), s.getValue());
             }
             return settings;
         }finally {
@@ -105,12 +103,10 @@ public class SettingsDAOImpl implements SettingTransactions {
     }
 
     @Override
-    public void addSetting(final String name, final String value) {
+    public void addSetting(final SettingType name, final String value) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
-            ServerSetting s = new ServerSetting();
-            s.setName(name);
-            s.setValue(value);
+            ServerSetting s = new ServerSetting(value, name);
             pm.makePersistent(s);
         } finally {
             pm.close();

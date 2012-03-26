@@ -47,13 +47,13 @@ public class CenterPanel extends NavigationEventProvider {
     // private final Map<String, AnnotatedTimeLinePanel> lines = new HashMap<String, AnnotatedTimeLinePanel>();
 
     private NavigationPanel navigationPanel;
-    private Map<String, String> settings;
+    private Map<SettingType, String> settings;
     private LoginInfo loginInfo;
     private LayoutContainer chartContainer;
     private int chartHeight;
     HBoxLayoutData flex = new HBoxLayoutData(new Margins(0, 5, 0, 0));
 
-    public CenterPanel(LoginInfo info, Map<String, String> settings) {
+    public CenterPanel(LoginInfo info, Map<SettingType, String> settings) {
         this.loginInfo = info;
         this.settings = settings;
 
@@ -145,7 +145,7 @@ public class CenterPanel extends NavigationEventProvider {
 
     }
 
-    private MainMenuBar initToolbar(final LoginInfo loginInfo, Map<String, String> settings) {
+    private MainMenuBar initToolbar(final LoginInfo loginInfo, Map<SettingType, String> settings) {
         MainMenuBar toolBar = new MainMenuBar(loginInfo, settings);
         toolBar.addEntityModifiedListeners(new MainMenuBar.EntityModifiedListener() {
             @Override

@@ -14,13 +14,14 @@
 package com.nimbits.client.service.settings;
 
 import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.enums.*;
 
 import java.util.*;
 
 public interface SettingsServiceAsync {
 
-    void getSetting(final String paramName, final AsyncCallback<String> asyncCallback);
+    void getSetting(final SettingType paramName, final AsyncCallback<String> asyncCallback);
 
-    void getSettings(final AsyncCallback<Map<String, String>> asyncCallback);
+    void getSettings(final AsyncCallback<Map<SettingType, String>> asyncCallback);
 
 }

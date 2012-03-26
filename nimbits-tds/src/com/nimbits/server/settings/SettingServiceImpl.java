@@ -15,6 +15,7 @@ package com.nimbits.server.settings;
 
 
 import com.google.gwt.user.server.rpc.*;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.service.settings.*;
 
@@ -29,13 +30,13 @@ public class SettingServiceImpl extends RemoteServiceServlet implements
 
 
     @Override
-    public Map<String, String> getSettings() throws NimbitsException {
+    public Map<SettingType, String> getSettings() throws NimbitsException {
         return SettingTransactionsFactory.getInstance().getSettings();
     }
 
     @Override
-    public String getSetting(final String paramName) throws NimbitsException {
-        return SettingTransactionsFactory.getInstance().getSetting(paramName);
+    public String getSetting(final SettingType s) throws NimbitsException {
+        return SettingTransactionsFactory.getInstance().getSetting(s);
     }
 
 }

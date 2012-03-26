@@ -31,7 +31,7 @@ public class SessionMaint extends HttpServlet {
     /**
      *
      */
-    private static final long serialVersionUID = Const.DEFAULT_SERIAL_VERSION;
+    private static final long serialVersionUID =1L;
 
     private static final Logger log = Logger.getLogger(SessionMaint.class.getName());
     @SuppressWarnings(Const.WARNING_UNCHECKED)

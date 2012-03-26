@@ -36,9 +36,14 @@ public class MainMenuBar extends ToolBar {
     private UserServiceAsync service;
     private int connectionCount = 0;
     private  LoginInfo loginInfo;
-    public MainMenuBar(LoginInfo loginInfo, Map<String, String> settings) {
+    private Map<SettingType, String> settings;
+
+    public MainMenuBar(LoginInfo loginInfo, Map<SettingType, String> settings) {
         this.loginInfo = loginInfo;
+        this.settings = settings;
+
         service = GWT.create(UserService.class);
+
         addFileMenu();
         addNavigateMenu();
         addActionMenu();
@@ -132,13 +137,13 @@ public class MainMenuBar extends ToolBar {
 
         menu.add(newKeyButton());
 
-        //if (settings.containsKey(Const.SETTING_TWITTER_CLIENT_ID) && !Utils.isEmptyString(settings.get(Const.SETTING_TWITTER_CLIENT_ID)) && loginInfo != null)
+       if (settings.containsKey(SettingType.twitterClientId) && !Utils.isEmptyString(settings.get(SettingType.twitterClientId)) && loginInfo != null)
         {
             menu.add(actionMenuItem("Enable Facebook",
                     AbstractImagePrototype.create(Icons.INSTANCE.connection()),
                     Action.facebook));
         }
-        // if (settings.containsKey(Const.SETTING_FACEBOOK_API_KEY) && !Utils.isEmptyString(settings.get(Const.SETTING_FACEBOOK_API_KEY)))
+        if (settings.containsKey(SettingType.facebookAPIKey) && !Utils.isEmptyString(settings.get(SettingType.facebookAPIKey)))
         {
             menu.add(actionMenuItem("Enable Twitter",
                     AbstractImagePrototype.create(Icons.INSTANCE.connection()),

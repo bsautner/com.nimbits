@@ -13,6 +13,7 @@
 
 package com.nimbits.server.email;
 
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.email.*;
@@ -95,7 +96,7 @@ public class EmailServiceImpl implements EmailService {
     private static InternetAddress getFromEmail() throws UnsupportedEncodingException {
         final String fromEmail;
         try {
-            fromEmail = new SettingServiceImpl().getSetting(Const.Params.PARAM_ADMIN);
+            fromEmail = new SettingServiceImpl().getSetting(SettingType.admin);
             return new InternetAddress(fromEmail, Const.WORD_NIMBITS);
         } catch (NimbitsException e) {
           return  new InternetAddress(Const.TEST_ACCOUNT, Const.WORD_NIMBITS);
@@ -119,13 +120,13 @@ public class EmailServiceImpl implements EmailService {
             case HighAlert: {
                 message.append("<P>Alarm Status: High</P>")
                         .append("<P>Alarm Setting: ").append(point.getHighAlarm()).append("</P>")
-                        .append("<p>Value Recorded: ").append(value.getNumberValue()).append("</p>");
+                        .append("<p>Value Recorded: ").append(value.getDoubleValue()).append("</p>");
                 break;
             }
             case LowAlert: {
                 message.append("<P>Alarm Status: Low</P>")
                         .append("<P>Alarm Setting: ").append(point.getLowAlarm()).append("</P>")
-                        .append("<p>Value Recorded: ").append(value.getNumberValue()).append("</p>");
+                        .append("<p>Value Recorded: ").append(value.getDoubleValue()).append("</p>");
                 break;
             }
             case IdleAlert: {

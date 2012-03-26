@@ -50,8 +50,8 @@ public class SubscriptionPanel extends NavigationEventProvider {
 
     private Entity entity;
     private Subscription subscription;
-    private Map<String, String> settings;
-    public SubscriptionPanel(Entity entity, Map<String, String> settings) {
+    private Map<SettingType, String> settings;
+    public SubscriptionPanel(Entity entity, Map<SettingType, String> settings) {
         this.entity = entity;
         this.settings = settings;
 
@@ -141,10 +141,10 @@ public class SubscriptionPanel extends NavigationEventProvider {
         ops.add(new DeliveryMethodOption(SubscriptionNotifyMethod.email));
         ops.add(new DeliveryMethodOption(SubscriptionNotifyMethod.feed));
 
-        if (settings.containsKey(Const.SETTING_TWITTER_CLIENT_ID) && !Utils.isEmptyString(settings.get(Const.SETTING_TWITTER_CLIENT_ID))) {
+        if (settings.containsKey(SettingType.twitterClientId) && !Utils.isEmptyString(settings.get(SettingType.twitterClientId))) {
             ops.add(new DeliveryMethodOption(SubscriptionNotifyMethod.twitter));
         }
-        if (settings.containsKey(Const.SETTING_FACEBOOK_API_KEY) && !Utils.isEmptyString(settings.get(Const.SETTING_FACEBOOK_API_KEY))) {
+        if (settings.containsKey(SettingType.facebookAPIKey) && !Utils.isEmptyString(settings.get(SettingType.facebookAPIKey))) {
             ops.add(new DeliveryMethodOption(SubscriptionNotifyMethod.facebook));
         }
 

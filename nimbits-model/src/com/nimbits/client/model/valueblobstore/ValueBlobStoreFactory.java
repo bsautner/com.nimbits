@@ -11,24 +11,30 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server.service.impl;
+package com.nimbits.client.model.valueblobstore;
 
-import com.nimbits.client.enums.*;
-
-import javax.servlet.http.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by Benjamin Sautner
- * User: BSautner
- * Date: 12/9/11
- * Time: 3:09 PM
+ * Created by bsautner
+ * User: benjamin
+ * Date: 3/23/12
+ * Time: 10:50 AM
  */
-public class Common {
+public class ValueBlobStoreFactory {
 
-     public static void addResponseHeaders(HttpServletResponse resp, ExportType type) {
-        resp.setContentType(type.getCode());
-        resp.addHeader("Cache-Control", "no-cache");
-        resp.addHeader("Access-Control-Allow-Origin", "*");
+    public static ValueBlobStore createValueBlobStore(ValueBlobStore store) {
+        return new ValueBlobStoreModel(store);
+
     }
+    public static  List<ValueBlobStore> createValueBlobStores(List<ValueBlobStore> store) {
+       List<ValueBlobStore> retObj = new ArrayList<ValueBlobStore>();
 
+      for (ValueBlobStore v : store) {
+        retObj.add(createValueBlobStore(v));
+      }
+        return retObj;
+
+    }
 }

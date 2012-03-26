@@ -27,7 +27,7 @@ import java.io.Serializable;
  * Time: 9:56 AM
  */
 public class EmailAddressImpl extends CommonIdentifierImpl implements Serializable, EmailAddress {
-    private static final long serialVersionUID = Const.DEFAULT_SERIAL_VERSION;
+    private static final long serialVersionUID =1L;
 
     protected EmailAddressImpl() {
         super();

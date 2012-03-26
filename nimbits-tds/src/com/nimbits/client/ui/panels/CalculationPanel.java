@@ -320,7 +320,7 @@ public class CalculationPanel extends NavigationEventProvider {
 
             @Override
             public void onSuccess(Value result) {
-                simple.addText("result: " + result.getNumberValue());
+                simple.addText("result: " + result.getDoubleValue());
                 simple.show();
             }
         });

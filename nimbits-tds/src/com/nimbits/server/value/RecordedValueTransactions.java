@@ -16,6 +16,7 @@ package com.nimbits.server.value;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.timespan.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 
 import java.util.*;
 
@@ -45,4 +46,8 @@ public interface RecordedValueTransactions {
     void moveValuesFromCacheToStore() throws NimbitsException;
 
     List<Value> getCache(final Timespan timespan) throws NimbitsException;
+
+    List<ValueBlobStore> getAllStores() throws NimbitsException;
+
+    void consolidateDate(Date timestamp) throws NimbitsException;
 }

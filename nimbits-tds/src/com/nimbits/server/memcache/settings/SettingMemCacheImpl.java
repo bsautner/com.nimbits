@@ -31,8 +31,8 @@ import java.util.*;
 public class SettingMemCacheImpl implements SettingTransactions {
     Cache cache;
 
-    private String SettingCacheKey(final String paramName) {
-        return MemCacheKey.setting + paramName;
+    private String SettingCacheKey(final SettingType setting) {
+        return MemCacheKey.setting + setting.getName();
     }
 
     @Override
@@ -43,10 +43,10 @@ public class SettingMemCacheImpl implements SettingTransactions {
 
         try {
             cache = CacheManager.getInstance().getCacheFactory().createCache(Collections.emptyMap());
-            final Map<String, String> settings = SettingTransactionsFactory.getDaoInstance().getSettings();
-            for (final String setting : settings.keySet()) {
+            final Map<SettingType, String> settings = SettingTransactionsFactory.getDaoInstance().getSettings();
+            for (final SettingType setting : settings.keySet()) {
                 cache.remove(MemCacheKey.allSettings);
-                builder.append("Removed: ").append(setting).append("<br />");
+                builder.append("Removed: ").append(setting.getName()).append("<br />");
                 cache.remove(SettingCacheKey(setting));
 
 
@@ -62,17 +62,17 @@ public class SettingMemCacheImpl implements SettingTransactions {
 
 
     @Override
-    public String getSetting(final String paramName) throws NimbitsException {
+    public String getSetting(final SettingType setting) throws NimbitsException {
 
         try {
             cache = CacheManager.getInstance().getCacheFactory().createCache(Collections.emptyMap());
-            if (cache.containsKey(SettingCacheKey(paramName))) {
-                return (String) cache.get(SettingCacheKey(paramName));
+            if (cache.containsKey(SettingCacheKey(setting))) {
+                return (String) cache.get(SettingCacheKey(setting));
 
             } else {
-                String storedVal = SettingTransactionsFactory.getDaoInstance().getSetting(paramName);
+                String storedVal = SettingTransactionsFactory.getDaoInstance().getSetting(setting);
                 if (!Utils.isEmptyString(storedVal)) {
-                    cache.put(SettingCacheKey(paramName), storedVal);
+                    cache.put(SettingCacheKey(setting), storedVal);
                     return storedVal;
                 } else {
                     throw new NimbitsException("Setting Not Found");
@@ -86,14 +86,14 @@ public class SettingMemCacheImpl implements SettingTransactions {
     }
 
     @Override
-    public Map<String, String> getSettings() throws NimbitsException {
+    public Map<SettingType, String> getSettings() throws NimbitsException {
         try {
             cache = CacheManager.getInstance().getCacheFactory().createCache(Collections.emptyMap());
             if (cache.containsKey(MemCacheKey.allSettings)) {
-                return (Map<String, String>) cache.get(MemCacheKey.allSettings);
+                return (Map<SettingType, String>) cache.get(MemCacheKey.allSettings);
 
             } else {
-                Map<String, String> settings = SettingTransactionsFactory.getDaoInstance().getSettings();
+                Map<SettingType, String> settings = SettingTransactionsFactory.getDaoInstance().getSettings();
                 cache.put(MemCacheKey.allSettings, settings);
                 return settings;
             }
@@ -103,25 +103,25 @@ public class SettingMemCacheImpl implements SettingTransactions {
     }
 
     @Override
-    public void addSetting(final String name, final String value) {
-        SettingTransactionsFactory.getDaoInstance().addSetting(name, value);
+    public void addSetting(final SettingType setting, final String value) {
+        SettingTransactionsFactory.getDaoInstance().addSetting(setting, value);
         if (cache.containsKey(MemCacheKey.allSettings)) {
             cache.remove(MemCacheKey.allSettings);
         }
-        if (cache.containsKey(SettingCacheKey(name))) {
-            cache.remove(SettingCacheKey(name));
+        if (cache.containsKey(SettingCacheKey(setting))) {
+            cache.remove(SettingCacheKey(setting));
         }
 
     }
 
     @Override
-    public void updateSetting(final String name, final String newValue) {
-        SettingTransactionsFactory.getDaoInstance().updateSetting(name, newValue);
+    public void updateSetting(final SettingType setting, final String newValue) {
+        SettingTransactionsFactory.getDaoInstance().updateSetting(setting, newValue);
         if (cache.containsKey(MemCacheKey.allSettings)) {
             cache.remove(MemCacheKey.allSettings);
         }
-        if (cache.containsKey(SettingCacheKey(name))) {
-            cache.remove(SettingCacheKey(name));
+        if (cache.containsKey(SettingCacheKey(setting))) {
+            cache.remove(SettingCacheKey(setting));
         }
     }
 

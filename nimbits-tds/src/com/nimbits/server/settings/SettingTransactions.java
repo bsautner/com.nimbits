@@ -14,19 +14,20 @@
 package com.nimbits.server.settings;
 
 
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 
 import java.util.*;
 
 public interface SettingTransactions {
 
-    String getSetting(final String paramName) throws NimbitsException;
+    String getSetting(final SettingType setting) throws NimbitsException;
 
-    Map<String, String> getSettings() throws NimbitsException;
+    Map<SettingType, String> getSettings() throws NimbitsException;
 
-    void addSetting(final String name, final String value);
+    void addSetting(final SettingType setting, final String value);
 
-    void updateSetting(final String name, final String newValue);
+    void updateSetting(final SettingType setting, final String newValue);
 
     String reloadCache() throws NimbitsException;
 }

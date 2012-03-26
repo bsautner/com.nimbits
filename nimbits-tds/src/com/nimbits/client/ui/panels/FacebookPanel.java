@@ -18,6 +18,7 @@ import com.extjs.gxt.ui.client.widget.layout.*;
 import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.service.facebook.*;
@@ -34,10 +35,10 @@ import java.util.*;
 public class FacebookPanel extends LayoutContainer {
 
     private final String facebookOauthCode;
-    private final Map<String, String> settings;
+    private final Map<SettingType, String> settings;
 
 
-    public FacebookPanel(String code, Map<String, String> someSettings) {
+    public FacebookPanel(String code, Map<SettingType, String> someSettings) {
         facebookOauthCode = code;
         this.settings = someSettings;
 
@@ -53,7 +54,7 @@ public class FacebookPanel extends LayoutContainer {
 
 
         String authURL = "https://graph.facebook.com/oauth/authorize" +
-                "?client_id=" + settings.get(Const.SETTING_FACEBOOK_CLIENT_ID) +
+                "?client_id=" + settings.get(SettingType.facebookClientId) +
                 "&redirect_uri=" + "http://apps.facebook.com/nimbits/" +
                 "&scope=user_status,publish_stream,offline_access,email";
 

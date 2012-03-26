@@ -15,6 +15,7 @@ package com.nimbits.client.service.settings;
 
 
 import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 
 import java.util.*;
@@ -22,9 +23,9 @@ import java.util.*;
 @RemoteServiceRelativePath("settings")
 public interface SettingsService extends RemoteService {
 
-    String getSetting(final String paramName) throws NimbitsException;
+    String getSetting(final SettingType paramName) throws NimbitsException;
 
-    Map<String, String> getSettings() throws NimbitsException;
+    Map<SettingType, String> getSettings() throws NimbitsException;
 
 
 

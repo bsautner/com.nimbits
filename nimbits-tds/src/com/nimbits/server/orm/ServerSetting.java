@@ -13,6 +13,8 @@
 
 package com.nimbits.server.orm;
 
+import com.nimbits.client.enums.*;
+
 import javax.jdo.annotations.*;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
@@ -29,9 +31,9 @@ public class ServerSetting {
     public ServerSetting() {
     }
 
-    public ServerSetting(final String value, final String name) {
+    public ServerSetting(final String value, final SettingType setting) {
         this.value = value;
-        this.name = name;
+        this.name = setting.getName();
     }
 
     @Persistent
@@ -39,12 +41,14 @@ public class ServerSetting {
     @Persistent
     private String value;
 
-    public String getName() {
-        return name;
+    public SettingType getSetting() {
+        return SettingType.get(name);
     }
 
-    public void setName(String name) {
-        this.name = name;
+
+
+    public void setName(SettingType setting) {
+        this.name = setting.getName();
     }
 
     public String getValue() {

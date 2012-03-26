@@ -151,7 +151,7 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
             Point p = PointServiceFactory.getInstance().getPointByUUID(calculation.getX());
             if (p != null) {
                 Value val = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
-                double d = val == null ? 0.0 : val.getNumberValue();
+                double d = val == null ? 0.0 : val.getDoubleValue();
 
                 m.addVariable("x", d);
             }
@@ -161,7 +161,7 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
             Point p = PointServiceFactory.getInstance().getPointByUUID(calculation.getY());
             if (p != null) {
                 Value val = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
-                double d = val == null ? 0.0 : val.getNumberValue();
+                double d = val == null ? 0.0 : val.getDoubleValue();
                 m.addVariable("y", d);
             }
 
@@ -170,7 +170,7 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
             Point p = PointServiceFactory.getInstance().getPointByUUID(calculation.getZ());
             if (p != null) {
                 Value val = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
-                double d = val == null ? 0.0 : val.getNumberValue();
+                double d = val == null ? 0.0 : val.getDoubleValue();
                 m.addVariable("z", d);
             }
         }

@@ -145,7 +145,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
 
     private String valueToHtml(final User user, final Entity entity, final Point point, final Value value) {
         StringBuilder sb = new StringBuilder();
-        if (! (Double.compare(value.getNumberValue(), Const.CONST_IGNORED_NUMBER_VALUE) == 0)) {
+        if (! (Double.compare(value.getDoubleValue(), Const.CONST_IGNORED_NUMBER_VALUE) == 0)) {
             sb.append("<img align=\"left\" src=\"")
                     .append(ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest()));
 
@@ -178,11 +178,11 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
         }
 
 
-        if (! (Double.compare(value.getNumberValue(), Const.CONST_IGNORED_NUMBER_VALUE) == 0)) {
+        if (! (Double.compare(value.getDoubleValue(), Const.CONST_IGNORED_NUMBER_VALUE) == 0)) {
             sb.append("Alert&nbsp;Status:")
                     .append(value.getAlertState().name());
             sb.append("&nbsp;&nbsp;Value:")
-                    .append(value.getNumberValue());
+                    .append(value.getDoubleValue());
         }
 
 

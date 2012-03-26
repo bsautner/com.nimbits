@@ -59,8 +59,8 @@ public class ValueDAOImpl implements RecordedValueTransactions {
         try {
             Map<String, Object> args;
             List<Value> retObj = new ArrayList<Value>();
-            Query q = pm.newQuery(ValueBlobStoreEntity.class,
-                    "entity == k && minTimestamp <= :t");
+           // Query q = pm.newQuery(RecordedValue.class, "pointFK== k && timestamp <= d");
+            Query q = pm.newQuery(ValueBlobStoreEntity.class,"entity==k && minTimestamp<=t");
             q.declareImports("import java.util.Date;");
             args = new HashMap<String, Object>();
             args.put("k", point.getUUID());
@@ -201,7 +201,7 @@ public class ValueDAOImpl implements RecordedValueTransactions {
             Date mostRecentTimeForDay = new Date(maxMap.get(l));
             Date earliestForDay = new Date(minMap.get(l));
 
-            currentStoreEntity = new ValueBlobStoreEntity(point.getUUID(),new Date(l), mostRecentTimeForDay, earliestForDay, key, path );
+            currentStoreEntity = new ValueBlobStoreEntity(point.getUUID(),new Date(l), mostRecentTimeForDay, earliestForDay, path );
             pm.makePersistent(currentStoreEntity);
 
         } finally {

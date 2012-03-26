@@ -1,7 +1,4 @@
 package com.nimbits.server.orm;
-
-import com.google.appengine.api.blobstore.*;
-
 import javax.jdo.annotations.*;
 import java.util.*;
 
@@ -13,6 +10,8 @@ import java.util.*;
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 public class ValueBlobStoreEntity {
+
+    private static final long serialVersionUID = 1L;
 
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
@@ -33,16 +32,17 @@ public class ValueBlobStoreEntity {
     @Persistent
     private String path;
 
-    @Persistent
-    BlobKey blobKey;
 
-    public ValueBlobStoreEntity(String entity, Date timestamp, Date maxTimestamp, Date minTimestamp, BlobKey blobKey, String path) {
+
+    public ValueBlobStoreEntity(String entity, Date timestamp, Date maxTimestamp, Date minTimestamp,String path) {
         this.entity = entity;
         this.timestamp = timestamp;
-        this.blobKey = blobKey;
         this.path = path;
         this.maxTimestamp = maxTimestamp;
         this.minTimestamp = minTimestamp;
+    }
+
+    public ValueBlobStoreEntity() {
     }
 
     public String getEntity() {
@@ -51,10 +51,6 @@ public class ValueBlobStoreEntity {
 
     public Date getTimestamp() {
         return timestamp;
-    }
-
-    public BlobKey getBlobKey() {
-        return blobKey;
     }
 
     public String getPath() {

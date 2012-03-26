@@ -54,12 +54,8 @@ public class StartActivity extends Activity {
     private static final int CHANGE_SERVER_DIALOG = 2;
     private static final int CHOOSE_SERVER_DIALOG = 3;
     private static final int CHECK_SERVER_DIALOG = 4;
-
-
     private AuthenticateThread authenticateThread;
-
     private ProgressDialog authenticateDialog;
-
     private String baseURL;
     private Cookie authCookie;
     public String webViewURl;
@@ -184,7 +180,7 @@ public class StartActivity extends Activity {
         private void update(boolean isLoggedIn) {
             Message msg = m.obtainMessage();
             Bundle b = new Bundle();
-            b.putBoolean(Const.PARAM_IS_LOGGED_IN, isLoggedIn);
+            b.putBoolean(Const.Params.PARAM_IS_LOGGED_IN, isLoggedIn);
             msg.setData(b);
             m.sendMessage(msg);
         }
@@ -222,7 +218,7 @@ public class StartActivity extends Activity {
     private final Handler authenticateThreadHandler = new Handler() {
         public void handleMessage(Message msg) {
             //	int total = msg.getData().getInt("total");
-            final boolean isLoggedIn = msg.getData().getBoolean(Const.PARAM_IS_LOGGED_IN);
+            final boolean isLoggedIn = msg.getData().getBoolean(Const.Params.PARAM_IS_LOGGED_IN);
             final String cookie;
             Log.v("NimbitsV", "is logged in " + isLoggedIn);
             if (authenticateDialog != null) {
@@ -271,12 +267,12 @@ public class StartActivity extends Activity {
                         mWebView.setInitialScale(100);
                         mWebView.getSettings().setJavaScriptEnabled(true);
 
-                        mWebView.loadUrl(baseURL + "?" + Const.PARAM_CLIENT + "=" + Const.WORD_ANDROID);
+                        mWebView.loadUrl(baseURL + "?" + Const.Params.PARAM_CLIENT + "=" + Const.WORD_ANDROID);
                     } catch (NimbitsException e) {
 
                     }
                 } else {
-                    Toast.makeText(StartActivity.this, "Nimbits uses google accounts to authenticate. Please add a google.com (gmail.com) account to this device.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(StartActivity.this, "There was a problem connecting to Nimbits. One possibility is that Nimbits uses google accounts to authenticate. Please add a google.com (gmail.com) account to this device.", Toast.LENGTH_LONG).show();
                 }
             }
         }

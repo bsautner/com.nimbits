@@ -144,7 +144,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
                     case twitterFinishReg:
                         finishTwitterAuthentication(settings, oauth_token, action);
                         break;
-                    case subscribe: case none:
+                    case subscribe: case twitter: case android: case none:
                         decidedWhatViewToLoadSecondStep(action, settings, uuid);
                         break;
                     default:
@@ -223,20 +223,12 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         viewport = new Viewport();
         viewport.setLayout(new BorderLayout());
         viewport.setBorders(false);
-        final FeedPanel feedPanel = new FeedPanel(loginInfo.getUser());
+
         //feedPanel.setLayout(new FitLayout());
         //feedPanel.setHeight("100%");
 
-        CenterPanel centerPanel = new CenterPanel(loginInfo, settings);
+        CenterPanel centerPanel = new CenterPanel(loginInfo, settings, action);
 
-        centerPanel.addEntityClickedListeners(new EntityClickedListener() {
-            @Override
-            public void onEntityClicked(GxtModel entity) {
-                if (entity.getEntityType().equals(EntityType.feed)) {
-                    feedPanel.reload();
-                }
-            }
-        });
 
         ContentPanel center = new ContentPanel();
         center.setHeading(Const.CONST_SERVER_NAME + " " + SettingType.serverVersion.getDefaultValue());
@@ -253,10 +245,22 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         eastData.setMargins(new Margins(0,0,5,5));
 
         center.add(centerPanel);
-        east.add(feedPanel);
+
 
         viewport.add(center, centerData);
-        viewport.add(east, eastData);
+        if (! action.equals(Action.android)) {
+            final FeedPanel feedPanel = new FeedPanel(loginInfo.getUser());
+            centerPanel.addEntityClickedListeners(new EntityClickedListener() {
+                @Override
+                public void onEntityClicked(GxtModel entity) {
+                    if (entity.getEntityType().equals(EntityType.feed)) {
+                        feedPanel.reload();
+                    }
+                }
+            });
+            east.add(feedPanel);
+            viewport.add(east, eastData);
+        }
 
 
         if (action.equals(Action.subscribe)) {

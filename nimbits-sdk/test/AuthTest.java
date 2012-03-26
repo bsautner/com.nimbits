@@ -11,6 +11,14 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
+import com.nimbits.client.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.user.*;
+import org.junit.*;
+import static org.junit.Assert.assertTrue;
+
+import java.io.*;
+
 /**
  * Created by bsautner
  * User: benjamin
@@ -20,16 +28,22 @@
 public class AuthTest {
 
 
-//    @Test
-//    public void testAuth() throws IOException {
-//       assertTrue(ClientHelper.clientSupportOnProd().isLoggedIn());
-//        assertTrue(ClientHelper.client().isLoggedIn());
-//
-//    }
-//     @Test
-//    public void testAuth2() throws IOException {
-//
-//        assertTrue(ClientHelper.client().isLoggedIn());
-//
-//    }
+    @Test
+    public void testAuth()   {
+        GoogleUser user = UserFactory.createGoogleUser("", "");
+        NimbitsClient client = null;
+
+        try {
+            client = NimbitsClientFactory.getInstance(user, "http://nimbits1.appspot.com");
+            assertTrue(client.isLoggedIn());
+        } catch (NimbitsException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+    }
+    @Test
+    public void testAuth2() throws IOException, NimbitsException {
+
+        assertTrue(ClientHelper.client().isLoggedIn());
+
+    }
 }

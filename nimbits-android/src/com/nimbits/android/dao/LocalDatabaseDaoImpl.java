@@ -34,12 +34,12 @@ import java.util.List;
  * Time: 4:50 PM
  */
 public class LocalDatabaseDaoImpl implements LocalDatabaseDao {
-    @Override
-    public void insertPoints(final Context aContext, final ContentValues values) {
-        final SQLiteDatabase db1 = DatabaseHelperFactory.getInstance(aContext).getDB(false);
-        db1.insert(Const.ANDROID_TABLE_LEVEL_TWO_DISPLAY, null, values);
-        db1.close();
-    }
+//    @Override
+//    public void insertPoints(final Context aContext, final ContentValues values) {
+//        final SQLiteDatabase db1 = DatabaseHelperFactory.getInstance(aContext).getDB(false);
+//        db1.insert(Const.ANDROID_TABLE_LEVEL_TWO_DISPLAY, null, values);
+//        db1.close();
+//    }
 
     @Override
     public String getSetting(final Context aContext, final String settingName) {
@@ -69,35 +69,35 @@ public class LocalDatabaseDaoImpl implements LocalDatabaseDao {
         return serverList;
     }
 
-    @Override
-    public void insertMain(final Context aContext, final ContentValues values) {
-        final SQLiteDatabase db1 = DatabaseHelperFactory.getInstance(aContext).getDB(false);
-        db1.insert(Const.ANDROID_TABLE_LEVEL_ONE_DISPLAY, null, values);
-        db1.close();
-    }
+//    @Override
+//    public void insertMain(final Context aContext, final ContentValues values) {
+//        final SQLiteDatabase db1 = DatabaseHelperFactory.getInstance(aContext).getDB(false);
+//        db1.insert(Const.ANDROID_TABLE_LEVEL_ONE_DISPLAY, null, values);
+//        db1.close();
+//    }
 
-    @Override
-    public ListAdapter mainListCursor(final Context aContext) {
-        final SQLiteDatabase db1 = DatabaseHelperFactory.getInstance(aContext).getDB(false);
-        final Cursor listCursor = db1.query(Const.ANDROID_TABLE_LEVEL_ONE_DISPLAY, new String[]{Const.ANDROID_COL_ID, Const.ANDROID_COL_NAME, Const.ANDROID_COL_DESCRIPTION, Const.ANDROID_COL_DISPLAY_TYPE}, Const.ANDROID_COL_NAME + " != ?", new String[]{Const.CONST_HIDDEN_CATEGORY}, null, null, Const.ANDROID_COL_DISPLAY_TYPE);
-        //   int r = listCursor.getCount();
+//    @Override
+//    public ListAdapter mainListCursor(final Context aContext) {
+//        final SQLiteDatabase db1 = DatabaseHelperFactory.getInstance(aContext).getDB(false);
+//        final Cursor listCursor = db1.query(Const.ANDROID_TABLE_LEVEL_ONE_DISPLAY, new String[]{Const.ANDROID_COL_ID, Const.ANDROID_COL_NAME, Const.ANDROID_COL_DESCRIPTION, Const.ANDROID_COL_DISPLAY_TYPE}, Const.ANDROID_COL_NAME + " != ?", new String[]{Const.Params.CONST_HIDDEN_CATEGORY}, null, null, Const.ANDROID_COL_DISPLAY_TYPE);
+//        //   int r = listCursor.getCount();
+//
+//
+//        return new ImageCursorAdapter(
+//                aContext, // Context.
+//                R.layout.main_list,  // Specify the row template to use (here, two columns bound to the two retrieved cursor
+//                listCursor,                                              // Pass in the cursor to bind to.
+//                new String[]{Const.ANDROID_COL_NAME, Const.ANDROID_COL_DESCRIPTION},           // Array of cursor columns to bind to.
+//                new int[]{R.id.text1, R.id.text2});
+//    }
 
-
-        return new ImageCursorAdapter(
-                aContext, // Context.
-                R.layout.main_list,  // Specify the row template to use (here, two columns bound to the two retrieved cursor
-                listCursor,                                              // Pass in the cursor to bind to.
-                new String[]{Const.ANDROID_COL_NAME, Const.ANDROID_COL_DESCRIPTION},           // Array of cursor columns to bind to.
-                new int[]{R.id.text1, R.id.text2});
-    }
-
-    @Override
-    public void updatePointValuesByName(Context aContext, final ContentValues u, final EntityName pointName) {
-        final SQLiteDatabase db1 = DatabaseHelperFactory.getInstance(aContext).getDB(false);
-        db1.update(Const.ANDROID_TABLE_LEVEL_TWO_DISPLAY, u, Const.ANDROID_COL_NAME + "=?", new String[]{pointName.getValue()});
-        db1.close();
-
-    }
+//    @Override
+//    public void updatePointValuesByName(Context aContext, final ContentValues u, final EntityName pointName) {
+//        final SQLiteDatabase db1 = DatabaseHelperFactory.getInstance(aContext).getDB(false);
+//        db1.update(Const.ANDROID_TABLE_LEVEL_TWO_DISPLAY, u, Const.ANDROID_COL_NAME + "=?", new String[]{pointName.getValue()});
+//        db1.close();
+//
+//    }
 
     public void updateSetting(final Context aContext, final String settingName, final String newValue) {
         final SQLiteDatabase db1 = DatabaseHelperFactory.getInstance(aContext).getDB(false);
@@ -130,13 +130,13 @@ public class LocalDatabaseDaoImpl implements LocalDatabaseDao {
 
     }
 
-    @Override
-    public void deleteAll(Context aContext) {
-        SQLiteDatabase db1 = DatabaseHelperFactory.getInstance(aContext).getDB(true);
-        db1.execSQL("delete from " + Const.ANDROID_TABLE_LEVEL_ONE_DISPLAY);
-        db1.execSQL("delete from " + Const.ANDROID_TABLE_LEVEL_TWO_DISPLAY);
-        db1.close();
-    }
+//    @Override
+//    public void deleteAll(Context aContext) {
+//        SQLiteDatabase db1 = DatabaseHelperFactory.getInstance(aContext).getDB(true);
+//        db1.execSQL("delete from " + Const.ANDROID_TABLE_LEVEL_ONE_DISPLAY);
+//        db1.execSQL("delete from " + Const.ANDROID_TABLE_LEVEL_TWO_DISPLAY);
+//        db1.close();
+//    }
 
 
 }

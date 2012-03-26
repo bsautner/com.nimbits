@@ -13,8 +13,7 @@
 
 package com.nimbits.server.api;
 
-import com.nimbits.client.enums.Action;
-import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityDescription;
@@ -78,7 +77,7 @@ public class EntityDescriptionServletImpl extends HttpServlet {
 
                 if (currentServer != null && entityDescription != null) {
 
-                    if (  entity.getProtectionLevel().equals(ProtectionLevel.everyone)) {
+                    if (  entity.getProtectionLevel().equals(ProtectionLevel.everyone) && sharedType(entity.getEntityType())) {
 
                         final EntityDescription retObj = EntityJPATransactionFactory.getInstance().addUpdateEntityDescription(entityDescription);
 
@@ -99,5 +98,10 @@ public class EntityDescriptionServletImpl extends HttpServlet {
             }
         }
         out.close();
+    }
+
+    private boolean sharedType(EntityType type) {
+        return type.equals(EntityType.point) ||  type.equals(EntityType.category) || type.equals(EntityType.file);
+
     }
 }

@@ -54,7 +54,7 @@ class NavigationPanel extends NavigationEventProvider {
     private final static int valueColumnIndex = 1;
 
     public NavigationPanel(final User user,
-                           final Map<SettingType, String> settings) {
+                           final Map<SettingType, String> settings, Action action) {
 
         this.settings = settings;
         this.user = user;

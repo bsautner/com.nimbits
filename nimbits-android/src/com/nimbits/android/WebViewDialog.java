@@ -13,6 +13,7 @@
 
 package com.nimbits.android;
 
+import android.*;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;

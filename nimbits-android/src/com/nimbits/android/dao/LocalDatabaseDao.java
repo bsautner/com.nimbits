@@ -30,21 +30,21 @@ public interface LocalDatabaseDao {
 
     String getSetting(final Context aContext, final String settingName);
 
-    void insertPoints(final Context aContext, final ContentValues values);
+  //  void insertPoints(final Context aContext, final ContentValues values);
 
-    void insertMain(final Context aContext, final ContentValues values);
+  //  void insertMain(final Context aContext, final ContentValues values);
 
-    ListAdapter mainListCursor(final Context aContext);
+ //   ListAdapter mainListCursor(final Context aContext);
 
-    void updatePointValuesByName(final Context aContext, final ContentValues u, final EntityName pointName);
+   // void updatePointValuesByName(final Context aContext, final ContentValues u, final EntityName pointName);
 
     void updateSetting(final Context aContext, final String settingName, final String newValue);
 
     void addServer(final Context aContext, final String url);
 
-    String getSelectedChildTableJsonByName(final Context aContext, final String name);
+   // String getSelectedChildTableJsonByName(final Context aContext, final String name);
 
-    void deleteAll(final Context aContext);
+  //  void deleteAll(final Context aContext);
 
     List<String> getServers(final Context aContext);
 }

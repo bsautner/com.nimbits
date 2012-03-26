@@ -52,10 +52,12 @@ public class CenterPanel extends NavigationEventProvider {
     private LayoutContainer chartContainer;
     private int chartHeight;
     HBoxLayoutData flex = new HBoxLayoutData(new Margins(0, 5, 0, 0));
+    Action action;
 
-    public CenterPanel(LoginInfo info, Map<SettingType, String> settings) {
+    public CenterPanel(LoginInfo info, Map<SettingType, String> settings, Action action) {
         this.loginInfo = info;
         this.settings = settings;
+        this.action = action;
 
     }
 
@@ -66,7 +68,7 @@ public class CenterPanel extends NavigationEventProvider {
     }
 
     final NavigationPanel createNavigationPanel() {
-        final NavigationPanel navTree = new NavigationPanel(loginInfo.getUser(), settings);
+        final NavigationPanel navTree = new NavigationPanel(loginInfo.getUser(), settings, action);
 
 
         navTree.addEntityClickedListeners(new EntityClickedListener() {
@@ -124,10 +126,8 @@ public class CenterPanel extends NavigationEventProvider {
         navigationPanel.setLayout(new FillLayout());
         navigationPanel.setHeight(navHeight);
         panel.add(navigationPanel, new RowData(1, .5, new Margins(0)));
-        ContentPanel chartPanel = new ContentPanel();
-        chartPanel.setHeight(450);
-        chartPanel.setFrame(true);
-        chartPanel.setHeaderVisible(false);
+
+
         HBoxLayout layout = new HBoxLayout();
         layout.setPadding(new Padding(0));
         layout.setHBoxLayoutAlign(HBoxLayout.HBoxLayoutAlign.MIDDLE);
@@ -136,11 +136,22 @@ public class CenterPanel extends NavigationEventProvider {
         flex.setFlex(1);
         addChart();
         // addChart();
-        chartPanel.add(chartContainer);
-        panel.add(chartPanel, new RowData(1, 5, new Margins(0)));
+
+
+
+        if (action != Action.android) {
+            ContentPanel chartPanel = new ContentPanel();
+            chartPanel.setHeight(450);
+            chartPanel.setFrame(true);
+            chartPanel.setHeaderVisible(false);
+            chartPanel.add(chartContainer);
+            panel.add(chartPanel, new RowData(1, 5, new Margins(0)));
+
+        }
+
 
         add(panel, new FlowData(0));
-        chartPanel.layout();
+        //chartPanel.layout();
         layout(true);
 
     }
@@ -256,7 +267,6 @@ public class CenterPanel extends NavigationEventProvider {
             public void onSuccess(String result) {
                 //	Window.alert(result);
                 Window.Location.replace(result);
-
             }
 
         });
@@ -294,26 +304,20 @@ public class CenterPanel extends NavigationEventProvider {
             public void onFailure(Throwable caught) {
                 GWT.log(caught.getMessage(), caught);
             }
-
             @Override
             public void onSuccess(Entity result) {
                 addEntity( new GxtModel(result));
             }
         });
-
     }
    //chart
     private void chartEntity(final GxtModel model) {
-
         for (int i = 0; i < chartContainer.getItemCount(); i++) {
             AnnotatedTimeLinePanel p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
             if (p.isSelected()) {
                 p.addEntityModel(model);
             }
-
         }
-
-
     }
 
 

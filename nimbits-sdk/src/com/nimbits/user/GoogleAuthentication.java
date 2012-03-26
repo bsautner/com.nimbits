@@ -39,8 +39,8 @@ public class GoogleAuthentication {
 
         private String _message;
 
-        private static final long serialVersionUID = Const.DEFAULT_SERIAL_VERSION;
-        ;
+        private static final long serialVersionUID = 1L;
+
 
         InvalidTokenException() {
             setMessage("Internal Server Error 500");

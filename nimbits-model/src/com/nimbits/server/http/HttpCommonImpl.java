@@ -150,14 +150,14 @@ public class HttpCommonImpl implements HttpCommon {
 
     public String doGet(final String postUrl, final String params, final String authCookie) throws NimbitsException {
         final StringBuilder sb = new StringBuilder();
-
+        HttpURLConnection connection = null;
 
         try {
-
+             System.setProperty("http.keepAlive", "false");
             // final String paramsWithAuth = params + getAuthParams();
             final URL url = new URL(postUrl + "?" + params);
             //  InetAddress address = InetAddress.getByName(postUrl);
-            final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
             connection.setRequestMethod(Const.METHOD_GET);
             // connection.setReadTimeout(Const.DEFAULT_HTTP_TIMEOUT);
@@ -180,6 +180,13 @@ public class HttpCommonImpl implements HttpCommon {
         } catch (ProtocolException e) {
             throw new NimbitsException(e);
         } catch (IOException e) {
+            if (connection != null) {
+                try {
+                    throw new NimbitsException(e.getMessage() + " " + connection.getResponseCode());
+                } catch (IOException e1) {
+                    throw new NimbitsException(e);
+                }
+            }
             throw new NimbitsException(e);
         }
 

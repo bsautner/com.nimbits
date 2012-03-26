@@ -57,33 +57,33 @@ public class ImageCursorAdapter extends SimpleCursorAdapter {
         switch (displayType) {
             case Category: {
                 icon.setImageResource(R.drawable.aquasmoothfoldersitesicon48);
-                icon.setTag(Const.PARAM_CATEGORY);
+                icon.setTag(Const.Params.PARAM_CATEGORY);
                 break;
             }
 
             case Point: {
                 icon.setImageResource(R.drawable.aquaballgreenicon32);
-                icon.setTag(Const.PARAM_POINT);
+                icon.setTag(Const.Params.PARAM_POINT);
                 break;
             }
             case HighAlarm: {
                 icon.setImageResource(R.drawable.aquaballredicon32);
-                icon.setTag(Const.PARAM_POINT);
+                icon.setTag(Const.Params.PARAM_POINT);
                 break;
             }
             case LowAlarm: {
                 icon.setImageResource(R.drawable.aquaballicon32);
-                icon.setTag(Const.PARAM_POINT);
+                icon.setTag(Const.Params.PARAM_POINT);
                 break;
             }
             case IdleAlarm: {
                 icon.setImageResource(R.drawable.aquapause);
-                icon.setTag(Const.PARAM_POINT);
+                icon.setTag(Const.Params.PARAM_POINT);
                 break;
             }
             case Diagram: {
                 icon.setImageResource(R.drawable.diagram);
-                icon.setTag(Const.PARAM_DIAGRAM);
+                icon.setTag(Const.Params.PARAM_DIAGRAM);
                 break;
             }
 

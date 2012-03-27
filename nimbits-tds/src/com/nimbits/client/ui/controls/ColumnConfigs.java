@@ -19,7 +19,7 @@ import com.extjs.gxt.ui.client.widget.form.*;
 import com.extjs.gxt.ui.client.widget.grid.*;
 import com.extjs.gxt.ui.client.widget.treegrid.*;
 import com.google.gwt.i18n.client.*;
-import com.nimbits.client.model.*;
+import com.nimbits.client.constants.*;
 
 public class ColumnConfigs {
 
@@ -31,8 +31,8 @@ public class ColumnConfigs {
                 DateTimeFormat.getFormat(Const.FORMAT_DATE_TIME));
 
         final ColumnConfig columnTime = new ColumnConfig();
-        columnTime.setId(Const.Params.PARAM_TIMESTAMP);
-        columnTime.setHeader(Const.WORD_TIMESTAMP);
+        columnTime.setId(Params.PARAM_TIMESTAMP);
+        columnTime.setHeader(Words.WORD_TIMESTAMP);
         columnTime.setAlignment(Style.HorizontalAlignment.LEFT);
         columnTime.setWidth(175);
         columnTime.setDateTimeFormat(DateTimeFormat
@@ -44,8 +44,8 @@ public class ColumnConfigs {
 
     public static ColumnConfig noteColumn( ) {
         final ColumnConfig columnNote = new ColumnConfig();
-        columnNote.setId(Const.PARAM_VALUE);
-        columnNote.setHeader(Const.WORD_ANNOTATION);
+        columnNote.setId(Params.PARAM_VALUE);
+        columnNote.setHeader(Words.WORD_ANNOTATION);
         columnNote.setWidth(400);
 
         final TextField<String> noteText = new TextField<String>();
@@ -57,8 +57,8 @@ public class ColumnConfigs {
 
     public static ColumnConfig dataColumn() {
         final ColumnConfig columnData = new ColumnConfig();
-        columnData.setId(Const.PARAM_DATA);
-        columnData.setHeader(Const.WORD_DATA);
+        columnData.setId(Params.PARAM_DATA);
+        columnData.setHeader(Words.WORD_DATA);
         columnData.setWidth(250);
 
         final TextField<String> dataText = new TextField<String>();
@@ -88,8 +88,8 @@ public class ColumnConfigs {
 //    }
 
     public static ColumnConfig pointNameColumn() {
-        final ColumnConfig nameColumn =  new ColumnConfig(Const.Params.PARAM_NAME, Const.MESSAGE_DATA_POINT, 150);
-        nameColumn.setId(Const.Params.PARAM_NAME);
+        final ColumnConfig nameColumn =  new ColumnConfig(Params.PARAM_NAME, UserMessages.MESSAGE_DATA_POINT, 150);
+        nameColumn.setId(Params.PARAM_NAME);
         nameColumn.setHeader("Objects");
         nameColumn.setAlignment(Style.HorizontalAlignment.LEFT);
         nameColumn.setWidth(225);

@@ -14,9 +14,9 @@
 package com.nimbits.server.core;
 
 import com.nimbits.client.common.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.entity.*;
@@ -41,12 +41,12 @@ public class CoreImpl implements Core {
             if (SettingTransactionsFactory.getInstance().getSetting(SettingType.serverIsDiscoverable).equals("1")) {
                 String json = GsonFactory.getInstance().toJson(entity);
 
-                final String params = Const.PARAM_ENTITY + "=" + json
-                        + "&" + Const.PARAM_ENTITY_TYPE + "=" + entity.getEntityType()
-                        + "&" + Const.Params.PARAM_ACTION + "=" + Action.delete.name();
+                final String params = Params.PARAM_ENTITY + "=" + json
+                        + "&" + Params.PARAM_ENTITY_TYPE + "=" + entity.getEntityType()
+                        + "&" + Params.PARAM_ACTION + "=" + Action.delete.name();
 
 
-                HttpCommonFactory.getInstance().doPost(Const.PATH_NIMBITS_CORE_ENTITY_DESC_URL, params);
+                HttpCommonFactory.getInstance().doPost(Path.PATH_NIMBITS_CORE_ENTITY_DESC_URL, params);
 
             }
         } catch (NimbitsException e) {
@@ -64,13 +64,13 @@ public class CoreImpl implements Core {
                 final Server server = ServerModelFactory.createServer(serverUrl, emailAddress, SettingType.serverVersion.getDefaultValue());
                 final String serverJson = GsonFactory.getInstance().toJson(server);
                 String json = GsonFactory.getInstance().toJson(entity);
-                final String params = Const.PARAM_SERVER + "=" + serverJson
-                        + "&" + Const.PARAM_ENTITY + "=" + json
-                        + "&" + Const.PARAM_ENTITY_TYPE + "=" + entity.getEntityType()
-                        + "&" + Const.Params.PARAM_ACTION + "=" + Action.update.name();
+                final String params = Params.PARAM_SERVER + "=" + serverJson
+                        + "&" + Params.PARAM_ENTITY + "=" + json
+                        + "&" + Params.PARAM_ENTITY_TYPE + "=" + entity.getEntityType()
+                        + "&" + Params.PARAM_ACTION + "=" + Action.update.name();
 
-                log.info(Const.PATH_NIMBITS_CORE_ENTITY_DESC_URL + "?" + params);
-                String response = HttpCommonFactory.getInstance().doPost(Const.PATH_NIMBITS_CORE_ENTITY_DESC_URL, params);
+                log.info(Path.PATH_NIMBITS_CORE_ENTITY_DESC_URL + "?" + params);
+                String response = HttpCommonFactory.getInstance().doPost(Path.PATH_NIMBITS_CORE_ENTITY_DESC_URL, params);
                 log.info("response from core: " + response);
 
             }

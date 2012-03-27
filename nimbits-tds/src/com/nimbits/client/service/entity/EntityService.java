@@ -1,9 +1,9 @@
 package com.nimbits.client.service.entity;
 
 import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
 
@@ -15,7 +15,7 @@ import java.util.*;
  * Date: 2/7/12
  * Time: 12:02 PM
  */
-@RemoteServiceRelativePath(Const.PARAM_ENTITY)
+@RemoteServiceRelativePath(Params.PARAM_ENTITY)
 public interface EntityService extends RemoteService {
     List<Entity> getEntities();
 

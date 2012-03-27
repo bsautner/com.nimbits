@@ -13,7 +13,7 @@
 
 package com.nimbits.server.cron;
 
-import com.nimbits.client.model.*;
+import com.nimbits.client.constants.*;
 
 import javax.servlet.http.*;
 import java.io.*;

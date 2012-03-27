@@ -14,8 +14,9 @@
 package com.nimbits.client.model.value;
 
 
+import com.nimbits.client.constants.*;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.*;
+
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;

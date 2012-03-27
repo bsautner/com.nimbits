@@ -3,7 +3,7 @@ package com.nimbits.server.gson;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.nimbits.client.model.Const;
+import com.nimbits.client.constants.Const;
 
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.entity.Entity;

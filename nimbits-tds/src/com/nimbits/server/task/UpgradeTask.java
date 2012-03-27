@@ -16,9 +16,9 @@ package com.nimbits.server.task;
 import com.google.gson.JsonSyntaxException;
 import com.nimbits.PMF;
 import com.nimbits.client.common.Utils;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.Const;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.calculation.CalculationModelFactory;
 import com.nimbits.client.model.common.CommonFactoryLocator;
@@ -77,7 +77,7 @@ public class UpgradeTask  extends HttpServlet
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
 
-        Action action = Action.get(req.getParameter(Const.Params.PARAM_ACTION));
+        Action action = Action.get(req.getParameter(Params.PARAM_ACTION));
         try {
             switch (action) {
                 case start:
@@ -120,7 +120,7 @@ public class UpgradeTask  extends HttpServlet
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         try {
-            Entity pointEntity = GsonFactory.getInstance().fromJson(req.getParameter(Const.Params.PARAM_JSON), EntityModel.class);
+            Entity pointEntity = GsonFactory.getInstance().fromJson(req.getParameter(Params.PARAM_JSON), EntityModel.class);
             User u = UserTransactionFactory.getDAOInstance().getUserByUUID(pointEntity.getOwner());
 
             final Query c = pm.newQuery(DataPoint.class, "uuid==o");
@@ -157,9 +157,9 @@ public class UpgradeTask  extends HttpServlet
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         try {
-            Entity pointEntity = GsonFactory.getInstance().fromJson(req.getParameter(Const.Params.PARAM_JSON), EntityModel.class);
+            Entity pointEntity = GsonFactory.getInstance().fromJson(req.getParameter(Params.PARAM_JSON), EntityModel.class);
             User u = UserTransactionFactory.getDAOInstance().getUserByUUID(pointEntity.getOwner());
-            clog(req.getParameter(Const.Params.PARAM_JSON));
+            clog(req.getParameter(Params.PARAM_JSON));
             if (u==null) {
                 clog("User not found" + pointEntity.getOwner());
             }
@@ -333,7 +333,7 @@ public class UpgradeTask  extends HttpServlet
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         try {
-            Entity categoryEntity = GsonFactory.getInstance().fromJson(req.getParameter(Const.Params.PARAM_JSON), EntityModel.class);
+            Entity categoryEntity = GsonFactory.getInstance().fromJson(req.getParameter(Params.PARAM_JSON), EntityModel.class);
             User u = UserTransactionFactory.getDAOInstance().getUserByUUID(categoryEntity.getOwner());
 
             final Query catQuery = pm.newQuery(PointCatagory.class, "userFK==o && name==n");
@@ -416,7 +416,7 @@ public class UpgradeTask  extends HttpServlet
     }
 
     private void doUser(HttpServletRequest req) {
-        Entity userEntity = GsonFactory.getInstance().fromJson(req.getParameter(Const.Params.PARAM_JSON), EntityModel.class);
+        Entity userEntity = GsonFactory.getInstance().fromJson(req.getParameter(Params.PARAM_JSON), EntityModel.class);
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final Query userQuery = pm.newQuery(NimbitsUser.class, "uuid==o");
 

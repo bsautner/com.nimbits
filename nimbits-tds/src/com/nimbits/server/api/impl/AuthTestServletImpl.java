@@ -13,9 +13,9 @@
 
 package com.nimbits.server.api.impl;
 
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.server.api.*;
 import com.nimbits.server.user.*;
@@ -39,15 +39,15 @@ public class AuthTestServletImpl extends ApiServlet {
         try {
             u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
             if (u != null && !u.isRestricted()) {
-                out.print(Const.WORD_TRUE);
+                out.print(Words.WORD_TRUE);
 
             } else {
-                out.print(Const.WORD_FALSE);
+                out.print(Words.WORD_FALSE);
 
             }
         } catch (NimbitsException e) {
 
-            out.print(Const.WORD_FALSE);
+            out.print(Words.WORD_FALSE);
         }
         out.close();
     }

@@ -10,33 +10,37 @@
     <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-
+    <link href="./assets/css/docs.css" rel="stylesheet">
     <!-- Le styles -->
-    <link rel="stylesheet" href="assets/css/bootstrap.css">
-    <link href="assets/css/docs.css" rel="stylesheet">
-    <link href="assets/js/google-code-prettify/prettify.css" rel="stylesheet">
-
+    <link rel="stylesheet" href="./assets/bootstrap/css/bootstrap.css">
+   <!--<link href="assets/css/docs.css" rel="stylesheet">-->
+    <link href="./assets/js/google-code-prettify/prettify.css" rel="stylesheet">
+    <link href="./assets/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
     <!-- Le javascript -->
-    <script src="http://code.jquery.com/jquery-1.5.2.min.js"></script>
-    <script src="http://autobahn.tablesorter.com/jquery.tablesorter.min.js"></script>
+
+    <!--<script src="http://autobahn.tablesorter.com/jquery.tablesorter.min.js"></script>-->
     <script src="assets/js/google-code-prettify/prettify.js"></script>
     <!--<script src="assets/js/application.js"></script>-->
     <script src="./assets/js/util.js"></script>
-    <script type="text/javascript"
-            src="assets/danvk-dygraphs-0842b24/dygraph-combined.js"></script>
-    <!-- Le fav and touch icons -->
-    <link rel="shortcut icon" href="images/favicon.ico">
-    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
 
+
+
+    <style type="text/css">
+        body {
+            padding-top: 60px;
+            padding-bottom: 40px;
+        }
+        .sidebar-nav {
+            padding: 9px 0;
+        }
+    </style>
 
 </head>
 
 <body style="padding-top: 40px;" onload="loadRequestedPage();">
 
 <div id="fb-root"></div>
-  <!--social media code-->
+<!--social media code-->
 <script>(function(d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) return;
@@ -66,419 +70,207 @@
         var tooltip =document.getElementById("myToolTip");
         tooltip.style.visibility = "hidden";
     }
+
+
+
 </script>
+
 <!-- Topbar
 ================================================== -->
-<div class="topbar">
-    <div class="topbar-inner">
-        <div class="container">
-            <h3><a href="index.html">nimbits.com</a></h3>
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="index.html"> nimbits.com  <g:plusone size="small" ></g:plusone></a>
 
 
-            <ul class="nav">
-                <li><a href="#store" onclick="getContent('pages/store.html')">Store</a></li>
-                <li><a href="#forum" onclick="popUp('http://groups.google.com/group/nimbits')">Forum</a></li>
-                <li><a href="#terms" onclick="getContent('pages/terms.html')">Terms</a></li>
-                <li><a href="#service" onclick="getContent('pages/support.html')">Services</a></li>
-                <li><a href="#terms" onclick="getContent('pages/source.html')">Source</a></li>
-                <li><a href="http://app.nimbits.com" target="_blank">Login</a></li>
-            </ul>
+            <!--<div class="fb-like" data-href="http://www.nimbits.com" data-send="false" data-layout="button_count"-->
+            <!--data-width="75" data-show-faces="false" style="float:left; margin-left: 4px; margin-top: 4px"></div>-->
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <li><a href="#store" onclick="getContent('pages/store.html')">Store</a></li>
+                    <li><a href="#forum" onclick="popUp('http://groups.google.com/group/nimbits')">Forum</a></li>
+                    <li><a href="#terms" onclick="getContent('pages/terms.html')">Terms</a></li>
+                    <li><a href="#service" onclick="getContent('pages/support.html')">Services</a></li>
+                    <li><a href="#terms" onclick="getContent('pages/source.html')">Source</a></li>
+                    <li><a href="http://app.nimbits.com" target="_blank">Login</a></li>
+                </ul>
+            </div>
 
 
-            <ul class="nav secondary-nav">
-                <li class="dropdown">
-                    <a href="#" class="menu">Download</a>
-
-                    <ul class="dropdown-menu">
-                        <li><a href="#download" onclick="getContent('pages/download.html')">Server / SDK</a></li>
-                        <li><a href="#"
-                               onclick="popUp('http://www.google.com/ig/directory?type=gadgets&url=www.gigamegablog.com/gadgets/nimbits.xml')">
-                            Google Gadget</a></li>
-                        <li><a
-                                href="https://chrome.google.com/webstore/detail/fmhbpieakkkhcajlpbeffhfihenafhbl"
-                                target="_blank">Google Chrome
-                            App</a></li>
-                        <li><a href="http://www.nimbits.com/downloads/nimbits_sdk.jar">nimbits_sdk.jar</a></li>
-                    </ul>
-                </li>
-            </ul>
 
 
-            <ul class="nav secondary-nav">
-                <li class="dropdown">
-                    <a href="#" class="menu">Web Services</a>
-
-                    <ul class="dropdown-menu">
-                        <!--<li><a href="#">Nimbits Server Overview</a></li>-->
-                        <!--<li class="divider"></li>-->
-                        <li><a href="#" onclick="getContent('pages/web_service_primer.html')">Getting Started</a></li>
-                        <li><a href="#" onclick="getContent('pages/timespan.html')">Understanding Date/Time Ranges</a>
-                        </li>
-                        <li><a href="#" onclick="getContent('pages/current_value_service.html')">Current Values</a></li>
-                        <li><a href="#" onclick="getContent('pages/batch_service.html')">Batch</a></li>
-                        <li><a href="#" onclick="getContent('pages/category_service.html')">Category</a></li>
-                        <li><a href="#" onclick="getContent('pages/point_service.html')">Data Point</a></li>
-                        <li><a href="#" onclick="getContent('pages/series_service.html')">Data Series</a></li>
-                        <li><a href="#" onclick="getContent('pages/chart_service.html')">Chart Image Service</a></li>
-                        <li><a href="#" onclick="getContent('pages/xmpp.html')">M2M with XMPP</a></li>
-
-                        <li class="divider"></li>
-
-                        <li><a href="#" onclick="getContent('pages/email_service.html')">Bulk Email</a></li>
-                        <li><a href="#" onclick="getContent('pages/im_service.html')">Instant Messaging</a></li>
-                        <li><a href="#" onclick="getContent('pages/facebook_service.html')">Facebook</a></li>
-                        <li><a href="#" onclick="getContent('pages/twitter_service.html')">Twitter</a></li>
+            <form action="search_results.html" id="cse-search-box" class="navbar-form pull-right">
+                <div>
+                    <input type="hidden" name="cx" value="partner-pub-6491049122047226:5289700289"/>
+                    <input type="hidden" name="cof" value="FORID:10"/>
+                    <input type="hidden" name="ie" value="UTF-8"/>
+                    <input type="text" name="q" size="75" class="search-query"/>
+                    <input class="btn-toolbar" type="submit" name="sa" value="Search"/>
+                </div>
+            </form>
+            <script type="text/javascript">
+                var googleSearchIframeName = "cse-search-results";
+                var googleSearchFormName = "cse-search-box";
+                var googleSearchFrameWidth = 800;
+                var googleSearchDomain = "www.google.com";
+                var googleSearchPath = "/cse";
+            </script>
+            <script type="text/javascript" src="http://www.google.com/afsonline/show_afs_search.js"></script>
 
 
-                    </ul>
-                </li>
-            </ul>
 
-            <ul class="nav secondary-nav">
-                <li class="dropdown">
-                    <a href="#" class="menu">Tutorials</a>
 
-                    <ul class="dropdown-menu">
-                        <!--<li><a href="#">Nimbits Server Overview</a></li>-->
-                        <li><a href="#" onclick="getContent('pages/code/sdk_create_random_data.html')">Java SDK</a></li>
-                        <li><a href="#" onclick="getContent('pages/python.html')">Python</a></li>
-                        <li><a href="#" onclick="getContent('pages/curl.html')">cURL</a></li>
-                        <li><a href="#" onclick="getContent('pages/XMPP_WA.html')">Intelligent M2M</a></li>
-                        <li><a href="#" onclick="getContent('pages/javascript.html')">Javascript Library</a></li>
-                        <li><a href="#" onclick="getContent('pages/javascript_chart.html')">Interactive Charts</a></li>
-                        <li><a href="#"
-                               onclick="popUp('http://nimbits.blogspot.com/2010/02/connecting-spreadsheets-to-nimbits.html')">Spreadsheets</a>
-                        </li>
-                        <li><a href="#"
-                               onclick="popUp('http://nimbits.blogspot.com/2010/02/create-visio-diagram-with-nimbits-data.html')">Visio</a>
-                        </li>
-                        <li><a href="#"
-                               onclick="popUp('http://nimbits.blogspot.com/2010/11/data-out-barcodes.html')">Barcodes</a>
-                        </li>
-                        <li><a href="#"
-                               onclick="popUp('http://nimbits.blogspot.com/2010/07/data-in-connect-arduino-to-nimbits-data.html')">Arduino</a>
-                        </li>
-                        <li><a href="#"
-                               onclick="popUp('http://nimbits.blogspot.com/2010/06/read-values-from-parallax-micro.html')">Parallax
-                            Stamp</a></li>
 
-                    </ul>
-                </li>
-            </ul>
-
-            <ul class="nav secondary-nav">
-                <li class="dropdown">
-                    <a href="#" class="menu">How it works</a>
-
-                    <ul class="dropdown-menu">
-                        <!--<li><a href="#">Nimbits Server Overview</a></li>-->
-                        <!--<li class="divider"></li>-->
-                        <li><a href="#" onclick="getContent('pages/compression.html')">Compression</a></li>
-                        <li><a href="#" onclick="getContent('pages/wolfram.html')">Intelligence</a></li>
-                        <li><a href="#" onclick="getContent('pages/alerts.html')">Alerts</a></li>
-                        <li><a href="#" onclick="getContent('pages/calculations.html')">Calculations</a></li>
-                        <li><a href="#" onclick="getContent('pages/expiration.html')">Data Expiration</a></li>
-
-                    </ul>
-                </li>
-            </ul>
 
         </div>
     </div>
 </div>
 
 <a href="" id="link" onmouseout="hideToolTip()" onmouseover="showToolTip()">
-    <img   src="images/link.jpg" width="21" alt="link to this page" style="float:left"/></a>
+    <img   src="images/link.jpg" width="21" alt="link to this page" style="float:right"/></a>
 <div id="myToolTip" style="position: absolute; z-index: 999; visibility: hidden;">
     <span class="label success">Link to this page</span>
 
 </div>
 
-<div class="fb-like" data-href="http://www.nimbits.com" data-send="false" data-layout="button_count"
-     data-width="75" data-show-faces="false" style="float:left; margin-left: 4px; margin-top: 4px"></div>
-
-<div style="float:left; margin-left: 0px; margin-top: 6px">
-    <g:plusone size="small" ></g:plusone>
-</div>
-<div class="container">
-
-<div class="content" id="content">
-<div id="masthead">
-
-    <div class="inner">
-
-        <div class="container">
-            <img id="logo" src="images/nimbits_transparent_logo.png" align="left" alt="logo"
-                 style="margin-right: 10px"/>
-
-            <p class="lead">
-                Nimbits is a service you can use to record and share data on the cloud.
-                It is a
-                free, social and open source platform for the Internet of Things.
-            </p>
-
-            <p style="text-align: left">
-                Nimbits Server is a free and open source <em><a
-                    href="http://en.wikipedia.org/wiki/Operational_historian">Operational Process Data
-                Historian</a></em> you can use to create and share
-                <a href="#" onclick="getContent('pages/walkthrough.html')">data
-                    points</a>
-                on a public or private cloud and record your changing numeric, text based, GPS, json or xml values
-                into them. You can use Nimbits to store and share files, sensor logs, and process diagrams and receive
-                alerts, perform calculations, generate statistics and more. With our open source SDK and REST Web Service
-                API, you can use nimbits as a backend for your software and micro-controller projects.
-
-
-
-        </div>
-        <!-- /container -->
-    </div>
-</div>
-
-<!--search engine -->
-<div class="content" id="search">
-
-
-
-
-    <div class="row"
-         style="padding-top: 10px">
-
-
-        <div class="span6">
-            <div class="input">
-                <h5>Search for shared points and files</h5>
-                <form action="search_results.html" id="cse-search-box">
-                    <div>
-                        <input type="hidden" name="cx" value="partner-pub-6491049122047226:5289700289"/>
-                        <input type="hidden" name="cof" value="FORID:10"/>
-                        <input type="hidden" name="ie" value="UTF-8"/>
-                        <input type="text" name="q" size="75"/>
-                        <input class="btn primary" type="submit" name="sa" value="Search"/>
-                    </div>
-                </form>
-                <script type="text/javascript">
-                    var googleSearchIframeName = "cse-search-results";
-                    var googleSearchFormName = "cse-search-box";
-                    var googleSearchFrameWidth = 800;
-                    var googleSearchDomain = "www.google.com";
-                    var googleSearchPath = "/cse";
-                </script>
-                <script type="text/javascript" src="http://www.google.com/afsonline/show_afs_search.js"></script>
-            </div>
-        </div>
-        <div class="span10">
-              <span style="">The <a href="http://app.nimbits.com">Nimbits public cloud</a> and hundreds of server instances
-        around the world have files and <a href="#" onclick="getContent('pages/walkthrough.html')">data points</a> that are discoverable on our search engine. You can share your data
-    privately with other users, or anonymously publish  your feeds for everyone to subscribe to. It's easy to customise how you are alerted to
-                  changes in data you are subscribing to, from posts to your facebook wall, tweets, emails and instant messages.
-                  <a href="http://nimbits1.appspot.com/report.html?uuid=96c55c29-d60f-42a1-82a9-98d8a76960bd&count=100"
-                                                                                                    target="_blank">[sample]</a></span>
-        </div>
-
-
-
-
-        </div>
-
-
-    </div>
-
- <hr />
-
-<div style="margin-top: 10px;" class="row">
-    <div class="span9">
-        <p style="text-align: left">
-            <span class="label success">What's New!</span>
-        <ul>
-            <li>A new <a href="https://market.android.com/details?id=com.nimbits.android" target="_blank">
-                Android App</a> is out that makes it easier to chart and record data</li>
-            <li><a href="#" onclick="getContent('pages/javascript.html')">JavaScript and Interactive Charts!</a> Learn
-                to embed
-                live Nimbits data in web pages and use highly interactive visualizations like the charts, gauges and
-                images.
-                You can even connect your data to other data points running on other Nimbits Servers.
+<div class="container-fluid">
+<div class="row-fluid">
+<div class="span2">
+    <div class="well sidebar-nav">
+        <ul class="nav nav-list">
+            <li class="nav-header">Web Service API</li>
+            <li><a href="#" onclick="getContent('pages/web_service_primer.html')">Getting Started</a></li>
+            <li><a href="#" onclick="getContent('pages/timespan.html')">Understanding Date/Time Ranges</a>
             </li>
-            <li><a href="#" onclick="getContent('pages/xmpp.html')">Nimbits Machine 2 Machine (M2M)</a> technology
-                allows you to give devices <i>presence</i> on the internet using XMPP protocols.
-            </li>
-            <li><a href="#" onclick="getContent('pages/wolfram.html')">New Data Intelligence</a> now lets you connect
-                point data to computational knowledge engine <a href="http://wolframalpha.com">WolframAlpha</a> (BETA)
-            </li>
+            <li><a href="#" onclick="getContent('pages/time.html')">Current Time Service</a></li>
+            <li><a href="#" onclick="getContent('pages/current_value_service.html')">Current Values</a></li>
+            <li><a href="#" onclick="getContent('pages/batch_service.html')">Batch</a></li>
+            <li><a href="#" onclick="getContent('pages/category_service.html')">Category</a></li>
+            <li><a href="#" onclick="getContent('pages/point_service.html')">Data Point</a></li>
+            <li><a href="#" onclick="getContent('pages/series_service.html')">Data Series</a></li>
+            <li><a href="#" onclick="getContent('pages/chart_service.html')">Chart Image Service</a></li>
+            <li><a href="#" onclick="getContent('pages/xmpp.html')">M2M with XMPP</a></li>
 
+            <li class="divider"></li>
 
-            <li>Check out the <a href="#" onclick="getContent('pages/download.html')">download page</a> to learn how you
-                can run a Nimbits Server in a scalable private cloud on your network, Amazon EC2, Google App Engine - or
-                build a hybrid of all three.
+            <li><a href="#" onclick="getContent('pages/email_service.html')">Bulk Email</a></li>
+            <li><a href="#" onclick="getContent('pages/im_service.html')">Instant Messaging</a></li>
+            <li><a href="#" onclick="getContent('pages/facebook_service.html')">Facebook</a></li>
+            <li><a href="#" onclick="getContent('pages/twitter_service.html')">Twitter</a></li>
+            <li class="nav-header">Download</li>
+            <li><a href="#">Link</a></li>
+            <li><a href="#">Link</a></li>
+            <li><a href="#">Link</a></li>
+            <li><a href="#">Link</a></li>
+            <li><a href="#">Link</a></li>
+            <li><a href="#">Link</a></li>
+            <li class="nav-header">Tutorials</li>
+            <li><a href="#" onclick="getContent('pages/compression.html')">Compression</a></li>
+            <li><a href="#" onclick="getContent('pages/wolfram.html')">Intelligence</a></li>
+            <li><a href="#" onclick="getContent('pages/alerts.html')">Alerts</a></li>
+            <li><a href="#" onclick="getContent('pages/calculations.html')">Calculations</a></li>
+            <li><a href="#" onclick="getContent('pages/expiration.html')">Data Expiration</a></li>
+
+            <li class="divider"></li>
+
+            <li><a href="#" onclick="getContent('pages/code/sdk_create_random_data.html')">Java SDK</a></li>
+            <li><a href="#" onclick="getContent('pages/python.html')">Python</a></li>
+            <li><a href="#" onclick="getContent('pages/curl.html')">cURL</a></li>
+            <li><a href="#" onclick="getContent('pages/XMPP_WA.html')">Intelligent M2M</a></li>
+            <li><a href="#" onclick="getContent('pages/javascript.html')">Javascript Library</a></li>
+            <li><a href="#" onclick="getContent('pages/javascript_chart.html')">Interactive Charts</a></li>
+
+            <li class="divider"></li>
+            <li><a href="#"
+                   onclick="popUp('http://nimbits.blogspot.com/2010/02/connecting-spreadsheets-to-nimbits.html')">Spreadsheets</a>
             </li>
+            <li><a href="#"
+                   onclick="popUp('http://nimbits.blogspot.com/2010/02/create-visio-diagram-with-nimbits-data.html')">Visio</a>
+            </li>
+            <li><a href="#"
+                   onclick="popUp('http://nimbits.blogspot.com/2010/11/data-out-barcodes.html')">Barcodes</a>
+            </li>
+            <li><a href="#"
+                   onclick="popUp('http://nimbits.blogspot.com/2010/07/data-in-connect-arduino-to-nimbits-data.html')">Arduino</a>
+            </li>
+            <li><a href="#"
+                   onclick="popUp('http://nimbits.blogspot.com/2010/06/read-values-from-parallax-micro.html')">Parallax
+                Stamp</a></li>
         </ul>
-
-    </div>
-    <div class="span7">
-        <div id="graphdiv4"  style="width:350px; height:200px;border: 1px">
-            <script type="text/javascript">
-
-                var chartData = "Date,Series1,Series2\n";
-                var now = new Date().getTime();
-                now = now - (10 * 1000 * 60);
-                for (var i = 0; i < 10; i++) {
-                    var value1 = Math.floor(Math.random() * 110);
-                    var value2 = Math.floor(Math.random() * 110);
+    </div><!--/.well -->
+</div><!--/span-->
+<div  id="content" class="span10">
 
 
-                    var date = new Date(now);
-                    now += 60000;
-                    var ds = date.getFullYear() + "-" + date.getMonth()+1 + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-                    chartData += ds + "," + value1 + ",10," + value2 + ",20" + "\n";
+
+<div class="hero-unit">
 
 
-                }
 
-                g4 = new Dygraph(
-                        document.getElementById("graphdiv4"),
-                        chartData,
-                        {
-                            rollPeriod:7,
-                            //  showRoller: false,
-                            errorBars:true,
-                            valueRange:[-1, 100],
-                            drawXAxis:false,
-                            drawYAxis:false
-                        }
-                );
+    <img id="logo" src="images/nimbits_transparent_logo.png" align="left" alt="logo"
+         style="margin-right: 10px"/>
 
-            </script>
+    <h3>
+        Nimbits is a service for connecting people and devices on the cloud.
+        It is a free, social and open source platform for the Internet of Things.
+    </h3>
+
+    <p>
+        Nimbits Server is a free and open source <em><a
+            href="http://en.wikipedia.org/wiki/Operational_historian">Operational Process Data
+        Historian</a></em> you can use to create and share
+        <a href="#" onclick="getContent('pages/walkthrough.html')">data
+            points</a>
+        on a public or private cloud and record your changing numeric, text based, GPS, json or xml values
+        into them. You can use Nimbits to store and share files, sensor logs, and process diagrams and receive
+        alerts, perform calculations, generate statistics and more. With our open source SDK and REST Web Service
+        API, you can use nimbits as a backend for your software and micro-controller projects.
+
+
+
+
+</div>
+
+
+
+
+
+
+<div id="myCarousel" class="carousel slide">
+    <!-- Carousel items -->
+    <div class="carousel-inner">
+        <div class="active item">
+        <img src="assets/img/bird.png" alt="">
+        <div class="carousel-caption">
+            <h4>First Thumbnail label</h4>
+            <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
         </div>
-        <p><a href="#" onclick="getContent('pages/javascript_chart.html')">Graph your data on your own web site with
-            javascript and a huge selection of charts, gauges and more.</a></p>
-    </div>
-</div>
-
-<div class="row">
-    <hr>
-</div>
-
-
-<!-- Quickstart options
-================================================== -->
-<div class="quickstart">
-    <div class="container">
-        <div class="row">
-            <div class="span5 columns">
-                <h6><A href="http://app.nimbits.com" target="_blank">Log In Now</a></h6>
-
-                <p>You can log into Nimbits right now and start creating data points on the public cloud.
-                    Nimbits uses
-                    Google Accounts for secure access.</p>
-
-            </div>
-
-            <div class="span5 columns">
-                <h6><a href="#" onclick="getContent('pages/download.html')">Download your own</a></h6>
-
-                <p>Like what you see on the public server and want your own? Download and and spin up your own
-                    instance
-                    of Nimbits on your private cloud, App Engine or Amazon EC2.</p>
-
-            </div>
-            <div class="span5 columns">
-                <h6><a href="#" onclick="getContent('pages/support.html')">Get Help</a></h6>
-
-                <p>We can install, monitor and maintain your Nimbits ecosystem. We provide customised
-                    installations of Nimbits specialised for your needs, interfaces for your devices and ongoing
-                    support </p>
-
+        </div>
+        <div class="item">
+            <img src="assets/img/browsers.png" alt="">
+            <div class="carousel-caption">
+                <h4>RESTful API</h4>
+                <p>A collection of REST Web Services are available for bulk loading and recording data. </p>
             </div>
 
         </div>
-        <!-- /row -->
-
-
+        <!-- Carousel nav -->
+        <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+        <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
     </div>
 </div>
-<div class="quickstart">
-
-    <table border="0">
-        <tr>
-
-            <td colspan="14">
-                <h4>Featured Tutorials</h4>
-
-                <UL>
-                    <li>Give your devices presence on the cloud so they can see each others status, send
-                        messages using XMPP and
-                        integrate into the WolframAlpha Computation Knowledge Engine. <a href="#"
-                                                                                         onclick="getContent('pages/XMPP_WA.html')">Read
-                            More</a></li>
-                    <LI>
-                        Feed data from an <a href="http://astore.amazon.com/nimbdatahist-20/detail/B002YQK670">Arduino
-                        Ethernet Shield</a> directly out to the Nimbits Cloud without the need
-                        of a middle-tier computer.
-                        <a href="http://nimbits.blogspot.com/2010/11/data-in-connect-arduino-to-cloud.html"
-                           target="_blank">Read more</a>
-                    </LI>
-
-                    <LI>
-                        Machine to Machine (M2M) Object Oriented Communication on the cloud. Nimbits takes M2M
-                        communication
-                        to a new level with OO.
-                        <a href="http://nimbits.blogspot.com/2011/10/machine-to-machine-m2m-communication.html"
-                           target="_blank">Read more</a>
-                    </LI>
-                </UL>
-            </td>
-
-        </tr>
 
 
-        <tr>
 
 
-            <td><a href="#"
-                   onclick="popUp('http://nimbits.blogspot.com/2010/02/connecting-spreadsheets-to-nimbits.html')">
-                <p style="text-align: center">Spreadsheets
-                    <br>
-                    <img src="./images/spreadsheet.png" alt="spreadsheets"></a></p>
-            </td>
-
-            <td><p style="text-align: center"><a href="#"
-                                                 onclick="popUp('http://nimbits.blogspot.com/2011/07/process-diagrams-with-svg.html')">
-                Process Control<br>
-                <img src="./images/process_diagram.gif" style="height: 200;width:250px;" alt="spreadsheets">
-            </a></p>
-
-            </td>
 
 
-            <td><p style="text-align: center"><a href="#" onclick="getContent('pages/chart_service.html')">
-                Chart API<br></a>
-                <iframe style="border: 0" width="250" height="200" src="pages/chart.html"></iframe>
 
-
-            </td>
-
-            <td><p style="text-align: center"><a
-                    href="https://market.android.com/details?id=com.nimbits.android" target="_blank">
-                Android<br></a>
-                <img src="./images/android225.png" style="height: 200;width:100px;" alt="android">  </a></p>
-
-
-            </td>
-
-        </tr>
-
-
-    </table>
-    <br>
-
-</div>
-<P>
-
-</P>
-
-
-</div>
-</div>
 
 <p style="margin-top: 10"></p>
 
@@ -500,5 +292,24 @@
     rights reserved.</p></div>
 
 <div><p style="text-align: center; font-size: x-small; color: #aaaaaa;"><a href="sitemap.html">Site Map</a></p></div>
+</div>
+</div>
+</div>
+<script src="./assets/js/jquery/jquery-1.7.1.js"></script>
+
+
+<script src="./assets/bootstrap/js/bootstrap-transition.js"></script>
+<script src="./assets/bootstrap/js/bootstrap-carousel.js"></script>
+<script>
+    // Load this when the DOM is ready
+    $(function(){
+
+        // You used .myCarousel here.
+        // That's the class selector not the id selector,
+        // which is #myCarousel
+        $('#myCarousel').carousel({ interval: 1200 }).loop();
+    });
+</script>
+
 </body>
 </html>

@@ -25,9 +25,9 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.i18n.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.summary.*;
@@ -120,12 +120,12 @@ public class SummaryPanel extends NavigationEventProvider {
         store.add(ops);
 
         combo.setFieldLabel(title);
-        combo.setDisplayField(Const.Params.PARAM_NAME);
-        combo.setValueField(Const.PARAM_VALUE);
+        combo.setDisplayField(com.nimbits.client.constants.Params.PARAM_NAME);
+        combo.setValueField(com.nimbits.client.constants.Params.PARAM_VALUE);
         combo.setTriggerAction(ComboBox.TriggerAction.ALL);
         combo.setStore(store);
 
-        SummaryTypeOption selected = combo.getStore().findModel(Const.PARAM_VALUE, selectedValue.getCode());
+        SummaryTypeOption selected = combo.getStore().findModel(com.nimbits.client.constants.Params.PARAM_VALUE, selectedValue.getCode());
         combo.setValue(selected);
 
         return combo;
@@ -181,7 +181,7 @@ public class SummaryPanel extends NavigationEventProvider {
         spinnerField.setValue(summary == null ? 8 : summary.getSummaryIntervalHours());
 
         String target = summary == null ? null : summary.getTargetPointUUID();
-        final EntityCombo targetCombo = new EntityCombo(EntityType.point, target,Const.MESSAGE_SELECT_POINT );
+        final EntityCombo targetCombo = new EntityCombo(EntityType.point, target, UserMessages.MESSAGE_SELECT_POINT );
         targetCombo.setFieldLabel("Target");
 
         Button submit = new Button("Submit");
@@ -298,8 +298,8 @@ public class SummaryPanel extends NavigationEventProvider {
 
         public SummaryTypeOption(SummaryType value) {
             this.type = value;
-            set(Const.PARAM_VALUE, value.getCode());
-            set(Const.Params.PARAM_NAME, value.getText());
+            set(com.nimbits.client.constants.Params.PARAM_VALUE, value.getCode());
+            set(com.nimbits.client.constants.Params.PARAM_NAME, value.getText());
         }
 
         public SummaryType getMethod() {

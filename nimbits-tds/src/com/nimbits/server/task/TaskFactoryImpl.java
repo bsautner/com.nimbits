@@ -16,9 +16,9 @@ package com.nimbits.server.task;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.*;
 import com.google.gson.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
@@ -37,6 +37,27 @@ import java.util.*;
  */
 public class TaskFactoryImpl implements TaskFactory {
     private final Gson gson = GsonFactory.getInstance();
+    private static final String TASK_POINT_MAINT = "pointmaint";
+    private static final String TASK_UPGRADE = "upgrade";
+    private static final String TASK_MOVE = "move";
+    private static final String IN_CONTENT = "inContent";
+
+    private static final String QUEUE_DELETE_SUMMARY = "summary";
+    private static final String QUEUE_INCOMING_MAIL = "incommingmail";
+    private static final String QUEUE_RECORD_VALUE = "recordvaluequeue";
+    private static final String QUEUE_PROCESS_BATCH = "processbatchqueue";
+    private static final String QUEUE_DELETE_DATA = "deletedata";
+
+
+    private static final String PATH_SUMMARY_TASK = "/task/summary";
+    private static final String PATH_POINT_MAINT_TASK = "/task/pointmaint";
+    private static final String PATH_UPGRADE_TASK = "/task/upgrade";
+    private static final String PATH_MOVE_TASK = "/task/move";
+    private static final String PATH_TASK_RECORD_VALUE = "/task/recordvaluetask";
+    private static final String PATH_TASK_PROCESS_BATCH = "/task/processbatchtask";
+    private static final String PATH_INCOMING_MAIL_QUEUE = "/task/incommingmail";
+    private static final String PATH_DELETE_DATA_TASK = "/task/DeleteRecordedValuesTask";
+
 
     @Override
     public void startDeleteDataTask(final Point point,
@@ -44,16 +65,16 @@ public class TaskFactoryImpl implements TaskFactory {
                                     final int exp) {
 
 
-        final Queue queue = QueueFactory.getQueue(Const.QUEUE_DELETE_DATA);
+        final Queue queue = QueueFactory.getQueue(QUEUE_DELETE_DATA);
         if (onlyExpired) {
-            queue.add(TaskOptions.Builder.withUrl(Const.PATH_DELETE_DATA_TASK)
-                    .param(Const.Params.PARAM_JSON,  GsonFactory.getInstance().toJson(point))
-                    .param(Const.Params.PARAM_EXP, Long.toString(exp))
+            queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_DATA_TASK)
+                    .param(Params.PARAM_JSON,  GsonFactory.getInstance().toJson(point))
+                    .param(Params.PARAM_EXP, Long.toString(exp))
 
             );
         } else {
-            queue.add(TaskOptions.Builder.withUrl(Const.PATH_DELETE_DATA_TASK)
-                    .param(Const.Params.PARAM_JSON,  GsonFactory.getInstance().toJson(point))
+            queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_DATA_TASK)
+                    .param(Params.PARAM_JSON,  GsonFactory.getInstance().toJson(point))
             );
         }
 
@@ -61,10 +82,10 @@ public class TaskFactoryImpl implements TaskFactory {
     }
     @Override
     public void startSummaryTask(final Entity entity) {
-        final Queue queue = QueueFactory.getQueue(Const.QUEUE_DELETE_SUMMARY);
+        final Queue queue = QueueFactory.getQueue(QUEUE_DELETE_SUMMARY);
         String json = GsonFactory.getInstance().toJson(entity);
-        queue.add(TaskOptions.Builder.withUrl(Const.PATH_SUMMARY_TASK)
-                .param(Const.Params.PARAM_JSON, json)
+        queue.add(TaskOptions.Builder.withUrl(PATH_SUMMARY_TASK)
+                .param(Params.PARAM_JSON, json)
         );
     }
 
@@ -73,12 +94,12 @@ public class TaskFactoryImpl implements TaskFactory {
     public void startProcessBatchTask(final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException {
 
 
-        final com.google.appengine.api.taskqueue.Queue queue = QueueFactory.getQueue(Const.QUEUE_PROCESS_BATCH);
+        final com.google.appengine.api.taskqueue.Queue queue = QueueFactory.getQueue(QUEUE_PROCESS_BATCH);
         final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
 
         final String userJson = gson.toJson(u);
 
-        final TaskOptions options = TaskOptions.Builder.withUrl(Const.PATH_TASK_PROCESS_BATCH);
+        final TaskOptions options = TaskOptions.Builder.withUrl(PATH_TASK_PROCESS_BATCH);
         final Enumeration enumeration = req.getParameterNames();
         final Map m = req.getParameterMap();
 
@@ -88,7 +109,7 @@ public class TaskFactoryImpl implements TaskFactory {
             options.param(param, value);
         }
 
-        options.param(Const.Params.PARAM_JSON_USER, userJson);
+        options.param(Params.PARAM_JSON_USER, userJson);
 
         queue.add(options);
 
@@ -100,17 +121,17 @@ public class TaskFactoryImpl implements TaskFactory {
         if (Double.valueOf(value.getDoubleValue()).isInfinite()) {
             return;
         }
-        final Queue queue = QueueFactory.getQueue(Const.QUEUE_RECORD_VALUE);
+        final Queue queue = QueueFactory.getQueue(QUEUE_RECORD_VALUE);
 
         final String userJson = gson.toJson(u);
         final String pointJson = gson.toJson(point);
         final String valueJson = gson.toJson(value);
 
-        queue.add(TaskOptions.Builder.withUrl(Const.PATH_TASK_RECORD_VALUE)
-                .param(Const.Params.PARAM_JSON_USER, userJson)
-                .param(Const.Params.PARAM_JSON_POINT, pointJson)
-                .param(Const.Params.PARAM_JSON_VALUE, valueJson)
-                .param(Const.PARAM_LOOP, String.valueOf(loopFlag))
+        queue.add(TaskOptions.Builder.withUrl(PATH_TASK_RECORD_VALUE)
+                .param(Params.PARAM_JSON_USER, userJson)
+                .param(Params.PARAM_JSON_POINT, pointJson)
+                .param(Params.PARAM_JSON_VALUE, valueJson)
+                .param(Params.PARAM_LOOP, String.valueOf(loopFlag))
 
         );
     }
@@ -118,10 +139,10 @@ public class TaskFactoryImpl implements TaskFactory {
     @Override
     public void startIncomingMailTask(final String fromAddress, final String inContent) {
 
-        final Queue queue = QueueFactory.getQueue(Const.QUEUE_INCOMING_MAIL);
-        queue.add(TaskOptions.Builder.withUrl(Const.PATH_INCOMING_MAIL_QUEUE)
-                .param(Const.Params.PARAM_FROM_ADDRESS, fromAddress)
-                .param(Const.IN_CONTENT, inContent));
+        final Queue queue = QueueFactory.getQueue(QUEUE_INCOMING_MAIL);
+        queue.add(TaskOptions.Builder.withUrl(PATH_INCOMING_MAIL_QUEUE)
+                .param(Params.PARAM_FROM_ADDRESS, fromAddress)
+                .param(IN_CONTENT, inContent));
 
 
     }
@@ -130,10 +151,10 @@ public class TaskFactoryImpl implements TaskFactory {
     public void startPointMaintTask(final Point point) {
         final String json = gson.toJson(point);
 
-        final Queue queue = QueueFactory.getQueue(Const.TASK_POINT_MAINT);
+        final Queue queue = QueueFactory.getQueue(TASK_POINT_MAINT);
 
-        queue.add(TaskOptions.Builder.withUrl(Const.PATH_POINT_MAINT_TASK)
-                .param(Const.Params.PARAM_POINT, json));
+        queue.add(TaskOptions.Builder.withUrl(PATH_POINT_MAINT_TASK)
+                .param(Params.PARAM_POINT, json));
 
     }
 
@@ -154,14 +175,14 @@ public class TaskFactoryImpl implements TaskFactory {
     public void startUpgradeTask(final Action action,final  Entity entity) {
 
 
-        final Queue queue = QueueFactory.getQueue(Const.TASK_UPGRADE);
+        final Queue queue = QueueFactory.getQueue(TASK_UPGRADE);
         String json = "";
         if (entity != null) {
             json = GsonFactory.getInstance().toJson(entity);
         }
-        queue.add(TaskOptions.Builder.withUrl(Const.PATH_UPGRADE_TASK)
-        .param(Const.Params.PARAM_JSON, json)
-        .param(Const.Params.PARAM_ACTION, action.getCode()));
+        queue.add(TaskOptions.Builder.withUrl(PATH_UPGRADE_TASK)
+        .param(Params.PARAM_JSON, json)
+        .param(Params.PARAM_ACTION, action.getCode()));
 
     }
 
@@ -169,10 +190,10 @@ public class TaskFactoryImpl implements TaskFactory {
     public void startMoveCachedValuesToStoreTask(final Point point) {
         final String json = gson.toJson(point);
 
-        final Queue queue = QueueFactory.getQueue(Const.TASK_MOVE);
+        final Queue queue = QueueFactory.getQueue(TASK_MOVE);
 
-        queue.add(TaskOptions.Builder.withUrl(Const.PATH_MOVE_TASK)
-                .param(Const.Params.PARAM_POINT, json));
+        queue.add(TaskOptions.Builder.withUrl(PATH_MOVE_TASK)
+                .param(Params.PARAM_POINT, json));
     }
 
 

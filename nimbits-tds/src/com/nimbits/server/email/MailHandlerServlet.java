@@ -13,7 +13,7 @@
 
 package com.nimbits.server.email;
 
-import com.nimbits.client.model.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.server.task.*;
 
 import javax.activation.*;
@@ -64,7 +64,7 @@ public class MailHandlerServlet extends HttpServlet {
     private static String getContent(final MimeMessage message, final String contentType)
             throws MessagingException, IOException {
 
-        return (contentType.contains(Const.WORD_MULTI_PART)) ? getMultipartContent(message) : (String) message.getContent();
+        return (contentType.contains(Words.WORD_MULTI_PART)) ? getMultipartContent(message) : (String) message.getContent();
 
     }
 

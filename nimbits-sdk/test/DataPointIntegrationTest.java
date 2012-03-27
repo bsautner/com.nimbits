@@ -4,7 +4,7 @@
 
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.Const;
+import com.nimbits.client.constants.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;

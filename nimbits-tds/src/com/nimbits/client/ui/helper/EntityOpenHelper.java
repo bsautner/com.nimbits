@@ -1,8 +1,8 @@
 package com.nimbits.client.ui.helper;
 
 import com.google.gwt.user.client.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.model.*;
 import com.nimbits.client.model.entity.*;
 
 /**
@@ -26,7 +26,7 @@ public class EntityOpenHelper {
     }
 
     private static void openNewEntityWindow(Entity entity) {
-        Window.open("/" + "?" + Const.PARAM_UUID + "=" + entity.getEntity(), entity.getName().getValue(), "");
+        Window.open("/" + "?" + Params.PARAM_UUID + "=" + entity.getEntity(), entity.getName().getValue(), "");
     }
 
     public static boolean isSVG(final Entity entity) {
@@ -34,7 +34,7 @@ public class EntityOpenHelper {
     }
 
     public  static void showBlob(final Entity entity) {
-        final String resourceUrl = Const.PATH_BLOB_SERVICE + "?" + Const.Params.PARAM_BLOB_KEY + "=" + entity.getBlobKey();
+        final String resourceUrl = Path.PATH_BLOB_SERVICE + "?" + Params.PARAM_BLOB_KEY + "=" + entity.getBlobKey();
         Window.open(resourceUrl, entity.getName().getValue(), "");
     }
 

@@ -17,6 +17,7 @@ import com.extjs.gxt.ui.client.store.*;
 import com.extjs.gxt.ui.client.widget.form.*;
 import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.entity.*;
@@ -35,8 +36,8 @@ public class EntityCombo extends ComboBox<GxtModel> {
         final EntityServiceAsync service = GWT.create(EntityService.class);
         setEmptyText(emptyText);
         setStore(cbStore);
-        setDisplayField(Const.Params.PARAM_NAME);
-        setValueField(Const.Params.PARAM_ID);
+        setDisplayField(Params.PARAM_NAME);
+        setValueField(Params.PARAM_ID);
         setEditable(true);
         setAutoValidate(true);
 

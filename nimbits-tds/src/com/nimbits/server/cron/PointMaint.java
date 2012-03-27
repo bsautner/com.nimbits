@@ -13,7 +13,7 @@
 
 package com.nimbits.server.cron;
 
-import com.nimbits.client.model.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.task.*;

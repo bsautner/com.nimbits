@@ -28,7 +28,6 @@ import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.subscription.*;
@@ -119,12 +118,12 @@ public class SubscriptionPanel extends NavigationEventProvider {
         store.add(ops);
 
         combo.setFieldLabel(title);
-        combo.setDisplayField(Const.Params.PARAM_NAME);
-        combo.setValueField(Const.PARAM_VALUE);
+        combo.setDisplayField(com.nimbits.client.constants.Params.PARAM_NAME);
+        combo.setValueField(com.nimbits.client.constants.Params.PARAM_VALUE);
         combo.setTriggerAction(ComboBox.TriggerAction.ALL);
         combo.setStore(store);
 
-        SubscriptionTypeOption selected = combo.getStore().findModel(Const.PARAM_VALUE, selectedValue.getCode());
+        SubscriptionTypeOption selected = combo.getStore().findModel(com.nimbits.client.constants.Params.PARAM_VALUE, selectedValue.getCode());
         combo.setValue(selected);
 
         return combo;
@@ -158,12 +157,12 @@ public class SubscriptionPanel extends NavigationEventProvider {
         store.add(ops);
 
         combo.setFieldLabel(title);
-        combo.setDisplayField(Const.Params.PARAM_NAME);
-        combo.setValueField(Const.PARAM_VALUE);
+        combo.setDisplayField(com.nimbits.client.constants.Params.PARAM_NAME);
+        combo.setValueField(com.nimbits.client.constants.Params.PARAM_VALUE);
         combo.setTriggerAction(ComboBox.TriggerAction.ALL);
         combo.setStore(store);
 
-        DeliveryMethodOption selected = combo.getStore().findModel(Const.PARAM_VALUE, selectedValue.getCode());
+        DeliveryMethodOption selected = combo.getStore().findModel(com.nimbits.client.constants.Params.PARAM_VALUE, selectedValue.getCode());
         combo.setValue(selected);
 
         return combo;
@@ -374,8 +373,8 @@ public class SubscriptionPanel extends NavigationEventProvider {
 
         public DeliveryMethodOption(SubscriptionNotifyMethod value) {
             this.method = value;
-            set(Const.PARAM_VALUE, value.getCode());
-            set(Const.Params.PARAM_NAME, value.getText());
+            set(com.nimbits.client.constants.Params.PARAM_VALUE, value.getCode());
+            set(com.nimbits.client.constants.Params.PARAM_NAME, value.getText());
         }
 
         public SubscriptionNotifyMethod getMethod() {
@@ -389,8 +388,8 @@ public class SubscriptionPanel extends NavigationEventProvider {
 
         public SubscriptionTypeOption(SubscriptionType value) {
             this.type = value;
-            set(Const.PARAM_VALUE, value.getCode());
-            set(Const.Params.PARAM_NAME, value.getText());
+            set(com.nimbits.client.constants.Params.PARAM_VALUE, value.getCode());
+            set(com.nimbits.client.constants.Params.PARAM_NAME, value.getText());
         }
 
         public SubscriptionType getMethod() {

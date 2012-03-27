@@ -14,7 +14,7 @@
 package com.nimbits.server.cron;
 
 import com.google.appengine.api.datastore.*;
-import com.nimbits.client.model.*;
+import com.nimbits.client.constants.*;
 
 import javax.servlet.http.*;
 import java.io.*;

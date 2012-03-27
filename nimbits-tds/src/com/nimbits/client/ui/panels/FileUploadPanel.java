@@ -21,6 +21,7 @@ import com.extjs.gxt.ui.client.widget.form.FormPanel.*;
 import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.email.*;
@@ -95,7 +96,7 @@ public class FileUploadPanel extends LayoutContainer {
 
         BlobServiceAsync service = GWT.create(BlobService.class);
         //  diagramService.getBlobStoreUrl("http://" + Window.Location.getHost() +  "/service/diagram", new AsyncCallback<String>() {
-        service.getBlobStoreUrl(Const.PATH_BLOB_SERVICE, new AsyncCallback<String>() {
+        service.getBlobStoreUrl(Path.PATH_BLOB_SERVICE, new AsyncCallback<String>() {
             @Override
             public void onFailure(Throwable throwable) {
                 GWT.log(throwable.getMessage());
@@ -127,18 +128,18 @@ public class FileUploadPanel extends LayoutContainer {
         panel.add(file);
 
         name.setFieldLabel("Description");
-        name.setName(Const.PARAM_DESCRIPTION);
+        name.setName(Params.PARAM_DESCRIPTION);
         panel.add(name);
 
 
 
         final HiddenField<String> emailAddressHiddenField=new HiddenField<String>();
-        emailAddressHiddenField.setName(Const.PARAM_EMAIL_HIDDEN_FIELD);
+        emailAddressHiddenField.setName(Params.PARAM_EMAIL_HIDDEN_FIELD);
         panel.add(emailAddressHiddenField);
 
 
         final HiddenField<String> fileNameHiddenField=new HiddenField<String>();
-        fileNameHiddenField.setName(Const.PARAM_FILE_NAME);
+        fileNameHiddenField.setName(Params.PARAM_FILE_NAME);
         panel.add(fileNameHiddenField);
 
 
@@ -159,12 +160,12 @@ public class FileUploadPanel extends LayoutContainer {
                 });
 
         final HiddenField<UploadType> uploadTypeHiddenField = new HiddenField<UploadType>();
-        uploadTypeHiddenField.setName(Const.PARAM_UPLOAD_TYPE_HIDDEN_FIELD);
+        uploadTypeHiddenField.setName(Params.PARAM_UPLOAD_TYPE_HIDDEN_FIELD);
         uploadTypeHiddenField.setValue(uploadType);
         panel.add(uploadTypeHiddenField);
         if (uploadType == UploadType.updatedFile && entity != null) {
             final HiddenField<String> diagramId = new HiddenField<String>();
-            diagramId.setName(Const.PARAM_FILE_ID);
+            diagramId.setName(Params.PARAM_FILE_ID);
             diagramId.setValue(entity.getEntity());
             panel.add(diagramId);
             name.setValue(entity.getName().getValue());

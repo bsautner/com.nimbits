@@ -13,9 +13,9 @@
 
 package com.nimbits.server.email;
 
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
@@ -32,7 +32,7 @@ import java.util.logging.*;
 public class EmailServiceImpl implements EmailService {
 
     private static final Logger log = Logger.getLogger(EmailServiceImpl.class.getName());
-
+    private static final String DEFAULT_EMAIL_SUBJECT = "Nimbits Messaging";
 
 
     private void send(final Message msg) {
@@ -56,7 +56,7 @@ public class EmailServiceImpl implements EmailService {
             final Message msg = new MimeMessage(session);
             msg.setFrom(getFromEmail());
             msg.addRecipient(Message.RecipientType.TO, internetAddress);
-            msg.setSubject(Const.MESSAGE_EMAIL_SUBJECT);
+            msg.setSubject(UserMessages.MESSAGE_EMAIL_SUBJECT);
             msg.setContent(message, Const.CONTENT_TYPE_HTML);
             send(msg);
 
@@ -97,9 +97,9 @@ public class EmailServiceImpl implements EmailService {
         final String fromEmail;
         try {
             fromEmail = new SettingServiceImpl().getSetting(SettingType.admin);
-            return new InternetAddress(fromEmail, Const.WORD_NIMBITS);
+            return new InternetAddress(fromEmail, Words.WORD_NIMBITS);
         } catch (NimbitsException e) {
-          return  new InternetAddress(Const.TEST_ACCOUNT, Const.WORD_NIMBITS);
+          return  new InternetAddress(Const.TEST_ACCOUNT, Words.WORD_NIMBITS);
         }
 
     }
@@ -159,7 +159,7 @@ public class EmailServiceImpl implements EmailService {
             msg.setFrom(getFromEmail());
             InternetAddress internetAddress = new InternetAddress(emailAddress.getValue());
             msg.addRecipient(Message.RecipientType.TO, internetAddress);
-            msg.setSubject(Const.DEFAULT_EMAIL_SUBJECT);
+            msg.setSubject(DEFAULT_EMAIL_SUBJECT);
             msg.setContent(message.toString(), Const.CONTENT_TYPE_HTML);
             send(msg);
             }

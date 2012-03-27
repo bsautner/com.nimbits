@@ -1,6 +1,6 @@
 package com.nimbits.client.enums;
 
-import com.nimbits.client.model.*;
+import com.nimbits.client.constants.*;
 
 import java.util.*;
 
@@ -20,7 +20,7 @@ public enum SettingType {
     admin(SettingConstants.SETTING_ADMIN, Const.TEST_ACCOUNT, false, true),
     connectionsEnabled(SettingConstants.SETTING_ENABLE_CONNECTIONS, SettingConstants.TRUE, false, true),
     facebookClientId(SettingConstants.SETTING_FACEBOOK_CLIENT_ID, SettingConstants.EMPTY, false, true),
-    facebookRedirectURL(SettingConstants.SETTING_FACEBOOK_REDIRECT_URL, Const.PATH_FACEBOOK_REDIRECT, false, true),
+    facebookRedirectURL(SettingConstants.SETTING_FACEBOOK_REDIRECT_URL, Path.PATH_FACEBOOK_REDIRECT, false, true),
     facebookAPIKey(SettingConstants.SETTING_FACEBOOK_API_KEY, SettingConstants.EMPTY, false, true),
     facebookSecret(SettingConstants.SETTING_FACEBOOK_SECRET, SettingConstants.EMPTY, false, true),
     wolframKey(SettingConstants.SETTING_WOLFRAM, Const.CONST_UNKNOWN, false, true),

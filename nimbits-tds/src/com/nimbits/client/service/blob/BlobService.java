@@ -14,7 +14,7 @@
 package com.nimbits.client.service.blob;
 
 import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.model.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.model.entity.*;
 
 /**
@@ -23,7 +23,7 @@ import com.nimbits.client.model.entity.*;
  * Date: 5/20/11
  * Time: 5:38 PM
  */
-@RemoteServiceRelativePath(Const.Params.PARAM_BLOB)
+@RemoteServiceRelativePath(Params.PARAM_BLOB)
 public interface BlobService extends RemoteService {
 
     String getBlobStoreUrl(final String url);

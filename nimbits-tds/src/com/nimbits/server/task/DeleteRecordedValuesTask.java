@@ -15,10 +15,9 @@ package com.nimbits.server.task;
 
 import com.google.appengine.api.datastore.*;
 import com.google.gwt.core.client.*;
-import com.nimbits.client.model.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.server.gson.*;
-import com.nimbits.server.point.*;
 
 import javax.servlet.http.*;
 import java.util.*;
@@ -33,8 +32,8 @@ public class DeleteRecordedValuesTask extends HttpServlet {
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
 
-        final String pointJson = req.getParameter(Const.Params.PARAM_JSON);
-        final String exp = req.getParameter(Const.Params.PARAM_EXP);
+        final String pointJson = req.getParameter(Params.PARAM_JSON);
+        final String exp = req.getParameter(Params.PARAM_EXP);
         Point point = GsonFactory.getInstance().fromJson(pointJson, PointModel.class);
 
           int expDays = 0;
@@ -65,7 +64,7 @@ public class DeleteRecordedValuesTask extends HttpServlet {
 
         q.addFilter("pointFK", Query.FilterOperator.EQUAL, point.getId());
         if (expOnly) {
-            q.addFilter(Const.Params.PARAM_TIMESTAMP, Query.FilterOperator.LESS_THAN, d.getTime());
+            q.addFilter(Params.PARAM_TIMESTAMP, Query.FilterOperator.LESS_THAN, d.getTime());
         }
         for (final Entity e : store.prepare(q).asList(FetchOptions.Builder.withLimit(5000))) {
             count++;

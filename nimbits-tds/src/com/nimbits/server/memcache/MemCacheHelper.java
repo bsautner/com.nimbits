@@ -13,8 +13,8 @@
 
 package com.nimbits.server.memcache;
 
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.model.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
@@ -47,19 +47,19 @@ public class MemCacheHelper {
 
 
 
-    public static String allUsersCacheKey =  CACHE_KEY_PREFIX + Const.PARAM_USER + SettingType.serverVersion.getDefaultValue() + "ALLUSERS";
+    public static String allUsersCacheKey =  CACHE_KEY_PREFIX + Params.PARAM_USER + SettingType.serverVersion.getDefaultValue() + "ALLUSERS";
 
     public static String UserCacheKey(final EmailAddress emailAddress) {
-        return  CACHE_KEY_PREFIX + Const.PARAM_USER + SettingType.serverVersion.getDefaultValue()+    emailAddress.getValue();
+        return  CACHE_KEY_PREFIX + Params.PARAM_USER + SettingType.serverVersion.getDefaultValue()+    emailAddress.getValue();
     }
 
 
     public static String UserCacheKey(final User u) {
-        return CACHE_KEY_PREFIX + Const.PARAM_USER + SettingType.serverVersion.getDefaultValue()+   u.getEmail().getValue();
+        return CACHE_KEY_PREFIX + Params.PARAM_USER + SettingType.serverVersion.getDefaultValue()+   u.getEmail().getValue();
     }
 
     public static String UserCacheKey(final long id) {
-        return  CACHE_KEY_PREFIX + Const.PARAM_USER + SettingType.serverVersion.getDefaultValue() +   id;
+        return  CACHE_KEY_PREFIX + Params.PARAM_USER + SettingType.serverVersion.getDefaultValue() +   id;
     }
     public static String makeSafeNamespace(final String sample) {
 

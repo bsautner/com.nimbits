@@ -37,9 +37,9 @@ import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine;
 import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine.Options;
 import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine.WindowMode;
 import com.nimbits.client.common.Utils;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.Const;
 import com.nimbits.client.model.GxtModel;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
@@ -72,7 +72,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
     private boolean headerVisible;
     private final String name;
     private boolean selected;
-
+    private static final String DEFAULT_EMPTY_COL = "EMPTY";
 
     @Override
     protected void onResize(int width, int height) {
@@ -124,7 +124,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
         int PointColumn;
         boolean found = false;
 
-        removePointDataFromTable(CommonFactoryLocator.getInstance().createName(Const.DEFAULT_EMPTY_COL, EntityType.point));
+        removePointDataFromTable(CommonFactoryLocator.getInstance().createName(DEFAULT_EMPTY_COL, EntityType.point));
 
         int r = dataTable.getNumberOfColumns();
         int CurrentRow = dataTable.getNumberOfRows();
@@ -272,7 +272,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
                     line = null;
                 }
                 dataTable = DataTable.create();
-                dataTable.addColumn(ColumnType.DATETIME, Const.WORD_DATE);
+                dataTable.addColumn(ColumnType.DATETIME, Words.WORD_DATE);
                 line = new AnnotatedTimeLine(dataTable, createOptions(), "100%", "100%");
                 mainPanel.add(line);
                 addEmptyDataToTable();
@@ -291,7 +291,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
     }
 
     private void addEmptyDataToTable() {
-        dataTable.addColumn(ColumnType.NUMBER, Const.DEFAULT_EMPTY_COL);
+        dataTable.addColumn(ColumnType.NUMBER, DEFAULT_EMPTY_COL);
         dataTable.addColumn(ColumnType.STRING, "title0");
         dataTable.addColumn(ColumnType.STRING, "text0");
     }
@@ -504,7 +504,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
         }
         if (points.size() == 0) {
             try {
-                removePointDataFromTable(CommonFactoryLocator.getInstance().createName(Const.DEFAULT_EMPTY_COL, EntityType.point));
+                removePointDataFromTable(CommonFactoryLocator.getInstance().createName(DEFAULT_EMPTY_COL, EntityType.point));
                 addEmptyDataToTable();
             } catch (NimbitsException e) {
                 FeedbackHelper.showError(e);

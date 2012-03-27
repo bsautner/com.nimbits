@@ -22,6 +22,7 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
@@ -42,7 +43,7 @@ import java.util.*;
  * Time: 10:37 AM
  */
 public class CenterPanel extends NavigationEventProvider {
-
+    private static final String DEFAULT_CHART_NAME = "Chart";
     // private final Map<String, Entity> entities = new HashMap<String, Entity>();
     // private final Map<String, AnnotatedTimeLinePanel> lines = new HashMap<String, AnnotatedTimeLinePanel>();
 
@@ -178,14 +179,14 @@ public class CenterPanel extends NavigationEventProvider {
                         navigationPanel.toggleExpansion();
                         break;
                     case logout:
-                        final String logoutUrl = (loginInfo != null) ? loginInfo.getLogoutUrl() : Const.PATH_NIMBITS_HOME;
+                        final String logoutUrl = (loginInfo != null) ? loginInfo.getLogoutUrl() : Path.PATH_NIMBITS_HOME;
                         Window.Location.replace(logoutUrl);
                         break;
                     case xmpp:
                         sendXMPPInvite();
                         break;
                     case facebook:
-                        Window.Location.replace(Const.PATH_FACEBOOK_APP);
+                        Window.Location.replace(Path.PATH_FACEBOOK_APP);
                         break;
                     case twitter:
                         twitterAuthorise();
@@ -203,7 +204,7 @@ public class CenterPanel extends NavigationEventProvider {
     }
 
     private void addChart() {
-        final AnnotatedTimeLinePanel line = new AnnotatedTimeLinePanel(true, Const.DEFAULT_CHART_NAME + (chartContainer.getItemCount() + 1));
+        final AnnotatedTimeLinePanel line = new AnnotatedTimeLinePanel(true,  DEFAULT_CHART_NAME + (chartContainer.getItemCount() + 1));
         line.setHeight(chartHeight);
         line.setSelected(true);
         line.addListener(Events.OnClick, new Listener<BaseEvent>() {

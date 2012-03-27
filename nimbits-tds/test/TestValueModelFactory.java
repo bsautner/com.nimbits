@@ -1,4 +1,4 @@
-import com.nimbits.client.model.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.model.value.*;
 import static org.junit.Assert.*;
 import org.junit.*;

@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-import com.nimbits.client.model.Const;
+import com.nimbits.client.constants.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
 import org.junit.Test;
@@ -27,11 +27,6 @@ import java.text.ParseException;
  */
 public class TestConst {
 
-    @Test
-    public void testInvite() {
-        System.out.println(Const.getConnectionInviteEmail((EmailAddress) CommonFactoryLocator.getInstance().createEmailAddress("bsautner@gmail.com")));
-
-    }
 
     @Test
     public void testConvert() throws ParseException {

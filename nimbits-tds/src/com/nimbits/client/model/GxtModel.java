@@ -15,6 +15,7 @@ package com.nimbits.client.model;
 
 import com.extjs.gxt.ui.client.data.*;
 import com.nimbits.client.common.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
@@ -53,10 +54,10 @@ public class GxtModel extends BaseTreeModel implements Serializable {
         this.entityType = EntityType.user;
         this.isReadOnly = true;
         this.baseEntity = EntityModelFactory.createEntity(user);
-        set(Const.Params.PARAM_ID, this.uuid);
-        set(Const.Params.PARAM_NAME, this.name.getValue());
-        set(Const.PARAM_ENTITY_TYPE,  this.entityType.getCode());
-        set(Const.PARAM_DIRTY, Const.Params.PARAM_NO);
+        set(Params.PARAM_ID, this.uuid);
+        set(Params.PARAM_NAME, this.name.getValue());
+        set(Params.PARAM_ENTITY_TYPE,  this.entityType.getCode());
+        set(Params.PARAM_DIRTY, Params.PARAM_NO);
     }
 
     public AlertType getAlertType() {
@@ -102,7 +103,7 @@ public class GxtModel extends BaseTreeModel implements Serializable {
     }
 
     public void setDirty(boolean dirty) {
-        set(Const.PARAM_DIRTY, dirty ? Const.Params.PARAM_YES : Const.Params.PARAM_NO);
+        set(Params.PARAM_DIRTY, dirty ? Params.PARAM_YES : Params.PARAM_NO);
         isDirty = dirty;
     }
 
@@ -120,7 +121,7 @@ public class GxtModel extends BaseTreeModel implements Serializable {
             sb.append(" ");
             sb.append(value.getNote());
         }
-        set(Const.PARAM_VALUE, sb.toString().trim());
+        set(Params.PARAM_VALUE, sb.toString().trim());
         this.value = value;
     }
 
@@ -139,8 +140,8 @@ public class GxtModel extends BaseTreeModel implements Serializable {
         this.entityType = entity.getEntityType();
         this.isReadOnly = entity.isReadOnly();
         this.baseEntity = entity;
-        set(Const.Params.PARAM_ID, this.uuid);
-        set(Const.Params.PARAM_NAME, this.name.getValue());
-        set(Const.PARAM_ENTITY_TYPE, entity.getEntityType().getCode());
+        set(Params.PARAM_ID, this.uuid);
+        set(Params.PARAM_NAME, this.name.getValue());
+        set(Params.PARAM_ENTITY_TYPE, entity.getEntityType().getCode());
     }
 }

@@ -22,9 +22,9 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 import com.nimbits.client.common.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.Point;
@@ -66,7 +66,7 @@ public class DiagramPanel extends LayoutContainer {
 
     public DiagramPanel(final Entity aDiagram, boolean showHeader) {
         final FlowPanel imagePanel = new FlowPanel();
-        final String resourceUrl = Const.PATH_BLOB_SERVICE + "?" + Const.Params.PARAM_BLOB_KEY + "=" + aDiagram.getBlobKey();
+        final String resourceUrl = Path.PATH_BLOB_SERVICE + "?" + com.nimbits.client.constants.Params.PARAM_BLOB_KEY + "=" + aDiagram.getBlobKey();
         this.diagram = aDiagram;
         ContentPanel mainPanel = new ContentPanel();
         mainPanel.setFrame(true);
@@ -262,10 +262,10 @@ public class DiagramPanel extends LayoutContainer {
     //OMSVGTextElement
 
     private void processOMSVGTextElement(final OMSVGTextElement o) throws NimbitsException {
-        final String pointNameParam = o.getAttribute(Const.Params.PARAM_POINT);
-        final String action = o.getAttribute(Const.Params.PARAM_ACTION);
-        final String diagramNameParam = o.getAttribute(Const.Params.PARAM_DIAGRAM);
-        final String url = o.getAttribute(Const.PARAM_URL);
+        final String pointNameParam = o.getAttribute(com.nimbits.client.constants.Params.PARAM_POINT);
+        final String action = o.getAttribute(com.nimbits.client.constants.Params.PARAM_ACTION);
+        final String diagramNameParam = o.getAttribute(com.nimbits.client.constants.Params.PARAM_DIAGRAM);
+        final String url = o.getAttribute(com.nimbits.client.constants.Params.PARAM_URL);
         if (!Utils.isEmptyString(action)) {
            // final String[] actions = action.split(",");
             if (!Utils.isEmptyString(pointNameParam)) {
@@ -358,8 +358,8 @@ public class DiagramPanel extends LayoutContainer {
     }
 
     private void updateTextBoxValue(final OMSVGTextElement o) throws NimbitsException {
-        final String pointNameParam = o.getAttribute(Const.Params.PARAM_POINT);
-        final String action = o.getAttribute(Const.Params.PARAM_ACTION);
+        final String pointNameParam = o.getAttribute(com.nimbits.client.constants.Params.PARAM_POINT);
+        final String action = o.getAttribute(com.nimbits.client.constants.Params.PARAM_ACTION);
 
         if (!Utils.isEmptyString(action)) {
             final String[] actions = action.split(",");
@@ -418,9 +418,9 @@ public class DiagramPanel extends LayoutContainer {
     }
     private void processTextNodeActions(final Point p, final Value result, final String[] actions, final OMSVGTextElement o) {
         for (final String action : actions) {
-            if (action.equals(Const.ACTION_VALUE)) {
+            if (action.equals(Action.value.getCode())) {
                 o.getElement().setInnerText(String.valueOf(Utils.roundDouble(result.getDoubleValue())));
-            } else if (action.equals(Const.ACTION_ALERT)) {
+            } else if (action.equals(Action.alert.getCode())) {
                 if (result.getDoubleValue() <= p.getLowAlarm() && p.isLowAlarmOn()) {
                     o.getStyle().setSVGProperty(SVGConstants.CSS_FILL_VALUE,
                             SVGConstants.CSS_BLUE_VALUE);
@@ -431,7 +431,7 @@ public class DiagramPanel extends LayoutContainer {
                     o.getStyle().setSVGProperty(SVGConstants.CSS_FILL_VALUE,
                             originalFill.get(o.getId()));
                 }
-            } else if (action.equals(Const.ACTION_IDLE) && p.isIdleAlarmOn()) {
+            } else if (action.equals(Action.idle.getCode()) && p.isIdleAlarmOn()) {
                 DateWrapper n = new DateWrapper();
                 long last = result.getTimestamp().getTime();
                 long current = n.getTime();
@@ -442,7 +442,7 @@ public class DiagramPanel extends LayoutContainer {
                     o.getStyle().setSVGProperty(SVGConstants.CSS_FILL_VALUE,
                             SVGConstants.CSS_ORANGE_VALUE);
                 }
-            } else if (action.equals(Const.ACTION_ONOFF)) {
+            } else if (action.equals(Action.onOff.getCode())) {
                 if (result.getDoubleValue() == 0.0) {
                     o.getStyle().setSVGProperty(SVGConstants.CSS_FILL_VALUE,
                             SVGConstants.CSS_BLACK_VALUE);
@@ -457,10 +457,10 @@ public class DiagramPanel extends LayoutContainer {
     //PATH
 
     private void processOMSVGPathElement(final OMSVGPathElement o) throws NimbitsException {
-        final String pointNameParam = o.getAttribute(Const.Params.PARAM_POINT);
-        final String action = o.getAttribute(Const.Params.PARAM_ACTION);
-        final String diagramNameParam = o.getAttribute(Const.Params.PARAM_DIAGRAM);
-        final String url = o.getAttribute(Const.PARAM_URL);
+        final String pointNameParam = o.getAttribute(com.nimbits.client.constants.Params.PARAM_POINT);
+        final String action = o.getAttribute(com.nimbits.client.constants.Params.PARAM_ACTION);
+        final String diagramNameParam = o.getAttribute(com.nimbits.client.constants.Params.PARAM_DIAGRAM);
+        final String url = o.getAttribute(com.nimbits.client.constants.Params.PARAM_URL);
         if (!Utils.isEmptyString(action)) {
            /// final String[] actions = action.split(",");
             if (!Utils.isEmptyString(pointNameParam)) {
@@ -534,8 +534,8 @@ public class DiagramPanel extends LayoutContainer {
     }
 
     private void updatePathValue(final OMSVGPathElement o) throws NimbitsException {
-        final String pointNameParam = o.getAttribute(Const.Params.PARAM_POINT);
-        final String action = o.getAttribute(Const.Params.PARAM_ACTION);
+        final String pointNameParam = o.getAttribute(com.nimbits.client.constants.Params.PARAM_POINT);
+        final String action = o.getAttribute(com.nimbits.client.constants.Params.PARAM_ACTION);
 
         if (!Utils.isEmptyString(action)) {
             final String[] actions = action.split(",");
@@ -577,9 +577,9 @@ public class DiagramPanel extends LayoutContainer {
                     @Override
                     public void onSuccess(Point p) {
                         for (String action : actions) {
-                            if (action.equals(Const.ACTION_VALUE)) {
+                            if (action.equals(Action.value.getCode())) {
                                 o.getElement().setInnerText(String.valueOf(result.getDoubleValue()));
-                            } else if (action.equals(Const.ACTION_ALERT)) {
+                            } else if (action.equals(Action.alert.getCode())) {
                                 if (result.getDoubleValue() <= p.getLowAlarm() && p.isLowAlarmOn()) {
                                     o.getStyle().setSVGProperty(SVGConstants.CSS_FILL_VALUE,
                                             SVGConstants.CSS_RED_VALUE);
@@ -601,7 +601,7 @@ public class DiagramPanel extends LayoutContainer {
                                     o.getStyle().setSVGProperty(SVGConstants.CSS_FILL_VALUE,
                                             SVGConstants.CSS_GRAY_VALUE);
                                 }
-                            } else if (action.equals(Const.ACTION_ONOFF)) {
+                            } else if (action.equals(Action.onOff.getCode())) {
                                 if (result.getDoubleValue() == 0.0) {
                                     o.getStyle().setSVGProperty(SVGConstants.CSS_FILL_VALUE,
                                             SVGConstants.CSS_BLACK_VALUE);
@@ -634,10 +634,10 @@ public class DiagramPanel extends LayoutContainer {
     //rect
 
     private void processOMSVGRectElement(OMSVGRectElement o) throws NimbitsException {
-        final String pointNameParam = o.getAttribute(Const.Params.PARAM_POINT);
-        final String action = o.getAttribute(Const.Params.PARAM_ACTION);
-        final String diagramNameParam = o.getAttribute(Const.Params.PARAM_DIAGRAM);
-        final String url = o.getAttribute(Const.PARAM_URL);
+        final String pointNameParam = o.getAttribute(com.nimbits.client.constants.Params.PARAM_POINT);
+        final String action = o.getAttribute(com.nimbits.client.constants.Params.PARAM_ACTION);
+        final String diagramNameParam = o.getAttribute(com.nimbits.client.constants.Params.PARAM_DIAGRAM);
+        final String url = o.getAttribute(com.nimbits.client.constants.Params.PARAM_URL);
         if (!Utils.isEmptyString(action)) {
 //            final String[] actions = action.split(",");
             if (!Utils.isEmptyString(pointNameParam)) {
@@ -707,8 +707,8 @@ public class DiagramPanel extends LayoutContainer {
     }
 
     private void updateRectValue(final OMSVGRectElement o) throws NimbitsException {
-        final String pointNameParam = o.getAttribute(Const.Params.PARAM_POINT);
-        final String action = o.getAttribute(Const.Params.PARAM_ACTION);
+        final String pointNameParam = o.getAttribute(com.nimbits.client.constants.Params.PARAM_POINT);
+        final String action = o.getAttribute(com.nimbits.client.constants.Params.PARAM_ACTION);
 
         if (!Utils.isEmptyString(action)) {
             final String[] actions = action.split(",");
@@ -746,9 +746,9 @@ public class DiagramPanel extends LayoutContainer {
                 @Override
                 public void onSuccess(Point p) {
                     for (String action : actions) {
-                        if (action.equals(Const.ACTION_VALUE)) {
+                        if (action.equals(Action.value.getCode())) {
                             o.getElement().setInnerText(String.valueOf(result.getDoubleValue()));
-                        } else if (action.equals(Const.ACTION_ALERT)) {
+                        } else if (action.equals(Action.alert.getCode())) {
                             if (result.getDoubleValue() <= p.getLowAlarm() && p.isLowAlarmOn()) {
                                 o.getStyle().setSVGProperty(SVGConstants.CSS_FILL_VALUE,
                                         SVGConstants.CSS_RED_VALUE);
@@ -759,7 +759,7 @@ public class DiagramPanel extends LayoutContainer {
                                 o.getStyle().setSVGProperty(SVGConstants.CSS_FILL_VALUE,
                                         originalFill.get(o.getId()));
                             }
-                        } else if (action.equals(Const.Params.PARAM_IDLE) && p.isIdleAlarmOn()) {
+                        } else if (action.equals(com.nimbits.client.constants.Params.PARAM_IDLE) && p.isIdleAlarmOn()) {
                             DateWrapper n = new DateWrapper();
                             long last = result.getTimestamp().getTime();
                             long current = n.getTime();
@@ -770,7 +770,7 @@ public class DiagramPanel extends LayoutContainer {
                                 o.getStyle().setSVGProperty(SVGConstants.CSS_FILL_VALUE,
                                         SVGConstants.CSS_GRAY_VALUE);
                             }
-                        } else if (action.equals(Const.ACTION_ONOFF)) {
+                        } else if (action.equals(Action.onOff.getCode())) {
                             if (result.getDoubleValue() == 0.0) {
                                 o.getStyle().setSVGProperty(SVGConstants.CSS_FILL_VALUE,
                                         SVGConstants.CSS_BLACK_VALUE);

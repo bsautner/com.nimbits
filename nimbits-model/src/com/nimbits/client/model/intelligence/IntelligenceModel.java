@@ -15,9 +15,6 @@ package com.nimbits.client.model.intelligence;
 
 
 import com.nimbits.client.enums.IntelligenceResultTarget;
-import com.nimbits.client.model.Const;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
 
 import java.io.Serializable;
 

@@ -27,9 +27,9 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.intelligence.*;
@@ -129,7 +129,7 @@ public class IntelligencePanel extends NavigationEventProvider {
 
         String target = intelligence == null ? null : intelligence.getTarget();
 
-        final EntityCombo intelTargetPoint = new EntityCombo(EntityType.point, target,Const.MESSAGE_SELECT_POINT);
+        final EntityCombo intelTargetPoint = new EntityCombo(EntityType.point, target, UserMessages.MESSAGE_SELECT_POINT);
         intelTargetPoint.setFieldLabel("Target");
 
 
@@ -248,7 +248,7 @@ public class IntelligencePanel extends NavigationEventProvider {
             @Override
             public void handleEvent(BaseEvent be) {
                 if (intelTargetRadioNumber.getValue()) {
-                    intelNodeId.setValue(Const.PARAM_RESULT);
+                    intelNodeId.setValue(com.nimbits.client.constants.Params.PARAM_RESULT);
                     intelPlainText.setValue(intelTargetRadioNumber.getValue());
                 }
                 intelNodeId.setReadOnly(intelTargetRadioNumber.getValue());
@@ -260,7 +260,7 @@ public class IntelligencePanel extends NavigationEventProvider {
             @Override
             public void handleEvent(BaseEvent be) {
                 if (intelTargetRadioNumber.getValue()) {
-                    intelNodeId.setValue(Const.PARAM_RESULT);
+                    intelNodeId.setValue(com.nimbits.client.constants.Params.PARAM_RESULT);
                     intelPlainText.setValue(intelTargetRadioNumber.getValue());
 
                 }

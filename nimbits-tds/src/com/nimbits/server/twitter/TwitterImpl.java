@@ -17,9 +17,9 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.http.client.*;
 import com.google.gwt.user.server.rpc.*;
 import com.nimbits.client.common.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.twitter.*;
@@ -72,8 +72,8 @@ public class TwitterImpl extends RemoteServiceServlet implements
             final HttpServletRequest request = this.getThreadLocalRequest();
             final HttpSession session = request.getSession();
 
-            session.setAttribute(Const.Params.PARAM_TOKEN, requestToken);
-            session.setAttribute(Const.Params.PARAM_EMAIL, email);
+            session.setAttribute(Params.PARAM_TOKEN, requestToken);
+            session.setAttribute(Params.PARAM_EMAIL, email);
 
         } catch (Exception e) {
             log.severe(e.getMessage());
@@ -97,8 +97,8 @@ public class TwitterImpl extends RemoteServiceServlet implements
         final Twitter twitter = new TwitterFactory().getInstance();
         twitter.setOAuthConsumer(twitter_client_id, twitter_Secret);
 
-        final RequestToken requestToken = (RequestToken) session.getAttribute(Const.Params.PARAM_TOKEN);
-        final EmailAddress email = (EmailAddress) session.getAttribute(Const.Params.PARAM_EMAIL);
+        final RequestToken requestToken = (RequestToken) session.getAttribute(Params.PARAM_TOKEN);
+        final EmailAddress email = (EmailAddress) session.getAttribute(Params.PARAM_EMAIL);
 
         log.info("Twitter: Updating user token " + email.getValue() + "  " + request);
 

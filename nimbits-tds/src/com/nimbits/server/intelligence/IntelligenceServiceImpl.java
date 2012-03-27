@@ -15,9 +15,9 @@ package com.nimbits.server.intelligence;
 
 import com.google.gwt.user.server.rpc.*;
 import com.nimbits.client.common.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.*;
@@ -137,13 +137,13 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
         final String params;
         try {
-            params = Const.PARAM_INPUT + "=" + URLEncoder.encode(formula, Const.CONST_ENCODING) +
+            params = Params.PARAM_INPUT + "=" + URLEncoder.encode(formula, Const.CONST_ENCODING) +
                     "&appid=" + key() +
                     "&includepodid=Result";
         } catch (UnsupportedEncodingException e) {
             throw new NimbitsException(e.getMessage());
         }
-        final String result = HttpCommonFactory.getInstance().doGet(Const.PATH_WOLFRAM_ALPHA, params);
+        final String result = HttpCommonFactory.getInstance().doGet(Path.PATH_WOLFRAM_ALPHA, params);
         return Double.valueOf(result);
 
 
@@ -158,7 +158,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
     public String getRawResult(final String query, final String podId, final boolean htmlOutput) throws NimbitsException {
         String params;
         try {
-            params = Const.PARAM_INPUT + "=" + URLEncoder.encode(query, Const.CONST_ENCODING) +
+            params = Params.PARAM_INPUT + "=" + URLEncoder.encode(query, Const.CONST_ENCODING) +
                     "&appid=" + key();
             if (!Utils.isEmptyString(podId)) {
                 params += "&includepodid=" + podId;
@@ -169,7 +169,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
         } catch (UnsupportedEncodingException e) {
             throw new NimbitsException(e.getMessage());
         }
-        return HttpCommonFactory.getInstance().doGet(Const.PATH_WOLFRAM_ALPHA, params);
+        return HttpCommonFactory.getInstance().doGet(Path.PATH_WOLFRAM_ALPHA, params);
     }
 
 
@@ -295,12 +295,12 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
                     if (inputPoint != null) {
                         Value inputValue = RecordedValueServiceFactory.getInstance().getCurrentValue(inputPoint);
-                        if (a.equals(Const.PARAM_VALUE)) {
+                        if (a.equals(Params.PARAM_VALUE)) {
                             retStr = retStr.replace(r, String.valueOf(inputValue.getDoubleValue()));
-                        } else if (a.equals(Const.PARAM_DATA)) {
+                        } else if (a.equals(Params.PARAM_DATA)) {
                             retStr = retStr.replace(r, String.valueOf(inputValue.getData()));
 
-                        } else if (a.equals(Const.Params.PARAM_NOTE)) {
+                        } else if (a.equals(Params.PARAM_NOTE)) {
                             retStr = retStr.replace(r, String.valueOf(inputValue.getNote()));
 
                         }
@@ -336,9 +336,9 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
 
             if (intelligence.getResultsInPlainText()) {
-                result = getDataResult(processedInput, Const.PARAM_RESULT);
+                result = getDataResult(processedInput, Params.PARAM_RESULT);
             } else {
-                result = getRawResult(processedInput, Const.PARAM_RESULT, false);
+                result = getRawResult(processedInput, Params.PARAM_RESULT, false);
             }
 
 

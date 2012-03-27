@@ -14,9 +14,9 @@
 package com.nimbits.server.api.impl;
 
 import com.nimbits.client.common.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
@@ -76,7 +76,7 @@ public class ValueServletImpl extends ApiServlet {
                     out.print(j);
 
                 } else {
-                    FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(Const.ERROR_POINT_NOT_FOUND));
+                    FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(UserMessages.ERROR_POINT_NOT_FOUND));
                 }
             } catch (NimbitsException ex) {
                 FeedServiceFactory.getInstance().postToFeed(user, ex);
@@ -99,11 +99,11 @@ public class ValueServletImpl extends ApiServlet {
 
             u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
 
-            final String format = getParam(ApiParam.format)==null ? Const.WORD_DOUBLE : getParam(ApiParam.format);
+            final String format = getParam(ApiParam.format)==null ? Words.WORD_DOUBLE : getParam(ApiParam.format);
 
-            if (format.equals(Const.Params.PARAM_JSON) && !Utils.isEmptyString(getParam(ApiParam.json))) {
+            if (format.equals(Params.PARAM_JSON) && !Utils.isEmptyString(getParam(ApiParam.json))) {
                 nv = GsonFactory.getInstance().fromJson(getParam(ApiParam.json), ValueModel.class);
-            } else if (format.equals(Const.WORD_DOUBLE) && !Utils.isEmptyString(getParam(ApiParam.value))) {
+            } else if (format.equals(Words.WORD_DOUBLE) && !Utils.isEmptyString(getParam(ApiParam.value))) {
                 nv = ValueModelFactory.createValueModel(
                         getParam(ApiParam.value),
                         getParam(ApiParam.note),
@@ -151,12 +151,12 @@ public class ValueServletImpl extends ApiServlet {
                 p = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
             }
             else {
-                throw new NimbitsException(Const.ERROR_POINT_NOT_FOUND);
+                throw new NimbitsException(UserMessages.ERROR_POINT_NOT_FOUND);
             }
 
         } else {
 
-            throw new NimbitsException(Const.ERROR_POINT_NOT_FOUND);
+            throw new NimbitsException(UserMessages.ERROR_POINT_NOT_FOUND);
         }
 
         if (p != null) {
@@ -164,7 +164,7 @@ public class ValueServletImpl extends ApiServlet {
             Entity e = EntityServiceFactory.getInstance().getEntityByUUID(p.getUUID());
 
             if ((u == null || u.isRestricted()) && ! e.getProtectionLevel().equals(ProtectionLevel.everyone)) {
-                throw new NimbitsException(Const.RESPONSE_PROTECTED_POINT);
+                throw new NimbitsException(UserMessages.RESPONSE_PROTECTED_POINT);
             } else {
                 if (nv != null && (u != null && !u.isRestricted())) {
                     // record the value, but not if this is a public
@@ -178,7 +178,7 @@ public class ValueServletImpl extends ApiServlet {
                 } else {
                     value = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
                 }
-                if (format.equals(Const.Params.PARAM_JSON)) {
+                if (format.equals(Params.PARAM_JSON)) {
                     result = GsonFactory.getInstance().toJson(value);
                 } else {
                     result = String.valueOf(value.getDoubleValue());
@@ -187,7 +187,7 @@ public class ValueServletImpl extends ApiServlet {
         }
         else {
 
-            throw new NimbitsException(Const.ERROR_POINT_NOT_FOUND);
+            throw new NimbitsException(UserMessages.ERROR_POINT_NOT_FOUND);
         }
         return result;
     }

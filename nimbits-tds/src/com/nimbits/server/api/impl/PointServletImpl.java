@@ -15,9 +15,9 @@ package com.nimbits.server.api.impl;
 
 import com.google.gson.*;
 import com.nimbits.client.common.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
@@ -31,7 +31,6 @@ import com.nimbits.server.gson.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.value.*;
 import com.nimbits.server.time.*;
-import com.nimbits.server.user.*;
 
 import javax.servlet.http.*;
 import java.io.*;
@@ -59,7 +58,7 @@ public class PointServletImpl extends ApiServlet {
 
 
 
-                final String actionParam = req.getParameter(Const.Params.PARAM_ACTION);
+                final String actionParam = req.getParameter(Params.PARAM_ACTION);
                 final Action action = (Utils.isEmptyString(actionParam)) ? Action.create : Action.get(actionParam);
 
 
@@ -93,7 +92,7 @@ public class PointServletImpl extends ApiServlet {
                 }
             } else {
 
-                out.println(Const.RESPONSE_PERMISSION_DENIED);
+                out.println(UserMessages.RESPONSE_PERMISSION_DENIED);
             }
         } catch (IOException e) {
             if (user != null) {
@@ -115,9 +114,9 @@ public class PointServletImpl extends ApiServlet {
 
 
 
-        final String startParam = req.getParameter(Const.Params.PARAM_START_DATE);
-        final String endParam = req.getParameter(Const.Params.PARAM_END_DATE);
-        final String offsetParam = req.getParameter(Const.PARAM_OFFSET);
+        final String startParam = req.getParameter(Params.PARAM_START_DATE);
+        final String endParam = req.getParameter(Params.PARAM_END_DATE);
+        final String offsetParam = req.getParameter(Params.PARAM_OFFSET);
 
 
         final String pointNameParam = Utils.isEmptyString(getParam(ApiParam.name)) ?
@@ -350,7 +349,7 @@ public class PointServletImpl extends ApiServlet {
             }
 
         } else {
-            out.println(Const.RESPONSE_PERMISSION_DENIED);
+            out.println(UserMessages.RESPONSE_PERMISSION_DENIED);
         }
     }
 }

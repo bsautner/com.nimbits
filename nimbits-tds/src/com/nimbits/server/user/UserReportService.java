@@ -14,7 +14,7 @@
 package com.nimbits.server.user;
 
 import com.nimbits.client.common.*;
-import com.nimbits.client.model.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.user.*;
@@ -36,8 +36,8 @@ public class UserReportService extends HttpServlet {
     @Override
     public void doGet(final HttpServletRequest req,final HttpServletResponse resp) throws IOException {
 
-        String c = req.getParameter(Const.Params.PARAM_COUNT);
-        String email = req.getParameter(Const.Params.PARAM_EMAIL);
+        String c = req.getParameter(Params.PARAM_COUNT);
+        String email = req.getParameter(Params.PARAM_EMAIL);
         final PrintWriter out = resp.getWriter();
         int count = 100;
 

@@ -1,4 +1,5 @@
 <%@ page import="com.nimbits.client.model.*" %>
+<%@ page import="com.nimbits.client.constants.*" %>
 <%--
   Created by IntelliJ IDEA.
   User: BSautner

@@ -14,7 +14,6 @@
 package com.nimbits.client.model.user;
 
 
-import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.EntityName;

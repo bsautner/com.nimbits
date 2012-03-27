@@ -13,8 +13,8 @@
 
 package com.nimbits.server.task;
 
+import com.nimbits.client.constants.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.value.*;
@@ -40,7 +40,7 @@ public class MoveCachedValuesToStoreTask extends HttpServlet
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
 
-        final String pointJson = req.getParameter(Const.Params.PARAM_POINT);
+        final String pointJson = req.getParameter(Params.PARAM_POINT);
         final Point point = GsonFactory.getInstance().fromJson(pointJson, PointModel.class);
         try {
             RecordedValueTransactionFactory.getInstance(point).moveValuesFromCacheToStore();

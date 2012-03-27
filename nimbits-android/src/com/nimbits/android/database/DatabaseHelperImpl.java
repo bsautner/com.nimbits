@@ -18,7 +18,7 @@ import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import com.nimbits.client.model.Const;
+import com.nimbits.client.constants.*;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -36,12 +36,12 @@ public class DatabaseHelperImpl extends SQLiteOpenHelper implements DatabaseHelp
 
     public DatabaseHelperImpl(Context context) {
 
-        super(context, Const.ANDROID_DB_NAME, null, 1);
+        super(context, Android.ANDROID_DB_NAME, null, 1);
         this.myContext = context;
     }
 
     boolean dbFileExists() {
-        java.io.File file = new java.io.File(Const.ANDROID_DB_PATH + Const.ANDROID_DB_NAME);
+        java.io.File file = new java.io.File(Android.ANDROID_DB_PATH + Android.ANDROID_DB_NAME);
         return file.exists();
     }
 
@@ -69,7 +69,7 @@ public class DatabaseHelperImpl extends SQLiteOpenHelper implements DatabaseHelp
     @Override
     public boolean isDatabaseEmpty() {
         SQLiteDatabase db1 = getDB(false);
-        final Cursor c = db1.query(Const.ANDROID_TABLE_LEVEL_TWO_DISPLAY, new String[] {"_id", Const.ANDROID_COL_CATEGORY, Const.ANDROID_COL_DESCRIPTION, Const.ANDROID_COL_DISPLAY_TYPE},  null , null, null, null, Const.ANDROID_COL_DISPLAY_TYPE);
+        final Cursor c = db1.query(Android.ANDROID_TABLE_LEVEL_TWO_DISPLAY, new String[] {"_id", Android.ANDROID_COL_CATEGORY, Android.ANDROID_COL_DESCRIPTION, Android.ANDROID_COL_DISPLAY_TYPE},  null , null, null, null, Android.ANDROID_COL_DISPLAY_TYPE);
         final boolean retVal = c.isAfterLast();
         c.close();
         db1.close();
@@ -81,8 +81,8 @@ public class DatabaseHelperImpl extends SQLiteOpenHelper implements DatabaseHelp
     void dbCreate() throws IOException {
         final AssetManager assetManager = myContext.getAssets();
         this.getWritableDatabase();
-        final InputStream myInput =assetManager.open(Const.ANDROID_DB_NAME);
-        final String outFileName = Const.ANDROID_DB_PATH + Const.ANDROID_DB_NAME;
+        final InputStream myInput =assetManager.open(Android.ANDROID_DB_NAME);
+        final String outFileName = Android.ANDROID_DB_PATH + Android.ANDROID_DB_NAME;
         final OutputStream myOutput = new FileOutputStream(outFileName);
         final byte[] buffer = new byte[1024];
         int length;

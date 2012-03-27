@@ -17,11 +17,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.widget.ListAdapter;
-import com.nimbits.android.ImageCursorAdapter;
-import com.nimbits.android.R;
 import com.nimbits.android.database.DatabaseHelperFactory;
-import com.nimbits.client.model.Const;
+import com.nimbits.client.constants.*;
 
 
 import java.util.ArrayList;
@@ -44,9 +41,9 @@ public class LocalDatabaseDaoImpl implements LocalDatabaseDao {
     @Override
     public String getSetting(final Context aContext, final String settingName) {
         final SQLiteDatabase db1 = DatabaseHelperFactory.getInstance(aContext).getDB(false);
-        final Cursor c = db1.query(Const.ANDROID_TABLE_SETTINGS, new String[]{Const.ANDROID_COL_ID, Const.ANDROID_COL_VALUE}, Const.ANDROID_COL_NAME + "=?", new String[]{settingName}, null, null, null);
+        final Cursor c = db1.query(Android.ANDROID_TABLE_SETTINGS, new String[]{Android.ANDROID_COL_ID, Android.ANDROID_COL_VALUE}, Android.ANDROID_COL_NAME + "=?", new String[]{settingName}, null, null, null);
         c.moveToFirst();
-        final String retVal = c.getString(c.getColumnIndex(Const.ANDROID_COL_VALUE));
+        final String retVal = c.getString(c.getColumnIndex(Android.ANDROID_COL_VALUE));
         c.close();
         db1.close();
         return retVal;
@@ -55,12 +52,12 @@ public class LocalDatabaseDaoImpl implements LocalDatabaseDao {
     public List<String> getServers(final Context aContext) {
         final List<String> serverList = new ArrayList<String>();
         final SQLiteDatabase db1 = DatabaseHelperFactory.getInstance(aContext).getDB(false);
-        final Cursor c = db1.query(Const.ANDROID_TABLE_SERVERS, new String[]{Const.ANDROID_COL_ID, Const.ANDROID_COL_URL}, null, null, null, null, null);
+        final Cursor c = db1.query(Android.ANDROID_TABLE_SERVERS, new String[]{Android.ANDROID_COL_ID, Android.ANDROID_COL_URL}, null, null, null, null, null);
         c.moveToFirst();
         //l.add("New Connection");
 
         while (!c.isAfterLast()) {
-            final String url = c.getString(c.getColumnIndex(Const.ANDROID_COL_URL));
+            final String url = c.getString(c.getColumnIndex(Android.ANDROID_COL_URL));
             serverList.add(url);
             c.moveToNext();
         }
@@ -102,27 +99,27 @@ public class LocalDatabaseDaoImpl implements LocalDatabaseDao {
     public void updateSetting(final Context aContext, final String settingName, final String newValue) {
         final SQLiteDatabase db1 = DatabaseHelperFactory.getInstance(aContext).getDB(false);
         ContentValues u = new ContentValues();
-        u.put(Const.PARAM_VALUE, newValue);
-        db1.update(Const.ANDROID_TABLE_SETTINGS, u, Const.ANDROID_COL_NAME + "=?", new String[]{settingName});
+        u.put(Params.PARAM_VALUE, newValue);
+        db1.update(Android.ANDROID_TABLE_SETTINGS, u, Android.ANDROID_COL_NAME + "=?", new String[]{settingName});
         db1.close();
     }
 
     public void addServer(Context aContext, String url) {
 
         ContentValues u = new ContentValues();
-        u.put(Const.ANDROID_COL_URL, url);
+        u.put(Android.ANDROID_COL_URL, url);
         SQLiteDatabase db1;
         db1 = DatabaseHelperFactory.getInstance(aContext).getDB(true);
-        db1.insert(Const.ANDROID_TABLE_SERVERS, null, u);
+        db1.insert(Android.ANDROID_TABLE_SERVERS, null, u);
         db1.close();
     }
 
     public String getSelectedChildTableJsonByName(Context aContext, String name) {
         Cursor c;
         SQLiteDatabase db1 = DatabaseHelperFactory.getInstance(aContext).getDB(false);
-        c = db1.query(Const.ANDROID_TABLE_LEVEL_TWO_DISPLAY, new String[]{Const.ANDROID_COL_ID, Const.ANDROID_COL_JSON}, Const.ANDROID_COL_NAME + "='" + name + "'", null, null, null, null);
+        c = db1.query(Android.ANDROID_TABLE_LEVEL_TWO_DISPLAY, new String[]{Android.ANDROID_COL_ID, Android.ANDROID_COL_JSON}, Android.ANDROID_COL_NAME + "='" + name + "'", null, null, null, null);
         c.moveToFirst();
-        String retVal = c.getString(c.getColumnIndex(Const.ANDROID_COL_JSON));
+        String retVal = c.getString(c.getColumnIndex(Android.ANDROID_COL_JSON));
         c.close();
         db1.close();
         return retVal;

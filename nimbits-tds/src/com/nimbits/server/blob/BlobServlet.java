@@ -14,9 +14,9 @@
 package com.nimbits.server.blob;
 
 import com.google.appengine.api.blobstore.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
@@ -42,17 +42,17 @@ public class BlobServlet extends HttpServlet {
     public void doPost(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
         final Map<String,List<BlobKey>> blobs = blobstoreService.getUploads(req);
-        final BlobKey blobKey = blobs.get(Const.PARAM_MY_FILE).get(0);
+        final BlobKey blobKey = blobs.get(Params.PARAM_MY_FILE).get(0);
 //        String diagramDescParam = req.getParameter(Const.PARAM_DESCRIPTION);
-        final String entityId = req.getParameter(Const.PARAM_FILE_ID);
-        final String uploadType = req.getParameter(Const.PARAM_UPLOAD_TYPE_HIDDEN_FIELD);
-        final String email = req.getParameter(Const.PARAM_EMAIL_HIDDEN_FIELD);
+        final String entityId = req.getParameter(Params.PARAM_FILE_ID);
+        final String uploadType = req.getParameter(Params.PARAM_UPLOAD_TYPE_HIDDEN_FIELD);
+        final String email = req.getParameter(Params.PARAM_EMAIL_HIDDEN_FIELD);
         final HttpSession session = req.getSession();
 
-        String diagramNameParam = req.getParameter(Const.PARAM_FILE_NAME);
+        String diagramNameParam = req.getParameter(Params.PARAM_FILE_NAME);
         final int lastIndex = diagramNameParam.lastIndexOf('\\');
         final String fileName = diagramNameParam.substring(lastIndex + 1);
-        session.setAttribute(Const.Params.PARAM_EMAIL, CommonFactoryLocator.getInstance().createEmailAddress(email));
+        session.setAttribute(Params.PARAM_EMAIL, CommonFactoryLocator.getInstance().createEmailAddress(email));
         final User u;
         try {
             u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
@@ -96,7 +96,7 @@ public class BlobServlet extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        BlobKey blobKey = new BlobKey(req.getParameter(Const.Params.PARAM_BLOB_KEY));
+        BlobKey blobKey = new BlobKey(req.getParameter(Params.PARAM_BLOB_KEY));
         blobstoreService.serve(blobKey, res);
     }
 

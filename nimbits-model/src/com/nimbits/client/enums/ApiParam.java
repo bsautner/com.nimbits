@@ -1,6 +1,7 @@
 package com.nimbits.client.enums;
 
-import com.nimbits.client.model.*;
+import com.nimbits.client.constants.*;
+
 
 import java.util.*;
 
@@ -11,21 +12,21 @@ import java.util.*;
  * Time: 1:23 PM
  */
 public enum ApiParam {
-    record(Const.ACTION_RECORD),
-    point(Const.Params.PARAM_POINT),
-    value(Const.PARAM_VALUE),
-    json(Const.Params.PARAM_JSON),
-    name(Const.Params.PARAM_NAME),
-    note(Const.Params.PARAM_NOTE),
-    lat(Const.Params.PARAM_LAT),
-    lng(Const.Params.PARAM_LNG),
-    timestamp(Const.Params.PARAM_TIMESTAMP),
-    data(Const.PARAM_DATA),
-    uuid(Const.PARAM_UUID),
-    format(Const.Params.PARAM_FORMAT),
-    points(Const.Params.PARAM_POINTS),
-    count(Const.Params.PARAM_COUNT),
-    autoscale(Const.Params.PARAM_AUTO_SCALE), category(Const.Params.PARAM_CATEGORY);
+    record(Params.ACTION_RECORD),
+    point(Params.PARAM_POINT),
+    value(Params.PARAM_VALUE),
+    json(Params.PARAM_JSON),
+    name(Params.PARAM_NAME),
+    note(Params.PARAM_NOTE),
+    lat(Params.PARAM_LAT),
+    lng(Params.PARAM_LNG),
+    timestamp(Params.PARAM_TIMESTAMP),
+    data(Params.PARAM_DATA),
+    uuid(Params.PARAM_UUID),
+    format(Params.PARAM_FORMAT),
+    points(Params.PARAM_POINTS),
+    count(Params.PARAM_COUNT),
+    autoscale(Params.PARAM_AUTO_SCALE), category(Params.PARAM_CATEGORY);
 
     private static final Map<String, ApiParam> lookup = new HashMap<String, ApiParam>();
 

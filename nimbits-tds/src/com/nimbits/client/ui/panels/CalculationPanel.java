@@ -26,9 +26,9 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
 import com.nimbits.client.model.calculation.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
@@ -122,16 +122,16 @@ public class CalculationPanel extends NavigationEventProvider {
         String zc = calculation == null ? null : calculation.getZ();
         String targetc = calculation == null ? null : calculation.getTarget();
 
-        final EntityCombo targetcombo = new EntityCombo(EntityType.point, targetc, Const.MESSAGE_SELECT_POINT);
+        final EntityCombo targetcombo = new EntityCombo(EntityType.point, targetc, UserMessages.MESSAGE_SELECT_POINT);
         targetcombo.setFieldLabel("Target");
 
-        final EntityCombo xCombo = new EntityCombo(EntityType.point, xc,Const.MESSAGE_SELECT_POINT);
+        final EntityCombo xCombo = new EntityCombo(EntityType.point, xc, UserMessages.MESSAGE_SELECT_POINT);
         xCombo.setFieldLabel("x var");
 
-        final EntityCombo yCombo = new EntityCombo(EntityType.point, yc,Const.MESSAGE_SELECT_POINT);
+        final EntityCombo yCombo = new EntityCombo(EntityType.point, yc, UserMessages.MESSAGE_SELECT_POINT);
         yCombo.setFieldLabel("y var");
 
-        final EntityCombo zCombo = new EntityCombo(EntityType.point, zc,Const.MESSAGE_SELECT_POINT);
+        final EntityCombo zCombo = new EntityCombo(EntityType.point, zc, UserMessages.MESSAGE_SELECT_POINT);
         zCombo.setFieldLabel("z var");
 
 

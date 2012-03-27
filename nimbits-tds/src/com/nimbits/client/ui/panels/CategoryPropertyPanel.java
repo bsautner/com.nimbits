@@ -26,9 +26,8 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.service.entity.*;
 import com.nimbits.client.ui.icons.*;
@@ -79,7 +78,7 @@ public class CategoryPropertyPanel extends NavigationEventProvider {
         // vp.setSpacing(10);
         createForm();
 
-        String url = "http://" + com.google.gwt.user.client.Window.Location.getHostName() + "?" + Const.PARAM_UUID + "=" + entity.getEntity();
+        String url = "http://" + com.google.gwt.user.client.Window.Location.getHostName() + "?" + Params.PARAM_UUID + "=" + entity.getEntity();
 
 
         Html h = new Html("<p>Link:</p><br>" +

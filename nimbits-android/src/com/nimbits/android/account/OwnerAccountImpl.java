@@ -20,8 +20,8 @@ import android.os.Bundle;
 import android.util.Log;
 import com.nimbits.client.NimbitsClient;
 import com.nimbits.client.NimbitsClientFactory;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
 
@@ -54,7 +54,7 @@ public class OwnerAccountImpl implements OwnerAccount {
 
     public void invalidateToken(final Context context, String token) {
         final AccountManager mgr = AccountManager.get(context);
-        mgr.invalidateAuthToken(Const.Params.PARAM_GOOGLE_COM, token);
+        mgr.invalidateAuthToken(Params.PARAM_GOOGLE_COM, token);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class OwnerAccountImpl implements OwnerAccount {
 
         if (tokenStore == null) {
             final AccountManager mgr = AccountManager.get(context);
-            final Account[] accounts = mgr.getAccountsByType(Const.Params.PARAM_GOOGLE_COM);
+            final Account[] accounts = mgr.getAccountsByType(Params.PARAM_GOOGLE_COM);
 
             if (accounts.length > 0) {
                 AccountManagerFuture<Bundle> accountManagerFuture = mgr.getAuthToken(accounts[0], Const.CONST_AH, null, (Activity) context, null, null);
@@ -72,22 +72,22 @@ public class OwnerAccountImpl implements OwnerAccount {
 
                     authToken = authTokenBundle.get(AccountManager.KEY_AUTHTOKEN).toString();
                     tokenStore = authToken;
-                    Log.i(Const.N, "got new token: " + authToken);
+                    Log.i(Android.N, "got new token: " + authToken);
                 } catch (OperationCanceledException e) {
-                    Log.e(Const.N, e.getMessage(), e);
-                    authToken = Const.MESSAGE_NO_ACCOUNT;
+                    Log.e(Android.N, e.getMessage(), e);
+                    authToken = UserMessages.MESSAGE_NO_ACCOUNT;
                     tokenStore = null;
                 } catch (IOException e) {
-                    authToken = Const.MESSAGE_NO_ACCOUNT;
+                    authToken = UserMessages.MESSAGE_NO_ACCOUNT;
                     tokenStore = null;
-                    Log.e(Const.N, e.getMessage(), e);
+                    Log.e(Android.N, e.getMessage(), e);
                 } catch (AuthenticatorException e) {
-                    authToken = Const.MESSAGE_NO_ACCOUNT;
+                    authToken = UserMessages.MESSAGE_NO_ACCOUNT;
                     tokenStore = null;
-                    Log.e(Const.N, e.getMessage(), e);
+                    Log.e(Android.N, e.getMessage(), e);
                 }
             } else {
-                authToken = Const.MESSAGE_NO_ACCOUNT;
+                authToken = UserMessages.MESSAGE_NO_ACCOUNT;
                 tokenStore = null;
 
             }
@@ -95,7 +95,7 @@ public class OwnerAccountImpl implements OwnerAccount {
 
         } else {
             authToken = tokenStore;
-            Log.i(Const.N, "using cached token: " + authToken);
+            Log.i(Android.N, "using cached token: " + authToken);
         }
         return authToken;
 
@@ -106,7 +106,7 @@ public class OwnerAccountImpl implements OwnerAccount {
     public NimbitsClient getNimbitsClient(final Context context, final String baseUrl) throws NimbitsException {
         //
         try {
-            if (baseUrl.equals(Const.PATH_LOCAL)) {
+            if (baseUrl.equals(Path.PATH_LOCAL)) {
                 EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(Const.TEST_ACCOUNT);
                 return NimbitsClientFactory.getInstance(null, emailAddress, baseUrl);
             } else {
@@ -120,7 +120,7 @@ public class OwnerAccountImpl implements OwnerAccount {
     }
 
     private Account getAccount(final AccountManager accountManager) {
-        final Account[] accounts = accountManager.getAccountsByType(Const.Params.PARAM_GOOGLE_COM);
+        final Account[] accounts = accountManager.getAccountsByType(Params.PARAM_GOOGLE_COM);
         return accounts.length > 0 ? accounts[0] : null;
 
 

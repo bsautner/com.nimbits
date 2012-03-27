@@ -15,7 +15,7 @@ package com.nimbits.client.model.value;
 
 
 import com.nimbits.client.enums.AlertType;
-import com.nimbits.client.model.Const;
+import com.nimbits.client.constants.Const;
 import java.io.Serializable;
 import java.util.Date;
 

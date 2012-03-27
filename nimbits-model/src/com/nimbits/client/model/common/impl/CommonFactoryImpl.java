@@ -13,9 +13,9 @@
 
 package com.nimbits.client.model.common.impl;
 
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.email.impl.EmailAddressImpl;

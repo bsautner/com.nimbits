@@ -14,9 +14,9 @@
 package com.nimbits.server.api.impl;
 
 import com.nimbits.client.common.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
@@ -47,7 +47,7 @@ public class ChartApiServletImpl extends ApiServlet {
 
     @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
-        final String formatParam = req.getParameter(Const.Params.PARAM_FORMAT);
+        final String formatParam = req.getParameter(Params.PARAM_FORMAT);
         init(req, resp, getContentType(formatParam));
 
 
@@ -59,9 +59,9 @@ public class ChartApiServletImpl extends ApiServlet {
 
             final ExportType type = getContentType(formatParam);
             log.info(req.getQueryString());
-            log.info(req.getParameter(Const.Params.PARAM_EMAIL));
+            log.info(req.getParameter(Params.PARAM_EMAIL));
 
-            final boolean doScale = (!Utils.isEmptyString(getParam(ApiParam.autoscale)) && getParam(ApiParam.autoscale).equals(Const.WORD_TRUE));
+            final boolean doScale = (!Utils.isEmptyString(getParam(ApiParam.autoscale)) && getParam(ApiParam.autoscale).equals(Words.WORD_TRUE));
 
             if (user==null)  {
                 log.severe("Null user in chart api");
@@ -158,7 +158,7 @@ public class ChartApiServletImpl extends ApiServlet {
     }
 
     private void sendChartImage(final HttpServletResponse resp, final String params) throws IOException {
-        final URL url = new URL(Const.PATH_GOOGLE_CHART_API);
+        final URL url = new URL(Path.PATH_GOOGLE_CHART_API);
         final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setDoOutput(true);
         connection.setRequestMethod(Const.METHOD_POST);
@@ -195,8 +195,8 @@ public class ChartApiServletImpl extends ApiServlet {
 
     private Timespan getTimestamp(HttpServletRequest req) throws NimbitsException {
         Timespan timespan = null;
-        String startDate = req.getParameter(Const.Params.PARAM_START_DATE);
-        String endDate = req.getParameter(Const.Params.PARAM_END_DATE);
+        String startDate = req.getParameter(Params.PARAM_START_DATE);
+        String endDate = req.getParameter(Params.PARAM_END_DATE);
         //support for legacy st param
         if (startDate == null) {
             startDate = req.getParameter("st");

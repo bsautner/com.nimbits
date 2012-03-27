@@ -1,7 +1,5 @@
 package com.nimbits.client.model.point;
 
-import com.nimbits.client.model.Const;
-
 import java.io.Serializable;
 
 /**

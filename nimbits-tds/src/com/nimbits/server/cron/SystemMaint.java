@@ -14,9 +14,9 @@
 package com.nimbits.server.cron;
 
 import com.google.appengine.api.memcache.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.server.*;
@@ -86,9 +86,9 @@ public class SystemMaint extends HttpServlet {
             final EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
             final Server server = ServerModelFactory.createServer(ServerInfoImpl.getFullServerURL(req), emailAddress, SettingType.serverVersion.getDefaultValue());
             final String json = GsonFactory.getInstance().toJson(server);
-            final String params = Const.Params.PARAM_JSON + "=" + json;
+            final String params = Params.PARAM_JSON + "=" + json;
             out.println("<p>");
-            out.println(HttpCommonFactory.getInstance().doPost(Const.PATH_NIMBITS_CORE_SERVERS_URL, params));
+            out.println(HttpCommonFactory.getInstance().doPost(Path.PATH_NIMBITS_CORE_SERVERS_URL, params));
             out.println("</p>");
         } else {
             out.println("<span class=\"label success\">Because Setting: " + SettingType.serverIsDiscoverable.getDefaultValue() + "" +

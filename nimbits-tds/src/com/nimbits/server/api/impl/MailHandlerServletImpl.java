@@ -13,9 +13,9 @@
 
 package com.nimbits.server.api.impl;
 
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
 import com.nimbits.server.api.*;
 import com.nimbits.server.feed.*;
 import com.nimbits.server.task.*;
@@ -26,7 +26,6 @@ import javax.mail.internet.*;
 import javax.servlet.http.*;
 import java.io.*;
 import java.util.*;
-import java.util.logging.*;
 
 public class MailHandlerServletImpl extends ApiServlet {
     /**
@@ -65,7 +64,7 @@ public class MailHandlerServletImpl extends ApiServlet {
     private static String getContent(final MimeMessage message, final String contentType)
             throws MessagingException, IOException {
 
-        return (contentType.contains(Const.WORD_MULTI_PART)) ? getMultipartContent(message) : (String) message.getContent();
+        return (contentType.contains(Words.WORD_MULTI_PART)) ? getMultipartContent(message) : (String) message.getContent();
 
     }
 

@@ -1,9 +1,9 @@
 package com.nimbits.server.api;
 
 import com.nimbits.client.common.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.server.counter.*;
@@ -35,21 +35,21 @@ public class ApiServlet extends HttpServlet {
             paramMap = new HashMap<ApiParam, String>();
 
             String items[] = {
-                    Const.Params.PARAM_POINT,
-                    Const.PARAM_VALUE,
-                    Const.Params.PARAM_JSON,
-                    Const.Params.PARAM_NOTE,
-                    Const.Params.PARAM_LAT,
-                    Const.Params.PARAM_LNG,
-                    Const.Params.PARAM_TIMESTAMP,
-                    Const.PARAM_DATA,
-                    Const.PARAM_UUID,
-                    Const.Params.PARAM_FORMAT,
-                    Const.Params.PARAM_NAME,
-                    Const.Params.PARAM_POINTS,
-                    Const.Params.PARAM_COUNT,
-                    Const.Params.PARAM_AUTO_SCALE,
-                    Const.Params.PARAM_CATEGORY
+                    Params.PARAM_POINT,
+                    Params.PARAM_VALUE,
+                    Params.PARAM_JSON,
+                    Params.PARAM_NOTE,
+                    Params.PARAM_LAT,
+                    Params.PARAM_LNG,
+                    Params.PARAM_TIMESTAMP,
+                    Params.PARAM_DATA,
+                    Params.PARAM_UUID,
+                    Params.PARAM_FORMAT,
+                    Params.PARAM_NAME,
+                    Params.PARAM_POINTS,
+                    Params.PARAM_COUNT,
+                    Params.PARAM_AUTO_SCALE,
+                    Params.PARAM_CATEGORY
 
             };
 

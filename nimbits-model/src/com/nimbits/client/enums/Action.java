@@ -14,42 +14,46 @@
 package com.nimbits.client.enums;
 
 
-import com.nimbits.client.model.*;
+
 
 import java.util.*;
 
 public enum Action {
-    record(Const.ACTION_RECORD),
-    read(Const.ACTION_READ),
-    recordValue(Const.ACTION_RECORD_VALUE),
-    currentValue(Const.CURRENT_VALUE),
-    create(Const.ACTION_CREATE),
-    delete(Const.ACTION_DELETE),
-    update(Const.ACTION_UPDATE),
-    readJsonValue(Const.ACTION_RECORD_JSON),
-    readNote(Const.ACTION_READ_NOTE),
-    readValue(Const.ACTION_READ_VALUE),
-    readGps(Const.ACTION_READ_GPS),
-    readJson(Const.ACTION_READ_JSON),
-    subscribe(Const.ACTION_SUBSCRIBE),
-    android(Const.ACTION_ANDROID),
-    facebook(Const.ACTION_FACEBOOK),
-    twitter(Const.ACTION_TWITTER),
-    twitterFinishReg(Const.ACTION_TWITTER_FINISH_REG),
-    none(Const.ACTION_NONE),
-    report(Const.ACTION_REPORT),
-    diagram(Const.ACTION_DIAGRAM),
-    start(Const.ACTION_START),
-    user(Const.ACTION_USER),
-    category(Const.ACTION_CATEGORY),
-    point(Const.ACTION_POINT),
-    refresh(Const.ACTION_REFRESH),
-    expand(Const.ACTION_EXPAND),
-    logout(Const.ACTION_LOGOUT),
-    xmpp(Const.ACTION_XMPP),
-    addChart(Const.ACTION_ADD_CHART),
-    save(Const.ACTION_SAVE),
-    value(Const.ACTION_VALUE);
+    record(ActionConstants.ACTION_RECORD),
+    read(ActionConstants.ACTION_READ),
+    recordValue(ActionConstants.ACTION_RECORD_VALUE),
+    currentValue(ActionConstants.CURRENT_VALUE),
+    create(ActionConstants.ACTION_CREATE),
+    delete(ActionConstants.ACTION_DELETE),
+    update(ActionConstants.ACTION_UPDATE),
+    readJsonValue(ActionConstants.ACTION_RECORD_JSON),
+    readNote(ActionConstants.ACTION_READ_NOTE),
+    readValue(ActionConstants.ACTION_READ_VALUE),
+    readGps(ActionConstants.ACTION_READ_GPS),
+    readJson(ActionConstants.ACTION_READ_JSON),
+    subscribe(ActionConstants.ACTION_SUBSCRIBE),
+    android(ActionConstants.ACTION_ANDROID),
+    facebook(ActionConstants.ACTION_FACEBOOK),
+    twitter(ActionConstants.ACTION_TWITTER),
+    twitterFinishReg(ActionConstants.ACTION_TWITTER_FINISH_REG),
+    none(ActionConstants.ACTION_NONE),
+    report(ActionConstants.ACTION_REPORT),
+    diagram(ActionConstants.ACTION_DIAGRAM),
+    start(ActionConstants.ACTION_START),
+    user(ActionConstants.ACTION_USER),
+    category(ActionConstants.ACTION_CATEGORY),
+    point(ActionConstants.ACTION_POINT),
+    refresh(ActionConstants.ACTION_REFRESH),
+    expand(ActionConstants.ACTION_EXPAND),
+    logout(ActionConstants.ACTION_LOGOUT),
+    xmpp(ActionConstants.ACTION_XMPP),
+    addChart(ActionConstants.ACTION_ADD_CHART),
+    save(ActionConstants.ACTION_SAVE),
+    alert(ActionConstants.ACTION_ALERT),
+    idle(ActionConstants.ACTION_IDLE),
+    value(ActionConstants.ACTION_VALUE),
+    onOff(ActionConstants.ACTION_ONOFF),
+    download(ActionConstants.ACTION_DOWNLOAD);
     private static final Map<String, Action> lookup = new HashMap<String, Action>();
 
     static {
@@ -70,4 +74,44 @@ public enum Action {
     public static Action get(String code) {
         return lookup.get(code);
     }
+
+    private class ActionConstants {
+        protected static final String ACTION_ALERT = "alert";
+        protected static final String ACTION_CREATE = "create";
+        protected static final String ACTION_DELETE = "delete";
+        protected static final String ACTION_DOWNLOAD = "download";
+        protected static final String ACTION_IDLE = "idle";
+        protected static final String ACTION_ONOFF = "onoff";
+        protected static final String ACTION_UPDATE = "update";
+        protected static final String ACTION_VALUE = "value";
+        protected static final String ACTION_RECORD = "record";
+        protected static final String ACTION_READ = "read";
+        protected static final String ACTION_RECORD_VALUE = "recordvalue";
+        protected static final String ACTION_RECORD_JSON = "recordjson";
+        protected static final String ACTION_READ_NOTE = "readnote";
+        protected static final String ACTION_READ_VALUE = "readvalue";
+        protected static final String ACTION_READ_GPS = "readgps";
+        protected static final String ACTION_READ_JSON = "readjson";
+        protected static final String ACTION_SUBSCRIBE = "subscribe";
+        protected static final String ACTION_NONE = "none";
+        protected static final String ACTION_ANDROID = "android";
+        protected static final String ACTION_FACEBOOK = "facebook";
+        protected static final String ACTION_TWITTER = "twitter";
+        protected static final String ACTION_TWITTER_FINISH_REG = "twitterFinishReg";
+        protected static final String ACTION_REPORT = "report";
+        protected static final String ACTION_DIAGRAM = "diagram";
+        protected static final String ACTION_START = "start";
+        protected static final String ACTION_USER = "user";
+        protected static final String ACTION_CATEGORY = "category";
+        protected static final String ACTION_POINT = "point";
+        protected static final String ACTION_REFRESH = "refresh" ;
+        protected static final String ACTION_EXPAND = "expand";
+        protected static final String ACTION_LOGOUT = "logout";
+        protected static final String ACTION_XMPP = "xmpp";
+        protected static final String ACTION_ADD_CHART = "addchart";
+        protected static final String ACTION_SAVE = "save";
+        protected static final String CURRENT_VALUE = "currentvalue";
+
+    }
+
 }

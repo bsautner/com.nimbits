@@ -24,6 +24,7 @@ import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 import com.nimbits.client.common.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
@@ -47,7 +48,14 @@ public class EntityContextMenu extends Menu {
 
     private EntityTree<ModelData> tree;
     private GxtModel currentModel;
-
+    private static final String PARAM_DEFAULT_WINDOW_OPTIONS = "menubar=no," +
+            "location=false," +
+            "resizable=yes," +
+            "scrollbars=yes," +
+            "width=980px," +
+            "height=800," +
+            "status=no," +
+            "dependent=true";
 
     private MenuItem deleteContext;
     private MenuItem subscribeContext;
@@ -303,7 +311,7 @@ public class EntityContextMenu extends Menu {
                         final Window w = new Window();
                         w.setWidth(500);
                         w.setHeight(400);
-                        w.setHeading(entity.getName().getValue() + " " + Const.WORD_PROPERTIES);
+                        w.setHeading(entity.getName().getValue() + " " + Words.WORD_PROPERTIES);
                         w.add(dp);
                         w.show();
                         break;
@@ -338,7 +346,7 @@ public class EntityContextMenu extends Menu {
                         final Window w = new Window();
                         w.setWidth(500);
                         w.setHeight(400);
-                        w.setHeading(entity.getName().getValue() + " " + Const.WORD_PROPERTIES);
+                        w.setHeading(entity.getName().getValue() + " " + Words.WORD_PROPERTIES);
                         w.add(dp);
                         w.show();
                         break;
@@ -381,8 +389,8 @@ public class EntityContextMenu extends Menu {
                 final MessageBox box;
                 if (currentModel.getEntityType().equals(EntityType.point) && ! currentModel.isReadOnly()) {
                     box= MessageBox.prompt(
-                            Const.MESSAGE_NEW_POINT,
-                            Const.MESSAGE_NEW_POINT_PROMPT);
+                            UserMessages.MESSAGE_NEW_POINT,
+                            UserMessages.MESSAGE_NEW_POINT_PROMPT);
                     box.addCallback(copyPointListener);
                 }
                 else {
@@ -417,7 +425,7 @@ public class EntityContextMenu extends Menu {
                 String u = com.google.gwt.user.client.Window.Location.getHref()
                         + "?uuid=" + uuid
                         + "&count=10";
-                com.google.gwt.user.client.Window.open(u, title, Const.PARAM_DEFAULT_WINDOW_OPTIONS);
+                com.google.gwt.user.client.Window.open(u, title, PARAM_DEFAULT_WINDOW_OPTIONS);
             }
         });
 
@@ -429,7 +437,7 @@ public class EntityContextMenu extends Menu {
             com.extjs.gxt.ui.client.widget.button.Button btn = ce.getButtonClicked();
             final EntityServiceAsync service = GWT.create(EntityService.class);
 
-            if (btn.getText().equals(Const.WORD_YES)) {
+            if (btn.getText().equals(Words.WORD_YES)) {
                 final Entity entityToDelete = currentModel.getBaseEntity();
                 service.deleteEntity(entityToDelete, new AsyncCallback<Void>() {
                     @Override

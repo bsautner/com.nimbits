@@ -14,9 +14,9 @@
 package com.nimbits.server.api.impl;
 
 import com.nimbits.client.common.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
@@ -35,7 +35,6 @@ import com.nimbits.server.user.*;
 import javax.servlet.http.*;
 import java.io.*;
 import java.util.*;
-import java.util.logging.*;
 
 public class SeriesServletImpl extends ApiServlet {
 
@@ -51,9 +50,9 @@ public class SeriesServletImpl extends ApiServlet {
         int count;
 
 
-        String segStr = req.getParameter(Const.Params.PARAM_SEGMENT);
-        final String startDate = req.getParameter(Const.Params.PARAM_START_DATE);
-        final String endDate = req.getParameter(Const.Params.PARAM_END_DATE);
+        String segStr = req.getParameter(Params.PARAM_SEGMENT);
+        final String startDate = req.getParameter(Params.PARAM_START_DATE);
+        final String endDate = req.getParameter(Params.PARAM_END_DATE);
 
 
         Timespan timespan = null;

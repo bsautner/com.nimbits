@@ -1,6 +1,6 @@
 package com.nimbits.server;
 
-import com.nimbits.client.model.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.server.memcache.*;
 import static org.junit.Assert.*;
 import org.junit.*;

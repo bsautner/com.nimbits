@@ -1,6 +1,7 @@
 package com.nimbits.client.model;
 
 import com.extjs.gxt.ui.client.data.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.model.feed.*;
 
 import java.io.*;
@@ -17,8 +18,8 @@ public class GxtFeedModel extends BaseTreeModel implements Serializable {
 
     public GxtFeedModel(FeedValue v) {
         this.html = v.getFeedHtml();
-        set(Const.Params.PARAM_HTML,html);
-        set(Const.Params.PARAM_TYPE,v.getFeedType().getCode());
+        set(Params.PARAM_HTML,html);
+        set(Params.PARAM_TYPE,v.getFeedType().getCode());
 
     }
 

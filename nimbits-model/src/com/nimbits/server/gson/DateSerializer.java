@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import com.nimbits.client.model.Const;
+import com.nimbits.client.constants.Const;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;

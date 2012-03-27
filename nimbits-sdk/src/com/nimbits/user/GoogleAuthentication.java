@@ -13,8 +13,8 @@
 
 package com.nimbits.user;
 
+import com.nimbits.client.constants.*;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.Const;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.exceptions.GoogleAuthenticationException;
 import org.apache.http.HttpResponse;
@@ -94,7 +94,7 @@ public class GoogleAuthentication {
                            final String googlePassword) throws NimbitsException {
         boolean retVal = true;
 
-        final String gaeAppLoginUrl = gaeAppBaseUrl + Const.PATH_AH_LOGIN;
+        final String gaeAppLoginUrl = gaeAppBaseUrl + Path.PATH_AH_LOGIN;
 
         final String authToken = getToken(googleAccount, googlePassword);
         try {
@@ -110,7 +110,7 @@ public class GoogleAuthentication {
     //Alternate Method of connecting - supports android phones that already have the token
     public Cookie ConnectAuth(final String authToken,
                               final String gaeAppBaseUrl) throws GoogleAuthenticationException, NimbitsException {
-        final String gaeAppLoginUrl = gaeAppBaseUrl + Const.PATH_AH_LOGIN;
+        final String gaeAppLoginUrl = gaeAppBaseUrl + Path.PATH_AH_LOGIN;
         authCookie = getAuthCookie(gaeAppBaseUrl, gaeAppLoginUrl, authToken);
         if (authCookie == null) {
             throw new GoogleAuthenticationException("Null Cookie returned using " + gaeAppLoginUrl + " and token: " + authToken);
@@ -158,7 +158,7 @@ public class GoogleAuthentication {
                     response.getStatusLine().getStatusCode() == HttpURLConnection.HTTP_NO_CONTENT) {
 
                 for (final Cookie cookie : httpClient.getCookieStore().getCookies()) {
-                    if (cookie.getName().equals(Const.PARAM_ACSID)) {
+                    if (cookie.getName().equals(Params.PARAM_ACSID)) {
                         retObj = cookie;
                         break;
                     }
@@ -189,13 +189,13 @@ public class GoogleAuthentication {
             final EmailAddress username,
             final String password) throws IOException {
 
-        final URL url = new URL(Const.PATH_GOOGLE_CLIENT_LOGIN);
+        final URL url = new URL(Path.PATH_GOOGLE_CLIENT_LOGIN);
         final HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         urlConnection.setRequestMethod("POST");
         urlConnection.setDoInput(true);
         urlConnection.setDoOutput(true);
         urlConnection.setUseCaches(false);
-        urlConnection.setRequestProperty(Const.Params.PARAM_CONTENT_TYPE,
+        urlConnection.setRequestProperty(Params.PARAM_CONTENT_TYPE,
                 "application/x-www-form-urlencoded");
         final StringBuilder content = new StringBuilder();
         content.append("Email=")

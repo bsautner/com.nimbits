@@ -1,6 +1,6 @@
 package com.nimbits.server.google;
 
-import com.nimbits.client.model.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.http.*;
 
@@ -15,7 +15,7 @@ public class GoogleURLShortener   {
    public static String shortenURL(final String longURl) {
        final URLResource urlResource = new URLResource(longURl);
        final String json = GsonFactory.getInstance().toJson(urlResource);
-       final String u = HttpCommonFactory.getInstance().doJsonPost( Const.PATH_GOOGLE_URL_SHORTENER, "",json);
+       final String u = HttpCommonFactory.getInstance().doJsonPost( Path.PATH_GOOGLE_URL_SHORTENER, "",json);
        final ShortResponse response = GsonFactory.getInstance().fromJson(u, ShortResponse.class);
        return response.getId();
    }

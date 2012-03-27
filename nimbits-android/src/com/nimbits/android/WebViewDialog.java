@@ -13,7 +13,6 @@
 
 package com.nimbits.android;
 
-import android.*;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -21,8 +20,8 @@ import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.Const;
 
 import java.io.UnsupportedEncodingException;
 
@@ -81,7 +80,7 @@ public class WebViewDialog extends Dialog {
 
                 }
             } catch (UnsupportedEncodingException e) {
-                Log.e(Const.N, e.getMessage());
+                Log.e(Android.N, e.getMessage());
             }
             reload("about:blank");
             WebViewDialog.this.dismiss();

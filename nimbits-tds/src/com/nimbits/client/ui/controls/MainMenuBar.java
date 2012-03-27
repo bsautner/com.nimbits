@@ -11,6 +11,7 @@ import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 import com.nimbits.client.common.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
@@ -161,13 +162,13 @@ public class MainMenuBar extends ToolBar {
         MenuItem item = new MenuItem("Data Point");
 
         item.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.addNew()));
-        item.setToolTip(Const.MESSAGE_NEW_POINT);
+        item.setToolTip(UserMessages.MESSAGE_NEW_POINT);
         item.addListener(Events.OnClick, new Listener<BaseEvent>() {
             @Override
             public void handleEvent(BaseEvent be) {
                 final MessageBox box = MessageBox.prompt(
-                        Const.MESSAGE_NEW_POINT,
-                        Const.MESSAGE_NEW_POINT_PROMPT);
+                        UserMessages.MESSAGE_NEW_POINT,
+                        UserMessages.MESSAGE_NEW_POINT_PROMPT);
 
                 box.addCallback(createNewPointListener);
             }
@@ -197,7 +198,7 @@ public class MainMenuBar extends ToolBar {
         public void handleEvent(BaseEvent be) {
             final Window w = new Window();
             w.setAutoWidth(true);
-            w.setHeading(Const.MESSAGE_UPLOAD_SVG);
+            w.setHeading(UserMessages.MESSAGE_UPLOAD_SVG);
             FileUploadPanel p = new FileUploadPanel(UploadType.newFile);
             p.addFileAddedListeners(new FileUploadPanel.FileAddedListener() {
 
@@ -263,7 +264,7 @@ public class MainMenuBar extends ToolBar {
             @Override
             public void handleEvent(BaseEvent be) {
                 final MessageBox box = MessageBox.prompt(
-                        Const.MESSAGE_ADD_CATEGORY,
+                        UserMessages.MESSAGE_ADD_CATEGORY,
                         "Add a new folder to organize your data. Folders can be shared, and " +
                                 "subscribed to by other users if you set their security level " +
                                 "to public");

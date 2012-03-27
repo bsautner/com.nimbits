@@ -40,8 +40,8 @@ import com.nimbits.android.WebViewDialog;
 import com.nimbits.android.account.OwnerAccountFactory;
 import com.nimbits.android.dao.LocalDatabaseDaoFactory;
 import com.nimbits.android.database.DatabaseHelperFactory;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.Const;
 import org.apache.http.cookie.Cookie;
 
 import java.io.UnsupportedEncodingException;
@@ -180,7 +180,7 @@ public class StartActivity extends Activity {
         private void update(boolean isLoggedIn) {
             Message msg = m.obtainMessage();
             Bundle b = new Bundle();
-            b.putBoolean(Const.Params.PARAM_IS_LOGGED_IN, isLoggedIn);
+            b.putBoolean(Params.PARAM_IS_LOGGED_IN, isLoggedIn);
             msg.setData(b);
             m.sendMessage(msg);
         }
@@ -188,7 +188,7 @@ public class StartActivity extends Activity {
         public void run() {
 
             try {
-                baseURL = LocalDatabaseDaoFactory.getInstance().getSetting(StartActivity.this, Const.PARAM_SERVER);
+                baseURL = LocalDatabaseDaoFactory.getInstance().getSetting(StartActivity.this, Params.PARAM_SERVER);
 
                 // String authToken = OwnerAccountImpl.getToken(currentContext);
                 //googleAuth.connectClean(baseURL,authToken);
@@ -202,7 +202,7 @@ public class StartActivity extends Activity {
                 update(isLoggedIn);
             } catch (Exception e) {
                 OwnerAccountFactory.getInstance().invalidateToken(StartActivity.this, OwnerAccountFactory.getInstance().getToken(StartActivity.this));
-                Log.e(Const.N, e.getMessage());
+                Log.e(Android.N, e.getMessage());
                 update(false);
             }
 
@@ -218,7 +218,7 @@ public class StartActivity extends Activity {
     private final Handler authenticateThreadHandler = new Handler() {
         public void handleMessage(Message msg) {
             //	int total = msg.getData().getInt("total");
-            final boolean isLoggedIn = msg.getData().getBoolean(Const.Params.PARAM_IS_LOGGED_IN);
+            final boolean isLoggedIn = msg.getData().getBoolean(Params.PARAM_IS_LOGGED_IN);
             final String cookie;
             Log.v("NimbitsV", "is logged in " + isLoggedIn);
             if (authenticateDialog != null) {
@@ -267,7 +267,7 @@ public class StartActivity extends Activity {
                         mWebView.setInitialScale(100);
                         mWebView.getSettings().setJavaScriptEnabled(true);
 
-                        mWebView.loadUrl(baseURL + "?" + Const.Params.PARAM_CLIENT + "=" + Const.WORD_ANDROID);
+                        mWebView.loadUrl(baseURL + "?" + Params.PARAM_CLIENT + "=" + Words.WORD_ANDROID);
                     } catch (NimbitsException e) {
 
                     }
@@ -353,7 +353,7 @@ public class StartActivity extends Activity {
             public void onClick(DialogInterface dialog, int which) {
                 if (selectedServer != null) {
                     baseURL = selectedServer;
-                    LocalDatabaseDaoFactory.getInstance().updateSetting(StartActivity.this, Const.PARAM_SERVER, baseURL);
+                    LocalDatabaseDaoFactory.getInstance().updateSetting(StartActivity.this, Params.PARAM_SERVER, baseURL);
                     dismissDialog(CHOOSE_SERVER_DIALOG);
                     removeDialog(CHOOSE_SERVER_DIALOG);
 
@@ -399,7 +399,7 @@ public class StartActivity extends Activity {
         d.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 EditText urlText = (EditText) dialog1.findViewById(R.id.new_value);
-                urlText.setText(Const.PATH_NIMBITS_PUBLIC_SERVER);
+                urlText.setText(Path.PATH_NIMBITS_PUBLIC_SERVER);
 
             }
         });
@@ -417,7 +417,7 @@ public class StartActivity extends Activity {
 
     private Dialog dialogAuthenticatedResponse() {
         Log.v("NimbitsV", "Authenticating");
-        baseURL = LocalDatabaseDaoFactory.getInstance().getSetting(StartActivity.this, Const.PARAM_SERVER);
+        baseURL = LocalDatabaseDaoFactory.getInstance().getSetting(StartActivity.this, Params.PARAM_SERVER);
         Log.v("NimbitsV", "Logging into " + baseURL);
         authenticateDialog = new ProgressDialog(this);
         authenticateDialog = ProgressDialog.show(this, "", "Authenticating to Nimbits Server @ " + baseURL + " using account " + OwnerAccountFactory.getInstance().getEmail(StartActivity.this) + ".  Please wait...", true);

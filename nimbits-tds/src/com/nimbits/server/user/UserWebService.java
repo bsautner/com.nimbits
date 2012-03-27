@@ -13,7 +13,8 @@
 
 package com.nimbits.server.user;
 
-import com.nimbits.client.model.*;
+import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.server.gson.*;
 
@@ -29,9 +30,9 @@ public class UserWebService extends HttpServlet {
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
         final String result;
         final PrintWriter out;
-        final String action = req.getParameter(Const.Params.PARAM_ACTION);
+        final Action action = Action.get(req.getParameter(Params.PARAM_ACTION));
 
-        if (!(action == null) && action.equals(Const.ACTION_DOWNLOAD)) {
+        if (!(action == null) && action.equals(Action.download)) {
             out = resp.getWriter();
             final List<User> users = UserTransactionFactory.getInstance().getAllUsers("dateCreated ascending", 1000);
 
@@ -39,7 +40,7 @@ public class UserWebService extends HttpServlet {
             result = GsonFactory.getInstance().toJson(users, GsonFactory.userListType);
             out.println(result);
         }
-        if (!(action == null) && action.equals(Const.ACTION_CREATE)) {
+        if (!(action == null) && action.equals(Action.create)) {
 
         }
 

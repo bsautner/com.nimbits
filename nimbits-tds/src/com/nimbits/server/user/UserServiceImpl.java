@@ -16,24 +16,21 @@ package com.nimbits.server.user;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.*;
 import com.nimbits.client.common.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.connection.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.user.UserService;
-import com.nimbits.server.counter.*;
-import com.nimbits.server.dao.counter.*;
 import com.nimbits.server.email.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.feed.*;
 
 import javax.servlet.http.*;
 import java.util.*;
-import java.util.logging.*;
 
 
 public class UserServiceImpl extends RemoteServiceServlet implements
@@ -55,8 +52,8 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         final com.google.appengine.api.users.UserService googleUserService = UserServiceFactory.getUserService();
 
         if (req != null) {
-            emailParam = req.getParameter(Const.Params.PARAM_EMAIL);
-            secret = req.getParameter(Const.Params.PARAM_SECRET);
+            emailParam = req.getParameter(Params.PARAM_EMAIL);
+            secret = req.getParameter(Params.PARAM_SECRET);
             session = req.getSession();
         }
 
@@ -69,8 +66,8 @@ public class UserServiceImpl extends RemoteServiceServlet implements
             email = (!Utils.isEmptyString(emailParam)) ?
                     CommonFactoryLocator.getInstance().createEmailAddress(emailParam) : null;
 
-            if (email == null && session != null && (session.getAttribute(Const.Params.PARAM_EMAIL) != null)) {
-                email = (EmailAddress) session.getAttribute(Const.Params.PARAM_EMAIL);
+            if (email == null && session != null && (session.getAttribute(Params.PARAM_EMAIL) != null)) {
+                email = (EmailAddress) session.getAttribute(Params.PARAM_EMAIL);
             }
 
             if (email == null && googleUserService.getCurrentUser() != null) {
@@ -187,7 +184,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
 
         if (f != null) {
-            EmailServiceFactory.getInstance().sendEmail(email, Const.getConnectionInviteEmail(user.getEmail()));
+            EmailServiceFactory.getInstance().sendEmail(email,  getConnectionInviteEmail(user.getEmail()));
             FeedServiceFactory.getInstance().postToFeed(user, "<p>A connection request has been emailed to " +
                     email.getValue() + ". If they approve, you will see any data object of theirs that have " +
                     "their permission set to be viewable by the public or connections</p>", FeedType.info);
@@ -197,7 +194,69 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
 
     }
-
+    public static String getConnectionInviteEmail(final EmailAddress email) {
+        return "<P STYLE=\"margin-bottom: 0in\"> " + email.getValue() +
+                " wants to connect with you on <a href = \"http://www.nimbits.com\"> Nimbits! </A></BR></P><BR> \n" +
+                "<P><a href = \"http://www.nimbits.com\">Nimbits</A> is a data logging service that you can use to record time series\n" +
+                "data, such as sensor readings, GPS Data, stock prices or anything else into Data Points on the cloud.</P>\n" +
+                "<BR><P STYLE=\"margin-bottom: 0in\">\n" +
+                "</P>\n" +
+                "<P STYLE=\"margin-bottom: 0in\">Nimbits uses Google Accounts for\n" +
+                "authentication. If you have a gmail account, you can sign into\n" +
+                "Nimbits immediately  using that account. You can also register any\n" +
+                "email address with google accounts and then sign in to Nimbits.  It\n" +
+                "only takes a few seconds to register:\n" +
+                "<A HREF=\"https://www.google.com/accounts/NewAccount\">https://www.google.com/accounts/NewAccount</A></P>\n" +
+                "<P STYLE=\"margin-bottom: 0in\">\n" +
+                "</P>\n" +
+                "<BR><P STYLE=\"margin-bottom: 0in\"><A HREF=\"http://app.nimbits.com/\">Sign\n" +
+                "into Nimbits</A> to approve this connection request.  <A HREF=\"http://www.nimbits.com/\">Go to \n" +
+                "nimbits.com</A> to learn more.</P>\n" +
+                "<P STYLE=\"margin-bottom: 0in\">\n" +
+                "</P>\n" +
+                "<P STYLE=\"margin-bottom: 0in\">\n" +
+                "</P>\n" +
+                "<BR><BR><P STYLE=\"margin-bottom: 0in\"><STRONG>More about Nimbits Services</STRONG></P>\n" +
+                "<P STYLE=\"margin-bottom: 0in\">\n" +
+                "</P>\n" +
+                "<P STYLE=\"margin-bottom: 0in\">Nimbits is a collection of software " +
+                "designed for recording and working with time series data - such as " +
+                "readings from a temperature probe, a stock price, or anything else " +
+                "that changes over time - even textual and GPS data.  Nimbits allows " +
+                "you to create online Data Points that provide a data channel into the " +
+                "cloud.\n" +
+                "</P>\n" +
+                "<P STYLE=\"margin-bottom: 0in\">\n" +
+                "</P>\n" +
+                "<BR><P STYLE=\"margin-bottom: 0in\">Nimbits Server, a data historian, is " +
+                "available at <A HREF=\"http://www.nimbits.com/\">app.nimbits.com</A> " +
+                "and provides a collection of web services, APIs and an interactive " +
+                "portal enabling you to record data on a global cloud computing " +
+                "infrastructure. You can also download and install your own instance " +
+                "of a Nimbits Server, write your own software using Nimbits as a " +
+                "powerful back end, or use our many free and open source downloads. " +
+                "</P>\n" +
+                "<P STYLE=\"margin-bottom: 0in\">\n" +
+                "</P>\n" +
+                "<BR><P STYLE=\"margin-bottom: 0in\">Built on cloud computing architecture,\n" +
+                "and optimized to run on Google App Engine, you can run a Nimbits\n" +
+                "Server with remarkable uptime and out of the box disaster recover\n" +
+                "with zero upfront cost and a generous free quota. Then, only pay for\n" +
+                "computing services you use with near limitless and instant\n" +
+                "scalability when you need it. A typical 10 point Nimbits System costs\n" +
+                "only pennies a week to run, and nothing at all when it's not in use.\n" +
+                "</P>\n" +
+                "<P STYLE=\"margin-bottom: 0in\">\n" +
+                "</P>\n" +
+                "<P STYLE=\"margin-bottom: 0in\">As your data flows into a Nimbits Data\n" +
+                "Point, values can be compressed, alarms can be triggered,\n" +
+                "calculations can be performed and data can even be relayed to\n" +
+                "facebook, Twitter or other connected systems.  You can chat with your\n" +
+                "data over IM from anywhere, see and share your changing data values\n" +
+                "in spreadsheets, diagrams and even on your phone with our free\n" +
+                "android app. \n" +
+                "</P>";
+    }
     @Override
     public List<Connection> getPendingConnectionRequests(final EmailAddress email) {
         return UserTransactionFactory.getInstance().getPendingConnectionRequests(email);

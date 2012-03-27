@@ -1,7 +1,7 @@
 package com.nimbits.client.enums;
 
 
-import com.nimbits.client.model.Const;
+import com.nimbits.client.constants.Const;
 
 import java.util.EnumSet;
 import java.util.HashMap;

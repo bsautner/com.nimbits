@@ -14,7 +14,7 @@
 package com.nimbits.server.task;
 
 import com.google.gson.Gson;
-import com.nimbits.client.model.Const;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
@@ -42,7 +42,7 @@ public class PointMaintTask extends HttpServlet {
         final Gson gson = GsonFactory.getInstance();
         resp.setContentType(Const.CONTENT_TYPE_HTML);
 
-        final String pointJson = req.getParameter(Const.Params.PARAM_POINT);
+        final String pointJson = req.getParameter(Params.PARAM_POINT);
         final PointModel p = gson.fromJson(pointJson, PointModel.class);
         // final UserContext context = gson.fromJson(jsonContext, UserContextImpl.class);
 

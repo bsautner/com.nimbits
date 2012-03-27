@@ -14,7 +14,6 @@
 package com.nimbits.client.model.email.impl;
 
 
-import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.impl.CommonIdentifierImpl;
 import com.nimbits.client.model.email.EmailAddress;
 

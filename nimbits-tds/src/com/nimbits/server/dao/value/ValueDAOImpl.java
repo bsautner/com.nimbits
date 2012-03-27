@@ -6,7 +6,7 @@ import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.files.*;
 import com.nimbits.PMF;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.Const;
+import com.nimbits.client.constants.Const;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.value.Value;

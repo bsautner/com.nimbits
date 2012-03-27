@@ -25,6 +25,7 @@ import com.google.gwt.user.client.Window.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 import com.nimbits.client.common.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.entity.*;
@@ -51,13 +52,13 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
     @Override
     public void onModuleLoad() {
-        final String clientTypeParam = Location.getParameter(Const.Params.PARAM_CLIENT);
-        String uuid = Location.getParameter(Const.PARAM_UUID);
-        final String actionParam = Location.getParameter(Const.Params.PARAM_ACTION);
-        final String fb = Location.getParameter(Const.Params.PARAM_FACEBOOK);
-        final String code = Location.getParameter(Const.Params.PARAM_CODE);
-        final String tw = Location.getParameter(Const.Params.PARAM_TWITTER);
-        final String oauth_token = Location.getParameter(Const.Params.PARAM_OAUTH);
+        final String clientTypeParam = Location.getParameter(com.nimbits.client.constants.Params.PARAM_CLIENT);
+        String uuid = Location.getParameter(com.nimbits.client.constants.Params.PARAM_UUID);
+        final String actionParam = Location.getParameter(com.nimbits.client.constants.Params.PARAM_ACTION);
+        final String fb = Location.getParameter(com.nimbits.client.constants.Params.PARAM_FACEBOOK);
+        final String code = Location.getParameter(com.nimbits.client.constants.Params.PARAM_CODE);
+        final String tw = Location.getParameter(com.nimbits.client.constants.Params.PARAM_TWITTER);
+        final String oauth_token = Location.getParameter(com.nimbits.client.constants.Params.PARAM_OAUTH);
         //final String diagramUUID = Location.getParameter(Const.Params.PARAM_DIAGRAM);
 
 //        final String debug = Location.getParameter(Const.PARAM_DEBUG);
@@ -70,10 +71,10 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         boolean doSubscribe = (uuid != null && actionParam != null && actionParam.equals(Action.subscribe.name()));
         Action action = Action.none;
 
-        if (Cookies.getCookieNames().contains(Const.Params.PARAM_CLIENT) && Utils.isEmptyString(clientTypeParam)) {
-            clientType = ClientType.valueOf(Cookies.getCookie(Const.Params.PARAM_CLIENT));
+        if (Cookies.getCookieNames().contains(com.nimbits.client.constants.Params.PARAM_CLIENT) && Utils.isEmptyString(clientTypeParam)) {
+            clientType = ClientType.valueOf(Cookies.getCookie(com.nimbits.client.constants.Params.PARAM_CLIENT));
         }
-        else if (!Utils.isEmptyString(clientTypeParam) && clientTypeParam.equals(Const.WORD_ANDROID)) {
+        else if (!Utils.isEmptyString(clientTypeParam) && clientTypeParam.equals(Words.WORD_ANDROID)) {
             clientType = ClientType.android;
             doAndroid = true;
         } else {
@@ -107,7 +108,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
             action = Action.facebook;
         }
 
-        Cookies.setCookie(Const.Params.PARAM_CLIENT, clientType.name());
+        Cookies.setCookie(com.nimbits.client.constants.Params.PARAM_CLIENT, clientType.name());
 
 
 
@@ -360,7 +361,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
                     @Override
                     public void onSuccess(Void result) {
-                        Window.alert(Const.MESSAGE_TWITTER_ADDED);
+                        Window.alert(UserMessages.MESSAGE_TWITTER_ADDED);
                         decidedWhatViewToLoadSecondStep(action, settings, null);
 
                     }

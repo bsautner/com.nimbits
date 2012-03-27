@@ -15,9 +15,9 @@ package com.nimbits.server.facebook;
 
 import com.google.gwt.http.client.*;
 import com.google.gwt.user.server.rpc.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.service.facebook.*;
@@ -49,18 +49,18 @@ public class FacebookImpl extends RemoteServiceServlet implements FacebookServic
         final String facebookSecret = SettingTransactionsFactory.getInstance().getSetting(SettingType.facebookSecret);
         final String redirect_uri = SettingTransactionsFactory.getInstance().getSetting(SettingType.facebookRedirectURL);
         final String token = getToken(code, facebookClientId, redirect_uri, facebookSecret);
-        final String jsonEmail = HttpCommonFactory.getInstance().doGet(Const.PATH_FACEBOOK_ME, urlEncodeToken(token) + "&fields=email,name");
+        final String jsonEmail = HttpCommonFactory.getInstance().doGet(Path.PATH_FACEBOOK_ME, urlEncodeToken(token) + "&fields=email,name");
 
         final FacebookUser f = GsonFactory.getSimpleInstance().fromJson(jsonEmail, FacebookUser.class);
 
         final HttpServletRequest request = this.getThreadLocalRequest();
         final HttpSession session = request.getSession();
-        session.setAttribute(Const.Params.PARAM_EMAIL, u.getEmail());
+        session.setAttribute(Params.PARAM_EMAIL, u.getEmail());
 
         UserTransactionFactory.getInstance().setFacebookToken(u.getEmail(), token, f.getId());
 
         updateStatus(token, "Added Nimbits services for facebook.",
-                Const.PATH_LOGO_IMG, "http://www.nimbits.com",
+                Path.PATH_LOGO_IMG, "http://www.nimbits.com",
                 "go to www.nimbits.com to learn more",
                 "",
                 "Nimbits is a free, social and open source data logging service you can use to integrate your home, apps and life into the cloud."

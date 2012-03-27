@@ -13,7 +13,6 @@
 
 package com.nimbits.client.model.point;
 
-import com.nimbits.client.model.Const;
 import com.nimbits.client.model.common.impl.CommonIdentifierImpl;
 
 import java.io.Serializable;

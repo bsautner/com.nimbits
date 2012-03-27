@@ -14,8 +14,8 @@
 package com.nimbits.server.dao.user;
 
 import com.nimbits.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
 import com.nimbits.client.model.connection.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.entity.*;

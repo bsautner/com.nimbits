@@ -14,9 +14,9 @@
 package com.nimbits.server.task;
 
 import com.google.gson.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
@@ -65,7 +65,7 @@ public class ProcessBatchTask extends HttpServlet {
     private void processBatch(final HttpServletRequest req, final HttpServletResponse resp) throws IOException, NimbitsException {
 
         final Gson gson = GsonFactory.getInstance();
-        final String userJson = req.getParameter(Const.Params.PARAM_JSON_USER);
+        final String userJson = req.getParameter(Params.PARAM_JSON_USER);
         final User u = gson.fromJson(userJson, UserModel.class);
 
 
@@ -106,7 +106,7 @@ public class ProcessBatchTask extends HttpServlet {
                         RecordedValueServiceFactory.getInstance().recordValue(b.u, p, v, false);
                     } catch (JDOException e) {
 
-                        log.severe(Const.ERROR_BATCH_SERVICE_JDO + e.getMessage());
+                        log.severe(UserMessages.ERROR_BATCH_SERVICE_JDO + e.getMessage());
 
                     }
                 }

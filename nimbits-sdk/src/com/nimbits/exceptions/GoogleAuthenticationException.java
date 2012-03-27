@@ -13,8 +13,6 @@
 
 package com.nimbits.exceptions;
 
-import com.nimbits.client.model.Const;
-
 public class GoogleAuthenticationException extends Exception {
 
     /**

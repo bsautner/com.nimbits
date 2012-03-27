@@ -15,6 +15,7 @@ import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.feed.*;
@@ -77,12 +78,12 @@ public class FeedPanel  extends LayoutContainer {
         store.add(ops);
 
         //  combo.setFieldLabel(title);
-        combo.setDisplayField(Const.Params.PARAM_NAME);
-        combo.setValueField(Const.PARAM_VALUE);
+        combo.setDisplayField(Params.PARAM_NAME);
+        combo.setValueField(Params.PARAM_VALUE);
         combo.setTriggerAction(ComboBox.TriggerAction.ALL);
         combo.setStore(store);
 
-        FeedTypeOption selected = combo.getStore().findModel(Const.PARAM_VALUE, selectedValue.getCode());
+        FeedTypeOption selected = combo.getStore().findModel(Params.PARAM_VALUE, selectedValue.getCode());
         combo.setValue(selected);
 
         return combo;
@@ -111,7 +112,7 @@ public class FeedPanel  extends LayoutContainer {
                         model = new GxtFeedModel(v);
                         FeedType type = feedType.getValue().type;
                         if (type.equals(FeedType.all) || type.equals(v.getFeedType())) {
-                            if (store.findModel(Const.PARAM_HTML, model.getHtml()) == null) {
+                            if (store.findModel(Params.PARAM_HTML, model.getHtml()) == null) {
                                 store.insert(model, 0);
                            }
                         }
@@ -135,7 +136,7 @@ public class FeedPanel  extends LayoutContainer {
             protected GxtFeedModel prepareData(GxtFeedModel model) {
                 // String s = model.get(Const.Params.PARAM_NAME);
                 //  model.set("shortName", Format.ellipse(s, 15));
-                model.set(Const.Params.PARAM_PATH, GWT.getHostPageBaseURL() + model.get(Const.Params.PARAM_PATH));
+                model.set(Params.PARAM_PATH, GWT.getHostPageBaseURL() + model.get(Params.PARAM_PATH));
                 return model;
             }
 
@@ -256,8 +257,8 @@ public class FeedPanel  extends LayoutContainer {
 
         public FeedTypeOption(FeedType value) {
             this.type = value;
-            set(Const.PARAM_VALUE, value.getCode());
-            set(Const.Params.PARAM_NAME, value.getText());
+            set(Params.PARAM_VALUE, value.getCode());
+            set(Params.PARAM_NAME, value.getText());
         }
 
         public FeedType getMethod() {

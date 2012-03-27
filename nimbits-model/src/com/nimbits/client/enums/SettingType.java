@@ -13,19 +13,24 @@ import java.util.*;
 public enum SettingType {
 
 
-    lastChecked(SettingConstants.SETTING_LAST_CHECKED, new Date().toString(), true),
-    serverVersion(SettingConstants.SETTING_VERSION, SettingConstants.CONST_SERVER_VERSION, true),
-    serverIsDiscoverable(SettingConstants.SETTING_SERVER_IS_DISCOVERABLE,SettingConstants.TRUE, false),
-    billingEnabled(SettingConstants.SETTING_BILLING_ENABLED, SettingConstants.FALSE, false),
-    admin(SettingConstants.SETTING_ADMIN, Const.TEST_ACCOUNT, false),
-    connectionsEnabled(SettingConstants.SETTING_ENABLE_CONNECTIONS, SettingConstants.TRUE, false),
-    facebookClientId(SettingConstants.SETTING_FACEBOOK_CLIENT_ID, SettingConstants.EMPTY, false),
-    facebookRedirectURL(SettingConstants.SETTING_FACEBOOK_REDIRECT_URL, Const.PATH_FACEBOOK_REDIRECT, false),
-    facebookAPIKey(SettingConstants.SETTING_FACEBOOK_API_KEY, SettingConstants.EMPTY, false),
-    facebookSecret(SettingConstants.SETTING_FACEBOOK_SECRET, SettingConstants.EMPTY, false),
-    wolframKey(SettingConstants.SETTING_WOLFRAM, Const.CONST_UNKNOWN, false),
-    twitterClientId(SettingConstants.SETTING_TWITTER_CLIENT_ID, SettingConstants.EMPTY, false),
-    twitterSecret(SettingConstants.SETTING_TWITTER_SECRET, SettingConstants.EMPTY, false);
+    lastChecked(SettingConstants.SETTING_LAST_CHECKED, new Date().toString(), true, true),
+    serverVersion(SettingConstants.SETTING_VERSION, SettingConstants.CONST_SERVER_VERSION, true, true),
+    serverIsDiscoverable(SettingConstants.SETTING_SERVER_IS_DISCOVERABLE,SettingConstants.TRUE, false, true),
+    billingEnabled(SettingConstants.SETTING_BILLING_ENABLED, SettingConstants.FALSE, false, true),
+    admin(SettingConstants.SETTING_ADMIN, Const.TEST_ACCOUNT, false, true),
+    connectionsEnabled(SettingConstants.SETTING_ENABLE_CONNECTIONS, SettingConstants.TRUE, false, true),
+    facebookClientId(SettingConstants.SETTING_FACEBOOK_CLIENT_ID, SettingConstants.EMPTY, false, true),
+    facebookRedirectURL(SettingConstants.SETTING_FACEBOOK_REDIRECT_URL, Const.PATH_FACEBOOK_REDIRECT, false, true),
+    facebookAPIKey(SettingConstants.SETTING_FACEBOOK_API_KEY, SettingConstants.EMPTY, false, true),
+    facebookSecret(SettingConstants.SETTING_FACEBOOK_SECRET, SettingConstants.EMPTY, false, true),
+    wolframKey(SettingConstants.SETTING_WOLFRAM, Const.CONST_UNKNOWN, false, true),
+    twitterClientId(SettingConstants.SETTING_TWITTER_CLIENT_ID, SettingConstants.EMPTY, false, true),
+    twitterSecret(SettingConstants.SETTING_TWITTER_SECRET, SettingConstants.EMPTY, false, true),
+    source(SettingConstants.SETTING_SOURCE,SettingConstants.EMPTY,false, false),
+    testAccount(SettingConstants.SETTING_TEST_ACCOUNT,SettingConstants.EMPTY,false, false),
+    testPassword(SettingConstants.SETTING_TEST_PASSWORD,SettingConstants.EMPTY,false, false),
+    testURL(SettingConstants.SETTING_TEST_URL,SettingConstants.EMPTY,false, false)
+    ;
 
 
     private static final Map<String, SettingType> lookup = new HashMap<String, SettingType>();
@@ -40,11 +45,12 @@ public enum SettingType {
     private final String name;
     private final String defaultValue;
     private final boolean update;
-
-    private SettingType(final String name, final String defaultValue, final boolean update) {
+    private final boolean create;
+    private SettingType(final String name, final String defaultValue, final boolean update, final boolean create) {
         this.name = name;
         this.update = update;
         this.defaultValue = defaultValue;
+        this.create = create;
     }
 
 
@@ -62,6 +68,10 @@ public enum SettingType {
 
     public String getName() {
         return name;
+    }
+
+    public boolean isCreate() {
+        return create;
     }
 
     @Override
@@ -87,5 +97,9 @@ public enum SettingType {
         private static final String SETTING_TWITTER_SECRET = "twitterSecret";
         private static final String SETTING_VERSION = "version";
         private static final String SETTING_FACEBOOK_API_KEY = "facebookApiKey";
+        public static final String SETTING_SOURCE = "source";
+        public static final String SETTING_TEST_ACCOUNT = "testAccount";
+        public static final String SETTING_TEST_PASSWORD = "testPassword";
+        public static final String SETTING_TEST_URL = "testURL";
     }
 }

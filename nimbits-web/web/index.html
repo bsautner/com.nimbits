@@ -140,6 +140,7 @@
 
                     <ul class="dropdown-menu">
                         <!--<li><a href="#">Nimbits Server Overview</a></li>-->
+                        <li><a href="#" onclick="getContent('pages/code/sdk_create_random_data.html')">Java SDK</a></li>
                         <li><a href="#" onclick="getContent('pages/python.html')">Python</a></li>
                         <li><a href="#" onclick="getContent('pages/curl.html')">cURL</a></li>
                         <li><a href="#" onclick="getContent('pages/XMPP_WA.html')">Intelligent M2M</a></li>
@@ -186,38 +187,26 @@
     </div>
 </div>
 
+<a href="" id="link" onmouseout="hideToolTip()" onmouseover="showToolTip()">
+    <img   src="images/link.jpg" width="21" alt="link to this page" style="float:left"/></a>
+<div id="myToolTip" style="position: absolute; z-index: 999; visibility: hidden;">
+    <span class="label success">Link to this page</span>
 
-    <table style="padding:0; border:0; width: 100px; height: 10px; vertical-align:bottom;">
+</div>
 
-        <tr>
-            <td style="padding-right:4; padding-top: 0; width: 30px" >
-                <a href="" id="link" onmouseout="hideToolTip()" onmouseover="showToolTip()">
-                    <img src="images/link.jpg" width="20" alt="link to this page" /></a>
+<div class="fb-like" data-href="http://www.nimbits.com" data-send="false" data-layout="button_count"
+     data-width="75" data-show-faces="false" style="float:left; margin-left: 4px; margin-top: 4px"></div>
 
-                <div id="myToolTip" style="position: absolute; z-index: 999; visibility: hidden;">
-                    <span class="label success">Link to this page</span>
-
-                </div>
-            </td>
-            <td style="padding:1px; width:40px" >
-                <g:plusone size="small"></g:plusone>
-            </td>
-
-               <td style="padding:1px;" >
-                   <div class="fb-like" data-href="http://www.nimbits.com" data-send="false" data-layout="button_count" data-width="75" data-show-faces="false"></div>
-
-            </td>
-
-        </tr>
-
-    </table>
-
+<div style="float:left; margin-left: 0px; margin-top: 6px">
+    <g:plusone size="small" ></g:plusone>
+</div>
 <div class="container">
-
 
 <div class="content" id="content">
 <div id="masthead">
+
     <div class="inner">
+
         <div class="container">
             <img id="logo" src="images/nimbits_transparent_logo.png" align="left" alt="logo"
                  style="margin-right: 10px"/>
@@ -235,11 +224,10 @@
                 <a href="#" onclick="getContent('pages/walkthrough.html')">data
                     points</a>
                 on a public or private cloud and record your changing numeric, text based, GPS, json or xml values
-                into them.
-                Nimbits is software platform you can use to develop your own cloud, android and micro-controller
-                applications. With our
-                open source software development kit, we greatly simplify your requirements for logging, alerts
-                and more.
+                into them. You can use Nimbits to store and share files, sensor logs, and process diagrams and receive
+                alerts, perform calculations, generate statistics and more. With our open source SDK and REST Web Service
+                API, you can use nimbits as a backend for your software and micro-controller projects.
+
 
 
         </div>
@@ -251,15 +239,15 @@
 <div class="content" id="search">
 
 
-    <h5>Search for Existing Data Points</h5>
+
 
     <div class="row"
-         style="border-top: 0px;border-left: 0px;border-bottom: 1px;border-right: 0px; border-style: solid; border-color: #dcdcdc ">
+         style="padding-top: 10px">
 
 
         <div class="span6">
             <div class="input">
-
+                <h5>Search for shared points and files</h5>
                 <form action="search_results.html" id="cse-search-box">
                     <div>
                         <input type="hidden" name="cx" value="partner-pub-6491049122047226:5289700289"/>
@@ -279,22 +267,24 @@
                 <script type="text/javascript" src="http://www.google.com/afsonline/show_afs_search.js"></script>
             </div>
         </div>
+        <div class="span10">
+              <span style="">The <a href="http://app.nimbits.com">Nimbits public cloud</a> and hundreds of server instances
+        around the world have files and <a href="#" onclick="getContent('pages/walkthrough.html')">data points</a> that are discoverable on our search engine. You can share your data
+    privately with other users, or anonymously publish  your feeds for everyone to subscribe to. It's easy to customise how you are alerted to
+                  changes in data you are subscribing to, from posts to your facebook wall, tweets, emails and instant messages.
+                  <a href="http://nimbits1.appspot.com/report.html?uuid=96c55c29-d60f-42a1-82a9-98d8a76960bd&count=100"
+                                                                                                    target="_blank">[sample]</a></span>
+        </div>
 
-        <div class="span9">
 
-            <p><a href="#" onclick="getContent('pages/walkthrough.html')">Learn how to get started publishing your own
-                data points.</a><br/>
 
-                <a href="http://nimbits1.appspot.com/report.html?uuid=96c55c29-d60f-42a1-82a9-98d8a76960bd&count=100"
-                   target="_blank">Click here</a> for an example search result data view.
-            </p>
 
         </div>
 
 
     </div>
-</div>
 
+ <hr />
 
 <div style="margin-top: 10px;" class="row">
     <div class="span9">
@@ -488,8 +478,8 @@
 
 
 </div>
-
 </div>
+
 <p style="margin-top: 10"></p>
 
 <p align="center">
@@ -509,6 +499,6 @@
 <div><p style="text-align: center; font-size: x-small; color: #aaaaaa;">&copy; copyright 2011 Tonic Solutions LLC - all
     rights reserved.</p></div>
 
-
+<div><p style="text-align: center; font-size: x-small; color: #aaaaaa;"><a href="sitemap.html">Site Map</a></p></div>
 </body>
 </html>

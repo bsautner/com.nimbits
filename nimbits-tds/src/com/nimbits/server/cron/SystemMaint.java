@@ -118,8 +118,10 @@ public class SystemMaint extends HttpServlet {
 
             }
         } catch (NimbitsException e) {
-            SettingTransactionsFactory.getInstance().addSetting(setting, setting.getDefaultValue());
-            out.println("<p>Added setting: " + setting.getName() + " new value : " +  setting.getDefaultValue() + "</p>");
+            if (setting.isCreate()) {
+                SettingTransactionsFactory.getInstance().addSetting(setting, setting.getDefaultValue());
+                out.println("<p>Added setting: " + setting.getName() + " new value : " +  setting.getDefaultValue() + "</p>");
+            }
         }
 
 

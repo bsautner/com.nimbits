@@ -1,0 +1,30 @@
+<script type="text/javascript" src="/include/rawfile.js">  </script>
+
+<h5>Load Random Data Sample</h5>
+<p>This Java snippet will authenticate with a Google Account,
+    use the SDK to check is a point named foo exists, if not the point is created. Then 100 random values are recorded
+with the current time.</p>
+
+ <pre class="prettyprint">
+
+        String email = "test@example.com"
+        String password = "pa$$word"
+        String url = "appid.appspot.com"
+        String pointName = "foo";
+        GoogleUser user = UserFactory.createGoogleUser(email, password);
+        Random r = new Random();
+
+        NimbitsClient client = NimbitsClientFactory.getInstance(user, url);
+
+        Point p = client.getPoint(pointName);
+        if (p == null) {  //point does not exist, let's create it.
+            p = client.addPoint(pointName);
+        }
+        // record 100 random values
+        for (int i = 0; i < 100; i++) {
+            client.recordValue(pointName, r.nextDouble());
+
+        }
+
+
+ </pre>

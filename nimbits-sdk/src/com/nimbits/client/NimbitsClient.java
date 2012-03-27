@@ -68,6 +68,8 @@ public interface NimbitsClient {
 
     Point getPoint(final EntityName pointName) throws NimbitsException;
 
+    Point getPoint(final String pointName) throws NimbitsException;
+
     Point updatePoint(final Point p);
 
     void deletePoint(final EntityName pointName);

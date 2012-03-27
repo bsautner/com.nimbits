@@ -15,7 +15,7 @@ package com.nimbits.client;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.nimbits.client.enums.Action;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.Const;
 import com.nimbits.client.model.calculation.Calculation;
@@ -352,6 +352,12 @@ public class NimbitsClientImpl implements NimbitsClient {
         return retObj;
 
 
+    }
+
+    @Override
+    public Point getPoint(String pointName) throws NimbitsException {
+        EntityName name = CommonFactoryLocator.getInstance().createName(pointName, EntityType.point);
+        return getPoint(name);
     }
 
     @Override

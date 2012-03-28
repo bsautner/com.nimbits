@@ -15,6 +15,7 @@ package com.nimbits.server.dao.value;
 
 import com.nimbits.*;
 import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.timespan.*;
@@ -137,8 +138,8 @@ public class RecordedValueDAOImpl implements RecordedValueTransactions {
         args.put("k", point.getId());
         //args.put(Const.PARAM_START_DATE, timespan.getStart());
         //args.put(Const.PARAM_END_DATE, timespan.getEnd());
-        args.put(Params.PARAM_START_DATE, new Date(timespan.getStart().getTime() - 1000));
-        args.put(Params.PARAM_END_DATE, new Date(timespan.getEnd().getTime() + 1000));
+        args.put(Parameters.sd.getText(), new Date(timespan.getStart().getTime() - 1000));
+        args.put(Parameters.ed.getText(), new Date(timespan.getEnd().getTime() + 1000));
 
         q.declareParameters("String k, Date sd, Date ed");
         q.setOrdering("timestamp descending");
@@ -172,8 +173,8 @@ public class RecordedValueDAOImpl implements RecordedValueTransactions {
         q.setRange(start, end);
 
         args.put("k", point.getId());
-        args.put(Params.PARAM_START_DATE, new Date(timespan.getStart().getTime() - 1000));
-        args.put(Params.PARAM_END_DATE, new Date(timespan.getEnd().getTime() + 1000));
+        args.put(Parameters.sd.getText(), new Date(timespan.getStart().getTime() - 1000));
+        args.put(Parameters.ed.getText(), new Date(timespan.getEnd().getTime() + 1000));
 
 
         q.declareParameters("String k, Date sd, Date ed");

@@ -14,7 +14,7 @@
 package com.nimbits.server.task;
 
 import com.google.gson.*;
-import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
@@ -36,10 +36,10 @@ public class RecordValueTask extends HttpServlet {
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
 
         final Gson gson = GsonFactory.getInstance();
-        final String userJson = req.getParameter(Params.PARAM_JSON_USER);
-        final String pointJson = req.getParameter(Params.PARAM_JSON_POINT);
-        final String valueJson = req.getParameter(Params.PARAM_JSON_VALUE);
-        final String loopFlagParam = req.getParameter(Params.PARAM_LOOP);
+        final String userJson = req.getParameter(Parameters.pointUser.getText());
+        final String pointJson = req.getParameter(Parameters.pointJson.getText());
+        final String valueJson = req.getParameter(Parameters.valueJson.getText());
+        final String loopFlagParam = req.getParameter(Parameters.loop.getText());
         final Point point = gson.fromJson(pointJson, PointModel.class);
         final Value value = gson.fromJson(valueJson, ValueModel.class);
         final boolean loopFlag = Boolean.valueOf(loopFlagParam);

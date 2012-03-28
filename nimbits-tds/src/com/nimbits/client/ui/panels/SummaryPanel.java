@@ -120,12 +120,12 @@ public class SummaryPanel extends NavigationEventProvider {
         store.add(ops);
 
         combo.setFieldLabel(title);
-        combo.setDisplayField(com.nimbits.client.constants.Params.PARAM_NAME);
-        combo.setValueField(com.nimbits.client.constants.Params.PARAM_VALUE);
+        combo.setDisplayField(Parameters.name.getText());
+        combo.setValueField(Parameters.value.getText());
         combo.setTriggerAction(ComboBox.TriggerAction.ALL);
         combo.setStore(store);
 
-        SummaryTypeOption selected = combo.getStore().findModel(com.nimbits.client.constants.Params.PARAM_VALUE, selectedValue.getCode());
+        SummaryTypeOption selected = combo.getStore().findModel(Parameters.value.getText(), selectedValue.getCode());
         combo.setValue(selected);
 
         return combo;
@@ -298,8 +298,8 @@ public class SummaryPanel extends NavigationEventProvider {
 
         public SummaryTypeOption(SummaryType value) {
             this.type = value;
-            set(com.nimbits.client.constants.Params.PARAM_VALUE, value.getCode());
-            set(com.nimbits.client.constants.Params.PARAM_NAME, value.getText());
+            set(Parameters.value.getText(), value.getCode());
+            set(Parameters.name.getText(), value.getText());
         }
 
         public SummaryType getMethod() {

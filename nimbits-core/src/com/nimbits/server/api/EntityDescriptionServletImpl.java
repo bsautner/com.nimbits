@@ -13,7 +13,6 @@
 
 package com.nimbits.server.api;
 
-import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityDescription;
@@ -47,9 +46,9 @@ public class EntityDescriptionServletImpl extends HttpServlet {
 
     @Override
     public void doPost(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
-        final String serverJson = request.getParameter(Params.PARAM_SERVER);
-        final String json = request.getParameter(Params.PARAM_ENTITY);
-        final String action = request.getParameter(Params.PARAM_ACTION);
+        final String serverJson = request.getParameter(Parameters.server.getText());
+        final String json = request.getParameter(Parameters.entity.getText());
+        final String action = request.getParameter(Parameters.action.getText());
 
         final PrintWriter out = response.getWriter();
 

@@ -31,7 +31,6 @@ public class Path {
     public static final String PATH_GOOGLE_URL_SHORTENER =  "https://www.googleapis.com/urlshortener/v1/url";
     public static final String PATH_LOCAL = "http://192.168.1.2:8081";
     public static final String PATH_FACEBOOK_REDIRECT = "http://apps.facebook.com/nimbits/";
-    public static final String PATH_CATEGORY_SERVICE = "/service/category";
     public static final String PATH_AUTHTEST_SERVICE = "/service/authtest";
     public static final String PATH_CURRENT_VALUE = "/service/currentvalue";
     public static final String PATH_AH_LOGIN = "/_ah/login";

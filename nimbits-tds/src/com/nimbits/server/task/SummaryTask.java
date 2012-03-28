@@ -1,6 +1,5 @@
 package com.nimbits.server.task;
 
-import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
@@ -38,7 +37,7 @@ public class SummaryTask  extends HttpServlet {
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
 
-        final String json = req.getParameter(Params.PARAM_JSON);
+        final String json = req.getParameter(Parameters.json.getText());
         final Entity entity = GsonFactory.getInstance().fromJson(json, EntityModel.class);
 
         final User user = UserServiceFactory.getInstance().getUserByUUID(entity.getOwner());

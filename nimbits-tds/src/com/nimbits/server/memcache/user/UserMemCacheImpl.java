@@ -221,4 +221,9 @@ public class UserMemCacheImpl implements UserTransactions {
         return UserTransactionFactory.getDAOInstance().getConnectionRequests(connections);
     }
 
+    @Override
+    public List<User> getUsers() {
+        return UserTransactionFactory.getDAOInstance().getUsers();
+    }
+
 }

@@ -78,12 +78,12 @@ public class FeedPanel  extends LayoutContainer {
         store.add(ops);
 
         //  combo.setFieldLabel(title);
-        combo.setDisplayField(Params.PARAM_NAME);
-        combo.setValueField(Params.PARAM_VALUE);
+        combo.setDisplayField(Parameters.name.getText());
+        combo.setValueField(Parameters.value.getText());
         combo.setTriggerAction(ComboBox.TriggerAction.ALL);
         combo.setStore(store);
 
-        FeedTypeOption selected = combo.getStore().findModel(Params.PARAM_VALUE, selectedValue.getCode());
+        FeedTypeOption selected = combo.getStore().findModel(Parameters.value.getText(), selectedValue.getCode());
         combo.setValue(selected);
 
         return combo;
@@ -112,7 +112,7 @@ public class FeedPanel  extends LayoutContainer {
                         model = new GxtFeedModel(v);
                         FeedType type = feedType.getValue().type;
                         if (type.equals(FeedType.all) || type.equals(v.getFeedType())) {
-                            if (store.findModel(Params.PARAM_HTML, model.getHtml()) == null) {
+                            if (store.findModel(Parameters.html.getText(), model.getHtml()) == null) {
                                 store.insert(model, 0);
                            }
                         }
@@ -136,7 +136,7 @@ public class FeedPanel  extends LayoutContainer {
             protected GxtFeedModel prepareData(GxtFeedModel model) {
                 // String s = model.get(Const.Params.PARAM_NAME);
                 //  model.set("shortName", Format.ellipse(s, 15));
-                model.set(Params.PARAM_PATH, GWT.getHostPageBaseURL() + model.get(Params.PARAM_PATH));
+                model.set(Parameters.path.getText(), GWT.getHostPageBaseURL() + model.get(Parameters.path.getText()));
                 return model;
             }
 
@@ -257,8 +257,8 @@ public class FeedPanel  extends LayoutContainer {
 
         public FeedTypeOption(FeedType value) {
             this.type = value;
-            set(Params.PARAM_VALUE, value.getCode());
-            set(Params.PARAM_NAME, value.getText());
+            set(Parameters.value.getText(), value.getCode());
+            set(Parameters.name.getText(), value.getText());
         }
 
         public FeedType getMethod() {

@@ -1,7 +1,6 @@
 package com.nimbits.server.api;
 
 import com.nimbits.client.common.*;
-import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.email.*;
@@ -23,7 +22,7 @@ import java.util.logging.*;
 public class ApiServlet extends HttpServlet {
     private static final Logger log = Logger.getLogger(ApiServlet.class.getName());
     protected User user;
-    private Map<ApiParam, String> paramMap;
+    private Map<Parameters, String> paramMap;
 
 
     public void init(final HttpServletRequest req, final HttpServletResponse resp, final ExportType type) {
@@ -32,31 +31,31 @@ public class ApiServlet extends HttpServlet {
             if (user != null) {
                 incrementCounter(user);
             }
-            paramMap = new HashMap<ApiParam, String>();
+            paramMap = new HashMap<Parameters, String>();
 
-            String items[] = {
-                    Params.PARAM_POINT,
-                    Params.PARAM_VALUE,
-                    Params.PARAM_JSON,
-                    Params.PARAM_NOTE,
-                    Params.PARAM_LAT,
-                    Params.PARAM_LNG,
-                    Params.PARAM_TIMESTAMP,
-                    Params.PARAM_DATA,
-                    Params.PARAM_UUID,
-                    Params.PARAM_FORMAT,
-                    Params.PARAM_NAME,
-                    Params.PARAM_POINTS,
-                    Params.PARAM_COUNT,
-                    Params.PARAM_AUTO_SCALE,
-                    Params.PARAM_CATEGORY
+            Parameters items[] = {
+                    Parameters.point,
+                    Parameters.value,
+                    Parameters.json,
+                    Parameters.note,
+                    Parameters.lat,
+                    Parameters.lng,
+                    Parameters.timestamp,
+                    Parameters.data,
+                    Parameters.uuid,
+                    Parameters.format,
+                    Parameters.name,
+                    Parameters.points,
+                    Parameters.count,
+                    Parameters.autoscale,
+                    Parameters.category
 
             };
 
 
 
-            for (String s : items) {
-                paramMap.put(ApiParam.get(s), req.getParameter(s));
+            for (Parameters s : items) {
+                paramMap.put(s, req.getParameter(s.getText()));
             }
             addResponseHeaders(resp, type);
 
@@ -72,7 +71,7 @@ public class ApiServlet extends HttpServlet {
         resp.addHeader("Cache-Control", "no-cache");
         resp.addHeader("Access-Control-Allow-Origin", "*");
     }
-    protected String getParam(final ApiParam param) {
+    protected String getParam(final Parameters param) {
         if (paramMap.containsKey(param)) {
             return paramMap.get(param);
         }
@@ -81,7 +80,7 @@ public class ApiServlet extends HttpServlet {
         }
     }
 
-    protected boolean containsParam(final ApiParam param) {
+    protected boolean containsParam(final Parameters param) {
 
         return paramMap.containsKey(param) && !Utils.isEmptyString(paramMap.get(param));
 

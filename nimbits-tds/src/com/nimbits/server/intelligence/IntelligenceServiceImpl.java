@@ -137,7 +137,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
         final String params;
         try {
-            params = Params.PARAM_INPUT + "=" + URLEncoder.encode(formula, Const.CONST_ENCODING) +
+            params = Parameters.input.getText() + "=" + URLEncoder.encode(formula, Const.CONST_ENCODING) +
                     "&appid=" + key() +
                     "&includepodid=Result";
         } catch (UnsupportedEncodingException e) {
@@ -158,7 +158,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
     public String getRawResult(final String query, final String podId, final boolean htmlOutput) throws NimbitsException {
         String params;
         try {
-            params = Params.PARAM_INPUT + "=" + URLEncoder.encode(query, Const.CONST_ENCODING) +
+            params = Parameters.input.getText() + "=" + URLEncoder.encode(query, Const.CONST_ENCODING) +
                     "&appid=" + key();
             if (!Utils.isEmptyString(podId)) {
                 params += "&includepodid=" + podId;
@@ -295,12 +295,12 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
                     if (inputPoint != null) {
                         Value inputValue = RecordedValueServiceFactory.getInstance().getCurrentValue(inputPoint);
-                        if (a.equals(Params.PARAM_VALUE)) {
+                        if (a.equals(Parameters.value.getText())) {
                             retStr = retStr.replace(r, String.valueOf(inputValue.getDoubleValue()));
-                        } else if (a.equals(Params.PARAM_DATA)) {
+                        } else if (a.equals(Parameters.data.getText())) {
                             retStr = retStr.replace(r, String.valueOf(inputValue.getData()));
 
-                        } else if (a.equals(Params.PARAM_NOTE)) {
+                        } else if (a.equals(Parameters.note.getText())) {
                             retStr = retStr.replace(r, String.valueOf(inputValue.getNote()));
 
                         }
@@ -336,9 +336,9 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
 
             if (intelligence.getResultsInPlainText()) {
-                result = getDataResult(processedInput, Params.PARAM_RESULT);
+                result = getDataResult(processedInput, Parameters.result.getText());
             } else {
-                result = getRawResult(processedInput, Params.PARAM_RESULT, false);
+                result = getRawResult(processedInput, Parameters.result.getText(), false);
             }
 
 

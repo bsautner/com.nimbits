@@ -23,7 +23,7 @@ import android.widget.ImageView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.DisplayType;
+import com.nimbits.client.enums.*;
 
 public class ImageCursorAdapter extends SimpleCursorAdapter {
     private final Cursor c;
@@ -57,33 +57,33 @@ public class ImageCursorAdapter extends SimpleCursorAdapter {
         switch (displayType) {
             case Category: {
                 icon.setImageResource(R.drawable.aquasmoothfoldersitesicon48);
-                icon.setTag(Params.PARAM_CATEGORY);
+                icon.setTag(Parameters.category.getText());
                 break;
             }
 
             case Point: {
                 icon.setImageResource(R.drawable.aquaballgreenicon32);
-                icon.setTag(Params.PARAM_POINT);
+                icon.setTag(Parameters.point.getText());
                 break;
             }
             case HighAlarm: {
                 icon.setImageResource(R.drawable.aquaballredicon32);
-                icon.setTag(Params.PARAM_POINT);
+                icon.setTag(Parameters.point.getText());
                 break;
             }
             case LowAlarm: {
                 icon.setImageResource(R.drawable.aquaballicon32);
-                icon.setTag(Params.PARAM_POINT);
+                icon.setTag(Parameters.point.getText());
                 break;
             }
             case IdleAlarm: {
                 icon.setImageResource(R.drawable.aquapause);
-                icon.setTag(Params.PARAM_POINT);
+                icon.setTag(Parameters.point.getText());
                 break;
             }
             case Diagram: {
                 icon.setImageResource(R.drawable.diagram);
-                icon.setTag(Params.PARAM_DIAGRAM);
+                icon.setTag(Parameters.diagram.getText());
                 break;
             }
 

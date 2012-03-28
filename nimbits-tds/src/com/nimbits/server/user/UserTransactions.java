@@ -53,4 +53,5 @@ public interface UserTransactions {
     List<User>  getConnectionRequests(final List<String> connections);
 
 
+    List<User> getUsers();
 }

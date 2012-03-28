@@ -22,6 +22,13 @@
         <timezone>America/New_York</timezone>
     </cron>
     <cron>
+        <url>/cron/quota</url>
+        <description>Resets Quotas for all users</description>
+        <schedule>every day 00:00</schedule>
+        <timezone>America/New_York</timezone>
+    </cron>
+
+    <cron>
         <url>/cron/move</url>
         <description>Moves recorded values from the memcache to the data store</description>
         <schedule>every 10 minutes</schedule>

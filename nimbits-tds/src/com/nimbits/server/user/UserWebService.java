@@ -13,7 +13,6 @@
 
 package com.nimbits.server.user;
 
-import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.server.gson.*;
@@ -30,7 +29,7 @@ public class UserWebService extends HttpServlet {
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
         final String result;
         final PrintWriter out;
-        final Action action = Action.get(req.getParameter(Params.PARAM_ACTION));
+        final Action action = Action.get(req.getParameter(Parameters.action.getText()));
 
         if (!(action == null) && action.equals(Action.download)) {
             out = resp.getWriter();

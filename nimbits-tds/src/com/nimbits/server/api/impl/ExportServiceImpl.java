@@ -14,7 +14,6 @@
 package com.nimbits.server.api.impl;
 
 import com.google.appengine.api.blobstore.*;
-import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.server.api.*;
 
@@ -34,7 +33,7 @@ public class ExportServiceImpl extends ApiServlet {
     @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
         init(req, resp, ExportType.unknown);
-        BlobKey blobKey = new BlobKey(req.getParameter(Params.PARAM_BLOB_KEY));
+        BlobKey blobKey = new BlobKey(req.getParameter(Parameters.blobkey.getText()));
         blobstoreService.serve(blobKey, resp);
     }
 }

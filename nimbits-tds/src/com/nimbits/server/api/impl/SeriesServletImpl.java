@@ -14,7 +14,6 @@
 package com.nimbits.server.api.impl;
 
 import com.nimbits.client.common.*;
-import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
@@ -50,9 +49,9 @@ public class SeriesServletImpl extends ApiServlet {
         int count;
 
 
-        String segStr = req.getParameter(Params.PARAM_SEGMENT);
-        final String startDate = req.getParameter(Params.PARAM_START_DATE);
-        final String endDate = req.getParameter(Params.PARAM_END_DATE);
+        String segStr = req.getParameter(Parameters.seg.getText());
+        final String startDate = req.getParameter(Parameters.sd.getText());
+        final String endDate = req.getParameter(Parameters.ed.getText());
 
 
         Timespan timespan = null;
@@ -66,8 +65,8 @@ public class SeriesServletImpl extends ApiServlet {
         }
 
 
-        if (!Utils.isEmptyString(getParam(ApiParam.count))) {
-            count = Integer.valueOf(getParam(ApiParam.count));
+        if (!Utils.isEmptyString(getParam(Parameters.count))) {
+            count = Integer.valueOf(getParam(Parameters.count));
         } else {
             count = 10;
 
@@ -90,12 +89,12 @@ public class SeriesServletImpl extends ApiServlet {
         try {
             final PrintWriter out = resp.getWriter();
 
-            if (Utils.isEmptyString(getParam(ApiParam.point))) {
+            if (Utils.isEmptyString(getParam(Parameters.point))) {
                 out.println("point name not specified");
             } else {
 
 
-                final EntityName pointName = CommonFactoryLocator.getInstance().createName(getParam(ApiParam.point), EntityType.point);
+                final EntityName pointName = CommonFactoryLocator.getInstance().createName(getParam(Parameters.point), EntityType.point);
                 Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
                 final Point point = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
 

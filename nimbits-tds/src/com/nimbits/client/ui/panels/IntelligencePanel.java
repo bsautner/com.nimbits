@@ -248,7 +248,7 @@ public class IntelligencePanel extends NavigationEventProvider {
             @Override
             public void handleEvent(BaseEvent be) {
                 if (intelTargetRadioNumber.getValue()) {
-                    intelNodeId.setValue(com.nimbits.client.constants.Params.PARAM_RESULT);
+                    intelNodeId.setValue(Parameters.result.getText());
                     intelPlainText.setValue(intelTargetRadioNumber.getValue());
                 }
                 intelNodeId.setReadOnly(intelTargetRadioNumber.getValue());
@@ -260,7 +260,7 @@ public class IntelligencePanel extends NavigationEventProvider {
             @Override
             public void handleEvent(BaseEvent be) {
                 if (intelTargetRadioNumber.getValue()) {
-                    intelNodeId.setValue(com.nimbits.client.constants.Params.PARAM_RESULT);
+                    intelNodeId.setValue(Parameters.result.getText());
                     intelPlainText.setValue(intelTargetRadioNumber.getValue());
 
                 }

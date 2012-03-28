@@ -16,6 +16,7 @@ package com.nimbits.server.http;
 
 import com.nimbits.client.common.*;
 import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 
 
@@ -122,7 +123,7 @@ public class HttpCommonImpl implements HttpCommon {
             connection.setDoOutput(true);
             connection.setRequestMethod(Const.METHOD_POST);
             connection.setReadTimeout(Const.DEFAULT_HTTP_TIMEOUT);
-            connection.setRequestProperty(Params.PARAM_CONTENT_TYPE, Const.CONTENT_TYPE_JSON);
+            connection.setRequestProperty(Parameters.contentType.getText(), Const.CONTENT_TYPE_JSON);
 
 
             final OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());

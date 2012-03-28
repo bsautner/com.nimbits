@@ -47,19 +47,19 @@ public class MemCacheHelper {
 
 
 
-    public static String allUsersCacheKey =  CACHE_KEY_PREFIX + Params.PARAM_USER + SettingType.serverVersion.getDefaultValue() + "ALLUSERS";
+    public static String allUsersCacheKey =  CACHE_KEY_PREFIX + Parameters.user.getText() + SettingType.serverVersion.getDefaultValue() + "ALLUSERS";
 
     public static String UserCacheKey(final EmailAddress emailAddress) {
-        return  CACHE_KEY_PREFIX + Params.PARAM_USER + SettingType.serverVersion.getDefaultValue()+    emailAddress.getValue();
+        return  CACHE_KEY_PREFIX + Parameters.user.getText() + SettingType.serverVersion.getDefaultValue()+    emailAddress.getValue();
     }
 
 
     public static String UserCacheKey(final User u) {
-        return CACHE_KEY_PREFIX + Params.PARAM_USER + SettingType.serverVersion.getDefaultValue()+   u.getEmail().getValue();
+        return CACHE_KEY_PREFIX + Parameters.user.getText() + SettingType.serverVersion.getDefaultValue()+   u.getEmail().getValue();
     }
 
     public static String UserCacheKey(final long id) {
-        return  CACHE_KEY_PREFIX + Params.PARAM_USER + SettingType.serverVersion.getDefaultValue() +   id;
+        return  CACHE_KEY_PREFIX + Parameters.user.getText() + SettingType.serverVersion.getDefaultValue() +   id;
     }
     public static String makeSafeNamespace(final String sample) {
 

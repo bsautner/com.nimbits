@@ -21,6 +21,7 @@ import android.util.Log;
 import com.nimbits.client.NimbitsClient;
 import com.nimbits.client.NimbitsClientFactory;
 import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
@@ -54,7 +55,7 @@ public class OwnerAccountImpl implements OwnerAccount {
 
     public void invalidateToken(final Context context, String token) {
         final AccountManager mgr = AccountManager.get(context);
-        mgr.invalidateAuthToken(Params.PARAM_GOOGLE_COM, token);
+        mgr.invalidateAuthToken(Parameters.PARAM_GOOGLE_COM, token);
     }
 
     @Override
@@ -63,7 +64,7 @@ public class OwnerAccountImpl implements OwnerAccount {
 
         if (tokenStore == null) {
             final AccountManager mgr = AccountManager.get(context);
-            final Account[] accounts = mgr.getAccountsByType(Params.PARAM_GOOGLE_COM);
+            final Account[] accounts = mgr.getAccountsByType(Parameters.PARAM_GOOGLE_COM);
 
             if (accounts.length > 0) {
                 AccountManagerFuture<Bundle> accountManagerFuture = mgr.getAuthToken(accounts[0], Const.CONST_AH, null, (Activity) context, null, null);
@@ -120,7 +121,7 @@ public class OwnerAccountImpl implements OwnerAccount {
     }
 
     private Account getAccount(final AccountManager accountManager) {
-        final Account[] accounts = accountManager.getAccountsByType(Params.PARAM_GOOGLE_COM);
+        final Account[] accounts = accountManager.getAccountsByType(Parameters.PARAM_GOOGLE_COM);
         return accounts.length > 0 ? accounts[0] : null;
 
 

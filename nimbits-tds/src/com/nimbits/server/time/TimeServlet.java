@@ -1,7 +1,6 @@
 package com.nimbits.server.time;
 
 import com.nimbits.client.common.*;
-import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.server.gson.*;
 
@@ -24,7 +23,7 @@ public class TimeServlet extends HttpServlet {
 
         final PrintWriter out = resp.getWriter();
         DateFormatType type;
-        String format = req.getParameter(Params.PARAM_FORMAT);
+        String format = req.getParameter(Parameters.format.getText());
         if (Utils.isEmptyString(format)) {
             type = DateFormatType.unixEpoch;
 

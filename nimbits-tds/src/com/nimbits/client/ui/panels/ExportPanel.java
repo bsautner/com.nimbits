@@ -24,7 +24,6 @@ import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.Window;
 import static com.google.gwt.user.client.Window.*;
 import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.value.*;
@@ -128,7 +127,7 @@ public class ExportPanel extends LayoutContainer {
 
                     @Override
                     public void onSuccess(final String result) {
-                        final String url = GWT.getModuleBaseURL() + "export?" + Params.PARAM_BLOB_KEY
+                        final String url = GWT.getModuleBaseURL() + "export?" + Parameters.blobkey.getText()
                                 + "=" + result;
                         box.close();
                         Window.open(url, "Export", "");

@@ -14,7 +14,7 @@
 package com.nimbits.client.service.channel;
 
 import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.model.point.*;
 
 /**
@@ -24,7 +24,7 @@ import com.nimbits.client.model.point.*;
  * Time: 3:38 PM
  */
 
-@RemoteServiceRelativePath(Params.PARAM_CHANNEL)
+@RemoteServiceRelativePath("channel")
 
 public interface ChannelApiService extends RemoteService {
 

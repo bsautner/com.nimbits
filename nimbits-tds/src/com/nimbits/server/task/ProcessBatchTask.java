@@ -65,7 +65,7 @@ public class ProcessBatchTask extends HttpServlet {
     private void processBatch(final HttpServletRequest req, final HttpServletResponse resp) throws IOException, NimbitsException {
 
         final Gson gson = GsonFactory.getInstance();
-        final String userJson = req.getParameter(Params.PARAM_JSON_USER);
+        final String userJson = req.getParameter(Parameters.pointUser.getText());
         final User u = gson.fromJson(userJson, UserModel.class);
 
 

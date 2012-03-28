@@ -52,8 +52,8 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         final com.google.appengine.api.users.UserService googleUserService = UserServiceFactory.getUserService();
 
         if (req != null) {
-            emailParam = req.getParameter(Params.PARAM_EMAIL);
-            secret = req.getParameter(Params.PARAM_SECRET);
+            emailParam = req.getParameter(Parameters.email.getText());
+            secret = req.getParameter(Parameters.secret.getText());
             session = req.getSession();
         }
 
@@ -66,8 +66,8 @@ public class UserServiceImpl extends RemoteServiceServlet implements
             email = (!Utils.isEmptyString(emailParam)) ?
                     CommonFactoryLocator.getInstance().createEmailAddress(emailParam) : null;
 
-            if (email == null && session != null && (session.getAttribute(Params.PARAM_EMAIL) != null)) {
-                email = (EmailAddress) session.getAttribute(Params.PARAM_EMAIL);
+            if (email == null && session != null && (session.getAttribute(Parameters.email.getText()) != null)) {
+                email = (EmailAddress) session.getAttribute(Parameters.email.getText());
             }
 
             if (email == null && googleUserService.getCurrentUser() != null) {

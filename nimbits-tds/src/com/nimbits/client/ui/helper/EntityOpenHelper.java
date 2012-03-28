@@ -26,7 +26,7 @@ public class EntityOpenHelper {
     }
 
     private static void openNewEntityWindow(Entity entity) {
-        Window.open("/" + "?" + Params.PARAM_UUID + "=" + entity.getEntity(), entity.getName().getValue(), "");
+        Window.open("/" + "?" + Parameters.uuid.getText() + "=" + entity.getEntity(), entity.getName().getValue(), "");
     }
 
     public static boolean isSVG(final Entity entity) {
@@ -34,7 +34,7 @@ public class EntityOpenHelper {
     }
 
     public  static void showBlob(final Entity entity) {
-        final String resourceUrl = Path.PATH_BLOB_SERVICE + "?" + Params.PARAM_BLOB_KEY + "=" + entity.getBlobKey();
+        final String resourceUrl = Path.PATH_BLOB_SERVICE + "?" + Parameters.blobkey.getText() + "=" + entity.getBlobKey();
         Window.open(resourceUrl, entity.getName().getValue(), "");
     }
 

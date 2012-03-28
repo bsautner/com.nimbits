@@ -16,7 +16,7 @@ package com.nimbits;
 import com.nimbits.client.NimbitsClient;
 import com.nimbits.client.NimbitsClientFactory;
 import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.Action;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
@@ -58,18 +58,18 @@ public class MainClass {
             processArgs(args, argsMap);
         }
 
-        if (argsMap.containsKey(Params.PARAM_I)) {
+        if (argsMap.containsKey(Parameters.i.getText())) {
             String[] fileArgs = KeyFile.processKeyFile(argsMap);
             processArgs(fileArgs, argsMap);
         }
 
-        final boolean verbose = argsMap.containsKey(Params.PARAM_VERBOSE);
-        final boolean listen = argsMap.containsKey(Params.PARAM_LISTEN);
-        final String host = argsMap.containsKey(Params.PARAM_HOST) ? argsMap.get(Params.PARAM_HOST) : Path.PATH_NIMBITS_PUBLIC_SERVER;
-        final String emailParam = argsMap.containsKey(Params.PARAM_EMAIL) ? argsMap.get(Params.PARAM_EMAIL) : null;
-        final String key = argsMap.containsKey(Params.PARAM_KEY) ? argsMap.get(Params.PARAM_KEY) : null;
-        final String appId = argsMap.containsKey(Params.PARAM_APP_ID) ? argsMap.get(Params.PARAM_APP_ID) : null;
-        final String password = argsMap.containsKey(Params.PARAM_PASSWORD) ? argsMap.get(Params.PARAM_PASSWORD) : null;
+        final boolean verbose = argsMap.containsKey(Parameters.verbose.getText());
+        final boolean listen = argsMap.containsKey(Parameters.listen.getText());
+        final String host = argsMap.containsKey(Parameters.host.getText()) ? argsMap.get(Parameters.host.getText()) : Path.PATH_NIMBITS_PUBLIC_SERVER;
+        final String emailParam = argsMap.containsKey(Parameters.email.getText()) ? argsMap.get(Parameters.email.getText()) : null;
+        final String key = argsMap.containsKey(Parameters.key.getText()) ? argsMap.get(Parameters.key.getText()) : null;
+        final String appId = argsMap.containsKey(Parameters.appid.getText()) ? argsMap.get(Parameters.appid.getText()) : null;
+        final String password = argsMap.containsKey(Parameters.password.getText()) ? argsMap.get(Parameters.password.getText()) : null;
         final EmailAddress email = CommonFactoryLocator.getInstance().createEmailAddress(emailParam);
         final NimbitsClient client = createClient(host, email, key, password);
 
@@ -97,8 +97,8 @@ public class MainClass {
                 }
             }
         } else {
-            if (argsMap.containsKey(Params.PARAM_ACTION) && loggedIn) {
-                Action action = Action.valueOf(argsMap.get(Params.PARAM_ACTION));
+            if (argsMap.containsKey(Parameters.action.getText()) && loggedIn) {
+                Action action = Action.valueOf(argsMap.get(Parameters.action.getText()));
 
                 switch (action) {
                     case read:
@@ -115,7 +115,7 @@ public class MainClass {
                     default:
                         printUsage();
                 }
-            } else if (argsMap.containsKey(Params.PARAM_GENKEY) && argsMap.containsKey(Params.PARAM_OUT)) {
+            } else if (argsMap.containsKey(Parameters.genkey.getText()) && argsMap.containsKey(Parameters.out.getText())) {
 
                 out(true, KeyFile.genKey(argsMap));
 
@@ -145,8 +145,8 @@ public class MainClass {
 
     }
 
-    private static void readValue(final NimbitsClient client, final Map<String, String> argsMap, Action action) {
-        final EntityName pointName = CommonFactoryLocator.getInstance().createName(argsMap.get(Params.PARAM_POINT));
+    private static void readValue(final NimbitsClient client, final Map<String, String> argsMap, Action action) throws NimbitsException {
+        final EntityName pointName = CommonFactoryLocator.getInstance().createName(argsMap.get(Parameters.point.getText()), EntityType.point);
         final Value v = client.getCurrentRecordedValue(pointName);
 
         switch (action) {
@@ -167,20 +167,20 @@ public class MainClass {
     }
 
     private static Value buildValue(final Map<String, String> argsMap) {
-        final double d = argsMap.containsKey(Params.PARAM_VALUE) ? Double.valueOf(argsMap.get(Params.PARAM_VALUE)) : 0.0;
-        final String note = argsMap.containsKey(Params.PARAM_NOTE) ? argsMap.get(Params.PARAM_NOTE) : null;
-        final double lat = argsMap.containsKey(Params.PARAM_LAT) ? Double.valueOf(argsMap.get(Params.PARAM_LAT)) : 0.0;
-        final double lng = argsMap.containsKey(Params.PARAM_LNG) ? Double.valueOf(argsMap.get(Params.PARAM_LNG)) : 0.0;
+        final double d = argsMap.containsKey(Parameters.value.getText()) ? Double.valueOf(argsMap.get(Parameters.value.getText())) : 0.0;
+        final String note = argsMap.containsKey(Parameters.note.getText()) ? argsMap.get(Parameters.note.getText()) : null;
+        final double lat = argsMap.containsKey(Parameters.lat.getText()) ? Double.valueOf(argsMap.get(Parameters.lat.getText())) : 0.0;
+        final double lng = argsMap.containsKey(Parameters.lng.getText()) ? Double.valueOf(argsMap.get(Parameters.lng.getText())) : 0.0;
 
         return ValueModelFactory.createValueModel(lat, lng, d, new Date(), "", note, "");
 
     }
 
-    private static void recordValue(final NimbitsClient client, final Map<String, String> argsMap, final boolean verbose) throws IOException {
+    private static void recordValue(final NimbitsClient client, final Map<String, String> argsMap, final boolean verbose) throws IOException, NimbitsException {
         out(verbose, "Recording values");
 
         final Value v = buildValue(argsMap);
-        final EntityName pointName = CommonFactoryLocator.getInstance().createName(argsMap.get(Params.PARAM_POINT));
+        final EntityName pointName = CommonFactoryLocator.getInstance().createName(argsMap.get(Parameters.point), EntityType.point);
         final Value result = client.recordValue(pointName, v);
         if (result == null) {
             out(verbose, "An error occurred recording your data");

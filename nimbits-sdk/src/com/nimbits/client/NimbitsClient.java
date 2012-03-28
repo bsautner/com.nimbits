@@ -62,9 +62,9 @@ public interface NimbitsClient {
 
     Value recordValue(final EntityName pointName, double d);
 
-    Entity addCategory(final EntityName categoryName) throws UnsupportedEncodingException;
-
-    String deleteCategory(final EntityName categoryName);
+//    Entity addCategory(final EntityName categoryName) throws UnsupportedEncodingException;
+//
+//    String deleteCategory(final EntityName categoryName);
 
     Point getPoint(final EntityName pointName) throws NimbitsException;
 
@@ -84,7 +84,7 @@ public interface NimbitsClient {
 
     List<Entity> getCategories(final boolean includePoints, final boolean includeDiagrams) throws NimbitsException;
 
-    Entity getCategory(final EntityName categoryName, final boolean includePoints, final boolean includeDiagrams) throws NimbitsException;
+   // Entity getCategory(final EntityName categoryName, final boolean includePoints, final boolean includeDiagrams) throws NimbitsException;
 
     String currentValue(final EntityName pointName) throws IOException, NimbitsException;
 

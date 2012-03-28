@@ -16,7 +16,6 @@ package com.nimbits.server.task;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.*;
 import com.google.gson.*;
-import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
@@ -68,13 +67,13 @@ public class TaskFactoryImpl implements TaskFactory {
         final Queue queue = QueueFactory.getQueue(QUEUE_DELETE_DATA);
         if (onlyExpired) {
             queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_DATA_TASK)
-                    .param(Params.PARAM_JSON,  GsonFactory.getInstance().toJson(point))
-                    .param(Params.PARAM_EXP, Long.toString(exp))
+                    .param(Parameters.json.getText(),  GsonFactory.getInstance().toJson(point))
+                    .param(Parameters.exp.getText(), Long.toString(exp))
 
             );
         } else {
             queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_DATA_TASK)
-                    .param(Params.PARAM_JSON,  GsonFactory.getInstance().toJson(point))
+                    .param(Parameters.json.getText(),  GsonFactory.getInstance().toJson(point))
             );
         }
 
@@ -85,7 +84,7 @@ public class TaskFactoryImpl implements TaskFactory {
         final Queue queue = QueueFactory.getQueue(QUEUE_DELETE_SUMMARY);
         String json = GsonFactory.getInstance().toJson(entity);
         queue.add(TaskOptions.Builder.withUrl(PATH_SUMMARY_TASK)
-                .param(Params.PARAM_JSON, json)
+                .param(Parameters.json.getText(), json)
         );
     }
 
@@ -109,7 +108,7 @@ public class TaskFactoryImpl implements TaskFactory {
             options.param(param, value);
         }
 
-        options.param(Params.PARAM_JSON_USER, userJson);
+        options.param(Parameters.pointUser.getText(), userJson);
 
         queue.add(options);
 
@@ -128,10 +127,10 @@ public class TaskFactoryImpl implements TaskFactory {
         final String valueJson = gson.toJson(value);
 
         queue.add(TaskOptions.Builder.withUrl(PATH_TASK_RECORD_VALUE)
-                .param(Params.PARAM_JSON_USER, userJson)
-                .param(Params.PARAM_JSON_POINT, pointJson)
-                .param(Params.PARAM_JSON_VALUE, valueJson)
-                .param(Params.PARAM_LOOP, String.valueOf(loopFlag))
+                .param(Parameters.pointUser.getText(), userJson)
+                .param(Parameters.pointJson.getText(), pointJson)
+                .param(Parameters.valueJson.getText(), valueJson)
+                .param(Parameters.loop.getText(), String.valueOf(loopFlag))
 
         );
     }
@@ -141,7 +140,7 @@ public class TaskFactoryImpl implements TaskFactory {
 
         final Queue queue = QueueFactory.getQueue(QUEUE_INCOMING_MAIL);
         queue.add(TaskOptions.Builder.withUrl(PATH_INCOMING_MAIL_QUEUE)
-                .param(Params.PARAM_FROM_ADDRESS, fromAddress)
+                .param(Parameters.fromAddress.getText(), fromAddress)
                 .param(IN_CONTENT, inContent));
 
 
@@ -154,7 +153,7 @@ public class TaskFactoryImpl implements TaskFactory {
         final Queue queue = QueueFactory.getQueue(TASK_POINT_MAINT);
 
         queue.add(TaskOptions.Builder.withUrl(PATH_POINT_MAINT_TASK)
-                .param(Params.PARAM_POINT, json));
+                .param(Parameters.point.getText(), json));
 
     }
 
@@ -181,8 +180,8 @@ public class TaskFactoryImpl implements TaskFactory {
             json = GsonFactory.getInstance().toJson(entity);
         }
         queue.add(TaskOptions.Builder.withUrl(PATH_UPGRADE_TASK)
-        .param(Params.PARAM_JSON, json)
-        .param(Params.PARAM_ACTION, action.getCode()));
+        .param(Parameters.json.getText(), json)
+        .param(Parameters.action.getText(), action.getCode()));
 
     }
 
@@ -193,7 +192,7 @@ public class TaskFactoryImpl implements TaskFactory {
         final Queue queue = QueueFactory.getQueue(TASK_MOVE);
 
         queue.add(TaskOptions.Builder.withUrl(PATH_MOVE_TASK)
-                .param(Params.PARAM_POINT, json));
+                .param(Parameters.point.getText(), json));
     }
 
 

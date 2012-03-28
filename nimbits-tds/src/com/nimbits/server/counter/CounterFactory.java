@@ -44,7 +44,7 @@ public class CounterFactory {
     public ShardedCounter createCounter(final String name) {
         ShardedCounter counter = new ShardedCounter(name);
 
-        DatastoreCounter counterEntity = new DatastoreCounter(name, 0);
+        ApiCounter counterEntity = new ApiCounter(name, 0);
         PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
             pm.makePersistent(counterEntity);

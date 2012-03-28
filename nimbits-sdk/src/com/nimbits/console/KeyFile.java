@@ -13,7 +13,7 @@
 
 package com.nimbits.console;
 
-import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
 import com.nimbits.security.*;
 
 import java.io.*;
@@ -28,19 +28,19 @@ import java.util.*;
 public class KeyFile {
     public static String genKey(final Map<String, String> argsMap) throws IOException {
 
-        final String filename = argsMap.get(Params.PARAM_OUT);
+        final String filename = argsMap.get(Parameters.PARAM_OUT);
         final StringBuilder sb = new StringBuilder();
-        if (argsMap.containsKey(Params.PARAM_KEY)) {
-            sb.append("-key=").append(argsMap.get(Params.PARAM_KEY)).append(" ");
+        if (argsMap.containsKey(Parameters.PARAM_KEY)) {
+            sb.append("-key=").append(argsMap.get(Parameters.PARAM_KEY)).append(" ");
         }
-        if (argsMap.containsKey(Params.PARAM_EMAIL)) {
-            sb.append("-email=").append(argsMap.get(Params.PARAM_EMAIL)).append(" ");
+        if (argsMap.containsKey(Parameters.email.getText())) {
+            sb.append("-email=").append(argsMap.get(Parameters.email.getText())).append(" ");
         }
-        if (argsMap.containsKey(Params.PARAM_PASSWORD)) {
-            sb.append("-password=").append(argsMap.get(Params.PARAM_PASSWORD)).append(" ");
+        if (argsMap.containsKey(Parameters.PARAM_PASSWORD)) {
+            sb.append("-password=").append(argsMap.get(Parameters.PARAM_PASSWORD)).append(" ");
         }
-        if (argsMap.containsKey(Params.PARAM_HOST)) {
-            sb.append("-host=").append(argsMap.get(Params.PARAM_HOST)).append(" ");
+        if (argsMap.containsKey(Parameters.PARAM_HOST)) {
+            sb.append("-host=").append(argsMap.get(Parameters.PARAM_HOST)).append(" ");
         }
 
         final File file = new File(filename);
@@ -56,7 +56,7 @@ public class KeyFile {
     }
 
     public static String[] processKeyFile(final Map<String, String> argsMap) throws IOException {
-        final String fn =  argsMap.get(Params.PARAM_I);
+        final String fn =  argsMap.get(Parameters.PARAM_I);
         final File file = new File(fn);
         String[] args = null;
         if (file.exists()) {

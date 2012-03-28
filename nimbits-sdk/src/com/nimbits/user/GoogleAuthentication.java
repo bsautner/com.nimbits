@@ -14,6 +14,7 @@
 package com.nimbits.user;
 
 import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.exceptions.GoogleAuthenticationException;
@@ -158,7 +159,7 @@ public class GoogleAuthentication {
                     response.getStatusLine().getStatusCode() == HttpURLConnection.HTTP_NO_CONTENT) {
 
                 for (final Cookie cookie : httpClient.getCookieStore().getCookies()) {
-                    if (cookie.getName().equals(Params.PARAM_ACSID)) {
+                    if (cookie.getName().equals(Parameters.PARAM_ACSID)) {
                         retObj = cookie;
                         break;
                     }
@@ -195,7 +196,7 @@ public class GoogleAuthentication {
         urlConnection.setDoInput(true);
         urlConnection.setDoOutput(true);
         urlConnection.setUseCaches(false);
-        urlConnection.setRequestProperty(Params.PARAM_CONTENT_TYPE,
+        urlConnection.setRequestProperty(Parameters.PARAM_CONTENT_TYPE,
                 "application/x-www-form-urlencoded");
         final StringBuilder content = new StringBuilder();
         content.append("Email=")

@@ -25,6 +25,8 @@ public interface SettingsService extends RemoteService {
 
     String getSetting(final SettingType paramName) throws NimbitsException;
 
+    boolean getBooleanSetting(final SettingType paramName) throws NimbitsException;
+
     Map<SettingType, String> getSettings() throws NimbitsException;
 
 

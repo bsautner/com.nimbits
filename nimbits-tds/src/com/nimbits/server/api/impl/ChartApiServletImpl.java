@@ -47,7 +47,7 @@ public class ChartApiServletImpl extends ApiServlet {
 
     @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
-        final String formatParam = req.getParameter(Params.PARAM_FORMAT);
+        final String formatParam = req.getParameter(Parameters.format.getText());
         init(req, resp, getContentType(formatParam));
 
 
@@ -59,16 +59,16 @@ public class ChartApiServletImpl extends ApiServlet {
 
             final ExportType type = getContentType(formatParam);
             log.info(req.getQueryString());
-            log.info(req.getParameter(Params.PARAM_EMAIL));
+            log.info(req.getParameter(Parameters.email.getText()));
 
-            final boolean doScale = (!Utils.isEmptyString(getParam(ApiParam.autoscale)) && getParam(ApiParam.autoscale).equals(Words.WORD_TRUE));
+            final boolean doScale = (!Utils.isEmptyString(getParam(Parameters.autoscale)) && getParam(Parameters.autoscale).equals(Words.WORD_TRUE));
 
             if (user==null)  {
                 log.severe("Null user in chart api");
             }
             else {
-                final List<EntityName> pointList = createPointList(getParam(ApiParam.points), getParam(ApiParam.point));
-                int count = Utils.isEmptyString(getParam(ApiParam.count)) ? 10 : Integer.valueOf(getParam(ApiParam.count));
+                final List<EntityName> pointList = createPointList(getParam(Parameters.points), getParam(Parameters.point));
+                int count = Utils.isEmptyString(getParam(Parameters.count)) ? 10 : Integer.valueOf(getParam(Parameters.count));
 
                 if (type == ExportType.png) {
                     final String params = generateImageChartParams(req, timespan, count, doScale, user, pointList);
@@ -195,8 +195,8 @@ public class ChartApiServletImpl extends ApiServlet {
 
     private Timespan getTimestamp(HttpServletRequest req) throws NimbitsException {
         Timespan timespan = null;
-        String startDate = req.getParameter(Params.PARAM_START_DATE);
-        String endDate = req.getParameter(Params.PARAM_END_DATE);
+        String startDate = req.getParameter(Parameters.sd.getText());
+        String endDate = req.getParameter(Parameters.ed.getText());
         //support for legacy st param
         if (startDate == null) {
             startDate = req.getParameter("st");

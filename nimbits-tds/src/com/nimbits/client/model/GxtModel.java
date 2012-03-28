@@ -54,10 +54,10 @@ public class GxtModel extends BaseTreeModel implements Serializable {
         this.entityType = EntityType.user;
         this.isReadOnly = true;
         this.baseEntity = EntityModelFactory.createEntity(user);
-        set(Params.PARAM_ID, this.uuid);
-        set(Params.PARAM_NAME, this.name.getValue());
-        set(Params.PARAM_ENTITY_TYPE,  this.entityType.getCode());
-        set(Params.PARAM_DIRTY, Params.PARAM_NO);
+        set(Parameters.id.getText(), this.uuid);
+        set(Parameters.name.getText(), this.name.getValue());
+        set(Parameters.entityType.getText(),  this.entityType.getCode());
+        set(Parameters.dirty.getText(), Parameters.no.getText());
     }
 
     public AlertType getAlertType() {
@@ -103,7 +103,7 @@ public class GxtModel extends BaseTreeModel implements Serializable {
     }
 
     public void setDirty(boolean dirty) {
-        set(Params.PARAM_DIRTY, dirty ? Params.PARAM_YES : Params.PARAM_NO);
+        set(Parameters.dirty.getText(), dirty ? Parameters.yes.getText() : Parameters.no.getText());
         isDirty = dirty;
     }
 
@@ -121,7 +121,7 @@ public class GxtModel extends BaseTreeModel implements Serializable {
             sb.append(" ");
             sb.append(value.getNote());
         }
-        set(Params.PARAM_VALUE, sb.toString().trim());
+        set(Parameters.value.getText(), sb.toString().trim());
         this.value = value;
     }
 
@@ -140,8 +140,8 @@ public class GxtModel extends BaseTreeModel implements Serializable {
         this.entityType = entity.getEntityType();
         this.isReadOnly = entity.isReadOnly();
         this.baseEntity = entity;
-        set(Params.PARAM_ID, this.uuid);
-        set(Params.PARAM_NAME, this.name.getValue());
-        set(Params.PARAM_ENTITY_TYPE, entity.getEntityType().getCode());
+        set(Parameters.id.getText(), this.uuid);
+        set(Parameters.name.getText(), this.name.getValue());
+        set(Parameters.entityType.getText(), entity.getEntityType().getCode());
     }
 }

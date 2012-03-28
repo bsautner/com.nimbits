@@ -1,4 +1,3 @@
-import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
@@ -72,7 +71,7 @@ public class TestServers {
        Server server = ServerModelFactory.createServer("http://delete.me.http", emailAddress, "1.2.0");
 
         String json = GsonFactory.getInstance().toJson(server);
-        String params = Params.PARAM_JSON + "=" + json;
+        String params = Parameters.json.getText() + "=" + json;
         String response = HttpCommonFactory.getInstance().doPost("http://localhost:8080/servers", params);
         System.out.println(response);
         Server retServer = GsonFactory.getInstance().fromJson(response, ServerModel.class);

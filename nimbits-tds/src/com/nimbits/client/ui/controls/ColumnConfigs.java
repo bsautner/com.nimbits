@@ -20,6 +20,7 @@ import com.extjs.gxt.ui.client.widget.grid.*;
 import com.extjs.gxt.ui.client.widget.treegrid.*;
 import com.google.gwt.i18n.client.*;
 import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
 
 public class ColumnConfigs {
 
@@ -31,7 +32,7 @@ public class ColumnConfigs {
                 DateTimeFormat.getFormat(Const.FORMAT_DATE_TIME));
 
         final ColumnConfig columnTime = new ColumnConfig();
-        columnTime.setId(Params.PARAM_TIMESTAMP);
+        columnTime.setId(Parameters.timestamp.getText());
         columnTime.setHeader(Words.WORD_TIMESTAMP);
         columnTime.setAlignment(Style.HorizontalAlignment.LEFT);
         columnTime.setWidth(175);
@@ -44,7 +45,7 @@ public class ColumnConfigs {
 
     public static ColumnConfig noteColumn( ) {
         final ColumnConfig columnNote = new ColumnConfig();
-        columnNote.setId(Params.PARAM_VALUE);
+        columnNote.setId(Parameters.value.getText());
         columnNote.setHeader(Words.WORD_ANNOTATION);
         columnNote.setWidth(400);
 
@@ -57,7 +58,7 @@ public class ColumnConfigs {
 
     public static ColumnConfig dataColumn() {
         final ColumnConfig columnData = new ColumnConfig();
-        columnData.setId(Params.PARAM_DATA);
+        columnData.setId(Parameters.data.getText());
         columnData.setHeader(Words.WORD_DATA);
         columnData.setWidth(250);
 
@@ -88,8 +89,8 @@ public class ColumnConfigs {
 //    }
 
     public static ColumnConfig pointNameColumn() {
-        final ColumnConfig nameColumn =  new ColumnConfig(Params.PARAM_NAME, UserMessages.MESSAGE_DATA_POINT, 150);
-        nameColumn.setId(Params.PARAM_NAME);
+        final ColumnConfig nameColumn =  new ColumnConfig(Parameters.name.getText(), UserMessages.MESSAGE_DATA_POINT, 150);
+        nameColumn.setId(Parameters.name.getText());
         nameColumn.setHeader("Objects");
         nameColumn.setAlignment(Style.HorizontalAlignment.LEFT);
         nameColumn.setWidth(225);

@@ -15,6 +15,7 @@ package com.nimbits.server.task;
 
 import com.google.gson.*;
 import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.server.gson.*;
 
@@ -34,7 +35,7 @@ public class CategoryMaintTask extends HttpServlet {
         final Gson gson = GsonFactory.getInstance();
         resp.setContentType(Const.CONTENT_TYPE_HTML);
 
-        final String j = req.getParameter(Params.PARAM_USER);
+        final String j = req.getParameter(Parameters.user.getText());
         final User u = gson.fromJson(j, UserModel.class);
 
 

@@ -13,7 +13,6 @@
 
 package com.nimbits.server.email;
 
-import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
@@ -45,8 +44,8 @@ public class IncomingMailTask extends HttpServlet {
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
 
-        final String fromAddress = req.getParameter(Params.PARAM_FROM_ADDRESS);
-        final String inContent = req.getParameter(Params.PARAM_IN_CONTENT);
+        final String fromAddress = req.getParameter(Parameters.fromAddress.getText());
+        final String inContent = req.getParameter(Parameters.inContent.getText());
 
         final EmailAddress internetAddress = CommonFactoryLocator.getInstance().createEmailAddress(fromAddress);
         final User u;

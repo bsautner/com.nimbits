@@ -19,6 +19,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import com.nimbits.android.database.DatabaseHelperFactory;
 import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
 
 
 import java.util.ArrayList;
@@ -99,7 +100,7 @@ public class LocalDatabaseDaoImpl implements LocalDatabaseDao {
     public void updateSetting(final Context aContext, final String settingName, final String newValue) {
         final SQLiteDatabase db1 = DatabaseHelperFactory.getInstance(aContext).getDB(false);
         ContentValues u = new ContentValues();
-        u.put(Params.PARAM_VALUE, newValue);
+        u.put(Parameters.value.getText(), newValue);
         db1.update(Android.ANDROID_TABLE_SETTINGS, u, Android.ANDROID_COL_NAME + "=?", new String[]{settingName});
         db1.close();
     }

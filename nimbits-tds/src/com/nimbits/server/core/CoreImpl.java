@@ -41,9 +41,9 @@ public class CoreImpl implements Core {
             if (SettingTransactionsFactory.getInstance().getSetting(SettingType.serverIsDiscoverable).equals("1")) {
                 String json = GsonFactory.getInstance().toJson(entity);
 
-                final String params = Params.PARAM_ENTITY + "=" + json
-                        + "&" + Params.PARAM_ENTITY_TYPE + "=" + entity.getEntityType()
-                        + "&" + Params.PARAM_ACTION + "=" + Action.delete.name();
+                final String params = Parameters.entity.getText() + "=" + json
+                        + "&" + Parameters.entityType.getText() + "=" + entity.getEntityType()
+                        + "&" + Parameters.action.getText() + "=" + Action.delete.name();
 
 
                 HttpCommonFactory.getInstance().doPost(Path.PATH_NIMBITS_CORE_ENTITY_DESC_URL, params);
@@ -64,10 +64,10 @@ public class CoreImpl implements Core {
                 final Server server = ServerModelFactory.createServer(serverUrl, emailAddress, SettingType.serverVersion.getDefaultValue());
                 final String serverJson = GsonFactory.getInstance().toJson(server);
                 String json = GsonFactory.getInstance().toJson(entity);
-                final String params = Params.PARAM_SERVER + "=" + serverJson
-                        + "&" + Params.PARAM_ENTITY + "=" + json
-                        + "&" + Params.PARAM_ENTITY_TYPE + "=" + entity.getEntityType()
-                        + "&" + Params.PARAM_ACTION + "=" + Action.update.name();
+                final String params = Parameters.server.getText() + "=" + serverJson
+                        + "&" + Parameters.entity.getText() + "=" + json
+                        + "&" + Parameters.entityType.getText() + "=" + entity.getEntityType()
+                        + "&" + Parameters.action.getText() + "=" + Action.update.name();
 
                 log.info(Path.PATH_NIMBITS_CORE_ENTITY_DESC_URL + "?" + params);
                 String response = HttpCommonFactory.getInstance().doPost(Path.PATH_NIMBITS_CORE_ENTITY_DESC_URL, params);

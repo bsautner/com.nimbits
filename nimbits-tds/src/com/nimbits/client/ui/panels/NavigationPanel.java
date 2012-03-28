@@ -105,10 +105,10 @@ class NavigationPanel extends NavigationEventProvider {
     }
 
     private void updateModel(Value value, GxtModel model) {
-        model.set(Params.PARAM_VALUE, value.getValueWithNote());
-        model.set(Params.PARAM_DATA, value.getData());
-        model.set(Params.PARAM_TIMESTAMP, value.getTimestamp());
-        model.set(Params.PARAM_NOTE, value.getNote());
+        model.set(Parameters.value.getText(), value.getValueWithNote());
+        model.set(Parameters.data.getText(), value.getData());
+        model.set(Parameters.timestamp.getText(), value.getTimestamp());
+        model.set(Parameters.note.getText(), value.getNote());
         model.setAlertType(value.getAlertState());
         model.setDirty(false);
         tree.getTreeStore().update(model);
@@ -162,7 +162,7 @@ class NavigationPanel extends NavigationEventProvider {
                 if (!(e.getTarget().getInnerHTML().equals("&nbsp;"))) {
                     if (selectedModel instanceof GxtModel) {
                         final GxtModel model = (GxtModel) selectedModel;
-                        selectedModel.set(Params.PARAM_NAME, model.getName().getValue());
+                        selectedModel.set(Parameters.name.getText(), model.getName().getValue());
                         final Entity draggedEntity =  model.getBaseEntity();
                         final Entity target = getDropTarget(e.getTarget().getInnerText());
                         e.setCancelled(  target.isReadOnly());
@@ -183,7 +183,7 @@ class NavigationPanel extends NavigationEventProvider {
 
     private Entity getDropTarget(String targetName) {
 
-        ModelData modelData = tree.getTreeStore().findModel(Params.PARAM_NAME, targetName);
+        ModelData modelData = tree.getTreeStore().findModel(Parameters.name.getText(), targetName);
         return ((GxtModel) modelData).getBaseEntity();
 
 
@@ -253,7 +253,7 @@ class NavigationPanel extends NavigationEventProvider {
 
         if (tree != null && tree.getStore() != null) {
 
-            final ModelData mx = tree.getTreeStore().findModel(Params.PARAM_ID, model.getBaseEntity().getEntity());
+            final ModelData mx = tree.getTreeStore().findModel(Parameters.id.getText(), model.getBaseEntity().getEntity());
             if (mx != null) {
                 final GxtModel m = (GxtModel)mx;
                 m.update(model.getBaseEntity());
@@ -263,7 +263,7 @@ class NavigationPanel extends NavigationEventProvider {
                 }
             }
             else {
-                final ModelData parent = tree.getTreeStore().findModel(Params.PARAM_ID, model.getBaseEntity().getParent());
+                final ModelData parent = tree.getTreeStore().findModel(Parameters.id.getText(), model.getBaseEntity().getParent());
                 if (parent != null) {
                     tree.getTreeStore().add(parent, model, true);
 
@@ -278,7 +278,7 @@ class NavigationPanel extends NavigationEventProvider {
         if (tree != null && tree.getStore() != null) {
 
 
-            GxtModel m = (GxtModel) tree.getTreeStore().findModel(Params.PARAM_ID, currentModel.getBaseEntity().getEntity());
+            GxtModel m = (GxtModel) tree.getTreeStore().findModel(Parameters.id.getText(), currentModel.getBaseEntity().getEntity());
             tree.getTreeStore().remove(m);
 
         }
@@ -424,10 +424,10 @@ class NavigationPanel extends NavigationEventProvider {
 
 
                     final Entity entity =model.getBaseEntity();
-                    Date timestamp = saveWithCurrentTime ? new Date() : (Date) model.get(Params.PARAM_TIMESTAMP);
+                    Date timestamp = saveWithCurrentTime ? new Date() : (Date) model.get(Parameters.timestamp.getText());
 
 
-                    final String valueAndNote = model.get(Params.PARAM_VALUE);
+                    final String valueAndNote = model.get(Parameters.value.getText());
                     //final String data = model.get(Const.PARAM_DATA);
                     String uuid = model.getId();
                     if (timestamp == null) {
@@ -500,11 +500,11 @@ class NavigationPanel extends NavigationEventProvider {
         //  final List<GxtModel> models = grid.getSelectionModel().getSelectedItems();
         RecordedValueServiceAsync service = GWT.create(RecordedValueService.class);
 
-        for (final ModelData x :  tree.getTreeStore().findModels(Params.PARAM_DIRTY, "yes")) {
+        for (final ModelData x :  tree.getTreeStore().findModels(Parameters.dirty.getText(), "yes")) {
             final GxtModel model = (GxtModel)x;
-            Date date = model.get(Params.PARAM_TIMESTAMP) == null ? new Date() : (Date) model.get(Params.PARAM_TIMESTAMP);
+            Date date = model.get(Parameters.timestamp.getText()) == null ? new Date() : (Date) model.get(Parameters.timestamp.getText());
             final Date timestamp = saveWithCurrentTime ? new Date() : date;
-            final String v = model.get(Params.PARAM_VALUE);
+            final String v = model.get(Parameters.value.getText());
 //            final String note = model.get(Const.Params.PARAM_NOTE);
 //            final String data = model.get(Const.PARAM_DATA);
             final Value value = ValueModelFactory.createValueModel(v, timestamp, model.getId());

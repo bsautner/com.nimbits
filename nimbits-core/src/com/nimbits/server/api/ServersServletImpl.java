@@ -15,7 +15,7 @@ package com.nimbits.server.api;
 
 
 
-import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.server.*;
 
@@ -40,7 +40,7 @@ public class ServersServletImpl  extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse  response) throws IOException {
-        String json = request.getParameter(Params.PARAM_JSON);
+        String json = request.getParameter(Parameters.json.getText());
         PrintWriter out = response.getWriter();
         Server server = GsonFactory.getInstance().fromJson(json, ServerModel.class);
         Server retObj = null;

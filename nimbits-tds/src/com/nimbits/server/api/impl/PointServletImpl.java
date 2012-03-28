@@ -53,12 +53,12 @@ public class PointServletImpl extends ApiServlet {
 
             if ((user != null) && (!user.isRestricted())) {
 
-                final String pointNameParam = Utils.isEmptyString(getParam(ApiParam.name)) ?
-                        getParam(ApiParam.point) : getParam(ApiParam.name);
+                final String pointNameParam = Utils.isEmptyString(getParam(Parameters.name)) ?
+                        getParam(Parameters.point) : getParam(Parameters.name);
 
 
 
-                final String actionParam = req.getParameter(Params.PARAM_ACTION);
+                final String actionParam = req.getParameter(Parameters.action.getText());
                 final Action action = (Utils.isEmptyString(actionParam)) ? Action.create : Action.get(actionParam);
 
 
@@ -69,23 +69,23 @@ public class PointServletImpl extends ApiServlet {
                         deletePoint(user, pointNameParam);
                         return;
                     case update:
-                        updatePoint(user, getParam(ApiParam.json));
+                        updatePoint(user, getParam(Parameters.json));
                         return;
                     case create:
                         EntityName categoryName = null;
 
-                        if (containsParam(ApiParam.category)) {
-                            categoryName= CommonFactoryLocator.getInstance().createName(getParam(ApiParam.category), EntityType.category);
+                        if (containsParam(Parameters.category)) {
+                            categoryName= CommonFactoryLocator.getInstance().createName(getParam(Parameters.category), EntityType.category);
                         }
-                        if (!Utils.isEmptyString(pointNameParam) && Utils.isEmptyString(getParam(ApiParam.json))) {
+                        if (!Utils.isEmptyString(pointNameParam) && Utils.isEmptyString(getParam(Parameters.json))) {
                             final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
                             final Point point = createPoint(user, pointName, categoryName);
                             final String retJson = gson.toJson(point);
                             out.println(retJson);
 
-                        } else if (!Utils.isEmptyString(pointNameParam) && !Utils.isEmptyString(getParam(ApiParam.json))) {
+                        } else if (!Utils.isEmptyString(pointNameParam) && !Utils.isEmptyString(getParam(Parameters.json))) {
                             final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
-                            final Point point = createPointWithJson(user,pointName, categoryName, getParam(ApiParam.json));
+                            final Point point = createPointWithJson(user,pointName, categoryName, getParam(Parameters.json));
                             final String retJson = gson.toJson(point);
                             out.println(retJson);
                         }
@@ -114,28 +114,28 @@ public class PointServletImpl extends ApiServlet {
 
 
 
-        final String startParam = req.getParameter(Params.PARAM_START_DATE);
-        final String endParam = req.getParameter(Params.PARAM_END_DATE);
-        final String offsetParam = req.getParameter(Params.PARAM_OFFSET);
+        final String startParam = req.getParameter(Parameters.sd.getText());
+        final String endParam = req.getParameter(Parameters.ed.getText());
+        final String offsetParam = req.getParameter(Parameters.offset.getText());
 
 
-        final String pointNameParam = Utils.isEmptyString(getParam(ApiParam.name)) ?
-                getParam(ApiParam.point) : getParam(ApiParam.name);
+        final String pointNameParam = Utils.isEmptyString(getParam(Parameters.name)) ?
+                getParam(Parameters.point) : getParam(Parameters.name);
 
 
         try {
             final PrintWriter out = resp.getWriter();
 
 
-            if (! containsParam(ApiParam.uuid)) {
-                getPointObjects(req, getParam(ApiParam.category), pointNameParam, out);
+            if (! containsParam(Parameters.uuid)) {
+                getPointObjects(req, getParam(Parameters.category), pointNameParam, out);
             } else {
-                final Point point = PointServiceFactory.getInstance().getPointByUUID(getParam(ApiParam.uuid));
+                final Point point = PointServiceFactory.getInstance().getPointByUUID(getParam(Parameters.uuid));
                 if (point != null) {
-                    outputPoint(getParam(ApiParam.count), getParam(ApiParam.format), startParam, endParam, offsetParam, out, point);
+                    outputPoint(getParam(Parameters.count), getParam(Parameters.format), startParam, endParam, offsetParam, out, point);
                 }
                 else {
-                    final Entity category = EntityServiceFactory.getInstance().getEntityByUUID(user, getParam(ApiParam.uuid));
+                    final Entity category = EntityServiceFactory.getInstance().getEntityByUUID(user, getParam(Parameters.uuid));
 
                     if (category != null) {
                         if (okToReport(user, category)) {
@@ -148,7 +148,7 @@ public class PointServletImpl extends ApiServlet {
 
                             //todo remove point from list if private
                             for (final Point p : points) {
-                                p.setValues(getRecordedValues(getParam(ApiParam.count), startParam, endParam, offsetParam, p).getValues());
+                                p.setValues(getRecordedValues(getParam(Parameters.count), startParam, endParam, offsetParam, p).getValues());
                                 p.setValue(RecordedValueServiceFactory.getInstance().getCurrentValue(p));
 
 

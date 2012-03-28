@@ -14,8 +14,7 @@
 package com.nimbits.server.api;
 
 import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ExportType;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.EntityDescription;
 import com.nimbits.server.dao.pointDescription.EntityJPATransactionFactory;
@@ -63,8 +62,8 @@ public class EntityDescriptionSearchServletImpl extends HttpServlet {
         resp.addHeader("Access-Control-Allow-Origin", "*");
 
 
-        final String dangerousSearchText = request.getParameter(Params.PARAM_SEARCH);
-        final String format = request.getParameter(Params.PARAM_FORMAT);
+        final String dangerousSearchText = request.getParameter(Parameters.search.getText());
+        final String format = request.getParameter(Parameters.format.getText());
         final ExportType type = StringUtils.isEmpty(format) ?
              ExportType.json :  ExportType.valueOf(format);
 

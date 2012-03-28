@@ -66,7 +66,7 @@ public class DiagramPanel extends LayoutContainer {
 
     public DiagramPanel(final Entity aDiagram, boolean showHeader) {
         final FlowPanel imagePanel = new FlowPanel();
-        final String resourceUrl = Path.PATH_BLOB_SERVICE + "?" + com.nimbits.client.constants.Params.PARAM_BLOB_KEY + "=" + aDiagram.getBlobKey();
+        final String resourceUrl = Path.PATH_BLOB_SERVICE + "?" + Parameters.blobkey.getText() + "=" + aDiagram.getBlobKey();
         this.diagram = aDiagram;
         ContentPanel mainPanel = new ContentPanel();
         mainPanel.setFrame(true);
@@ -262,10 +262,10 @@ public class DiagramPanel extends LayoutContainer {
     //OMSVGTextElement
 
     private void processOMSVGTextElement(final OMSVGTextElement o) throws NimbitsException {
-        final String pointNameParam = o.getAttribute(com.nimbits.client.constants.Params.PARAM_POINT);
-        final String action = o.getAttribute(com.nimbits.client.constants.Params.PARAM_ACTION);
-        final String diagramNameParam = o.getAttribute(com.nimbits.client.constants.Params.PARAM_DIAGRAM);
-        final String url = o.getAttribute(com.nimbits.client.constants.Params.PARAM_URL);
+        final String pointNameParam = o.getAttribute(Parameters.point.getText());
+        final String action = o.getAttribute(Parameters.action.getText());
+        final String diagramNameParam = o.getAttribute(Parameters.diagram.getText());
+        final String url = o.getAttribute(Parameters.url.getText());
         if (!Utils.isEmptyString(action)) {
            // final String[] actions = action.split(",");
             if (!Utils.isEmptyString(pointNameParam)) {
@@ -358,8 +358,8 @@ public class DiagramPanel extends LayoutContainer {
     }
 
     private void updateTextBoxValue(final OMSVGTextElement o) throws NimbitsException {
-        final String pointNameParam = o.getAttribute(com.nimbits.client.constants.Params.PARAM_POINT);
-        final String action = o.getAttribute(com.nimbits.client.constants.Params.PARAM_ACTION);
+        final String pointNameParam = o.getAttribute(Parameters.point.getText());
+        final String action = o.getAttribute(Parameters.action.getText());
 
         if (!Utils.isEmptyString(action)) {
             final String[] actions = action.split(",");
@@ -457,10 +457,10 @@ public class DiagramPanel extends LayoutContainer {
     //PATH
 
     private void processOMSVGPathElement(final OMSVGPathElement o) throws NimbitsException {
-        final String pointNameParam = o.getAttribute(com.nimbits.client.constants.Params.PARAM_POINT);
-        final String action = o.getAttribute(com.nimbits.client.constants.Params.PARAM_ACTION);
-        final String diagramNameParam = o.getAttribute(com.nimbits.client.constants.Params.PARAM_DIAGRAM);
-        final String url = o.getAttribute(com.nimbits.client.constants.Params.PARAM_URL);
+        final String pointNameParam = o.getAttribute(Parameters.point.getText());
+        final String action = o.getAttribute(Parameters.action.getText());
+        final String diagramNameParam = o.getAttribute(Parameters.diagram.getText());
+        final String url = o.getAttribute(Parameters.url.getText());
         if (!Utils.isEmptyString(action)) {
            /// final String[] actions = action.split(",");
             if (!Utils.isEmptyString(pointNameParam)) {
@@ -534,8 +534,8 @@ public class DiagramPanel extends LayoutContainer {
     }
 
     private void updatePathValue(final OMSVGPathElement o) throws NimbitsException {
-        final String pointNameParam = o.getAttribute(com.nimbits.client.constants.Params.PARAM_POINT);
-        final String action = o.getAttribute(com.nimbits.client.constants.Params.PARAM_ACTION);
+        final String pointNameParam = o.getAttribute(Parameters.point.getText());
+        final String action = o.getAttribute(Parameters.action.getText());
 
         if (!Utils.isEmptyString(action)) {
             final String[] actions = action.split(",");
@@ -634,10 +634,10 @@ public class DiagramPanel extends LayoutContainer {
     //rect
 
     private void processOMSVGRectElement(OMSVGRectElement o) throws NimbitsException {
-        final String pointNameParam = o.getAttribute(com.nimbits.client.constants.Params.PARAM_POINT);
-        final String action = o.getAttribute(com.nimbits.client.constants.Params.PARAM_ACTION);
-        final String diagramNameParam = o.getAttribute(com.nimbits.client.constants.Params.PARAM_DIAGRAM);
-        final String url = o.getAttribute(com.nimbits.client.constants.Params.PARAM_URL);
+        final String pointNameParam = o.getAttribute(Parameters.point.getText());
+        final String action = o.getAttribute(Parameters.action.getText());
+        final String diagramNameParam = o.getAttribute(Parameters.diagram.getText());
+        final String url = o.getAttribute(Parameters.url.getText());
         if (!Utils.isEmptyString(action)) {
 //            final String[] actions = action.split(",");
             if (!Utils.isEmptyString(pointNameParam)) {
@@ -707,8 +707,8 @@ public class DiagramPanel extends LayoutContainer {
     }
 
     private void updateRectValue(final OMSVGRectElement o) throws NimbitsException {
-        final String pointNameParam = o.getAttribute(com.nimbits.client.constants.Params.PARAM_POINT);
-        final String action = o.getAttribute(com.nimbits.client.constants.Params.PARAM_ACTION);
+        final String pointNameParam = o.getAttribute(Parameters.point.getText());
+        final String action = o.getAttribute(Parameters.action.getText());
 
         if (!Utils.isEmptyString(action)) {
             final String[] actions = action.split(",");
@@ -759,7 +759,7 @@ public class DiagramPanel extends LayoutContainer {
                                 o.getStyle().setSVGProperty(SVGConstants.CSS_FILL_VALUE,
                                         originalFill.get(o.getId()));
                             }
-                        } else if (action.equals(com.nimbits.client.constants.Params.PARAM_IDLE) && p.isIdleAlarmOn()) {
+                        } else if (action.equals(Parameters.idle.getText()) && p.isIdleAlarmOn()) {
                             DateWrapper n = new DateWrapper();
                             long last = result.getTimestamp().getTime();
                             long current = n.getTime();

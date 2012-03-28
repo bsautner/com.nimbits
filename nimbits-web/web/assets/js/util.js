@@ -110,6 +110,8 @@ function getContent(page) {
        request.open("POST", page, true);
         request.send(null);
        document.getElementById("link").href = page;
+
+
    }
    catch (ex) {
        alert(ex);

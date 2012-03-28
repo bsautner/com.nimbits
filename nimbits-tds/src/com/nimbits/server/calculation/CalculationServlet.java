@@ -13,7 +13,6 @@
 
 package com.nimbits.server.calculation;
 
-import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.calculation.*;
@@ -39,8 +38,8 @@ public class CalculationServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         super.doPost(req, resp);
 
-        String json = req.getParameter(Params.PARAM_JSON);
-        String nameParam = req.getParameter(Params.PARAM_NAME);
+        String json = req.getParameter(Parameters.json.getText());
+        String nameParam = req.getParameter(Parameters.name.getText());
         Calculation c = GsonFactory.getInstance().fromJson(json, CalculationModel.class);
         EntityName name;
         User u;

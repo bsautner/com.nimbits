@@ -38,11 +38,10 @@ import java.util.*;
  * Time: 3:28 PM
  */
 public class FileUploadPanel extends LayoutContainer {
-
+    private final UploadType uploadType;
     private final List<FileAddedListener> FileAddedListeners = new ArrayList<FileAddedListener>();
-    //  private File diagram;
     private EmailAddress email;
-    Entity entity;
+    private Entity entity;
 
     public FileUploadPanel(UploadType uploadType) {
         this.uploadType = uploadType;
@@ -53,9 +52,6 @@ public class FileUploadPanel extends LayoutContainer {
         //this.diagram = diagram;
         this.entity = entity;
     }
-
-
-    private final UploadType uploadType;
 
 
     public interface FileAddedListener {
@@ -77,15 +73,10 @@ public class FileUploadPanel extends LayoutContainer {
     protected void onRender(Element parent, int index) {
         super.onRender(parent, index);
         setStyleAttribute("margin", "10px");
-
-
-
         final FormPanel panel = new FormPanel();
         panel.setEncoding(FormPanel.Encoding.MULTIPART);
         panel.addListener(Events.Submit, new Listener<FormEvent>() {
-
-
-            @Override
+        @Override
             public void handleEvent(FormEvent formEvent) {
                  notifyFileAddedListener();
 
@@ -93,7 +84,6 @@ public class FileUploadPanel extends LayoutContainer {
         });
         panel.setHeaderVisible(false);
         panel.setFrame(false);
-
         BlobServiceAsync service = GWT.create(BlobService.class);
         //  diagramService.getBlobStoreUrl("http://" + Window.Location.getHost() +  "/service/diagram", new AsyncCallback<String>() {
         service.getBlobStoreUrl(Path.PATH_BLOB_SERVICE, new AsyncCallback<String>() {
@@ -108,41 +98,28 @@ public class FileUploadPanel extends LayoutContainer {
             }
         });
 
-        // panel.setAction("http://" + Window.Location.getHost() + "/service/file");
         panel.setEncoding(Encoding.MULTIPART);
         panel.setMethod(Method.POST);
-        //  panel.setButtonAlign(HorizontalAlignment.CENTER);
         panel.setWidth(350);
 
         final TextArea name = new TextArea();
-
-
-
         final FileUploadField file = new FileUploadField();
+
         file.setAllowBlank(false);
         file.setName("myFile");
         file.setFieldLabel("File");
-
-
-
         panel.add(file);
-
         name.setFieldLabel("Description");
-        name.setName(Params.PARAM_DESCRIPTION);
+        name.setName(Parameters.description.getText());
         panel.add(name);
 
-
-
         final HiddenField<String> emailAddressHiddenField=new HiddenField<String>();
-        emailAddressHiddenField.setName(Params.PARAM_EMAIL_HIDDEN_FIELD);
+        emailAddressHiddenField.setName(Parameters.emailHiddenField.getText());
         panel.add(emailAddressHiddenField);
 
-
         final HiddenField<String> fileNameHiddenField=new HiddenField<String>();
-        fileNameHiddenField.setName(Params.PARAM_FILE_NAME);
+        fileNameHiddenField.setName(Parameters.fileName.getText());
         panel.add(fileNameHiddenField);
-
-
         LoginServiceAsync loginService = GWT.create(LoginService.class);
         loginService.login(GWT.getHostPageBaseURL(),
                 new AsyncCallback<LoginInfo>() {
@@ -160,12 +137,12 @@ public class FileUploadPanel extends LayoutContainer {
                 });
 
         final HiddenField<UploadType> uploadTypeHiddenField = new HiddenField<UploadType>();
-        uploadTypeHiddenField.setName(Params.PARAM_UPLOAD_TYPE_HIDDEN_FIELD);
+        uploadTypeHiddenField.setName(Parameters.uploadTypeHiddenField.getText());
         uploadTypeHiddenField.setValue(uploadType);
         panel.add(uploadTypeHiddenField);
         if (uploadType == UploadType.updatedFile && entity != null) {
             final HiddenField<String> diagramId = new HiddenField<String>();
-            diagramId.setName(Params.PARAM_FILE_ID);
+            diagramId.setName(Parameters.fileId.getText());
             diagramId.setValue(entity.getEntity());
             panel.add(diagramId);
             name.setValue(entity.getName().getValue());

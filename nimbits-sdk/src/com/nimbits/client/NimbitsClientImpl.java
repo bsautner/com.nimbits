@@ -183,7 +183,7 @@ public class NimbitsClientImpl implements NimbitsClient {
         final String u = host + Path.PATH_CURRENT_VALUE;
         String params;
         try {
-            params = new StringBuilder().append(Params.PARAM_POINT).append("=").append(URLEncoder.encode(name.getValue(), Const.CONST_ENCODING)).append("&").append(Params.PARAM_TIMESTAMP).append("=").append(timestamp.getTime()).append("&").append(Params.PARAM_VALUE).append("=").append(value).toString();
+            params = new StringBuilder().append(Parameters.point.getText()).append("=").append(URLEncoder.encode(name.getValue(), Const.CONST_ENCODING)).append("&").append(Parameters.timestamp.getText()).append("=").append(timestamp.getTime()).append("&").append(Parameters.value.getText()).append("=").append(value).toString();
         } catch (UnsupportedEncodingException ignored) {
             params = null;
         }
@@ -241,56 +241,51 @@ public class NimbitsClientImpl implements NimbitsClient {
     public Value recordValue(EntityName name, Value v) throws IOException {
         String u = host + Path.PATH_CURRENT_VALUE;
         String json = gson.toJson(v, ValueModel.class);
-        String params = Params.PARAM_TIMESTAMP +
+        String params = Parameters.timestamp.getText() +
                 "=" + v.getTimestamp().getTime() +
-                "&" + Params.PARAM_POINT + "=" +
+                "&" + Parameters.point.getText() + "=" +
                 URLEncoder.encode(name.getValue(), Const.CONST_ENCODING) +
-                "&" + Params.PARAM_JSON + "=" + URLEncoder.encode(json, Const.CONST_ENCODING);
+                "&" + Parameters.json.getText() + "=" + URLEncoder.encode(json, Const.CONST_ENCODING);
         String result = doGPost(u, params);
         return gson.fromJson(result, ValueModel.class);
 
     }
 
-    /**
-     * Add a new Category
-     *
-     * @param EntityName the name of the new category
-     * @throws UnsupportedEncodingException
-     */
-    public Entity addCategory(final EntityName EntityName) throws UnsupportedEncodingException {
 
-        final String u = host + Path.PATH_CATEGORY_SERVICE;
-        final String params = "name=" + URLEncoder.encode(EntityName.getValue(), Const.CONST_ENCODING);
-        final String result = doGPost(u, params);
-        return gson.fromJson(result, EntityModel.class);
+//    public Entity addCategory(final EntityName EntityName) throws UnsupportedEncodingException {
+//
+//        final String u = host + Path.PATH_CATEGORY_SERVICE;
+//        final String params = "name=" + URLEncoder.encode(EntityName.getValue(), Const.CONST_ENCODING);
+//        final String result = doGPost(u, params);
+//        return gson.fromJson(result, EntityModel.class);
+//
+//
+//    }
 
-
-    }
-
-    public String deleteCategory(final EntityName EntityName) {
-        String retVal = "";
-        try {
-            String u = host + Path.PATH_CATEGORY_SERVICE;
-            String params;
-            params = Params.PARAM_ACTION
-                    + "=" + Action.delete.name()
-                    + "&" + Params.PARAM_NAME
-                    + "=" + URLEncoder.encode(EntityName.getValue(), Const.CONST_ENCODING);
-            retVal = doGPost(u, params);
-        } catch (UnsupportedEncodingException ignored) {
-
-        }
-        return retVal;
-
-
-    }
+//    public String deleteCategory(final EntityName EntityName) {
+//        String retVal = "";
+//        try {
+//            String u = host + Path.PATH_CATEGORY_SERVICE;
+//            String params;
+//            params = Parameters.action.getText()
+//                    + "=" + Action.delete.name()
+//                    + "&" + Parameters.name.getText()
+//                    + "=" + URLEncoder.encode(EntityName.getValue(), Const.CONST_ENCODING);
+//            retVal = doGPost(u, params);
+//        } catch (UnsupportedEncodingException ignored) {
+//
+//        }
+//        return retVal;
+//
+//
+//    }
 
     public Point addPoint(final EntityName pointName) {
         Point point = null;
 
         try {
             final String u = host + Path.PATH_POINT_SERVICE;
-            final String params = Params.PARAM_NAME + "=" +
+            final String params = Parameters.name.getText() + "=" +
                     URLEncoder.encode(pointName.getValue(), Const.CONST_ENCODING);
             String json = doGPost(u, params);
             point = gson.fromJson(json, PointModel.class);
@@ -310,9 +305,9 @@ public class NimbitsClientImpl implements NimbitsClient {
         final String params;
         final String json = GsonFactory.getInstance().toJson(calculation);
         try {
-            params = Params.PARAM_NAME + "=" +
+            params = Parameters.name.getText() + "=" +
                     URLEncoder.encode(name.getValue(), Const.CONST_ENCODING)
-            + "&" + Params.PARAM_JSON + "=" + URLEncoder.encode(json, Const.CONST_ENCODING);
+            + "&" + Parameters.json.getText() + "=" + URLEncoder.encode(json, Const.CONST_ENCODING);
 
             doGPost(u, params);
 
@@ -340,7 +335,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
         try {
             final String u = host + Path.PATH_POINT_SERVICE;
-            final String params = Params.PARAM_NAME + "=" + URLEncoder.encode(name.getValue(), Const.CONST_ENCODING);
+            final String params = Parameters.name.getText() + "=" + URLEncoder.encode(name.getValue(), Const.CONST_ENCODING);
             String json = doGGet(u, params);
             retObj = gson.fromJson(json, PointModel.class);
 
@@ -368,8 +363,8 @@ public class NimbitsClientImpl implements NimbitsClient {
             String u = host + Path.PATH_POINT_SERVICE;
             String params;
             String json = gson.toJson(p);
-            params = Params.PARAM_JSON + "=" + URLEncoder.encode(json, Const.CONST_ENCODING) +
-                    "&" + Params.PARAM_ACTION + "=" + Action.update.getCode();
+            params = Parameters.json.getText() + "=" + URLEncoder.encode(json, Const.CONST_ENCODING) +
+                    "&" + Parameters.action.getText() + "=" + Action.update.getCode();
             String response = doGPost(u, params);
             if (response != null) {
                 ret = gson.fromJson(response, PointModel.class);
@@ -389,8 +384,8 @@ public class NimbitsClientImpl implements NimbitsClient {
         try {
             String u = host + Path.PATH_POINT_SERVICE;
             String params;
-            params = Params.PARAM_JSON + "=" + URLEncoder.encode(newPointJson, Const.CONST_ENCODING) +
-            "&" + Params.PARAM_NAME + "=" + pointName.getValue();
+            params = Parameters.json.getText() + "=" + URLEncoder.encode(newPointJson, Const.CONST_ENCODING) +
+            "&" + Parameters.name.getText() + "=" + pointName.getValue();
             String result = doGPost(u, params);
             retObj = gson.fromJson(result, PointModel.class);
         } catch (UnsupportedEncodingException e) {
@@ -402,31 +397,31 @@ public class NimbitsClientImpl implements NimbitsClient {
     }
 
 
-    public Entity getCategory(final EntityName EntityName, final boolean includePoints, final boolean includeDiagrams) throws NimbitsException {
-        Entity c;
-        final String u = host + Path.PATH_CATEGORY_SERVICE;
-        String params = Params.PARAM_NAME + "=" + EntityName.getValue();
-
-        if (includePoints) {
-            params += "&" + Params.PARAM_INCLUDE_POINTS + "=" + Words.WORD_TRUE;
-        }
-        if (includeDiagrams) {
-            params += "&" + Params.PARAM_INCLUDE_DIAGRAMS + "=" + Words.WORD_TRUE;
-        }
-
-        final String json = doGGet(u, params);
-
-        c = gson.fromJson(json, EntityModel.class);
-
-
-        return c;
-
-
-    }
+//    public Entity getCategory(final EntityName EntityName, final boolean includePoints, final boolean includeDiagrams) throws NimbitsException {
+//        Entity c;
+//        final String u = host + Path.PATH_CATEGORY_SERVICE;
+//        String params = Parameters.name.getText() + "=" + EntityName.getValue();
+//
+//        if (includePoints) {
+//            params += "&" + Parameters.PARAM_INCLUDE_POINTS + "=" + Words.WORD_TRUE;
+//        }
+//        if (includeDiagrams) {
+//            params += "&" + Parameters.PARAM_INCLUDE_DIAGRAMS + "=" + Words.WORD_TRUE;
+//        }
+//
+//        final String json = doGGet(u, params);
+//
+//        c = gson.fromJson(json, EntityModel.class);
+//
+//
+//        return c;
+//
+//
+//    }
 
     public String currentValue(final EntityName name) throws IOException, NimbitsException {
         String u = host + Path.PATH_CURRENT_VALUE;
-        String params = Params.PARAM_POINT + "=" + URLEncoder.encode(name.getValue(), Const.CONST_ENCODING);
+        String params = Parameters.point.getText() + "=" + URLEncoder.encode(name.getValue(), Const.CONST_ENCODING);
         return doGGet(u, params);
 
     }
@@ -471,7 +466,7 @@ public class NimbitsClientImpl implements NimbitsClient {
         String json;
 
         try {
-            params = Params.PARAM_POINT + "=" + URLEncoder.encode(name.getValue(), Const.CONST_ENCODING) + "&format=json";
+            params = Parameters.point.getText() + "=" + URLEncoder.encode(name.getValue(), Const.CONST_ENCODING) + "&format=json";
             json = doGGet(u, params);
 
             if (json != null) {
@@ -503,7 +498,7 @@ public class NimbitsClientImpl implements NimbitsClient {
         final String destUrl = host + Path.PATH_SERIES_SERVICE;
         String params;
         try {
-            params = Params.PARAM_COUNT + "=" + count + "&" + Params.PARAM_POINT + "=" + URLEncoder.encode(name.getValue(), Const.CONST_ENCODING);
+            params = Parameters.count.getText() + "=" + count + "&" + Parameters.point.getText() + "=" + URLEncoder.encode(name.getValue(), Const.CONST_ENCODING);
             result = doGGet(destUrl, params);
 
             retObj = gson.fromJson(result, GsonFactory.valueListType);
@@ -532,7 +527,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
         try {
             while (true) {
-                params = "seg=" + seg + "&sd=" + startDate.getTime() + "&ed=" + endDate.getTime() + "&" + Params.PARAM_POINT + "=" + URLEncoder.encode(name.getValue(), Const.CONST_ENCODING);
+                params = "seg=" + seg + "&sd=" + startDate.getTime() + "&ed=" + endDate.getTime() + "&" + Parameters.point.getText() + "=" + URLEncoder.encode(name.getValue(), Const.CONST_ENCODING);
                 result = doGGet(destUrl, params);
                 List<Value> r = gson.fromJson(result, GsonFactory.valueListType);
 
@@ -634,9 +629,9 @@ public class NimbitsClientImpl implements NimbitsClient {
     private String getAuthParams() {
 
         final StringBuilder b = new StringBuilder();
-        b.append("&" + Params.PARAM_EMAIL + "=").append(G.getEmail().getValue());
+        b.append("&" + Parameters.email.getText() + "=").append(G.getEmail().getValue());
         if (G.getSecret() != null) {
-            b.append("&" + Params.PARAM_SECRET + "=").append(G.getSecret());
+            b.append("&" + Parameters.secret.getText() + "=").append(G.getSecret());
         }
 
         return b.toString();

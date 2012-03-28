@@ -52,13 +52,13 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
     @Override
     public void onModuleLoad() {
-        final String clientTypeParam = Location.getParameter(com.nimbits.client.constants.Params.PARAM_CLIENT);
-        String uuid = Location.getParameter(com.nimbits.client.constants.Params.PARAM_UUID);
-        final String actionParam = Location.getParameter(com.nimbits.client.constants.Params.PARAM_ACTION);
-        final String fb = Location.getParameter(com.nimbits.client.constants.Params.PARAM_FACEBOOK);
-        final String code = Location.getParameter(com.nimbits.client.constants.Params.PARAM_CODE);
-        final String tw = Location.getParameter(com.nimbits.client.constants.Params.PARAM_TWITTER);
-        final String oauth_token = Location.getParameter(com.nimbits.client.constants.Params.PARAM_OAUTH);
+        final String clientTypeParam = Location.getParameter(Parameters.client.getText());
+        String uuid = Location.getParameter(Parameters.uuid.getText());
+        final String actionParam = Location.getParameter(Parameters.action.getText());
+        final String fb = Location.getParameter(Parameters.facebook.getText());
+        final String code = Location.getParameter(Parameters.code.getText());
+        final String tw = Location.getParameter(Parameters.twitter.getText());
+        final String oauth_token = Location.getParameter(Parameters.oauth_token.getText());
         //final String diagramUUID = Location.getParameter(Const.Params.PARAM_DIAGRAM);
 
 //        final String debug = Location.getParameter(Const.PARAM_DEBUG);
@@ -71,8 +71,8 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         boolean doSubscribe = (uuid != null && actionParam != null && actionParam.equals(Action.subscribe.name()));
         Action action = Action.none;
 
-        if (Cookies.getCookieNames().contains(com.nimbits.client.constants.Params.PARAM_CLIENT) && Utils.isEmptyString(clientTypeParam)) {
-            clientType = ClientType.valueOf(Cookies.getCookie(com.nimbits.client.constants.Params.PARAM_CLIENT));
+        if (Cookies.getCookieNames().contains(Parameters.client.getText()) && Utils.isEmptyString(clientTypeParam)) {
+            clientType = ClientType.valueOf(Cookies.getCookie(Parameters.client.getText()));
         }
         else if (!Utils.isEmptyString(clientTypeParam) && clientTypeParam.equals(Words.WORD_ANDROID)) {
             clientType = ClientType.android;
@@ -108,7 +108,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
             action = Action.facebook;
         }
 
-        Cookies.setCookie(com.nimbits.client.constants.Params.PARAM_CLIENT, clientType.name());
+        Cookies.setCookie(Parameters.client.getText(), clientType.name());
 
 
 

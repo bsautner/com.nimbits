@@ -86,7 +86,7 @@ public class SystemMaint extends HttpServlet {
             final EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
             final Server server = ServerModelFactory.createServer(ServerInfoImpl.getFullServerURL(req), emailAddress, SettingType.serverVersion.getDefaultValue());
             final String json = GsonFactory.getInstance().toJson(server);
-            final String params = Params.PARAM_JSON + "=" + json;
+            final String params = Parameters.json.getText() + "=" + json;
             out.println("<p>");
             out.println(HttpCommonFactory.getInstance().doPost(Path.PATH_NIMBITS_CORE_SERVERS_URL, params));
             out.println("</p>");

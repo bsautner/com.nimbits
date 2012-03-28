@@ -221,7 +221,22 @@ public class UserDAOImpl implements UserTransactions {
         }
         return retObj;
     }
-
+    @Override
+    public List<User> getUsers() {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        List<User> result;
+        List<User> retObj = null;
+        try {
+            Query q = pm.newQuery(NimbitsUser.class);
+            result = (List<User>) q.execute();
+            retObj = UserModelFactory.createUserModels(result);
+        } catch (Exception e) {
+            log.severe(e.getMessage());
+        } finally {
+            pm.close();
+        }
+        return retObj;
+    }
     @Override
     public List<Connection> getPendingConnectionRequests(final EmailAddress internetAddress) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();

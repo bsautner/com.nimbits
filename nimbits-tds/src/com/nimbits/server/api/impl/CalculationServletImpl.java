@@ -39,12 +39,12 @@ public class CalculationServletImpl extends ApiServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        init(req, resp, ExportType.plain);
-        Calculation c = GsonFactory.getInstance().fromJson(getParam(Parameters.json), CalculationModel.class);
-        EntityName name;
+
 
         try {
-
+            init(req, resp, ExportType.plain);
+            Calculation c = GsonFactory.getInstance().fromJson(getParam(Parameters.json), CalculationModel.class);
+            EntityName name;
             name = CommonFactoryLocator.getInstance().createName(getParam(Parameters.name), EntityType.calculation);
             if ((user != null) && (!user.isRestricted()) && (c != null)) {
                 CalculationServiceFactory.getInstance().addUpdateCalculation(user, null, name, c);

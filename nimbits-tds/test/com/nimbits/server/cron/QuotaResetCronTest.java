@@ -46,7 +46,7 @@ public class QuotaResetCronTest {
 
         QuotaResetCron cron = new QuotaResetCron();
         cron.doGet(null, null);
-        ShardedCounter counter = getOrCreateCounter("test@example.com");
+        ShardedCounter counter = CounterFactory.getHelper().getOrCreateCounter("test@example.com");
         int count;
         for (int i = 0; i < 100; i++) {
         counter.increment();
@@ -61,14 +61,5 @@ public class QuotaResetCronTest {
 
 
     }
-    private ShardedCounter getOrCreateCounter(String s) {
-        CounterFactory factory = new CounterFactory();
-        ShardedCounter counter = factory.getCounter(s);
-        if (counter == null) {
-            counter = factory.createCounter(s);
-            counter.addShard();
 
-        }
-        return counter;
-    }
 }

@@ -25,4 +25,6 @@ public interface SettingsServiceAsync {
     void getSettings(final AsyncCallback<Map<SettingType, String>> asyncCallback);
 
     void getBooleanSetting(final SettingType paramName, AsyncCallback<Boolean> async);
+
+    void updateSetting(final SettingType setting, final String newValue, AsyncCallback<Void> async);
 }

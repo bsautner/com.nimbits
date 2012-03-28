@@ -29,6 +29,6 @@ public interface SettingsService extends RemoteService {
 
     Map<SettingType, String> getSettings() throws NimbitsException;
 
-
+    void updateSetting(final SettingType setting, final String newValue);
 
 }

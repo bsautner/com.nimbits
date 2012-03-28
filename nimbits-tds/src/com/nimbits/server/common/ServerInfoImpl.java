@@ -23,22 +23,28 @@ import javax.servlet.http.*;
  * Time: 9:35 AM
  */
 public class ServerInfoImpl {
-
+    private static final String TEST_URL = "http://localhost:8081";
 
     public static String getFullServerURL(final HttpServletRequest req) {
-        return (req == null) ? getUrl() : req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort();
+     try {
+         return (req == null) ? getUrl() : req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort();
+
+     }
+     catch (NullPointerException ex) {
+        return TEST_URL;
+     }
 
     }
     private  static String getUrl() {
-        String hostUrl;
+
         String environment = System.getProperty("com.google.appengine.runtime.environment");
         if (environment.equals("Production")) {
             String applicationId = System.getProperty("com.google.appengine.application.id");
             String version = System.getProperty("com.google.appengine.application.version");
-            hostUrl = "http://"+version+"."+applicationId+".appspot.com/";
+           return  "http://"+version+"."+applicationId+".appspot.com/";
         } else {
-            hostUrl = "http://localhost:8081";
+           return TEST_URL;
         }
-        return hostUrl;
+
     }
 }

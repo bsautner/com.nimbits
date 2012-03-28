@@ -48,11 +48,12 @@ public class ChartApiServletImpl extends ApiServlet {
     @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
         final String formatParam = req.getParameter(Parameters.format.getText());
-        init(req, resp, getContentType(formatParam));
+
 
 
         final Timespan timespan;
         try {
+            init(req, resp, getContentType(formatParam));
             timespan = getTimestamp(req);
 
 

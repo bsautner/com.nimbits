@@ -54,4 +54,7 @@ public class CounterFactory {
 
         return counter;
     }
+    public static CounterHelper getHelper() {
+        return new CounterHelperImpl();
+    }
 }

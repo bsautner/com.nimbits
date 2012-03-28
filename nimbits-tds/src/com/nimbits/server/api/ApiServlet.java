@@ -1,12 +1,15 @@
 package com.nimbits.server.api;
 
 import com.nimbits.client.common.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.setting.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.server.counter.*;
 import com.nimbits.server.dao.counter.*;
+import com.nimbits.server.settings.*;
 import com.nimbits.server.user.*;
 
 import javax.servlet.http.*;
@@ -25,8 +28,8 @@ public class ApiServlet extends HttpServlet {
     private Map<Parameters, String> paramMap;
 
 
-    public void init(final HttpServletRequest req, final HttpServletResponse resp, final ExportType type) {
-        try {
+    public void init(final HttpServletRequest req, final HttpServletResponse resp, final ExportType type) throws NimbitsException {
+
             user = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
             if (user != null) {
                 incrementCounter(user);
@@ -59,10 +62,7 @@ public class ApiServlet extends HttpServlet {
             }
             addResponseHeaders(resp, type);
 
-        } catch (NimbitsException e) {
-            user = null;
-            log.severe(e.getMessage());
-        }
+
     }
     public static void addResponseHeaders(final HttpServletResponse resp, final ExportType type) {
         if (! type.equals(ExportType.unknown)) {
@@ -85,9 +85,16 @@ public class ApiServlet extends HttpServlet {
         return paramMap.containsKey(param) && !Utils.isEmptyString(paramMap.get(param));
 
     }
-    private void incrementCounter(final User user) {
+    private void incrementCounter(final User user) throws NimbitsException {
         ShardedCounter counter = getOrCreateCounter(user.getEmail());
         counter.increment();
+        if (counter.getCount() > Const.MAX_DAILY_QUOTA) {
+            if (SettingsServiceFactory.getInstance().getBooleanSetting(SettingType.quotaEnabled)) {
+                throw new NimbitsException(UserMessages.ERROR_QUOTA_EXCEEDED);
+                //todo here is where we charge em;
+            }
+
+        }
     }
 
     private ShardedCounter getOrCreateCounter(final EmailAddress email) {

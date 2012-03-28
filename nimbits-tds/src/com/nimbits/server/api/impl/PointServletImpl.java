@@ -45,9 +45,10 @@ public class PointServletImpl extends ApiServlet {
 
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
-        init(req, resp, ExportType.unknown);
+
 
         try {
+            init(req, resp, ExportType.unknown);
             final PrintWriter out = resp.getWriter();
 
 
@@ -108,23 +109,21 @@ public class PointServletImpl extends ApiServlet {
 
     @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp) {
-        init(req, resp, ExportType.plain);
-
-
-
-
-
-        final String startParam = req.getParameter(Parameters.sd.getText());
-        final String endParam = req.getParameter(Parameters.ed.getText());
-        final String offsetParam = req.getParameter(Parameters.offset.getText());
-
-
-        final String pointNameParam = Utils.isEmptyString(getParam(Parameters.name)) ?
-                getParam(Parameters.point) : getParam(Parameters.name);
 
 
         try {
+
             final PrintWriter out = resp.getWriter();
+            init(req, resp, ExportType.plain);
+
+
+            final String startParam = req.getParameter(Parameters.sd.getText());
+            final String endParam = req.getParameter(Parameters.ed.getText());
+            final String offsetParam = req.getParameter(Parameters.offset.getText());
+
+
+            final String pointNameParam = Utils.isEmptyString(getParam(Parameters.name)) ?
+                    getParam(Parameters.point) : getParam(Parameters.name);
 
 
             if (! containsParam(Parameters.uuid)) {

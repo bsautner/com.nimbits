@@ -44,80 +44,86 @@ public class ValueServletImpl extends ApiServlet {
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
 
-        init(req, resp, ExportType.plain);
-
-        if (user != null && ! user.isRestricted()) {
-            try {
-                final EntityName pointName = CommonFactoryLocator.getInstance().createName(getParam(Parameters.point), EntityType.point);
-                final Entity e = EntityServiceFactory.getInstance().getEntityByName(user, pointName);
-                final Point point = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
-
-
-                if (point != null) {
-
-                    final Value v;
-
-                    if (!Utils.isEmptyString(getParam(Parameters.json))) {
-                        final Value vx = GsonFactory.getInstance().fromJson(getParam(Parameters.json), ValueModel.class);
-
-                        v = ValueModelFactory.createValueModel(vx.getLatitude(), vx.getLongitude(), vx.getDoubleValue(), vx.getTimestamp(),
-                                point.getUUID(), vx.getNote(), vx.getData());
-                    } else {
-                        final double latitude = getDoubleFromParam(getParam(Parameters.lat));
-                        final double longitude = getDoubleFromParam(getParam(Parameters.lng));
-                        final double value = getDoubleFromParam(getParam(Parameters.value));
-                        final Date timestamp = (getParam(Parameters.timestamp) != null) ? (new Date(Long.parseLong(getParam(Parameters.timestamp)))) : new Date();
-                        v = ValueModelFactory.createValueModel(latitude, longitude, value, timestamp, point.getUUID(), getParam(Parameters.note), getParam(Parameters.json));
-                    }
-
-                    Value result = RecordedValueServiceFactory.getInstance().recordValue(user, point, v, false);
-                    final PrintWriter out = resp.getWriter();
-                    String j = GsonFactory.getInstance().toJson(result);
-                    out.print(j);
-
-                } else {
-                    FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(UserMessages.ERROR_POINT_NOT_FOUND));
-                }
-            } catch (NimbitsException ex) {
-                FeedServiceFactory.getInstance().postToFeed(user, ex);
-
+        try {
+            processPost(req, resp);
+        } catch (NimbitsException e) {
+            if (user != null) {
+                FeedServiceFactory.getInstance().postToFeed(user, e);
             }
         }
 
     }
 
+    protected void processPost(HttpServletRequest req, HttpServletResponse resp) throws NimbitsException, IOException {
+        init(req, resp, ExportType.plain);
+
+        if (user != null && ! user.isRestricted()) {
+
+            final EntityName pointName = CommonFactoryLocator.getInstance().createName(getParam(Parameters.point), EntityType.point);
+            final Entity e = EntityServiceFactory.getInstance().getEntityByName(user, pointName);
+            final Point point = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
+
+
+            if (point != null) {
+
+                final Value v;
+
+                if (!Utils.isEmptyString(getParam(Parameters.json))) {
+                    final Value vx = GsonFactory.getInstance().fromJson(getParam(Parameters.json), ValueModel.class);
+
+                    v = ValueModelFactory.createValueModel(vx.getLatitude(), vx.getLongitude(), vx.getDoubleValue(), vx.getTimestamp(),
+                            point.getUUID(), vx.getNote(), vx.getData());
+                } else {
+                    final double latitude = getDoubleFromParam(getParam(Parameters.lat));
+                    final double longitude = getDoubleFromParam(getParam(Parameters.lng));
+                    final double value = getDoubleFromParam(getParam(Parameters.value));
+                    final Date timestamp = (getParam(Parameters.timestamp) != null) ? (new Date(Long.parseLong(getParam(Parameters.timestamp)))) : new Date();
+                    v = ValueModelFactory.createValueModel(latitude, longitude, value, timestamp, point.getUUID(), getParam(Parameters.note), getParam(Parameters.json));
+                }
+
+                Value result = RecordedValueServiceFactory.getInstance().recordValue(user, point, v, false);
+                final PrintWriter out = resp.getWriter();
+                String j = GsonFactory.getInstance().toJson(result);
+                out.print(j);
+
+            } else {
+                FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(UserMessages.ERROR_POINT_NOT_FOUND));
+            }
+
+        }
+    }
+
     @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
 
-        init(req, resp, ExportType.plain);
-
-
-        final PrintWriter out = resp.getWriter();
-        Value nv = null;
-        User u = null;
         try {
-
-            u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
-
-            final String format = getParam(Parameters.format)==null ? Words.WORD_DOUBLE : getParam(Parameters.format);
-
-            if (format.equals(Parameters.json.getText()) && !Utils.isEmptyString(getParam(Parameters.json))) {
-                nv = GsonFactory.getInstance().fromJson(getParam(Parameters.json), ValueModel.class);
-            } else if (format.equals(Words.WORD_DOUBLE) && !Utils.isEmptyString(getParam(Parameters.value))) {
-                nv = ValueModelFactory.createValueModel(
-                        getParam(Parameters.value),
-                        getParam(Parameters.note),
-                        getParam(Parameters.lat),
-                        getParam(Parameters.lng),
-                        getParam(Parameters.json));
-            }
-            out.println(processRequest(getParam(Parameters.point), getParam(Parameters.uuid), format, nv, u));
-
+            processGet(req, resp);
         } catch (NimbitsException e) {
-            if (u != null) {
-                FeedServiceFactory.getInstance().postToFeed(u, e);
+            if (user != null) {
+                FeedServiceFactory.getInstance().postToFeed(user, e);
             }
         }
+
+    }
+
+    protected void processGet(HttpServletRequest req, HttpServletResponse resp) throws NimbitsException, IOException {
+        init(req, resp, ExportType.plain);
+        final PrintWriter out = resp.getWriter();
+        Value nv = null;
+        final String format = getParam(Parameters.format)==null ? Words.WORD_DOUBLE : getParam(Parameters.format);
+
+        if (format.equals(Parameters.json.getText()) && !Utils.isEmptyString(getParam(Parameters.json))) {
+            nv = GsonFactory.getInstance().fromJson(getParam(Parameters.json), ValueModel.class);
+        } else if (format.equals(Words.WORD_DOUBLE) && !Utils.isEmptyString(getParam(Parameters.value))) {
+            nv = ValueModelFactory.createValueModel(
+                    getParam(Parameters.value),
+                    getParam(Parameters.note),
+                    getParam(Parameters.lat),
+                    getParam(Parameters.lng),
+                    getParam(Parameters.json));
+        }
+        out.println(processRequest(getParam(Parameters.point), getParam(Parameters.uuid), format, nv, user));
+
 
     }
 

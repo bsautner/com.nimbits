@@ -44,6 +44,8 @@ public class SeriesServletImpl extends ApiServlet {
 
     @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp) {
+
+        try {
         String result;
         init(req, resp, ExportType.plain);
         int count;
@@ -79,14 +81,10 @@ public class SeriesServletImpl extends ApiServlet {
             segStr = "0";
         }
 
-        User u;
-        try {
-            u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
-        } catch (NimbitsException e) {
-            u = null;
-        }
 
-        try {
+
+
+
             final PrintWriter out = resp.getWriter();
 
             if (Utils.isEmptyString(getParam(Parameters.point))) {
@@ -95,7 +93,7 @@ public class SeriesServletImpl extends ApiServlet {
 
 
                 final EntityName pointName = CommonFactoryLocator.getInstance().createName(getParam(Parameters.point), EntityType.point);
-                Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
+                Entity e = EntityServiceFactory.getInstance().getEntityByName(user, pointName);
                 final Point point = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
 
                 if (point == null) {

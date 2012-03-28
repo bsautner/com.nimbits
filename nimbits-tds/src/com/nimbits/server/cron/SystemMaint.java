@@ -104,7 +104,7 @@ public class SystemMaint extends HttpServlet {
             final String currentValue = SettingTransactionsFactory.getDaoInstance().getSetting(setting);
 
             if (setting.isUpdate()) {
-                SettingTransactionsFactory.getInstance().updateSetting(setting,setting.getDefaultValue());
+                SettingsServiceFactory.getInstance().updateSetting(setting,setting.getDefaultValue());
 
                 out.println("<p>" + setting.getName() + " updated to " + setting.getDefaultValue() +
                         " (was " + currentValue + ")</p>");

@@ -31,14 +31,14 @@ public class AuthTestServletImpl extends ApiServlet {
     public void doGet(final HttpServletRequest req,
                       final HttpServletResponse resp) throws IOException {
 
-        init(req, resp, ExportType.plain);
+
 
         final PrintWriter out = resp.getWriter();
 
-        final User u;
         try {
-            u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
-            if (u != null && !u.isRestricted()) {
+            init(req, resp, ExportType.plain);
+
+            if (user != null && !user.isRestricted()) {
                 out.print(Words.WORD_TRUE);
 
             } else {

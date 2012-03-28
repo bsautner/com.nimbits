@@ -38,10 +38,12 @@ import java.util.*;
 public class BlobServletImpl extends ApiServlet {
     private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 
-    public void doPost(HttpServletRequest req, HttpServletResponse res)
-            throws ServletException, IOException {
+    @Override
+    public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
 
-        init(req, res, ExportType.plain);
+        try {
+            init(req, res, ExportType.plain);
+
 
         final Map<String,List<BlobKey>> blobs = blobstoreService.getUploads(req);
         final BlobKey blobKey = blobs.get(Parameters.myFile.getText()).get(0);
@@ -56,7 +58,7 @@ public class BlobServletImpl extends ApiServlet {
         final String fileName = diagramNameParam.substring(lastIndex + 1);
         session.setAttribute(Parameters.email.getText(), CommonFactoryLocator.getInstance().createEmailAddress(email));
 
-        try {
+
 
             final EntityName diagramName = CommonFactoryLocator.getInstance().createName(fileName, EntityType.file);
             PrintWriter out = res.getWriter();

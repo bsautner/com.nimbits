@@ -27,8 +27,9 @@ public class BatchServletImpl extends ApiServlet {
 
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
-        init(req, resp, ExportType.plain);
+
         try {
+            init(req, resp, ExportType.plain);
             TaskFactoryLocator.getInstance().startProcessBatchTask(req, resp);
         } catch (NimbitsException e) {
             if (user != null) {
@@ -47,9 +48,10 @@ public class BatchServletImpl extends ApiServlet {
 
     @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp) {
-        init(req, resp, ExportType.plain);
+       //todo go through all servlets, make them like currentvalue
 
         try {
+            init(req, resp, ExportType.plain);
             TaskFactoryLocator.getInstance().startProcessBatchTask(req, resp);
         } catch (NimbitsException e) {
             if (user != null) {

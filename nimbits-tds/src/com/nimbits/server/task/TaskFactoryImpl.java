@@ -27,6 +27,7 @@ import com.nimbits.server.user.*;
 
 import javax.servlet.http.*;
 import java.util.*;
+import java.util.logging.*;
 
 /**
  * Created by bsautner
@@ -56,7 +57,7 @@ public class TaskFactoryImpl implements TaskFactory {
     private static final String PATH_TASK_PROCESS_BATCH = "/task/processbatchtask";
     private static final String PATH_INCOMING_MAIL_QUEUE = "/task/incommingmail";
     private static final String PATH_DELETE_DATA_TASK = "/task/DeleteRecordedValuesTask";
-
+    private static final Logger log = Logger.getLogger(TaskFactoryImpl.class.getName());
 
     @Override
     public void startDeleteDataTask(final Point point,
@@ -117,22 +118,26 @@ public class TaskFactoryImpl implements TaskFactory {
 
     @Override
     public void startRecordValueTask(final User u, final Point point, final Value value, final boolean loopFlag) {
-        if (Double.valueOf(value.getDoubleValue()).isInfinite()) {
-            return;
+        try {
+            if (Double.valueOf(value.getDoubleValue()).isInfinite()) {
+                return;
+            }
+            final Queue queue = QueueFactory.getQueue(QUEUE_RECORD_VALUE);
+
+            final String userJson = gson.toJson(u);
+            final String pointJson = gson.toJson(point);
+            final String valueJson = gson.toJson(value);
+
+            queue.add(TaskOptions.Builder.withUrl(PATH_TASK_RECORD_VALUE)
+                    .param(Parameters.pointUser.getText(), userJson)
+                    .param(Parameters.pointJson.getText(), pointJson)
+                    .param(Parameters.valueJson.getText(), valueJson)
+                    .param(Parameters.loop.getText(), String.valueOf(loopFlag))
+
+            );
+        } catch (IllegalStateException e) {
+         log.severe(e.getMessage());
         }
-        final Queue queue = QueueFactory.getQueue(QUEUE_RECORD_VALUE);
-
-        final String userJson = gson.toJson(u);
-        final String pointJson = gson.toJson(point);
-        final String valueJson = gson.toJson(value);
-
-        queue.add(TaskOptions.Builder.withUrl(PATH_TASK_RECORD_VALUE)
-                .param(Parameters.pointUser.getText(), userJson)
-                .param(Parameters.pointJson.getText(), pointJson)
-                .param(Parameters.valueJson.getText(), valueJson)
-                .param(Parameters.loop.getText(), String.valueOf(loopFlag))
-
-        );
     }
 
     @Override

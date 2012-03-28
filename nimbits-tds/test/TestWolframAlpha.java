@@ -29,6 +29,7 @@ import java.io.*;
 public class TestWolframAlpha {
 
     @Test
+    @Ignore
     public void testWolframAlpha() throws ParserConfigurationException, IOException, SAXException, NimbitsException {
         IntelligenceServiceImpl i = new IntelligenceServiceImpl();
         assertEquals(2.0, i.getFormulaResult("1+1"), 0.0);
@@ -44,6 +45,7 @@ public class TestWolframAlpha {
 
 
     @Test
+    @Ignore
     public void testParseInput() {
 
         String t1 = "5+[point.data]-[point2.value]+[point3.value]-8/6";

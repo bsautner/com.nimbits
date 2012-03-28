@@ -37,6 +37,11 @@ public class SettingServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
+    public void updateSetting(SettingType setting, String newValue) {
+         SettingTransactionsFactory.getInstance().updateSetting(setting, newValue);
+    }
+
+    @Override
     public String getSetting(final SettingType paramName) throws NimbitsException {
         return SettingTransactionsFactory.getInstance().getSetting(paramName);
     }

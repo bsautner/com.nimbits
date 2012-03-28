@@ -25,4 +25,6 @@ public class UserMessages {
             "You can configure data points to send alerts and updates to your twitter feed " +
             "on the property menu";
     public static final String MESSAGE_UPLOAD_SVG = "Upload a process diagram in .svg format";
+    public static final String ERROR_QUOTA_EXCEEDED = "Daily Quota of " + Const.MAX_DAILY_QUOTA + " Exceeded. " +
+            " and there are no billable units in your account. Please visit nimbits.com to enable billing";
 }

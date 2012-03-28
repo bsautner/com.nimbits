@@ -36,10 +36,11 @@ public class MailHandlerServletImpl extends ApiServlet {
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp)
             throws IOException {
-        init(req, resp, ExportType.unknown);
-        final Properties props = new Properties();
-        final Session session = Session.getDefaultInstance(props, null);
+
         try {
+            init(req, resp, ExportType.unknown);
+            final Properties props = new Properties();
+            final Session session = Session.getDefaultInstance(props, null);
             final MimeMessage message = new MimeMessage(session, req.getInputStream());
 
             final Address a[] = message.getFrom();
@@ -55,6 +56,10 @@ public class MailHandlerServletImpl extends ApiServlet {
 
             }
         } catch (MessagingException e) {
+            if (user != null) {
+                FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(e));
+            }
+        } catch (NimbitsException e) {
             if (user != null) {
                 FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(e));
             }

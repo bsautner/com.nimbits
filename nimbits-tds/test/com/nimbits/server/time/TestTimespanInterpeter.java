@@ -97,7 +97,7 @@ public class TestTimespanInterpeter  {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
-        Assert.assertEquals(1304924504000L, ts.getStart().getTime());
+        Assert.assertEquals(1266942548000L, ts.getStart().getTime());
         Assert.assertEquals(1298478548000L, ts.getEnd().getTime());
         Assert.assertNotNull(ts);
 

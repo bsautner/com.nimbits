@@ -1,6 +1,7 @@
 package com.nimbits.client.model.entity;
 
 import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.server.Server;
 
 import java.io.Serializable;
@@ -25,7 +26,7 @@ public class EntityDescriptionModel implements Serializable, EntityDescription {
 
     private int entityType;
 
-    public EntityDescriptionModel(Server server, Entity entity) {
+    public EntityDescriptionModel(Server server, Entity entity) throws NimbitsException {
         this.server = server;
         this.pointName = entity.getName().getValue();
         this.uuid = entity.getEntity();

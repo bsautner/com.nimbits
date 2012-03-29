@@ -28,11 +28,13 @@ import com.extjs.gxt.ui.client.widget.toolbar.*;
 import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
+import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.service.datapoints.*;
 import com.nimbits.client.service.entity.*;
 import com.nimbits.client.ui.controls.*;
+import com.nimbits.client.ui.helper.FeedbackHelper;
 import com.nimbits.client.ui.icons.*;
 
 import java.util.*;
@@ -215,14 +217,19 @@ public class PointPanel extends LayoutContainer {
 
             @Override
             public void onSuccess(Point result) {
-                MessageBox.alert("Success", "Point Updated", null);
-                notifyPointUpdatedListener();
+
+                try {
+                    notifyPointUpdatedListener();
+                    MessageBox.alert("Success", "Point Updated", null);
+                } catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
+                }
                 box.close();
             }
         });
     }
 
-    private void notifyPointUpdatedListener() {
+    private void notifyPointUpdatedListener() throws NimbitsException {
         for (final PointUpdatedListener pointUpdatedListener : pointUpdatedListeners) {
             pointUpdatedListener.onPointUpdated(entity);
         }
@@ -367,7 +374,7 @@ public class PointPanel extends LayoutContainer {
 
 
     public interface PointUpdatedListener {
-        void onPointUpdated(Entity entity);
+        void onPointUpdated(Entity entity) throws NimbitsException;
     }
 
     public void addPointUpdatedListeners(PointUpdatedListener listener) {

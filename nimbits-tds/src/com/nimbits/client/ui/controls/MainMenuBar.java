@@ -203,7 +203,7 @@ public class MainMenuBar extends ToolBar {
             p.addFileAddedListeners(new FileUploadPanel.FileAddedListener() {
 
                 @Override
-                public void onFileAdded()  {
+                public void onFileAdded() throws NimbitsException {
                     w.hide();
                     notifyEntityModifiedListener(null, Action.refresh);
 
@@ -330,7 +330,11 @@ public class MainMenuBar extends ToolBar {
 
                             @Override
                             public void onSuccess(final Entity result) {
-                                notifyEntityModifiedListener(new GxtModel(result), Action.create);
+                                try {
+                                    notifyEntityModifiedListener(new GxtModel(result), Action.create);
+                                } catch (NimbitsException e) {
+                                    FeedbackHelper.showError(e);
+                                }
 
                             }
                         });
@@ -369,7 +373,11 @@ public class MainMenuBar extends ToolBar {
                     @Override
                     public void onSuccess(Entity result) {
 
-                        notifyEntityModifiedListener(new GxtModel(result), Action.create);
+                        try {
+                            notifyEntityModifiedListener(new GxtModel(result), Action.create);
+                        } catch (NimbitsException e) {
+                            FeedbackHelper.showError(e);
+                        }
 
                         box.close();
                     }
@@ -489,7 +497,11 @@ public class MainMenuBar extends ToolBar {
                                         connectionCount += (-1);
 
                                         connectionRequest.setText("Requests(" + connectionCount + ")");
-                                        notifyEntityModifiedListener(null, Action.refresh);
+                                        try {
+                                            notifyEntityModifiedListener(null, Action.refresh);
+                                        } catch (NimbitsException e) {
+                                            FeedbackHelper.showError(e);
+                                        }
 
                                     }
 
@@ -514,7 +526,7 @@ public class MainMenuBar extends ToolBar {
         return connectionRequest;
     }
     public interface EntityModifiedListener {
-        void onEntityModified(final GxtModel model, final Action action) ;
+        void onEntityModified(final GxtModel model, final Action action) throws NimbitsException;
 
     }
     private List<EntityModifiedListener> entityModifiedListeners = new ArrayList<EntityModifiedListener>();
@@ -522,7 +534,7 @@ public class MainMenuBar extends ToolBar {
         this.entityModifiedListeners.add(listener);
     }
 
-    void notifyEntityModifiedListener(final GxtModel model, final Action action)  {
+    void notifyEntityModifiedListener(final GxtModel model, final Action action) throws NimbitsException {
         for (EntityModifiedListener listener : entityModifiedListeners) {
             listener.onEntityModified(model, action);
         }

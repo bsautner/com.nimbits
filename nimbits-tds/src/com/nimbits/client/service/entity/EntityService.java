@@ -16,7 +16,7 @@ import java.util.*;
  */
 @RemoteServiceRelativePath("entity")
 public interface EntityService extends RemoteService {
-    List<Entity> getEntities();
+    List<Entity> getEntities() throws NimbitsException;
 
     Entity addUpdateEntity(final Entity entity) throws NimbitsException;
 
@@ -24,13 +24,13 @@ public interface EntityService extends RemoteService {
 
     void deleteEntity(Entity entity) throws NimbitsException;
 
-    Entity getEntityByUUID(String uuid);
+    Entity getEntityByUUID(String uuid) throws NimbitsException;
 
-    Map<String, Entity> getEntityMap(EntityType type);
+    Map<String, Entity> getEntityMap(EntityType type) throws NimbitsException;
 
-    Map<String, Entity> getEntityMap(User user, EntityType type);
+    Map<String, Entity> getEntityMap(User user, EntityType type) throws NimbitsException;
 
-    Map<EntityName, Entity> getEntityNameMap(EntityType type);
+    Map<EntityName, Entity> getEntityNameMap(EntityType type) throws NimbitsException;
 
     Entity copyEntity(Entity originalEntity, EntityName newName) throws NimbitsException;
 
@@ -38,19 +38,19 @@ public interface EntityService extends RemoteService {
 
     List<Entity> getEntityChildren(Entity parentEntity, EntityType type);
 
-    Entity getEntityByName(EntityName name);
+    Entity getEntityByName(EntityName name) throws NimbitsException;
 
     Entity addUpdateEntity(User user, Entity aConnection) throws NimbitsException;
 
-    Entity getEntityByUUID(User u, String entityId);
+    Entity getEntityByUUID(User u, String entityId) throws NimbitsException;
 
-    Entity getEntityByName(User u, EntityName name);
+    Entity getEntityByName(User u, EntityName name) throws NimbitsException;
 
     void deleteEntity(User u, Entity entity) throws NimbitsException;
 
     List<Entity> getEntityChildren(User u, Entity c, EntityType point);
 
-    Map<String, Entity> getSystemWideEntityMap(EntityType type);
+    Map<String, Entity> getSystemWideEntityMap(EntityType type) throws NimbitsException;
 
 
 }

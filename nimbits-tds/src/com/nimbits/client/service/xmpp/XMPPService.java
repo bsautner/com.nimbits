@@ -33,7 +33,7 @@ public interface XMPPService extends RemoteService {
 
     Entity createXmppResource(final Entity targetPointEntity, final EntityName resourceName) throws NimbitsException;
 
-    void sendMessage(final List<XmppResource> resources, final String message, final EmailAddress email);
+    void sendMessage(final List<XmppResource> resources, final String message, final EmailAddress email) throws NimbitsException;
 
     void deleteResource(final User u, final Entity entity);
 }

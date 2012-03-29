@@ -107,7 +107,7 @@ public class EmailServiceImpl implements EmailService {
     public void sendAlert(final Entity entity,
                           final Point point,
                           final EmailAddress emailAddress,
-                          final Value value) {
+                          final Value value) throws NimbitsException {
 
         final Properties props = new Properties();
         final Session session = Session.getDefaultInstance(props, null);

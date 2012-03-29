@@ -31,7 +31,7 @@ public class EntityDaoImpl implements  EntityTransactions {
     }
 
     @Override
-    public Map<String, Entity> getEntityMap(EntityType type) {
+    public Map<String, Entity> getEntityMap(EntityType type) throws NimbitsException {
         Map<String, Entity> retObj = new HashMap<String, Entity>();
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -56,7 +56,7 @@ public class EntityDaoImpl implements  EntityTransactions {
 
 
     @Override
-    public Map<EntityName, Entity> getEntityNameMap(EntityType type) {
+    public Map<EntityName, Entity> getEntityNameMap(EntityType type) throws NimbitsException {
 
         Map<EntityName, Entity> retObj = new HashMap<EntityName, Entity>();
 
@@ -141,7 +141,7 @@ public class EntityDaoImpl implements  EntityTransactions {
 
 
     @Override
-    public List<Entity> getEntities() {
+    public List<Entity> getEntities() throws NimbitsException {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         List<String> uuids = new ArrayList<String>();
@@ -235,7 +235,7 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     @Override
 
-    public Entity getEntityByUUID(final String uuid) {
+    public Entity getEntityByUUID(final String uuid) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
 
@@ -261,7 +261,7 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     @Override
 
-    public Entity getEntityByName(final EntityName name) {
+    public Entity getEntityByName(final EntityName name) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
 
@@ -314,7 +314,7 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     @Override
 
-    public Map<String, Entity> getSystemWideEntityMap(EntityType type) {
+    public Map<String, Entity> getSystemWideEntityMap(EntityType type) throws NimbitsException {
         Map<String, Entity> retObj = new HashMap<String, Entity>();
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();

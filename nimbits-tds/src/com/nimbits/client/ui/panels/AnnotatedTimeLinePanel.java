@@ -497,7 +497,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
         return options;
     }
 
-    public void removePoint(final Entity entity) {
+    public void removePoint(final Entity entity) throws NimbitsException {
         removePointDataFromTable(entity.getName());
         if (points.containsKey(entity.getName())) {
             points.remove(entity.getName());
@@ -579,7 +579,11 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
             @Override
             public void handleEvent(BaseEvent be) {
                 for (Entity entity : points.values()) {
-                    removePoint(entity);
+                    try {
+                        removePoint(entity);
+                    } catch (NimbitsException e) {
+                        FeedbackHelper.showError(e);
+                    }
                 }
 
             }

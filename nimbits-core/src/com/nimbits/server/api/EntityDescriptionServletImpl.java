@@ -14,6 +14,7 @@
 package com.nimbits.server.api;
 
 import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityDescription;
 import com.nimbits.client.model.entity.EntityModel;
@@ -46,6 +47,14 @@ public class EntityDescriptionServletImpl extends HttpServlet {
 
     @Override
     public void doPost(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+        try {
+            processGet(request, response);
+        } catch (NimbitsException ignored) {    //todo logging
+
+        }
+    }
+
+    private void processGet(HttpServletRequest request, HttpServletResponse response) throws IOException, NimbitsException {
         final String serverJson = request.getParameter(Parameters.server.getText());
         final String json = request.getParameter(Parameters.entity.getText());
         final String action = request.getParameter(Parameters.action.getText());
@@ -66,7 +75,7 @@ public class EntityDescriptionServletImpl extends HttpServlet {
                entity.setDescription(desc);
                entityDescription =
                         EntityModelFactory.createEntityDescription(
-                                currentServer,entity
+                                currentServer, entity
                         );
 
 

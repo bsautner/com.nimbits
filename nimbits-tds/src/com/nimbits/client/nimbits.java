@@ -27,6 +27,7 @@ import com.google.gwt.user.client.ui.*;
 import com.nimbits.client.common.*;
 import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.service.*;
@@ -311,7 +312,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         });
     }
 
-    private void loadDiagramView(final Entity diagram) {
+    private void loadDiagramView(final Entity diagram) throws NimbitsException {
 
         viewport = new Viewport();
         viewport.setLayout(new BorderLayout());
@@ -389,6 +390,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
             @Override
             public void onSuccess(Entity entity) {
+                try {
                 switch (entity.getEntityType()) {
 
                     case user:
@@ -414,6 +416,10 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
                         break;
                     case feed:
                         break;
+                }
+                }
+                catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
                 }
 
 

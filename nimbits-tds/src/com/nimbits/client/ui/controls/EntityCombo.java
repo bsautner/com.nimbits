@@ -18,9 +18,11 @@ import com.extjs.gxt.ui.client.widget.form.*;
 import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.service.entity.*;
+import com.nimbits.client.ui.helper.FeedbackHelper;
 
 import java.util.*;
 
@@ -53,11 +55,17 @@ public class EntityCombo extends ComboBox<GxtModel> {
                 setEmptyText(emptyText);
 
                 for (final Entity e : result.values()) {
-                    final GxtModel model = new GxtModel(e);
-                    cbStore.add(model);
-                    if (model.getBaseEntity().getEntity().equals(selectedUUID)) {
-                       setValue(model);
+                    final GxtModel model;
+                    try {
+                        model = new GxtModel(e);
+                        cbStore.add(model);
+                        if (model.getBaseEntity().getEntity().equals(selectedUUID)) {
+                            setValue(model);
+                        }
+                    } catch (NimbitsException e1) {
+                        FeedbackHelper.showError(e1);
                     }
+
 
                 }
             }

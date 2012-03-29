@@ -1,9 +1,13 @@
 package com.nimbits.server.dao.value;
 
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.BlobstoreService;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.files.*;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.nimbits.client.exception.NimbitsException;
@@ -16,11 +20,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
 import java.util.*;
 
 import static com.google.appengine.api.datastore.FetchOptions.Builder.withLimit;
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 /**
  * Created by Benjamin Sautner
@@ -88,6 +96,63 @@ public class ValueDaoImplTest {
 
     }
 
+    @Test
+    public void testBlobStore() throws IOException {
+        // Get a file service
+        FileService fileService = FileServiceFactory.getFileService();
+
+        // Create a new Blob file with mime-type "text/plain"
+        AppEngineFile file = fileService.createNewBlobFile("text/plain");
+
+        // Open a channel to write to it
+        boolean lock = false;
+        FileWriteChannel writeChannel = fileService.openWriteChannel(file, lock);
+
+        // Different standard Java ways of writing to the channel
+        // are possible. Here we use a PrintWriter:
+        PrintWriter out = new PrintWriter(Channels.newWriter(writeChannel, "UTF8"));
+        out.println("The woods are lovely dark and deep.");
+        out.println("But I have promises to keep.");
+
+        // Close without finalizing and save the file path for writing later
+        out.close();
+        String path = file.getFullPath();
+
+        // Write more to the file in a separate request:
+        file = new AppEngineFile(path);
+
+        // This time lock because we intend to finalize
+        lock = true;
+        writeChannel = fileService.openWriteChannel(file, lock);
+
+        // This time we write to the channel directly
+        writeChannel.write(ByteBuffer.wrap
+                ("And miles to go before I sleep.".getBytes()));
+
+        // Now finalize
+        writeChannel.closeFinally();
+
+        // Later, read from the file using the file API
+        lock = false; // Let other people read at the same time
+        FileReadChannel readChannel = fileService.openReadChannel(file, false);
+
+        // Again, different standard Java ways of reading from the channel.
+        BufferedReader reader =
+                new BufferedReader(Channels.newReader(readChannel, "UTF8"));
+        String line = reader.readLine();
+        // line = "The woods are lovely dark and deep."
+
+        readChannel.close();
+
+        // Now read from the file using the Blobstore API
+        BlobKey blobKey = fileService.getBlobKey(file);
+        BlobstoreService blobStoreService = BlobstoreServiceFactory.getBlobstoreService();
+        String segment = new String(blobStoreService.fetchData(blobKey, 30, 40));
+
+
+        assertNotNull(blobKey);
+        assertEquals(line, "The woods are lovely dark and deep." );
+    }
 
     @Test
     public void testGetTopDataSeries(){

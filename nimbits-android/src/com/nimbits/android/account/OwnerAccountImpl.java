@@ -55,7 +55,7 @@ public class OwnerAccountImpl implements OwnerAccount {
 
     public void invalidateToken(final Context context, String token) {
         final AccountManager mgr = AccountManager.get(context);
-        mgr.invalidateAuthToken(Parameters.PARAM_GOOGLE_COM, token);
+        mgr.invalidateAuthToken(Parameters.comGoogle.getText(), token);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class OwnerAccountImpl implements OwnerAccount {
 
         if (tokenStore == null) {
             final AccountManager mgr = AccountManager.get(context);
-            final Account[] accounts = mgr.getAccountsByType(Parameters.PARAM_GOOGLE_COM);
+            final Account[] accounts = mgr.getAccountsByType(Parameters.comGoogle.getText());
 
             if (accounts.length > 0) {
                 AccountManagerFuture<Bundle> accountManagerFuture = mgr.getAuthToken(accounts[0], Const.CONST_AH, null, (Activity) context, null, null);
@@ -121,7 +121,7 @@ public class OwnerAccountImpl implements OwnerAccount {
     }
 
     private Account getAccount(final AccountManager accountManager) {
-        final Account[] accounts = accountManager.getAccountsByType(Parameters.PARAM_GOOGLE_COM);
+        final Account[] accounts = accountManager.getAccountsByType(Parameters.comGoogle.getText());
         return accounts.length > 0 ? accounts[0] : null;
 
 

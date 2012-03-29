@@ -23,7 +23,7 @@ public interface SubscriptionService  extends RemoteService {
     void updateSubscriptionLastSent(Subscription subscription);
     Entity subscribe(Entity entity, Subscription subscription, EntityName name) throws NimbitsException;
     Subscription readSubscription(final Entity point) throws NimbitsException;
-    Entity getSubscribedEntity(final Entity entity);
+    Entity getSubscribedEntity(final Entity entity) throws NimbitsException;
 
     void deleteSubscription(User u, Entity entity);
 }

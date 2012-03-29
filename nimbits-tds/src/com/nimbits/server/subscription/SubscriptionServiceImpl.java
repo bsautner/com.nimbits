@@ -149,7 +149,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public Entity getSubscribedEntity(Entity entity) {
+    public Entity getSubscribedEntity(Entity entity) throws NimbitsException {
         Subscription subscription =
                 SubscriptionTransactionFactory.getInstance(getUser()).readSubscription(entity);
         return EntityServiceFactory.getInstance().getEntityByUUID(getUser(), subscription.getSubscribedEntity());
@@ -182,7 +182,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
                 break;
         }
     }
-    private void doXMPP(final User u, Subscription subscription, Entity entity, final Point point, final Value v) {
+    private void doXMPP(final User u, Subscription subscription, Entity entity, final Point point, final Value v) throws NimbitsException {
         final String message;
 
         if (subscription.getNotifyFormatJson()) {
@@ -205,7 +205,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
     }
 
 
-    private void sendTweet(User u, Entity entity, Point point, Value v)  {
+    private void sendTweet(User u, Entity entity, Point point, Value v) throws NimbitsException {
         StringBuilder message = new StringBuilder();
         message.append("#").append(entity.getName().getValue()).append(" ");
         message.append("Value=").append(v.getDoubleValue());

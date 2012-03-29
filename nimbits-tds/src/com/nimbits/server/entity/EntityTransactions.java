@@ -14,21 +14,21 @@ import java.util.*;
  */
 public interface EntityTransactions {
 
-    Map<String, Entity> getEntityMap(EntityType type);
+    Map<String, Entity> getEntityMap(EntityType type) throws NimbitsException;
 
-    Map<EntityName, Entity> getEntityNameMap(EntityType type);
+    Map<EntityName, Entity> getEntityNameMap(EntityType type) throws NimbitsException;
 
     List<Entity> getEntityChildren(Entity parentEntity, EntityType type);
 
     Entity addUpdateEntity(Entity entity) throws NimbitsException;
 
-    List<Entity> getEntities();
+    List<Entity> getEntities() throws NimbitsException;
 
     void deleteEntity(Entity entity) throws NimbitsException;
 
-    Entity getEntityByUUID(String uuid);
+    Entity getEntityByUUID(String uuid) throws NimbitsException;
 
-    Entity getEntityByName(EntityName name);
+    Entity getEntityByName(EntityName name) throws NimbitsException;
 
-    Map<String, Entity> getSystemWideEntityMap(EntityType type);
+    Map<String, Entity> getSystemWideEntityMap(EntityType type) throws NimbitsException;
 }

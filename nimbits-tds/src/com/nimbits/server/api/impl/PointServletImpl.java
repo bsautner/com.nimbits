@@ -175,7 +175,7 @@ public class PointServletImpl extends ApiServlet {
         }
 
     }
-    private Entity getCategoryWithParam(final EntityName categoryName, final User u) {
+    private Entity getCategoryWithParam(final EntityName categoryName, final User u) throws NimbitsException {
 
         // Category c = CategoryServiceFactory.getInstance().getCategory(u, categoryName);
 

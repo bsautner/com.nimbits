@@ -1,12 +1,13 @@
 package com.nimbits.client.service.entity;
 
-import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.user.*;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.user.User;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 public interface EntityServiceAsync {
     void getEntities(AsyncCallback<List<Entity>> async);

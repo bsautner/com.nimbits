@@ -118,7 +118,7 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
     }
 
     @Override
-    public void processCalculations(User u, Point point, Value value) {
+    public void processCalculations(User u, Point point, Value value) throws NimbitsException {
 
         Entity e = EntityServiceFactory.getInstance().getEntityByUUID(point.getUUID());
 

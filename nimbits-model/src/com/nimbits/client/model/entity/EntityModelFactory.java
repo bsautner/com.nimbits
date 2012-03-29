@@ -20,7 +20,7 @@ import java.util.List;
 public class EntityModelFactory {
 
 
-    public static Entity createEntity(final User user, final Entity entity) {
+    public static Entity createEntity(final User user, final Entity entity) throws NimbitsException {
         Entity r = new EntityModel(entity);
         boolean isOwner =  (user != null && entity.getOwner().equals(user.getUuid()));
         r.setReadOnly(!isOwner);
@@ -28,7 +28,7 @@ public class EntityModelFactory {
 
     }
 
-    public static Entity createEntity(final Entity entity) {
+    public static Entity createEntity(final Entity entity) throws NimbitsException {
 
         return new EntityModel(entity);
 
@@ -66,7 +66,7 @@ public class EntityModelFactory {
     }
 
 
-    public static EntityDescription createEntityDescription(final Server server, Entity entity) {
+    public static EntityDescription createEntityDescription(final Server server, Entity entity) throws NimbitsException {
         return new EntityDescriptionModel(server, entity);
     }
 
@@ -86,7 +86,7 @@ public class EntityModelFactory {
 
     }
 
-    public static List<Entity> createEntities(final User user,final  List<Entity> result) {
+    public static List<Entity> createEntities(final User user,final  List<Entity> result) throws NimbitsException {
         ArrayList<Entity> entities = new ArrayList<Entity>();
         for (final Entity e : result) {
 

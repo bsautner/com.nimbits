@@ -16,7 +16,7 @@ import java.util.*;
  * Time: 10:50 AM
  */
 public interface Entity  extends Serializable {
-    EntityName getName();
+    EntityName getName() throws NimbitsException;
 
     void setName(EntityName name) throws NimbitsException;
 

@@ -14,6 +14,7 @@
 package com.nimbits.client.service.calculation;
 
 import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
@@ -31,7 +32,7 @@ public interface CalculationServiceAsync {
 
     void getCalculations(final Entity entity, final AsyncCallback<List<Calculation>> async);
 
-    void processCalculations(final User u, final Point point, final Value value, final AsyncCallback<Void> async);
+    void processCalculations(final User u, final Point point, final Value value, final AsyncCallback<Void> async) throws NimbitsException;
 
     void addUpdateCalculation(final User u, final Entity entity, final EntityName name, final Calculation calculation, final AsyncCallback<Entity> async);
 

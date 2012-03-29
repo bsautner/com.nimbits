@@ -119,7 +119,7 @@ class NavigationPanel extends NavigationEventProvider {
         context = new EntityContextMenu(tree, settings);
         context.addEntityModifiedListeners(new EntityContextMenu.EntityModifiedListener() {
             @Override
-            public void onEntityModified(GxtModel model, Action action) {
+            public void onEntityModified(GxtModel model, Action action) throws NimbitsException {
                 switch (action) {
                     case delete: {
                         removeEntity(model);
@@ -210,7 +210,7 @@ class NavigationPanel extends NavigationEventProvider {
         }
     }
 
-    private void addChildrenToModel(final List<Entity> result, List<String> parents, GxtModel model) {
+    private void addChildrenToModel(final List<Entity> result, List<String> parents, GxtModel model) throws NimbitsException {
 
 
         for (final Entity entity : result) {
@@ -249,7 +249,7 @@ class NavigationPanel extends NavigationEventProvider {
 
     }
 
-    public void addUpdateTreeModel(final GxtModel model, final boolean refresh) {
+    public void addUpdateTreeModel(final GxtModel model, final boolean refresh) throws NimbitsException {
 
         if (tree != null && tree.getStore() != null) {
 
@@ -382,7 +382,7 @@ class NavigationPanel extends NavigationEventProvider {
             if (mx != null) {
                 GxtModel model = ((GxtModel) mx);
 
-
+                try {
                 switch (model.getBaseEntity().getEntityType()) {
                     case user:
                         break;
@@ -402,6 +402,10 @@ class NavigationPanel extends NavigationEventProvider {
                         break;
 
 
+                }
+                }
+                catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
                 }
 
 
@@ -474,20 +478,25 @@ class NavigationPanel extends NavigationEventProvider {
 
             @Override
             public void onSuccess(List<Entity> result) {
+
+                try {
                 if (refresh) {
                     for (Entity e : result) {
 
-                        addUpdateTreeModel(new GxtModel(e), true);
+
+                            addUpdateTreeModel(new GxtModel(e), true);
+
 
                     }
                 }
                 else {
-                    try {
+
                         createTree(result);
-                    } catch (NimbitsException e) {
-                        FeedbackHelper.showError(e);
-                    }
+
                     doLayout();
+                }
+                } catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
                 }
 
             }

@@ -1,17 +1,18 @@
 package com.nimbits.server.memcache.entity;
 
-import com.google.appengine.api.memcache.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.entity.*;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.MemCacheKey;
+import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.memcache.*;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.user.User;
+import com.nimbits.server.entity.EntityTransactionFactory;
+import com.nimbits.server.entity.EntityTransactions;
 
-import javax.persistence.*;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Benjamin Sautner
@@ -24,7 +25,7 @@ public class EntityCacheImpl implements EntityTransactions {
     private final User user;
     private final MemcacheService cache;
 
-    private void removeEntityFromCache(Entity entity) {
+    private void removeEntityFromCache(Entity entity) throws NimbitsException {
         if (cache.contains(entity.getEntity())) {
             cache.delete(entity.getEntity());
         }
@@ -33,7 +34,7 @@ public class EntityCacheImpl implements EntityTransactions {
         }
 
     }
-    private void addEntityToCache(Entity entity) {
+    private void addEntityToCache(Entity entity) throws NimbitsException {
         removeEntityFromCache(entity);
         cache.put(entity.getName(), entity);
         cache.put(entity.getEntity(), entity);
@@ -53,13 +54,13 @@ public class EntityCacheImpl implements EntityTransactions {
 
 
     @Override
-    public Map<String, Entity> getEntityMap(EntityType type) {
+    public Map<String, Entity> getEntityMap(EntityType type) throws NimbitsException {
 
         return  EntityTransactionFactory.getDaoInstance(user).getEntityMap(type);
     }
 
     @Override
-    public Map<EntityName, Entity> getEntityNameMap(EntityType type) {
+    public Map<EntityName, Entity> getEntityNameMap(EntityType type) throws NimbitsException {
         return  EntityTransactionFactory.getDaoInstance(user).getEntityNameMap(type);
     }
 
@@ -77,7 +78,7 @@ public class EntityCacheImpl implements EntityTransactions {
     }
 
     @Override
-    public List<Entity> getEntities() {
+    public List<Entity> getEntities() throws NimbitsException {
         return  EntityTransactionFactory.getDaoInstance(user).getEntities();
     }
 
@@ -88,7 +89,7 @@ public class EntityCacheImpl implements EntityTransactions {
     }
 
     @Override
-    public Entity getEntityByUUID(String uuid) {
+    public Entity getEntityByUUID(String uuid) throws NimbitsException {
         if (cache.contains(uuid)) {
             return (Entity) cache.get(uuid);
         }
@@ -101,7 +102,7 @@ public class EntityCacheImpl implements EntityTransactions {
     }
 
     @Override
-    public Entity getEntityByName(EntityName name) {
+    public Entity getEntityByName(EntityName name) throws NimbitsException {
         if (cache.contains(name)) {
             return (Entity) cache.get(name);
         }
@@ -116,7 +117,7 @@ public class EntityCacheImpl implements EntityTransactions {
     }
 
     @Override
-    public Map<String, Entity> getSystemWideEntityMap(EntityType type) {
+    public Map<String, Entity> getSystemWideEntityMap(EntityType type) throws NimbitsException {
         return  EntityTransactionFactory.getDaoInstance(user).getSystemWideEntityMap(type);
     }
 }

@@ -71,7 +71,11 @@ public class CalculationPanel extends NavigationEventProvider {
                 getExisting();
             }
             else {
-                createForm();
+                try {
+                    createForm();
+                } catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
+                }
                 add(vp);
                 doLayout();
             }
@@ -90,7 +94,11 @@ public class CalculationPanel extends NavigationEventProvider {
             @Override
             public void onSuccess(Calculation result) {
                 calculation = result;
-                createForm();
+                try {
+                    createForm();
+                } catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
+                }
                 add(vp);
                 doLayout();
             }
@@ -99,7 +107,7 @@ public class CalculationPanel extends NavigationEventProvider {
 
 
 
-    private void createForm() {
+    private void createForm() throws NimbitsException {
 
         FormPanel simple = new FormPanel();
         simple.setWidth(350);
@@ -155,7 +163,11 @@ public class CalculationPanel extends NavigationEventProvider {
 
             @Override
             public void componentSelected(ButtonEvent buttonEvent) {
-                notifyEntityAddedListener(null);
+                try {
+                    notifyEntityAddedListener(null);
+                } catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
+                }
             }
         });
 
@@ -195,14 +207,22 @@ public class CalculationPanel extends NavigationEventProvider {
                         GWT.log(e.getMessage(), e);
                         box.close();
                         MessageBox.alert("Error", e.getMessage(), null);
-                        notifyEntityAddedListener(null);
+                        try {
+                            notifyEntityAddedListener(null);
+                        } catch (NimbitsException e1) {
+                            FeedbackHelper.showError(e);
+                        }
                     }
 
                     @Override
                     public void onSuccess(final Entity result) {
                         box.close();
 
-                        notifyEntityAddedListener(result);
+                        try {
+                            notifyEntityAddedListener(result);
+                        } catch (NimbitsException e) {
+                            FeedbackHelper.showError(e);
+                        }
                     }
                 });
 
@@ -236,7 +256,11 @@ public class CalculationPanel extends NavigationEventProvider {
 
                 @Override
                 public void onSuccess(Entity point) {
-                    pn.setHtml("<p><b>Trigger Point Name: </b>" + point.getName().getValue() + "</p>");
+                    try {
+                        pn.setHtml("<p><b>Trigger Point Name: </b>" + point.getName().getValue() + "</p>");
+                    } catch (NimbitsException e) {
+                       FeedbackHelper.showError(e);
+                    }
                 }
             });
 

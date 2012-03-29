@@ -62,7 +62,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     }
 
     @Override
-    public Entity getEntityByName(final User user, final EntityName name) {
+    public Entity getEntityByName(final User user, final EntityName name) throws NimbitsException {
        return EntityTransactionFactory.getInstance(user).getEntityByName(name);
     }
 
@@ -122,7 +122,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     }
 
     @Override
-    public List<Entity> getEntities() {
+    public List<Entity> getEntities() throws NimbitsException {
 
          return EntityTransactionFactory.getInstance(getUser()).getEntities();
     }
@@ -152,22 +152,22 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     }
 
     @Override
-    public Entity getEntityByUUID(String uuid) {
+    public Entity getEntityByUUID(String uuid) throws NimbitsException {
        return EntityTransactionFactory.getInstance(getUser()).getEntityByUUID(uuid);
     }
 
     @Override
-    public Map<String, Entity> getEntityMap(EntityType type) {
+    public Map<String, Entity> getEntityMap(EntityType type) throws NimbitsException {
        return EntityTransactionFactory.getInstance(getUser()).getEntityMap(type);
     }
 
     @Override
-    public Map<String, Entity> getEntityMap(User user, EntityType type) {
+    public Map<String, Entity> getEntityMap(User user, EntityType type) throws NimbitsException {
         return EntityTransactionFactory.getInstance(user).getEntityMap(type);
     }
 
     @Override
-    public Map<EntityName, Entity> getEntityNameMap(EntityType type) {
+    public Map<EntityName, Entity> getEntityNameMap(EntityType type) throws NimbitsException {
         return EntityTransactionFactory.getInstance(getUser()).getEntityNameMap(type);
     }
 
@@ -203,12 +203,12 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     }
 
     @Override
-    public Entity getEntityByName(EntityName name) {
+    public Entity getEntityByName(EntityName name) throws NimbitsException {
        return EntityTransactionFactory.getInstance(getUser()).getEntityByName(name);
     }
 
     @Override
-    public Map<String, Entity> getSystemWideEntityMap(EntityType type) {
+    public Map<String, Entity> getSystemWideEntityMap(EntityType type) throws NimbitsException {
         return EntityTransactionFactory.getInstance(null).getSystemWideEntityMap(type);
     }
 
@@ -218,7 +218,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     }
 
     @Override
-    public Entity getEntityByUUID(User user, String entityId) {
+    public Entity getEntityByUUID(User user, String entityId) throws NimbitsException {
         return EntityTransactionFactory.getInstance(user).getEntityByUUID(entityId);
     }
 

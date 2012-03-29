@@ -68,7 +68,11 @@ public class SubscriptionPanel extends NavigationEventProvider {
                 getExistingSubscription();
             }
             else {
-                createForm();
+                try {
+                    createForm();
+                } catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
+                }
                 add(vp);
                 doLayout();
             }
@@ -92,7 +96,11 @@ public class SubscriptionPanel extends NavigationEventProvider {
             @Override
             public void onSuccess(Subscription result) {
                 subscription = result;
-                createForm();
+                try {
+                    createForm();
+                } catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
+                }
                 add(vp);
                 doLayout();
             }
@@ -169,7 +177,7 @@ public class SubscriptionPanel extends NavigationEventProvider {
 
     }
 
-    private void createForm() {
+    private void createForm() throws NimbitsException {
 
         FormPanel simple = new FormPanel();
         simple.setWidth(350);
@@ -178,7 +186,7 @@ public class SubscriptionPanel extends NavigationEventProvider {
         simple.setBodyBorder(false);
         simple.setFrame(false);
 
-       // int alertSelected = (subscription == null) ? SubscriptionNotifyMethod.none.getCode() : subscription.getAlertNotifyMethod().getCode();
+        // int alertSelected = (subscription == null) ? SubscriptionNotifyMethod.none.getCode() : subscription.getAlertNotifyMethod().getCode();
 
         SubscriptionType type =  (subscription == null) ? SubscriptionType.none : subscription.getSubscriptionType() ;
         SubscriptionNotifyMethod method = (subscription==null) ? SubscriptionNotifyMethod.none : subscription.getNotifyMethod();
@@ -190,12 +198,16 @@ public class SubscriptionPanel extends NavigationEventProvider {
 
         final TextField<String> subscriptionName = new TextField<String>();
         subscriptionName.setFieldLabel("Subscription Name");
-
-        if (subscription != null && entity.getEntityType().equals(EntityType.subscription)) {
-            subscriptionName.setValue(entity.getName().getValue());
+        try {
+            if (subscription != null && entity.getEntityType().equals(EntityType.subscription)) {
+                subscriptionName.setValue(entity.getName().getValue());
+            }
+            else {
+                subscriptionName.setValue(entity.getName().getValue() + " Subscription");
+            }
         }
-        else {
-            subscriptionName.setValue(entity.getName().getValue() + " Subscription");
+        catch (NimbitsException e) {
+            FeedbackHelper.showError(e);
         }
 
 
@@ -230,7 +242,11 @@ public class SubscriptionPanel extends NavigationEventProvider {
 
             @Override
             public void componentSelected(ButtonEvent buttonEvent) {
-                notifyEntityAddedListener(null);
+                try {
+                    notifyEntityAddedListener(null);
+                } catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
+                }
             }
         });
 
@@ -282,14 +298,22 @@ public class SubscriptionPanel extends NavigationEventProvider {
                         GWT.log(e.getMessage(), e);
                         box.close();
                         MessageBox.alert("Error", e.getMessage(), null);
-                        notifyEntityAddedListener(null);
+                        try {
+                            notifyEntityAddedListener(null);
+                        } catch (NimbitsException e1) {
+                            FeedbackHelper.showError(e);
+                        }
                     }
 
                     @Override
                     public void onSuccess(final Entity result) {
                         box.close();
 
-                        notifyEntityAddedListener(result);
+                        try {
+                            notifyEntityAddedListener(result);
+                        } catch (NimbitsException e) {
+                            FeedbackHelper.showError(e);
+                        }
                     }
                 });
 
@@ -319,7 +343,7 @@ public class SubscriptionPanel extends NavigationEventProvider {
             private void setMachineEnabled(SubscriptionNotifyMethod method) {
                 machine.setEnabled( method.isJsonCompatible());
                 if (! method.isJsonCompatible()) {
-                   machine.setValue(false);
+                    machine.setValue(false);
                 }
             }
         });

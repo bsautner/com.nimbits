@@ -44,7 +44,7 @@ public class GxtModel extends BaseTreeModel implements Serializable {
     private Entity baseEntity;
 
 
-    public GxtModel(Entity entity) {
+    public GxtModel(Entity entity) throws NimbitsException {
         setEntityValues(entity);
     }
     public GxtModel(User user) throws NimbitsException {
@@ -129,11 +129,11 @@ public class GxtModel extends BaseTreeModel implements Serializable {
         return baseEntity;
     }
 
-    public void update(Entity entity) {
+    public void update(Entity entity) throws NimbitsException {
        setEntityValues(entity);
     }
 
-    private void setEntityValues(Entity entity) {
+    private void setEntityValues(Entity entity) throws NimbitsException {
         this.uuid = entity.getEntity();
         this.name = entity.getName();
         this.alertType = entity.getAlertType();

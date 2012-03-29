@@ -13,15 +13,12 @@
 
 import com.nimbits.client.NimbitsClient;
 import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.value.Value;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.Random;
 import java.util.UUID;
 
 import static org.junit.Assert.assertNotNull;
@@ -39,28 +36,6 @@ public class LocalTest {
 
 
 
-    @Test
-    public void loadRandomTest() throws IOException {
-
-        EntityName cName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
-        Entity cx = c.addCategory(cName);
-
-        EntityName pointName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
-        Point p = c.addPoint(pointName);
-        assertNotNull(p);
-        long now = new Date().getTime();
-        long then = now - 1000 * 100;
-        Random r = new Random();
-        double d = 0;
-
-        while (then < now) {
-            then += 1000;
-            d += 1;
-            assertNotNull(c.recordValue(pointName, r.nextDouble() * 100, new Date(then)).getDoubleValue());
-        }
-
-
-    }
 
     @Test
     public void loadLineTest() throws IOException {

@@ -3,6 +3,7 @@ package com.nimbits.client.model.entity;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.point.*;
 
@@ -55,7 +56,7 @@ public class EntityModel  implements Serializable, Entity {
 
     }
 
-    public EntityModel(final Entity entity)  {
+    public EntityModel(final Entity entity) throws NimbitsException {
         this.name = entity.getName().getValue();
         this.description = entity.getDescription();
         this.entityType = entity.getEntityType().getCode();
@@ -72,8 +73,8 @@ public class EntityModel  implements Serializable, Entity {
     }
 
     @Override
-    public EntityName getName() {
-        return CommonFactoryLocator.getInstance().createName(name);
+    public EntityName getName() throws NimbitsException {
+        return CommonFactoryLocator.getInstance().createName(name, EntityType.get(entityType));
     }
 
     @Override

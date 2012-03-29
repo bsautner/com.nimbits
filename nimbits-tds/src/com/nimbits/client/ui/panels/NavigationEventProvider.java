@@ -14,6 +14,7 @@
 package com.nimbits.client.ui.panels;
 
 import com.extjs.gxt.ui.client.widget.*;
+import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.value.*;
@@ -45,7 +46,7 @@ public abstract class NavigationEventProvider extends LayoutContainer {
         reloadListeners.add(listener);
     }
     public interface EntityAddedListener {
-        void onEntityAdded(final Entity entity);
+        void onEntityAdded(final Entity entity) throws NimbitsException;
     }
 
     public void addEntityAddedListener(final EntityAddedListener listener) {
@@ -53,7 +54,7 @@ public abstract class NavigationEventProvider extends LayoutContainer {
     }
 
 
-    void notifyEntityAddedListener(final Entity model)  {
+    void notifyEntityAddedListener(final Entity model) throws NimbitsException {
         for (EntityAddedListener listener : entityAddedListeners) {
             listener.onEntityAdded(model);
         }

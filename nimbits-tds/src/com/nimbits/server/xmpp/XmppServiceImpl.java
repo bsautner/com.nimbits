@@ -65,7 +65,7 @@ public class XmppServiceImpl extends RemoteServiceServlet implements XMPPService
     }
 
     @Override
-    public void sendMessage(List<XmppResource> resources, String message, EmailAddress email) {
+    public void sendMessage(List<XmppResource> resources, String message, EmailAddress email) throws NimbitsException {
         for (XmppResource resource : resources) {
             Entity entity = EntityServiceFactory.getInstance().getEntityByUUID(resource.getUuid());
             if (entity != null) {

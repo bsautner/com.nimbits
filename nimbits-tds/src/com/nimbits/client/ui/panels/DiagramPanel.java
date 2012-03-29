@@ -299,8 +299,11 @@ public class DiagramPanel extends LayoutContainer {
                 //   com.google.gwt.user.client.Window.alert("1");
                 if (pointEntityMap.containsKey(name)) {
                     Entity entity = pointEntityMap.get(name);
-                    EntityOpenHelper.showEntity(entity);
-
+                    try {
+                        EntityOpenHelper.showEntity(entity);
+                    } catch (NimbitsException e) {
+                        FeedbackHelper.showError(e);
+                    }
 
 
                 }
@@ -334,8 +337,12 @@ public class DiagramPanel extends LayoutContainer {
                 if (diagrams.containsKey(diagramName)) {
                     EntityModel diagramModel = (EntityModel) diagrams.get(diagramName);
                     //diagramModel.setClientType(clientType);
-                    Entity entity = EntityModelFactory.createEntity(diagramModel);
-                    EntityOpenHelper.showEntity(entity);
+                    try { Entity entity = EntityModelFactory.createEntity(diagramModel);
+
+                        EntityOpenHelper.showEntity(entity);
+                    } catch (NimbitsException e) {
+                        FeedbackHelper.showError(e);
+                    }
 
                 }
             }
@@ -376,7 +383,11 @@ public class DiagramPanel extends LayoutContainer {
 
                         @Override
                         public void onSuccess(Value result) {
-                            applyValueToTextNode(result, pointName, actions, o);
+                            try {
+                                applyValueToTextNode(result, pointName, actions, o);
+                            } catch (NimbitsException e) {
+                                FeedbackHelper.showError(e);
+                            }
                         }
                     });
 
@@ -385,7 +396,7 @@ public class DiagramPanel extends LayoutContainer {
         }
     }
 
-    private void applyValueToTextNode(final Value result, final EntityName pointName, final String[] actions, final OMSVGTextElement o) {
+    private void applyValueToTextNode(final Value result, final EntityName pointName, final String[] actions, final OMSVGTextElement o) throws NimbitsException {
         if (pointEntityMap != null && pointEntityMap.containsKey(pointName)) {
 
             final Entity entity = pointEntityMap.get(pointName);
@@ -405,8 +416,14 @@ public class DiagramPanel extends LayoutContainer {
 
                     @Override
                     public void onSuccess(final Point p) {
-                        pointMap.put(entity.getName(), p);
-                        processTextNodeActions(p, result, actions, o);
+                        try {
+
+                            pointMap.put(entity.getName(), p);
+                            processTextNodeActions(p, result, actions, o);
+                        } catch (NimbitsException e) {
+                            FeedbackHelper.showError(e);
+                        }
+
                     }
 
 
@@ -490,7 +507,11 @@ public class DiagramPanel extends LayoutContainer {
             public void onMouseDown(MouseDownEvent mouseDownEvent) {
                 if (pointEntityMap.containsKey(pointName)) {
                     Entity entity =  pointEntityMap.get(pointName);
-                    EntityOpenHelper.showEntity(entity);
+                    try {
+                        EntityOpenHelper.showEntity(entity);
+                    } catch (NimbitsException e) {
+                        FeedbackHelper.showError(e);
+                    }
 
 
                 }
@@ -523,8 +544,14 @@ public class DiagramPanel extends LayoutContainer {
                 if (diagrams.containsKey(diagramName)) {
                     EntityModel diagramModel = (EntityModel) diagrams.get(diagramName);
                     //diagramModel.setClientType(clientType);
-                    Entity entity = EntityModelFactory.createEntity(diagramModel);
-                    EntityOpenHelper.showEntity(entity);
+                    Entity entity = null;
+                    try {
+                        entity = EntityModelFactory.createEntity(diagramModel);
+                        EntityOpenHelper.showEntity(entity);
+                    } catch (NimbitsException e) {
+                        FeedbackHelper.showError(e);
+                    }
+
 
                 }
             }
@@ -666,7 +693,11 @@ public class DiagramPanel extends LayoutContainer {
                 if (pointEntityMap.containsKey(pointName)) {
 
                     Entity entity = pointEntityMap.get(pointName);
-                    EntityOpenHelper.showEntity(entity);
+                    try {
+                        EntityOpenHelper.showEntity(entity);
+                    } catch (NimbitsException e) {
+                        FeedbackHelper.showError(e);
+                    }
 
                 }
             }
@@ -698,8 +729,14 @@ public class DiagramPanel extends LayoutContainer {
                 if (diagrams.containsKey(diagramName)) {
                     EntityModel diagramModel = (EntityModel) diagrams.get(diagramName);
                     //diagramModel.setClientType(clientType);
-                    Entity entity = EntityModelFactory.createEntity(diagramModel);
-                    EntityOpenHelper.showEntity(entity);
+                    Entity entity = null;
+                    try {
+                        entity = EntityModelFactory.createEntity(diagramModel);
+                        EntityOpenHelper.showEntity(entity);
+
+                    } catch (NimbitsException e) {
+                        FeedbackHelper.showError(e);
+                    }
 
                 }
             }

@@ -74,14 +74,14 @@ public class EntityContextMenu extends Menu {
         this.entityModifiedListeners.add(listener);
     }
 
-    void notifyEntityModifiedListener(final GxtModel model, final Action action)  {
+    void notifyEntityModifiedListener(final GxtModel model, final Action action) throws NimbitsException {
         for (EntityModifiedListener listener : entityModifiedListeners) {
             listener.onEntityModified(model, action);
         }
     }
 
     public interface EntityModifiedListener {
-        void onEntityModified(final GxtModel model, final Action action) ;
+        void onEntityModified(final GxtModel model, final Action action) throws NimbitsException;
 
     }
 
@@ -99,7 +99,7 @@ public class EntityContextMenu extends Menu {
         calcContext = calcContext();
         intelligenceContext = intelligenceContext();
         xmppContext = xmppResourceContext();
-         summaryContext = summaryContext();
+        summaryContext = summaryContext();
         add(propertyContext);
         add(copyContext);
         add(deleteContext);
@@ -171,7 +171,11 @@ public class EntityContextMenu extends Menu {
             public void componentSelected(MenuEvent ce) {
                 GxtModel selectedModel = (GxtModel) tree.getSelectionModel().getSelectedItem();
                 Entity entity = selectedModel.getBaseEntity();
-                showCalcPanel(entity);
+                try {
+                    showCalcPanel(entity);
+                } catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
+                }
             }
 
         });
@@ -238,7 +242,7 @@ public class EntityContextMenu extends Menu {
         w.add(dp);
         dp.addEntityAddedListener(new NavigationEventProvider.EntityAddedListener() {
             @Override
-            public void onEntityAdded(Entity entity) {
+            public void onEntityAdded(Entity entity) throws NimbitsException {
                 w.hide();
                 Cookies.removeCookie(Action.subscribe.name());
 //                if (entity.getEntityType().equals(EntityType.point)) {
@@ -261,14 +265,18 @@ public class EntityContextMenu extends Menu {
             public void componentSelected(MenuEvent ce) {
                 GxtModel selectedModel = (GxtModel) tree.getSelectionModel().getSelectedItem();
                 Entity entity = selectedModel.getBaseEntity();
-                showIntelligencePanel(entity);
+                try {
+                    showIntelligencePanel(entity);
+                } catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
+                }
             }
 
         });
         return retObj;
     }
 
-    public void showIntelligencePanel(Entity entity) {
+    public void showIntelligencePanel(Entity entity) throws NimbitsException {
         IntelligencePanel dp = new IntelligencePanel(entity);
 
         final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
@@ -284,7 +292,7 @@ public class EntityContextMenu extends Menu {
         w.add(dp);
         dp.addEntityAddedListener(new NavigationEventProvider.EntityAddedListener() {
             @Override
-            public void onEntityAdded(Entity entity) {
+            public void onEntityAdded(Entity entity) throws NimbitsException {
                 w.hide();
                 notifyEntityModifiedListener(new GxtModel(entity), Action.create);
 
@@ -303,54 +311,71 @@ public class EntityContextMenu extends Menu {
             public void componentSelected(MenuEvent ce) {
                 GxtModel selectedModel = (GxtModel) tree.getSelectionModel().getSelectedItem();
                 Entity entity = selectedModel.getBaseEntity();
-                switch (selectedModel.getEntityType()) {
-                    case category:  {
+
+                try {
+                    switch (selectedModel.getEntityType()) {
+                        case category:  {
 
 
-                        CategoryPropertyPanel dp = new CategoryPropertyPanel(entity);
-                        final Window w = new Window();
-                        w.setWidth(500);
-                        w.setHeight(400);
-                        w.setHeading(entity.getName().getValue() + " " + Words.WORD_PROPERTIES);
-                        w.add(dp);
-                        w.show();
-                        break;
+                            CategoryPropertyPanel dp = new CategoryPropertyPanel(entity);
+                            final Window w = new Window();
+                            w.setWidth(500);
+                            w.setHeight(400);
+                            try {
+                                w.setHeading(entity.getName().getValue() + " " + Words.WORD_PROPERTIES);
+                            } catch (NimbitsException e) {
+                                FeedbackHelper.showError(e);
+                            }
+                            w.add(dp);
+                            w.show();
+                            break;
 
+                        }
+                        case point: {
+
+
+                            createPointPropertyWindow(entity);
+
+
+                            break;
+
+
+                        }
+
+                        case subscription: {
+                            showSubscriptionPanel(entity);
+                            break;
+                        }
+                        case calculation: {
+
+                            showCalcPanel(entity);
+
+                            break;
+                        }
+                        case intelligence: {
+
+                            showIntelligencePanel(entity);
+
+                            break;
+                        }
+                        case summary:
+                            showSummaryPanel(entity);
+                            break;
+                        case file: {
+                            FilePropertyPanel dp = new FilePropertyPanel(entity);
+                            final Window w = new Window();
+                            w.setWidth(500);
+                            w.setHeight(400);
+
+                            w.setHeading(entity.getName().getValue() + " " + Words.WORD_PROPERTIES);
+
+                            w.add(dp);
+                            w.show();
+                            break;
+                        }
                     }
-                    case point: {
-
-                        createPointPropertyWindow(entity);
-
-                        break;
-
-
-                    }
-
-                    case subscription: {
-                        showSubscriptionPanel(entity);
-                        break;
-                    }
-                    case calculation: {
-                        showCalcPanel(entity);
-                        break;
-                    }
-                    case intelligence: {
-                        showIntelligencePanel(entity);
-                        break;
-                    }
-                    case summary:
-                        showSummaryPanel(entity);
-                        break;
-                    case file: {
-                        FilePropertyPanel dp = new FilePropertyPanel(entity);
-                        final Window w = new Window();
-                        w.setWidth(500);
-                        w.setHeight(400);
-                        w.setHeading(entity.getName().getValue() + " " + Words.WORD_PROPERTIES);
-                        w.add(dp);
-                        w.show();
-                        break;
-                    }
+                } catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
                 }
             }
         });
@@ -414,7 +439,11 @@ public class EntityContextMenu extends Menu {
                 GxtModel model = (GxtModel) selectedModel;
                 if (model.getEntityType().equals(EntityType.point) || model.getEntityType().equals(EntityType.category)) {
                     Entity p =  model.getBaseEntity();
-                    openUrl(p.getEntity(), p.getName().getValue());
+                    try {
+                        openUrl(p.getEntity(), p.getName().getValue());
+                    } catch (NimbitsException e) {
+                        FeedbackHelper.showError(e);
+                    }
                 }
 
 
@@ -447,7 +476,11 @@ public class EntityContextMenu extends Menu {
 
                     @Override
                     public void onSuccess(Void result) {
-                        notifyEntityModifiedListener(currentModel, Action.delete);
+                        try {
+                            notifyEntityModifiedListener(currentModel, Action.delete);
+                        } catch (NimbitsException e) {
+                            FeedbackHelper.showError(e);
+                        }
 
                     }
                 });
@@ -485,8 +518,14 @@ public class EntityContextMenu extends Menu {
                     @Override
                     public void onSuccess(Entity entity) {
                         box.close();
-                        GxtModel model = new GxtModel(entity);
-                        notifyEntityModifiedListener(model, Action.create);
+                        GxtModel model = null;
+                        try {
+                            model = new GxtModel(entity);
+                            notifyEntityModifiedListener(model, Action.create);
+                        } catch (NimbitsException e) {
+                            FeedbackHelper.showError(e);
+                        }
+
                         //  addUpdateTreeModel(entity, false);
                     }
                 });
@@ -521,7 +560,11 @@ public class EntityContextMenu extends Menu {
 
                     @Override
                     public void onSuccess(Entity result) {
-                        notifyEntityModifiedListener(new GxtModel(result), Action.create);
+                        try {
+                            notifyEntityModifiedListener(new GxtModel(result), Action.create);
+                        } catch (NimbitsException e) {
+                            FeedbackHelper.showError(e);
+                        }
                         box.close();
                     }
                 });
@@ -530,7 +573,7 @@ public class EntityContextMenu extends Menu {
         }
     };
 
-    private void createPointPropertyWindow(Entity entity) {
+    private void createPointPropertyWindow(Entity entity) throws NimbitsException {
         final Window window = new Window();
 
 
@@ -538,7 +581,7 @@ public class EntityContextMenu extends Menu {
 
         panel.addPointUpdatedListeners(new PointPanel.PointUpdatedListener() {
             @Override
-            public void onPointUpdated(Entity result) {
+            public void onPointUpdated(Entity result) throws NimbitsException {
                 notifyEntityModifiedListener(new GxtModel(result), Action.create);
             }
         });
@@ -568,7 +611,7 @@ public class EntityContextMenu extends Menu {
         w.add(dp);
         dp.addEntityAddedListener(new NavigationEventProvider.EntityAddedListener() {
             @Override
-            public void onEntityAdded(Entity entity) {
+            public void onEntityAdded(Entity entity) throws NimbitsException {
                 w.hide();
                 Cookies.removeCookie(Action.subscribe.name());
                 notifyEntityModifiedListener(new GxtModel(entity), Action.create);
@@ -579,7 +622,7 @@ public class EntityContextMenu extends Menu {
         w.show();
     }
 
-    public void showCalcPanel(final Entity entity) {
+    public void showCalcPanel(final Entity entity) throws NimbitsException {
         CalculationPanel dp = new CalculationPanel(entity);
 
         final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
@@ -595,7 +638,7 @@ public class EntityContextMenu extends Menu {
         w.add(dp);
         dp.addEntityAddedListener(new NavigationEventProvider.EntityAddedListener() {
             @Override
-            public void onEntityAdded(Entity entity) {
+            public void onEntityAdded(Entity entity) throws NimbitsException {
                 w.hide();
                 notifyEntityModifiedListener(new GxtModel(entity), Action.create);
 

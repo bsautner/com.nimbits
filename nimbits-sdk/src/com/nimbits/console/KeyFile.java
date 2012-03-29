@@ -28,19 +28,19 @@ import java.util.*;
 public class KeyFile {
     public static String genKey(final Map<String, String> argsMap) throws IOException {
 
-        final String filename = argsMap.get(Parameters.PARAM_OUT);
+        final String filename = argsMap.get(Parameters.out.getText());
         final StringBuilder sb = new StringBuilder();
-        if (argsMap.containsKey(Parameters.PARAM_KEY)) {
-            sb.append("-key=").append(argsMap.get(Parameters.PARAM_KEY)).append(" ");
+        if (argsMap.containsKey(Parameters.key.getText())) {
+            sb.append("-key=").append(argsMap.get(Parameters.key.getText())).append(" ");
         }
         if (argsMap.containsKey(Parameters.email.getText())) {
             sb.append("-email=").append(argsMap.get(Parameters.email.getText())).append(" ");
         }
-        if (argsMap.containsKey(Parameters.PARAM_PASSWORD)) {
-            sb.append("-password=").append(argsMap.get(Parameters.PARAM_PASSWORD)).append(" ");
+        if (argsMap.containsKey(Parameters.password.getText())) {
+            sb.append("-password=").append(argsMap.get(Parameters.password.getText())).append(" ");
         }
-        if (argsMap.containsKey(Parameters.PARAM_HOST)) {
-            sb.append("-host=").append(argsMap.get(Parameters.PARAM_HOST)).append(" ");
+        if (argsMap.containsKey(Parameters.host.getText())) {
+            sb.append("-host=").append(argsMap.get(Parameters.host.getText())).append(" ");
         }
 
         final File file = new File(filename);
@@ -56,7 +56,7 @@ public class KeyFile {
     }
 
     public static String[] processKeyFile(final Map<String, String> argsMap) throws IOException {
-        final String fn =  argsMap.get(Parameters.PARAM_I);
+        final String fn =  argsMap.get(Parameters.i.getText());
         final File file = new File(fn);
         String[] args = null;
         if (file.exists()) {

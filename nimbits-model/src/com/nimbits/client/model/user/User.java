@@ -13,6 +13,7 @@
 
 package com.nimbits.client.model.user;
 
+import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.entity.EntityName;
 
@@ -85,6 +86,6 @@ public interface User extends Serializable {
 
     boolean isRestricted();
 
-    EntityName getName();
+    EntityName getName() throws NimbitsException;
 
 }

@@ -159,7 +159,7 @@ public class GoogleAuthentication {
                     response.getStatusLine().getStatusCode() == HttpURLConnection.HTTP_NO_CONTENT) {
 
                 for (final Cookie cookie : httpClient.getCookieStore().getCookies()) {
-                    if (cookie.getName().equals(Parameters.PARAM_ACSID)) {
+                    if (cookie.getName().equals(Parameters.acsid.getText())) {
                         retObj = cookie;
                         break;
                     }
@@ -196,7 +196,7 @@ public class GoogleAuthentication {
         urlConnection.setDoInput(true);
         urlConnection.setDoOutput(true);
         urlConnection.setUseCaches(false);
-        urlConnection.setRequestProperty(Parameters.PARAM_CONTENT_TYPE,
+        urlConnection.setRequestProperty(Parameters.contentType.getText(),
                 "application/x-www-form-urlencoded");
         final StringBuilder content = new StringBuilder();
         content.append("Email=")

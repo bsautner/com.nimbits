@@ -161,7 +161,7 @@ public class CenterPanel extends NavigationEventProvider {
         MainMenuBar toolBar = new MainMenuBar(loginInfo, settings);
         toolBar.addEntityModifiedListeners(new MainMenuBar.EntityModifiedListener() {
             @Override
-            public void onEntityModified(GxtModel model, Action action) {
+            public void onEntityModified(GxtModel model, Action action) throws NimbitsException {
                 switch (action) {
                     case update: case create:
                         navigationPanel.addUpdateTreeModel(model, false);
@@ -274,7 +274,7 @@ public class CenterPanel extends NavigationEventProvider {
     }
 
     public void addEntity(final GxtModel model) {
-
+        try {
         switch (model.getEntityType()) {
             case user:
                 break;
@@ -293,6 +293,9 @@ public class CenterPanel extends NavigationEventProvider {
                 notifyEntityClickedListener(model);
                 break;
         }
+        } catch (NimbitsException ex) {
+            FeedbackHelper.showError(ex);
+        }
 
     }
 
@@ -307,7 +310,11 @@ public class CenterPanel extends NavigationEventProvider {
             }
             @Override
             public void onSuccess(Entity result) {
-                addEntity( new GxtModel(result));
+                try {
+                    addEntity( new GxtModel(result));
+                } catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
+                }
             }
         });
     }

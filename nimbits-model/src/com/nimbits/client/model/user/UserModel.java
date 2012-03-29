@@ -14,6 +14,8 @@
 package com.nimbits.client.model.user;
 
 
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.EntityName;
@@ -229,8 +231,8 @@ public class UserModel implements Serializable, User {
     }
 
     @Override
-    public EntityName getName() {
-      return CommonFactoryLocator.getInstance().createName(this.emailAddress);
+    public EntityName getName() throws NimbitsException {
+      return CommonFactoryLocator.getInstance().createName(this.emailAddress, EntityType.user);
     }
 
     @Override

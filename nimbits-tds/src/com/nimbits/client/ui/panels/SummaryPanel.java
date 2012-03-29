@@ -66,9 +66,14 @@ public class SummaryPanel extends NavigationEventProvider {
                 getExistingSummary();
             }
             else {
-                createForm();
-                add(vp);
-                doLayout();
+                try {
+                    createForm();
+                    add(vp);
+                    doLayout();
+                } catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
+                }
+
             }
 
         }
@@ -90,9 +95,14 @@ public class SummaryPanel extends NavigationEventProvider {
             @Override
             public void onSuccess(Summary result) {
                 summary = result;
-                createForm();
-                add(vp);
-                doLayout();
+                try {
+                    createForm();
+                    add(vp);
+                    doLayout();
+                } catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
+                }
+
             }
         });
     }
@@ -134,7 +144,7 @@ public class SummaryPanel extends NavigationEventProvider {
 
 
 
-    private void createForm() {
+    private void createForm() throws NimbitsException {
 
         FormPanel simple = new FormPanel();
         simple.setWidth(350);
@@ -146,14 +156,14 @@ public class SummaryPanel extends NavigationEventProvider {
         final EntityName name;
         final TextField<String> summaryName = new TextField<String>();
         summaryName.setFieldLabel("Summary Name");
-
+        try {
         if (summary != null && entity.getEntityType().equals(EntityType.summary)) {
             summaryName.setValue(entity.getName().getValue());
         }
         else {
             summaryName.setValue(entity.getName().getValue() + " Average");
         }
-        try {
+
             name = CommonFactoryLocator.getInstance().createName(summaryName.getValue(), EntityType.summary);
         } catch (NimbitsException caught) {
             FeedbackHelper.showError(caught);
@@ -191,7 +201,11 @@ public class SummaryPanel extends NavigationEventProvider {
 
             @Override
             public void componentSelected(ButtonEvent buttonEvent) {
-                notifyEntityAddedListener(null);
+                try {
+                    notifyEntityAddedListener(null);
+                } catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
+                }
             }
         });
 
@@ -227,13 +241,21 @@ public class SummaryPanel extends NavigationEventProvider {
                     public void onFailure(Throwable caught) {
                         FeedbackHelper.showError(caught);
                         box.close();
-                        notifyEntityAddedListener(null);
+                        try {
+                            notifyEntityAddedListener(null);
+                        } catch (NimbitsException e) {
+                            FeedbackHelper.showError(e);
+                        }
                     }
 
                     @Override
                     public void onSuccess(Entity result) {
                         box.close();
-                        notifyEntityAddedListener(result);
+                        try {
+                            notifyEntityAddedListener(result);
+                        } catch (NimbitsException e) {
+                            FeedbackHelper.showError(e);
+                        }
                     }
                 });
 

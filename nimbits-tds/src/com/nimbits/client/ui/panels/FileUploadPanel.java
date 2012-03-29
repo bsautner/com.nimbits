@@ -23,11 +23,13 @@ import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.service.*;
 import com.nimbits.client.service.blob.*;
+import com.nimbits.client.ui.helper.FeedbackHelper;
 
 import java.util.*;
 
@@ -55,7 +57,7 @@ public class FileUploadPanel extends LayoutContainer {
 
 
     public interface FileAddedListener {
-        void onFileAdded();
+        void onFileAdded() throws NimbitsException;
 
     }
 
@@ -63,7 +65,7 @@ public class FileUploadPanel extends LayoutContainer {
         FileAddedListeners.add(listener);
     }
 
-    void notifyFileAddedListener()   {
+    void notifyFileAddedListener() throws NimbitsException {
         for (FileAddedListener FileAddedListener : FileAddedListeners) {
             FileAddedListener.onFileAdded();
         }
@@ -78,9 +80,13 @@ public class FileUploadPanel extends LayoutContainer {
         panel.addListener(Events.Submit, new Listener<FormEvent>() {
         @Override
             public void handleEvent(FormEvent formEvent) {
-                 notifyFileAddedListener();
-
+            try {
+                notifyFileAddedListener();
+            } catch (NimbitsException e) {
+                FeedbackHelper.showError(e);
             }
+
+        }
         });
         panel.setHeaderVisible(false);
         panel.setFrame(false);
@@ -145,7 +151,11 @@ public class FileUploadPanel extends LayoutContainer {
             diagramId.setName(Parameters.fileId.getText());
             diagramId.setValue(entity.getEntity());
             panel.add(diagramId);
-            name.setValue(entity.getName().getValue());
+            try {
+                name.setValue(entity.getName().getValue());
+            } catch (NimbitsException e) {
+                FeedbackHelper.showError(e);
+            }
             name.setReadOnly(true);
             name.setVisible(false);
         }

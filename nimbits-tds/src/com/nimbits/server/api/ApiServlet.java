@@ -9,6 +9,7 @@ import com.nimbits.client.model.setting.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.server.counter.*;
 import com.nimbits.server.dao.counter.*;
+import com.nimbits.server.quota.*;
 import com.nimbits.server.settings.*;
 import com.nimbits.server.user.*;
 
@@ -32,7 +33,7 @@ public class ApiServlet extends HttpServlet {
 
             user = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
             if (user != null) {
-                incrementCounter(user);
+                QuotaFactory.getInstance(user).incrementCounter();
             }
             paramMap = new HashMap<Parameters, String>();
 
@@ -85,26 +86,5 @@ public class ApiServlet extends HttpServlet {
         return paramMap.containsKey(param) && !Utils.isEmptyString(paramMap.get(param));
 
     }
-    private void incrementCounter(final User user) throws NimbitsException {
-        ShardedCounter counter = getOrCreateCounter(user.getEmail());
-        counter.increment();
-        if (counter.getCount() > Const.MAX_DAILY_QUOTA) {
-            if (SettingsServiceFactory.getInstance().getBooleanSetting(SettingType.quotaEnabled)) {
-                throw new NimbitsException(UserMessages.ERROR_QUOTA_EXCEEDED);
-                //todo here is where we charge em;
-            }
 
-        }
-    }
-
-    private ShardedCounter getOrCreateCounter(final EmailAddress email) {
-        CounterFactory factory = new CounterFactory();
-        ShardedCounter counter = factory.getCounter(email.getValue());
-        if (counter == null) {
-            counter = factory.createCounter(email.getValue());
-            counter.addShard();
-
-        }
-        return counter;
-    }
 }

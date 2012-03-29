@@ -71,12 +71,9 @@ public class SettingMemCacheImpl implements SettingTransactions {
 
             } else {
                 String storedVal = SettingTransactionsFactory.getDaoInstance().getSetting(setting);
-                if (!Utils.isEmptyString(storedVal)) {
-                    cache.put(SettingCacheKey(setting), storedVal);
-                    return storedVal;
-                } else {
-                    throw new NimbitsException("Setting Not Found");
-                }
+                cache.put(SettingCacheKey(setting), storedVal);
+                return storedVal;
+
             }
 
         } catch (CacheException e) {

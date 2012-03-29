@@ -36,8 +36,6 @@ public interface EntityService extends RemoteService {
 
     List<Entity> getChildren(Entity parentEntity, EntityType type);
 
-    List<Entity> getEntityChildren(Entity parentEntity, EntityType type);
-
     Entity getEntityByName(EntityName name) throws NimbitsException;
 
     Entity addUpdateEntity(User user, Entity aConnection) throws NimbitsException;

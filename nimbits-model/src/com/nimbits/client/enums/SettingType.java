@@ -19,7 +19,6 @@ public enum SettingType {
     billingEnabled(SettingConstants.SETTING_BILLING_ENABLED, Const.FALSE, false, true),
     admin(SettingConstants.SETTING_ADMIN, Const.TEST_ACCOUNT, false, true),
     connectionsEnabled(SettingConstants.SETTING_ENABLE_CONNECTIONS, Const.TRUE, false, true),
-    facebookClientId(SettingConstants.SETTING_FACEBOOK_CLIENT_ID, Const.EMPTY, false, true),
     facebookRedirectURL(SettingConstants.SETTING_FACEBOOK_REDIRECT_URL, Path.PATH_FACEBOOK_REDIRECT, false, true),
     facebookAPIKey(SettingConstants.SETTING_FACEBOOK_API_KEY, Const.EMPTY, false, true),
     facebookSecret(SettingConstants.SETTING_FACEBOOK_SECRET, Const.EMPTY, false, true),
@@ -30,7 +29,8 @@ public enum SettingType {
     testAccount(SettingConstants.SETTING_TEST_ACCOUNT,Const.EMPTY,false, false),
     testPassword(SettingConstants.SETTING_TEST_PASSWORD,Const.EMPTY,false, false),
     testURL(SettingConstants.SETTING_TEST_URL,Const.EMPTY,false, false),
-    quotaEnabled(SettingConstants.SETTING_ENABLE_QUOTA, Const.FALSE, false, true)
+    quotaEnabled(SettingConstants.SETTING_ENABLE_QUOTA, Const.FALSE, false, true),
+    facebookClientId(SettingConstants.SETTING_FACEBOOK_CLIENT_ID, Const.EMPTY, true, true)
     ;
 
 
@@ -81,11 +81,10 @@ public enum SettingType {
     }
     private class SettingConstants {
 
-        private static final String CONST_SERVER_VERSION = "3.3.2.2";
+        private static final String CONST_SERVER_VERSION = "3.3.2.3";
         private static final String SETTING_ENABLE_CONNECTIONS = "enableConnections";
         private static final String SETTING_ADMIN = "admin";
         private static final String SETTING_LAST_CHECKED = "lastChecked";
-
         private static final String SETTING_FACEBOOK_CLIENT_ID = "facebookClientId";
         private static final String SETTING_FACEBOOK_SECRET = "facebookSecret";
         private static final String SETTING_FACEBOOK_REDIRECT_URL = "facebookRedirectUrl";

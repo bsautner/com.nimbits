@@ -2,6 +2,7 @@ package com.nimbits.server.entity;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.nimbits.client.common.Utils;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.FeedType;
 import com.nimbits.client.enums.ProtectionLevel;
@@ -108,18 +109,15 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
             FeedServiceFactory.getInstance().postToFeed(user,entity.getEntityType().name() +
                     " " + entity.getName().toString() + " deleted ", FeedType.info);
 
-        deleteChildren(user, entity);
+
 
     }
 
     @Override
-    public List<Entity> getEntityChildren(final User user, final Entity c,final  EntityType type) {
-        return EntityTransactionFactory.getInstance(user).getEntityChildren(c, type);
+    public List<Entity> getEntityChildren(final User user, final Entity entity,final  EntityType type) {
+        return EntityTransactionFactory.getInstance(user).getChildren(entity, type);
     }
 
-    private void deleteChildren(final User user, final Entity entity) {
-        //TODO - kick of a task to recursivly delete children - all types, and their children etc.
-    }
 
     @Override
     public List<Entity> getEntities() throws NimbitsException {
@@ -194,13 +192,10 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
 
     @Override
     public List<Entity> getChildren(Entity parentEntity, EntityType type) {
-        return EntityTransactionFactory.getInstance(getUser()).getEntityChildren(parentEntity, type);
+        return EntityTransactionFactory.getInstance(getUser()).getChildren(parentEntity, type);
     }
 
-    @Override
-    public List<Entity> getEntityChildren(Entity parentEntity, EntityType type) {
-        return EntityTransactionFactory.getInstance(getUser()).getEntityChildren(parentEntity, type);
-    }
+
 
     @Override
     public Entity getEntityByName(EntityName name) throws NimbitsException {
@@ -210,6 +205,11 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     @Override
     public Map<String, Entity> getSystemWideEntityMap(EntityType type) throws NimbitsException {
         return EntityTransactionFactory.getInstance(null).getSystemWideEntityMap(type);
+    }
+
+    @Override
+    public void removeEntityFromCache(Entity entity) throws NimbitsException {
+        throw new NimbitsException(UserMessages.ERROR_NOT_IMPLEMENTED);
     }
 
     @Override

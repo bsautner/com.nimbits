@@ -40,12 +40,9 @@ public class SettingsDAOImpl implements SettingTransactions {
             if (a.size() > 0) {
                 s = a.get(0);
                 retVal = s.getValue();
-            } else {
-                throw new NimbitsException(setting.getName() + new Date().toString() + " setting not found.");
-
-                // just in case someone tried to submit the error message as the
-                // secret, we generate a random return string with the error.
-
+            }
+            else {
+                throw new NimbitsException(setting.getName() + " setting not found.");
             }
         } finally {
             pm.close();

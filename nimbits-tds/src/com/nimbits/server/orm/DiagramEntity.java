@@ -56,6 +56,4 @@ public class DiagramEntity  {
     public DiagramEntity() {
     }
 
-
-
 }

@@ -36,8 +36,8 @@ public class SystemMaint extends HttpServlet {
      */
     private static final long serialVersionUID = 1L;
     private PrintWriter out = null;
-    private final String I = "UPGRADE_TASK_KEY";
-    private final MemcacheService cache = MemcacheServiceFactory.getMemcacheService("UPGRADE_TASK");
+
+
     @SuppressWarnings(Const.WARNING_UNCHECKED)
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -61,17 +61,7 @@ public class SystemMaint extends HttpServlet {
 
         out.println("<span class=\"label success\">A new Nimbits server has properly initialised!</span>");
         out.println("<p>You now may want to <A href = \"https://appengine.google.com/\">log into the admin console on App Engine</a> and edit these values to meet your needs.</p>");
-        out.println("<HTML><BODY>");
 
-        if (cache.contains(I)) {
-            out.println("<P>" + "Upgrade Task Dump" + "</P>");
-            List<String> log = (List<String>) cache.get(I);
-            for (String s : log) {
-                out.println("<P>" + s + "</P>");
-            }
-        }
-
-        out.println("</BODY></HTML>");
         out.println("</body></html>");
         out.close();
     }
@@ -119,7 +109,7 @@ public class SystemMaint extends HttpServlet {
             }
         } catch (NimbitsException e) {
             if (setting.isCreate()) {
-                SettingTransactionsFactory.getInstance().addSetting(setting, setting.getDefaultValue());
+                SettingsServiceFactory.getInstance().addSetting(setting, setting.getDefaultValue());
                 out.println("<p>Added setting: " + setting.getName() + " new value : " +  setting.getDefaultValue() + "</p>");
             }
         }

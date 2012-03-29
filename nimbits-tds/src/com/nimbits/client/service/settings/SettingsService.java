@@ -31,4 +31,5 @@ public interface SettingsService extends RemoteService {
 
     void updateSetting(final SettingType setting, final String newValue);
 
+    void addSetting(final SettingType setting,final  String defaultValue);
 }

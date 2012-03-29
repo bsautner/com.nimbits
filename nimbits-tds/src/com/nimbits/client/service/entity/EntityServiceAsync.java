@@ -28,8 +28,6 @@ public interface EntityServiceAsync {
 
     void getChildren(Entity parentEntity, EntityType type, AsyncCallback<List<Entity>> async);
 
-    void getEntityChildren(Entity parentEntity, EntityType type, AsyncCallback<List<Entity>> async);
-
     void getEntityByName(EntityName name, AsyncCallback<Entity> async);
 
     void addUpdateEntity(User user, Entity aConnection, AsyncCallback<Entity> async);

@@ -25,7 +25,8 @@ public class EntityCacheImpl implements EntityTransactions {
     private final User user;
     private final MemcacheService cache;
 
-    private void removeEntityFromCache(Entity entity) throws NimbitsException {
+    @Override
+    public void removeEntityFromCache(Entity entity) throws NimbitsException {
         if (cache.contains(entity.getEntity())) {
             cache.delete(entity.getEntity());
         }
@@ -65,8 +66,8 @@ public class EntityCacheImpl implements EntityTransactions {
     }
 
     @Override
-    public List<Entity> getEntityChildren(Entity parentEntity, EntityType type) {
-        return  EntityTransactionFactory.getDaoInstance(user).getEntityChildren(parentEntity, type);
+    public List<Entity> getChildren(Entity parentEntity, EntityType type) {
+        return  EntityTransactionFactory.getDaoInstance(user).getChildren(parentEntity, type);
     }
 
     @Override

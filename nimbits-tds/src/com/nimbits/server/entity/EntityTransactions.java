@@ -18,7 +18,7 @@ public interface EntityTransactions {
 
     Map<EntityName, Entity> getEntityNameMap(EntityType type) throws NimbitsException;
 
-    List<Entity> getEntityChildren(Entity parentEntity, EntityType type);
+    List<Entity> getChildren(Entity parentEntity, EntityType type);
 
     Entity addUpdateEntity(Entity entity) throws NimbitsException;
 
@@ -31,4 +31,6 @@ public interface EntityTransactions {
     Entity getEntityByName(EntityName name) throws NimbitsException;
 
     Map<String, Entity> getSystemWideEntityMap(EntityType type) throws NimbitsException;
+
+    void removeEntityFromCache(Entity entity) throws NimbitsException;
 }

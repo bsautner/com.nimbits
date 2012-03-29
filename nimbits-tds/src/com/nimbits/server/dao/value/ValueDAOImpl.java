@@ -223,7 +223,7 @@ public class ValueDAOImpl implements RecordedValueTransactions {
 
     }
 
-    private void createBlobStoreEntity(Map<Long, Long> maxMap, Map<Long, Long> minMap, Long l, String json) throws IOException {
+    private void createBlobStoreEntity(Map<Long, Long> maxMap, Map<Long, Long> minMap, Long l, String json) throws IOException, NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         FileService fileService = FileServiceFactory.getFileService();
         try {
@@ -250,6 +250,10 @@ public class ValueDAOImpl implements RecordedValueTransactions {
 
             pm.makePersistent(currentStoreEntity);
             pm.flush();
+        }
+            catch (Exception ex) {
+                throw new NimbitsException(ex);
+
         } finally {
             pm.close();
         }

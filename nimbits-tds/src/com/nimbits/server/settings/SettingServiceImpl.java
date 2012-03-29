@@ -37,8 +37,13 @@ public class SettingServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public void updateSetting(SettingType setting, String newValue) {
+    public void updateSetting(final SettingType setting,final  String newValue) {
          SettingTransactionsFactory.getInstance().updateSetting(setting, newValue);
+    }
+
+    @Override
+    public void addSetting(final SettingType setting,final String value) {
+        SettingTransactionsFactory.getInstance().addSetting(setting, value);
     }
 
     @Override

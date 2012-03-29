@@ -19,9 +19,6 @@ import javax.jdo.annotations.*;
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 public class PointCatagory   {
 
-
-
-
     public PointCatagory() {
 
     }
@@ -29,8 +26,6 @@ public class PointCatagory   {
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     public Long id;
-
-
 
     @Persistent
     public Long userFK;

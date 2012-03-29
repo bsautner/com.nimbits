@@ -2,6 +2,7 @@ package com.nimbits.server.dao.entity;
 
 
 import com.nimbits.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
@@ -83,7 +84,7 @@ public class EntityDaoImpl implements  EntityTransactions {
 
 
     @Override
-    public List<Entity> getEntityChildren(Entity parentEntity, EntityType type) {
+    public List<Entity> getChildren(Entity parentEntity, EntityType type) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
             return getEntityChildren(pm, parentEntity, type);
@@ -213,7 +214,7 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     @Override
 
-    public void deleteEntity(final Entity entity) {
+    public void deleteEntity(final Entity entity) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final Query q1 = pm.newQuery(EntityStore.class, "entity==b");
         q1.declareParameters("String b");
@@ -226,6 +227,9 @@ public class EntityDaoImpl implements  EntityTransactions {
             if (c.size() > 0) {
                 List<Entity> entities = getEntityChildren(pm, c.get(0));
                 entities.add(c.get(0));
+                for (Entity e : entities) {
+                    EntityTransactionFactory.getInstance(user).removeEntityFromCache(e);
+                }
                 pm.deletePersistentAll(entities);
             }
         } finally {
@@ -336,6 +340,10 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     }
 
+    @Override
+    public void removeEntityFromCache(Entity entity) throws NimbitsException {
+        throw new NimbitsException(UserMessages.ERROR_NOT_IMPLEMENTED);
+    }
 
 
 }

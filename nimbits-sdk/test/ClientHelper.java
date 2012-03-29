@@ -40,10 +40,10 @@ class ClientHelper {
     //  private static final String accountPath = "/mnt/raid/nimbits/test";
     private final static String email = "test@example.com";
 
-    private final static String password = "ca5e0245-31e0-4981-8145-7bb7136895e4";
+    private final static String password = "233aee89-9a74-4596-915d-1961fe7b3772";
 
     //  private final static String appscale =  "http://127.0.0.1:8888";
-    public final static String url = "http://localhost:8081";
+    public final static String url = "http://192.168.1.2:8081";
 
     public static NimbitsClient client() {
         if (instance == null) {

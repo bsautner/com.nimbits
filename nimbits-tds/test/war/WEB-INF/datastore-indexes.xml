@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <datastore-indexes autoGenerate="true">
+
+
+    <datastore-index kind="DataPointStatShardEntity" ancestor="true" source="manual">
+        <property name="pointStatShardEntities_INTEGER_IDX" direction="asc"/>
+    </datastore-index>
+
+    <datastore-index kind="DiagramEntity" ancestor="false" source="manual">
+        <property name="categoryFk" direction="asc"/>
+        <property name="userFk" direction="asc"/>
+        <property name="name" direction="asc"/>
+    </datastore-index>
+
+    <datastore-index kind="DataPoint" ancestor="false">
+        <property name="catagory" direction="asc"/>
+        <property name="userFK" direction="asc"/>
+        <property name="name" direction="asc"/>
+    </datastore-index>
+
+    <!-- Used 3 times in query history -->
+    <datastore-index kind="PointCatagory" ancestor="false" source="auto">
+        <property name="userFK" direction="asc"/>
+        <property name="name" direction="asc"/>
+    </datastore-index>
+
+    <!-- Used 3 times in query history -->
+    <datastore-index kind="DataPoint" ancestor="false" source="auto">
+        <property name="catID" direction="asc"/>
+        <property name="userFK" direction="asc"/>
+        <property name="name" direction="asc"/>
+    </datastore-index>
+
+    <datastore-index kind="DataPoint" ancestor="false">
+        <property name="userFK" direction="asc"/>
+        <property name="name" direction="desc"/>
+    </datastore-index>
+
+    <datastore-index kind="RecordedValue" ancestor="false">
+        <property name="pointFK" direction="asc"/>
+        <property name="timestamp" direction="asc"/>
+        <property name="pointFK" direction="desc"/>
+        <property name="timestamp" direction="desc"/>
+    </datastore-index>
+
+    <datastore-index kind="RecordedValue" ancestor="false" source="manual">
+        <property name="pointFK" direction="asc"/>
+        <property name="timestamp" direction="asc"/>
+    </datastore-index>
+
+    <datastore-index kind="RecordedValue" ancestor="false" source="manual">
+        <property name="pointFK" direction="asc"/>
+        <property name="timestamp" direction="desc"/>
+    </datastore-index>
+
+    <datastore-index kind="ConnectionRequest" ancestor="false" source="manual">
+        <property name="approved" direction="asc"/>
+        <property name="targetEmail" direction="asc"/>
+        <property name="requestDate" direction="desc"/>
+    </datastore-index>
+
+    <datastore-index kind="DiagramEntity" ancestor="false" source="manual">
+        <property name="categoryFk" direction="asc"/>
+        <property name="userFk" direction="asc"/>
+        <property name="name" direction="asc"/>
+    </datastore-index>
+
+</datastore-indexes>

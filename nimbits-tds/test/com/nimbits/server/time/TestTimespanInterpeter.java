@@ -76,20 +76,13 @@ public class TestTimespanInterpeter  {
     }
 
     @Test
-    public void testTime5() {
+    public void testTime5() throws NimbitsException {
         String s1 = "05/09/2011 07:01:44 PM";
-        String s2 = "05/09/2011 08:40:44 PM";
-        Timespan ts = null;
-        try {
-            ts = TimespanServiceFactory.getInstance().createTimespan(s1, s2);
-        } catch (NimbitsException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-
-        Assert.assertEquals(1304924504000L, ts.getStart().getTime());
-        Assert.assertEquals(1304930444000L, ts.getEnd().getTime());
+        String s2 = "05/09/2011 08:40:44 PM"; //assumes GMT
+        Timespan ts = TimespanServiceFactory.getInstance().createTimespan(s1, s2);
+        Assert.assertEquals(1304938904000L, ts.getStart().getTime());
+        Assert.assertEquals(1304944844000L, ts.getEnd().getTime());
         Assert.assertNotNull(ts);
-
     }
 
 

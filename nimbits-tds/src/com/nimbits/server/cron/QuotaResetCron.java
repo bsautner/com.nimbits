@@ -8,6 +8,7 @@ import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.server.counter.*;
 import com.nimbits.server.dao.counter.*;
+import com.nimbits.server.quota.*;
 import com.nimbits.server.settings.*;
 import com.nimbits.server.task.*;
 import com.nimbits.server.user.*;
@@ -33,26 +34,21 @@ public class QuotaResetCron  extends HttpServlet {
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
+        try {
+            processGet();
+        } catch (NimbitsException e) {
+            log.severe(e.getMessage());
+        }
+
+
+    }
+
+    protected void processGet() throws NimbitsException {
         final List<User> users = UserTransactionFactory.getInstance().getUsers();
         for (final User u : users) {
-            ShardedCounter count =  getOrCreateCounter(u.getEmail());
-            count.increment(count.getCount() * -1);
+            QuotaFactory.getInstance(u).resetCounter();
         }
-
-
-
-
     }
 
-    private ShardedCounter getOrCreateCounter(final EmailAddress email) {
-        CounterFactory factory = new CounterFactory();
-        ShardedCounter counter = factory.getCounter(email.getValue());
-        if (counter == null) {
-            counter = factory.createCounter(email.getValue());
-            counter.addShard();
-
-        }
-        return counter;
-    }
 
 }

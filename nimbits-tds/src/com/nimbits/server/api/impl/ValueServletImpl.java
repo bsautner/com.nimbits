@@ -106,7 +106,7 @@ public class ValueServletImpl extends ApiServlet {
 
     }
 
-    protected void processGet(HttpServletRequest req, HttpServletResponse resp) throws NimbitsException, IOException {
+    public void processGet(HttpServletRequest req, HttpServletResponse resp) throws NimbitsException, IOException {
         init(req, resp, ExportType.plain);
         final PrintWriter out = resp.getWriter();
         Value nv = null;

@@ -65,6 +65,7 @@ public class ApiServlet extends HttpServlet {
 
 
     }
+
     public static void addResponseHeaders(final HttpServletResponse resp, final ExportType type) {
         if (! type.equals(ExportType.unknown)) {
             resp.setContentType(type.getCode());
@@ -72,6 +73,7 @@ public class ApiServlet extends HttpServlet {
         resp.addHeader("Cache-Control", "no-cache");
         resp.addHeader("Access-Control-Allow-Origin", "*");
     }
+
     protected String getParam(final Parameters param) {
         if (paramMap.containsKey(param)) {
             return paramMap.get(param);

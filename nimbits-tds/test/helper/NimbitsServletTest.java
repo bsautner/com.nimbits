@@ -1,25 +1,33 @@
 package helper;
 
-import com.google.appengine.tools.development.*;
-import com.google.appengine.tools.development.testing.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.service.datapoints.*;
-import com.nimbits.client.service.settings.*;
-import com.nimbits.server.api.impl.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.point.*;
-import com.nimbits.server.settings.*;
-import com.nimbits.server.user.*;
-import org.junit.*;
-import org.springframework.mock.web.*;
+import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
+import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.service.datapoints.PointService;
+import com.nimbits.client.service.settings.SettingsService;
+import com.nimbits.server.api.impl.ValueServletImpl;
+import com.nimbits.server.entity.EntityServiceFactory;
+import com.nimbits.server.point.PointServiceFactory;
+import com.nimbits.server.settings.SettingsServiceFactory;
+import com.nimbits.server.user.UserTransactionFactory;
+import com.nimbits.server.user.UserTransactions;
+import org.junit.After;
+import org.junit.Before;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 
-import java.io.*;
-import java.util.*;
+import java.util.UUID;
 
 /**
  * Created by Benjamin Sautner
@@ -46,9 +54,14 @@ public class NimbitsServletTest {
     public EmailAddress emailAddress;
 
     public ValueServletImpl valueServlet;
+
     public PointService pointService;
     public SettingsService settingsService;
     public UserTransactions userTransactionsDao;
+
+    public Point point;
+
+
 
     @Before
     public void setUp() throws NimbitsException {
@@ -76,7 +89,7 @@ public class NimbitsServletTest {
         c = EntityServiceFactory.getInstance().addUpdateEntity(c);
 
         Entity e = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone, UUID.randomUUID().toString(), c.getEntity(), user.getUuid());
-        pointService.addPoint(user, e);
+        point = pointService.addPoint(user, e);
 
         Entity e2 = EntityModelFactory.createEntity(pointChildName, "", EntityType.point, ProtectionLevel.everyone, UUID.randomUUID().toString(),e.getEntity(), user.getUuid());
         pointService.addPoint(user, e2);

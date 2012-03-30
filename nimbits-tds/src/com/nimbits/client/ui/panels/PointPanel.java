@@ -13,31 +13,38 @@
 
 package com.nimbits.client.ui.panels;
 
-import com.extjs.gxt.ui.client.Style.*;
-import com.extjs.gxt.ui.client.event.*;
+import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
+import com.extjs.gxt.ui.client.Style.Orientation;
+import com.extjs.gxt.ui.client.data.BaseModelData;
+import com.extjs.gxt.ui.client.event.ButtonEvent;
+import com.extjs.gxt.ui.client.event.SelectionListener;
+import com.extjs.gxt.ui.client.store.ListStore;
 import com.extjs.gxt.ui.client.widget.*;
-import com.extjs.gxt.ui.client.widget.TabPanel;
-import com.extjs.gxt.ui.client.widget.VerticalPanel;
 import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.form.CheckBox;
-import com.extjs.gxt.ui.client.widget.form.FormPanel;
 import com.extjs.gxt.ui.client.widget.form.*;
-import com.extjs.gxt.ui.client.widget.form.TextArea;
-import com.extjs.gxt.ui.client.widget.layout.*;
-import com.extjs.gxt.ui.client.widget.toolbar.*;
-import com.google.gwt.core.client.*;
-import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
+import com.extjs.gxt.ui.client.widget.layout.FillLayout;
+import com.extjs.gxt.ui.client.widget.layout.FormData;
+import com.extjs.gxt.ui.client.widget.layout.TableData;
+import com.extjs.gxt.ui.client.widget.toolbar.SeparatorToolItem;
+import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.nimbits.client.enums.FilterType;
+import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.service.datapoints.*;
-import com.nimbits.client.service.entity.*;
-import com.nimbits.client.ui.controls.*;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.service.datapoints.PointService;
+import com.nimbits.client.service.datapoints.PointServiceAsync;
+import com.nimbits.client.service.entity.EntityService;
+import com.nimbits.client.service.entity.EntityServiceAsync;
+import com.nimbits.client.ui.controls.ProtectionLevelOptions;
 import com.nimbits.client.ui.helper.FeedbackHelper;
-import com.nimbits.client.ui.icons.*;
+import com.nimbits.client.ui.icons.Icons;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PointPanel extends LayoutContainer {
 
@@ -58,12 +65,42 @@ public class PointPanel extends LayoutContainer {
     private final TextField<String> unit = new TextField<String>();
     private final Entity entity;
     private Point point;
+    private ComboBox<TypeOption> hysteresisType;
+
 
     public PointPanel(final Entity entity)   {
         this.entity = entity;
          protectionLevelOptions = new ProtectionLevelOptions(entity);
+
          loadForm();
 
+
+    }
+    private ComboBox<TypeOption> hysteresisTypeCombo(final FilterType selectedValue) {
+        ComboBox<TypeOption> combo = new ComboBox<TypeOption>();
+
+        ArrayList<TypeOption> ops = new ArrayList<TypeOption>();
+
+        for (FilterType type : FilterType.values()){
+            ops.add(new TypeOption(type));
+        }
+
+
+
+        ListStore<TypeOption> store = new ListStore<TypeOption>();
+
+        store.add(ops);
+
+        combo.setFieldLabel("Filter type");
+        combo.setDisplayField(Parameters.name.getText());
+        combo.setValueField(Parameters.value.getText());
+        combo.setTriggerAction(ComboBox.TriggerAction.ALL);
+        combo.setStore(store);
+        combo.setForceSelection(true);
+        TypeOption selected = combo.getStore().findModel(Parameters.value.getText(), selectedValue.getCode());
+        combo.setValue(selected);
+
+        return combo;
 
     }
 
@@ -128,10 +165,7 @@ public class PointPanel extends LayoutContainer {
 
         toolBar.add(buttonSave);
 
-        toolBar.add(new SeparatorToolItem());
 
-
-        toolBar.add(separatorToolItem);
 
         return toolBar;
     }
@@ -183,7 +217,8 @@ public class PointPanel extends LayoutContainer {
 
             }
         });
-        point.setCompression(compression.getValue().doubleValue());
+        point.setFilterValue(compression.getValue().doubleValue());
+        point.setFilterType(hysteresisType.getValue().type);
         point.setExpire(expires.getValue().intValue());
         point.setUnit(unit.getValue());
 
@@ -334,11 +369,13 @@ public class PointPanel extends LayoutContainer {
         tdVerticalPanel.setHorizontalAlign(HorizontalAlignment.CENTER);
         tdVerticalPanel.setMargin(5);
 
-        compression.setFieldLabel("Compression");
-        compression.setValue(point.getCompression());
+        compression.setFieldLabel("Compression Filter");
+        hysteresisType = hysteresisTypeCombo(point.getFilterType());
+
+        compression.setValue(point.getFilterValue());
         compression.setAllowBlank(false);
         simple.add(compression);
-
+        simple.add(hysteresisType);
 
 
         targetValue.setFieldLabel("Target");
@@ -368,7 +405,9 @@ public class PointPanel extends LayoutContainer {
         simple.add(description, new FormData("-20"));
         description.setSize("400", "100");
 
-
+        Html h = new Html("<p>Use filter types to ignore new values that are +/- the previously recorded value or above/below the floor or ceiling setting. This is useful for " +
+                "filtering out noise such as small changes in a value or the same value repeated many times when you only want to record significant changes.</p>");
+        simple.add(h);
         return simple;
     }
 
@@ -379,5 +418,19 @@ public class PointPanel extends LayoutContainer {
 
     public void addPointUpdatedListeners(PointUpdatedListener listener) {
         pointUpdatedListeners.add(listener);
+    }
+    private class TypeOption extends BaseModelData {
+        FilterType type;
+
+
+        public TypeOption(FilterType value) {
+            this.type = value;
+            set(Parameters.value.getText(), value.getCode());
+            set(Parameters.name.getText(), value.getText());
+        }
+
+        public FilterType getMethod() {
+            return type;
+        }
     }
 }

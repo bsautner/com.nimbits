@@ -364,6 +364,11 @@ public class UpgradeTask  extends HttpServlet
                         if (Utils.isEmptyString(parent)) {
                             parent = u.getUuid();
                         }
+
+                        p.setFilterValue(p.getCompression());
+                        p.setFilterType(FilterType.fixedHysteresis);
+                        PointServiceFactory.getInstance().updatePoint(u, p);
+
                         ProtectionLevel protectionLevel = p.isPublic ? ProtectionLevel.everyone : ProtectionLevel.onlyMe;
                         EntityName name = CommonFactoryLocator.getInstance().createName(p.name);
                         Entity pointEntity = EntityModelFactory.createEntity(name, p.description, EntityType.point,

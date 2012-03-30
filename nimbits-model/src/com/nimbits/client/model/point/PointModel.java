@@ -14,8 +14,7 @@
 package com.nimbits.client.model.point;
 
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.model.intelligence.Intelligence;
-import com.nimbits.client.model.intelligence.IntelligenceModelFactory;
+import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.model.value.Value;
 
 import java.io.Serializable;
@@ -37,10 +36,6 @@ public class PointModel implements Serializable, Point {
 
     private long createDate;
 
-    private long lastAlarmSent;
-
-    private String host;
-
     private long userFK;
 
 
@@ -50,15 +45,11 @@ public class PointModel implements Serializable, Point {
 
     private String unit;
 
-    private double compression = 0.1;
-
     private double lowAlarm = 0.0;
 
     private boolean highAlarmOn;
 
     private boolean lowAlarmOn;
-
-    private String description;
 
     private String tag;
 
@@ -68,6 +59,10 @@ public class PointModel implements Serializable, Point {
 
     //reset on any data write
     private boolean idleAlarmSent;
+
+    private int filterType;
+
+    private double filterValue;
 
 
     public PointModel(String uuid) {
@@ -84,7 +79,7 @@ public class PointModel implements Serializable, Point {
         this.highAlarm = p.getHighAlarm();
         this.expire = p.getExpire();
         this.unit = p.getUnit();
-        this.compression = p.getCompression();
+
         this.lowAlarm = p.getLowAlarm();
         this.highAlarmOn = p.isHighAlarmOn();
         this.lowAlarmOn = p.isLowAlarmOn();
@@ -96,7 +91,8 @@ public class PointModel implements Serializable, Point {
         this.targetValue = p.getTargetValue();
         this.values = p.getValues();
         this.value = p.getValue();
-
+        this.filterType = p.getFilterType().getCode();
+        this.filterValue = p.getFilterValue();
 
     }
 
@@ -112,10 +108,7 @@ public class PointModel implements Serializable, Point {
 
     private Value value;
 
-    @Override
-    public double getCompression() {
-        return this.compression;
-    }
+
 
     @Override
     public Date getCreateDate() {
@@ -200,12 +193,6 @@ public class PointModel implements Serializable, Point {
     }
 
 
-
-    @Override
-    public void setCompression(final double compression) {
-        this.compression = compression;
-    }
-
     @Override
     public void setCreateDate(final Date createDate) {
         this.createDate = createDate.getTime();
@@ -274,6 +261,26 @@ public class PointModel implements Serializable, Point {
     @Override
     public void setValues(final List<Value> values) {
         this.values = values;
+    }
+
+    @Override
+    public FilterType getFilterType() {
+        return FilterType.get(filterType);
+    }
+
+    @Override
+    public void setFilterType(FilterType filterType) {
+       this.filterType = filterType.getCode();
+    }
+
+    @Override
+    public double getFilterValue() {
+        return filterValue;
+    }
+
+    @Override
+    public void setFilterValue(double value) {
+      this.filterValue = value;
     }
 
 

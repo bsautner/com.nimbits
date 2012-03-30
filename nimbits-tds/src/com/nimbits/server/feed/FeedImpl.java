@@ -48,7 +48,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
     public void postToFeed(final User user, final Entity entity, final Point originalPoint, final Value value, final FeedType type) throws NimbitsException {
         final Point point = getFeedPoint(user);
         if (point != null) {
-            final FeedValue feedValue = new FeedValueModel(shortenFeedHTML(valueToHtml(user, entity, originalPoint, value)), value.getData(), type);
+            final FeedValue feedValue = new FeedValueModel((valueToHtml(entity, originalPoint, value)), value.getData(), type);
             final String json = GsonFactory.getSimpleInstance().toJson(feedValue);
             final Value v = ValueModelFactory.createValueModel(value, json);
             RecordedValueServiceFactory.getInstance().recordValue(user, point, v, false);
@@ -57,31 +57,34 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
 
     @Override
     public void postToFeed(final User user, final NimbitsException ex) {
-        final Point point;
+
         try {
-            point = getFeedPoint(user);
-            if (point != null) {
-                final StringBuilder sb = new StringBuilder();
-                sb.append("<p><img src=\"" + ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest()) +
-                        "/resources/images/symbol-error.png\" align=\"left\" width=\"35\" height=\"35\">");
-                sb.append("<p style=\"color:red\">Error reported<p>");
-                sb.append("<p style=\"color:red\">" + ex.getMessage() + "<p>");
-                sb.append("<p>" + ExceptionUtils.getStackTrace(ex) + "<p>");
-                final FeedValue feedValue = new FeedValueModel(shortenFeedHTML(sb.toString()), "", FeedType.error);
-                final String json = GsonFactory.getSimpleInstance().toJson(feedValue);
-                final Value value = ValueModelFactory.createValueModel(0.0, 0.0, Const.CONST_IGNORED_NUMBER_VALUE,
-                        new Date(), point.getUUID(), "", json);
-                final Value v = ValueModelFactory.createValueModel(value, json);
-                RecordedValueServiceFactory.getInstance().recordValue(user, point, v, false);
-            }
+            postToFeed(user, ExceptionUtils.getStackTrace(ex), FeedType.error);
+
+
         } catch (NimbitsException e) {
              log.severe(e.getMessage());
         }
 
     }
 
-    public void postToFeed(final User user, final String html, final FeedType type) throws NimbitsException {
+    public void postToFeed(final User user, final String message, final FeedType type) throws NimbitsException {
         final Point point = getFeedPoint(user);
+
+        String fullHTML =  generatePostToFeedHtml(message, type);
+        String shortened = shortenFeedMessage(message, fullHTML);
+        String finalMessage = generatePostToFeedHtml(shortened, type);
+
+        final FeedValue feedValue = new FeedValueModel(shortened, "", type);
+        final String json = GsonFactory.getSimpleInstance().toJson(feedValue);
+        final Value value = ValueModelFactory.createValueModel(0.0, 0.0, Const.CONST_IGNORED_NUMBER_VALUE,
+                new Date(), point.getUUID(), "", json);
+        final Value v = ValueModelFactory.createValueModel(value, json);
+        RecordedValueServiceFactory.getInstance().recordValue(user, point, v, false);
+
+    }
+
+    private String  generatePostToFeedHtml(String message, FeedType type) {
         final StringBuilder sb = new StringBuilder() ;
         switch (type) {
 
@@ -108,42 +111,34 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
         }
 
 
-
-        sb.append(html);
+        sb.append(message);
         sb.append("</p>");
-        final FeedValue feedValue = new FeedValueModel(shortenFeedHTML(sb.toString()), "", type);
-        final String json = GsonFactory.getSimpleInstance().toJson(feedValue);
-        final Value value = ValueModelFactory.createValueModel(0.0, 0.0, Const.CONST_IGNORED_NUMBER_VALUE,
-                new Date(), point.getUUID(), "", json);
-        final Value v = ValueModelFactory.createValueModel(value, json);
-        RecordedValueServiceFactory.getInstance().recordValue(user, point, v, false);
-
+        return sb.toString();
     }
 
-    private String shortenFeedHTML(final String html) {
-        if (html.length() > Const.DEFAULT_FEED_LENGTH) {
+    private String shortenFeedMessage(final String message, final String fullHTML) {
+        if (message.length() > Const.DEFAULT_FEED_LENGTH) {
             try {
-                String shorterHtml;
-                shorterHtml =  (html.length() > 2000) ?  html.substring(0, 2000) : html;
-                return html.substring(0, Const.DEFAULT_FEED_LENGTH)
-                        + "<a href=\"#\" onclick=\"window.open('feed.html?content=" + URLEncoder.encode(shorterHtml, Const.CONST_ENCODING) + "', 'Feed'," +
+               final String shorterHtml =  (message.length() > Const.DEFAULT_FEED_LENGTH) ?  message.substring(0, Const.DEFAULT_FEED_LENGTH) : message;
+                return shorterHtml
+                        + "<a href=\"#\" onclick=\"window.open('feed.html?content=" + URLEncoder.encode(fullHTML, Const.CONST_ENCODING) + "', 'Feed'," +
                         "'height=400,width=400,toolbar=0,status=0,location=0' );\" >" +
                         "&nbsp;[more]</a>";
 //                        + "<a href=\"feed.html?content=" + URLEncoder.encode(html, Const.CONST_ENCODING) + "\" " +
 //                        "target=\"_blank\">" +
 //                        "&nbsp;[more]</a>";
             } catch (UnsupportedEncodingException e) {
-                return html.substring(0, Const.DEFAULT_FEED_LENGTH);
+                return message.substring(0, Const.DEFAULT_FEED_LENGTH);
             }
 
         }
         else {
-            return html;
+            return message;
         }
 
     }
 
-    private String valueToHtml(final User user, final Entity entity, final Point point, final Value value) {
+    private String valueToHtml(final Entity entity, final Point point, final Value value) {
         StringBuilder sb = new StringBuilder();
         if (! (Double.compare(value.getDoubleValue(), Const.CONST_IGNORED_NUMBER_VALUE) == 0)) {
             sb.append("<img align=\"left\" src=\"")
@@ -169,26 +164,29 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
 
         if (entity != null && point != null) {
 
-            sb.append("&nbsp;")
-                    .append("<a href=\"#\" onclick=\"window.open('report.html?uuid=" +  point.getUUID() + "', 'Report'," +
-                            "'height=800,width=800,toolbar=0,status=0,location=0' );\" >" +
-                            "&nbsp;[more]</a>")
-                    .append("<a href=\"")
-                    .append("<br>");
+            sb.append("&nbsp;");
+
+            if (! (Double.compare(value.getDoubleValue(), Const.CONST_IGNORED_NUMBER_VALUE) == 0)) {
+                sb.append("Alert&nbsp;Status:")
+                        .append(value.getAlertState().name());
+                sb.append("<br>Value:")
+                        .append(value.getDoubleValue());
+            }
+
+
+            if (! Utils.isEmptyString(value.getNote())) {
+                sb.append("<br>Note:").append(value.getNote());
+            }
+
+
+            sb.append("<a href=\"#\" onclick=\"window.open('report.html?uuid=").append(point.getUUID())
+                    .append("', 'Report',")
+                    .append("'height=800,width=800,toolbar=0,status=0,location=0' );\" >")
+                    .append("&nbsp;[more]</a>");
+
         }
 
 
-        if (! (Double.compare(value.getDoubleValue(), Const.CONST_IGNORED_NUMBER_VALUE) == 0)) {
-            sb.append("Alert&nbsp;Status:")
-                    .append(value.getAlertState().name());
-            sb.append("&nbsp;&nbsp;Value:")
-                    .append(value.getDoubleValue());
-        }
-
-
-        if (! Utils.isEmptyString(value.getNote())) {
-            sb.append(("<br>Note:" + value.getNote()));
-        }
 
 
 

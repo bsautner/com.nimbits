@@ -71,14 +71,14 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
     private void sendWelcomeFeed(com.nimbits.client.model.user.User u) throws NimbitsException {
 
         final String message =
-                ("<b>Welcome To Nimbits!</b> <br> <p>This is your data feed channel, you can subscribe " +
+                ("<b>Welcome To Nimbits!</b> <br> This is your data feed channel, you can subscribe " +
                 "to data points and see events like high and low alerts here. You can get started by creating " +
                 "a new data point using the File menu. Right click on the point to configure its compression, " +
                 "alerts, calculations etc. " +
                 "You can find other shared data points on <a href=\"http://www.nimbits.com\" " +
                 "target=\"_blank\" >nimbits.com</a> and subscribe to their " +
                 "alerts. Use the connection request button to invite other Nimbits users to connect to your account so " +
-                "you can see each others data.</p>");
+                "you can see each others data.");
         FeedServiceFactory.getInstance().postToFeed(u, message, FeedType.info);
     }
     private void sendUserCreatedFeed(com.nimbits.client.model.user.User u) throws NimbitsException {

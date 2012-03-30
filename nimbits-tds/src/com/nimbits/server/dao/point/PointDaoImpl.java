@@ -96,7 +96,7 @@ public class PointDaoImpl implements PointTransactions {
                 original.setLowAlarm(update.getLowAlarm());
                 original.setLowAlarmOn(update.isLowAlarmOn());
                 original.setHighAlarmOn(update.isHighAlarmOn());
-                original.setCompression(update.getCompression());
+
                 original.setUnit(update.getUnit());
                 original.setExpire(update.getExpire());
                 original.setTag(update.getTag());
@@ -106,7 +106,8 @@ public class PointDaoImpl implements PointTransactions {
                 original.setIdleAlarmOn(update.isIdleAlarmOn());
                 original.setIdleAlarmSent(update.getIdleAlarmSent());
                 original.setIdleSeconds(update.getIdleSeconds());
-
+                original.setFilterType(update.getFilterType());
+                original.setFilterValue(update.getFilterValue());
                 tx.commit();
                 retObj = PointModelFactory.createPointModel(original);
 
@@ -173,10 +174,12 @@ public class PointDaoImpl implements PointTransactions {
         try {
 
             final DataPoint jdoPoint = new DataPoint(u, entity);
-            jdoPoint.setCompression(Const.DEFAULT_POINT_COMPRESSION);
+            jdoPoint.setFilterValue(Const.DEFAULT_POINT_COMPRESSION);
+            jdoPoint.setFilterType(FilterType.fixedHysteresis);
             jdoPoint.setExpire(Const.DEFAULT_DATA_EXPIRE_DAYS);
             jdoPoint.setLastChecked(new Date());
             jdoPoint.setCreateDate(new Date());
+
             pm.makePersistent(jdoPoint);
 
             return PointModelFactory.createPointModel(jdoPoint);

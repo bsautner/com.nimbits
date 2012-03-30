@@ -64,8 +64,17 @@ public class DataPoint implements Point {
     private int expire = 90;
     @Persistent
     private String unit;
+
+    @Deprecated
     @Persistent
     private Double compression = 0.1;
+
+
+    @Persistent
+    private Double filterValue = 0.1;
+    @Persistent
+    private Integer filterType = 0;
+
     @Persistent
     private Double lowAlarm = 0.0;
     @Persistent
@@ -115,6 +124,9 @@ public class DataPoint implements Point {
 
     @Persistent
     private Integer idleSeconds = 0;
+
+
+
 
     //reset on any data write
     @Persistent
@@ -173,6 +185,7 @@ public class DataPoint implements Point {
         this.uuid = entity.getEntity();
         this.LastChecked= new Date();
         this.createDate = new Date();
+        this.filterType = FilterType.fixedHysteresis.getCode();
      }
 
 
@@ -184,7 +197,7 @@ public class DataPoint implements Point {
     @NotPersistent
     private Value value;
 
-    @Override
+    @Deprecated
     public double getCompression() {
         return (compression == null) ? 0.0 : compression;
 
@@ -266,11 +279,6 @@ public class DataPoint implements Point {
         return (lowAlarmOn == null) ? false : lowAlarmOn;
     }
 
-
-    @Override
-    public void setCompression(final double compression) {
-        this.compression = compression;
-    }
 
     @Override
     public void setCreateDate(final Date createDate) {
@@ -373,7 +381,23 @@ public class DataPoint implements Point {
     }
 
 
+    @Override
+    public FilterType getFilterType() {
+        return filterType == null ? FilterType.fixedHysteresis : FilterType.get(filterType);
+    }
 
+    @Override
+    public void setFilterType(FilterType filterType) {
+        this.filterType = filterType.getCode();
+    }
 
+    @Override
+    public double getFilterValue() {
+        return filterValue == null ? 0.0 : filterValue;
+    }
 
+    @Override
+    public void setFilterValue(double value) {
+        this.filterValue = value;
+    }
 }

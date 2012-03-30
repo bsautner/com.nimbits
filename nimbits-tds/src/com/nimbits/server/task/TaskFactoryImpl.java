@@ -165,12 +165,18 @@ public class TaskFactoryImpl implements TaskFactory {
 
     @Override
     public void startPointMaintTask(final Point point) {
+
+        try {
         final String json = gson.toJson(point);
 
         final Queue queue =  QueueFactory.getQueue(overrideQueue ? DEFAULT : TASK_POINT_MAINT);
 
         queue.add(TaskOptions.Builder.withUrl(PATH_POINT_MAINT_TASK)
                 .param(Parameters.point.getText(), json));
+        } catch (IllegalStateException ex) {
+            overrideQueue = true;
+            startPointMaintTask(point);
+        }
 
     }
 

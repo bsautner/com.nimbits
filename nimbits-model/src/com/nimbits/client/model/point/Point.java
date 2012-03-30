@@ -13,7 +13,7 @@
 
 package com.nimbits.client.model.point;
 
-import com.nimbits.client.model.intelligence.Intelligence;
+import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.model.value.Value;
 
 import java.io.Serializable;
@@ -28,7 +28,6 @@ import java.util.List;
  */
 public interface Point extends Serializable {
 
-    double getCompression();
 
     Date getCreateDate();
 
@@ -66,8 +65,6 @@ public interface Point extends Serializable {
 
     boolean isLowAlarmOn();
 
-    void setCompression(final double compression);
-
     void setCreateDate(final Date createDate);
 
     void setExpire(final int expire);
@@ -104,4 +101,11 @@ public interface Point extends Serializable {
 
     void setValues(final List<Value> values);
 
+    FilterType getFilterType();
+
+    void setFilterType(FilterType filterType);
+
+    double getFilterValue();
+
+    void setFilterValue(double value);
 }

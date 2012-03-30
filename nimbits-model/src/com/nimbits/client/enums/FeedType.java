@@ -10,10 +10,12 @@ import java.util.*;
  */
 public enum FeedType {
     error(0, "Errors"),
-    system(1, "System Messages"),
-    info(2, "Info"),
-    data(3, "Subscription Data"),
-    all(4, "Everything");
+    status(1, "User Status"),
+    system(2, "System Messages"),
+    info(3, "Info"),
+    data(4, "Subscription Data"),
+    all(5, "Everything"),
+    ;
 
 
     private static final Map<Integer, FeedType> lookup = new HashMap<Integer, FeedType>();

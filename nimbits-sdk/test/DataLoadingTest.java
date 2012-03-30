@@ -76,7 +76,7 @@ public class DataLoadingTest {
 
         Point p = ClientHelper.client().addPoint(pointName);
         assertNotNull(p);
-        p.setCompression(-1);
+        p.setFilterValue(-1);
         ClientHelper.client().updatePoint(p);
         Random r = new Random();
         double total = 0.0;

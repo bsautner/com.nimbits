@@ -13,7 +13,6 @@
 
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.server.gson.GsonFactory;
@@ -54,7 +53,7 @@ public class JsonTest {
 
 
         Point point = ClientHelper.client().addPoint(pointName);
-        point.setCompression(-1);
+        point.setFilterValue(-1);
         ClientHelper.client().updatePoint(point);
         Robot robot = new Robot();
         robot.setEmotion(Robot.Emotion.sad);

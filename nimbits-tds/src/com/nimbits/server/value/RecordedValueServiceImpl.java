@@ -43,8 +43,8 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
     @Override
     public Value getCurrentValue(final Entity entity) throws NimbitsException {
 
-       // final User u = UserServiceFactory.getInstance().getAppUserUsingGoogleAuth();
-      //  final User pointOwner = UserTransactionFactory.getInstance().getNimbitsUserByID(pointOwnerId);
+        // final User u = UserServiceFactory.getInstance().getAppUserUsingGoogleAuth();
+        //  final User pointOwner = UserTransactionFactory.getInstance().getNimbitsUserByID(pointOwnerId);
         final Point p = PointServiceFactory.getInstance().getPointByUUID(entity.getEntity());
 
 
@@ -224,29 +224,54 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
 
     //determines if a new value should be ignored
-    private boolean ignoreByCompression(final User u,
-                                        final Point p,
-                                        final Value v) throws NimbitsException {
-
-        boolean r = false;
+    protected boolean ignoreByCompression(final Point point, final Value v) throws NimbitsException {
 
 
-        if (p.getCompression() > 0) {
-            final Value pv = getPrevValue(p, v.getTimestamp());
-            if (pv == null) {
-                r = false;
-            } else if ((v.getDoubleValue() <= (pv.getDoubleValue() + p.getCompression()))
-                    && (v.getDoubleValue() >= (pv.getDoubleValue() - p.getCompression()))
-                    && (v.getNote().equals(pv.getNote()))
-                    && (v.getLatitude() == pv.getLatitude())
-                    && (v.getLongitude() == pv.getLongitude())
-                    && (v.getData().equals(pv.getData()))) {
-                r = true; //values are the same within compression setting.
+        final Value pv = getPrevValue(point, v.getTimestamp());
+        if (pv == null) {
+            return false;
+        }
+        else {
+
+            switch (point.getFilterType()) {
+
+                case fixedHysteresis:
+                    return ((v.getDoubleValue() <= (pv.getDoubleValue() + point.getFilterValue()))
+                            && (v.getDoubleValue() >= (pv.getDoubleValue() - point.getFilterValue()))
+                            && (v.getNote().equals(pv.getNote()))
+                            && (v.getLatitude() == pv.getLatitude())
+                            && (v.getLongitude() == pv.getLongitude())
+                            && (v.getData().equals(pv.getData())));
+
+                case percentageHysteresis:
+                    if (point.getFilterValue() > 0) {
+                        double p = pv.getDoubleValue() *  (point.getFilterValue() /100);
+                        return (v.getDoubleValue() <= (pv.getDoubleValue() + p))
+                                && (v.getDoubleValue() >= (pv.getDoubleValue() - p));
+
+
+                    }
+                    else {
+
+                        return false;
+                    }
+
+                case ceiling:
+                    return (v.getDoubleValue() >= point.getFilterValue());
+
+                case floor:
+                    return (v.getDoubleValue() <= point.getFilterValue());
+
+                default:
+                    return false;
+                case none:
+                    return false;
             }
+
+
+
         }
 
-
-        return r;
 
     }
 
@@ -263,7 +288,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
         final boolean ignoredByDate = ignoreDataByExpirationDate(point, value, ignored);
         final boolean ignoredByOwnership = ignoreDataByOwnership(u, point, ignored);
-        final boolean ignoredByCompression = ignoreByCompression(u, point, value);
+        final boolean ignoredByCompression = ignoreByCompression(point, value);
 
         if (!ignoredByDate && !ignoredByOwnership && !ignoredByCompression) {
 

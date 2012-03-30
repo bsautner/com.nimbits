@@ -51,7 +51,7 @@ public class DataPointIntegrationTest extends TestCase {
         Point p = new PointModel();
         EntityName name = CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString(), EntityType.point);
         p.setExpire(1);
-        p.setCompression(0);
+        p.setFilterValue(0);
         Point point =  ClientHelper.client().addPoint(name, p);
         assertNotNull(point);
 
@@ -67,7 +67,7 @@ public class DataPointIntegrationTest extends TestCase {
     public void testCompressionSeparatePostsNoDate() throws Exception {
         Point p = new PointModel();
         EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString(), EntityType.point));
-        p.setCompression(0.1);
+        p.setFilterValue(0.1);
         ClientHelper.client().addPoint(name);
 
         double rx = 0.0;
@@ -112,7 +112,7 @@ public class DataPointIntegrationTest extends TestCase {
         Point p = new PointModel();
 
         EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString(), EntityType.point));
-        p.setCompression(0.1);
+        p.setFilterValue(0.1);
         Point result = ClientHelper.client().addPoint(name);
         assertNotNull(result);
 
@@ -159,7 +159,7 @@ public class DataPointIntegrationTest extends TestCase {
         Point p = new PointModel();
 
        EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString()));
-        p.setCompression(2.0);
+        p.setFilterValue(2.0);
         Point result = ClientHelper.client().addPoint(name, p);
         assertNotNull(result);
         Point test = ClientHelper.client().getPoint(name);
@@ -175,19 +175,19 @@ public class DataPointIntegrationTest extends TestCase {
         Point p = new PointModel();
 
        EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString()));
-        p.setCompression(0.0);
+        p.setFilterValue(0.0);
         ClientHelper.client().addPoint(name, p);
 
 
         Point px = ClientHelper.client().getPoint(name);
 
         Assert.assertNotNull(px);
-        px.setCompression(2.0);
+        px.setFilterValue(2.0);
         ClientHelper.client().updatePoint(px);
 
 
         Point px2 = ClientHelper.client().getPoint(name);
-        Assert.assertEquals(2.0, px2.getCompression());
+        Assert.assertEquals(2.0, px2.getFilterValue());
         Assert.assertEquals(px.getId(), px2.getId());
         try {
             Thread.sleep(1000);
@@ -207,9 +207,9 @@ public class DataPointIntegrationTest extends TestCase {
         Point p = new PointModel();
 
        EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString()));
-        p.setCompression(0.0);
+        p.setFilterValue(0.0);
         ClientHelper.client().addPoint(name, p);
-        System.out.println("Starting batch compression integration test compression = " + p.getCompression());
+        System.out.println("Starting batch compression integration test compression = " + p.getFilterValue());
 
         StringBuilder b = new StringBuilder();
 
@@ -258,7 +258,7 @@ public class DataPointIntegrationTest extends TestCase {
         Point p = new PointModel();
 
        EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString()));
-        p.setCompression(2.0);
+        p.setFilterValue(2.0);
         ClientHelper.client().addPoint(name, p);
         StringBuilder b = new StringBuilder();
 
@@ -315,12 +315,12 @@ public class DataPointIntegrationTest extends TestCase {
 //    }
 
 
-    public void TestCompressionWithBatchWithMissingPoints() throws NimbitsException {
+    public void testCompressionWithBatchWithMissingPoints() throws NimbitsException {
         Point p = new PointModel();
 
         EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString(), EntityType.point));
 
-        p.setCompression(2.0);
+        p.setFilterValue(2.0);
         ClientHelper.client().addPoint(name, p);
         StringBuilder b = new StringBuilder();
 

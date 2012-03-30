@@ -1,30 +1,39 @@
 package com.nimbits.client.ui.panels;
 
-import com.extjs.gxt.ui.client.*;
-import com.extjs.gxt.ui.client.data.*;
+import com.extjs.gxt.ui.client.Style;
+import com.extjs.gxt.ui.client.data.BaseModelData;
+import com.extjs.gxt.ui.client.data.BeanModel;
 import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.store.*;
-import com.extjs.gxt.ui.client.widget.*;
-import com.extjs.gxt.ui.client.widget.button.*;
+import com.extjs.gxt.ui.client.store.ListStore;
+import com.extjs.gxt.ui.client.widget.ContentPanel;
+import com.extjs.gxt.ui.client.widget.LayoutContainer;
+import com.extjs.gxt.ui.client.widget.ListView;
 import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.form.*;
-import com.extjs.gxt.ui.client.widget.layout.*;
-import com.extjs.gxt.ui.client.widget.toolbar.*;
-import com.google.gwt.core.client.*;
-import com.google.gwt.user.client.*;
+import com.extjs.gxt.ui.client.widget.button.ButtonGroup;
+import com.extjs.gxt.ui.client.widget.form.ComboBox;
+import com.extjs.gxt.ui.client.widget.form.TextArea;
+import com.extjs.gxt.ui.client.widget.toolbar.LabelToolItem;
+import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.feed.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.service.feed.*;
-import com.nimbits.client.ui.controls.*;
-import com.nimbits.client.ui.icons.*;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.FeedType;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.model.GxtFeedModel;
+import com.nimbits.client.model.GxtModel;
+import com.nimbits.client.model.feed.FeedValue;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.service.feed.Feed;
+import com.nimbits.client.service.feed.FeedAsync;
+import com.nimbits.client.ui.controls.EntityCombo;
+import com.nimbits.client.ui.icons.Icons;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -67,11 +76,10 @@ public class FeedPanel  extends LayoutContainer {
 
         ArrayList<FeedTypeOption> ops = new ArrayList<FeedTypeOption>();
 
-        ops.add(new FeedTypeOption(FeedType.all));
-        ops.add(new FeedTypeOption(FeedType.info));
-        ops.add(new FeedTypeOption(FeedType.data));
-        ops.add(new FeedTypeOption(FeedType.error));
-        ops.add(new FeedTypeOption(FeedType.system));
+        for (FeedType type : FeedType.values()) {
+            ops.add(new FeedTypeOption(type));
+        }
+
 
         ListStore<FeedTypeOption> store = new ListStore<FeedTypeOption>();
 
@@ -143,7 +151,7 @@ public class FeedPanel  extends LayoutContainer {
         };
 
 
-        FeedAsync service = GWT.create(Feed.class);
+        final FeedAsync service = GWT.create(Feed.class);
         final int FEED_COUNT = 30;
         service.getFeed(FEED_COUNT, feedOwnersUUID, new AsyncCallback<List<FeedValue>>() {
             @Override
@@ -159,7 +167,7 @@ public class FeedPanel  extends LayoutContainer {
                     store.add(new GxtFeedModel(v));
                 }
                 view.setStore(store);
-                layout(true);
+
             }
         });
 
@@ -207,6 +215,8 @@ public class FeedPanel  extends LayoutContainer {
         group.add(feedType);
         group.setBodyBorder(true);
 
+
+
         group.add(new LabelToolItem("Switch to connected user's Feed:"));
         EntityCombo entityCombo = new EntityCombo(EntityType.userConnection, "", "");
         entityCombo.addSelectionChangedListener(new SelectionChangedListener<GxtModel>() {
@@ -217,18 +227,45 @@ public class FeedPanel  extends LayoutContainer {
             }
         });
         group.add(entityCombo);
+
+        group.add(new LabelToolItem("Update Status:"));
+        final TextArea status = new TextArea();
+        status.addKeyListener(new KeyListener() {
+            @Override
+            public void componentKeyDown(ComponentEvent event) {
+                if (event.getKeyCode() == 13) {
+                    service.postToFeed(user,status.getValue(), FeedType.status, new AsyncCallback<Void>() {
+                        @Override
+                        public void onFailure(Throwable throwable) {
+                            reload();
+                        }
+
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                           updateValues(false);
+                           status.setValue("");
+                        }
+                    });
+                }
+            }
+        });
+        status.setWidth(200);
+        group.add(status);
+        group.setBodyBorder(true);
+
+
         group.add(btn);
         bar.add(group);
 
         ContentPanel main = new ContentPanel();
         main.setBorders(false);
         main.setBodyBorder(false);
-        main.setLayout(new FillLayout());
+        main.setScrollMode(Style.Scroll.ALWAYS);
         main.setHeaderVisible(false);
         main.setTopComponent(bar);
-        main.setScrollMode(Style.Scroll.AUTOY);
+
         main.add(view);
-        main.setHeight(800);
+
 
         add(main);
 

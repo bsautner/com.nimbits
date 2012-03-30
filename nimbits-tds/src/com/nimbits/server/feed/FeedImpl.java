@@ -75,7 +75,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
         String shortened = shortenFeedMessage(message, fullHTML);
         String finalMessage = generatePostToFeedHtml(shortened, type);
 
-        final FeedValue feedValue = new FeedValueModel(shortened, "", type);
+        final FeedValue feedValue = new FeedValueModel(finalMessage, "", type);
         final String json = GsonFactory.getSimpleInstance().toJson(feedValue);
         final Value value = ValueModelFactory.createValueModel(0.0, 0.0, Const.CONST_IGNORED_NUMBER_VALUE,
                 new Date(), point.getUUID(), "", json);

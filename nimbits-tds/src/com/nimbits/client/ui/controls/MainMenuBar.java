@@ -56,11 +56,16 @@ public class MainMenuBar extends ToolBar {
         addHelpMenu();
         add(new SeparatorMenuItem());
 
-        add(saveButton());
+      //  add(saveButton());
         add(addChartButton());
 
         add(connectionButton());
         add(pendingConnectionsButton());
+
+        add(urlMenuItem("Report Issue",
+                AbstractImagePrototype.create(Icons.INSTANCE.bug()),
+                "https://github.com/bsautner/com.nimbits/issues"));
+
         add(actionMenuItem("Logout",
                 AbstractImagePrototype.create(Icons.INSTANCE.deleteFriend()),
                 Action.logout));
@@ -558,8 +563,8 @@ public class MainMenuBar extends ToolBar {
     }
 
     private Button connectionButton() {
-        final Button b = new Button("Send Connection Request");
-        b.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.addFriend()));
+        final Button b = new Button("&nbsp;Send Connection Request");
+        b.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.email2()));
 
         b.addListener(Events.OnClick, new Listener<BaseEvent>() {
 
@@ -627,8 +632,8 @@ public class MainMenuBar extends ToolBar {
     }
 
     private Button addChartButton() {
-        Button addChartButton = new Button("Add Chart");
-        addChartButton.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.chart24()));
+        Button addChartButton = new Button("&nbsp;Add Chart");
+        addChartButton.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.lineChart()));
         addChartButton.setToolTip("Add another chart");
 
         addChartButton.addListener(Events.OnClick, new Listener<BaseEvent>() {

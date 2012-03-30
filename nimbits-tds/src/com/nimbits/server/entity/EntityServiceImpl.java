@@ -70,6 +70,8 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     @Override
     public void deleteEntity(final User user, final Entity entity) throws NimbitsException {
         EntityTransactionFactory.getInstance(user).deleteEntity(entity);
+        //todo - delete or disable subscriptions to entity
+
 
         switch (entity.getEntityType()) {
 

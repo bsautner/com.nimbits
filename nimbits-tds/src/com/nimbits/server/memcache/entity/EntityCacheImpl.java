@@ -36,9 +36,11 @@ public class EntityCacheImpl implements EntityTransactions {
 
     }
     private void addEntityToCache(Entity entity) throws NimbitsException {
+        if (entity != null) {
         removeEntityFromCache(entity);
         cache.put(entity.getName(), entity);
         cache.put(entity.getEntity(), entity);
+        }
     }
 
     public EntityCacheImpl(final User u) {
@@ -92,10 +94,20 @@ public class EntityCacheImpl implements EntityTransactions {
     @Override
     public Entity getEntityByUUID(String uuid) throws NimbitsException {
         if (cache.contains(uuid)) {
-            return (Entity) cache.get(uuid);
+
+            Entity e =  (Entity) cache.get(uuid);
+            if (e != null) {
+                return e;
+            }
+            else {
+                Entity result = EntityTransactionFactory.getDaoInstance(user).getEntityByUUID(uuid);
+                addEntityToCache(result);
+                return result;
+            }
         }
         else {
             Entity result = EntityTransactionFactory.getDaoInstance(user).getEntityByUUID(uuid);
+
             addEntityToCache(result);
             return result;
         }

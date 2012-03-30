@@ -61,50 +61,58 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
 
         List<Subscription> subscriptions= getSubscriptionsToPoint(point);
+        log.info("processing " + subscriptions.size() + "subscriptions");
+
         for (Subscription subscription : subscriptions) {
 
             if (subscription.getLastSent().getTime() + (subscription.getMaxRepeat() * 60 * 1000) < new Date().getTime()) {
 
 
-
+                log.info("Processing Subscription " + subscription.getUuid());
                 Entity subscriptionEntity = EntityServiceFactory.getInstance().getEntityByUUID(subscription.getUuid());
-                Entity entity = EntityServiceFactory.getInstance().getEntityByUUID(point.getUUID());
+                if (subscriptionEntity != null ) { //todo - handle subscribed to object deleted
 
-                User subscriber = UserServiceFactory.getInstance().getUserByUUID(subscriptionEntity.getOwner());
-                AlertType alert = v.getAlertState();
+                    Entity entity = EntityServiceFactory.getInstance().getEntityByUUID(point.getUUID());
 
-                switch (subscription.getSubscriptionType()) {
+                    User subscriber = UserServiceFactory.getInstance().getUserByUUID(subscriptionEntity.getOwner());
+                    AlertType alert = v.getAlertState();
+
+                    switch (subscription.getSubscriptionType()) {
 
 
-                    case none:
-                        break;
-                    case anyAlert:
-                        if (! alert.equals(AlertType.OK) && (point.isHighAlarmOn() || point.isLowAlarmOn())) {
+                        case none:
+                            break;
+                        case anyAlert:
+                            if (! alert.equals(AlertType.OK) && (point.isHighAlarmOn() || point.isLowAlarmOn())) {
+                                sendNotification(subscriber, entity, subscription, point, v);
+                            }
+                            break;
+                        case high:
+                            if (alert.equals(AlertType.HighAlert) && point.isHighAlarmOn() ) {
+                                sendNotification(subscriber, entity, subscription, point, v);
+                            }
+                            break;
+                        case low:
+                            if (alert.equals(AlertType.LowAlert) && point.isLowAlarmOn()) {
+                                sendNotification(subscriber, entity, subscription, point, v);
+                            }
+                            break;
+                        case idle:
+                            if (alert.equals(AlertType.IdleAlert) && point.isIdleAlarmOn()) {
+                                sendNotification(subscriber, entity, subscription, point, v);
+                            }
+                            break;
+                        case newValue:
                             sendNotification(subscriber, entity, subscription, point, v);
-                        }
-                        break;
-                    case high:
-                        if (alert.equals(AlertType.HighAlert) && point.isHighAlarmOn() ) {
-                            sendNotification(subscriber, entity, subscription, point, v);
-                        }
-                        break;
-                    case low:
-                        if (alert.equals(AlertType.LowAlert) && point.isLowAlarmOn()) {
-                            sendNotification(subscriber, entity, subscription, point, v);
-                        }
-                        break;
-                    case idle:
-                        if (alert.equals(AlertType.IdleAlert) && point.isIdleAlarmOn()) {
-                            sendNotification(subscriber, entity, subscription, point, v);
-                        }
-                        break;
-                    case newValue:
-                        sendNotification(subscriber, entity, subscription, point, v);
-                    case changed:
-                        break;
+                        case changed:
+                            break;
+                    }
+
                 }
+                else {
 
 
+                }
 
             }
 

@@ -12,6 +12,7 @@ import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.button.ButtonGroup;
 import com.extjs.gxt.ui.client.widget.form.ComboBox;
 import com.extjs.gxt.ui.client.widget.form.TextArea;
+import com.extjs.gxt.ui.client.widget.layout.FillLayout;
 import com.extjs.gxt.ui.client.widget.toolbar.LabelToolItem;
 import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
 import com.google.gwt.core.client.GWT;
@@ -263,7 +264,8 @@ public class FeedPanel  extends LayoutContainer {
         main.setScrollMode(Style.Scroll.ALWAYS);
         main.setHeaderVisible(false);
         main.setTopComponent(bar);
-
+        main.setLayout(new FillLayout());
+        main.setHeight(800);
         main.add(view);
 
 

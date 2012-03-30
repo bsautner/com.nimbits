@@ -39,7 +39,7 @@ public class WebUtils {
                 writeFiles(cd, out);
             }
             else {
-                int l = dir.getPath().indexOf("\\pages");
+                int l = dir.getPath().indexOf("pages") -1;
                 String path = dir.getPath().substring(l);
                 out.write("<li><a href=\"." +path + "/" + fn + "\">" + fn + "</a></li>\n");
             }

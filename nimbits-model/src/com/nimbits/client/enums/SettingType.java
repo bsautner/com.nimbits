@@ -81,7 +81,7 @@ public enum SettingType {
     }
     private class SettingConstants {
 
-        private static final String CONST_SERVER_VERSION = "3.3.2.3";
+        private static final String CONST_SERVER_VERSION = "3.3.2.4";
         private static final String SETTING_ENABLE_CONNECTIONS = "enableConnections";
         private static final String SETTING_ADMIN = "admin";
         private static final String SETTING_LAST_CHECKED = "lastChecked";

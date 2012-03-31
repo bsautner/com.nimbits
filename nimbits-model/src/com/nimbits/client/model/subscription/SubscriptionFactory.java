@@ -35,8 +35,8 @@ public class SubscriptionFactory {
 
     }
     public static List<Subscription> createSubscriptions(List<Subscription> subscriptions) {
-        ArrayList<Subscription> retObj = new ArrayList<Subscription>();
-        for (Subscription s : subscriptions) {
+        final ArrayList<Subscription> retObj = new ArrayList<Subscription>();
+        for (final Subscription s : subscriptions) {
             retObj.add(createSubscription(s));
         }
         return retObj;

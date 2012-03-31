@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2010 Tonic Solutions LLC.
+ *
+ * http://www.nimbits.com
+ *
+ *
+ * Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.gnu.org/licenses/gpl.html
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+ */
+
 package com.nimbits.client.ui.controls;
 
 import com.extjs.gxt.ui.client.event.*;
@@ -440,8 +453,9 @@ public class MainMenuBar extends ToolBar {
                 if (result.size() > 0) {
                     final Menu scrollMenu = new Menu();
                     scrollMenu.setMaxHeight(200);
+                    MenuItem m;
                     for (final Connection r : result) {
-                        final MenuItem m = acceptConnectionMenuItem(scrollMenu, r);
+                       m = acceptConnectionMenuItem(scrollMenu, r);
                         scrollMenu.add(m);
                     }
 

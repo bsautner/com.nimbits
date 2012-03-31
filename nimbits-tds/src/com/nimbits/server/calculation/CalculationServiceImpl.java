@@ -123,11 +123,13 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
         Entity e = EntityServiceFactory.getInstance().getEntityByUUID(point.getUUID());
 
         List<Calculation> calculations = getCalculations(e);
+        Point target;
+        Value result;
         for (Calculation c : calculations) {
             if (c.getEnabled()) {
-               Point target = PointServiceFactory.getInstance().getPointByUUID(c.getTarget());
+                target = PointServiceFactory.getInstance().getPointByUUID(c.getTarget());
                 try {
-                    Value result = solveEquation(c);
+                    result= solveEquation(c);
                     RecordedValueServiceFactory.getInstance().recordValue(u, target, result, true);
                 } catch (NimbitsException e1) {
                     c.setEnabled(false);

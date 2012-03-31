@@ -33,7 +33,7 @@ public class MathEvaluator {
      */
     public MathEvaluator(String s) {
         init();
-        setExpression(s);
+        expression = s;
     }
 
     private void init() {
@@ -350,13 +350,13 @@ public class MathEvaluator {
          * displays the tree of the expression
          */
         public void trace() {
-            String op = getOperator() == null ? " " : getOperator().getOperator();
-            _D(op + " : " + getString());
+            final String op = nOperator == null ? " " : nOperator.getOperator();
+            _D(op + " : " + nString);
             if (this.hasChild()) {
                 if (hasLeft())
-                    getLeft().trace();
+                    nLeft.trace();
                 if (hasRight())
-                    getRight().trace();
+                    nRight.trace();
             }
         }
 

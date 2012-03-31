@@ -16,7 +16,7 @@ package com.nimbits.server.cron;
 import com.google.appengine.api.memcache.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.point.*;
-import com.nimbits.server.task.*;
+import com.nimbits.server.task.TaskFactory;
 
 import javax.servlet.http.*;
 import java.io.*;
@@ -45,7 +45,7 @@ public class MoveRecordedValuesToStoreCron extends HttpServlet {
             final Map<String, Point> points = (Map<String, Point>) cacheShared.get(MemCacheKey.activePoints);
             cacheShared.delete(MemCacheKey.activePoints); //TODO possible race condition with record value service
             for (final Point point : points.values()) {
-                  TaskFactoryLocator.getInstance().startMoveCachedValuesToStoreTask(point);
+                  TaskFactory.getInstance().startMoveCachedValuesToStoreTask(point);
             }
 
         }

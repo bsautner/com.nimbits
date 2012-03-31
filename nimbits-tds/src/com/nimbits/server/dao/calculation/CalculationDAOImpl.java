@@ -29,12 +29,12 @@ import java.util.*;
  * Date: 2/18/12
  * Time: 12:24 PM
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "unused"})
+
 public class CalculationDAOImpl implements CalculationTransactions {
-    private final User user;
 
     public CalculationDAOImpl(final User user) {
-        this.user = user;
+
     }
 
     @Override
@@ -104,18 +104,18 @@ public class CalculationDAOImpl implements CalculationTransactions {
     public Calculation addUpdateCalculation(final Calculation calculation) {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        List<CalculationEntity> results;
+        final List<CalculationEntity> results;
 
 
         try {
 
-            Query q = pm.newQuery(CalculationEntity.class, "uuid==u");
+            final Query q = pm.newQuery(CalculationEntity.class, "uuid==u");
             q.declareParameters("String u");
             q.setRange(0, 1);
             results = (List<CalculationEntity>) q.execute(calculation.getUUID());
             if (results.size() > 0) {
-                CalculationEntity result = results.get(0);
-                Transaction tx = pm.currentTransaction();
+                final CalculationEntity result = results.get(0);
+                final Transaction tx = pm.currentTransaction();
                 tx.begin();
                 result.setEnabled(calculation.getEnabled());
                 result.setFormula(calculation.getFormula());
@@ -131,7 +131,7 @@ public class CalculationDAOImpl implements CalculationTransactions {
 
             }
             else {
-                CalculationEntity s = new CalculationEntity(calculation);
+                final CalculationEntity s = new CalculationEntity(calculation);
                 pm.makePersistent(s);
                 return CalculationModelFactory.createCalculation(s);
 

@@ -32,11 +32,11 @@ public class SettingsDAOImpl implements SettingTransactions {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         String retVal;
         try {
-            ServerSetting s;
-            Query q = pm.newQuery(ServerSetting.class, "name == n");
+            final ServerSetting s;
+            final Query q = pm.newQuery(ServerSetting.class, "name == n");
             q.setRange(0, 1);
             q.declareParameters("String n");
-            List<ServerSetting> a = (List<ServerSetting>) q.execute(setting.getName());
+            final List<ServerSetting> a = (List<ServerSetting>) q.execute(setting.getName());
             if (a.size() > 0) {
                 s = a.get(0);
                 retVal = s.getValue();
@@ -55,14 +55,14 @@ public class SettingsDAOImpl implements SettingTransactions {
     public void updateSetting(final SettingType name, final String newValue) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
-            ServerSetting s;
+            final ServerSetting s;
 
-            Query q = pm.newQuery(ServerSetting.class, "name == n");
+            final Query q = pm.newQuery(ServerSetting.class, "name == n");
             q.setRange(0, 1);
             q.declareParameters("String n");
-            List<ServerSetting> a = (List<ServerSetting>) q.execute(name.getName());
+            final List<ServerSetting> a = (List<ServerSetting>) q.execute(name.getName());
             if (a.size() > 0) {
-                Transaction tx = pm.currentTransaction();
+                final Transaction tx = pm.currentTransaction();
                 tx.begin();
                 s = a.get(0);
                 s.setValue(newValue);
@@ -83,12 +83,12 @@ public class SettingsDAOImpl implements SettingTransactions {
 
     @Override
     public Map<SettingType, String> getSettings() {
-        final Map<SettingType, String> settings = new HashMap<SettingType, String>();
+
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
             final Query q = pm.newQuery(ServerSetting.class);
             final List<ServerSetting> l = (List<ServerSetting>) q.execute();
-
+            final EnumMap<SettingType, String> settings = new EnumMap<SettingType, String>(SettingType.class);
             for (final ServerSetting s : l) {
                 settings.put(s.getSetting(), s.getValue());
             }
@@ -103,7 +103,7 @@ public class SettingsDAOImpl implements SettingTransactions {
     public void addSetting(final SettingType name, final String value) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
-            ServerSetting s = new ServerSetting(value, name);
+            final ServerSetting s = new ServerSetting(value, name);
             pm.makePersistent(s);
         } finally {
             pm.close();

@@ -13,7 +13,6 @@
 
 package com.nimbits.server.cron;
 
-import com.google.appengine.api.memcache.*;
 import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
@@ -24,11 +23,10 @@ import com.nimbits.server.common.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.http.*;
 import com.nimbits.server.settings.*;
-import com.nimbits.server.task.*;
+import com.nimbits.server.task.TaskFactory;
 
 import javax.servlet.http.*;
 import java.io.*;
-import java.util.*;
 
 public class SystemMaint extends HttpServlet {
     /**
@@ -103,7 +101,7 @@ public class SystemMaint extends HttpServlet {
                     out.println("<p>New Version detected, starting upgrade. This may take up to an hour after " +
                             "after seeing this message. You can monitor this on the app engine console " +
                             "under the task queue. Upgrade is completed after all upgrade tasks have stopped.</p>");
-                    TaskFactoryLocator.getInstance().startUpgradeTask(Action.start, null);
+                    TaskFactory.getInstance().startUpgradeTask(Action.start, null);
                 }
 
             }

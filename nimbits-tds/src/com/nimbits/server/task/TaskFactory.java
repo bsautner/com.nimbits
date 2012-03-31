@@ -13,36 +13,22 @@
 
 package com.nimbits.server.task;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
-
-import javax.servlet.http.*;
-
 /**
  * Created by bsautner
  * User: benjamin
  * Date: 10/7/11
- * Time: 2:09 PM
+ * Time: 2:16 PM
  */
-public interface TaskFactory {
+public class TaskFactory {
+    protected TaskFactory() {
+    }
 
-    void startDeleteDataTask(final Point point, final boolean onlyExpired, final int exp);
+    private static Task instance;
 
-    void startProcessBatchTask(final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException;
+    public static Task getInstance() {
 
-    void startRecordValueTask(final User u, final Point point, final Value value, final boolean loopFlag);
+        return new TaskImpl();
+    }
 
-    void startIncomingMailTask(final String address, final String content);
 
-    void startPointMaintTask(final Point point);
-
-    void startMoveCachedValuesToStoreTask(final Point point);
-
-    void startUpgradeTask(Action action, Entity entity);
-
-    void startSummaryTask(Entity entity);
 }

@@ -25,6 +25,7 @@ import java.io.Serializable;
  * Date: 8/1/11
  * Time: 9:56 AM
  */
+@SuppressWarnings("unused")
 public class EmailAddressImpl extends CommonIdentifierImpl implements Serializable, EmailAddress {
     private static final long serialVersionUID =1L;
 

@@ -18,7 +18,7 @@ import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.server.api.*;
 import com.nimbits.server.feed.*;
-import com.nimbits.server.task.*;
+import com.nimbits.server.task.TaskFactory;
 
 import javax.activation.*;
 import javax.mail.*;
@@ -52,7 +52,7 @@ public class MailHandlerServletImpl extends ApiServlet {
             if (a.length > 0) {
                 final InternetAddress aa = (InternetAddress) a[0];
                 final String fromAddress = aa.getAddress();
-                TaskFactoryLocator.getInstance().startIncomingMailTask(fromAddress, inContent);
+                TaskFactory.getInstance().startIncomingMailTask(fromAddress, inContent);
 
             }
         } catch (MessagingException e) {
@@ -80,10 +80,10 @@ public class MailHandlerServletImpl extends ApiServlet {
         final MimeMultipart mimeMultipart = new MimeMultipart(dataSource);
         final Part part = mimeMultipart.getBodyPart(0);
 
-        for (int i = 0; i < mimeMultipart.getCount(); i++) {
-            final Part p = mimeMultipart.getBodyPart(i);
-
-        }
+//        for (int i = 0; i < mimeMultipart.getCount(); i++) {
+//            final Part p = mimeMultipart.getBodyPart(i);
+//
+//        }
         return (String) part.getContent();
     }
 

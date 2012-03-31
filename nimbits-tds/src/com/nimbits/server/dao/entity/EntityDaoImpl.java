@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2010 Tonic Solutions LLC.
+ *
+ * http://www.nimbits.com
+ *
+ *
+ * Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.gnu.org/licenses/gpl.html
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+ */
+
 package com.nimbits.server.dao.entity;
 
 
@@ -8,7 +21,7 @@ import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.server.entity.*;
-import com.nimbits.server.orm.entity.*;
+import com.nimbits.server.orm.EntityStore;
 
 import javax.jdo.*;
 import java.util.*;
@@ -27,13 +40,13 @@ public class EntityDaoImpl implements  EntityTransactions {
 
 
 
-    public EntityDaoImpl(User user) {
+    public EntityDaoImpl(final User user) {
         this.user = user;
     }
 
     @Override
-    public Map<String, Entity> getEntityMap(EntityType type) throws NimbitsException {
-        Map<String, Entity> retObj = new HashMap<String, Entity>();
+    public Map<String, Entity> getEntityMap(final EntityType type) throws NimbitsException {
+
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final Query q1 = pm.newQuery(EntityStore.class, "owner==b && entityType==t");
@@ -41,8 +54,9 @@ public class EntityDaoImpl implements  EntityTransactions {
         try {
 
             final List<Entity> result = (List<Entity>) q1.execute(user.getUuid(), type.getCode());
-            List<Entity> models = EntityModelFactory.createEntities(user, result);
-            for (Entity e : models) {
+            final List<Entity> models = EntityModelFactory.createEntities(user, result);
+            final Map<String, Entity> retObj = new HashMap<String, Entity>(models.size());
+            for (final Entity e : models) {
 
                 retObj.put(e.getEntity(), e);
             }
@@ -57,9 +71,9 @@ public class EntityDaoImpl implements  EntityTransactions {
 
 
     @Override
-    public Map<EntityName, Entity> getEntityNameMap(EntityType type) throws NimbitsException {
+    public Map<EntityName, Entity> getEntityNameMap(final EntityType type) throws NimbitsException {
 
-        Map<EntityName, Entity> retObj = new HashMap<EntityName, Entity>();
+
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final Query q1 = pm.newQuery(EntityStore.class, "owner==b && entityType==t");
@@ -67,8 +81,9 @@ public class EntityDaoImpl implements  EntityTransactions {
         try {
 
             final List<Entity> result = (List<Entity>) q1.execute(user.getUuid(), type.getCode());
-            List<Entity> models = EntityModelFactory.createEntities(user, result);
-            for (Entity e : models) {
+            final List<Entity> models = EntityModelFactory.createEntities(user, result);
+            final Map<EntityName, Entity> retObj = new HashMap<EntityName, Entity>(models.size());
+            for (final Entity e : models) {
 
                 retObj.put(e.getName(), e);
             }
@@ -84,7 +99,7 @@ public class EntityDaoImpl implements  EntityTransactions {
 
 
     @Override
-    public List<Entity> getChildren(Entity parentEntity, EntityType type) {
+    public List<Entity> getChildren(final Entity parentEntity, final EntityType type) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
             return getEntityChildren(pm, parentEntity, type);
@@ -99,7 +114,7 @@ public class EntityDaoImpl implements  EntityTransactions {
 
 
     @Override
-    public Entity addUpdateEntity(Entity entity) throws NimbitsException {
+    public Entity addUpdateEntity(final Entity entity) throws NimbitsException {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final Query q1 = pm.newQuery(EntityStore.class, "owner==o && entity==b");
@@ -110,8 +125,8 @@ public class EntityDaoImpl implements  EntityTransactions {
 
             final List<Entity> c = (List<Entity>) q1.execute(user.getUuid(), entity.getEntity());
             if (c.size() > 0) {
-                Transaction tx = pm.currentTransaction();
-                Entity result = c.get(0);
+                final Transaction tx = pm.currentTransaction();
+                final Entity result = c.get(0);
                 tx.begin();
                 result.setDescription(entity.getDescription());
                 result.setName(entity.getName());
@@ -126,7 +141,7 @@ public class EntityDaoImpl implements  EntityTransactions {
                    checkDuplicateEntity(entity);
 
                 }
-                Entity commit = new EntityStore(entity);
+                final Entity commit = new EntityStore(entity);
                 pm.makePersistent(commit);
 
                 return EntityModelFactory.createEntity(user, commit);
@@ -145,13 +160,13 @@ public class EntityDaoImpl implements  EntityTransactions {
     public List<Entity> getEntities() throws NimbitsException {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        List<String> uuids = new ArrayList<String>();
-        Map<String, Entity> connections = getEntityMap(EntityType.userConnection);
 
+        final Map<String, Entity> connections = getEntityMap(EntityType.userConnection);
+        final List<String> uuids = new ArrayList<String>(connections.size() + 1);
         uuids.add(user.getUuid());
 
 
-        for (Entity e : connections.values()) {
+        for (final Entity e : connections.values()) {
 
             uuids.add(e.getEntity());
         }
@@ -168,19 +183,20 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     }
 
-    private List<Entity> getEntityChildren(PersistenceManager pm, Entity entity) {
+    private static List<Entity> getEntityChildren(final PersistenceManager pm, final Entity entity) {
 
         final Query q1 = pm.newQuery(EntityStore.class, "parent==b");
         q1.declareParameters("String b");
-        final List<Entity> retObj = new ArrayList<Entity>();
+        final List<Entity> retObj = new ArrayList<Entity>(1024);
 
 
 
         final List<Entity> result = (List<Entity>) q1.execute(entity.getEntity());
         if (result.size() > 0) {
             retObj.addAll(result);
-            for (Entity e : result) {
-                List<Entity> children = getEntityChildren(pm, e);
+            List<Entity> children;
+            for (final Entity e : result) {
+                children = getEntityChildren(pm, e);
                 retObj.addAll(children);
             }
         }
@@ -189,19 +205,20 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     }
 
-    private List<Entity> getEntityChildren(PersistenceManager pm, Entity entity, EntityType type) {
+    private static List<Entity> getEntityChildren(final PersistenceManager pm, final Entity entity, final EntityType type) {
 
         final Query q1 = pm.newQuery(EntityStore.class, "parent==b && entityType==t");
         q1.declareParameters("String b, Integer t");
-        final List<Entity> retObj = new ArrayList<Entity>();
+        final List<Entity> retObj = new ArrayList<Entity>(1024);
 
 
 
         final List<Entity> result = (List<Entity>) q1.execute(entity.getEntity(), type.getCode());
         if (result.size() > 0) {
             retObj.addAll(result);
-            for (Entity e : result) {
-                List<Entity> children = getEntityChildren(pm, e);
+            List<Entity> children;
+            for (final Entity e : result) {
+                children = getEntityChildren(pm, e);
                 retObj.addAll(children);
             }
         }
@@ -225,9 +242,9 @@ public class EntityDaoImpl implements  EntityTransactions {
             final List<Entity> c = (List<Entity>) q1.execute(entity.getEntity());
 
             if (c.size() > 0) {
-                List<Entity> entities = getEntityChildren(pm, c.get(0));
+                final List<Entity> entities = getEntityChildren(pm, c.get(0));
                 entities.add(c.get(0));
-                for (Entity e : entities) {
+                for (final Entity e : entities) {
                     EntityTransactionFactory.getInstance(user).removeEntityFromCache(e);
                 }
                 pm.deletePersistentAll(entities);
@@ -250,7 +267,7 @@ public class EntityDaoImpl implements  EntityTransactions {
             final List<Entity> c = (List<Entity>) q1.execute(uuid);
             if (c.size() > 0) {
 
-                Entity result = c.get(0);
+                final Entity result = c.get(0);
                 return EntityModelFactory.createEntity(user,result);
 
             }
@@ -276,7 +293,7 @@ public class EntityDaoImpl implements  EntityTransactions {
             final List<Entity> c = (List<Entity>) q1.execute(name.getValue(), user.getUuid());
             if (c.size() > 0) {
 
-                Entity result = c.get(0);
+                final Entity result = c.get(0);
                 return EntityModelFactory.createEntity(user,  result);
 
             }
@@ -289,7 +306,7 @@ public class EntityDaoImpl implements  EntityTransactions {
         }
     }
 
-    private void checkDuplicateEntity(Entity entity) throws NimbitsException {
+    private void checkDuplicateEntity(final Entity entity) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
 
@@ -318,8 +335,8 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     @Override
 
-    public Map<String, Entity> getSystemWideEntityMap(EntityType type) throws NimbitsException {
-        Map<String, Entity> retObj = new HashMap<String, Entity>();
+    public Map<String, Entity> getSystemWideEntityMap(final EntityType type) throws NimbitsException {
+
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final Query q1 = pm.newQuery(EntityStore.class, "entityType==t");
@@ -327,7 +344,8 @@ public class EntityDaoImpl implements  EntityTransactions {
         try {
 
             final List<Entity> result = (List<Entity>) q1.execute(type.getCode());
-            List<Entity> models = EntityModelFactory.createEntities(null, result);
+            final List<Entity> models = EntityModelFactory.createEntities(null, result);
+            final Map<String, Entity> retObj = new HashMap<String, Entity>(models.size());
             for (final Entity e : models) {
                retObj.put(e.getEntity(), e);
             }
@@ -341,7 +359,7 @@ public class EntityDaoImpl implements  EntityTransactions {
     }
 
     @Override
-    public void removeEntityFromCache(Entity entity) throws NimbitsException {
+    public void removeEntityFromCache(final Entity entity) throws NimbitsException {
         throw new NimbitsException(UserMessages.ERROR_NOT_IMPLEMENTED);
     }
 

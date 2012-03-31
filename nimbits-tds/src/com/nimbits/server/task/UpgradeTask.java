@@ -66,6 +66,7 @@ import java.util.logging.Logger;
  * Date: 1/14/12
  * Time: 10:48 AM
  */
+@SuppressWarnings("deprecation")
 public class UpgradeTask  extends HttpServlet
 
 {
@@ -191,7 +192,7 @@ public class UpgradeTask  extends HttpServlet
                         IntelligenceServiceFactory.getDaoInstance().addUpdateIntelligence(i);
                     }
                 }
-                TaskFactoryLocator.getInstance().startUpgradeTask(Action.value,pointEntity );
+                TaskFactory.getInstance().startUpgradeTask(Action.value,pointEntity );
 
             }
         } catch (Exception e) {
@@ -375,7 +376,7 @@ public class UpgradeTask  extends HttpServlet
                                 protectionLevel, p.getUUID(), parent, u.getUuid());
                         Entity r = EntityServiceFactory.getInstance().addUpdateEntity(u, pointEntity);
                         clog("created point " + name.getValue());
-                        TaskFactoryLocator.getInstance().startUpgradeTask(Action.point,r );
+                        TaskFactory.getInstance().startUpgradeTask(Action.point,r );
 
                     }
                 }
@@ -443,7 +444,7 @@ public class UpgradeTask  extends HttpServlet
                         r = EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
                     }
                     clog("created category " + name.getValue());
-                    TaskFactoryLocator.getInstance().startUpgradeTask(Action.category,r );
+                    TaskFactory.getInstance().startUpgradeTask(Action.category,r );
                 }
 
 
@@ -482,7 +483,7 @@ public class UpgradeTask  extends HttpServlet
                 clog("Upgrading user: " + u.getEmail().getValue());
                 Entity entity = EntityModelFactory.createEntity(u);
                 Entity r = EntityServiceFactory.getInstance().addUpdateEntity(u, entity);
-                TaskFactoryLocator.getInstance().startUpgradeTask(Action.user,r );
+                TaskFactory.getInstance().startUpgradeTask(Action.user,r );
 
             }
 

@@ -36,7 +36,7 @@ public class CalculationModelFactory {
 
     public static List<Calculation> createCalculations(List<Calculation> calculations) {
         List<Calculation> retObj = new ArrayList<Calculation>();
-        for (Calculation c : calculations) {
+        for (final Calculation c : calculations) {
             retObj.add(createCalculation(c));
         }
         return retObj;

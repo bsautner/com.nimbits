@@ -40,14 +40,14 @@ public class UserDAOImpl implements UserTransactions {
     public User setFacebookToken(final EmailAddress internetAddress, final String token, final long facebookId) {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        NimbitsUser u;
-        Query q = pm.newQuery(NimbitsUser.class, "email == u");
+        final NimbitsUser u;
+        final Query q = pm.newQuery(NimbitsUser.class, "email == u");
         q.declareParameters("String u");
         q.setRange(0, 1);
 
         User retObj;
         try {
-            List<NimbitsUser> result = (List<NimbitsUser>) q.execute(internetAddress.getValue());
+            final List<NimbitsUser> result = (List<NimbitsUser>) q.execute(internetAddress.getValue());
 
 
             if (result.size() > 0) {
@@ -90,7 +90,7 @@ public class UserDAOImpl implements UserTransactions {
             pm.makePersistent(u);
 
             retObj = UserModelFactory.createUserModel(u);
-            Entity entity = EntityModelFactory.createEntity(retObj);
+            final Entity entity = EntityModelFactory.createEntity(retObj);
             EntityServiceFactory.getInstance().addUpdateEntity(retObj, entity);
         } finally {
             pm.close();
@@ -139,7 +139,7 @@ public class UserDAOImpl implements UserTransactions {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         User retObj;
         try {
-            NimbitsUser u = pm.getObjectById(NimbitsUser.class, id);
+            final NimbitsUser u = pm.getObjectById(NimbitsUser.class, id);
             retObj = UserModelFactory.createUserModel(u);
         } finally {
             pm.close();
@@ -154,7 +154,6 @@ public class UserDAOImpl implements UserTransactions {
     * @see com.nimbits.server.user.UserTransactions#updateSecret()
     */
     @Override
-    @SuppressWarnings(Const.WARNING_UNCHECKED)
     public User updateSecret(final EmailAddress emailAddress, final UUID uuid) {
 
 
@@ -185,12 +184,12 @@ public class UserDAOImpl implements UserTransactions {
 
     @Override
     @SuppressWarnings(Const.WARNING_UNCHECKED)
-    public List<User> getAllUsers(final String ordering, int count) {
+    public List<User> getAllUsers(final String ordering, final int count) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        List<User> result;
+        final List<User> result;
         List<User> retObj = null;
         try {
-            Query q = pm.newQuery(NimbitsUser.class);
+            final Query q = pm.newQuery(NimbitsUser.class);
             q.setOrdering(ordering);
             q.setRange(0, count);
             result = (List<User>) q.execute();
@@ -204,12 +203,12 @@ public class UserDAOImpl implements UserTransactions {
     }
 
     @Override
-    public List<User> getUsers(int start, int end) {
+    public List<User> getUsers(final int start, final int end) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        List<User> result;
+        final List<User> result;
         List<User> retObj = null;
         try {
-            Query q = pm.newQuery(NimbitsUser.class);
+            final Query q = pm.newQuery(NimbitsUser.class);
 
             q.setRange(start, end);
             result = (List<User>) q.execute();
@@ -224,10 +223,10 @@ public class UserDAOImpl implements UserTransactions {
     @Override
     public List<User> getUsers() {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        List<User> result;
+        final List<User> result;
         List<User> retObj = null;
         try {
-            Query q = pm.newQuery(NimbitsUser.class);
+            final Query q = pm.newQuery(NimbitsUser.class);
             result = (List<User>) q.execute();
             retObj = UserModelFactory.createUserModels(result);
         } catch (Exception e) {
@@ -241,14 +240,14 @@ public class UserDAOImpl implements UserTransactions {
     public List<Connection> getPendingConnectionRequests(final EmailAddress internetAddress) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final Query q = pm.newQuery(ConnectionRequest.class, "approved == a && targetEmail==e && rejected == r");
-        final Map<String, Object> args = new HashMap<String, Object>();
+        final Map<String, Object> args = new HashMap<String, Object>(3);
         args.put("a", false);
         args.put("r", false);
         args.put("e", internetAddress.getValue());
         q.declareParameters("Boolean a, Boolean r, String e");
-        List<ConnectionRequest> data = (List<ConnectionRequest>) q.executeWithMap(args);
+        final List<ConnectionRequest> data = (List<ConnectionRequest>) q.executeWithMap(args);
 
-        List<Connection> retObj = ConnectionRequestModelFactory.CreateConnectionRequestModels(data);
+        final List<Connection> retObj = ConnectionRequestModelFactory.CreateConnectionRequestModels(data);
         pm.close();
         return retObj;
 
@@ -258,20 +257,20 @@ public class UserDAOImpl implements UserTransactions {
     public List<User> updateConnectionRequest(final String uuid, final User requestor, final User acceptor, final boolean accepted) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final Query q = pm.newQuery(ConnectionRequest.class, "uuid == u");// && targetEmail==e && rejected != r");
-        final List<User> affectedUsers = new ArrayList<User>();
+        final List<User> affectedUsers = new ArrayList<User>(1);
 
-        final Map<String, Object> args = new HashMap<String, Object>();
+        final Map<String, Object> args = new HashMap<String, Object>(1);
         args.put("u", uuid);
 
         q.declareParameters("String u");//, String e, Boolean r");
 
         q.setRange(0, 1);
-        List<ConnectionRequest> data = (List<ConnectionRequest>) q.executeWithMap(args);
+        final List<ConnectionRequest> data = (List<ConnectionRequest>) q.executeWithMap(args);
         if (data.size() > 0) {
-            Transaction tx;
+            final Transaction tx;
             tx = pm.currentTransaction();
             tx.begin();
-            ConnectionRequest c = data.get(0);
+            final ConnectionRequest c = data.get(0);
             c.setRejected(!accepted);
             c.setApproved(accepted);
             c.setApprovedDate(new Date());
@@ -312,9 +311,9 @@ public class UserDAOImpl implements UserTransactions {
             q.declareParameters("String u");
             final List<NimbitsUser> result = (List<NimbitsUser>) q.execute(internetAddress.getValue());
             if (result.size() > 0) {
-                Transaction tx = pm.currentTransaction();
+                final Transaction tx = pm.currentTransaction();
                 tx.begin();
-                NimbitsUser n = result.get(0);
+                final NimbitsUser n = result.get(0);
                 n.setTwitterToken(token.getToken());
                 n.setTwitterTokenSecret(token.getTokenSecret());
                 retObj = UserModelFactory.createUserModel(n);
@@ -334,8 +333,8 @@ public class UserDAOImpl implements UserTransactions {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final User retObj;
         try {
-            Transaction tx = pm.currentTransaction();
-            NimbitsUser n = pm.getObjectById(NimbitsUser.class, user.getId());
+            final Transaction tx = pm.currentTransaction();
+            final NimbitsUser n = pm.getObjectById(NimbitsUser.class, user.getId());
 
             tx.begin();
             n.setLastLoggedIn(lastLoggedIn);
@@ -353,7 +352,7 @@ public class UserDAOImpl implements UserTransactions {
     }
 
     @Override
-    public User getUserByUUID(String subscriberUUID) {
+    public User getUserByUUID(final String subscriberUUID) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final Query q = pm.newQuery(NimbitsUser.class, "uuid == u");
         User retObj = null;
@@ -362,7 +361,7 @@ public class UserDAOImpl implements UserTransactions {
             final List<NimbitsUser> result = (List<NimbitsUser>) q.execute(subscriberUUID);
             if (result.size() > 0) {
 
-                NimbitsUser n = result.get(0);
+                final NimbitsUser n = result.get(0);
                 retObj = UserModelFactory.createUserModel(n);
 
             }
@@ -376,17 +375,19 @@ public class UserDAOImpl implements UserTransactions {
     }
 
     @Override
-    public List<User> getConnectionRequests(List<String> connections) {
+    public List<User> getConnectionRequests(final List<String> connections) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final Query q = pm.newQuery(ConnectionRequest.class,":p.contains(uuid)");
 
-        List<User> retObj = new ArrayList<User>();
-        try {
 
+        try {
+            User u;
             final List<ConnectionRequest> result = (List<ConnectionRequest>) q.execute(connections);
+            final List<User> retObj = new ArrayList<User>(result.size());
             if (result.size() > 0) {
-                for (Connection c : result) {
-                    User u = getNimbitsUser(c.getTargetEmail());
+
+                for (final Connection c : result) {
+                  u = getNimbitsUser(c.getTargetEmail());
                     retObj.add( UserModelFactory.createUserModel(u));
 
                 }

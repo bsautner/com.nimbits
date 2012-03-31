@@ -1,4 +1,17 @@
 <!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2010 Tonic Solutions LLC.
+  ~
+  ~ http://www.nimbits.com
+  ~
+  ~
+  ~ Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.gnu.org/licenses/gpl.html
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+  -->
+
 <html>
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7; IE=EmulateIE9">
@@ -383,10 +396,10 @@
       <p>If you want to support previous versions of Internet Explorer (IE6&ndash;IE8), you'll need to include the <a href="http://code.google.com/p/explorercanvas/">excanvas</a> library, which emulates the <code>&lt;canvas&gt;</code> tag using VML. You can add excanvas by including the following snippet:</p>
 
 <pre>
-&lt;!DOCTYPE html&gt; 
+&lt;!DOCTYPE html&gt;
 &lt;html&gt;
   &lt;head&gt;
-    &lt;meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7; IE=EmulateIE9"&gt; 
+    &lt;meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7; IE=EmulateIE9"&gt;
     &lt;!--[if IE]&gt;&lt;script src="path/to/excanvas.js"&gt;&lt;/script&gt;&lt;![endif]--&gt;
   &lt;/head&gt;
 </pre>
@@ -583,7 +596,7 @@ perl -ne 'BEGIN{print "Month,Nominal,Real\n"} chomp; ($m,$cpi,$low,$close,$high)
     <p>There is currently no GWT wrapper around Dygraphs, however there is a class that can be used to easily load Dygraphs into the browser.  To use it, include the generated dygraph-gwt.jar file in your classpath and add the following line to your GWT module:</p>
 
 <pre>
-&lt;inherits name=&quot;org.danvk.dygraphs&quot;/&gt;    
+&lt;inherits name=&quot;org.danvk.dygraphs&quot;/&gt;
 </pre>
 
     <p>Call org.danvk.Dygraphs.install() when your application starts to install the JavaScript code into the browser.  You can use <a href="http://code.google.com/webtoolkit/doc/latest/DevGuideCodingBasicsJSNI.html">JSNI</a> to call Dygraphs from your GWT code, as in the example below.  The example uses the <a href="http://code.google.com/p/gwt-google-apis/wiki/VisualizationGettingStarted">Visualization API for GWT</a> and the <a href="#gviz">Dygraphs GViz API.</a></p>

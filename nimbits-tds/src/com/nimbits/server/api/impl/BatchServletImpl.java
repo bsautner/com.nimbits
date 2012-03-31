@@ -17,7 +17,7 @@ import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.server.api.*;
 import com.nimbits.server.feed.*;
-import com.nimbits.server.task.*;
+import com.nimbits.server.task.TaskFactory;
 
 import javax.servlet.http.*;
 import java.io.*;
@@ -30,7 +30,7 @@ public class BatchServletImpl extends ApiServlet {
 
         try {
             init(req, resp, ExportType.plain);
-            TaskFactoryLocator.getInstance().startProcessBatchTask(req, resp);
+            TaskFactory.getInstance().startProcessBatchTask(req, resp);
         } catch (NimbitsException e) {
             if (user != null) {
                 FeedServiceFactory.getInstance().postToFeed(user, e);
@@ -52,7 +52,7 @@ public class BatchServletImpl extends ApiServlet {
 
         try {
             init(req, resp, ExportType.plain);
-            TaskFactoryLocator.getInstance().startProcessBatchTask(req, resp);
+            TaskFactory.getInstance().startProcessBatchTask(req, resp);
         } catch (NimbitsException e) {
             if (user != null) {
                 FeedServiceFactory.getInstance().postToFeed(user, e);

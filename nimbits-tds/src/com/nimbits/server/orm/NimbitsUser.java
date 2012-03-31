@@ -13,6 +13,8 @@
 
 package com.nimbits.server.orm;
 
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.entity.*;
@@ -197,8 +199,8 @@ public class NimbitsUser implements User {
     }
 
     @Override
-    public EntityName getName() {
-        return CommonFactoryLocator.getInstance().createName(this.email);
+    public EntityName getName() throws NimbitsException {
+        return CommonFactoryLocator.getInstance().createName(this.email, EntityType.user);
     }
 
     public void setRestricted(final boolean restricted) {

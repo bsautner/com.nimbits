@@ -85,9 +85,10 @@ public class ProcessBatchTask extends HttpServlet {
             }
             Entity entity;
             Collections.sort(ts);
-
+            BR b;
+            Value v;
             for (final long l : ts) {
-                final BR b = ht.get(l);
+               b = ht.get(l);
                 if (points.containsKey(b.pointName)) {
                     entity = points.get(b.pointName);
 
@@ -101,7 +102,7 @@ public class ProcessBatchTask extends HttpServlet {
                 }
                 if (entity != null) {
                     try {
-                        final Value v = ValueModelFactory.createValueModel(0.0, 0.0, b.value, b.timestamp, entity.getEntity(), b.note);
+                       v = ValueModelFactory.createValueModel(0.0, 0.0, b.value, b.timestamp, entity.getEntity(), b.note);
                         Point p = PointServiceFactory.getInstance().getPointByUUID(entity.getEntity());
                         RecordedValueServiceFactory.getInstance().recordValue(b.u, p, v, false);
                     } catch (JDOException e) {

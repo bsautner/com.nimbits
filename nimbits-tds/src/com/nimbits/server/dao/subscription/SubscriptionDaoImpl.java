@@ -31,37 +31,34 @@ import java.util.*;
  * Date: 1/17/12
  * Time: 4:18 PM
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "unused"})
 public class SubscriptionDaoImpl implements SubscriptionTransactions {
 
-    @SuppressWarnings("unused")
-    final private User user;
+    public SubscriptionDaoImpl(final User u) {
 
-    public SubscriptionDaoImpl(User u) {
-        this.user = u;
     }
 
 
     @Override
-    public void subscribe(Entity entity, Subscription subscription) {
+    public void subscribe(final Entity entity, final Subscription subscription) {
          addOrUpdateSubscription(entity, subscription);
     }
 
-    private void addOrUpdateSubscription(Entity entity, Subscription subscription)  {
+    private static void addOrUpdateSubscription(final Entity entity, final Subscription subscription)  {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        List<SubscriptionEntity> results;
+        final List<SubscriptionEntity> results;
 
 
         try {
 
-            Query q = pm.newQuery(SubscriptionEntity.class, "uuid==u");
+            final Query q = pm.newQuery(SubscriptionEntity.class, "uuid==u");
             q.declareParameters("String u");
             q.setRange(0, 1);
             results = (List<SubscriptionEntity>) q.execute(entity.getEntity());
             if (results.size() > 0) {
-                SubscriptionEntity result = results.get(0);
-                Transaction tx = pm.currentTransaction();
+                final SubscriptionEntity result = results.get(0);
+                final Transaction tx = pm.currentTransaction();
                 tx.begin();
                 result.setNotifyMethod(subscription.getNotifyMethod());
                 result.setSubscriptionType(subscription.getSubscriptionType());
@@ -76,7 +73,7 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
 
             }
             else {
-                SubscriptionEntity s = new SubscriptionEntity(subscription);
+                final SubscriptionEntity s = new SubscriptionEntity(subscription);
                 pm.makePersistent(s);
 
             }
@@ -92,15 +89,15 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
     public Subscription readSubscription(final Entity entity)  {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        List<SubscriptionEntity> results;
+        final List<SubscriptionEntity> results;
         Subscription retObj = null;
         try {
-            Query q = pm.newQuery(SubscriptionEntity.class, "uuid==u");
+            final Query q = pm.newQuery(SubscriptionEntity.class, "uuid==u");
             q.declareParameters("String u");
             q.setRange(0, 1);
             results = (List<SubscriptionEntity>) q.execute(entity.getEntity());
             if (results.size() > 0) {
-                SubscriptionEntity result = results.get(0);
+                final SubscriptionEntity result = results.get(0);
                 retObj = SubscriptionFactory.createSubscription(result);
             }
             return retObj;
@@ -116,10 +113,10 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
     @Override
     public List<Subscription> getSubscriptionsToPoint(final Point point) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        List<Subscription> results;
-        List<Subscription> retObj;
+        final List<Subscription> results;
+        final List<Subscription> retObj;
         try {
-            Query q = pm.newQuery(SubscriptionEntity.class, "subscribedEntity==p && enabled==e");
+            final Query q = pm.newQuery(SubscriptionEntity.class, "subscribedEntity==p && enabled==e");
             q.declareParameters("String p, Boolean e");
             results = (List<Subscription>) q.execute(point.getUUID(), true);
             retObj = SubscriptionFactory.createSubscriptions(results);
@@ -133,10 +130,10 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
     @Override
     public List<Subscription> getSubscriptionsToPointByType(final Point point, final SubscriptionType type) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        List<Subscription> results;
-        List<Subscription> retObj;
+        final List<Subscription> results;
+        final List<Subscription> retObj;
         try {
-            Query q = pm.newQuery(SubscriptionEntity.class, "subscribedEntity==p && subscriptionType==t && enabled==e" );
+            final Query q = pm.newQuery(SubscriptionEntity.class, "subscribedEntity==p && subscriptionType==t && enabled==e" );
             q.declareParameters("String p, Integer t, Boolean e");
             results = (List<Subscription>) q.execute(point.getUUID(), type.getCode(), true);
             retObj = SubscriptionFactory.createSubscriptions(results);
@@ -151,15 +148,15 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
             try {
-                List<SubscriptionEntity> results;
-                Query q = pm.newQuery(SubscriptionEntity.class, "uuid==u");
+                final List<SubscriptionEntity> results;
+                final Query q = pm.newQuery(SubscriptionEntity.class, "uuid==u");
                 q.declareParameters("String u");
                 q.setRange(0, 1);
                 results = (List<SubscriptionEntity>) q.execute(subscription.getUuid());
                 if (results.size() > 0) {
-                    Transaction tx = pm.currentTransaction();
+                    final Transaction tx = pm.currentTransaction();
                     tx.begin();
-                    SubscriptionEntity result = results.get(0);
+                    final SubscriptionEntity result = results.get(0);
                     result.setLastSent(new Date());
                     tx.commit();
                 }
@@ -171,17 +168,17 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
     }
 
     @Override
-    public void deleteSubscription(Entity entity) {
+    public void deleteSubscription(final Entity entity) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        List<SubscriptionEntity> results;
-        Subscription retObj = null;
+        final List<SubscriptionEntity> results;
+        final Subscription retObj = null;
         try {
-            Query q = pm.newQuery(SubscriptionEntity.class, "uuid==u");
+            final Query q = pm.newQuery(SubscriptionEntity.class, "uuid==u");
             q.declareParameters("String u");
             q.setRange(0, 1);
             results = (List<SubscriptionEntity>) q.execute(entity.getEntity());
             if (results.size() > 0) {
-                SubscriptionEntity result = results.get(0);
+                final SubscriptionEntity result = results.get(0);
                 pm.deletePersistent(result);
             }
 

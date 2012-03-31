@@ -23,33 +23,12 @@ import java.io.Serializable;
  * Date: 8/6/11
  * Time: 11:07 AM
  */
-public abstract  class CommonIdentifierImpl implements CommonIdentifier, Serializable{
+public abstract class CommonIdentifierImpl implements CommonIdentifier, Serializable{
 
-    private String value;
+    private final String value;
 
     protected CommonIdentifierImpl(final String value) {
         this.value = value;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-        return true;
-        }
-
-        if (!(o instanceof CommonIdentifierImpl)){
-            return false;
-        }
-
-        CommonIdentifierImpl that = (CommonIdentifierImpl) o;
-
-        return value.equals(that.value);
-
-    }
-
-    @Override
-    public int hashCode() {
-        return value.hashCode();
     }
 
     @Override
@@ -64,6 +43,22 @@ public abstract  class CommonIdentifierImpl implements CommonIdentifier, Seriali
     }
 
     protected CommonIdentifierImpl() {
+         value = null;
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CommonIdentifierImpl)) return false;
+
+        CommonIdentifierImpl that = (CommonIdentifierImpl) o;
+
+        return value.equals(that.value);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return value.hashCode();
     }
 }

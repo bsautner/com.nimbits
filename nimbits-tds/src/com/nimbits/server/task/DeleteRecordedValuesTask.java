@@ -72,7 +72,7 @@ public class DeleteRecordedValuesTask extends HttpServlet {
         }
         if (count > 0) {
             store.delete(keys);
-            TaskFactoryLocator.getInstance().startDeleteDataTask(point, expOnly, expDays);
+            TaskFactory.getInstance().startDeleteDataTask(point, expOnly, expDays);
         }
 
     }

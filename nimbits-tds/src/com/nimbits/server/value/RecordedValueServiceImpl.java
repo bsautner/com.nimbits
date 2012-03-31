@@ -25,7 +25,7 @@ import com.nimbits.client.model.value.*;
 import com.nimbits.client.service.recordedvalues.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.point.*;
-import com.nimbits.server.task.*;
+import com.nimbits.server.task.TaskFactory;
 import com.nimbits.server.user.*;
 
 import java.util.*;
@@ -62,7 +62,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
     public List<Value> getTopDataSeries(final Entity entity,
                                         final int maxValues,
                                         final Date endDate) throws NimbitsException {
-        Point p = PointServiceFactory.getInstance().getPointByUUID(entity.getEntity());
+        final Point p = PointServiceFactory.getInstance().getPointByUUID(entity.getEntity());
         return RecordedValueTransactionFactory.getInstance(p).getTopDataSeries(maxValues, endDate);
     }
     //called from RPC Client
@@ -74,12 +74,12 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public List<Value> getCache(Point point) throws NimbitsException {
+    public List<Value> getCache(final Point point) throws NimbitsException {
         return RecordedValueTransactionFactory.getInstance(point).getCache();
     }
     @Override
-    public List<Value> getCache(Entity entity) throws NimbitsException {
-        Point point = PointServiceFactory.getInstance().getPointByUUID(entity.getEntity());
+    public List<Value> getCache(final Entity entity) throws NimbitsException {
+        final Point point = PointServiceFactory.getInstance().getPointByUUID(entity.getEntity());
         return RecordedValueTransactionFactory.getInstance(point).getCache();
     }
 
@@ -95,7 +95,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
                                              final Timespan timespan,
                                              final int start,
                                              final int end) throws NimbitsException {
-        Point point = PointServiceFactory.getInstance().getPointByUUID(entity.getEntity());
+        final Point point = PointServiceFactory.getInstance().getPointByUUID(entity.getEntity());
 
         return RecordedValueTransactionFactory.getInstance(point).getDataSegment(timespan, start, end);
     }
@@ -122,12 +122,12 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public List<Value> getDataSegment(Point point, Timespan timespan, int start, int end) throws NimbitsException {
+    public List<Value> getDataSegment(final Point point, final Timespan timespan, final int start, final int end) throws NimbitsException {
         return RecordedValueTransactionFactory.getInstance(point).getDataSegment(timespan, start, end);
     }
 
     @Override
-    public List<Value> getDataSegment(Point point, Timespan timespan) throws NimbitsException {
+    public List<Value> getDataSegment(final Point point, final Timespan timespan) throws NimbitsException {
         return RecordedValueTransactionFactory.getInstance(point).getDataSegment(timespan);
     }
 
@@ -137,16 +137,16 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
                              final Value value) throws NimbitsException {
 
 
-        Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
-        Point point = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
+        final Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
+        final Point point = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
 
         return (point != null) ? recordValue(u, point, value, false) : null;
 
     }
 
 
-    private List<Point> getDataSeries1(final List<Point> points,
-                                       final Timespan timespan) throws NimbitsException {
+    private static List<Point> getDataSeries1(final List<Point> points,
+                                              final Timespan timespan) throws NimbitsException {
 
 
         for (final Point point : points) {
@@ -182,7 +182,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
         return retObj;
 
     }
-    private AlertType getAlertType(final Point point, final Value value)  {
+    private static AlertType getAlertType(final Point point, final Value value)  {
         AlertType retObj = AlertType.OK;
 
         if (point.isHighAlarmOn() || point.isLowAlarmOn()) {
@@ -245,7 +245,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
                 case percentageHysteresis:
                     if (point.getFilterValue() > 0) {
-                        double p = pv.getDoubleValue() *  (point.getFilterValue() /100);
+                        final double p = pv.getDoubleValue() *  (point.getFilterValue() /100);
                         return (v.getDoubleValue() <= (pv.getDoubleValue() + p))
                                 && (v.getDoubleValue() >= (pv.getDoubleValue() - p));
 
@@ -284,7 +284,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
         //	RecordedValue prevValue = null;
         Value retObj = null;
 
-        boolean ignored = false;
+        final boolean ignored = false;
 
         final boolean ignoredByDate = ignoreDataByExpirationDate(point, value, ignored);
         final boolean ignoredByOwnership = ignoreDataByOwnership(u, point, ignored);
@@ -294,7 +294,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
             retObj = RecordedValueTransactionFactory.getInstance(point).recordValue(value);
             retObj.setAlertType(getAlertType(point, retObj));
-            TaskFactoryLocator.getInstance().startRecordValueTask(u, point, value, loopFlag);
+            TaskFactory.getInstance().startRecordValueTask(u, point, value, loopFlag);
         }
 
 
@@ -302,7 +302,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
     }
 
-    private boolean ignoreDataByOwnership(User u, Point point, boolean ignored) {
+    private static boolean ignoreDataByOwnership(final User u, final Point point, boolean ignored) {
         //extra safety check to make sure user isn't writing to someone else's point
         if (u.getId() != point.getUserFK()) {
             ignored = true;
@@ -310,7 +310,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
         return ignored;
     }
 
-    private boolean ignoreDataByExpirationDate(final Point point, final Value value, boolean ignored) {
+    private static boolean ignoreDataByExpirationDate(final Point point, final Value value, boolean ignored) {
         if (point.getExpire() > 0) {
             final Calendar c = Calendar.getInstance();
             c.add(Calendar.DATE, point.getExpire() * -1);

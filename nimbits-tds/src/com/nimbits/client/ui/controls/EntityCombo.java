@@ -53,9 +53,9 @@ public class EntityCombo extends ComboBox<GxtModel> {
             @Override
             public void onSuccess(final Map<String, Entity> result) {
                 setEmptyText(emptyText);
-
+                GxtModel model;
                 for (final Entity e : result.values()) {
-                    final GxtModel model;
+
                     try {
                         model = new GxtModel(e);
                         cbStore.add(model);

@@ -24,14 +24,14 @@ import java.util.List;
  */
 public class ValueBlobStoreFactory {
 
-    public static ValueBlobStore createValueBlobStore(ValueBlobStore store) {
+    public static ValueBlobStore createValueBlobStore(final ValueBlobStore store) {
         return new ValueBlobStoreModel(store);
 
     }
-    public static  List<ValueBlobStore> createValueBlobStores(List<ValueBlobStore> store) {
-       List<ValueBlobStore> retObj = new ArrayList<ValueBlobStore>();
+    public static  List<ValueBlobStore> createValueBlobStores(final List<ValueBlobStore> store) {
+      final List<ValueBlobStore> retObj = new ArrayList<ValueBlobStore>(store.size());
 
-      for (ValueBlobStore v : store) {
+      for (final ValueBlobStore v : store) {
         retObj.add(createValueBlobStore(v));
       }
         return retObj;

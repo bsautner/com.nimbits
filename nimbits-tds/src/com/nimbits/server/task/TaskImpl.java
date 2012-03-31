@@ -35,7 +35,7 @@ import java.util.logging.*;
  * Date: 10/7/11
  * Time: 2:12 PM
  */
-public class TaskFactoryImpl implements TaskFactory {
+public class TaskImpl implements Task {
     private final Gson gson = GsonFactory.getInstance();
     private static final String TASK_POINT_MAINT = "pointmaint";
     private static final String TASK_UPGRADE = "upgrade";
@@ -57,11 +57,11 @@ public class TaskFactoryImpl implements TaskFactory {
     private static final String PATH_TASK_PROCESS_BATCH = "/task/processbatchtask";
     private static final String PATH_INCOMING_MAIL_QUEUE = "/task/incommingmail";
     private static final String PATH_DELETE_DATA_TASK = "/task/DeleteRecordedValuesTask";
-    private static final Logger log = Logger.getLogger(TaskFactoryImpl.class.getName());
+    private static final Logger log = Logger.getLogger(TaskImpl.class.getName());
     private boolean overrideQueue;
 
 
-    public TaskFactoryImpl() {
+    public TaskImpl() {
 
         overrideQueue = false;
 

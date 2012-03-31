@@ -23,7 +23,7 @@ import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.server.orm.*;
 import com.nimbits.server.point.*;
-import com.nimbits.server.task.*;
+import com.nimbits.server.task.TaskFactory;
 
 import javax.jdo.*;
 import javax.servlet.http.*;
@@ -87,10 +87,10 @@ public class PointDaoImpl implements PointTransactions {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         Point retObj = null;
         try {
-            DataPoint original = pm.getObjectById(DataPoint.class, update.getId());
+            final DataPoint original = pm.getObjectById(DataPoint.class, update.getId());
 
             if (original != null) {
-                Transaction tx = pm.currentTransaction();
+                final Transaction tx = pm.currentTransaction();
                 tx.begin();
                 original.setHighAlarm(update.getHighAlarm());
                 original.setLowAlarm(update.getLowAlarm());
@@ -133,15 +133,15 @@ public class PointDaoImpl implements PointTransactions {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         Point retObj;
 
-        List<DataPoint> points;
+        final List<DataPoint> points;
         try {
-            Query q = pm.newQuery(DataPoint.class, "uuid == k");
+            final Query q = pm.newQuery(DataPoint.class, "uuid == k");
             q.declareParameters("String k");
             q.setRange(0, 1);
             points = (List<DataPoint>) q.execute(uuid);
 
             if (points.size() > 0) {
-                DataPoint result = points.get(0);
+                final DataPoint result = points.get(0);
                 retObj = PointModelFactory.createPointModel(result);
             } else {
                 retObj = null;
@@ -160,7 +160,7 @@ public class PointDaoImpl implements PointTransactions {
 
         try {
             final Query q = pm.newQuery(DataPoint.class);
-            List<Point> result = (List<Point>) q.execute();
+            final List<Point> result = (List<Point>) q.execute();
             return PointModelFactory.createPointModels(result);
 
         } finally {
@@ -169,7 +169,7 @@ public class PointDaoImpl implements PointTransactions {
     }
 
     @Override
-    public Point addPoint(Entity entity) {
+    public Point addPoint(final Entity entity) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
 
@@ -189,7 +189,7 @@ public class PointDaoImpl implements PointTransactions {
     }
 
     @Override
-    public Point addPoint(Entity entity, Point point) {
+    public Point addPoint(final Entity entity, final Point point) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
             final DataPoint jdoPoint = new DataPoint(u, entity);
@@ -204,11 +204,11 @@ public class PointDaoImpl implements PointTransactions {
 
     @SuppressWarnings(Const.WARNING_UNCHECKED)
     @Override
-    public List<Point> getPoints(List<Entity> entities) {
+    public List<Point> getPoints(final List<Entity> entities) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        List<String> ids = new ArrayList<String>();
+        final List<String> ids = new ArrayList<String>(entities.size());
 
-        for (Entity e : entities) {
+        for (final Entity e : entities) {
             if (e.getEntityType().equals(EntityType.point)) {
                 ids.add(e.getEntity());
             }
@@ -223,7 +223,7 @@ public class PointDaoImpl implements PointTransactions {
                 return PointModelFactory.createPointModels(result);
             }
             else {
-                return new ArrayList<Point>();
+                return new ArrayList<Point>(0);
             }
         } finally {
             pm.close();
@@ -234,15 +234,15 @@ public class PointDaoImpl implements PointTransactions {
     public Point deletePoint(final Entity entity) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
-        List<DataPoint> points;
+        final List<DataPoint> points;
         try {
-            Query q = pm.newQuery(DataPoint.class, "uuid == k");
+            final Query q = pm.newQuery(DataPoint.class, "uuid == k");
             q.declareParameters("String k");
             q.setRange(0, 1);
             points = (List<DataPoint>) q.execute(entity.getEntity());
             if (points.size() > 0) {
-                Point p = points.get(0);
-                Point retObj =PointModelFactory.createPointModel(p);
+                final Point p = points.get(0);
+                final Point retObj =PointModelFactory.createPointModel(p);
                 pm.deletePersistentAll(points);
                 return retObj;
             }
@@ -283,7 +283,7 @@ public class PointDaoImpl implements PointTransactions {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final Transaction tx = pm.currentTransaction();
-        Point retObj;
+        final Point retObj;
 
         try {
             tx.begin();
@@ -299,7 +299,7 @@ public class PointDaoImpl implements PointTransactions {
             }
 
             if (p.getExpire() > 0) {
-                TaskFactoryLocator.getInstance().startDeleteDataTask(
+                TaskFactory.getInstance().startDeleteDataTask(
                         p,
                         true, p.getExpire());
             }
@@ -322,7 +322,7 @@ public class PointDaoImpl implements PointTransactions {
     */
     @SuppressWarnings(Const.WARNING_UNCHECKED)
     @Override
-    public List<Point> getAllPoints(int start, int end) {
+    public List<Point> getAllPoints(final int start, final int end) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final List<Point> retObj;
         try {
@@ -349,9 +349,9 @@ public class PointDaoImpl implements PointTransactions {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         List<Point> retObj;
         try {
-            List<Point> points;
+            final List<Point> points;
 
-            Query q = pm
+            final Query q = pm
                     .newQuery(DataPoint.class, "idleAlarmOn == k && idleAlarmSent  == c");
             q.declareParameters("Long k, Long c");
 

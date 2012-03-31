@@ -16,7 +16,7 @@ package com.nimbits.server.cron;
 import com.nimbits.client.constants.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.server.point.*;
-import com.nimbits.server.task.*;
+import com.nimbits.server.task.TaskFactory;
 
 import javax.servlet.http.*;
 import java.io.*;
@@ -53,7 +53,7 @@ public class PointMaint extends HttpServlet {
             for (final Point p : points) {
 
                 count++;
-                TaskFactoryLocator.getInstance().startPointMaintTask(p);
+                TaskFactory.getInstance().startPointMaintTask(p);
             }
         }
         out.println("<h5>" + count + " Points.");

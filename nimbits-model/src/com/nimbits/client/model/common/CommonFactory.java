@@ -34,5 +34,5 @@ public abstract interface CommonFactory {
     EntityName createName(final String value);
 
 
-    EntityName createName(String value, EntityType type) throws NimbitsException;
+    EntityName createName(final String value,final EntityType type) throws NimbitsException;
 }

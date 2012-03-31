@@ -114,19 +114,21 @@ public class ChartApiServletImpl extends ApiServlet {
         StringBuilder params = new StringBuilder();
         params.append(req.getQueryString());
         params.append(chartDateCode);
-
+        Entity e;
+        Point p;
+        List<Value> values;
         for (final EntityName pointName : pointList) {
 
 
-            Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
-            final Point p = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
+            e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
+            p = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
 
             if (p != null) {
                 //Entity e = EntityServiceFactory.getInstance().getEntityByUUID(p.getUUID());
                 if (e.getProtectionLevel().equals(ProtectionLevel.everyone) || !u.isRestricted()) {
 
 
-                    final List<Value> values = (timespan != null) ?
+                    values = (timespan != null) ?
 
                             RecordedValueServiceFactory.getInstance().getDataSegment(p, timespan) :
                             RecordedValueServiceFactory.getInstance().getTopDataSeries(p, valueCount).getValues();

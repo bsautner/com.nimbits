@@ -13,26 +13,34 @@
 
 package com.nimbits.server.api.impl;
 
-import com.nimbits.client.common.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.server.api.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.feed.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.point.*;
-import com.nimbits.server.value.*;
-import com.nimbits.server.user.*;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.constants.UserMessages;
+import com.nimbits.client.constants.Words;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ExportType;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.ValueModel;
+import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.server.api.ApiServlet;
+import com.nimbits.server.entity.EntityServiceFactory;
+import com.nimbits.server.feed.FeedServiceFactory;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.point.PointServiceFactory;
+import com.nimbits.server.value.RecordedValueServiceFactory;
 
-import javax.servlet.http.*;
-import java.io.*;
-import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Date;
 
 
 
@@ -54,7 +62,7 @@ public class ValueServletImpl extends ApiServlet {
 
     }
 
-    protected void processPost(HttpServletRequest req, HttpServletResponse resp) throws NimbitsException, IOException {
+    protected void processPost(final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException, IOException {
         init(req, resp, ExportType.plain);
 
         if (user != null && ! user.isRestricted()) {
@@ -81,9 +89,9 @@ public class ValueServletImpl extends ApiServlet {
                     v = ValueModelFactory.createValueModel(latitude, longitude, value, timestamp, point.getUUID(), getParam(Parameters.note), getParam(Parameters.json));
                 }
 
-                Value result = RecordedValueServiceFactory.getInstance().recordValue(user, point, v, false);
+                final Value result = RecordedValueServiceFactory.getInstance().recordValue(user, point, v, false);
                 final PrintWriter out = resp.getWriter();
-                String j = GsonFactory.getInstance().toJson(result);
+                final String j = GsonFactory.getInstance().toJson(result);
                 out.print(j);
 
             } else {
@@ -106,7 +114,7 @@ public class ValueServletImpl extends ApiServlet {
 
     }
 
-    public void processGet(HttpServletRequest req, HttpServletResponse resp) throws NimbitsException, IOException {
+    public void processGet(final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException, IOException {
         init(req, resp, ExportType.plain);
         final PrintWriter out = resp.getWriter();
         Value nv = null;
@@ -127,7 +135,7 @@ public class ValueServletImpl extends ApiServlet {
 
     }
 
-    private double getDoubleFromParam(final String valueStr) {
+    private static double getDoubleFromParam(final String valueStr) {
         double retVal;
         try {
             retVal = (valueStr != null) ? Double.valueOf(valueStr) : 0;
@@ -145,14 +153,14 @@ public class ValueServletImpl extends ApiServlet {
             final User u) throws NimbitsException {
         final Point p;
 
-        String result;
+        final String result;
 
         if (!Utils.isEmptyString(uuid)) {
             p = PointServiceFactory.getInstance().getPointByUUID(uuid);
 
         } else if (!Utils.isEmptyString(pointNameParam)) {
-            EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
-            Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
+            final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
+            final Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
             if (e != null) {
                 p = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
             }
@@ -167,7 +175,7 @@ public class ValueServletImpl extends ApiServlet {
 
         if (p != null) {
             final Value value;
-            Entity e = EntityServiceFactory.getInstance().getEntityByUUID(p.getUUID());
+            final Entity e = EntityServiceFactory.getInstance().getEntityByUUID(p.getUUID());
 
             if ((u == null || u.isRestricted()) && ! e.getProtectionLevel().equals(ProtectionLevel.everyone)) {
                 throw new NimbitsException(UserMessages.RESPONSE_PROTECTED_POINT);

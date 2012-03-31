@@ -22,8 +22,8 @@ import com.nimbits.client.model.timespan.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 import com.nimbits.server.memcache.*;
+import com.nimbits.server.task.TaskFactory;
 import com.nimbits.server.value.*;
-import com.nimbits.server.task.*;
 
 import java.util.*;
 
@@ -50,7 +50,7 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
 
     private void addPointToActiveList() {
         if (cacheShared.contains(MemCacheKey.activePoints)) {
-            Map<String, Point> points = (Map<String, Point>) cacheShared.get(MemCacheKey.activePoints);
+            final Map<String, Point> points = (Map<String, Point>) cacheShared.get(MemCacheKey.activePoints);
             if (! points.containsKey(p.getUUID())) {
                 points.put(p.getUUID(), p);
                 cacheShared.delete(MemCacheKey.activePoints);
@@ -60,7 +60,7 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
 
         }
         else {
-            Map<String, Point> points = new HashMap<String, Point>();
+            final Map<String, Point> points = new HashMap<String, Point>(1);
             points.put(p.getUUID(), p);
             cacheShared.put(MemCacheKey.activePoints, points);
         }
@@ -122,13 +122,13 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
                 cache.delete(stored);
                 cache.put(b, stored);
             } else {
-                stored = new ArrayList<Long>();
+                stored = new ArrayList<Long>(10);
                 stored.add(v.getTimestamp().getTime());
                 cache.put(b, stored);
             }
             cache.put(v.getTimestamp().getTime(), v);
             if (stored.size() > Const.CONST_MAX_CACHED_VALUE_SIZE) {
-                TaskFactoryLocator.getInstance().startMoveCachedValuesToStoreTask(p);
+                TaskFactory.getInstance().startMoveCachedValuesToStoreTask(p);
             }
 
             if (cache.contains(k)) {
@@ -152,18 +152,18 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
 
     @Override
     public List<Value> getTopDataSeries(final int maxValues) throws NimbitsException {
-        List<Value> cached = getCache();
-        List<Value> stored = RecordedValueTransactionFactory.getDaoInstance(p).getTopDataSeries(maxValues);
+        final List<Value> cached = getCache();
+        final List<Value> stored = RecordedValueTransactionFactory.getDaoInstance(p).getTopDataSeries(maxValues);
         return mergeAndSort(cached, stored, maxValues);
     }
 
     @Override
     public List<Value> getTopDataSeries(final int maxValues, final Date endDate) throws NimbitsException {
-        List<Value> cached = getCache();
+        final List<Value> cached = getCache();
         if (cached.size() > maxValues) {
             return cached;
         } else {
-            List<Value> stored = RecordedValueTransactionFactory.getDaoInstance(p).getTopDataSeries(maxValues, endDate);
+            final List<Value> stored = RecordedValueTransactionFactory.getDaoInstance(p).getTopDataSeries(maxValues, endDate);
             if (stored.size() > 0) {
                 return mergeAndSort(stored, cached, endDate);
             } else {
@@ -175,8 +175,8 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
 
     @Override
     public List<Value> getDataSegment(final Timespan timespan) throws NimbitsException {
-        List<Value> stored = RecordedValueTransactionFactory.getDaoInstance(p).getDataSegment(timespan);
-        List<Value> cached = getCache();
+        final List<Value> stored = RecordedValueTransactionFactory.getDaoInstance(p).getDataSegment(timespan);
+        final List<Value> cached = getCache();
         return mergeAndSort(stored, cached, timespan);
     }
 
@@ -186,21 +186,22 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
     }
 
     @Override
-    public void recordValues(List<Value> values) throws NimbitsException {
+    public void recordValues(final List<Value> values) throws NimbitsException {
         RecordedValueTransactionFactory.getDaoInstance(p).recordValues(values);
     }
 
     public List<Value> getCache(final Timespan timespan) {
         final String b = MemCacheHelper.valueBufferCacheKey(p);
-        List<Value> retObj = new ArrayList<Value>();
-        List<Long> x;
+        List<Value> retObj = null;
+        final List<Long> x;
         if (cache.contains(b)) {
             x = (List<Long>) cache.get(b);
-            Map<Long, Object> valueMap = cache.getAll(x);
-            ValueComparator bvc = new ValueComparator(valueMap);
-            TreeMap<Long, Object> sorted_map = new TreeMap(bvc);
+            final Map<Long, Object> valueMap = cache.getAll(x);
+            final ValueComparator bvc = new ValueComparator(valueMap);
+            final TreeMap<Long, Object> sorted_map = new TreeMap(bvc);
             sorted_map.putAll(valueMap);
-            for (Long ts : sorted_map.keySet()) {
+            retObj = new ArrayList<Value>(sorted_map.keySet().size());
+            for (final Long ts : sorted_map.keySet()) {
                 if (ts >= timespan.getStart().getTime() || ts <= timespan.getStart().getTime()) {
                     retObj.add((Value) sorted_map.get(ts));
                 }
@@ -216,22 +217,23 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
     }
 
     @Override
-    public void consolidateDate(Date timestamp) throws NimbitsException {
+    public void consolidateDate(final Date timestamp) throws NimbitsException {
         throw new NimbitsException("Not Implemented");
     }
 
     public List<Value> getCache() {
         final String b = MemCacheHelper.valueBufferCacheKey(p);
-        List<Value> retObj = new ArrayList<Value>();
+        List<Value> retObj = null;
         try {
-            List<Long> x;
+            final List<Long> x;
             if (cache.contains(b)) {
                 x = (List<Long>) cache.get(b);
-                Map<Long, Object> valueMap = cache.getAll(x);
-                ValueComparator bvc = new ValueComparator(valueMap);
-                TreeMap<Long, Object> sorted_map = new TreeMap(bvc);
+                final Map<Long, Object> valueMap = cache.getAll(x);
+                final ValueComparator bvc = new ValueComparator(valueMap);
+                final TreeMap<Long, Object> sorted_map = new TreeMap(bvc);
                 sorted_map.putAll(valueMap);
-                for (Long ts : sorted_map.keySet()) {
+                retObj  = new ArrayList<Value>( sorted_map.keySet().size());
+                for (final Long ts : sorted_map.keySet()) {
                     retObj.add((Value) sorted_map.get(ts));
                 }
             }
@@ -254,10 +256,10 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
                     cache.delete(b);
                     final Map<Long, Object> valueMap = cache.getAll(x);
                     cache.deleteAll(x);
-                    final List<Value> values = new ArrayList<Value>();
+                    final List<Value> values = new ArrayList<Value>(valueMap.keySet().size());
                   //  int count = values.size();
-                    for (final Long ts : valueMap.keySet()) {
-                        values.add((Value) valueMap.get(ts));
+                    for (final Map.Entry<Long, Object> longObjectEntry : valueMap.entrySet()) {
+                        values.add((Value) longObjectEntry.getValue());
                     }
                     RecordedValueTransactionFactory.getDaoInstance(p).recordValues(values);
                 }
@@ -269,19 +271,20 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
 
     }
 
-    private List<Value> mergeAndSort(final List<Value> first, final List<Value> second, final int max) {
+    private static List<Value> mergeAndSort(final List<Value> first, final List<Value> second, final int max) {
         first.addAll(second);
-        Map<Long, Object> valueMap = new TreeMap<Long, Object>();
-        for (Value v : first) {
+        final Map<Long, Object> valueMap = new TreeMap<Long, Object>();
+        for (final Value v : first) {
             valueMap.put(v.getTimestamp().getTime(), v);
         }
-        List<Value> retObj = new ArrayList<Value>();
 
-        ValueComparator bvc = new ValueComparator(valueMap);
-        TreeMap<Long, Object> sorted_map = new TreeMap(bvc);
+
+        final ValueComparator bvc = new ValueComparator(valueMap);
+        final TreeMap<Long, Object> sorted_map = new TreeMap(bvc);
         sorted_map.putAll(valueMap);
         int c = 0;
-        for (Long ts : sorted_map.keySet()) {
+        final List<Value> retObj = new ArrayList<Value>( sorted_map.keySet().size());
+        for (final Long ts : sorted_map.keySet()) {
             c++;
             retObj.add((Value) sorted_map.get(ts));
             if (c >= max) {
@@ -291,19 +294,19 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
         return retObj;
     }
 
-    private List<Value> mergeAndSort(final List<Value> first, final List<Value> second, Date endDate) {
+    private static List<Value> mergeAndSort(final List<Value> first, final List<Value> second, final Date endDate) {
         first.addAll(second);
-        Map<Long, Object> valueMap = new TreeMap<Long, Object>();
-        for (Value v : first) {
+        final Map<Long, Object> valueMap = new TreeMap<Long, Object>();
+        for (final Value v : first) {
             valueMap.put(v.getTimestamp().getTime(), v);
         }
-        List<Value> retObj = new ArrayList<Value>();
 
-        ValueComparator bvc = new ValueComparator(valueMap);
-        TreeMap<Long, Object> sorted_map = new TreeMap(bvc);
+
+        final ValueComparator bvc = new ValueComparator(valueMap);
+        final TreeMap<Long, Object> sorted_map = new TreeMap(bvc);
         sorted_map.putAll(valueMap);
-
-        for (Long ts : sorted_map.keySet()) {
+        final List<Value> retObj = new ArrayList<Value>(sorted_map.keySet().size());
+        for (final Long ts : sorted_map.keySet()) {
             if (ts <= endDate.getTime()) {
                 retObj.add((Value) sorted_map.get(ts));
             }
@@ -312,18 +315,18 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
         return retObj;
     }
 
-    private List<Value> mergeAndSort(final List<Value> first, final List<Value> second, Timespan timespan) {
+    private static List<Value> mergeAndSort(final List<Value> first, final List<Value> second, final Timespan timespan) {
         first.addAll(second);
-        Map<Long, Object> valueMap = new TreeMap<Long, Object>();
-        for (Value v : first) {
+        final Map<Long, Object> valueMap = new TreeMap<Long, Object>();
+        for (final Value v : first) {
             valueMap.put(v.getTimestamp().getTime(), v);
         }
-        List<Value> retObj = new ArrayList<Value>();
 
-        ValueComparator bvc = new ValueComparator(valueMap);
-        TreeMap<Long, Object> sorted_map = new TreeMap(bvc);
+
+        final ValueComparator bvc = new ValueComparator(valueMap);
+        final TreeMap<Long, Object> sorted_map = new TreeMap(bvc);
         sorted_map.putAll(valueMap);
-
+        final List<Value> retObj = new ArrayList<Value>(sorted_map.keySet().size());
         for (final Long ts : sorted_map.keySet()) {
             if ((ts >= timespan.getStart().getTime() - 1000) && (ts <= timespan.getEnd().getTime() + 1000)) {
                 retObj.add((Value) sorted_map.get(ts));
@@ -333,15 +336,15 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
     }
 
 
-    class ValueComparator implements Comparator {
+    static class ValueComparator implements Comparator {
 
         Map base;
 
-        public ValueComparator(Map base) {
+        public ValueComparator(final Map base) {
             this.base = base;
         }
 
-        public int compare(Object a, Object b) {
+        public int compare(final Object a, final Object b) {
 
             if (((Value) base.get(a)).getTimestamp().getTime() < ((Value) base.get(b)).getTimestamp().getTime()) {
                 return 1;

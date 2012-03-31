@@ -142,7 +142,7 @@ public class XMPPReceiverServlet extends HttpServlet {
 
     }
 
-    private void recordNewValue(String body, User u) throws NimbitsException {
+    private void recordNewValue(final String body,final User u) throws NimbitsException {
         String b[] = body.split("=");
         if (b.length == 2) {
 

@@ -8,7 +8,7 @@
  *
  * http://www.gnu.org/licenses/gpl.html
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
 package com.nimbits.client.ui.panels;
@@ -127,11 +127,11 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
         removePointDataFromTable(CommonFactoryLocator.getInstance().createName(DEFAULT_EMPTY_COL, EntityType.point));
 
         int r = dataTable.getNumberOfColumns();
-        int CurrentRow = dataTable.getNumberOfRows();
+        int currentRow = dataTable.getNumberOfRows();
         PointColumn = dataTable.getNumberOfColumns();
-
+        String s;
         for (int i = 0; i < r; i++) {
-            String s = dataTable.getColumnLabel(i);
+            s = dataTable.getColumnLabel(i);
             if (s.equals(entity.getName().getValue())) {
                 PointColumn = i;
                 found = true;
@@ -162,16 +162,18 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
             else {
                 valueMap.put(entity.getName(), values);
             }
+            String note;
+            String name;
             for (final Value v : values) {
 
 //                points.get(entity.getName()).getValues().add(v);
 
                 dataTable.addRow();
-                dataTable.setValue(CurrentRow, 0, v.getTimestamp());
-                dataTable.setValue(CurrentRow, PointColumn, v.getDoubleValue());
+                dataTable.setValue(currentRow, 0, v.getTimestamp());
+                dataTable.setValue(currentRow, PointColumn, v.getDoubleValue());
 
-                String note = v.getNote();
-                String name =entity.getName().getValue();
+               note = v.getNote();
+                name =entity.getName().getValue();
 
                 if (Utils.isEmptyString(note)) {
                     note = null;
@@ -179,18 +181,19 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
                 }
 
                 //note = null;
-                dataTable.setValue(CurrentRow, PointColumn + 2, note);
-                dataTable.setValue(CurrentRow, PointColumn + 1, name);
+                dataTable.setValue(currentRow, PointColumn + 2, note);
+                dataTable.setValue(currentRow, PointColumn + 1, name);
 
-                CurrentRow++;
+                currentRow++;
             }
         }
     }
 
     private void removePointDataFromTable(final EntityName pointName) {
         int r = dataTable.getNumberOfColumns();
+        String s;
         for (int i = 0; i < r; i++) {
-            String s = dataTable.getColumnLabel(i);
+           s = dataTable.getColumnLabel(i);
             if (s.equals(pointName.getValue())) {
                 dataTable.removeColumns(i, i + 2);
                 break;
@@ -469,8 +472,9 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
             protected void onDragDrop(final DNDEvent event) {
                 super.onDragDrop(event);
                 List<TreeStoreModel> t = event.getData();
+                GxtModel p;
                 for (final TreeStoreModel a : t) {
-                    final GxtModel p = (GxtModel) a.getModel();
+                    p = (GxtModel) a.getModel();
                     handleDrop(p);
                 }
             }
@@ -486,8 +490,8 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
         }
     }
 
-    private Options createOptions() {
-        Options options = Options.create();
+    private static Options createOptions() {
+        final Options options = Options.create();
         options.setDisplayAnnotations(true);
         options.setWindowMode(WindowMode.OPAQUE);
         options.setAllowRedraw(true);

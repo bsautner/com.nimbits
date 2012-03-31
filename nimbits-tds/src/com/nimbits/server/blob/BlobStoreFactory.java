@@ -11,17 +11,18 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server.blobstore;
+package com.nimbits.server.blob;
 
-import com.nimbits.client.enums.*;
 
-/**
- * Created by Benjamin Sautner
- * User: ubuntu
- * Date: 11/15/11
- * Time: 5:05 PM
- *
- */
-public interface BlobStore {
-    String createFile(final String data, final ExportType exportType) ;
+public class BlobStoreFactory {
+    private static BlobStore instance;
+
+    public static BlobStore getInstance() {
+        if (instance == null) {
+            instance = new BlobStoreImpl();
+        }
+        return instance;
+    }
+
+
 }

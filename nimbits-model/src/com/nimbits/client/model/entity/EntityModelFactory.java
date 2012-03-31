@@ -21,8 +21,8 @@ public class EntityModelFactory {
 
 
     public static Entity createEntity(final User user, final Entity entity) throws NimbitsException {
-        Entity r = new EntityModel(entity);
-        boolean isOwner =  (user != null && entity.getOwner().equals(user.getUuid()));
+        final Entity r = new EntityModel(entity);
+        final boolean isOwner =  (user != null && entity.getOwner().equals(user.getUuid()));
         r.setReadOnly(!isOwner);
         return r;
 
@@ -58,7 +58,7 @@ public class EntityModelFactory {
 
 
     public static Entity createEntity(final User user) throws NimbitsException {
-        EntityName name = CommonFactoryLocator.getInstance().createName(user.getEmail().getValue(), EntityType.user);
+        final EntityName name = CommonFactoryLocator.getInstance().createName(user.getEmail().getValue(), EntityType.user);
 
         return createEntity(name, "", EntityType.user, ProtectionLevel.onlyMe,
                 user.getUuid(), user.getUuid(), user.getUuid());
@@ -66,13 +66,13 @@ public class EntityModelFactory {
     }
 
 
-    public static EntityDescription createEntityDescription(final Server server, Entity entity) throws NimbitsException {
+    public static EntityDescription createEntityDescription(final Server server, final Entity entity) throws NimbitsException {
         return new EntityDescriptionModel(server, entity);
     }
 
     public static List<EntityDescription> createPointDescriptions(final List<EntityDescription> entityDescriptions) {
-        List<EntityDescription> retObj = new ArrayList<EntityDescription>();
-        for (EntityDescription entityDescription : entityDescriptions) {
+        final List<EntityDescription> retObj = new ArrayList<EntityDescription>(entityDescriptions.size());
+        for (final EntityDescription entityDescription : entityDescriptions) {
             retObj.add(createPointDescription(entityDescription));
         }
         return retObj;
@@ -87,7 +87,7 @@ public class EntityModelFactory {
     }
 
     public static List<Entity> createEntities(final User user,final  List<Entity> result) throws NimbitsException {
-        ArrayList<Entity> entities = new ArrayList<Entity>();
+        final ArrayList<Entity> entities = new ArrayList<Entity>(result.size());
         for (final Entity e : result) {
 
             final boolean isOwner = (user != null) && e.getOwner().equals(user.getUuid());
@@ -95,7 +95,7 @@ public class EntityModelFactory {
             if (entityIsReadable(user, e, isOwner))
             {
 
-                Entity r = createEntity(user, e);
+                final Entity r = createEntity(user, e);
 
                 entities.add(r);
             }

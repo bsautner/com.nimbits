@@ -325,7 +325,7 @@ public class CalculationPanel extends NavigationEventProvider {
 
 
 
-    private void runEquation(Calculation calculation1)   {
+    private static void runEquation(final Calculation calculation1)   {
         final Dialog simple = new Dialog();
         simple.setHeading("Test Result");
         simple.setButtons(Dialog.OK);
@@ -334,16 +334,16 @@ public class CalculationPanel extends NavigationEventProvider {
 
 
         simple.setHideOnButtonClick(true);
-        CalculationServiceAsync service = GWT.create(CalculationService.class);
+        final CalculationServiceAsync service = GWT.create(CalculationService.class);
         service.solveEquation(calculation1, new AsyncCallback<Value>() {
             @Override
-            public void onFailure(Throwable throwable) {
+            public void onFailure(final Throwable throwable) {
                 simple.addText(throwable.getMessage());
                 simple.show();
             }
 
             @Override
-            public void onSuccess(Value result) {
+            public void onSuccess(final Value result) {
                 simple.addText("result: " + result.getDoubleValue());
                 simple.show();
             }

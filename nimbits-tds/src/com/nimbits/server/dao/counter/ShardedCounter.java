@@ -41,11 +41,11 @@ public class ShardedCounter {
 
     private String counterName;
     private Cache cache;
-    private final String COUNT = "count";
-    private final String SHARDS = "shards";
+    private static final String COUNT = "count";
+    private static final String SHARDS = "shards";
 
 
-    public ShardedCounter(String counterName) {
+    public ShardedCounter(final String counterName) {
         this.counterName = counterName;
         cache = null;
         try {
@@ -56,16 +56,12 @@ public class ShardedCounter {
         }
     }
 
-    public String getCounterName() {
-        return counterName;
-    }
-
-    private ApiCounter getThisCounter(PersistenceManager pm) {
+    private ApiCounter getThisCounter(final PersistenceManager pm) {
         ApiCounter current = null;
-        Query thisCounterQuery = pm.newQuery(ApiCounter.class,
+        final Query thisCounterQuery = pm.newQuery(ApiCounter.class,
                 "counterName == nameParam");
         thisCounterQuery.declareParameters("String nameParam");
-        List<ApiCounter> counter =
+        final List<ApiCounter> counter =
                 (List<ApiCounter>) thisCounterQuery.execute(counterName);
         if (counter != null && !counter.isEmpty()) {
             current = counter.get(0);
@@ -75,7 +71,7 @@ public class ShardedCounter {
 
     public boolean isInDatastore() {
         boolean counterStored = false;
-        PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
             if (getThisCounter(pm) != null) {
                 counterStored = true;
@@ -88,23 +84,23 @@ public class ShardedCounter {
 
     public int getCount() {
         if (cache != null) {
-            Integer cachedCount = (Integer) cache.get(COUNT + counterName);
+            final Integer cachedCount = (Integer) cache.get(COUNT + counterName);
             if (cachedCount != null) {
                 return cachedCount;
             }
         }
 
         int sum = 0;
-        PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         try {
-            Query shardsQuery = pm.newQuery(ApiCounterShard.class,
+            final Query shardsQuery = pm.newQuery(ApiCounterShard.class,
                     "counterName == nameParam");
             shardsQuery.declareParameters("String nameParam");
-            List<ApiCounterShard> shards =
+            final List<ApiCounterShard> shards =
                     (List<ApiCounterShard>) shardsQuery.execute(counterName);
             if (shards != null && !shards.isEmpty()) {
-                for (ApiCounterShard current : shards) {
+                for (final ApiCounterShard current : shards) {
                     sum += current.getCount();
                 }
             }
@@ -118,42 +114,42 @@ public class ShardedCounter {
 
         return sum;
     }
-
-    public int getNumShards() {
-        if (cache != null) {
-            Integer cachedCount = (Integer) cache.get(SHARDS + counterName);
-            if (cachedCount != null) {
-                return cachedCount;
-            }
-        }
-
-        int numShards = 0;
-        PersistenceManager pm = PMF.get().getPersistenceManager();
-        try {
-            ApiCounter current = getThisCounter(pm);
-            if (current != null) {
-                numShards = current.getShardCount();
-            }
-        } finally {
-            pm.close();
-        }
-
-        if (cache != null) {
-            cache.put(SHARDS + counterName, numShards);
-        }
-
-        return numShards;
-    }
+//
+//    public int getNumShards() {
+//        if (cache != null) {
+//            final Integer cachedCount = (Integer) cache.get(SHARDS + counterName);
+//            if (cachedCount != null) {
+//                return cachedCount;
+//            }
+//        }
+//
+//        int numShards = 0;
+//        final PersistenceManager pm = PMF.get().getPersistenceManager();
+//        try {
+//            final ApiCounter current = getThisCounter(pm);
+//            if (current != null) {
+//                numShards = current.getShardCount();
+//            }
+//        } finally {
+//            pm.close();
+//        }
+//
+//        if (cache != null) {
+//            cache.put(SHARDS + counterName, numShards);
+//        }
+//
+//        return numShards;
+//    }
 
     public int addShard() {
         return addShards(1);
     }
 
-    public int addShards(int totalCount) {
+    public int addShards(final int totalCount) {
         int numShards = 0;
         PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
-            ApiCounter current = getThisCounter(pm);
+            final ApiCounter current = getThisCounter(pm);
             if (current != null) {
                 numShards = current.getShardCount();
                 current.setShardCount(numShards + totalCount);
@@ -165,9 +161,11 @@ public class ShardedCounter {
 
         pm = PMF.get().getPersistenceManager();
         try {
+            ApiCounterShard newShard;
             for (int i = 0; i < totalCount; i++) {
-                ApiCounterShard newShard = new ApiCounterShard(
-                        getCounterName(), numShards);
+
+                newShard = new ApiCounterShard(
+                        counterName, numShards);
                 pm.makePersistent(newShard);
                 numShards++;
             }
@@ -188,7 +186,7 @@ public class ShardedCounter {
 
     public void increment(final int totalCount) {
         if (cache != null) {
-            Integer cachedCount = (Integer) cache.get(COUNT + counterName);
+            final Integer cachedCount = (Integer) cache.get(COUNT + counterName);
             if (cachedCount != null) {
                 cache.put(COUNT + counterName,
                         totalCount + cachedCount);
@@ -198,26 +196,26 @@ public class ShardedCounter {
         int shardCount = 0;
         PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
-            ApiCounter current = getThisCounter(pm);
+            final ApiCounter current = getThisCounter(pm);
             shardCount = current.getShardCount();
         } finally {
             pm.close();
         }
 
-        Random generator = new Random();
-        int shardNum = generator.nextInt(shardCount);
+        final Random generator = new Random();
+        final int shardNum = generator.nextInt(shardCount);
 
         pm = PMF.get().getPersistenceManager();
         try {
-            Query randomShardQuery = pm.newQuery(ApiCounterShard.class);
+            final Query randomShardQuery = pm.newQuery(ApiCounterShard.class);
             randomShardQuery.setFilter(
                     "counterName == nameParam && shardNumber == numParam");
             randomShardQuery.declareParameters("String nameParam, int numParam");
-            List<ApiCounterShard> shards =
+            final List<ApiCounterShard> shards =
                     (List<ApiCounterShard>) randomShardQuery.execute(
                             counterName, shardNum);
             if (shards != null && !shards.isEmpty()) {
-                ApiCounterShard shard = shards.get(0);
+                final ApiCounterShard shard = shards.get(0);
                 shard.increment(totalCount);
                 pm.makePersistent(shard);
             }

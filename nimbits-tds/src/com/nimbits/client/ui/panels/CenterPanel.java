@@ -95,8 +95,9 @@ public class CenterPanel extends NavigationEventProvider {
         navTree.addValueEnteredListeners(new ValueEnteredListener() {
             @Override
             public void onValueEntered(GxtModel model, Value value) {
+                AnnotatedTimeLinePanel p;
               for (int i = 0; i < chartContainer.getItemCount(); i++) {
-                  AnnotatedTimeLinePanel p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
+                  p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
                   try {
                       p.addValue(model, value);
                   } catch (NimbitsException e) {
@@ -210,8 +211,9 @@ public class CenterPanel extends NavigationEventProvider {
         line.addListener(Events.OnClick, new Listener<BaseEvent>() {
             @Override
             public void handleEvent(BaseEvent baseEvent) {
+                AnnotatedTimeLinePanel p;
                 for (int i = 0; i < chartContainer.getItemCount(); i ++) {
-                    AnnotatedTimeLinePanel p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
+                    p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
                     line.setSelected(p.getName().equals(line.getName()));
                 }
             }

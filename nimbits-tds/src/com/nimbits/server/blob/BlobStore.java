@@ -11,23 +11,17 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server.cron;
+package com.nimbits.server.blob;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import com.nimbits.client.enums.*;
 
-public class NimbitsStats extends HttpServlet {
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
-
-    @Override
-    public void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
-
-
-    }
+/**
+ * Created by Benjamin Sautner
+ * User: ubuntu
+ * Date: 11/15/11
+ * Time: 5:05 PM
+ *
+ */
+public interface BlobStore {
+    String createFile(final String data, final ExportType exportType) ;
 }

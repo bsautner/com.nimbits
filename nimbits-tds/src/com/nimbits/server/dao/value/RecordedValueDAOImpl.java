@@ -33,7 +33,7 @@ public class RecordedValueDAOImpl implements RecordedValueTransactions {
     private static final Logger log = Logger.getLogger(RecordedValueDAOImpl.class.getName());
     private final Point point;
 
-    public RecordedValueDAOImpl(Point point) {
+    public RecordedValueDAOImpl(final Point point) {
         this.point = point;
     }
 
@@ -44,16 +44,16 @@ public class RecordedValueDAOImpl implements RecordedValueTransactions {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
 
-            Query q = pm.newQuery(RecordedValue.class,
+            final Query q = pm.newQuery(RecordedValue.class,
                     "pointFK == k  && timestamp <= d");
             q.declareImports("import java.util.Date;");
-            Map<String, Object> args = new HashMap<String, Object>();
+            final Map<String, Object> args = new HashMap<String, Object>(2);
             args.put("k", point.getId());
             args.put("d", timestamp);
             q.declareParameters("String k, Date d");
             q.setOrdering("timestamp descending");
             q.setRange(0, 1);
-            List<Value> data = (List<Value>) q.executeWithMap(args);
+            final List<Value> data = (List<Value>) q.executeWithMap(args);
             if (data.size() > 0) {
 
                 retObj = ValueModelFactory.createValueModel(data.get(0));
@@ -81,7 +81,7 @@ public class RecordedValueDAOImpl implements RecordedValueTransactions {
         try {
             final Query q = pm.newQuery(RecordedValue.class, "pointFK== k");
             q.declareImports("import java.util.Date");
-            final Map<String, Long> args = new HashMap<String, Long>();
+            final Map<String, Long> args = new HashMap<String, Long>(1);
             args.put("k", point.getId());
 
             q.setRange(0, maxValues);
@@ -105,15 +105,15 @@ public class RecordedValueDAOImpl implements RecordedValueTransactions {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         try {
-            Query q = pm.newQuery(RecordedValue.class, "pointFK== k && timestamp <= d");
+            final Query q = pm.newQuery(RecordedValue.class, "pointFK== k && timestamp <= d");
             q.declareImports("import java.util.Date");
-            Map<String, Object> args = new HashMap<String, Object>();
+            final Map<String, Object> args = new HashMap<String, Object>(2);
             args.put("k", point.getId());
             args.put("d", endDate);
             q.setRange(0, maxValues);
             q.declareParameters("Long k");
             q.setOrdering("timestamp descending");
-            @SuppressWarnings(Const.WARNING_UNCHECKED)
+            @SuppressWarnings(Const.WARNING_UNCHECKED) final
             List<Value> data = (List<Value>) q
                     .executeWithMap(args);
             retObj = ValueModelFactory.createValueModels(data);
@@ -134,7 +134,7 @@ public class RecordedValueDAOImpl implements RecordedValueTransactions {
         Query q = pm.newQuery(RecordedValue.class,
                 "pointFK== k && timestamp >= sd && timestamp <= ed");
         q.declareImports("import java.util.Date");
-        Map<String, Object> args = new HashMap<String, Object>();
+        final Map<String, Object> args = new HashMap<String, Object>(3);
         args.put("k", point.getId());
         //args.put(Const.PARAM_START_DATE, timespan.getStart());
         //args.put(Const.PARAM_END_DATE, timespan.getEnd());
@@ -145,7 +145,7 @@ public class RecordedValueDAOImpl implements RecordedValueTransactions {
         q.setOrdering("timestamp descending");
 
         try {
-            List<Value> data = (List<Value>) q.executeWithMap(args);
+            final List<Value> data = (List<Value>) q.executeWithMap(args);
 
             retObj = ValueModelFactory.createValueModels(data);
 
@@ -160,9 +160,9 @@ public class RecordedValueDAOImpl implements RecordedValueTransactions {
 
     @Override
     public List<Value> getDataSegment(final Timespan timespan, final int start, final int end) {
-        List<Value> retObj;
+        final List<Value> retObj;
 
-        final Map<String, Object> args = new HashMap<String, Object>();
+        final Map<String, Object> args = new HashMap<String, Object>(3);
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final Query q = pm.newQuery(RecordedValue.class,
                 "pointFK== k && " +
@@ -207,7 +207,7 @@ public class RecordedValueDAOImpl implements RecordedValueTransactions {
     @Override
     public void recordValues(final List<Value> values) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final List<RecordedValue> jdoVals = new ArrayList<RecordedValue>();
+        final List<RecordedValue> jdoVals = new ArrayList<RecordedValue>(values.size());
         for (final Value v : values) {
             jdoVals.add(new RecordedValue(point, v));
         }
@@ -226,7 +226,7 @@ public class RecordedValueDAOImpl implements RecordedValueTransactions {
     }
 
     @Override
-    public List<Value> getCache(Timespan timespan) throws NimbitsException {
+    public List<Value> getCache(final Timespan timespan) throws NimbitsException {
         throw new NimbitsException("Not Implemented");
     }
 
@@ -236,7 +236,7 @@ public class RecordedValueDAOImpl implements RecordedValueTransactions {
     }
 
     @Override
-    public void consolidateDate(Date timestamp) throws NimbitsException {
+    public void consolidateDate(final Date timestamp) throws NimbitsException {
         throw new NimbitsException("Not Implemented");
     }
 }

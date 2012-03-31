@@ -22,12 +22,12 @@ import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.service.datapoints.*;
-import com.nimbits.server.blobstore.*;
+import com.nimbits.server.blob.BlobStoreFactory;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.export.*;
 import com.nimbits.server.feed.*;
+import com.nimbits.server.task.TaskFactory;
 import com.nimbits.server.value.*;
-import com.nimbits.server.task.*;
 import com.nimbits.server.user.*;
 
 import java.util.*;
@@ -67,9 +67,9 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
         List<Point> points =  PointTransactionsFactory.getInstance(getUser()).getPoints(entityList);
         Map<String, Point> retObj = new HashMap<String, Point>();
-
+        Value v;
         for (Point p : points) {
-            Value v  = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
+            v  = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
             p.setValue(v);
             retObj.put(p.getUUID(), p);
         }
@@ -80,7 +80,7 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     @Override
     public void deletePoint(User u, Entity entity) {
           Point deleted = PointTransactionsFactory.getInstance(u).deletePoint(entity);
-          TaskFactoryLocator.getInstance().startDeleteDataTask(deleted, false, 0);
+          TaskFactory.getInstance().startDeleteDataTask(deleted, false, 0);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
         Point result = PointTransactionsFactory.getInstance(u).updatePoint(point);
         if (result != null) {
-            TaskFactoryLocator.getInstance().startPointMaintTask(result);
+            TaskFactory.getInstance().startPointMaintTask(result);
         }
         return result;
     }

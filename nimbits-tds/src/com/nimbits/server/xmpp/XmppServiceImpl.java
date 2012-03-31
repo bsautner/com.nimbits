@@ -54,7 +54,7 @@ public class XmppServiceImpl extends RemoteServiceServlet implements XMPPService
 
     }
 
-    private void send(String msgBody, JID jid) {
+    private static void send(final String msgBody, final JID jid) {
         final Message msg = new MessageBuilder()
                 .withRecipientJids(jid)
                 .withBody(msgBody)
@@ -65,11 +65,12 @@ public class XmppServiceImpl extends RemoteServiceServlet implements XMPPService
     }
 
     @Override
-    public void sendMessage(List<XmppResource> resources, String message, EmailAddress email) throws NimbitsException {
+    public void sendMessage(final List<XmppResource> resources, final String message, final EmailAddress email) throws NimbitsException {
         for (XmppResource resource : resources) {
             Entity entity = EntityServiceFactory.getInstance().getEntityByUUID(resource.getUuid());
+            final JID jid;
             if (entity != null) {
-                final JID jid = new JID(email.getValue() + "/" + entity.getName().getValue());
+              jid = new JID(email.getValue() + "/" + entity.getName().getValue());
                 send(message, jid);
                 log.info("stanza sent with jid: " + email.getValue() + "/" + entity.getName().getValue());
             }

@@ -14,7 +14,7 @@
 package com.nimbits.server.email;
 
 import com.nimbits.client.constants.*;
-import com.nimbits.server.task.*;
+import com.nimbits.server.task.TaskFactory;
 
 import javax.activation.*;
 import javax.mail.*;
@@ -53,7 +53,7 @@ public class MailHandlerServlet extends HttpServlet {
             if (a.length > 0) {
                 final InternetAddress aa = (InternetAddress) a[0];
                 final String fromAddress = aa.getAddress();
-                TaskFactoryLocator.getInstance().startIncomingMailTask(fromAddress, inContent);
+                TaskFactory.getInstance().startIncomingMailTask(fromAddress, inContent);
 
             }
         } catch (MessagingException e) {

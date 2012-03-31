@@ -61,7 +61,7 @@ public class CommonFactoryImpl implements CommonFactory {
        if (name.contains(Const.REGEX_SPECIAL_CHARS)) {
           throw new NimbitsException("A name cannot contain these chars" + Const.REGEX_SPECIAL_CHARS);
        }
-       if (name.length() > 500) {
+       if (name.length() > Const.CONST_MAX_NAME_LENGTH) {
            throw new NimbitsException("Whoa! That's a long name. Names must be less than 500 chars!");
 
        }

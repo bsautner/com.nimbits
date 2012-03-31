@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2010 Tonic Solutions LLC.
+ *
+ * http://www.nimbits.com
+ *
+ *
+ * Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.gnu.org/licenses/gpl.html
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+ */
+
 package com.nimbits.server.dao.intelligence;
 
 import com.nimbits.*;
@@ -21,7 +34,7 @@ public class IntelligenceDAOImpl implements IntelligenceTransactions {
 
 
     @Override
-    public Intelligence getIntelligence(Entity entity) {
+    public Intelligence getIntelligence(final Entity entity) {
         Intelligence retObj = null;
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
@@ -40,20 +53,20 @@ public class IntelligenceDAOImpl implements IntelligenceTransactions {
     }
 
     @Override
-    public Intelligence addUpdateIntelligence(Intelligence update) {
+    public Intelligence addUpdateIntelligence(final Intelligence update) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        List<Intelligence> results;
+        final List<Intelligence> results;
 
 
         try {
 
-            Query q = pm.newQuery(DataPointIntelligenceEntity.class, "uuid==u");
+            final Query q = pm.newQuery(DataPointIntelligenceEntity.class, "uuid==u");
             q.declareParameters("String u");
             q.setRange(0, 1);
             results = (List<Intelligence>) q.execute(update.getUUID());
             if (results.size() > 0) {
-                Intelligence result = results.get(0);
-                Transaction tx = pm.currentTransaction();
+                final Intelligence result = results.get(0);
+                final Transaction tx = pm.currentTransaction();
                 tx.begin();
                 result.setEnabled(update.getEnabled());
                 result.setInput(update.getInput());
@@ -69,7 +82,7 @@ public class IntelligenceDAOImpl implements IntelligenceTransactions {
 
             }
             else {
-                DataPointIntelligenceEntity s = new DataPointIntelligenceEntity(update);
+                final DataPointIntelligenceEntity s = new DataPointIntelligenceEntity(update);
 
                 pm.makePersistent(s);
                 return IntelligenceFactory.createIntelligence(s);
@@ -84,7 +97,7 @@ public class IntelligenceDAOImpl implements IntelligenceTransactions {
     }
 
     @Override
-    public List<Intelligence> getIntelligence(Point point) {
+    public List<Intelligence> getIntelligence(final Point point) {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
@@ -101,7 +114,7 @@ public class IntelligenceDAOImpl implements IntelligenceTransactions {
     }
 
     @Override
-    public void deleteIntelligence(Entity entity) {
+    public void deleteIntelligence(final Entity entity) {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 

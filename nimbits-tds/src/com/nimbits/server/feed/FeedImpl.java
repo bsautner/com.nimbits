@@ -13,31 +13,37 @@
 
 package com.nimbits.server.feed;
 
-import com.google.gson.*;
-import com.google.gwt.user.server.rpc.*;
-import com.nimbits.client.common.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.feed.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.client.service.feed.*;
-import com.nimbits.server.common.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.point.*;
-import com.nimbits.server.value.*;
-import com.nimbits.server.user.*;
-import org.apache.commons.lang3.exception.*;
+import com.google.gson.JsonSyntaxException;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.FeedType;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.feed.FeedValue;
+import com.nimbits.client.model.feed.FeedValueModel;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.client.service.feed.Feed;
+import com.nimbits.server.common.ServerInfoImpl;
+import com.nimbits.server.entity.EntityServiceFactory;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.point.PointServiceFactory;
+import com.nimbits.server.user.UserServiceFactory;
+import com.nimbits.server.value.RecordedValueServiceFactory;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
-import java.io.*;
-import java.net.*;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.*;
-import java.util.logging.*;
+import java.util.logging.Logger;
 
 /**
  * Created by Benjamin Sautner
@@ -48,14 +54,14 @@ import java.util.logging.*;
 public class FeedImpl extends RemoteServiceServlet implements Feed {
     private static final Logger log = Logger.getLogger(FeedImpl.class.getName());
 
-    private User getUser() {
-        try {
-            return UserServiceFactory.getServerInstance().getHttpRequestUser(
-                    this.getThreadLocalRequest());
-        } catch (NimbitsException e) {
-            return null;
-        }
-    }
+//    private User getUser() {
+//        try {
+//            return UserServiceFactory.getServerInstance().getHttpRequestUser(
+//                    this.getThreadLocalRequest());
+//        } catch (NimbitsException e) {
+//            return null;
+//        }
+//    }
 
     @Override
     public void postToFeed(final User user, final Entity entity, final Point originalPoint, final Value value, final FeedType type) throws NimbitsException {
@@ -76,7 +82,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
 
 
         } catch (NimbitsException e) {
-             log.severe(e.getMessage());
+            log.severe(e.getMessage());
         }
 
     }
@@ -84,9 +90,9 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
     public void postToFeed(final User user, final String message, final FeedType type) throws NimbitsException {
         final Point point = getFeedPoint(user);
 
-        String fullHTML =  generatePostToFeedHtml(message, type);
-        String shortened = shortenFeedMessage(message, fullHTML);
-        String finalMessage = generatePostToFeedHtml(shortened, type);
+        final String fullHTML =  generatePostToFeedHtml(message, type);
+        final String shortened = shortenFeedMessage(message, fullHTML);
+        final String finalMessage = generatePostToFeedHtml(shortened, type);
 
         final FeedValue feedValue = new FeedValueModel(finalMessage, "", type);
         final String json = GsonFactory.getSimpleInstance().toJson(feedValue);
@@ -97,30 +103,27 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
 
     }
 
-    private String  generatePostToFeedHtml(String message, FeedType type) {
-        final StringBuilder sb = new StringBuilder() ;
+    private String  generatePostToFeedHtml(final String message, final FeedType type) {
+        final StringBuilder sb = new StringBuilder(200) ;
         switch (type) {
 
             case error:
-                sb.append("<p><img src=\"" + ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest()) +
-                        "/resources/images/symbol-error.png\" align=\"left\" width=\"35\" height=\"35\">");
-                sb.append("<p style=\"color:red\">Error reported<p>");
+                sb.append("<p><img src=\"")
+                        .append(ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest()))
+                        .append("/resources/images/symbol-error.png\" align=\"left\" width=\"35\" height=\"35\">")
+                        .append("<p style=\"color:red\">Error reported<p>");
                 break;
             case system:
-                sb.append("<p><img src=\"" + ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest()) +
-                        "/resources/images/logo.png\" align=\"left\" width=\"40\" height=\"40\">");
+                sb.append("<p><img src=\"").append(ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest())).append("/resources/images/logo.png\" align=\"left\" width=\"40\" height=\"40\">");
                 break;
             case info:
-                sb.append("<p><img src=\"" + ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest()) +
-                        "/resources/images/info.png\" align=\"left\" width=\"35\" height=\"35\">");
+                sb.append("<p><img src=\"").append(ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest())).append("/resources/images/info.png\" align=\"left\" width=\"35\" height=\"35\">");
                 break;
             case data:
-                sb.append("<p><img src=\"" + ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest()) +
-                        "/resources/images/point_ok.png\" align=\"left\" width=\"40\" height=\"40\">");
+                sb.append("<p><img src=\"").append(ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest())).append("/resources/images/point_ok.png\" align=\"left\" width=\"40\" height=\"40\">");
                 break;
             default:
-                sb.append("<p><img src=\"" + ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest()) +
-                        "/resources/images/logo.png\" align=\"left\" width=\"40\" height=\"40\">");
+                sb.append("<p><img src=\"").append(ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest())).append("/resources/images/logo.png\" align=\"left\" width=\"40\" height=\"40\">");
         }
 
 
@@ -129,10 +132,10 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
         return sb.toString();
     }
 
-    private String shortenFeedMessage(final String message, final String fullHTML) {
+    private static String shortenFeedMessage(final String message, final String fullHTML) {
         if (message.length() > Const.DEFAULT_FEED_LENGTH) {
             try {
-               final String shorterHtml =  (message.length() > Const.DEFAULT_FEED_LENGTH) ?  message.substring(0, Const.DEFAULT_FEED_LENGTH) : message;
+                final String shorterHtml =  (message.length() > Const.DEFAULT_FEED_LENGTH) ?  message.substring(0, Const.DEFAULT_FEED_LENGTH) : message;
                 return shorterHtml
                         + "<a href=\"#\" onclick=\"window.open('feed.html?content=" + URLEncoder.encode(fullHTML, Const.CONST_ENCODING) + "', 'Feed'," +
                         "'height=400,width=400,toolbar=0,status=0,location=0' );\" >" +
@@ -152,7 +155,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
     }
 
     private String valueToHtml(final Entity entity, final Point point, final Value value) {
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder(1024);
         if (! (Double.compare(value.getDoubleValue(), Const.CONST_IGNORED_NUMBER_VALUE) == 0)) {
             sb.append("<img align=\"left\" src=\"")
                     .append(ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest()));
@@ -214,7 +217,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
             point = createFeedPoint(user);
         }
         else {
-            Entity e =  map.values().iterator().next();
+            final Entity e =  map.values().iterator().next();
             point = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
         }
         return point;
@@ -225,14 +228,14 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
         //User user = getUser();
         final User user = UserServiceFactory.getInstance().getUserByUUID(feedOwnersUUID);
         final Point point = getFeedPoint(user);
-        List<Value> values = RecordedValueServiceFactory.getInstance().getTopDataSeries(point, count, new Date());
-        List<FeedValue> retObj = new ArrayList<FeedValue>();
+        final List<Value> values = RecordedValueServiceFactory.getInstance().getTopDataSeries(point, count, new Date());
+        final List<FeedValue> retObj = new ArrayList<FeedValue>(values.size());
         FeedValue fv;
 
-        for (Value v : values) {
+        for (final Value v : values) {
             if (! Utils.isEmptyString(v.getData())) {
                 try {
-                  fv =  GsonFactory.getInstance().fromJson(v.getData(), FeedValueModel.class);
+                    fv =  GsonFactory.getInstance().fromJson(v.getData(), FeedValueModel.class);
                     retObj.add(fv);
                 } catch (JsonSyntaxException ignored) {
 

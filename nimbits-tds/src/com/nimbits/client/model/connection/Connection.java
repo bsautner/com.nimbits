@@ -13,10 +13,10 @@
 
 package com.nimbits.client.model.connection;
 
-import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.email.EmailAddress;
 
-import java.io.*;
-import java.util.*;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by bsautner

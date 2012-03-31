@@ -13,11 +13,13 @@
 
 package com.nimbits.server.entity;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Benjamin Sautner
@@ -37,7 +39,7 @@ public interface EntityTransactions {
 
     List<Entity> getEntities() throws NimbitsException;
 
-    void deleteEntity(Entity entity) throws NimbitsException;
+    List<Entity> deleteEntity(Entity entity) throws NimbitsException;
 
     Entity getEntityByUUID(String uuid) throws NimbitsException;
 

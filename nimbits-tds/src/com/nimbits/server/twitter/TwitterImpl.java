@@ -13,24 +13,31 @@
 
 package com.nimbits.server.twitter;
 
-import com.google.gwt.core.client.*;
-import com.google.gwt.http.client.*;
-import com.google.gwt.user.server.rpc.*;
-import com.nimbits.client.common.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.email.*;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.user.User;
-import com.nimbits.client.service.twitter.*;
-import com.nimbits.server.settings.*;
-import com.nimbits.server.user.*;
-import twitter4j.*;
-import twitter4j.auth.*;
-import twitter4j.conf.*;
+import com.nimbits.client.service.twitter.TwitterService;
+import com.nimbits.server.settings.SettingTransactionsFactory;
+import com.nimbits.server.user.UserTransactionFactory;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import twitter4j.auth.AccessToken;
+import twitter4j.auth.RequestToken;
+import twitter4j.conf.ConfigurationBuilder;
 
-import javax.servlet.http.*;
-import java.util.logging.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.logging.Logger;
 
 /**
  * Created by bsautner

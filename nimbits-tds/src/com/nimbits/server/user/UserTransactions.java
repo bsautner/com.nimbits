@@ -13,14 +13,15 @@
 
 package com.nimbits.server.user;
 
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.connection.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.user.*;
-import twitter4j.auth.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.connection.Connection;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.user.User;
+import twitter4j.auth.AccessToken;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 public interface UserTransactions {
 
@@ -31,8 +32,6 @@ public interface UserTransactions {
     User getNimbitsUser(final EmailAddress emailAddress) throws NimbitsException;
 
     List<User> getAllUsers(final String sortColumn, int count);
-
-    List<User> getUsers(int start, int end);
 
     User getNimbitsUserByID(final long id) throws NimbitsException;
 

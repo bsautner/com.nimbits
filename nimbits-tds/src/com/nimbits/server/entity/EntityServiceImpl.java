@@ -15,7 +15,7 @@ package com.nimbits.server.entity;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.nimbits.client.common.Utils;
-import com.nimbits.client.constants.*;
+import com.nimbits.client.constants.UserMessages;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.FeedType;
 import com.nimbits.client.enums.ProtectionLevel;
@@ -27,6 +27,7 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.server.blob.BlobServiceFactory;
 import com.nimbits.server.calculation.CalculationServiceFactory;
+import com.nimbits.server.core.CoreFactory;
 import com.nimbits.server.feed.FeedServiceFactory;
 import com.nimbits.server.intelligence.IntelligenceServiceFactory;
 import com.nimbits.server.orm.EntityStore;
@@ -59,12 +60,12 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     }
 
     @Override
-    public Entity addUpdateEntity(EntityName name, EntityType type) throws NimbitsException {
-        User u = getUser();
+    public Entity addUpdateEntity(final EntityName name, final EntityType type) throws NimbitsException {
+        final User u = getUser();
 
-        Entity e = EntityModelFactory.createEntity(name, "", type, ProtectionLevel.everyone,
+        final Entity e = EntityModelFactory.createEntity(name, "", type, ProtectionLevel.everyone,
                 UUID.randomUUID().toString(), u.getUuid(), u.getUuid());
-        Entity r = EntityTransactionFactory.getInstance(u).addUpdateEntity(e);
+        final Entity r = EntityTransactionFactory.getInstance(u).addUpdateEntity(e);
         switch (type) {
             case point:
                 PointServiceFactory.getInstance().addPoint(u, r);
@@ -81,8 +82,14 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     }
 
     @Override
-    public void deleteEntity(final User user, final Entity entity) throws NimbitsException {
-        EntityTransactionFactory.getInstance(user).deleteEntity(entity);
+    public List<Entity> deleteEntity(final User user, final Entity entity) throws NimbitsException {
+       final List<Entity> deleted =  EntityTransactionFactory.getInstance(user).deleteEntity(entity);
+        for (final Entity e : deleted) {
+            EntityTransactionFactory.getInstance(user).removeEntityFromCache(e);
+            CoreFactory.getInstance().reportDeleteToCore(entity);
+            FeedServiceFactory.getInstance().postToFeed(user,entity.getEntityType().name() +
+                    ' ' + entity.getName().toString() + " deleted ", FeedType.info);
+        }
         //todo - delete or disable subscriptions to entity
 
 
@@ -121,8 +128,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
                 break;
         }
 
-            FeedServiceFactory.getInstance().postToFeed(user,entity.getEntityType().name() +
-                    " " + entity.getName().toString() + " deleted ", FeedType.info);
+         return deleted;
 
 
 
@@ -141,8 +147,8 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     }
 
     @Override
-    public Entity addUpdateEntity(Entity entity) throws NimbitsException {
-        User u = getUser();
+    public Entity addUpdateEntity(final Entity entity) throws NimbitsException {
+        final User u = getUser();
         if (Utils.isEmptyString(entity.getOwner())) {
             entity.setOwner(u.getUuid());
         }
@@ -152,41 +158,44 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
         if (Utils.isEmptyString(entity.getEntity())) {
             entity.setEntity(UUID.randomUUID().toString());
         }
-        return addUpdateEntity(u, entity);
+
+        final Entity e=  addUpdateEntity(u, entity);
+        CoreFactory.getInstance().reportUpdateToCore(e);
+        return e;
     }
 
     @Override
-    public void deleteEntity(Entity entity) throws NimbitsException {
+    public List<Entity> deleteEntity(final Entity entity) throws NimbitsException {
         User u = getUser();
         if (u == null)  {
             u = UserServiceFactory.getInstance().getUserByUUID(entity.getOwner());
         }
-        deleteEntity(u, entity);
+       return  deleteEntity(u, entity);
     }
 
     @Override
-    public Entity getEntityByUUID(String uuid) throws NimbitsException {
+    public Entity getEntityByUUID(final String uuid) throws NimbitsException {
        return EntityTransactionFactory.getInstance(getUser()).getEntityByUUID(uuid);
     }
 
     @Override
-    public Map<String, Entity> getEntityMap(EntityType type) throws NimbitsException {
+    public Map<String, Entity> getEntityMap(final EntityType type) throws NimbitsException {
        return EntityTransactionFactory.getInstance(getUser()).getEntityMap(type);
     }
 
     @Override
-    public Map<String, Entity> getEntityMap(User user, EntityType type) throws NimbitsException {
+    public Map<String, Entity> getEntityMap(final User user, final EntityType type) throws NimbitsException {
         return EntityTransactionFactory.getInstance(user).getEntityMap(type);
     }
 
     @Override
-    public Map<EntityName, Entity> getEntityNameMap(EntityType type) throws NimbitsException {
+    public Map<EntityName, Entity> getEntityNameMap(final EntityType type) throws NimbitsException {
         return EntityTransactionFactory.getInstance(getUser()).getEntityNameMap(type);
     }
 
     @Override
-    public Entity copyEntity(Entity originalEntity, EntityName newName) throws NimbitsException {
-        Entity newEntity = new EntityStore(originalEntity);
+    public Entity copyEntity(final Entity originalEntity, final EntityName newName) throws NimbitsException {
+        final Entity newEntity = new EntityStore(originalEntity);
         newEntity.setEntity(UUID.randomUUID().toString());
         switch (newEntity.getEntityType()) {
 
@@ -206,34 +215,34 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     }
 
     @Override
-    public List<Entity> getChildren(Entity parentEntity, EntityType type) {
+    public List<Entity> getChildren(final Entity parentEntity, final EntityType type) {
         return EntityTransactionFactory.getInstance(getUser()).getChildren(parentEntity, type);
     }
 
 
 
     @Override
-    public Entity getEntityByName(EntityName name) throws NimbitsException {
+    public Entity getEntityByName(final EntityName name) throws NimbitsException {
        return EntityTransactionFactory.getInstance(getUser()).getEntityByName(name);
     }
 
     @Override
-    public Map<String, Entity> getSystemWideEntityMap(EntityType type) throws NimbitsException {
+    public Map<String, Entity> getSystemWideEntityMap(final EntityType type) throws NimbitsException {
         return EntityTransactionFactory.getInstance(null).getSystemWideEntityMap(type);
     }
 
     @Override
-    public void removeEntityFromCache(Entity entity) throws NimbitsException {
+    public void removeEntityFromCache(final Entity entity) throws NimbitsException {
         throw new NimbitsException(UserMessages.ERROR_NOT_IMPLEMENTED);
     }
 
     @Override
-    public Entity addUpdateEntity(User user, Entity entity) throws NimbitsException {
+    public Entity addUpdateEntity(final User user, final Entity entity) throws NimbitsException {
         return EntityTransactionFactory.getInstance(user).addUpdateEntity(entity);
     }
 
     @Override
-    public Entity getEntityByUUID(User user, String entityId) throws NimbitsException {
+    public Entity getEntityByUUID(final User user, final String entityId) throws NimbitsException {
         return EntityTransactionFactory.getInstance(user).getEntityByUUID(entityId);
     }
 

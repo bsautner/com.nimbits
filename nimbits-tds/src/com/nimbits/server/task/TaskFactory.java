@@ -23,7 +23,7 @@ public class TaskFactory {
     protected TaskFactory() {
     }
 
-    private static Task instance;
+
 
     public static Task getInstance() {
 

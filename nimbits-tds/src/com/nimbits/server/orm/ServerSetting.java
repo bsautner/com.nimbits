@@ -13,7 +13,7 @@
 
 package com.nimbits.server.orm;
 
-import com.nimbits.client.enums.*;
+import com.nimbits.client.enums.SettingType;
 
 import javax.jdo.annotations.*;
 

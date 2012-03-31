@@ -14,17 +14,24 @@
 package com.nimbits.server.dao.entity;
 
 
-import com.nimbits.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.entity.*;
+import com.nimbits.PMF;
+import com.nimbits.client.constants.UserMessages;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.user.User;
+import com.nimbits.server.entity.EntityTransactions;
 import com.nimbits.server.orm.EntityStore;
 
-import javax.jdo.*;
-import java.util.*;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Benjamin Sautner
@@ -49,7 +56,8 @@ public class EntityDaoImpl implements  EntityTransactions {
 
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final Query q1 = pm.newQuery(EntityStore.class, "owner==b && entityType==t");
+        final Query q1 = pm.newQuery(EntityStore.class);
+        q1.setFilter("owner==b && entityType==t");
         q1.declareParameters("String b, Integer t");
         try {
 
@@ -76,7 +84,8 @@ public class EntityDaoImpl implements  EntityTransactions {
 
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final Query q1 = pm.newQuery(EntityStore.class, "owner==b && entityType==t");
+        final Query q1 = pm.newQuery(EntityStore.class);
+        q1.setFilter("owner==b && entityType==t");
         q1.declareParameters("String b, Integer t");
         try {
 
@@ -117,7 +126,8 @@ public class EntityDaoImpl implements  EntityTransactions {
     public Entity addUpdateEntity(final Entity entity) throws NimbitsException {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final Query q1 = pm.newQuery(EntityStore.class, "owner==o && entity==b");
+        final Query q1 = pm.newQuery(EntityStore.class);
+        q1.setFilter("owner==o && entity==b");
         q1.declareParameters("String o, String b");
         q1.setRange(0, 1);
 
@@ -185,7 +195,8 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     private static List<Entity> getEntityChildren(final PersistenceManager pm, final Entity entity) {
 
-        final Query q1 = pm.newQuery(EntityStore.class, "parent==b");
+        final Query q1 = pm.newQuery(EntityStore.class);
+        q1.setFilter("parent==b");
         q1.declareParameters("String b");
         final List<Entity> retObj = new ArrayList<Entity>(1024);
 
@@ -207,7 +218,8 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     private static List<Entity> getEntityChildren(final PersistenceManager pm, final Entity entity, final EntityType type) {
 
-        final Query q1 = pm.newQuery(EntityStore.class, "parent==b && entityType==t");
+        final Query q1 = pm.newQuery(EntityStore.class);
+        q1.setFilter("parent==b && entityType==t");
         q1.declareParameters("String b, Integer t");
         final List<Entity> retObj = new ArrayList<Entity>(1024);
 
@@ -231,9 +243,10 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     @Override
 
-    public void deleteEntity(final Entity entity) throws NimbitsException {
+    public List<Entity> deleteEntity(final Entity entity) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final Query q1 = pm.newQuery(EntityStore.class, "entity==b");
+        final Query q1 = pm.newQuery(EntityStore.class);
+        q1.setFilter("entity==b");
         q1.declareParameters("String b");
         q1.setRange(0, 1);
 
@@ -241,13 +254,17 @@ public class EntityDaoImpl implements  EntityTransactions {
 
             final List<Entity> c = (List<Entity>) q1.execute(entity.getEntity());
 
+
             if (c.size() > 0) {
                 final List<Entity> entities = getEntityChildren(pm, c.get(0));
                 entities.add(c.get(0));
-                for (final Entity e : entities) {
-                    EntityTransactionFactory.getInstance(user).removeEntityFromCache(e);
-                }
+                final List<Entity> deleted = EntityModelFactory.createEntities(user, entities);
+
                 pm.deletePersistentAll(entities);
+                return deleted;
+            }
+            else {
+                return new ArrayList<Entity>(0);
             }
         } finally {
             pm.close();
@@ -261,7 +278,8 @@ public class EntityDaoImpl implements  EntityTransactions {
 
 
         try {
-            final Query q1 = pm.newQuery(EntityStore.class, "entity==b");
+            final Query q1 = pm.newQuery(EntityStore.class);
+            q1.setFilter("entity==b");
             q1.declareParameters("String b");
             q1.setRange(0, 1);
             final List<Entity> c = (List<Entity>) q1.execute(uuid);
@@ -287,7 +305,8 @@ public class EntityDaoImpl implements  EntityTransactions {
 
 
         try {
-            final Query q1 = pm.newQuery(EntityStore.class, "name==b && owner==o");
+            final Query q1 = pm.newQuery(EntityStore.class);
+            q1.setFilter("name==b && owner==o");
             q1.declareParameters("String b, String o");
             q1.setRange(0, 1);
             final List<Entity> c = (List<Entity>) q1.execute(name.getValue(), user.getUuid());
@@ -311,7 +330,8 @@ public class EntityDaoImpl implements  EntityTransactions {
 
 
         try {
-            final Query q1 = pm.newQuery(EntityStore.class, "name==b && owner==o && entityType==t");
+            final Query q1 = pm.newQuery(EntityStore.class);
+            q1.setFilter("name==b && owner==o && entityType==t");
             q1.declareParameters("String b, String o, Integer t");
             q1.setRange(0, 1);
             final List<Entity> c = (List<Entity>) q1.execute(
@@ -339,7 +359,8 @@ public class EntityDaoImpl implements  EntityTransactions {
 
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final Query q1 = pm.newQuery(EntityStore.class, "entityType==t");
+        final Query q1 = pm.newQuery(EntityStore.class);
+        q1.setFilter("entityType==t");
         q1.declareParameters("Integer t");
         try {
 

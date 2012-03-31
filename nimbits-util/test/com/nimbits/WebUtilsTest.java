@@ -1,6 +1,7 @@
 package com.nimbits;
 
 import com.nimbits.client.enums.*;
+import com.nimbits.helper.DevelopmentSettingsHelper;
 import org.junit.*;
 import static org.junit.Assert.assertTrue;
 
@@ -17,7 +18,7 @@ public class WebUtilsTest {
     @Test
     public void createSiteMapTest() throws IOException {
          WebUtils.createSiteMap();
-         File file = new File(Settings.getSetting(SettingType.source) + "/nimbits-web/web/sitemap.html");
+         File file = new File(DevelopmentSettingsHelper.getSetting(SettingType.source) + "/nimbits-web/web/sitemap.html");
 
          assertTrue(file.exists());
     }

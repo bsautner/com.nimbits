@@ -13,19 +13,24 @@
 
 package com.nimbits.server.task;
 
-import com.google.gson.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.server.calculation.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.intelligence.*;
-import com.nimbits.server.subscription.*;
+import com.google.gson.Gson;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModel;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.user.UserModel;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.ValueModel;
+import com.nimbits.server.calculation.CalculationServiceFactory;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.intelligence.IntelligenceServiceFactory;
+import com.nimbits.server.subscription.SubscriptionServiceFactory;
 
-import javax.servlet.http.*;
-import java.util.logging.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.logging.Logger;
 
 public class RecordValueTask extends HttpServlet {
 

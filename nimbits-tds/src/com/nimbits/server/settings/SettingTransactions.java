@@ -14,10 +14,10 @@
 package com.nimbits.server.settings;
 
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
+import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.exception.NimbitsException;
 
-import java.util.*;
+import java.util.Map;
 
 public interface SettingTransactions {
 

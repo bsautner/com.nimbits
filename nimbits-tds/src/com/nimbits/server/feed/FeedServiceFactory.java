@@ -13,7 +13,7 @@
 
 package com.nimbits.server.feed;
 
-import com.nimbits.client.service.feed.*;
+import com.nimbits.client.service.feed.Feed;
 
 /**
  * Created by Benjamin Sautner

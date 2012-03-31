@@ -13,7 +13,7 @@
 
 package com.nimbits.server.orm;
 
-import com.nimbits.client.model.calculation.*;
+import com.nimbits.client.model.calculation.Calculation;
 
 import javax.jdo.annotations.*;
 

@@ -13,10 +13,10 @@
 
 package com.nimbits.client.service.settings;
 
-import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.enums.*;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.nimbits.client.enums.SettingType;
 
-import java.util.*;
+import java.util.Map;
 
 public interface SettingsServiceAsync {
 

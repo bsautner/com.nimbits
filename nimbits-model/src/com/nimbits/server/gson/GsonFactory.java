@@ -45,7 +45,7 @@ public class GsonFactory {
 
 
     public static Gson getInstance() {
-        // if (instance == null) {
+       if (instance == null) {
         instance = new GsonBuilder()
                 .setDateFormat(Const.GSON_DATE_FORMAT)
                 .serializeNulls()
@@ -63,7 +63,7 @@ public class GsonFactory {
                         // .registerTypeAdapter(Date.class, new DateDeserializer())
                         //  .registerTypeAdapter(Date.class, new DateSerializer())
                 .create();
-        //  }
+        }
         return instance;
     }
 

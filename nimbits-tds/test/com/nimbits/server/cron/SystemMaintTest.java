@@ -13,15 +13,16 @@
 
 package com.nimbits.server.cron;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import helper.*;
-import org.junit.*;
+import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.exception.NimbitsException;
+import helper.NimbitsServletTest;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.util.Map;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-
-import java.io.*;
-import java.util.*;
 
 /**
  * Created by Benjamin Sautner

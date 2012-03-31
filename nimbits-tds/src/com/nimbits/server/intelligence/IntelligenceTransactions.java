@@ -13,11 +13,11 @@
 
 package com.nimbits.server.intelligence;
 
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.intelligence.*;
-import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.intelligence.Intelligence;
+import com.nimbits.client.model.point.Point;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * Created by Benjamin Sautner

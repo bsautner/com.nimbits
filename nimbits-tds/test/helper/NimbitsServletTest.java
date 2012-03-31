@@ -15,6 +15,7 @@ package helper;
 
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.google.appengine.tools.development.testing.LocalTaskQueueTestConfig;
 import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.Parameters;
@@ -54,8 +55,9 @@ public class NimbitsServletTest {
     public final String email = "test@example.com";
     public final LocalServiceTestHelper helper = new LocalServiceTestHelper(
             new LocalDatastoreServiceTestConfig(),
+            new LocalTaskQueueTestConfig(),
             new LocalUserServiceTestConfig()).setEnvIsLoggedIn(true).setEnvEmail(email).setEnvAuthDomain("example.com");
-         //   new LocalTaskQueueTestConfig());
+
 
 
     public MockHttpServletRequest req;
@@ -75,6 +77,7 @@ public class NimbitsServletTest {
     public UserTransactions userTransactionsDao;
     public SettingTransactions settingsDAO;
     public Point point;
+    public Entity pointEntity;
 
 
 
@@ -106,10 +109,10 @@ public class NimbitsServletTest {
         Entity c = EntityModelFactory.createEntity(groupName, "", EntityType.category, ProtectionLevel.everyone, UUID.randomUUID().toString(), user.getUuid(), user.getUuid());
         c = EntityServiceFactory.getInstance().addUpdateEntity(c);
 
-        Entity e = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone, UUID.randomUUID().toString(), c.getEntity(), user.getUuid());
-        point = pointService.addPoint(user, e);
+        pointEntity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone, UUID.randomUUID().toString(), c.getEntity(), user.getUuid());
+        point = pointService.addPoint(user, pointEntity);
 
-        Entity e2 = EntityModelFactory.createEntity(pointChildName, "", EntityType.point, ProtectionLevel.everyone, UUID.randomUUID().toString(),e.getEntity(), user.getUuid());
+        Entity e2 = EntityModelFactory.createEntity(pointChildName, "", EntityType.point, ProtectionLevel.everyone, UUID.randomUUID().toString(),pointEntity.getEntity(), user.getUuid());
         pointService.addPoint(user, e2);
 
 

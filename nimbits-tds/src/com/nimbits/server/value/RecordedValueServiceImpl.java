@@ -13,23 +13,28 @@
 
 package com.nimbits.server.value;
 
-import com.google.gwt.http.client.*;
-import com.google.gwt.user.server.rpc.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.timespan.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.client.service.recordedvalues.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.point.*;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.enums.AlertType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.timespan.Timespan;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.service.recordedvalues.RecordedValueService;
+import com.nimbits.server.entity.EntityServiceFactory;
+import com.nimbits.server.point.PointServiceFactory;
 import com.nimbits.server.task.TaskFactory;
-import com.nimbits.server.user.*;
+import com.nimbits.server.user.UserServiceFactory;
 
-import java.util.*;
-import java.util.logging.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Logger;
 
 public class RecordedValueServiceImpl extends RemoteServiceServlet implements
         RecordedValueService, RequestCallback {
@@ -75,12 +80,12 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public List<Value> getCache(final Point point) throws NimbitsException {
-        return RecordedValueTransactionFactory.getInstance(point).getCache();
+        return RecordedValueTransactionFactory.getInstance(point).getBuffer();
     }
     @Override
     public List<Value> getCache(final Entity entity) throws NimbitsException {
         final Point point = PointServiceFactory.getInstance().getPointByUUID(entity.getEntity());
-        return RecordedValueTransactionFactory.getInstance(point).getCache();
+        return RecordedValueTransactionFactory.getInstance(point).getBuffer();
     }
 
     public List<Value> getPieceOfDataSegment(final Point point,

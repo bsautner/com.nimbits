@@ -13,22 +13,30 @@
 
 package com.nimbits.server.dao.point;
 
-import com.nimbits.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.orm.*;
-import com.nimbits.server.point.*;
+import com.nimbits.PMF;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.FilterType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModelFactory;
+import com.nimbits.client.model.user.User;
+import com.nimbits.server.orm.DataPoint;
+import com.nimbits.server.point.PointTransactions;
 import com.nimbits.server.task.TaskFactory;
 
-import javax.jdo.*;
-import javax.servlet.http.*;
-import java.util.*;
-import java.util.logging.*;
+import javax.jdo.JDOObjectNotFoundException;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+import java.util.logging.Logger;
 @SuppressWarnings(Const.WARNING_UNCHECKED)
 public class PointDaoImpl implements PointTransactions {
     private final Logger log = Logger.getLogger(PointDaoImpl.class.getName());
@@ -94,9 +102,6 @@ public class PointDaoImpl implements PointTransactions {
                 tx.begin();
                 original.setHighAlarm(update.getHighAlarm());
                 original.setLowAlarm(update.getLowAlarm());
-                original.setLowAlarmOn(update.isLowAlarmOn());
-                original.setHighAlarmOn(update.isHighAlarmOn());
-
                 original.setUnit(update.getUnit());
                 original.setExpire(update.getExpire());
                 original.setTag(update.getTag());
@@ -192,7 +197,7 @@ public class PointDaoImpl implements PointTransactions {
     public Point addPoint(final Entity entity, final Point point) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
-            final DataPoint jdoPoint = new DataPoint(u, entity);
+            final DataPoint jdoPoint = new DataPoint(u, entity, point);
 
             pm.makePersistent(jdoPoint);
 

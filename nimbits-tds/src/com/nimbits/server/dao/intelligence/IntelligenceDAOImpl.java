@@ -13,15 +13,18 @@
 
 package com.nimbits.server.dao.intelligence;
 
-import com.nimbits.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.intelligence.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.server.intelligence.*;
-import com.nimbits.server.orm.*;
+import com.nimbits.PMF;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.intelligence.Intelligence;
+import com.nimbits.client.model.intelligence.IntelligenceFactory;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.server.intelligence.IntelligenceTransactions;
+import com.nimbits.server.orm.DataPointIntelligenceEntity;
 
-import javax.jdo.*;
-import java.util.*;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
+import java.util.List;
 
 /**
  * Created by Benjamin Sautner
@@ -39,7 +42,8 @@ public class IntelligenceDAOImpl implements IntelligenceTransactions {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         try {
-            final Query q = pm.newQuery(DataPointIntelligenceEntity.class, "uuid == k");
+            final Query q = pm.newQuery(DataPointIntelligenceEntity.class);
+            q.setFilter("uuid == k");
             q.declareParameters("String k");
             q.setRange(0,1);
             final List<Intelligence> results = (List<Intelligence>) q.execute(entity.getEntity());
@@ -60,7 +64,8 @@ public class IntelligenceDAOImpl implements IntelligenceTransactions {
 
         try {
 
-            final Query q = pm.newQuery(DataPointIntelligenceEntity.class, "uuid==u");
+            final Query q = pm.newQuery(DataPointIntelligenceEntity.class);
+            q.setFilter("uuid==u");
             q.declareParameters("String u");
             q.setRange(0, 1);
             results = (List<Intelligence>) q.execute(update.getUUID());
@@ -102,7 +107,8 @@ public class IntelligenceDAOImpl implements IntelligenceTransactions {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         try {
-            final Query q = pm.newQuery(DataPointIntelligenceEntity.class, "target == k && enabled == e");
+            final Query q = pm.newQuery(DataPointIntelligenceEntity.class);
+            q.setFilter("target == k && enabled == e");
             q.declareParameters("String k, Boolean e");
             q.setRange(0,1);
             final List<Intelligence> results = (List<Intelligence>) q.execute(point.getUUID(), true);

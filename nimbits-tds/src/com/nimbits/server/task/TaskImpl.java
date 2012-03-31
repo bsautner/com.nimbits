@@ -14,20 +14,25 @@
 package com.nimbits.server.task;
 
 import com.google.appengine.api.taskqueue.Queue;
-import com.google.appengine.api.taskqueue.*;
-import com.google.gson.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.user.*;
+import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.taskqueue.TaskOptions;
+import com.google.gson.Gson;
+import com.nimbits.client.enums.Action;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.user.UserServiceFactory;
 
-import javax.servlet.http.*;
-import java.util.*;
-import java.util.logging.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Enumeration;
+import java.util.Map;
+import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  * Created by bsautner
@@ -92,7 +97,7 @@ public class TaskImpl implements Task {
     @Override
     public void startSummaryTask(final Entity entity) {
         final Queue queue =  QueueFactory.getQueue(overrideQueue ? DEFAULT : QUEUE_DELETE_SUMMARY);
-        String json = GsonFactory.getInstance().toJson(entity);
+        final String json = GsonFactory.getInstance().toJson(entity);
         queue.add(TaskOptions.Builder.withUrl(PATH_SUMMARY_TASK)
                 .param(Parameters.json.getText(), json)
         );
@@ -196,7 +201,7 @@ public class TaskImpl implements Task {
     @Override
     public void startUpgradeTask(final Action action,final  Entity entity) {
 
-
+        try {
         final Queue queue =  QueueFactory.getQueue(overrideQueue ? DEFAULT : TASK_UPGRADE);
         String json = "";
         if (entity != null) {
@@ -205,6 +210,11 @@ public class TaskImpl implements Task {
         queue.add(TaskOptions.Builder.withUrl(PATH_UPGRADE_TASK)
                 .param(Parameters.json.getText(), json)
                 .param(Parameters.action.getText(), action.getCode()));
+        }
+        catch (IllegalStateException ex) {
+            overrideQueue = true;
+            startUpgradeTask(action, entity);
+        }
 
     }
 

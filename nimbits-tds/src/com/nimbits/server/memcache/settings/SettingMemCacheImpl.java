@@ -13,13 +13,17 @@
 
 package com.nimbits.server.memcache.settings;
 
-import com.nimbits.client.common.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.server.settings.*;
-import net.sf.jsr107cache.*;
+import com.nimbits.client.enums.MemCacheKey;
+import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.server.settings.SettingTransactions;
+import com.nimbits.server.settings.SettingTransactionsFactory;
+import net.sf.jsr107cache.Cache;
+import net.sf.jsr107cache.CacheException;
+import net.sf.jsr107cache.CacheManager;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * Created by bsautner
@@ -38,7 +42,7 @@ public class SettingMemCacheImpl implements SettingTransactions {
     @Override
     public String reloadCache() throws NimbitsException {
 
-        final StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder(1024);
         builder.append("<h5>Removing old values from memcache</h5>");
 
         try {
@@ -46,8 +50,11 @@ public class SettingMemCacheImpl implements SettingTransactions {
             final Map<SettingType, String> settings = SettingTransactionsFactory.getDaoInstance().getSettings();
             for (final SettingType setting : settings.keySet()) {
                 cache.remove(MemCacheKey.allSettings);
+                if (setting != null) {
                 builder.append("Removed: ").append(setting.getName()).append("<br />");
                 cache.remove(SettingCacheKey(setting));
+                }
+
 
 
             }

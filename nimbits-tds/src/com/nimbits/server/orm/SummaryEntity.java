@@ -14,11 +14,12 @@
 package com.nimbits.server.orm;
 
 import com.google.appengine.api.datastore.Key;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.summary.*;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.enums.SummaryType;
+import com.nimbits.client.model.summary.Summary;
 
 import javax.jdo.annotations.*;
-import java.util.*;
+import java.util.Date;
 
 /**
  * Created by Benjamin Sautner

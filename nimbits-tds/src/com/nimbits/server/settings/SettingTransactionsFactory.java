@@ -14,8 +14,8 @@
 package com.nimbits.server.settings;
 
 
-import com.nimbits.server.dao.settings.*;
-import com.nimbits.server.memcache.settings.*;
+import com.nimbits.server.dao.settings.SettingsDAOImpl;
+import com.nimbits.server.memcache.settings.SettingMemCacheImpl;
 
 public class SettingTransactionsFactory {
     protected SettingTransactionsFactory() {

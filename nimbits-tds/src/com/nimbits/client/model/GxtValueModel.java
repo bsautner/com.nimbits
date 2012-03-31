@@ -13,9 +13,9 @@
 
 package com.nimbits.client.model;
 
-import com.extjs.gxt.ui.client.data.*;
+import com.extjs.gxt.ui.client.data.BaseTreeModel;
 
-import java.io.*;
+import java.io.Serializable;
 
 /**
  * Created by Benjamin Sautner

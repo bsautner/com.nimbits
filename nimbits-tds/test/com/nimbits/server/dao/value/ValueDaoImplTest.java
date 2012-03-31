@@ -186,18 +186,19 @@ public class ValueDaoImplTest {
 
     @Test
     public void testGetRecordedValuePrecedingTimestamp() {
-        List<Value> values = loadSomeDataOverDays();
+        final List<Value> values = loadSomeDataOverDays();
 
 
-        ValueDAOImpl dao = new ValueDAOImpl(point);
+        final ValueDAOImpl dao = new ValueDAOImpl(point);
         try {
             dao.recordValues(values);
-
+            List<Value> all = dao.getTopDataSeries(1000);
+            assertEquals(100, all.size());
             for (int i = 0; i < 100; i++) {
-                Calendar c1 = Calendar.getInstance();
+                final Calendar c1 = Calendar.getInstance();
                 c1.add(Calendar.DATE, -1 * i);
-                Double d1 = (double) i;
-                Value vx = dao.getRecordedValuePrecedingTimestamp(c1.getTime());
+                final Double d1 = (double) i;
+                final Value vx = dao.getRecordedValuePrecedingTimestamp(c1.getTime());
                 assertEquals(d1, vx.getDoubleValue(), 0.0);
             }
         } catch (NimbitsException e) {
@@ -211,14 +212,14 @@ public class ValueDaoImplTest {
 
     @Test
     public void testGetRecordedValuePrecedingTimestampMultiplePoints() {
-        List<Value> values = loadSomeDataOverDays();
-        Point point1 = PointModelFactory.createPointModel(UUID.randomUUID().toString());
-        Point point2 = PointModelFactory.createPointModel(UUID.randomUUID().toString());
-        Point point3 = PointModelFactory.createPointModel(UUID.randomUUID().toString());
+        final List<Value> values = loadSomeDataOverDays();
+        final Point point1 = PointModelFactory.createPointModel(UUID.randomUUID().toString());
+        final Point point2 = PointModelFactory.createPointModel(UUID.randomUUID().toString());
+        final Point point3 = PointModelFactory.createPointModel(UUID.randomUUID().toString());
 
-        ValueDAOImpl dao1 = new ValueDAOImpl(point1);
-        ValueDAOImpl dao2 = new ValueDAOImpl(point2);
-        ValueDAOImpl dao3 = new ValueDAOImpl(point3);
+        final ValueDAOImpl dao1 = new ValueDAOImpl(point1);
+        final ValueDAOImpl dao2 = new ValueDAOImpl(point2);
+        final ValueDAOImpl dao3 = new ValueDAOImpl(point3);
 
 
         try {
@@ -227,24 +228,24 @@ public class ValueDaoImplTest {
             dao3.recordValues(values);
 
             for (int i = 0; i < 100; i++) {
-                Calendar c1 = Calendar.getInstance();
+                final Calendar c1 = Calendar.getInstance();
                 c1.add(Calendar.DATE, -1 * i);
-                Double d1 = (double) i;
-                Value vx = dao1.getRecordedValuePrecedingTimestamp(c1.getTime());
+                final Double d1 = (double) i;
+                final Value vx = dao1.getRecordedValuePrecedingTimestamp(c1.getTime());
                 assertEquals(d1, vx.getDoubleValue(), 0.0);
             }
             for (int i = 0; i < 100; i++) {
-                Calendar c1 = Calendar.getInstance();
+                final Calendar c1 = Calendar.getInstance();
                 c1.add(Calendar.DATE, -1 * i);
-                Double d1 = (double) i;
-                Value vx = dao2.getRecordedValuePrecedingTimestamp(c1.getTime());
+                final Double d1 = (double) i;
+                final Value vx = dao2.getRecordedValuePrecedingTimestamp(c1.getTime());
                 assertEquals(d1, vx.getDoubleValue(), 0.0);
             }
             for (int i = 0; i < 100; i++) {
-                Calendar c1 = Calendar.getInstance();
+                final Calendar c1 = Calendar.getInstance();
                 c1.add(Calendar.DATE, -1 * i);
-                Double d1 = (double) i;
-                Value vx = dao3.getRecordedValuePrecedingTimestamp(c1.getTime());
+                final Double d1 = (double) i;
+                final Value vx = dao3.getRecordedValuePrecedingTimestamp(c1.getTime());
                 assertEquals(d1, vx.getDoubleValue(), 0.0);
             }
         } catch (NimbitsException e) {
@@ -255,15 +256,13 @@ public class ValueDaoImplTest {
     }
 
 
-    private List<Value> loadSomeDataOverDays() {
-        List<Value> values = new ArrayList<Value>();
-        Random r = new Random();
-
+    private static List<Value> loadSomeDataOverDays() {
+        final List<Value> values = new ArrayList<Value>(100);
         for (int i = 0; i < 100; i++) {
-            Calendar c1 = Calendar.getInstance();
+            final Calendar c1 = Calendar.getInstance();
             c1.add(Calendar.DATE, -1 * i);
-            Double d1 = (double) i;
-            Value v1 = ValueModelFactory.createValueModel(d1, c1.getTime());
+            final Double d1 = (double) i;
+            final Value v1 = ValueModelFactory.createValueModel(d1, c1.getTime());
             values.add(v1);
         }
         return values;

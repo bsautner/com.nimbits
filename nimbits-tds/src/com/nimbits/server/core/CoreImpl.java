@@ -13,19 +13,24 @@
 
 package com.nimbits.server.core;
 
-import com.nimbits.client.common.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.server.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.http.*;
-import com.nimbits.server.settings.*;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.constants.Path;
+import com.nimbits.client.enums.Action;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.server.Server;
+import com.nimbits.client.model.server.ServerModelFactory;
+import com.nimbits.server.common.ServerInfoImpl;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.http.HttpCommonFactory;
+import com.nimbits.server.settings.SettingTransactionsFactory;
+import com.nimbits.server.settings.SettingsServiceFactory;
 
-import java.util.logging.*;
+import java.util.logging.Logger;
 
 /**
  * Created by bsautner
@@ -39,11 +44,11 @@ public class CoreImpl implements Core {
     public void reportDeleteToCore(final Entity entity) {
         try {
             if (SettingTransactionsFactory.getInstance().getSetting(SettingType.serverIsDiscoverable).equals("1")) {
-                String json = GsonFactory.getInstance().toJson(entity);
+                final String json = GsonFactory.getInstance().toJson(entity);
 
-                final String params = Parameters.entity.getText() + "=" + json
-                        + "&" + Parameters.entityType.getText() + "=" + entity.getEntityType()
-                        + "&" + Parameters.action.getText() + "=" + Action.delete.name();
+                final String params = Parameters.entity.getText() + '=' + json
+                        + '&' + Parameters.entityType.getText() + '=' + entity.getEntityType()
+                        + '&' + Parameters.action.getText() + '=' + Action.delete.name();
 
 
                 HttpCommonFactory.getInstance().doPost(Path.PATH_NIMBITS_CORE_ENTITY_DESC_URL, params);
@@ -56,21 +61,23 @@ public class CoreImpl implements Core {
     }
 
 
-    public void reportUpdateToCore(final String serverUrl, final Entity entity) {
+    public void reportUpdateToCore(final Entity entity) {
         try {
-            if (!Utils.isEmptyString(serverUrl) && SettingTransactionsFactory.getInstance().getSetting(SettingType.serverIsDiscoverable).equals("1")) {
+            final String serverUrl = ServerInfoImpl.getFullServerURL(null);
+
+            if (!Utils.isEmptyString(serverUrl) &&  SettingsServiceFactory.getInstance().getBooleanSetting(SettingType.serverIsDiscoverable)) {
                 final String email = SettingTransactionsFactory.getInstance().getSetting(SettingType.admin);
                 final EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
                 final Server server = ServerModelFactory.createServer(serverUrl, emailAddress, SettingType.serverVersion.getDefaultValue());
                 final String serverJson = GsonFactory.getInstance().toJson(server);
-                String json = GsonFactory.getInstance().toJson(entity);
-                final String params = Parameters.server.getText() + "=" + serverJson
-                        + "&" + Parameters.entity.getText() + "=" + json
-                        + "&" + Parameters.entityType.getText() + "=" + entity.getEntityType()
-                        + "&" + Parameters.action.getText() + "=" + Action.update.name();
+                final String json = GsonFactory.getInstance().toJson(entity);
+                final String params = Parameters.server.getText() + '=' + serverJson
+                        + '&' + Parameters.entity.getText() + '=' + json
+                        + '&' + Parameters.entityType.getText() + '=' + entity.getEntityType()
+                        + '&' + Parameters.action.getText() + '=' + Action.update.name();
 
-                log.info(Path.PATH_NIMBITS_CORE_ENTITY_DESC_URL + "?" + params);
-                String response = HttpCommonFactory.getInstance().doPost(Path.PATH_NIMBITS_CORE_ENTITY_DESC_URL, params);
+                log.info(Path.PATH_NIMBITS_CORE_ENTITY_DESC_URL + '?' + params);
+                final String response = HttpCommonFactory.getInstance().doPost(Path.PATH_NIMBITS_CORE_ENTITY_DESC_URL, params);
                 log.info("response from core: " + response);
 
             }

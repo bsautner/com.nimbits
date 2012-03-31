@@ -13,10 +13,11 @@
 
 package com.nimbits.client.service.summary;
 
-import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.summary.*;
-import com.nimbits.client.model.user.*;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.summary.Summary;
+import com.nimbits.client.model.user.User;
 
 public interface SummaryServiceAsync {
     void readSummary(Entity entity, AsyncCallback<Summary> async);

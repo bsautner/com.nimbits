@@ -58,7 +58,7 @@ public interface NimbitsClient {
 
     Value recordValue(final EntityName pointName, final Value v) throws IOException;
 
-    Value recordValue(final String pointName, final double v);
+    Value recordValue(final String pointName, final double v) throws NimbitsException;
 
     Value recordValue(final EntityName pointName, double d);
 

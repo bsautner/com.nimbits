@@ -20,11 +20,11 @@ package com.nimbits.server.counter;
  * Time: 5:00 PM
  */
 
-import com.nimbits.*;
-import com.nimbits.server.dao.counter.*;
-import com.nimbits.server.orm.*;
+import com.nimbits.PMF;
+import com.nimbits.server.dao.counter.ShardedCounter;
+import com.nimbits.server.orm.ApiCounter;
 
-import javax.jdo.*;
+import javax.jdo.PersistenceManager;
 
 /**
  * Finds or creates a sharded counter with the desired name.

@@ -69,32 +69,38 @@ public class ValueServletImpl extends ApiServlet {
 
             final EntityName pointName = CommonFactoryLocator.getInstance().createName(getParam(Parameters.point), EntityType.point);
             final Entity e = EntityServiceFactory.getInstance().getEntityByName(user, pointName);
-            final Point point = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
+
+            if (e != null) {
+                final Point point = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
 
 
-            if (point != null) {
+                if (point != null) {
 
-                final Value v;
+                    final Value v;
 
-                if (!Utils.isEmptyString(getParam(Parameters.json))) {
-                    final Value vx = GsonFactory.getInstance().fromJson(getParam(Parameters.json), ValueModel.class);
+                    if (!Utils.isEmptyString(getParam(Parameters.json))) {
+                        final Value vx = GsonFactory.getInstance().fromJson(getParam(Parameters.json), ValueModel.class);
 
-                    v = ValueModelFactory.createValueModel(vx.getLatitude(), vx.getLongitude(), vx.getDoubleValue(), vx.getTimestamp(),
-                            point.getUUID(), vx.getNote(), vx.getData());
+                        v = ValueModelFactory.createValueModel(vx.getLatitude(), vx.getLongitude(), vx.getDoubleValue(), vx.getTimestamp(),
+                                point.getUUID(), vx.getNote(), vx.getData());
+                    } else {
+                        final double latitude = getDoubleFromParam(getParam(Parameters.lat));
+                        final double longitude = getDoubleFromParam(getParam(Parameters.lng));
+                        final double value = getDoubleFromParam(getParam(Parameters.value));
+                        final Date timestamp = (getParam(Parameters.timestamp) != null) ? (new Date(Long.parseLong(getParam(Parameters.timestamp)))) : new Date();
+                        v = ValueModelFactory.createValueModel(latitude, longitude, value, timestamp, point.getUUID(), getParam(Parameters.note), getParam(Parameters.json));
+                    }
+
+                    final Value result = RecordedValueServiceFactory.getInstance().recordValue(user, point, v, false);
+                    final PrintWriter out = resp.getWriter();
+                    final String j = GsonFactory.getInstance().toJson(result);
+                    out.print(j);
+
                 } else {
-                    final double latitude = getDoubleFromParam(getParam(Parameters.lat));
-                    final double longitude = getDoubleFromParam(getParam(Parameters.lng));
-                    final double value = getDoubleFromParam(getParam(Parameters.value));
-                    final Date timestamp = (getParam(Parameters.timestamp) != null) ? (new Date(Long.parseLong(getParam(Parameters.timestamp)))) : new Date();
-                    v = ValueModelFactory.createValueModel(latitude, longitude, value, timestamp, point.getUUID(), getParam(Parameters.note), getParam(Parameters.json));
+                    FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(UserMessages.ERROR_POINT_NOT_FOUND));
                 }
-
-                final Value result = RecordedValueServiceFactory.getInstance().recordValue(user, point, v, false);
-                final PrintWriter out = resp.getWriter();
-                final String j = GsonFactory.getInstance().toJson(result);
-                out.print(j);
-
-            } else {
+            }
+            else {
                 FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(UserMessages.ERROR_POINT_NOT_FOUND));
             }
 

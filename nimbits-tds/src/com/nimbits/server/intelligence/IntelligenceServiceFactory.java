@@ -13,8 +13,8 @@
 
 package com.nimbits.server.intelligence;
 
-import com.nimbits.client.service.intelligence.*;
-import com.nimbits.server.dao.intelligence.*;
+import com.nimbits.client.service.intelligence.IntelligenceService;
+import com.nimbits.server.dao.intelligence.IntelligenceDAOImpl;
 
 /**
  * Created by bsautner

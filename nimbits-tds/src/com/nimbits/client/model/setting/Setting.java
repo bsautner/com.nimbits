@@ -13,7 +13,7 @@
 
 package com.nimbits.client.model.setting;
 
-import java.io.*;
+import java.io.Serializable;
 
 /**
  * Created by Benjamin Sautner

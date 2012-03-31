@@ -13,8 +13,8 @@
 
 package com.nimbits.server.orm;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.intelligence.*;
+import com.nimbits.client.enums.IntelligenceResultTarget;
+import com.nimbits.client.model.intelligence.Intelligence;
 
 import javax.jdo.annotations.*;
 

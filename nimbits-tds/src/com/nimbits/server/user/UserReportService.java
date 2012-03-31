@@ -13,17 +13,20 @@
 
 package com.nimbits.server.user;
 
-import com.nimbits.client.common.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.counter.*;
-import com.nimbits.server.dao.counter.*;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.user.User;
+import com.nimbits.server.counter.CounterFactory;
+import com.nimbits.server.dao.counter.ShardedCounter;
 
-import javax.servlet.http.*;
-import java.io.*;
-import java.util.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
 
 /**
  * Created by Benjamin Sautner

@@ -14,23 +14,29 @@
 package com.nimbits.server.user;
 
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.gwt.user.server.rpc.*;
-import com.nimbits.client.common.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.connection.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.entity.*;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.FeedType;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.connection.Connection;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.user.UserService;
-import com.nimbits.server.email.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.feed.*;
+import com.nimbits.server.email.EmailServiceFactory;
+import com.nimbits.server.entity.EntityServiceFactory;
+import com.nimbits.server.feed.FeedServiceFactory;
 
-import javax.servlet.http.*;
-import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.UUID;
 
 
 public class UserServiceImpl extends RemoteServiceServlet implements
@@ -138,12 +144,12 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public User getAppUserUsingGoogleAuth() throws NimbitsException {
-        com.google.appengine.api.users.UserService u = UserServiceFactory.getUserService();
+        final com.google.appengine.api.users.UserService u = UserServiceFactory.getUserService();
         //u.getCurrentUser().
 
         User retObj = null;
         if (u.getCurrentUser() != null) {
-            EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(u.getCurrentUser().getEmail());
+            final EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(u.getCurrentUser().getEmail());
             retObj = UserTransactionFactory.getInstance().getNimbitsUser(emailAddress);
         }
 
@@ -155,12 +161,12 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
         final String email = UserServiceFactory.getUserService().getCurrentUser().getEmail().toLowerCase();
         final EmailAddress internetAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
-        User u = UserTransactionFactory.getDAOInstance().getNimbitsUser(internetAddress);
+        final User u = UserTransactionFactory.getDAOInstance().getNimbitsUser(internetAddress);
         return u.getSecret();
     }
 
     @Override
-    public User getUserByUUID(String subscriberUUID) {
+    public User getUserByUUID(final String subscriberUUID) {
         return UserTransactionFactory.getInstance().getUserByUUID(subscriberUUID);
     }
 
@@ -263,7 +269,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public List<User> getConnectionRequests(List<String> connections) {
+    public List<User> getConnectionRequests(final List<String> connections) {
         return UserTransactionFactory.getInstance().getConnectionRequests(connections);
     }
 
@@ -279,9 +285,9 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
         final User requester = UserTransactionFactory.getInstance().getNimbitsUser(requesterEmail);
 
-        Entity rConnection = EntityModelFactory.createEntity(acceptor.getName(), "", EntityType.userConnection, ProtectionLevel.onlyMe, acceptor.getUuid(), requester.getUuid(), requester.getUuid());
+        final Entity rConnection = EntityModelFactory.createEntity(acceptor.getName(), "", EntityType.userConnection, ProtectionLevel.onlyMe, acceptor.getUuid(), requester.getUuid(), requester.getUuid());
 
-        Entity aConnection = EntityModelFactory.createEntity(requester.getName(), "", EntityType.userConnection, ProtectionLevel.onlyMe, requester.getUuid(), acceptor.getUuid(), acceptor.getUuid());
+        final Entity aConnection = EntityModelFactory.createEntity(requester.getName(), "", EntityType.userConnection, ProtectionLevel.onlyMe, requester.getUuid(), acceptor.getUuid(), acceptor.getUuid());
 
         EntityServiceFactory.getInstance().addUpdateEntity(acceptor, aConnection);
         EntityServiceFactory.getInstance().addUpdateEntity(requester,rConnection);

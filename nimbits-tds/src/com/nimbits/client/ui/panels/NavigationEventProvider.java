@@ -13,13 +13,14 @@
 
 package com.nimbits.client.ui.panels;
 
-import com.extjs.gxt.ui.client.widget.*;
+import com.extjs.gxt.ui.client.widget.LayoutContainer;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.GxtModel;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.value.Value;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class NavigationEventProvider extends LayoutContainer {
 

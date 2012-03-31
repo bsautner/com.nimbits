@@ -13,9 +13,9 @@
 
 package com.nimbits.server.point;
 
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.dao.point.*;
-import com.nimbits.server.memcache.point.*;
+import com.nimbits.client.model.user.User;
+import com.nimbits.server.dao.point.PointDaoImpl;
+import com.nimbits.server.memcache.point.PointMemCacheImpl;
 
 /**
  * Created by bsautner

@@ -13,13 +13,16 @@
 
 package com.nimbits.client.service.entity;
 
-import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.user.*;
+import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.user.User;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Benjamin Sautner
@@ -35,7 +38,7 @@ public interface EntityService extends RemoteService {
 
     Entity addUpdateEntity(final EntityName entity, final EntityType type) throws NimbitsException;
 
-    void deleteEntity(Entity entity) throws NimbitsException;
+    List<Entity> deleteEntity(Entity entity) throws NimbitsException;
 
     Entity getEntityByUUID(String uuid) throws NimbitsException;
 
@@ -57,7 +60,7 @@ public interface EntityService extends RemoteService {
 
     Entity getEntityByName(User u, EntityName name) throws NimbitsException;
 
-    void deleteEntity(User u, Entity entity) throws NimbitsException;
+    List<Entity> deleteEntity(User u, Entity entity) throws NimbitsException;
 
     List<Entity> getEntityChildren(User u, Entity c, EntityType point);
 

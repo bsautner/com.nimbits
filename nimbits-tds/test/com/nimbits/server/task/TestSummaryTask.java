@@ -13,9 +13,10 @@
 
 package com.nimbits.server.task;
 
-import com.nimbits.client.enums.*;
-import static org.junit.Assert.*;
-import org.junit.*;
+import com.nimbits.client.enums.SummaryType;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by Benjamin Sautner

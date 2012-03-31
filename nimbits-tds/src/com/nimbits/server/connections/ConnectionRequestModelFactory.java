@@ -13,10 +13,12 @@
 
 package com.nimbits.server.connections;
 
-import com.nimbits.client.model.connection.*;
-import com.nimbits.server.orm.*;
+import com.nimbits.client.model.connection.Connection;
+import com.nimbits.client.model.connection.ConnectionRequestModel;
+import com.nimbits.server.orm.ConnectionRequest;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by bsautner

@@ -13,12 +13,13 @@
 
 package com.nimbits.server.orm;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.subscription.*;
+import com.nimbits.client.enums.SubscriptionNotifyMethod;
+import com.nimbits.client.enums.SubscriptionType;
+import com.nimbits.client.model.subscription.Subscription;
 
 import javax.jdo.annotations.*;
-import java.io.*;
-import java.util.*;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by Benjamin Sautner

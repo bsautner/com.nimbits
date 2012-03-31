@@ -13,7 +13,7 @@
 
 package com.nimbits.server.channel;
 
-import com.nimbits.client.service.channel.*;
+import com.nimbits.client.service.channel.ChannelApiService;
 
 /**
  * Created by bsautner

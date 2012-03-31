@@ -13,12 +13,12 @@
 
 package com.nimbits.server.subscription;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.subscription.*;
+import com.nimbits.client.enums.SubscriptionType;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.subscription.Subscription;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * Created by Benjamin Sautner

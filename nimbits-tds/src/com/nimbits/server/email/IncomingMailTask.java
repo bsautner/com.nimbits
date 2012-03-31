@@ -13,23 +13,28 @@
 
 package com.nimbits.server.email;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.feed.*;
-import com.nimbits.server.point.*;
-import com.nimbits.server.value.*;
-import com.nimbits.server.user.*;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.server.entity.EntityServiceFactory;
+import com.nimbits.server.feed.FeedServiceFactory;
+import com.nimbits.server.point.PointServiceFactory;
+import com.nimbits.server.user.UserTransactionFactory;
+import com.nimbits.server.value.RecordedValueServiceFactory;
 
-import javax.servlet.http.*;
-import java.util.*;
-import java.util.logging.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
+import java.util.logging.Logger;
 
 public class IncomingMailTask extends HttpServlet {
 

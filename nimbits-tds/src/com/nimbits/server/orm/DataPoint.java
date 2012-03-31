@@ -13,14 +13,17 @@
 
 package com.nimbits.server.orm;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
+import com.nimbits.client.enums.AlertType;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.FilterType;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 
 import javax.jdo.annotations.*;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 public class DataPoint implements Point {
@@ -39,7 +42,9 @@ public class DataPoint implements Point {
 
     @Persistent
     private String uuid;
+
     @Persistent
+    @Deprecated
     private Date LastChecked;
 
     @Persistent
@@ -48,7 +53,7 @@ public class DataPoint implements Point {
 
     @Persistent
     @Deprecated
-    private Long catID;
+    public Long catID;
     @Persistent
     private boolean isSystemPoint;
     @Persistent
@@ -67,7 +72,7 @@ public class DataPoint implements Point {
 
     @Deprecated
     @Persistent
-    private Double compression = 0.1;
+    public Double compression = 0.1;
 
 
     @Persistent
@@ -80,7 +85,6 @@ public class DataPoint implements Point {
     @Persistent
     private Boolean highAlarmOn;
     @Persistent
-    @Deprecated
     private Boolean lowAlarmOn;
     @Persistent
     @Deprecated
@@ -160,7 +164,7 @@ public class DataPoint implements Point {
     }
 
     @Override
-    public void setIdleSeconds(int idleSeconds) {
+    public void setIdleSeconds(final int idleSeconds) {
         this.idleSeconds = idleSeconds;
     }
 
@@ -179,7 +183,7 @@ public class DataPoint implements Point {
     }
 
 
-    public DataPoint(User user, Entity entity) {
+    public DataPoint(final User user, final Entity entity) {
         this();
         this.userFK = user.getId();
         this.uuid = entity.getEntity();
@@ -188,20 +192,43 @@ public class DataPoint implements Point {
         this.filterType = FilterType.fixedHysteresis.getCode();
      }
 
+    public DataPoint(final User user, final Entity entity, final Point point) {
+        this.userFK = user.getId();
+        this.uuid = entity.getEntity();
+        this.LastChecked= new Date();
+        this.createDate =new Date();
+        this.highAlarm = point.getHighAlarm();
+        this.expire = point.getExpire();
+        this.unit = point.getUnit();
+
+        this.lowAlarm = point.getLowAlarm();
+        this.highAlarmOn = point.isHighAlarmOn();
+        this.lowAlarmOn = point.isLowAlarmOn();
+        this.tag = point.getTag();
+        this.idleAlarmOn = point.isIdleAlarmOn();
+        this.idleSeconds = point.getIdleSeconds();
+        this.idleAlarmSent = point.getIdleAlarmSent();
+
+        this.values = point.getValues();
+        this.value = point.getValue();
+        this.filterType = point.getFilterType().getCode();
+        this.filterValue = point.getFilterValue();
+
+    }
+
 
     @Persistent
-    private Double TargetValue;
+    @Deprecated
+    public Double TargetValue;
+
+    @Persistent
+    private Double target;
 
     @NotPersistent
     private List<Value> values;
     @NotPersistent
     private Value value;
 
-    @Deprecated
-    public double getCompression() {
-        return (compression == null) ? 0.0 : compression;
-
-    }
 
     @Override
     public Date getCreateDate() {
@@ -306,12 +333,6 @@ public class DataPoint implements Point {
         this.highAlarmOn = highAlarmOn;
     }
 
-
-    @Override
-    public void setId(final long id) {
-        this.id = id;
-    }
-
     @Override
     public void setLastChecked(final Date lastChecked) {
         LastChecked = lastChecked;
@@ -367,14 +388,14 @@ public class DataPoint implements Point {
 
     @Override
     public void setTargetValue(final double targetValue) {
-        TargetValue = targetValue;
+        target = targetValue;
     }
 
     @Override
     public double getTargetValue() {
         double retVal = 0;
-        if (TargetValue != null) {
-            retVal = TargetValue;
+        if (target != null) {
+            retVal = target;
 
         }
         return retVal;
@@ -387,7 +408,7 @@ public class DataPoint implements Point {
     }
 
     @Override
-    public void setFilterType(FilterType filterType) {
+    public void setFilterType(final FilterType filterType) {
         this.filterType = filterType.getCode();
     }
 
@@ -397,7 +418,7 @@ public class DataPoint implements Point {
     }
 
     @Override
-    public void setFilterValue(double value) {
+    public void setFilterValue(final double value) {
         this.filterValue = value;
     }
 }

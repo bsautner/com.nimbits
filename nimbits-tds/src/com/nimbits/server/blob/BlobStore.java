@@ -13,7 +13,7 @@
 
 package com.nimbits.server.blob;
 
-import com.nimbits.client.enums.*;
+import com.nimbits.client.enums.ExportType;
 
 /**
  * Created by Benjamin Sautner

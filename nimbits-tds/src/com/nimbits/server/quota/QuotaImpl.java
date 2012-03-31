@@ -13,14 +13,15 @@
 
 package com.nimbits.server.quota;
 
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.counter.*;
-import com.nimbits.server.dao.counter.*;
-import com.nimbits.server.settings.*;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.constants.UserMessages;
+import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.user.User;
+import com.nimbits.server.counter.CounterFactory;
+import com.nimbits.server.dao.counter.ShardedCounter;
+import com.nimbits.server.settings.SettingsServiceFactory;
 
 /**
  * Created by Benjamin Sautner
@@ -31,7 +32,7 @@ import com.nimbits.server.settings.*;
 public class QuotaImpl implements Quota {
  //   private final User user;
     ShardedCounter counter;
-    public QuotaImpl(User user) {
+    public QuotaImpl(final User user) {
        // this.user = user;
         counter = getOrCreateCounter(user.getEmail());
 
@@ -52,7 +53,7 @@ public class QuotaImpl implements Quota {
 
     @Override
     public void resetCounter() throws NimbitsException {
-      int count = counter.getCount();
+      final int count = counter.getCount();
       counter.increment(count * -1);
     }
 
@@ -62,8 +63,8 @@ public class QuotaImpl implements Quota {
     }
 
 
-    private ShardedCounter getOrCreateCounter(final EmailAddress email) {
-        CounterFactory factory = new CounterFactory();
+    private static ShardedCounter getOrCreateCounter(final EmailAddress email) {
+        final CounterFactory factory = new CounterFactory();
         ShardedCounter counter = factory.getCounter(email.getValue());
         if (counter == null) {
             counter = factory.createCounter(email.getValue());

@@ -13,19 +13,26 @@
 
 package com.nimbits.server.api.impl;
 
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.server.api.*;
-import com.nimbits.server.feed.*;
+import com.nimbits.client.constants.Words;
+import com.nimbits.client.enums.ExportType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.server.api.ApiServlet;
+import com.nimbits.server.feed.FeedServiceFactory;
 import com.nimbits.server.task.TaskFactory;
 
-import javax.activation.*;
-import javax.mail.*;
-import javax.mail.internet.*;
-import javax.servlet.http.*;
-import java.io.*;
-import java.util.*;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.mail.Address;
+import javax.mail.MessagingException;
+import javax.mail.Part;
+import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Properties;
 
 public class MailHandlerServletImpl extends ApiServlet {
     /**

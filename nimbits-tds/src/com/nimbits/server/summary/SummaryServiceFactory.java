@@ -13,7 +13,7 @@
 
 package com.nimbits.server.summary;
 
-import com.nimbits.client.service.summary.*;
+import com.nimbits.client.service.summary.SummaryService;
 
 /**
  * Created by Benjamin Sautner

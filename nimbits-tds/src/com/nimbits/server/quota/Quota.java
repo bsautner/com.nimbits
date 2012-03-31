@@ -13,8 +13,7 @@
 
 package com.nimbits.server.quota;
 
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.user.*;
+import com.nimbits.client.exception.NimbitsException;
 
 /**
  * Created by Benjamin Sautner

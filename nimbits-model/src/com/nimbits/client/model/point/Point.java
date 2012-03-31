@@ -73,8 +73,6 @@ public interface Point extends Serializable {
 
     void setHighAlarmOn(final boolean highAlarmOn);
 
-    void setId(final long id);
-
     void setIdleAlarmOn(boolean idleAlarmOn);
 
     void setIdleAlarmSent(final boolean idleAlarmSent);

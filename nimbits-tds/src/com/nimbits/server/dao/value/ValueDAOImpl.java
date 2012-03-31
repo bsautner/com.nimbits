@@ -18,8 +18,8 @@ import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.files.*;
 import com.nimbits.PMF;
-import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.constants.Const;
+import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.value.Value;
@@ -84,7 +84,7 @@ public class ValueDAOImpl implements RecordedValueTransactions {
             q.declareParameters("String k, Long t");
             q.setOrdering("minTimestamp desc");
 
-            q.setRange(0, 1000);
+            q.setRange(0, maxValues);
             final List<ValueBlobStoreEntity> result = (List<ValueBlobStoreEntity>) q.execute(point.getUUID(), endDate.getTime());
             List<Value> values;
             for (final ValueBlobStoreEntity e : result) {
@@ -114,17 +114,24 @@ public class ValueDAOImpl implements RecordedValueTransactions {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         try {
-            final Map<String, Object> args;
+
             final List<Value> retObj = new ArrayList<Value>(end - start);
-            final Query q = pm.newQuery(ValueBlobStoreEntity.class,
-                    "entity == k && minTimestamp <= et && minTimestamp >= st ");
-            args = new HashMap<String, Object>(3);
-            args.put("k", point.getUUID());
-            args.put("et", timespan.getEnd().getTime());
-            args.put("st", timespan.getStart().getTime());
-            q.setOrdering("minTimestamp descending");
+            final Query q = pm.newQuery(ValueBlobStoreEntity.class);
+            q.setFilter("entity == k && minTimestamp <= et && minTimestamp >= st ");
+            q.declareParameters("String k, Long et, Long st");
+            q.setOrdering("minTimestamp desc");
+
+
+//
+//            final Query q = pm.newQuery(ValueBlobStoreEntity.class,
+//                    "entity == k && minTimestamp <= et && minTimestamp >= st ");
+//            args = new HashMap<String, Object>(3);
+//            args.put("String k", point.getUUID());
+//            args.put("Long et", timespan.getEnd().getTime());
+//            args.put("Long st", timespan.getStart().getTime());
+//            q.setOrdering("minTimestamp descending");
             q.setRange(start, end);
-            final List<ValueBlobStore> result = (List<ValueBlobStore>) q.executeWithMap(args);
+            final List<ValueBlobStore> result = (List<ValueBlobStore>) q.execute(point.getUUID(), timespan.getEnd().getTime(), timespan.getStart().getTime());
             List<Value> values;
             for (final ValueBlobStore e : result) {
                 values = readValuesFromFile(e.getPath());
@@ -186,6 +193,7 @@ public class ValueDAOImpl implements RecordedValueTransactions {
         }
     }
 
+
     @Override
     public void recordValues(final List<Value> values) throws NimbitsException {
 
@@ -198,7 +206,7 @@ public class ValueDAOImpl implements RecordedValueTransactions {
             Date zero;
             List<Value> list;
             for (final Value value : values) {
-                 zero= TimespanServiceFactory.getInstance().zeroOutDate(value.getTimestamp());
+                zero= TimespanServiceFactory.getInstance().zeroOutDate(value.getTimestamp());
                 if (map.containsKey(zero.getTime())) {
                     map.get(zero.getTime()).add(value);
                     if (maxMap.get(zero.getTime()) < value.getTimestamp().getTime()) {
@@ -211,7 +219,7 @@ public class ValueDAOImpl implements RecordedValueTransactions {
                     }
                 }
                 else {
-                    list = new ArrayList<Value>(1);
+                    list = new ArrayList<Value>(Const.CONST_MAX_CACHED_VALUE_SIZE);
                     list.add(value);
                     map.put(zero.getTime(),list);
                     maxMap.put(zero.getTime(), value.getTimestamp().getTime());
@@ -289,7 +297,7 @@ public class ValueDAOImpl implements RecordedValueTransactions {
     }
 
     @Override
-    public List<Value> getCache() throws NimbitsException {
+    public List<Value> getBuffer() throws NimbitsException {
         throw new NimbitsException("Not Implimented");
     }
 

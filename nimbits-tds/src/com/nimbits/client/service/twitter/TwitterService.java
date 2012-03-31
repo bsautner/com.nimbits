@@ -13,10 +13,11 @@
 
 package com.nimbits.client.service.twitter;
 
-import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.user.*;
+import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.user.User;
 
 @RemoteServiceRelativePath("twitter")
 public interface TwitterService extends RemoteService {

@@ -13,31 +13,46 @@
 
 package com.nimbits.client.ui.panels;
 
-import com.extjs.gxt.ui.client.util.*;
-import com.extjs.gxt.ui.client.widget.*;
-import com.google.gwt.core.client.*;
+import com.extjs.gxt.ui.client.util.DateWrapper;
+import com.extjs.gxt.ui.client.widget.ContentPanel;
+import com.extjs.gxt.ui.client.widget.LayoutContainer;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.http.client.*;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
-import com.nimbits.client.common.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.constants.Path;
+import com.nimbits.client.enums.Action;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModel;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.value.*;
-import com.nimbits.client.service.datapoints.*;
-import com.nimbits.client.service.entity.*;
-import com.nimbits.client.service.recordedvalues.*;
-import com.nimbits.client.ui.helper.*;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.service.datapoints.PointService;
+import com.nimbits.client.service.datapoints.PointServiceAsync;
+import com.nimbits.client.service.entity.EntityService;
+import com.nimbits.client.service.entity.EntityServiceAsync;
+import com.nimbits.client.service.recordedvalues.RecordedValueService;
+import com.nimbits.client.service.recordedvalues.RecordedValueServiceAsync;
+import com.nimbits.client.ui.helper.EntityOpenHelper;
+import com.nimbits.client.ui.helper.FeedbackHelper;
 import org.vectomatic.dom.svg.*;
-import org.vectomatic.dom.svg.ui.*;
-import org.vectomatic.dom.svg.utils.*;
+import org.vectomatic.dom.svg.ui.SVGImage;
+import org.vectomatic.dom.svg.utils.OMSVGParser;
+import org.vectomatic.dom.svg.utils.SVGConstants;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 
 /**

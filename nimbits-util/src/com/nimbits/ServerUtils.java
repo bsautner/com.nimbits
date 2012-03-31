@@ -3,9 +3,8 @@ package com.nimbits;
 import com.nimbits.client.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
+import com.nimbits.helper.DevelopmentSettingsHelper;
 import com.nimbits.user.*;
 
 import java.util.*;
@@ -20,9 +19,9 @@ public class ServerUtils {
 
     protected static void loadRandomDataToTestAccount() throws NimbitsException {
 
-        String email = Settings.getSetting(SettingType.testAccount);
-        String password =Settings.getSetting(SettingType.testPassword);
-        String url = Settings.getSetting(SettingType.testURL);
+        String email = DevelopmentSettingsHelper.getSetting(SettingType.testAccount);
+        String password = DevelopmentSettingsHelper.getSetting(SettingType.testPassword);
+        String url = DevelopmentSettingsHelper.getSetting(SettingType.testURL);
         String pointName = "foo";
         GoogleUser user = UserFactory.createGoogleUser(email, password);
         Random r = new Random();

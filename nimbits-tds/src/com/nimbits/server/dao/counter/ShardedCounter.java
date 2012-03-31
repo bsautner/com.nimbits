@@ -13,13 +13,19 @@
 
 package com.nimbits.server.dao.counter;
 
-import com.nimbits.*;
-import com.nimbits.server.orm.*;
-import net.sf.jsr107cache.*;
+import com.nimbits.PMF;
+import com.nimbits.server.orm.ApiCounter;
+import com.nimbits.server.orm.ApiCounterShard;
+import net.sf.jsr107cache.Cache;
+import net.sf.jsr107cache.CacheException;
+import net.sf.jsr107cache.CacheManager;
 
-import javax.jdo.*;
-import java.util.*;
-import java.util.logging.*;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+import java.util.logging.Logger;
 
 /**
  * A counter which can be incremented rapidly.
@@ -94,8 +100,8 @@ public class ShardedCounter {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         try {
-            final Query shardsQuery = pm.newQuery(ApiCounterShard.class,
-                    "counterName == nameParam");
+            final Query shardsQuery = pm.newQuery(ApiCounterShard.class);
+            shardsQuery.setFilter("counterName == nameParam");
             shardsQuery.declareParameters("String nameParam");
             final List<ApiCounterShard> shards =
                     (List<ApiCounterShard>) shardsQuery.execute(counterName);

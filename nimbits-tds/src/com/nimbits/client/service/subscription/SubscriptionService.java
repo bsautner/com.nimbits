@@ -13,15 +13,17 @@
 
 package com.nimbits.client.service.subscription;
 
-import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.subscription.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
+import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.subscription.Subscription;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * Created by Benjamin Sautner

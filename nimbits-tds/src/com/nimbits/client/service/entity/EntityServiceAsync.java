@@ -29,8 +29,6 @@ public interface EntityServiceAsync {
 
     void addUpdateEntity(final EntityName name ,EntityType type,  AsyncCallback<Entity> async);
 
-    void deleteEntity(Entity entity, AsyncCallback<Void> asyncCallback);
-
     void getEntityByUUID(String uuid, AsyncCallback<Entity> async);
 
     void copyEntity(Entity originalEntity, EntityName newName, AsyncCallback<Entity> async);
@@ -49,12 +47,13 @@ public interface EntityServiceAsync {
 
     void getEntityByName(User u, EntityName name, AsyncCallback<Entity> async);
 
-    void deleteEntity(User u, Entity entity, AsyncCallback<Void> async);
+    void deleteEntity(User u, Entity entity, AsyncCallback<List<Entity>> async);
+
+    void deleteEntity(Entity entity, AsyncCallback<List<Entity>> asyncCallback);
 
     void getEntityChildren(User u, Entity c, EntityType point, AsyncCallback<List<Entity>> async);
 
     void getEntityMap(User user, EntityType type, AsyncCallback<Map<String, Entity>> async);
-
 
     void getSystemWideEntityMap(EntityType type, AsyncCallback<Map<String, Entity>> async);
 }

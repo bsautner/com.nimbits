@@ -65,38 +65,38 @@ public class PointModel implements Serializable, Point {
     private double filterValue;
 
 
-    public PointModel(String uuid) {
+    public PointModel(final String uuid) {
         this.uuid = uuid;
     }
 
     // Constructors
-    public PointModel(final Point p) {
-        this.id = p.getId();
-        this.uuid = p.getUUID();
-        this.lastChecked = p.getLastChecked().getTime();
-        this.userFK = p.getUserFK();
-        this.createDate = p.getCreateDate().getTime();
-        this.highAlarm = p.getHighAlarm();
-        this.expire = p.getExpire();
-        this.unit = p.getUnit();
+    public PointModel(final Point point) {
+        this.id = point.getId();
+        this.uuid = point.getUUID();
+        this.lastChecked = point.getLastChecked().getTime();
+        this.userFK = point.getUserFK();
+        this.createDate = point.getCreateDate().getTime();
+        this.highAlarm = point.getHighAlarm();
+        this.expire = point.getExpire();
+        this.unit = point.getUnit();
 
-        this.lowAlarm = p.getLowAlarm();
-        this.highAlarmOn = p.isHighAlarmOn();
-        this.lowAlarmOn = p.isLowAlarmOn();
-        this.tag = p.getTag();
-        this.idleAlarmOn = p.isIdleAlarmOn();
-        this.idleSeconds = p.getIdleSeconds();
-        this.idleAlarmSent = p.getIdleAlarmSent();
+        this.lowAlarm = point.getLowAlarm();
+        this.highAlarmOn = point.isHighAlarmOn();
+        this.lowAlarmOn = point.isLowAlarmOn();
+        this.tag = point.getTag();
+        this.idleAlarmOn = point.isIdleAlarmOn();
+        this.idleSeconds = point.getIdleSeconds();
+        this.idleAlarmSent = point.getIdleAlarmSent();
 
-        this.targetValue = p.getTargetValue();
-        this.values = p.getValues();
-        this.value = p.getValue();
-        this.filterType = p.getFilterType().getCode();
-        this.filterValue = p.getFilterValue();
+        this.targetValue = point.getTargetValue();
+        this.values = point.getValues();
+        this.value = point.getValue();
+        this.filterType = point.getFilterType().getCode();
+        this.filterValue = point.getFilterValue();
 
     }
 
-    public PointModel() {
+    protected PointModel() {
     }
 
 
@@ -175,7 +175,7 @@ public class PointModel implements Serializable, Point {
     @Override
     public List<Value> getValues() {
         if (values == null) {
-            values = new ArrayList<Value>();
+            values = new ArrayList<Value>(0);
 
         }
         return values;
@@ -204,7 +204,7 @@ public class PointModel implements Serializable, Point {
     }
 
     @Override
-    public void setHighAlarm(double highAlarm) {
+    public void setHighAlarm(final double highAlarm) {
         this.highAlarm = highAlarm;
     }
 
@@ -213,10 +213,7 @@ public class PointModel implements Serializable, Point {
         this.highAlarmOn = highAlarmOn;
     }
 
-    @Override
-    public void setId(final long id) {
-        this.id = id;
-    }
+
 
     @Override
     public void setLastChecked(final Date lastChecked) {
@@ -269,7 +266,7 @@ public class PointModel implements Serializable, Point {
     }
 
     @Override
-    public void setFilterType(FilterType filterType) {
+    public void setFilterType(final FilterType filterType) {
        this.filterType = filterType.getCode();
     }
 
@@ -279,7 +276,7 @@ public class PointModel implements Serializable, Point {
     }
 
     @Override
-    public void setFilterValue(double value) {
+    public void setFilterValue(final double value) {
       this.filterValue = value;
     }
 

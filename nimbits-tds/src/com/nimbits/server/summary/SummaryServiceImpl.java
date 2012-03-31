@@ -13,17 +13,22 @@
 
 package com.nimbits.server.summary;
 
-import com.google.gwt.user.server.rpc.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.summary.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.service.summary.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.user.*;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.summary.Summary;
+import com.nimbits.client.model.summary.SummaryModelFactory;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.service.summary.SummaryService;
+import com.nimbits.server.entity.EntityServiceFactory;
+import com.nimbits.server.user.UserServiceFactory;
 
-import java.util.*;
+import java.util.Date;
+import java.util.UUID;
 
 
 /**

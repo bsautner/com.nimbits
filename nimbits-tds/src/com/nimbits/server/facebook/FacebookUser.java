@@ -13,7 +13,7 @@
 
 package com.nimbits.server.facebook;
 
-import java.io.*;
+import java.io.Serializable;
 
 /**
  * Created by Benjamin Sautner

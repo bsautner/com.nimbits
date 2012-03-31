@@ -13,14 +13,14 @@
 
 package com.nimbits.server.orm;
 
-import com.nimbits.client.common.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.point.*;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.AlertType;
+import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.value.Value;
 
 import javax.jdo.annotations.*;
-import java.util.*;
+import java.util.Date;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 public class RecordedValue implements com.nimbits.client.model.value.Value {

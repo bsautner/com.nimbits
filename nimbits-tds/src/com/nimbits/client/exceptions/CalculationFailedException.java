@@ -13,7 +13,7 @@
 
 package com.nimbits.client.exceptions;
 
-import java.io.*;
+import java.io.Serializable;
 
 public class CalculationFailedException extends Exception implements Serializable {
 

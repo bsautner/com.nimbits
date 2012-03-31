@@ -13,9 +13,7 @@
 
 package com.nimbits.server.entity;
 
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.service.entity.*;
-import com.nimbits.server.dao.entity.*;
+import com.nimbits.client.service.entity.EntityService;
 
 /**
  * Created by Benjamin Sautner

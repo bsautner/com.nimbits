@@ -14,8 +14,8 @@
 package com.nimbits.server.task;
 
 import com.google.gson.Gson;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;

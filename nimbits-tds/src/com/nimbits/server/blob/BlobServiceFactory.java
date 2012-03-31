@@ -13,7 +13,7 @@
 
 package com.nimbits.server.blob;
 
-import com.nimbits.client.service.blob.*;
+import com.nimbits.client.service.blob.BlobService;
 
 /**
  * Created by Benjamin Sautner

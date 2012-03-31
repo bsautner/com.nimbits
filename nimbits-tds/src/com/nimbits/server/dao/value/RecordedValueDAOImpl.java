@@ -13,20 +13,22 @@
 
 package com.nimbits.server.dao.value;
 
-import com.nimbits.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.timespan.*;
-import com.nimbits.client.model.value.*;
+import com.nimbits.PMF;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.timespan.Timespan;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.ValueModelFactory;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
-import com.nimbits.server.orm.*;
-import com.nimbits.server.value.*;
+import com.nimbits.server.orm.RecordedValue;
+import com.nimbits.server.value.RecordedValueTransactions;
 
-import javax.jdo.*;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
 import java.util.*;
-import java.util.logging.*;
+import java.util.logging.Logger;
 @SuppressWarnings("unchecked")
 @Deprecated
 public class RecordedValueDAOImpl implements RecordedValueTransactions {
@@ -194,7 +196,7 @@ public class RecordedValueDAOImpl implements RecordedValueTransactions {
     }
 
     @Override
-    public List<Value> getCache() {
+    public List<Value> getBuffer() {
         return null;  //auto generated
     }
 

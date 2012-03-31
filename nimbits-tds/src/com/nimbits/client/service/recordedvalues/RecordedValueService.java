@@ -13,15 +13,18 @@
 
 package com.nimbits.client.service.recordedvalues;
 
-import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.timespan.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
+import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.timespan.Timespan;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 @RemoteServiceRelativePath("data")
 public interface RecordedValueService extends RemoteService {

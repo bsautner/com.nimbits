@@ -13,13 +13,12 @@
 
 package com.nimbits.client.service.user;
 
-import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.model.connection.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.user.*;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.nimbits.client.model.connection.Connection;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.user.User;
 
-import java.util.*;
+import java.util.List;
 
 public interface UserServiceAsync {
 

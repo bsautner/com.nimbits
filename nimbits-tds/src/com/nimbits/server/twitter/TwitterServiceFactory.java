@@ -13,7 +13,7 @@
 
 package com.nimbits.server.twitter;
 
-import com.nimbits.client.service.twitter.*;
+import com.nimbits.client.service.twitter.TwitterService;
 
 /**
  * Created by bsautner

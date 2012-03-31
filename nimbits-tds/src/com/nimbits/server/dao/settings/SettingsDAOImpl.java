@@ -13,14 +13,18 @@
 
 package com.nimbits.server.dao.settings;
 
-import com.nimbits.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.server.orm.*;
-import com.nimbits.server.settings.*;
+import com.nimbits.PMF;
+import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.server.orm.ServerSetting;
+import com.nimbits.server.settings.SettingTransactions;
 
-import javax.jdo.*;
-import java.util.*;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @SuppressWarnings("unchecked")
@@ -88,9 +92,12 @@ public class SettingsDAOImpl implements SettingTransactions {
         try {
             final Query q = pm.newQuery(ServerSetting.class);
             final List<ServerSetting> l = (List<ServerSetting>) q.execute();
-            final EnumMap<SettingType, String> settings = new EnumMap<SettingType, String>(SettingType.class);
+            final Map<SettingType, String> settings = new HashMap<SettingType, String>(SettingType.values().length);
             for (final ServerSetting s : l) {
+                SettingType type = s.getSetting();
+                if (type != null) { //this can happen if an old setting in the db isn't in the enum anymore
                 settings.put(s.getSetting(), s.getValue());
+                }
             }
             return settings;
         }finally {

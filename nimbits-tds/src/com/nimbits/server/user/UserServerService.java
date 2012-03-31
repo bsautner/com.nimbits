@@ -13,11 +13,10 @@
 
 package com.nimbits.server.user;
 
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.user.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.user.User;
 
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by Benjamin Sautner

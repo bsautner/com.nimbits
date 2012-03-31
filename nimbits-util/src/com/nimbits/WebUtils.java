@@ -3,6 +3,7 @@ package com.nimbits;
 
 import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
+import com.nimbits.helper.DevelopmentSettingsHelper;
 
 import java.io.*;
 
@@ -15,13 +16,13 @@ import java.io.*;
 public class WebUtils {
 
     protected static void createSiteMap() throws IOException {
-        String source = Settings.getSetting(SettingType.source);
-        File dir = new File(source + "/nimbits-web/web/pages");
-        File sitemap = new File(source + "/nimbits-web/web/sitemap.html");
+        final String source = DevelopmentSettingsHelper.getSetting(SettingType.source);
+        final File dir = new File(source + "/nimbits-web/web/pages");
+        final File sitemap = new File(source + "/nimbits-web/web/sitemap.html");
         if (sitemap.exists()) {
             sitemap.delete();
         }
-        Writer out = new OutputStreamWriter(new FileOutputStream(sitemap));
+        final Writer out = new OutputStreamWriter(new FileOutputStream(sitemap));
         out.write(Const.HTML_BOOTSTRAP);
         out.write("<ul>");
         writeFiles(dir, out);
@@ -32,16 +33,20 @@ public class WebUtils {
 
     private static void writeFiles(final File dir,final Writer out) throws IOException {
         out.write("<li>" + dir.getName() + "<ul>");
+        File cd;
+        String path;
+        int l;
+        String fn;
         for (int i = 0; i < dir.list().length; i++) {
-            String fn = dir.list()[i];
-            File cd = new File(dir.getPath() + "\\" + fn);
+             fn = dir.list()[i];
+            cd = new File(dir.getPath() + "\\" + fn);
             if (cd.isDirectory()) {
                 writeFiles(cd, out);
             }
             else {
-                int l = dir.getPath().indexOf("pages") -1;
-                String path = dir.getPath().substring(l);
-                out.write("<li><a href=\"." +path + "/" + fn + "\">" + fn + "</a></li>\n");
+                l = dir.getPath().indexOf("pages") -1;
+                path  = dir.getPath().substring(l);
+                out.write("<li><a href=\"." +path + '/' + fn + "\">" + fn + "</a></li>\n");
             }
         }
         out.write("</ul>");

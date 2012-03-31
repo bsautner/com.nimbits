@@ -13,10 +13,9 @@
 
 package com.nimbits.server.task;
 
-import com.google.gson.JsonSyntaxException;
 import com.nimbits.PMF;
 import com.nimbits.client.common.Utils;
-import com.nimbits.client.constants.*;
+import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.calculation.Calculation;
@@ -66,11 +65,11 @@ import java.util.logging.Logger;
  * Date: 1/14/12
  * Time: 10:48 AM
  */
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "unchecked"})
 public class UpgradeTask  extends HttpServlet
 
 {
-    private final String N= "Nimbits_Unsorted";
+    private final static String N= "Nimbits_Unsorted";
 
     private static final Logger log = Logger.getLogger(UpgradeTask.class.getName());
     private static final long serialVersionUID = 1L;
@@ -78,27 +77,26 @@ public class UpgradeTask  extends HttpServlet
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
 
-        Action action = Action.get(req.getParameter(Parameters.action.getText()));
+        final Action action = Action.get(req.getParameter(Parameters.action.getText()));
         try {
             switch (action) {
                 case start:
 
-                    clog("Started upgrade task");
+
                     doStart();
                     break;
                 case user:
 
-                    clog("Started upgrade user task");
+
                     doUser(req);
                     break;
                 case category:
+                     doCategory(req);
 
-                    clog("Started upgrade category task");
-                    doCategory(req);
                     break;
                 case point:
 
-                    clog("Started upgrade Point task");
+
                     doPoint(req);
                     break;
 
@@ -113,34 +111,37 @@ public class UpgradeTask  extends HttpServlet
     }
 
 
-    private void clog(String string) {
-       log.info(string);
+    private static void clog(final String string) {
+     //  log.info(string);
     }
 
-    private void doValue(HttpServletRequest req) {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+    protected static void doValue(final HttpServletRequest req) {
+        final PersistenceManager pm;
+        pm = PMF.get().getPersistenceManager();
 
         try {
-            Entity pointEntity = GsonFactory.getInstance().fromJson(req.getParameter(Parameters.json.getText()), EntityModel.class);
-            User u = UserTransactionFactory.getDAOInstance().getUserByUUID(pointEntity.getOwner());
+            final Entity pointEntity = GsonFactory.getInstance().fromJson(req.getParameter(Parameters.json.getText()), EntityModel.class);
+            final User u = UserTransactionFactory.getDAOInstance().getUserByUUID(pointEntity.getOwner());
 
-            final Query c = pm.newQuery(DataPoint.class, "uuid==o");
+            final Query c = pm.newQuery(DataPoint.class);
+            c.setFilter("uuid==o");
             c.declareParameters("String o");
-            List<DataPoint> pList = (List<DataPoint>) c.execute(pointEntity.getEntity());
+            final List<DataPoint> pList = (List<DataPoint>) c.execute(pointEntity.getEntity());
 
             if (pList.size() > 0) {
-                Point point = pList.get(0);
-                RecordedValueTransactions old =  RecordedValueTransactionFactory.getLegacyInstance(point);
-                RecordedValueTransactions dao =  RecordedValueTransactionFactory.getDaoInstance(point);
-                Timespan timespan = TimespanModelFactory.createTimespan(point.getCreateDate(), new Date());
+                final Point point = pList.get(0);
+                final RecordedValueTransactions old =  RecordedValueTransactionFactory.getLegacyInstance(point);
+                final RecordedValueTransactions dao =  RecordedValueTransactionFactory.getDaoInstance(point);
+                final Timespan timespan = TimespanModelFactory.createTimespan(point.getCreateDate(), new Date());
 
-                int count = -1;
-                int seg = 0;
-                while (count > 0) {
-                    seg += 1000;
-                    List<Value> values= dao.getDataSegment(timespan,seg, seg + 1000 );
+                 int cx = -1;
+                 int seg = 0;
+                while (cx != 0) {
+
+                    final List<Value> values= old.getDataSegment(timespan,seg, seg + 1000 );
+                    cx = values.size();
                     dao.recordValues(values);
-
+                    seg += 1000;
                 }
 
             }
@@ -153,21 +154,22 @@ public class UpgradeTask  extends HttpServlet
 
         }
 
-    private void doPoint(HttpServletRequest req) {
+    private void doPoint(final HttpServletRequest req) {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         try {
-            Entity pointEntity = GsonFactory.getInstance().fromJson(req.getParameter(Parameters.json.getText()), EntityModel.class);
-            User u = UserTransactionFactory.getDAOInstance().getUserByUUID(pointEntity.getOwner());
+            final Entity pointEntity = GsonFactory.getInstance().fromJson(req.getParameter(Parameters.json.getText()), EntityModel.class);
+            final User u = UserTransactionFactory.getDAOInstance().getUserByUUID(pointEntity.getOwner());
             clog(req.getParameter(Parameters.json.getText()));
             if (u==null) {
                 clog("User not found" + pointEntity.getOwner());
             }
             clog(u.getEmail().getValue());
-            final Query c = pm.newQuery(DataPoint.class, "uuid==o");
+            final Query c = pm.newQuery(DataPoint.class);
+            c.setFilter( "uuid==o");
             c.declareParameters("String o");
-            List<DataPoint> pList = (List<DataPoint>) c.execute(pointEntity.getEntity());
+            final List<DataPoint> pList = (List<DataPoint>) c.execute(pointEntity.getEntity());
             if (pList.size() > 0) {
                 //create subscriptions
 
@@ -177,15 +179,15 @@ public class UpgradeTask  extends HttpServlet
                 clog("fixing calculations");
                 createCalcs(pm, u, p);
                 if (p.dataPointIntelligenceEntity != null) {
-                    EntityName name = CommonFactoryLocator.getInstance().createName(p.name + "Intelligence");
-                    String uuid = UUID.randomUUID().toString();
-                    Point target = PointServiceFactory.getInstance().getPointByID(p.dataPointIntelligenceEntity.targetPointId);
+                    final EntityName name = CommonFactoryLocator.getInstance().createName(p.name + "Intelligence");
+                    final String uuid = UUID.randomUUID().toString();
+                    final Point target = PointServiceFactory.getInstance().getPointByID(p.dataPointIntelligenceEntity.targetPointId);
                     if (target != null) {
-                    Entity iEntity = EntityModelFactory.createEntity(name,"",EntityType.intelligence,
+                    final Entity iEntity = EntityModelFactory.createEntity(name,"",EntityType.intelligence,
                             ProtectionLevel.onlyMe, uuid, p.getUUID(), u.getUuid() );
                     EntityServiceFactory.getInstance().addUpdateEntity(u, iEntity);
 
-                    Intelligence i = IntelligenceModelFactory.createIntelligenceModel(uuid, p.dataPointIntelligenceEntity.getEnabled(),
+                    final Intelligence i = IntelligenceModelFactory.createIntelligenceModel(uuid, p.dataPointIntelligenceEntity.getEnabled(),
                             p.dataPointIntelligenceEntity.getResultTarget(),target.getUUID(), p.dataPointIntelligenceEntity.getInput(),
                             p.dataPointIntelligenceEntity.getNodeId(), p.dataPointIntelligenceEntity.getResultsInPlainText(),
                             p.getUUID());
@@ -208,14 +210,14 @@ public class UpgradeTask  extends HttpServlet
 
     }
 
-    private void createCalcs(PersistenceManager pm, User u, DataPoint p) throws NimbitsException {
+    private static void createCalcs(final PersistenceManager pm, final User u, final DataPoint p) throws NimbitsException {
         if (p.calculationEntity != null) {
 
             String x = null, y = null, z = null, target = null;
 
             if (p.calculationEntity.x != null && p.calculationEntity.x > 0) {
                 try {
-                    DataPoint px = pm.getObjectById(DataPoint.class, p.calculationEntity.x);
+                    final DataPoint px = pm.getObjectById(DataPoint.class, p.calculationEntity.x);
                     if (px != null) {
                         x=(px.getUUID());
                     }
@@ -226,7 +228,7 @@ public class UpgradeTask  extends HttpServlet
             }
             if (p.calculationEntity.y != null && p.calculationEntity.y > 0) {
                 try {
-                    DataPoint py =  pm.getObjectById(DataPoint.class, p.calculationEntity.y);
+                    final DataPoint py =  pm.getObjectById(DataPoint.class, p.calculationEntity.y);
                     if (py != null) {
                         y=(py.getUUID());
                     }
@@ -237,7 +239,7 @@ public class UpgradeTask  extends HttpServlet
             }
             if (p.calculationEntity.z != null && p.calculationEntity.z > 0) {
                 try {
-                    DataPoint pz =  pm.getObjectById(DataPoint.class, p.calculationEntity.z);
+                    final DataPoint pz =  pm.getObjectById(DataPoint.class, p.calculationEntity.z);
 
                     if (pz != null) {
                         z=(pz.getUUID());
@@ -249,7 +251,7 @@ public class UpgradeTask  extends HttpServlet
             }
             if (p.calculationEntity.target != null && p.calculationEntity.target > 0) {
                 try {
-                    DataPoint pt = pm.getObjectById(DataPoint.class, p.calculationEntity.target);
+                    final DataPoint pt = pm.getObjectById(DataPoint.class, p.calculationEntity.target);
                     if (pt != null && ! pt.getUUID().equals(p.getUUID())) {
                         target= (pt.getUUID());
                     }
@@ -330,30 +332,35 @@ public class UpgradeTask  extends HttpServlet
         SubscriptionTransactionFactory.getInstance(u).subscribe(r, subscription);
     }
 
-    private void doCategory(HttpServletRequest req) throws NimbitsException {
+    protected static void doCategory(final HttpServletRequest req) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         try {
-            Entity categoryEntity = GsonFactory.getInstance().fromJson(req.getParameter(Parameters.json.getText()), EntityModel.class);
-            User u = UserTransactionFactory.getDAOInstance().getUserByUUID(categoryEntity.getOwner());
+            final Entity categoryEntity = GsonFactory.getInstance().fromJson(req.getParameter(Parameters.json.getText()), EntityModel.class);
+            final User u = UserTransactionFactory.getDAOInstance().getUserByUUID(categoryEntity.getOwner());
+            log.info(u.getEmail().getValue());
+            final Query catQuery = pm.newQuery(PointCatagory.class);
+            catQuery.setFilter("userFK==o && name==n");
+            catQuery.declareParameters("Long o, String n");
+            final List<PointCatagory> cList = (List<PointCatagory>) catQuery.execute(u.getId(), categoryEntity.getName().getValue());
 
-            final Query catQuery = pm.newQuery(PointCatagory.class, "userFK==o && name==n");
-            catQuery.declareParameters("String o, String n");
-            List<PointCatagory> cList = (List<PointCatagory>) catQuery.execute(u.getId(), categoryEntity.getName().getValue());
 
+
+
+            log.info( categoryEntity.getName().getValue());
             if (cList.size() > 0) {
-                PointCatagory catagory = cList.get(0);
+                final PointCatagory catagory = cList.get(0);
 
 
-                final Query pointQuery = pm.newQuery(DataPoint.class, "catID==o");
+                final Query pointQuery = pm.newQuery(DataPoint.class);
+                pointQuery.setFilter("catID==o");
+                pointQuery.declareParameters("Long o");
 
-                pointQuery.declareParameters("String o");
-
-                List<DataPoint> points = (List<DataPoint>) pointQuery.execute(catagory.id);
+                final List<DataPoint> points = (List<DataPoint>) pointQuery.execute(catagory.id);
                 if (points.size() > 0) {
 
                     for (DataPoint p : points) {
-
+                         log.info(p.name);
                         String parent;
                         if (catagory.name.equals(N)) {
                             parent = u.getUuid();
@@ -366,11 +373,12 @@ public class UpgradeTask  extends HttpServlet
                             parent = u.getUuid();
                         }
 
-                        p.setFilterValue(p.getCompression());
+                        p.setFilterValue(p.compression);
+                        p.setTargetValue(p.TargetValue == null ? 0.0 : p.TargetValue);
                         p.setFilterType(FilterType.fixedHysteresis);
                         PointServiceFactory.getInstance().updatePoint(u, p);
 
-                        ProtectionLevel protectionLevel = p.isPublic ? ProtectionLevel.everyone : ProtectionLevel.onlyMe;
+                        ProtectionLevel protectionLevel = (p.isPublic != null && p.isPublic) ? ProtectionLevel.everyone : ProtectionLevel.onlyMe;
                         EntityName name = CommonFactoryLocator.getInstance().createName(p.name);
                         Entity pointEntity = EntityModelFactory.createEntity(name, p.description, EntityType.point,
                                 protectionLevel, p.getUUID(), parent, u.getUuid());
@@ -380,38 +388,15 @@ public class UpgradeTask  extends HttpServlet
 
                     }
                 }
-                final Query d = pm.newQuery(DiagramEntity.class, "categoryFk==o");
-
-                List<DiagramEntity> diagrams = (List<DiagramEntity>) d.execute(catagory.id);
-                for (DiagramEntity e : diagrams) {
-                    String parent;
-                    if (catagory.name.equals(N)) {
-                        parent = u.getUuid();
-                    }
-                    else {
-                        parent = catagory.uuid;
-                    }
-                    if (Utils.isEmptyString(parent)) {
-                        parent = u.getUuid();
-                    }
-                    ProtectionLevel protectionLevel = ProtectionLevel.get(e.protectionLevel);
-                    EntityName name = CommonFactoryLocator.getInstance().createName(e.name + ".svg");
-                    Entity pointEntity = EntityModelFactory.createEntity(name, "", EntityType.file,
-                            protectionLevel, UUID.randomUUID().toString(), parent, u.getUuid(), e.blobKey.getKeyString());
-
-                    Entity r = EntityServiceFactory.getInstance().addUpdateEntity(u, pointEntity);
-                    clog("created diagram " + name.getValue());
-                    // TaskFactoryLocator.getInstance().startUpgradeTask(Action.point,r );
-
-                }
+                doDiagram(catagory, u);
 
 
 
             }
-        } catch (JsonSyntaxException e) {
+        } catch (Exception e) {
 
             e.printStackTrace();
-            clog(e.getMessage());
+            log.severe(e.getMessage());
 
         } finally {
             pm.close();
@@ -421,38 +406,88 @@ public class UpgradeTask  extends HttpServlet
 
     }
 
-    private void doUser(HttpServletRequest req) {
-        Entity userEntity = GsonFactory.getInstance().fromJson(req.getParameter(Parameters.json.getText()), EntityModel.class);
+    protected static void doDiagram(PointCatagory catagory, User u) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final Query userQuery = pm.newQuery(NimbitsUser.class, "uuid==o");
+         try {
+        final Query d = pm.newQuery(DiagramEntity.class);
+        d.setFilter("categoryFk==o");
+        d.declareParameters("Long o");
+        List<DiagramEntity> diagrams = (List<DiagramEntity>) d.execute(catagory.id);
+        for (DiagramEntity diagramEntity : diagrams) {
+            String parent;
+            if (catagory.name.equals(N)) {
+                parent = u.getUuid();
+            }
+            else {
+                parent = catagory.uuid;
+            }
+            if (Utils.isEmptyString(parent)) {
+                parent = u.getUuid();
+            }
+            ProtectionLevel protectionLevel = ProtectionLevel.get(diagramEntity.protectionLevel);
+            EntityName name = CommonFactoryLocator.getInstance().createName(diagramEntity.name + ".svg");
+            Entity pointEntity = EntityModelFactory.createEntity(name, "", EntityType.file,
+                    protectionLevel, UUID.randomUUID().toString(), parent, u.getUuid(), diagramEntity.blobKey.getKeyString());
+
+            Entity r = EntityServiceFactory.getInstance().addUpdateEntity(u, pointEntity);
+            clog("created diagram " + name.getValue());
+            // TaskFactoryLocator.getInstance().startUpgradeTask(Action.point,r );
+
+        }
+         } catch (NimbitsException e) {
+             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+         } finally {
+              pm.close();
+         }
+
+    }
+
+    protected static int doUser(final HttpServletRequest req) {
+        final Entity userEntity = GsonFactory.getInstance().fromJson(req.getParameter(Parameters.json.getText()), EntityModel.class);
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final Query userQuery = pm.newQuery(NimbitsUser.class);
+        userQuery.setFilter("uuid==u");
+        userQuery.declareParameters("String u");
+
+
+
+         int categories = 0;
 
         try {
-            List<NimbitsUser> users = (List<NimbitsUser>) userQuery.execute(userEntity.getEntity());
+            final List<NimbitsUser> users = (List<NimbitsUser>) userQuery.execute(userEntity.getEntity());
             if (users.size() > 0) {
-                NimbitsUser user = users.get(0);
+                final NimbitsUser user = users.get(0);
+                log.info(user.getEmail().getValue());
+
+                final Query cQuery = pm.newQuery(PointCatagory.class);
+                cQuery.setFilter("userFK==o");
+                cQuery.declareParameters("Long o");
 
 
-                final Query cQuery = pm.newQuery(PointCatagory.class, "userFK==o");
-                cQuery.declareParameters("String o");
-                List<PointCatagory> list = (List<PointCatagory>) cQuery.execute(user.getId());
-                for (PointCatagory c : list) {
-                    EntityName name = CommonFactoryLocator.getInstance().createName(c.name);
-                    Entity entity = EntityModelFactory.createEntity(name, c.name, EntityType.category, ProtectionLevel.get(c.protectionLevel),
+
+
+                final List<PointCatagory> list = (List<PointCatagory>) cQuery.execute(user.getId());
+                categories = list.size();
+                for (final PointCatagory c : list) {
+                    log.info(c.name);
+                    final EntityName name = CommonFactoryLocator.getInstance().createName(c.name);
+                    ProtectionLevel protectionLevel = c.protectionLevel == null ? ProtectionLevel.onlyMe : ProtectionLevel.get(c.protectionLevel);
+                    final Entity entity = EntityModelFactory.createEntity(name, c.name, EntityType.category, protectionLevel,
                             UUID.randomUUID().toString(), userEntity.getEntity(), userEntity.getEntity());
                     Entity r = entity;
                     if (! name.getValue().equals(N)) {
                         r = EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
                     }
-                    clog("created category " + name.getValue());
+                    log.info("created category " + name.getValue());
                     TaskFactory.getInstance().startUpgradeTask(Action.category,r );
                 }
 
 
                 if (user.getConnections() != null && user.getConnections().size() > 0) {
-                    for (Long l : user.getConnections()) {
-                        User connection = UserTransactionFactory.getDAOInstance().getNimbitsUserByID(l);
-                        EntityName name = CommonFactoryLocator.getInstance().createName(connection.getEmail().getValue());
-                        Entity entity = EntityModelFactory.createEntity(name, "",EntityType.userConnection, ProtectionLevel.onlyMe,
+                    for (final Long l : user.getConnections()) {
+                        final User connection = UserTransactionFactory.getDAOInstance().getNimbitsUserByID(l);
+                        final EntityName name = CommonFactoryLocator.getInstance().createName(connection.getEmail().getValue());
+                        final Entity entity = EntityModelFactory.createEntity(name, "",EntityType.userConnection, ProtectionLevel.onlyMe,
                                 connection.getUuid(), user.getUuid(), user.getUuid());
                         clog("created connection " + name.getValue());
                         EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
@@ -461,33 +496,36 @@ public class UpgradeTask  extends HttpServlet
                 }
 
             }
-        } catch (NimbitsException e) {
-            clog("ERROR" + e.getMessage());
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            return categories;
+        } catch (Exception e) {
+            log.severe("ERROR" + e.getMessage());
+            return -1;
+
         } finally {
             pm.close();
         }
 
     }
 
-    private void doStart() throws NimbitsException {
+    protected static int doStart() throws NimbitsException {
         int set = 0;
         int results = -1;
-        while (results != 0) {
-            final List<User> users = UserTransactionFactory.getInstance().getUsers(set, set + Const.CONST_QUERY_CHUNK_SIZE);
+        final List<User> users;
+
+           users = UserTransactionFactory.getInstance().getUsers();
             //   final List<User> users = UserTransactionFactory.getInstance().getAllUsers("lastLoggedIn desc", 3000);
             results = users.size();
 
             set += Const.CONST_QUERY_CHUNK_SIZE;
-            for (User u : users) {
-                clog("Upgrading user: " + u.getEmail().getValue());
-                Entity entity = EntityModelFactory.createEntity(u);
-                Entity r = EntityServiceFactory.getInstance().addUpdateEntity(u, entity);
+            for (final User u : users) {
+              //  clog("Upgrading user: " + u.getEmail().getValue());
+                final Entity entity = EntityModelFactory.createEntity(u);
+                final Entity r = EntityServiceFactory.getInstance().addUpdateEntity(u, entity);
                 TaskFactory.getInstance().startUpgradeTask(Action.user,r );
 
             }
 
-        }
+        return results;
     }
 
 

@@ -13,22 +13,19 @@
 
 package com.nimbits.server.api;
 
-import com.nimbits.client.common.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.setting.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.counter.*;
-import com.nimbits.server.dao.counter.*;
-import com.nimbits.server.quota.*;
-import com.nimbits.server.settings.*;
-import com.nimbits.server.user.*;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.enums.ExportType;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.user.User;
+import com.nimbits.server.quota.QuotaFactory;
+import com.nimbits.server.user.UserServiceFactory;
 
-import javax.servlet.http.*;
-import java.util.*;
-import java.util.logging.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.EnumMap;
+import java.util.Map;
 
 /**
  * Created by Benjamin Sautner
@@ -37,7 +34,7 @@ import java.util.logging.*;
  * Time: 12:58 PM
  */
 public class ApiServlet extends HttpServlet {
-    private static final Logger log = Logger.getLogger(ApiServlet.class.getName());
+    //private static final Logger log = Logger.getLogger(ApiServlet.class.getName());
     protected User user;
     private Map<Parameters, String> paramMap;
 
@@ -48,9 +45,9 @@ public class ApiServlet extends HttpServlet {
             if (user != null) {
                 QuotaFactory.getInstance(user).incrementCounter();
             }
-            paramMap = new HashMap<Parameters, String>();
+            paramMap = new EnumMap<Parameters, String>(Parameters.class);
 
-            Parameters items[] = {
+            final Parameters[] items = {
                     Parameters.point,
                     Parameters.value,
                     Parameters.json,
@@ -71,7 +68,7 @@ public class ApiServlet extends HttpServlet {
 
 
 
-            for (Parameters s : items) {
+            for (final Parameters s : items) {
                 paramMap.put(s, req.getParameter(s.getText()));
             }
             addResponseHeaders(resp, type);

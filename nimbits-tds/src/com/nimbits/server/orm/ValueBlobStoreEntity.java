@@ -16,7 +16,6 @@ package com.nimbits.server.orm;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 
-
 import javax.jdo.annotations.*;
 import java.util.Date;
 

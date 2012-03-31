@@ -13,17 +13,19 @@
 
 package com.nimbits.client.ui.panels;
 
-import com.extjs.gxt.ui.client.widget.*;
-import com.extjs.gxt.ui.client.widget.layout.*;
-import com.google.gwt.core.client.*;
-import com.google.gwt.user.client.*;
-import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.service.facebook.*;
+import com.extjs.gxt.ui.client.widget.ContentPanel;
+import com.extjs.gxt.ui.client.widget.Label;
+import com.extjs.gxt.ui.client.widget.LayoutContainer;
+import com.extjs.gxt.ui.client.widget.layout.FillLayout;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.service.facebook.FacebookService;
+import com.nimbits.client.service.facebook.FacebookServiceAsync;
 
-import java.util.*;
+import java.util.Map;
 
 
 /**

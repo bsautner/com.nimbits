@@ -30,16 +30,19 @@ public enum SettingType {
     testPassword(SettingConstants.SETTING_TEST_PASSWORD,Const.EMPTY,false, false),
     testURL(SettingConstants.SETTING_TEST_URL,Const.EMPTY,false, false),
     quotaEnabled(SettingConstants.SETTING_ENABLE_QUOTA, Const.FALSE, false, true),
-    facebookClientId(SettingConstants.SETTING_FACEBOOK_CLIENT_ID, Const.EMPTY, true, true)
+    facebookClientId(SettingConstants.SETTING_FACEBOOK_CLIENT_ID, Const.EMPTY, false, true),
+    localDevAccount(SettingConstants.SETTING_LOCAL_DEV_ACCOUNT, Const.EMPTY, false, false),
+    localDevPath(SettingConstants.SETTING_LOCAL_DEV_PATH, Const.EMPTY, false, false),
+    localDevKey(SettingConstants.SETTING_LOCAL_DEV_KEY, Const.EMPTY, false, false),
     ;
 
 
-    private static final Map<String, SettingType> lookup = new HashMap<String, SettingType>();
+    private static final Map<String, SettingType> lookup = new HashMap<String, SettingType>(21);
 
 
     static {
-        for (SettingType s : EnumSet.allOf(SettingType.class))
-            lookup.put(s.getName(), s);
+        for (final SettingType s : EnumSet.allOf(SettingType.class))
+            lookup.put(s.name, s);
     }
 
 
@@ -55,7 +58,7 @@ public enum SettingType {
     }
 
 
-    public static SettingType get(String name) {
+    public static SettingType get(final String name) {
         return lookup.get(name);
     }
 
@@ -79,9 +82,14 @@ public enum SettingType {
     public String toString() {
         return name;
     }
-    private class SettingConstants {
+    private static class SettingConstants {
+        private static final String CONST_SERVER_VERSION = "3.3.2";
+        private static final String SETTING_LOCAL_DEV_ACCOUNT = "SETTING_LOCAL_DEV_ACCOUNT";
+        private static final String SETTING_LOCAL_DEV_KEY = "SETTING_LOCAL_DEV_KEY";
+        private static final String SETTING_LOCAL_DEV_PATH = "SETTING_LOCAL_DEV_PATH";
 
-        private static final String CONST_SERVER_VERSION = "3.3.2.4";
+
+
         private static final String SETTING_ENABLE_CONNECTIONS = "enableConnections";
         private static final String SETTING_ADMIN = "admin";
         private static final String SETTING_LAST_CHECKED = "lastChecked";

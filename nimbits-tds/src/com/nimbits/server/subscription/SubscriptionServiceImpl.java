@@ -13,29 +13,36 @@
 
 package com.nimbits.server.subscription;
 
-import com.google.gwt.user.server.rpc.*;
-import com.nimbits.client.common.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.subscription.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.client.model.xmpp.*;
-import com.nimbits.client.service.subscription.*;
-import com.nimbits.server.email.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.facebook.*;
-import com.nimbits.server.feed.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.value.*;
-import com.nimbits.server.twitter.*;
-import com.nimbits.server.user.*;
-import com.nimbits.server.xmpp.*;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.enums.AlertType;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.FeedType;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.subscription.Subscription;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.xmpp.XmppResource;
+import com.nimbits.client.service.subscription.SubscriptionService;
+import com.nimbits.server.email.EmailServiceFactory;
+import com.nimbits.server.entity.EntityServiceFactory;
+import com.nimbits.server.facebook.FacebookFactory;
+import com.nimbits.server.feed.FeedServiceFactory;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.twitter.TwitterServiceFactory;
+import com.nimbits.server.user.UserServiceFactory;
+import com.nimbits.server.value.RecordedValueServiceFactory;
+import com.nimbits.server.xmpp.XmppServiceFactory;
 
-import java.util.*;
-import java.util.logging.*;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  * Created by Benjamin Sautner

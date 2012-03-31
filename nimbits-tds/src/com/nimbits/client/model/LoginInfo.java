@@ -13,11 +13,11 @@
 
 package com.nimbits.client.model;
 
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.user.User;
 
-import java.io.*;
+import java.io.Serializable;
 
 public class LoginInfo implements Serializable {
 

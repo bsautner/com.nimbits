@@ -13,12 +13,13 @@
 
 package com.nimbits.server.value;
 
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.timespan.*;
-import com.nimbits.client.model.value.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.timespan.Timespan;
+import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 public interface RecordedValueTransactions {
 
@@ -39,7 +40,7 @@ public interface RecordedValueTransactions {
                                final int start,
                                final int end) throws NimbitsException;
 
-    List<Value> getCache() throws NimbitsException;
+    List<Value> getBuffer() throws NimbitsException;
 
     void recordValues(final List<Value> values) throws NimbitsException;
 

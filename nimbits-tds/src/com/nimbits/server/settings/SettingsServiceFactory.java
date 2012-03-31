@@ -13,7 +13,7 @@
 
 package com.nimbits.server.settings;
 
-import com.nimbits.client.service.settings.*;
+import com.nimbits.client.service.settings.SettingsService;
 
 public class SettingsServiceFactory {
     private static SettingsService instance;

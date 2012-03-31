@@ -13,8 +13,8 @@
 
 package com.nimbits.server.subscription;
 
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.dao.subscription.*;
+import com.nimbits.client.model.user.User;
+import com.nimbits.server.dao.subscription.SubscriptionDaoImpl;
 
 /**
  * Created by Benjamin Sautner

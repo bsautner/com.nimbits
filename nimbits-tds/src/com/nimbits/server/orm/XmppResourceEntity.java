@@ -14,7 +14,7 @@
 package com.nimbits.server.orm;
 
 import com.google.appengine.api.datastore.Key;
-import com.nimbits.client.model.xmpp.*;
+import com.nimbits.client.model.xmpp.XmppResource;
 
 import javax.jdo.annotations.*;
 

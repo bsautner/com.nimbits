@@ -13,23 +13,18 @@
 
 package com.nimbits.server.cron;
 
-import com.google.appengine.api.datastore.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.counter.*;
-import com.nimbits.server.dao.counter.*;
-import com.nimbits.server.quota.*;
-import com.nimbits.server.settings.*;
-import com.nimbits.server.task.*;
-import com.nimbits.server.user.*;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.user.User;
+import com.nimbits.server.quota.QuotaFactory;
+import com.nimbits.server.user.UserTransactionFactory;
 
-import javax.servlet.http.*;
-import java.io.*;
-import java.util.*;
-import java.util.logging.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by Benjamin Sautner

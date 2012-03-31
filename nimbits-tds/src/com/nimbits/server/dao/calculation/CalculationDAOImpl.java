@@ -13,15 +13,18 @@
 
 package com.nimbits.server.dao.calculation;
 
-import com.nimbits.*;
-import com.nimbits.client.model.calculation.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.calculation.*;
-import com.nimbits.server.orm.*;
+import com.nimbits.PMF;
+import com.nimbits.client.model.calculation.Calculation;
+import com.nimbits.client.model.calculation.CalculationModelFactory;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.user.User;
+import com.nimbits.server.calculation.CalculationTransactions;
+import com.nimbits.server.orm.CalculationEntity;
 
-import javax.jdo.*;
-import java.util.*;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
+import java.util.List;
 
 /**
  * Created by bsautner
@@ -45,7 +48,8 @@ public class CalculationDAOImpl implements CalculationTransactions {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         try {
-            final Query q = pm.newQuery(CalculationEntity.class, "uuid == k");
+            final Query q = pm.newQuery(CalculationEntity.class);
+            q.setFilter("uuid == k");
             q.declareParameters("String k");
             q.setRange(0,1);
             final List<Calculation> results = (List<Calculation>) q.execute(entity.getEntity());
@@ -69,7 +73,8 @@ public class CalculationDAOImpl implements CalculationTransactions {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         try {
-            final Query q = pm.newQuery(CalculationEntity.class, "trigger == k");
+            final Query q = pm.newQuery(CalculationEntity.class);
+            q.setFilter("trigger == k");
             q.declareParameters("String k");
             q.setRange(0,1);
             final List<Calculation> results = (List<Calculation>) q.execute(entity.getEntity());
@@ -89,7 +94,8 @@ public class CalculationDAOImpl implements CalculationTransactions {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         try {
-            final Query q = pm.newQuery(CalculationEntity.class, "trigger == k");
+            final Query q = pm.newQuery(CalculationEntity.class);
+            q.setFilter("trigger == k");
             q.declareParameters("String k");
             q.setRange(0,1);
             final List<Calculation> results = (List<Calculation>) q.execute(entity.getEntity());
@@ -109,7 +115,8 @@ public class CalculationDAOImpl implements CalculationTransactions {
 
         try {
 
-            final Query q = pm.newQuery(CalculationEntity.class, "uuid==u");
+            final Query q = pm.newQuery(CalculationEntity.class);
+            q.setFilter("uuid==u");
             q.declareParameters("String u");
             q.setRange(0, 1);
             results = (List<CalculationEntity>) q.execute(calculation.getUUID());

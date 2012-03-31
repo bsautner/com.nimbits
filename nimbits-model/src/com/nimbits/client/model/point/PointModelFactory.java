@@ -34,7 +34,7 @@ public class PointModelFactory {
 
 
     public static List<Point> createPointModels(final List<Point> points) {
-        final List<Point> retObj = new ArrayList<Point>();
+        final List<Point> retObj = new ArrayList<Point>(points.size());
 
         for (final Point p : points) {
             retObj.add(createPointModel(p));

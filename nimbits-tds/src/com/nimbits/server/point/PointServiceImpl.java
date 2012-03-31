@@ -14,21 +14,27 @@
 package com.nimbits.server.point;
 
 
-import com.google.gwt.user.server.rpc.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.client.service.datapoints.*;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ExportType;
+import com.nimbits.client.enums.FeedType;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModelFactory;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.service.datapoints.PointService;
 import com.nimbits.server.blob.BlobStoreFactory;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.export.*;
-import com.nimbits.server.feed.*;
+import com.nimbits.server.entity.EntityServiceFactory;
+import com.nimbits.server.export.ExportHelperFactory;
+import com.nimbits.server.feed.FeedServiceFactory;
 import com.nimbits.server.task.TaskFactory;
-import com.nimbits.server.value.*;
-import com.nimbits.server.user.*;
+import com.nimbits.server.user.UserServiceFactory;
+import com.nimbits.server.value.RecordedValueServiceFactory;
 
 import java.util.*;
 
@@ -111,8 +117,7 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
     private void notifyFeedOfNewPoint(User user, Entity entity) throws NimbitsException {
         FeedServiceFactory.getInstance().postToFeed(user, "A new data point named " + entity.getName().getValue() +
-        " has been created with a default compression of 0.1, expiration of 90 days and security set to public. Right " +
-                "click your data point to edit its properties.", FeedType.info);
+        " has been created.", FeedType.info);
     }
 
     @Override

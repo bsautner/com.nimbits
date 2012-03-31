@@ -13,16 +13,22 @@
 
 package com.nimbits.server.memcache.user;
 
-import com.google.appengine.api.memcache.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.connection.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.memcache.*;
-import com.nimbits.server.user.*;
-import twitter4j.auth.*;
+import com.google.appengine.api.memcache.InvalidValueException;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.connection.Connection;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.user.User;
+import com.nimbits.server.memcache.MemCacheHelper;
+import com.nimbits.server.user.UserTransactionFactory;
+import com.nimbits.server.user.UserTransactions;
+import twitter4j.auth.AccessToken;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by bsautner
@@ -146,11 +152,6 @@ public class UserMemCacheImpl implements UserTransactions {
 //            return store;
 //        }
 
-    }
-
-    @Override
-    public List<User> getUsers(int start, int end) {
-        return UserTransactionFactory.getDAOInstance().getUsers(start, end);
     }
 
     @Override

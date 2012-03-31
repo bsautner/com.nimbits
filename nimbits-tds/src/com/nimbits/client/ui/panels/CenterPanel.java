@@ -13,28 +13,38 @@
 
 package com.nimbits.client.ui.panels;
 
-import com.extjs.gxt.ui.client.*;
-import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.util.*;
-import com.extjs.gxt.ui.client.widget.*;
+import com.extjs.gxt.ui.client.Style;
+import com.extjs.gxt.ui.client.event.BaseEvent;
+import com.extjs.gxt.ui.client.event.Events;
+import com.extjs.gxt.ui.client.event.Listener;
+import com.extjs.gxt.ui.client.util.Margins;
+import com.extjs.gxt.ui.client.util.Padding;
+import com.extjs.gxt.ui.client.widget.ContentPanel;
+import com.extjs.gxt.ui.client.widget.LayoutContainer;
 import com.extjs.gxt.ui.client.widget.layout.*;
-import com.google.gwt.core.client.*;
-import com.google.gwt.user.client.*;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.client.service.subscription.*;
-import com.nimbits.client.service.twitter.*;
-import com.nimbits.client.service.xmpp.*;
-import com.nimbits.client.ui.controls.*;
-import com.nimbits.client.ui.helper.*;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.nimbits.client.constants.Path;
+import com.nimbits.client.enums.Action;
+import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.GxtModel;
+import com.nimbits.client.model.LoginInfo;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.service.subscription.SubscriptionService;
+import com.nimbits.client.service.subscription.SubscriptionServiceAsync;
+import com.nimbits.client.service.twitter.TwitterService;
+import com.nimbits.client.service.twitter.TwitterServiceAsync;
+import com.nimbits.client.service.xmpp.XMPPService;
+import com.nimbits.client.service.xmpp.XMPPServiceAsync;
+import com.nimbits.client.ui.controls.MainMenuBar;
+import com.nimbits.client.ui.helper.EntityOpenHelper;
+import com.nimbits.client.ui.helper.FeedbackHelper;
 
-import java.util.*;
+import java.util.Map;
 
 /**
  * Created by bsautner

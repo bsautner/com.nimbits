@@ -13,11 +13,13 @@
 
 package com.nimbits.server.memcache;
 
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.MemCacheKey;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
 
 /**
  * Created by Benjamin Sautner

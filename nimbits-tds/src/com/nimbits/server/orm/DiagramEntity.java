@@ -14,10 +14,10 @@
 package com.nimbits.server.orm;
 
 
-import com.google.appengine.api.blobstore.*;
+import com.google.appengine.api.blobstore.BlobKey;
 
 import javax.jdo.annotations.*;
-import java.util.*;
+import java.util.Date;
 
 /**
  * Created by Benjamin Sautner

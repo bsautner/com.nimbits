@@ -13,7 +13,7 @@
 
 package com.nimbits.server.time;
 
-import com.nimbits.client.service.timespan.*;
+import com.nimbits.client.service.timespan.TimespanService;
 
 /**
  * Created by bsautner

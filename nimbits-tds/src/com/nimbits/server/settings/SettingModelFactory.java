@@ -13,7 +13,8 @@
 
 package com.nimbits.server.settings;
 
-import com.nimbits.client.model.setting.*;
+import com.nimbits.client.model.setting.Setting;
+import com.nimbits.client.model.setting.SettingModel;
 
 /**
  * Created by bsautner

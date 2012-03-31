@@ -13,9 +13,9 @@
 
 package com.nimbits.server.calculation;
 
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.service.calculation.*;
-import com.nimbits.server.dao.calculation.*;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.service.calculation.CalculationService;
+import com.nimbits.server.dao.calculation.CalculationDAOImpl;
 
 /**
  * Created by bsautner

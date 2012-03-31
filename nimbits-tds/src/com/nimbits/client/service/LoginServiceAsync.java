@@ -13,8 +13,8 @@
 
 package com.nimbits.client.service;
 
-import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.model.*;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.nimbits.client.model.LoginInfo;
 
 public interface LoginServiceAsync {
     void login(final String requestUri, final AsyncCallback<LoginInfo> async);

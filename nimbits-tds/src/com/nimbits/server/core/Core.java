@@ -13,7 +13,7 @@
 
 package com.nimbits.server.core;
 
-import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.entity.Entity;
 
 /**
  * Created by bsautner
@@ -24,6 +24,6 @@ import com.nimbits.client.model.entity.*;
 public interface Core {
 
     void reportDeleteToCore(final Entity entity);
-    void reportUpdateToCore(final String url, Entity entity);
+    void reportUpdateToCore(final Entity entity);
 
 }

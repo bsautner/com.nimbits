@@ -13,21 +13,24 @@
 
 package com.nimbits.server.cron;
 
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.server.point.*;
-import com.nimbits.server.value.*;
-import com.nimbits.server.subscription.*;
-import com.nimbits.server.user.*;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.AlertType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.server.point.PointServiceFactory;
+import com.nimbits.server.subscription.SubscriptionServiceFactory;
+import com.nimbits.server.user.UserTransactionFactory;
+import com.nimbits.server.value.RecordedValueServiceFactory;
 
-import javax.servlet.http.*;
-import java.io.*;
-import java.util.*;
-import java.util.logging.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.List;
+import java.util.logging.Logger;
 
 public class IdlePointCron extends HttpServlet {
     /**

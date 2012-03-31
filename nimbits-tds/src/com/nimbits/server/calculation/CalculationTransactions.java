@@ -13,10 +13,10 @@
 
 package com.nimbits.server.calculation;
 
-import com.nimbits.client.model.calculation.*;
-import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.calculation.Calculation;
+import com.nimbits.client.model.entity.Entity;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * Created by bsautner

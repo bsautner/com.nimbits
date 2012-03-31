@@ -13,28 +13,34 @@
 
 package com.nimbits.server.api.impl;
 
-import com.google.gson.*;
-import com.nimbits.client.common.*;
-import com.nimbits.client.constants.*;
+import com.google.gson.Gson;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.constants.UserMessages;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.timespan.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.server.api.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.feed.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.point.*;
-import com.nimbits.server.value.*;
-import com.nimbits.server.time.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModel;
+import com.nimbits.client.model.timespan.Timespan;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.server.api.ApiServlet;
+import com.nimbits.server.entity.EntityServiceFactory;
+import com.nimbits.server.feed.FeedServiceFactory;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.point.PointServiceFactory;
+import com.nimbits.server.time.TimespanServiceFactory;
+import com.nimbits.server.value.RecordedValueServiceFactory;
 
-import javax.servlet.http.*;
-import java.io.*;
-import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+import java.util.UUID;
 
 
 public class PointServletImpl extends ApiServlet {
@@ -127,7 +133,7 @@ public class PointServletImpl extends ApiServlet {
 
 
             if (! containsParam(Parameters.uuid)) {
-                getPointObjects(req, getParam(Parameters.category), pointNameParam, out);
+                getPointObjects(getParam(Parameters.category), pointNameParam, out);
             } else {
                 final Point point = PointServiceFactory.getInstance().getPointByUUID(getParam(Parameters.uuid));
                 if (point != null) {
@@ -142,7 +148,7 @@ public class PointServletImpl extends ApiServlet {
 //                                u = UserServiceFactory.getServerInstance().getUserByID(category.getUserFK());
 //                                u.setRestricted(true);
 //                            }
-                            List<Entity> children = EntityServiceFactory.getInstance().getEntityChildren(user, category, EntityType.point);
+                            final List<Entity> children = EntityServiceFactory.getInstance().getEntityChildren(user, category, EntityType.point);
                             final List<Point> points =PointServiceFactory.getInstance().getPoints(user, children);// PointServiceFactory.getInstance().getPointsByCategory(u, category);
 
                             //todo remove point from list if private
@@ -175,7 +181,7 @@ public class PointServletImpl extends ApiServlet {
         }
 
     }
-    private Entity getCategoryWithParam(final EntityName categoryName, final User u) throws NimbitsException {
+    private static Entity getCategoryWithParam(final EntityName categoryName, final User u) throws NimbitsException {
 
         // Category c = CategoryServiceFactory.getInstance().getCategory(u, categoryName);
 
@@ -188,11 +194,11 @@ public class PointServletImpl extends ApiServlet {
         return c;
     }
 
-    private Point createPoint(final User u, final EntityName pointName, final EntityName categoryName) throws NimbitsException {
-        Point retObj;
+    private static Point createPoint(final User u, final EntityName pointName, final EntityName categoryName) throws NimbitsException {
+        final Point retObj;
         final Entity category;
-        Entity entity;
-        String parent;
+        final Entity entity;
+        final String parent;
         if (categoryName != null) {
             category = getCategoryWithParam(categoryName, u);
             parent = category.getEntity();
@@ -210,7 +216,7 @@ public class PointServletImpl extends ApiServlet {
         return retObj;
     }
 
-    private Point createPointWithJson(final User u, final EntityName name, final EntityName categoryName, final String json) throws NimbitsException {
+    private static Point createPointWithJson(final User u, final EntityName name, final EntityName categoryName, final String json) throws NimbitsException {
 
 
         final String parent;
@@ -231,7 +237,7 @@ public class PointServletImpl extends ApiServlet {
 
         final Point point = gson.fromJson(json, PointModel.class);
 
-        Entity entity = EntityModelFactory.createEntity(name,"", EntityType.point,
+        final Entity entity = EntityModelFactory.createEntity(name,"", EntityType.point,
                 ProtectionLevel.everyone, UUID.randomUUID().toString(),
                 parent, u.getUuid() );
         point.setUserFK(u.getId());
@@ -240,13 +246,13 @@ public class PointServletImpl extends ApiServlet {
 
     }
 
-    private Point updatePoint(User u, final String json) throws NimbitsException {
+    private static Point updatePoint(final User u, final String json) throws NimbitsException {
         final Point point = gson.fromJson(json, PointModel.class);
         return PointServiceFactory.getInstance().updatePoint(u, point);
 
     }
 
-    private void deletePoint(final User u, final String pointNameParam) throws NimbitsException {
+    private static void deletePoint(final User u, final String pointNameParam) throws NimbitsException {
         final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
         final Entity entity = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
         if (entity != null) {
@@ -257,23 +263,23 @@ public class PointServletImpl extends ApiServlet {
 
 
 
-    private void outputPoint(String countParam, String format, String startParam, String endParam, String offsetParam, PrintWriter out, Point point) throws NimbitsException {
+    private static void outputPoint(final String countParam, final String format, final String startParam, final String endParam, final String offsetParam, final PrintWriter out, final Point point) throws NimbitsException {
 
 
-        point = getRecordedValues(countParam, startParam, endParam, offsetParam, point);
+        final Point p = getRecordedValues(countParam, startParam, endParam, offsetParam, point);
 
-        Value current = RecordedValueServiceFactory.getInstance().getCurrentValue(point);
-        point.setValue(current);
+        final Value current = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
+        p.setValue(current);
         final ExportType type = getOutputType(format);
         if (type.equals(ExportType.json)) {
-            String json = gson.toJson(point);
+            final String json = gson.toJson(p);
             out.print(json);
         }
 
     }
 
 
-    private ExportType getOutputType(String format) {
+    private static ExportType getOutputType(final String format) {
         final ExportType type;
         if (!Utils.isEmptyString(format)) {
             type = ExportType.valueOf(format);
@@ -285,7 +291,7 @@ public class PointServletImpl extends ApiServlet {
         return type;
     }
 
-    private Point getRecordedValues(final String countParam, final String start, final String end, String offsetParam, final Point point) throws NimbitsException {
+    private static Point getRecordedValues(final String countParam, final String start, final String end, final String offsetParam, final Point point) throws NimbitsException {
         final Point retPoint;
         if (!Utils.isEmptyString(countParam)) {
             int count;
@@ -300,10 +306,10 @@ public class PointServletImpl extends ApiServlet {
             retPoint = RecordedValueServiceFactory.getInstance().getTopDataSeries(point, count);
 
         } else if (!Utils.isEmptyString(start) && !Utils.isEmptyString(end) && !Utils.isEmptyString(end)) {
-            int offset = Integer.valueOf(offsetParam);
-            Timespan ts = TimespanServiceFactory.getInstance().createTimespan(start, end, offset);
+            final int offset = Integer.valueOf(offsetParam);
+            final Timespan ts = TimespanServiceFactory.getInstance().createTimespan(start, end, offset);
 
-            List<Value> values = RecordedValueServiceFactory.getInstance().getDataSegment(point, ts);
+            final List<Value> values = RecordedValueServiceFactory.getInstance().getDataSegment(point, ts);
             retPoint = point;
             retPoint.setValues(values);
         } else {
@@ -315,11 +321,11 @@ public class PointServletImpl extends ApiServlet {
 
 
     //todo make ok for connections
-    private boolean okToReport(User u, Entity c) {
+    private static boolean okToReport(final User u, final Entity c) {
         return c.getProtectionLevel().equals(ProtectionLevel.everyone) || !(u == null || u.isRestricted());
     }
 
-    private void getPointObjects(HttpServletRequest req, String categoryNameParam, String pointNameParam, PrintWriter out) throws NimbitsException {
+    private void getPointObjects(final String categoryNameParam, final String pointNameParam, final PrintWriter out) throws NimbitsException {
 
         if (user != null) {
 
@@ -339,7 +345,7 @@ public class PointServletImpl extends ApiServlet {
             } else if (!Utils.isEmptyString(categoryNameParam)) {
                 final EntityName categoryName = CommonFactoryLocator.getInstance().createName(categoryNameParam, EntityType.category);
                 final Entity c = EntityServiceFactory.getInstance().getEntityByName(user, categoryName);//  CategoryServiceFactory.getInstance().getCategory(u, categoryName);
-                List<Entity> children = EntityServiceFactory.getInstance().getEntityChildren(user, c, EntityType.point);
+                final List<Entity> children = EntityServiceFactory.getInstance().getEntityChildren(user, c, EntityType.point);
                 final List<Point> points = PointServiceFactory.getInstance().getPoints(user, children);
 
                 //final List<Point> points = PointServiceFactory.getInstance().getPointsByCategory(u, c);

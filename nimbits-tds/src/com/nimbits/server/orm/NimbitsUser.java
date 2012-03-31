@@ -15,13 +15,15 @@ package com.nimbits.server.orm;
 
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.user.User;
 
 import javax.jdo.annotations.*;
-import java.util.*;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 
 //import com.google.appengine.api.users.User;

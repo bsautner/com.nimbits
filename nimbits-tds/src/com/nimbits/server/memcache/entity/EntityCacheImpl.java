@@ -99,9 +99,10 @@ public class EntityCacheImpl implements EntityTransactions {
     }
 
     @Override
-    public void deleteEntity(Entity entity) throws NimbitsException {
-        EntityTransactionFactory.getDaoInstance(user).deleteEntity(entity);
+    public List<Entity> deleteEntity(Entity entity) throws NimbitsException {
+
         removeEntityFromCache(entity);
+        return EntityTransactionFactory.getDaoInstance(user).deleteEntity(entity);
     }
 
     @Override
@@ -128,12 +129,12 @@ public class EntityCacheImpl implements EntityTransactions {
     }
 
     @Override
-    public Entity getEntityByName(EntityName name) throws NimbitsException {
+    public Entity getEntityByName(final EntityName name) throws NimbitsException {
         if (cache.contains(name)) {
             return (Entity) cache.get(name);
         }
         else {
-            Entity result =  EntityTransactionFactory.getDaoInstance(user).getEntityByName(name);
+            final Entity result =  EntityTransactionFactory.getDaoInstance(user).getEntityByName(name);
             if (result != null) {
             addEntityToCache(result);
             }
@@ -143,7 +144,7 @@ public class EntityCacheImpl implements EntityTransactions {
     }
 
     @Override
-    public Map<String, Entity> getSystemWideEntityMap(EntityType type) throws NimbitsException {
+    public Map<String, Entity> getSystemWideEntityMap(final EntityType type) throws NimbitsException {
         return  EntityTransactionFactory.getDaoInstance(user).getSystemWideEntityMap(type);
     }
 }

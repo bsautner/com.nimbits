@@ -13,18 +13,17 @@
 
 package com.nimbits.server.cron;
 
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.server.counter.*;
-import com.nimbits.server.dao.counter.*;
-import com.nimbits.server.quota.*;
-import com.nimbits.server.settings.*;
-import helper.*;
-import org.junit.*;
-import static org.junit.Assert.assertEquals;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.server.quota.QuotaFactory;
+import com.nimbits.server.settings.SettingsServiceFactory;
+import helper.NimbitsServletTest;
+import org.junit.Test;
 
-import java.io.*;
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by Benjamin Sautner

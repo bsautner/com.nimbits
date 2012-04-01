@@ -47,6 +47,7 @@ import com.nimbits.server.subscription.SubscriptionTransactionFactory;
 import com.nimbits.server.user.UserTransactionFactory;
 import com.nimbits.server.value.RecordedValueTransactionFactory;
 import com.nimbits.server.value.RecordedValueTransactions;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.jdo.JDOObjectNotFoundException;
 import javax.jdo.PersistenceManager;
@@ -112,7 +113,7 @@ public class UpgradeTask  extends HttpServlet
 
 
     private static void clog(final String string) {
-     //  log.info(string);
+      log.info(string);
     }
 
     protected static void doValue(final HttpServletRequest req) {
@@ -350,17 +351,23 @@ public class UpgradeTask  extends HttpServlet
             log.info( categoryEntity.getName().getValue());
             if (cList.size() > 0) {
                 final PointCatagory catagory = cList.get(0);
+                clog("A");
+
+                final Query pointQuery = pm.newQuery(com.nimbits.server.orm.legacy.DataPoint.class);
+                clog("B");
+
+                pointQuery.setFilter("catID==i");
+                pointQuery.declareParameters("Long i");
+                clog("A");
+                final List<com.nimbits.server.orm.legacy.DataPoint> points = (List<com.nimbits.server.orm.legacy.DataPoint>) pointQuery.execute(catagory.id);
+
+                clog("d");
 
 
-                final Query pointQuery = pm.newQuery(DataPoint.class);
-                pointQuery.setFilter("catID==o");
-                pointQuery.declareParameters("Long o");
-
-                final List<DataPoint> points = (List<DataPoint>) pointQuery.execute(catagory.id);
                 if (points.size() > 0) {
 
-                    for (DataPoint p : points) {
-                         log.info(p.name);
+                    for (final com.nimbits.server.orm.legacy.DataPoint p : points) {
+                        log.info(p.name);
                         String parent;
                         if (catagory.name.equals(N)) {
                             parent = u.getUuid();
@@ -376,13 +383,14 @@ public class UpgradeTask  extends HttpServlet
                         p.setFilterValue(p.compression);
                         p.setTargetValue(p.TargetValue == null ? 0.0 : p.TargetValue);
                         p.setFilterType(FilterType.fixedHysteresis);
+                        clog("updating point");
                         PointServiceFactory.getInstance().updatePoint(u, p);
-
-                        ProtectionLevel protectionLevel = (p.isPublic != null && p.isPublic) ? ProtectionLevel.everyone : ProtectionLevel.onlyMe;
-                        EntityName name = CommonFactoryLocator.getInstance().createName(p.name);
-                        Entity pointEntity = EntityModelFactory.createEntity(name, p.description, EntityType.point,
+                        clog("done updating point");
+                        final ProtectionLevel protectionLevel = (p.isPublic != null && p.isPublic) ? ProtectionLevel.everyone : ProtectionLevel.onlyMe;
+                        final EntityName name = CommonFactoryLocator.getInstance().createName(p.name);
+                        final Entity pointEntity = EntityModelFactory.createEntity(name, p.description, EntityType.point,
                                 protectionLevel, p.getUUID(), parent, u.getUuid());
-                        Entity r = EntityServiceFactory.getInstance().addUpdateEntity(u, pointEntity);
+                        final Entity r = EntityServiceFactory.getInstance().addUpdateEntity(u, pointEntity);
                         clog("created point " + name.getValue());
                         TaskFactory.getInstance().startUpgradeTask(Action.point,r );
 
@@ -397,7 +405,7 @@ public class UpgradeTask  extends HttpServlet
 
             e.printStackTrace();
             log.severe(e.getMessage());
-
+            log.severe(ExceptionUtils.getStackTrace(e));
         } finally {
             pm.close();
         }

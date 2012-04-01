@@ -202,7 +202,7 @@ public class TaskImpl implements Task {
     public void startUpgradeTask(final Action action,final  Entity entity) {
 
         try {
-        final Queue queue =  QueueFactory.getQueue(overrideQueue ? DEFAULT : TASK_UPGRADE);
+        final Queue queue =  QueueFactory.getQueue(DEFAULT);
         String json = "";
         if (entity != null) {
             json = GsonFactory.getInstance().toJson(entity);

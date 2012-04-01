@@ -15,7 +15,6 @@ package com.nimbits.server.cron;
 
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.constants.Path;
-import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.exception.NimbitsException;
@@ -28,7 +27,6 @@ import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.http.HttpCommonFactory;
 import com.nimbits.server.settings.SettingTransactionsFactory;
 import com.nimbits.server.settings.SettingsServiceFactory;
-import com.nimbits.server.task.TaskFactory;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -104,13 +102,7 @@ public class SystemMaint extends HttpServlet {
 
                 out.println("<p>" + setting.getName() + " updated to " + setting.getDefaultValue() +
                         " (was " + currentValue + ")</p>");
-                if (setting.equals(SettingType.serverVersion) && ! currentValue.equals(SettingType.serverVersion.getDefaultValue()))
-                {
-                    out.println("<p>New Version detected, starting upgrade. This may take up to an hour after " +
-                            "after seeing this message. You can monitor this on the app engine console " +
-                            "under the task queue. Upgrade is completed after all upgrade tasks have stopped.</p>");
-                    TaskFactory.getInstance().startUpgradeTask(Action.start, null);
-                }
+
 
             }
         } catch (NimbitsException e) {

@@ -15,12 +15,9 @@
 <queue-entries>
     <queue>
         <name>default</name>
-        <rate>1/s</rate>
+        <rate>30/s</rate>
     </queue>
-    <queue>
-        <name>upgrade</name>
-        <rate>10/s</rate>
-    </queue>
+
     <queue>
         <name>recordvaluequeue</name>
         <rate>30/s</rate>

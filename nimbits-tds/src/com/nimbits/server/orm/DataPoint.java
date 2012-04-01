@@ -29,8 +29,8 @@ import java.util.List;
 public class DataPoint implements Point {
 
     @PrimaryKey
-    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    private Long id;
+    @Persistent(valueStrategy = IdGeneratorStrategy.UUIDSTRING)
+    private  String id;
 
     @Persistent(defaultFetchGroup = "true")
     @Deprecated

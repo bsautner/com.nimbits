@@ -55,7 +55,7 @@ public class ValueBlobStoreModel implements ValueBlobStore {
         this.path = store.getPath();
         this.maxTimestamp = store.getMaxTimestamp().getTime();
         this.minTimestamp = store.getMinTimestamp().getTime();
-        this.key = store.getKey();
+        this.key = store.getBlobkey();
     }
 
     public String getEntity() {
@@ -88,7 +88,7 @@ public class ValueBlobStoreModel implements ValueBlobStore {
     }
 
     @Override
-    public String getKey() {
+    public String getBlobkey() {
         return key;
     }
 }

@@ -182,7 +182,7 @@ public class ValueDAOImpl implements RecordedValueTransactions {
             final List<Value> values = new ArrayList<Value>(1024);
             for (final ValueBlobStore store : result) {
                 values.addAll(readValuesFromFile(store.getPath()));
-                key = new BlobKey(store.getKey());
+                key = new BlobKey(store.getBlobkey());
                 blobstoreService.delete(key);
             }
             pm.deletePersistentAll(result);

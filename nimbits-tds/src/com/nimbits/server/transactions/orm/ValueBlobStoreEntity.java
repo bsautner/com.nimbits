@@ -32,10 +32,7 @@ public class ValueBlobStoreEntity  implements ValueBlobStore {
 
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    private com.google.appengine.api.datastore.Key id;
-
-    @Persistent
-    private String entity;
+    private com.google.appengine.api.datastore.Key key;
 
     @Persistent
     private long timestamp;
@@ -47,19 +44,22 @@ public class ValueBlobStoreEntity  implements ValueBlobStore {
     private long minTimestamp;
 
     @Persistent
+    private String entity;
+
+    @Persistent
     private String path;
 
     @Persistent
-    private BlobKey key;
+    private BlobKey blobkey;
 
-    public ValueBlobStoreEntity(String entity, Date timestamp, Date maxTimestamp, Date minTimestamp, String path, BlobKey key) {
+    public ValueBlobStoreEntity(final String entity, final Date timestamp, final Date maxTimestamp, final Date minTimestamp, final String path, final BlobKey blobkey) {
         this.entity = entity;
         this.timestamp = timestamp.getTime();
 
         this.path = path;
         this.maxTimestamp = maxTimestamp.getTime();
         this.minTimestamp = minTimestamp.getTime();
-        this.key = key;
+        this.blobkey = blobkey;
     }
 
 
@@ -95,8 +95,8 @@ public class ValueBlobStoreEntity  implements ValueBlobStore {
         this.minTimestamp = minTimestamp.getTime();
     }
 
-    public String getKey() {
-        return key.getKeyString();
+    public String getBlobkey() {
+        return blobkey.getKeyString();
     }
 
 

@@ -42,10 +42,10 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
     MemcacheService cacheShared;
    // MemcacheService systemCache;
     // private EntityName pointName;
-    private final Point p;
+    private final Point point;
 
     public ValueMemCacheImpl(final Point point) {
-        this.p = point;
+        this.point = point;
         buffer = MemcacheServiceFactory.getMemcacheService(MemCacheHelper.valueMemCacheNamespace(point));
         cacheShared = MemcacheServiceFactory.getMemcacheService();
     }
@@ -53,8 +53,8 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
     private void addPointToActiveList() {
         if (cacheShared.contains(MemCacheKey.activePoints)) {
             final Map<String, Point> points = (Map<String, Point>) cacheShared.get(MemCacheKey.activePoints);
-            if (! points.containsKey(p.getKey())) {
-                points.put(p.getKey(), p);
+            if (! points.containsKey(point.getKey())) {
+                points.put(point.getKey(), point);
                 cacheShared.delete(MemCacheKey.activePoints);
                 cacheShared.put(MemCacheKey.activePoints, points);
 
@@ -63,7 +63,7 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
         }
         else {
             final Map<String, Point> points = new HashMap<String, Point>(1);
-            points.put(p.getKey(), p);
+            points.put(point.getKey(), point);
             cacheShared.put(MemCacheKey.activePoints, points);
         }
     }
@@ -72,14 +72,14 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
     @Override
     public Value getRecordedValuePrecedingTimestamp(final Date timestamp) throws NimbitsException {
         Value retObj;
-        final String key =MemCacheHelper.currentValueCacheKey(p.getKey());
+        final String key =MemCacheHelper.currentValueCacheKey(point.getKey());
 
         try {
             if (buffer.contains(key)) {
                 final Value value = (Value) buffer.get(key);
                 if (value == null) {
                     buffer.delete(key);
-                    retObj = RecordedValueTransactionFactory.getDaoInstance(p).getRecordedValuePrecedingTimestamp(timestamp);
+                    retObj = RecordedValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
                     if (retObj != null) {
                         buffer.put(key, retObj);
                     }
@@ -87,11 +87,11 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
                     if (timestamp.getTime() > value.getTimestamp().getTime()) {
                         retObj = value;
                     } else {
-                        retObj = RecordedValueTransactionFactory.getDaoInstance(p).getRecordedValuePrecedingTimestamp(timestamp);
+                        retObj = RecordedValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
                     }
                 }
             } else {
-                retObj = RecordedValueTransactionFactory.getDaoInstance(p).getRecordedValuePrecedingTimestamp(timestamp);
+                retObj = RecordedValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
                 if (retObj != null) {
                     buffer.put(key, retObj);
                 }
@@ -99,7 +99,7 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
             }
         } catch (ClassCastException e) { //old cache data causing a provblem when upgrading.
             buffer.delete(key);
-            retObj = RecordedValueTransactionFactory.getDaoInstance(p).getRecordedValuePrecedingTimestamp(timestamp);
+            retObj = RecordedValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
             if (retObj != null) {
                 buffer.put(key, retObj);
             }
@@ -113,8 +113,8 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
     @Override
     public Value recordValue(final Value v)  {
 
-        final String k = MemCacheHelper.currentValueCacheKey(p.getKey());
-        final String b = MemCacheHelper.valueBufferCacheKey(p);
+        final String k = MemCacheHelper.currentValueCacheKey(point.getKey());
+        final String b = MemCacheHelper.valueBufferCacheKey(point);
         addPointToActiveList();
         try {
             final List<Long> stored;
@@ -130,7 +130,7 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
             }
             buffer.put(v.getTimestamp().getTime(), v);
             if (stored.size() > Const.CONST_MAX_CACHED_VALUE_SIZE) {
-                TaskFactory.getInstance().startMoveCachedValuesToStoreTask(p);
+                TaskFactory.getInstance().startMoveCachedValuesToStoreTask(point);
             }
 
             if (buffer.contains(k)) {
@@ -155,7 +155,7 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
     @Override
     public List<Value> getTopDataSeries(final int maxValues) throws NimbitsException {
         final List<Value> cached = getBuffer();
-        final List<Value> stored = RecordedValueTransactionFactory.getDaoInstance(p).getTopDataSeries(maxValues);
+        final List<Value> stored = RecordedValueTransactionFactory.getDaoInstance(point).getTopDataSeries(maxValues);
         return mergeAndSort(cached, stored, maxValues);
     }
 
@@ -168,7 +168,7 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
         if (cached != null && cached.size() > maxValues) {
             return cached;
         } else {
-            final List<Value> stored = RecordedValueTransactionFactory.getDaoInstance(p).getTopDataSeries(maxValues, endDate);
+            final List<Value> stored = RecordedValueTransactionFactory.getDaoInstance(point).getTopDataSeries(maxValues, endDate);
             if (stored.size() > 0) {
                 return mergeAndSort(stored, cached, endDate);
             } else {
@@ -180,23 +180,23 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
 
     @Override
     public List<Value> getDataSegment(final Timespan timespan) throws NimbitsException {
-        final List<Value> stored = RecordedValueTransactionFactory.getDaoInstance(p).getDataSegment(timespan);
+        final List<Value> stored = RecordedValueTransactionFactory.getDaoInstance(point).getDataSegment(timespan);
         final List<Value> cached = getBuffer();
         return mergeAndSort(stored, cached, timespan);
     }
 
     @Override
     public List<Value> getDataSegment(final Timespan timespan, final int start, final int end) throws NimbitsException {
-        return RecordedValueTransactionFactory.getDaoInstance(p).getDataSegment(timespan, start, end);
+        return RecordedValueTransactionFactory.getDaoInstance(point).getDataSegment(timespan, start, end);
     }
 
     @Override
     public void recordValues(final List<Value> values) throws NimbitsException {
-        RecordedValueTransactionFactory.getDaoInstance(p).recordValues(values);
+        RecordedValueTransactionFactory.getDaoInstance(point).recordValues(values);
     }
 
     public List<Value> getCache(final Timespan timespan) {
-        final String b = MemCacheHelper.valueBufferCacheKey(p);
+        final String b = MemCacheHelper.valueBufferCacheKey(point);
         List<Value> retObj = null;
         final List<Long> x;
         if (buffer.contains(b)) {
@@ -227,7 +227,7 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
     }
 
     public List<Value> getBuffer() {
-        final String b = MemCacheHelper.valueBufferCacheKey(p);
+        final String b = MemCacheHelper.valueBufferCacheKey(point);
 
 
             final List<Long> x;
@@ -252,10 +252,9 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
 
     }
 
-    //TODO need to do a big refactor to make a point's uuid the pk - then do key only queries
     public void moveValuesFromCacheToStore() {
 
-        final String b = MemCacheHelper.valueBufferCacheKey(p);
+        final String b = MemCacheHelper.valueBufferCacheKey(point);
 
         try {
             if (buffer.contains(b)) {
@@ -269,7 +268,7 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
                     for (final Map.Entry<Long, Object> longObjectEntry : valueMap.entrySet()) {
                         values.add((Value) longObjectEntry.getValue());
                     }
-                    RecordedValueTransactionFactory.getDaoInstance(p).recordValues(values);
+                    RecordedValueTransactionFactory.getDaoInstance(point).recordValues(values);
                 }
              }
         } catch (Exception e) {

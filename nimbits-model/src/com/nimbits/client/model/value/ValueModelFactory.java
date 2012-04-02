@@ -136,10 +136,11 @@ public class ValueModelFactory {
     }
     public static List<Value> createValueModels(final List<Value> values) {
         final LinkedList<Value> retObj = new LinkedList<Value>();
+        if (values != null) {
+            for (final Value v : values) {
+                retObj.add(createValueModel(v));
 
-        for (final Value v : values) {
-            retObj.add(createValueModel(v));
-
+            }
         }
         return retObj;
 

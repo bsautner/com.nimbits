@@ -30,7 +30,7 @@ import com.nimbits.server.calculation.CalculationServiceFactory;
 import com.nimbits.server.core.CoreFactory;
 import com.nimbits.server.feed.FeedServiceFactory;
 import com.nimbits.server.intelligence.IntelligenceServiceFactory;
-import com.nimbits.server.transactions.orm.EntityStore;
+import com.nimbits.server.orm.EntityStore;
 import com.nimbits.server.point.PointServiceFactory;
 import com.nimbits.server.subscription.SubscriptionServiceFactory;
 import com.nimbits.server.summary.SummaryServiceFactory;

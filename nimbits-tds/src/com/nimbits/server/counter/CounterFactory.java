@@ -22,7 +22,7 @@ package com.nimbits.server.counter;
 
 import com.nimbits.PMF;
 import com.nimbits.server.transactions.dao.counter.ShardedCounter;
-import com.nimbits.server.transactions.orm.ApiCounter;
+import com.nimbits.server.orm.ApiCounter;
 
 import javax.jdo.PersistenceManager;
 

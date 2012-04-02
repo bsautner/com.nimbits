@@ -16,7 +16,7 @@ package com.nimbits.server.transactions.dao.settings;
 import com.nimbits.PMF;
 import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.server.transactions.orm.ServerSetting;
+import com.nimbits.server.orm.ServerSetting;
 import com.nimbits.server.settings.SettingTransactions;
 
 import javax.jdo.PersistenceManager;

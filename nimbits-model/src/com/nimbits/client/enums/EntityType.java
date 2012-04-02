@@ -19,8 +19,8 @@ public enum EntityType {
     intelligence(8, false),
     feed(9, false),
     resource(10, true),
-    summary(11, false);
-
+    summary(11, false),
+    instance(12, false);
     private static final Map<Integer, EntityType> lookup = new HashMap<Integer, EntityType>();
 
     static {

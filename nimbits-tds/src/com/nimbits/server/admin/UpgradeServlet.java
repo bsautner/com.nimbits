@@ -45,10 +45,12 @@ public class UpgradeServlet extends HttpServlet {
 
         final PrintWriter out = resp.getWriter();
         out.println(Const.HTML_BOOTSTRAP);
-        out.println("<P>Starting upgrade tasks. You can check the upgrade task queue in the admin console for status. When all tasks are completed, the upgrade has finished.</P>");
+        out.println("<P>Starting upgrade tasks. You can check the default task queue in the admin console for status. When all tasks are completed, the upgrade has finished." +
+                "This upgrade includes a migration from storing values in the data store to the blobstore and may take some time. Please monitor your quota to ensure it is not " +
+                "exceeded during the upgrade process. Only run this once. Please contact support if you need any help.</P>");
 
 
-        TaskFactory.getInstance().startUpgradeTask(Action.start, null, null);
+        TaskFactory.getInstance().startUpgradeTask(Action.start, null, 0, 1000);
 
     }
 

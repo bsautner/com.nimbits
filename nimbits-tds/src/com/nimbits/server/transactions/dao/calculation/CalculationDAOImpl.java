@@ -19,7 +19,7 @@ import com.nimbits.client.model.calculation.CalculationModelFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
 import com.nimbits.server.calculation.CalculationTransactions;
-import com.nimbits.server.transactions.orm.CalcEntity;
+import com.nimbits.server.orm.CalcEntity;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;

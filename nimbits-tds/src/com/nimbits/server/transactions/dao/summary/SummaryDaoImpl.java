@@ -18,7 +18,7 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.summary.Summary;
 import com.nimbits.client.model.summary.SummaryModelFactory;
 import com.nimbits.client.model.user.User;
-import com.nimbits.server.transactions.orm.SummaryEntity;
+import com.nimbits.server.orm.SummaryEntity;
 import com.nimbits.server.summary.SummaryTransactions;
 
 import javax.jdo.PersistenceManager;

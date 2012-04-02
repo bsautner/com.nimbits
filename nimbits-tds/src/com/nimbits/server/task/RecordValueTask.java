@@ -47,6 +47,7 @@ public class RecordValueTask extends HttpServlet {
         final String loopFlagParam = req.getParameter(Parameters.loop.getText());
         final Point point = gson.fromJson(pointJson, PointModel.class);
         final Value value = gson.fromJson(valueJson, ValueModel.class);
+        log.info(userJson);
         final boolean loopFlag = Boolean.valueOf(loopFlagParam);
         final User u = gson.fromJson(userJson, UserModel.class);
 

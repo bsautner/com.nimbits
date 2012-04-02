@@ -17,7 +17,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.server.transactions.dao.value.RecordedValueDAOImpl;
 import com.nimbits.server.transactions.dao.value.ValueDAOImpl;
 import com.nimbits.server.transactions.memcache.value.ValueMemCacheImpl;
-import com.nimbits.server.transactions.orm.legacy.DataPoint;
+import com.nimbits.server.orm.DataPoint;
 
 public class RecordedValueTransactionFactory {
 

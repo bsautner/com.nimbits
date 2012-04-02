@@ -26,7 +26,7 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 import com.nimbits.client.model.valueblobstore.ValueBlobStoreFactory;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.transactions.orm.ValueBlobStoreEntity;
+import com.nimbits.server.orm.ValueBlobStoreEntity;
 import com.nimbits.server.time.TimespanServiceFactory;
 import com.nimbits.server.value.RecordedValueTransactions;
 

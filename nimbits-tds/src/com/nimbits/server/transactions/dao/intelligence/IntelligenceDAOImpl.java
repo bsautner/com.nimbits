@@ -19,7 +19,7 @@ import com.nimbits.client.model.intelligence.Intelligence;
 import com.nimbits.client.model.intelligence.IntelligenceFactory;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.server.intelligence.IntelligenceTransactions;
-import com.nimbits.server.transactions.orm.IntelligenceEntity;
+import com.nimbits.server.orm.IntelligenceEntity;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;

@@ -28,14 +28,12 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModelFactory;
 import com.nimbits.server.connections.ConnectionRequestModelFactory;
 import com.nimbits.server.entity.EntityTransactionFactory;
-import com.nimbits.server.transactions.orm.ConnectionRequest;
-import com.nimbits.server.transactions.orm.UserEntity;
+import com.nimbits.server.orm.ConnectionRequest;
+import com.nimbits.server.orm.UserEntity;
 import com.nimbits.server.user.UserTransactions;
 import twitter4j.auth.AccessToken;
 
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
+import javax.jdo.*;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -57,7 +55,7 @@ public class UserDAOImpl implements UserTransactions {
         User retObj;
         try {
             final List<UserEntity> result = (List<UserEntity>) q.execute(internetAddress.getValue());
-             //todo make sure unregistereed users from facebook get an account created.
+            //todo make sure unregistereed users from facebook get an account created.
 
             if (result.size() > 0) {
                 final Transaction tx = pm.currentTransaction();
@@ -68,7 +66,7 @@ public class UserDAOImpl implements UserTransactions {
                 tx.commit();
 
             }
-           retObj = UserModelFactory.createUserModel(u);
+            retObj = UserModelFactory.createUserModel(u);
 
         } finally {
             pm.close();
@@ -98,7 +96,7 @@ public class UserDAOImpl implements UserTransactions {
 
 
 
-          return  UserModelFactory.createUserModel(u);
+            return  UserModelFactory.createUserModel(u);
 
         } finally {
             pm.close();
@@ -331,8 +329,11 @@ public class UserDAOImpl implements UserTransactions {
         try {
 
 
-               return pm.getObjectById(UserEntity.class, key);
+            return pm.getObjectById(UserEntity.class, key);
+        }catch (JDOObjectNotFoundException ex) {
 
+
+            return null;
         } finally {
             pm.close();
         }
@@ -354,7 +355,7 @@ public class UserDAOImpl implements UserTransactions {
             if (result.size() > 0) {
 
                 for (final Connection c : result) {
-                  u = getNimbitsUser(c.getTargetEmail());
+                    u = getNimbitsUser(c.getTargetEmail());
                     retObj.add( UserModelFactory.createUserModel(u));
 
                 }

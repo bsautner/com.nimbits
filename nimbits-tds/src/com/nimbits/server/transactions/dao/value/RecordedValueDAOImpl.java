@@ -21,8 +21,8 @@ import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueModelFactory;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
-import com.nimbits.server.transactions.orm.legacy.DataPoint;
-import com.nimbits.server.transactions.orm.legacy.RecordedValue;
+import com.nimbits.server.orm.DataPoint;
+import com.nimbits.server.orm.RecordedValue;
 import com.nimbits.server.value.RecordedValueTransactions;
 
 import javax.jdo.PersistenceManager;

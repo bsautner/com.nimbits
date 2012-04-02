@@ -83,7 +83,7 @@ public enum SettingType {
         return name;
     }
     private static class SettingConstants {
-        private static final String CONST_SERVER_VERSION = "3.3.2";
+        private static final String CONST_SERVER_VERSION = "3.3.2.2";
         private static final String SETTING_LOCAL_DEV_ACCOUNT = "SETTING_LOCAL_DEV_ACCOUNT";
         private static final String SETTING_LOCAL_DEV_KEY = "SETTING_LOCAL_DEV_KEY";
         private static final String SETTING_LOCAL_DEV_PATH = "SETTING_LOCAL_DEV_PATH";

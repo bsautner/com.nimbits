@@ -23,7 +23,7 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.user.User;
-import com.nimbits.server.transactions.orm.PointEntity;
+import com.nimbits.server.orm.PointEntity;
 import com.nimbits.server.point.PointTransactions;
 import com.nimbits.server.task.TaskFactory;
 

@@ -14,8 +14,8 @@
 package com.nimbits.server.transactions.dao.counter;
 
 import com.nimbits.PMF;
-import com.nimbits.server.transactions.orm.ApiCounter;
-import com.nimbits.server.transactions.orm.ApiCounterShard;
+import com.nimbits.server.orm.ApiCounter;
+import com.nimbits.server.orm.ApiCounterShard;
 import net.sf.jsr107cache.Cache;
 import net.sf.jsr107cache.CacheException;
 import net.sf.jsr107cache.CacheManager;

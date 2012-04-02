@@ -19,7 +19,7 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.server.transactions.orm.legacy.DataPoint;
+import com.nimbits.server.orm.DataPoint;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,7 +44,7 @@ public interface Task {
 
     void startMoveCachedValuesToStoreTask(final Point point);
 
-    void startUpgradeTask(Action action, Entity entity, DataPoint legacyPoint);
+    void startUpgradeTask(Action action, Entity entity, int s, int e);
 
     void startSummaryTask(Entity entity);
 }

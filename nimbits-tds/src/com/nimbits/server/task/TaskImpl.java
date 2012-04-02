@@ -25,7 +25,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.transactions.orm.legacy.DataPoint;
+import com.nimbits.server.orm.DataPoint;
 import com.nimbits.server.user.UserServiceFactory;
 
 import javax.servlet.http.HttpServletRequest;
@@ -200,28 +200,26 @@ public class TaskImpl implements Task {
 //    }
 
     @Override
-    public void startUpgradeTask(final Action action,final  Entity entity, final DataPoint legacyPoint) {
+    public void startUpgradeTask(final Action action,final  Entity entity, final int s, final int e ) {
 
         try {
         final Queue queue =  QueueFactory.getQueue(DEFAULT);
         String json = "";
-        String p = "";
+
         if (entity != null) {
             json = GsonFactory.getInstance().toJson(entity);
-        }
-        if (legacyPoint!= null) {
-            p = GsonFactory.getInstance().toJson(legacyPoint);
         }
 
 
         queue.add(TaskOptions.Builder.withUrl(PATH_UPGRADE_TASK)
                 .param(Parameters.json.getText(), json)
-                .param((Parameters.point.getText()), p)
+                 .param("s", String.valueOf(s))
+                 .param("e", String.valueOf(s))
                 .param(Parameters.action.getText(), action.getCode()));
         }
         catch (IllegalStateException ex) {
             overrideQueue = true;
-            startUpgradeTask(action, entity, legacyPoint);
+            startUpgradeTask(action, entity, s, e );
         }
 
     }

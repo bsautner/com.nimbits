@@ -20,7 +20,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.subscription.SubscriptionFactory;
 import com.nimbits.client.model.user.User;
-import com.nimbits.server.transactions.orm.SubscriptionEntity;
+import com.nimbits.server.orm.SubscriptionEntity;
 import com.nimbits.server.subscription.SubscriptionTransactions;
 
 import javax.jdo.PersistenceManager;

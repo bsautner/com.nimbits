@@ -19,7 +19,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.xmpp.XmppResource;
 import com.nimbits.client.model.xmpp.XmppResourceFactory;
-import com.nimbits.server.transactions.orm.XmppResourceEntity;
+import com.nimbits.server.orm.XmppResourceEntity;
 import com.nimbits.server.xmpp.XmppTransaction;
 
 import javax.jdo.PersistenceManager;

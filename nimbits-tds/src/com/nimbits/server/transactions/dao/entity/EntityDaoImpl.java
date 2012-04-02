@@ -23,12 +23,10 @@ import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.user.User;
 import com.nimbits.server.entity.EntityTransactions;
-import com.nimbits.server.transactions.orm.EntityStore;
+import com.nimbits.server.orm.EntityStore;
 import com.nimbits.shared.Utils;
 
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
+import javax.jdo.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -295,7 +293,10 @@ public class EntityDaoImpl implements  EntityTransactions {
             final Entity result =  pm.getObjectById(EntityStore.class, uuid);
             return EntityModelFactory.createEntity(user,result);
 
-
+        } catch (JDOObjectNotFoundException ex) {
+            return null;
+        } catch (JDOFatalUserException ex) {
+            return null;
         } finally {
             pm.close();
         }
@@ -305,14 +306,22 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     public Entity getEntityByName(final EntityName name) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-
+        final List<Entity> c;
 
         try {
             final Query q1 = pm.newQuery(EntityStore.class);
-            q1.setFilter("name==b && owner==o");
-            q1.declareParameters("String b, String o");
-            q1.setRange(0, 1);
-            final List<Entity> c = (List<Entity>) q1.execute(name.getValue(), user.getKey());
+            if (user != null) {
+                q1.setFilter("name==b && owner==o");
+                q1.declareParameters("String b, String o");
+                q1.setRange(0, 1);
+                c = (List<Entity>) q1.execute(name.getValue(), user.getKey());
+            }
+            else {
+                q1.setFilter("name==b");
+                q1.declareParameters("String b");
+                q1.setRange(0, 1);
+                c = (List<Entity>) q1.execute(name.getValue());
+            }
             if (c.size() > 0) {
 
                 final Entity result = c.get(0);
@@ -371,6 +380,9 @@ public class EntityDaoImpl implements  EntityTransactions {
 
                 }
             }
+
+        } catch(javax.jdo.JDOUserException ignored) {
+
 
 
         } finally {

@@ -84,7 +84,7 @@ public class IncomingMailTask extends HttpServlet {
         final EntityName pointName = CommonFactoryLocator.getInstance().createName(emailLine[0], EntityType.point);
 
         Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
-        final Point point = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
+        final Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
 
         if (point != null) {
             sendValue(u, point, emailLine);
@@ -125,7 +125,7 @@ public class IncomingMailTask extends HttpServlet {
             } else {
                 note = "";
             }
-            final Value value = ValueModelFactory.createValueModel(0.0, 0.0, v, new Date(timestamp), point.getUUID(), note);
+            final Value value = ValueModelFactory.createValueModel(0.0, 0.0, v, new Date(timestamp), point.getKey(), note);
             try {
                 RecordedValueServiceFactory.getInstance().recordValue(u, point, value, false);
             } catch (NimbitsException e) {

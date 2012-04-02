@@ -292,7 +292,7 @@ public class SubscriptionPanel extends NavigationEventProvider {
                 }
                 else {
                     update = SubscriptionFactory.createSubscription(
-                            entity.getEntity(),
+                            entity.getKey(),
                             subscriptionType,
                             subscriptionNotifyMethod,
                             spinnerField.getValue().doubleValue(),

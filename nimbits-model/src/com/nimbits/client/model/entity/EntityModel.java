@@ -28,26 +28,20 @@ public class EntityModel  implements Serializable, Entity {
     private String entity;
     private String parent;
     private String owner;
-    private String[] metadata = null;
-    private String[] accessKeys = null;
     private boolean readOnly = false;
     private String blobKey;
-   // private List<Entity> children;
     private List<Point> points;
-    private String host;
 
     public EntityModel(final EntityName name,
                        final String description,
                        final EntityType entityType,
                        final ProtectionLevel protectionLevel,
-                       final String entity,
                        final String parent,
                        final String owner,
                        final String blobKey) {
         this.name = name.getValue();
         this.description = description;
         this.entityType = entityType.getCode();
-        this.entity =entity;
         this.parent = parent;
         this.owner = owner;
         this.protectionLevel = protectionLevel.getCode();
@@ -60,13 +54,21 @@ public class EntityModel  implements Serializable, Entity {
         this.name = entity.getName().getValue();
         this.description = entity.getDescription();
         this.entityType = entity.getEntityType().getCode();
-        this.entity =entity.getEntity();
+        this.entity =entity.getKey();
         this.parent = entity.getParent();
         this.owner = entity.getOwner();
         this.protectionLevel = entity.getProtectionLevel().getCode();
         this.alertType = entity.getAlertType().getCode();
         this.blobKey = entity.getBlobKey();
 
+    }
+
+    public List<Point> getPoints() {
+        return points;
+    }
+
+    public void setPoints(List<Point> points) {
+        this.points = points;
     }
 
     public EntityModel() {
@@ -103,13 +105,8 @@ public class EntityModel  implements Serializable, Entity {
     }
 
     @Override
-    public String getEntity() {
+    public String getKey() {
         return (this.entity);
-    }
-
-    @Override
-    public void setEntity(String entity) {
-        this.entity = entity;
     }
 
     @Override
@@ -162,16 +159,7 @@ public class EntityModel  implements Serializable, Entity {
         this.readOnly = readOnly;
     }
 
-    @Override
-    public String getUUID() {
-        return this.entity;
 
-    }
-
-    @Override
-    public void setUUID(String newUUID) {
-        this.entity = newUUID;
-    }
     @Override
     public String getBlobKey() {
         return blobKey;
@@ -180,31 +168,8 @@ public class EntityModel  implements Serializable, Entity {
     public void setBlobKey(String blobKey) {
         this.blobKey = blobKey;
     }
-//    @Override
-//    public List<Entity> getChildren() {
-//        if (children == null) {
-//            children = new ArrayList<Entity>();
-//
-//        }
-//        return children;
-//    }
-//
-//    public void addChild(Entity entity) {
-//        if (children == null) {
-//            children = new ArrayList<Entity>();
-//
-//        }
-//        children.add(entity);
-//    }
 
-    @Override
-    public void setPoints(List<Point> points) {
-       this.points = points;
-    }
 
-    @Override
-    public void setHost(String host) {
-      this.host = host;
-    }
+
 
 }

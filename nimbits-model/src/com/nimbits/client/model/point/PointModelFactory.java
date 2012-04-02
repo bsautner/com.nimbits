@@ -18,9 +18,9 @@ import java.util.List;
 public class PointModelFactory {
 
 
-    public static PointModel createPointModel(final String uuid) {
+    public static PointModel createPointModel() {
 
-        return new PointModel(uuid);
+        return new PointModel();
 
     }
 

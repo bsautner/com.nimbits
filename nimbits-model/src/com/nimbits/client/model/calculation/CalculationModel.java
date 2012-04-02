@@ -10,7 +10,7 @@ import java.io.Serializable;
  */
 public class CalculationModel implements Serializable, Calculation {
     private static final long serialVersionUID =1L;
-    private long id;
+    private String key;
     private String target;
     private String formula;
     private String x;
@@ -18,20 +18,19 @@ public class CalculationModel implements Serializable, Calculation {
     private String z;
     private boolean enabled;
     private String trigger;
-    private String uuid;
+
 
     public CalculationModel() {
     }
 
     public CalculationModel(Calculation calculation) {
-
+        this.key = calculation.getKey();
         this.target = calculation.getTarget();
         this.formula = calculation.getFormula();
         this.x = calculation.getX();
         this.y = calculation.getY();
         this.z = calculation.getZ();
         this.enabled = calculation.getEnabled();
-        this.uuid = calculation.getUUID();
         this.trigger = calculation.getTrigger();
     }
 
@@ -44,7 +43,6 @@ public class CalculationModel implements Serializable, Calculation {
         this.y = y;
         this.z = z;
         this.enabled = enabled;
-        this.uuid = uuid;
 
     }
 
@@ -84,8 +82,8 @@ public class CalculationModel implements Serializable, Calculation {
         this.enabled = b;
     }
 
-    public String getUUID() {
-        return uuid;
+    public String getKey() {
+        return key;
     }
 
     @Override

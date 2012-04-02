@@ -94,7 +94,7 @@ public class EntityDescriptionSearchServletImpl extends HttpServlet {
                 }
 
                 sb.append("<div class=\"row\">")
-                        .append("<h5>").append("<a href=\"").append(d.getServer().getBaseUrl()).append("/report.html?uuid=").append(d.getUuid())
+                        .append("<h5>").append("<a href=\"").append(d.getServer().getBaseUrl()).append("/report.html?uuid=").append(d.getKey())
                         .append("\" target=\"_blank\">").append(d.getName()).append("</a></h5>")
                         .append(img)
                         .append("<p>").append(d.getDesc()).append("</p>")

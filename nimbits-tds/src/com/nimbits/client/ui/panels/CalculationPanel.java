@@ -256,7 +256,7 @@ public class CalculationPanel extends NavigationEventProvider {
         else {
             EntityServiceAsync svc = GWT.create(EntityService.class);
 
-            svc.getEntityByUUID(calculation.getTrigger(), new AsyncCallback<Entity>() {
+            svc.getEntityByKey(calculation.getTrigger(), new AsyncCallback<Entity>() {
                 @Override
                 public void onFailure(Throwable throwable) {
                     GWT.log(throwable.getMessage(), throwable);
@@ -267,7 +267,7 @@ public class CalculationPanel extends NavigationEventProvider {
                     try {
                         pn.setHtml("<p><b>Trigger Point Name: </b>" + point.getName().getValue() + "</p>");
                     } catch (NimbitsException e) {
-                       FeedbackHelper.showError(e);
+                        FeedbackHelper.showError(e);
                     }
                 }
             });
@@ -318,12 +318,12 @@ public class CalculationPanel extends NavigationEventProvider {
 
         if (entity.getEntityType().equals(EntityType.calculation) && calculation != null) {
 
-            update  = CalculationModelFactory.createCalculation(calculation.getTrigger(), calculation.getUUID(), enabled.getValue(), formula.getValue(), target,
+            update  = CalculationModelFactory.createCalculation(calculation.getTrigger(), calculation.getKey(), enabled.getValue(), formula.getValue(), target,
                     x, y, z);
 
         }
         else {
-            update = CalculationModelFactory.createCalculation(entity.getEntity(), null, enabled.getValue(), formula.getValue(),target,
+            update = CalculationModelFactory.createCalculation(entity.getKey(), null, enabled.getValue(), formula.getValue(),target,
                     x, y, z);
 
         }

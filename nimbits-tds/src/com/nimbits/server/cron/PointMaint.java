@@ -13,56 +13,40 @@
 
 package com.nimbits.server.cron;
 
-import com.nimbits.client.constants.Const;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.server.point.PointServiceFactory;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.server.entity.EntityTransactionFactory;
 import com.nimbits.server.task.TaskFactory;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 public class PointMaint extends HttpServlet {
     /**
      *
      */
     private static final long serialVersionUID = 1L;
-
+    private static final Logger log = Logger.getLogger(PointMaint.class.getName());
 
     @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp)
             throws IOException {
 
-        PrintWriter out;
+            try {
+                final Map<String,Entity> e = EntityTransactionFactory.getDaoInstance(null).getSystemWideEntityMap(EntityType.point);
+                for (final Entity en : e.values()) {
+                    TaskFactory.getInstance().startPointMaintTask(en);
+                }
 
-
-        //  final List<Point> points = PointServiceFactory.getInstance().getAllPoints();
-        resp.setContentType(Const.CONTENT_TYPE_HTML);
-        out = resp.getWriter();
-        out.println(Const.HTML_BOOTSTRAP);
-//
-
-        int set = 0;
-        int results = -1;
-        int count = 0;
-        while (results != 0) {
-            List<Point> points = PointServiceFactory.getInstance().getAllPoints(set, set + Const.CONST_QUERY_CHUNK_SIZE);
-            results = points.size();
-            set += Const.CONST_QUERY_CHUNK_SIZE;
-
-            for (final Point p : points) {
-
-                count++;
-                TaskFactory.getInstance().startPointMaintTask(p);
+            } catch (NimbitsException e1) {
+              log.severe(e1.getMessage());
             }
+
         }
-        out.println("<h5>" + count + " Points.");
-        out.println("</body></html>");
-        out.close();
 
-
-    }
 }

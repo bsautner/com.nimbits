@@ -13,12 +13,14 @@
 
 package com.nimbits.server.dao.search;
 
-import com.nimbits.client.exception.*;
-import com.nimbits.server.*;
-import com.nimbits.server.orm.jpa.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.server.EMF;
+import com.nimbits.server.jpa.JpaSearchLog;
 
-import javax.persistence.*;
-import java.util.*;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.NoResultException;
+import java.util.Date;
 
 /**
  * Created by Benjamin Sautner

@@ -33,7 +33,7 @@ public class IntelligenceModel implements Serializable, Intelligence {
 
     private boolean resultsInPlainText;
 
-    private String uuid;
+    private String key;
 
     private String trigger;
 
@@ -55,7 +55,7 @@ public class IntelligenceModel implements Serializable, Intelligence {
         this.nodeId = nodeId;
         this.resultsInPlainText = resultsInPlainText;
         this.trigger = trigger;
-        this.uuid = uuid;
+
     }
 
     public IntelligenceModel(final Intelligence intelligence) {
@@ -65,9 +65,9 @@ public class IntelligenceModel implements Serializable, Intelligence {
         this.input = intelligence.getInput();
         this.nodeId = intelligence.getNodeId();
         this.resultsInPlainText = intelligence.getResultsInPlainText();
-        this.uuid = intelligence.getUUID();
+        this.key = intelligence.getKey();
         this.trigger = intelligence.getTrigger();
-        this.uuid = intelligence.getUUID();
+
     }
 
     @Override
@@ -76,8 +76,8 @@ public class IntelligenceModel implements Serializable, Intelligence {
     }
 
     @Override
-    public String getUUID() {
-        return uuid;
+    public String getKey() {
+        return key;
     }
 
     @Override
@@ -143,12 +143,5 @@ public class IntelligenceModel implements Serializable, Intelligence {
     public void setTrigger(String trigger) {
         this.trigger = trigger;
     }
-    @Override
-    public String getUuid() {
-        return uuid;
-    }
-    @Override
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
+
 }

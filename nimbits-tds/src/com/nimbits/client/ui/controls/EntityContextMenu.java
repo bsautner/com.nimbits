@@ -451,7 +451,7 @@ public class EntityContextMenu extends Menu {
                 if (model.getEntityType().equals(EntityType.point) || model.getEntityType().equals(EntityType.category)) {
                     Entity p =  model.getBaseEntity();
                     try {
-                        openUrl(p.getEntity(), p.getName().getValue());
+                        openUrl(p.getKey(), p.getName().getValue());
                     } catch (NimbitsException e) {
                         FeedbackHelper.showError(e);
                     }

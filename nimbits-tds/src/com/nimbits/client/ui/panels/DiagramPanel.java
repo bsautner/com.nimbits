@@ -422,7 +422,7 @@ public class DiagramPanel extends LayoutContainer {
                     processTextNodeActions(pointMap.get(entity.getName()), result, actions, o);
                 }
                 PointServiceAsync service = GWT.create(PointService.class);
-                service.getPointByUUID(entity.getEntity(), new AsyncCallback<Point>() {
+                service.getPointByKey(entity.getKey(), new AsyncCallback<Point>() {
 
                     @Override
                     public void onFailure(Throwable caught) {
@@ -609,7 +609,7 @@ public class DiagramPanel extends LayoutContainer {
             if (result != null) {
 
                 PointServiceAsync service = GWT.create(PointService.class);
-                service.getPointByUUID(entity.getEntity(), new AsyncCallback<Point>() {
+                service.getPointByKey(entity.getKey(), new AsyncCallback<Point>() {
 
                     @Override
                     public void onFailure(Throwable caught) {
@@ -789,7 +789,7 @@ public class DiagramPanel extends LayoutContainer {
         if (result != null && pointEntityMap.containsKey(pointName)) {
             final Entity entity = pointEntityMap.get(pointName);
             PointServiceAsync service = GWT.create(PointService.class);
-            service.getPointByUUID(entity.getEntity(), new AsyncCallback<Point>() {
+            service.getPointByKey(entity.getKey(), new AsyncCallback<Point>() {
                 @Override
                 public void onFailure(Throwable caught) {
                     //auto generated

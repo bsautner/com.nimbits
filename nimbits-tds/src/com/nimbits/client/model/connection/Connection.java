@@ -26,9 +26,9 @@ import java.util.Date;
  */
 public interface Connection extends Serializable {
 
-    long getRequestorID();
+    String getRequestorID();
 
-    void setRequestorID(final long requestorID);
+    void setRequestorID(final String requestorID);
 
     EmailAddress getTargetEmail();
 
@@ -50,7 +50,7 @@ public interface Connection extends Serializable {
 
     void setApproved(final boolean approved);
 
-    Long getKey();
+    String getKey();
 
     void setRequestorEmail(final EmailAddress requestorEmail);
 

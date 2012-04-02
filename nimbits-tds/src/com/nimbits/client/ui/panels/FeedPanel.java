@@ -67,7 +67,7 @@ public class FeedPanel  extends LayoutContainer {
     public FeedPanel(final User user) {
 
         this.user = user;
-        feedOwnersUUID = user.getUuid();
+        feedOwnersUUID = user.getKey();
     }
 
     @Override
@@ -212,7 +212,7 @@ public class FeedPanel  extends LayoutContainer {
         btn.addSelectionListener(new SelectionListener<ButtonEvent>() {
             @Override
             public void componentSelected(ButtonEvent buttonEvent) {
-                 feedOwnersUUID = user.getUuid();
+                 feedOwnersUUID = user.getKey();
             }
         });
 
@@ -325,7 +325,7 @@ public class FeedPanel  extends LayoutContainer {
 //
 //        public UserOption(User value) {
 //            this.user = value;
-//            set(Const.PARAM_VALUE,value.getUuid());
+//            set(Const.PARAM_VALUE,value.getKey());
 //            set(Const.Params.PARAM_NAME, value.getEmail());
 //        }
 //

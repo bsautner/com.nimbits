@@ -293,7 +293,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
         EntityServiceAsync service = GWT.create(EntityService.class);
 
-        service.getEntityByUUID(uuid, new AsyncCallback<Entity>() {
+        service.getEntityByKey(uuid, new AsyncCallback<Entity>() {
             @Override
             public void onFailure(Throwable caught) {
                 FeedbackHelper.showError(caught);
@@ -394,7 +394,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
         EntityServiceAsync service = GWT.create(EntityService.class);
 
-        service.getEntityByUUID(uuid, new AsyncCallback<Entity>() {
+        service.getEntityByKey(uuid, new AsyncCallback<Entity>() {
             @Override
             public void onFailure(Throwable caught) {
                 FeedbackHelper.showError(caught);
@@ -403,34 +403,33 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
             @Override
             public void onSuccess(Entity entity) {
                 try {
-                switch (entity.getEntityType()) {
+                    switch (entity.getEntityType()) {
 
-                    case user:
-                        break;
-                    case point: case category:
-                        Location.replace("report.html?uuid=" + uuid);
-                        break;
-                    case file:
-                        if (EntityOpenHelper.isSVG(entity)) {
-                            loadDiagramView(entity);
-                        }
-                        else {
-                            EntityOpenHelper.showBlob(entity);
-                        }
-                        break;
-                    case subscription:
-                        break;
-                    case userConnection:
-                        break;
-                    case calculation:
-                        break;
-                    case intelligence:
-                        break;
-                    case feed:
-                        break;
-                }
-                }
-                catch (NimbitsException e) {
+                        case user:
+                            break;
+                        case point:
+                        case category:
+                            Location.replace("report.html?uuid=" + uuid);
+                            break;
+                        case file:
+                            if (EntityOpenHelper.isSVG(entity)) {
+                                loadDiagramView(entity);
+                            } else {
+                                EntityOpenHelper.showBlob(entity);
+                            }
+                            break;
+                        case subscription:
+                            break;
+                        case userConnection:
+                            break;
+                        case calculation:
+                            break;
+                        case intelligence:
+                            break;
+                        case feed:
+                            break;
+                    }
+                } catch (NimbitsException e) {
                     FeedbackHelper.showError(e);
                 }
 

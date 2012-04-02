@@ -21,8 +21,8 @@ import java.util.Date;
 
 
 public class ConnectionRequestModel extends BaseModelData implements Serializable, Connection {
-    private Long key;
-    private Long requestorID;
+    private String key;
+    private String requestorID;
     private EmailAddress requestorEmail;
     private EmailAddress targetEmail;
     private Date requestDate;
@@ -48,12 +48,12 @@ public class ConnectionRequestModel extends BaseModelData implements Serializabl
     }
 
     @Override
-    public long getRequestorID() {
+    public String getRequestorID() {
         return requestorID;
     }
 
     @Override
-    public void setRequestorID(final long requestorID) {
+    public void setRequestorID(final String requestorID) {
         this.requestorID = requestorID;
     }
 
@@ -110,7 +110,7 @@ public class ConnectionRequestModel extends BaseModelData implements Serializabl
     }
 
     @Override
-    public Long getKey() {
+    public String getKey() {
         return key;
     }
 

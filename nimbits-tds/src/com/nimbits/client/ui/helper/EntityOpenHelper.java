@@ -42,7 +42,7 @@ public class EntityOpenHelper {
     }
 
     private static void openNewEntityWindow(Entity entity) throws NimbitsException {
-        Window.open("/" + "?" + Parameters.uuid.getText() + "=" + entity.getEntity(), entity.getName().getValue(), "");
+        Window.open("/" + "?" + Parameters.uuid.getText() + "=" + entity.getKey(), entity.getName().getValue(), "");
     }
 
     public static boolean isSVG(final Entity entity) throws NimbitsException {

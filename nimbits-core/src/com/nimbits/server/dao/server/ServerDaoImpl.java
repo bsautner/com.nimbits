@@ -18,7 +18,7 @@ import com.nimbits.client.model.entity.EntityDescription;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.server.ServerModelFactory;
 import com.nimbits.server.EMF;
-import com.nimbits.server.orm.jpa.JpaServer;
+import com.nimbits.server.jpa.JpaServer;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;

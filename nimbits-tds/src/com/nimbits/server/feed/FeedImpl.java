@@ -97,7 +97,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
         final FeedValue feedValue = new FeedValueModel(finalMessage, "", type);
         final String json = GsonFactory.getSimpleInstance().toJson(feedValue);
         final Value value = ValueModelFactory.createValueModel(0.0, 0.0, Const.CONST_IGNORED_NUMBER_VALUE,
-                new Date(), point.getUUID(), "", json);
+                new Date(),"", json);
         final Value v = ValueModelFactory.createValueModel(value, json);
         RecordedValueServiceFactory.getInstance().recordValue(user, point, v, false);
 
@@ -195,7 +195,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
             }
 
 
-            sb.append("<a href=\"#\" onclick=\"window.open('report.html?uuid=").append(point.getUUID())
+            sb.append("<a href=\"#\" onclick=\"window.open('report.html?uuid=").append(point.getKey())
                     .append("', 'Report',")
                     .append("'height=800,width=800,toolbar=0,status=0,location=0' );\" >")
                     .append("&nbsp;[more]</a>");
@@ -218,7 +218,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
         }
         else {
             final Entity e =  map.values().iterator().next();
-            point = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
+            point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
         }
         return point;
     }
@@ -246,12 +246,11 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
     }
 
     private Point createFeedPoint(final User user) throws NimbitsException {
-        final String uuid = UUID.randomUUID().toString();
 
         final EntityName name = CommonFactoryLocator.getInstance().createName(Const.TEXT_DATA_FEED, EntityType.point);
 
         final Entity entity = EntityModelFactory.createEntity(name, "", EntityType.feed,
-                ProtectionLevel.onlyConnection, uuid, user.getUuid(), user.getUuid());
+                ProtectionLevel.onlyConnection, user.getKey(), user.getKey());
         final Entity r = EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
 
 

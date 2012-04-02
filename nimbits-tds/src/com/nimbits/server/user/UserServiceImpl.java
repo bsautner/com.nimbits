@@ -27,6 +27,7 @@ import com.nimbits.client.model.connection.Connection;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.user.UserService;
 import com.nimbits.server.email.EmailServiceFactory;
@@ -167,7 +168,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public User getUserByUUID(final String subscriberUUID) {
-        return UserTransactionFactory.getInstance().getUserByUUID(subscriberUUID);
+        return UserTransactionFactory.getInstance().getUserByKey(subscriberUUID);
     }
 
 
@@ -285,9 +286,11 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
         final User requester = UserTransactionFactory.getInstance().getNimbitsUser(requesterEmail);
 
-        final Entity rConnection = EntityModelFactory.createEntity(acceptor.getName(), "", EntityType.userConnection, ProtectionLevel.onlyMe, acceptor.getUuid(), requester.getUuid(), requester.getUuid());
+        EntityName a = CommonFactoryLocator.getInstance().createName(acceptor.getEmail().getValue(), EntityType.userConnection);
+        EntityName r = CommonFactoryLocator.getInstance().createName(requester.getEmail().getValue(), EntityType.userConnection);
+        final Entity rConnection = EntityModelFactory.createEntity(a, "", EntityType.userConnection, ProtectionLevel.onlyMe,  requester.getKey(), requester.getKey());
 
-        final Entity aConnection = EntityModelFactory.createEntity(requester.getName(), "", EntityType.userConnection, ProtectionLevel.onlyMe, requester.getUuid(), acceptor.getUuid(), acceptor.getUuid());
+        final Entity aConnection = EntityModelFactory.createEntity(r, "", EntityType.userConnection, ProtectionLevel.onlyMe, acceptor.getKey(), acceptor.getKey());
 
         EntityServiceFactory.getInstance().addUpdateEntity(acceptor, aConnection);
         EntityServiceFactory.getInstance().addUpdateEntity(requester,rConnection);

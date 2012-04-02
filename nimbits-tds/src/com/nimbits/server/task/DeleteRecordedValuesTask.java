@@ -13,7 +13,6 @@
 
 package com.nimbits.server.task;
 
-import com.google.appengine.api.datastore.*;
 import com.google.gwt.core.client.GWT;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.model.point.Point;
@@ -23,9 +22,6 @@ import com.nimbits.server.gson.GsonFactory;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Set;
 
 
 public class DeleteRecordedValuesTask extends HttpServlet {
@@ -58,27 +54,27 @@ public class DeleteRecordedValuesTask extends HttpServlet {
 
      //TODO - delete blobs
     private void deleteData(final Point point, final boolean expOnly, final int expDays) {
-        long count = 0;
-        final Set<Key> keys = new HashSet<Key>();
-        final Calendar d = Calendar.getInstance();
-        d.add(Calendar.DATE, (expDays * -1));
-        final DatastoreService store = DatastoreServiceFactory.getDatastoreService();
-//        Point p = PointServiceFactory.getInstance().getPointByUUID(uuid);
-
-        final Query q = new Query("RecordedValue").setKeysOnly();
-
-        q.addFilter("pointFK", Query.FilterOperator.EQUAL, point.getId());
-        if (expOnly) {
-            q.addFilter(Parameters.timestamp.getText(), Query.FilterOperator.LESS_THAN, d.getTime());
-        }
-        for (final Entity e : store.prepare(q).asList(FetchOptions.Builder.withLimit(5000))) {
-            count++;
-            keys.add(e.getKey());
-        }
-        if (count > 0) {
-            store.delete(keys);
-            TaskFactory.getInstance().startDeleteDataTask(point, expOnly, expDays);
-        }
+//        long count = 0;
+//        final Set<Key> keys = new HashSet<Key>();
+//        final Calendar d = Calendar.getInstance();
+//        d.add(Calendar.DATE, (expDays * -1));
+//        final DatastoreService store = DatastoreServiceFactory.getDatastoreService();
+////        Point p = PointServiceFactory.getInstance().getPointByUUID(uuid);
+//
+//        final Query q = new Query("RecordedValue").setKeysOnly();
+//
+//        q.addFilter("pointFK", Query.FilterOperator.EQUAL, point.getId());
+//        if (expOnly) {
+//            q.addFilter(Parameters.timestamp.getText(), Query.FilterOperator.LESS_THAN, d.getTime());
+//        }
+//        for (final Entity e : store.prepare(q).asList(FetchOptions.Builder.withLimit(5000))) {
+//            count++;
+//            keys.add(e.getKey());
+//        }
+//        if (count > 0) {
+//            store.delete(keys);
+//            TaskFactory.getInstance().startDeleteDataTask(point, expOnly, expDays);
+//        }
 
     }
 

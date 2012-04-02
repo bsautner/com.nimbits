@@ -1,6 +1,7 @@
 import com.nimbits.client.exception.*;
 import com.nimbits.server.dao.search.*;
-import com.nimbits.server.orm.jpa.*;
+import com.nimbits.server.jpa.JpaSearchLog;
+
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import org.junit.*;

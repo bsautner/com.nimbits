@@ -48,7 +48,7 @@ public class UpgradeServlet extends HttpServlet {
         out.println("<P>Starting upgrade tasks. You can check the upgrade task queue in the admin console for status. When all tasks are completed, the upgrade has finished.</P>");
 
 
-        TaskFactory.getInstance().startUpgradeTask(Action.start, null);
+        TaskFactory.getInstance().startUpgradeTask(Action.start, null, null);
 
     }
 

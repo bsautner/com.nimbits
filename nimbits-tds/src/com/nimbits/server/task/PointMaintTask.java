@@ -16,11 +16,12 @@ package com.nimbits.server.task;
 import com.google.gson.Gson;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.model.point.PointModel;
-import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModel;
+import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.user.UserTransactionFactory;
+import com.nimbits.server.point.PointServiceFactory;
 import com.nimbits.server.value.RecordedValueTransactionFactory;
 
 import javax.servlet.http.HttpServlet;
@@ -43,19 +44,17 @@ public class PointMaintTask extends HttpServlet {
         final Gson gson = GsonFactory.getInstance();
         resp.setContentType(Const.CONTENT_TYPE_HTML);
 
-        final String pointJson = req.getParameter(Parameters.point.getText());
-        final PointModel p = gson.fromJson(pointJson, PointModel.class);
-        // final UserContext context = gson.fromJson(jsonContext, UserContextImpl.class);
+        final String j = req.getParameter(Parameters.json.getText());
+        final Entity e = gson.fromJson(j, EntityModel.class);
 
-
-        User n = null;  // pm.getObjectById(NimbitsUser.class, p.getUserFK());//UserDAL.getNimbitsUserByID(p.getUser());
         try {
-            n = UserTransactionFactory.getInstance().getNimbitsUserByID(p.getUserFK());
-            List<ValueBlobStore> stores = RecordedValueTransactionFactory.getDaoInstance(p).getAllStores();
+           // n = UserTransactionFactory.getInstance().(p.getUserFK());
+            final Point p = PointServiceFactory.getInstance().getPointByKey(e.getKey());
+            final List<ValueBlobStore> stores = RecordedValueTransactionFactory.getDaoInstance(p).getAllStores();
             if (stores.size() > 0) {
 
-                List<Long> dates = new ArrayList<Long>();
-                for (ValueBlobStore store : stores) {
+                final List<Long> dates = new ArrayList<Long>(stores.size());
+                for (final ValueBlobStore store : stores) {
                     if (dates.contains(store.getTimestamp().getTime())) {
                         RecordedValueTransactionFactory.getDaoInstance(p).consolidateDate(store.getTimestamp());
                     }
@@ -70,12 +69,12 @@ public class PointMaintTask extends HttpServlet {
 
 
 
-        } catch (Exception e) {
-           log.severe(e.getMessage());
+        } catch (Exception ex) {
+           log.severe(ex.getMessage());
         }
 
 
-        if (n != null) {
+       // if (n != null) {
            // if (p.getCatID() != 0) {
            // Category category = CategoryServiceFactory.getInstance().getCategory(n, p.getCatID());
          //   try {
@@ -95,14 +94,6 @@ public class PointMaintTask extends HttpServlet {
 
 
 
-
-
-
-        } else {
-
-
-
-        }
 
 
     }

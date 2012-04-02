@@ -39,7 +39,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 /**
@@ -78,13 +77,13 @@ public class BlobServlet extends HttpServlet {
 
             Entity entity = null;
             if (uploadType.equals(UploadType.newFile.name())) {
-                entity = EntityModelFactory.createEntity(diagramName, "", EntityType.file, ProtectionLevel.everyone, UUID.randomUUID().toString(),
-                        u.getUuid(), u.getUuid(),blobKey.getKeyString());
+                entity = EntityModelFactory.createEntity(diagramName, "", EntityType.file, ProtectionLevel.everyone,
+                        u.getKey(), u.getKey(),blobKey.getKeyString());
 
             }
             else if (uploadType.equals(UploadType.updatedFile.name()) && entityId != null) {
 
-                entity = EntityServiceFactory.getInstance().getEntityByUUID(u, entityId);
+                entity = EntityServiceFactory.getInstance().getEntityByKey(u, entityId);
                 entity.setBlobKey(blobKey.getKeyString());
 
 

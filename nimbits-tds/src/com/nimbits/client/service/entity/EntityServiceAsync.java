@@ -29,7 +29,7 @@ public interface EntityServiceAsync {
 
     void addUpdateEntity(final EntityName name ,EntityType type,  AsyncCallback<Entity> async);
 
-    void getEntityByUUID(String uuid, AsyncCallback<Entity> async);
+    void getEntityByKey(String uuid, AsyncCallback<Entity> async);
 
     void copyEntity(Entity originalEntity, EntityName newName, AsyncCallback<Entity> async);
 
@@ -43,7 +43,7 @@ public interface EntityServiceAsync {
 
     void addUpdateEntity(User user, Entity aConnection, AsyncCallback<Entity> async);
 
-    void getEntityByUUID(User u, String entityId, AsyncCallback<Entity> async);
+    void getEntityByKey(User u, String entityId, AsyncCallback<Entity> async);
 
     void getEntityByName(User u, EntityName name, AsyncCallback<Entity> async);
 

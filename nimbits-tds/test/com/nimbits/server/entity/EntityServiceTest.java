@@ -24,7 +24,6 @@ import helper.NimbitsServletTest;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.Assert.*;
 
@@ -69,10 +68,10 @@ public class EntityServiceTest extends NimbitsServletTest {
 
         EntityName name = CommonFactoryLocator.getInstance().createName("TWICE", EntityType.point);
         Entity model = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.everyone,
-                UUID.randomUUID().toString(), user.getUuid(), user.getUuid());
+               user.getKey(), user.getKey());
         Entity e = EntityServiceFactory.getInstance().addUpdateEntity(model);
         Entity model2 = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.everyone,
-                UUID.randomUUID().toString(), user.getUuid(), user.getUuid());
+              user.getKey(), user.getKey());
         Entity e2 = EntityServiceFactory.getInstance().addUpdateEntity(model2);
 
 
@@ -82,10 +81,10 @@ public class EntityServiceTest extends NimbitsServletTest {
         try {
             EntityName name = CommonFactoryLocator.getInstance().createName("TWICE", EntityType.category);
             Entity model = EntityModelFactory.createEntity(name, "", EntityType.category, ProtectionLevel.everyone,
-                    UUID.randomUUID().toString(), user.getUuid(), user.getUuid());
+                    user.getKey(), user.getKey());
             Entity e = EntityServiceFactory.getInstance().addUpdateEntity(model);
             Entity model2 = EntityModelFactory.createEntity(name, "", EntityType.category, ProtectionLevel.everyone,
-                    UUID.randomUUID().toString(), user.getUuid(), user.getUuid());
+                 user.getKey(), user.getKey());
 
             Entity e2 = EntityServiceFactory.getInstance().addUpdateEntity(model2);
         } catch (NimbitsException e1) {

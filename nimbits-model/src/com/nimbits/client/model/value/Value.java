@@ -34,8 +34,6 @@ public interface Value extends Serializable, Comparable<Value> {
 
     double getLongitude();
 
-    String getPointUUID();
-
     @Deprecated
     double getValue();
 
@@ -46,8 +44,6 @@ public interface Value extends Serializable, Comparable<Value> {
     Date getTimestamp();
 
     AlertType getAlertState();
-
-    void setAlertType(final AlertType alertState);
 
     String getData();
 

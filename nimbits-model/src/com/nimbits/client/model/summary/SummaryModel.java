@@ -39,7 +39,7 @@ public class SummaryModel implements Summary {
     }
 
     public SummaryModel(Summary summary) {
-        this.uuid = summary.getUuid();
+        this.uuid = summary.getKey();
         this.entity = summary.getEntity();
         this.targetPointUUID = summary.getTargetPointUUID();
         this.summaryType = summary.getSummaryType().getCode();
@@ -52,7 +52,7 @@ public class SummaryModel implements Summary {
     }
 
     @Override
-    public String getUuid() {
+    public String getKey() {
         return uuid;
     }
 

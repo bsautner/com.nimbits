@@ -32,7 +32,7 @@ public class SeriesTest {
     @Ignore
     public void testGetLargeSeries() throws Exception {
         Random rx = new Random();
-        Point p = PointModelFactory.createPointModel(UUID.randomUUID().toString());
+        Point p = PointModelFactory.createPointModel();
 
        EntityName name = (CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString()));
         EntityName categoryName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
@@ -63,7 +63,7 @@ public class SeriesTest {
         Calendar s = Calendar.getInstance();
         String fn = "/tmp/b1.json";
         s.set(2009, 0, 1);
-        Point p = PointModelFactory.createPointModel(UUID.randomUUID().toString());
+        Point p = PointModelFactory.createPointModel();
 
        EntityName name = (CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString()));
        // EntityName categoryName = CommonFactoryLocator.getInstance().createName(Const.CONST_HIDDEN_CATEGORY);

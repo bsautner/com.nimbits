@@ -13,12 +13,10 @@
 
 package com.nimbits.client.model.user;
 
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.email.EmailAddress;
 
-import java.io.*;
-import java.util.*;
+import java.io.Serializable;
+import java.util.Date;
 
 
 /**
@@ -30,13 +28,7 @@ import java.util.*;
 public interface User extends Serializable {
 
 
-    boolean getSendEmail();
-
-    void setSendEmail(final boolean sendEmail);
-
-    long getId();
-
-    void setId(final long id);
+    String getKey();
 
     Date getDateCreated();
 
@@ -44,15 +36,7 @@ public interface User extends Serializable {
 
     void setLastLoggedIn(final Date lastLoggedIn);
 
-    void setDateCreated(final Date dateCreated);
-
     EmailAddress getEmail();
-
-    void setEmail(final EmailAddress email);
-
-    String getUserSource();
-
-    void setUserSource(final String userSource);
 
     String getTwitterTokenSecret();
 
@@ -70,14 +54,6 @@ public interface User extends Serializable {
 
     void setFacebookID(final long facebookID);
 
-    void setUuid(final String uuid);
-
-    String getUuid();
-
-    void setHost(final String host);
-
-    String getHost();
-
     void setSecret(final String secret);
 
     String getSecret();
@@ -86,6 +62,5 @@ public interface User extends Serializable {
 
     boolean isRestricted();
 
-    EntityName getName() throws NimbitsException;
 
 }

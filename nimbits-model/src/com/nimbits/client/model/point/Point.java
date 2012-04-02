@@ -17,7 +17,6 @@ import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.model.value.Value;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,16 +27,11 @@ import java.util.List;
  */
 public interface Point extends Serializable {
 
-
-    Date getCreateDate();
-
-    Date getLastChecked();
+    String getKey();
 
     int getExpire();
 
     double getHighAlarm();
-
-    long getId();
 
     boolean getIdleAlarmSent();
 
@@ -45,15 +39,7 @@ public interface Point extends Serializable {
 
     double getLowAlarm();
 
-    String getTag();
-
-    double getTargetValue();
-
     String getUnit();
-
-    long getUserFK();
-
-    String getUUID();
 
     Value getValue();
 
@@ -64,8 +50,6 @@ public interface Point extends Serializable {
     boolean isIdleAlarmOn();
 
     boolean isLowAlarmOn();
-
-    void setCreateDate(final Date createDate);
 
     void setExpire(final int expire);
 
@@ -79,21 +63,11 @@ public interface Point extends Serializable {
 
     void setIdleSeconds(int idleSeconds);
 
-    void setLastChecked(final Date lastChecked);
-
     void setLowAlarm(final double lowAlarm);
 
     void setLowAlarmOn(final boolean lowAlarmOn);
 
-    void setTag(final String tag);
-
-    void setTargetValue(final double targetValue);
-
     void setUnit(final String unit);
-
-    void setUserFK(final long userFK);
-
-    void setUuid(final String uuid);
 
     void setValue(final Value value);
 

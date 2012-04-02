@@ -135,10 +135,10 @@ public class ChartApiServletImpl extends ApiServlet {
 
 
             e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
-            p = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
+            p = PointServiceFactory.getInstance().getPointByKey(e.getKey());
 
             if (p != null) {
-                //Entity e = EntityServiceFactory.getInstance().getEntityByUUID(p.getUUID());
+                //Entity e = EntityServiceFactory.getInstance().getEntityByUUID(p.getEntity());
                 if (e.getProtectionLevel().equals(ProtectionLevel.everyone) || !u.isRestricted()) {
 
 

@@ -83,7 +83,7 @@ public class CategoryPropertyPanel extends NavigationEventProvider {
         // vp.setSpacing(10);
         createForm();
 
-        String url = "http://" + com.google.gwt.user.client.Window.Location.getHostName() + "?" + Parameters.uuid.getText() + "=" + entity.getEntity();
+        String url = "http://" + com.google.gwt.user.client.Window.Location.getHostName() + "?" + Parameters.uuid.getText() + "=" + entity.getKey();
 
 
         Html h = new Html("<p>Link:</p><br>" +

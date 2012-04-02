@@ -28,9 +28,7 @@ public interface Entity  extends Serializable {
 
     void setEntityType(EntityType entityType);
 
-    String getEntity();
-
-    void setEntity(String entity);
+    String getKey();
 
     String getParent();
 
@@ -52,17 +50,10 @@ public interface Entity  extends Serializable {
 
     void setReadOnly(boolean readOnly);
 
-    @Deprecated
-    String getUUID();
-
-    @Deprecated
-    void setUUID(String newUUID);
-
     String getBlobKey();
 
     void setBlobKey(String blobKey);
 
     void setPoints(List<Point> points);
 
-    void setHost(String host);
 }

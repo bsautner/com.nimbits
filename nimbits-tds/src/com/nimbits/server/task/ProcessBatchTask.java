@@ -108,8 +108,8 @@ public class ProcessBatchTask extends HttpServlet {
                 }
                 if (entity != null) {
                     try {
-                       v = ValueModelFactory.createValueModel(0.0, 0.0, b.value, b.timestamp, entity.getEntity(), b.note);
-                       p = PointServiceFactory.getInstance().getPointByUUID(entity.getEntity());
+                       v = ValueModelFactory.createValueModel(0.0, 0.0, b.value, b.timestamp, entity.getKey(), b.note);
+                       p = PointServiceFactory.getInstance().getPointByKey(entity.getKey());
                         RecordedValueServiceFactory.getInstance().recordValue(b.u, p, v, false);
                     } catch (JDOException e) {
 

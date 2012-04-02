@@ -97,7 +97,7 @@ public class SeriesServletImpl extends ApiServlet {
 
                 final EntityName pointName = CommonFactoryLocator.getInstance().createName(getParam(Parameters.point), EntityType.point);
                 Entity e = EntityServiceFactory.getInstance().getEntityByName(user, pointName);
-                final Point point = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
+                final Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
 
                 if (point == null) {
                     out.println("Point not found");

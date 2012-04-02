@@ -14,9 +14,10 @@
 package com.nimbits.server.value;
 
 import com.nimbits.client.model.point.Point;
-import com.nimbits.server.dao.value.RecordedValueDAOImpl;
-import com.nimbits.server.dao.value.ValueDAOImpl;
-import com.nimbits.server.memcache.value.ValueMemCacheImpl;
+import com.nimbits.server.transactions.dao.value.RecordedValueDAOImpl;
+import com.nimbits.server.transactions.dao.value.ValueDAOImpl;
+import com.nimbits.server.transactions.memcache.value.ValueMemCacheImpl;
+import com.nimbits.server.transactions.orm.legacy.DataPoint;
 
 public class RecordedValueTransactionFactory {
 
@@ -35,7 +36,7 @@ public class RecordedValueTransactionFactory {
 
     }
 
-    public static RecordedValueTransactions getLegacyInstance(final Point point) {
+    public static RecordedValueTransactions getLegacyInstance(final DataPoint point) {
 
         return new RecordedValueDAOImpl(point);
 

@@ -13,7 +13,7 @@
 
 package com.nimbits.server.dao.pointDescription;
 
-import com.nimbits.server.dao.EntityDescription.EntityJPATransactions;
+import com.nimbits.server.transactions.dao.EntityDescription.EntityJPATransactions;
 
 /**
  * Created by Benjamin Sautner

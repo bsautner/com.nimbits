@@ -1,0 +1,77 @@
+/*
+ * Copyright (c) 2010 Tonic Solutions LLC.
+ *
+ * http://www.nimbits.com
+ *
+ *
+ * Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.gnu.org/licenses/gpl.html
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+ */
+
+package com.nimbits.server.transactions.memcache;
+
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.MemCacheKey;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
+
+/**
+ * Created by Benjamin Sautner
+ * User: BSautner
+ * Date: 12/22/11
+ * Time: 12:19 PM
+ */
+public class MemCacheHelper {
+    public static final String DEFAULT_CACHE_NAMESPACE = SettingType.serverVersion.getDefaultValue() + "DEFAULT";
+    private static final String CACHE_KEY_PREFIX = "FOO";
+
+    public static String currentValueCacheKey(String uuid) {
+        return SettingType.serverVersion.getDefaultValue() + CACHE_KEY_PREFIX + "MOST_RECENT_VALUE_CACHE" + uuid;
+    }
+
+    public static String valueMemCacheNamespace(Point point) {
+        return MemCacheKey.valueCache +  point.getKey();
+    }
+
+    public static String valueBufferCacheKey(Point point) {
+        return SettingType.serverVersion.getDefaultValue() +  CACHE_KEY_PREFIX + "BUFFERMEM" + point.getKey();
+    }
+
+    public static String defaultPointCache() {
+        return SettingType.serverVersion.getDefaultValue() + "DEFAULT_POINT_NAMESPACE";
+    }
+
+
+
+    public static String allUsersCacheKey =  CACHE_KEY_PREFIX + Parameters.user.getText() + SettingType.serverVersion.getDefaultValue() + "ALLUSERS";
+
+    public static String UserCacheKey(final EmailAddress emailAddress) {
+        return  CACHE_KEY_PREFIX + Parameters.user.getText() + SettingType.serverVersion.getDefaultValue()+    emailAddress.getValue();
+    }
+
+
+    public static String UserCacheKey(final User u) {
+        return CACHE_KEY_PREFIX + Parameters.user.getText() + SettingType.serverVersion.getDefaultValue()+   u.getEmail().getValue();
+    }
+
+    public static String UserCacheKey(final String id) {
+        return  CACHE_KEY_PREFIX + Parameters.user.getText() + SettingType.serverVersion.getDefaultValue() +   id;
+    }
+    public static String makeSafeNamespace(final String sample) {
+
+       if (sample.matches(Const.REGEX_NAMESPACE)) {
+          return sample;
+       }
+        else {
+           return sample.replaceAll(Const.REGEX_SPECIAL_CHARS, "A");
+       }
+    }
+
+
+}

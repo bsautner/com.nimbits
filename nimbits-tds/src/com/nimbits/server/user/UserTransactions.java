@@ -33,8 +33,6 @@ public interface UserTransactions {
 
     List<User> getAllUsers(final String sortColumn, int count);
 
-    User getNimbitsUserByID(final long id) throws NimbitsException;
-
     User updateSecret(final EmailAddress emailAddress, final UUID uuid) throws NimbitsException;
 
     Connection makeConnectionRequest(final User u, final EmailAddress emailAddress);
@@ -47,7 +45,7 @@ public interface UserTransactions {
 
     User updateLastLoggedIn(final User user, final Date LastLoggedIn) throws NimbitsException;
 
-    User getUserByUUID(final String subscriberUUID);
+    User getUserByKey(final String subscriberUUID);
 
     List<User>  getConnectionRequests(final List<String> connections);
 

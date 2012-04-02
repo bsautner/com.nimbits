@@ -30,7 +30,7 @@ import com.nimbits.server.calculation.CalculationServiceFactory;
 import com.nimbits.server.core.CoreFactory;
 import com.nimbits.server.feed.FeedServiceFactory;
 import com.nimbits.server.intelligence.IntelligenceServiceFactory;
-import com.nimbits.server.orm.EntityStore;
+import com.nimbits.server.transactions.orm.EntityStore;
 import com.nimbits.server.point.PointServiceFactory;
 import com.nimbits.server.subscription.SubscriptionServiceFactory;
 import com.nimbits.server.summary.SummaryServiceFactory;
@@ -39,7 +39,6 @@ import com.nimbits.server.xmpp.XmppServiceFactory;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by Benjamin Sautner
@@ -64,7 +63,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
         final User u = getUser();
 
         final Entity e = EntityModelFactory.createEntity(name, "", type, ProtectionLevel.everyone,
-                UUID.randomUUID().toString(), u.getUuid(), u.getUuid());
+                u.getKey(), u.getKey());
         final Entity r = EntityTransactionFactory.getInstance(u).addUpdateEntity(e);
         switch (type) {
             case point:
@@ -150,14 +149,12 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     public Entity addUpdateEntity(final Entity entity) throws NimbitsException {
         final User u = getUser();
         if (Utils.isEmptyString(entity.getOwner())) {
-            entity.setOwner(u.getUuid());
+            entity.setOwner(u.getKey());
         }
         if (Utils.isEmptyString(entity.getParent())) {
-            entity.setParent(u.getUuid());
+            entity.setParent(u.getKey());
         }
-        if (Utils.isEmptyString(entity.getEntity())) {
-            entity.setEntity(UUID.randomUUID().toString());
-        }
+
 
         final Entity e=  addUpdateEntity(u, entity);
         CoreFactory.getInstance().reportUpdateToCore(e);
@@ -174,8 +171,8 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     }
 
     @Override
-    public Entity getEntityByUUID(final String uuid) throws NimbitsException {
-       return EntityTransactionFactory.getInstance(getUser()).getEntityByUUID(uuid);
+    public Entity getEntityByKey(final String uuid) throws NimbitsException {
+       return EntityTransactionFactory.getInstance(getUser()).getEntityByKey(uuid);
     }
 
     @Override
@@ -196,7 +193,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     @Override
     public Entity copyEntity(final Entity originalEntity, final EntityName newName) throws NimbitsException {
         final Entity newEntity = new EntityStore(originalEntity);
-        newEntity.setEntity(UUID.randomUUID().toString());
+
         switch (newEntity.getEntityType()) {
 
             case user:
@@ -242,8 +239,8 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     }
 
     @Override
-    public Entity getEntityByUUID(final User user, final String entityId) throws NimbitsException {
-        return EntityTransactionFactory.getInstance(user).getEntityByUUID(entityId);
+    public Entity getEntityByKey(final User user, final String entityId) throws NimbitsException {
+        return EntityTransactionFactory.getInstance(user).getEntityByKey(entityId);
     }
 
 

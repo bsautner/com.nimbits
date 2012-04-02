@@ -14,7 +14,7 @@
 package com.nimbits.server.summary;
 
 import com.nimbits.client.model.user.User;
-import com.nimbits.server.dao.summary.SummaryDaoImpl;
+import com.nimbits.server.transactions.dao.summary.SummaryDaoImpl;
 
 /**
  * Created by Benjamin Sautner

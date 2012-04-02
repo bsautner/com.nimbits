@@ -48,7 +48,7 @@ public class DataPointIntegrationTest extends TestCase {
     }
 
     public void testNoCompression() throws Exception {
-        final Point p = PointModelFactory.createPointModel(UUID.randomUUID().toString());
+        final Point p = PointModelFactory.createPointModel();
         final EntityName name = CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString(), EntityType.point);
         p.setExpire(1);
         p.setFilterValue(0);
@@ -65,7 +65,7 @@ public class DataPointIntegrationTest extends TestCase {
 
 
     public void testCompressionSeparatePostsNoDate() throws Exception {
-        Point p = PointModelFactory.createPointModel(UUID.randomUUID().toString());
+        Point p = PointModelFactory.createPointModel();
         EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString(), EntityType.point));
         p.setFilterValue(0.1);
         ClientHelper.client().addPoint(name);
@@ -109,7 +109,7 @@ public class DataPointIntegrationTest extends TestCase {
 
     public void testCompressionSeperateAlternatingValuesPostsNoDate() throws Exception {
 
-        Point p = PointModelFactory.createPointModel(UUID.randomUUID().toString());
+        Point p = PointModelFactory.createPointModel();
 
         EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString(), EntityType.point));
         p.setFilterValue(0.1);
@@ -156,7 +156,7 @@ public class DataPointIntegrationTest extends TestCase {
 
     @Test
     public void testCompression() throws NimbitsException {
-        Point p = PointModelFactory.createPointModel(UUID.randomUUID().toString());
+        Point p = PointModelFactory.createPointModel();
 
        EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString()));
         p.setFilterValue(2.0);
@@ -172,7 +172,7 @@ public class DataPointIntegrationTest extends TestCase {
 
 
     public void testChangeCompression() throws NimbitsException {
-        Point p = PointModelFactory.createPointModel(UUID.randomUUID().toString());
+        Point p = PointModelFactory.createPointModel();
 
        EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString()));
         p.setFilterValue(0.0);
@@ -188,7 +188,7 @@ public class DataPointIntegrationTest extends TestCase {
 
         Point px2 = ClientHelper.client().getPoint(name);
         Assert.assertEquals(2.0, px2.getFilterValue());
-        Assert.assertEquals(px.getId(), px2.getId());
+        Assert.assertEquals(px.getKey(), px2.getKey());
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -204,7 +204,7 @@ public class DataPointIntegrationTest extends TestCase {
 
 
     public void TestZeroCompressionWithBatch() throws NimbitsException {
-        Point p = PointModelFactory.createPointModel(UUID.randomUUID().toString());
+        Point p = PointModelFactory.createPointModel();
 
        EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString()));
         p.setFilterValue(0.0);
@@ -255,7 +255,7 @@ public class DataPointIntegrationTest extends TestCase {
 
     @Test
     public void TestCompressionWithBatch() throws NimbitsException {
-        Point p = PointModelFactory.createPointModel(UUID.randomUUID().toString());
+        Point p = PointModelFactory.createPointModel();
 
        EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString()));
         p.setFilterValue(2.0);
@@ -316,7 +316,7 @@ public class DataPointIntegrationTest extends TestCase {
 
 
     public void testCompressionWithBatchWithMissingPoints() throws NimbitsException {
-        final Point p = PointModelFactory.createPointModel(UUID.randomUUID().toString());
+        final Point p = PointModelFactory.createPointModel();
 
         final EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString(), EntityType.point));
 

@@ -28,7 +28,6 @@ import com.nimbits.server.entity.EntityServiceFactory;
 import com.nimbits.server.user.UserServiceFactory;
 
 import java.util.Date;
-import java.util.UUID;
 
 
 /**
@@ -67,11 +66,11 @@ public class SummaryServiceImpl  extends RemoteServiceServlet implements Summary
         User u = getUser();
 
         if (entity.getEntityType().equals(EntityType.point)) {
-            String uuid = UUID.randomUUID().toString();
+
             Entity newEntity = EntityModelFactory.createEntity(name, "", EntityType.summary,
-                    ProtectionLevel.onlyMe, uuid, entity.getEntity(), u.getUuid());
+                    ProtectionLevel.onlyMe, entity.getKey(), u.getKey());
             Entity createdEntity = EntityServiceFactory.getInstance().addUpdateEntity(u, newEntity);
-            Summary newSummary = SummaryModelFactory.createSummary(uuid, entity.getEntity(), update.getTargetPointUUID(), update.getSummaryType(),
+            Summary newSummary = SummaryModelFactory.createSummary(newEntity.getKey(), entity.getKey(), update.getTargetPointUUID(), update.getSummaryType(),
                     update.getSummaryIntervalMs(), new Date());
 
             SummaryTransactionFactory.getInstance(u).addOrUpdateSummary(createdEntity, newSummary);

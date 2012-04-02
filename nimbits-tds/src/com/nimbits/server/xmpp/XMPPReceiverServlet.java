@@ -47,7 +47,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 
@@ -120,10 +119,10 @@ public class XMPPReceiverServlet extends HttpServlet {
 
         switch (action) {
             case record:
-                Point point = PointServiceFactory.getInstance().getPointByUUID(p.getUUID());
+                Point point = PointServiceFactory.getInstance().getPointByKey(p.getKey());
 
                 if (point != null) {
-                    log.info("xmpp found point" + point.getId());
+
                     final Value v = RecordedValueServiceFactory.getInstance().recordValue(u, point, p.getValue(), false);
                     point.setValue(v);
                     String result = gson.toJson(point);
@@ -147,8 +146,8 @@ public class XMPPReceiverServlet extends HttpServlet {
 
 
         EntityName pointName = CommonFactoryLocator.getInstance().createName(body.substring(1).trim(), EntityType.point);
-        Entity entity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone, UUID.randomUUID().toString(),
-                u.getUuid(), u.getUuid());
+        Entity entity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone,
+                u.getKey(), u.getKey());
         PointServiceFactory.getInstance().addPoint(u, entity);
         XmppServiceFactory.getInstance().sendMessage(pointName.getValue() + " created", u.getEmail());
 
@@ -185,7 +184,7 @@ public class XMPPReceiverServlet extends HttpServlet {
             final EntityName pointName = CommonFactoryLocator.getInstance().createName(body.replace("?", ""), EntityType.point);
 
             Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
-            Point point = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
+            Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
 
             String t = "";
 

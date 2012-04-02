@@ -41,7 +41,6 @@ import com.nimbits.server.xmpp.XmppServiceFactory;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 /**
@@ -88,11 +87,11 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
             if (subscription.getLastSent().getTime() + (subscription.getMaxRepeat() * 60 * 1000) < new Date().getTime()) {
 
 
-                log.info("Processing Subscription " + subscription.getUuid());
-                Entity subscriptionEntity = EntityServiceFactory.getInstance().getEntityByUUID(subscription.getUuid());
+                log.info("Processing Subscription " + subscription.getKey());
+                Entity subscriptionEntity = EntityServiceFactory.getInstance().getEntityByKey(subscription.getKey());
                 if (subscriptionEntity != null ) { //todo - handle subscribed to object deleted
 
-                    Entity entity = EntityServiceFactory.getInstance().getEntityByUUID(point.getUUID());
+                    Entity entity = EntityServiceFactory.getInstance().getEntityByKey(point.getKey());
 
                     User subscriber = UserServiceFactory.getInstance().getUserByUUID(subscriptionEntity.getOwner());
                     AlertType alert = v.getAlertState();
@@ -154,16 +153,18 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
         }
         else { //new
-            subscription.setUuid(UUID.randomUUID().toString());
-            if (entity.getOwner().equals(user.getUuid())) {   //subscribe to your own data
+
+            if (entity.getOwner().equals(user.getKey())) {   //subscribe to your own data
                 Entity s = EntityModelFactory.createEntity(name, "",EntityType.subscription,
-                        ProtectionLevel.onlyMe, subscription.getUuid(), entity.getEntity(), user.getUuid());
+                        ProtectionLevel.onlyMe, entity.getKey(), user.getKey());
+                subscription.setUuid(s.getKey());
                 SubscriptionTransactionFactory.getInstance(user).subscribe(s, subscription);
                 return  EntityServiceFactory.getInstance().addUpdateEntity(user, s);
             }
             else { //subscribe to some elses data
                 Entity s = EntityModelFactory.createEntity(name, "",EntityType.subscription,
-                        ProtectionLevel.onlyMe, subscription.getUuid(), user.getUuid(), user.getUuid());
+                        ProtectionLevel.onlyMe,  user.getKey(), user.getKey());
+                subscription.setUuid(s.getKey());
                 SubscriptionTransactionFactory.getInstance(user).subscribe(s, subscription);
                 return  EntityServiceFactory.getInstance().addUpdateEntity(user, s);
             }
@@ -180,7 +181,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
     public Entity getSubscribedEntity(Entity entity) throws NimbitsException {
         Subscription subscription =
                 SubscriptionTransactionFactory.getInstance(getUser()).readSubscription(entity);
-        return EntityServiceFactory.getInstance().getEntityByUUID(getUser(), subscription.getSubscribedEntity());
+        return EntityServiceFactory.getInstance().getEntityByKey(getUser(), subscription.getSubscribedEntity());
 
     }
 
@@ -277,7 +278,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
             picture.append("http://app.nimbits.com/resources/images/logo.png");
         }
 
-        String link = "http://app.nimbits.com?uuid=" + p.getUUID();
+        String link = "http://app.nimbits.com?uuid=" + p.getKey();
         String d = Utils.isEmptyString(entity.getDescription()) ? "" : entity.getDescription();
         FacebookFactory.getInstance().updateStatus(u.getFacebookToken(), m, picture.toString(), link, "Subscribe to this data feed.",
                 "nimbits.com", d);

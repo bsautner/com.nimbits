@@ -61,7 +61,7 @@ public class EntityCombo extends ComboBox<GxtModel> {
                     try {
                         model = new GxtModel(e);
                         cbStore.add(model);
-                        if (model.getBaseEntity().getEntity().equals(selectedUUID)) {
+                        if (model.getBaseEntity().getKey().equals(selectedUUID)) {
                             setValue(model);
                         }
                     } catch (NimbitsException e1) {

@@ -438,7 +438,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
     @Override
     public Value recordDataObject(EntityName name, Object object, Class<?> cls) throws NimbitsException {
-        Value value = ValueModelFactory.createValueModel(0.0, 0.0, 0.0, new Date(), "", cls.getName(), gson.toJson(object));
+        Value value = ValueModelFactory.createValueModel(0.0, 0.0, 0.0, new Date(),  cls.getName(), gson.toJson(object));
         try {
             return recordValue(name, value);
         } catch (IOException e) {
@@ -450,7 +450,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
     @Override
     public Value recordDataObject(EntityName name, Object object, Class<?> cls, double latitude, double longitude, double value) throws NimbitsException {
-        Value vx = ValueModelFactory.createValueModel(latitude, longitude, value, new Date(), "", cls.getName(), gson.toJson(object));
+        Value vx = ValueModelFactory.createValueModel(latitude, longitude, value, new Date(), cls.getName(), gson.toJson(object));
         try {
             return recordValue(name, vx);
         } catch (IOException e) {

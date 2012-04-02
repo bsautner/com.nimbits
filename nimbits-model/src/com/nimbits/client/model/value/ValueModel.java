@@ -25,52 +25,47 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
     /**
      *
      */
-    private static final long serialVersionUID = 1l;
-    private long id;
-    private double lat;
-    private double lng;
-    private double d;
-    private long timestamp;
-    private String pointUUID;
-    private String note;
-    private String data;
-    private int alertState;
 
-    public ValueModel() {
-    }
+    long id;
+    double lt;
+    double lg;
+    double d;
+    long t;
+    String n;
+    String dx;
+    int st;
 
-    @Override
-    public void setAlertType(final AlertType alertState) {
-        this.alertState = alertState.getCode();
+    protected ValueModel() {
+
     }
 
     @Override
     public String getData() {
-        return this.data == null ? "" : this.data;
+        return this.dx == null ? "" : this.dx;
     }
 
 
     public ValueModel(final Value v) {
         this.id = v.getId();
-        this.lat = v.getLatitude();
-        this.lng = v.getLongitude();
+        this.lt = v.getLatitude();
+        this.lg = v.getLongitude();
         this.d = v.getDoubleValue();
-        this.timestamp = v.getTimestamp().getTime();
-        this.pointUUID = v.getPointUUID();
-        this.note = v.getNote();
-        this.data = v.getData();
+        this.t = v.getTimestamp().getTime();
+        this.n = v.getNote();
+        this.dx = v.getData();
+        this.st = v.getAlertState().getCode();
 
     }
 
     public ValueModel(final Value v, final String dataOverride) {
         this.id = v.getId();
-        this.lat = v.getLatitude();
-        this.lng = v.getLongitude();
+        this.lt = v.getLatitude();
+        this.lg = v.getLongitude();
         this.d = v.getDoubleValue();
-        this.timestamp = v.getTimestamp().getTime();
-        this.pointUUID = v.getPointUUID();
-        this.note = v.getNote();
-        this.data = dataOverride;
+        this.t = v.getTimestamp().getTime();
+        this.n = v.getNote();
+        this.dx = dataOverride;
+        this.st = v.getAlertState().getCode();
 
     }
 
@@ -78,37 +73,20 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
                       final double lng,
                       final double d,
                       final Date timestamp,
-                      final String pointUUID,
                       final String note,
-                      final String data) {
+                      final String data,
+                      final AlertType alert) {
         this.id = 0;
-        this.lat = lat;
-        this.lng = lng;
+        this.lt = lat;
+        this.lg = lng;
         this.d = d;
-
-        this.timestamp = timestamp.getTime();
-        this.pointUUID = pointUUID;
-        this.note = note;
-        this.data = data;
+        this.st = alert.getCode();
+        this.t = timestamp.getTime();
+        this.n = note;
+        this.dx = data;
     }
 
-    public ValueModel(final long id,
-                      final double lat,
-                      final double lng,
-                      final double d,
-                      final Date timestamp,
-                      final String pointUUID,
-                      final String note,
-                      final String data) {
-        this.id = id;
-        this.lat = lat;
-        this.lng = lng;
-        this.d = d;
-        this.timestamp = timestamp.getTime();
-        this.pointUUID = pointUUID;
-        this.note = note;
-        this.data = data;
-    }
+
 
     //
     @Override
@@ -119,33 +97,26 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
 
     @Override
     public String getNote() {
-        return note == null ? "" : note;
+        return n == null ? "" : n;
      }
 
 
     @Override
     public double getLatitude() {
-        return lat;
+        return lt;
     }
 
 
     @Override
     public double getLongitude() {
-        return lng;
+        return lg;
     }
-
-
-    @Override
-    public String getPointUUID() {
-        return pointUUID;
-    }
-
 
     @Override
     @Deprecated
     public double getValue() {
         return this.d;
-     }
+    }
 
     @Override
     public double getDoubleValue() {
@@ -159,9 +130,9 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
         if ( this.d != Const.CONST_IGNORED_NUMBER_VALUE) {
             sb.append(this.d);
         }
-        if (this.note != null && this.note.length() > 0) {
+        if (this.n != null && this.n.length() > 0) {
             sb.append(" ");
-            sb.append(this.note);
+            sb.append(this.n);
         }
         return sb.toString().trim();
 
@@ -169,16 +140,16 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
 
     @Override
     public Date getTimestamp() {
-        return new Date(this.timestamp);
+        return new Date(this.t);
     }
 
     @Override
     public AlertType getAlertState() {
-        return AlertType.get(this.alertState);
+        return AlertType.get(this.st);
     }
 
     @Override
     public int compareTo(Value value) {
-       return Long.valueOf(timestamp).compareTo(value.getTimestamp().getTime());
+       return Long.valueOf(t).compareTo(value.getTimestamp().getTime());
     }
 }

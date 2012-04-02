@@ -58,7 +58,6 @@ public class PointPanel extends LayoutContainer {
     private final NumberField high = new NumberField();
     private final NumberField idleMinutes = new NumberField();
     private final NumberField low = new NumberField();
-    private final NumberField targetValue = new NumberField();
     private final PointServiceAsync pointService = GWT.create(PointService.class);
     private final SeparatorToolItem separatorToolItem = new SeparatorToolItem();
     private final TextArea description = new TextArea();
@@ -105,7 +104,7 @@ public class PointPanel extends LayoutContainer {
     }
 
     private void loadForm()  {
-        pointService.getPointByUUID(entity.getEntity(), new AsyncCallback<Point>() {
+        pointService.getPointByKey(entity.getKey(), new AsyncCallback<Point>() {
             @Override
             public void onFailure(Throwable caught) {
                 GWT.log(caught.getMessage());
@@ -222,7 +221,6 @@ public class PointPanel extends LayoutContainer {
         point.setExpire(expires.getValue().intValue());
         point.setUnit(unit.getValue());
 
-        point.setTargetValue(targetValue.getValue().doubleValue());
 
         //Alerts
 
@@ -377,11 +375,6 @@ public class PointPanel extends LayoutContainer {
         simple.add(compression);
         simple.add(hysteresisType);
 
-
-        targetValue.setFieldLabel("Target");
-        targetValue.setValue(point.getTargetValue());
-        targetValue.setAllowBlank(false);
-        simple.add(targetValue);
 
 
         expires.setFieldLabel("Expires (days)");

@@ -14,7 +14,7 @@
 package com.nimbits.server.intelligence;
 
 import com.nimbits.client.service.intelligence.IntelligenceService;
-import com.nimbits.server.dao.intelligence.IntelligenceDAOImpl;
+import com.nimbits.server.transactions.dao.intelligence.IntelligenceDAOImpl;
 
 /**
  * Created by bsautner

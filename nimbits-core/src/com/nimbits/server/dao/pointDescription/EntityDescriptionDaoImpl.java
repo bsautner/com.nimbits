@@ -16,8 +16,8 @@ package com.nimbits.server.dao.pointDescription;
 import com.nimbits.client.model.entity.EntityDescription;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.server.EMF;
-import com.nimbits.server.dao.EntityDescription.EntityJPATransactions;
-import com.nimbits.server.orm.jpa.JpaEntityDescription;
+import com.nimbits.server.transactions.dao.EntityDescription.EntityJPATransactions;
+import com.nimbits.server.jpa.JpaEntityDescription;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -88,7 +88,7 @@ public class EntityDescriptionDaoImpl implements EntityJPATransactions {
         final EntityDescription retObj;
 
         final List result = em.createQuery(uuidSQL)
-                .setParameter(1, entityDescription.getUuid())
+                .setParameter(1, entityDescription.getKey())
                 .getResultList();
 
         if (result != null && result.size() > 0) {

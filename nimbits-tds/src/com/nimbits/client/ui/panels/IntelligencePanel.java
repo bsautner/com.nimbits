@@ -375,14 +375,14 @@ public class IntelligencePanel extends NavigationEventProvider {
                     "",
                     intelEnabled.getValue(),
                     target,
-                    intelTargetPoint.getValue().getBaseEntity().getEntity(),
+                    intelTargetPoint.getValue().getBaseEntity().getKey(),
                     intelFormula.getValue(),
                     intelNodeId.getValue(), intelPlainText.getValue(),
-                    entity.getEntity());
+                    entity.getKey());
         }
         else {
             return IntelligenceModelFactory.createIntelligenceModel(
-                    intelligence.getUUID(),
+                    intelligence.getKey(),
                     intelEnabled.getValue(),
                     target,
                     intelTargetPoint.getValue().getUUID(),

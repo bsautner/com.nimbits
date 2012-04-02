@@ -87,10 +87,10 @@ public class FilePropertyPanel extends NavigationEventProvider {
         simple.add(protectionLevelOptions, formData);
 
 
-        String url = "http://" + com.google.gwt.user.client.Window.Location.getHostName() + "?uuid=" + entity.getEntity();
+        String url = "http://" + com.google.gwt.user.client.Window.Location.getHostName() + "?uuid=" + entity.getKey();
 
         if (com.google.gwt.user.client.Window.Location.getHostName().equals("127.0.0.1")) {
-            url = "http://127.0.0.1:8888/nimbits.html?gwt.codesvr=127.0.0.1:9997&uuid=" + entity.getEntity();
+            url = "http://127.0.0.1:8888/nimbits.html?gwt.codesvr=127.0.0.1:9997&uuid=" + entity.getKey();
         }
 
         Html h = new Html("<p>This file can be viewed in a full window by anyone by setting" +

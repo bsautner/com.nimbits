@@ -52,7 +52,7 @@ public class GxtModel extends BaseTreeModel implements Serializable {
         setEntityValues(entity);
     }
     public GxtModel(User user) throws NimbitsException {
-        this.uuid = user.getUuid();
+        this.uuid = user.getKey();
         this.name = CommonFactoryLocator.getInstance().createName(user.getEmail().getValue(), EntityType.user);
         this.alertType = AlertType.OK;
         this.entityType = EntityType.user;
@@ -138,7 +138,7 @@ public class GxtModel extends BaseTreeModel implements Serializable {
     }
 
     private void setEntityValues(Entity entity) throws NimbitsException {
-        this.uuid = entity.getEntity();
+        this.uuid = entity.getKey();
         this.name = entity.getName();
         this.alertType = entity.getAlertType();
         this.entityType = entity.getEntityType();

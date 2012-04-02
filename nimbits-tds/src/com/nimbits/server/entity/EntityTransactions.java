@@ -41,7 +41,7 @@ public interface EntityTransactions {
 
     List<Entity> deleteEntity(Entity entity) throws NimbitsException;
 
-    Entity getEntityByUUID(String uuid) throws NimbitsException;
+    Entity getEntityByKey(String uuid) throws NimbitsException;
 
     Entity getEntityByName(EntityName name) throws NimbitsException;
 

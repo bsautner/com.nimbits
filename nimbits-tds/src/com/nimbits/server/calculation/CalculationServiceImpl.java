@@ -34,7 +34,6 @@ import com.nimbits.server.user.UserServiceFactory;
 import com.nimbits.server.value.RecordedValueServiceFactory;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by bsautner
@@ -66,34 +65,34 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
 
         if (entity == null) {
 
-            String uuid = UUID.randomUUID().toString();
-            Entity e = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe, uuid,
-                    calculation.getTrigger(), u.getUuid());
+
+            final Entity e = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe,
+                    calculation.getTrigger(), u.getKey());
             retObj = EntityServiceFactory.getInstance().addUpdateEntity(u, e);
-            Calculation c = CalculationModelFactory.createCalculation(calculation.getTrigger(), uuid, calculation.getEnabled(),
+            final Calculation c = CalculationModelFactory.createCalculation(calculation.getTrigger(), e.getKey(), calculation.getEnabled(),
                     calculation.getFormula(), calculation.getTarget(), calculation.getX(),
                     calculation.getY(), calculation.getZ());
 
-            CalculationServiceFactory.getDaoInstance(u).addUpdateCalculation(c);
+            CalculationServiceFactory.getDaoInstance(u).addUpdateCalculation(retObj, c);
 
 
         }
-        else if (entity.getEntityType().equals(EntityType.point) && Utils.isEmptyString(calculation.getUUID())) {
-            String uuid = UUID.randomUUID().toString();
-            Entity e = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe, uuid,
-                    entity.getEntity(), u.getUuid());
+        else if (entity.getEntityType().equals(EntityType.point) && Utils.isEmptyString(calculation.getKey())) {
+
+            Entity e = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe,
+                    entity.getKey(), u.getKey());
             retObj = EntityServiceFactory.getInstance().addUpdateEntity(e);
-            Calculation c = CalculationModelFactory.createCalculation(entity.getEntity(), uuid, calculation.getEnabled(),
+            Calculation c = CalculationModelFactory.createCalculation(entity.getKey(), e.getKey(), calculation.getEnabled(),
                     calculation.getFormula(), calculation.getTarget(), calculation.getX(),
                     calculation.getY(), calculation.getZ());
 
-            CalculationServiceFactory.getDaoInstance(u).addUpdateCalculation(c);
+            CalculationServiceFactory.getDaoInstance(u).addUpdateCalculation(retObj, c);
 
 
         }
         else if (entity.getEntityType().equals(EntityType.calculation)) {
             entity.setName(name);
-            CalculationServiceFactory.getDaoInstance(u).addUpdateCalculation(calculation);
+            CalculationServiceFactory.getDaoInstance(u).addUpdateCalculation(entity, calculation);
             return EntityServiceFactory.getInstance().addUpdateEntity(entity);
 
 
@@ -123,22 +122,22 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
     }
 
     @Override
-    public void processCalculations(User u, Point point, Value value) throws NimbitsException {
+    public void processCalculations(final User u, final Point point, final Value value) throws NimbitsException {
 
-        Entity e = EntityServiceFactory.getInstance().getEntityByUUID(point.getUUID());
+        final Entity e = EntityServiceFactory.getInstance().getEntityByKey(point.getKey());
 
-        List<Calculation> calculations = getCalculations(e);
+        final List<Calculation> calculations = getCalculations(e);
         Point target;
         Value result;
-        for (Calculation c : calculations) {
+        for (final Calculation c : calculations) {
             if (c.getEnabled()) {
-                target = PointServiceFactory.getInstance().getPointByUUID(c.getTarget());
+                target = PointServiceFactory.getInstance().getPointByKey(c.getTarget());
                 try {
                     result= solveEquation(c);
                     RecordedValueServiceFactory.getInstance().recordValue(u, target, result, true);
                 } catch (NimbitsException e1) {
                     c.setEnabled(false);
-                    CalculationServiceFactory.getDaoInstance(u).addUpdateCalculation(c);
+                    CalculationServiceFactory.getDaoInstance(u).addUpdateCalculation(null, c);
 
                 }
 
@@ -155,7 +154,7 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
 
 
         if (!(Utils.isEmptyString(calculation.getX())) && calculation.getFormula().contains("x")) {
-            Point p = PointServiceFactory.getInstance().getPointByUUID(calculation.getX());
+            Point p = PointServiceFactory.getInstance().getPointByKey(calculation.getX());
             if (p != null) {
                 Value val = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
                 double d = val == null ? 0.0 : val.getDoubleValue();
@@ -165,7 +164,7 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
         }
         if (!(Utils.isEmptyString(calculation.getY())) && calculation.getFormula().contains("y")) {
 
-            Point p = PointServiceFactory.getInstance().getPointByUUID(calculation.getY());
+            Point p = PointServiceFactory.getInstance().getPointByKey(calculation.getY());
             if (p != null) {
                 Value val = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
                 double d = val == null ? 0.0 : val.getDoubleValue();
@@ -174,7 +173,7 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
 
         }
         if (!(Utils.isEmptyString(calculation.getZ())) && calculation.getFormula().contains("z")) {
-            Point p = PointServiceFactory.getInstance().getPointByUUID(calculation.getZ());
+            Point p = PointServiceFactory.getInstance().getPointByKey(calculation.getZ());
             if (p != null) {
                 Value val = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
                 double d = val == null ? 0.0 : val.getDoubleValue();

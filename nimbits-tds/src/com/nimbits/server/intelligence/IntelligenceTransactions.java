@@ -29,7 +29,7 @@ public interface IntelligenceTransactions {
 
     public Intelligence getIntelligence(Entity entity);
 
-    Intelligence addUpdateIntelligence(Intelligence update);
+    Intelligence addUpdateIntelligence(Entity entity, Intelligence update);
 
     List<Intelligence> getIntelligence(Point point);
 

@@ -40,14 +40,14 @@ import static com.nimbits.server.user.UserServiceFactory.getServerInstance;
 public class CalculationServlet extends HttpServlet {
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
         super.doPost(req, resp);
 
-        String json = req.getParameter(Parameters.json.getText());
-        String nameParam = req.getParameter(Parameters.name.getText());
-        Calculation c = GsonFactory.getInstance().fromJson(json, CalculationModel.class);
-        EntityName name;
-        User u;
+        final String json = req.getParameter(Parameters.json.getText());
+        final String nameParam = req.getParameter(Parameters.name.getText());
+        final Calculation c = GsonFactory.getInstance().fromJson(json, CalculationModel.class);
+        final EntityName name;
+        final User u;
         try {
             u = getServerInstance().getHttpRequestUser(req);
             name = CommonFactoryLocator.getInstance().createName(nameParam, EntityType.calculation);

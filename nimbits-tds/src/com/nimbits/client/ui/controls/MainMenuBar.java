@@ -389,13 +389,10 @@ public class MainMenuBar extends ToolBar {
                         "Creating your data point channel into the cloud", "Creating: " + newEntityName);
                 box.show();
                 EntityServiceAsync service = GWT.create(EntityService.class);
-                EntityName name;
+
                 try {
-                    name = CommonFactoryLocator.getInstance().createName(newEntityName, EntityType.point);
-                } catch (NimbitsException caught) {
-                    FeedbackHelper.showError(caught);
-                    return;
-                }
+                    EntityName name = CommonFactoryLocator.getInstance().createName(newEntityName, EntityType.point);
+
                 //     Entity entity = EntityModelFactory.createEntity(name, EntityType.point);
                 service.addUpdateEntity(name, EntityType.point,  new AsyncCallback<Entity>() {
                     @Override
@@ -416,7 +413,10 @@ public class MainMenuBar extends ToolBar {
                         box.close();
                     }
                 });
-
+                } catch (NimbitsException caught) {
+                    FeedbackHelper.showError(caught);
+                    return;
+                }
 
             }
         }

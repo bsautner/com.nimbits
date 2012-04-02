@@ -10,7 +10,7 @@ import java.io.Serializable;
  */
 public interface Calculation extends Serializable {
 
-    String getUUID();
+    String getKey();
 
     String getTrigger();
 

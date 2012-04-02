@@ -13,7 +13,7 @@ import java.util.*;
  */
 public interface Subscription extends Serializable {
 
-    String getUuid();
+    String getKey();
 
     void setUuid(String uuid);
 

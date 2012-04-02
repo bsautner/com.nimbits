@@ -240,14 +240,14 @@ public class SummaryPanel extends NavigationEventProvider {
 
                 if (entity.getEntityType().equals(EntityType.summary) && summary != null) {
 
-                    update = SummaryModelFactory.createSummary(summary.getUuid(),
+                    update = SummaryModelFactory.createSummary(summary.getKey(),
                             summary.getEntity(), summary.getTargetPointUUID(), summaryType,
                             spinnerField.getValue().intValue() * 60 * 60 * 1000, new Date());
 
                 }
                 else {
                     update = SummaryModelFactory.createSummary(null,
-                            entity.getEntity(),targetCombo.getValue().getUUID() , summaryType,
+                            entity.getKey(),targetCombo.getValue().getUUID() , summaryType,
                             spinnerField.getValue().intValue() * 60 * 60 * 1000, new Date());
 
                 }

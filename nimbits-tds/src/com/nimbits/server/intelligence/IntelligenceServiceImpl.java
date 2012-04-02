@@ -201,34 +201,34 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
         User u = getUser();
         if (entity == null) {
 
-            String uuid = UUID.randomUUID().toString();
-            Entity e = EntityModelFactory.createEntity(name, "", EntityType.intelligence, ProtectionLevel.onlyMe, uuid,
-                    update.getTrigger(), u.getUuid());
+
+            Entity e = EntityModelFactory.createEntity(name, "", EntityType.intelligence, ProtectionLevel.onlyMe,
+                    update.getTrigger(), u.getKey());
             retObj = EntityServiceFactory.getInstance().addUpdateEntity(u, e);
-            Intelligence c = IntelligenceModelFactory.createIntelligenceModel(uuid,
+            Intelligence c = IntelligenceModelFactory.createIntelligenceModel(e.getKey(),
                     update.getEnabled(), update.getResultTarget(), update.getTarget(), update.getInput(), update.getNodeId(),
                     update.getResultsInPlainText(), update.getTrigger());
 
-            IntelligenceServiceFactory.getDaoInstance().addUpdateIntelligence(c);
+            IntelligenceServiceFactory.getDaoInstance().addUpdateIntelligence(retObj, c);
 
 
         }
-        else if (entity.getEntityType().equals(EntityType.point) && Utils.isEmptyString(update.getUUID())) {
-            String uuid = UUID.randomUUID().toString();
-            Entity e = EntityModelFactory.createEntity(name, "", EntityType.intelligence, ProtectionLevel.onlyMe, uuid,
-                    entity.getEntity(), u.getUuid());
+        else if (entity.getEntityType().equals(EntityType.point) && Utils.isEmptyString(update.getKey())) {
+
+            Entity e = EntityModelFactory.createEntity(name, "", EntityType.intelligence, ProtectionLevel.onlyMe,
+                    entity.getKey(), u.getKey());
             retObj = EntityServiceFactory.getInstance().addUpdateEntity(e);
-            Intelligence c = IntelligenceModelFactory.createIntelligenceModel(uuid,
+            Intelligence c = IntelligenceModelFactory.createIntelligenceModel(e.getKey(),
                     update.getEnabled(), update.getResultTarget(), update.getTarget(), update.getInput(), update.getNodeId(),
                     update.getResultsInPlainText(), update.getTrigger());
 
-            IntelligenceServiceFactory.getDaoInstance().addUpdateIntelligence(c);
+            IntelligenceServiceFactory.getDaoInstance().addUpdateIntelligence(retObj, c);
 
 
         }
         else if (entity.getEntityType().equals(EntityType.intelligence)) {
             entity.setName(name);
-            IntelligenceServiceFactory.getDaoInstance().addUpdateIntelligence(update);
+            IntelligenceServiceFactory.getDaoInstance().addUpdateIntelligence(entity, update);
 
             return EntityServiceFactory.getInstance().addUpdateEntity(entity);
 
@@ -246,7 +246,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
         for (Intelligence i : list) {
             try {
-                Point target = PointServiceFactory.getInstance().getPointByUUID(i.getTarget());
+                Point target = PointServiceFactory.getInstance().getPointByKey(i.getTarget());
 
                 if (target!= null) {
 
@@ -258,7 +258,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
                 i.setEnabled(false);
                 FeedServiceFactory.getInstance().postToFeed(u, new NimbitsException("An error occured when processing an intelligence" +
                         " expression - intelligence on data point has been disabled  " + e.getMessage()));
-                IntelligenceServiceFactory.getDaoInstance().addUpdateIntelligence(i);
+                IntelligenceServiceFactory.getDaoInstance().addUpdateIntelligence(null, i);
 
             }
 
@@ -269,7 +269,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
     @Override
     public Value processInput(final Intelligence update) throws NimbitsException {
         String processedInput = addDataToInput(getUser(), update.getInput());
-        Point target = PointServiceFactory.getInstance().getPointByUUID(update.getTarget());
+        Point target = PointServiceFactory.getInstance().getPointByKey(update.getTarget());
         return processInput(update, target, processedInput);
 
     }
@@ -302,7 +302,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
 
                     Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
-                    inputPoint= PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
+                    inputPoint= PointServiceFactory.getInstance().getPointByKey(e.getKey());
 
                     if (inputPoint != null) {
                         Value inputValue = RecordedValueServiceFactory.getInstance().getCurrentValue(inputPoint);
@@ -376,7 +376,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
             data = result;
         }
 
-        return ValueModelFactory.createValueModel(0.0, 0.0, v, new Date(), targetPoint.getUUID(),"", data);
+        return ValueModelFactory.createValueModel(0.0, 0.0, v, new Date(), "", data);
 
 
     }

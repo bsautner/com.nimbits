@@ -28,7 +28,7 @@ public interface CalculationTransactions {
 
     Calculation getCalculation(final Entity entity);
 
-    Calculation addUpdateCalculation(final Calculation calculation);
+    Calculation addUpdateCalculation(final Entity entity, final Calculation calculation);
 
     List<Calculation> getCalculations(final Entity entity);
 

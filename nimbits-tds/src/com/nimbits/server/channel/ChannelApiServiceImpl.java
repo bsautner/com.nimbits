@@ -46,7 +46,7 @@ public class ChannelApiServiceImpl extends RemoteServiceServlet implements Chann
     @Override
     public String openChannel(Point point) {
         ChannelService channelService = ChannelServiceFactory.getChannelService();
-        return channelService.createChannel(point.getUUID());
+        return channelService.createChannel(point.getKey());
 
     }
 
@@ -54,7 +54,7 @@ public class ChannelApiServiceImpl extends RemoteServiceServlet implements Chann
     public void notifyPointUpdated(Point point) {
         ChannelService channelService = ChannelServiceFactory.getChannelService();
 
-        channelService.sendMessage(new ChannelMessage(point.getUUID(), Action.update.name()));
+        channelService.sendMessage(new ChannelMessage(point.getKey(), Action.update.name()));
     }
 
 }

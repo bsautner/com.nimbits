@@ -19,6 +19,7 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.server.transactions.orm.legacy.DataPoint;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,11 +40,11 @@ public interface Task {
 
     void startIncomingMailTask(final String address, final String content);
 
-    void startPointMaintTask(final Point point);
+    void startPointMaintTask(final Entity point);
 
     void startMoveCachedValuesToStoreTask(final Point point);
 
-    void startUpgradeTask(Action action, Entity entity);
+    void startUpgradeTask(Action action, Entity entity, DataPoint legacyPoint);
 
     void startSummaryTask(Entity entity);
 }

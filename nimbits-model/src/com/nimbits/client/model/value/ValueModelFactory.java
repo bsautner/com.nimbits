@@ -15,6 +15,7 @@ package com.nimbits.client.model.value;
 
 
 import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.exception.NimbitsException;
 
 import java.util.Date;
@@ -33,6 +34,18 @@ public class ValueModelFactory {
         return new ValueModel(v);
 
     }
+    public static ValueModel createValueModel(final Value v, final AlertType alertType) {
+
+        return new ValueModel(v.getLatitude(),
+                v.getLongitude(),
+                v.getDoubleValue(),
+                v.getTimestamp(),
+                v.getNote(),
+                v.getData(),
+                alertType);
+
+    }
+
 
     public static ValueModel createValueModel(final Value v, final String value) {
 
@@ -43,26 +56,14 @@ public class ValueModelFactory {
                                               final double lng,
                                               final double d,
                                               final Date timestamp,
-                                              final String pointUUID,
                                               final String note,
-                                              final String data) {
+                                              final String data,
+                                              final AlertType alert) {
 
-        return new ValueModel(lat, lng, d, timestamp, pointUUID, note, data);
+        return new ValueModel(lat, lng, d, timestamp, note, data, alert);
 
     }
 
-    public static ValueModel createValueModel(final long id,
-                                              final double lat,
-                                              final double lng,
-                                              final double d,
-                                              final Date timestamp,
-                                              final String pointUUID,
-                                              final String note,
-                                              final String data) {
-
-        return new ValueModel(lat, lng, d, timestamp, pointUUID, note, data);
-
-    }
 
     public static ValueModel createValueModel(final double lat,
                                               final double lng,
@@ -71,30 +72,30 @@ public class ValueModelFactory {
                                               final String pointUUID,
                                               final String note) {
 
-        return new ValueModel(lat, lng, d, timestamp, pointUUID, note, "");
+        return new ValueModel(lat, lng, d, timestamp, note, "", AlertType.OK);
 
     }
 
     public static ValueModel createValueModel(final double d) {
 
-        return new ValueModel(0.0, 0.0, d, new Date(), null, "", "");
+        return new ValueModel(0.0, 0.0, d, new Date(), "", "", AlertType.OK);
 
     }
 
     public static ValueModel createValueModel(final double d, final String note) {
 
-        return new ValueModel(0.0, 0.0, d, new Date(), null, note, "");
+        return new ValueModel(0.0, 0.0, d, new Date(), note, "", AlertType.OK);
 
     }
 
     public static ValueModel createValueModel(final double d, final Date timestamp) {
 
-        return new ValueModel(0.0, 0.0, d, timestamp, null, "", "");
+        return new ValueModel(0.0, 0.0, d, timestamp,  "", "", AlertType.OK);
 
     }
     public static ValueModel createValueModel(final double d, final String note, final Date timestamp) {
 
-        return new ValueModel(0.0, 0.0, d, timestamp, null,note, "");
+        return new ValueModel(0.0, 0.0, d, timestamp,note, "",AlertType.OK);
 
     }
     public static ValueModel createValueModel(final String valueAndNote, final Date timestamp, final String uuid) {
@@ -131,7 +132,7 @@ public class ValueModelFactory {
         }
 
 
-        return new ValueModel(0.0, 0.0, d, timestamp, uuid,note, "");
+        return new ValueModel(0.0, 0.0, d, timestamp, note, "", AlertType.OK);
     }
     public static List<Value> createValueModels(final List<Value> values) {
         final LinkedList<Value> retObj = new LinkedList<Value>();
@@ -166,7 +167,7 @@ public class ValueModelFactory {
         }
 
 
-        return createValueModel(latitude, longitude, value, timestamp, null, note, data);
+        return createValueModel(latitude, longitude, value, timestamp, note, data, AlertType.OK);
 
     }
 

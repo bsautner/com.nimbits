@@ -152,7 +152,7 @@ public class EmailServiceImpl implements EmailService {
                 .append("<p><a href =\"" +
                         ServerInfoImpl.getFullServerURL(null) +
                         "?uuid=" +
-                        point.getUUID() +
+                        point.getKey() +
                         "\">Go to Current Status Report</a></p>");
 
 

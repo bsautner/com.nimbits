@@ -25,6 +25,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.ValueModelFactory;
 import com.nimbits.client.service.recordedvalues.RecordedValueService;
 import com.nimbits.server.entity.EntityServiceFactory;
 import com.nimbits.server.point.PointServiceFactory;
@@ -50,7 +51,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
         // final User u = UserServiceFactory.getInstance().getAppUserUsingGoogleAuth();
         //  final User pointOwner = UserTransactionFactory.getInstance().getNimbitsUserByID(pointOwnerId);
-        final Point p = PointServiceFactory.getInstance().getPointByUUID(entity.getEntity());
+        final Point p = PointServiceFactory.getInstance().getPointByKey(entity.getKey());
 
 
         return getCurrentValue(p);
@@ -67,7 +68,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
     public List<Value> getTopDataSeries(final Entity entity,
                                         final int maxValues,
                                         final Date endDate) throws NimbitsException {
-        final Point p = PointServiceFactory.getInstance().getPointByUUID(entity.getEntity());
+        final Point p = PointServiceFactory.getInstance().getPointByKey(entity.getKey());
         return RecordedValueTransactionFactory.getInstance(p).getTopDataSeries(maxValues, endDate);
     }
     //called from RPC Client
@@ -84,7 +85,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
     }
     @Override
     public List<Value> getCache(final Entity entity) throws NimbitsException {
-        final Point point = PointServiceFactory.getInstance().getPointByUUID(entity.getEntity());
+        final Point point = PointServiceFactory.getInstance().getPointByKey(entity.getKey());
         return RecordedValueTransactionFactory.getInstance(point).getBuffer();
     }
 
@@ -100,7 +101,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
                                              final Timespan timespan,
                                              final int start,
                                              final int end) throws NimbitsException {
-        final Point point = PointServiceFactory.getInstance().getPointByUUID(entity.getEntity());
+        final Point point = PointServiceFactory.getInstance().getPointByKey(entity.getKey());
 
         return RecordedValueTransactionFactory.getInstance(point).getDataSegment(timespan, start, end);
     }
@@ -112,7 +113,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
         final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
                 this.getThreadLocalRequest());
 
-        final Point px = PointServiceFactory.getInstance().getPointByUUID(point.getEntity());
+        final Point px = PointServiceFactory.getInstance().getPointByKey(point.getKey());
         return recordValue(u, px, value, false);
     }
 
@@ -143,7 +144,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
 
         final Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
-        final Point point = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
+        final Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
 
         return (point != null) ? recordValue(u, point, value, false) : null;
 
@@ -174,17 +175,24 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
     public Value getCurrentValue(final Point p) throws NimbitsException {
 
-        Value retObj = null;
+
         if (p != null) {
 
-            retObj = getPrevValue(p, new Date());
-            if (retObj != null) {
-                retObj.setAlertType(getAlertType(p, retObj));
+            final Value v = getPrevValue(p, new Date());
+            if (v != null) {
+                AlertType alertType = getAlertType(p, v);
+                return ValueModelFactory.createValueModel(v, alertType);
+
+            }
+            else {
+                return null;
             }
 
         }
+        else {
+            return null;
+        }
 
-        return retObj;
 
     }
     private static AlertType getAlertType(final Point point, final Value value)  {
@@ -292,14 +300,15 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
         final boolean ignored = false;
 
         final boolean ignoredByDate = ignoreDataByExpirationDate(point, value, ignored);
-        final boolean ignoredByOwnership = ignoreDataByOwnership(u, point, ignored);
+      //  final boolean ignoredByOwnership = ignoreDataByOwnership(u, point, ignored);
         final boolean ignoredByCompression = ignoreByCompression(point, value);
 
-        if (!ignoredByDate && !ignoredByOwnership && !ignoredByCompression) {
+        if (!ignoredByDate &&  !ignoredByCompression) {
 
             retObj = RecordedValueTransactionFactory.getInstance(point).recordValue(value);
-            retObj.setAlertType(getAlertType(point, retObj));
-            TaskFactory.getInstance().startRecordValueTask(u, point, value, loopFlag);
+            final AlertType t = (getAlertType(point, retObj));
+            final Value v = ValueModelFactory.createValueModel(retObj, t);
+            TaskFactory.getInstance().startRecordValueTask(u, point, v, loopFlag);
         }
 
 
@@ -307,13 +316,13 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
     }
 
-    private static boolean ignoreDataByOwnership(final User u, final Point point, boolean ignored) {
-        //extra safety check to make sure user isn't writing to someone else's point
-        if (u.getId() != point.getUserFK()) {
-            ignored = true;
-        }
-        return ignored;
-    }
+//    private static boolean ignoreDataByOwnership(final User u, final Point point, boolean ignored) {
+//        //extra safety check to make sure user isn't writing to someone else's point
+//        if (u.getId() != point.getUserFK()) {
+//            ignored = true;
+//        }
+//        return ignored;
+//    }
 
     private static boolean ignoreDataByExpirationDate(final Point point, final Value value, boolean ignored) {
         if (point.getExpire() > 0) {

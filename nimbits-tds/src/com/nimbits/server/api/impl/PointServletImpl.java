@@ -40,7 +40,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-import java.util.UUID;
 
 
 public class PointServletImpl extends ApiServlet {
@@ -135,12 +134,12 @@ public class PointServletImpl extends ApiServlet {
             if (! containsParam(Parameters.uuid)) {
                 getPointObjects(getParam(Parameters.category), pointNameParam, out);
             } else {
-                final Point point = PointServiceFactory.getInstance().getPointByUUID(getParam(Parameters.uuid));
+                final Point point = PointServiceFactory.getInstance().getPointByKey(getParam(Parameters.uuid));
                 if (point != null) {
                     outputPoint(getParam(Parameters.count), getParam(Parameters.format), startParam, endParam, offsetParam, out, point);
                 }
                 else {
-                    final Entity category = EntityServiceFactory.getInstance().getEntityByUUID(user, getParam(Parameters.uuid));
+                    final Entity category = EntityServiceFactory.getInstance().getEntityByKey(user, getParam(Parameters.uuid));
 
                     if (category != null) {
                         if (okToReport(user, category)) {
@@ -186,8 +185,9 @@ public class PointServletImpl extends ApiServlet {
         // Category c = CategoryServiceFactory.getInstance().getCategory(u, categoryName);
 
         Entity c = EntityServiceFactory.getInstance().getEntityByName(u, categoryName);
+
         if (c == null) {
-            c = EntityServiceFactory.getInstance().getEntityByName(u, u.getName());
+            c = EntityServiceFactory.getInstance().getEntityByName(u,  CommonFactoryLocator.getInstance().createName(u.getEmail().getValue(), EntityType.user));
         }
 
 
@@ -201,14 +201,14 @@ public class PointServletImpl extends ApiServlet {
         final String parent;
         if (categoryName != null) {
             category = getCategoryWithParam(categoryName, u);
-            parent = category.getEntity();
+            parent = category.getKey();
         }
         else {
-            parent = u.getUuid();
+            parent = u.getKey();
         }
 
-        entity = EntityModelFactory.createEntity(pointName,"", EntityType.point, ProtectionLevel.everyone, UUID.randomUUID().toString(),
-                parent, u.getUuid() );
+        entity = EntityModelFactory.createEntity(pointName,"", EntityType.point, ProtectionLevel.everyone,
+                parent, u.getKey(), "" );
 
         retObj = PointServiceFactory.getInstance().addPoint(u, entity);
 
@@ -223,24 +223,23 @@ public class PointServletImpl extends ApiServlet {
         if (categoryName != null) {
             final Entity category = getCategoryWithParam(categoryName, u);
             if (category != null) {
-                parent = category.getEntity();
+                parent = category.getKey();
             }
             else {
-                parent = u.getUuid();
+                parent = u.getKey();
             }
 
         }
         else {
-            parent = u.getUuid();
+            parent = u.getKey();
         }
 
 
         final Point point = gson.fromJson(json, PointModel.class);
 
         final Entity entity = EntityModelFactory.createEntity(name,"", EntityType.point,
-                ProtectionLevel.everyone, UUID.randomUUID().toString(),
-                parent, u.getUuid() );
-        point.setUserFK(u.getId());
+                ProtectionLevel.everyone,
+                parent, u.getKey() );
 
         return PointServiceFactory.getInstance().addPoint(u, entity, point);
 
@@ -334,7 +333,7 @@ public class PointServletImpl extends ApiServlet {
                 final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
                 final Entity e = EntityServiceFactory.getInstance().getEntityByName(user, pointName);
                 if (e != null) {
-                    final Point p= PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
+                    final Point p= PointServiceFactory.getInstance().getPointByKey(e.getKey());
                     result = gson.toJson(p);
                     out.println(result);
                 }

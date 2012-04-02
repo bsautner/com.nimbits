@@ -14,7 +14,7 @@
 package com.nimbits.server.subscription;
 
 import com.nimbits.client.model.user.User;
-import com.nimbits.server.dao.subscription.SubscriptionDaoImpl;
+import com.nimbits.server.transactions.dao.subscription.SubscriptionDaoImpl;
 
 /**
  * Created by Benjamin Sautner

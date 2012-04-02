@@ -36,7 +36,10 @@ import com.nimbits.server.task.TaskFactory;
 import com.nimbits.server.user.UserServiceFactory;
 import com.nimbits.server.value.RecordedValueServiceFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class PointServiceImpl extends RemoteServiceServlet implements
         PointService {
@@ -53,16 +56,16 @@ public class PointServiceImpl extends RemoteServiceServlet implements
         }
         return u;
     }
-
+//
     @Override
     public Entity copyPoint(User u, Entity originalEntity, EntityName newName) throws NimbitsException {
-        final Point storedPoint = PointServiceFactory.getInstance().getPointByUUID(originalEntity.getEntity());
+        final Point storedPoint = PointServiceFactory.getInstance().getPointByKey(originalEntity.getKey());
         final Point newPoint = PointModelFactory.createPointModel(storedPoint);
-        final String newUUID = UUID.randomUUID().toString();
-        newPoint.setUuid(newUUID);
+
+
         final Entity newEntity = EntityModelFactory.createEntity(u, originalEntity);
         newEntity.setName(newName);
-        newEntity.setEntity(newUUID);
+
         addPoint(u, newEntity, newPoint);
         return newEntity;
     }
@@ -77,7 +80,7 @@ public class PointServiceImpl extends RemoteServiceServlet implements
         for (Point p : points) {
             v  = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
             p.setValue(v);
-            retObj.put(p.getUUID(), p);
+            retObj.put(p.getKey(), p);
         }
         return retObj;
 
@@ -99,11 +102,7 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     @Override
     public Point updatePoint(final User u, final Point point) throws NimbitsException {
 
-        Point result = PointTransactionsFactory.getInstance(u).updatePoint(point);
-        if (result != null) {
-            TaskFactory.getInstance().startPointMaintTask(result);
-        }
-        return result;
+        return PointTransactionsFactory.getInstance(u).updatePoint(point);
     }
 
 
@@ -115,16 +114,16 @@ public class PointServiceImpl extends RemoteServiceServlet implements
         return newPoint;
     }
 
-    private void notifyFeedOfNewPoint(User user, Entity entity) throws NimbitsException {
+    private static void notifyFeedOfNewPoint(final User user, final Entity entity) throws NimbitsException {
         FeedServiceFactory.getInstance().postToFeed(user, "A new data point named " + entity.getName().getValue() +
         " has been created.", FeedType.info);
     }
 
     @Override
-    public Point addPoint(User user, Entity entity, Point point) throws NimbitsException {
-        EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
+    public Point addPoint(final User user, final Entity entity, final Point point) throws NimbitsException {
+        Entity result =  EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
         notifyFeedOfNewPoint(user, entity);
-        return PointTransactionsFactory.getInstance(user).addPoint(entity, point);
+        return PointTransactionsFactory.getInstance(user).addPoint(result, point);
     }
 
     @Override
@@ -132,43 +131,43 @@ public class PointServiceImpl extends RemoteServiceServlet implements
         User u = getUser();
 
         Entity r = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.everyone,
-                UUID.randomUUID().toString(), u.getUuid(), u.getUuid());
+               u.getKey(), u.getKey());
         return addPoint(u, r);
 
 
     }
 
+//    @Override
+//    public Point getPointByID(final long id) throws NimbitsException {
+//        final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
+//                this.getThreadLocalRequest());
+//        return getPointByID(u, id);
+//    }
+
+//
+//    public List<Point> getPoints() throws NimbitsException {
+//
+//        final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
+//                this.getThreadLocalRequest());
+//        return getPoints(u);
+//
+//    }
+
     @Override
-    public Point getPointByID(final long id) throws NimbitsException {
-        final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
-                this.getThreadLocalRequest());
-        return getPointByID(u, id);
-    }
-
-
-    public List<Point> getPoints() throws NimbitsException {
-
-        final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
-                this.getThreadLocalRequest());
-        return getPoints(u);
-
-    }
-
-    @Override
-    public List<Point> getPoints(User u, List<Entity> entities) {
+    public List<Point> getPoints(final User u, final List<Entity> entities) {
         return PointTransactionsFactory.getInstance(u).getPoints(entities);
     }
-    //End RPC Calls
+//    //End RPC Calls
+//
+//    public List<Point> getPoints(final User u) throws NimbitsException {
+//        return PointTransactionsFactory.getInstance(u).getPoints();
+//    }
 
-    public List<Point> getPoints(final User u) throws NimbitsException {
-        return PointTransactionsFactory.getInstance(u).getPoints();
-    }
 
-
-    @Override
-    public Point getPointByID(final User u, final long id) throws NimbitsException {
-        return PointTransactionsFactory.getInstance(u).getPointByID(id);
-    }
+//    @Override
+//    public Point getPointByID(final User u, final long id) throws NimbitsException {
+//        return PointTransactionsFactory.getInstance(u).getPointByID(id);
+//    }
 
 
     @Override
@@ -199,21 +198,21 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public Point getPointByUUID(final String uuid)  {
-        return PointTransactionsFactory.getInstance(null).getPointByUUID(uuid);
+    public Point getPointByKey(final String uuid)  {
+        return PointTransactionsFactory.getInstance(null).getPointByKey(uuid);
     }
 
-    @Override
-    public List<Point> getAllPoints(int start, int end) {
-        return PointTransactionsFactory.getInstance(null).getAllPoints(start, end);
-    }
-
-    @Override
-    public List<Point> getAllPoints() {
-        return PointTransactionsFactory.getInstance(null).getAllPoints();
-    }
-
-
+//    @Override
+//    public List<Point> getAllPoints(int start, int end) {
+//        return PointTransactionsFactory.getInstance(null).getAllPoints(start, end);
+//    }
+//
+//    @Override
+//    public List<Point> getAllPoints() {
+//        return PointTransactionsFactory.getInstance(null).getAllPoints();
+//    }
+//
+//
     @Override
     public List<Point> getIdlePoints() {
         return PointTransactionsFactory.getInstance(null).getIdlePoints();

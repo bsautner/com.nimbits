@@ -200,7 +200,7 @@ class NavigationPanel extends NavigationEventProvider {
         if (! target.getOwner().equals(draggedEntity.getOwner())) {
 
         EntityServiceAsync service = GWT.create(EntityService.class);
-        draggedEntity.setParent(target.getEntity());
+        draggedEntity.setParent(target.getKey());
 
         service.addUpdateEntity(draggedEntity, new AsyncCallback<Entity>() {
             @Override
@@ -220,10 +220,10 @@ class NavigationPanel extends NavigationEventProvider {
 
 
         for (final Entity entity : result) {
-            if (! entity.getEntityType().equals(EntityType.user)) {// entity.getEntity().equals(this.user.getUuid()) ) {
+            if (! entity.getEntityType().equals(EntityType.user)) {// entity.getEntity().equals(this.user.getKey()) ) {
                 if (entity.getParent().equals(model.getUUID())) {
                     GxtModel model2 = new GxtModel(entity);
-                    if (parents.contains(entity.getEntity()) && ! entity.getEntityType().equals(EntityType.user)) {
+                    if (parents.contains(entity.getKey()) && ! entity.getEntityType().equals(EntityType.user)) {
                         addChildrenToModel(result, parents, model2);
                     }
 
@@ -259,7 +259,7 @@ class NavigationPanel extends NavigationEventProvider {
 
         if (tree != null && tree.getStore() != null) {
 
-            final ModelData mx = tree.getTreeStore().findModel(Parameters.id.getText(), model.getBaseEntity().getEntity());
+            final ModelData mx = tree.getTreeStore().findModel(Parameters.id.getText(), model.getBaseEntity().getKey());
             if (mx != null) {
                 final GxtModel m = (GxtModel)mx;
                 m.update(model.getBaseEntity());
@@ -284,7 +284,7 @@ class NavigationPanel extends NavigationEventProvider {
         if (tree != null && tree.getStore() != null) {
 
 
-            GxtModel m = (GxtModel) tree.getTreeStore().findModel(Parameters.id.getText(), currentModel.getBaseEntity().getEntity());
+            GxtModel m = (GxtModel) tree.getTreeStore().findModel(Parameters.id.getText(), currentModel.getBaseEntity().getKey());
             tree.getTreeStore().remove(m);
 
         }

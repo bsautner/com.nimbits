@@ -14,11 +14,8 @@
 package com.nimbits.client.model.user;
 
 
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.EntityName;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -29,7 +26,7 @@ import java.util.Date;
 
 public class UserModel implements Serializable, User {
 
-    private long id;
+    private String key;
 
     private Date dateCreated;
 
@@ -39,21 +36,13 @@ public class UserModel implements Serializable, User {
 
     private String facebookToken;
 
-    private String host;
-
     private String secret;
 
     private String twitterToken;
 
     private String twitterTokenSecret;
 
-    private String userSource;
-
-    private String uuid;
-
     private boolean restricted;
-
-    private boolean sendEmail;
 
     private long facebookID;
 
@@ -66,63 +55,25 @@ public class UserModel implements Serializable, User {
     public UserModel() {
     }
 
-    public UserModel(final long id) {
-        this.id = id;
-    }
+
 
     public UserModel(final User u) {
-        this.id = u.getId();
+        this.key = u.getKey();
         this.dateCreated = u.getDateCreated();
         this.lastLoggedIn = u.getLastLoggedIn();
-        this.sendEmail = u.getSendEmail();
-        this.host = u.getHost();
-        this.uuid = u.getUuid();
         this.secret = u.getSecret();
-
-
         this.restricted = u.isRestricted();
         this.emailAddress = u.getEmail().getValue();
         this.facebookToken = u.getFacebookToken();
-        this.userSource = u.getUserSource();
         this.twitterToken = u.getTwitterToken();
         this.twitterTokenSecret = u.getTwitterTokenSecret();
         this.facebookID = u.getFacebookID();
     }
 
-//    public UserModel(final EmailAddress email, final String uuid) {
-//        this.dateCreated = new Date();
-//        this.email = email.getValue();
-//        this.sendEmail = true;
-//        this.uuid = uuid;
-//
-//    }
 
     @Override
-    public void setEmail(final EmailAddress email) {
-        this.emailAddress = email.getValue();
-        // case
-    }
-
-
-
-    @Override
-    public boolean getSendEmail() {
-        return sendEmail;
-    }
-
-    @Override
-    public void setSendEmail(final boolean sendEmail) {
-        this.sendEmail = sendEmail;
-    }
-
-    @Override
-    public long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(final long id) {
-        this.id = id;
+    public String getKey() {
+        return this.key;
     }
 
     @Override
@@ -140,20 +91,6 @@ public class UserModel implements Serializable, User {
         this.lastLoggedIn = new Date(lastLoggedIn.getTime());
     }
 
-    @Override
-    public void setDateCreated(final Date dateCreated) {
-        this.dateCreated = new Date(dateCreated.getTime());
-    }
-
-    @Override
-    public String getUserSource() {
-        return userSource;
-    }
-
-    @Override
-    public void setUserSource(final String userSource) {
-        this.userSource = userSource;
-    }
 
     @Override
     public String getTwitterTokenSecret() {
@@ -196,26 +133,6 @@ public class UserModel implements Serializable, User {
     }
 
     @Override
-    public String getUuid() {
-        return uuid;
-    }
-
-    @Override
-    public void setUuid(final String uuid) {
-        this.uuid = uuid;
-    }
-
-    @Override
-    public String getHost() {
-        return host;
-    }
-
-    @Override
-    public void setHost(final String host) {
-        this.host = host;
-    }
-
-    @Override
     public String getSecret() {
         return secret;
     }
@@ -230,10 +147,7 @@ public class UserModel implements Serializable, User {
         return restricted;
     }
 
-    @Override
-    public EntityName getName() throws NimbitsException {
-      return CommonFactoryLocator.getInstance().createName(this.emailAddress, EntityType.user);
-    }
+
 
     @Override
     public void setRestricted(final boolean restricted) {

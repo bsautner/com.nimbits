@@ -43,8 +43,6 @@ import org.junit.Before;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import java.util.UUID;
-
 /**
  * Created by Benjamin Sautner
  * User: bsautner
@@ -77,7 +75,9 @@ public class NimbitsServletTest {
     public UserTransactions userTransactionsDao;
     public SettingTransactions settingsDAO;
     public Point point;
+    public Point pointChild;
     public Entity pointEntity;
+    public Entity pointChildEntity;
 
 
 
@@ -106,14 +106,14 @@ public class NimbitsServletTest {
         req.addParameter(Parameters.point.getText(), pointName.getValue());
         req.addParameter(Parameters.value.getText(), "1.234");
 
-        Entity c = EntityModelFactory.createEntity(groupName, "", EntityType.category, ProtectionLevel.everyone, UUID.randomUUID().toString(), user.getUuid(), user.getUuid());
+        Entity c = EntityModelFactory.createEntity(groupName, "", EntityType.category, ProtectionLevel.everyone, user.getKey(), user.getKey());
         c = EntityServiceFactory.getInstance().addUpdateEntity(c);
 
-        pointEntity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone, UUID.randomUUID().toString(), c.getEntity(), user.getUuid());
+        pointEntity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone,  c.getKey(), user.getKey());
         point = pointService.addPoint(user, pointEntity);
 
-        Entity e2 = EntityModelFactory.createEntity(pointChildName, "", EntityType.point, ProtectionLevel.everyone, UUID.randomUUID().toString(),pointEntity.getEntity(), user.getUuid());
-        pointService.addPoint(user, e2);
+        pointChildEntity = EntityModelFactory.createEntity(pointChildName, "", EntityType.point, ProtectionLevel.everyone, point.getKey(), user.getKey());
+       pointChild =  pointService.addPoint(user, pointChildEntity);
 
 
     }

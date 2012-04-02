@@ -25,7 +25,7 @@ import java.io.Serializable;
  */
 public abstract class CommonIdentifierImpl implements CommonIdentifier, Serializable{
 
-    private final String value;
+    private String value;
 
     protected CommonIdentifierImpl(final String value) {
         this.value = value;
@@ -47,11 +47,11 @@ public abstract class CommonIdentifierImpl implements CommonIdentifier, Serializ
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (!(o instanceof CommonIdentifierImpl)) return false;
 
-        CommonIdentifierImpl that = (CommonIdentifierImpl) o;
+        final CommonIdentifierImpl that = (CommonIdentifierImpl) o;
 
         return value.equals(that.value);
 

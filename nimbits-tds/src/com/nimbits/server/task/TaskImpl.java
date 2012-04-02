@@ -25,6 +25,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.transactions.orm.legacy.DataPoint;
 import com.nimbits.server.user.UserServiceFactory;
 
 import javax.servlet.http.HttpServletRequest;
@@ -169,18 +170,18 @@ public class TaskImpl implements Task {
     }
 
     @Override
-    public void startPointMaintTask(final Point point) {
+    public void startPointMaintTask(final Entity e) {
 
         try {
-        final String json = gson.toJson(point);
+        final String json = gson.toJson(e);
 
         final Queue queue =  QueueFactory.getQueue(overrideQueue ? DEFAULT : TASK_POINT_MAINT);
 
         queue.add(TaskOptions.Builder.withUrl(PATH_POINT_MAINT_TASK)
-                .param(Parameters.point.getText(), json));
+                .param(Parameters.json.getText(), json));
         } catch (IllegalStateException ex) {
             overrideQueue = true;
-            startPointMaintTask(point);
+            startPointMaintTask(e);
         }
 
     }
@@ -199,21 +200,28 @@ public class TaskImpl implements Task {
 //    }
 
     @Override
-    public void startUpgradeTask(final Action action,final  Entity entity) {
+    public void startUpgradeTask(final Action action,final  Entity entity, final DataPoint legacyPoint) {
 
         try {
         final Queue queue =  QueueFactory.getQueue(DEFAULT);
         String json = "";
+        String p = "";
         if (entity != null) {
             json = GsonFactory.getInstance().toJson(entity);
         }
+        if (legacyPoint!= null) {
+            p = GsonFactory.getInstance().toJson(legacyPoint);
+        }
+
+
         queue.add(TaskOptions.Builder.withUrl(PATH_UPGRADE_TASK)
                 .param(Parameters.json.getText(), json)
+                .param((Parameters.point.getText()), p)
                 .param(Parameters.action.getText(), action.getCode()));
         }
         catch (IllegalStateException ex) {
             overrideQueue = true;
-            startUpgradeTask(action, entity);
+            startUpgradeTask(action, entity, legacyPoint);
         }
 
     }

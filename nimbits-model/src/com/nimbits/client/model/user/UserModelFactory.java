@@ -17,9 +17,6 @@ import java.util.Set;
  * Time: 4:10 PM
  */
 public class UserModelFactory {
-    public static User createUserModel(final long id) {
-        return new UserModel(id);
-    }
 
     public static List<User> createUserModels(final List<User> users) {
         List<User> retObj = new ArrayList<User>();

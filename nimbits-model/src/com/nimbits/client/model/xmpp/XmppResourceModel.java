@@ -11,7 +11,7 @@ public class XmppResourceModel implements XmppResource {
     private String entity;
 
     public XmppResourceModel(XmppResource resource) {
-        this.uuid = resource.getUuid();
+        this.uuid = resource.getKey();
         this.entity = resource.getEntity();
     }
     public XmppResourceModel(String uuid, String entity) {
@@ -20,7 +20,7 @@ public class XmppResourceModel implements XmppResource {
     }
 
     @Override
-    public String getUuid() {
+    public String getKey() {
         return uuid;
     }
 

@@ -66,7 +66,7 @@ public class SummaryTask  extends HttpServlet {
         final Date now = new Date();
         final long d = new Date().getTime() - summary.getSummaryIntervalMs();
         if (summary.getLastProcessed().getTime() < d) {
-            final Point source = PointServiceFactory.getInstance().getPointByUUID(summary.getEntity());
+            final Point source = PointServiceFactory.getInstance().getPointByKey(summary.getEntity());
             final Timespan span = TimespanModelFactory.createTimespan(new Date(now.getTime() - summary.getSummaryIntervalMs()), now);
             final List<Value> values;
             try {
@@ -78,7 +78,7 @@ public class SummaryTask  extends HttpServlet {
                 }
                 if (values.size() > 0) {
                     // final Entity targetEntity = EntityServiceFactory.getInstance().getEntityByUUID(summary.getTargetPointUUID());
-                    final Point target = PointServiceFactory.getInstance().getPointByUUID(summary.getTargetPointUUID());
+                    final Point target = PointServiceFactory.getInstance().getPointByKey(summary.getTargetPointUUID());
                     final double result = getValue(summary.getSummaryType(), doubles);
                     final Value value = ValueModelFactory.createValueModel(result);
 

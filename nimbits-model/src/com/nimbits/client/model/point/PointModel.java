@@ -15,11 +15,11 @@ package com.nimbits.client.model.point;
 
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.FilterType;
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.value.Value;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
@@ -28,16 +28,7 @@ public class PointModel implements Serializable, Point {
 
     private int entityType = EntityType.point.getCode();
 
-    private long id;
-
-    private String uuid;
-
-    private long lastChecked;
-
-    private long createDate;
-
-    private long userFK;
-
+    private String key;
 
     private double highAlarm = 0.0;
 
@@ -51,8 +42,6 @@ public class PointModel implements Serializable, Point {
 
     private boolean lowAlarmOn;
 
-    private String tag;
-
     private boolean idleAlarmOn;
 
     private Integer idleSeconds = 0;
@@ -65,30 +54,24 @@ public class PointModel implements Serializable, Point {
     private double filterValue;
 
 
-    public PointModel(final String uuid) {
-        this.uuid = uuid;
+    public PointModel(final Entity key) {
+       this.key = key.getKey();
     }
 
     // Constructors
     public PointModel(final Point point) {
-        this.id = point.getId();
-        this.uuid = point.getUUID();
-        this.lastChecked = point.getLastChecked().getTime();
-        this.userFK = point.getUserFK();
-        this.createDate = point.getCreateDate().getTime();
+
         this.highAlarm = point.getHighAlarm();
         this.expire = point.getExpire();
         this.unit = point.getUnit();
-
+        this.key = point.getKey();
         this.lowAlarm = point.getLowAlarm();
         this.highAlarmOn = point.isHighAlarmOn();
         this.lowAlarmOn = point.isLowAlarmOn();
-        this.tag = point.getTag();
         this.idleAlarmOn = point.isIdleAlarmOn();
         this.idleSeconds = point.getIdleSeconds();
         this.idleAlarmSent = point.getIdleAlarmSent();
 
-        this.targetValue = point.getTargetValue();
         this.values = point.getValues();
         this.value = point.getValue();
         this.filterType = point.getFilterType().getCode();
@@ -100,20 +83,9 @@ public class PointModel implements Serializable, Point {
     }
 
 
-    // End Constructors
-
-    private double targetValue;
-
     private List<Value> values;
 
     private Value value;
-
-
-
-    @Override
-    public Date getCreateDate() {
-        return new Date(this.createDate);
-    }
 
 
 
@@ -127,28 +99,11 @@ public class PointModel implements Serializable, Point {
         return highAlarm;
     }
 
-    @Override
-    public long getId() {
-        return id;
-    }
-
-    @Override
-    public Date getLastChecked() {
-
-        return new Date(lastChecked);
-    }
-
-    @Override
+     @Override
     public double getLowAlarm() {
         return lowAlarm;
     }
 
-
-
-    @Override
-    public String getTag() {
-        return tag;
-    }
 
     @Override
     public String getUnit() {
@@ -156,17 +111,7 @@ public class PointModel implements Serializable, Point {
     }
 
 
-    @Override
-    public long getUserFK() {
-        return userFK;
-    }
-
-    @Override
-    public String getUUID() {
-        return uuid;
-    }
-
-    @Override
+   @Override
     public Value getValue() {
         return value;
     }
@@ -192,12 +137,6 @@ public class PointModel implements Serializable, Point {
         return lowAlarmOn;
     }
 
-
-    @Override
-    public void setCreateDate(final Date createDate) {
-        this.createDate = createDate.getTime();
-    }
-
     @Override
     public void setExpire(final int expire) {
         this.expire = expire;
@@ -213,13 +152,6 @@ public class PointModel implements Serializable, Point {
         this.highAlarmOn = highAlarmOn;
     }
 
-
-
-    @Override
-    public void setLastChecked(final Date lastChecked) {
-        this.lastChecked = lastChecked.getTime();
-    }
-
     @Override
     public void setLowAlarm(final double lowAlarm) {
         this.lowAlarm = lowAlarm;
@@ -231,23 +163,8 @@ public class PointModel implements Serializable, Point {
     }
 
     @Override
-    public void setTag(final String tag) {
-        this.tag = tag;
-    }
-
-    @Override
     public void setUnit(final String unit) {
         this.unit = unit;
-    }
-
-    @Override
-    public void setUserFK(final long userFK) {
-        this.userFK = userFK;
-    }
-
-    @Override
-    public void setUuid(final String uuid) {
-        this.uuid = uuid;
     }
 
     @Override
@@ -279,21 +196,6 @@ public class PointModel implements Serializable, Point {
     public void setFilterValue(final double value) {
       this.filterValue = value;
     }
-
-
-    @Override
-    public void setTargetValue(final double targetValue) {
-        this.targetValue = targetValue;
-    }
-
-    @Override
-    public double getTargetValue() {
-
-        return targetValue;
-    }
-
-
-
 
     @Override
     public boolean isIdleAlarmOn() {
@@ -329,7 +231,8 @@ public class PointModel implements Serializable, Point {
     public EntityType getEntityType() {
         return EntityType.get(this.entityType);
     }
-
-
-
+    @Override
+    public String getKey() {
+        return key;
+    }
 }

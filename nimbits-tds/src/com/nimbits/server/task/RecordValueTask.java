@@ -51,7 +51,7 @@ public class RecordValueTask extends HttpServlet {
         final User u = gson.fromJson(userJson, UserModel.class);
 
             if (!loopFlag) {
-
+                //todo - these service calls need their memcache trans classes
                 try {
                     CalculationServiceFactory.getInstance().processCalculations(u, point, value);
                     IntelligenceServiceFactory.getInstance().processIntelligence(u, point);

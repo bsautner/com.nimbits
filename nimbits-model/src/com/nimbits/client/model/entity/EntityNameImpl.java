@@ -25,7 +25,7 @@ import java.io.Serializable;
  */
 public class EntityNameImpl extends CommonIdentifierImpl implements EntityName, Serializable {
 
-    public EntityNameImpl(String value) {
+    public EntityNameImpl(final String value) {
         super(value);
     }
 

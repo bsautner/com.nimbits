@@ -26,7 +26,7 @@ public class SubscriptionModel implements Serializable, Subscription  {
     }
 
     public SubscriptionModel(Subscription subscription) {
-        this.uuid = subscription.getUuid();
+        this.uuid = subscription.getKey();
         this.subscribedEntity = subscription.getSubscribedEntity();
         this.notifyMethod = subscription.getNotifyMethod().getCode();
         this.subscriptionType = subscription.getSubscriptionType().getCode();
@@ -100,7 +100,7 @@ public class SubscriptionModel implements Serializable, Subscription  {
         this.subscriptionType = subscriptionType.getCode();
     }
     @Override
-    public String getUuid() {
+    public String getKey() {
         return this.uuid;
     }
 

@@ -16,7 +16,7 @@ public interface EntityDescription extends Serializable {
 
     Server getServer();
 
-    String getUuid();
+    String getKey();
 
     String getName();
 

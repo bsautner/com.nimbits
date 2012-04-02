@@ -93,14 +93,14 @@ public class EntityDescriptionServletImpl extends HttpServlet {
                         String r = GsonFactory.getInstance().toJson(retObj);
                         out.println(r);
                     } else {
-                        out.println("deleting : " + entityDescription.getUuid());
-                        EntityJPATransactionFactory.getInstance().deleteEntityDescriptionByUUID(entityDescription.getUuid());
+                        out.println("deleting : " + entityDescription.getKey());
+                        EntityJPATransactionFactory.getInstance().deleteEntityDescriptionByUUID(entityDescription.getKey());
                     }
 
 
                 }
             } else if (action.equals(Action.delete.name()) && entityDescription != null) {
-                EntityJPATransactionFactory.getInstance().deleteEntityDescriptionByUUID(entityDescription.getUuid());
+                EntityJPATransactionFactory.getInstance().deleteEntityDescriptionByUUID(entityDescription.getKey());
 
 
             }

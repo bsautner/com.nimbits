@@ -29,7 +29,7 @@ import java.util.List;
  */
 public interface PointTransactions {
 
-    List<Point> getPoints() throws NimbitsException;
+    //List<Point> getPoints() throws NimbitsException;
 
     Point getPointByID(final long id) throws NimbitsException;
 
@@ -43,7 +43,7 @@ public interface PointTransactions {
 
     List<Point> getIdlePoints();
 
-    Point getPointByUUID(final String uuid);
+    Point getPointByKey(final String uuid);
 
     List<Point> getAllPoints();
 

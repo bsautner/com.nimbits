@@ -16,10 +16,7 @@ package com.nimbits.server.api.impl;
 import com.nimbits.client.common.Utils;
 import com.nimbits.client.constants.UserMessages;
 import com.nimbits.client.constants.Words;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ExportType;
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
@@ -71,7 +68,7 @@ public class ValueServletImpl extends ApiServlet {
             final Entity e = EntityServiceFactory.getInstance().getEntityByName(user, pointName);
 
             if (e != null) {
-                final Point point = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
+                final Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
 
 
                 if (point != null) {
@@ -82,13 +79,13 @@ public class ValueServletImpl extends ApiServlet {
                         final Value vx = GsonFactory.getInstance().fromJson(getParam(Parameters.json), ValueModel.class);
 
                         v = ValueModelFactory.createValueModel(vx.getLatitude(), vx.getLongitude(), vx.getDoubleValue(), vx.getTimestamp(),
-                                point.getUUID(), vx.getNote(), vx.getData());
+                                vx.getNote(), vx.getData(), AlertType.OK);
                     } else {
                         final double latitude = getDoubleFromParam(getParam(Parameters.lat));
                         final double longitude = getDoubleFromParam(getParam(Parameters.lng));
                         final double value = getDoubleFromParam(getParam(Parameters.value));
                         final Date timestamp = (getParam(Parameters.timestamp) != null) ? (new Date(Long.parseLong(getParam(Parameters.timestamp)))) : new Date();
-                        v = ValueModelFactory.createValueModel(latitude, longitude, value, timestamp, point.getUUID(), getParam(Parameters.note), getParam(Parameters.json));
+                        v = ValueModelFactory.createValueModel(latitude, longitude, value, timestamp, getParam(Parameters.note), getParam(Parameters.json));
                     }
 
                     final Value result = RecordedValueServiceFactory.getInstance().recordValue(user, point, v, false);
@@ -162,13 +159,13 @@ public class ValueServletImpl extends ApiServlet {
         final String result;
 
         if (!Utils.isEmptyString(uuid)) {
-            p = PointServiceFactory.getInstance().getPointByUUID(uuid);
+            p = PointServiceFactory.getInstance().getPointByKey(uuid);
 
         } else if (!Utils.isEmptyString(pointNameParam)) {
             final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
             final Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
             if (e != null) {
-                p = PointServiceFactory.getInstance().getPointByUUID(e.getEntity());
+                p = PointServiceFactory.getInstance().getPointByKey(e.getKey());
             }
             else {
                 throw new NimbitsException(UserMessages.ERROR_POINT_NOT_FOUND);
@@ -181,7 +178,7 @@ public class ValueServletImpl extends ApiServlet {
 
         if (p != null) {
             final Value value;
-            final Entity e = EntityServiceFactory.getInstance().getEntityByUUID(p.getUUID());
+            final Entity e = EntityServiceFactory.getInstance().getEntityByKey(p.getKey());
 
             if ((u == null || u.isRestricted()) && ! e.getProtectionLevel().equals(ProtectionLevel.everyone)) {
                 throw new NimbitsException(UserMessages.RESPONSE_PROTECTED_POINT);
@@ -191,7 +188,7 @@ public class ValueServletImpl extends ApiServlet {
                     // request
                     final Value newValue = ValueModelFactory.createValueModel(
                             nv.getLatitude(), nv.getLongitude(), nv.getDoubleValue(),
-                            nv.getTimestamp(), p.getUUID(), nv.getNote(), nv.getData());
+                            nv.getTimestamp(), nv.getNote(), nv.getData());
 
 
                     value = RecordedValueServiceFactory.getInstance().recordValue(u, p, newValue, false);

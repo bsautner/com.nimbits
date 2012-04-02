@@ -12,7 +12,7 @@ import java.util.*;
  * Time: 9:59 AM
  */
 public interface Summary  extends Serializable {
-    String getUuid();
+    String getKey();
 
     String getEntity();
 

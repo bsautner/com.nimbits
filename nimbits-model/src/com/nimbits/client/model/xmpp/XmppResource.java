@@ -10,7 +10,7 @@ import java.io.*;
  */
 public interface XmppResource extends Serializable {
 
-    String getUuid();
+    String getKey();
 
     String getEntity();
 }

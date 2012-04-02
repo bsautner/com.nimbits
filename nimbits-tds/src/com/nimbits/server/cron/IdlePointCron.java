@@ -16,9 +16,12 @@ package com.nimbits.server.cron;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.server.entity.EntityServiceFactory;
 import com.nimbits.server.point.PointServiceFactory;
 import com.nimbits.server.subscription.SubscriptionServiceFactory;
 import com.nimbits.server.user.UserTransactionFactory;
@@ -66,10 +69,12 @@ public class IdlePointCron extends HttpServlet {
                 !p.getIdleAlarmSent()) {
 
             p.setIdleAlarmSent(true);
-            final User u = UserTransactionFactory.getInstance().getNimbitsUserByID(p.getUserFK());
+            Entity entity = EntityServiceFactory.getInstance().getEntityByKey(p.getKey());
+
+            final User u = UserTransactionFactory.getInstance().getUserByKey(entity.getOwner());
             PointServiceFactory.getInstance().updatePoint(u, p);
-            v.setAlertType(AlertType.IdleAlert);
-            SubscriptionServiceFactory.getInstance().processSubscriptions(p,v);
+            Value va = ValueModelFactory.createValueModel(v, AlertType.IdleAlert);
+            SubscriptionServiceFactory.getInstance().processSubscriptions(p,va);
 
 
 

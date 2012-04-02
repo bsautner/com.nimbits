@@ -20,7 +20,7 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.user.User;
 import com.nimbits.server.counter.CounterFactory;
-import com.nimbits.server.dao.counter.ShardedCounter;
+import com.nimbits.server.transactions.dao.counter.ShardedCounter;
 import com.nimbits.server.settings.SettingsServiceFactory;
 
 /**

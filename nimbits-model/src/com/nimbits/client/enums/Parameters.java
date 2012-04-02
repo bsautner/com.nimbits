@@ -9,6 +9,7 @@ import java.util.*;
  * Time: 2:18 PM
  */
 public enum Parameters {
+
      action(ParamConstants.PARAM_ACTION),
      autoscale(ParamConstants.PARAM_AUTO_SCALE),
      blobkey(ParamConstants.PARAM_BLOB_KEY),
@@ -112,6 +113,7 @@ public enum Parameters {
     }
 
     private class ParamConstants {
+
        public static final String PARAM_ACTION = "action";
        public static final String PARAM_AUTO_SCALE = "autoscale";
        public static final String PARAM_BLOB_KEY = "blob-key";

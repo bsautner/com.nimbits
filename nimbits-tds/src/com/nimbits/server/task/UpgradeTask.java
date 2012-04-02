@@ -98,13 +98,55 @@ public class UpgradeTask  extends HttpServlet
                 case value:
                     doValue(req);
                     break;
+                case calculation:
+                    doCalc(req);
+                    break;
             }
         } catch (NimbitsException e) {
             clog(e.getMessage());
         }
 
     }
+    protected static void doCalc(final HttpServletRequest req) {
+        final PersistenceManager pm;
+        pm = PMF.get().getPersistenceManager();
 
+        try {
+            final Entity pointEntity = GsonFactory.getInstance().fromJson(req.getParameter(Parameters.json.getText()), EntityModel.class);
+            final User u = UserTransactionFactory.getDAOInstance().getUserByKey(pointEntity.getOwner());
+
+            //  final Query c = pm.newQuery(DataPoint.class);
+            //  c.setFilter("uuid==o");
+            //  c.declareParameters("String o");
+            //  final List<DataPoint> pList = (List<DataPoint>) c.execute(pointEntity.getEntity());
+            final DataPoint legecy =  GsonFactory.getInstance().fromJson(req.getParameter(Parameters.point.getText()), DataPoint.class);
+
+            if (legecy != null) {
+                //  final Point point = pList.get(0);
+                final Point point = PointServiceFactory.getInstance().getPointByKey(pointEntity.getKey());
+                final RecordedValueTransactions old =  RecordedValueTransactionFactory.getLegacyInstance(legecy);
+                final RecordedValueTransactions dao =  RecordedValueTransactionFactory.getDaoInstance(point);
+                final Timespan timespan = TimespanModelFactory.createTimespan(legecy.getCreateDate(), new Date());
+
+                int cx = -1;
+                int seg = 0;
+                while (cx != 0) {
+
+                    final List<Value> values= old.getDataSegment(timespan,seg, seg + 1000 );
+                    cx = values.size();
+                    dao.recordValues(values);
+                    seg += 1000;
+                }
+
+            }
+
+        } catch (NimbitsException e) {
+            log.severe(e.getMessage());
+        } finally {
+            pm.close();
+        }
+
+    }
     private static void clog(final String string) {
         log.info(string);
     }

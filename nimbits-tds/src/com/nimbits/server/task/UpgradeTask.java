@@ -13,7 +13,6 @@
 
 package com.nimbits.server.task;
 
-import com.google.appengine.api.memcache.*;
 import com.nimbits.PMF;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
@@ -29,26 +28,30 @@ import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.timespan.TimespanModelFactory;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.server.entity.*;
+import com.nimbits.server.entity.EntityServiceFactory;
+import com.nimbits.server.entity.EntityTransactionFactory;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.orm.*;
-import com.nimbits.server.orm.PointEntity;
-import com.nimbits.server.orm.UserEntity;
 import com.nimbits.server.point.PointServiceFactory;
 import com.nimbits.server.subscription.SubscriptionTransactionFactory;
-import com.nimbits.server.user.*;
+import com.nimbits.server.user.UserServiceFactory;
+import com.nimbits.server.user.UserTransactionFactory;
 import com.nimbits.server.value.RecordedValueTransactionFactory;
 import com.nimbits.server.value.RecordedValueTransactions;
 import com.nimbits.shared.Utils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
-import javax.jdo.*;
+import javax.jdo.JDOObjectNotFoundException;
+import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 /**
@@ -109,6 +112,7 @@ public class UpgradeTask  extends HttpServlet
         catQuery.setFilter("name != 'System' && name != 'Nimbits_Unsorted'");
         List<PointCatagory> list = (List<PointCatagory>) catQuery.execute();
         HashMap<Long, NimbitsUser> map = new HashMap<Long, NimbitsUser>(2500);
+        HashMap<String, User> umap = new HashMap<String, User>(2500);
         HashMap<EntityName, Entity> emap = new HashMap<EntityName, Entity>(2500);
         NimbitsUser u;
         Entity userEntity;
@@ -126,8 +130,8 @@ public class UpgradeTask  extends HttpServlet
                     }
 
                     if (u != null) {
-                        EntityName email = CommonFactoryLocator.getInstance().createName(u.getEmail().getValue(), EntityType.user);
-                        EntityName name = CommonFactoryLocator.getInstance().createName(c.getName(), EntityType.category);
+                        final EntityName email = CommonFactoryLocator.getInstance().createName(u.getEmail().getValue(), EntityType.user);
+                        final EntityName name = CommonFactoryLocator.getInstance().createName(c.getName(), EntityType.category);
                         clog(email.getValue() + "  " + name.getValue());
 
                         if (emap.containsKey(email)) {
@@ -138,9 +142,19 @@ public class UpgradeTask  extends HttpServlet
                             emap.put(email, userEntity);
                         }
 
-                        ProtectionLevel protectionLevel = c.getProtectionLevel() == null ? ProtectionLevel.onlyMe : ProtectionLevel.get(c.getProtectionLevel());
-                        User user = UserServiceFactory.getInstance().getUserByUUID(userEntity.getKey());
-                        Entity newCat = EntityModelFactory.createEntity(name, "", EntityType.category,protectionLevel,
+                        final ProtectionLevel protectionLevel = c.getProtectionLevel() == null ? ProtectionLevel.onlyMe : ProtectionLevel.get(c.getProtectionLevel());
+                        final User user;
+
+                        if (umap.containsKey(userEntity.getKey())) {
+                            user = umap.get(userEntity.getKey());
+                        }
+                        else {
+                            user = UserServiceFactory.getInstance().getUserByUUID(userEntity.getKey());
+                            umap.put(userEntity.getKey(), user);
+                        }
+
+
+                        final Entity newCat = EntityModelFactory.createEntity(name, "", EntityType.category,protectionLevel,
                                 user.getKey(), user.getKey());
 
                         EntityServiceFactory.getInstance().addUpdateEntity(user, newCat);
@@ -168,8 +182,8 @@ public class UpgradeTask  extends HttpServlet
         final PersistenceManager pm;
         pm = PMF.get().getPersistenceManager();
         final Query q = pm.newQuery(DataPoint.class);
-        int s = Integer.valueOf(req.getParameter("s"));
-        int e = Integer.valueOf(req.getParameter("e"));
+        final int s = Integer.valueOf(req.getParameter("s"));
+        final int e = Integer.valueOf(req.getParameter("e"));
         q.setRange(s, e);
         List<DataPoint> points = (List<DataPoint>) q.execute();
 
@@ -188,91 +202,82 @@ public class UpgradeTask  extends HttpServlet
 
 
                     name = CommonFactoryLocator.getInstance().createName(p.getName(), EntityType.point);
-                    Entity doneEntity;
-                    boolean skip = false;
 
-                    if (! Utils.isEmptyString(p.getTag()) ) {
-                        doneEntity = EntityTransactionFactory.getDaoInstance(null).getEntityByKey(p.getTag());
-                        if (doneEntity != null && doneEntity.getName().getValue().equals(name.getValue())) {
-                            skip = true;
+                    final ProtectionLevel protectionLevel = (p.getPublic() != null && p.getPublic()) ? ProtectionLevel.everyone : ProtectionLevel.onlyMe;
+
+                    cx = getLegCat(pm, p.getCatID());
+                    if (cx != null) {
+                        if (map.containsKey(p.getUserFK())) {
+                            u = map.get(p.getUserFK());
                         }
-                    }
-                    if (! skip) {
-                        final ProtectionLevel protectionLevel = (p.getPublic() != null && p.getPublic()) ? ProtectionLevel.everyone : ProtectionLevel.onlyMe;
+                        else {
+                            u = getLegUser(pm, p.getUserFK());
+                            map.put(p.getUserFK(), u);
+                        }
 
-                        cx = getLegCat(pm, p.getCatID());
-                        if (cx != null) {
-                            if (map.containsKey(p.getUserFK())) {
-                                u = map.get(p.getUserFK());
+                        if (u != null) {
+                            EntityName email = CommonFactoryLocator.getInstance().createName(u.getEmail().getValue(), EntityType.user);
+
+
+
+                            if (umap.containsKey(email)) {
+                                userEntity = umap.get(email);
                             }
                             else {
-                                u = getLegUser(pm, p.getUserFK());
-                                map.put(p.getUserFK(), u);
+                                userEntity = EntityTransactionFactory.getDaoInstance(null).getEntityByName(email);
+                                umap.put(email, userEntity);
                             }
+                            User user = UserServiceFactory.getInstance().getUserByUUID(userEntity.getKey());
+                            String parent;
+                            if (cx.getName().equals(N)) {
+                                parent = userEntity.getKey();
+                            }
+                            else {
+                                final EntityName cname = CommonFactoryLocator.getInstance().createName(cx.getName(), EntityType.category);
 
-                            if (u != null) {
-                                EntityName email = CommonFactoryLocator.getInstance().createName(u.getEmail().getValue(), EntityType.user);
-
-
-
-                                if (umap.containsKey(email)) {
-                                    userEntity = umap.get(email);
+                                final Entity cEntity = EntityTransactionFactory.getDaoInstance(user).getEntityByName(cname);
+                                if (cEntity != null) {
+                                    parent = cEntity.getKey();
                                 }
                                 else {
-                                    userEntity = EntityTransactionFactory.getDaoInstance(null).getEntityByName(email);
-                                    umap.put(email, userEntity);
-                                }
-                                User user = UserServiceFactory.getInstance().getUserByUUID(userEntity.getKey());
-                                String parent;
-                                if (cx.getName().equals(N)) {
+
                                     parent = userEntity.getKey();
                                 }
-                                else {
-                                    final EntityName cname = CommonFactoryLocator.getInstance().createName(cx.getName(), EntityType.category);
 
-                                    Entity cEntity = EntityTransactionFactory.getDaoInstance(user).getEntityByName(cname);
-                                    if (cEntity != null) {
-                                        parent = cEntity.getKey();
-                                    }
-                                    else {
-                                        log.severe(cx.getName() + " was an old category that didn't get converted");
-                                        parent = userEntity.getKey();
-                                    }
-
-                                }
-                                final Entity pointEntity = EntityModelFactory.createEntity(name, p.getDescription(), EntityType.point,
-                                        protectionLevel,  parent, userEntity.getKey());
-                                final Entity newPoint = EntityServiceFactory.getInstance().addUpdateEntity(user, pointEntity);
-
-
-                                log.info("new point: " + email.getValue() + " " + newPoint.getName().getValue());
-                                String key = makePointEntity(p, newPoint);
-                                Transaction tx = pm.currentTransaction();
-                                tx.begin();
-                                p.setTag(key);
-                                tx.commit();
-                                Entity npoint = EntityTransactionFactory.getDaoInstance(user).getEntityByKey(key);
-                                if (npoint != null) {
-                                   // TaskFactory.getInstance().startUpgradeTask(Action.value, npoint, 0, 1000);
-                                }
                             }
+                            final Entity pointEntity = EntityModelFactory.createEntity(name, p.getDescription(), EntityType.point,
+                                    protectionLevel,  parent, userEntity.getKey());
+                            final Entity newPoint = EntityServiceFactory.getInstance().addUpdateEntity(user, pointEntity);
+
+
+                            log.info("new point: " + email.getValue() + " " + newPoint.getName().getValue());
+                            makePointEntity(p, newPoint);
+                           // Transaction tx = pm.currentTransaction();
+                           // tx.begin();
+                           // p.setTag(key);
+                           // tx.commit();
+//                            Entity npoint = EntityTransactionFactory.getDaoInstance(user).getEntityByKey(key);
+//                            if (npoint != null) {
+//                                // TaskFactory.getInstance().startUpgradeTask(Action.value, npoint, 0, 1000);
+//                            }
                         }
+
                     }
 
                 }
-                TaskFactory.getInstance().startUpgradeTask(Action.point,null, s+1000, e+1000);
+                TaskFactory.getInstance().startUpgradeTask(Action.point,null, s+500, e+500);
             }
             else {
                 TaskFactory.getInstance().startUpgradeTask(Action.subscribe,null, 0, 1000);
                 TaskFactory.getInstance().startUpgradeTask(Action.calculation, null, 0, 1000);
                 TaskFactory.getInstance().startUpgradeTask(Action.diagram, null, 0, 1000);
             }
-                } catch (NimbitsException ex) {
-                    if (name != null) {
-                        log.severe("Error caused by " + name );
-                    }
-                    log.severe(ex.getMessage());
-                }
+        } catch (NimbitsException ex) {
+            if (name != null) {
+                log.severe("Error caused by " + name );
+            }
+            log.severe(ex.getMessage());
+        }
 
 
 

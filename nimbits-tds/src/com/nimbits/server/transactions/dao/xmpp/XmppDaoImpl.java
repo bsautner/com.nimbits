@@ -40,13 +40,13 @@ public class XmppDaoImpl implements XmppTransaction {
     public XmppDaoImpl(final User u) {
 
     }
-    public void addResource(final XmppResource resource)  {
+    public void addResource(final Entity entity, final XmppResource resource)  {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
 
         try {
-            final XmppResourceEntity s = new XmppResourceEntity(resource);
+            final XmppResourceEntity s = new XmppResourceEntity(entity, resource);
             pm.makePersistent(s);
 
         }

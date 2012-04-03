@@ -24,6 +24,9 @@ import java.util.Date;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 public class ConnectionRequest implements Connection {
+    @PrimaryKey
+    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+    private Key key;
 
     @Persistent
     private Boolean approved;
@@ -37,10 +40,6 @@ public class ConnectionRequest implements Connection {
     @Persistent
     private Date requestDate;
 
-    @PrimaryKey
-    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    private Key key;
-
     @Persistent
     private String requestorID;
 
@@ -50,8 +49,6 @@ public class ConnectionRequest implements Connection {
     @Persistent
     private String targetEmail;
 
-    @Persistent
-    private String uuid;
 
     public ConnectionRequest() {
     }
@@ -63,8 +60,7 @@ public class ConnectionRequest implements Connection {
         this.requestDate = c.getRequestDate();
         this.approved = c.getApproved();
         this.rejected = c.getRejected();
-        this.uuid = c.getUUID();
-    }
+     }
 
     public ConnectionRequest(final String requestorID, final EmailAddress requestorEmail, final EmailAddress targetEmail, final String uuid) {
         this.requestorID = requestorID;
@@ -73,7 +69,7 @@ public class ConnectionRequest implements Connection {
         this.requestDate = new Date();
         this.approved = false;
         this.rejected = false;
-        this.uuid = uuid;
+
     }
 
     public String getRequestorID() {
@@ -139,11 +135,5 @@ public class ConnectionRequest implements Connection {
         this.rejected = rejected;
     }
 
-    public String getUUID() {
-        return uuid;
-    }
 
-    public void setUUID(String uUID) {
-        uuid = uUID;
-    }
 }

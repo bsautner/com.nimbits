@@ -225,30 +225,28 @@ public class UserDAOImpl implements UserTransactions {
     }
 
     @Override
-    public List<User> updateConnectionRequest(final String uuid, final User requestor, final User acceptor, final boolean accepted) {
+    public List<User> updateConnectionRequest(final String key, final User requestor, final User acceptor, final boolean accepted) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final Query q = pm.newQuery(ConnectionRequest.class, "uuid == u");// && targetEmail==e && rejected != r");
         final List<User> affectedUsers = new ArrayList<User>(1);
 
-        final Map<String, Object> args = new HashMap<String, Object>(1);
-        args.put("u", uuid);
+        final Transaction tx;
 
-        q.declareParameters("String u");//, String e, Boolean r");
-
-        q.setRange(0, 1);
-        final List<ConnectionRequest> data = (List<ConnectionRequest>) q.executeWithMap(args);
-        if (data.size() > 0) {
-            final Transaction tx;
-            tx = pm.currentTransaction();
-            tx.begin();
-            final ConnectionRequest c = data.get(0);
-            c.setRejected(!accepted);
-            c.setApproved(accepted);
-            c.setApprovedDate(new Date());
-            tx.commit();
-
+        try {
+            final ConnectionRequest c =  pm.getObjectById(ConnectionRequest.class, key);
+            if (c!= null) {
+                tx = pm.currentTransaction();
+                tx.begin();
+                c.setRejected(!accepted);
+                c.setApproved(accepted);
+                c.setApprovedDate(new Date());
+                tx.commit();
+            }
+        } finally {
+            pm.close();
         }
-        pm.close();
+
+
+
         return affectedUsers;
 
     }

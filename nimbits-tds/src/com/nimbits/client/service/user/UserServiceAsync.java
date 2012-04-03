@@ -30,7 +30,7 @@ public interface UserServiceAsync {
 
     void getPendingConnectionRequests(final EmailAddress email, final AsyncCallback<List<Connection>> asyncCallback);
 
-    void connectionRequestReply(final EmailAddress targetEmail, final EmailAddress requestorEmail, final String uuid, final boolean accepted, final AsyncCallback<Void> asyncCallback);
+    void connectionRequestReply(final EmailAddress targetEmail, final EmailAddress requestorEmail, final String key, final boolean accepted, final AsyncCallback<Void> asyncCallback);
 
     void getAppUserUsingGoogleAuth(final AsyncCallback<User> async);
 

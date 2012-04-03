@@ -13,9 +13,9 @@
 
 package com.nimbits.server.orm;
 
-import com.google.appengine.api.datastore.Key;
-import com.nimbits.client.enums.ProtectionLevel;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.nimbits.client.enums.SummaryType;
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.summary.Summary;
 
 import javax.jdo.annotations.*;
@@ -28,15 +28,14 @@ import java.util.Date;
  * Time: 9:49 AM
  */
 
+@SuppressWarnings("unused")
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 public class SummaryEntity implements Summary {
 
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    private com.google.appengine.api.datastore.Key id;
+    private com.google.appengine.api.datastore.Key key;
 
-    @Persistent
-    private String uuid;
 
     @Persistent
     private String entity;
@@ -54,11 +53,11 @@ public class SummaryEntity implements Summary {
     private Date lastProcessed;
 
 
-    public SummaryEntity() {
+    protected SummaryEntity() {
     }
 
-    public SummaryEntity(Summary summary) {
-        this.uuid = summary.getKey();
+    public SummaryEntity(final Entity entity, final Summary summary) {
+        this.key = KeyFactory.createKey(SummaryEntity.class.getSimpleName(), entity.getKey());
         this.entity = summary.getEntity();
         this.targetPointUUID = summary.getTargetPointUUID();
         this.summaryType = summary.getSummaryType().getCode();
@@ -67,31 +66,28 @@ public class SummaryEntity implements Summary {
 
     }
 
-    public SummaryEntity(final String uuid,
-                         final String entity,
-                         final String targetPointUUID,
-                         final SummaryType summaryType,
-                         final Long summaryIntervalMs,
-                         final Date lastProcessed,
-                         final ProtectionLevel protectionLevel) {
+//    public SummaryEntity(final String uuid,
+//                         final String entity,
+//                         final String targetPointUUID,
+//                         final SummaryType summaryType,
+//                         final Long summaryIntervalMs,
+//                         final Date lastProcessed,
+//                         final ProtectionLevel protectionLevel) {
+//
+//        this.uuid = uuid;
+//        this.entity = entity;
+//        this.targetPointUUID = targetPointUUID;
+//        this.summaryType = summaryType.getCode();
+//        this.summaryIntervalMs = summaryIntervalMs;
+//        this.lastProcessed = lastProcessed;
+//
+//    }
 
-        this.uuid = uuid;
-        this.entity = entity;
-        this.targetPointUUID = targetPointUUID;
-        this.summaryType = summaryType.getCode();
-        this.summaryIntervalMs = summaryIntervalMs;
-        this.lastProcessed = lastProcessed;
 
-    }
-
-
-    public Key getId() {
-        return id;
-    }
 
     @Override
     public String getKey() {
-        return uuid;
+        return key.getName();
     }
 
     @Override
@@ -124,15 +120,15 @@ public class SummaryEntity implements Summary {
         return lastProcessed;
     }
 
-    public void setSummaryType(SummaryType summaryType) {
+    public void setSummaryType(final SummaryType summaryType) {
         this.summaryType = summaryType.getCode();
     }
 
-    public void setSummaryIntervalMs(Long summaryIntervalMs) {
+    public void setSummaryIntervalMs(final Long summaryIntervalMs) {
         this.summaryIntervalMs = summaryIntervalMs;
     }
 
-    public void setLastProcessed(Date lastProcessed) {
+    public void setLastProcessed(final Date lastProcessed) {
         this.lastProcessed = lastProcessed;
     }
 }

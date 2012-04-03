@@ -29,6 +29,7 @@ import java.util.List;
 
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
+@Deprecated
 public class NimbitsUser {
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)

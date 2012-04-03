@@ -157,14 +157,14 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
             if (entity.getOwner().equals(user.getKey())) {   //subscribe to your own data
                 Entity s = EntityModelFactory.createEntity(name, "",EntityType.subscription,
                         ProtectionLevel.onlyMe, entity.getKey(), user.getKey());
-                subscription.setUuid(s.getKey());
+
                 SubscriptionTransactionFactory.getInstance(user).subscribe(s, subscription);
                 return  EntityServiceFactory.getInstance().addUpdateEntity(user, s);
             }
             else { //subscribe to some elses data
                 Entity s = EntityModelFactory.createEntity(name, "",EntityType.subscription,
                         ProtectionLevel.onlyMe,  user.getKey(), user.getKey());
-                subscription.setUuid(s.getKey());
+
                 SubscriptionTransactionFactory.getInstance(user).subscribe(s, subscription);
                 return  EntityServiceFactory.getInstance().addUpdateEntity(user, s);
             }

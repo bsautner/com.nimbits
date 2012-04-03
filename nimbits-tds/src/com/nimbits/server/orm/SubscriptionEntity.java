@@ -13,8 +13,10 @@
 
 package com.nimbits.server.orm;
 
+import com.google.appengine.api.datastore.KeyFactory;
 import com.nimbits.client.enums.SubscriptionNotifyMethod;
 import com.nimbits.client.enums.SubscriptionType;
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.subscription.Subscription;
 
 import javax.jdo.annotations.*;
@@ -33,10 +35,7 @@ public class SubscriptionEntity implements Serializable, Subscription {
 
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    private com.google.appengine.api.datastore.Key id;
-
-    @Persistent
-    private String uuid;
+    private com.google.appengine.api.datastore.Key key;
 
     @Persistent
     private String subscribedEntity;
@@ -62,31 +61,26 @@ public class SubscriptionEntity implements Serializable, Subscription {
     public SubscriptionEntity() {
     }
 
-    public SubscriptionEntity(final Subscription subscription) {
+    public SubscriptionEntity(final Entity entity, final Subscription subscription) {
 
         this.notifyMethod = subscription.getNotifyMethod().getCode();
         this.subscriptionType = subscription.getSubscriptionType().getCode();
-        this.uuid = subscription.getKey();
         this.maxRepeat = subscription.getMaxRepeat();
         this.lastSent = subscription.getLastSent();
         this.notifyFormatJson = subscription.getNotifyFormatJson();
         this.enabled = subscription.getEnabled();
         this.subscribedEntity = subscription.getSubscribedEntity();
+        this.key =  KeyFactory.createKey(SubscriptionEntity.class.getSimpleName(), entity.getKey());
     }
 
 
 
     @Override
     public String getKey() {
-      return this.uuid;
+      return key.getName();
     }
 
-    @Override
-    public void setUuid(String uuid) {
-      this.uuid = uuid;
-    }
-
-    @Override
+     @Override
     public double getMaxRepeat() {
         return this.maxRepeat;
     }
@@ -146,4 +140,6 @@ public class SubscriptionEntity implements Serializable, Subscription {
     public void setSubscriptionType(SubscriptionType subscriptionType) {
         this.subscriptionType = subscriptionType.getCode();
     }
+
+
 }

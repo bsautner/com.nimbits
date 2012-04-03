@@ -27,7 +27,6 @@ public class ConnectionRequestModel extends BaseModelData implements Serializabl
     private EmailAddress targetEmail;
     private Date requestDate;
     private Date approvedDate;
-    private String uuid;
     private Boolean approved;
     private Boolean rejected;
     private static final long serialVersionUID = 1L;
@@ -43,7 +42,7 @@ public class ConnectionRequestModel extends BaseModelData implements Serializabl
         this.requestDate = c.getRequestDate();
         this.approved = c.getApproved();
         this.rejected = c.getRejected();
-        this.uuid = c.getUUID();
+
         this.key = c.getKey();
     }
 
@@ -89,15 +88,6 @@ public class ConnectionRequestModel extends BaseModelData implements Serializabl
         this.approvedDate = new Date(approvedDate.getTime());
     }
 
-    @Override
-    public String getUUID() {
-        return uuid;
-    }
-
-    @Override
-    public void setUUID(String uUID) {
-        uuid = uUID;
-    }
 
     @Override
     public Boolean getApproved() {

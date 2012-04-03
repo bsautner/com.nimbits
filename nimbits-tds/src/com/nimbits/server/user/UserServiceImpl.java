@@ -280,7 +280,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     @Override
     public void connectionRequestReply(final EmailAddress targetEmail,
                                        final EmailAddress requesterEmail,
-                                       final String uuid,
+                                       final String key,
                                        final boolean accepted) throws NimbitsException {
         final User acceptor = getAppUserUsingGoogleAuth();
 
@@ -295,7 +295,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         EntityServiceFactory.getInstance().addUpdateEntity(acceptor, aConnection);
         EntityServiceFactory.getInstance().addUpdateEntity(requester,rConnection);
 
-        UserTransactionFactory.getInstance().updateConnectionRequest(uuid, requester, acceptor, accepted);
+        UserTransactionFactory.getInstance().updateConnectionRequest(key, requester, acceptor, accepted);
 
 
     }

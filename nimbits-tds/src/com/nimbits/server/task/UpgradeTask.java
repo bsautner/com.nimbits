@@ -51,7 +51,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 /**
@@ -573,7 +572,6 @@ public class UpgradeTask  extends HttpServlet
                 type, method, delay,
                 new Date(), legacy.getSendAlertsAsJson(), enabled);
 
-        subscription.setUuid(UUID.randomUUID().toString());
 
         Entity entity = EntityModelFactory.createEntity(name, "",EntityType.subscription,
                 ProtectionLevel.onlyMe,subscription.getKey(), p.getKey(), u.getKey());

@@ -103,7 +103,7 @@ public class XmppServiceImpl extends RemoteServiceServlet implements XMPPService
                     targetPointEntity.getKey(),getUser().getKey() );
             Entity retObj = EntityServiceFactory.getInstance().addUpdateEntity(entity);
             XmppResource resource = XmppResourceFactory.createXmppResource(entity.getKey(), targetPointEntity.getKey());
-            XmppTransactionFactory.getInstance(u).addResource(resource);
+            XmppTransactionFactory.getInstance(u).addResource(entity, resource);
             return retObj;
         }
         else {

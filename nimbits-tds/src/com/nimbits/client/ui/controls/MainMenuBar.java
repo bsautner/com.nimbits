@@ -519,7 +519,7 @@ public class MainMenuBar extends ToolBar {
                                     boolean accepted)  {
                                 UserServiceAsync userService;
                                 userService = GWT.create(UserService.class);
-                                userService.connectionRequestReply(r.getTargetEmail(), r.getRequestorEmail(), r.getUUID(), accepted, new AsyncCallback<Void>() {
+                                userService.connectionRequestReply(r.getTargetEmail(), r.getRequestorEmail(), r.getKey(), accepted, new AsyncCallback<Void>() {
 
                                     @Override
                                     public void onFailure(Throwable caught) {

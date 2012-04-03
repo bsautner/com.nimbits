@@ -15,8 +15,6 @@ public interface Subscription extends Serializable {
 
     String getKey();
 
-    void setUuid(String uuid);
-
     double getMaxRepeat();
 
     void setMaxRepeat(double maxRepeat);
@@ -44,4 +42,5 @@ public interface Subscription extends Serializable {
     SubscriptionType getSubscriptionType();
 
     void setSubscriptionType(SubscriptionType subscriptionType);
+
 }

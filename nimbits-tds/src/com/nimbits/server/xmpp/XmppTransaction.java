@@ -26,7 +26,8 @@ import java.util.List;
  * Time: 1:18 PM
  */
 public interface XmppTransaction  {
-  void addResource(XmppResource resource);
+
+    void addResource(Entity entity, XmppResource resource);
 
     List<XmppResource> getPointXmppResources(Point point);
 

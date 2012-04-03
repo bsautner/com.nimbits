@@ -13,7 +13,8 @@
 
 package com.nimbits.server.orm;
 
-import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.xmpp.XmppResource;
 
 import javax.jdo.annotations.*;
@@ -24,31 +25,28 @@ import javax.jdo.annotations.*;
  * Date: 3/15/12
  * Time: 12:36 PM
  */
+@SuppressWarnings("unused")
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 public class XmppResourceEntity implements XmppResource {
 
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    private com.google.appengine.api.datastore.Key id;
+    private com.google.appengine.api.datastore.Key key;
 
-    @Persistent
-    private String uuid;
 
     @Persistent
     private String entity;
 
-    public XmppResourceEntity() {
+    protected XmppResourceEntity() {
     }
-    public XmppResourceEntity(XmppResource resource) {
-        this.uuid = resource.getKey();
+
+    public XmppResourceEntity(final Entity entity, final XmppResource resource) {
+        this.key = KeyFactory.createKey(XmppResourceEntity.class.getSimpleName(), entity.getKey());
         this.entity = resource.getEntity();
-    }
-    public Key getId() {
-        return id;
     }
 
     public String getKey() {
-        return uuid;
+        return key.getName();
     }
 
     public String getEntity() {

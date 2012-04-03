@@ -14,7 +14,6 @@ import java.util.*;
 public class SubscriptionModel implements Serializable, Subscription  {
 
     private String key;
-    private String uuid;
     private String subscribedEntity;
     private int notifyMethod;
     private int subscriptionType;
@@ -26,7 +25,6 @@ public class SubscriptionModel implements Serializable, Subscription  {
     }
 
     public SubscriptionModel(Subscription subscription) {
-        this.uuid = subscription.getKey();
         this.subscribedEntity = subscription.getSubscribedEntity();
         this.notifyMethod = subscription.getNotifyMethod().getCode();
         this.subscriptionType = subscription.getSubscriptionType().getCode();
@@ -101,12 +99,7 @@ public class SubscriptionModel implements Serializable, Subscription  {
     }
     @Override
     public String getKey() {
-        return this.uuid;
-    }
-
-    @Override
-    public void setUuid(String uuid) {
-       this.uuid = uuid;
+        return this.key;
     }
 
 

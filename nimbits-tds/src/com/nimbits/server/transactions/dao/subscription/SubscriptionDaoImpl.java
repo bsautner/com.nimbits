@@ -23,6 +23,7 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.server.orm.SubscriptionEntity;
 import com.nimbits.server.subscription.SubscriptionTransactions;
 
+import javax.jdo.JDOObjectNotFoundException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
@@ -45,23 +46,37 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
 
     @Override
     public void subscribe(final Entity entity, final Subscription subscription) {
-         addOrUpdateSubscription(entity, subscription);
+        addOrUpdateSubscription(entity, subscription);
     }
 
+    private static SubscriptionEntity getSubscription(PersistenceManager pm, Entity entity) {
+      return getSubscription(pm, entity.getKey());
+
+
+    }
+    private static SubscriptionEntity getSubscription(PersistenceManager pm, String key) {
+        try {
+            final SubscriptionEntity result = pm.getObjectById(SubscriptionEntity.class, key);
+            return result;
+
+        }
+        catch (JDOObjectNotFoundException ex) {
+            return null;
+        }
+
+
+    }
     private static void addOrUpdateSubscription(final Entity entity, final Subscription subscription)  {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final List<SubscriptionEntity> results;
 
 
         try {
 
-            final Query q = pm.newQuery(SubscriptionEntity.class, "uuid==u");
-            q.declareParameters("String u");
-            q.setRange(0, 1);
-            results = (List<SubscriptionEntity>) q.execute(entity.getKey());
-            if (results.size() > 0) {
-                final SubscriptionEntity result = results.get(0);
+
+
+            SubscriptionEntity result = getSubscription(pm, entity);
+            if (result != null) {
                 final Transaction tx = pm.currentTransaction();
                 tx.begin();
                 result.setNotifyMethod(subscription.getNotifyMethod());
@@ -74,34 +89,32 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
                 //retObj = EntityTransactionFactory.getInstance(user).getEntityByUUID(result.getKey());
                 pm.flush();
 
-
-            }
-            else {
-                final SubscriptionEntity s = new SubscriptionEntity(subscription);
-                pm.makePersistent(s);
-
             }
 
+                else {
+                    final SubscriptionEntity s = new SubscriptionEntity(entity, subscription);
+                    pm.makePersistent(s);
+
+                }
+
+
+            }
+            finally {
+                pm.close();
+            }
 
         }
-        finally {
-            pm.close();
-        }
-
-    }
 
     public Subscription readSubscription(final Entity entity)  {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final List<SubscriptionEntity> results;
+
         Subscription retObj = null;
         try {
-            final Query q = pm.newQuery(SubscriptionEntity.class, "uuid==u");
-            q.declareParameters("String u");
-            q.setRange(0, 1);
-            results = (List<SubscriptionEntity>) q.execute(entity.getKey());
-            if (results.size() > 0) {
-                final SubscriptionEntity result = results.get(0);
+
+            SubscriptionEntity result = getSubscription(pm, entity);
+            if (result != null) {
+
                 retObj = SubscriptionFactory.createSubscription(result);
             }
             return retObj;
@@ -151,22 +164,18 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
     public void updateSubscriptionLastSent(final Subscription subscription) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
-            try {
-                final List<SubscriptionEntity> results;
-                final Query q = pm.newQuery(SubscriptionEntity.class, "uuid==u");
-                q.declareParameters("String u");
-                q.setRange(0, 1);
-                results = (List<SubscriptionEntity>) q.execute(subscription.getKey());
-                if (results.size() > 0) {
-                    final Transaction tx = pm.currentTransaction();
-                    tx.begin();
-                    final SubscriptionEntity result = results.get(0);
-                    result.setLastSent(new Date());
-                    tx.commit();
-                }
-            } finally {
-                pm.close();
+        try {
+            SubscriptionEntity result = getSubscription(pm, subscription.getKey());
+            if (result != null) {
+                final Transaction tx = pm.currentTransaction();
+                tx.begin();
+
+                result.setLastSent(new Date());
+                tx.commit();
             }
+        } finally {
+            pm.close();
+        }
 
 
     }
@@ -174,15 +183,12 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
     @Override
     public void deleteSubscription(final Entity entity) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final List<SubscriptionEntity> results;
+
         final Subscription retObj = null;
         try {
-            final Query q = pm.newQuery(SubscriptionEntity.class, "uuid==u");
-            q.declareParameters("String u");
-            q.setRange(0, 1);
-            results = (List<SubscriptionEntity>) q.execute(entity.getKey());
-            if (results.size() > 0) {
-                final SubscriptionEntity result = results.get(0);
+            SubscriptionEntity result = getSubscription(pm, entity);
+            if (result != null) {
+
                 pm.deletePersistent(result);
             }
 

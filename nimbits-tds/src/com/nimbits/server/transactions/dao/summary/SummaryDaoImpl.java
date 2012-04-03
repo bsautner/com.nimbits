@@ -21,11 +21,10 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.server.orm.SummaryEntity;
 import com.nimbits.server.summary.SummaryTransactions;
 
+import javax.jdo.JDOObjectNotFoundException;
 import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
 import javax.jdo.Transaction;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by Benjamin Sautner
@@ -41,19 +40,28 @@ public class SummaryDaoImpl implements SummaryTransactions {
 
     }
 
+    private static SummaryEntity readSummaryEntity(final PersistenceManager pm, final Entity entity) {
+
+         try {
+             return pm.getObjectById(SummaryEntity.class, entity.getKey());
+         }
+         catch (JDOObjectNotFoundException ex) {
+             return null;
+         }
+
+    }
+
+
     @Override
     public void addOrUpdateSummary(final Entity entity,final Summary summary)  {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final List<SummaryEntity> results;
+
 
         try {
-            final Query q = pm.newQuery(SummaryEntity.class, "uuid==u");
-            q.declareParameters("String u");
-            q.setRange(0, 1);
-            results = (List<SummaryEntity>) q.execute(entity.getKey());
-            if (results.size() > 0) {
-                final SummaryEntity result = results.get(0);
+            final SummaryEntity result = readSummaryEntity(pm, entity);
+            if (result != null) {
+
                 final Transaction tx = pm.currentTransaction();
                 tx.begin();
                 result.setLastProcessed(new Date());
@@ -63,7 +71,7 @@ public class SummaryDaoImpl implements SummaryTransactions {
                 pm.flush();
             }
             else {
-                final SummaryEntity s = new SummaryEntity(summary);
+                final SummaryEntity s = new SummaryEntity(entity, summary);
                 pm.makePersistent(s);
              }
         }
@@ -75,17 +83,12 @@ public class SummaryDaoImpl implements SummaryTransactions {
     @Override
     public Summary readSummary(final Entity entity) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final List<SummaryEntity> results;
-
 
         try {
 
-            final Query q = pm.newQuery(SummaryEntity.class, "uuid==u");
-            q.declareParameters("String u");
-            q.setRange(0, 1);
-            results = (List<SummaryEntity>) q.execute(entity.getKey());
-            if (results.size() > 0) {
-                final SummaryEntity result = results.get(0);
+            final SummaryEntity result = readSummaryEntity(pm, entity);
+            if (result != null) {
+
                 return SummaryModelFactory.createSummary(result);
             }
             else {
@@ -100,15 +103,11 @@ public class SummaryDaoImpl implements SummaryTransactions {
     @Override
     public void updateLastProcessed(final Entity entity) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final List<SummaryEntity> results;
 
         try {
-            final Query q = pm.newQuery(SummaryEntity.class, "uuid==u");
-            q.declareParameters("String u");
-            q.setRange(0, 1);
-            results = (List<SummaryEntity>) q.execute(entity.getKey());
-            if (results.size() > 0) {
-                final SummaryEntity result = results.get(0);
+            final SummaryEntity result = readSummaryEntity(pm, entity);
+            if (result != null) {
+
                 final Transaction tx = pm.currentTransaction();
                 tx.begin();
                 result.setLastProcessed(new Date());
@@ -125,15 +124,14 @@ public class SummaryDaoImpl implements SummaryTransactions {
     @Override
     public void deleteSummary(final Entity entity) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final List<SummaryEntity> results;
 
 
         try {
 
-            Query q = pm.newQuery(SummaryEntity.class, "uuid==u");
-            q.declareParameters("String u");
-            results = (List<SummaryEntity>) q.execute(entity.getKey());
-            pm.deletePersistentAll(results);
+            final SummaryEntity result = readSummaryEntity(pm, entity);
+            if (result != null) {
+            pm.deletePersistentAll(result);
+            }
         }
         finally {
             pm.close();

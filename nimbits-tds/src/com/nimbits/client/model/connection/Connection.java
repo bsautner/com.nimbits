@@ -42,10 +42,6 @@ public interface Connection extends Serializable {
 
     void setApprovedDate(final Date approvedDate);
 
-    String getUUID();
-
-    void setUUID(final String uUID);
-
     Boolean getApproved();
 
     void setApproved(final boolean approved);

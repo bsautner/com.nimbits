@@ -24,4 +24,6 @@ import com.nimbits.client.enums.ExportType;
  */
 public interface BlobStore {
     String createFile(final String data, final ExportType exportType) ;
+
+    void deleteOrphans();
 }

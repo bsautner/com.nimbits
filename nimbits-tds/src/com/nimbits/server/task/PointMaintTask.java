@@ -16,6 +16,7 @@ package com.nimbits.server.task;
 import com.google.gson.Gson;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.point.Point;
@@ -48,25 +49,7 @@ public class PointMaintTask extends HttpServlet {
         final Entity e = gson.fromJson(j, EntityModel.class);
 
         try {
-           // n = UserTransactionFactory.getInstance().(p.getUserFK());
-            final Point p = PointServiceFactory.getInstance().getPointByKey(e.getKey());
-            final List<ValueBlobStore> stores = RecordedValueTransactionFactory.getDaoInstance(p).getAllStores();
-            if (stores.size() > 0) {
-
-                final List<Long> dates = new ArrayList<Long>(stores.size());
-                for (final ValueBlobStore store : stores) {
-                    if (dates.contains(store.getTimestamp().getTime())) {
-                        RecordedValueTransactionFactory.getDaoInstance(p).consolidateDate(store.getTimestamp());
-                    }
-                    else {
-                        dates.add(store.getTimestamp().getTime());
-                    }
-                }
-
-
-
-            }
-
+            consolidateBlobs(e);
 
 
         } catch (Exception ex) {
@@ -74,20 +57,6 @@ public class PointMaintTask extends HttpServlet {
         }
 
 
-       // if (n != null) {
-           // if (p.getCatID() != 0) {
-           // Category category = CategoryServiceFactory.getInstance().getCategory(n, p.getCatID());
-         //   try {
-               // PointTransactionsFactory.getInstance(null).checkPoint(req, n.getEmail(), p);
-
-
-           // } catch (NimbitsException e) {
-            //    log.severe(e.getMessage());
-            //}
-
-            ///log.info("reporting point to core:" + p.getName().getValue());
-           // String url = ServerInfoImpl.getFullServerURL(req);
-           // CoreFactory.getInstance().reportUpdateToCore(url, pointJson, EntityType.point);
 
 
 
@@ -95,7 +64,27 @@ public class PointMaintTask extends HttpServlet {
 
 
 
+    }
 
+    public static void consolidateBlobs(final Entity e) throws NimbitsException {
+        // n = UserTransactionFactory.getInstance().(p.getUserFK());
+        final Point p = PointServiceFactory.getInstance().getPointByKey(e.getKey());
+        final List<ValueBlobStore> stores = RecordedValueTransactionFactory.getDaoInstance(p).getAllStores();
+        if (stores.size() > 0) {
+
+            final List<Long> dates = new ArrayList<Long>(stores.size());
+            for (final ValueBlobStore store : stores) {
+                if (dates.contains(store.getTimestamp().getTime())) {
+                    RecordedValueTransactionFactory.getDaoInstance(p).consolidateDate(store.getTimestamp());
+                }
+                else {
+                    dates.add(store.getTimestamp().getTime());
+                }
+            }
+
+
+
+        }
     }
 
 

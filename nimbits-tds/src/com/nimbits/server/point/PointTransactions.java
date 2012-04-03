@@ -31,7 +31,7 @@ public interface PointTransactions {
 
     //List<Point> getPoints() throws NimbitsException;
 
-    Point getPointByID(final long id) throws NimbitsException;
+
 
     Point updatePoint(final Point point) throws NimbitsException;
 

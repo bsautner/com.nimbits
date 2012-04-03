@@ -318,12 +318,13 @@ public class CalculationPanel extends NavigationEventProvider {
 
         if (entity.getEntityType().equals(EntityType.calculation) && calculation != null) {
 
-            update  = CalculationModelFactory.createCalculation(calculation.getTrigger(), calculation.getKey(), enabled.getValue(), formula.getValue(), target,
+            update  = CalculationModelFactory.createCalculation
+                    (calculation.getTrigger(), calculation.getKey(), enabled.getValue(), formula.getValue(), target,
                     x, y, z);
 
         }
         else {
-            update = CalculationModelFactory.createCalculation(entity.getKey(), null, enabled.getValue(), formula.getValue(),target,
+            update = CalculationModelFactory.createCalculation(entity.getKey(),  enabled.getValue(), formula.getValue(),target,
                     x, y, z);
 
         }

@@ -67,7 +67,9 @@ public class TestUpgradeTask extends NimbitsServletTest {
         }
         pm.close();
         final PersistenceManager pm2 = PMF.get().getPersistenceManager();
-        UpgradeTask.doStart();
+        req.addParameter("s", "0");
+        UpgradeTask.doStart(req);
+
         Query q = pm2.newQuery(UserEntity.class);
         List<User> users = (List<User>) q.execute();
         assertEquals(11, users.size());

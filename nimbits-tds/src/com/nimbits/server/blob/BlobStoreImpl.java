@@ -14,15 +14,16 @@
 package com.nimbits.server.blob;
 
 
-import com.google.appengine.api.blobstore.BlobKey;
-import com.google.appengine.api.blobstore.BlobstoreService;
-import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.blobstore.*;
+import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.files.*;
+import com.google.apphosting.api.*;
 import com.nimbits.client.enums.ExportType;
 
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.nio.channels.Channels;
+import java.util.*;
 
 public class BlobStoreImpl implements BlobStore {
 
@@ -87,5 +88,25 @@ public class BlobStoreImpl implements BlobStore {
 
         }
 
+    }
+
+    @Override
+    public void deleteOrphans() {
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+        BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+        List<BlobInfo> blobsToCheck = new LinkedList<BlobInfo>();
+        Iterator<BlobInfo> iterator = null;
+        String  afterBlobKey = null;
+        if(afterBlobKey == null){
+            iterator = new BlobInfoFactory().queryBlobInfos();
+        }else{
+            iterator = new BlobInfoFactory().queryBlobInfosAfter(new BlobKey(afterBlobKey));
+        }
+
+        while(iterator.hasNext()){
+
+            blobsToCheck.add(iterator.next());
+
+        }
     }
 }

@@ -51,7 +51,7 @@ public class PointMemCacheImpl implements PointTransactions {
     public PointMemCacheImpl(final User user) {
         this.u = user;
         if (user != null) {
-            cache = MemcacheServiceFactory.getMemcacheService(MemCacheKey.userPointNamespace.name() + u.getKey());
+            cache = MemcacheServiceFactory.getMemcacheService(MemCacheKey.userPointNamespace.name() + u.getKey().replace('@', '-'));
         } else {
             cache = MemcacheServiceFactory.getMemcacheService(MemCacheKey.defaultNamespace.name());
 
@@ -82,10 +82,6 @@ public class PointMemCacheImpl implements PointTransactions {
 //
 //    }
 
-    @Override
-    public Point getPointByID(final long id) throws NimbitsException {
-        return  PointTransactionsFactory.getDaoInstance(u).getPointByID(id);
-    }
 
     @Override
     public Point updatePoint(final Point point) throws NimbitsException {

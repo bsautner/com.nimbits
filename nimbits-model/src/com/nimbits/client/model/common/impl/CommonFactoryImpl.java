@@ -13,6 +13,7 @@
 
 package com.nimbits.client.model.common.impl;
 
+import com.nimbits.client.common.*;
 import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
@@ -21,6 +22,7 @@ import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.email.impl.EmailAddressImpl;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.entity.EntityNameImpl;
+import sun.org.mozilla.javascript.internal.regexp.*;
 
 
 /**
@@ -57,14 +59,30 @@ public class CommonFactoryImpl implements CommonFactory {
     }
 
 
-   private void nameTest(final String name, final EntityType type) throws NimbitsException {
-       if (name.contains(Const.REGEX_SPECIAL_CHARS)) {
-          throw new NimbitsException("A name cannot contain these chars" + Const.REGEX_SPECIAL_CHARS);
-       }
-       if (name.length() > Const.CONST_MAX_NAME_LENGTH) {
-           throw new NimbitsException("Whoa! That's a long name. Names must be less than 500 chars!");
+   protected void nameTest(final String name, final EntityType type) throws NimbitsException {
+       //TODO use regex
+
+       if (Utils.isEmptyString(name)) {
+           throw new NimbitsException("Invalid Empty Name");
 
        }
+
+        if (name.contains("%")
+                || name.contains("+")
+                || name.contains("'")
+                || name.contains("\"")
+                || name.contains("!")
+                || name.contains("?")
+                ) {
+            throw new NimbitsException("Invalid Name");
+        }
+
+
+       if (name.length() > Const.CONST_MAX_NAME_LENGTH) {
+           throw new NimbitsException("Whoa! That's a long name. Names must be less than " + Const.CONST_MAX_NAME_LENGTH + " chars!");
+
+       }
+
        switch (type) {
 
            case user:

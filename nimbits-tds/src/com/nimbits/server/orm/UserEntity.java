@@ -42,9 +42,6 @@ public class UserEntity implements User {
     private Long facebookID;
 
     @Persistent
-    private String email;
-
-    @Persistent
     private String facebookToken;
 
     @Persistent
@@ -116,7 +113,6 @@ public class UserEntity implements User {
     public UserEntity(final Entity entity, final EmailAddress email) {
         dateCreated = new Date();
         lastLoggedIn = dateCreated;
-        this.email = email.getValue();
         this.key = KeyFactory.createKey(UserEntity.class.getSimpleName(), entity.getKey());
 
     }
@@ -143,7 +139,7 @@ public class UserEntity implements User {
     }
     @Override
     public EmailAddress getEmail() {
-        return CommonFactoryLocator.getInstance().createEmailAddress(email);
+        return CommonFactoryLocator.getInstance().createEmailAddress(key.getName());
     }
     @Override
     public long getFacebookID() {

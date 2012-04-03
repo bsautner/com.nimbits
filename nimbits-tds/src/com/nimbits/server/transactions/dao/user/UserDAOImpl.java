@@ -47,20 +47,16 @@ public class UserDAOImpl implements UserTransactions {
     public User setFacebookToken(final EmailAddress internetAddress, final String token, final long facebookId) {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        UserEntity u = null;
-        final Query q = pm.newQuery(UserEntity.class, "email == u");
-        q.declareParameters("String u");
-        q.setRange(0, 1);
+
 
         User retObj;
         try {
-            final List<UserEntity> result = (List<UserEntity>) q.execute(internetAddress.getValue());
-            //todo make sure unregistereed users from facebook get an account created.
 
-            if (result.size() > 0) {
+            User u = getUserByKey(pm, internetAddress.getValue());
+            if (u != null) {
                 final Transaction tx = pm.currentTransaction();
                 tx.begin();
-                u = result.get(0);
+
                 u.setFacebookToken(token);
                 u.setFacebookID(facebookId);
                 tx.commit();
@@ -117,12 +113,9 @@ public class UserDAOImpl implements UserTransactions {
         try {
             if (internetAddress != null) {
 
-                final Query q = pm.newQuery(UserEntity.class, "email == u");
-                q.declareParameters("String u");
-                q.setRange(0, 1);
-                final List<UserEntity> result = (List<UserEntity>) q.execute(internetAddress.getValue());
-                if (result.size() > 0) {
-                    final UserEntity u = result.get(0);
+                User u = getUserByKey(pm, internetAddress.getValue());
+                if (u != null) {
+
                     retObj = UserModelFactory.createUserModel(u);
                 }
 
@@ -149,16 +142,15 @@ public class UserDAOImpl implements UserTransactions {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         User retObj = null;
 
-        final Query q = pm.newQuery(UserEntity.class, "email == u");
-        q.declareParameters("String u");
+
         try {
-            final List<UserEntity> result = (List<UserEntity>) q.execute(emailAddress.getValue());
-            if (result.size() > 0) {
+            User u = getUserByKey(pm, emailAddress.getValue());
+            if (u != null) {
                 final Transaction tx = pm.currentTransaction();
                 tx.begin();
-                final UserEntity n = result.get(0);
-                n.setSecret(uuid.toString());
-                retObj = UserModelFactory.createUserModel(n);
+
+                u.setSecret(uuid.toString());
+                retObj = UserModelFactory.createUserModel(u);
                 tx.commit();
 
             }
@@ -274,19 +266,19 @@ public class UserDAOImpl implements UserTransactions {
     @Override
     public User updateTwitter(final EmailAddress internetAddress, final AccessToken token) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final Query q = pm.newQuery(UserEntity.class, "email == u");
         User retObj = null;
-        try {
-            q.declareParameters("String u");
-            final List<UserEntity> result = (List<UserEntity>) q.execute(internetAddress.getValue());
-            if (result.size() > 0) {
+         try {
+
+             User u = getUserByKey(pm, internetAddress.getValue());
+            if (u != null) {
                 final Transaction tx = pm.currentTransaction();
                 tx.begin();
-                final UserEntity n = result.get(0);
-                n.setTwitterToken(token.getToken());
-                n.setTwitterTokenSecret(token.getTokenSecret());
-                retObj = UserModelFactory.createUserModel(n);
+
+                u.setTwitterToken(token.getToken());
+                u.setTwitterTokenSecret(token.getTokenSecret());
                 tx.commit();
+                retObj = UserModelFactory.createUserModel(u);
+
             }
 
         } finally {
@@ -325,12 +317,15 @@ public class UserDAOImpl implements UserTransactions {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         try {
+            User user = getUserByKey(pm, key);
+            if (user != null) {
+            return UserModelFactory.createUserModel(user);
+            }
+            else {
+                return null;
+            }
 
-
-            return pm.getObjectById(UserEntity.class, key);
         }catch (JDOObjectNotFoundException ex) {
-
-
             return null;
         } finally {
             pm.close();
@@ -339,6 +334,17 @@ public class UserDAOImpl implements UserTransactions {
 
 
     }
+
+    private User getUserByKey( final PersistenceManager pm, final String key) {
+
+        try {
+            return pm.getObjectById(UserEntity.class, key);
+        }catch (JDOObjectNotFoundException ex) {
+            return null;
+        }
+
+    }
+
 
     @Override
     public List<User> getConnectionRequests(final List<String> connections) {

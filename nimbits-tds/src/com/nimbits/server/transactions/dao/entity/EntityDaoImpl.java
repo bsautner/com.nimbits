@@ -337,6 +337,40 @@ public class EntityDaoImpl implements  EntityTransactions {
         }
     }
 
+    @Override
+    public Entity getEntityByName(EntityName name, EntityType type) throws NimbitsException {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final List<Entity> c;
+
+        try {
+            final Query q1 = pm.newQuery(EntityStore.class);
+            if (user != null) {
+                q1.setFilter("name==b && owner==o && entityType==t");
+                q1.declareParameters("String b, String o, Integer t");
+                q1.setRange(0, 1);
+                c = (List<Entity>) q1.execute(name.getValue(), user.getKey(), type.getCode());
+            }
+            else {
+                q1.setFilter("name==b && entityType==t");
+                q1.declareParameters("String b, Integer t");
+                q1.setRange(0, 1);
+                c = (List<Entity>) q1.execute(name.getValue(), type.getCode());
+            }
+            if (c.size() > 0) {
+
+                final Entity result = c.get(0);
+                return EntityModelFactory.createEntity(user,  result);
+
+            }
+            else {
+                return null;
+            }
+
+        } finally {
+            pm.close();
+        }
+    }
+
     private void checkDuplicateEntity(final Entity entity) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 

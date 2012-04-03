@@ -200,7 +200,7 @@ public class TaskImpl implements Task {
 //    }
 
     @Override
-    public void startUpgradeTask(final Action action,final  Entity entity, final int s, final int e ) {
+    public void startUpgradeTask(final Action action,final  Entity entity, final int s ) {
 
         try {
         final Queue queue =  QueueFactory.getQueue(DEFAULT);
@@ -219,7 +219,7 @@ public class TaskImpl implements Task {
         }
         catch (IllegalStateException ex) {
             overrideQueue = true;
-            startUpgradeTask(action, entity, s, e );
+            startUpgradeTask(action, entity, s  );
         }
 
     }

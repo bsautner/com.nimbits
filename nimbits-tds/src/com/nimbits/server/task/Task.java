@@ -44,7 +44,7 @@ public interface Task {
 
     void startMoveCachedValuesToStoreTask(final Point point);
 
-    void startUpgradeTask(Action action, Entity entity, int s, int e);
+    void startUpgradeTask(Action action, Entity entity, int s);
 
     void startSummaryTask(Entity entity);
 }

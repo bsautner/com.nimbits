@@ -42,7 +42,7 @@ public class EntityStore implements Entity {
 
     @PrimaryKey
     @Persistent
-    private Key entity;
+    private Key key;
 
     @Persistent
     private String name;
@@ -81,10 +81,19 @@ public class EntityStore implements Entity {
 
         EntityName saferName = CommonFactoryLocator.getInstance().createName(entity.getName().getValue(), entity.getEntityType());
         if (Utils.isEmptyString(entity.getKey())) {
-            this.entity = KeyFactory.createKey(EntityStore.class.getSimpleName(), UUID.randomUUID().toString());
+            if (entity.getEntityType().equals(EntityType.user)) {
+                this.key = KeyFactory.createKey(EntityStore.class.getSimpleName(), saferName.getValue());
+            }
+            else if (entity.getEntityType().equals(EntityType.point)) {
+                this.key =  KeyFactory.createKey(EntityStore.class.getSimpleName(), entity.getOwner() + "/" + saferName.getValue());
+            }
+            else {
+                this.key = KeyFactory.createKey(EntityStore.class.getSimpleName(), UUID.randomUUID().toString());
+            }
+
         }
         else {
-            this.entity = KeyFactory.createKey(EntityStore.class.getSimpleName(), entity.getKey());
+            this.key = KeyFactory.createKey(EntityStore.class.getSimpleName(), entity.getKey());
         }
         this.name = saferName.getValue();
         this.description = entity.getDescription();
@@ -136,7 +145,7 @@ public class EntityStore implements Entity {
     @Override
     public String getKey() {
 
-        return  this.entity.getName();
+        return  this.key.getName();
     }
 
 //    @Override

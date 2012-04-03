@@ -60,7 +60,7 @@ public class EntityCacheImpl implements EntityTransactions {
         this.user = u;
 
         if (user != null) {
-            cache = MemcacheServiceFactory.getMemcacheService(MemCacheKey.userNamespace.name() + u.getKey());
+            cache = MemcacheServiceFactory.getMemcacheService(MemCacheKey.userNamespace.name() + u.getKey().replace('@', '-'));
         } else {
             cache = MemcacheServiceFactory.getMemcacheService(MemCacheKey.defaultNamespace.name());
 
@@ -141,6 +141,11 @@ public class EntityCacheImpl implements EntityTransactions {
             return result;
         }
 
+    }
+
+    @Override
+    public Entity getEntityByName(EntityName name, EntityType type) throws NimbitsException {
+        return EntityTransactionFactory.getDaoInstance(user).getEntityByName(name, type);
     }
 
     @Override

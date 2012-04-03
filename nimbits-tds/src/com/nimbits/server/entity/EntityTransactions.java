@@ -45,6 +45,8 @@ public interface EntityTransactions {
 
     Entity getEntityByName(EntityName name) throws NimbitsException;
 
+    Entity getEntityByName(EntityName name, EntityType type) throws NimbitsException;
+
     Map<String, Entity> getSystemWideEntityMap(EntityType type) throws NimbitsException;
 
     void removeEntityFromCache(Entity entity) throws NimbitsException;

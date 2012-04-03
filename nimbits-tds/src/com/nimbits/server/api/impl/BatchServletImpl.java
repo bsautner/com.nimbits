@@ -29,6 +29,8 @@ public class BatchServletImpl extends ApiServlet {
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
 
+
+
         try {
             init(req, resp, ExportType.plain);
             TaskFactory.getInstance().startProcessBatchTask(req, resp);

@@ -128,7 +128,9 @@ public class CalcEntity implements Calculation {
     public void setY(String y) {
         this.yVar  = y;
     }
-
+    public void setZ(String z) {
+        this.zVar  = z;
+    }
     @Override
     public String getZ() {
         return zVar;
@@ -139,9 +141,6 @@ public class CalcEntity implements Calculation {
         this.enabled = b;
     }
 
-    public void setZ(String z) {
-        this.zVar = z;
-    }
 
     @Override
     public String getKey() {

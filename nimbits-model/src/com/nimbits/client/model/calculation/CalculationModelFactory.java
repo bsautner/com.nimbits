@@ -28,12 +28,16 @@ public class CalculationModelFactory {
         return new CalculationModel(calculation);
     }
 
-    public static Calculation createCalculation(final String trigger, final String uuid, final boolean enabled, final String f, final String target, final String x, final String y, final String z) {
+    public static Calculation createCalculation(final String trigger, final boolean enabled, final String f, final String target, final String x, final String y, final String z) {
 
 
-        return new CalculationModel(trigger, uuid, enabled, f, target,  x,y, z);
+        return new CalculationModel(trigger,  enabled, f, target,  x,y, z);
     }
+    public static Calculation createCalculation(final String trigger, final String key, final boolean enabled, final String f, final String target, final String x, final String y, final String z) {
 
+
+        return new CalculationModel(trigger, key, enabled, f, target,  x,y, z);
+    }
     public static List<Calculation> createCalculations(List<Calculation> calculations) {
         List<Calculation> retObj = new ArrayList<Calculation>();
         for (final Calculation c : calculations) {

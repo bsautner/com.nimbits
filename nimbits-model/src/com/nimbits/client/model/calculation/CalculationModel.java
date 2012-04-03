@@ -35,7 +35,18 @@ public class CalculationModel implements Serializable, Calculation {
     }
 
 
-    public CalculationModel(final String trigger, final String uuid, final boolean enabled, final String f, final String target, final String x, final String y, final String z) {
+    public CalculationModel(final String trigger, final boolean enabled, final String f, final String target, final String x, final String y, final String z) {
+        this.trigger = trigger;
+        this.target = target;
+        this.formula = f;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.enabled = enabled;
+
+    }
+    public CalculationModel(final String trigger,final String key, final boolean enabled, final String f, final String target, final String x, final String y, final String z) {
+        this.key = key;
         this.trigger = trigger;
         this.target = target;
         this.formula = f;
@@ -88,6 +99,6 @@ public class CalculationModel implements Serializable, Calculation {
 
     @Override
     public String getTrigger() {
-       return  this.trigger;
+        return  this.trigger;
     }
 }

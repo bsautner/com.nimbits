@@ -36,7 +36,7 @@ public class MemCacheHelper {
     }
 
     public static String valueMemCacheNamespace(Point point) {
-        return MemCacheKey.valueCache +  point.getKey();
+        return MemCacheKey.valueCache +  point.getKey().replace('@', '-').replace('/', '-').replace(' ', '_');
     }
 
     public static String valueBufferCacheKey(Point point) {

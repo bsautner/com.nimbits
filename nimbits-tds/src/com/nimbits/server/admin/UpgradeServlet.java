@@ -50,7 +50,7 @@ public class UpgradeServlet extends HttpServlet {
                 "exceeded during the upgrade process. Only run this once. Please contact support if you need any help.</P>");
 
 
-        TaskFactory.getInstance().startUpgradeTask(Action.start, null, 0, 1000);
+        TaskFactory.getInstance().startUpgradeTask(Action.start, null, 0);
 
     }
 

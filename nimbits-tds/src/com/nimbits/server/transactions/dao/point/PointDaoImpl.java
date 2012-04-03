@@ -46,25 +46,6 @@ public class PointDaoImpl implements PointTransactions {
 
 
 
-    @Override
-    public Point getPointByID(final long id) {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-        Point retObj = null;
-        try {
-            final PointEntity p = pm.getObjectById(PointEntity.class, id);
-            if (p != null) {
-                retObj = PointModelFactory.createPointModel(p);
-            }
-
-        } catch (JDOObjectNotFoundException ex) {
-            log.info("Point not found");
-
-        } finally {
-            pm.close();
-        }
-
-        return retObj;
-    }
 
 
     @Override
@@ -109,18 +90,20 @@ public class PointDaoImpl implements PointTransactions {
     @SuppressWarnings(Const.WARNING_UNCHECKED)
     public Point getPointByKey(final String entity) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        Point retObj;
+
 
         try {
 
             final Point p =   pm.getObjectById(PointEntity.class, entity);
-            retObj = PointModelFactory.createPointModel(p);
+            return PointModelFactory.createPointModel(p);
+        }
+        catch (JDOObjectNotFoundException ex) {
+            return null;
 
         } finally {
             pm.close();
         }
 
-        return retObj;
     }
 
     @SuppressWarnings(Const.WARNING_UNCHECKED)
@@ -175,7 +158,7 @@ public class PointDaoImpl implements PointTransactions {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
 
-       // final Query q1 = pm.newQuery(PointEntity.class, ":p.contains(uuid)");
+        // final Query q1 = pm.newQuery(PointEntity.class, ":p.contains(uuid)");
 
         try {
             List<Point> points = new ArrayList<Point>(entities.size());
@@ -200,12 +183,12 @@ public class PointDaoImpl implements PointTransactions {
         try {
 
 
-                final Point p = pm.getObjectById(PointEntity.class, entity.getKey());
+            final Point p = pm.getObjectById(PointEntity.class, entity.getKey());
 
-                final Point retObj =PointModelFactory.createPointModel(p);
+            final Point retObj =PointModelFactory.createPointModel(p);
 
-                pm.deletePersistent(p);
-                return retObj;
+            pm.deletePersistent(p);
+            return retObj;
 
 
 

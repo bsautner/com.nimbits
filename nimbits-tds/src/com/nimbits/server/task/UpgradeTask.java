@@ -13,9 +13,12 @@
 
 package com.nimbits.server.task;
 
+import com.google.appengine.api.memcache.*;
+import com.google.apphosting.api.*;
 import com.nimbits.PMF;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.calculation.*;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
@@ -28,29 +31,28 @@ import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.timespan.TimespanModelFactory;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.server.entity.EntityServiceFactory;
-import com.nimbits.server.entity.EntityTransactionFactory;
+import com.nimbits.server.calculation.*;
+import com.nimbits.server.entity.*;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.orm.*;
-import com.nimbits.server.point.PointServiceFactory;
+import com.nimbits.server.orm.PointEntity;
+import com.nimbits.server.orm.UserEntity;
+import com.nimbits.server.point.*;
 import com.nimbits.server.subscription.SubscriptionTransactionFactory;
-import com.nimbits.server.user.UserServiceFactory;
-import com.nimbits.server.user.UserTransactionFactory;
+import com.nimbits.server.user.*;
 import com.nimbits.server.value.RecordedValueTransactionFactory;
 import com.nimbits.server.value.RecordedValueTransactions;
 import com.nimbits.shared.Utils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.datanucleus.exceptions.*;
 
-import javax.jdo.JDOObjectNotFoundException;
-import javax.jdo.PersistenceManager;
+import javax.jdo.*;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -70,15 +72,15 @@ public class UpgradeTask  extends HttpServlet
 
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
-
+        MemcacheServiceFactory.getMemcacheService().clearAll();
         final Action action = Action.get(req.getParameter(Parameters.action.getText()));
         try {
             switch (action) {
                 case start:
-                    doStart();
+                    doStart(req);
                     break;
                 case user:
-                    doUser(req);
+                    doConnections(req);
                     break;
                 case category:
                     doCategory2(req);
@@ -87,93 +89,132 @@ public class UpgradeTask  extends HttpServlet
                     doPoint2(req);
                     break;
                 case value:
-                    doValue(req);
+                   // doValue(req);
                     break;
                 case calculation:
+                    doCalc3(req);
                     break;
                 case diagram:
+                    doDiagram();
                     break;
 
                 case subscribe:
-
+                    doSubscriptions(req);
                     break;
+
+                case record:
+                    startValue(req) ;
+
             }
         } catch (NimbitsException e) {
             clog(e.getMessage());
         }
-
+        MemcacheServiceFactory.getMemcacheService().clearAll();
     }
     protected static void doCategory2(final HttpServletRequest req) throws NimbitsException {
         clog("Upgrading categories");
         final PersistenceManager pm;
         pm = PMF.get().getPersistenceManager();
+
+
+        int s = Integer.valueOf(req.getParameter("s"));
         final Query catQuery = pm.newQuery(PointCatagory.class);
         catQuery.setFilter("name != 'System' && name != 'Nimbits_Unsorted'");
+        catQuery.setRange(s, s+100);
+
+
+
         List<PointCatagory> list = (List<PointCatagory>) catQuery.execute();
-        HashMap<Long, NimbitsUser> map = new HashMap<Long, NimbitsUser>(2500);
-        HashMap<String, User> umap = new HashMap<String, User>(2500);
-        HashMap<EntityName, Entity> emap = new HashMap<EntityName, Entity>(2500);
+        HashMap<Long, NimbitsUser> map = new HashMap<Long, NimbitsUser>(s);
+        HashMap<EntityName, Entity> emap = new HashMap<EntityName, Entity>(s);
         NimbitsUser u;
         Entity userEntity;
-        for (PointCatagory c : list) {
-            try {
-                if (c.getUserFK() != null) {
+        if (list.size() > 0) {
 
 
-                    if (map.containsKey(c.getUserFK())) {
-                        u = map.get(c.getUserFK());
-                    }
-                    else {
-                        u = getLegUser(pm, c.getUserFK());
-                        map.put(c.getUserFK(), u);
-                    }
+            for (PointCatagory c : list) {
+                try {
+                    if (c.getUserFK() != null) {
 
-                    if (u != null) {
-                        final EntityName email = CommonFactoryLocator.getInstance().createName(u.getEmail().getValue(), EntityType.user);
-                        final EntityName name = CommonFactoryLocator.getInstance().createName(c.getName(), EntityType.category);
-                        clog(email.getValue() + "  " + name.getValue());
 
-                        if (emap.containsKey(email)) {
-                            userEntity = emap.get(email);
+                        if (map.containsKey(c.getUserFK())) {
+                            u = map.get(c.getUserFK());
                         }
                         else {
-                            userEntity = EntityTransactionFactory.getDaoInstance(null).getEntityByName(email);
-                            emap.put(email, userEntity);
+                            u = getLegUser(pm, c.getUserFK());
+                            map.put(c.getUserFK(), u);
                         }
 
-                        final ProtectionLevel protectionLevel = c.getProtectionLevel() == null ? ProtectionLevel.onlyMe : ProtectionLevel.get(c.getProtectionLevel());
-                        final User user;
+                        if (u != null) {
+                            EntityName email = CommonFactoryLocator.getInstance().createName(u.getEmail().getValue(), EntityType.user);
+                            EntityName name = CommonFactoryLocator.getInstance().createName(c.getName(), EntityType.category);
+                            clog("Upgrading category: " + email.getValue() + "  " + name.getValue());
 
-                        if (umap.containsKey(userEntity.getKey())) {
-                            user = umap.get(userEntity.getKey());
+                            if (emap.containsKey(email)) {
+                                userEntity = emap.get(email);
+                            }
+                            else {
+                                userEntity = EntityTransactionFactory.getDaoInstance(null).getEntityByName(email);
+                                emap.put(email, userEntity);
+                            }
+                            if (userEntity != null) {
+                                clog("found upgraded user entity: " + email.getValue());
+                                User user = UserTransactionFactory.getDAOInstance().getUserByKey(userEntity.getKey());
+                                if (user != null) {
+
+                                    Entity categoryEntity = EntityTransactionFactory.getDaoInstance(user).getEntityByName(name, EntityType.category);
+                                    if (categoryEntity == null) {
+                                        ProtectionLevel protectionLevel = c.getProtectionLevel() == null ? ProtectionLevel.onlyMe : ProtectionLevel.get(c.getProtectionLevel());
+
+                                        Entity newCat = EntityModelFactory.createEntity(name, "", EntityType.category,protectionLevel,
+                                                user.getKey(), user.getKey());
+
+                                        EntityServiceFactory.getInstance().addUpdateEntity(user, newCat);
+                                    }
+                                    else {
+                                        clog("Skipping " + name.getValue() + " already processed");
+                                    }
+
+
+                                }
+                                else {
+                                    log.severe(email.getValue() + " didn't have a user object, but did have an entity");
+                                }
+
+
+
+
+                            }
+                            else {
+                                log.severe(email.getValue() + " didn't have an entity");
+                            }
+
+
+
                         }
                         else {
-                            user = UserServiceFactory.getInstance().getUserByUUID(userEntity.getKey());
-                            umap.put(userEntity.getKey(), user);
+                            log.severe(c.getName() + "wasn't in the db");
                         }
-
-
-                        final Entity newCat = EntityModelFactory.createEntity(name, "", EntityType.category,protectionLevel,
-                                user.getKey(), user.getKey());
-
-                        EntityServiceFactory.getInstance().addUpdateEntity(user, newCat);
                     }
                     else {
-                        log.severe(c.getName() + "wasn't in the db");
+                        log.severe(c.getName() + "had a null user fk");
                     }
-                }
-                else {
-                    log.severe(c.getName() + "had a null user fk");
-                }
-            } catch (NimbitsException e) {
+                } catch (NimbitsException e) {
 
-                log.severe(c.getName() + " caused an error");
+                    log.severe(c.getName() + " caused an error");
 
-                log.severe(e.getMessage());
+                    log.severe(e.getMessage());
+                }
+
             }
-
+            TaskFactory.getInstance().startUpgradeTask(Action.category, null, s+100 );
         }
-        TaskFactory.getInstance().startUpgradeTask(Action.point, null, 0, 1000);
+        else {
+
+            log.info("Completed category upgrade " + s);
+            TaskFactory.getInstance().startUpgradeTask(Action.point, null, 0 );
+        }
+
 
 
     }
@@ -181,102 +222,103 @@ public class UpgradeTask  extends HttpServlet
         final PersistenceManager pm;
         pm = PMF.get().getPersistenceManager();
         final Query q = pm.newQuery(DataPoint.class);
-        final int s = Integer.valueOf(req.getParameter("s"));
-        final int e = Integer.valueOf(req.getParameter("e"));
-        q.setRange(s, e);
+        int s = Integer.valueOf(req.getParameter("s"));
+
+        q.setRange(s, s+100);
         List<DataPoint> points = (List<DataPoint>) q.execute();
 
         clog("Upgrading points");
 
-        HashMap<Long, NimbitsUser> map = new HashMap<Long, NimbitsUser>(2500);
-        HashMap<EntityName, Entity> umap = new HashMap<EntityName, Entity>(2500);
+        HashMap<Long, NimbitsUser> map = new HashMap<Long, NimbitsUser>(s);
 
-        NimbitsUser u;
-        Entity userEntity;
+        NimbitsUser legacyUser;
+        Entity userEntity ;
         PointCatagory cx = null;
-        EntityName name = null;
-        try {
-            if (points.size() > 0) {
-                for (DataPoint p : points) {
 
 
-                    name = CommonFactoryLocator.getInstance().createName(p.getName(), EntityType.point);
-
+        if (points.size() > 0) {
+            clog("upgrading points " + s + " to " + (s+100));
+            for (DataPoint p : points) {
+                try {
+                    EntityName name = CommonFactoryLocator.getInstance().createName(p.getName(), EntityType.point);
                     final ProtectionLevel protectionLevel = (p.getPublic() != null && p.getPublic()) ? ProtectionLevel.everyone : ProtectionLevel.onlyMe;
+                    legacyUser = getLegUser(pm, p.getUserFK());
+                    if (legacyUser != null) {
+                        userEntity = EntityTransactionFactory.getDaoInstance(null).getEntityByName(legacyUser.getName(), EntityType.user);
+                        User user = UserTransactionFactory.getDAOInstance().getUserByKey(userEntity.getKey());
 
-                    cx = getLegCat(pm, p.getCatID());
-                    if (cx != null) {
-                        if (map.containsKey(p.getUserFK())) {
-                            u = map.get(p.getUserFK());
-                        }
-                        else {
-                            u = getLegUser(pm, p.getUserFK());
-                            map.put(p.getUserFK(), u);
-                        }
+                        if (user != null) {
+                            cx = getLegCat(pm, p.getCatID());
+                            if (cx != null) {
 
-                        if (u != null) {
-                            EntityName email = CommonFactoryLocator.getInstance().createName(u.getEmail().getValue(), EntityType.user);
+                                Entity completedPoint = EntityTransactionFactory.getDaoInstance(user).getEntityByName(name, EntityType.point);
+                                if (completedPoint == null) {
+
+                                    String parent;
+                                    if (cx.getName().equals(N) || cx.getName().equals("System")) {
+                                        parent = userEntity.getKey();
+                                    }
+                                    else {
+                                        final EntityName cname = CommonFactoryLocator.getInstance().createName(cx.getName(), EntityType.category);
+
+                                        Entity cEntity = EntityTransactionFactory.getDaoInstance(user).getEntityByName(cname, EntityType.category);
+                                        if (cEntity != null) {
+                                            parent = cEntity.getKey();
+                                        }
+                                        else {
+                                            log.severe(cx.getName() + " was an old category that didn't get converted");
+                                            parent = userEntity.getKey();
+                                        }
+
+                                    }
+                                    final Entity pointEntity = EntityModelFactory.createEntity(name, p.getDescription(), EntityType.point,
+                                            protectionLevel,  parent, userEntity.getKey());
+                                    final Entity newPoint = EntityServiceFactory.getInstance().addUpdateEntity(user, pointEntity);
 
 
+                                    log.info("new point: " + user.getEmail().getValue() + " " + newPoint.getName().getValue());
+                                    makePointEntity(p, newPoint);
 
-                            if (umap.containsKey(email)) {
-                                userEntity = umap.get(email);
-                            }
-                            else {
-                                userEntity = EntityTransactionFactory.getDaoInstance(null).getEntityByName(email);
-                                umap.put(email, userEntity);
-                            }
-                            User user = UserServiceFactory.getInstance().getUserByUUID(userEntity.getKey());
-                            String parent;
-                            if (cx.getName().equals(N)) {
-                                parent = userEntity.getKey();
-                            }
-                            else {
-                                final EntityName cname = CommonFactoryLocator.getInstance().createName(cx.getName(), EntityType.category);
 
-                                final Entity cEntity = EntityTransactionFactory.getDaoInstance(user).getEntityByName(cname);
-                                if (cEntity != null) {
-                                    parent = cEntity.getKey();
                                 }
                                 else {
-
-                                    parent = userEntity.getKey();
+                                    Point point = PointTransactionsFactory.getDaoInstance(user).getPointByKey(completedPoint.getKey());
+                                    if (point != null) {
+                                        clog("Skipping " + p.getName() + " already processed");
+                                    }
+                                    else {
+                                        log.severe("found a point entity but no point" + p.getName());
+                                    }
                                 }
-
                             }
-                            final Entity pointEntity = EntityModelFactory.createEntity(name, p.getDescription(), EntityType.point,
-                                    protectionLevel,  parent, userEntity.getKey());
-                            final Entity newPoint = EntityServiceFactory.getInstance().addUpdateEntity(user, pointEntity);
-
-
-                            log.info("new point: " + email.getValue() + " " + newPoint.getName().getValue());
-                            makePointEntity(p, newPoint);
-                           // Transaction tx = pm.currentTransaction();
-                           // tx.begin();
-                           // p.setTag(key);
-                           // tx.commit();
-//                            Entity npoint = EntityTransactionFactory.getDaoInstance(user).getEntityByKey(key);
-//                            if (npoint != null) {
-//                                // TaskFactory.getInstance().startUpgradeTask(Action.value, npoint, 0, 1000);
-//                            }
+                            else {
+                                log.severe("could not find category for point: " + p.getName());
+                            }
                         }
-
+                        else {
+                            log.severe("could not find point owner for point: " + p.getName());
+                        }
                     }
-
+                    else {
+                        log.severe("could not find point owner for point: " + p.getName());
+                    }
                 }
-                TaskFactory.getInstance().startUpgradeTask(Action.point,null, s+500, e+500);
+
+                catch (NimbitsException ex) {
+
+                    log.severe(ex.getMessage());
+                }
+
+
             }
-            else {
-                TaskFactory.getInstance().startUpgradeTask(Action.subscribe,null, 0, 1000);
-                TaskFactory.getInstance().startUpgradeTask(Action.calculation, null, 0, 1000);
-                TaskFactory.getInstance().startUpgradeTask(Action.diagram, null, 0, 1000);
-            }
-        } catch (NimbitsException ex) {
-            if (name != null) {
-                log.severe("Error caused by " + name );
-            }
-            log.severe(ex.getMessage());
+            TaskFactory.getInstance().startUpgradeTask(Action.point,null, s+100 );
         }
+        else {
+            clog("completed point upgrade " + s);
+            TaskFactory.getInstance().startUpgradeTask(Action.subscribe,null, 0 );
+
+        }
+
 
 
 
@@ -285,28 +327,382 @@ public class UpgradeTask  extends HttpServlet
         pm.close();
 
     }
+
+    protected static void doSubscriptions(final HttpServletRequest req) throws NimbitsException {
+        final PersistenceManager pm;
+        pm = PMF.get().getPersistenceManager();
+        final Query q = pm.newQuery(DataPoint.class);
+        int s = Integer.valueOf(req.getParameter("s"));
+
+        q.setRange(s, s+100);
+        List<DataPoint> points = (List<DataPoint>) q.execute();
+
+        clog("Upgrading subscriptions");
+
+        HashMap<Long, NimbitsUser> map = new HashMap<Long, NimbitsUser>(s);
+
+        NimbitsUser legacyUser;
+        Entity userEntity ;
+        PointCatagory cx = null;
+
+
+        if (points.size() > 0) {
+            clog("upgrading subscriptions " + s + " to " + (s+100));
+            for (DataPoint p : points) {
+                try {
+                    EntityName name = CommonFactoryLocator.getInstance().createName(p.getName(), EntityType.point);
+                    final ProtectionLevel protectionLevel = (p.getPublic() != null && p.getPublic()) ? ProtectionLevel.everyone : ProtectionLevel.onlyMe;
+                    legacyUser = getLegUser(pm, p.getUserFK());
+                    if (legacyUser != null) {
+                        userEntity = EntityTransactionFactory.getDaoInstance(null).getEntityByName(legacyUser.getName(), EntityType.user);
+                        User user = UserTransactionFactory.getDAOInstance().getUserByKey(userEntity.getKey());
+
+                        if (user != null) {
+                            cx = getLegCat(pm, p.getCatID());
+                            if (cx != null) {
+
+                                Entity completedPoint = EntityTransactionFactory.getDaoInstance(user).getEntityByName(name, EntityType.point);
+                                if (completedPoint == null) {
+                                    log.severe("should have found a completed point entity here" + p.getName());
+                                }
+                                else {
+                                    Point point = PointTransactionsFactory.getDaoInstance(user).getPointByKey(completedPoint.getKey());
+                                    if (point != null) {
+                                        createSubscriptions(user, p, completedPoint);
+                                    }
+                                    else {
+                                        log.severe("should have found a completed point here" + p.getName());
+                                    }
+                                }
+                            }
+                            else {
+                                log.severe("could not find category for point: " + p.getName());
+                            }
+                        }
+                        else {
+                            log.severe("could not find point owner for point: " + p.getName());
+                        }
+                    }
+                    else {
+                        log.severe("could not find point owner for point: " + p.getName());
+                    }
+                }
+
+                catch (NimbitsException ex) {
+
+                    log.severe(ex.getMessage());
+                }
+
+
+            }
+            TaskFactory.getInstance().startUpgradeTask(Action.subscribe,null, s+100 );
+        }
+        else {
+            clog("completed subscription upgrade " + s);
+            TaskFactory.getInstance().startUpgradeTask(Action.calculation, null, 0 );
+            TaskFactory.getInstance().startUpgradeTask(Action.diagram, null, 0 );
+            TaskFactory.getInstance().startUpgradeTask(Action.user, null, 0 );
+            TaskFactory.getInstance().startUpgradeTask(Action.record,null, 0);
+        }
+
+
+
+
+
+
+        pm.close();
+
+    }
+
+    protected static void startValue(final HttpServletRequest req) throws NimbitsException {
+        final PersistenceManager pm;
+        pm = PMF.get().getPersistenceManager();
+        final Query q = pm.newQuery(DataPoint.class);
+        int s = Integer.valueOf(req.getParameter("s"));
+
+        q.setRange(s, s+100);
+        List<DataPoint> points = (List<DataPoint>) q.execute();
+
+        clog("Upgrading value");
+
+
+        NimbitsUser legacyUser;
+        Entity userEntity ;
+        PointCatagory cx = null;
+
+
+        if (points.size() > 0) {
+            clog("upgrading value " + s + " to " + (s+100));
+            for (DataPoint p : points) {
+                try {
+                    EntityName name = CommonFactoryLocator.getInstance().createName(p.getName(), EntityType.point);
+                    legacyUser = getLegUser(pm, p.getUserFK());
+                    if (legacyUser != null) {
+                        userEntity = EntityTransactionFactory.getDaoInstance(null).getEntityByName(legacyUser.getName(), EntityType.user);
+                        User user = UserTransactionFactory.getDAOInstance().getUserByKey(userEntity.getKey());
+
+                        if (user != null) {
+                            cx = getLegCat(pm, p.getCatID());
+                            if (cx != null) {
+
+                                Entity completedPoint = EntityTransactionFactory.getDaoInstance(user).getEntityByName(name, EntityType.point);
+                                if (completedPoint == null) {
+                                    log.severe("should have found a completed point entity here" + p.getName());
+                                }
+                                else {
+                                    Point point = PointTransactionsFactory.getDaoInstance(user).getPointByKey(completedPoint.getKey());
+                                    if (point != null) {
+
+                                        TaskFactory.getInstance().startUpgradeTask(Action.value,completedPoint, 0 );
+
+                                    }
+                                    else {
+                                        log.severe("should have found a completed point here" + p.getName());
+                                    }
+                                }
+                            }
+                            else {
+                                log.severe("could not find category for point: " + p.getName());
+                            }
+                        }
+                        else {
+                            log.severe("could not find point owner for point: " + p.getName());
+                        }
+                    }
+                    else {
+                        log.severe("could not find point owner for point: " + p.getName());
+                    }
+                }
+
+                catch (NimbitsException ex) {
+
+                    log.severe(ex.getMessage());
+                }
+
+
+            }
+            TaskFactory.getInstance().startUpgradeTask(Action.record,null, s+100 );
+        }
+        else {
+            clog("completed value upgrade! " + s);
+
+        }
+
+
+
+
+
+
+        pm.close();
+
+    }
+
+
+
+    protected static void doCalc3(final HttpServletRequest req) throws NimbitsException {
+        final PersistenceManager pm;
+        pm = PMF.get().getPersistenceManager();
+        final Query q = pm.newQuery(DataPoint.class);
+        int s = Integer.valueOf(req.getParameter("s"));
+
+        q.setRange(s, s+100);
+        List<DataPoint> points = (List<DataPoint>) q.execute();
+
+        clog("Upgrading calcs");
+
+
+        NimbitsUser legacyUser;
+        Entity userEntity ;
+        PointCatagory cx = null;
+
+
+        if (points.size() > 0) {
+            clog("upgrading calcs " + s + " to " + (s+100));
+            for (DataPoint legacyPoint : points) {
+                try {
+                    EntityName pname = CommonFactoryLocator.getInstance().createName(legacyPoint.getName(), EntityType.point);
+                    legacyUser = getLegUser(pm, legacyPoint.getUserFK());
+                    if (legacyUser != null) {
+                        userEntity = EntityTransactionFactory.getDaoInstance(null).getEntityByName(legacyUser.getName(), EntityType.user);
+                        User user = UserTransactionFactory.getDAOInstance().getUserByKey(userEntity.getKey());
+
+                        if (user != null) {
+                            cx = getLegCat(pm, legacyPoint.getCatID());
+                            if (cx != null) {
+
+                                Entity completedPoint = EntityTransactionFactory.getDaoInstance(user).getEntityByName(pname, EntityType.point);
+                                if (completedPoint == null) {
+                                    log.severe("should have found a completed point entity here" + legacyPoint.getName());
+                                }
+                                else {
+                                    Point point = PointTransactionsFactory.getDaoInstance(user).getPointByKey(completedPoint.getKey());
+                                    if (point != null) {
+                                       if (legacyPoint.getCalculationEntity() != null) {
+
+                                           CalculationEntity calc = legacyPoint.getCalculationEntity();
+
+                                           EntityName triggerName = CommonFactoryLocator.getInstance().createName(completedPoint.getName().getValue(), EntityType.point);
+                                           Entity trigger = EntityTransactionFactory.getDaoInstance(user).getEntityByName(triggerName, EntityType.point);
+                                           String X = "";
+                                           String Y = "";
+                                           String Z = "";
+                                           String T = "";
+                                           if (calc.getX() != null && calc.getX() > 0) {
+                                               DataPoint xp = getLegPoint(pm, calc.getX());
+                                               if (xp != null) {
+                                                   EntityName name = CommonFactoryLocator.getInstance().createName(xp.getName(), EntityType.point);
+                                                   Entity p = EntityTransactionFactory.getDaoInstance(user).getEntityByName(name, EntityType.point);
+                                                   if (p!= null) {
+                                                       X = p.getKey();
+                                                   }
+                                               }
+                                           }
+                                           if (calc.getY() != null && calc.getY() > 0) {
+                                               DataPoint lp = getLegPoint(pm, calc.getY());
+                                               if (lp != null) {
+                                                   EntityName name = CommonFactoryLocator.getInstance().createName(lp.getName(), EntityType.point);
+                                                   Entity p = EntityTransactionFactory.getDaoInstance(user).getEntityByName(name, EntityType.point);
+                                                   if (p!= null) {
+                                                       Y = p.getKey();
+                                                   }
+                                               }
+                                           }
+                                           if (calc.getZ() != null && calc.getZ() > 0) {
+                                               DataPoint lp = getLegPoint(pm, calc.getZ());
+                                               if (lp != null) {
+                                                   EntityName name = CommonFactoryLocator.getInstance().createName(lp.getName(), EntityType.point);
+                                                   Entity p = EntityTransactionFactory.getDaoInstance(user).getEntityByName(name, EntityType.point);
+                                                   if (p!= null) {
+                                                       Z = p.getKey();
+                                                   }
+                                               }
+                                           }
+                                           if (calc.getTarget() != null && calc.getTarget()  > 0) {
+                                               DataPoint lp = getLegPoint(pm, calc.getTarget());
+                                               if (lp != null) {
+                                                   EntityName name = CommonFactoryLocator.getInstance().createName(lp.getName(), EntityType.point);
+                                                   Entity p = EntityTransactionFactory.getDaoInstance(user).getEntityByName(name, EntityType.point);
+                                                   if (p!= null) {
+                                                       T = p.getKey();
+                                                   }
+                                               }
+                                           }
+                                           EntityName cName = CommonFactoryLocator.getInstance().createName(legacyPoint.getName() + " Calc", EntityType.calculation);
+
+
+                                           Entity existing = EntityTransactionFactory.getDaoInstance(user).getEntityByName(cName, EntityType.calculation);
+                                           if (existing == null) {
+                                               Entity ce = EntityModelFactory.createEntity(cName, "", EntityType.calculation, ProtectionLevel.onlyMe, trigger.getKey(),
+                                                       user.getKey());
+                                               Entity rce = EntityServiceFactory.getInstance().addUpdateEntity(user, ce);
+                                               Calculation calcEntity = CalculationModelFactory.createCalculation(trigger.getKey(), true, calc.getFormula(),
+                                                       T, X, Y, Z);
+                                               CalculationServiceFactory.getDaoInstance(user).addUpdateCalculation(rce, calcEntity);
+                                               clog("Created calc" + legacyPoint.getName());
+
+                                           }
+                                           else {
+                                               clog("skipping calc " + cName.getValue() + "already processed");
+                                           }
+
+
+
+                                       }
+
+                                    }
+                                    else {
+                                        log.severe("should have found a completed point here" + legacyPoint.getName());
+                                    }
+                                }
+                            }
+                            else {
+                                log.severe("could not find category for point: " + legacyPoint.getName());
+                            }
+                        }
+                        else {
+                            log.severe("could not find point owner for point: " + legacyPoint.getName());
+                        }
+                    }
+                    else {
+                        log.severe("could not find point owner for point: " + legacyPoint.getName());
+                    }
+                }
+                catch (NucleusObjectNotFoundException ex) {
+                    log.severe(ex.getMessage());
+                } catch (JDOFatalUserException ex) {
+                    log.severe(ex.getMessage());
+
+                } catch (NimbitsException e) {
+                    log.severe(e.getMessage());
+                }
+
+
+
+            }
+            TaskFactory.getInstance().startUpgradeTask(Action.calculation,null, s+100 );
+        }
+        else {
+            clog("calc upgrade complete " + s);
+
+        }
+
+
+
+
+
+
+        pm.close();
+
+    }
+
+
+
+
+
+
+
     protected static void doCalc(final HttpServletRequest req) {
         final PersistenceManager pm;
         pm = PMF.get().getPersistenceManager();
 
         try {
 
-            final Query c = pm.newQuery(DataPoint.class);
-            List<DataPoint> points = (List<DataPoint>) c.execute();
-            for (DataPoint p : points) {
-                if (p.getCalculationEntity() != null) {
-                    CalculationEntity co = p.getCalculationEntity();
-                    clog("doing calc: " + co.formula);
-                    //  getLegUser()
+            List<CalculationEntity> calcs;
+            Query q = pm.newQuery(CalculationEntity.class);
+            calcs = (List<CalculationEntity>) q.execute();
+            for (CalculationEntity calc : calcs){
 
-                    //CalculationModelFactory.createCalculation()
+                try {
+                    DataPoint point = calc.getPoint();
+                    clog("Upgrading calc for point" + point.getName());
+                    NimbitsUser legecyUser = getLegUser(pm, point.getUserFK());
+                    if (legecyUser != null) {
+                        Entity userEntity = EntityTransactionFactory.getDaoInstance(null).getEntityByName(legecyUser.getName(), EntityType.user);
+                        User user = UserTransactionFactory.getDAOInstance().getUserByKey(userEntity.getKey());
+                        if (user != null) {
 
+                        }
+                        else {
+                            clog("could not find calc owner" + legecyUser.getName());
 
+                        }
+                    }
+                    else {
+                        clog("could not find calc owner for point " + point.getName());
 
+                    }
                 }
+                catch (NucleusObjectNotFoundException ex) {
+                    log.severe(ex.getMessage());
+                } catch (JDOFatalUserException ex) {
+                    log.severe(ex.getMessage());
+
+                } catch (NimbitsException e) {
+                    log.severe(e.getMessage());
+                }
+
+
             }
-
-
 
 
 
@@ -322,9 +718,10 @@ public class UpgradeTask  extends HttpServlet
     protected static void doValue(final HttpServletRequest req) {
         final PersistenceManager pm;
         pm = PMF.get().getPersistenceManager();
-
+        int s = Integer.valueOf(req.getParameter("s"));
         try {
-            clog("doing value");
+            clog("doing values " + s + (s + 1000));
+
             final Entity pointEntity = GsonFactory.getInstance().fromJson(req.getParameter(Parameters.json.getText()), EntityModel.class);
             final User u = UserTransactionFactory.getDAOInstance().getUserByKey(pointEntity.getOwner());
             if (u != null) {
@@ -344,21 +741,20 @@ public class UpgradeTask  extends HttpServlet
                     final RecordedValueTransactions dao =  RecordedValueTransactionFactory.getDaoInstance(point);
                     final Timespan timespan = TimespanModelFactory.createTimespan(leg.getCreateDate(), new Date());
 
-                    int cx = -1;
-                    int seg = 0;
-                    while (cx != 0) {
 
-                        final List<Value> values= old.getDataSegment(timespan,seg, seg + 1000 );
-                        cx = values.size();
-                        if (values.size() > 0) {
-                            dao.recordValues(values);
-                            clog("Saved " + values.size() + " values");
-                        }
 
-                        seg += 1000;
-
+                    final List<Value> values= old.getDataSegment(timespan,s, s + 1000 );
+                    int cx = values.size();
+                    if (cx > 0) {
+                        dao.recordValues(values);
+                        clog("Saved " + values.size() + " values");
+                        TaskFactory.getInstance().startUpgradeTask(Action.value,pointEntity, s+1000 );
 
                     }
+                    else {
+                        clog("Done value transfer" + pointEntity.getName().getValue());
+                    }
+
                 }
                 else {
                     log.severe(pointEntity.getName() + " didn't exist");
@@ -397,278 +793,69 @@ public class UpgradeTask  extends HttpServlet
 //    }
 //
 //
-    private void doPoint(final HttpServletRequest req) {
 
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-
-        try {
-            final Entity pointEntity = GsonFactory.getInstance().fromJson(req.getParameter(Parameters.json.getText()), EntityModel.class);
-            final DataPoint legecy =  GsonFactory.getInstance().fromJson(req.getParameter(Parameters.point.getText()), DataPoint.class);
-
-
-            final User u = UserTransactionFactory.getDAOInstance().getUserByKey(pointEntity.getOwner());
-            clog(req.getParameter(Parameters.json.getText()));
-            if (u==null) {
-                clog("User not found" + pointEntity.getOwner());
-            }
-            clog(u.getEmail().getValue());
-            final Query c = pm.newQuery(DataPoint.class);
-            c.setFilter( "uuid==o");
-            c.declareParameters("String o");
-            final List<DataPoint> pList = (List<DataPoint>) c.execute(legecy.getUUID());
-            if (pList.size() > 0) {
-                //create subscriptions
-
-                DataPoint p = pList.get(0);
-                clog("Started creating subscritptions");
-                createSubscriptions(u, legecy, pointEntity);
-                clog("fixing calculations");
-                //   createCalcs(pm, u, pointEntity, legecy);
-//                if (p.dataPointIntelligenceEntity != null) {
-//                    final EntityName name = CommonFactoryLocator.getInstance().createName(p.name + "Intelligence");
-//
-//                    final DataPoint target =  getPoint(p.dataPointIntelligenceEntity.targetPointId);
-//
-//                    if (target != null) {
-//                        final Entity iEntity = EntityModelFactory.createEntity(name,"",EntityType.intelligence,
-//                                ProtectionLevel.onlyMe, p.getEntity(), u.getKey() );
-//                        Entity result=  EntityServiceFactory.getInstance().addUpdateEntity(u, iEntity);
-//
-//                        final Intelligence i = IntelligenceModelFactory.createIntelligenceModel(uuid, p.dataPointIntelligenceEntity.getEnabled(),
-//                                p.dataPointIntelligenceEntity.getResultTarget(), target.getUUID(), p.dataPointIntelligenceEntity.getInput(),
-//                                p.dataPointIntelligenceEntity.getNodeId(), p.dataPointIntelligenceEntity.getResultsInPlainText(),
-//                                p.getEntity());
-//                        IntelligenceServiceFactory.getDaoInstance().addUpdateIntelligence(i);
-//                    }
-//                }
-                TaskFactory.getInstance().startUpgradeTask(Action.value, null,0 , 1000);
-
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            clog("ERROR : " + e.getMessage());
-        } finally {
-            if (! pm.isClosed()) {
-                pm.close();
-            }
-        }
-
-
-
-    }
-
-    //    private static void createCalcs(final PersistenceManager pm, final User u, final Entity e, DataPoint p) throws NimbitsException {
-//        if (p.calculationEntity != null) {
-//
-//            String x = null, y = null, z = null, target = null;
-//
-//            if (p.calculationEntity.x != null && p.calculationEntity.x > 0) {
-//                try {
-//                    final PointEntity px = pm.getObjectById(PointEntity.class, p.calculationEntity.x);
-//                    if (px != null) {
-//                        x=(px.getUUID());
-//                    }
-//                } catch (JDOObjectNotFoundException ex) {
-//                    clog("Point not found");
-//
-//                }
-//            }
-//            if (p.calculationEntity.y != null && p.calculationEntity.y > 0) {
-//                try {
-//                    final PointEntity py =  pm.getObjectById(PointEntity.class, p.calculationEntity.y);
-//                    if (py != null) {
-//                        y=(py.getUUID());
-//                    }
-//                } catch (JDOObjectNotFoundException ex) {
-//                    clog("Point not found");
-//
-//                }
-//            }
-//            if (p.calculationEntity.z != null && p.calculationEntity.z > 0) {
-//                try {
-//                    final PointEntity pz =  pm.getObjectById(PointEntity.class, p.calculationEntity.z);
-//
-//                    if (pz != null) {
-//                        z=(pz.getUUID());
-//                    }
-//                } catch (JDOObjectNotFoundException ex) {
-//                    clog("Point not found");
-//
-//                }
-//            }
-//            if (p.calculationEntity.target != null && p.calculationEntity.target > 0) {
-//                try {
-//                    final PointEntity pt = pm.getObjectById(PointEntity.class, p.calculationEntity.target);
-//                    if (pt != null && ! pt.getUUID().equals(p.getEntity())) {
-//                        target= (pt.getUUID());
-//                    }
-//                } catch (JDOObjectNotFoundException ex) {
-//                    clog("Point not found");
-//
-//                }
-//            }
-//            else {
-//                // p.calculationEntity.setEnabled(false);
-//            }
-//
-//            pm.close();
-//            clog("Done getting point vars");
-//            EntityName name = CommonFactoryLocator.getInstance().createName(p.name + " calc");
-//            String uuid = UUID.randomUUID().toString();
-//            Entity entity = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe,
-//                    uuid, p.getEntity(), u.getKey());
-//
-//
-//            clog("creating calc");
-//            Calculation calc = CalculationModelFactory.createCalculation(p.getEntity(),
-//                    uuid, true, p.calculationEntity.getFormula(), target, x, y, z);
-//
-//            clog("saving entity");
-//            EntityServiceFactory.getInstance().addUpdateEntity(u, entity);
-//
-//            clog("saving calc");
-//            CalculationServiceFactory.getDaoInstance(u).addUpdateCalculation(calc);
-//            clog("saving done");
-//
-//
-//        }
-//    }
-//
-    private void createSubscriptions(User u,  DataPoint p, Entity x) {
+    private static void createSubscriptions(User u, DataPoint p, Entity subscivedEntity) {
         boolean enabled = p.isHighAlarmOn() ||p.isLowAlarmOn() || p.getIdleAlarmOn();
 
         try {
-            int delay = (p.getAlarmDelay() > 5) ?  p.getAlarmDelay() : 30;
-            EntityName name = CommonFactoryLocator.getInstance().createName(p.getName() + " alert");
+            int delay = (p.getAlarmDelay() > 30) ?  p.getAlarmDelay() : 30;
+
             if ( p.getAlarmToFacebook()) {
-                createSubscription(u, x, p, enabled, delay, name, SubscriptionType.anyAlert, SubscriptionNotifyMethod.facebook);
+                EntityName name = CommonFactoryLocator.getInstance().createName(p.getName() + " facebook alert", EntityType.subscription);
+                createSubscription(u, subscivedEntity, p, enabled, delay, name, SubscriptionType.anyAlert, SubscriptionNotifyMethod.facebook);
             }
             if ( p.getSendAlarmTweet()) {
-                createSubscription(u, x, p, enabled, delay, name, SubscriptionType.anyAlert, SubscriptionNotifyMethod.twitter);
+                EntityName name = CommonFactoryLocator.getInstance().createName(p.getName() + " twitter alert", EntityType.subscription);
+                createSubscription(u, subscivedEntity, p, enabled, delay, name, SubscriptionType.anyAlert, SubscriptionNotifyMethod.twitter);
             }
             if (p.getSendAlarmIM() != null && p.getSendAlarmIM()) {
-                createSubscription(u, x, p, enabled, delay, name, SubscriptionType.anyAlert, SubscriptionNotifyMethod.instantMessage);
+                EntityName name = CommonFactoryLocator.getInstance().createName(p.getName() + " xmpp alert", EntityType.subscription);
+                createSubscription(u, subscivedEntity, p, enabled, delay, name, SubscriptionType.anyAlert, SubscriptionNotifyMethod.instantMessage);
             }
             if (p.getAlarmToEmail() != null && p.getAlarmToEmail()) {
-                createSubscription(u, x, p, enabled, delay, name, SubscriptionType.anyAlert, SubscriptionNotifyMethod.email);
+                EntityName name = CommonFactoryLocator.getInstance().createName(p.getName() + " email alert", EntityType.subscription);
+                createSubscription(u, subscivedEntity, p, enabled, delay, name, SubscriptionType.anyAlert, SubscriptionNotifyMethod.email);
             }
             if (p.getIdleAlarmOn() != null && p.getIdleAlarmOn()) {
-                createSubscription(u, x, p, p.getIdleAlarmOn(),
+                EntityName name = CommonFactoryLocator.getInstance().createName(p.getName() + " idle alert", EntityType.subscription);
+                createSubscription(u, subscivedEntity, p, p.getIdleAlarmOn(),
                         delay, name, SubscriptionType.idle, SubscriptionNotifyMethod.email);
             }
             if (p.getPostToFacebook() != null && p.getPostToFacebook()) {
-                createSubscription(u,x,  p, enabled, delay, name, SubscriptionType.newValue, SubscriptionNotifyMethod.facebook);
+                EntityName name = CommonFactoryLocator.getInstance().createName(p.getName() + " facebook alert", EntityType.subscription);
+                createSubscription(u,subscivedEntity,  p, enabled, delay, name, SubscriptionType.newValue, SubscriptionNotifyMethod.facebook);
             }
         } catch (Exception ex) {
             clog(ex.getMessage());
         }
     }
     //
-    private void createSubscription(User u, Entity p,DataPoint legacy, boolean enabled, int delay, EntityName name,
-                                    SubscriptionType type, SubscriptionNotifyMethod method ) throws NimbitsException {
+    private static void createSubscription(User u, Entity p, DataPoint legacy, boolean enabled, int delay, EntityName name,
+                                           SubscriptionType type, SubscriptionNotifyMethod method) throws NimbitsException {
 
 
         Subscription subscription = SubscriptionFactory.createSubscription(p.getKey(),
                 type, method, delay,
                 new Date(), legacy.getSendAlertsAsJson(), enabled);
 
+        // subscription.setUuid(UUID.randomUUID().toString());
 
-        Entity entity = EntityModelFactory.createEntity(name, "",EntityType.subscription,
+        Entity sentity = EntityModelFactory.createEntity(name, "",EntityType.subscription,
                 ProtectionLevel.onlyMe,subscription.getKey(), p.getKey(), u.getKey());
-        clog("created subscription " + name.getValue());
-        Entity r = EntityServiceFactory.getInstance().addUpdateEntity(u, entity);
-        SubscriptionTransactionFactory.getInstance(u).subscribe(r, subscription);
+
+
+        Entity s = EntityTransactionFactory.getDaoInstance(u).getEntityByName(name, EntityType.subscription);
+        if (s==null) {
+            clog("created subscription " + name.getValue());
+            Entity r = EntityServiceFactory.getInstance().addUpdateEntity(u, sentity);
+            SubscriptionTransactionFactory.getInstance(u).subscribe(r, subscription);
+        }
+        else {
+            clog("Skipping" + name.getValue());
+        }
     }
     //
-    protected static void doCategory(final HttpServletRequest req) throws NimbitsException {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
 
-        try {
-            final Entity categoryEntity = GsonFactory.getInstance().fromJson(req.getParameter(Parameters.json.getText()), EntityModel.class);
-
-
-            final User u = UserTransactionFactory.getDAOInstance().getUserByKey(categoryEntity.getOwner());
-            log.info(u.getEmail().getValue());
-            final Query catQuery = pm.newQuery(PointCatagory.class);
-            catQuery.setFilter("userFK==o && name==n");
-            catQuery.declareParameters("Long o, String n");
-            NimbitsUser lu = getLegUser(pm, u.getEmail().getValue());
-            final List<PointCatagory> cList = (List<PointCatagory>) catQuery.execute(lu.getId(), categoryEntity.getName().getValue());
-
-
-
-
-            log.info( categoryEntity.getName().getValue());
-            if (cList.size() > 0) {
-                final PointCatagory legecyCat = cList.get(0);
-                clog("A");
-
-                final Query pointQuery = pm.newQuery(DataPoint.class);
-                clog("B");
-
-                pointQuery.setFilter("catID==i");
-                pointQuery.declareParameters("Long i");
-                clog("Getting Cat ID : " + legecyCat.getId()  + " " + legecyCat.getName());
-                final List<DataPoint> points = (List<DataPoint>) pointQuery.execute(legecyCat.getId());
-
-                clog("d");
-
-
-                if (points.size() > 0) {
-
-                    for (final DataPoint p : points) {
-                        log.info(p.getName());
-
-
-                        String parent;
-                        if (legecyCat.getName().equals(N)) {
-                            parent = u.getKey();
-
-                        }
-                        else {
-                            parent = categoryEntity.getKey();
-                        }
-                        if (Utils.isEmptyString(parent)) {
-                            parent = u.getKey();
-                        }
-
-
-                        final ProtectionLevel protectionLevel = (p.getPublic() != null && p.getPublic()) ? ProtectionLevel.everyone : ProtectionLevel.onlyMe;
-                        final EntityName name = CommonFactoryLocator.getInstance().createName(p.getName());
-                        final Entity pointEntity = EntityModelFactory.createEntity(name, p.getDescription(), EntityType.point,
-                                protectionLevel,  parent, u.getKey());
-                        final Entity r = EntityServiceFactory.getInstance().addUpdateEntity(u, pointEntity);
-
-                        String key = makePointEntity(p, r);
-
-                        Transaction tx = pm.currentTransaction();
-                        tx.begin();
-                        p.setTag(key);
-                        tx.commit();
-                        clog("created point " + name.getValue() + " key = " + key);
-
-                        TaskFactory.getInstance().startUpgradeTask(Action.point, null,0, 1000);
-
-                    }
-
-                }
-                doDiagram(legecyCat,categoryEntity,  u);
-
-
-
-            }
-        } catch (Exception e) {
-
-            e.printStackTrace();
-            log.severe(e.getMessage());
-            log.severe(ExceptionUtils.getStackTrace(e));
-        } finally {
-            pm.close();
-        }
-
-
-
-    }
 
     private static String makePointEntity(DataPoint p, Entity r) {
         final PersistenceManager pm1 = PMF.get().getPersistenceManager();
@@ -691,109 +878,132 @@ public class UpgradeTask  extends HttpServlet
         return key;
     }
 
-    protected static void doDiagram(PointCatagory catagory, Entity newCat, User u ) {
+    protected static void doDiagram(  ) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
+
         try {
             final Query d = pm.newQuery(DiagramEntity.class);
-            d.setFilter("categoryFk==o");
-            d.declareParameters("Long o");
-            List<DiagramEntity> diagrams = (List<DiagramEntity>) d.execute(catagory.getId());
-            for (DiagramEntity diagramEntity : diagrams) {
-                String parent;
-                if (catagory.getName().equals(N)) {
-                    parent = u.getKey();
-                }
-                else {
-                    parent = newCat.getKey();
-                }
-                if (Utils.isEmptyString(parent)) {
-                    parent = u.getKey();
-                }
-                ProtectionLevel protectionLevel = ProtectionLevel.get(diagramEntity.protectionLevel);
-                EntityName name = CommonFactoryLocator.getInstance().createName(diagramEntity.name + ".svg");
-                Entity e = EntityModelFactory.createEntity(name, "", EntityType.file,
-                        protectionLevel, parent, u.getKey(), diagramEntity.blobKey.getKeyString());
 
-                Entity r = EntityServiceFactory.getInstance().addUpdateEntity(u, e);
-                clog("created diagram " + name.getValue());
-                // TaskFactoryLocator.getInstance().startUpgradeTask(Action.point,r );
+            List<DiagramEntity> diagrams = (List<DiagramEntity>) d.execute( );
+            clog("processing " + diagrams.size() + "diagrams");
+            for (DiagramEntity diagramEntity : diagrams) {
+
+                try {
+                    PointCatagory c = getLegCat(pm, diagramEntity.categoryFk);
+                    NimbitsUser u = getLegUser(pm, diagramEntity.userFk);
+                    EntityName newName = CommonFactoryLocator.getInstance().createName(diagramEntity.name + ".svg");
+
+                    if (c!= null && u != null) {
+
+                        Entity userEntity = EntityTransactionFactory.getDaoInstance(null).getEntityByName(u.getName(), EntityType.user);
+                        User user = UserTransactionFactory.getDAOInstance().getUserByKey(userEntity.getKey());
+
+                        Entity existing = EntityTransactionFactory.getInstance(user).getEntityByName(newName, EntityType.file);
+                        if (existing == null) {
+
+
+                            String parent;
+                            if (c.getName().equals(N) || c.getName().equals("System")) {
+                                parent = user.getKey();
+                            }
+                            else {
+                                EntityName cName = CommonFactoryLocator.getInstance().createName(c.getName());
+                                Entity newCat = EntityTransactionFactory.getDaoInstance(user).getEntityByName(cName, EntityType.category);
+                                if (newCat != null){
+                                    parent = newCat.getKey();
+                                }
+                                else {
+                                    parent = user.getKey();
+                                }
+                            }
+                            if (Utils.isEmptyString(parent)) {
+                                parent = u.getKey();
+                            }
+                            ProtectionLevel protectionLevel = ProtectionLevel.get(diagramEntity.protectionLevel);
+
+                            Entity e = EntityModelFactory.createEntity(newName, "", EntityType.file,
+                                    protectionLevel, parent, u.getKey(), diagramEntity.blobKey.getKeyString());
+
+                            Entity r = EntityServiceFactory.getInstance().addUpdateEntity(user, e);
+                            clog("created diagram " + newName.getValue());
+                        }
+                        else {
+                            clog("skipping diagram " + newName.getValue());
+                        }
+                    }
+                    // TaskFactoryLocator.getInstance().startUpgradeTask(Action.point,r );
+                } catch (NimbitsException e) {
+                    log.severe(e.getMessage());
+                }
 
             }
-        } catch (NimbitsException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            clog("done processing diagrams");
+
+
         } finally {
             pm.close();
         }
 
     }
 
-    protected static int doUser(final HttpServletRequest req) {
-        final Entity userEntity = GsonFactory.getInstance().fromJson(req.getParameter(Parameters.json.getText()), EntityModel.class);
+    protected static void doConnections(final HttpServletRequest req) {
+
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
 
 
-
-        int categories = 0;
-
         try {
 
-            final UserEntity user = pm.getObjectById(UserEntity.class, userEntity.getKey());
-
+            int s = Integer.valueOf(req.getParameter("s"));
             final Query legUserQuery = pm.newQuery(NimbitsUser.class);
-            legUserQuery.setFilter("email==o");
-            legUserQuery.declareParameters("String o");
-            List<NimbitsUser> legu = (List<NimbitsUser>) legUserQuery.execute(user.getEmail().getValue());
-            NimbitsUser lu = legu.get(0);
+            legUserQuery.setRange(s, s+100);
+            List<NimbitsUser> legu = (List<NimbitsUser>) legUserQuery.execute();
+
+
+            clog("processing connections");
+
+            if (legu.size() > 0) {
+
+                for (NimbitsUser lu : legu) {
+
+
+                    if (lu.getConnections() != null && lu.getConnections().size() > 0) {
+                        for (final Long l : lu.getConnections()) {
+                            NimbitsUser connection = getLegUser(pm, l);
+                            User user = UserTransactionFactory.getDAOInstance().getNimbitsUser(lu.getEmail());
+
+                            if (connection != null) {
+                                final EntityName name = CommonFactoryLocator.getInstance().createName(connection.getEmail().getValue(), EntityType.userConnection);
+
+                                Entity existing = EntityTransactionFactory.getDaoInstance(user).getEntityByName(name, EntityType.userConnection);
+
+                                if (existing == null) {
+                                    final Entity entity = EntityModelFactory.createEntity(name, "",EntityType.userConnection, ProtectionLevel.onlyMe,
+                                            user.getKey(), user.getKey());
+                                    clog("created connection " + name.getValue());
+                                    EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
+                                }
+                                else {
+                                    clog("Skipping " + name.getValue() + " already processed");
+                                }
+
+                            }
 
 
 
-            log.info(user.getEmail().getValue());
 
-            final Query cQuery = pm.newQuery(PointCatagory.class);
-            cQuery.setFilter("userFK==o");
-            cQuery.declareParameters("Long o");
-
-
-
-
-            final List<PointCatagory> list = (List<PointCatagory>) cQuery.execute(lu.getId());
-            categories = list.size();
-            for (final PointCatagory c : list) {
-                log.info(c.getName());
-                final EntityName name = CommonFactoryLocator.getInstance().createName(c.getName());
-                ProtectionLevel protectionLevel = c.getProtectionLevel() == null ? ProtectionLevel.onlyMe : ProtectionLevel.get(c.getProtectionLevel());
-                final Entity entity = EntityModelFactory.createEntity(name, c.getName(), EntityType.category, protectionLevel,
-                        userEntity.getKey(), userEntity.getKey());
-                Entity r = entity;
-                if (! name.getValue().equals(N)) {
-                    r = EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
+                        }
+                    }
                 }
-                log.info("created category " + name.getValue());
-                TaskFactory.getInstance().startUpgradeTask(Action.category, null, 0, 1000);
+                TaskFactory.getInstance().startUpgradeTask(Action.user, null, s+100 );
+            }
+            else {
+                clog("Completed connections");
             }
 
 
-            if (lu.getConnections() != null && lu.getConnections().size() > 0) {
-                for (final Long l : lu.getConnections()) {
-                    NimbitsUser connection = getLegUser(pm, l);
-
-
-
-                    final EntityName name = CommonFactoryLocator.getInstance().createName(connection.getEmail().getValue());
-                    final Entity entity = EntityModelFactory.createEntity(name, "",EntityType.userConnection, ProtectionLevel.onlyMe,
-                            user.getKey(), user.getKey());
-                    clog("created connection " + name.getValue());
-                    EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
-
-                }
-            }
-
-
-            return categories;
         } catch (Exception e) {
             log.severe("ERROR" + e.getMessage());
-            return -1;
 
         } finally {
             pm.close();
@@ -850,7 +1060,7 @@ public class UpgradeTask  extends HttpServlet
         cq.declareParameters("String o");
         return ((List<NimbitsUser>) cq.execute(email)).get(0);
     }
-    protected static int doStart() throws NimbitsException {
+    protected static int doStart(final HttpServletRequest req) throws NimbitsException {
 
         int results = -1;
 
@@ -859,36 +1069,61 @@ public class UpgradeTask  extends HttpServlet
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
 
-        users = (List<NimbitsUser>) pm.newQuery(NimbitsUser.class).execute();
+        Query q =pm.newQuery(NimbitsUser.class);
+        int s = Integer.valueOf(req.getParameter("s"));
+
+        q.setRange(s, s+100);
+        users = (List<NimbitsUser>) q.execute();
 
         //  users = UserTransactionFactory.getInstance().getUsers();
         //   final List<User> users = UserTransactionFactory.getInstance().getAllUsers("lastLoggedIn desc", 3000);
         results = users.size();
-        clog(results + " users found");
-        for (final NimbitsUser u : users) {
-            try {
-                clog("Upgrading user: " + u.getEmail().getValue());
+        clog(results + " users found at range " + s + " "+ (s+100)) ;
+        if (results > 0) {
+            for (final NimbitsUser u : users) {
+                try {
+                    clog("Upgrading user: " + u.getEmail().getValue());
+                    Entity existingUserEntity = EntityTransactionFactory.getDaoInstance(null).getEntityByName(u.getName());
+                    User existingUser = UserTransactionFactory.getDAOInstance().getNimbitsUser(u.getEmail());
 
-                final Entity entity = EntityModelFactory.createEntity(u.getName(), "", EntityType.user, ProtectionLevel.onlyMe, "", "");
-                final Entity r = EntityTransactionFactory.getDaoInstance(null).addUpdateEntity(entity);
-                UserEntity userEntity = new UserEntity(r, u.getEmail());
-                userEntity.setFacebookID(u.getFacebookID());
-                userEntity.setFacebookToken(u.getFacebookToken());
-                userEntity.setLastLoggedIn(u.getLastLoggedIn());
-                userEntity.setSecret(u.getSecret());
-                userEntity.setTwitterToken(u.getTwitterToken());
-                userEntity.setTwitterTokenSecret(u.getTwitterTokenSecret());
-                userEntity.setFacebookID(u.getFacebookID());
-                userEntity.setDateCreated(u.getDateCreated());
+                    if (existingUser == null &&  existingUserEntity == null) {
 
-                pm.makePersistent(userEntity);
-            } catch (NimbitsException e) {
-                log.severe(u.getEmail() + " " + e.getMessage());
+                        final Entity entity = EntityModelFactory.createEntity(u.getName(), "", EntityType.user, ProtectionLevel.onlyMe, "", "");
+                        final Entity r = EntityTransactionFactory.getDaoInstance(null).addUpdateEntity(entity);
+                        UserEntity userEntity = new UserEntity(r, u.getEmail());
+                        userEntity.setFacebookID(u.getFacebookID());
+                        userEntity.setFacebookToken(u.getFacebookToken());
+                        userEntity.setLastLoggedIn(u.getLastLoggedIn());
+                        userEntity.setSecret(u.getSecret());
+                        userEntity.setTwitterToken(u.getTwitterToken());
+                        userEntity.setTwitterTokenSecret(u.getTwitterTokenSecret());
+                        userEntity.setFacebookID(u.getFacebookID());
+                        userEntity.setDateCreated(u.getDateCreated());
+
+                        pm.makePersistent(userEntity);
+                    }
+                    else  if (existingUser != null &&  existingUserEntity != null) {
+                        clog("skipping" +  u.getEmail().getValue() + " Already processed");
+
+                    }
+                    else {
+                        log.severe("Found a corrupt users: " + u.getEmail().getValue());
+                    }
+                } catch (NimbitsException e) {
+                    log.severe(u.getEmail() + " " + e.getMessage());
+                }
+
             }
+            TaskFactory.getInstance().startUpgradeTask(Action.start, null, s+100 );
 
+            //  TaskFactory.getInstance().startUpgradeTask(Action.category, null, s+100 );
 
         }
-        TaskFactory.getInstance().startUpgradeTask(Action.category, null, 0, 10000);
+        else {
+            clog("Completed user upgrade: " + s);
+            TaskFactory.getInstance().startUpgradeTask(Action.category, null, 0);
+        }
+
         return results;
     }
 

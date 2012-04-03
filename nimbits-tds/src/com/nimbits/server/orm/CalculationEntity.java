@@ -22,56 +22,51 @@ import javax.jdo.annotations.*;
  * Time: 4:40 PM
  */
 
-
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 @Deprecated
 public class CalculationEntity  {
+    private static final long serialVersionUID = 2L;
 
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    public com.google.appengine.api.datastore.Key id;
+    private com.google.appengine.api.datastore.Key id;
 
     @Persistent
-    public String formula;
+    private String formula;
 
     @Persistent
-    public String trigger;
+    private Boolean enabled;
 
     @Persistent
-    public Boolean enabled;
+    private Long target;
 
     @Persistent
-    @Deprecated
-    public Long target;
+    private Long x;
 
     @Persistent
-    @Deprecated
-    public Long x;
+    private Long y;
 
     @Persistent
-    @Deprecated
-    public Long y;
+    private Long z;
 
-    @Persistent
-    @Deprecated
-    public Long z;
-
-
-
-    @Deprecated
     @Persistent(mappedBy = "calculationEntity")
     private DataPoint point;
 
     public CalculationEntity() {
     }
 
-
-
-    public String getTrigger() {
-        return this.trigger;
+    public CalculationEntity(String formula, Boolean enabled, Long target, Long x, Long y, Long z) {
+        this.formula = formula;
+        this.enabled = enabled;
+        this.target = target;
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
-
+    public DataPoint getPoint() {
+        return point;
+    }
 
     public String getFormula() {
         return formula;
@@ -91,8 +86,38 @@ public class CalculationEntity  {
     }
 
 
-    public void setEnabled(boolean b) {
-        this.enabled = b;
+    public Long getTarget() {
+        return target;
     }
 
+    public void setTarget(Long target) {
+        this.target = target;
+    }
+
+
+    public Long getX() {
+        return x;
+    }
+
+    public void setX(Long x) {
+        this.x = x;
+    }
+
+
+    public Long getY() {
+        return y;
+    }
+
+    public void setY(Long y) {
+        this.y = y;
+    }
+
+
+    public Long getZ() {
+        return z;
+    }
+
+    public void setZ(Long z) {
+        this.z = z;
+    }
 }

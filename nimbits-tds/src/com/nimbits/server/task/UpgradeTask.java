@@ -841,7 +841,7 @@ public class UpgradeTask  extends HttpServlet
         // subscription.setUuid(UUID.randomUUID().toString());
 
         Entity sentity = EntityModelFactory.createEntity(name, "",EntityType.subscription,
-                ProtectionLevel.onlyMe,subscription.getKey(), p.getKey(), u.getKey());
+                ProtectionLevel.onlyMe, p.getKey(), u.getKey());
 
 
         Entity s = EntityTransactionFactory.getDaoInstance(u).getEntityByName(name, EntityType.subscription);

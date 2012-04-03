@@ -13,12 +13,12 @@
 
 package com.nimbits.server.task;
 
-import com.google.appengine.api.memcache.*;
-import com.google.apphosting.api.*;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.nimbits.PMF;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.calculation.*;
+import com.nimbits.client.model.calculation.Calculation;
+import com.nimbits.client.model.calculation.CalculationModelFactory;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
@@ -31,28 +31,30 @@ import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.timespan.TimespanModelFactory;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.server.calculation.*;
-import com.nimbits.server.entity.*;
+import com.nimbits.server.calculation.CalculationServiceFactory;
+import com.nimbits.server.entity.EntityServiceFactory;
+import com.nimbits.server.entity.EntityTransactionFactory;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.orm.*;
-import com.nimbits.server.orm.PointEntity;
-import com.nimbits.server.orm.UserEntity;
-import com.nimbits.server.point.*;
+import com.nimbits.server.point.PointServiceFactory;
+import com.nimbits.server.point.PointTransactionsFactory;
 import com.nimbits.server.subscription.SubscriptionTransactionFactory;
-import com.nimbits.server.user.*;
+import com.nimbits.server.user.UserTransactionFactory;
 import com.nimbits.server.value.RecordedValueTransactionFactory;
 import com.nimbits.server.value.RecordedValueTransactions;
 import com.nimbits.shared.Utils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.datanucleus.exceptions.*;
+import org.datanucleus.exceptions.NucleusObjectNotFoundException;
 
-import javax.jdo.*;
+import javax.jdo.JDOFatalUserException;
+import javax.jdo.JDOObjectNotFoundException;
+import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
-import javax.jdo.Transaction;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**

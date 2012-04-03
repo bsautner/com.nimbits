@@ -208,7 +208,7 @@ public class PointServletImpl extends ApiServlet {
         }
 
         entity = EntityModelFactory.createEntity(pointName,"", EntityType.point, ProtectionLevel.everyone,
-                parent, u.getKey(), "" );
+                parent, u.getKey());
 
         retObj = PointServiceFactory.getInstance().addPoint(u, entity);
 

@@ -78,7 +78,7 @@ public class UserDAOImpl implements UserTransactions {
         try {
             final EntityName name = CommonFactoryLocator.getInstance().createName(internetAddress.getValue(), EntityType.user);
             final Entity entity =  EntityModelFactory.createEntity(name, "", EntityType.user, ProtectionLevel.onlyMe,
-                    "","", "");
+                    "","");
 
 
             Entity r = EntityTransactionFactory.getDaoInstance(null).addUpdateEntity(entity);

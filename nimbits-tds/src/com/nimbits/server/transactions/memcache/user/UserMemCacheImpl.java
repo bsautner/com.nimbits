@@ -176,7 +176,7 @@ public class UserMemCacheImpl implements UserTransactions {
     }
 
     @Override
-    public List<User> updateConnectionRequest(final String key, final User requestor, final User acceptor, final boolean accepted) throws NimbitsException {
+    public List<User> updateConnectionRequest(final Long key, final User requestor, final User acceptor, final boolean accepted) throws NimbitsException {
         final List<User> affectedUsers = UserTransactionFactory.getDAOInstance().updateConnectionRequest(key, requestor, acceptor, accepted);
         for (final User u : affectedUsers) {
             addUserToCache(u);

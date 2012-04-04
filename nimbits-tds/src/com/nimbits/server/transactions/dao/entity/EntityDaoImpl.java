@@ -21,9 +21,11 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.relationship.*;
 import com.nimbits.client.model.user.User;
 import com.nimbits.server.entity.EntityTransactions;
 import com.nimbits.server.orm.EntityStore;
+import com.nimbits.server.relationship.*;
 import com.nimbits.shared.Utils;
 
 import javax.jdo.*;
@@ -188,17 +190,38 @@ public class EntityDaoImpl implements  EntityTransactions {
         final List<String> uuids = new ArrayList<String>(connections.size() + 1);
         uuids.add(user.getKey());
 
+        List<String> connectedUserKeys = new ArrayList<String>(connections.size());
+        Map<String, Relationship> relationshipMap = new HashMap<String, Relationship>(connections.size());
 
         for (final Entity e : connections.values()) {
+            Relationship r = RelationshipTransactionFactory.getInstance().getRelationship(e);
 
-            uuids.add(e.getKey());
+            if (r != null) {
+                relationshipMap.put(r.getForeignKey(), r);
+                uuids.add(r.getForeignKey());
+                connectedUserKeys.add(r.getForeignKey());
+            }
         }
 
         final Query q1 = pm.newQuery(EntityStore.class, ":p.contains(owner)");
 
         try {
             final List<Entity> result = (List<Entity>) q1.execute(uuids);
-            return EntityModelFactory.createEntities(user, result);
+
+            List<Entity> r =  EntityModelFactory.createEntities(user, result);
+            for (Entity entity1 : r) {
+
+                if (connectedUserKeys.contains(entity1.getParent())) {
+                    Relationship rx = relationshipMap.get(entity1.getParent());
+                    entity1.setParent(rx.getKey());
+                }
+
+
+            }
+            return r;
+
+
+
         } finally {
             pm.close();
         }
@@ -290,8 +313,8 @@ public class EntityDaoImpl implements  EntityTransactions {
 
         try {
             if (! Utils.isEmptyString(uuid)) {
-            final Entity result =  pm.getObjectById(EntityStore.class, uuid);
-            return EntityModelFactory.createEntity(user,result);
+                final Entity result =  pm.getObjectById(EntityStore.class, uuid);
+                return EntityModelFactory.createEntity(user,result);
 
             }
             else {

@@ -28,8 +28,8 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModelFactory;
 import com.nimbits.server.connections.ConnectionRequestModelFactory;
 import com.nimbits.server.entity.EntityTransactionFactory;
-import com.nimbits.server.orm.ConnectionRequest;
-import com.nimbits.server.orm.UserEntity;
+import com.nimbits.server.orm.*;
+import com.nimbits.server.orm.ConnectionRequestEntity;
 import com.nimbits.server.user.UserTransactions;
 import twitter4j.auth.AccessToken;
 
@@ -202,29 +202,34 @@ public class UserDAOImpl implements UserTransactions {
     @Override
     public List<Connection> getPendingConnectionRequests(final EmailAddress internetAddress) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final Query q = pm.newQuery(ConnectionRequest.class, "approved == a && targetEmail==e && rejected == r");
-        final Map<String, Object> args = new HashMap<String, Object>(3);
-        args.put("a", false);
-        args.put("r", false);
-        args.put("e", internetAddress.getValue());
-        q.declareParameters("Boolean a, Boolean r, String e");
-        final List<ConnectionRequest> data = (List<ConnectionRequest>) q.executeWithMap(args);
+        final List<Connection> retObj;
+        try {
+            final Query q = pm.newQuery(ConnectionRequestEntity.class);
+            q.setFilter("approved == a && targetEmail==e && rejected == r");
+            q.declareParameters("Boolean a, Boolean r, String e");
+            q.setRange(0,25);
 
-        final List<Connection> retObj = ConnectionRequestModelFactory.CreateConnectionRequestModels(data);
-        pm.close();
-        return retObj;
+
+            final List<ConnectionRequestEntity> data = (List<ConnectionRequestEntity>) q.execute(false, false, internetAddress.getValue());
+
+            return  ConnectionRequestModelFactory.CreateConnectionRequestModels(data);
+
+        } finally {
+            pm.close();
+        }
+
 
     }
 
     @Override
-    public List<User> updateConnectionRequest(final String key, final User requestor, final User acceptor, final boolean accepted) {
+    public List<User> updateConnectionRequest(final Long key, final User requestor, final User acceptor, final boolean accepted) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final List<User> affectedUsers = new ArrayList<User>(1);
 
         final Transaction tx;
 
         try {
-            final ConnectionRequest c =  pm.getObjectById(ConnectionRequest.class, key);
+            final ConnectionRequestEntity c =  pm.getObjectById(ConnectionRequestEntity.class, key);
             if (c!= null) {
                 tx = pm.currentTransaction();
                 tx.begin();
@@ -247,7 +252,7 @@ public class UserDAOImpl implements UserTransactions {
 
     @Override
     public Connection makeConnectionRequest(final User u, final EmailAddress emailAddress) {
-        final ConnectionRequest f = new ConnectionRequest(u.getKey(), u.getEmail(), emailAddress, UUID.randomUUID().toString());
+        final ConnectionRequestEntity f = new ConnectionRequestEntity(u.getKey(), u.getEmail(), emailAddress, UUID.randomUUID().toString());
         Connection retObj;
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -349,12 +354,12 @@ public class UserDAOImpl implements UserTransactions {
     @Override
     public List<User> getConnectionRequests(final List<String> connections) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final Query q = pm.newQuery(ConnectionRequest.class,":p.contains(uuid)");
+        final Query q = pm.newQuery(ConnectionRequestEntity.class,":p.contains(uuid)");
 
 
         try {
             User u;
-            final List<ConnectionRequest> result = (List<ConnectionRequest>) q.execute(connections);
+            final List<ConnectionRequestEntity> result = (List<ConnectionRequestEntity>) q.execute(connections);
             final List<User> retObj = new ArrayList<User>(result.size());
             if (result.size() > 0) {
 

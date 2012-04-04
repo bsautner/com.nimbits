@@ -46,7 +46,7 @@ public interface Connection extends Serializable {
 
     void setApproved(final boolean approved);
 
-    String getKey();
+    Long getKey();
 
     void setRequestorEmail(final EmailAddress requestorEmail);
 

@@ -28,6 +28,7 @@ import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.feed.FeedValue;
 import com.nimbits.client.model.feed.FeedValueModel;
 import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.relationship.*;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueModelFactory;
@@ -36,6 +37,7 @@ import com.nimbits.server.common.ServerInfoImpl;
 import com.nimbits.server.entity.EntityServiceFactory;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.point.PointServiceFactory;
+import com.nimbits.server.relationship.*;
 import com.nimbits.server.user.UserServiceFactory;
 import com.nimbits.server.value.RecordedValueServiceFactory;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -54,14 +56,14 @@ import java.util.logging.Logger;
 public class FeedImpl extends RemoteServiceServlet implements Feed {
     private static final Logger log = Logger.getLogger(FeedImpl.class.getName());
 
-//    private User getUser() {
-//        try {
-//            return UserServiceFactory.getServerInstance().getHttpRequestUser(
-//                    this.getThreadLocalRequest());
-//        } catch (NimbitsException e) {
-//            return null;
-//        }
-//    }
+    private User getUser() {
+        try {
+            return UserServiceFactory.getServerInstance().getHttpRequestUser(
+                    this.getThreadLocalRequest());
+        } catch (NimbitsException e) {
+            return null;
+        }
+    }
 
     @Override
     public void postToFeed(final User user, final Entity entity, final Point originalPoint, final Value value, final FeedType type) throws NimbitsException {
@@ -224,25 +226,52 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
     }
 
     @Override
-    public List<FeedValue> getFeed(final int count, final String feedOwnersUUID) throws NimbitsException {
-        //User user = getUser();
-        final User user = UserServiceFactory.getInstance().getUserByUUID(feedOwnersUUID);
-        final Point point = getFeedPoint(user);
-        final List<Value> values = RecordedValueServiceFactory.getInstance().getTopDataSeries(point, count, new Date());
-        final List<FeedValue> retObj = new ArrayList<FeedValue>(values.size());
-        FeedValue fv;
+    public List<FeedValue> getFeed(final int count, final String relationshipEntityKey) throws NimbitsException {
 
-        for (final Value v : values) {
-            if (! Utils.isEmptyString(v.getData())) {
-                try {
-                    fv =  GsonFactory.getInstance().fromJson(v.getData(), FeedValueModel.class);
-                    retObj.add(fv);
-                } catch (JsonSyntaxException ignored) {
+        User loggedInUser = getUser();
+        final User feedUser;
+        if (loggedInUser != null && loggedInUser.getKey().equals(relationshipEntityKey)) {
 
-                }
+            feedUser = loggedInUser;
+
+
+        }
+        else {
+            final Relationship r = RelationshipTransactionFactory.getInstance().getRelationship(relationshipEntityKey);
+
+            if (r != null) {
+                final String feedOwnersUUID = r.getForeignKey();
+                feedUser = UserServiceFactory.getInstance().getUserByUUID(feedOwnersUUID);
+            }
+            else {
+                feedUser = null;
             }
         }
-        return retObj;
+
+        if (feedUser != null) {
+
+
+            final Point point = getFeedPoint(feedUser);
+            final List<Value> values = RecordedValueServiceFactory.getInstance().getTopDataSeries(point, count, new Date());
+            final List<FeedValue> retObj = new ArrayList<FeedValue>(values.size());
+            FeedValue fv;
+
+            for (final Value v : values) {
+                if (! Utils.isEmptyString(v.getData())) {
+                    try {
+                        fv =  GsonFactory.getInstance().fromJson(v.getData(), FeedValueModel.class);
+                        retObj.add(fv);
+                    } catch (JsonSyntaxException ignored) {
+
+                    }
+                }
+            }
+            return retObj;
+        }
+        else
+        {
+            return new ArrayList<FeedValue>(0);
+        }
     }
 
     private Point createFeedPoint(final User user) throws NimbitsException {

@@ -61,13 +61,13 @@ public class FeedPanel  extends LayoutContainer {
     //ContentPanel panel;
     private ComboBox<FeedTypeOption> feedType;
 
-    private String feedOwnersUUID;
+    private String connectionEntityKey;
     private final User user;
 
     public FeedPanel(final User user) {
 
         this.user = user;
-        feedOwnersUUID = user.getKey();
+        connectionEntityKey = user.getKey();
     }
 
     @Override
@@ -119,7 +119,7 @@ public class FeedPanel  extends LayoutContainer {
         }
         if (store != null) {
             FeedAsync service = GWT.create(Feed.class);
-            service.getFeed(10, feedOwnersUUID, new AsyncCallback<List<FeedValue>>() {
+            service.getFeed(10, connectionEntityKey, new AsyncCallback<List<FeedValue>>() {
                 @Override
                 public void onFailure(Throwable caught) {
 
@@ -167,7 +167,7 @@ public class FeedPanel  extends LayoutContainer {
 
         final FeedAsync service = GWT.create(Feed.class);
         final int FEED_COUNT = 30;
-        service.getFeed(FEED_COUNT, feedOwnersUUID, new AsyncCallback<List<FeedValue>>() {
+        service.getFeed(FEED_COUNT, connectionEntityKey, new AsyncCallback<List<FeedValue>>() {
             @Override
             public void onFailure(Throwable caught) {
 
@@ -212,7 +212,7 @@ public class FeedPanel  extends LayoutContainer {
         btn.addSelectionListener(new SelectionListener<ButtonEvent>() {
             @Override
             public void componentSelected(ButtonEvent buttonEvent) {
-                 feedOwnersUUID = user.getKey();
+                 connectionEntityKey = user.getKey();
             }
         });
 
@@ -236,7 +236,7 @@ public class FeedPanel  extends LayoutContainer {
         entityCombo.addSelectionChangedListener(new SelectionChangedListener<GxtModel>() {
             @Override
             public void selectionChanged(SelectionChangedEvent<GxtModel> gxtModelSelectionChangedEvent) {
-               feedOwnersUUID =gxtModelSelectionChangedEvent.getSelectedItem().getUUID();
+               connectionEntityKey =gxtModelSelectionChangedEvent.getSelectedItem().getUUID();
                 updateValues(true);
             }
         });

@@ -13,6 +13,7 @@
 
 package com.nimbits.server.task;
 
+import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.nimbits.PMF;
 import com.nimbits.client.enums.*;
@@ -25,6 +26,7 @@ import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.relationship.*;
 import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.subscription.SubscriptionFactory;
 import com.nimbits.client.model.timespan.Timespan;
@@ -38,6 +40,7 @@ import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.orm.*;
 import com.nimbits.server.point.PointServiceFactory;
 import com.nimbits.server.point.PointTransactionsFactory;
+import com.nimbits.server.relationship.*;
 import com.nimbits.server.subscription.SubscriptionTransactionFactory;
 import com.nimbits.server.user.UserTransactionFactory;
 import com.nimbits.server.value.RecordedValueTransactionFactory;
@@ -91,7 +94,7 @@ public class UpgradeTask  extends HttpServlet
                     doPoint2(req);
                     break;
                 case value:
-                   doValue(req);
+                    doValue(req);
                     break;
                 case calculation:
                     doCalc3(req);
@@ -539,77 +542,77 @@ public class UpgradeTask  extends HttpServlet
                                 else {
                                     Point point = PointTransactionsFactory.getDaoInstance(user).getPointByKey(completedPoint.getKey());
                                     if (point != null) {
-                                       if (legacyPoint.getCalculationEntity() != null) {
+                                        if (legacyPoint.getCalculationEntity() != null) {
 
-                                           CalculationEntity calc = legacyPoint.getCalculationEntity();
+                                            CalculationEntity calc = legacyPoint.getCalculationEntity();
 
-                                           EntityName triggerName = CommonFactoryLocator.getInstance().createName(completedPoint.getName().getValue(), EntityType.point);
-                                           Entity trigger = EntityTransactionFactory.getDaoInstance(user).getEntityByName(triggerName, EntityType.point);
-                                           String X = "";
-                                           String Y = "";
-                                           String Z = "";
-                                           String T = "";
-                                           if (calc.getX() != null && calc.getX() > 0) {
-                                               DataPoint xp = getLegPoint(pm, calc.getX());
-                                               if (xp != null) {
-                                                   EntityName name = CommonFactoryLocator.getInstance().createName(xp.getName(), EntityType.point);
-                                                   Entity p = EntityTransactionFactory.getDaoInstance(user).getEntityByName(name, EntityType.point);
-                                                   if (p!= null) {
-                                                       X = p.getKey();
-                                                   }
-                                               }
-                                           }
-                                           if (calc.getY() != null && calc.getY() > 0) {
-                                               DataPoint lp = getLegPoint(pm, calc.getY());
-                                               if (lp != null) {
-                                                   EntityName name = CommonFactoryLocator.getInstance().createName(lp.getName(), EntityType.point);
-                                                   Entity p = EntityTransactionFactory.getDaoInstance(user).getEntityByName(name, EntityType.point);
-                                                   if (p!= null) {
-                                                       Y = p.getKey();
-                                                   }
-                                               }
-                                           }
-                                           if (calc.getZ() != null && calc.getZ() > 0) {
-                                               DataPoint lp = getLegPoint(pm, calc.getZ());
-                                               if (lp != null) {
-                                                   EntityName name = CommonFactoryLocator.getInstance().createName(lp.getName(), EntityType.point);
-                                                   Entity p = EntityTransactionFactory.getDaoInstance(user).getEntityByName(name, EntityType.point);
-                                                   if (p!= null) {
-                                                       Z = p.getKey();
-                                                   }
-                                               }
-                                           }
-                                           if (calc.getTarget() != null && calc.getTarget()  > 0) {
-                                               DataPoint lp = getLegPoint(pm, calc.getTarget());
-                                               if (lp != null) {
-                                                   EntityName name = CommonFactoryLocator.getInstance().createName(lp.getName(), EntityType.point);
-                                                   Entity p = EntityTransactionFactory.getDaoInstance(user).getEntityByName(name, EntityType.point);
-                                                   if (p!= null) {
-                                                       T = p.getKey();
-                                                   }
-                                               }
-                                           }
-                                           EntityName cName = CommonFactoryLocator.getInstance().createName(legacyPoint.getName() + " Calc", EntityType.calculation);
-
-
-                                           Entity existing = EntityTransactionFactory.getDaoInstance(user).getEntityByName(cName, EntityType.calculation);
-                                           if (existing == null) {
-                                               Entity ce = EntityModelFactory.createEntity(cName, "", EntityType.calculation, ProtectionLevel.onlyMe, trigger.getKey(),
-                                                       user.getKey());
-                                               Entity rce = EntityServiceFactory.getInstance().addUpdateEntity(user, ce);
-                                               Calculation calcEntity = CalculationModelFactory.createCalculation(trigger.getKey(), true, calc.getFormula(),
-                                                       T, X, Y, Z);
-                                               CalculationServiceFactory.getDaoInstance(user).addUpdateCalculation(rce, calcEntity);
-                                               clog("Created calc" + legacyPoint.getName());
-
-                                           }
-                                           else {
-                                               clog("skipping calc " + cName.getValue() + "already processed");
-                                           }
+                                            EntityName triggerName = CommonFactoryLocator.getInstance().createName(completedPoint.getName().getValue(), EntityType.point);
+                                            Entity trigger = EntityTransactionFactory.getDaoInstance(user).getEntityByName(triggerName, EntityType.point);
+                                            String X = "";
+                                            String Y = "";
+                                            String Z = "";
+                                            String T = "";
+                                            if (calc.getX() != null && calc.getX() > 0) {
+                                                DataPoint xp = getLegPoint(pm, calc.getX());
+                                                if (xp != null) {
+                                                    EntityName name = CommonFactoryLocator.getInstance().createName(xp.getName(), EntityType.point);
+                                                    Entity p = EntityTransactionFactory.getDaoInstance(user).getEntityByName(name, EntityType.point);
+                                                    if (p!= null) {
+                                                        X = p.getKey();
+                                                    }
+                                                }
+                                            }
+                                            if (calc.getY() != null && calc.getY() > 0) {
+                                                DataPoint lp = getLegPoint(pm, calc.getY());
+                                                if (lp != null) {
+                                                    EntityName name = CommonFactoryLocator.getInstance().createName(lp.getName(), EntityType.point);
+                                                    Entity p = EntityTransactionFactory.getDaoInstance(user).getEntityByName(name, EntityType.point);
+                                                    if (p!= null) {
+                                                        Y = p.getKey();
+                                                    }
+                                                }
+                                            }
+                                            if (calc.getZ() != null && calc.getZ() > 0) {
+                                                DataPoint lp = getLegPoint(pm, calc.getZ());
+                                                if (lp != null) {
+                                                    EntityName name = CommonFactoryLocator.getInstance().createName(lp.getName(), EntityType.point);
+                                                    Entity p = EntityTransactionFactory.getDaoInstance(user).getEntityByName(name, EntityType.point);
+                                                    if (p!= null) {
+                                                        Z = p.getKey();
+                                                    }
+                                                }
+                                            }
+                                            if (calc.getTarget() != null && calc.getTarget()  > 0) {
+                                                DataPoint lp = getLegPoint(pm, calc.getTarget());
+                                                if (lp != null) {
+                                                    EntityName name = CommonFactoryLocator.getInstance().createName(lp.getName(), EntityType.point);
+                                                    Entity p = EntityTransactionFactory.getDaoInstance(user).getEntityByName(name, EntityType.point);
+                                                    if (p!= null) {
+                                                        T = p.getKey();
+                                                    }
+                                                }
+                                            }
+                                            EntityName cName = CommonFactoryLocator.getInstance().createName(legacyPoint.getName() + " Calc", EntityType.calculation);
 
 
+                                            Entity existing = EntityTransactionFactory.getDaoInstance(user).getEntityByName(cName, EntityType.calculation);
+                                            if (existing == null) {
+                                                Entity ce = EntityModelFactory.createEntity(cName, "", EntityType.calculation, ProtectionLevel.onlyMe, trigger.getKey(),
+                                                        user.getKey());
+                                                Entity rce = EntityServiceFactory.getInstance().addUpdateEntity(user, ce);
+                                                Calculation calcEntity = CalculationModelFactory.createCalculation(trigger.getKey(), true, calc.getFormula(),
+                                                        T, X, Y, Z);
+                                                CalculationServiceFactory.getDaoInstance(user).addUpdateCalculation(rce, calcEntity);
+                                                clog("Created calc" + legacyPoint.getName());
 
-                                       }
+                                            }
+                                            else {
+                                                clog("skipping calc " + cName.getValue() + "already processed");
+                                            }
+
+
+
+                                        }
 
                                     }
                                     else {
@@ -722,7 +725,7 @@ public class UpgradeTask  extends HttpServlet
         pm = PMF.get().getPersistenceManager();
         int s = Integer.valueOf(req.getParameter("s"));
         try {
-            clog("doing values " + s + (s + 1000));
+            clog("doing values " + s + (s + 100));
 
             final Entity pointEntity = GsonFactory.getInstance().fromJson(req.getParameter(Parameters.json.getText()), EntityModel.class);
             final User u = UserTransactionFactory.getDAOInstance().getUserByKey(pointEntity.getOwner());
@@ -738,17 +741,22 @@ public class UpgradeTask  extends HttpServlet
                     final Timespan timespan = TimespanModelFactory.createTimespan(leg.getCreateDate(), new Date());
 
 
+                    final List<Value> values;
+                    try {
+                        values = old.getDataSegment(timespan,s, s + 100 );
 
-                    final List<Value> values= old.getDataSegment(timespan,s, s + 1000 );
-                    final int cx = values.size();
-                    if (cx > 0) {
-                        dao.recordValues(values);
-                        clog("Saved " + values.size() + " values");
-                        TaskFactory.getInstance().startUpgradeTask(Action.value,pointEntity, s+1000 );
+                        final int cx = values.size();
+                        if (cx > 0) {
+                            dao.recordValues(values);
+                            clog("Saved " + values.size() + " values");
+                            TaskFactory.getInstance().startUpgradeTask(Action.value,pointEntity, s+100 );
 
-                    }
-                    else {
-                        clog("Done value transfer" + pointEntity.getName().getValue());
+                        }
+                        else {
+                            clog("Done value transfer" + pointEntity.getName().getValue());
+                        }
+                    } catch (DatastoreTimeoutException e) {
+                        TaskFactory.getInstance().startUpgradeTask(Action.value,pointEntity, s);
                     }
 
                 }
@@ -847,7 +855,7 @@ public class UpgradeTask  extends HttpServlet
             SubscriptionTransactionFactory.getInstance(u).subscribe(r, subscription);
         }
         else {
-           Subscription s = SubscriptionTransactionFactory.getInstance(u).readSubscription(exists);
+            Subscription s = SubscriptionTransactionFactory.getInstance(u).readSubscription(exists);
             if (s!= null) {
 
 
@@ -973,7 +981,7 @@ public class UpgradeTask  extends HttpServlet
                         for (final Long l : lu.getConnections()) {
                             NimbitsUser connection = getLegUser(pm, l);
                             User user = UserTransactionFactory.getDAOInstance().getNimbitsUser(lu.getEmail());
-
+                            User connectedUser = UserTransactionFactory.getDAOInstance().getNimbitsUser(connection.getEmail());
                             if (connection != null) {
                                 final EntityName name = CommonFactoryLocator.getInstance().createName(connection.getEmail().getValue(), EntityType.userConnection);
 
@@ -983,10 +991,23 @@ public class UpgradeTask  extends HttpServlet
                                     final Entity entity = EntityModelFactory.createEntity(name, "",EntityType.userConnection, ProtectionLevel.onlyMe,
                                             user.getKey(), user.getKey());
                                     clog("created connection " + name.getValue());
-                                    EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
+                                    Entity newEntity = EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
+                                    RelationshipTransactionFactory.getInstance().createRelationship(newEntity, connectedUser.getKey());
+
                                 }
                                 else {
-                                    clog("Skipping " + name.getValue() + " already processed");
+                                    Relationship r = RelationshipTransactionFactory.getInstance().getRelationship(existing);
+                                    if (r == null) {
+                                        RelationshipTransactionFactory.getInstance().createRelationship(existing, connectedUser.getKey());
+
+
+                                    }
+                                    else {
+                                        clog("Skipping " + name.getValue() + " already processed");
+                                    }
+
+
+
                                 }
 
                             }

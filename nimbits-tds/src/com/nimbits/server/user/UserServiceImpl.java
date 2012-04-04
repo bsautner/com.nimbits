@@ -33,6 +33,7 @@ import com.nimbits.client.service.user.UserService;
 import com.nimbits.server.email.EmailServiceFactory;
 import com.nimbits.server.entity.EntityServiceFactory;
 import com.nimbits.server.feed.FeedServiceFactory;
+import com.nimbits.server.relationship.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -280,7 +281,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     @Override
     public void connectionRequestReply(final EmailAddress targetEmail,
                                        final EmailAddress requesterEmail,
-                                       final String key,
+                                       final Long key,
                                        final boolean accepted) throws NimbitsException {
         final User acceptor = getAppUserUsingGoogleAuth();
 
@@ -292,10 +293,18 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
         final Entity aConnection = EntityModelFactory.createEntity(r, "", EntityType.userConnection, ProtectionLevel.onlyMe, acceptor.getKey(), acceptor.getKey());
 
-        EntityServiceFactory.getInstance().addUpdateEntity(acceptor, aConnection);
-        EntityServiceFactory.getInstance().addUpdateEntity(requester,rConnection);
+        Entity newAcceptorEntity = EntityServiceFactory.getInstance().addUpdateEntity(acceptor, aConnection);
+        Entity newRequestorEntity = EntityServiceFactory.getInstance().addUpdateEntity(requester,rConnection);
+
+        RelationshipTransactionFactory.getInstance().createRelationship(newRequestorEntity, acceptor.getKey());
+        RelationshipTransactionFactory.getInstance().createRelationship(newAcceptorEntity, requester.getKey());
 
         UserTransactionFactory.getInstance().updateConnectionRequest(key, requester, acceptor, accepted);
+
+
+
+
+
 
 
     }

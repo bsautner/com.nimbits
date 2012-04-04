@@ -21,7 +21,7 @@ import java.util.Date;
 
 
 public class ConnectionRequestModel extends BaseModelData implements Serializable, Connection {
-    private String key;
+    private Long key;
     private String requestorID;
     private EmailAddress requestorEmail;
     private EmailAddress targetEmail;
@@ -100,7 +100,7 @@ public class ConnectionRequestModel extends BaseModelData implements Serializabl
     }
 
     @Override
-    public String getKey() {
+    public Long getKey() {
         return key;
     }
 

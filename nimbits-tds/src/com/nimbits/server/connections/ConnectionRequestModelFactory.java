@@ -15,7 +15,7 @@ package com.nimbits.server.connections;
 
 import com.nimbits.client.model.connection.Connection;
 import com.nimbits.client.model.connection.ConnectionRequestModel;
-import com.nimbits.server.orm.ConnectionRequest;
+import com.nimbits.server.orm.ConnectionRequestEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,13 +29,13 @@ import java.util.List;
 public class ConnectionRequestModelFactory {
 
 
-    public static ConnectionRequestModel CreateConnectionRequestModel(final ConnectionRequest c) {
+    public static ConnectionRequestModel CreateConnectionRequestModel(final ConnectionRequestEntity c) {
         return new ConnectionRequestModel(c);
     }
 
-    public static List<Connection> CreateConnectionRequestModels(final List<ConnectionRequest> cl) {
+    public static List<Connection> CreateConnectionRequestModels(final List<ConnectionRequestEntity> cl) {
         final List<Connection> retObj = new ArrayList<Connection>();
-        for (final ConnectionRequest c : cl) {
+        for (final ConnectionRequestEntity c : cl) {
             retObj.add(new ConnectionRequestModel(c));
         }
         return retObj;

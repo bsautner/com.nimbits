@@ -415,7 +415,7 @@ public class MainMenuBar extends ToolBar {
                 });
                 } catch (NimbitsException caught) {
                     FeedbackHelper.showError(caught);
-                    return;
+
                 }
 
             }

@@ -39,7 +39,7 @@ public interface UserTransactions {
 
     List<Connection> getPendingConnectionRequests(final EmailAddress emailAddress);
 
-    List<User> updateConnectionRequest(final String key, final User requestor, final User acceptor, final boolean accepted) throws NimbitsException;
+    List<User> updateConnectionRequest(final Long key, final User requestor, final User acceptor, final boolean accepted) throws NimbitsException;
 
     User updateTwitter(final EmailAddress emailAddress, final AccessToken token) throws NimbitsException;
 

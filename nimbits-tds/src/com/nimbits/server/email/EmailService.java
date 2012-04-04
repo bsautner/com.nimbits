@@ -24,5 +24,10 @@ public interface EmailService {
 
     void sendEmail(final EmailAddress email, final String message, final String subject);
 
+    void sendEmail(final EmailAddress fromEmail,
+                   final EmailAddress emailAddress,
+                   final String message,
+                   final String subject);
+
     void sendAlert(final Entity entity, final Point point, final EmailAddress email, final Value value) throws NimbitsException;
 }

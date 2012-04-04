@@ -13,6 +13,7 @@
 
 package com.nimbits.server.quota;
 
+import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.user.User;
 
 /**
@@ -23,8 +24,8 @@ import com.nimbits.client.model.user.User;
  */
 public class QuotaFactory {
 
-    public static Quota getInstance(User user) {
-          return new QuotaImpl(user);
+    public static Quota getInstance(EmailAddress emailAddress) {
+          return new QuotaImpl(emailAddress);
     }
 
 }

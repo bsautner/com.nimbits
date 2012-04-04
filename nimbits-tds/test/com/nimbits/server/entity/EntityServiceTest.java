@@ -41,9 +41,9 @@ public class EntityServiceTest extends NimbitsServletTest {
 
         List<Entity> entities =  EntityServiceFactory.getInstance().getEntities();
         assertTrue(entities.size() > 0);
-        Entity e = EntityServiceFactory.getInstance().getEntityByName(pointName);
-        Entity c = EntityServiceFactory.getInstance().getEntityByName(pointChildName);
-        Entity g = EntityServiceFactory.getInstance().getEntityByName(groupName);
+        Entity e = EntityServiceFactory.getInstance().getEntityByName(pointName,EntityType.point);
+        Entity c = EntityServiceFactory.getInstance().getEntityByName(pointChildName,EntityType.point);
+        Entity g = EntityServiceFactory.getInstance().getEntityByName(groupName,EntityType.category);
         assertNotNull(e);
         assertNotNull(c);
         assertNotNull(g);
@@ -51,9 +51,9 @@ public class EntityServiceTest extends NimbitsServletTest {
         assertTrue(children.size() > 0);
 
         EntityServiceFactory.getInstance().deleteEntity(g);
-        e = EntityServiceFactory.getInstance().getEntityByName(pointName);
-        c = EntityServiceFactory.getInstance().getEntityByName(pointChildName);
-        g = EntityServiceFactory.getInstance().getEntityByName(groupName);
+        e = EntityServiceFactory.getInstance().getEntityByName(pointName,EntityType.point);
+        c = EntityServiceFactory.getInstance().getEntityByName(pointChildName,EntityType.point);
+        g = EntityServiceFactory.getInstance().getEntityByName(groupName,EntityType.category);
 
 
         assertNull(g);

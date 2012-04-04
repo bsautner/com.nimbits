@@ -49,13 +49,11 @@ import java.util.Map;
 @SuppressWarnings("unchecked")
 public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTransactions, EntityService {
 
-    private User getUser() {
-        try {
+    private User getUser() throws NimbitsException {
+
             return UserServiceFactory.getServerInstance().getHttpRequestUser(
                     this.getThreadLocalRequest());
-        } catch (NimbitsException e) {
-            return null;
-        }
+
     }
 
     @Override
@@ -75,10 +73,6 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
         return r;
     }
 
-    @Override
-    public Entity getEntityByName(final User user, final EntityName name) throws NimbitsException {
-       return EntityTransactionFactory.getInstance(user).getEntityByName(name);
-    }
 
     @Override
     public List<Entity> deleteEntity(final User user, final Entity entity) throws NimbitsException {
@@ -134,7 +128,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     }
 
     @Override
-    public List<Entity> getEntityChildren(final User user, final Entity entity,final  EntityType type) {
+    public List<Entity> getEntityChildren(final User user, final Entity entity,final  EntityType type) throws NimbitsException {
         return EntityTransactionFactory.getInstance(user).getChildren(entity, type);
     }
 
@@ -212,16 +206,15 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     }
 
     @Override
-    public List<Entity> getChildren(final Entity parentEntity, final EntityType type) {
+    public List<Entity> getChildren(final Entity parentEntity, final EntityType type) throws NimbitsException {
         return EntityTransactionFactory.getInstance(getUser()).getChildren(parentEntity, type);
     }
 
-
-
     @Override
-    public Entity getEntityByName(final EntityName name) throws NimbitsException {
-       return EntityTransactionFactory.getInstance(getUser()).getEntityByName(name);
+    public Entity getEntityByName(final User user, final EntityName name, EntityType type) throws NimbitsException {
+        return EntityTransactionFactory.getInstance(user).getEntityByName(name, type);
     }
+
 
     @Override
     public Entity getEntityByName(EntityName name, EntityType type) throws NimbitsException {

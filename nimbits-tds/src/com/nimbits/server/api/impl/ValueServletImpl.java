@@ -51,6 +51,20 @@ public class ValueServletImpl extends ApiServlet {
 
         try {
             processPost(req, resp);
+
+        } catch (NimbitsException e) {
+            if (user != null) {
+                FeedServiceFactory.getInstance().postToFeed(user, e);
+            }
+        }
+
+    }
+    @Override
+    public void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
+
+        try {
+            processGet(req, resp);
+
         } catch (NimbitsException e) {
             if (user != null) {
                 FeedServiceFactory.getInstance().postToFeed(user, e);
@@ -60,12 +74,12 @@ public class ValueServletImpl extends ApiServlet {
     }
 
     protected void processPost(final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException, IOException {
-        init(req, resp, ExportType.plain);
+        doInit(req, resp, ExportType.plain);
 
         if (user != null && ! user.isRestricted()) {
 
             final EntityName pointName = CommonFactoryLocator.getInstance().createName(getParam(Parameters.point), EntityType.point);
-            final Entity e = EntityServiceFactory.getInstance().getEntityByName(user, pointName);
+            final Entity e = EntityServiceFactory.getInstance().getEntityByName(user, pointName,EntityType.point);
 
             if (e != null) {
                 final Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
@@ -102,23 +116,12 @@ public class ValueServletImpl extends ApiServlet {
             }
 
         }
+        doDestroy();
     }
 
-    @Override
-    public void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
-
-        try {
-            processGet(req, resp);
-        } catch (NimbitsException e) {
-            if (user != null) {
-                FeedServiceFactory.getInstance().postToFeed(user, e);
-            }
-        }
-
-    }
 
     public void processGet(final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException, IOException {
-        init(req, resp, ExportType.plain);
+        doInit(req, resp, ExportType.plain);
         final PrintWriter out = resp.getWriter();
         Value nv = null;
         final String format = getParam(Parameters.format)==null ? Words.WORD_DOUBLE : getParam(Parameters.format);
@@ -134,7 +137,8 @@ public class ValueServletImpl extends ApiServlet {
                     getParam(Parameters.json));
         }
         out.println(processRequest(getParam(Parameters.point), getParam(Parameters.uuid), format, nv, user));
-
+        out.close();
+        doDestroy();
 
     }
 
@@ -163,7 +167,7 @@ public class ValueServletImpl extends ApiServlet {
 
         } else if (!Utils.isEmptyString(pointNameParam)) {
             final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
-            final Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
+            final Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName,EntityType.point);
             if (e != null) {
                 p = PointServiceFactory.getInstance().getPointByKey(e.getKey());
             }

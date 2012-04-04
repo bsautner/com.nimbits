@@ -63,6 +63,10 @@ public class PointEntity implements Point {
     @Persistent
     private Boolean idleAlarmSent;
 
+    @Persistent
+    private String legacyKey;
+
+
     @Override
     public boolean isIdleAlarmOn() {
         return (idleAlarmOn == null) ? false : idleAlarmOn;
@@ -243,5 +247,9 @@ public class PointEntity implements Point {
     @Override
     public String getKey() {
         return key.getName();
+    }
+
+    public void setLegacyKey(String legacyKey) {
+        this.legacyKey = legacyKey;
     }
 }

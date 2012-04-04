@@ -33,7 +33,7 @@ public interface EntityTransactions {
 
     Map<EntityName, Entity> getEntityNameMap(EntityType type) throws NimbitsException;
 
-    List<Entity> getChildren(Entity parentEntity, EntityType type);
+    List<Entity> getChildren(Entity parentEntity, EntityType type) throws NimbitsException;
 
     Entity addUpdateEntity(Entity entity) throws NimbitsException;
 
@@ -42,8 +42,6 @@ public interface EntityTransactions {
     List<Entity> deleteEntity(Entity entity) throws NimbitsException;
 
     Entity getEntityByKey(String uuid) throws NimbitsException;
-
-    Entity getEntityByName(EntityName name) throws NimbitsException;
 
     Entity getEntityByName(EntityName name, EntityType type) throws NimbitsException;
 

@@ -18,6 +18,7 @@ import com.extjs.gxt.ui.client.data.BaseModelData;
 import com.extjs.gxt.ui.client.data.BeanModel;
 import com.extjs.gxt.ui.client.event.*;
 import com.extjs.gxt.ui.client.store.ListStore;
+import com.extjs.gxt.ui.client.util.*;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.LayoutContainer;
 import com.extjs.gxt.ui.client.widget.ListView;
@@ -25,7 +26,7 @@ import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.button.ButtonGroup;
 import com.extjs.gxt.ui.client.widget.form.ComboBox;
 import com.extjs.gxt.ui.client.widget.form.TextArea;
-import com.extjs.gxt.ui.client.widget.layout.FillLayout;
+import com.extjs.gxt.ui.client.widget.layout.*;
 import com.extjs.gxt.ui.client.widget.toolbar.LabelToolItem;
 import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
 import com.google.gwt.core.client.GWT;
@@ -152,7 +153,13 @@ public class FeedPanel  extends LayoutContainer {
     protected void onRender(Element parent, int index) {
         super.onRender(parent, index);
         setBorders(false);
+       // setScrollMode(Style.Scroll.AUTOY);
 
+        ContentPanel panel = new ContentPanel();
+        panel.setLayout(new RowLayout(Style.Orientation.HORIZONTAL));
+        panel.setHeight(1200);
+        panel.setWidth("100%");
+        panel.setHeaderVisible(false);
         view = new ListView<GxtFeedModel>() {
             @Override
             protected GxtFeedModel prepareData(GxtFeedModel model) {
@@ -188,6 +195,7 @@ public class FeedPanel  extends LayoutContainer {
         view.setTemplate(getTemplate());
         view.setBorders(false);
         view.setItemSelector("div.thumb-wrap");
+        view.setStyleAttribute("overflow-y", "scroll");
         view.getSelectionModel().addListener(Events.SelectionChange,
                 new Listener<SelectionChangedEvent<BeanModel>>() {
 
@@ -205,6 +213,8 @@ public class FeedPanel  extends LayoutContainer {
         group.setHeaderVisible(false);
         group.setBodyBorder(false);
         group.setAutoWidth(true);
+        group.setWidth("100%");
+        group.setBorders(false);
         Button btn = new Button("Refresh");
         btn.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.refresh()));
         btn.setIconAlign(Style.IconAlign.LEFT);
@@ -263,26 +273,21 @@ public class FeedPanel  extends LayoutContainer {
                 }
             }
         });
-        status.setWidth(200);
+        status.setWidth("100%");
         group.add(status);
         group.setBodyBorder(true);
 
 
         group.add(btn);
         bar.add(group);
-
-        ContentPanel main = new ContentPanel();
-        main.setBorders(false);
-        main.setBodyBorder(false);
-        main.setScrollMode(Style.Scroll.ALWAYS);
-        main.setHeaderVisible(false);
-        main.setTopComponent(bar);
-        main.setLayout(new FillLayout());
-        main.setHeight(800);
-        main.add(view);
+        panel.setTopComponent(bar);
+        panel.add(view, new RowData(1, -1, new Margins(4)));
+        view.setBorders(true);
+        view.setHeight(600);
+        panel.setFrame(true);
 
 
-        add(main);
+        add(panel, new FlowData(-1));
 
 
     }

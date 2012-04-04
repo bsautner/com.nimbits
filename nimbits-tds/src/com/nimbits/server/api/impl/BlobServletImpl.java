@@ -49,7 +49,7 @@ public class BlobServletImpl extends ApiServlet {
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
 
         try {
-            init(req, res, ExportType.plain);
+            doInit(req, res, ExportType.plain);
 
 
         final Map<String,List<BlobKey>> blobs = blobstoreService.getUploads(req);

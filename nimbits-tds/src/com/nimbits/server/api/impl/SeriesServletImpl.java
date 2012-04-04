@@ -50,7 +50,7 @@ public class SeriesServletImpl extends ApiServlet {
 
         try {
         String result;
-        init(req, resp, ExportType.plain);
+        doInit(req, resp, ExportType.plain);
         int count;
 
 
@@ -96,7 +96,7 @@ public class SeriesServletImpl extends ApiServlet {
 
 
                 final EntityName pointName = CommonFactoryLocator.getInstance().createName(getParam(Parameters.point), EntityType.point);
-                Entity e = EntityServiceFactory.getInstance().getEntityByName(user, pointName);
+                Entity e = EntityServiceFactory.getInstance().getEntityByName(user, pointName,EntityType.point);
                 final Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
 
                 if (point == null) {

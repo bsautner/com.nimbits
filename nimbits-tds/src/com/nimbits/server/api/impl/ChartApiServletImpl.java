@@ -67,7 +67,7 @@ public class ChartApiServletImpl extends ApiServlet {
 
         final Timespan timespan;
         try {
-            init(req, resp, getContentType(formatParam));
+            doInit(req, resp, getContentType(formatParam));
             timespan = getTimestamp(req);
 
 
@@ -134,7 +134,7 @@ public class ChartApiServletImpl extends ApiServlet {
         for (final EntityName pointName : pointList) {
 
 
-            e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
+            e = EntityServiceFactory.getInstance().getEntityByName(u, pointName,EntityType.point);
             p = PointServiceFactory.getInstance().getPointByKey(e.getKey());
 
             if (p != null) {

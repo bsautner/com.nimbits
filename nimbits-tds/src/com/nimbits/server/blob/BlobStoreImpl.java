@@ -19,6 +19,7 @@ import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.files.*;
 import com.google.apphosting.api.*;
 import com.nimbits.client.enums.ExportType;
+import com.nimbits.client.model.entity.*;
 
 import java.io.BufferedReader;
 import java.io.PrintWriter;
@@ -28,14 +29,14 @@ import java.util.*;
 public class BlobStoreImpl implements BlobStore {
 
     @Override
-    public String createFile(final String data,final ExportType exportType)   {
+    public String createFile(EntityName name, final String data,final ExportType exportType)   {
         // Get a file service
 
         try {
             final FileService fileService = FileServiceFactory.getFileService();
 
             // Create a new Blob file with mime-type "text/plain"
-            AppEngineFile file = fileService.createNewBlobFile(exportType.getCode());
+            AppEngineFile file = fileService.createNewBlobFile(exportType.getCode(), name.getValue() + "." + exportType.getFileExtension());
 
             // Open a channel to write to it
             boolean lock = false;

@@ -46,11 +46,11 @@ public class QuotaResetCronTest extends NimbitsServletTest {
         for (int i = 0; i < 10; i++) {
             valueServlet.processGet(req, resp);
         }
-        assertEquals(10, QuotaFactory.getInstance(user).getCount());
+        assertEquals(10, QuotaFactory.getInstance(user.getEmail()).getCount());
 
         QuotaResetCron cron = new QuotaResetCron();
         cron.doGet(req,resp);
-        assertEquals(0, QuotaFactory.getInstance(user).getCount());
+        assertEquals(0, QuotaFactory.getInstance(user.getEmail()).getCount());
 
 
     }

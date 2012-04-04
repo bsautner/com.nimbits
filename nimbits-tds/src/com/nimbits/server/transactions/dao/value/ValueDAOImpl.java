@@ -17,6 +17,7 @@ import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.files.*;
+import com.google.apphosting.api.*;
 import com.nimbits.PMF;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.exception.NimbitsException;
@@ -154,13 +155,14 @@ public class ValueDAOImpl implements RecordedValueTransactions {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         try {
-            final Map<String, Object> args;
 
-            final Query q = pm.newQuery(ValueBlobStoreEntity.class,
-                    "entity == k");
-            args = new HashMap<String, Object>(1);
-            args.put("k", point.getKey());
-            final List<ValueBlobStore> result = (List<ValueBlobStore>) q.executeWithMap(args);
+            final Query q = pm.newQuery(ValueBlobStoreEntity.class);
+            q.setFilter("entity == k");
+            q.declareParameters("String k");
+            q.setRange(0, 1000);
+            q.setOrdering("timestamp descending");
+
+            final List<ValueBlobStore> result = (List<ValueBlobStore>) q.execute(point.getKey());
 
             return ValueBlobStoreFactory.createValueBlobStores(result);
         } finally {
@@ -329,6 +331,7 @@ public class ValueDAOImpl implements RecordedValueTransactions {
                     new BufferedReader(Channels.newReader(readChannel, "UTF8"));
             final StringBuilder sb = new StringBuilder(1024);
             String line;
+
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
             }
@@ -336,6 +339,9 @@ public class ValueDAOImpl implements RecordedValueTransactions {
             final List<Value> models =  GsonFactory.getInstance().fromJson(sb.toString(), GsonFactory.valueListType);
             Collections.sort(models);
             return models;
+        } catch (ApiProxy.ApiDeadlineExceededException ex) {
+            throw new NimbitsException(ex);
+
 
         } catch (IOException e) {
             throw new NimbitsException(e);

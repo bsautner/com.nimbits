@@ -329,40 +329,40 @@ public class EntityDaoImpl implements  EntityTransactions {
         }
     }
 
-    @Override
-
-    public Entity getEntityByName(final EntityName name) throws NimbitsException {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final List<Entity> c;
-
-        try {
-            final Query q1 = pm.newQuery(EntityStore.class);
-            if (user != null) {
-                q1.setFilter("name==b && owner==o");
-                q1.declareParameters("String b, String o");
-                q1.setRange(0, 1);
-                c = (List<Entity>) q1.execute(name.getValue(), user.getKey());
-            }
-            else {
-                q1.setFilter("name==b");
-                q1.declareParameters("String b");
-                q1.setRange(0, 1);
-                c = (List<Entity>) q1.execute(name.getValue());
-            }
-            if (c.size() > 0) {
-
-                final Entity result = c.get(0);
-                return EntityModelFactory.createEntity(user,  result);
-
-            }
-            else {
-                return null;
-            }
-
-        } finally {
-            pm.close();
-        }
-    }
+//    @Override
+//
+//    public Entity getEntityByName(final EntityName name) throws NimbitsException {
+//        final PersistenceManager pm = PMF.get().getPersistenceManager();
+//        final List<Entity> c;
+//
+//        try {
+//            final Query q1 = pm.newQuery(EntityStore.class);
+//            if (user != null) {
+//                q1.setFilter("name==b && owner==o");
+//                q1.declareParameters("String b, String o");
+//                q1.setRange(0, 1);
+//                c = (List<Entity>) q1.execute(name.getValue(), user.getKey());
+//            }
+//            else {
+//                q1.setFilter("name==b");
+//                q1.declareParameters("String b");
+//                q1.setRange(0, 1);
+//                c = (List<Entity>) q1.execute(name.getValue());
+//            }
+//            if (c.size() > 0) {
+//
+//                final Entity result = c.get(0);
+//                return EntityModelFactory.createEntity(user,  result);
+//
+//            }
+//            else {
+//                return null;
+//            }
+//
+//        } finally {
+//            pm.close();
+//        }
+//    }
 
     @Override
     public Entity getEntityByName(EntityName name, EntityType type) throws NimbitsException {

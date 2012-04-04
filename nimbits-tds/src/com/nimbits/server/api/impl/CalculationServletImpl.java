@@ -43,7 +43,7 @@ public class CalculationServletImpl extends ApiServlet {
 
 
         try {
-            init(req, resp, ExportType.plain);
+            doInit(req, resp, ExportType.plain);
             Calculation c = GsonFactory.getInstance().fromJson(getParam(Parameters.json), CalculationModel.class);
             EntityName name;
             name = CommonFactoryLocator.getInstance().createName(getParam(Parameters.name), EntityType.calculation);

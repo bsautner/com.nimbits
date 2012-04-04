@@ -20,7 +20,7 @@ public class CalculationModel implements Serializable, Calculation {
     private String trigger;
 
 
-    public CalculationModel() {
+    protected CalculationModel() {
     }
 
     public CalculationModel(Calculation calculation) {

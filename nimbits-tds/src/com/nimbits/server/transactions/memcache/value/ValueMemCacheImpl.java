@@ -52,8 +52,14 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
 
     private void addPointToActiveList() {
         if (cacheShared.contains(MemCacheKey.activePoints)) {
-            final Map<String, Point> points = (Map<String, Point>) cacheShared.get(MemCacheKey.activePoints);
-            if (! points.containsKey(point.getKey())) {
+            Map<String, Point> points = (Map<String, Point>) cacheShared.get(MemCacheKey.activePoints);
+            if (points == null) { //contains a null map?
+                points = new HashMap<String, Point>(1);
+                points.put(point.getKey(), point);
+                cacheShared.delete(MemCacheKey.activePoints);
+                cacheShared.put(MemCacheKey.activePoints, points);
+            }
+            else if (! points.containsKey(point.getKey())) {
                 points.put(point.getKey(), point);
                 cacheShared.delete(MemCacheKey.activePoints);
                 cacheShared.put(MemCacheKey.activePoints, points);

@@ -36,7 +36,7 @@ public class AuthTestServletImpl extends ApiServlet {
         final PrintWriter out = resp.getWriter();
 
         try {
-            init(req, resp, ExportType.plain);
+            doInit(req, resp, ExportType.plain);
 
             if (user != null && !user.isRestricted()) {
                 out.print(Words.WORD_TRUE);

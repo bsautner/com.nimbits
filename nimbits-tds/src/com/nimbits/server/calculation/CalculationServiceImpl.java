@@ -29,6 +29,7 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueModelFactory;
 import com.nimbits.client.service.calculation.CalculationService;
 import com.nimbits.server.entity.EntityServiceFactory;
+import com.nimbits.server.feed.*;
 import com.nimbits.server.point.PointServiceFactory;
 import com.nimbits.server.user.UserServiceFactory;
 import com.nimbits.server.value.RecordedValueServiceFactory;
@@ -104,13 +105,13 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
 
     @Override
     public void deleteCalculation(final User u, final Entity entity) {
-      CalculationServiceFactory.getDaoInstance(u).deleteCalculation(entity);
+        CalculationServiceFactory.getDaoInstance(u).deleteCalculation(entity);
     }
 
     @Override
     public Entity addUpdateCalculation(Entity entity, EntityName name, Calculation calculation) throws NimbitsException {
-         User u = getUser();
-         return addUpdateCalculation(u, entity, name, calculation);
+        User u = getUser();
+        return addUpdateCalculation(u, entity, name, calculation);
     }
 
     //Section - Calls from RPC Client
@@ -124,21 +125,25 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
     @Override
     public void processCalculations(final User u, final Point point, final Value value) throws NimbitsException {
 
-        final Entity e = EntityServiceFactory.getInstance().getEntityByKey(point.getKey());
+        final Entity e = EntityServiceFactory.getInstance().getEntityByKey(u, point.getKey());
 
         final List<Calculation> calculations = getCalculations(e);
         Point target;
         Value result;
         for (final Calculation c : calculations) {
             if (c.getEnabled()) {
-                target = PointServiceFactory.getInstance().getPointByKey(c.getTarget());
+
+
                 try {
+                    target = PointServiceFactory.getInstance().getPointByKey(c.getTarget());
                     result= solveEquation(c);
                     RecordedValueServiceFactory.getInstance().recordValue(u, target, result, true);
                 } catch (NimbitsException e1) {
                     c.setEnabled(false);
                     CalculationServiceFactory.getDaoInstance(u).addUpdateCalculation(null, c);
-
+                    if (u != null) {
+                        FeedServiceFactory.getInstance().postToFeed(u, e1);
+                    }
                 }
 
 

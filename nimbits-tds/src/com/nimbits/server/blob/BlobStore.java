@@ -14,6 +14,7 @@
 package com.nimbits.server.blob;
 
 import com.nimbits.client.enums.ExportType;
+import com.nimbits.client.model.entity.*;
 
 /**
  * Created by Benjamin Sautner
@@ -23,7 +24,7 @@ import com.nimbits.client.enums.ExportType;
  *
  */
 public interface BlobStore {
-    String createFile(final String data, final ExportType exportType) ;
+    String createFile(EntityName name, final String data, final ExportType exportType) ;
 
     void deleteOrphans();
 }

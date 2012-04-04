@@ -74,6 +74,7 @@ public class PointMaintTask extends HttpServlet {
 
             final List<Long> dates = new ArrayList<Long>(stores.size());
             for (final ValueBlobStore store : stores) {
+                //consolidate blobs that have more than one date.
                 if (dates.contains(store.getTimestamp().getTime())) {
                     RecordedValueTransactionFactory.getDaoInstance(p).consolidateDate(store.getTimestamp());
                 }

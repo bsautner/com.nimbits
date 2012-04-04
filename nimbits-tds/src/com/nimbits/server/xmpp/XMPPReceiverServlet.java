@@ -183,7 +183,7 @@ public class XMPPReceiverServlet extends HttpServlet {
         if (!Utils.isEmptyString(body) && body.endsWith("?")) {
             final EntityName pointName = CommonFactoryLocator.getInstance().createName(body.replace("?", ""), EntityType.point);
 
-            Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
+            Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName,EntityType.point);
             Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
 
             String t = "";

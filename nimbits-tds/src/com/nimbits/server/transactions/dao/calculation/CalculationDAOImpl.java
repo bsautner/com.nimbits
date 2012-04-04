@@ -71,7 +71,6 @@ public class CalculationDAOImpl implements CalculationTransactions {
             final Query q = pm.newQuery(CalcEntity.class);
             q.setFilter("trigger == k");
             q.declareParameters("String k");
-            q.setRange(0,1);
             final List<Calculation> results = (List<Calculation>) q.execute(entity.getKey());
             return CalculationModelFactory.createCalculations(results);
 

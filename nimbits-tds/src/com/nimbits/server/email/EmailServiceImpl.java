@@ -82,6 +82,7 @@ public class EmailServiceImpl implements EmailService {
         final Properties props = new Properties();
         final Session session = Session.getDefaultInstance(props, null);
         try {
+
             final InternetAddress internetAddress = new InternetAddress(emailAddress.getValue());
             final Message msg = new MimeMessage(session);
             msg.setFrom(getFromEmail());
@@ -99,7 +100,29 @@ public class EmailServiceImpl implements EmailService {
             log.severe(e.getMessage());
         }
     }
+    public void sendEmail(final EmailAddress fromEmail,
+                          final EmailAddress emailAddress,
+                          final String message,
+                          final String subject) {
+        final Properties props = new Properties();
+        final Session session = Session.getDefaultInstance(props, null);
+        try {
+            final InternetAddress internetAddress = new InternetAddress(emailAddress.getValue());
+            final InternetAddress from = new InternetAddress(fromEmail.getValue());
+            final Message msg = new MimeMessage(session);
+            msg.setFrom(from);
+            msg.addRecipient(Message.RecipientType.TO, internetAddress);
 
+            msg.setSubject(subject);
+            msg.setContent(message, Const.CONTENT_TYPE_HTML);
+            Transport.send(msg);
+
+        } catch (AddressException e) {
+            log.severe(e.getMessage());
+        } catch (MessagingException e) {
+            log.severe(e.getMessage());
+        }
+    }
     private static InternetAddress getFromEmail() throws UnsupportedEncodingException {
         final String fromEmail;
         try {

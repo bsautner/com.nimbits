@@ -50,19 +50,21 @@ public interface EntityService extends RemoteService {
 
     Entity copyEntity(Entity originalEntity, EntityName newName) throws NimbitsException;
 
-    List<Entity> getChildren(Entity parentEntity, EntityType type);
+    List<Entity> getChildren(Entity parentEntity, EntityType type) throws NimbitsException;
 
-    Entity getEntityByName(EntityName name) throws NimbitsException;
+
 
     Entity addUpdateEntity(User user, Entity aConnection) throws NimbitsException;
 
     Entity getEntityByKey(User u, String entityId) throws NimbitsException;
 
-    Entity getEntityByName(User u, EntityName name) throws NimbitsException;
+    Entity getEntityByName(User u, EntityName name, EntityType type) throws NimbitsException;
+
+    Entity getEntityByName(EntityName name, EntityType type) throws NimbitsException;
 
     List<Entity> deleteEntity(User u, Entity entity) throws NimbitsException;
 
-    List<Entity> getEntityChildren(User u, Entity c, EntityType point);
+    List<Entity> getEntityChildren(User u, Entity c, EntityType point) throws NimbitsException;
 
     Map<String, Entity> getSystemWideEntityMap(EntityType type) throws NimbitsException;
 

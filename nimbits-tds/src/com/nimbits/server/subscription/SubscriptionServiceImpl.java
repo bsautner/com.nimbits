@@ -76,7 +76,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
 
     @Override
-    public void processSubscriptions(final Point point, final Value v) throws NimbitsException {
+    public void processSubscriptions(final User user, final Point point, final Value v) throws NimbitsException {
 
 
         final List<Subscription> subscriptions= getSubscriptionsToPoint(point);
@@ -88,7 +88,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
 
                 log.info("Processing Subscription " + subscription.getKey());
-                final Entity subscriptionEntity = EntityServiceFactory.getInstance().getEntityByKey(subscription.getKey());
+                final Entity subscriptionEntity = EntityServiceFactory.getInstance().getEntityByKey(user, subscription.getKey());
                 if (subscriptionEntity != null ) { //todo - handle subscribed to object deleted
 
                     final Entity entity = EntityServiceFactory.getInstance().getEntityByKey(point.getKey());

@@ -45,7 +45,7 @@ public class MailHandlerServletImpl extends ApiServlet {
             throws IOException {
 
         try {
-            init(req, resp, ExportType.unknown);
+            doInit(req, resp, ExportType.unknown);
             final Properties props = new Properties();
             final Session session = Session.getDefaultInstance(props, null);
             final MimeMessage message = new MimeMessage(session, req.getInputStream());

@@ -81,7 +81,7 @@ public class EntityCacheImpl implements EntityTransactions {
     }
 
     @Override
-    public List<Entity> getChildren(Entity parentEntity, EntityType type) {
+    public List<Entity> getChildren(Entity parentEntity, EntityType type) throws NimbitsException {
         return  EntityTransactionFactory.getDaoInstance(user).getChildren(parentEntity, type);
     }
 
@@ -128,20 +128,20 @@ public class EntityCacheImpl implements EntityTransactions {
 
     }
 
-    @Override
-    public Entity getEntityByName(final EntityName name) throws NimbitsException {
-        if (cache.contains(name)) {
-            return (Entity) cache.get(name);
-        }
-        else {
-            final Entity result =  EntityTransactionFactory.getDaoInstance(user).getEntityByName(name);
-            if (result != null) {
-            addEntityToCache(result);
-            }
-            return result;
-        }
-
-    }
+//    @Override
+//    public Entity getEntityByName(final EntityName name) throws NimbitsException {
+//        if (cache.contains(name)) {
+//            return (Entity) cache.get(name);
+//        }
+//        else {
+//            final Entity result =  EntityTransactionFactory.getDaoInstance(user).getEntityByName(name);
+//            if (result != null) {
+//            addEntityToCache(result);
+//            }
+//            return result;
+//        }
+//
+//    }
 
     @Override
     public Entity getEntityByName(EntityName name, EntityType type) throws NimbitsException {

@@ -35,43 +35,47 @@ import java.util.Map;
  */
 public class ApiServlet extends HttpServlet {
     //private static final Logger log = Logger.getLogger(ApiServlet.class.getName());
-    protected User user;
-    private Map<Parameters, String> paramMap;
+    protected static User user;
+    private static Map<Parameters, String> paramMap;
+
+    public static void doDestroy() {
+        paramMap = null;
+    }
 
 
-    public void init(final HttpServletRequest req, final HttpServletResponse resp, final ExportType type) throws NimbitsException {
+    public static void doInit(final HttpServletRequest req, final HttpServletResponse resp, final ExportType type) throws NimbitsException {
 
-            user = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
-            if (user != null) {
-                QuotaFactory.getInstance(user).incrementCounter();
-            }
-            paramMap = new EnumMap<Parameters, String>(Parameters.class);
+        user = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
+        if (user != null) {
+            QuotaFactory.getInstance(user.getEmail()).incrementCounter();
+        }
+        paramMap = new EnumMap<Parameters, String>(Parameters.class);
 
-            final Parameters[] items = {
-                    Parameters.point,
-                    Parameters.value,
-                    Parameters.json,
-                    Parameters.note,
-                    Parameters.lat,
-                    Parameters.lng,
-                    Parameters.timestamp,
-                    Parameters.data,
-                    Parameters.uuid,
-                    Parameters.format,
-                    Parameters.name,
-                    Parameters.points,
-                    Parameters.count,
-                    Parameters.autoscale,
-                    Parameters.category
+        final Parameters[] items = {
+                Parameters.point,
+                Parameters.value,
+                Parameters.json,
+                Parameters.note,
+                Parameters.lat,
+                Parameters.lng,
+                Parameters.timestamp,
+                Parameters.data,
+                Parameters.uuid,
+                Parameters.format,
+                Parameters.name,
+                Parameters.points,
+                Parameters.count,
+                Parameters.autoscale,
+                Parameters.category
 
-            };
+        };
 
 
 
-            for (final Parameters s : items) {
-                paramMap.put(s, req.getParameter(s.getText()));
-            }
-            addResponseHeaders(resp, type);
+        for (final Parameters s : items) {
+            paramMap.put(s, req.getParameter(s.getText()));
+        }
+        addResponseHeaders(resp, type);
 
 
     }

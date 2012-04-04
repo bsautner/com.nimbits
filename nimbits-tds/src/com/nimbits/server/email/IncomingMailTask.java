@@ -83,7 +83,7 @@ public class IncomingMailTask extends HttpServlet {
         final String emailLine[] = s.split(",");
         final EntityName pointName = CommonFactoryLocator.getInstance().createName(emailLine[0], EntityType.point);
 
-        Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
+        Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName,EntityType.point);
         final Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
 
         if (point != null) {

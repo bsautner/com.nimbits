@@ -48,11 +48,11 @@ public interface PointService extends RemoteService {
 
    //  List<Point> getPoints(final User u) throws NimbitsException;
 
-    Point getPointByKey(final String uuid);
+    Point getPointByKey(final String uuid) throws NimbitsException;
 
    // Point getPointByID(final long id) throws NimbitsException;
 
-    String exportData(final Map<EntityName, Entity> points, final ExportType exportType, final Map<EntityName, List<Value>> values) ;
+    String exportData(final Map<EntityName, Entity> points, final ExportType exportType, final Map<EntityName, List<Value>> values) throws NimbitsException;
 
    // List<Point> getAllPoints(final int start, final int end);
 

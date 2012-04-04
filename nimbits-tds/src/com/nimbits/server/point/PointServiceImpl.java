@@ -20,6 +20,7 @@ import com.nimbits.client.enums.ExportType;
 import com.nimbits.client.enums.FeedType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
@@ -171,14 +172,22 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
 
     @Override
-    public String exportData(final Map<EntityName, Entity> points, final ExportType exportType, final Map<EntityName, List<Value>> values)  {
+    public String exportData(final Map<EntityName, Entity> points, final ExportType exportType, final Map<EntityName, List<Value>> values) throws NimbitsException {
 
         final String data;
 
         switch (exportType) {
             case csvSeparateColumns:
                 data = ExportHelperFactory.getInstance().exportPointDataToCSVSeparateColumns(points, values);
-                return BlobStoreFactory.getInstance().createFile(data, exportType);
+                Entity entity = points.values().iterator().next();
+                EntityName name;
+                if (entity != null) {
+                    name = entity.getName();
+                }
+                else {
+                    name = CommonFactoryLocator.getInstance().createName("nimbits_export", EntityType.file);
+                }
+                return BlobStoreFactory.getInstance().createFile(name, data, exportType);
 
 //            case descriptiveStatistics:
 //                data = ExportHelperFactory.getInstance().exportPointDataToDescriptiveStatistics(points);
@@ -198,7 +207,7 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public Point getPointByKey(final String uuid)  {
+    public Point getPointByKey(final String uuid) throws NimbitsException {
         return PointTransactionsFactory.getInstance(null).getPointByKey(uuid);
     }
 

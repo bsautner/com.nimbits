@@ -46,7 +46,27 @@ public class PointDaoImpl implements PointTransactions {
 
 
 
+    private Point getPointWithLegacyId(String uuid) {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
 
+        try {
+            Query q = pm.newQuery(PointEntity.class);
+            q.setFilter("legacyKey==l");
+            q.declareParameters("String l");
+            List<Point> results = (List<Point>) q.execute(uuid);
+            if (results.size() > 0) {
+                log.info("used legacy point" + uuid);
+                return PointModelFactory.createPointModel(results.get(0));
+            }
+            else {
+                return null;
+            }
+
+        }
+        finally {
+            pm.close();
+        }
+    }
 
     @Override
     public Point updatePoint(final Point update) {
@@ -88,17 +108,29 @@ public class PointDaoImpl implements PointTransactions {
       */
     @Override
     @SuppressWarnings(Const.WARNING_UNCHECKED)
-    public Point getPointByKey(final String entity) {
+    public Point getPointByKey(final String entity) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-
+        Point p;
 
         try {
 
-            final Point p =   pm.getObjectById(PointEntity.class, entity);
+            p =   pm.getObjectById(PointEntity.class, entity);
             return PointModelFactory.createPointModel(p);
         }
+        catch (IllegalArgumentException e) {
+            throw new NimbitsException(e);
+        }
         catch (JDOObjectNotFoundException ex) {
-            return null;
+
+            p = getPointWithLegacyId(entity);
+            if (p != null) {
+                return PointModelFactory.createPointModel(p);
+            }
+            else {
+                return null;
+            }
+
+
 
         } finally {
             pm.close();

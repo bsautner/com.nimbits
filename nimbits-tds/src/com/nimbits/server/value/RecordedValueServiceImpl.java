@@ -17,7 +17,7 @@ import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.nimbits.client.enums.AlertType;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
@@ -143,7 +143,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
                              final Value value) throws NimbitsException {
 
 
-        final Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
+        final Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName, EntityType.point);
         final Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
 
         return (point != null) ? recordValue(u, point, value, false) : null;

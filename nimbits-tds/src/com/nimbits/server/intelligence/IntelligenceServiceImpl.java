@@ -301,7 +301,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
                     Point inputPoint;
 
 
-                    Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName);
+                    Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName,EntityType.point);
                     inputPoint= PointServiceFactory.getInstance().getPointByKey(e.getKey());
 
                     if (inputPoint != null) {

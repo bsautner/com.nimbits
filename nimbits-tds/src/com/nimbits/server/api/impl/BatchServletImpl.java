@@ -32,7 +32,7 @@ public class BatchServletImpl extends ApiServlet {
 
 
         try {
-            init(req, resp, ExportType.plain);
+            doInit(req, resp, ExportType.plain);
             TaskFactory.getInstance().startProcessBatchTask(req, resp);
         } catch (NimbitsException e) {
             if (user != null) {
@@ -54,7 +54,7 @@ public class BatchServletImpl extends ApiServlet {
        //todo go through all servlets, make them like currentvalue
 
         try {
-            init(req, resp, ExportType.plain);
+            doInit(req, resp, ExportType.plain);
             TaskFactory.getInstance().startProcessBatchTask(req, resp);
         } catch (NimbitsException e) {
             if (user != null) {

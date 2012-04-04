@@ -48,10 +48,9 @@ import com.nimbits.server.value.RecordedValueTransactions;
 import com.nimbits.shared.Utils;
 import org.datanucleus.exceptions.NucleusObjectNotFoundException;
 
-import javax.jdo.JDOFatalUserException;
-import javax.jdo.JDOObjectNotFoundException;
-import javax.jdo.PersistenceManager;
+import javax.jdo.*;
 import javax.jdo.Query;
+import javax.jdo.Transaction;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -94,7 +93,7 @@ public class UpgradeTask  extends HttpServlet
                     doPoint2(req);
                     break;
                 case value:
-                    doValue(req);
+                  //  doValue(req);
                     break;
                 case calculation:
                     doCalc3(req);
@@ -108,7 +107,7 @@ public class UpgradeTask  extends HttpServlet
                     break;
 
                 case record:
-                    startValue(req) ;
+                  //  startValue(req) ;
 
             }
         } catch (NimbitsException e) {
@@ -159,7 +158,7 @@ public class UpgradeTask  extends HttpServlet
                                 userEntity = emap.get(email);
                             }
                             else {
-                                userEntity = EntityTransactionFactory.getDaoInstance(null).getEntityByName(email);
+                                userEntity = EntityTransactionFactory.getDaoInstance(null).getEntityByName(email, EntityType.user);
                                 emap.put(email, userEntity);
                             }
                             if (userEntity != null) {
@@ -289,6 +288,9 @@ public class UpgradeTask  extends HttpServlet
                                 else {
                                     Point point = PointTransactionsFactory.getDaoInstance(user).getPointByKey(completedPoint.getKey());
                                     if (point != null) {
+                                        clog("setting legacy key " + p.getName() + "  ");
+                                        setLegacyKey(p, completedPoint);
+
                                         clog("Skipping " + p.getName() + " already processed");
                                     }
                                     else {
@@ -725,7 +727,7 @@ public class UpgradeTask  extends HttpServlet
         pm = PMF.get().getPersistenceManager();
         int s = Integer.valueOf(req.getParameter("s"));
         try {
-            clog("doing values " + s + (s + 100));
+            clog("doing values " + s + " to " +  (s + 100));
 
             final Entity pointEntity = GsonFactory.getInstance().fromJson(req.getParameter(Parameters.json.getText()), EntityModel.class);
             final User u = UserTransactionFactory.getDAOInstance().getUserByKey(pointEntity.getOwner());
@@ -882,12 +884,26 @@ public class UpgradeTask  extends HttpServlet
         pe.setIdleSeconds(p.getIdleSeconds());
         pe.setIdleAlarmOn(p.getIdleAlarmOn());
         pe.setUnit(p.getUnit());
+        pe.setLegacyKey(p.getUuid());
         pm1.makePersistent(pe);
         String key = pe.getKey();
         pm1.close();
         return key;
     }
+    private static void setLegacyKey(DataPoint p, Entity r) {
+        final PersistenceManager pm1 = PMF.get().getPersistenceManager();
+        try {
+            PointEntity point = pm1.getObjectById(PointEntity.class, r.getKey());
+            Transaction tx = pm1.currentTransaction();
+            tx.begin();
+            point.setLegacyKey(p.getUuid());
+            tx.commit();
+        } finally {
+            pm1.close();
+        }
 
+
+    }
     protected static void doDiagram(  ) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
@@ -998,6 +1014,7 @@ public class UpgradeTask  extends HttpServlet
                                 else {
                                     Relationship r = RelationshipTransactionFactory.getInstance().getRelationship(existing);
                                     if (r == null) {
+                                        log.severe("had an entity but no connection - making relationship" + existing.getKey() +" " + connectedUser.getKey());
                                         RelationshipTransactionFactory.getInstance().createRelationship(existing, connectedUser.getKey());
 
 
@@ -1106,7 +1123,7 @@ public class UpgradeTask  extends HttpServlet
             for (final NimbitsUser u : users) {
                 try {
                     clog("Upgrading user: " + u.getEmail().getValue());
-                    Entity existingUserEntity = EntityTransactionFactory.getDaoInstance(null).getEntityByName(u.getName());
+                    Entity existingUserEntity = EntityTransactionFactory.getDaoInstance(null).getEntityByName(u.getName(), EntityType.user);
                     User existingUser = UserTransactionFactory.getDAOInstance().getNimbitsUser(u.getEmail());
 
                     if (existingUser == null &&  existingUserEntity == null) {

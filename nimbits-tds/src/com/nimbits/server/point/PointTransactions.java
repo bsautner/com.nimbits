@@ -43,7 +43,7 @@ public interface PointTransactions {
 
     List<Point> getIdlePoints();
 
-    Point getPointByKey(final String uuid);
+    Point getPointByKey(final String uuid) throws NimbitsException;
 
     List<Point> getAllPoints();
 

@@ -83,6 +83,8 @@ public class PointMemCacheImpl implements PointTransactions {
 //    }
 
 
+
+
     @Override
     public Point updatePoint(final Point point) throws NimbitsException {
 
@@ -103,7 +105,7 @@ public class PointMemCacheImpl implements PointTransactions {
 
     //these should not use the cache, since we don't know the user
     @Override
-    public Point getPointByKey(final String uuid)  {
+    public Point getPointByKey(final String uuid) throws NimbitsException {
         return PointTransactionsFactory.getDaoInstance(u).getPointByKey(uuid);
     }
 

@@ -74,7 +74,7 @@ public class IdlePointCron extends HttpServlet {
             final User u = UserTransactionFactory.getInstance().getUserByKey(entity.getOwner());
             PointServiceFactory.getInstance().updatePoint(u, p);
             Value va = ValueModelFactory.createValueModel(v, AlertType.IdleAlert);
-            SubscriptionServiceFactory.getInstance().processSubscriptions(p,va);
+            SubscriptionServiceFactory.getInstance().processSubscriptions(u, p,va);
 
 
 

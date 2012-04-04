@@ -66,10 +66,11 @@ public class SummaryTask  extends HttpServlet {
         final Date now = new Date();
         final long d = new Date().getTime() - summary.getSummaryIntervalMs();
         if (summary.getLastProcessed().getTime() < d) {
-            final Point source = PointServiceFactory.getInstance().getPointByKey(summary.getEntity());
-            final Timespan span = TimespanModelFactory.createTimespan(new Date(now.getTime() - summary.getSummaryIntervalMs()), now);
-            final List<Value> values;
+
             try {
+                final Point source = PointServiceFactory.getInstance().getPointByKey(summary.getEntity());
+                final Timespan span = TimespanModelFactory.createTimespan(new Date(now.getTime() - summary.getSummaryIntervalMs()), now);
+                final List<Value> values;
                 values = RecordedValueServiceFactory.getInstance().getDataSegment(source, span);
 
                 final double[] doubles = new double[values.size()];

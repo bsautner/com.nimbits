@@ -49,7 +49,10 @@ import java.util.logging.Logger;
  */
 @SuppressWarnings("unchecked")
 public class ProcessBatchTask extends HttpServlet {
-
+    private static final String P = "p";
+    private static final String V = "v";
+    private static final String T = "t";
+    private static final String N = "n";
     private static final long serialVersionUID = 1L;
     private static final Logger log = Logger.getLogger(ProcessBatchTask.class.getName());
 
@@ -101,7 +104,7 @@ public class ProcessBatchTask extends HttpServlet {
                     entity = points.get(b.pointName);
 
                 } else {
-                    entity = EntityServiceFactory.getInstance().getEntityByName(u, b.pointName);
+                    entity = EntityServiceFactory.getInstance().getEntityByName(u, b.pointName,EntityType.point);
                     if (entity != null) {
                         points.put(b.pointName, entity);
                     }
@@ -110,7 +113,17 @@ public class ProcessBatchTask extends HttpServlet {
                     try {
                        v = ValueModelFactory.createValueModel(0.0, 0.0, b.value, b.timestamp, entity.getKey(), b.note);
                        p = PointServiceFactory.getInstance().getPointByKey(entity.getKey());
+                       if (p != null) {
                         RecordedValueServiceFactory.getInstance().recordValue(b.u, p, v, false);
+                       }
+                        else {
+                           log.severe("Batch service could not find a point named " + entity.getName() + " but the entity existed!");
+
+                       }
+                    } catch (NimbitsException ex) {
+                     log.severe(ex.getMessage());
+
+
                     } catch (JDOException e) {
 
                         log.severe(UserMessages.ERROR_BATCH_SERVICE_JDO + e.getMessage());
@@ -130,11 +143,11 @@ public class ProcessBatchTask extends HttpServlet {
 
 
         final String parameterName = enumeration.nextElement();
-        if (parameterName.startsWith("p") && (parameterName.length() == 2 || parameterName.length() == 3)) {
+        if (parameterName.startsWith(P) && (parameterName.length() == 2 || parameterName.length() == 3)) {
 
 
             final int x = Integer.valueOf((String) parameterName.subSequence(1, parameterName.length()));
-            if (m.containsKey("v" + x)) {
+            if (m.containsKey(V + x)) {
                 getValuesFromParam(m, u, x);
             }
         }
@@ -142,7 +155,7 @@ public class ProcessBatchTask extends HttpServlet {
 
     private void getValuesFromParam(final Map m, final User u, final int x) throws NimbitsException {
 
-        final String[] values = (String[]) m.get("v" + x);
+        final String[] values = (String[]) m.get(V + x);
         final String valStr = values[0];
         double value;
 
@@ -155,17 +168,17 @@ public class ProcessBatchTask extends HttpServlet {
 
 
         Date timestamp;
-        final String[] points = (String[]) m.get("p" + x);
+        final String[] points = (String[]) m.get(P + x);
         final EntityName pointName = CommonFactoryLocator.getInstance().createName(points[0], EntityType.point);
         String note = "";
 
-        if (m.containsKey("n" + x)) {
-            final String[] notes = (String[]) m.get("n" + x);
+        if (m.containsKey(N + x)) {
+            final String[] notes = (String[]) m.get(N + x);
             note = notes[0];
         }
 
-        if (m.containsKey("t" + x)) {
-            final String[] timestamps = (String[]) m.get("t" + x);
+        if (m.containsKey(T + x)) {
+            final String[] timestamps = (String[]) m.get(T + x);
             final String valTime = timestamps[0];
             final BigDecimal time = new BigDecimal(valTime);
 

@@ -15,6 +15,7 @@ package com.nimbits.client.service.entity;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.user.User;
@@ -39,13 +40,13 @@ public interface EntityServiceAsync {
 
     void getChildren(Entity parentEntity, EntityType type, AsyncCallback<List<Entity>> async);
 
-    void getEntityByName(EntityName name, AsyncCallback<Entity> async);
+    void getEntityByName(EntityName name, EntityType type, AsyncCallback<Entity> async);
 
     void addUpdateEntity(User user, Entity aConnection, AsyncCallback<Entity> async);
 
     void getEntityByKey(User u, String entityId, AsyncCallback<Entity> async);
 
-    void getEntityByName(User u, EntityName name, AsyncCallback<Entity> async);
+    void getEntityByName(User u, EntityName name, EntityType type, AsyncCallback<Entity> async);
 
     void deleteEntity(User u, Entity entity, AsyncCallback<List<Entity>> async);
 

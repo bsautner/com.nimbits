@@ -24,7 +24,7 @@ import com.nimbits.client.model.value.Value;
 import java.util.List;
 
 public interface SubscriptionServiceAsync {
-    void processSubscriptions(final Point point, final Value v, AsyncCallback<Void> async);
+    void processSubscriptions(final User user, final Point point, final Value v, AsyncCallback<Void> async);
 
     void getSubscriptionsToPoint(Point point, AsyncCallback<List<Subscription>> async);
 

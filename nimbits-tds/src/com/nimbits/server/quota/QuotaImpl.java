@@ -32,9 +32,9 @@ import com.nimbits.server.settings.SettingsServiceFactory;
 public class QuotaImpl implements Quota {
  //   private final User user;
     ShardedCounter counter;
-    public QuotaImpl(final User user) {
+    public QuotaImpl(final EmailAddress email) { //use email since sometimes we only have the key
        // this.user = user;
-        counter = getOrCreateCounter(user.getEmail());
+        counter = getOrCreateCounter(email);
 
     }
 

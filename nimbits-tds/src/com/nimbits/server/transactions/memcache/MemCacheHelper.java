@@ -31,8 +31,8 @@ public class MemCacheHelper {
     public static final String DEFAULT_CACHE_NAMESPACE = SettingType.serverVersion.getDefaultValue() + "DEFAULT";
     private static final String CACHE_KEY_PREFIX = "FOO";
 
-    public static String currentValueCacheKey(String uuid) {
-        return SettingType.serverVersion.getDefaultValue() + CACHE_KEY_PREFIX + "MOST_RECENT_VALUE_CACHE" + uuid;
+    public static String currentValueCacheKey(String key) {
+        return SettingType.serverVersion.getDefaultValue() + CACHE_KEY_PREFIX + "MOST_RECENT_VALUE_CACHE" + key;
     }
 
     public static String valueMemCacheNamespace(Point point) {

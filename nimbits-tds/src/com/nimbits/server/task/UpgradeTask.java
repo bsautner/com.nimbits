@@ -68,7 +68,7 @@ public class UpgradeTask  extends HttpServlet
 
 {
     private final static String N= "Nimbits_Unsorted";
-
+    //WTF
     private static final Logger log = Logger.getLogger(UpgradeTask.class.getName());
     private static final long serialVersionUID = 1L;
 

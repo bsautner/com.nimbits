@@ -106,7 +106,7 @@ public class ValueDAOImpl implements RecordedValueTransactions {
 
     @Override
     public List<Value> getDataSegment(final Timespan timespan) throws NimbitsException {
-       return getDataSegment(timespan, 0, 1000);
+        return getDataSegment(timespan, 0, 1000);
     }
 
     @Override
@@ -206,46 +206,57 @@ public class ValueDAOImpl implements RecordedValueTransactions {
             Date zero;
             List<Value> list;
             for (final Value value : values) {
-                zero= TimespanServiceFactory.getInstance().zeroOutDate(value.getTimestamp());
-                if (map.containsKey(zero.getTime())) {
-                    map.get(zero.getTime()).add(value);
-                    if (maxMap.get(zero.getTime()) < value.getTimestamp().getTime()) {
-                        maxMap.remove(zero.getTime());
-                        maxMap.put(zero.getTime(),value.getTimestamp().getTime()); //keep the most recent value in the batch
+                if (valueHealthy(value)) {
+                    zero= TimespanServiceFactory.getInstance().zeroOutDate(value.getTimestamp());
+                    if (map.containsKey(zero.getTime())) {
+                        map.get(zero.getTime()).add(value);
+                        if (maxMap.get(zero.getTime()) < value.getTimestamp().getTime()) {
+                            maxMap.remove(zero.getTime());
+                            maxMap.put(zero.getTime(),value.getTimestamp().getTime()); //keep the most recent value in the batch
+                        }
+                        if (minMap.get(zero.getTime()) > value.getTimestamp().getTime()) {
+                            minMap.remove(zero.getTime());
+                            minMap.put(zero.getTime(),value.getTimestamp().getTime()); //keep the earliest value in the batch
+                        }
                     }
-                    if (minMap.get(zero.getTime()) > value.getTimestamp().getTime()) {
-                        minMap.remove(zero.getTime());
-                        minMap.put(zero.getTime(),value.getTimestamp().getTime()); //keep the earliest value in the batch
+                    else {
+                        list = new ArrayList<Value>(Const.CONST_MAX_CACHED_VALUE_SIZE);
+                        list.add(value);
+                        map.put(zero.getTime(),list);
+                        maxMap.put(zero.getTime(), value.getTimestamp().getTime());
+                        minMap.put(zero.getTime(), value.getTimestamp().getTime());
                     }
+
+
                 }
-                else {
-                    list = new ArrayList<Value>(Const.CONST_MAX_CACHED_VALUE_SIZE);
-                    list.add(value);
-                    map.put(zero.getTime(),list);
-                    maxMap.put(zero.getTime(), value.getTimestamp().getTime());
-                    minMap.put(zero.getTime(), value.getTimestamp().getTime());
-                }
-
-
-
 
             }
 
             for (final Map.Entry<Long, List<Value>> longListEntry : map.entrySet()) {
-                final String json = GsonFactory.getInstance().toJson(longListEntry.getValue());
+                if (longListEntry.getValue().size() > 0) {
+                    final String json = GsonFactory.getInstance().toJson(longListEntry.getValue());
 
-                try {
-                    createBlobStoreEntity(maxMap, minMap, longListEntry.getKey(), json);
-                } catch (IOException e) {
-                    throw new NimbitsException(e);
+                    try {
+                        createBlobStoreEntity(maxMap, minMap, longListEntry.getKey(), json);
+                    } catch (IOException e) {
+                        throw new NimbitsException(e);
+                    }
+
+
                 }
-
-
             }
 
 
 
         }
+
+
+    }
+
+    private static boolean valueHealthy(final Value value) {
+
+        return !Double.isInfinite(value.getDoubleValue())
+                && !Double.isNaN(value.getDoubleValue());
 
 
     }
@@ -272,14 +283,14 @@ public class ValueDAOImpl implements RecordedValueTransactions {
             key = fileService.getBlobKey(file);
             final Date mostRecentTimeForDay = new Date(maxMap.get(l));
             final Date earliestForDay = new Date(minMap.get(l));
-          currentStoreEntity = new
+            currentStoreEntity = new
                     ValueBlobStoreEntity(point.getKey(),new Date(l), mostRecentTimeForDay, earliestForDay, path, key );
 
             pm.makePersistent(currentStoreEntity);
             pm.flush();
         }
-            catch (Exception ex) {
-                throw new NimbitsException(ex);
+        catch (Exception ex) {
+            throw new NimbitsException(ex);
 
         } finally {
             pm.close();

@@ -91,7 +91,7 @@ public class UpgradeTask  extends HttpServlet
                     doPoint2(req);
                     break;
                 case value:
-                   // doValue(req);
+                   doValue(req);
                     break;
                 case calculation:
                     doCalc3(req);
@@ -732,12 +732,6 @@ public class UpgradeTask  extends HttpServlet
                 final DataPoint leg = getLegPoint(pm, nu.getId(), pointEntity.getName().getValue());
                 if (leg != null) {
 
-                    //  final Query c = pm.newQuery(DataPoint.class);
-                    //  c.setFilter("uuid==o");
-                    //  c.declareParameters("String o");
-                    //  final List<DataPoint> pList = (List<DataPoint>) c.execute(pointEntity.getEntity());
-
-                    //  final Point point = pList.get(0);
                     final Point point = PointServiceFactory.getInstance().getPointByKey(pointEntity.getKey());
                     final RecordedValueTransactions old =  RecordedValueTransactionFactory.getLegacyInstance(leg);
                     final RecordedValueTransactions dao =  RecordedValueTransactionFactory.getDaoInstance(point);
@@ -746,7 +740,7 @@ public class UpgradeTask  extends HttpServlet
 
 
                     final List<Value> values= old.getDataSegment(timespan,s, s + 1000 );
-                    int cx = values.size();
+                    final int cx = values.size();
                     if (cx > 0) {
                         dao.recordValues(values);
                         clog("Saved " + values.size() + " values");
@@ -832,7 +826,7 @@ public class UpgradeTask  extends HttpServlet
         }
     }
     //
-    private static void createSubscription(User u, Entity p, DataPoint legacy, boolean enabled, int delay, EntityName name,
+    private static void createSubscription(User u, Entity p, DataPoint legacy, boolean enabled, int delay, EntityName newName,
                                            SubscriptionType type, SubscriptionNotifyMethod method) throws NimbitsException {
 
 
@@ -840,20 +834,26 @@ public class UpgradeTask  extends HttpServlet
                 type, method, delay,
                 new Date(), legacy.getSendAlertsAsJson(), enabled);
 
-        // subscription.setUuid(UUID.randomUUID().toString());
 
-        Entity sentity = EntityModelFactory.createEntity(name, "",EntityType.subscription,
+
+        Entity sentity = EntityModelFactory.createEntity(newName, "",EntityType.subscription,
                 ProtectionLevel.onlyMe, p.getKey(), u.getKey());
 
-
-        Entity s = EntityTransactionFactory.getDaoInstance(u).getEntityByName(name, EntityType.subscription);
-        if (s==null) {
-            clog("created subscription " + name.getValue());
+        EntityName subscribedToPointName = CommonFactoryLocator.getInstance().createName(legacy.getName(), EntityType.point);
+        Entity exists = EntityTransactionFactory.getDaoInstance(u).getEntityByName(newName, EntityType.subscription);
+        if (exists==null) {
+            clog("created subscription " + newName.getValue());
             Entity r = EntityServiceFactory.getInstance().addUpdateEntity(u, sentity);
             SubscriptionTransactionFactory.getInstance(u).subscribe(r, subscription);
         }
         else {
-            clog("Skipping" + name.getValue());
+           Subscription s = SubscriptionTransactionFactory.getInstance(u).readSubscription(exists);
+            if (s!= null) {
+
+
+            }
+
+            clog("Skipping" + newName.getValue());
         }
     }
     //

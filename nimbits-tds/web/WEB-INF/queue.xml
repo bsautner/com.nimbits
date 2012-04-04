@@ -15,7 +15,7 @@
 <queue-entries>
     <queue>
         <name>default</name>
-        <rate>30/s</rate>
+        <rate>1/s</rate>
     </queue>
 
     <queue>

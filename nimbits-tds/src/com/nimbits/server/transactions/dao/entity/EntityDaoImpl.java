@@ -289,10 +289,14 @@ public class EntityDaoImpl implements  EntityTransactions {
 
 
         try {
-
+            if (! Utils.isEmptyString(uuid)) {
             final Entity result =  pm.getObjectById(EntityStore.class, uuid);
             return EntityModelFactory.createEntity(user,result);
 
+            }
+            else {
+                return null;
+            }
         } catch (JDOObjectNotFoundException ex) {
             return null;
         } catch (JDOFatalUserException ex) {

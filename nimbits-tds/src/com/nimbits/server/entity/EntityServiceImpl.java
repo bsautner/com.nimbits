@@ -171,8 +171,8 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     }
 
     @Override
-    public Entity getEntityByKey(final String uuid) throws NimbitsException {
-       return EntityTransactionFactory.getInstance(getUser()).getEntityByKey(uuid);
+    public Entity getEntityByKey(final String key) throws NimbitsException {
+       return EntityTransactionFactory.getInstance(getUser()).getEntityByKey(key);
     }
 
     @Override

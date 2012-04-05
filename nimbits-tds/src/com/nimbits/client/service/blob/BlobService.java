@@ -13,9 +13,8 @@
 
 package com.nimbits.client.service.blob;
 
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.nimbits.client.model.entity.Entity;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.model.entity.*;
 
 /**
  * Created by bsautner

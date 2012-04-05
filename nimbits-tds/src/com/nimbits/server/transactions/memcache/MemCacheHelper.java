@@ -13,13 +13,12 @@
 
 package com.nimbits.server.transactions.memcache;
 
-import com.nimbits.client.constants.Const;
-import com.nimbits.client.enums.MemCacheKey;
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.enums.SettingType;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.user.User;
+import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
 
 /**
  * Created by Benjamin Sautner
@@ -28,50 +27,28 @@ import com.nimbits.client.model.user.User;
  * Time: 12:19 PM
  */
 public class MemCacheHelper {
-    public static final String DEFAULT_CACHE_NAMESPACE = SettingType.serverVersion.getDefaultValue() + "DEFAULT";
-    private static final String CACHE_KEY_PREFIX = "FOO";
-
-    public static String currentValueCacheKey(String key) {
-        return SettingType.serverVersion.getDefaultValue() + CACHE_KEY_PREFIX + "MOST_RECENT_VALUE_CACHE" + key;
-    }
-
-    public static String valueMemCacheNamespace(Point point) {
-        return MemCacheKey.valueCache +  point.getKey().replace('@', '-').replace('/', '-').replace(' ', '_');
-    }
-
-    public static String valueBufferCacheKey(Point point) {
-        return SettingType.serverVersion.getDefaultValue() +  CACHE_KEY_PREFIX + "BUFFERMEM" + point.getKey();
-    }
-
-    public static String defaultPointCache() {
-        return SettingType.serverVersion.getDefaultValue() + "DEFAULT_POINT_NAMESPACE";
-    }
+     private static final String CACHE_KEY_PREFIX = "FOO";
 
 
 
-    public static String allUsersCacheKey =  CACHE_KEY_PREFIX + Parameters.user.getText() + SettingType.serverVersion.getDefaultValue() + "ALLUSERS";
+
+
+
+    public static final String allUsersCacheKey =  CACHE_KEY_PREFIX + Parameters.user.getText() + SettingType.serverVersion.getDefaultValue() + "ALLUSERS";
 
     public static String UserCacheKey(final EmailAddress emailAddress) {
         return  CACHE_KEY_PREFIX + Parameters.user.getText() + SettingType.serverVersion.getDefaultValue()+    emailAddress.getValue();
     }
 
 
-    public static String UserCacheKey(final User u) {
+    public static String UserCacheKey(final User u) throws NimbitsException {
         return CACHE_KEY_PREFIX + Parameters.user.getText() + SettingType.serverVersion.getDefaultValue()+   u.getEmail().getValue();
     }
 
     public static String UserCacheKey(final String id) {
         return  CACHE_KEY_PREFIX + Parameters.user.getText() + SettingType.serverVersion.getDefaultValue() +   id;
     }
-    public static String makeSafeNamespace(final String sample) {
 
-       if (sample.matches(Const.REGEX_NAMESPACE)) {
-          return sample;
-       }
-        else {
-           return sample.replaceAll(Const.REGEX_SPECIAL_CHARS, "A");
-       }
-    }
 
 
 }

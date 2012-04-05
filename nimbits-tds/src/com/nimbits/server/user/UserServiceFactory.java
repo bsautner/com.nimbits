@@ -14,7 +14,7 @@
 package com.nimbits.server.user;
 
 
-import com.nimbits.client.service.user.UserService;
+import com.nimbits.client.service.user.*;
 
 public class UserServiceFactory {
     private static UserService instance;

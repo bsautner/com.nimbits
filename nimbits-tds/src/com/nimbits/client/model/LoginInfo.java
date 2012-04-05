@@ -13,11 +13,12 @@
 
 package com.nimbits.client.model;
 
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.user.User;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.user.*;
 
-import java.io.Serializable;
+import java.io.*;
 
 public class LoginInfo implements Serializable {
 
@@ -64,11 +65,11 @@ public class LoginInfo implements Serializable {
         this.logoutUrl = logoutUrl;
     }
 
-    public EmailAddress getEmailAddress() {
+    public EmailAddress getEmailAddress() throws NimbitsException {
         return CommonFactoryLocator.getInstance().createEmailAddress(emailAddress);
     }
 
-    public void setEmailAddress(final EmailAddress emailAddress) {
+    public void setEmailAddress(final CommonIdentifier emailAddress) {
         this.emailAddress = emailAddress.getValue();
     }
 

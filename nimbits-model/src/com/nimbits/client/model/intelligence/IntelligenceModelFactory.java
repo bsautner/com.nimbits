@@ -23,6 +23,9 @@ import com.nimbits.client.enums.IntelligenceResultTarget;
  */
 public class IntelligenceModelFactory {
 
+    private IntelligenceModelFactory() {
+    }
+
     public static Intelligence createIntelligenceModel(Intelligence i) {
         return new IntelligenceModel(i);
 

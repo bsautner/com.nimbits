@@ -13,20 +13,18 @@
 
 package com.nimbits.client.ui.controls;
 
-import com.extjs.gxt.ui.client.store.ListStore;
-import com.extjs.gxt.ui.client.widget.form.ComboBox;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.GxtModel;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.service.entity.EntityService;
-import com.nimbits.client.service.entity.EntityServiceAsync;
-import com.nimbits.client.ui.helper.FeedbackHelper;
+import com.extjs.gxt.ui.client.store.*;
+import com.extjs.gxt.ui.client.widget.form.*;
+import com.google.gwt.core.client.*;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.service.entity.*;
+import com.nimbits.client.ui.helper.*;
 
-import java.util.Map;
+import java.util.*;
 
 public class EntityCombo extends ComboBox<GxtModel> {
 

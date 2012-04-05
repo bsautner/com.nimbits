@@ -13,16 +13,14 @@
 
 package com.nimbits.client.service.recordedvalues;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.timespan.Timespan;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.timespan.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public interface RecordedValueServiceAsync {
     void getDataSeries(final List<Point> arrayList, final Timespan timespan, final AsyncCallback<List<Point>> asyncCallback);

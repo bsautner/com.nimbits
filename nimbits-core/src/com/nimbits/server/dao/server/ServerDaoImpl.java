@@ -49,12 +49,12 @@ public class ServerDaoImpl implements ServerTransactions {
 
     }
 
-    public Server addServer(Server server) {
+    public Server addServer(Server server) throws NimbitsException {
         EntityManager em = EMF.getInstance();
 
 
         try {
-            JpaServer jpaServer = new JpaServer(server);
+            Server jpaServer = new JpaServer(server);
 
             EntityTransaction tx = em.getTransaction();
             tx.begin();
@@ -62,9 +62,7 @@ public class ServerDaoImpl implements ServerTransactions {
             em.flush();
             tx.commit();
 
-            Server retObj = ServerModelFactory.createServer(jpaServer);
-
-            return retObj;
+            return ServerModelFactory.createServer(jpaServer);
         } finally {
             em.close();
         }
@@ -136,7 +134,7 @@ public class ServerDaoImpl implements ServerTransactions {
     }
 
     @Override
-    public Server readServer(final String hostUrl) {
+    public Server readServer(final String hostUrl) throws NimbitsException {
         EntityManager em = EMF.getInstance();
         Server retObj;
         try {

@@ -13,22 +13,18 @@
 
 package com.nimbits.server.api.impl;
 
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ExportType;
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.calculation.Calculation;
-import com.nimbits.client.model.calculation.CalculationModel;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.server.api.ApiServlet;
-import com.nimbits.server.calculation.CalculationServiceFactory;
-import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.calculation.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.server.api.*;
+import com.nimbits.server.calculation.*;
+import com.nimbits.server.gson.*;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.io.*;
 
 /**
  * Created by bsautner

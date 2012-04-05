@@ -14,7 +14,8 @@
 package com.nimbits.server.common;
 
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.*;
+import javax.servlet.http.*;
 
 /**
  * Created by bsautner
@@ -25,9 +26,12 @@ import javax.servlet.http.HttpServletRequest;
 public class ServerInfoImpl {
     private static final String TEST_URL = "http://localhost:8081";
 
-    public static String getFullServerURL(final HttpServletRequest req) {
+    private ServerInfoImpl() {
+    }
+
+    public static String getFullServerURL(final ServletRequest req) {
      try {
-         return (req == null) ? getUrl() : req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort();
+         return (req == null) ? getUrl() : req.getScheme() + "://" + req.getServerName() + ':' + req.getServerPort();
 
      }
      catch (NullPointerException ex) {
@@ -41,7 +45,7 @@ public class ServerInfoImpl {
         if (environment.equals("Production")) {
             String applicationId = System.getProperty("com.google.appengine.application.id");
             String version = System.getProperty("com.google.appengine.application.version");
-           return  "http://"+version+"."+applicationId+".appspot.com/";
+           return  "http://"+version+ '.' +applicationId+".appspot.com/";
         } else {
            return TEST_URL;
         }

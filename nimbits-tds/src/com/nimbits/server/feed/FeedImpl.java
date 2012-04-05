@@ -13,39 +13,32 @@
 
 package com.nimbits.server.feed;
 
-import com.google.gson.JsonSyntaxException;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.nimbits.client.common.Utils;
-import com.nimbits.client.constants.Const;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.FeedType;
-import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.feed.FeedValue;
-import com.nimbits.client.model.feed.FeedValueModel;
-import com.nimbits.client.model.point.Point;
+import com.google.gson.*;
+import com.google.gwt.user.server.rpc.*;
+import com.nimbits.client.common.*;
+import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.feed.*;
+import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.relationship.*;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModelFactory;
-import com.nimbits.client.service.feed.Feed;
-import com.nimbits.server.common.ServerInfoImpl;
-import com.nimbits.server.entity.EntityServiceFactory;
-import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.point.PointServiceFactory;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.client.service.feed.*;
+import com.nimbits.server.common.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.gson.*;
+import com.nimbits.server.logging.*;
+import com.nimbits.server.point.*;
 import com.nimbits.server.relationship.*;
-import com.nimbits.server.user.UserServiceFactory;
-import com.nimbits.server.value.RecordedValueServiceFactory;
-import org.apache.commons.lang3.exception.ExceptionUtils;
+import com.nimbits.server.user.*;
+import com.nimbits.server.value.*;
+import org.apache.commons.lang3.exception.*;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.*;
-import java.util.logging.Logger;
+
 
 /**
  * Created by Benjamin Sautner
@@ -54,7 +47,11 @@ import java.util.logging.Logger;
  * Time: 2:02 PM
  */
 public class FeedImpl extends RemoteServiceServlet implements Feed {
-    private static final Logger log = Logger.getLogger(FeedImpl.class.getName());
+
+    private static final int MAX_LENGTH = 200;
+    private static final int INT = MAX_LENGTH;
+    private static final int SIZE = 1024;
+
 
     private User getUser() {
         try {
@@ -77,23 +74,23 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
     }
 
     @Override
-    public void postToFeed(final User user, final NimbitsException ex) {
+        public void postToFeed(final User user, final Throwable ex) {
 
-        try {
+            try {
             postToFeed(user, ExceptionUtils.getStackTrace(ex), FeedType.error);
 
 
         } catch (NimbitsException e) {
-            log.severe(e.getMessage());
+            LogHelper.logException(this.getClass(), e);
         }
 
     }
 
+    @Override
     public void postToFeed(final User user, final String message, final FeedType type) throws NimbitsException {
         final Point point = getFeedPoint(user);
+        final String shortened = message.length() > MAX_LENGTH ? message.substring(0, MAX_LENGTH) : message;
 
-        final String fullHTML =  generatePostToFeedHtml(message, type);
-        final String shortened = shortenFeedMessage(message, fullHTML);
         final String finalMessage = generatePostToFeedHtml(shortened, type);
 
         final FeedValue feedValue = new FeedValueModel(finalMessage, "", type);
@@ -106,26 +103,37 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
     }
 
     private String  generatePostToFeedHtml(final String message, final FeedType type) {
-        final StringBuilder sb = new StringBuilder(200) ;
+        final StringBuilder sb = new StringBuilder(INT) ;
+        String start ="<p style=\"white-space: normal;width:150px\"><img style=\"float:left;\" ";
         switch (type) {
 
             case error:
-                sb.append("<p><img src=\"")
+                sb.append(start)
+                        .append("src=\"")
                         .append(ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest()))
-                        .append("/resources/images/symbol-error.png\" align=\"left\" width=\"35\" height=\"35\">")
-                        .append("<p style=\"color:red\">Error reported<p>");
+                        .append("/resources/images/symbol-error.png\" width=\"35\" height=\"35\">");
+
                 break;
             case system:
-                sb.append("<p><img src=\"").append(ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest())).append("/resources/images/logo.png\" align=\"left\" width=\"40\" height=\"40\">");
+                sb.append(start)
+                        .append("src=\"")
+                        .append(ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest()))
+                        .append("/resources/images/logo.png\"  width=\"40\" height=\"40\">");
                 break;
             case info:
-                sb.append("<p><img src=\"").append(ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest())).append("/resources/images/info.png\" align=\"left\" width=\"35\" height=\"35\">");
+                sb.append(start).append("src=\"")
+                        .append(ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest()))
+                        .append("/resources/images/info.png\" width=\"35\" height=\"35\">");
                 break;
             case data:
-                sb.append("<p><img src=\"").append(ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest())).append("/resources/images/point_ok.png\" align=\"left\" width=\"40\" height=\"40\">");
+                sb.append(start).append("src=\"")
+                        .append(ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest()))
+                        .append("/resources/images/point_ok.png\" width=\"40\" height=\"40\">");
                 break;
             default:
-                sb.append("<p><img src=\"").append(ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest())).append("/resources/images/logo.png\" align=\"left\" width=\"40\" height=\"40\">");
+                sb.append(start).append("src=\"")
+                        .append(ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest()))
+                        .append("/resources/images/logo.png\" width=\"40\" height=\"40\">");
         }
 
 
@@ -134,32 +142,30 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
         return sb.toString();
     }
 
-    private static String shortenFeedMessage(final String message, final String fullHTML) {
-        if (message.length() > Const.DEFAULT_FEED_LENGTH) {
-            try {
-                final String shorterHtml =  (message.length() > Const.DEFAULT_FEED_LENGTH) ?  message.substring(0, Const.DEFAULT_FEED_LENGTH) : message;
-                return shorterHtml
-                        + "<a href=\"#\" onclick=\"window.open('feed.html?content=" + URLEncoder.encode(fullHTML, Const.CONST_ENCODING) + "', 'Feed'," +
-                        "'height=400,width=400,toolbar=0,status=0,location=0' );\" >" +
-                        "&nbsp;[more]</a>";
-//                        + "<a href=\"feed.html?content=" + URLEncoder.encode(html, Const.CONST_ENCODING) + "\" " +
-//                        "target=\"_blank\">" +
+//    private static String shortenFeedMessage(final String message, final String fullHTML) {
+//        if (message.length() > Const.DEFAULT_FEED_LENGTH) {
+//            try {
+//                final String shorterHtml =  (message.length() > Const.DEFAULT_FEED_LENGTH) ?  message.substring(0, Const.DEFAULT_FEED_LENGTH) : message;
+//                return shorterHtml
+//                        + "<a href=\"#\" onclick=\"window.open('feed.html?content=" + URLEncoder.encode(fullHTML, Const.CONST_ENCODING) + "', 'Feed'," +
+//                        "'height=400,width=400,toolbar=0,status=0,location=0' );\" >" +
 //                        "&nbsp;[more]</a>";
-            } catch (UnsupportedEncodingException e) {
-                return message.substring(0, Const.DEFAULT_FEED_LENGTH);
-            }
-
-        }
-        else {
-            return message;
-        }
-
-    }
+//
+//            } catch (UnsupportedEncodingException e) {
+//                return message.substring(0, Const.DEFAULT_FEED_LENGTH);
+//            }
+//
+//        }
+//        else {
+//            return message;
+//        }
+//
+//    }
 
     private String valueToHtml(final Entity entity, final Point point, final Value value) {
-        final StringBuilder sb = new StringBuilder(1024);
+        final StringBuilder sb = new StringBuilder(SIZE);
         if (! (Double.compare(value.getDoubleValue(), Const.CONST_IGNORED_NUMBER_VALUE) == 0)) {
-            sb.append("<img align=\"left\" src=\"")
+            sb.append("<img style=\"float:left\" src=\"")
                     .append(ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest()));
 
 
@@ -215,7 +221,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
         final Point point;
         final Map<String, Entity> map =  EntityServiceFactory.getInstance().getEntityMap(user, EntityType.feed);
 
-        if (map.size() == 0) {
+        if (map.isEmpty()) {
             point = createFeedPoint(user);
         }
         else {
@@ -230,23 +236,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
 
         User loggedInUser = getUser();
         final User feedUser;
-        if (loggedInUser != null && loggedInUser.getKey().equals(relationshipEntityKey)) {
-
-            feedUser = loggedInUser;
-
-
-        }
-        else {
-            final Relationship r = RelationshipTransactionFactory.getInstance().getRelationship(relationshipEntityKey);
-
-            if (r != null) {
-                final String feedOwnersUUID = r.getForeignKey();
-                feedUser = UserServiceFactory.getInstance().getUserByUUID(feedOwnersUUID);
-            }
-            else {
-                feedUser = null;
-            }
-        }
+        feedUser = getFeedUser(relationshipEntityKey, loggedInUser);
 
         if (feedUser != null) {
 
@@ -274,6 +264,28 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
         }
     }
 
+    private static User getFeedUser(String relationshipEntityKey, User loggedInUser) throws NimbitsException {
+        User feedUser;
+        if (loggedInUser != null && loggedInUser.getKey().equals(relationshipEntityKey)) {
+
+            feedUser = loggedInUser;
+
+
+        }
+        else {
+            final Relationship r = RelationshipTransactionFactory.getInstance().getRelationship(relationshipEntityKey);
+
+            if (r != null) {
+                final String feedOwnersUUID = r.getForeignKey();
+                feedUser = UserServiceFactory.getInstance().getUserByKey(feedOwnersUUID);
+            }
+            else {
+                feedUser = null;
+            }
+        }
+        return feedUser;
+    }
+
     private Point createFeedPoint(final User user) throws NimbitsException {
 
         final EntityName name = CommonFactoryLocator.getInstance().createName(Const.TEXT_DATA_FEED, EntityType.point);
@@ -293,4 +305,6 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
         return point;
 
     }
+
+
 }

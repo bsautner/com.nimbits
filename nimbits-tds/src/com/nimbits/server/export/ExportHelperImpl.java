@@ -13,22 +13,23 @@
 
 package com.nimbits.server.export;
 
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.server.intelligence.IntelligenceServiceFactory;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.server.intelligence.*;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class ExportHelperImpl implements ExportHelper {
 
+    private static final int INT = 1024;
+
+    @Override
     public String exportPointDataToCSVSeparateColumns(final Map<EntityName, Entity> points,
                                                       final Map<EntityName, List<Value>> values) {
-        final StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder(INT);
         int max = 0;
         int i = 0;
         Value v;
@@ -41,20 +42,20 @@ public class ExportHelperImpl implements ExportHelper {
             }
         }
         sb.deleteCharAt(sb.length() - 1);
-        sb.append("\n");
+        sb.append('\n');
 
-
+        List<Value> vx;
         while (i < max) {
-            for (final EntityName name : points.keySet()) {
-                p = points.get(name);
-                List<Value> vx = values.get(name);
+            for (final Map.Entry<EntityName, Entity> entityNameEntityEntry : points.entrySet()) {
+               // p = entityNameEntityEntry.getValue();
+                vx= values.get(entityNameEntityEntry.getKey());
                 if (vx.size() >= i) {
                     v = vx.get(i);
-                    sb.append(v.getTimestamp()).append(",").append(v.getDoubleValue()).append(",");
+                    sb.append(v.getTimestamp()).append(',').append(v.getDoubleValue()).append(',');
                 }
             }
             sb.deleteCharAt(sb.length() - 1);
-            sb.append("\n");
+            sb.append('\n');
             i++;
         }
         return sb.toString();

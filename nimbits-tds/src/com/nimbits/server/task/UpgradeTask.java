@@ -14,50 +14,39 @@
 package com.nimbits.server.task;
 
 import com.google.appengine.api.datastore.*;
-import com.google.appengine.api.memcache.MemcacheServiceFactory;
-import com.nimbits.PMF;
+import com.google.appengine.api.memcache.*;
+import com.nimbits.*;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.calculation.Calculation;
-import com.nimbits.client.model.calculation.CalculationModelFactory;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.calculation.*;
+import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModel;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.relationship.*;
-import com.nimbits.client.model.subscription.Subscription;
-import com.nimbits.client.model.subscription.SubscriptionFactory;
-import com.nimbits.client.model.timespan.Timespan;
-import com.nimbits.client.model.timespan.TimespanModelFactory;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.server.calculation.CalculationServiceFactory;
-import com.nimbits.server.entity.EntityServiceFactory;
-import com.nimbits.server.entity.EntityTransactionFactory;
-import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.client.model.subscription.*;
+import com.nimbits.client.model.timespan.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.server.calculation.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.gson.*;
 import com.nimbits.server.orm.*;
-import com.nimbits.server.point.PointServiceFactory;
-import com.nimbits.server.point.PointTransactionsFactory;
+import com.nimbits.server.point.*;
 import com.nimbits.server.relationship.*;
-import com.nimbits.server.subscription.SubscriptionTransactionFactory;
-import com.nimbits.server.user.UserTransactionFactory;
-import com.nimbits.server.value.RecordedValueTransactionFactory;
-import com.nimbits.server.value.RecordedValueTransactions;
-import com.nimbits.shared.Utils;
-import org.datanucleus.exceptions.NucleusObjectNotFoundException;
+import com.nimbits.server.subscription.*;
+import com.nimbits.server.user.*;
+import com.nimbits.server.value.*;
+import com.nimbits.shared.*;
+import org.datanucleus.exceptions.*;
 
 import javax.jdo.*;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.logging.Logger;
+import javax.servlet.http.*;
+import java.util.*;
+import java.util.logging.*;
 
 /**
  * Created by bsautner
@@ -1130,7 +1119,7 @@ public class UpgradeTask  extends HttpServlet
 
                         final Entity entity = EntityModelFactory.createEntity(u.getName(), "", EntityType.user, ProtectionLevel.onlyMe, "", "");
                         final Entity r = EntityTransactionFactory.getDaoInstance(null).addUpdateEntity(entity);
-                        UserEntity userEntity = new UserEntity(r, u.getEmail());
+                        UserEntity userEntity = new UserEntity(r);
                         userEntity.setFacebookID(u.getFacebookID());
                         userEntity.setFacebookToken(u.getFacebookToken());
                         userEntity.setLastLoggedIn(u.getLastLoggedIn());

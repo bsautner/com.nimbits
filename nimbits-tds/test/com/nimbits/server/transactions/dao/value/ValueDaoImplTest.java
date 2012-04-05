@@ -13,35 +13,22 @@
 
 package com.nimbits.server.transactions.dao.value;
 
-import com.google.appengine.api.blobstore.BlobKey;
-import com.google.appengine.api.blobstore.BlobstoreService;
-import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.blobstore.*;
+import com.google.appengine.api.datastore.*;
+import static com.google.appengine.api.datastore.FetchOptions.Builder.*;
 import com.google.appengine.api.files.*;
-import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
-import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointModelFactory;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModelFactory;
-import com.nimbits.server.time.TimespanServiceFactory;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.ByteBuffer;
-import java.nio.channels.Channels;
-import java.util.*;
-
-import static com.google.appengine.api.datastore.FetchOptions.Builder.withLimit;
+import com.google.appengine.tools.development.testing.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.server.time.*;
+import org.junit.*;
 import static org.junit.Assert.*;
+
+import java.io.*;
+import java.nio.*;
+import java.nio.channels.*;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner
@@ -85,16 +72,16 @@ public class ValueDaoImplTest {
         List<Value> values;
         Date zero = TimespanServiceFactory.getInstance().zeroOutDate(new Date());
         for (int i = 1; i < 11; i++) {
-        values= new ArrayList<Value>();
-        values.add(ValueModelFactory.createValueModel(1));
-        values.add(ValueModelFactory.createValueModel(1));
-        values.add(ValueModelFactory.createValueModel(1));
-        dao.recordValues(values);
+            values= new ArrayList<Value>();
+            values.add(ValueModelFactory.createValueModel(1));
+            values.add(ValueModelFactory.createValueModel(1));
+            values.add(ValueModelFactory.createValueModel(1));
+            dao.recordValues(values);
             assertEquals(i, dao.getAllStores().size());
         }
 
 
-         dao.consolidateDate(zero);
+        dao.consolidateDate(zero);
         assertEquals(1, dao.getAllStores().size());
 
         List<Value> result = dao.getTopDataSeries(100);
@@ -166,6 +153,15 @@ public class ValueDaoImplTest {
         assertNotNull(blobKey);
         assertEquals(line, "The woods are lovely dark and deep." );
     }
+    @Test
+    public void testReadJson() {
+
+
+
+
+    }
+
+
 
     @Test
     public void testGetTopDataSeries(){
@@ -288,11 +284,36 @@ public class ValueDaoImplTest {
 
 
         } catch (NimbitsException e) {
-            e.printStackTrace();
+
             fail();
         }
     }
 
+    @Test
+    public void testRecordValuesLoad() {
+        long s = new Date().getTime();
+
+        for (int i = 0; i < 1000; i++) {
+            List<Value> values = loadSomeData();
+
+            ValueDAOImpl dao = new ValueDAOImpl(point);
+            try {
+                dao.recordValues(values);
+                List<Value> result = dao.getTopDataSeries(100);
+                assertNotNull(result);
+
+                double ret = 0.0;
+                for (Value v : result) {
+                    ret += v.getDoubleValue();
+                }
+
+            } catch (NimbitsException e) {
+
+                fail();
+            }
+        }
+
+    }
 
 
     // run this test twice to prove we're not leaking any state across tests

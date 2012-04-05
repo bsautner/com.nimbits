@@ -13,33 +13,22 @@
 
 package com.nimbits.server.blob;
 
-import com.google.appengine.api.blobstore.BlobKey;
-import com.google.appengine.api.blobstore.BlobstoreService;
-import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.enums.UploadType;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.user.User;
-import com.nimbits.server.entity.EntityServiceFactory;
-import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.user.UserServiceFactory;
+import com.google.appengine.api.blobstore.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.gson.*;
+import com.nimbits.server.logging.*;
+import com.nimbits.server.user.*;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.io.*;
+import java.util.*;
+import java.util.logging.*;
 
 /**
  * Created by bsautner
@@ -50,6 +39,7 @@ import java.util.logging.Logger;
 public class BlobServlet extends HttpServlet {
     private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
     private static final Logger log = Logger.getLogger(BlobServlet.class.getName());
+    @Override
     public void doPost(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
         final Map<String,List<BlobKey>> blobs = blobstoreService.getUploads(req);
@@ -63,7 +53,11 @@ public class BlobServlet extends HttpServlet {
         String diagramNameParam = req.getParameter(Parameters.fileName.getText());
         final int lastIndex = diagramNameParam.lastIndexOf('\\');
         final String fileName = diagramNameParam.substring(lastIndex + 1);
-        session.setAttribute(Parameters.email.getText(), CommonFactoryLocator.getInstance().createEmailAddress(email));
+        try {
+            session.setAttribute(Parameters.email.getText(), CommonFactoryLocator.getInstance().createEmailAddress(email));
+        } catch (NimbitsException e) {
+            LogHelper.logException(this.getClass(), e);
+        }
         final User u;
         try {
             u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
@@ -106,6 +100,7 @@ public class BlobServlet extends HttpServlet {
 
     }
 
+    @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
         BlobKey blobKey = new BlobKey(req.getParameter(Parameters.blobkey.getText()));
         blobstoreService.serve(blobKey, res);

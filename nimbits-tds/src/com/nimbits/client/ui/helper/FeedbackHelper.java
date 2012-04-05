@@ -13,7 +13,7 @@
 
 package com.nimbits.client.ui.helper;
 
-import com.extjs.gxt.ui.client.widget.MessageBox;
+import com.extjs.gxt.ui.client.widget.*;
 
 /**
  * Created by Benjamin Sautner

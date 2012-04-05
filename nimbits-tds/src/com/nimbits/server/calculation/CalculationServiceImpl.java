@@ -13,28 +13,24 @@
 
 package com.nimbits.server.calculation;
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.nimbits.client.common.Utils;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.exception.NimbitsException;
+import com.google.gwt.user.server.rpc.*;
+import com.nimbits.client.common.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.calculation.Calculation;
-import com.nimbits.client.model.calculation.CalculationModelFactory;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModelFactory;
-import com.nimbits.client.service.calculation.CalculationService;
-import com.nimbits.server.entity.EntityServiceFactory;
+import com.nimbits.client.model.calculation.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.client.service.calculation.*;
+import com.nimbits.server.entity.*;
 import com.nimbits.server.feed.*;
-import com.nimbits.server.point.PointServiceFactory;
-import com.nimbits.server.user.UserServiceFactory;
-import com.nimbits.server.value.RecordedValueServiceFactory;
+import com.nimbits.server.point.*;
+import com.nimbits.server.user.*;
+import com.nimbits.server.value.*;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by bsautner

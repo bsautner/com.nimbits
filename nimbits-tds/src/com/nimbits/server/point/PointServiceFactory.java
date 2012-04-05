@@ -13,10 +13,13 @@
 
 package com.nimbits.server.point;
 
-import com.nimbits.client.service.datapoints.PointService;
+import com.nimbits.client.service.datapoints.*;
 
 public class PointServiceFactory {
     private static PointService instance;
+
+    private PointServiceFactory() {
+    }
 
 
     public static PointService getInstance() {

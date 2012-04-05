@@ -13,10 +13,9 @@
 
 package com.nimbits.server.logging;
 
-import com.nimbits.server.task.ProcessBatchTask;
-import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.*;
 
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 /**
  * Created by bsautner
@@ -26,15 +25,15 @@ import java.util.logging.Logger;
  */
 public class LogHelper {
 
-    public static void logException(final Class<ProcessBatchTask> processBatchTaskClass, final Throwable ex) {
+    public static void logException(final Class<?> processBatchTaskClass, final Throwable ex) {
         final Logger log = Logger.getLogger(processBatchTaskClass.getName());
         log.severe(ex.getMessage());
         log.severe(ExceptionUtils.getStackTrace(ex));
 
 
     }
-    public static void log(final Class<ProcessBatchTask> processBatchTaskClass, final String ex) {
-        final Logger log = Logger.getLogger(processBatchTaskClass.getName());
+    public static void log(final Class<?> c, final String ex) {
+        final Logger log = Logger.getLogger(c.getName());
         log.info(ex);
 
 

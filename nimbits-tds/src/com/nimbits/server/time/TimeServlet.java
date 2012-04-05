@@ -13,18 +13,14 @@
 
 package com.nimbits.server.time;
 
-import com.nimbits.client.common.Utils;
-import com.nimbits.client.enums.DateFormatType;
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.client.common.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.server.gson.*;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Date;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.io.*;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner

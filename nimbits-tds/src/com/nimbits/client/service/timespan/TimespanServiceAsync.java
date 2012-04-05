@@ -13,11 +13,11 @@
 
 package com.nimbits.client.service.timespan;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.timespan.Timespan;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.timespan.*;
 
-import java.util.Date;
+import java.util.*;
 
 public interface TimespanServiceAsync {
     void createTimespan(final String start, final String end, final AsyncCallback<Timespan> async);

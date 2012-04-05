@@ -1,6 +1,6 @@
 package com.nimbits.client.enums;
 
-import com.nimbits.client.model.*;
+
 
 import java.util.*;
 
@@ -14,6 +14,7 @@ public enum MemCacheKey {
 
     activePoints(0, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_ACTIVE_POINTS),
     valueCache(1,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_VALUE),
+    currentValueCache(1,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_CURRENT_VALUE),
     allSettings(2, SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_ALL_SETTINGS),
     setting(3,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_SETTING),
     userNamespace(4, SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_USER_NAMESPACE),
@@ -21,11 +22,11 @@ public enum MemCacheKey {
     entityMap(6, SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_ENTITY_MAP),
     userPointNamespace(7, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_USER_POINT_NAMESPACE);
 
-    private static final Map<Integer, MemCacheKey> lookup = new HashMap<Integer, MemCacheKey>();
+    private static final Map<Integer, MemCacheKey> lookup = new HashMap<Integer, MemCacheKey>(MemCacheKey.values().length);
 
     static {
         for (MemCacheKey s : EnumSet.allOf(MemCacheKey.class))
-            lookup.put(s.getCode(), s);
+            lookup.put(s.code, s);
     }
 
     private final int code;
@@ -49,7 +50,7 @@ public enum MemCacheKey {
         return text;
     }
 
-     private class KeyConstants {
+     private static class KeyConstants {
         static final String KEY_ALL_SETTINGS = "KEY_ALL_SETTINGS";
         static final String KEY_SETTING = "KEY_SETTING";
         static final String KEY_USER_NAMESPACE = "KEY_USER_NAMESPACE";
@@ -58,6 +59,10 @@ public enum MemCacheKey {
         static final String KEY_USER_POINT_NAMESPACE = "KEY_USER_POINT_NAMESPACE";
         static final String KEY_ACTIVE_POINTS = "KEY_ACTIVE_POINTS";
         static final String KEY_VALUE = "KEY_VALUE";
-    }
+        static final String KEY_CURRENT_VALUE = "KEY_CURRENT_VALUE";
+
+         private KeyConstants() {
+         }
+     }
 
 }

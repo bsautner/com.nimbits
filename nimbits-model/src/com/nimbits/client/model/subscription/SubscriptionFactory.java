@@ -12,6 +12,9 @@ import java.util.*;
  */
 public class SubscriptionFactory {
 
+    private SubscriptionFactory() {
+    }
+
     public static Subscription createSubscription(Subscription subscription) {
         return new SubscriptionModel(subscription);
 
@@ -34,8 +37,8 @@ public class SubscriptionFactory {
         );
 
     }
-    public static List<Subscription> createSubscriptions(List<Subscription> subscriptions) {
-        final ArrayList<Subscription> retObj = new ArrayList<Subscription>();
+    public static List<Subscription> createSubscriptions(Collection<Subscription> subscriptions) {
+        final List<Subscription> retObj = new ArrayList<Subscription>(subscriptions.size());
         for (final Subscription s : subscriptions) {
             retObj.add(createSubscription(s));
         }

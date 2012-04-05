@@ -17,13 +17,11 @@ package com.nimbits.server.blob;
 import com.google.appengine.api.blobstore.*;
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.files.*;
-import com.google.apphosting.api.*;
-import com.nimbits.client.enums.ExportType;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.model.entity.*;
 
-import java.io.BufferedReader;
-import java.io.PrintWriter;
-import java.nio.channels.Channels;
+import java.io.*;
+import java.nio.channels.*;
 import java.util.*;
 
 public class BlobStoreImpl implements BlobStore {
@@ -34,54 +32,16 @@ public class BlobStoreImpl implements BlobStore {
 
         try {
             final FileService fileService = FileServiceFactory.getFileService();
+            AppEngineFile file = fileService.createNewBlobFile(exportType.getCode(), name.getValue() + '.' + exportType.getFileExtension());
 
-            // Create a new Blob file with mime-type "text/plain"
-            AppEngineFile file = fileService.createNewBlobFile(exportType.getCode(), name.getValue() + "." + exportType.getFileExtension());
-
-            // Open a channel to write to it
-            boolean lock = false;
-            FileWriteChannel writeChannel = fileService.openWriteChannel(file, lock);
-
-            // Different standard Java ways of writing to the channel
-            // are possible. Here we use a PrintWriter:
+            FileWriteChannel writeChannel = fileService.openWriteChannel(file, true);
             PrintWriter out = new PrintWriter(Channels.newWriter(writeChannel, "UTF8"));
             out.println(data);
-
-
-            // Close without finalizing and save the file path for writing later
-            out.close();
-            String path = file.getFullPath();
-
-            // Write more to the file in a separate request:
-            file = new AppEngineFile(path);
-
-            // This time lock because we intend to finalize
-            lock = true;
-            writeChannel = fileService.openWriteChannel(file, lock);
-
-            // This time we write to the channel using standard Java
-            // writeChannel.write(ByteBuffer.wrap
-            //        ("And miles to go before I sleep.".getBytes()));
-
-            // Now finalize
             writeChannel.closeFinally();
-
-            // Later, read from the file using the file API
-            lock = false; // Let other people read at the same time
-            FileReadChannel readChannel = fileService.openReadChannel(file, false);
-
-            // Again, different standard Java ways of reading from the channel.
-            BufferedReader reader =
-                    new BufferedReader(Channels.newReader(readChannel, "UTF8"));
-            String line = reader.readLine();
-            // line = "The woods are lovely dark and deep."
-
-            readChannel.close();
-
-            // Now read from the file using the Blobstore API
+            String path = file.getFullPath();
+            file = new AppEngineFile(path);
             BlobKey blobKey = fileService.getBlobKey(file);
-            BlobstoreService blobStoreService = BlobstoreServiceFactory.getBlobstoreService();
-            String segment = new String(blobStoreService.fetchData(blobKey, 30, 40));
+
 
             return blobKey.getKeyString();
         }   catch (Exception e) {
@@ -91,6 +51,7 @@ public class BlobStoreImpl implements BlobStore {
 
     }
 
+    @SuppressWarnings("TypeMayBeWeakened")
     @Override
     public void deleteOrphans() {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -98,13 +59,10 @@ public class BlobStoreImpl implements BlobStore {
         List<BlobInfo> blobsToCheck = new LinkedList<BlobInfo>();
         Iterator<BlobInfo> iterator = null;
         String  afterBlobKey = null;
-        if(afterBlobKey == null){
-            iterator = new BlobInfoFactory().queryBlobInfos();
-        }else{
-            iterator = new BlobInfoFactory().queryBlobInfosAfter(new BlobKey(afterBlobKey));
-        }
+        iterator = new BlobInfoFactory().queryBlobInfos();
 
         while(iterator.hasNext()){
+//            BlobInfo info = iterator.next();
 
             blobsToCheck.add(iterator.next());
 

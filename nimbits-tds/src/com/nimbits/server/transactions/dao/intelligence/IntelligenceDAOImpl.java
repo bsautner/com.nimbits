@@ -13,18 +13,15 @@
 
 package com.nimbits.server.transactions.dao.intelligence;
 
-import com.nimbits.PMF;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.intelligence.Intelligence;
-import com.nimbits.client.model.intelligence.IntelligenceFactory;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.server.intelligence.IntelligenceTransactions;
-import com.nimbits.server.orm.IntelligenceEntity;
+import com.nimbits.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.intelligence.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.server.intelligence.*;
+import com.nimbits.server.orm.*;
 
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
-import java.util.List;
+import javax.jdo.*;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner

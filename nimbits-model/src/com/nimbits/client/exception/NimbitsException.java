@@ -20,7 +20,7 @@ public class NimbitsException extends Exception implements Serializable {
 
     private static final long serialVersionUID = 10L;
 
-    private String message;
+
 
     public NimbitsException() {
         super();

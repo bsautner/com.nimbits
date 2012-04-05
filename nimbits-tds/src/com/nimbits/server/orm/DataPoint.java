@@ -20,16 +20,11 @@ package com.nimbits.server.orm;
  * Time: 1:25 PM
  */
 
-import com.nimbits.client.enums.AlertType;
-import com.nimbits.client.enums.ClientType;
-import com.nimbits.client.model.intelligence.Intelligence;
-import com.nimbits.client.model.intelligence.IntelligenceModelFactory;
-import com.nimbits.client.model.point.PointName;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.model.value.Value;
 
 import javax.jdo.annotations.*;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 @SuppressWarnings("unused")

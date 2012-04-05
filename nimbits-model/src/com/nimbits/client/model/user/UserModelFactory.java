@@ -6,9 +6,9 @@
 
 package com.nimbits.client.model.user;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import com.nimbits.client.exception.*;
+
+import java.util.*;
 
 /**
  * Created by bsautner
@@ -18,8 +18,11 @@ import java.util.Set;
  */
 public class UserModelFactory {
 
-    public static List<User> createUserModels(final List<User> users) {
-        List<User> retObj = new ArrayList<User>();
+    private UserModelFactory() {
+    }
+
+    public static List<User> createUserModels(final Collection<User> users) throws NimbitsException {
+        List<User> retObj = new ArrayList<User>(users.size());
 
         for (final User u : users) {
             retObj.add(createUserModel(u));
@@ -28,23 +31,12 @@ public class UserModelFactory {
         return retObj;
     }
 
-    public static User createUserModel(final User u) {
+    public static User createUserModel(final User u) throws NimbitsException {
         return new UserModel(u);
     }
 
 
 
-    public List<User> createUserModels(final Set<User> users) {
 
-        final List<User> retObj = new ArrayList<User>();
-
-        for (final User u : users) {
-            retObj.add(createUserModel(u));
-        }
-
-        return retObj;
-
-
-    }
 
 }

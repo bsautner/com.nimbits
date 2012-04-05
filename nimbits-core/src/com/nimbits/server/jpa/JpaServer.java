@@ -13,6 +13,7 @@
 
 package com.nimbits.server.jpa;
 
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.server.Server;
@@ -72,7 +73,7 @@ public class JpaServer implements Server {
 //
 //    }
 
-    public JpaServer(Server server) {
+    public JpaServer(Server server) throws NimbitsException {
         this.baseUrl = server.getBaseUrl();
         this.ownerEmail = server.getOwnerEmail().getValue();
         this.serverVersion = server.getServerVersion();
@@ -90,7 +91,7 @@ public class JpaServer implements Server {
     }
 
     @Override
-    public EmailAddress getOwnerEmail() {
+    public EmailAddress getOwnerEmail() throws NimbitsException {
 
         return CommonFactoryLocator.getInstance().createEmailAddress(ownerEmail);
     }

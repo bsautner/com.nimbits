@@ -13,36 +13,30 @@
 
 package com.nimbits.client.ui.panels;
 
-import com.extjs.gxt.ui.client.Style.Scroll;
-import com.extjs.gxt.ui.client.data.ModelData;
-import com.extjs.gxt.ui.client.dnd.DND.Feedback;
-import com.extjs.gxt.ui.client.dnd.TreeGridDragSource;
-import com.extjs.gxt.ui.client.dnd.TreeGridDropTarget;
+import com.extjs.gxt.ui.client.Style.*;
+import com.extjs.gxt.ui.client.data.*;
+import com.extjs.gxt.ui.client.dnd.DND.*;
+import com.extjs.gxt.ui.client.dnd.*;
 import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.store.TreeStore;
-import com.extjs.gxt.ui.client.widget.grid.EditorGrid;
-import com.google.gwt.core.client.GWT;
+import com.extjs.gxt.ui.client.store.*;
+import com.extjs.gxt.ui.client.widget.grid.*;
+import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.client.common.Utils;
-import com.nimbits.client.constants.Const;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.common.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.GxtModel;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModelFactory;
-import com.nimbits.client.service.datapoints.PointService;
-import com.nimbits.client.service.datapoints.PointServiceAsync;
-import com.nimbits.client.service.entity.EntityService;
-import com.nimbits.client.service.entity.EntityServiceAsync;
-import com.nimbits.client.service.recordedvalues.RecordedValueService;
-import com.nimbits.client.service.recordedvalues.RecordedValueServiceAsync;
-import com.nimbits.client.ui.controls.EntityContextMenu;
-import com.nimbits.client.ui.controls.EntityTree;
-import com.nimbits.client.ui.helper.FeedbackHelper;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.client.service.datapoints.*;
+import com.nimbits.client.service.entity.*;
+import com.nimbits.client.service.recordedvalues.*;
+import com.nimbits.client.ui.controls.*;
+import com.nimbits.client.ui.helper.*;
 
 import java.util.*;
 

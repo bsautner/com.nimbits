@@ -13,30 +13,25 @@
 
 package com.nimbits.server.api.impl;
 
-import com.nimbits.client.common.Utils;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ExportType;
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.timespan.Timespan;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.server.api.ApiServlet;
-import com.nimbits.server.entity.EntityServiceFactory;
-import com.nimbits.server.feed.FeedServiceFactory;
-import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.point.PointServiceFactory;
-import com.nimbits.server.time.TimespanServiceFactory;
-import com.nimbits.server.value.RecordedValueServiceFactory;
+import com.nimbits.client.common.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.timespan.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.server.api.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.feed.*;
+import com.nimbits.server.gson.*;
+import com.nimbits.server.point.*;
+import com.nimbits.server.time.*;
+import com.nimbits.server.value.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
+import javax.servlet.http.*;
+import java.io.*;
+import java.util.*;
 
 public class SeriesServletImpl extends ApiServlet {
 
@@ -61,7 +56,7 @@ public class SeriesServletImpl extends ApiServlet {
 
         Timespan timespan = null;
 
-        if (!Utils.isEmptyString(startDate) && !Utils.isEmptyString(startDate)) {
+        if (!Utils.isEmptyString(startDate) && !Utils.isEmptyString(endDate)) {
             try {
                 timespan = TimespanServiceFactory.getInstance().createTimespan(startDate, endDate);
             } catch (NimbitsException e) {
@@ -70,12 +65,7 @@ public class SeriesServletImpl extends ApiServlet {
         }
 
 
-        if (!Utils.isEmptyString(getParam(Parameters.count))) {
-            count = Integer.valueOf(getParam(Parameters.count));
-        } else {
-            count = 10;
-
-        }
+            count = Utils.isEmptyString(getParam(Parameters.count)) ? 10 : Integer.valueOf(getParam(Parameters.count));
 
         if (count > 1000) {
             count = 1000;

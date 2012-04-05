@@ -5,7 +5,6 @@ import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.relationship.*;
 import com.nimbits.server.orm.*;
 import com.nimbits.server.relationship.*;
-import org.datanucleus.exceptions.*;
 
 import javax.jdo.*;
 

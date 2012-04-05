@@ -13,9 +13,9 @@
 
 package com.nimbits.server.point;
 
-import com.nimbits.client.model.user.User;
-import com.nimbits.server.transactions.dao.point.PointDaoImpl;
-import com.nimbits.server.transactions.memcache.point.PointMemCacheImpl;
+import com.nimbits.client.model.user.*;
+import com.nimbits.server.transactions.dao.point.*;
+import com.nimbits.server.transactions.memcache.point.*;
 
 /**
  * Created by bsautner
@@ -24,6 +24,9 @@ import com.nimbits.server.transactions.memcache.point.PointMemCacheImpl;
  * Time: 2:10 PM
  */
 public class PointTransactionsFactory {
+
+    private PointTransactionsFactory() {
+    }
 
     public static PointTransactions getInstance(User u) {
 

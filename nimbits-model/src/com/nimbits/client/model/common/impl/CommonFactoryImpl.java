@@ -35,9 +35,9 @@ public class CommonFactoryImpl implements CommonFactory {
 
 
     @Override
-    public EmailAddress createEmailAddress(final String value) {
+    public EmailAddress createEmailAddress(final String value) throws NimbitsException {
         if (value == null) {
-            throw new NimbitsRuntimeException("Email can not be null");
+            throw new NimbitsException("Email can not be null");
         }
         return new EmailAddressImpl(value);
 
@@ -59,8 +59,8 @@ public class CommonFactoryImpl implements CommonFactory {
     }
 
 
-   protected void nameTest(final String name, final EntityType type) throws NimbitsException {
-       //TODO use regex
+   protected static void nameTest(final String name, final EntityType type) throws NimbitsException {
+
 
        if (Utils.isEmptyString(name)) {
            throw new NimbitsException("Invalid Empty Name");
@@ -110,6 +110,8 @@ public class CommonFactoryImpl implements CommonFactory {
                if (name.contains(" ")) {
                    throw new NimbitsException("XMPP Resource names must not contain spaces");
                }
+               break;
+           default:
                break;
        }
    }

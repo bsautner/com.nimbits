@@ -13,38 +13,28 @@
 
 package com.nimbits.client.ui.panels;
 
-import com.extjs.gxt.ui.client.Style;
-import com.extjs.gxt.ui.client.event.BaseEvent;
-import com.extjs.gxt.ui.client.event.Events;
-import com.extjs.gxt.ui.client.event.Listener;
-import com.extjs.gxt.ui.client.util.Margins;
-import com.extjs.gxt.ui.client.util.Padding;
-import com.extjs.gxt.ui.client.widget.ContentPanel;
-import com.extjs.gxt.ui.client.widget.LayoutContainer;
+import com.extjs.gxt.ui.client.*;
+import com.extjs.gxt.ui.client.event.*;
+import com.extjs.gxt.ui.client.util.*;
+import com.extjs.gxt.ui.client.widget.*;
 import com.extjs.gxt.ui.client.widget.layout.*;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Element;
+import com.google.gwt.core.client.*;
+import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.client.constants.Path;
-import com.nimbits.client.enums.Action;
-import com.nimbits.client.enums.SettingType;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.GxtModel;
-import com.nimbits.client.model.LoginInfo;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.service.subscription.SubscriptionService;
-import com.nimbits.client.service.subscription.SubscriptionServiceAsync;
-import com.nimbits.client.service.twitter.TwitterService;
-import com.nimbits.client.service.twitter.TwitterServiceAsync;
-import com.nimbits.client.service.xmpp.XMPPService;
-import com.nimbits.client.service.xmpp.XMPPServiceAsync;
-import com.nimbits.client.ui.controls.MainMenuBar;
-import com.nimbits.client.ui.helper.EntityOpenHelper;
-import com.nimbits.client.ui.helper.FeedbackHelper;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.client.service.subscription.*;
+import com.nimbits.client.service.twitter.*;
+import com.nimbits.client.service.xmpp.*;
+import com.nimbits.client.ui.controls.*;
+import com.nimbits.client.ui.helper.*;
 
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by bsautner
@@ -74,11 +64,15 @@ public class CenterPanel extends NavigationEventProvider {
 
     protected void onRender(final Element target, final int index) {
         super.onRender(target, index);
-        loadLayout();
+        try {
+            loadLayout();
+        } catch (NimbitsException e) {
+            FeedbackHelper.showError(e);
+        }
 
     }
 
-    final NavigationPanel createNavigationPanel() {
+    NavigationPanel createNavigationPanel() {
         final NavigationPanel navTree = new NavigationPanel(loginInfo.getUser(), settings, action);
 
 
@@ -120,7 +114,7 @@ public class CenterPanel extends NavigationEventProvider {
 
     }
 
-    private void loadLayout() {
+    private void loadLayout() throws NimbitsException {
 
         final ContentPanel panel = new ContentPanel( );
         chartHeight  = Double.valueOf((Window.getClientHeight() * .9)  / 2).intValue();
@@ -168,7 +162,7 @@ public class CenterPanel extends NavigationEventProvider {
 
     }
 
-    private MainMenuBar initToolbar(final LoginInfo loginInfo, Map<SettingType, String> settings) {
+    private MainMenuBar initToolbar(final LoginInfo loginInfo, Map<SettingType, String> settings) throws NimbitsException {
         MainMenuBar toolBar = new MainMenuBar(loginInfo, settings);
         toolBar.addEntityModifiedListeners(new MainMenuBar.EntityModifiedListener() {
             @Override
@@ -184,7 +178,7 @@ public class CenterPanel extends NavigationEventProvider {
         } );
         toolBar.addActionListeners(new MainMenuBar.ActionListener() {
             @Override
-            public void onAction(Action action) {
+            public void onAction(Action action) throws NimbitsException {
                 switch (action) {
                     case expand:
                         navigationPanel.toggleExpansion();
@@ -267,7 +261,7 @@ public class CenterPanel extends NavigationEventProvider {
         });
     }
 
-    private void twitterAuthorise() {
+    private void twitterAuthorise() throws NimbitsException {
         TwitterServiceAsync twitterService = GWT.create(TwitterService.class);
         twitterService.twitterAuthorise(loginInfo.getEmailAddress(), new AsyncCallback<String>() {
 

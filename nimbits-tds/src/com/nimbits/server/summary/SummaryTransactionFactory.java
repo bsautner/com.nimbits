@@ -13,8 +13,8 @@
 
 package com.nimbits.server.summary;
 
-import com.nimbits.client.model.user.User;
-import com.nimbits.server.transactions.dao.summary.SummaryDaoImpl;
+import com.nimbits.client.model.user.*;
+import com.nimbits.server.transactions.dao.summary.*;
 
 /**
  * Created by Benjamin Sautner

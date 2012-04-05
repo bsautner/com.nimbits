@@ -13,12 +13,10 @@
 
 package com.nimbits.server.google;
 
-import org.junit.Test;
+import static junit.framework.Assert.*;
+import org.junit.*;
 
-import java.io.IOException;
-
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
+import java.io.*;
 
 /**
  * Created by Benjamin Sautner

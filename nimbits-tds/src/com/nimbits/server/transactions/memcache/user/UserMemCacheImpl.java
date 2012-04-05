@@ -13,22 +13,16 @@
 
 package com.nimbits.server.transactions.memcache.user;
 
-import com.google.appengine.api.memcache.InvalidValueException;
-import com.google.appengine.api.memcache.MemcacheService;
-import com.google.appengine.api.memcache.MemcacheServiceFactory;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.connection.Connection;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.user.User;
-import com.nimbits.server.transactions.memcache.MemCacheHelper;
-import com.nimbits.server.user.UserTransactionFactory;
-import com.nimbits.server.user.UserTransactions;
-import twitter4j.auth.AccessToken;
+import com.google.appengine.api.memcache.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.connection.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.server.transactions.memcache.*;
+import com.nimbits.server.user.*;
+import twitter4j.auth.*;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by bsautner
@@ -46,9 +40,9 @@ public class UserMemCacheImpl implements UserTransactions {
 
 
 
-    private void addUserToCache(final User user) {
+    protected  void addUserToCache(final User user) throws NimbitsException {
         if (cache.contains(MemCacheHelper.allUsersCacheKey)) {
-            HashMap<EmailAddress, User> users = (HashMap<EmailAddress, User>) cache.get(MemCacheHelper.allUsersCacheKey);
+            Map<EmailAddress, User> users = (Map<EmailAddress, User>) cache.get(MemCacheHelper.allUsersCacheKey);
             if (users.containsKey(user.getEmail())) {
                 users.remove(user.getEmail());
             }
@@ -67,14 +61,10 @@ public class UserMemCacheImpl implements UserTransactions {
 
     }
 
-    private User getUserFromCache(final EmailAddress emailAddress) {
+    protected User getUserFromCache(final EmailAddress emailAddress) {
 
         try {
-            if (cache.contains(MemCacheHelper.UserCacheKey(emailAddress))) {
-                return (User) cache.get(MemCacheHelper.UserCacheKey(emailAddress));
-            } else {
-                return null;
-            }
+            return cache.contains(MemCacheHelper.UserCacheKey(emailAddress)) ? (User) cache.get(MemCacheHelper.UserCacheKey(emailAddress)) : null;
 
         } catch (InvalidValueException e) {
             cache.delete(MemCacheHelper.UserCacheKey(emailAddress));
@@ -83,20 +73,7 @@ public class UserMemCacheImpl implements UserTransactions {
 
     }
 
-    private User getUserFromCache(String id) {
-        try {
-            if (cache.contains(MemCacheHelper.UserCacheKey(id))) {
-                return (User) cache.get(MemCacheHelper.UserCacheKey(id));
-            } else {
-                return null;
-            }
 
-        } catch (InvalidValueException e) {
-            cache.delete(MemCacheHelper.UserCacheKey(id));
-            return null;
-        }
-
-    }
 
     @Override
     public User createNimbitsUser(final EmailAddress emailAddress) throws NimbitsException {
@@ -166,7 +143,7 @@ public class UserMemCacheImpl implements UserTransactions {
 
 
     @Override
-    public Connection makeConnectionRequest(final User u, final EmailAddress email) {
+    public Connection makeConnectionRequest(final User u, final EmailAddress email) throws NimbitsException {
         return UserTransactionFactory.getDAOInstance().makeConnectionRequest(u, email);
     }
 
@@ -176,12 +153,9 @@ public class UserMemCacheImpl implements UserTransactions {
     }
 
     @Override
-    public List<User> updateConnectionRequest(final Long key, final User requestor, final User acceptor, final boolean accepted) throws NimbitsException {
-        final List<User> affectedUsers = UserTransactionFactory.getDAOInstance().updateConnectionRequest(key, requestor, acceptor, accepted);
-        for (final User u : affectedUsers) {
-            addUserToCache(u);
-        }
-        return affectedUsers;
+    public void updateConnectionRequest(final Long key, final User requestor, final User acceptor, final boolean accepted) throws NimbitsException {
+        UserTransactionFactory.getDAOInstance().updateConnectionRequest(key, requestor, acceptor, accepted);
+
     }
 
     @Override
@@ -200,17 +174,17 @@ public class UserMemCacheImpl implements UserTransactions {
     }
 
     @Override
-    public User getUserByKey(String subscriberUUID) {
+    public User getUserByKey(String subscriberUUID) throws NimbitsException {
         return UserTransactionFactory.getDAOInstance().getUserByKey(subscriberUUID);
     }
 
     @Override
-    public List<User> getConnectionRequests(List<String> connections) {
+    public List<User> getConnectionRequests(List<String> connections) throws NimbitsException {
         return UserTransactionFactory.getDAOInstance().getConnectionRequests(connections);
     }
 
     @Override
-    public List<User> getUsers() {
+    public List<User> getUsers() throws NimbitsException {
         return UserTransactionFactory.getDAOInstance().getUsers();
     }
 

@@ -13,10 +13,9 @@
 
 package com.nimbits.server.calculation;
 
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 @SuppressWarnings("unchecked")
 public class MathEvaluator {
     private static Operator[] operators = null;

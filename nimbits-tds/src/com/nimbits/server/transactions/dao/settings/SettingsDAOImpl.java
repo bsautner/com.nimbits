@@ -13,18 +13,14 @@
 
 package com.nimbits.server.transactions.dao.settings;
 
-import com.nimbits.PMF;
-import com.nimbits.client.enums.SettingType;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.server.orm.ServerSetting;
-import com.nimbits.server.settings.SettingTransactions;
+import com.nimbits.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.server.orm.*;
+import com.nimbits.server.settings.*;
 
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.jdo.*;
+import java.util.*;
 
 
 @SuppressWarnings("unchecked")

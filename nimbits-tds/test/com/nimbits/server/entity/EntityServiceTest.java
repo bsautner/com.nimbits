@@ -13,19 +13,15 @@
 
 package com.nimbits.server.entity;
 
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
-import helper.NimbitsServletTest;
-import org.junit.Test;
-
-import java.util.List;
-
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.*;
+import helper.*;
 import static org.junit.Assert.*;
+import org.junit.*;
+
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner

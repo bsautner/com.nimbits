@@ -13,7 +13,7 @@
 
 package com.nimbits.client.exceptions;
 
-import java.io.Serializable;
+import java.io.*;
 
 public class NotLoggedInException extends Exception implements Serializable {
 

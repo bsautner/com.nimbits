@@ -14,9 +14,8 @@
 package com.nimbits.client.ui.icons;
 
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.core.client.*;
+import com.google.gwt.resources.client.*;
 
 
 public interface Icons extends ClientBundle {

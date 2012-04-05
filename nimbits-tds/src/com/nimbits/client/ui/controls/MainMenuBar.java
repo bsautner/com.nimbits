@@ -13,48 +13,32 @@
 
 package com.nimbits.client.ui.controls;
 
-import com.extjs.gxt.ui.client.event.BaseEvent;
-import com.extjs.gxt.ui.client.event.Events;
-import com.extjs.gxt.ui.client.event.Listener;
-import com.extjs.gxt.ui.client.event.MessageBoxEvent;
-import com.extjs.gxt.ui.client.widget.Info;
-import com.extjs.gxt.ui.client.widget.MessageBox;
-import com.extjs.gxt.ui.client.widget.Window;
+import com.extjs.gxt.ui.client.event.*;
+import com.extjs.gxt.ui.client.widget.*;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.CheckBox;
-import com.extjs.gxt.ui.client.widget.menu.Menu;
+import com.extjs.gxt.ui.client.widget.menu.*;
 import com.extjs.gxt.ui.client.widget.menu.MenuItem;
-import com.extjs.gxt.ui.client.widget.menu.SeparatorMenuItem;
-import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.nimbits.client.common.Utils;
-import com.nimbits.client.constants.UserMessages;
-import com.nimbits.client.enums.Action;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.SettingType;
-import com.nimbits.client.enums.UploadType;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.GxtModel;
-import com.nimbits.client.model.LoginInfo;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.connection.Connection;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.service.entity.EntityService;
-import com.nimbits.client.service.entity.EntityServiceAsync;
-import com.nimbits.client.service.user.UserService;
-import com.nimbits.client.service.user.UserServiceAsync;
-import com.nimbits.client.ui.helper.FeedbackHelper;
-import com.nimbits.client.ui.icons.Icons;
-import com.nimbits.client.ui.panels.FileUploadPanel;
+import com.extjs.gxt.ui.client.widget.toolbar.*;
+import com.google.gwt.core.client.*;
+import com.google.gwt.user.client.rpc.*;
+import com.google.gwt.user.client.ui.*;
+import com.nimbits.client.common.*;
+import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.connection.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.service.entity.*;
+import com.nimbits.client.service.user.*;
+import com.nimbits.client.ui.helper.*;
+import com.nimbits.client.ui.icons.*;
+import com.nimbits.client.ui.panels.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner
@@ -63,12 +47,13 @@ import java.util.Map;
  * Time: 3:55 PM
  */
 public class MainMenuBar extends ToolBar {
+    private static final int MAX_HEIGHT = 200;
     private UserServiceAsync service;
     private int connectionCount = 0;
     private  LoginInfo loginInfo;
     private Map<SettingType, String> settings;
 
-    public MainMenuBar(LoginInfo loginInfo, Map<SettingType, String> settings) {
+    public MainMenuBar(LoginInfo loginInfo, Map<SettingType, String> settings) throws NimbitsException {
         this.loginInfo = loginInfo;
         this.settings = settings;
 
@@ -85,7 +70,7 @@ public class MainMenuBar extends ToolBar {
         addHelpMenu();
         add(new SeparatorMenuItem());
 
-      //  add(saveButton());
+        //  add(saveButton());
         add(addChartButton());
 
         add(connectionButton());
@@ -137,7 +122,7 @@ public class MainMenuBar extends ToolBar {
         saveToNowCheckBox.setValue(true);
 //        autoSaveCheckBox.setBoxLabel("Auto-Save when a number is entered");
 //        autoSaveCheckBox.setValue(true);
-       // menu.add(autoSaveCheckBox);
+        // menu.add(autoSaveCheckBox);
         button.setMenu(menu);
         add(button);
     }
@@ -172,7 +157,7 @@ public class MainMenuBar extends ToolBar {
 
         menu.add(newKeyButton());
 
-       if (settings.containsKey(SettingType.twitterClientId) && !Utils.isEmptyString(settings.get(SettingType.twitterClientId)) && loginInfo != null)
+        if (settings.containsKey(SettingType.twitterClientId) && !Utils.isEmptyString(settings.get(SettingType.twitterClientId)) && loginInfo != null)
         {
             menu.add(actionMenuItem("Enable Facebook",
                     AbstractImagePrototype.create(Icons.INSTANCE.connection()),
@@ -197,16 +182,7 @@ public class MainMenuBar extends ToolBar {
 
         item.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.addNew()));
         item.setToolTip(UserMessages.MESSAGE_NEW_POINT);
-        item.addListener(Events.OnClick, new Listener<BaseEvent>() {
-            @Override
-            public void handleEvent(BaseEvent be) {
-                final MessageBox box = MessageBox.prompt(
-                        UserMessages.MESSAGE_NEW_POINT,
-                        UserMessages.MESSAGE_NEW_POINT_PROMPT);
-
-                box.addCallback(createNewPointListener);
-            }
-        });
+        item.addListener(Events.OnClick, new NewPointBaseEventListener());
 
         return item;
 
@@ -225,29 +201,7 @@ public class MainMenuBar extends ToolBar {
 
     }
 
-    private final Listener<BaseEvent> uploadFileListener = new Listener<BaseEvent>() {
-
-
-        @Override
-        public void handleEvent(BaseEvent be) {
-            final Window w = new Window();
-            w.setAutoWidth(true);
-            w.setHeading(UserMessages.MESSAGE_UPLOAD_SVG);
-            FileUploadPanel p = new FileUploadPanel(UploadType.newFile);
-            p.addFileAddedListeners(new FileUploadPanel.FileAddedListener() {
-
-                @Override
-                public void onFileAdded() throws NimbitsException {
-                    w.hide();
-                    notifyEntityModifiedListener(null, Action.refresh);
-
-                }
-            });
-
-            w.add(p);
-            w.show();
-        }
-    };
+    private final Listener<BaseEvent> uploadFileListener = new UploadFileBaseEventListener();
 
     private MenuItem actionMenuItem(final String text,
                                     final AbstractImagePrototype icon,
@@ -256,12 +210,7 @@ public class MainMenuBar extends ToolBar {
 
         item.setIcon(icon);
 
-        item.addListener(Events.OnClick, new Listener<BaseEvent>() {
-            @Override
-            public void handleEvent(BaseEvent be) {
-                notifyActionListener(action);
-            }
-        });
+        item.addListener(Events.OnClick, new ActionEventListener(action));
 
         return item;
 
@@ -294,18 +243,7 @@ public class MainMenuBar extends ToolBar {
 
         item.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.category()));
 
-        item.addListener(Events.OnClick, new Listener<BaseEvent>() {
-            @Override
-            public void handleEvent(BaseEvent be) {
-                final MessageBox box = MessageBox.prompt(
-                        UserMessages.MESSAGE_ADD_CATEGORY,
-                        "Add a new folder to organize your data. Folders can be shared, and " +
-                                "subscribed to by other users if you set their security level " +
-                                "to public");
-
-                box.addCallback(createNewFolderListener);
-            }
-        });
+        item.addListener(Events.OnClick, new AddFolderBaseEventListener());
 
         return item;
 
@@ -314,28 +252,7 @@ public class MainMenuBar extends ToolBar {
     private MenuItem newKeyButton() {
         MenuItem item = new MenuItem("Get or Reset Secret Key");
         item.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.Key()));
-        item.addListener(Events.OnClick, new Listener<BaseEvent>() {
-
-            public void handleEvent(BaseEvent be) {
-                service.getSecret(new AsyncCallback<String>() {
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        FeedbackHelper.showError(caught);
-                    }
-
-                    @Override
-                    public void onSuccess(String s) {
-                        MessageBox.confirm("Reset Your Key",
-                                "Your secret Key is currently set to: " + s +
-                                        "<br> Press YES to generate a new secret key and to have it emailed to the account you are currently logged in with. " +
-                                        "Your old key will no longer be valid. You can use your key to use Nimbits web services.",
-                                newKeyListener);
-
-                    }
-                });
-
-            }
-        });
+        item.addListener(Events.OnClick, new ResetSecretBaseEventListener());
         return item;
     }
     private final Listener<MessageBoxEvent> createNewFolderListener = new Listener<MessageBoxEvent>() {
@@ -393,26 +310,26 @@ public class MainMenuBar extends ToolBar {
                 try {
                     EntityName name = CommonFactoryLocator.getInstance().createName(newEntityName, EntityType.point);
 
-                //     Entity entity = EntityModelFactory.createEntity(name, EntityType.point);
-                service.addUpdateEntity(name, EntityType.point,  new AsyncCallback<Entity>() {
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        FeedbackHelper.showError(caught);
-                        box.close();
-                    }
-
-                    @Override
-                    public void onSuccess(Entity result) {
-
-                        try {
-                            notifyEntityModifiedListener(new GxtModel(result), Action.create);
-                        } catch (NimbitsException e) {
-                            FeedbackHelper.showError(e);
+                    //     Entity entity = EntityModelFactory.createEntity(name, EntityType.point);
+                    service.addUpdateEntity(name, EntityType.point,  new AsyncCallback<Entity>() {
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            FeedbackHelper.showError(caught);
+                            box.close();
                         }
 
-                        box.close();
-                    }
-                });
+                        @Override
+                        public void onSuccess(Entity result) {
+
+                            try {
+                                notifyEntityModifiedListener(new GxtModel(result), Action.create);
+                            } catch (NimbitsException e) {
+                                FeedbackHelper.showError(e);
+                            }
+
+                            box.close();
+                        }
+                    });
                 } catch (NimbitsException caught) {
                     FeedbackHelper.showError(caught);
 
@@ -422,35 +339,21 @@ public class MainMenuBar extends ToolBar {
         }
     };
     private final Listener<MessageBoxEvent> newKeyListener= new Listener<MessageBoxEvent>() {
-            @Override
-            public void handleEvent(MessageBoxEvent ce) {
-                Button btn = ce.getButtonClicked();
-                final UserServiceAsync us = GWT.create(UserService.class);
+        @Override
+        public void handleEvent(MessageBoxEvent ce) {
+            Button btn = ce.getButtonClicked();
+            final UserServiceAsync us = GWT.create(UserService.class);
 
-                if (btn.getText().toLowerCase().equals("yes")) {
-                    us.updateSecret(new AsyncCallback<String>() {
-
-                        @Override
-                        public void onFailure(Throwable caught) {
-
-                            FeedbackHelper.showError(caught);
-                        }
-
-                        @Override
-                        public void onSuccess(String key) {
-                            com.google.gwt.user.client.Window.alert("Your new secret has been reset to: " + key + " and a copy has been emailed to you. Your old secret key is no longer valid.");
-
-                        }
-
-                    });
-
-                }
+            if (btn.getText().toLowerCase().equals("yes")) {
+                us.updateSecret(new ResetSecretAsyncCallback());
 
             }
-        };
+
+        }
+    };
 
 
-    private Button pendingConnectionsButton() {
+    private Button pendingConnectionsButton() throws NimbitsException {
         final Button connectionRequest = new Button("Connection Requests(" + connectionCount + ")");
 
         connectionRequest.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.add16()));
@@ -465,94 +368,34 @@ public class MainMenuBar extends ToolBar {
             @Override
             public void onSuccess(final List<Connection> result) {
 
+                try {
+                    if (result.isEmpty()) {
+                        connectionRequest.setVisible(false);
+                    } else {
+                        final Menu scrollMenu = new Menu();
+                        scrollMenu.setMaxHeight(MAX_HEIGHT);
+                        MenuItem m;
+                        for (final Connection r : result) {
+                            m = acceptConnectionMenuItem(scrollMenu, r);
+                            scrollMenu.add(m);
+                        }
 
-                if (result.size() > 0) {
-                    final Menu scrollMenu = new Menu();
-                    scrollMenu.setMaxHeight(200);
-                    MenuItem m;
-                    for (final Connection r : result) {
-                       m = acceptConnectionMenuItem(scrollMenu, r);
-                        scrollMenu.add(m);
+
+                        connectionRequest.setMenu(scrollMenu);
+                        connectionCount = result.size();
+
+                        connectionRequest.setText("Requests(" + connectionCount + ')');
                     }
-
-
-                    connectionRequest.setMenu(scrollMenu);
-                    connectionCount = result.size();
-
-                    connectionRequest.setText("Requests(" + connectionCount + ")");
                 }
-                else {
-                    connectionRequest.setVisible(false);
+                catch (NimbitsException ex) {
+                    FeedbackHelper.showError(ex);
                 }
             }
 
-            private MenuItem acceptConnectionMenuItem(final Menu scrollMenu, final Connection r) {
+            private MenuItem acceptConnectionMenuItem(final Menu scrollMenu, final Connection r) throws NimbitsException {
                 final MenuItem m = new MenuItem(r.getRequestorEmail().getValue());
                 m.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.connection()));
-                m.addListener(Events.Select, new Listener<BaseEvent>() {
-
-                    @Override
-                    public void handleEvent(final BaseEvent be) {
-                        //	final Dialog simple = new Dialog();
-                        //simple.setHeading(");
-                        final MessageBox box = new MessageBox();
-                        box.setButtons(MessageBox.YESNOCANCEL);
-                        box.setIcon(MessageBox.QUESTION);
-                        box.setTitle("Connection request approval");
-                        box.addCallback(new Listener<MessageBoxEvent>() {
-                            @Override
-                            public void handleEvent(final MessageBoxEvent be) {
-
-                                final Button btn = be.getButtonClicked();
-
-                                if (btn.getText().equals("Yes")) {
-                                    acceptConnection(r, true);
-                                    scrollMenu.remove(m);
-                                } else if (btn.getText().equals("No")) {
-                                    scrollMenu.remove(m);
-                                    acceptConnection(r, false);
-                                }
-                            }
-
-                            private void acceptConnection(
-                                    final Connection r,
-                                    boolean accepted)  {
-                                UserServiceAsync userService;
-                                userService = GWT.create(UserService.class);
-                                userService.connectionRequestReply(r.getTargetEmail(), r.getRequestorEmail(), r.getKey(), accepted, new AsyncCallback<Void>() {
-
-                                    @Override
-                                    public void onFailure(Throwable caught) {
-                                        FeedbackHelper.showError(caught);
-                                    }
-
-                                    @Override
-                                    public void onSuccess(Void result) {
-
-                                        connectionCount += (-1);
-
-                                        connectionRequest.setText("Requests(" + connectionCount + ")");
-                                        try {
-                                            notifyEntityModifiedListener(null, Action.refresh);
-                                        } catch (NimbitsException e) {
-                                            FeedbackHelper.showError(e);
-                                        }
-
-                                    }
-
-                                });
-                            }
-
-
-                        });
-
-                        box.setMessage("The owner of the email address: '" + r.getRequestorEmail().getValue() + "' would like to connect with you. You will have read only access to each others data points. Is that OK?");
-                        box.show();
-
-
-                    }
-
-                });
+                m.addListener(Events.Select, new AcceptConnectionBaseEventListener(r, scrollMenu, m, connectionRequest));
                 return m;
             }
 
@@ -564,7 +407,7 @@ public class MainMenuBar extends ToolBar {
         void onEntityModified(final GxtModel model, final Action action) throws NimbitsException;
 
     }
-    private List<EntityModifiedListener> entityModifiedListeners = new ArrayList<EntityModifiedListener>();
+    private Collection<EntityModifiedListener> entityModifiedListeners = new ArrayList<EntityModifiedListener>(1);
     public void addEntityModifiedListeners(final EntityModifiedListener listener) {
         this.entityModifiedListeners.add(listener);
     }
@@ -576,9 +419,9 @@ public class MainMenuBar extends ToolBar {
     }
 
 
-    private List<ActionListener> actionListeners = new ArrayList<ActionListener>();
+    private List<ActionListener> actionListeners = new ArrayList<ActionListener>(1);
     public interface ActionListener {
-        void onAction(Action action) ;
+        void onAction(Action action) throws NimbitsException;
 
     }
 
@@ -586,94 +429,319 @@ public class MainMenuBar extends ToolBar {
         this.actionListeners.add(listener);
     }
 
-    void notifyActionListener(Action action)  {
+    void notifyActionListener(Action action) throws NimbitsException {
         for (ActionListener listener : actionListeners) {
             listener.onAction(action);
         }
     }
 
-    private Button connectionButton() {
+    private static Button connectionButton() {
         final Button b = new Button("&nbsp;Connect");
         b.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.email2()));
 
-        b.addListener(Events.OnClick, new Listener<BaseEvent>() {
-
-            @Override
-            public void handleEvent(BaseEvent be) {
-
-
-                final MessageBox box = MessageBox.prompt(UserMessages.MESSAGE_CONNECTION_REQUEST_TITLE, UserMessages.MESSAGE_CONNECTION_REQUEST);
-                box.addCallback(sendInviteLisenter());
-
-            }
-        });
+        b.addListener(Events.OnClick, new ConnectBaseEventListener());
         return b;
     }
 
-    private Listener<MessageBoxEvent> sendInviteLisenter() {
-        return new Listener<MessageBoxEvent>() {
-            @Override
-            public void handleEvent(MessageBoxEvent be) {
-                final String email;
-                email = be.getValue();
-                if (email != null) {
-                    if (email.length() > 0) {
-                        UserServiceAsync userService;
-                        userService = GWT.create(UserService.class);
-                        EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
-                        userService.sendConnectionRequest(emailAddress, new AsyncCallback<Void>() {
-
-                            @Override
-                            public void onFailure(Throwable caught) {
-                                FeedbackHelper.showError(caught);
-
-                            }
-
-                            @Override
-                            public void onSuccess(Void result) {
-
-                                Info.display(UserMessages.MESSAGE_CONNECTION_REQUEST_TITLE, UserMessages.MESSAGE_CONNECTION_REQUEST_SUCCESS);
-
-                            }
-
-                        });
-
-
-                    }
-                }
-            }
-
-        };
+    private static Listener<MessageBoxEvent> sendInviteListener() {
+        return new MessageBoxEventListener();
     }
-    private Button saveButton() {
-        Button saveButton = new Button("Save");
-        saveButton.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.SaveAll()));
-        saveButton.setToolTip("Save checked rows");
-
-        saveButton.addListener(Events.OnClick, new Listener<BaseEvent>() {
-            @Override
-            public void handleEvent(BaseEvent baseEvent) {
-                notifyActionListener(Action.save);
-            }
-        });
-        return (saveButton);
-    }
+//    private Button saveButton() {
+//        Button saveButton = new Button("Save");
+//        saveButton.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.SaveAll()));
+//        saveButton.setToolTip("Save checked rows");
+//
+//        saveButton.addListener(Events.OnClick, new SaveBaseEventListener());
+//        return (saveButton);
+//    }
 
     private Button addChartButton() {
         Button addChartButton = new Button("&nbsp;Add Chart");
         addChartButton.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.lineChart()));
         addChartButton.setToolTip("Add another chart");
 
-        addChartButton.addListener(Events.OnClick, new Listener<BaseEvent>() {
-            @Override
-            public void handleEvent(BaseEvent baseEvent) {
-                notifyActionListener(Action.addChart);
-
-            }
-        });
+        addChartButton.addListener(Events.OnClick, new AddChartBaseEventListener());
         return addChartButton;
 
     }
 
 
+    private static class ConnectionRequestAsyncCallback implements AsyncCallback<Void> {
+
+        @Override
+        public void onFailure(Throwable caught) {
+            FeedbackHelper.showError(caught);
+
+        }
+
+        @Override
+        public void onSuccess(Void result) {
+
+            Info.display(UserMessages.MESSAGE_CONNECTION_REQUEST_TITLE, UserMessages.MESSAGE_CONNECTION_REQUEST_SUCCESS);
+
+        }
+
+    }
+
+    private static class MessageBoxEventListener implements Listener<MessageBoxEvent> {
+        @Override
+        public void handleEvent(MessageBoxEvent be) {
+            final String email;
+            email = be.getValue();
+            if (email != null) {
+                if (!email.isEmpty()) {
+                    UserServiceAsync userService;
+                    userService = GWT.create(UserService.class);
+                    EmailAddress emailAddress;
+                    try {
+                        emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
+
+                        userService.sendConnectionRequest(emailAddress, new ConnectionRequestAsyncCallback());
+                    } catch (NimbitsException e) {
+                        FeedbackHelper.showError(e);
+                    }
+
+                }
+            }
+        }
+
+    }
+
+    private static class ConnectBaseEventListener implements Listener<BaseEvent> {
+
+        @Override
+        public void handleEvent(BaseEvent be) {
+
+
+            final MessageBox box = MessageBox.prompt(UserMessages.MESSAGE_CONNECTION_REQUEST_TITLE, UserMessages.MESSAGE_CONNECTION_REQUEST);
+            box.addCallback(sendInviteListener());
+
+        }
+    }
+
+    private class AddChartBaseEventListener implements Listener<BaseEvent> {
+        @Override
+        public void handleEvent(BaseEvent baseEvent) {
+            try {
+                notifyActionListener(Action.addChart);
+            } catch (NimbitsException e) {
+                FeedbackHelper.showError(e);
+            }
+
+        }
+    }
+
+
+    private class NewPointBaseEventListener implements Listener<BaseEvent> {
+        @Override
+        public void handleEvent(BaseEvent be) {
+            final MessageBox box = MessageBox.prompt(
+                    UserMessages.MESSAGE_NEW_POINT,
+                    UserMessages.MESSAGE_NEW_POINT_PROMPT);
+
+            box.addCallback(createNewPointListener);
+        }
+    }
+
+    private class FileUploadListener implements FileUploadPanel.FileAddedListener {
+
+        private final Window w;
+
+        public FileUploadListener(Window w) {
+            this.w = w;
+        }
+
+        @Override
+        public void onFileAdded() throws NimbitsException {
+            w.hide();
+            notifyEntityModifiedListener(null, Action.refresh);
+
+        }
+    }
+
+    private class ActionEventListener implements Listener<BaseEvent> {
+        private final Action action;
+
+        public ActionEventListener(Action action) {
+            this.action = action;
+        }
+
+        @Override
+        public void handleEvent(BaseEvent be) {
+            try {
+                notifyActionListener(action);
+            } catch (NimbitsException e) {
+                FeedbackHelper.showError(e);
+            }
+        }
+    }
+
+    private class UploadFileBaseEventListener implements Listener<BaseEvent> {
+
+
+        @Override
+        public void handleEvent(BaseEvent be) {
+            final Window w = new Window();
+            w.setAutoWidth(true);
+            w.setHeading(UserMessages.MESSAGE_UPLOAD_SVG);
+            FileUploadPanel p = new FileUploadPanel(UploadType.newFile);
+            p.addFileAddedListeners(new FileUploadListener(w));
+
+            w.add(p);
+            w.show();
+        }
+    }
+
+    private class AddFolderBaseEventListener implements Listener<BaseEvent> {
+        @Override
+        public void handleEvent(BaseEvent be) {
+            final MessageBox box = MessageBox.prompt(
+                    UserMessages.MESSAGE_ADD_CATEGORY,
+                    "Add a new folder to organize your data. Folders can be shared, and " +
+                            "subscribed to by other users if you set their security level " +
+                            "to public");
+
+            box.addCallback(createNewFolderListener);
+        }
+    }
+
+    private class ResetSecretBaseEventListener implements Listener<BaseEvent> {
+
+        public void handleEvent(BaseEvent be) {
+            service.getSecret(new AsyncCallback<String>() {
+                @Override
+                public void onFailure(Throwable caught) {
+                    FeedbackHelper.showError(caught);
+                }
+
+                @Override
+                public void onSuccess(String s) {
+                    MessageBox.confirm("Reset Your Key",
+                            "Your secret Key is currently set to: " + s +
+                                    "<br> Press YES to generate a new secret key and to have it emailed to the account you are currently logged in with. " +
+                                    "Your old key will no longer be valid. You can use your key to use Nimbits web services.",
+                            newKeyListener);
+
+                }
+            });
+
+        }
+    }
+
+    private class ResetSecretAsyncCallback implements AsyncCallback<String> {
+
+        @Override
+        public void onFailure(Throwable caught) {
+
+            FeedbackHelper.showError(caught);
+        }
+
+        @Override
+        public void onSuccess(String key) {
+            com.google.gwt.user.client.Window.alert("Your new secret has been reset to: " + key + " and a copy has been emailed to you. Your old secret key is no longer valid.");
+
+        }
+
+    }
+
+    private class ApproveConnectionMessageBoxEventListener implements Listener<MessageBoxEvent> {
+        private final Connection r;
+        private final Menu scrollMenu;
+        private final MenuItem m;
+        private final Button connectionRequest;
+
+        public ApproveConnectionMessageBoxEventListener(Connection r, Menu scrollMenu, MenuItem m, Button connectionRequest) {
+            this.r = r;
+            this.scrollMenu = scrollMenu;
+            this.m = m;
+            this.connectionRequest = connectionRequest;
+        }
+
+        @Override
+        public void handleEvent(final MessageBoxEvent be) {
+
+            final Button btn = be.getButtonClicked();
+            try {
+                if (btn.getText().equals("Yes")) {
+                    acceptConnection(r, true);
+                    scrollMenu.remove(m);
+                } else if (btn.getText().equals("No")) {
+                    scrollMenu.remove(m);
+                    acceptConnection(r, false);
+                }
+            }
+            catch (NimbitsException ex) {
+                FeedbackHelper.showError(ex);
+            }
+        }
+
+        private void acceptConnection(
+                final Connection r,
+                boolean accepted) throws NimbitsException {
+            UserServiceAsync userService;
+            userService = GWT.create(UserService.class);
+            userService.connectionRequestReply(r.getTargetEmail(), r.getRequestorEmail(), r.getKey(), accepted, new AsyncCallback<Void>() {
+
+                @Override
+                public void onFailure(Throwable caught) {
+                    FeedbackHelper.showError(caught);
+                }
+
+                @Override
+                public void onSuccess(Void result) {
+
+                    connectionCount += (-1);
+
+                    connectionRequest.setText("Requests(" + connectionCount + ')');
+                    try {
+                        notifyEntityModifiedListener(null, Action.refresh);
+                    } catch (NimbitsException e) {
+                        FeedbackHelper.showError(e);
+                    }
+
+                }
+
+            });
+        }
+
+
+    }
+
+    private class AcceptConnectionBaseEventListener implements Listener<BaseEvent> {
+
+        private final Connection r;
+        private final Menu scrollMenu;
+        private final MenuItem m;
+        private final Button connectionRequest;
+
+        public AcceptConnectionBaseEventListener(Connection r, Menu scrollMenu, MenuItem m, Button connectionRequest) {
+            this.r = r;
+            this.scrollMenu = scrollMenu;
+            this.m = m;
+            this.connectionRequest = connectionRequest;
+        }
+
+        @Override
+        public void handleEvent(final BaseEvent be) {
+            //	final Dialog simple = new Dialog();
+            //simple.setHeading(");
+            try {
+                final MessageBox box = new MessageBox();
+                box.setButtons(MessageBox.YESNOCANCEL);
+                box.setIcon(MessageBox.QUESTION);
+                box.setTitle("Connection request approval");
+                box.addCallback(new ApproveConnectionMessageBoxEventListener(r, scrollMenu, m, connectionRequest));
+
+
+                box.setMessage("The owner of the email address: '" + r.getRequestorEmail().getValue() + "' would like to connect with you. You will have read only access to each others data points. Is that OK?");
+
+                box.show();
+            } catch (NimbitsException e) {
+                FeedbackHelper.showError(e);
+            }
+
+
+        }
+
+    }
 }

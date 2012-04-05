@@ -20,11 +20,11 @@ package com.nimbits.server.counter;
  * Time: 5:00 PM
  */
 
-import com.nimbits.PMF;
-import com.nimbits.server.transactions.dao.counter.ShardedCounter;
-import com.nimbits.server.orm.ApiCounter;
+import com.nimbits.*;
+import com.nimbits.server.orm.*;
+import com.nimbits.server.transactions.dao.counter.*;
 
-import javax.jdo.PersistenceManager;
+import javax.jdo.*;
 
 /**
  * Finds or creates a sharded counter with the desired name.
@@ -32,16 +32,12 @@ import javax.jdo.PersistenceManager;
  */
 public class CounterFactory {
 
-    public ShardedCounter getCounter(final String name) {
+    public static ShardedCounter getCounter(final String name) {
         ShardedCounter counter = new ShardedCounter(name);
-        if (counter.isInDatastore()) {
-            return counter;
-        } else {
-            return null;
-        }
+        return counter.isInDatastore() ? counter : null;
     }
 
-    public ShardedCounter createCounter(final String name) {
+    public static ShardedCounter createCounter(final String name) {
         ShardedCounter counter = new ShardedCounter(name);
 
         ApiCounter counterEntity = new ApiCounter(name, 0);

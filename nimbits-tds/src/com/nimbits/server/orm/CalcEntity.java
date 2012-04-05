@@ -13,14 +13,11 @@
 
 package com.nimbits.server.orm;
 
-import com.google.appengine.api.datastore.KeyFactory;
-import com.nimbits.client.model.calculation.Calculation;
+import com.google.appengine.api.datastore.*;
+import com.nimbits.client.model.calculation.*;
 import com.nimbits.client.model.entity.Entity;
 
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.PrimaryKey;
+import javax.jdo.annotations.*;
 
 /**
  * Created by bsautner

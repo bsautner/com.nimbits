@@ -1,5 +1,6 @@
 package com.nimbits.client.model.server;
 
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.email.*;
 
 import java.io.*;
@@ -17,7 +18,7 @@ public interface Server  extends Serializable {
 
     String getBaseUrl();
 
-    EmailAddress getOwnerEmail();
+    EmailAddress getOwnerEmail() throws NimbitsException;
 
     String getServerVersion();
 

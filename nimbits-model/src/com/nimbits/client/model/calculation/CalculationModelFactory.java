@@ -13,8 +13,7 @@
 
 package com.nimbits.client.model.calculation;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by bsautner
@@ -23,6 +22,9 @@ import java.util.List;
  * Time: 10:04 AM
  */
 public class CalculationModelFactory {
+
+    private CalculationModelFactory() {
+    }
 
     public static Calculation createCalculation(Calculation calculation) {
         return new CalculationModel(calculation);
@@ -38,8 +40,8 @@ public class CalculationModelFactory {
 
         return new CalculationModel(trigger, key, enabled, f, target,  x,y, z);
     }
-    public static List<Calculation> createCalculations(List<Calculation> calculations) {
-        List<Calculation> retObj = new ArrayList<Calculation>();
+    public static List<Calculation> createCalculations(Collection<Calculation> calculations) {
+        List<Calculation> retObj = new ArrayList<Calculation>(calculations.size());
         for (final Calculation c : calculations) {
             retObj.add(createCalculation(c));
         }

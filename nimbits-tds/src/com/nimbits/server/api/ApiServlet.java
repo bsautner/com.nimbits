@@ -13,19 +13,15 @@
 
 package com.nimbits.server.api;
 
-import com.nimbits.client.common.Utils;
-import com.nimbits.client.enums.ExportType;
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.user.User;
-import com.nimbits.server.quota.QuotaFactory;
-import com.nimbits.server.user.UserServiceFactory;
+import com.nimbits.client.common.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.server.quota.*;
+import com.nimbits.server.user.*;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.EnumMap;
-import java.util.Map;
+import javax.servlet.http.*;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner
@@ -34,13 +30,11 @@ import java.util.Map;
  * Time: 12:58 PM
  */
 public class ApiServlet extends HttpServlet {
-    //private static final Logger log = Logger.getLogger(ApiServlet.class.getName());
+
     protected static User user;
     private static Map<Parameters, String> paramMap;
 
-    public static void doDestroy() {
-        paramMap = null;
-    }
+
 
 
     public static void doInit(final HttpServletRequest req, final HttpServletResponse resp, final ExportType type) throws NimbitsException {
@@ -88,16 +82,11 @@ public class ApiServlet extends HttpServlet {
         resp.addHeader("Access-Control-Allow-Origin", "*");
     }
 
-    protected String getParam(final Parameters param) {
-        if (paramMap.containsKey(param)) {
-            return paramMap.get(param);
-        }
-        else {
-            return null;
-        }
+    protected static String getParam(final Parameters param) {
+        return paramMap.containsKey(param) ? paramMap.get(param) : null;
     }
 
-    protected boolean containsParam(final Parameters param) {
+    protected static boolean containsParam(final Parameters param) {
 
         return paramMap.containsKey(param) && !Utils.isEmptyString(paramMap.get(param));
 

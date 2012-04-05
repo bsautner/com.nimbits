@@ -13,12 +13,10 @@
 
 package com.nimbits.server.cron;
 
-import com.nimbits.client.constants.Const;
+import com.nimbits.client.constants.*;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.logging.Logger;
+import javax.servlet.http.*;
+import java.util.logging.*;
 
 public class DataScrubberCron extends HttpServlet {
     /**

@@ -13,11 +13,12 @@
 
 package com.nimbits.server.orm;
 
-import com.google.appengine.api.blobstore.BlobKey;
-import com.nimbits.client.model.valueblobstore.ValueBlobStore;
+import com.google.appengine.api.blobstore.*;
+import com.nimbits.client.constants.*;
+import com.nimbits.client.model.valueblobstore.*;
 
 import javax.jdo.annotations.*;
-import java.util.Date;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner
@@ -50,9 +51,18 @@ public class ValueBlobStoreEntity  implements ValueBlobStore {
     private String path;
 
     @Persistent
+    private Long length;
+
+    @Persistent
     private BlobKey blobkey;
 
-    public ValueBlobStoreEntity(final String entity, final Date timestamp, final Date maxTimestamp, final Date minTimestamp, final String path, final BlobKey blobkey) {
+    public ValueBlobStoreEntity(final String entity,
+                                final Date timestamp,
+                                final Date maxTimestamp,
+                                final Date minTimestamp,
+                                final String path,
+                                final BlobKey blobkey,
+                                final long length) {
         this.entity = entity;
         this.timestamp = timestamp.getTime();
 
@@ -60,6 +70,7 @@ public class ValueBlobStoreEntity  implements ValueBlobStore {
         this.maxTimestamp = maxTimestamp.getTime();
         this.minTimestamp = minTimestamp.getTime();
         this.blobkey = blobkey;
+        this.length = length;
     }
 
 
@@ -95,9 +106,11 @@ public class ValueBlobStoreEntity  implements ValueBlobStore {
         this.minTimestamp = minTimestamp.getTime();
     }
 
-    public String getBlobkey() {
+    public String getBlobKey() {
         return blobkey.getKeyString();
     }
 
-
+    public long getLength() {
+        return length != null ? length : Const.CONST_DEFAULT_BLOB_LENGTH;
+    }
 }

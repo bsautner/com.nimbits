@@ -18,6 +18,9 @@ public class EmailServiceFactory {
 
     private static EmailService instance;
 
+    private EmailServiceFactory() {
+    }
+
     public static EmailService getInstance() {
         if (instance == null) {
             instance = new EmailServiceImpl();

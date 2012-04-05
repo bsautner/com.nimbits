@@ -13,7 +13,7 @@
 
 package com.nimbits.server.orm;
 
-import com.nimbits.client.enums.IntelligenceResultTarget;
+import com.nimbits.client.enums.*;
 
 import javax.jdo.annotations.*;
 

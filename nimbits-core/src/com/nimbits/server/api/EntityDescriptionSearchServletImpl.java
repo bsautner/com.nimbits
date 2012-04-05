@@ -93,12 +93,16 @@ public class EntityDescriptionSearchServletImpl extends HttpServlet {
                     img = "<img align=left src=\"http://www.nimbits.com/images/ball.png\" width=30 height=30>";
                 }
 
-                sb.append("<div class=\"row\">")
-                        .append("<h5>").append("<a href=\"").append(d.getServer().getBaseUrl()).append("/report.html?uuid=").append(d.getKey())
-                        .append("\" target=\"_blank\">").append(d.getName()).append("</a></h5>")
-                        .append(img)
-                        .append("<p>").append(d.getDesc()).append("</p>")
-                        .append("</div>");
+                try {
+                    sb.append("<div class=\"row\">")
+                            .append("<h5>").append("<a href=\"").append(d.getServer().getBaseUrl()).append("/report.html?uuid=").append(d.getKey())
+                            .append("\" target=\"_blank\">").append(d.getName()).append("</a></h5>")
+                            .append(img)
+                            .append("<p>").append(d.getDesc()).append("</p>")
+                            .append("</div>");
+                } catch (NimbitsException e) {
+
+                }
             }
             r = "<div class=\"row\"></div>";
             out.print(sb.toString());

@@ -13,23 +13,18 @@
 
 package com.nimbits.server.calculation;
 
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.calculation.Calculation;
-import com.nimbits.client.model.calculation.CalculationModel;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.user.User;
-import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.calculation.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.server.gson.*;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
-import static com.nimbits.server.user.UserServiceFactory.getServerInstance;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.io.*;
 
 /**
  * Created by bsautner
@@ -49,7 +44,7 @@ public class CalculationServlet extends HttpServlet {
         final EntityName name;
         final User u;
         try {
-            u = getServerInstance().getHttpRequestUser(req);
+            u = com.nimbits.server.user.UserServiceFactory.getServerInstance().getHttpRequestUser(req);
             name = CommonFactoryLocator.getInstance().createName(nameParam, EntityType.calculation);
             if ((u != null) && (!u.isRestricted()) && (c != null)) {
                 CalculationServiceFactory.getInstance().addUpdateCalculation(u, null, name, c);

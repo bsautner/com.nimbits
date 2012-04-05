@@ -1,5 +1,6 @@
 package com.nimbits.client.model.server;
 
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.email.*;
 
@@ -31,7 +32,7 @@ public class ServerModel implements Serializable, Server {
         this.serverVersion = serverVersion;
     }
 
-    public ServerModel(final Server server) {
+    public ServerModel(final Server server) throws NimbitsException {
 
         this.idServer = server.getIdServer();
         this.baseUrl = server.getBaseUrl();
@@ -54,7 +55,7 @@ public class ServerModel implements Serializable, Server {
     }
 
     @Override
-    public EmailAddress getOwnerEmail() {
+    public EmailAddress getOwnerEmail() throws NimbitsException {
         return CommonFactoryLocator.getInstance().createEmailAddress(ownerEmail);
     }
 

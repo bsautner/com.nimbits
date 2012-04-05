@@ -1,5 +1,6 @@
 package com.nimbits.client.model.server;
 
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.user.*;
 
@@ -13,7 +14,10 @@ import java.math.*;
  */
 public class ServerModelFactory {
 
-       public static Server createServer(final Server server) {
+    private ServerModelFactory() {
+    }
+
+    public static Server createServer(final Server server) throws NimbitsException {
 
         return new ServerModel(server);
 

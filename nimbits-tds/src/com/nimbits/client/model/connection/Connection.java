@@ -13,10 +13,11 @@
 
 package com.nimbits.client.model.connection;
 
-import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.email.*;
 
-import java.io.Serializable;
-import java.util.Date;
+import java.io.*;
+import java.util.*;
 
 /**
  * Created by bsautner
@@ -30,7 +31,7 @@ public interface Connection extends Serializable {
 
     void setRequestorID(final String requestorID);
 
-    EmailAddress getTargetEmail();
+    EmailAddress getTargetEmail() throws NimbitsException;
 
     void setTargetEmail(final EmailAddress targetEmail);
 
@@ -50,7 +51,7 @@ public interface Connection extends Serializable {
 
     void setRequestorEmail(final EmailAddress requestorEmail);
 
-    EmailAddress getRequestorEmail();
+    EmailAddress getRequestorEmail() throws NimbitsException;
 
     void setRejected(final boolean rejected);
 

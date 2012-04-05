@@ -26,28 +26,19 @@ public class ValueBlobStoreModel implements ValueBlobStore {
 
     private String entity;
 
-
     private Date timestamp;
-
 
     private long maxTimestamp;
 
-
     private long minTimestamp;
 
+    private long length;
 
     private String path;
 
     private String key;
 
-    public ValueBlobStoreModel(String entity, Date timestamp, Date maxTimestamp, Date minTimestamp, String path, String key) {
-        this.entity = entity;
-        this.timestamp = timestamp;
-        this.path = path;
-        this.maxTimestamp = maxTimestamp.getTime();
-        this.minTimestamp = minTimestamp.getTime();
-        this.key = key;
-    }
+
 
     public ValueBlobStoreModel(ValueBlobStore store) {
         this.entity = store.getEntity();
@@ -55,7 +46,8 @@ public class ValueBlobStoreModel implements ValueBlobStore {
         this.path = store.getPath();
         this.maxTimestamp = store.getMaxTimestamp().getTime();
         this.minTimestamp = store.getMinTimestamp().getTime();
-        this.key = store.getBlobkey();
+        this.key = store.getBlobKey();
+        this.length = store.getLength();
     }
 
     public String getEntity() {
@@ -88,7 +80,11 @@ public class ValueBlobStoreModel implements ValueBlobStore {
     }
 
     @Override
-    public String getBlobkey() {
+    public String getBlobKey() {
         return key;
+    }
+
+    public long getLength() {
+        return length;
     }
 }

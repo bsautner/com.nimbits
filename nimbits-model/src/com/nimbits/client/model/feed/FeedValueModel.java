@@ -24,7 +24,7 @@ public class FeedValueModel  implements Serializable, FeedValue {
         this.feedType = feedType.getCode();
     }
 
-    public FeedValueModel() {
+    private FeedValueModel() {
     }
 
     @Override

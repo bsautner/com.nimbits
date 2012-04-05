@@ -13,10 +13,10 @@
 
 package com.nimbits.server.orm;
 
-import com.google.appengine.api.datastore.KeyFactory;
-import com.nimbits.client.enums.IntelligenceResultTarget;
+import com.google.appengine.api.datastore.*;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.intelligence.Intelligence;
+import com.nimbits.client.model.intelligence.*;
 
 import javax.jdo.annotations.*;
 

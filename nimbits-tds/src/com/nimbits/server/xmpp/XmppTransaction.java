@@ -13,11 +13,11 @@
 
 package com.nimbits.server.xmpp;
 
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.xmpp.XmppResource;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.xmpp.*;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner

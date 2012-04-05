@@ -13,13 +13,11 @@
 
 package com.nimbits.server.cron;
 
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.server.point.PointServiceFactory;
-import helper.NimbitsServletTest;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import com.nimbits.client.exception.*;
+import com.nimbits.server.point.*;
+import helper.*;
+import static org.junit.Assert.*;
+import org.junit.*;
 
 /**
  * Created by bsautner

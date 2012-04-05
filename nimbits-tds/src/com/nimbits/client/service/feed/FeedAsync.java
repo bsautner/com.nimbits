@@ -13,16 +13,16 @@
 
 package com.nimbits.client.service.feed;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.client.enums.FeedType;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.feed.FeedValue;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.feed.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
 
-import java.util.List;
+import java.util.*;
 @SuppressWarnings("unused")
 public interface FeedAsync {
 
@@ -32,5 +32,5 @@ public interface FeedAsync {
 
     void postToFeed(final User user, final String html,  final FeedType type, final AsyncCallback<Void> async);
 
-    void postToFeed(final User user, final NimbitsException ex, final AsyncCallback<Void> async);
+    void postToFeed(final User user, final Throwable ex, final AsyncCallback<Void> async);
 }

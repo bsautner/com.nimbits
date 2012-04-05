@@ -13,14 +13,15 @@
 
 package com.nimbits.server.orm;
 
-import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Key;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.connection.Connection;
-import com.nimbits.client.model.email.EmailAddress;
+import com.google.appengine.api.datastore.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.connection.*;
+import com.nimbits.client.model.email.*;
 
 import javax.jdo.annotations.*;
-import java.util.Date;
+import java.util.*;
 
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
@@ -54,7 +55,7 @@ public class ConnectionRequestEntity implements Connection {
     protected  ConnectionRequestEntity() {
     }
 
-    public ConnectionRequestEntity(final Connection c) {
+    public ConnectionRequestEntity(final Connection c) throws NimbitsException {
         this.requestorID = c.getRequestorID();
         this.targetEmail = c.getTargetEmail().getValue();
         this.requestorEmail = c.getRequestorEmail().getValue();
@@ -66,7 +67,10 @@ public class ConnectionRequestEntity implements Connection {
         }
     }
 
-    public ConnectionRequestEntity(final String requestorID, final EmailAddress requestorEmail, final EmailAddress targetEmail, final String uuid) {
+    public ConnectionRequestEntity(final String requestorID,
+                                   final CommonIdentifier requestorEmail,
+                                   final CommonIdentifier targetEmail,
+                                   final String uuid) {
         this.requestorID = requestorID;
         this.targetEmail = targetEmail.getValue();
         this.requestorEmail = requestorEmail.getValue();
@@ -76,58 +80,72 @@ public class ConnectionRequestEntity implements Connection {
 
     }
 
+    @Override
     public String getRequestorID() {
         return requestorID;
     }
 
+    @Override
     public void setRequestorID(final String requestorId) {
         this.requestorID = requestorId;
     }
 
-    public EmailAddress getTargetEmail() {
+    @Override
+    public EmailAddress getTargetEmail() throws NimbitsException {
         return CommonFactoryLocator.getInstance().createEmailAddress(targetEmail);
     }
 
+    @Override
     public void setTargetEmail(final EmailAddress targetEmail) {
         this.targetEmail = targetEmail.getValue();
     }
 
+    @Override
     public Date getRequestDate() {
         return requestDate;
     }
 
+    @Override
     public void setRequestDate(final Date requestDate) {
-        this.requestDate = requestDate;
+        this.requestDate = new Date(requestDate.getTime());
     }
 
+    @Override
     public Date getApprovedDate() {
         return approvedDate;
     }
 
+    @Override
     public void setApprovedDate(final Date approvedDate) {
-        this.approvedDate = approvedDate;
+        this.approvedDate = new Date(approvedDate.getTime());
     }
 
+    @Override
     public Boolean getApproved() {
         return approved;
     }
 
+    @Override
     public void setApproved(final boolean approved) {
         this.approved = approved;
     }
 
+    @Override
     public Long getKey() {
         return key.getId();
     }
 
-    public EmailAddress getRequestorEmail() {
+    @Override
+    public EmailAddress getRequestorEmail() throws NimbitsException {
         return CommonFactoryLocator.getInstance().createEmailAddress(requestorEmail);
     }
 
+    @Override
     public void setRequestorEmail(final EmailAddress requestorEmail) {
         this.requestorEmail = requestorEmail.getValue();
     }
 
+    @Override
     public Boolean getRejected() {
         if (rejected == null) {
             rejected = false;
@@ -135,6 +153,7 @@ public class ConnectionRequestEntity implements Connection {
         return rejected;
     }
 
+    @Override
     public void setRejected(final boolean rejected) {
         this.rejected = rejected;
     }

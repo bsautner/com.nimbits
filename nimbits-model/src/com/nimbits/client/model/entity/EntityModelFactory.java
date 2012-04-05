@@ -7,8 +7,7 @@ import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.user.User;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by bsautner
@@ -18,6 +17,9 @@ import java.util.List;
  */
 public class EntityModelFactory {
 
+
+    private EntityModelFactory() {
+    }
 
     public static Entity createEntity(final User user, final Entity entity) throws NimbitsException {
         final Entity r = new EntityModel(entity);
@@ -66,7 +68,7 @@ public class EntityModelFactory {
         return new EntityDescriptionModel(server, entity);
     }
 
-    public static List<EntityDescription> createPointDescriptions(final List<EntityDescription> entityDescriptions) {
+    public static List<EntityDescription> createPointDescriptions(final Collection<EntityDescription> entityDescriptions) throws NimbitsException {
         final List<EntityDescription> retObj = new ArrayList<EntityDescription>(entityDescriptions.size());
         for (final EntityDescription entityDescription : entityDescriptions) {
             retObj.add(createPointDescription(entityDescription));
@@ -75,15 +77,15 @@ public class EntityModelFactory {
 
     }
 
-    public static EntityDescription createPointDescription(final EntityDescription entityDesc) {
+    public static EntityDescription createPointDescription(final EntityDescription entityDesc) throws NimbitsException {
 
         return new EntityDescriptionModel(entityDesc);
 
 
     }
 
-    public static List<Entity> createEntities(final User user,final  List<Entity> result) throws NimbitsException {
-        final ArrayList<Entity> entities = new ArrayList<Entity>(result.size());
+    public static List<Entity> createEntities(final User user,final Collection<Entity> result) throws NimbitsException {
+        final List<Entity> entities = new ArrayList<Entity>(result.size());
         for (final Entity e : result) {
 
             final boolean isOwner = (user != null) && e.getOwner().equals(user.getKey());
@@ -133,25 +135,20 @@ public class EntityModelFactory {
 
 
     public static Entity createEntity(final User u, final EntityName name) {
-        if (u != null) {
-            return new EntityModel(name,
-                    "",
-                    EntityType.point,
-                    ProtectionLevel.everyone,
-                    u.getKey(),
-                    u.getKey(),
-                    u.getKey());
-        }
-        else {
-            return new EntityModel(name,
-                    "",
-                    EntityType.point,
-                    ProtectionLevel.everyone,
+        return u != null ? new EntityModel(name,
+                "",
+                EntityType.point,
+                ProtectionLevel.everyone,
+                u.getKey(),
+                u.getKey(),
+                u.getKey()) : new EntityModel(name,
+                "",
+                EntityType.point,
+                ProtectionLevel.everyone,
 
-                    null,
-                    null,
-                    null);
-        }
+                null,
+                null,
+                null);
     }
 
 

@@ -14,22 +14,20 @@
 package com.nimbits.server.cron;
 
 import com.google.appengine.api.datastore.*;
-import com.nimbits.client.constants.Const;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.constants.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.user.*;
 import com.nimbits.server.email.*;
 import com.nimbits.server.quota.*;
-import com.nimbits.server.user.UserTransactionFactory;
+import com.nimbits.server.user.*;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.io.*;
 import java.util.*;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 /**
  * Created by Benjamin Sautner
@@ -41,6 +39,7 @@ public class QuotaResetCron  extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     private static final Logger log = Logger.getLogger(QuotaResetCron.class.getName());
+    private static final int LIMIT = 5000;
 
     @Override
     @SuppressWarnings(Const.WARNING_UNCHECKED)
@@ -48,7 +47,7 @@ public class QuotaResetCron  extends HttpServlet {
             throws IOException {
 
         try {
-            processGet(req, resp);
+            processGet(resp);
         } catch (NimbitsException e) {
             log.severe(e.getMessage());
         }
@@ -56,7 +55,7 @@ public class QuotaResetCron  extends HttpServlet {
 
     }
 
-    protected void processGet(HttpServletRequest req, HttpServletResponse resp) throws NimbitsException, IOException {
+    protected static void processGet(ServletResponse resp) throws NimbitsException, IOException {
         final List<User> users = UserTransactionFactory.getInstance().getUsers();
         StringBuilder sb = new StringBuilder(users.size() * 100);
 
@@ -70,7 +69,7 @@ public class QuotaResetCron  extends HttpServlet {
 
         sb.append("<html><body><table>");
         EmailAddress em;
-        for (final Entity e : store.prepare(q).asList(FetchOptions.Builder.withLimit(5000))) {
+        for (final Entity e : store.prepare(q).asList(FetchOptions.Builder.withLimit(LIMIT))) {
             em = CommonFactoryLocator.getInstance().createEmailAddress(e.getKey().getName());
 
             quota = QuotaFactory.getInstance(em);

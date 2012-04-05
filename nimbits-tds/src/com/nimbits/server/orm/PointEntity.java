@@ -13,14 +13,14 @@
 
 package com.nimbits.server.orm;
 
-import com.google.appengine.api.datastore.KeyFactory;
-import com.nimbits.client.enums.FilterType;
+import com.google.appengine.api.datastore.*;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.value.Value;
 
 import javax.jdo.annotations.*;
-import java.util.List;
+import java.util.*;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 public class PointEntity implements Point {

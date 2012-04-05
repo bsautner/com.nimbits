@@ -13,9 +13,9 @@
 
 package com.nimbits.server.calculation;
 
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.service.calculation.CalculationService;
-import com.nimbits.server.transactions.dao.calculation.CalculationDAOImpl;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.service.calculation.*;
+import com.nimbits.server.transactions.dao.calculation.*;
 
 /**
  * Created by bsautner
@@ -24,6 +24,9 @@ import com.nimbits.server.transactions.dao.calculation.CalculationDAOImpl;
  * Time: 12:24 PM
  */
 public class CalculationServiceFactory {
+
+    private CalculationServiceFactory() {
+    }
 
     public static CalculationService getInstance() {
         return new CalculationServiceImpl();

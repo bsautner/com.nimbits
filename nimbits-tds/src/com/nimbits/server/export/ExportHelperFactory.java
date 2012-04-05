@@ -15,6 +15,9 @@ package com.nimbits.server.export;
 
 public class ExportHelperFactory {
 
+    private ExportHelperFactory() {
+    }
+
     public static ExportHelper getInstance() {
         return new ExportHelperImpl();
     }

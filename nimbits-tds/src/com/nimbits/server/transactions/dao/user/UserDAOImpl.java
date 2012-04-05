@@ -13,43 +13,35 @@
 
 package com.nimbits.server.transactions.dao.user;
 
-import com.nimbits.PMF;
-import com.nimbits.client.constants.Const;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.connection.Connection;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.user.UserModelFactory;
-import com.nimbits.server.connections.ConnectionRequestModelFactory;
-import com.nimbits.server.entity.EntityTransactionFactory;
+import com.nimbits.*;
+import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.connection.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.server.connections.*;
+import com.nimbits.server.entity.*;
 import com.nimbits.server.orm.*;
-import com.nimbits.server.orm.ConnectionRequestEntity;
-import com.nimbits.server.user.UserTransactions;
-import twitter4j.auth.AccessToken;
+import com.nimbits.server.user.*;
+import twitter4j.auth.*;
 
 import javax.jdo.*;
 import java.util.*;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 @SuppressWarnings("unchecked")
 public class UserDAOImpl implements UserTransactions {
     private static final Logger log = Logger.getLogger(UserDAOImpl.class.getName());
+    private static final int MAX_REQUESTS = 25;
 
 
-
-
-    public User setFacebookToken(final EmailAddress internetAddress, final String token, final long facebookId) {
+    @Override
+    public User setFacebookToken(final EmailAddress internetAddress, final String token, final long facebookId) throws NimbitsException {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-
-
-        User retObj;
         try {
 
             final User u = getUserByKey(pm, internetAddress.getValue());
@@ -60,18 +52,22 @@ public class UserDAOImpl implements UserTransactions {
                 u.setFacebookToken(token);
                 u.setFacebookID(facebookId);
                 tx.commit();
-
+                return  UserModelFactory.createUserModel(u);
             }
-            retObj = UserModelFactory.createUserModel(u);
+            else {
+                throw new NimbitsException("User Not Found");
+            }
+
 
         } finally {
             pm.close();
         }
 
-        return retObj;
+
     }
 
 
+    @Override
     public User createNimbitsUser(final EmailAddress internetAddress) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
@@ -79,19 +75,10 @@ public class UserDAOImpl implements UserTransactions {
             final EntityName name = CommonFactoryLocator.getInstance().createName(internetAddress.getValue(), EntityType.user);
             final Entity entity =  EntityModelFactory.createEntity(name, "", EntityType.user, ProtectionLevel.onlyMe,
                     "","");
-
-
             final Entity r = EntityTransactionFactory.getDaoInstance(null).addUpdateEntity(entity);
-
-            final UserEntity u = new UserEntity(r, internetAddress);
-
-
+            final UserEntity u = new UserEntity(r);
             u.setSecret(UUID.randomUUID().toString());
             pm.makePersistent(u);
-
-
-
-
             return  UserModelFactory.createUserModel(u);
 
         } finally {
@@ -106,7 +93,7 @@ public class UserDAOImpl implements UserTransactions {
     * @see com.nimbits.server.user.UserTransactions#getNimbitsUser(java.lang.String, boolean, java.lang.String)
     */
     @Override
-    public User getNimbitsUser(final EmailAddress internetAddress) {
+    public User getNimbitsUser(final EmailAddress internetAddress) throws NimbitsException {
         User retObj = null;
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
@@ -136,7 +123,7 @@ public class UserDAOImpl implements UserTransactions {
     * @see com.nimbits.server.user.UserTransactions#updateSecret()
     */
     @Override
-    public User updateSecret(final EmailAddress emailAddress, final UUID uuid) {
+    public User updateSecret(final EmailAddress emailAddress, final UUID uuid) throws NimbitsException {
 
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -184,20 +171,18 @@ public class UserDAOImpl implements UserTransactions {
     }
 
     @Override
-    public List<User> getUsers() {
+    public List<User> getUsers() throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final List<User> result;
-        List<User> retObj = null;
+
         try {
             final Query q = pm.newQuery(UserEntity.class);
             result = (List<User>) q.execute();
-            retObj = UserModelFactory.createUserModels(result);
-        } catch (Exception e) {
-            log.severe(e.getMessage());
-        } finally {
+            return  UserModelFactory.createUserModels(result);
+        }  finally {
             pm.close();
         }
-        return retObj;
+
     }
     @Override
     public List<Connection> getPendingConnectionRequests(final EmailAddress internetAddress) {
@@ -206,7 +191,7 @@ public class UserDAOImpl implements UserTransactions {
             final Query q = pm.newQuery(ConnectionRequestEntity.class);
             q.setFilter("approved == a && targetEmail==e && rejected == r");
             q.declareParameters("Boolean a, Boolean r, String e");
-            q.setRange(0,25);
+            q.setRange(0, MAX_REQUESTS);
 
 
             final List<ConnectionRequestEntity> data = (List<ConnectionRequestEntity>) q.execute(false, false, internetAddress.getValue());
@@ -221,9 +206,9 @@ public class UserDAOImpl implements UserTransactions {
     }
 
     @Override
-    public List<User> updateConnectionRequest(final Long key, final User requestor, final User acceptor, final boolean accepted) {
+    public void updateConnectionRequest(final Long key, final User requestor, final User acceptor, final boolean accepted) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final List<User> affectedUsers = new ArrayList<User>(1);
+        //nal List<User> affectedUsers = new ArrayList<User>(1);
 
         final Transaction tx;
 
@@ -243,34 +228,33 @@ public class UserDAOImpl implements UserTransactions {
 
 
 
-        return affectedUsers;
+       // return affectedUsers;
 
     }
 
 
 
     @Override
-    public Connection makeConnectionRequest(final User u, final EmailAddress emailAddress) {
+    public Connection makeConnectionRequest(final User u, final EmailAddress emailAddress) throws NimbitsException {
         final ConnectionRequestEntity f = new ConnectionRequestEntity(u.getKey(), u.getEmail(), emailAddress, UUID.randomUUID().toString());
-        Connection retObj;
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
             pm.makePersistent(f);
-            retObj = ConnectionRequestModelFactory.CreateConnectionRequestModel(f);
+            return  ConnectionRequestModelFactory.CreateConnectionRequestModel(f);
 
         } finally {
             pm.close();
         }
-        return retObj;
+
 
 
     }
 
     @Override
-    public User updateTwitter(final EmailAddress internetAddress, final AccessToken token) {
+    public User updateTwitter(final EmailAddress internetAddress, final AccessToken token) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        User retObj = null;
+
          try {
 
              final User u = getUserByKey(pm, internetAddress.getValue());
@@ -281,8 +265,11 @@ public class UserDAOImpl implements UserTransactions {
                 u.setTwitterToken(token.getToken());
                 u.setTwitterTokenSecret(token.getTokenSecret());
                 tx.commit();
-                retObj = UserModelFactory.createUserModel(u);
+               return  UserModelFactory.createUserModel(u);
 
+            }
+             else {
+                throw new NimbitsException(UserMessages.ERROR_USER_NOT_FOUND);
             }
 
         } finally {
@@ -290,13 +277,12 @@ public class UserDAOImpl implements UserTransactions {
         }
 
 
-        return retObj;
     }
 
     @Override
-    public User updateLastLoggedIn(final User user, final Date lastLoggedIn) {
+    public User updateLastLoggedIn(final User user, final Date lastLoggedIn) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final User retObj;
+
         try {
             final Transaction tx = pm.currentTransaction();
             final UserEntity n = pm.getObjectById(UserEntity.class, user.getKey());
@@ -304,8 +290,8 @@ public class UserDAOImpl implements UserTransactions {
             tx.begin();
             n.setLastLoggedIn(lastLoggedIn);
             tx.commit();
-            retObj = UserModelFactory.createUserModel(n);
-            return retObj;
+            return UserModelFactory.createUserModel(n);
+
         } catch (ConcurrentModificationException ex) {
             log.severe(ex.getMessage());
             return user;
@@ -317,17 +303,12 @@ public class UserDAOImpl implements UserTransactions {
     }
 
     @Override
-    public User getUserByKey(final String key) {
+    public User getUserByKey(final String key) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         try {
             final User user = getUserByKey(pm, key);
-            if (user != null) {
-            return UserModelFactory.createUserModel(user);
-            }
-            else {
-                return null;
-            }
+            return user != null ? UserModelFactory.createUserModel(user) : null;
 
         }catch (JDOObjectNotFoundException ex) {
             return null;
@@ -351,16 +332,16 @@ public class UserDAOImpl implements UserTransactions {
 
 
     @Override
-    public List<User> getConnectionRequests(final List<String> connections) {
+    public List<User> getConnectionRequests(final List<String> connections) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final Query q = pm.newQuery(ConnectionRequestEntity.class,":p.contains(uuid)");
 
 
         try {
             User u;
-            final List<ConnectionRequestEntity> result = (List<ConnectionRequestEntity>) q.execute(connections);
+            final Collection<ConnectionRequestEntity> result = (Collection<ConnectionRequestEntity>) q.execute(connections);
             final List<User> retObj = new ArrayList<User>(result.size());
-            if (result.size() > 0) {
+            if (!result.isEmpty()) {
 
                 for (final Connection c : result) {
                     u = getNimbitsUser(c.getTargetEmail());

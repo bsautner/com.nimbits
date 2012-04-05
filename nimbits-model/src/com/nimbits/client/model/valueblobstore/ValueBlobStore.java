@@ -36,5 +36,7 @@ public interface ValueBlobStore {
 
     void setMinTimestamp(Date minTimestamp);
 
-    String getBlobkey();
+    String getBlobKey();
+
+    long getLength();
 }

@@ -13,12 +13,13 @@
 
 package com.nimbits.client.service.user;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.client.model.connection.Connection;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.user.User;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.connection.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.user.*;
 
-import java.util.List;
+import java.util.*;
 
 public interface UserServiceAsync {
 
@@ -34,8 +35,8 @@ public interface UserServiceAsync {
 
     void getAppUserUsingGoogleAuth(final AsyncCallback<User> async);
 
-    void getUserByUUID(final String subscriberUUID, final AsyncCallback<User> async);
+    void getUserByKey(final String subscriberUUID, final AsyncCallback<User> async) throws NimbitsException;
 
-    void getConnectionRequests(final List<String> connections, final AsyncCallback<List<User>> async);
+    void getConnectionRequests(final List<String> connections, final AsyncCallback<List<User>> async) throws NimbitsException;
 
 }

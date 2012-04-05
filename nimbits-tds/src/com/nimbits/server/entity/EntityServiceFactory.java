@@ -13,7 +13,7 @@
 
 package com.nimbits.server.entity;
 
-import com.nimbits.client.service.entity.EntityService;
+import com.nimbits.client.service.entity.*;
 
 /**
  * Created by Benjamin Sautner

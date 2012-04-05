@@ -13,7 +13,7 @@
 
 package com.nimbits.server.core;
 
-import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.*;
 
 /**
  * Created by bsautner

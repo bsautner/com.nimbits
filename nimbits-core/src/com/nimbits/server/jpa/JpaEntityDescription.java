@@ -14,6 +14,7 @@
 package com.nimbits.server.jpa;
 
 import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.EntityDescription;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.server.ServerModelFactory;
@@ -69,7 +70,7 @@ public class JpaEntityDescription implements EntityDescription {
     @Temporal(TemporalType.TIMESTAMP)
     private java.util.Date ts = new java.util.Date();
 
-    public JpaEntityDescription(EntityDescription p) {
+    public JpaEntityDescription(EntityDescription p) throws NimbitsException {
         this.server = new JpaServer(p.getServer());
         this.fkServer = this.server.getIdServer();
         this.pointName = p.getName();
@@ -84,7 +85,7 @@ public class JpaEntityDescription implements EntityDescription {
     }
 
     @Override
-    public Server getServer() {
+    public Server getServer() throws NimbitsException {
         return ServerModelFactory.createServer(server);
     }
 

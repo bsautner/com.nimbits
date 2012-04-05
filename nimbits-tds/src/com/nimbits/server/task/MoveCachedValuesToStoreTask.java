@@ -13,18 +13,15 @@
 
 package com.nimbits.server.task;
 
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointModel;
-import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.value.RecordedValueTransactionFactory;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.server.gson.*;
+import com.nimbits.server.value.*;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.logging.Logger;
+import javax.servlet.http.*;
+import java.io.*;
+import java.util.logging.*;
 
 /**
  * Created by Benjamin Sautner

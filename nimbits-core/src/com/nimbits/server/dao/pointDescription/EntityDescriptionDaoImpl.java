@@ -13,6 +13,7 @@
 
 package com.nimbits.server.dao.pointDescription;
 
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.EntityDescription;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.server.EMF;
@@ -58,7 +59,7 @@ public class EntityDescriptionDaoImpl implements EntityJPATransactions {
     }
 
     @Override
-    public EntityDescription addEntityDescription(final EntityDescription p) {
+    public EntityDescription addEntityDescription(final EntityDescription p) throws NimbitsException {
         EntityManager em = EMF.getInstance();
 
         try {
@@ -71,9 +72,7 @@ public class EntityDescriptionDaoImpl implements EntityJPATransactions {
             em.flush();
             tx.commit();
 
-            EntityDescription retObj = EntityModelFactory.createPointDescription(j);
-
-            return retObj;
+            return EntityModelFactory.createPointDescription(j);
         } finally {
             em.close();
         }
@@ -82,7 +81,7 @@ public class EntityDescriptionDaoImpl implements EntityJPATransactions {
     }
 
     @Override
-    public EntityDescription addUpdateEntityDescription(EntityDescription entityDescription) {
+    public EntityDescription addUpdateEntityDescription(EntityDescription entityDescription) throws NimbitsException {
 
         final EntityManager em = EMF.getInstance();
         final EntityDescription retObj;
@@ -110,7 +109,8 @@ public class EntityDescriptionDaoImpl implements EntityJPATransactions {
         return retObj;
     }
 
-    public EntityDescription getEntityDescriptionByUUID(final String uuid) {
+    @Override
+    public EntityDescription getEntityDescriptionByUUID(final String uuid) throws NimbitsException {
 
         final EntityManager em = EMF.getInstance();
         final EntityDescription retObj;
@@ -118,11 +118,7 @@ public class EntityDescriptionDaoImpl implements EntityJPATransactions {
             final List result = em.createQuery(uuidSQL)
                     .setParameter(1, uuid)
                     .getResultList();
-            if (result.size() > 0) {
-                retObj = EntityModelFactory.createPointDescription((EntityDescription) result.get(0));
-            } else {
-                retObj = null;
-            }
+            retObj = result.isEmpty() ? null : EntityModelFactory.createPointDescription((EntityDescription) result.get(0));
 
 
             return retObj;

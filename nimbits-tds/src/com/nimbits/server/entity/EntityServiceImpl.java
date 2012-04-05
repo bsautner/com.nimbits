@@ -13,32 +13,27 @@
 
 package com.nimbits.server.entity;
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.nimbits.client.common.Utils;
-import com.nimbits.client.constants.UserMessages;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.FeedType;
-import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.service.entity.EntityService;
-import com.nimbits.server.blob.BlobServiceFactory;
-import com.nimbits.server.calculation.CalculationServiceFactory;
-import com.nimbits.server.core.CoreFactory;
-import com.nimbits.server.feed.FeedServiceFactory;
-import com.nimbits.server.intelligence.IntelligenceServiceFactory;
-import com.nimbits.server.orm.EntityStore;
-import com.nimbits.server.point.PointServiceFactory;
-import com.nimbits.server.subscription.SubscriptionServiceFactory;
-import com.nimbits.server.summary.SummaryServiceFactory;
-import com.nimbits.server.user.UserServiceFactory;
-import com.nimbits.server.xmpp.XmppServiceFactory;
+import com.google.gwt.user.server.rpc.*;
+import com.nimbits.client.common.*;
+import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.service.entity.*;
+import com.nimbits.server.blob.*;
+import com.nimbits.server.calculation.*;
+import com.nimbits.server.core.*;
+import com.nimbits.server.feed.*;
+import com.nimbits.server.intelligence.*;
+import com.nimbits.server.orm.*;
+import com.nimbits.server.point.*;
+import com.nimbits.server.subscription.*;
+import com.nimbits.server.summary.*;
+import com.nimbits.server.user.*;
+import com.nimbits.server.xmpp.*;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner
@@ -159,7 +154,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     public List<Entity> deleteEntity(final Entity entity) throws NimbitsException {
         User u = getUser();
         if (u == null)  {
-            u = UserServiceFactory.getInstance().getUserByUUID(entity.getOwner());
+            u = UserServiceFactory.getInstance().getUserByKey(entity.getOwner());
         }
        return  deleteEntity(u, entity);
     }

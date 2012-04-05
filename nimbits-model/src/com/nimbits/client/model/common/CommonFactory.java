@@ -28,7 +28,7 @@ import com.nimbits.client.model.entity.EntityName;
 public abstract interface CommonFactory {
 
 
-    EmailAddress createEmailAddress(final String value);
+    EmailAddress createEmailAddress(final String value) throws NimbitsException;
 
     @Deprecated
     EntityName createName(final String value);

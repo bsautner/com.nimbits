@@ -29,6 +29,6 @@ public class EntityNameImpl extends CommonIdentifierImpl implements EntityName, 
         super(value);
     }
 
-    public EntityNameImpl() {
+    private EntityNameImpl() {
     }
 }

@@ -14,7 +14,6 @@
 package com.nimbits.server.quota;
 
 import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.user.User;
 
 /**
  * Created by Benjamin Sautner

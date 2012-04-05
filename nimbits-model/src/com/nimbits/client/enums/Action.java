@@ -55,11 +55,11 @@ public enum Action {
     value(ActionConstants.ACTION_VALUE),
     onOff(ActionConstants.ACTION_ONOFF),
     download(ActionConstants.ACTION_DOWNLOAD);
-    private static final Map<String, Action> lookup = new HashMap<String, Action>();
+    private static final Map<String, Action> lookup = new HashMap<String, Action>(Action.values().length);
 
     static {
         for (Action s : EnumSet.allOf(Action.class))
-            lookup.put(s.getCode(), s);
+            lookup.put(s.code, s);
     }
 
     private final String code;
@@ -76,7 +76,7 @@ public enum Action {
         return lookup.get(code);
     }
 
-    private class ActionConstants {
+    private static class ActionConstants {
 
         protected static final String ACTION_CALC = "calc";
         protected static final String ACTION_ALERT = "alert";
@@ -115,6 +115,8 @@ public enum Action {
         protected static final String ACTION_SAVE = "save";
         protected static final String CURRENT_VALUE = "currentvalue";
 
+        private ActionConstants() {
+        }
     }
 
 }

@@ -13,8 +13,8 @@
 
 package com.nimbits.client.service.facebook;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.client.model.email.EmailAddress;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.model.email.*;
 
 /**
  * Created by bsautner

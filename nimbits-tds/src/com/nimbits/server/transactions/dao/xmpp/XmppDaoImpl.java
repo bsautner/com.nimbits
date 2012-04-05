@@ -13,19 +13,16 @@
 
 package com.nimbits.server.transactions.dao.xmpp;
 
-import com.nimbits.PMF;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.xmpp.XmppResource;
-import com.nimbits.client.model.xmpp.XmppResourceFactory;
-import com.nimbits.server.orm.XmppResourceEntity;
-import com.nimbits.server.xmpp.XmppTransaction;
+import com.nimbits.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.xmpp.*;
+import com.nimbits.server.orm.*;
+import com.nimbits.server.xmpp.*;
 
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-import java.util.ArrayList;
-import java.util.List;
+import javax.jdo.*;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner

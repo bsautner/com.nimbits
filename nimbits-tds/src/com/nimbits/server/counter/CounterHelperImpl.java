@@ -13,7 +13,7 @@
 
 package com.nimbits.server.counter;
 
-import com.nimbits.server.transactions.dao.counter.ShardedCounter;
+import com.nimbits.server.transactions.dao.counter.*;
 
 /**
  * Created by Benjamin Sautner
@@ -23,11 +23,12 @@ import com.nimbits.server.transactions.dao.counter.ShardedCounter;
  */
 public class CounterHelperImpl implements CounterHelper{
 
+    @Override
     public ShardedCounter getOrCreateCounter(String s) {
-        CounterFactory factory = new CounterFactory();
-        ShardedCounter counter = factory.getCounter(s);
+       // CounterFactory factory = new CounterFactory();
+        ShardedCounter counter = CounterFactory.getCounter(s);
         if (counter == null) {
-            counter = factory.createCounter(s);
+            counter = CounterFactory.createCounter(s);
             counter.addShard();
 
         }

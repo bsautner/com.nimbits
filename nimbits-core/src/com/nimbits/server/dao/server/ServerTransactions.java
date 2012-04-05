@@ -25,6 +25,6 @@ import com.nimbits.client.model.server.*;
 public interface ServerTransactions {
     Server addUpdateServer(Server server) throws NimbitsException;
     void deleteServer(Server server);
-    Server readServer(String hostUrl);
+    Server readServer(String hostUrl) throws NimbitsException;
 
 }

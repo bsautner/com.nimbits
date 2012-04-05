@@ -56,7 +56,7 @@ public class TestServers {
 
 
      @Test
-    public void testServerDAORead() {
+    public void testServerDAORead() throws NimbitsException {
 
 
         Server read = ServerTransactionFactory.getInstance().readServer(host);
@@ -66,7 +66,7 @@ public class TestServers {
     }
 
     @Test
-    public void testServerHTTP() {
+    public void testServerHTTP() throws NimbitsException {
        EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress("htttp@b.com");
        Server server = ServerModelFactory.createServer("http://delete.me.http", emailAddress, "1.2.0");
 

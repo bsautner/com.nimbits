@@ -13,19 +13,14 @@
 
 package com.nimbits.server.transactions.memcache.entity;
 
-import com.google.appengine.api.memcache.MemcacheService;
-import com.google.appengine.api.memcache.MemcacheServiceFactory;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.MemCacheKey;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.user.User;
-import com.nimbits.server.entity.EntityTransactionFactory;
-import com.nimbits.server.entity.EntityTransactions;
+import com.google.appengine.api.memcache.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.server.entity.*;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner
@@ -43,15 +38,11 @@ public class EntityCacheImpl implements EntityTransactions {
         if (cache.contains(entity.getKey())) {
             cache.delete(entity.getKey());
         }
-        if (cache.contains(entity.getName())) {
-            cache.delete(entity.getName());
-        }
 
     }
     private void addEntityToCache(Entity entity) throws NimbitsException {
         if (entity != null) {
         removeEntityFromCache(entity);
-        cache.put(entity.getName(), entity);
         cache.put(entity.getKey(), entity);
         }
     }
@@ -114,34 +105,20 @@ public class EntityCacheImpl implements EntityTransactions {
                 return e;
             }
             else {
-                Entity result = EntityTransactionFactory.getDaoInstance(user).getEntityByKey(uuid);
-                addEntityToCache(result);
-                return result;
+                return getEntityFromStore(uuid);
             }
         }
         else {
-            Entity result = EntityTransactionFactory.getDaoInstance(user).getEntityByKey(uuid);
-
-            addEntityToCache(result);
-            return result;
+            return getEntityFromStore(uuid);
         }
 
     }
 
-//    @Override
-//    public Entity getEntityByName(final EntityName name) throws NimbitsException {
-//        if (cache.contains(name)) {
-//            return (Entity) cache.get(name);
-//        }
-//        else {
-//            final Entity result =  EntityTransactionFactory.getDaoInstance(user).getEntityByName(name);
-//            if (result != null) {
-//            addEntityToCache(result);
-//            }
-//            return result;
-//        }
-//
-//    }
+    private Entity getEntityFromStore(final String key) throws NimbitsException {
+        Entity result = EntityTransactionFactory.getDaoInstance(user).getEntityByKey(key);
+        addEntityToCache(result);
+        return result;
+    }
 
     @Override
     public Entity getEntityByName(EntityName name, EntityType type) throws NimbitsException {

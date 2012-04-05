@@ -13,31 +13,25 @@
 
 package com.nimbits.server.api.impl;
 
-import com.nimbits.client.common.Utils;
-import com.nimbits.client.constants.UserMessages;
-import com.nimbits.client.constants.Words;
+import com.nimbits.client.common.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModel;
-import com.nimbits.client.model.value.ValueModelFactory;
-import com.nimbits.server.api.ApiServlet;
-import com.nimbits.server.entity.EntityServiceFactory;
-import com.nimbits.server.feed.FeedServiceFactory;
-import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.point.PointServiceFactory;
-import com.nimbits.server.value.RecordedValueServiceFactory;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.server.api.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.feed.*;
+import com.nimbits.server.gson.*;
+import com.nimbits.server.point.*;
+import com.nimbits.server.value.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Date;
+import javax.servlet.http.*;
+import java.io.*;
+import java.util.*;
 
 
 
@@ -73,7 +67,7 @@ public class ValueServletImpl extends ApiServlet {
 
     }
 
-    protected void processPost(final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException, IOException {
+    protected static void processPost(final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException, IOException {
         doInit(req, resp, ExportType.plain);
 
         if (user != null && ! user.isRestricted()) {
@@ -89,17 +83,17 @@ public class ValueServletImpl extends ApiServlet {
 
                     final Value v;
 
-                    if (!Utils.isEmptyString(getParam(Parameters.json))) {
-                        final Value vx = GsonFactory.getInstance().fromJson(getParam(Parameters.json), ValueModel.class);
-
-                        v = ValueModelFactory.createValueModel(vx.getLatitude(), vx.getLongitude(), vx.getDoubleValue(), vx.getTimestamp(),
-                                vx.getNote(), vx.getData(), AlertType.OK);
-                    } else {
+                    if (Utils.isEmptyString(getParam(Parameters.json))) {
                         final double latitude = getDoubleFromParam(getParam(Parameters.lat));
                         final double longitude = getDoubleFromParam(getParam(Parameters.lng));
                         final double value = getDoubleFromParam(getParam(Parameters.value));
                         final Date timestamp = (getParam(Parameters.timestamp) != null) ? (new Date(Long.parseLong(getParam(Parameters.timestamp)))) : new Date();
                         v = ValueModelFactory.createValueModel(latitude, longitude, value, timestamp, getParam(Parameters.note), getParam(Parameters.json));
+                    } else {
+                        final Value vx = GsonFactory.getInstance().fromJson(getParam(Parameters.json), ValueModel.class);
+
+                        v = ValueModelFactory.createValueModel(vx.getLatitude(), vx.getLongitude(), vx.getDoubleValue(), vx.getTimestamp(),
+                                vx.getNote(), vx.getData(), AlertType.OK);
                     }
 
                     final Value result = RecordedValueServiceFactory.getInstance().recordValue(user, point, v, false);
@@ -116,11 +110,11 @@ public class ValueServletImpl extends ApiServlet {
             }
 
         }
-        doDestroy();
+
     }
 
 
-    public void processGet(final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException, IOException {
+    public static void processGet(final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException, IOException {
         doInit(req, resp, ExportType.plain);
         final PrintWriter out = resp.getWriter();
         Value nv = null;
@@ -138,7 +132,7 @@ public class ValueServletImpl extends ApiServlet {
         }
         out.println(processRequest(getParam(Parameters.point), getParam(Parameters.uuid), format, nv, user));
         out.close();
-        doDestroy();
+
 
     }
 
@@ -199,11 +193,7 @@ public class ValueServletImpl extends ApiServlet {
                 } else {
                     value = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
                 }
-                if (format.equals(Parameters.json.getText())) {
-                    result = GsonFactory.getInstance().toJson(value);
-                } else {
-                    result = String.valueOf(value.getDoubleValue());
-                }
+                result = format.equals(Parameters.json.getText()) ? GsonFactory.getInstance().toJson(value) : String.valueOf(value.getDoubleValue());
             }
         }
         else {

@@ -14,33 +14,24 @@
 package com.nimbits.server.point;
 
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ExportType;
-import com.nimbits.client.enums.FeedType;
-import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.exception.NimbitsException;
+import com.google.gwt.user.server.rpc.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointModelFactory;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.service.datapoints.PointService;
-import com.nimbits.server.blob.BlobStoreFactory;
-import com.nimbits.server.entity.EntityServiceFactory;
-import com.nimbits.server.export.ExportHelperFactory;
-import com.nimbits.server.feed.FeedServiceFactory;
-import com.nimbits.server.task.TaskFactory;
-import com.nimbits.server.user.UserServiceFactory;
-import com.nimbits.server.value.RecordedValueServiceFactory;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.client.service.datapoints.*;
+import com.nimbits.server.blob.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.export.*;
+import com.nimbits.server.feed.*;
+import com.nimbits.server.task.*;
+import com.nimbits.server.user.*;
+import com.nimbits.server.value.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class PointServiceImpl extends RemoteServiceServlet implements
         PointService {
@@ -76,7 +67,7 @@ public class PointServiceImpl extends RemoteServiceServlet implements
         List<Entity> entityList = new ArrayList<Entity>(entities.values());
 
         List<Point> points =  PointTransactionsFactory.getInstance(getUser()).getPoints(entityList);
-        Map<String, Point> retObj = new HashMap<String, Point>();
+        Map<String, Point> retObj = new HashMap<String, Point>(points.size());
         Value v;
         for (Point p : points) {
             v  = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
@@ -181,12 +172,7 @@ public class PointServiceImpl extends RemoteServiceServlet implements
                 data = ExportHelperFactory.getInstance().exportPointDataToCSVSeparateColumns(points, values);
                 Entity entity = points.values().iterator().next();
                 EntityName name;
-                if (entity != null) {
-                    name = entity.getName();
-                }
-                else {
-                    name = CommonFactoryLocator.getInstance().createName("nimbits_export", EntityType.file);
-                }
+                name = entity != null ? entity.getName() : CommonFactoryLocator.getInstance().createName("nimbits_export", EntityType.file);
                 return BlobStoreFactory.getInstance().createFile(name, data, exportType);
 
 //            case descriptiveStatistics:

@@ -13,15 +13,13 @@
 
 package com.nimbits.server.value;
 
-import com.nimbits.client.enums.FilterType;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModelFactory;
-import helper.NimbitsServletTest;
-import org.junit.Test;
-
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.value.*;
+import helper.*;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import org.junit.*;
 
 /**
  * Created by bsautner
@@ -32,16 +30,21 @@ import static org.junit.Assert.assertFalse;
 public class RecordedValueServiceImplTest extends NimbitsServletTest {
 
 
+    private static final double D = 1.23;
+    private static final double D1 = 2.23;
+    private static final int D2 = 11;
+
     @Test
     public void ignoreByCompressionTest() throws NimbitsException, InterruptedException {
 
-        Value value = ValueModelFactory.createValueModel(1.23);
+        Value value = ValueModelFactory.createValueModel(D);
         Thread.sleep(10);
-        Value value2 = ValueModelFactory.createValueModel(1.23);
+        Value value2 = ValueModelFactory.createValueModel(D);
 
-        Value value3 = ValueModelFactory.createValueModel(2.23);
+        Value value3 = ValueModelFactory.createValueModel(D1);
 
         RecordedValueServiceFactory.getInstance().recordValue(user, point, value, false);
+        Thread.sleep(1000);
         RecordedValueServiceImpl impl = new RecordedValueServiceImpl();
         assertTrue(impl.ignoreByCompression(point, value2));
         assertFalse(impl.ignoreByCompression(point, value3));
@@ -49,15 +52,15 @@ public class RecordedValueServiceImplTest extends NimbitsServletTest {
         point.setFilterValue(10);
         point.setFilterType(FilterType.ceiling);
 
-        assertFalse(impl.ignoreByCompression(point, ValueModelFactory.createValueModel(2.23)));
-        assertTrue(impl.ignoreByCompression(point, ValueModelFactory.createValueModel(11)));
+        assertFalse(impl.ignoreByCompression(point, ValueModelFactory.createValueModel(D1)));
+        assertTrue(impl.ignoreByCompression(point, ValueModelFactory.createValueModel(D2)));
 
         point.setFilterType(FilterType.floor);
-        assertTrue(impl.ignoreByCompression(point, ValueModelFactory.createValueModel(2.23)));
-        assertFalse(impl.ignoreByCompression(point, ValueModelFactory.createValueModel(11)));
+        assertTrue(impl.ignoreByCompression(point, ValueModelFactory.createValueModel(D1)));
+        assertFalse(impl.ignoreByCompression(point, ValueModelFactory.createValueModel(D2)));
 
         point.setFilterType(FilterType.none);
-        assertFalse(impl.ignoreByCompression(point, ValueModelFactory.createValueModel(11)));
+        assertFalse(impl.ignoreByCompression(point, ValueModelFactory.createValueModel(D2)));
 
         point.setFilterType(FilterType.percentageHysteresis);
         pointService.updatePoint(point);

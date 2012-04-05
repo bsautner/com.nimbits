@@ -13,15 +13,13 @@
 
 package com.nimbits.server.user;
 
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.connection.Connection;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.user.User;
-import twitter4j.auth.AccessToken;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.connection.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.user.*;
+import twitter4j.auth.*;
 
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public interface UserTransactions {
 
@@ -35,20 +33,20 @@ public interface UserTransactions {
 
     User updateSecret(final EmailAddress emailAddress, final UUID uuid) throws NimbitsException;
 
-    Connection makeConnectionRequest(final User u, final EmailAddress emailAddress);
+    Connection makeConnectionRequest(final User u, final EmailAddress emailAddress) throws NimbitsException;
 
     List<Connection> getPendingConnectionRequests(final EmailAddress emailAddress);
 
-    List<User> updateConnectionRequest(final Long key, final User requestor, final User acceptor, final boolean accepted) throws NimbitsException;
+    void updateConnectionRequest(final Long key, final User requestor, final User acceptor, final boolean accepted) throws NimbitsException;
 
     User updateTwitter(final EmailAddress emailAddress, final AccessToken token) throws NimbitsException;
 
     User updateLastLoggedIn(final User user, final Date LastLoggedIn) throws NimbitsException;
 
-    User getUserByKey(final String key);
+    User getUserByKey(final String key) throws NimbitsException;
 
-    List<User>  getConnectionRequests(final List<String> connections);
+    List<User>  getConnectionRequests(final List<String> connections) throws NimbitsException;
 
 
-    List<User> getUsers();
+    List<User> getUsers() throws NimbitsException;
 }

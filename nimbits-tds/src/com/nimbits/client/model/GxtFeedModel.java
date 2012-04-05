@@ -13,11 +13,11 @@
 
 package com.nimbits.client.model;
 
-import com.extjs.gxt.ui.client.data.BaseTreeModel;
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.model.feed.FeedValue;
+import com.extjs.gxt.ui.client.data.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.model.feed.*;
 
-import java.io.Serializable;
+import java.io.*;
 
 /**
  * Created by Benjamin Sautner
@@ -25,7 +25,7 @@ import java.io.Serializable;
  * Date: 2/24/12
  * Time: 2:47 PM
  */
-public class GxtFeedModel extends BaseTreeModel implements Serializable {
+public class GxtFeedModel extends BaseTreeModel implements GxtFeed {
     private String html;
 
 
@@ -36,6 +36,7 @@ public class GxtFeedModel extends BaseTreeModel implements Serializable {
 
     }
 
+    @Override
     public String getHtml() {
         return html;
     }

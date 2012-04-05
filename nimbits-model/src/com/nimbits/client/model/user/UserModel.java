@@ -14,6 +14,7 @@
 package com.nimbits.client.model.user;
 
 
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
 
@@ -57,7 +58,7 @@ public class UserModel implements Serializable, User {
 
 
 
-    public UserModel(final User u) {
+    public UserModel(final User u) throws NimbitsException {
         this.key = u.getKey();
         this.dateCreated = u.getDateCreated();
         this.lastLoggedIn = u.getLastLoggedIn();
@@ -155,7 +156,7 @@ public class UserModel implements Serializable, User {
     }
 
     @Override
-    public EmailAddress getEmail() {
+    public EmailAddress getEmail() throws NimbitsException {
         return CommonFactoryLocator.getInstance().createEmailAddress(emailAddress);
     }
 

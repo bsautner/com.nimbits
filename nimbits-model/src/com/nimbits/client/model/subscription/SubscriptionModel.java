@@ -21,7 +21,9 @@ public class SubscriptionModel implements Serializable, Subscription  {
     private Date lastSent;
     private boolean notifyFormatJson;
     private boolean enabled;
-    public SubscriptionModel() {
+
+    @SuppressWarnings("unused")
+    private SubscriptionModel() {
     }
 
     public SubscriptionModel(Subscription subscription) {
@@ -32,6 +34,7 @@ public class SubscriptionModel implements Serializable, Subscription  {
         this.lastSent = subscription.getLastSent();
         this.notifyFormatJson = subscription.getNotifyFormatJson();
         this.enabled = subscription.getEnabled();
+        this.key = subscription.getKey();
     }
 
     public SubscriptionModel(String subscribedEntity,
@@ -45,7 +48,7 @@ public class SubscriptionModel implements Serializable, Subscription  {
         this.subscriptionType = subscriptionType.getCode();
         this.notifyMethod = subscriptionNotifyMethod.getCode();
         this.maxRepeat = maxRepeat;
-        this.lastSent = lastSent;
+        this.lastSent = new Date(lastSent.getTime());
         this.enabled = enabled;
         this.notifyFormatJson = formatJson;
     }
@@ -103,20 +106,24 @@ public class SubscriptionModel implements Serializable, Subscription  {
     }
 
 
+    @Override
     public double getMaxRepeat() {
         return maxRepeat;
     }
 
+    @Override
     public void setMaxRepeat(double maxRepeat) {
         this.maxRepeat = maxRepeat;
     }
 
+    @Override
     public Date getLastSent() {
         return lastSent;
     }
 
+    @Override
     public void setLastSent(Date lastSent) {
-        this.lastSent = lastSent;
+        this.lastSent = new Date(lastSent.getTime());
     }
 
 

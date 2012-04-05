@@ -13,9 +13,9 @@
 
 package com.nimbits.server.entity;
 
-import com.nimbits.client.model.user.User;
-import com.nimbits.server.transactions.dao.entity.EntityDaoImpl;
-import com.nimbits.server.transactions.memcache.entity.EntityCacheImpl;
+import com.nimbits.client.model.user.*;
+import com.nimbits.server.transactions.dao.entity.*;
+import com.nimbits.server.transactions.memcache.entity.*;
 
 /**
  * Created by Benjamin Sautner

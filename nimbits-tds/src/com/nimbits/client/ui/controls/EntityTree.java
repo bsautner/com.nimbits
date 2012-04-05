@@ -13,15 +13,15 @@
 
 package com.nimbits.client.ui.controls;
 
-import com.extjs.gxt.ui.client.data.ModelIconProvider;
-import com.extjs.gxt.ui.client.store.TreeStore;
-import com.extjs.gxt.ui.client.widget.grid.ColumnModel;
-import com.extjs.gxt.ui.client.widget.treegrid.EditorTreeGrid;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.nimbits.client.model.GxtModel;
-import com.nimbits.client.ui.icons.Icons;
+import com.extjs.gxt.ui.client.data.*;
+import com.extjs.gxt.ui.client.store.*;
+import com.extjs.gxt.ui.client.widget.grid.*;
+import com.extjs.gxt.ui.client.widget.treegrid.*;
+import com.google.gwt.user.client.ui.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.ui.icons.*;
 
-import java.util.Arrays;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner

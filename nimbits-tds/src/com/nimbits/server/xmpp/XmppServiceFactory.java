@@ -13,7 +13,7 @@
 
 package com.nimbits.server.xmpp;
 
-import com.nimbits.client.service.xmpp.XMPPService;
+import com.nimbits.client.service.xmpp.*;
 
 public class XmppServiceFactory {
 

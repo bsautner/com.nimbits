@@ -13,12 +13,11 @@
 
 package com.nimbits.client.service.timespan;
 
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.timespan.Timespan;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.timespan.*;
 
-import java.util.Date;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner

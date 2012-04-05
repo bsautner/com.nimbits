@@ -13,36 +13,31 @@
 
 package com.nimbits.server.email;
 
-import com.nimbits.client.constants.Const;
-import com.nimbits.client.constants.UserMessages;
-import com.nimbits.client.constants.Words;
-import com.nimbits.client.enums.SettingType;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.server.common.ServerInfoImpl;
-import com.nimbits.server.settings.SettingServiceImpl;
+import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.server.common.*;
+import com.nimbits.server.settings.*;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import java.io.UnsupportedEncodingException;
-import java.util.Properties;
-import java.util.logging.Logger;
+import javax.mail.*;
+import javax.mail.internet.*;
+import java.io.*;
+import java.util.*;
+import java.util.logging.*;
 
 public class EmailServiceImpl implements EmailService {
 
     private static final Logger log = Logger.getLogger(EmailServiceImpl.class.getName());
     private static final String DEFAULT_EMAIL_SUBJECT = "Nimbits Messaging";
+    private static final int INT = 128;
+    private static final int SECONDS_IN_MINUTE = 60;
 
 
-    private void send(final Message msg) {
+    private static void send(final Message msg) {
 
         try {
             Transport.send(msg);
@@ -54,6 +49,7 @@ public class EmailServiceImpl implements EmailService {
 
     }
 
+    @Override
     public void sendEmail(final EmailAddress emailAddress, final String message) {
         final Properties props = new Properties();
         final Session session = Session.getDefaultInstance(props, null);
@@ -76,6 +72,7 @@ public class EmailServiceImpl implements EmailService {
         }
     }
 
+    @Override
     public void sendEmail(final EmailAddress emailAddress,
                           final String message,
                           final String subject) {
@@ -100,6 +97,7 @@ public class EmailServiceImpl implements EmailService {
             log.severe(e.getMessage());
         }
     }
+    @Override
     public void sendEmail(final EmailAddress fromEmail,
                           final EmailAddress emailAddress,
                           final String message,
@@ -134,6 +132,7 @@ public class EmailServiceImpl implements EmailService {
 
     }
 
+    @Override
     public void sendAlert(final Entity entity,
                           final Point point,
                           final EmailAddress emailAddress,
@@ -141,7 +140,7 @@ public class EmailServiceImpl implements EmailService {
 
         final Properties props = new Properties();
         final Session session = Session.getDefaultInstance(props, null);
-        final StringBuilder message = new StringBuilder();
+        final StringBuilder message = new StringBuilder(INT);
         message.append("<p>This is an alert email from <A HREF=www.nimbits.com>Nimbits Data Logger</A></p>")
                 .append("<p>Data Point: ").append(entity.getName().getValue()).append("</p>");
 
@@ -161,22 +160,18 @@ public class EmailServiceImpl implements EmailService {
             }
             case IdleAlert: {
                 message.append("<P>Alarm Status: Idle</P>")
-                        .append("<P>Idle Setting: ").append(point.getIdleSeconds() / 60).append(" minutes</P>");
-
+                        .append("<P>Idle Setting: ").append(point.getIdleSeconds() / SECONDS_IN_MINUTE).append(" minutes</P>");
+               break;
             }
             case OK: {
                 message.append("<P>Alarm Status: OK</P>");
+
             }
 
         }
 
 
-        message.append("<p></p>")
-                .append("<p><a href =\"" +
-                        ServerInfoImpl.getFullServerURL(null) +
-                        "?uuid=" +
-                        point.getKey() +
-                        "\">Go to Current Status Report</a></p>");
+        message.append("<p></p>").append("<p><a href =\"").append(ServerInfoImpl.getFullServerURL(null)).append("?uuid=").append(point.getKey()).append("\">Go to Current Status Report</a></p>");
 
 
 
@@ -185,16 +180,16 @@ public class EmailServiceImpl implements EmailService {
 
             final Message msg = new MimeMessage(session);
             InternetAddress from = getFromEmail();
-            if (from != null) {
-            msg.setFrom(getFromEmail());
+            if (from == null) {
+                log.severe("Null email from sendAlert");
+            } else
+            {
+            msg.setFrom(from);
             InternetAddress internetAddress = new InternetAddress(emailAddress.getValue());
             msg.addRecipient(Message.RecipientType.TO, internetAddress);
             msg.setSubject(DEFAULT_EMAIL_SUBJECT);
             msg.setContent(message.toString(), Const.CONTENT_TYPE_HTML);
             send(msg);
-            }
-            else {
-                log.severe("Null email from sendAlert");
             }
         } catch (AddressException e) {
             log.severe(e.getMessage());

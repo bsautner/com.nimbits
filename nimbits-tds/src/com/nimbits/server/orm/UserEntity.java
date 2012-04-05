@@ -14,14 +14,15 @@
 package com.nimbits.server.orm;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.email.EmailAddress;
+import com.google.appengine.api.datastore.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.user.*;
 
 import javax.jdo.annotations.*;
-import java.util.Date;
+import java.util.*;
 
 
 //import com.google.appengine.api.users.User;
@@ -62,6 +63,7 @@ public class UserEntity implements User {
     private static final long serialVersionUID = 1L;
 
 
+    @Override
     public Date getDateCreated() {
         return dateCreated;
     }
@@ -77,7 +79,7 @@ public class UserEntity implements User {
     }
 
 
-    @Persistent
+    @Override
     public String getTwitterTokenSecret() {
         return twitterTokenSecret;
     }
@@ -110,7 +112,7 @@ public class UserEntity implements User {
     protected UserEntity() {
     }
 
-    public UserEntity(final Entity entity, final EmailAddress email) {
+    public UserEntity(final Entity entity) {
         dateCreated = new Date();
         lastLoggedIn = dateCreated;
         this.key = KeyFactory.createKey(UserEntity.class.getSimpleName(), entity.getKey());
@@ -138,7 +140,7 @@ public class UserEntity implements User {
         return key.getName();
     }
     @Override
-    public EmailAddress getEmail() {
+    public EmailAddress getEmail() throws NimbitsException {
         return CommonFactoryLocator.getInstance().createEmailAddress(key.getName());
     }
     @Override
@@ -147,7 +149,7 @@ public class UserEntity implements User {
     }
 
     public void setDateCreated(Date dateCreated) {
-        this.dateCreated = dateCreated;
+        this.dateCreated = new Date(dateCreated.getTime());
     }
 
 

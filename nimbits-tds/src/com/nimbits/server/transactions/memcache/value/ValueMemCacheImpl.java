@@ -13,19 +13,18 @@
 
 package com.nimbits.server.transactions.memcache.value;
 
-import com.google.appengine.api.memcache.MemcacheService;
-import com.google.appengine.api.memcache.MemcacheServiceFactory;
-import com.nimbits.client.constants.Const;
-import com.nimbits.client.enums.MemCacheKey;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.timespan.Timespan;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.valueblobstore.ValueBlobStore;
-import com.nimbits.server.transactions.memcache.MemCacheHelper;
-import com.nimbits.server.task.TaskFactory;
-import com.nimbits.server.value.RecordedValueTransactionFactory;
-import com.nimbits.server.value.RecordedValueTransactions;
+import com.google.appengine.api.memcache.*;
+import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.timespan.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.valueblobstore.*;
+import com.nimbits.server.logging.*;
+import com.nimbits.server.task.*;
+import com.nimbits.server.transactions.memcache.*;
+import com.nimbits.server.value.*;
 
 import java.util.*;
 
@@ -38,15 +37,19 @@ import java.util.*;
 @SuppressWarnings("unchecked")
 public class ValueMemCacheImpl implements RecordedValueTransactions {
 
-    MemcacheService buffer;
-    MemcacheService cacheShared;
-   // MemcacheService systemCache;
-    // private EntityName pointName;
+    private final MemcacheService buffer;
+    private final MemcacheService cacheShared;
     private final Point point;
+    private final String currentValueCacheKey;
+    private final static String valueListCacheKey = "VALUE_LIST_CACHE_KEY";
 
     public ValueMemCacheImpl(final Point point) {
         this.point = point;
-        buffer = MemcacheServiceFactory.getMemcacheService(MemCacheHelper.valueMemCacheNamespace(point));
+        final String safe = point.getKey().replace('@', '-').replace('/', '-').replace(' ', '_');
+        final String bufferNamespace = MemCacheKey.valueCache + safe;
+
+        currentValueCacheKey = MemCacheKey.currentValueCache + safe;
+        buffer = MemcacheServiceFactory.getMemcacheService(bufferNamespace);
         cacheShared = MemcacheServiceFactory.getMemcacheService();
     }
 
@@ -78,36 +81,39 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
     @Override
     public Value getRecordedValuePrecedingTimestamp(final Date timestamp) throws NimbitsException {
         Value retObj;
-        final String key =MemCacheHelper.currentValueCacheKey(point.getKey());
 
         try {
-            if (buffer.contains(key)) {
-                final Value value = (Value) buffer.get(key);
+            if (buffer.contains(currentValueCacheKey)) {
+                final Value value = (Value) buffer.get(currentValueCacheKey);
                 if (value == null) {
-                    buffer.delete(key);
+                    buffer.delete(currentValueCacheKey);
                     retObj = RecordedValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
                     if (retObj != null) {
-                        buffer.put(key, retObj);
+                        buffer.put(currentValueCacheKey, retObj);
                     }
                 } else {
-                    if (timestamp.getTime() > value.getTimestamp().getTime()) {
-                        retObj = value;
-                    } else {
-                        retObj = RecordedValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
-                    }
+                    retObj = timestamp.getTime() > value.getTimestamp().getTime() ? value : RecordedValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
                 }
             } else {
+                LogHelper.log(this.getClass(), "Accessing data store for current value");
+
                 retObj = RecordedValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
+
                 if (retObj != null) {
-                    buffer.put(key, retObj);
+                    LogHelper.log(this.getClass(), "Found value in store" + retObj.getValueWithNote());
+                    buffer.put(currentValueCacheKey, retObj);
                 }
+                else {
+                    LogHelper.log(this.getClass(), "Nothing found in store");
+                }
+
 
             }
         } catch (ClassCastException e) { //old cache data causing a provblem when upgrading.
-            buffer.delete(key);
+            buffer.delete(currentValueCacheKey);
             retObj = RecordedValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
             if (retObj != null) {
-                buffer.put(key, retObj);
+                buffer.put(currentValueCacheKey, retObj);
             }
 
         }
@@ -119,39 +125,39 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
     @Override
     public Value recordValue(final Value v)  {
 
-        final String k = MemCacheHelper.currentValueCacheKey(point.getKey());
-        final String b = MemCacheHelper.valueBufferCacheKey(point);
+
+
         addPointToActiveList();
         try {
             final List<Long> stored;
-            if (buffer.contains(b)) {
-                stored = (List<Long>) buffer.get(b);
+            if (buffer.contains(valueListCacheKey)) {
+                stored = (List<Long>) buffer.get(valueListCacheKey);
                 stored.add(v.getTimestamp().getTime());
                 buffer.delete(stored);
-                buffer.put(b, stored);
+                buffer.put(valueListCacheKey, stored);
             } else {
                 stored = new ArrayList<Long>(10);
                 stored.add(v.getTimestamp().getTime());
-                buffer.put(b, stored);
+                buffer.put(valueListCacheKey, stored);
             }
             buffer.put(v.getTimestamp().getTime(), v);
             if (stored.size() > Const.CONST_MAX_CACHED_VALUE_SIZE) {
                 TaskFactory.getInstance().startMoveCachedValuesToStoreTask(point);
             }
 
-            if (buffer.contains(k)) {
-                final Value mostRecentCache = (Value) buffer.get(k);
+            if (buffer.contains(currentValueCacheKey)) {
+                final Value mostRecentCache = (Value) buffer.get(currentValueCacheKey);
 
                 if (mostRecentCache == null || (v.getTimestamp().getTime() > mostRecentCache.getTimestamp().getTime())) {
-                    buffer.delete(k);
-                    buffer.put(k, v);
+                    buffer.delete(currentValueCacheKey);
+                    buffer.put(currentValueCacheKey, v);
                 }
             } else {
-                buffer.put(k, v);
+                buffer.put(currentValueCacheKey, v);
             }
         } catch (Exception e) {
-            buffer.delete(k);
-            buffer.delete(b);
+            buffer.delete(currentValueCacheKey);
+            buffer.delete(valueListCacheKey);
         }
 
         return v;
@@ -175,11 +181,7 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
             return cached;
         } else {
             final List<Value> stored = RecordedValueTransactionFactory.getDaoInstance(point).getTopDataSeries(maxValues, endDate);
-            if (stored.size() > 0) {
-                return mergeAndSort(stored, cached, endDate);
-            } else {
-                return cached;
-            }
+            return stored.isEmpty() ? cached : mergeAndSort(stored, cached, endDate);
         }
 
     }
@@ -201,20 +203,21 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
         RecordedValueTransactionFactory.getDaoInstance(point).recordValues(values);
     }
 
+    @Override
     public List<Value> getCache(final Timespan timespan) {
-        final String b = MemCacheHelper.valueBufferCacheKey(point);
+
         List<Value> retObj = null;
         final List<Long> x;
-        if (buffer.contains(b)) {
-            x = (List<Long>) buffer.get(b);
+        if (buffer.contains(valueListCacheKey)) {
+            x = (List<Long>) buffer.get(valueListCacheKey);
             final Map<Long, Object> valueMap = buffer.getAll(x);
             final ValueComparator bvc = new ValueComparator(valueMap);
-            final TreeMap<Long, Object> sorted_map = new TreeMap(bvc);
+            final Map<Long, Object> sorted_map = new TreeMap(bvc);
             sorted_map.putAll(valueMap);
             retObj = new ArrayList<Value>(sorted_map.keySet().size());
-            for (final Long ts : sorted_map.keySet()) {
-                if (ts >= timespan.getStart().getTime() || ts <= timespan.getStart().getTime()) {
-                    retObj.add((Value) sorted_map.get(ts));
+            for (final Map.Entry<Long, Object> longObjectEntry : sorted_map.entrySet()) {
+                if (longObjectEntry.getKey() >= timespan.getStart().getTime() || longObjectEntry.getKey() <= timespan.getStart().getTime()) {
+                    retObj.add((Value) longObjectEntry.getValue());
                 }
             }
         }
@@ -232,20 +235,20 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
         throw new NimbitsException("Not Implemented");
     }
 
+    @Override
     public List<Value> getBuffer() {
-        final String b = MemCacheHelper.valueBufferCacheKey(point);
 
 
             final List<Long> x;
-            if (buffer.contains(b)) {
-                x = (List<Long>) buffer.get(b);
+            if (buffer.contains(valueListCacheKey)) {
+                x = (List<Long>) buffer.get(valueListCacheKey);
                 final Map<Long, Object> valueMap = buffer.getAll(x);
                 final ValueComparator bvc = new ValueComparator(valueMap);
-                final TreeMap<Long, Object> sorted_map = new TreeMap(bvc);
+                final Map<Long, Object> sorted_map = new TreeMap(bvc);
                 sorted_map.putAll(valueMap);
                 final List<Value> retObj  = new ArrayList<Value>( sorted_map.keySet().size());
-                for (final Long ts : sorted_map.keySet()) {
-                    retObj.add((Value) sorted_map.get(ts));
+                for (final Map.Entry<Long, Object> longObjectEntry : sorted_map.entrySet()) {
+                    retObj.add((Value) longObjectEntry.getValue());
                 }
                 return retObj;
             }
@@ -258,15 +261,15 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
 
     }
 
+    @Override
     public void moveValuesFromCacheToStore() {
 
-        final String b = MemCacheHelper.valueBufferCacheKey(point);
 
         try {
-            if (buffer.contains(b)) {
-                final List<Long> x = (List<Long>) buffer.get(b);
-                if (x != null && x.size() > 0) {
-                    buffer.delete(b);
+            if (buffer.contains(valueListCacheKey)) {
+                final Collection<Long> x = (Collection<Long>) buffer.get(valueListCacheKey);
+                if (x != null && !x.isEmpty()) {
+                    buffer.delete(valueListCacheKey);
                     final Map<Long, Object> valueMap = buffer.getAll(x);
                     buffer.deleteAll(x);
                     final List<Value> values = new ArrayList<Value>(valueMap.keySet().size());
@@ -278,13 +281,13 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
                 }
              }
         } catch (Exception e) {
-            buffer.delete(b);
+            buffer.delete(valueListCacheKey);
         }
 
 
     }
 
-    private static List<Value> mergeAndSort(final List<Value> first, final List<Value> second, final int max) {
+    private static List<Value> mergeAndSort(final Collection<Value> first, final Collection<Value> second, final int max) {
         first.addAll(second);
         final Map<Long, Object> valueMap = new TreeMap<Long, Object>();
         for (final Value v : first) {
@@ -293,13 +296,13 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
 
 
         final ValueComparator bvc = new ValueComparator(valueMap);
-        final TreeMap<Long, Object> sorted_map = new TreeMap(bvc);
+        final Map<Long, Object> sorted_map = new TreeMap(bvc);
         sorted_map.putAll(valueMap);
         int c = 0;
         final List<Value> retObj = new ArrayList<Value>( sorted_map.keySet().size());
-        for (final Long ts : sorted_map.keySet()) {
+        for (final Map.Entry<Long, Object> longObjectEntry : sorted_map.entrySet()) {
             c++;
-            retObj.add((Value) sorted_map.get(ts));
+            retObj.add((Value) longObjectEntry.getValue());
             if (c >= max) {
                 break;
             }
@@ -307,7 +310,7 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
         return retObj;
     }
 
-    private static List<Value> mergeAndSort(final List<Value> first, final List<Value> second, final Date endDate) {
+    private static List<Value> mergeAndSort(final Collection<Value> first, final Collection<Value> second, final Date endDate) {
         first.addAll(second);
         final Map<Long, Object> valueMap = new TreeMap<Long, Object>();
         for (final Value v : first) {
@@ -316,19 +319,19 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
 
 
         final ValueComparator bvc = new ValueComparator(valueMap);
-        final TreeMap<Long, Object> sorted_map = new TreeMap(bvc);
+        final Map<Long, Object> sorted_map = new TreeMap(bvc);
         sorted_map.putAll(valueMap);
         final List<Value> retObj = new ArrayList<Value>(sorted_map.keySet().size());
-        for (final Long ts : sorted_map.keySet()) {
-            if (ts <= endDate.getTime()) {
-                retObj.add((Value) sorted_map.get(ts));
+        for (final Map.Entry<Long, Object> longObjectEntry : sorted_map.entrySet()) {
+            if (longObjectEntry.getKey() <= endDate.getTime()) {
+                retObj.add((Value) longObjectEntry.getValue());
             }
 
         }
         return retObj;
     }
 
-    private static List<Value> mergeAndSort(final List<Value> first, final List<Value> second, final Timespan timespan) {
+    private static List<Value> mergeAndSort(final Collection<Value> first, final Collection<Value> second, final Timespan timespan) {
         first.addAll(second);
         final Map<Long, Object> valueMap = new TreeMap<Long, Object>();
         for (final Value v : first) {
@@ -337,12 +340,12 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
 
 
         final ValueComparator bvc = new ValueComparator(valueMap);
-        final TreeMap<Long, Object> sorted_map = new TreeMap(bvc);
+        final Map<Long, Object> sorted_map = new TreeMap(bvc);
         sorted_map.putAll(valueMap);
         final List<Value> retObj = new ArrayList<Value>(sorted_map.keySet().size());
-        for (final Long ts : sorted_map.keySet()) {
-            if ((ts >= timespan.getStart().getTime() - 1000) && (ts <= timespan.getEnd().getTime() + 1000)) {
-                retObj.add((Value) sorted_map.get(ts));
+        for (final Map.Entry<Long, Object> longObjectEntry : sorted_map.entrySet()) {
+            if ((longObjectEntry.getKey() >= timespan.getStart().getTime() - 1000) && (longObjectEntry.getKey() <= timespan.getEnd().getTime() + 1000)) {
+                retObj.add((Value) longObjectEntry.getValue());
             }
         }
         return retObj;
@@ -353,19 +356,14 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
 
         Map base;
 
-        public ValueComparator(final Map base) {
+        ValueComparator(final Map base) {
             this.base = base;
         }
 
+        @Override
         public int compare(final Object a, final Object b) {
 
-            if (((Value) base.get(a)).getTimestamp().getTime() < ((Value) base.get(b)).getTimestamp().getTime()) {
-                return 1;
-            } else if (((Value) base.get(a)).getTimestamp().getTime() == ((Value) base.get(b)).getTimestamp().getTime()) {
-                return 0;
-            } else {
-                return -1;
-            }
+            return ((Value) base.get(a)).getTimestamp().getTime() < ((Value) base.get(b)).getTimestamp().getTime() ? 1 : ((Value) base.get(a)).getTimestamp().getTime() == ((Value) base.get(b)).getTimestamp().getTime() ? 0 : -1;
         }
     }
 

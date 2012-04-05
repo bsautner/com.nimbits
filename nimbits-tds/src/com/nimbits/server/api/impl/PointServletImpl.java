@@ -13,33 +13,28 @@
 
 package com.nimbits.server.api.impl;
 
-import com.google.gson.Gson;
-import com.nimbits.client.common.Utils;
-import com.nimbits.client.constants.UserMessages;
+import com.google.gson.*;
+import com.nimbits.client.common.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointModel;
-import com.nimbits.client.model.timespan.Timespan;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.server.api.ApiServlet;
-import com.nimbits.server.entity.EntityServiceFactory;
-import com.nimbits.server.feed.FeedServiceFactory;
-import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.point.PointServiceFactory;
-import com.nimbits.server.time.TimespanServiceFactory;
-import com.nimbits.server.value.RecordedValueServiceFactory;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.timespan.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.server.api.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.feed.*;
+import com.nimbits.server.gson.*;
+import com.nimbits.server.point.*;
+import com.nimbits.server.time.*;
+import com.nimbits.server.value.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
+import javax.servlet.http.*;
+import java.io.*;
+import java.util.*;
 
 
 public class PointServletImpl extends ApiServlet {

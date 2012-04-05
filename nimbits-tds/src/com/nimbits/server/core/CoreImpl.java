@@ -13,24 +13,20 @@
 
 package com.nimbits.server.core;
 
-import com.nimbits.client.common.Utils;
-import com.nimbits.client.constants.Path;
-import com.nimbits.client.enums.Action;
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.enums.SettingType;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.server.Server;
-import com.nimbits.client.model.server.ServerModelFactory;
-import com.nimbits.server.common.ServerInfoImpl;
-import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.http.HttpCommonFactory;
-import com.nimbits.server.settings.SettingTransactionsFactory;
-import com.nimbits.server.settings.SettingsServiceFactory;
+import com.nimbits.client.common.*;
+import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.server.*;
+import com.nimbits.server.common.*;
+import com.nimbits.server.gson.*;
+import com.nimbits.server.http.*;
+import com.nimbits.server.settings.*;
 
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 /**
  * Created by bsautner

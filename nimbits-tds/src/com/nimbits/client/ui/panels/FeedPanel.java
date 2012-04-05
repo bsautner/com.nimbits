@@ -13,42 +13,33 @@
 
 package com.nimbits.client.ui.panels;
 
-import com.extjs.gxt.ui.client.Style;
-import com.extjs.gxt.ui.client.data.BaseModelData;
-import com.extjs.gxt.ui.client.data.BeanModel;
+import com.extjs.gxt.ui.client.*;
+import com.extjs.gxt.ui.client.data.*;
 import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.store.ListStore;
+import com.extjs.gxt.ui.client.store.*;
 import com.extjs.gxt.ui.client.util.*;
-import com.extjs.gxt.ui.client.widget.ContentPanel;
-import com.extjs.gxt.ui.client.widget.LayoutContainer;
-import com.extjs.gxt.ui.client.widget.ListView;
+import com.extjs.gxt.ui.client.widget.*;
 import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.button.ButtonGroup;
-import com.extjs.gxt.ui.client.widget.form.ComboBox;
+import com.extjs.gxt.ui.client.widget.button.*;
+import com.extjs.gxt.ui.client.widget.form.*;
 import com.extjs.gxt.ui.client.widget.form.TextArea;
 import com.extjs.gxt.ui.client.widget.layout.*;
-import com.extjs.gxt.ui.client.widget.toolbar.LabelToolItem;
-import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Element;
+import com.extjs.gxt.ui.client.widget.toolbar.*;
+import com.google.gwt.core.client.*;
+import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.nimbits.client.constants.Const;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.FeedType;
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.model.GxtFeedModel;
-import com.nimbits.client.model.GxtModel;
-import com.nimbits.client.model.feed.FeedValue;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.service.feed.Feed;
-import com.nimbits.client.service.feed.FeedAsync;
-import com.nimbits.client.ui.controls.EntityCombo;
-import com.nimbits.client.ui.icons.Icons;
+import com.google.gwt.user.client.rpc.*;
+import com.google.gwt.user.client.ui.*;
+import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.feed.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.service.feed.*;
+import com.nimbits.client.ui.controls.*;
+import com.nimbits.client.ui.icons.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -58,6 +49,10 @@ import java.util.List;
  * Time: 2:27 PM
  */
 public class FeedPanel  extends LayoutContainer {
+    private static final int HEIGHT = 1200;
+    private static final int COUNT = 30;
+    private static final int HEIGHT1 = 600;
+    private static final int WIDTH = 150;
     ListView<GxtFeedModel> view;
     //ContentPanel panel;
     private ComboBox<FeedTypeOption> feedType;
@@ -73,23 +68,16 @@ public class FeedPanel  extends LayoutContainer {
 
     @Override
     protected void onAttach() {
-        Timer updater = new Timer() {
-            @Override
-            public void run() {
-
-                updateValues(false);
-
-            }
-        };
+        Timer updater = new RefreshTimer();
         updater.scheduleRepeating(Const.DEFAULT_TIMER_UPDATE_SPEED);
         updater.run();
         super.onAttach();
     }
 
-    private ComboBox<FeedTypeOption> optionComboBox(final FeedType selectedValue) {
+    private static ComboBox<FeedTypeOption> optionComboBox(final FeedType selectedValue) {
         ComboBox<FeedTypeOption> combo = new ComboBox<FeedTypeOption>();
 
-        ArrayList<FeedTypeOption> ops = new ArrayList<FeedTypeOption>();
+        List<FeedTypeOption> ops = new ArrayList<FeedTypeOption>(FeedType.values().length);
 
         for (FeedType type : FeedType.values()) {
             ops.add(new FeedTypeOption(type));
@@ -120,30 +108,7 @@ public class FeedPanel  extends LayoutContainer {
         }
         if (store != null) {
             FeedAsync service = GWT.create(Feed.class);
-            service.getFeed(10, connectionEntityKey, new AsyncCallback<List<FeedValue>>() {
-                @Override
-                public void onFailure(Throwable caught) {
-
-                }
-
-                @Override
-                public void onSuccess(final List<FeedValue> result) {
-
-                    GxtFeedModel model;
-                    for (final FeedValue v : result) {
-
-                        model = new GxtFeedModel(v);
-                        FeedType type = feedType.getValue().type;
-                        if (type.equals(FeedType.all) || type.equals(v.getFeedType())) {
-                            if (store.findModel(Parameters.html.getText(), model.getHtml()) == null) {
-                                store.insert(model, 0);
-                           }
-                        }
-                    }
-
-                    layout(true);
-                }
-            });
+            service.getFeed(10, connectionEntityKey, new UpdateValuesAsyncCallback(store));
         }
     }
 
@@ -157,55 +122,40 @@ public class FeedPanel  extends LayoutContainer {
 
         ContentPanel panel = new ContentPanel();
         panel.setLayout(new RowLayout(Style.Orientation.HORIZONTAL));
-        panel.setHeight(1200);
+        panel.setHeight(HEIGHT);
         panel.setWidth("100%");
         panel.setHeaderVisible(false);
-        view = new ListView<GxtFeedModel>() {
-            @Override
-            protected GxtFeedModel prepareData(GxtFeedModel model) {
-                // String s = model.get(Const.Params.PARAM_NAME);
-                //  model.set("shortName", Format.ellipse(s, 15));
-                model.set(Parameters.path.getText(), GWT.getHostPageBaseURL() + model.get(Parameters.path.getText()));
-                return model;
-            }
-
-        };
+        view = new GxtFeedModelListView();
 
 
         final FeedAsync service = GWT.create(Feed.class);
-        final int FEED_COUNT = 30;
-        service.getFeed(FEED_COUNT, connectionEntityKey, new AsyncCallback<List<FeedValue>>() {
-            @Override
-            public void onFailure(Throwable caught) {
 
-            }
-
-            @Override
-            public void onSuccess(List<FeedValue> result) {
-                final ListStore<GxtFeedModel> store = new ListStore<GxtFeedModel>();
-
-                for (final FeedValue v : result) {
-                    store.add(new GxtFeedModel(v));
-                }
-                view.setStore(store);
-
-            }
-        });
+        service.getFeed(COUNT, connectionEntityKey, new ListAsyncCallback());
 
         view.setTemplate(getTemplate());
         view.setBorders(false);
         view.setItemSelector("div.thumb-wrap");
         view.setStyleAttribute("overflow-y", "scroll");
+        view.setStyleAttribute("white-space", "normal");
+        view.setWidth(WIDTH);
         view.getSelectionModel().addListener(Events.SelectionChange,
-                new Listener<SelectionChangedEvent<BeanModel>>() {
+                new SelectionChangedEventListener());
 
-                    public void handleEvent(SelectionChangedEvent<BeanModel> be) {
-//                        panel.setHeading("Simple ListView (" + be.getSelection().size()
-//                                + " items selected)");
-                    }
+        ToolBar bar = feedToolbar();
+        panel.setTopComponent(bar);
+        panel.add(view, new RowData(1, -1, new Margins(4)));
+        view.setBorders(true);
+        view.setHeight(HEIGHT1);
+        panel.setFrame(true);
 
-                });
 
+        add(panel, new FlowData(-1));
+
+
+    }
+
+    private ToolBar feedToolbar() {
+        final FeedAsync service = GWT.create(Feed.class);
         ToolBar bar = new ToolBar();
 
         ButtonGroup group = new ButtonGroup(1);
@@ -219,60 +169,24 @@ public class FeedPanel  extends LayoutContainer {
         btn.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.refresh()));
         btn.setIconAlign(Style.IconAlign.LEFT);
 
-        btn.addSelectionListener(new SelectionListener<ButtonEvent>() {
-            @Override
-            public void componentSelected(ButtonEvent buttonEvent) {
-                 connectionEntityKey = user.getKey();
-            }
-        });
+        btn.addSelectionListener(new RefreshButtonEventSelectionListener());
 
 
         feedType = optionComboBox(FeedType.all);
-        feedType.addSelectionChangedListener(new SelectionChangedListener<FeedTypeOption>() {
-            @Override
-            public void selectionChanged(SelectionChangedEvent<FeedTypeOption> feedTypeOptionSelectionChangedEvent) {
-
-                updateValues(true);
-            }
-        });
+        feedType.addSelectionChangedListener(new FeedTypeOptionSelectionChangedListener());
         group.add(new LabelToolItem("Show:"));
         group.add(feedType);
         group.setBodyBorder(true);
 
 
-
         group.add(new LabelToolItem("Switch to connected user's Feed:"));
         EntityCombo entityCombo = new EntityCombo(EntityType.userConnection, "", "");
-        entityCombo.addSelectionChangedListener(new SelectionChangedListener<GxtModel>() {
-            @Override
-            public void selectionChanged(SelectionChangedEvent<GxtModel> gxtModelSelectionChangedEvent) {
-               connectionEntityKey =gxtModelSelectionChangedEvent.getSelectedItem().getUUID();
-                updateValues(true);
-            }
-        });
+        entityCombo.addSelectionChangedListener(new ConnectionSelectionChangedListener());
         group.add(entityCombo);
 
         group.add(new LabelToolItem("Update Status:"));
         final TextArea status = new TextArea();
-        status.addKeyListener(new KeyListener() {
-            @Override
-            public void componentKeyDown(ComponentEvent event) {
-                if (event.getKeyCode() == 13) {
-                    service.postToFeed(user,status.getValue(), FeedType.status, new AsyncCallback<Void>() {
-                        @Override
-                        public void onFailure(Throwable throwable) {
-                            reload();
-                        }
-
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                           updateValues(false);
-                           status.setValue("");
-                        }
-                    });
-                }
-            }
-        });
+        status.addKeyListener(new StatusKeyDownListener(service, status));
         status.setWidth("100%");
         group.add(status);
         group.setBodyBorder(true);
@@ -280,22 +194,13 @@ public class FeedPanel  extends LayoutContainer {
 
         group.add(btn);
         bar.add(group);
-        panel.setTopComponent(bar);
-        panel.add(view, new RowData(1, -1, new Margins(4)));
-        view.setBorders(true);
-        view.setHeight(600);
-        panel.setFrame(true);
-
-
-        add(panel, new FlowData(-1));
-
-
+        return bar;
     }
 
     private native String getTemplate() /*-{
         return ['<tpl for=".">',
-            '<table border = 0>',
-            '<tr><td>{html}</td></tr>',
+            '<table border=0 style="width:150px;" >',
+            '<tr><td><div style="width:150px;float:left">{html}</div></td></tr>',
             '</table>',
             '<hr />',
             '</tpl>',
@@ -303,24 +208,46 @@ public class FeedPanel  extends LayoutContainer {
 
     }-*/;
 
+
     public void reload() {
         updateValues(true);
 
     }
 
-    private class FeedTypeOption extends BaseModelData {
+    private static class GxtFeedModelListView extends ListView<GxtFeedModel> {
+        @Override
+        protected GxtFeedModel prepareData(GxtFeedModel model) {
+            // String s = model.get(Const.Params.PARAM_NAME);
+            //  model.set("shortName", Format.ellipse(s, 15));
+            model.set(Parameters.path.getText(), GWT.getHostPageBaseURL() + model.get(Parameters.path.getText()));
+            return model;
+        }
+
+    }
+
+    private static class SelectionChangedEventListener implements Listener<SelectionChangedEvent<BeanModel>> {
+
+        @Override
+        public void handleEvent(SelectionChangedEvent<BeanModel> be) {
+//                        panel.setHeading("Simple ListView (" + be.getSelection().size()
+//                                + " items selected)");
+        }
+
+    }
+
+    private static class FeedTypeOption extends BaseModelData {
         FeedType type;
 
 
-        public FeedTypeOption(FeedType value) {
+        private FeedTypeOption(FeedType value) {
             this.type = value;
             set(Parameters.value.getText(), value.getCode());
             set(Parameters.name.getText(), value.getText());
         }
 
-        public FeedType getMethod() {
-            return type;
-        }
+//        public FeedType getMethod() {
+//            return type;
+//        }
     }
 
 
@@ -339,5 +266,116 @@ public class FeedPanel  extends LayoutContainer {
 //        }
 //    }
 
+    private class ListAsyncCallback implements AsyncCallback<List<FeedValue>> {
+        @Override
+        public void onFailure(Throwable caught) {
+
+        }
+
+        @Override
+        public void onSuccess(List<FeedValue> result) {
+            final ListStore<GxtFeedModel> store = new ListStore<GxtFeedModel>();
+
+            for (final FeedValue v : result) {
+                store.add(new GxtFeedModel(v));
+            }
+            view.setStore(store);
+
+        }
+    }
+
+    private class RefreshTimer extends Timer {
+        @Override
+        public void run() {
+
+            updateValues(false);
+
+        }
+    }
+
+    private class UpdateValuesAsyncCallback implements AsyncCallback<List<FeedValue>> {
+        private final ListStore<GxtFeedModel> store;
+
+        private UpdateValuesAsyncCallback(ListStore<GxtFeedModel> store) {
+            this.store = store;
+        }
+
+        @Override
+        public void onFailure(Throwable caught) {
+
+        }
+
+        @Override
+        public void onSuccess(final List<FeedValue> result) {
+
+            GxtFeedModel model;
+            for (final FeedValue v : result) {
+
+                model = new GxtFeedModel(v);
+                FeedType type = feedType.getValue().type;
+                if (type.equals(FeedType.all) || type.equals(v.getFeedType())) {
+                    if (store.findModel(Parameters.html.getText(), model.getHtml()) == null) {
+                        store.insert(model, 0);
+                   }
+                }
+            }
+
+            layout(true);
+        }
+    }
+
+    private class RefreshButtonEventSelectionListener extends SelectionListener<ButtonEvent> {
+        @Override
+        public void componentSelected(ButtonEvent buttonEvent) {
+             connectionEntityKey = user.getKey();
+        }
+    }
+
+    private class FeedTypeOptionSelectionChangedListener extends SelectionChangedListener<FeedTypeOption> {
+        @Override
+        public void selectionChanged(SelectionChangedEvent<FeedTypeOption> feedTypeOptionSelectionChangedEvent) {
+
+            updateValues(true);
+        }
+    }
+
+    private class ConnectionSelectionChangedListener extends SelectionChangedListener<GxtModel> {
+        @Override
+        public void selectionChanged(SelectionChangedEvent<GxtModel> gxtModelSelectionChangedEvent) {
+           connectionEntityKey =gxtModelSelectionChangedEvent.getSelectedItem().getUUID();
+            updateValues(true);
+        }
+    }
+
+    private class StatusKeyDownListener extends KeyListener {
+        private static final int ENTER_KEY = 13;
+        private final FeedAsync service;
+        private final TextArea status;
+
+        private StatusKeyDownListener(FeedAsync service, TextArea status) {
+            this.service = service;
+            this.status = status;
+        }
+
+        @Override
+        public void componentKeyDown(ComponentEvent event) {
+            if (event.getKeyCode() == ENTER_KEY) {
+                service.postToFeed(user, status.getValue(), FeedType.status, new PostToFeedAsyncCallback());
+            }
+        }
+
+        private class PostToFeedAsyncCallback implements AsyncCallback<Void> {
+            @Override
+            public void onFailure(Throwable throwable) {
+                reload();
+            }
+
+            @Override
+            public void onSuccess(Void aVoid) {
+               updateValues(false);
+               status.setValue("");
+            }
+        }
+    }
 }
 

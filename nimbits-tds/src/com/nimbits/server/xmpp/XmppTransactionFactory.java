@@ -13,8 +13,8 @@
 
 package com.nimbits.server.xmpp;
 
-import com.nimbits.client.model.user.User;
-import com.nimbits.server.transactions.dao.xmpp.XmppDaoImpl;
+import com.nimbits.client.model.user.*;
+import com.nimbits.server.transactions.dao.xmpp.*;
 
 /**
  * Created by Benjamin Sautner

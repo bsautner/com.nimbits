@@ -30,11 +30,11 @@ public enum AlertType {
     OK(3);
 
 
-    private static final Map<Integer, AlertType> lookup = new HashMap<Integer, AlertType>();
+    private static final Map<Integer, AlertType> lookup = new HashMap<Integer, AlertType>(AlertType.values().length);
 
     static {
         for (AlertType s : EnumSet.allOf(AlertType.class))
-            lookup.put(s.getCode(), s);
+            lookup.put(s.code, s);
     }
 
     private final int code;

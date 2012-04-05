@@ -14,31 +14,24 @@
 package com.nimbits.server.user;
 
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.nimbits.client.common.Utils;
-import com.nimbits.client.constants.Const;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.FeedType;
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.connection.Connection;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
+import com.google.gwt.user.server.rpc.*;
+import com.nimbits.client.common.*;
+import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.connection.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.user.UserService;
-import com.nimbits.server.email.EmailServiceFactory;
-import com.nimbits.server.entity.EntityServiceFactory;
-import com.nimbits.server.feed.FeedServiceFactory;
+import com.nimbits.server.email.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.feed.*;
 import com.nimbits.server.relationship.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.List;
-import java.util.UUID;
+import javax.servlet.http.*;
+import java.util.*;
 
 
 public class UserServiceImpl extends RemoteServiceServlet implements
@@ -67,12 +60,11 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
 
         if (emailParam != null && emailParam.equals(Const.TEST_ACCOUNT)) {
-            user = UserTransactionFactory.getDAOInstance().getNimbitsUser(CommonFactoryLocator.getInstance().createEmailAddress(emailParam));
+            user = UserTransactionFactory.getInstance().getNimbitsUser(CommonFactoryLocator.getInstance().createEmailAddress(emailParam));
 
         } else {
 
-            email = (!Utils.isEmptyString(emailParam)) ?
-                    CommonFactoryLocator.getInstance().createEmailAddress(emailParam) : null;
+            email = (Utils.isEmptyString(emailParam)) ? null : CommonFactoryLocator.getInstance().createEmailAddress(emailParam);
 
             if (email == null && session != null && (session.getAttribute(Parameters.email.getText()) != null)) {
                 email = (EmailAddress) session.getAttribute(Parameters.email.getText());
@@ -149,13 +141,13 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
         final String email = UserServiceFactory.getUserService().getCurrentUser().getEmail().toLowerCase();
         final EmailAddress internetAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
-        final User u = UserTransactionFactory.getDAOInstance().getNimbitsUser(internetAddress);
+        final User u = UserTransactionFactory.getInstance().getNimbitsUser(internetAddress);
         return u.getSecret();
     }
 
     @Override
-    public User getUserByUUID(final String subscriberUUID) {
-        return UserTransactionFactory.getInstance().getUserByKey(subscriberUUID);
+    public User getUserByKey(final String key) throws NimbitsException {
+        return UserTransactionFactory.getInstance().getUserByKey(key);
     }
 
 
@@ -172,6 +164,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
 
 
+    @Override
     public void sendConnectionRequest(final EmailAddress email) throws NimbitsException {
         final User user = getAppUserUsingGoogleAuth();
         final Connection f = UserTransactionFactory.getInstance().makeConnectionRequest(user, email);
@@ -188,7 +181,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
 
     }
-    public static String getConnectionInviteEmail(final EmailAddress email) {
+    public static String getConnectionInviteEmail(final CommonIdentifier email) {
         return "<P STYLE=\"margin-bottom: 0in\"> " + email.getValue() +
                 " wants to connect with you on <a href = \"http://www.nimbits.com\"> Nimbits! </A></BR></P><BR> \n" +
                 "<P><a href = \"http://www.nimbits.com\">Nimbits</A> is a data logging service that you can use to record time series\n" +
@@ -257,7 +250,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public List<User> getConnectionRequests(final List<String> connections) {
+    public List<User> getConnectionRequests(final List<String> connections) throws NimbitsException {
         return UserTransactionFactory.getInstance().getConnectionRequests(connections);
     }
 

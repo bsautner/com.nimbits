@@ -15,17 +15,16 @@ package com.nimbits.server.task;
 
 import com.nimbits.*;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.orm.*;
-import helper.NimbitsServletTest;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import org.junit.Test;
+import helper.*;
+import static org.junit.Assert.*;
+import org.junit.*;
 
 import javax.jdo.*;
 import java.util.*;

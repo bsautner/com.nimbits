@@ -13,6 +13,7 @@
 
 package com.nimbits.client.model.user;
 
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.email.EmailAddress;
 
 import java.io.Serializable;
@@ -36,7 +37,7 @@ public interface User extends Serializable {
 
     void setLastLoggedIn(final Date lastLoggedIn);
 
-    EmailAddress getEmail();
+    EmailAddress getEmail() throws NimbitsException;
 
     String getTwitterTokenSecret();
 

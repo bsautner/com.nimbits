@@ -13,30 +13,23 @@
 
 package com.nimbits.server.task;
 
-import com.google.gson.Gson;
-import com.google.gwt.ajaxloader.client.*;
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointModel;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.user.UserModel;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModel;
-import com.nimbits.server.calculation.CalculationServiceFactory;
-import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.intelligence.IntelligenceServiceFactory;
-import com.nimbits.server.subscription.SubscriptionServiceFactory;
-import org.apache.commons.lang3.exception.*;
+import com.google.gson.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.server.calculation.*;
+import com.nimbits.server.gson.*;
+import com.nimbits.server.intelligence.*;
+import com.nimbits.server.logging.*;
+import com.nimbits.server.subscription.*;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.logging.Logger;
+import javax.servlet.http.*;
 
 public class RecordValueTask extends HttpServlet {
 
-    private static final Logger log = Logger.getLogger(RecordValueTask.class.getName());
+
     private static final long serialVersionUID = 1L;
 
     @Override
@@ -49,29 +42,23 @@ public class RecordValueTask extends HttpServlet {
         final String loopFlagParam = req.getParameter(Parameters.loop.getText());
         final Point point = gson.fromJson(pointJson, PointModel.class);
         final Value value = gson.fromJson(valueJson, ValueModel.class);
-        log.info(userJson);
-        log.info(pointJson);
-        log.info(valueJson);
-        log.info(loopFlagParam);
+
         final boolean loopFlag = Boolean.valueOf(loopFlagParam);
         final User u = gson.fromJson(userJson, UserModel.class);
 
-            if (!loopFlag) {
-                //todo - these service calls need their memcache trans classes
-                try {
-                    log.info("Processing Calcs");
-                    CalculationServiceFactory.getInstance().processCalculations(u, point, value);
-                    log.info("Processing Intelligence");
-                    IntelligenceServiceFactory.getInstance().processIntelligence(u, point);
-                    log.info("Processing Subscriptions");
-                    SubscriptionServiceFactory.getInstance().processSubscriptions(u, point, value);
-                } catch (NimbitsException e) {
-                   log.severe(e.getMessage());
-                   log.severe(ExceptionUtils.getStackTrace(e));
-                }
+        if (!loopFlag) {
+            //todo - these service calls need their memcache trans classes
+            try {
 
-
+                CalculationServiceFactory.getInstance().processCalculations(u, point, value);
+                IntelligenceServiceFactory.getInstance().processIntelligence(u, point);
+                SubscriptionServiceFactory.getInstance().processSubscriptions(u, point, value);
+            } catch (NimbitsException e) {
+                LogHelper.logException(RecordValueTask.class, e);
             }
+
+
+        }
 
 
 

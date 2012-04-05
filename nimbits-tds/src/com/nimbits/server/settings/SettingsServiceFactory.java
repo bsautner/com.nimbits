@@ -13,13 +13,13 @@
 
 package com.nimbits.server.settings;
 
-import com.nimbits.client.service.settings.SettingsService;
+import com.nimbits.client.service.settings.*;
 
 public class SettingsServiceFactory {
     private static SettingsService instance;
 
 
-    protected SettingsServiceFactory() {
+    private SettingsServiceFactory() {
         // Exists only to defeat instantiation.
     }
 

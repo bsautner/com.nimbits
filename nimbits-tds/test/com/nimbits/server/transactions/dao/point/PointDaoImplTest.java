@@ -13,18 +13,16 @@
 
 package com.nimbits.server.transactions.dao.point;
 
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.server.entity.EntityServiceFactory;
-import com.nimbits.server.point.PointTransactionsFactory;
-import helper.NimbitsServletTest;
-import org.junit.Test;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.point.*;
+import helper.*;
+import static org.junit.Assert.*;
+import org.junit.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
+import java.util.*;
 
 /**
  * Created by bsautner

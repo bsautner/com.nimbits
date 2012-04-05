@@ -13,11 +13,11 @@
 
 package com.nimbits.server.user;
 
-import com.nimbits.server.transactions.dao.user.UserDAOImpl;
-import com.nimbits.server.transactions.memcache.user.UserMemCacheImpl;
+import com.nimbits.server.transactions.dao.user.*;
+import com.nimbits.server.transactions.memcache.user.*;
 
 public class UserTransactionFactory {
-    protected UserTransactionFactory() {
+    private UserTransactionFactory() {
     }
 
     public static UserTransactions getDAOInstance() {

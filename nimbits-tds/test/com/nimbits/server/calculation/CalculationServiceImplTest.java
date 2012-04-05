@@ -13,26 +13,21 @@
 
 package com.nimbits.server.calculation;
 
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.calculation.Calculation;
-import com.nimbits.client.model.calculation.CalculationModelFactory;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModelFactory;
-import com.nimbits.server.point.PointServiceFactory;
-import com.nimbits.server.value.RecordedValueServiceFactory;
-import helper.NimbitsServletTest;
-import org.junit.Test;
+import com.nimbits.client.model.calculation.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.server.point.*;
+import com.nimbits.server.value.*;
+import helper.*;
+import static org.junit.Assert.*;
+import org.junit.*;
 
-import java.util.Random;
-import java.util.UUID;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import java.util.*;
 
 /**
  * Created by bsautner

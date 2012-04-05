@@ -14,11 +14,11 @@
 package com.nimbits.server.settings;
 
 
-import com.nimbits.server.transactions.dao.settings.SettingsDAOImpl;
-import com.nimbits.server.transactions.memcache.settings.SettingMemCacheImpl;
+import com.nimbits.server.transactions.dao.settings.*;
+import com.nimbits.server.transactions.memcache.settings.*;
 
 public class SettingTransactionsFactory {
-    protected SettingTransactionsFactory() {
+    private SettingTransactionsFactory() {
     }
 
     private static SettingTransactions daoInstance;

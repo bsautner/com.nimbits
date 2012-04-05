@@ -28,8 +28,8 @@ public class IntelligenceFactory {
 
     }
 
-    public static List<Intelligence> createIntelligences(List<Intelligence> results) {
-        final List<Intelligence> retObj = new ArrayList<Intelligence>();
+    public static List<Intelligence> createIntelligences(Collection<Intelligence> results) {
+        final List<Intelligence> retObj = new ArrayList<Intelligence>(results.size());
         for (final Intelligence i : results) {
             retObj.add(createIntelligence(i));
         }

@@ -4,7 +4,7 @@ import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.point.*;
 
 import java.io.Serializable;
@@ -32,7 +32,7 @@ public class EntityModel  implements Serializable, Entity {
     private String blobKey;
     private List<Point> points;
 
-    public EntityModel(final EntityName name,
+    public EntityModel(final CommonIdentifier name,
                        final String description,
                        final EntityType entityType,
                        final ProtectionLevel protectionLevel,
@@ -67,11 +67,12 @@ public class EntityModel  implements Serializable, Entity {
         return points;
     }
 
+    @Override
     public void setPoints(List<Point> points) {
         this.points = points;
     }
 
-    public EntityModel() {
+    private EntityModel() {
     }
 
     @Override

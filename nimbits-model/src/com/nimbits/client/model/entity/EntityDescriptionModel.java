@@ -42,7 +42,7 @@ public class EntityDescriptionModel implements Serializable, EntityDescription {
 //        this.entityType = entityType.getCode();
 //    }
 
-    public EntityDescriptionModel(EntityDescription p) {
+    public EntityDescriptionModel(EntityDescription p) throws NimbitsException {
         this.server = p.getServer();
         this.pointName = p.getName();
         this.uuid = p.getKey();

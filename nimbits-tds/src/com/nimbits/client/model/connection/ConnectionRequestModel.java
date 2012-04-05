@@ -13,11 +13,12 @@
 
 package com.nimbits.client.model.connection;
 
-import com.extjs.gxt.ui.client.data.BaseModelData;
-import com.nimbits.client.model.email.EmailAddress;
+import com.extjs.gxt.ui.client.data.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.email.*;
 
-import java.io.Serializable;
-import java.util.Date;
+import java.io.*;
+import java.util.*;
 
 
 public class ConnectionRequestModel extends BaseModelData implements Serializable, Connection {
@@ -35,7 +36,7 @@ public class ConnectionRequestModel extends BaseModelData implements Serializabl
     protected ConnectionRequestModel() {
     }
 
-    public ConnectionRequestModel(Connection c) {
+    public ConnectionRequestModel(Connection c) throws NimbitsException {
         this.requestorID = c.getRequestorID();
         this.targetEmail = c.getTargetEmail();
         this.requestorEmail = c.getRequestorEmail();

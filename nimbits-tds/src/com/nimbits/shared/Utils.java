@@ -22,15 +22,20 @@ package com.nimbits.shared;
  */
 public class Utils {
 
+    private static final double DOUBLE = 100.0;
+
+    private Utils() {
+    }
+
     public static boolean isEmptyString(final String string) {
-        return (string == null || string.trim().length() == 0);
-        // return StringUtils.isEmpty(string);
+        return (string == null || string.trim().isEmpty());
+
     }
 
 
     public static double roundDouble(final double d) {
-        int ix = (int) (d * 100.0); // scale it
-        return ((double) ix) / 100.0;
+        int ix = (int) (d * DOUBLE); // scale it
+        return ((double) ix) / DOUBLE;
     }
 
 

@@ -13,15 +13,14 @@
 
 package com.nimbits.server.orm;
 
-import com.google.appengine.api.datastore.KeyFactory;
-import com.nimbits.client.enums.SubscriptionNotifyMethod;
-import com.nimbits.client.enums.SubscriptionType;
+import com.google.appengine.api.datastore.*;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.subscription.Subscription;
+import com.nimbits.client.model.subscription.*;
 
 import javax.jdo.annotations.*;
-import java.io.Serializable;
-import java.util.Date;
+import java.io.*;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner

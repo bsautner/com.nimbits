@@ -13,20 +13,19 @@
 
 package com.nimbits.server.user;
 
-import com.nimbits.client.common.Utils;
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.user.User;
-import com.nimbits.server.counter.CounterFactory;
-import com.nimbits.server.transactions.dao.counter.ShardedCounter;
+import com.nimbits.client.common.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.server.counter.*;
+import com.nimbits.server.logging.*;
+import com.nimbits.server.transactions.dao.counter.*;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
+import javax.servlet.http.*;
+import java.io.*;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner
@@ -43,7 +42,7 @@ public class UserReportService extends HttpServlet {
         String email = req.getParameter(Parameters.email.getText());
         final PrintWriter out = resp.getWriter();
         int count = 100;
-
+        try {
         if (! Utils.isEmptyString(c)) {
             count = Integer.valueOf(c);
         }
@@ -72,13 +71,16 @@ public class UserReportService extends HttpServlet {
                     out.println("<TR  bgcolor=\"#CCCC99\">");
                 }
 
-                out.println("<TD>" + u.getEmail() + "</TD>");
+
+                    out.println("<TD>" + u.getEmail() + "</TD>");
+
                 out.println("<TD>" + u.getLastLoggedIn() + "</TD>");
                 out.println("<TD>" + u.getDateCreated() + "</TD>");
 
                 ShardedCounter counter = getOrCreateCounter(u.getEmail());
                 out.println("<TD>" +counter.getCount() + "</TD>");
                 out.println("</TR>");
+
             }
 
             out.println("</table>");
@@ -89,7 +91,9 @@ public class UserReportService extends HttpServlet {
 
             out.println();
         }
-
+        } catch (NimbitsException e) {
+            LogHelper.logException(this.getClass(), e);
+        }
 
         out.close();
     }

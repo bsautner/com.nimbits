@@ -13,7 +13,7 @@
 
 package com.nimbits.server.counter;
 
-import com.nimbits.server.transactions.dao.counter.ShardedCounter;
+import com.nimbits.server.transactions.dao.counter.*;
 
 /**
  * Created by Benjamin Sautner

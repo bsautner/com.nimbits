@@ -1,6 +1,7 @@
 package com.nimbits.client.model.entity;
 
 import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.server.Server;
 
 import java.io.Serializable;
@@ -14,7 +15,7 @@ import java.io.Serializable;
 public interface EntityDescription extends Serializable {
     int getIdPoint();
 
-    Server getServer();
+    Server getServer() throws NimbitsException;
 
     String getKey();
 

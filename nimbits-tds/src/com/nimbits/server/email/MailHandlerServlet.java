@@ -13,24 +13,16 @@
 
 package com.nimbits.server.email;
 
-import com.nimbits.client.constants.Words;
-import com.nimbits.server.task.TaskFactory;
+import com.nimbits.client.constants.*;
+import com.nimbits.server.task.*;
 
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.mail.Address;
-import javax.mail.MessagingException;
-import javax.mail.Part;
-import javax.mail.Session;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Properties;
-import java.util.logging.Logger;
+import javax.activation.*;
+import javax.mail.*;
+import javax.mail.internet.*;
+import javax.servlet.http.*;
+import java.io.*;
+import java.util.*;
+import java.util.logging.*;
 
 public class MailHandlerServlet extends HttpServlet {
     /**

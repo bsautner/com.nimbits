@@ -13,41 +13,30 @@
 
 package com.nimbits.server.api.impl;
 
-import com.nimbits.client.common.Utils;
-import com.nimbits.client.constants.Const;
-import com.nimbits.client.constants.Path;
-import com.nimbits.client.constants.Words;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ExportType;
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.timespan.Timespan;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.server.api.ApiServlet;
-import com.nimbits.server.entity.EntityServiceFactory;
-import com.nimbits.server.feed.FeedServiceFactory;
-import com.nimbits.server.point.PointServiceFactory;
-import com.nimbits.server.time.TimespanServiceFactory;
-import com.nimbits.server.value.RecordedValueServiceFactory;
+import com.nimbits.client.common.*;
+import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.timespan.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.server.api.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.feed.*;
+import com.nimbits.server.point.*;
+import com.nimbits.server.time.*;
+import com.nimbits.server.value.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.logging.Logger;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import java.util.logging.*;
+import java.util.regex.*;
 
 public class ChartApiServletImpl extends ApiServlet {
     private static final Logger log = Logger.getLogger(ChartApiServletImpl.class.getName());
@@ -57,7 +46,9 @@ public class ChartApiServletImpl extends ApiServlet {
     private static final long serialVersionUID = 1L;
     private static final String autoscaleCode = "&chds=a";
     private static final String chartDateCode = "&chd=t:";
-
+    private static final int INT = 512;
+    private static final Pattern COMPILE = Pattern.compile(",");
+    private static final String DEFAULT="https://chart.googleapis.com/chart?chst=d_weather&chld=taped_y|rainy-sunny|point%20not%20found";
 
     @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
@@ -105,76 +96,82 @@ public class ChartApiServletImpl extends ApiServlet {
         }
     }
 
-    private ExportType getContentType(String formatParam) {
+    private static ExportType getContentType(String formatParam) {
         ExportType type;
 
-        if (Utils.isEmptyString(formatParam)) {
-            type = ExportType.png;
-        } else if (formatParam.equals("image")) {
-            type = ExportType.png;
-        } else if (formatParam.equals("table")) {
-            type = ExportType.table;
-
-        } else {
-            type = ExportType.plain;
-        }
+        type = Utils.isEmptyString(formatParam)
+                ? ExportType.png : formatParam.equals("image")
+                ? ExportType.png : formatParam.equals("table")
+                ? ExportType.table : ExportType.plain;
         return type;
     }
 
 
 
-    private String generateImageChartParams(final HttpServletRequest req, final Timespan timespan, final int valueCount, final boolean doScale, final User u, final List<EntityName> pointList) throws NimbitsException {
+    private static String generateImageChartParams(final HttpServletRequest req,
+                                                   final Timespan timespan,
+                                                   final int valueCount,
+                                                   final boolean doScale,
+                                                   final User u,
+                                                   final Iterable<EntityName> pointList) throws NimbitsException {
 
-        StringBuilder params = new StringBuilder();
+        StringBuilder params = new StringBuilder(INT);
         params.append(req.getQueryString());
         params.append(chartDateCode);
         Entity e;
         Point p;
         List<Value> values;
-        for (final EntityName pointName : pointList) {
+
+        if (u != null) {
+            for (final EntityName pointName : pointList) {
 
 
-            e = EntityServiceFactory.getInstance().getEntityByName(u, pointName,EntityType.point);
-            p = PointServiceFactory.getInstance().getPointByKey(e.getKey());
+                e = EntityServiceFactory.getInstance().getEntityByName(u, pointName,EntityType.point);
+                if (e != null) {
+                    p = PointServiceFactory.getInstance().getPointByKey(e.getKey());
 
-            if (p != null) {
-                //Entity e = EntityServiceFactory.getInstance().getEntityByUUID(p.getEntity());
-                if (e.getProtectionLevel().equals(ProtectionLevel.everyone) || !u.isRestricted()) {
-
-
-                    values = (timespan != null) ?
-
-                            RecordedValueServiceFactory.getInstance().getDataSegment(p, timespan) :
-                            RecordedValueServiceFactory.getInstance().getTopDataSeries(p, valueCount).getValues();
+                    if (p != null) {
+                        //Entity e = EntityServiceFactory.getInstance().getEntityByUUID(p.getEntity());
+                        if (e.getProtectionLevel().equals(ProtectionLevel.everyone) || !u.isRestricted()) {
 
 
-                    for (final Value v : values) {
-                        params.append(v.getDoubleValue()).append(Const.DELIMITER_COMMA);
+                            values = (timespan != null) ?
 
+                                    RecordedValueServiceFactory.getInstance().getDataSegment(p, timespan) :
+                                    RecordedValueServiceFactory.getInstance().getTopDataSeries(p, valueCount).getValues();
+
+
+                            for (final Value v : values) {
+                                params.append(v.getDoubleValue()).append(Const.DELIMITER_COMMA);
+
+                            }
+                            if (params.lastIndexOf(Const.DELIMITER_COMMA) > 0) {
+                                params.deleteCharAt(params.lastIndexOf(Const.DELIMITER_COMMA));
+
+                            }
+                            params.append(Const.DELIMITER_BAR);
+
+                        }
                     }
-                    if (params.lastIndexOf(Const.DELIMITER_COMMA) > 0) {
-                        params.deleteCharAt(params.lastIndexOf(Const.DELIMITER_COMMA));
 
-                    }
-                    params.append(Const.DELIMITER_BAR);
 
                 }
+                else {
+                    log.info("Couldn't find a point in the chart request.");
+                }
+                if (params.lastIndexOf(Const.DELIMITER_BAR) > 0) {
+                    params.deleteCharAt(params.lastIndexOf(Const.DELIMITER_BAR));
+                }
+
+                if (doScale) {
+                    params.append(autoscaleCode);
+                }
             }
-
-
         }
-        if (params.lastIndexOf(Const.DELIMITER_BAR) > 0) {
-            params.deleteCharAt(params.lastIndexOf(Const.DELIMITER_BAR));
-        }
-
-        if (doScale) {
-            params.append(autoscaleCode);
-        }
-
         return params.toString();
     }
 
-    private void sendChartImage(final HttpServletResponse resp, final String params) throws IOException {
+    private static void sendChartImage(final ServletResponse resp, final String params) throws IOException {
         final URL url = new URL(Path.PATH_GOOGLE_CHART_API);
         final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setDoOutput(true);
@@ -190,18 +187,19 @@ public class ChartApiServletImpl extends ApiServlet {
         final OutputStream out = resp.getOutputStream();
         resp.setContentLength(length);
         byte[] buffer = new byte[length];
-        for (int i; (i = is.read(buffer)) >= 0; ) {
+        int i;
+        while ((i = is.read(buffer)) >= 0) {
             out.write(buffer, 0, i);
         }
         out.close();
     }
 
-    private List<EntityName> createPointList(final String pointsListParam, final String pointParamName) throws NimbitsException {
-        final List<EntityName> pointList = new ArrayList<EntityName>();
+    private static List<EntityName> createPointList(final String pointsListParam, final String pointParamName) throws NimbitsException {
+        final List<EntityName> pointList = new ArrayList<EntityName>(10);
         if (!Utils.isEmptyString(pointParamName)) {
             pointList.add(CommonFactoryLocator.getInstance().createName(pointParamName, EntityType.point));
         } else if (!Utils.isEmptyString(pointsListParam)) {
-            final String[] p1 = (pointsListParam.split(","));
+            final String[] p1 = (COMPILE.split(pointsListParam));
             final List<String> pointsParams = Arrays.asList(p1);
             for (String pn : pointsParams) {
                 pointList.add(CommonFactoryLocator.getInstance().createName(pn, EntityType.point));
@@ -210,7 +208,7 @@ public class ChartApiServletImpl extends ApiServlet {
         return pointList;
     }
 
-    private Timespan getTimestamp(HttpServletRequest req) throws NimbitsException {
+    private static Timespan getTimestamp(ServletRequest req) throws NimbitsException {
         Timespan timespan = null;
         String startDate = req.getParameter(Parameters.sd.getText());
         String endDate = req.getParameter(Parameters.ed.getText());

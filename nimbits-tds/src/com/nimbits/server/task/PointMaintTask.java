@@ -13,25 +13,21 @@
 
 package com.nimbits.server.task;
 
-import com.google.gson.Gson;
-import com.nimbits.client.constants.Const;
-import com.nimbits.client.enums.Parameters;
+import com.google.gson.*;
+import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModel;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.valueblobstore.ValueBlobStore;
-import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.point.PointServiceFactory;
-import com.nimbits.server.value.RecordedValueTransactionFactory;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.valueblobstore.*;
+import com.nimbits.server.gson.*;
+import com.nimbits.server.point.*;
+import com.nimbits.server.value.*;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
+import javax.servlet.http.*;
+import java.io.*;
+import java.util.*;
+import java.util.logging.*;
 
 public class PointMaintTask extends HttpServlet {
 
@@ -55,14 +51,6 @@ public class PointMaintTask extends HttpServlet {
         } catch (Exception ex) {
            log.severe(ex.getMessage());
         }
-
-
-
-
-
-
-
-
 
     }
 

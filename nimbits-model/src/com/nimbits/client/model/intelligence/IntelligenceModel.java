@@ -37,10 +37,10 @@ public class IntelligenceModel implements Serializable, Intelligence {
 
     private String trigger;
 
-    public IntelligenceModel() {
+    private IntelligenceModel() {
     }
 
-    public IntelligenceModel(final String uuid,
+    public IntelligenceModel(final String key,
                              final boolean enabled,
                              final IntelligenceResultTarget resultTarget,
                              final String target,
@@ -55,6 +55,7 @@ public class IntelligenceModel implements Serializable, Intelligence {
         this.nodeId = nodeId;
         this.resultsInPlainText = resultsInPlainText;
         this.trigger = trigger;
+        this.key = key;
 
     }
 

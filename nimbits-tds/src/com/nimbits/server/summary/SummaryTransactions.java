@@ -13,8 +13,8 @@
 
 package com.nimbits.server.summary;
 
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.summary.Summary;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.summary.*;
 
 /**
  * Created by Benjamin Sautner

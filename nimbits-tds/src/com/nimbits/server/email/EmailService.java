@@ -13,11 +13,11 @@
 
 package com.nimbits.server.email;
 
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.value.Value;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.value.*;
 
 public interface EmailService {
     void sendEmail(final EmailAddress email, final String message);

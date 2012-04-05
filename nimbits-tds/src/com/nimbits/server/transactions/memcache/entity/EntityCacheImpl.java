@@ -34,13 +34,13 @@ public class EntityCacheImpl implements EntityTransactions {
     private final MemcacheService cache;
 
     @Override
-    public void removeEntityFromCache(Entity entity) throws NimbitsException {
+    public void removeEntityFromCache(final Entity entity) throws NimbitsException {
         if (cache.contains(entity.getKey())) {
             cache.delete(entity.getKey());
         }
 
     }
-    private void addEntityToCache(Entity entity) throws NimbitsException {
+    private void addEntityToCache(final Entity entity) throws NimbitsException {
         if (entity != null) {
         removeEntityFromCache(entity);
         cache.put(entity.getKey(), entity);
@@ -50,34 +50,31 @@ public class EntityCacheImpl implements EntityTransactions {
     public EntityCacheImpl(final User u) {
         this.user = u;
 
-        if (user != null) {
-            cache = MemcacheServiceFactory.getMemcacheService(MemCacheKey.userNamespace.name() + u.getKey().replace('@', '-'));
-        } else {
-            cache = MemcacheServiceFactory.getMemcacheService(MemCacheKey.defaultNamespace.name());
-
-        }
+        cache = user != null
+                ? MemcacheServiceFactory.getMemcacheService(MemCacheKey.userNamespace.name() + user.getKey().replace('@', '-'))
+                : MemcacheServiceFactory.getMemcacheService(MemCacheKey.defaultNamespace.name());
     }
 
 
 
     @Override
-    public Map<String, Entity> getEntityMap(EntityType type) throws NimbitsException {
+    public Map<String, Entity> getEntityMap(final EntityType type) throws NimbitsException {
 
         return  EntityTransactionFactory.getDaoInstance(user).getEntityMap(type);
     }
 
     @Override
-    public Map<EntityName, Entity> getEntityNameMap(EntityType type) throws NimbitsException {
+    public Map<EntityName, Entity> getEntityNameMap(final EntityType type) throws NimbitsException {
         return  EntityTransactionFactory.getDaoInstance(user).getEntityNameMap(type);
     }
 
     @Override
-    public List<Entity> getChildren(Entity parentEntity, EntityType type) throws NimbitsException {
+    public List<Entity> getChildren(final Entity parentEntity, final EntityType type) throws NimbitsException {
         return  EntityTransactionFactory.getDaoInstance(user).getChildren(parentEntity, type);
     }
 
     @Override
-    public Entity addUpdateEntity(Entity entity) throws NimbitsException {
+    public Entity addUpdateEntity(final Entity entity) throws NimbitsException {
 
         Entity result =   EntityTransactionFactory.getDaoInstance(user).addUpdateEntity(entity);
         addEntityToCache(result);
@@ -90,21 +87,20 @@ public class EntityCacheImpl implements EntityTransactions {
     }
 
     @Override
-    public List<Entity> deleteEntity(Entity entity) throws NimbitsException {
+    public List<Entity> deleteEntity(final Entity entity) throws NimbitsException {
 
         removeEntityFromCache(entity);
         return EntityTransactionFactory.getDaoInstance(user).deleteEntity(entity);
     }
 
     @Override
-    public Entity getEntityByKey(String uuid) throws NimbitsException {
+    public Entity getEntityByKey(final String uuid) throws NimbitsException {
         if (cache.contains(uuid)) {
 
-            Entity e =  (Entity) cache.get(uuid);
-            if (e != null) {
-                return e;
-            }
-            else {
+            try {
+                Entity e =  (Entity) cache.get(uuid);
+                return e != null ? e : getEntityFromStore(uuid);
+            } catch (InvalidValueException e1) {
                 return getEntityFromStore(uuid);
             }
         }
@@ -121,7 +117,7 @@ public class EntityCacheImpl implements EntityTransactions {
     }
 
     @Override
-    public Entity getEntityByName(EntityName name, EntityType type) throws NimbitsException {
+    public Entity getEntityByName(final EntityName name, final EntityType type) throws NimbitsException {
         return EntityTransactionFactory.getDaoInstance(user).getEntityByName(name, type);
     }
 

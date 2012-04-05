@@ -40,7 +40,7 @@ public interface EntityService extends RemoteService {
 
     List<Entity> deleteEntity(Entity entity) throws NimbitsException;
 
-    Entity getEntityByKey(String uuid) throws NimbitsException;
+
 
     Map<String, Entity> getEntityMap(EntityType type) throws NimbitsException;
 
@@ -55,6 +55,8 @@ public interface EntityService extends RemoteService {
 
 
     Entity addUpdateEntity(User user, Entity aConnection) throws NimbitsException;
+
+    Entity getEntityByKey(String uuid) throws NimbitsException;
 
     Entity getEntityByKey(User u, String entityId) throws NimbitsException;
 

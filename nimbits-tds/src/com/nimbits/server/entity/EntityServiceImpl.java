@@ -211,13 +211,13 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     }
 
     @Override
-    public Entity getEntityByName(final User user, final EntityName name, EntityType type) throws NimbitsException {
+    public Entity getEntityByName(final User user, final EntityName name, final EntityType type) throws NimbitsException {
         return EntityTransactionFactory.getInstance(user).getEntityByName(name, type);
     }
 
 
     @Override
-    public Entity getEntityByName(EntityName name, EntityType type) throws NimbitsException {
+    public Entity getEntityByName(final EntityName name, final EntityType type) throws NimbitsException {
         return EntityTransactionFactory.getInstance(getUser()).getEntityByName(name, type);
     }
 

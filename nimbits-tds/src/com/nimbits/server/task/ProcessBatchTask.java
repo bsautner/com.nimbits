@@ -15,7 +15,6 @@ package com.nimbits.server.task;
 
 import com.google.gson.Gson;
 import com.nimbits.client.constants.Const;
-import com.nimbits.client.constants.UserMessages;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.exception.NimbitsException;
@@ -29,6 +28,7 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueModelFactory;
 import com.nimbits.server.entity.EntityServiceFactory;
 import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.logging.LogHelper;
 import com.nimbits.server.point.PointServiceFactory;
 import com.nimbits.server.value.RecordedValueServiceFactory;
 
@@ -39,7 +39,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.logging.Logger;
 
 /**
  * Created by bsautner
@@ -54,7 +53,7 @@ public class ProcessBatchTask extends HttpServlet {
     private static final String T = "t";
     private static final String N = "n";
     private static final long serialVersionUID = 1L;
-    private static final Logger log = Logger.getLogger(ProcessBatchTask.class.getName());
+
 
     private Map<Long, BatchValue> timestampValueMap;
     private List<Long> timestamps;
@@ -66,9 +65,9 @@ public class ProcessBatchTask extends HttpServlet {
         try {
             processBatch(req, resp);
         } catch (IOException e) {
-            log.severe(e.getMessage());
+            LogHelper.logException(ProcessBatchTask.class, e);
         } catch (NimbitsException e) {
-            log.severe(e.getMessage());
+            LogHelper.logException(ProcessBatchTask.class, e);
         }
 
     }
@@ -80,7 +79,7 @@ public class ProcessBatchTask extends HttpServlet {
         final User u = gson.fromJson(userJson, UserModel.class);
 
 
-        log.info(u.getEmail().getValue());
+
         timestampValueMap = new HashMap<Long, BatchValue>(Const.CONST_MAX_BATCH_COUNT);
         timestamps = new ArrayList<Long>(Const.CONST_MAX_BATCH_COUNT);
 
@@ -117,16 +116,16 @@ public class ProcessBatchTask extends HttpServlet {
                         RecordedValueServiceFactory.getInstance().recordValue(b.u, p, v, false);
                        }
                         else {
-                           log.severe("Batch service could not find a point named " + entity.getName() + " but the entity existed!");
+                           LogHelper.log(ProcessBatchTask.class,"Batch service could not find a point named " + entity.getName() + " but the entity existed!");
 
                        }
                     } catch (NimbitsException ex) {
-                     log.severe(ex.getMessage());
 
+                        LogHelper.logException(ProcessBatchTask.class, ex);
 
                     } catch (JDOException e) {
+                        LogHelper.logException(ProcessBatchTask.class, e);
 
-                        log.severe(UserMessages.ERROR_BATCH_SERVICE_JDO + e.getMessage());
 
                     }
                 }

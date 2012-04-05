@@ -180,7 +180,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
             final Value v = getPrevValue(p, new Date());
             if (v != null) {
-                AlertType alertType = getAlertType(p, v);
+                final AlertType alertType = getAlertType(p, v);
                 return ValueModelFactory.createValueModel(v, alertType);
 
             }

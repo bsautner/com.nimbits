@@ -298,7 +298,8 @@ public class PointDaoImpl implements PointTransactions {
             final List<Point> points;
 
             final Query q = pm
-                    .newQuery(PointEntity.class, "idleAlarmOn == k && idleAlarmSent  == c");
+                    .newQuery(PointEntity.class);
+            q.setFilter("idleAlarmOn == k && idleAlarmSent  == c");
             q.declareParameters("Long k, Long c");
 
             points = (List<Point>) q.execute(true, false);

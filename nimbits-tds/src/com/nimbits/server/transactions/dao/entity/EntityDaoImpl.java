@@ -414,7 +414,7 @@ public class EntityDaoImpl implements  EntityTransactions {
                         entity.getEntityType().getCode());
                 if (c.size() > 0) {
 
-                    throw new NimbitsException("An User with the email address " + entity.getName().getValue() +
+                    throw new NimbitsException("A User with the email address " + entity.getName().getValue() +
                             " already exists. Entities of type [" + entity.getEntityType().name() + "] must have a " +
                             "unique name on your account");
 

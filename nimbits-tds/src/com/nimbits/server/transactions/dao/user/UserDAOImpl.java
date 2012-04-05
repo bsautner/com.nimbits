@@ -52,7 +52,7 @@ public class UserDAOImpl implements UserTransactions {
         User retObj;
         try {
 
-            User u = getUserByKey(pm, internetAddress.getValue());
+            final User u = getUserByKey(pm, internetAddress.getValue());
             if (u != null) {
                 final Transaction tx = pm.currentTransaction();
                 tx.begin();
@@ -81,7 +81,7 @@ public class UserDAOImpl implements UserTransactions {
                     "","");
 
 
-            Entity r = EntityTransactionFactory.getDaoInstance(null).addUpdateEntity(entity);
+            final Entity r = EntityTransactionFactory.getDaoInstance(null).addUpdateEntity(entity);
 
             final UserEntity u = new UserEntity(r, internetAddress);
 
@@ -113,7 +113,7 @@ public class UserDAOImpl implements UserTransactions {
         try {
             if (internetAddress != null) {
 
-                User u = getUserByKey(pm, internetAddress.getValue());
+                final User u = getUserByKey(pm, internetAddress.getValue());
                 if (u != null) {
 
                     retObj = UserModelFactory.createUserModel(u);
@@ -144,7 +144,7 @@ public class UserDAOImpl implements UserTransactions {
 
 
         try {
-            User u = getUserByKey(pm, emailAddress.getValue());
+            final User u = getUserByKey(pm, emailAddress.getValue());
             if (u != null) {
                 final Transaction tx = pm.currentTransaction();
                 tx.begin();
@@ -202,7 +202,6 @@ public class UserDAOImpl implements UserTransactions {
     @Override
     public List<Connection> getPendingConnectionRequests(final EmailAddress internetAddress) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final List<Connection> retObj;
         try {
             final Query q = pm.newQuery(ConnectionRequestEntity.class);
             q.setFilter("approved == a && targetEmail==e && rejected == r");
@@ -274,7 +273,7 @@ public class UserDAOImpl implements UserTransactions {
         User retObj = null;
          try {
 
-             User u = getUserByKey(pm, internetAddress.getValue());
+             final User u = getUserByKey(pm, internetAddress.getValue());
             if (u != null) {
                 final Transaction tx = pm.currentTransaction();
                 tx.begin();
@@ -322,7 +321,7 @@ public class UserDAOImpl implements UserTransactions {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         try {
-            User user = getUserByKey(pm, key);
+            final User user = getUserByKey(pm, key);
             if (user != null) {
             return UserModelFactory.createUserModel(user);
             }
@@ -340,7 +339,7 @@ public class UserDAOImpl implements UserTransactions {
 
     }
 
-    private User getUserByKey( final PersistenceManager pm, final String key) {
+    private static User getUserByKey(final PersistenceManager pm, final String key) {
 
         try {
             return pm.getObjectById(UserEntity.class, key);

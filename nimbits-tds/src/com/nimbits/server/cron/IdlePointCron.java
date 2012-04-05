@@ -26,6 +26,7 @@ import com.nimbits.server.point.PointServiceFactory;
 import com.nimbits.server.subscription.SubscriptionServiceFactory;
 import com.nimbits.server.user.UserTransactionFactory;
 import com.nimbits.server.value.RecordedValueServiceFactory;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -44,10 +45,15 @@ public class IdlePointCron extends HttpServlet {
 
     @Override
     @SuppressWarnings(Const.WARNING_UNCHECKED)
-    public void doGet(HttpServletRequest req, HttpServletResponse resp)
+    public void doGet(final HttpServletRequest req, final HttpServletResponse resp)
             throws IOException {
         // PrintWriter out;
         // out = resp.getWriter();
+        processGet();
+
+    }
+
+    protected static int processGet() {
         final List<Point> points = PointServiceFactory.getInstance().getIdlePoints();
 
         for (final Point p : points) {
@@ -55,25 +61,27 @@ public class IdlePointCron extends HttpServlet {
                 checkIdle(p);
             } catch (NimbitsException e) {
                 log.severe(e.getMessage());
+                log.severe(ExceptionUtils.getStackTrace(e));
             }
         }
-
+        return points.size();
     }
 
-    private void checkIdle(final Point p) throws NimbitsException {
+    private static void checkIdle(final Point p) throws NimbitsException {
         final Calendar c = Calendar.getInstance();
         c.add(Calendar.SECOND, p.getIdleSeconds() * -1);
-        Value v = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
+
+        final Entity entity = EntityServiceFactory.getInstance().getEntityByKey(null, p.getKey());
+        final User u = UserTransactionFactory.getInstance().getUserByKey(entity.getOwner());
+        final Value v = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
+
         if (p.getIdleSeconds() > 0 && v != null &&
                 v.getTimestamp().getTime() <= c.getTimeInMillis() &&
                 !p.getIdleAlarmSent()) {
 
             p.setIdleAlarmSent(true);
-            Entity entity = EntityServiceFactory.getInstance().getEntityByKey(p.getKey());
-
-            final User u = UserTransactionFactory.getInstance().getUserByKey(entity.getOwner());
             PointServiceFactory.getInstance().updatePoint(u, p);
-            Value va = ValueModelFactory.createValueModel(v, AlertType.IdleAlert);
+            final Value va = ValueModelFactory.createValueModel(v, AlertType.IdleAlert);
             SubscriptionServiceFactory.getInstance().processSubscriptions(u, p,va);
 
 

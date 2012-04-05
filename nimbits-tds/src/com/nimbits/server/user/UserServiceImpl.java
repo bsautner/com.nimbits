@@ -88,25 +88,11 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
                 user = UserTransactionFactory.getInstance().getNimbitsUser(email);
                 if (user != null) {
-                    //log.info("Found existing user");
-                    // log.info("user has null email: " + String.valueOf(user.getEmail() == null));
-                    // log.info(String.valueOf(user.getId()));
                     user.setRestricted(true);
-                    // info.append("found user in datastore =").append(email.getValue()).append("|");
-                    //did they provide a valid user secret?
+
                     if (!Utils.isEmptyString(secret) && !Utils.isEmptyString(user.getSecret()) && user.getSecret().equals(secret)) {
                         user.setRestricted(false);
                     }
-
-                    //a secret was provided but it wasn't the user secret, maybe the global sever secret
-//                    if (user.isRestricted() && !Utils.isEmptyString(secret)) {
-//                        final String serverSecret = SettingsServiceFactory.getInstance().getServerSecret();
-//                        if (!Utils.isEmptyString(serverSecret) && serverSecret.equals(secret)) {
-//                            user.setRestricted(false);
-//                        }
-//                    }
-                    //can we authenticate them with google auth?
-                    //log.info("Is user authenticated with google account?" + (googleUserService.getCurrentUser() != null));
                     if (user.isRestricted()) {
 
                         if (googleUserService.getCurrentUser() != null

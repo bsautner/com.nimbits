@@ -44,12 +44,12 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
         addOrUpdateSubscription(entity, subscription);
     }
 
-    private static SubscriptionEntity getSubscription(PersistenceManager pm, Entity entity) {
+    private static SubscriptionEntity getSubscription(final PersistenceManager pm, final Entity entity) {
       return getSubscription(pm, entity.getKey());
 
 
     }
-    private static SubscriptionEntity getSubscription(PersistenceManager pm, String key) {
+    private static SubscriptionEntity getSubscription(final PersistenceManager pm, final String key) {
         try {
             return pm.getObjectById(SubscriptionEntity.class, key);
 
@@ -69,7 +69,7 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
 
 
 
-            SubscriptionEntity result = getSubscription(pm, entity);
+            final SubscriptionEntity result = getSubscription(pm, entity);
             if (result != null) {
                 final Transaction tx = pm.currentTransaction();
                 tx.begin();
@@ -107,7 +107,7 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
         Subscription retObj = null;
         try {
 
-            SubscriptionEntity result = getSubscription(pm, entity);
+            final SubscriptionEntity result = getSubscription(pm, entity);
             if (result != null) {
 
                 retObj = SubscriptionFactory.createSubscription(result);
@@ -161,7 +161,7 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         try {
-            SubscriptionEntity result = getSubscription(pm, subscription.getKey());
+            final SubscriptionEntity result = getSubscription(pm, subscription.getKey());
             if (result != null) {
                 final Transaction tx = pm.currentTransaction();
                 tx.begin();
@@ -182,7 +182,7 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
 
         final Subscription retObj = null;
         try {
-            SubscriptionEntity result = getSubscription(pm, entity);
+            final SubscriptionEntity result = getSubscription(pm, entity);
             if (result != null) {
 
                 pm.deletePersistent(result);

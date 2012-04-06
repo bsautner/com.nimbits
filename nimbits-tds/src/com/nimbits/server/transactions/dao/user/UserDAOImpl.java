@@ -22,7 +22,6 @@ import com.nimbits.client.model.connection.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
-import com.nimbits.server.connections.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.orm.*;
 import com.nimbits.server.user.*;
@@ -185,7 +184,7 @@ public class UserDAOImpl implements UserTransactions {
 
     }
     @Override
-    public List<Connection> getPendingConnectionRequests(final EmailAddress internetAddress) {
+    public List<Connection> getPendingConnectionRequests(final EmailAddress internetAddress) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
             final Query q = pm.newQuery(ConnectionRequestEntity.class);

@@ -4,6 +4,7 @@ package integration;/*
  * This source code is distributed under GPL v3 without any warranty.
  */
 
+import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
@@ -59,7 +60,7 @@ public class SeriesTest {
 
     @Test
     @Ignore
-    public void testFileDownload() {
+    public void testFileDownload() throws NimbitsException {
         Calendar s = Calendar.getInstance();
         String fn = "/tmp/b1.json";
         s.set(2009, 0, 1);

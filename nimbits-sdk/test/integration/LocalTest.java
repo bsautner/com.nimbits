@@ -12,6 +12,7 @@ package integration;/*
  */
 
 import com.nimbits.client.NimbitsClient;
+import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.value.Value;
@@ -31,14 +32,15 @@ import static org.junit.Assert.assertNotNull;
  */
 public class LocalTest {
 
-    NimbitsClient c = ClientHelper.client();
 
 
 
 
 
     @Test
-    public void loadLineTest() throws IOException {
+    public void loadLineTest() throws IOException, NimbitsException {
+        NimbitsClient c = ClientHelper.client();
+
         long now = new Date().getTime();
         long then = now - 1000 * 100;
         double d = 0;

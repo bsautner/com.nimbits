@@ -6,6 +6,7 @@ package integration;/*
 
 import com.nimbits.client.NimbitsClient;
 import com.nimbits.client.NimbitsClientFactory;
+import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.EntityName;
@@ -45,7 +46,7 @@ class ClientHelper {
     //  private final static String appscale =  "http://127.0.0.1:8888";
     public  static String url;
 
-    public static NimbitsClient client() {
+    public static NimbitsClient client() throws NimbitsException {
        email =  "test@example.com";
 
         password = "92fd54a3-5d3b-4bfe-8636-7c9104c0012e";
@@ -72,7 +73,7 @@ class ClientHelper {
     }
 
 
-    public static Point createSeedPoint(EntityName name) {
+    public static Point createSeedPoint(EntityName name) throws NimbitsException {
 
 
         Point point = client().addPoint(name);

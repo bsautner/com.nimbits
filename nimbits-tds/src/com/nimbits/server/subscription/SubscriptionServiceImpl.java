@@ -78,7 +78,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
 
         final List<Subscription> subscriptions= getSubscriptionsToPoint(point);
-        log.info("processing " + subscriptions.size() + "subscriptions");
+        log.info("processing " + subscriptions.size() + " subscriptions");
 
         for (final Subscription subscription : subscriptions) {
 
@@ -86,6 +86,8 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
 
                 log.info("Processing Subscription " + subscription.getKey());
+                subscription.setLastSent(new Date());
+                SubscriptionServiceFactory.getInstance().updateSubscriptionLastSent(subscription);
                 final Entity subscriptionEntity = EntityServiceFactory.getInstance().getEntityByKey(user, subscription.getKey());
                 //todo - handle subscribed to object deleted
                 if (subscriptionEntity != null ) {
@@ -157,7 +159,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
             if (entity.getOwner().equals(user.getKey())) {   //subscribe to your own data
                 final Entity s = EntityModelFactory.createEntity(name, "",EntityType.subscription,
                         ProtectionLevel.onlyMe, entity.getKey(), user.getKey());
-                Entity r = EntityTransactionFactory.getInstance(user).addUpdateEntity(s);
+                final Entity r = EntityTransactionFactory.getInstance(user).addUpdateEntity(s);
                 SubscriptionTransactionFactory.getInstance(user).subscribe(r, subscription);
                 return  r;
             }
@@ -246,7 +248,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
     private static void postToFB(final Point p, final Entity entity, final User u, final Value v) throws NimbitsException {
 
-        String m = ("Data Point #" + entity.getName().getValue() + " = " + v);
+        String m = ("Data Point #" + entity.getName().getValue() + " = " + v.getDoubleValue());
         if (v.getNote() != null) {
             m += ' ' + v.getNote();
         }

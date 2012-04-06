@@ -245,7 +245,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
                 "</P>";
     }
     @Override
-    public List<Connection> getPendingConnectionRequests(final EmailAddress email) {
+    public List<Connection> getPendingConnectionRequests(final EmailAddress email) throws NimbitsException {
         return UserTransactionFactory.getInstance().getPendingConnectionRequests(email);
     }
 

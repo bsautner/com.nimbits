@@ -11,12 +11,13 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server.connections;
+package com.nimbits.client.model.connection;
 
-import com.nimbits.client.model.connection.*;
-import com.nimbits.server.orm.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.server.orm.ConnectionRequestEntity;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by bsautner
@@ -27,12 +28,12 @@ import java.util.*;
 public class ConnectionRequestModelFactory {
 
 
-    public static ConnectionRequestModel CreateConnectionRequestModel(final ConnectionRequestEntity c) {
+    public static ConnectionRequestModel CreateConnectionRequestModel(final ConnectionRequestEntity c) throws NimbitsException {
         return new ConnectionRequestModel(c);
     }
 
-    public static List<Connection> CreateConnectionRequestModels(final List<ConnectionRequestEntity> cl) {
-        final List<Connection> retObj = new ArrayList<Connection>();
+    public static List<Connection> CreateConnectionRequestModels(final List<ConnectionRequestEntity> cl) throws NimbitsException {
+        final List<Connection> retObj = new ArrayList<Connection>(cl.size());
         for (final ConnectionRequestEntity c : cl) {
             retObj.add(new ConnectionRequestModel(c));
         }

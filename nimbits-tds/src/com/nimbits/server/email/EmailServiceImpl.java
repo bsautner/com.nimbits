@@ -21,6 +21,7 @@ import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.server.common.*;
+import com.nimbits.server.logging.LogHelper;
 import com.nimbits.server.settings.*;
 
 import javax.mail.*;
@@ -43,7 +44,9 @@ public class EmailServiceImpl implements EmailService {
             Transport.send(msg);
 
         } catch (MessagingException e) {
-            log.severe(e.getMessage());
+
+
+            LogHelper.logException(EmailServiceImpl.class, e);
 
         }
 
@@ -53,9 +56,9 @@ public class EmailServiceImpl implements EmailService {
     public void sendEmail(final EmailAddress emailAddress, final String message) {
         final Properties props = new Properties();
         final Session session = Session.getDefaultInstance(props, null);
-
+        log.info(emailAddress + " " + message);
         try {
-            InternetAddress internetAddress = new InternetAddress(emailAddress.getValue());
+            final InternetAddress internetAddress = new InternetAddress(emailAddress.getValue());
             final Message msg = new MimeMessage(session);
             msg.setFrom(getFromEmail());
             msg.addRecipient(Message.RecipientType.TO, internetAddress);
@@ -64,11 +67,11 @@ public class EmailServiceImpl implements EmailService {
             send(msg);
 
         } catch (AddressException e) {
-            log.severe(e.getMessage());
+            LogHelper.logException(EmailServiceImpl.class, e);
         } catch (MessagingException e) {
-            log.severe(e.getMessage());
+            LogHelper.logException(EmailServiceImpl.class, e);
         } catch (UnsupportedEncodingException e) {
-            log.severe(e.getMessage());
+            LogHelper.logException(EmailServiceImpl.class, e);
         }
     }
 
@@ -79,7 +82,7 @@ public class EmailServiceImpl implements EmailService {
         final Properties props = new Properties();
         final Session session = Session.getDefaultInstance(props, null);
         try {
-
+            log.info(emailAddress + " " + message);
             final InternetAddress internetAddress = new InternetAddress(emailAddress.getValue());
             final Message msg = new MimeMessage(session);
             msg.setFrom(getFromEmail());
@@ -90,11 +93,11 @@ public class EmailServiceImpl implements EmailService {
             Transport.send(msg);
 
         } catch (AddressException e) {
-            log.severe(e.getMessage());
+            LogHelper.logException(EmailServiceImpl.class, e);
         } catch (MessagingException e) {
-            log.severe(e.getMessage());
+            LogHelper.logException(EmailServiceImpl.class, e);
         } catch (UnsupportedEncodingException e) {
-            log.severe(e.getMessage());
+            LogHelper.logException(EmailServiceImpl.class, e);
         }
     }
     @Override
@@ -105,6 +108,7 @@ public class EmailServiceImpl implements EmailService {
         final Properties props = new Properties();
         final Session session = Session.getDefaultInstance(props, null);
         try {
+            log.info(emailAddress + " " + message);
             final InternetAddress internetAddress = new InternetAddress(emailAddress.getValue());
             final InternetAddress from = new InternetAddress(fromEmail.getValue());
             final Message msg = new MimeMessage(session);
@@ -116,9 +120,9 @@ public class EmailServiceImpl implements EmailService {
             Transport.send(msg);
 
         } catch (AddressException e) {
-            log.severe(e.getMessage());
+            LogHelper.logException(EmailServiceImpl.class, e);
         } catch (MessagingException e) {
-            log.severe(e.getMessage());
+            LogHelper.logException(EmailServiceImpl.class, e);
         }
     }
     private static InternetAddress getFromEmail() throws UnsupportedEncodingException {
@@ -179,7 +183,7 @@ public class EmailServiceImpl implements EmailService {
         try {
 
             final Message msg = new MimeMessage(session);
-            InternetAddress from = getFromEmail();
+            final InternetAddress from = getFromEmail();
             if (from == null) {
                 log.severe("Null email from sendAlert");
             } else
@@ -189,14 +193,15 @@ public class EmailServiceImpl implements EmailService {
             msg.addRecipient(Message.RecipientType.TO, internetAddress);
             msg.setSubject(DEFAULT_EMAIL_SUBJECT);
             msg.setContent(message.toString(), Const.CONTENT_TYPE_HTML);
+            log.info(emailAddress + " " + message);
             send(msg);
             }
         } catch (AddressException e) {
-            log.severe(e.getMessage());
+            LogHelper.logException(EmailServiceImpl.class, e);
         } catch (MessagingException e) {
-            log.severe(e.getMessage());
+            LogHelper.logException(EmailServiceImpl.class, e);
         } catch (UnsupportedEncodingException e) {
-            log.severe(e.getMessage());
+            LogHelper.logException(EmailServiceImpl.class, e);
         }
     }
 }

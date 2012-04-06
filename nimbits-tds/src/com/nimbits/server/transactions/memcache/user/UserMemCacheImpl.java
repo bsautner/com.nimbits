@@ -42,7 +42,7 @@ public class UserMemCacheImpl implements UserTransactions {
 
     protected  void addUserToCache(final User user) throws NimbitsException {
         if (cache.contains(MemCacheHelper.allUsersCacheKey)) {
-            Map<EmailAddress, User> users = (Map<EmailAddress, User>) cache.get(MemCacheHelper.allUsersCacheKey);
+            final Map<EmailAddress, User> users = (Map<EmailAddress, User>) cache.get(MemCacheHelper.allUsersCacheKey);
             if (users.containsKey(user.getEmail())) {
                 users.remove(user.getEmail());
             }
@@ -110,7 +110,7 @@ public class UserMemCacheImpl implements UserTransactions {
     }
 
     @Override
-    public List<User> getAllUsers(final String sortColumn, int count) {
+    public List<User> getAllUsers(final String sortColumn, final int count) {
 //        if (cache.contains(allUsersCacheKey)) {
 //            HashMap<EmailAddress, User> users = (HashMap<EmailAddress, User>) cache.get(allUsersCacheKey);
 //            List<User> list = new ArrayList<User>();
@@ -148,7 +148,7 @@ public class UserMemCacheImpl implements UserTransactions {
     }
 
     @Override
-    public List<Connection> getPendingConnectionRequests(final EmailAddress email) {
+    public List<Connection> getPendingConnectionRequests(final EmailAddress email) throws NimbitsException {
         return UserTransactionFactory.getDAOInstance().getPendingConnectionRequests(email);
     }
 
@@ -174,12 +174,12 @@ public class UserMemCacheImpl implements UserTransactions {
     }
 
     @Override
-    public User getUserByKey(String subscriberUUID) throws NimbitsException {
+    public User getUserByKey(final String subscriberUUID) throws NimbitsException {
         return UserTransactionFactory.getDAOInstance().getUserByKey(subscriberUUID);
     }
 
     @Override
-    public List<User> getConnectionRequests(List<String> connections) throws NimbitsException {
+    public List<User> getConnectionRequests(final List<String> connections) throws NimbitsException {
         return UserTransactionFactory.getDAOInstance().getConnectionRequests(connections);
     }
 

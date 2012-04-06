@@ -35,7 +35,7 @@ public interface UserTransactions {
 
     Connection makeConnectionRequest(final User u, final EmailAddress emailAddress) throws NimbitsException;
 
-    List<Connection> getPendingConnectionRequests(final EmailAddress emailAddress);
+    List<Connection> getPendingConnectionRequests(final EmailAddress emailAddress) throws NimbitsException;
 
     void updateConnectionRequest(final Long key, final User requestor, final User acceptor, final boolean accepted) throws NimbitsException;
 

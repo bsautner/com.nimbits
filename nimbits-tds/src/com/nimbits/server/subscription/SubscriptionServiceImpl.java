@@ -29,6 +29,7 @@ import com.nimbits.server.entity.*;
 import com.nimbits.server.facebook.*;
 import com.nimbits.server.feed.*;
 import com.nimbits.server.gson.*;
+import com.nimbits.server.orm.*;
 import com.nimbits.server.twitter.*;
 import com.nimbits.server.user.*;
 import com.nimbits.server.value.*;
@@ -88,7 +89,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
                 log.info("Processing Subscription " + subscription.getKey());
                 subscription.setLastSent(new Date());
                 SubscriptionServiceFactory.getInstance().updateSubscriptionLastSent(subscription);
-                final Entity subscriptionEntity = EntityServiceFactory.getInstance().getEntityByKey(user, subscription.getKey());
+                final Entity subscriptionEntity = EntityServiceFactory.getInstance().getEntityByKey(user, subscription.getKey(), EntityStore.class.getName());
                 //todo - handle subscribed to object deleted
                 if (subscriptionEntity != null ) {
 
@@ -159,7 +160,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
             if (entity.getOwner().equals(user.getKey())) {   //subscribe to your own data
                 final Entity s = EntityModelFactory.createEntity(name, "",EntityType.subscription,
                         ProtectionLevel.onlyMe, entity.getKey(), user.getKey());
-                final Entity r = EntityTransactionFactory.getInstance(user).addUpdateEntity(s);
+                final Entity r = EntityServiceFactory.getInstance().addUpdateEntity(user, s);
                 SubscriptionTransactionFactory.getInstance(user).subscribe(r, subscription);
                 return  r;
             }
@@ -183,7 +184,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
     public Entity getSubscribedEntity(final Entity entity) throws NimbitsException {
         final Subscription subscription =
                 SubscriptionTransactionFactory.getInstance(getUser()).readSubscription(entity);
-        return EntityServiceFactory.getInstance().getEntityByKey(getUser(), subscription.getSubscribedEntity());
+        return EntityServiceFactory.getInstance().getEntityByKey(getUser(), subscription.getSubscribedEntity(), PointEntity.class.getName());
 
     }
 

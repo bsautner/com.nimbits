@@ -24,6 +24,7 @@ import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.service.recordedvalues.*;
 import com.nimbits.server.entity.*;
+import com.nimbits.server.orm.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.task.*;
 import com.nimbits.server.user.*;
@@ -43,7 +44,8 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
         // final User u = UserServiceFactory.getInstance().getAppUserUsingGoogleAuth();
         //  final User pointOwner = UserTransactionFactory.getInstance().getNimbitsUserByID(pointOwnerId);
-        final Point p = PointServiceFactory.getInstance().getPointByKey(entity.getKey());
+       // final Point p = PointServiceFactory.getInstance().getPointByKey(entity.getKey());
+        Point p = (Point) EntityServiceFactory.getInstance().getEntityByKey(entity.getKey(), PointEntity.class.getName());
 
 
         return getCurrentValue(p);
@@ -62,7 +64,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
     public List<Value> getTopDataSeries(final Entity entity,
                                         final int maxValues,
                                         final Date endDate) throws NimbitsException {
-        final Point p = PointServiceFactory.getInstance().getPointByKey(entity.getKey());
+        Point p = (Point) EntityServiceFactory.getInstance().getEntityByKey(entity.getKey(), PointEntity.class.getName());
         return RecordedValueTransactionFactory.getInstance(p).getTopDataSeries(maxValues, endDate);
     }
     //called from RPC Client
@@ -80,8 +82,9 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
     }
     @Override
     public List<Value> getCache(final Entity entity) throws NimbitsException {
-        final Point point = PointServiceFactory.getInstance().getPointByKey(entity.getKey());
-        return RecordedValueTransactionFactory.getInstance(point).getBuffer();
+      //  final Point point = PointServiceFactory.getInstance().getPointByKey(entity.getKey());
+        Point p = (Point) EntityServiceFactory.getInstance().getEntityByKey(entity.getKey(), PointEntity.class.getName());
+        return RecordedValueTransactionFactory.getInstance(p).getBuffer();
     }
 
     @Override
@@ -98,8 +101,8 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
                                              final Timespan timespan,
                                              final int start,
                                              final int end) throws NimbitsException {
-        final Point point = PointServiceFactory.getInstance().getPointByKey(entity.getKey());
-
+      //  final Point point = PointServiceFactory.getInstance().getPointByKey(entity.getKey());
+        Point point = (Point) EntityServiceFactory.getInstance().getEntityByKey(entity.getKey(), PointEntity.class.getName());
         return RecordedValueTransactionFactory.getInstance(point).getDataSegment(timespan, start, end);
     }
 
@@ -110,7 +113,8 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
         final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
                 this.getThreadLocalRequest());
 
-        final Point px = PointServiceFactory.getInstance().getPointByKey(point.getKey());
+//        final Point px = PointServiceFactory.getInstance().getPointByKey(point.getKey());
+        Point px = (Point) EntityServiceFactory.getInstance().getEntityByKey(point.getKey(), PointEntity.class.getName());
         return recordValue(u, px, value, false);
     }
 
@@ -142,10 +146,10 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
                              final Value value) throws NimbitsException {
 
 
-        final Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName, EntityType.point);
-        final Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
+        final Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName, PointEntity.class.getName());
+      //  final Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
 
-        return (point != null) ? recordValue(u, point, value, false) : null;
+        return (e != null) ? recordValue(u, (PointModel) e, value, false) : null;
 
     }
 

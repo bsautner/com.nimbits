@@ -24,6 +24,7 @@ import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.xmpp.*;
 import com.nimbits.client.service.xmpp.XMPPService;
 import com.nimbits.server.entity.*;
+import com.nimbits.server.orm.*;
 import com.nimbits.server.user.*;
 
 import java.util.*;
@@ -67,7 +68,7 @@ public class XmppServiceImpl extends RemoteServiceServlet implements XMPPService
     @Override
     public void sendMessage(final List<XmppResource> resources, final String message, final EmailAddress email) throws NimbitsException {
         for (XmppResource resource : resources) {
-            Entity entity = EntityServiceFactory.getInstance().getEntityByKey(resource.getKey());
+            Entity entity = EntityServiceFactory.getInstance().getEntityByKey(resource.getKey(),PointEntity.class.getName());
             final JID jid;
             if (entity != null) {
               jid = new JID(email.getValue() + "/" + entity.getName().getValue());

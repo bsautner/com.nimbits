@@ -27,6 +27,7 @@ import com.nimbits.client.model.value.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.json.*;
+import com.nimbits.server.orm.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.user.*;
 import com.nimbits.server.value.*;
@@ -106,7 +107,8 @@ public class XMPPReceiverServlet extends HttpServlet {
 
         switch (action) {
             case record:
-                Point point = PointServiceFactory.getInstance().getPointByKey(p.getKey());
+              //  Point point = PointServiceFactory.getInstance().getPointByKey(p.getKey());
+                Point point = (Point) EntityServiceFactory.getInstance().getEntityByKey(p.getKey(), PointEntity.class.getName());
 
                 if (point != null) {
 
@@ -171,7 +173,8 @@ public class XMPPReceiverServlet extends HttpServlet {
             final EntityName pointName = CommonFactoryLocator.getInstance().createName(body.replace("?", ""), EntityType.point);
 
             Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName,EntityType.point);
-            Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
+           // Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
+            Point point = (Point) EntityServiceFactory.getInstance().getEntityByKey(e.getKey(), PointEntity.class.getName());
 
             String t = "";
 

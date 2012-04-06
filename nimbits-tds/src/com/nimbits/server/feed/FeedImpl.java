@@ -17,9 +17,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.nimbits.client.common.Utils;
 import com.nimbits.client.constants.Const;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.FeedType;
-import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
@@ -37,6 +35,7 @@ import com.nimbits.server.common.ServerInfoImpl;
 import com.nimbits.server.entity.EntityServiceFactory;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.logging.LogHelper;
+import com.nimbits.server.orm.*;
 import com.nimbits.server.point.PointServiceFactory;
 import com.nimbits.server.relationship.RelationshipTransactionFactory;
 import com.nimbits.server.user.UserServiceFactory;
@@ -243,14 +242,14 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
 
     private Point getFeedPoint(final User user) throws NimbitsException {
         final Point point;
-        final Map<String, Entity> map =  EntityServiceFactory.getInstance().getEntityMap(user, EntityType.feed);
+        final Map<String, Entity> map =  EntityServiceFactory.getInstance().getEntityMap(user, EntityType.feed, 1);
 
         if (map.isEmpty()) {
             point = createFeedPoint(user);
         }
         else {
-            final Entity e =  map.values().iterator().next();
-            point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
+            return (Point) map.values().iterator().next();
+
         }
         return point;
     }
@@ -316,11 +315,11 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
 
         final Entity entity = EntityModelFactory.createEntity(name, "", EntityType.feed,
                 ProtectionLevel.onlyConnection, user.getKey(), user.getKey());
-        final Entity r = EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
+       // final Entity r = EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
 
 
 
-        final Point point =  PointServiceFactory.getInstance().addPoint(user, r);
+        final Point point =  PointServiceFactory.getInstance().addPoint(user, entity);
 
 
         postToFeed(user, "A new data point has been created for your data feed. Your data feed is just " +

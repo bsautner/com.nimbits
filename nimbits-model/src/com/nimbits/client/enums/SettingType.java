@@ -12,7 +12,6 @@ import java.util.*;
  */
 public enum SettingType {
 
-
     lastChecked(SettingConstants.SETTING_LAST_CHECKED, new Date().toString(), true, true),
     serverVersion(SettingConstants.SETTING_VERSION, SettingConstants.CONST_SERVER_VERSION, true, true),
     serverIsDiscoverable(SettingConstants.SETTING_SERVER_IS_DISCOVERABLE,Const.TRUE, false, true),
@@ -108,5 +107,8 @@ public enum SettingType {
         private static final String SETTING_TEST_PASSWORD = "testPassword";
         private static final String SETTING_TEST_URL = "testURL";
         private static final String SETTING_ENABLE_QUOTA = "SETTING_ENABLE_QUOTA";
+
+        private SettingConstants() {
+        }
     }
 }

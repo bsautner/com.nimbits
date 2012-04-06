@@ -22,6 +22,7 @@ import com.nimbits.client.model.user.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.logging.*;
+import com.nimbits.server.orm.*;
 import com.nimbits.server.user.*;
 
 import javax.servlet.*;
@@ -77,7 +78,7 @@ public class BlobServlet extends HttpServlet {
             }
             else if (uploadType.equals(UploadType.updatedFile.name()) && entityId != null) {
 
-                entity = EntityServiceFactory.getInstance().getEntityByKey(u, entityId);
+                entity = EntityServiceFactory.getInstance().getEntityByKey(u, entityId, EntityStore.class.getName());
                 entity.setBlobKey(blobKey.getKeyString());
 
 

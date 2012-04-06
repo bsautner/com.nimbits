@@ -37,7 +37,7 @@ public interface PointService extends RemoteService {
 
   //  List<Point> getPoints() throws NimbitsException;
 
-     List<Point> getPoints(final User u, List<Entity> entities);
+     List<Entity> getPoints(final User u, List<Entity> entities) throws NimbitsException;
 
     Point updatePoint(final Point point) throws NimbitsException;
 
@@ -45,7 +45,7 @@ public interface PointService extends RemoteService {
 
    //  List<Point> getPoints(final User u) throws NimbitsException;
 
-    Point getPointByKey(final String uuid) throws NimbitsException;
+  //  Point getPointByKey(final String uuid) throws NimbitsException;
 
    // Point getPointByID(final long id) throws NimbitsException;
 
@@ -53,7 +53,7 @@ public interface PointService extends RemoteService {
 
    // List<Point> getAllPoints(final int start, final int end);
 
-     List<Point> getIdlePoints();
+     List<Entity> getIdlePoints() throws NimbitsException;
 
    // List<Point> getAllPoints();
 
@@ -61,5 +61,5 @@ public interface PointService extends RemoteService {
 
     Map<String,Point> getPoints(final Map<String, Entity> entities) throws NimbitsException;
   //
-    void deletePoint(final User user, final Entity entity);
+    void deletePoint(final User user, final Entity entity) throws NimbitsException;
 }

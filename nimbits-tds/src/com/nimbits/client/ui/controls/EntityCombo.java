@@ -44,7 +44,7 @@ public class EntityCombo extends ComboBox<GxtModel> {
 
 
 
-        service.getEntityMap(type, new AsyncCallback<Map<String, Entity>>() {
+        service.getEntityMap(type, 100,  new AsyncCallback<Map<String, Entity>>() {
             @Override
             public void onFailure(final Throwable caught) {
                 GWT.log(caught.getMessage(), caught);

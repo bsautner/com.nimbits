@@ -54,6 +54,6 @@ public interface Entity  extends Serializable {
 
     void setBlobKey(String blobKey);
 
-    void setPoints(List<Point> points);
+    void setPoints(List<Entity> points);
 
 }

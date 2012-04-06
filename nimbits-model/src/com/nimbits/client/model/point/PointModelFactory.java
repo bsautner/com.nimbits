@@ -6,8 +6,10 @@
 
 package com.nimbits.client.model.point;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.entity.*;
+
+import java.util.*;
 
 /**
  * Created by bsautner
@@ -18,6 +20,9 @@ import java.util.List;
 public class PointModelFactory {
 
 
+    private PointModelFactory() {
+    }
+
     public static PointModel createPointModel() {
 
         return new PointModel();
@@ -26,25 +31,11 @@ public class PointModelFactory {
 
 
 
-    public static PointModel createPointModel(final Point p) {
+    public static PointModel createPointModel(final Entity p) throws NimbitsException {
 
         return new PointModel(p);
 
     }
-
-
-    public static List<Point> createPointModels(final List<Point> points) {
-        final List<Point> retObj = new ArrayList<Point>(points.size());
-
-        for (final Point p : points) {
-            retObj.add(createPointModel(p));
-        }
-
-        return retObj;
-
-
-    }
-
 
 
 }

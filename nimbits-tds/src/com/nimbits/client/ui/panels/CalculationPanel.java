@@ -38,6 +38,7 @@ import com.nimbits.client.service.entity.*;
 import com.nimbits.client.ui.controls.*;
 import com.nimbits.client.ui.helper.*;
 import com.nimbits.client.ui.icons.*;
+import com.nimbits.server.orm.*;
 
 
 /**
@@ -248,7 +249,7 @@ public class CalculationPanel extends NavigationEventProvider {
         else {
             EntityServiceAsync svc = GWT.create(EntityService.class);
 
-            svc.getEntityByKey(calculation.getTrigger(), new AsyncCallback<Entity>() {
+            svc.getEntityByKey(calculation.getTrigger(), EntityType.point.getClassName(),  new AsyncCallback<Entity>() {
                 @Override
                 public void onFailure(Throwable throwable) {
                     GWT.log(throwable.getMessage(), throwable);

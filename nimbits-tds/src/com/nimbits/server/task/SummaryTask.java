@@ -21,9 +21,11 @@ import com.nimbits.client.model.summary.*;
 import com.nimbits.client.model.timespan.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.server.entity.*;
 import com.nimbits.server.feed.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.logging.*;
+import com.nimbits.server.orm.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.summary.*;
 import com.nimbits.server.user.*;
@@ -64,7 +66,9 @@ public class SummaryTask  extends HttpServlet {
             if (summary.getLastProcessed().getTime() < d) {
 
                 try {
-                    final Point source = PointServiceFactory.getInstance().getPointByKey(summary.getEntity());
+                   // final Point source = PointServiceFactory.getInstance().getPointByKey(summary.getEntity());
+                    final Point source = (Point) EntityServiceFactory.getInstance().getEntityByKey(summary.getEntity(), PointEntity.class.getName());
+
                     final Timespan span = TimespanModelFactory.createTimespan(new Date(now.getTime() - summary.getSummaryIntervalMs()), now);
                     final List<Value> values;
                     values = RecordedValueServiceFactory.getInstance().getDataSegment(source, span);
@@ -75,7 +79,9 @@ public class SummaryTask  extends HttpServlet {
                     }
                     if (!values.isEmpty()) {
                         // final Entity targetEntity = EntityServiceFactory.getInstance().getEntityByUUID(summary.getTargetPointUUID());
-                        final Point target = PointServiceFactory.getInstance().getPointByKey(summary.getTargetPointUUID());
+                      //  final Point target = PointServiceFactory.getInstance().getPointByKey(summary.getTargetPointUUID());
+                        final Point target = (Point) EntityServiceFactory.getInstance().getEntityByKey(summary.getTargetPointUUID(), PointEntity.class.getName());
+
                         final double result = getValue(summary.getSummaryType(), doubles);
                         final Value value = ValueModelFactory.createValueModel(result);
 

@@ -26,6 +26,7 @@ import com.nimbits.server.api.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.feed.*;
 import com.nimbits.server.gson.*;
+import com.nimbits.server.orm.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.value.*;
 
@@ -73,13 +74,12 @@ public class ValueServletImpl extends ApiServlet {
         if (user != null && ! user.isRestricted()) {
 
             final EntityName pointName = CommonFactoryLocator.getInstance().createName(getParam(Parameters.point), EntityType.point);
-            final Entity e = EntityServiceFactory.getInstance().getEntityByName(user, pointName,EntityType.point);
+            final Point point = (Point) EntityServiceFactory.getInstance().getEntityByName(user, pointName,PointEntity.class.getName());
 
-            if (e != null) {
-                final Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
+            if (point != null) {
 
 
-                if (point != null) {
+                {
 
                     final Value v;
 
@@ -101,8 +101,6 @@ public class ValueServletImpl extends ApiServlet {
                     final String j = GsonFactory.getInstance().toJson(result);
                     out.print(j);
 
-                } else {
-                    FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(UserMessages.ERROR_POINT_NOT_FOUND));
                 }
             }
             else {
@@ -157,13 +155,16 @@ public class ValueServletImpl extends ApiServlet {
         final String result;
 
         if (!Utils.isEmptyString(uuid)) {
-            p = PointServiceFactory.getInstance().getPointByKey(uuid);
+            p = (Point) EntityServiceFactory.getInstance().getEntityByKey(uuid, PointEntity.class.getName());
+
+           // p = PointServiceFactory.getInstance().getPointByKey(uuid);
 
         } else if (!Utils.isEmptyString(pointNameParam)) {
             final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
-            final Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName,EntityType.point);
+            final Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName,PointEntity.class.getName());
             if (e != null) {
-                p = PointServiceFactory.getInstance().getPointByKey(e.getKey());
+                p = (Point) EntityServiceFactory.getInstance().getEntityByKey(e.getKey(), PointEntity.class.getName());
+
             }
             else {
                 throw new NimbitsException(UserMessages.ERROR_POINT_NOT_FOUND);
@@ -176,7 +177,7 @@ public class ValueServletImpl extends ApiServlet {
 
         if (p != null) {
             final Value value;
-            final Entity e = EntityServiceFactory.getInstance().getEntityByKey(p.getKey());
+            final Entity e = EntityServiceFactory.getInstance().getEntityByKey(p.getKey(), PointEntity.class.getName());
 
             if ((u == null || u.isRestricted()) && ! e.getProtectionLevel().equals(ProtectionLevel.everyone)) {
                 throw new NimbitsException(UserMessages.RESPONSE_PROTECTED_POINT);

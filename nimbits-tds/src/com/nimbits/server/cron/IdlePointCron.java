@@ -21,6 +21,7 @@ import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.server.entity.*;
+import com.nimbits.server.logging.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.subscription.*;
 import com.nimbits.server.user.*;
@@ -45,16 +46,20 @@ public class IdlePointCron extends HttpServlet {
             throws IOException {
         // PrintWriter out;
         // out = resp.getWriter();
-        processGet();
+        try {
+            processGet();
+        } catch (NimbitsException e) {
+            LogHelper.logException(IdlePointCron.class, e);
+        }
 
     }
 
-    protected static int processGet() {
-        final List<Point> points = PointServiceFactory.getInstance().getIdlePoints();
+    protected static int processGet() throws NimbitsException {
+        final List<Entity> points = PointServiceFactory.getInstance().getIdlePoints();
 
-        for (final Point p : points) {
+        for (final Entity p : points) {
             try {
-                checkIdle(p);
+                checkIdle((Point) p);
             } catch (NimbitsException e) {
                 log.severe(e.getMessage());
                 log.severe(ExceptionUtils.getStackTrace(e));

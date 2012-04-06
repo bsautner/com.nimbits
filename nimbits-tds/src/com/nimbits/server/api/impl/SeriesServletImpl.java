@@ -25,6 +25,7 @@ import com.nimbits.server.api.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.feed.*;
 import com.nimbits.server.gson.*;
+import com.nimbits.server.orm.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.time.*;
 import com.nimbits.server.value.*;
@@ -86,9 +87,9 @@ public class SeriesServletImpl extends ApiServlet {
 
 
                 final EntityName pointName = CommonFactoryLocator.getInstance().createName(getParam(Parameters.point), EntityType.point);
-                Entity e = EntityServiceFactory.getInstance().getEntityByName(user, pointName,EntityType.point);
-                final Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
+                Point point = (Point) EntityServiceFactory.getInstance().getEntityByName(user, pointName,PointEntity.class.getName());
 
+               // final Point point = (Point) EntityServiceFactory.getInstance().getEntityByKey(e.getKey(), PointEntity.class.getName());
                 if (point == null) {
                     out.println("Point not found");
                 } else {

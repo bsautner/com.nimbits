@@ -29,6 +29,7 @@ import com.nimbits.client.service.intelligence.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.feed.*;
 import com.nimbits.server.http.*;
+import com.nimbits.server.orm.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.settings.*;
 import com.nimbits.server.user.*;
@@ -235,7 +236,8 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
         for (Intelligence i : list) {
             try {
-                Point target = PointServiceFactory.getInstance().getPointByKey(i.getTarget());
+               // Point target = PointServiceFactory.getInstance().getPointByKey(i.getTarget());
+                final Point target = (Point) EntityServiceFactory.getInstance().getEntityByKey(i.getTarget(), PointEntity.class.getName());
 
                 if (target!= null) {
 
@@ -258,7 +260,9 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
     @Override
     public Value processInput(final Intelligence update) throws NimbitsException {
         String processedInput = addDataToInput(getUser(), update.getInput());
-        Point target = PointServiceFactory.getInstance().getPointByKey(update.getTarget());
+        final Point target = (Point) EntityServiceFactory.getInstance().getEntityByKey(update.getTarget(), PointEntity.class.getName());
+
+      //  Point target = PointServiceFactory.getInstance().getPointByKey(update.getTarget());
         return processInput(update, target, processedInput);
 
     }
@@ -287,11 +291,14 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
                     a = a.substring(0, a.indexOf("]"));
                     String r = "[" + pointName + "." + a + "]";
-                    Point inputPoint;
 
 
-                    Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName,EntityType.point);
-                    inputPoint= PointServiceFactory.getInstance().getPointByKey(e.getKey());
+
+                   // Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName,EntityType.point);
+                    Point inputPoint = (Point) EntityServiceFactory.getInstance().getEntityByName(u, pointName,PointEntity.class.getName());
+
+                    // inputPoint= PointServiceFactory.getInstance().getPointByKey(e.getKey());
+                   // inputPoint = (Point) EntityServiceFactory.getInstance().getEntityByKey(e.getKey(), PointEntity.class.getName());
 
                     if (inputPoint != null) {
                         Value inputValue = RecordedValueServiceFactory.getInstance().getCurrentValue(inputPoint);

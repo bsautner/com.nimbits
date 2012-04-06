@@ -75,8 +75,8 @@ public class TestUpgradeTask extends NimbitsServletTest {
         UpgradeTask.doCategory2(req);
         UpgradeTask.doPoint2(req);
         for (User u : users) {
-            Map<String, Entity> cmap = EntityServiceFactory.getInstance().getEntityMap(u, EntityType.category);
-            Map<String, Entity> pmap = EntityServiceFactory.getInstance().getEntityMap(u, EntityType.point);
+            Map<String, Entity> cmap = EntityServiceFactory.getInstance().getEntityMap(u, EntityType.category, 1000);
+            Map<String, Entity> pmap = EntityServiceFactory.getInstance().getEntityMap(u, EntityType.point, 1000);
             if (u.getEmail().getValue().contains("test.com")) {
                 assertEquals(2, cmap.size());
                 assertEquals(4, pmap.size());

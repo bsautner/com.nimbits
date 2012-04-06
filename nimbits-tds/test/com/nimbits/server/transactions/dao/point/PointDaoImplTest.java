@@ -17,6 +17,7 @@ import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.server.entity.*;
+import com.nimbits.server.orm.*;
 import com.nimbits.server.point.*;
 import helper.*;
 import static org.junit.Assert.*;
@@ -36,9 +37,9 @@ public class PointDaoImplTest extends NimbitsServletTest{
     public void getPointsTest() throws NimbitsException {
 
         List<Entity> e = new ArrayList<Entity>(2);
-        e.add(EntityServiceFactory.getInstance().getEntityByKey(point.getKey()));
-        e.add(EntityServiceFactory.getInstance().getEntityByKey(pointChild.getKey()));
-        List<Point> result = PointTransactionsFactory.getInstance(user).getPoints(e);
+        e.add(EntityServiceFactory.getInstance().getEntityByKey(point.getKey(),PointEntity.class.getName()));
+        e.add(EntityServiceFactory.getInstance().getEntityByKey(pointChild.getKey(),PointEntity.class.getName()));
+        List<Entity> result = PointTransactionsFactory.getInstance(user).getPoints(e);
         assertEquals(2, result.size());
 
 

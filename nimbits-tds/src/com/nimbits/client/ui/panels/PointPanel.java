@@ -39,6 +39,7 @@ import com.nimbits.client.service.entity.*;
 import com.nimbits.client.ui.controls.*;
 import com.nimbits.client.ui.helper.*;
 import com.nimbits.client.ui.icons.*;
+import com.nimbits.server.orm.*;
 
 import java.util.*;
 
@@ -54,7 +55,7 @@ public class PointPanel extends LayoutContainer {
     private final NumberField high = new NumberField();
     private final NumberField idleMinutes = new NumberField();
     private final NumberField low = new NumberField();
-    private final PointServiceAsync pointService = GWT.create(PointService.class);
+
     private final SeparatorToolItem separatorToolItem = new SeparatorToolItem();
     private final TextArea description = new TextArea();
     private final TextField<String> unit = new TextField<String>();
@@ -100,15 +101,16 @@ public class PointPanel extends LayoutContainer {
     }
 
     private void loadForm()  {
-        pointService.getPointByKey(entity.getKey(), new AsyncCallback<Point>() {
+        final EntityServiceAsync service = GWT.create(EntityService.class);
+        service.getEntityByKey(entity.getKey(), EntityType.point.getClassName(), new AsyncCallback<Entity>() {
             @Override
             public void onFailure(Throwable caught) {
                 GWT.log(caught.getMessage());
             }
 
             @Override
-            public void onSuccess(final Point p) {
-                buildForm(p);
+            public void onSuccess(final Entity p) {
+                buildForm((Point) p);
             }
 
             private void buildForm(final Point p) {
@@ -236,8 +238,8 @@ public class PointPanel extends LayoutContainer {
 
 
 
-
-        pointService.updatePoint(point, new AsyncCallback<Point>() {
+        PointServiceAsync service = GWT.create(PointService.class);
+        service.updatePoint(point, new AsyncCallback<Point>() {
             @Override
             public void onFailure(Throwable caught) {
                 MessageBox.alert("Alert", caught.getMessage(), null);

@@ -36,6 +36,7 @@ import com.nimbits.client.service.settings.*;
 import com.nimbits.client.service.twitter.*;
 import com.nimbits.client.ui.helper.*;
 import com.nimbits.client.ui.panels.*;
+import com.nimbits.server.orm.*;
 
 import java.util.*;
 
@@ -281,39 +282,11 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
 
 
-    public void showSubscriptionPanel(final String uuid, final Map<SettingType, String> settings) {
+    public static void showSubscriptionPanel(final String uuid, final Map<SettingType, String> settings) {
 
         EntityServiceAsync service = GWT.create(EntityService.class);
 
-        service.getEntityByKey(uuid, new AsyncCallback<Entity>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                FeedbackHelper.showError(caught);
-            }
-
-            @Override
-            public void onSuccess(Entity result) {
-                SubscriptionPanel dp = new SubscriptionPanel(result, settings);
-
-                final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
-                w.setWidth(500);
-                w.setHeight(500);
-                w.setHeading("Subscribe");
-                w.add(dp);
-                dp.addEntityAddedListener(new NavigationEventProvider.EntityAddedListener() {
-                    @Override
-                    public void onEntityAdded(Entity model) {
-                        w.hide();
-                        Cookies.removeCookie(Action.subscribe.name());
-                        //  mainPanel.addEntity(result);
-                        //TODO   mainPanel.addEnToTree(result);
-
-                    }
-                });
-
-                w.show();
-            }
-        });
+        service.getEntityByKey(uuid, EntityType.point.getClassName(), new SubscriptionPanelAsyncCallback(settings));
     }
 
     private void loadDiagramView(final Entity diagram) throws NimbitsException {
@@ -324,7 +297,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
         final ContentPanel contentPanel = new ContentPanel(new FillLayout());
         contentPanel.setHeaderVisible(true);
-        contentPanel.setHeading(Const.HTML_HOME_LINK + " | " + heading + " "
+        contentPanel.setHeading(Const.HTML_HOME_LINK + " | " + heading + ' '
                 + diagram.getName());
         contentPanel.setFrame(false);
 
@@ -386,7 +359,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
         EntityServiceAsync service = GWT.create(EntityService.class);
 
-        service.getEntityByKey(uuid, new AsyncCallback<Entity>() {
+        service.getEntityByKey(uuid,EntityType.point.getClassName(), new AsyncCallback<Entity>() {
             @Override
             public void onFailure(Throwable caught) {
                 FeedbackHelper.showError(caught);
@@ -440,5 +413,39 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
     }
 
 
+    private static class SubscriptionPanelAsyncCallback implements AsyncCallback<Entity> {
+        private final Map<SettingType, String> settings;
 
+        public SubscriptionPanelAsyncCallback(Map<SettingType, String> settings) {
+            this.settings = settings;
+        }
+
+        @Override
+        public void onFailure(Throwable caught) {
+            FeedbackHelper.showError(caught);
+        }
+
+        @Override
+        public void onSuccess(Entity result) {
+            SubscriptionPanel dp = new SubscriptionPanel(result, settings);
+
+            final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
+            w.setWidth(500);
+            w.setHeight(500);
+            w.setHeading("Subscribe");
+            w.add(dp);
+            dp.addEntityAddedListener(new EntityAddedListener() {
+                @Override
+                public void onEntityAdded(Entity model) {
+                    w.hide();
+                    Cookies.removeCookie(Action.subscribe.name());
+                    //  mainPanel.addEntity(result);
+                    //TODO   mainPanel.addEnToTree(result);
+
+                }
+            });
+
+            w.show();
+        }
+    }
 }

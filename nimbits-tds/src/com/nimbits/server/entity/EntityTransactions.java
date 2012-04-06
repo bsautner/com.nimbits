@@ -27,23 +27,25 @@ import java.util.*;
  */
 public interface EntityTransactions {
 
-    Map<String, Entity> getEntityMap(EntityType type) throws NimbitsException;
+    Map<String, Entity> getEntityMap( final EntityType type, final int limit) throws NimbitsException;
 
-    Map<EntityName, Entity> getEntityNameMap(EntityType type) throws NimbitsException;
+    Map<EntityName, Entity> getEntityNameMap( final EntityType type) throws NimbitsException;
 
-    List<Entity> getChildren(Entity parentEntity, EntityType type) throws NimbitsException;
+    List<Entity> getChildren( final Entity parentEntity,  final EntityType type) throws NimbitsException;
 
-    Entity addUpdateEntity(Entity entity) throws NimbitsException;
+    Entity addUpdateEntity( final Entity entity) throws NimbitsException;
 
     List<Entity> getEntities() throws NimbitsException;
 
-    List<Entity> deleteEntity(Entity entity) throws NimbitsException;
+    List<Entity> deleteEntity( final Entity entity) throws NimbitsException;
 
-    Entity getEntityByKey(String uuid) throws NimbitsException;
+    Entity getEntityByKey( final String uuid,  final Class<?> cls) throws NimbitsException;
 
-    Entity getEntityByName(EntityName name, EntityType type) throws NimbitsException;
+    Entity getEntityByName( final EntityName name,  final EntityType type) throws NimbitsException;
 
-    Map<String, Entity> getSystemWideEntityMap(EntityType type) throws NimbitsException;
+    Map<String, Entity> getSystemWideEntityMap( final EntityType type) throws NimbitsException;
 
-    void removeEntityFromCache(Entity entity) throws NimbitsException;
+    void removeEntityFromCache( final Entity entity) throws NimbitsException;
+
+    Entity getEntityByName( final EntityName name,  final Class<?> cls) throws NimbitsException;
 }

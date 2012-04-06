@@ -35,6 +35,7 @@ import java.util.*;
  */
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
+@Inheritance(customStrategy = "complete-table")
 public class EntityStore implements Entity {
 
     @PrimaryKey
@@ -82,7 +83,7 @@ public class EntityStore implements Entity {
                 this.key = KeyFactory.createKey(EntityStore.class.getSimpleName(), saferName.getValue());
             }
             else if (entity.getEntityType().equals(EntityType.point)) {
-                this.key =  KeyFactory.createKey(EntityStore.class.getSimpleName(), entity.getOwner() + "/" + saferName.getValue());
+                this.key =  KeyFactory.createKey(EntityStore.class.getSimpleName(), entity.getOwner() + '/' + saferName.getValue());
             }
             else {
                 this.key = KeyFactory.createKey(EntityStore.class.getSimpleName(), UUID.randomUUID().toString());
@@ -104,11 +105,44 @@ public class EntityStore implements Entity {
 
     }
 
+    public EntityStore(Class<?> cls, final Entity entity) throws NimbitsException {
+
+        EntityName saferName = CommonFactoryLocator.getInstance().createName(entity.getName().getValue(), entity.getEntityType());
+        if (Utils.isEmptyString(entity.getKey())) {
+            if (entity.getEntityType().equals(EntityType.user)) {
+                this.key = KeyFactory.createKey(cls.getSimpleName(), saferName.getValue());
+            }
+            else if (entity.getEntityType().equals(EntityType.point)) {
+                this.key =  KeyFactory.createKey(cls.getSimpleName(), entity.getOwner() + '/' + saferName.getValue());
+            }
+            else {
+                this.key = KeyFactory.createKey(cls.getSimpleName(), UUID.randomUUID().toString());
+            }
+
+        }
+        else {
+            this.key = KeyFactory.createKey(cls.getSimpleName(), entity.getKey());
+        }
+        this.name = saferName.getValue();
+        this.description = entity.getDescription();
+        this.entityType = entity.getEntityType().getCode();
+        this.parent = entity.getParent();
+        this.owner = entity.getOwner();
+        this.protectionLevel = entity.getProtectionLevel().getCode();
+        if (! Utils.isEmptyString(entity.getBlobKey()))  {
+            this.blobKey = new BlobKey(entity.getBlobKey());
+        }
+
+    }
+
     @Override
     public EntityName getName() {
         try {
-            return CommonFactoryLocator.getInstance().createName(name, EntityType.get(this.entityType));
+            return name != null ? CommonFactoryLocator.getInstance().createName(name, EntityType.get(this.entityType)) : null;
         } catch (NimbitsException e) {
+            return null;
+        }
+        catch (NullPointerException e) {
             return null;
         }
     }
@@ -225,7 +259,7 @@ public class EntityStore implements Entity {
     }
 
     @Override
-    public void setPoints(List<Point> points) {
+    public void setPoints(List<Entity> points) {
         //not implemented
     }
 

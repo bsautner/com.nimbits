@@ -38,7 +38,7 @@ public class PointMemCacheImpl implements PointTransactions {
     private final MemcacheService cache;
 
     @Override
-    public Point addPoint(Entity entity, Point point) {
+    public Point addPoint(Entity entity, Point point) throws NimbitsException {
         final Point retObj = PointTransactionsFactory.getDaoInstance(u).addPoint(entity, point);
         purgeMemCache(retObj);
         updateMap(retObj);
@@ -101,32 +101,32 @@ public class PointMemCacheImpl implements PointTransactions {
 //
 //    }
 
-    //these should not use the cache, since we don't know the user
-    @Override
-    public Point getPointByKey(final String uuid) throws NimbitsException {
-        return PointTransactionsFactory.getDaoInstance(u).getPointByKey(uuid);
-    }
+//    //these should not use the cache, since we don't know the user
+//    @Override
+//    public Point getPointByKey(final String uuid) throws NimbitsException {
+//        return PointTransactionsFactory.getDaoInstance(u).getPointByKey(uuid);
+//    }
 
     @Override
-    public List<Point> getAllPoints() {
+    public List<Entity> getAllPoints() throws NimbitsException {
         return PointTransactionsFactory.getDaoInstance(u).getAllPoints();
 
     }
 
     @Override
-    public Point addPoint(final Entity entity) {
+    public Point addPoint(final Entity entity) throws NimbitsException {
         final Point retObj = PointTransactionsFactory.getDaoInstance(u).addPoint(entity);
         updateMap(retObj);
         return retObj;
     }
 
     @Override
-    public List<Point> getPoints(final List<Entity> entities) {
+    public List<Entity> getPoints(final List<Entity> entities) throws NimbitsException {
         return PointTransactionsFactory.getDaoInstance(u).getPoints(entities);
     }
 
     @Override
-    public Point deletePoint(final Entity entity) {
+    public Point deletePoint(final Entity entity) throws NimbitsException {
        if (cache.contains(entity.getKey())) {
            cache.delete(entity.getKey());
        }
@@ -135,14 +135,14 @@ public class PointMemCacheImpl implements PointTransactions {
 
 
     @Override
-    public List<Point> getAllPoints(final int start,final  int end) {
+    public List<Entity> getAllPoints(final int start,final  int end) throws NimbitsException {
 
         return PointTransactionsFactory.getDaoInstance(u).getAllPoints(start, end);
 
     }
 
     @Override
-    public List<Point> getIdlePoints() {
+    public List<Entity> getIdlePoints() throws NimbitsException {
 
         return PointTransactionsFactory.getDaoInstance(u).getIdlePoints();
     }

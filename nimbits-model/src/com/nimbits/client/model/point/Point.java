@@ -14,6 +14,7 @@
 package com.nimbits.client.model.point;
 
 import com.nimbits.client.enums.FilterType;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.value.Value;
 
 import java.io.Serializable;
@@ -25,8 +26,9 @@ import java.util.List;
  * Date: 4/16/11
  * Time: 12:04 PM
  */
-public interface Point extends Serializable {
+public interface Point extends Entity, Serializable {
 
+    @Override
     String getKey();
 
     int getExpire();

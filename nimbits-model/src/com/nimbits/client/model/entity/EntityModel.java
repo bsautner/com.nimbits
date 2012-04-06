@@ -18,7 +18,6 @@ import java.util.*;
  */
 public class EntityModel  implements Serializable, Entity {
 
-    private static long serialVersionUID = 10L;
 
     private String name;
     private String description;
@@ -30,7 +29,7 @@ public class EntityModel  implements Serializable, Entity {
     private String owner;
     private boolean readOnly = false;
     private String blobKey;
-    private List<Point> points;
+    private List<Entity> points;
 
     public EntityModel(final CommonIdentifier name,
                        final String description,
@@ -49,7 +48,8 @@ public class EntityModel  implements Serializable, Entity {
         this.blobKey = blobKey;
 
     }
-
+    public EntityModel() {
+    }
     public EntityModel(final Entity entity) throws NimbitsException {
         this.name = entity.getName().getValue();
         this.description = entity.getDescription();
@@ -63,17 +63,16 @@ public class EntityModel  implements Serializable, Entity {
 
     }
 
-    public List<Point> getPoints() {
+    public List<Entity> getPoints() {
         return points;
     }
 
     @Override
-    public void setPoints(List<Point> points) {
+    public void setPoints(List<Entity> points) {
         this.points = points;
     }
 
-    private EntityModel() {
-    }
+
 
     @Override
     public EntityName getName() throws NimbitsException {

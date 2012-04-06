@@ -15,6 +15,7 @@ package com.nimbits.server.orm;
 
 import com.google.appengine.api.datastore.*;
 import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.value.Value;
@@ -23,23 +24,26 @@ import javax.jdo.annotations.*;
 import java.util.*;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
-public class PointEntity implements Point {
 
-    @PrimaryKey
-    @Persistent
-    private com.google.appengine.api.datastore.Key key;
+public class PointEntity extends EntityStore implements Point {
+    private static final int DEFAULT_EXPIRE = 90;
+    private static final double DEFAULT_FILTER_VALUE = 0.1;
+
+//    @PrimaryKey
+//    @Persistent
+//    private com.google.appengine.api.datastore.Key key;
 
     @Persistent
     private Double highAlarm = 0.0;
 
     @Persistent
-    private int expire = 90;
+    private int expire = DEFAULT_EXPIRE;
 
     @Persistent
     private String unit;
 
     @Persistent
-    private Double filterValue = 0.1;
+    private Double filterValue = DEFAULT_FILTER_VALUE;
 
     @Persistent
     private Integer filterType = 0;
@@ -65,6 +69,7 @@ public class PointEntity implements Point {
 
     @Persistent
     private String legacyKey;
+
 
 
     @Override
@@ -101,17 +106,17 @@ public class PointEntity implements Point {
     protected PointEntity() {
     }
 
-    public PointEntity(final Entity key) {
-       this.key =  KeyFactory.createKey(PointEntity.class.getSimpleName(), key.getKey());
+    public PointEntity(final Entity entity) throws NimbitsException {
+        super(PointEntity.class, entity);
+
     }
 
 
-    public PointEntity(final Entity key, final Point point) {
-
+    public PointEntity(final Entity entity, final Point point) throws NimbitsException {
+        super(PointEntity.class, entity);
         this.highAlarm = point.getHighAlarm();
         this.expire = point.getExpire();
         this.unit = point.getUnit();
-        this.key = KeyFactory.createKey(PointEntity.class.getSimpleName(), key.getKey());
         this.lowAlarm = point.getLowAlarm();
         this.highAlarmOn = point.isHighAlarmOn();
         this.lowAlarmOn = point.isLowAlarmOn();
@@ -246,7 +251,7 @@ public class PointEntity implements Point {
 
     @Override
     public String getKey() {
-        return key.getName();
+        return super.getKey();
     }
 
     public void setLegacyKey(String legacyKey) {

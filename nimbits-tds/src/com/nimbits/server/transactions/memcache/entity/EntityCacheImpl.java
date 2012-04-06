@@ -40,6 +40,12 @@ public class EntityCacheImpl implements EntityTransactions {
         }
 
     }
+
+    @Override
+    public Entity getEntityByName(EntityName name, Class<?> cls) throws NimbitsException {
+        return EntityTransactionFactory.getDaoInstance(user).getEntityByName(name, cls);
+    }
+
     private void addEntityToCache(final Entity entity) throws NimbitsException {
         if (entity != null) {
         removeEntityFromCache(entity);
@@ -58,9 +64,9 @@ public class EntityCacheImpl implements EntityTransactions {
 
 
     @Override
-    public Map<String, Entity> getEntityMap(final EntityType type) throws NimbitsException {
+    public Map<String, Entity> getEntityMap(final EntityType type, final int limit) throws NimbitsException {
 
-        return  EntityTransactionFactory.getDaoInstance(user).getEntityMap(type);
+        return  EntityTransactionFactory.getDaoInstance(user).getEntityMap(type, limit);
     }
 
     @Override
@@ -94,24 +100,24 @@ public class EntityCacheImpl implements EntityTransactions {
     }
 
     @Override
-    public Entity getEntityByKey(final String uuid) throws NimbitsException {
+    public Entity getEntityByKey(final String uuid, Class<?> cls) throws NimbitsException {
         if (cache.contains(uuid)) {
 
             try {
                 Entity e =  (Entity) cache.get(uuid);
-                return e != null ? e : getEntityFromStore(uuid);
+                return e != null ? e : getEntityFromStore(uuid, cls);
             } catch (InvalidValueException e1) {
-                return getEntityFromStore(uuid);
+                return getEntityFromStore(uuid, cls);
             }
         }
         else {
-            return getEntityFromStore(uuid);
+            return getEntityFromStore(uuid, cls);
         }
 
     }
 
-    private Entity getEntityFromStore(final String key) throws NimbitsException {
-        Entity result = EntityTransactionFactory.getDaoInstance(user).getEntityByKey(key);
+    private Entity getEntityFromStore(final String key, final Class<?> cls) throws NimbitsException {
+        Entity result = EntityTransactionFactory.getDaoInstance(user).getEntityByKey(key, cls);
         addEntityToCache(result);
         return result;
     }

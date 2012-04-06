@@ -15,7 +15,8 @@ package com.nimbits.client.model.point;
 
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.FilterType;
-import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.value.Value;
 
 import java.io.Serializable;
@@ -23,16 +24,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class PointModel implements Serializable, Point {
-    private static  long serialVersionUID = 10L;
+public class PointModel extends EntityModel implements Serializable, Point {
 
-    private int entityType = EntityType.point.getCode();
+    private static final int DEFAULT_EXPIRE = 90;
+    //private int entityType = EntityType.point.getCode();
 
     private String key;
 
     private double highAlarm = 0.0;
 
-    private int expire = 90;
+    private int expire = DEFAULT_EXPIRE;
 
     private String unit;
 
@@ -53,14 +54,17 @@ public class PointModel implements Serializable, Point {
 
     private double filterValue;
 
+    public PointModel(final Entity entity) throws NimbitsException {
+        super(entity);
+        this.key = entity.getKey();
 
-    public PointModel(final Entity key) {
-       this.key = key.getKey();
     }
 
-    // Constructors
-    public PointModel(final Point point) {
 
+
+    // Constructors
+    public PointModel(final Entity e, final Point point) throws NimbitsException {
+        super(e);
         this.highAlarm = point.getHighAlarm();
         this.expire = point.getExpire();
         this.unit = point.getUnit();
@@ -229,7 +233,7 @@ public class PointModel implements Serializable, Point {
     }
 
     public EntityType getEntityType() {
-        return EntityType.get(this.entityType);
+        return  (super.getEntityType());
     }
     @Override
     public String getKey() {

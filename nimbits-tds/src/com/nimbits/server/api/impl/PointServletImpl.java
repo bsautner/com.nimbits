@@ -28,6 +28,7 @@ import com.nimbits.server.api.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.feed.*;
 import com.nimbits.server.gson.*;
+import com.nimbits.server.orm.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.time.*;
 import com.nimbits.server.value.*;
@@ -90,6 +91,9 @@ public class PointServletImpl extends ApiServlet {
                             final String retJson = gson.toJson(point);
                             out.println(retJson);
                         }
+                        break;
+                    default:
+
                 }
             } else {
 
@@ -126,15 +130,14 @@ public class PointServletImpl extends ApiServlet {
                     getParam(Parameters.point) : getParam(Parameters.name);
 
 
-            if (! containsParam(Parameters.uuid)) {
-                getPointObjects(getParam(Parameters.category), pointNameParam, out);
-            } else {
-                final Point point = PointServiceFactory.getInstance().getPointByKey(getParam(Parameters.uuid));
+            if (containsParam(Parameters.uuid)) {
+
+                final Point point = (Point) EntityServiceFactory.getInstance().getEntityByKey(getParam(Parameters.uuid), PointEntity.class.getName());
+
                 if (point != null) {
                     outputPoint(getParam(Parameters.count), getParam(Parameters.format), startParam, endParam, offsetParam, out, point);
-                }
-                else {
-                    final Entity category = EntityServiceFactory.getInstance().getEntityByKey(user, getParam(Parameters.uuid));
+                } else {
+                    final Entity category = EntityServiceFactory.getInstance().getEntityByKey(user, EntityStore.class.getName(),getParam(Parameters.uuid));
 
                     if (category != null) {
                         if (okToReport(user, category)) {
@@ -143,13 +146,13 @@ public class PointServletImpl extends ApiServlet {
 //                                u.setRestricted(true);
 //                            }
                             final List<Entity> children = EntityServiceFactory.getInstance().getEntityChildren(user, category, EntityType.point);
-                            final List<Point> points =PointServiceFactory.getInstance().getPoints(user, children);// PointServiceFactory.getInstance().getPointsByCategory(u, category);
+                            final List<Entity> points = PointServiceFactory.getInstance().getPoints(user, children);// PointServiceFactory.getInstance().getPointsByCategory(u, category);
 
                             //todo remove point from list if private
-                            for (final Point p : points) {
+                            for (final Entity e : points) {
+                                Point p = (Point) e;
                                 p.setValues(getRecordedValues(getParam(Parameters.count), startParam, endParam, offsetParam, p).getValues());
                                 p.setValue(RecordedValueServiceFactory.getInstance().getCurrentValue(p));
-
 
 
                             }
@@ -161,6 +164,8 @@ public class PointServletImpl extends ApiServlet {
                         }
                     }
                 }
+            } else {
+                getPointObjects(getParam(Parameters.category), pointNameParam, out);
             }
 
             out.close();
@@ -217,12 +222,7 @@ public class PointServletImpl extends ApiServlet {
         final String parent;
         if (categoryName != null) {
             final Entity category = getCategoryWithParam(categoryName, u);
-            if (category != null) {
-                parent = category.getKey();
-            }
-            else {
-                parent = u.getKey();
-            }
+            parent = category != null ? category.getKey() : u.getKey();
 
         }
         else {
@@ -275,12 +275,7 @@ public class PointServletImpl extends ApiServlet {
 
     private static ExportType getOutputType(final String format) {
         final ExportType type;
-        if (!Utils.isEmptyString(format)) {
-            type = ExportType.valueOf(format);
-
-        } else {
-            type = ExportType.json;
-        }
+        type = Utils.isEmptyString(format) ? ExportType.json : ExportType.valueOf(format);
 
         return type;
     }
@@ -319,7 +314,7 @@ public class PointServletImpl extends ApiServlet {
         return c.getProtectionLevel().equals(ProtectionLevel.everyone) || !(u == null || u.isRestricted());
     }
 
-    private void getPointObjects(final String categoryNameParam, final String pointNameParam, final PrintWriter out) throws NimbitsException {
+    private static void getPointObjects(final String categoryNameParam, final String pointNameParam, final PrintWriter out) throws NimbitsException {
 
         if (user != null) {
 
@@ -328,7 +323,9 @@ public class PointServletImpl extends ApiServlet {
                 final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
                 final Entity e = EntityServiceFactory.getInstance().getEntityByName(user, pointName,EntityType.point);
                 if (e != null) {
-                    final Point p= PointServiceFactory.getInstance().getPointByKey(e.getKey());
+                    final Point p = (Point) EntityServiceFactory.getInstance().getEntityByKey(e.getKey(), PointEntity.class.getName());
+
+
                     result = gson.toJson(p);
                     out.println(result);
                 }
@@ -340,7 +337,7 @@ public class PointServletImpl extends ApiServlet {
                 final EntityName categoryName = CommonFactoryLocator.getInstance().createName(categoryNameParam, EntityType.category);
                 final Entity c = EntityServiceFactory.getInstance().getEntityByName(user, categoryName,EntityType.category);//  CategoryServiceFactory.getInstance().getCategory(u, categoryName);
                 final List<Entity> children = EntityServiceFactory.getInstance().getEntityChildren(user, c, EntityType.point);
-                final List<Point> points = PointServiceFactory.getInstance().getPoints(user, children);
+                final List<Entity> points =   PointServiceFactory.getInstance().getPoints(user, children);
 
                 //final List<Point> points = PointServiceFactory.getInstance().getPointsByCategory(u, c);
                 result = gson.toJson(points, GsonFactory.pointListType);

@@ -27,13 +27,13 @@ public interface EntityServiceAsync {
 
     void addUpdateEntity(final EntityName name ,EntityType type,  AsyncCallback<Entity> async);
 
-    void getEntityByKey(String uuid, AsyncCallback<Entity> async);
+    void getEntityByKey(String uuid, String className, AsyncCallback<Entity> async);
 
     void copyEntity(Entity originalEntity, EntityName newName, AsyncCallback<Entity> async);
 
     void getEntityNameMap(EntityType type, AsyncCallback<Map<EntityName, Entity>> async);
 
-    void getEntityMap(EntityType type, AsyncCallback<Map<String, Entity>> async);
+    void getEntityMap(EntityType type, final int limit, AsyncCallback<Map<String, Entity>> async);
 
     void getChildren(Entity parentEntity, EntityType type, AsyncCallback<List<Entity>> async);
 
@@ -41,7 +41,7 @@ public interface EntityServiceAsync {
 
     void addUpdateEntity(User user, Entity aConnection, AsyncCallback<Entity> async);
 
-    void getEntityByKey(User u, String entityId, AsyncCallback<Entity> async);
+    void getEntityByKey(User u, String entityId, String className, AsyncCallback<Entity> async);
 
     void getEntityByName(User u, EntityName name, EntityType type, AsyncCallback<Entity> async);
 
@@ -51,7 +51,9 @@ public interface EntityServiceAsync {
 
     void getEntityChildren(User u, Entity c, EntityType point, AsyncCallback<List<Entity>> async);
 
-    void getEntityMap(User user, EntityType type, AsyncCallback<Map<String, Entity>> async);
+    void getEntityMap(User user, EntityType type, final int limit, AsyncCallback<Map<String, Entity>> async);
 
     void getSystemWideEntityMap(EntityType type, AsyncCallback<Map<String, Entity>> async);
+
+    void getEntityByName(User user, EntityName name, String className, AsyncCallback<Entity> async);
 }

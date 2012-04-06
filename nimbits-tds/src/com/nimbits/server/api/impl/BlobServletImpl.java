@@ -22,6 +22,7 @@ import com.nimbits.server.api.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.feed.*;
 import com.nimbits.server.gson.*;
+import com.nimbits.server.orm.*;
 
 import javax.servlet.http.*;
 import java.io.*;
@@ -70,7 +71,7 @@ public class BlobServletImpl extends ApiServlet {
             }
             else if (uploadType.equals(UploadType.updatedFile.name()) && entityId != null) {
 
-                entity = EntityServiceFactory.getInstance().getEntityByKey(user, entityId);
+                entity = EntityServiceFactory.getInstance().getEntityByKey(user, entityId, EntityStore.class.getName());
                 entity.setBlobKey(blobKey.getKeyString());
 
 

@@ -39,19 +39,19 @@ public interface PointTransactions {
 
     Point checkPoint(final HttpServletRequest req, final EmailAddress email, final Point point) throws NimbitsException;
 
-    List<Point> getAllPoints(final int start,final  int end);
+    List<Entity> getAllPoints(final int start,final  int end) throws NimbitsException;
 
-    List<Point> getIdlePoints();
+    List<Entity> getIdlePoints() throws NimbitsException;
 
-    Point getPointByKey(final String uuid) throws NimbitsException;
+  //  Point getPointByKey(final String uuid) throws NimbitsException;
 
-    List<Point> getAllPoints();
+    List<Entity> getAllPoints() throws NimbitsException;
 
-    Point addPoint(final Entity entity);
+    Point addPoint(final Entity entity) throws NimbitsException;
 
-    Point addPoint(final Entity entity, final Point point);
+    Point addPoint(final Entity entity, final Point point) throws NimbitsException;
 
-    List<Point>  getPoints(final List<Entity> entities);
+    List<Entity>  getPoints(final List<Entity> entities) throws NimbitsException;
 
-    Point deletePoint(final Entity entity);
+    Point deletePoint(final Entity entity) throws NimbitsException;
 }

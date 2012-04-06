@@ -275,7 +275,10 @@ public class UpgradeTask  extends HttpServlet
 
                                 }
                                 else {
-                                    Point point = PointTransactionsFactory.getDaoInstance(user).getPointByKey(completedPoint.getKey());
+                                   // Point point = PointTransactionsFactory.getDaoInstance(user).getPointByKey(completedPoint.getKey());
+                                    Point point = (Point) EntityTransactionFactory.getDaoInstance(user).getEntityByKey(completedPoint.getKey(), PointEntity.class);
+
+
                                     if (point != null) {
                                         clog("setting legacy key " + p.getName() + "  ");
                                         setLegacyKey(p, completedPoint);
@@ -362,7 +365,10 @@ public class UpgradeTask  extends HttpServlet
                                     log.severe("should have found a completed point entity here" + p.getName());
                                 }
                                 else {
-                                    Point point = PointTransactionsFactory.getDaoInstance(user).getPointByKey(completedPoint.getKey());
+                                  //  Point point = PointTransactionsFactory.getDaoInstance(user).getPointByKey(completedPoint.getKey());
+                                    Point point = (Point) EntityTransactionFactory.getDaoInstance(user).getEntityByKey(completedPoint.getKey(), PointEntity.class);
+
+
                                     if (point != null) {
                                         createSubscriptions(user, p, completedPoint);
                                     }
@@ -446,7 +452,9 @@ public class UpgradeTask  extends HttpServlet
                                     log.severe("should have found a completed point entity here" + p.getName());
                                 }
                                 else {
-                                    Point point = PointTransactionsFactory.getDaoInstance(user).getPointByKey(completedPoint.getKey());
+                                   // Point point = PointTransactionsFactory.getDaoInstance(user).getPointByKey(completedPoint.getKey());
+                                    Point point = (Point) EntityTransactionFactory.getDaoInstance(user).getEntityByKey(completedPoint.getKey(), PointEntity.class);
+
                                     if (point != null) {
 
                                         TaskFactory.getInstance().startUpgradeTask(Action.value,completedPoint, 0 );
@@ -531,7 +539,9 @@ public class UpgradeTask  extends HttpServlet
                                     log.severe("should have found a completed point entity here" + legacyPoint.getName());
                                 }
                                 else {
-                                    Point point = PointTransactionsFactory.getDaoInstance(user).getPointByKey(completedPoint.getKey());
+                                    //Point point = PointTransactionsFactory.getDaoInstance(user).getPointByKey(completedPoint.getKey());
+                                    Point point = (Point) EntityTransactionFactory.getDaoInstance(user).getEntityByKey(completedPoint.getKey(), PointEntity.class);
+
                                     if (point != null) {
                                         if (legacyPoint.getCalculationEntity() != null) {
 
@@ -726,7 +736,9 @@ public class UpgradeTask  extends HttpServlet
                 final DataPoint leg = getLegPoint(pm, nu.getId(), pointEntity.getName().getValue());
                 if (leg != null) {
 
-                    final Point point = PointServiceFactory.getInstance().getPointByKey(pointEntity.getKey());
+                  //  final Point point = PointServiceFactory.getInstance().getPointByKey(pointEntity.getKey());
+                    Point point = (Point) EntityTransactionFactory.getDaoInstance(u).getEntityByKey(pointEntity.getKey(), PointEntity.class);
+
                     final RecordedValueTransactions old =  RecordedValueTransactionFactory.getLegacyInstance(leg);
                     final RecordedValueTransactions dao =  RecordedValueTransactionFactory.getDaoInstance(point);
                     final Timespan timespan = TimespanModelFactory.createTimespan(leg.getCreateDate(), new Date());
@@ -858,7 +870,7 @@ public class UpgradeTask  extends HttpServlet
     //
 
 
-    private static String makePointEntity(DataPoint p, Entity r) {
+    private static String makePointEntity(DataPoint p, Entity r) throws NimbitsException {
         final PersistenceManager pm1 = PMF.get().getPersistenceManager();
         PointEntity pe = new PointEntity(r);
         log.info("Creating new Point Entity");
@@ -899,7 +911,7 @@ public class UpgradeTask  extends HttpServlet
         try {
             final Query d = pm.newQuery(DiagramEntity.class);
 
-            List<DiagramEntity> diagrams = (List<DiagramEntity>) d.execute( );
+            Collection<DiagramEntity> diagrams = (Collection<DiagramEntity>) d.execute();
             clog("processing " + diagrams.size() + "diagrams");
             for (DiagramEntity diagramEntity : diagrams) {
 
@@ -943,7 +955,7 @@ public class UpgradeTask  extends HttpServlet
                             clog("created diagram " + newName.getValue());
                         }
                         else {
-                            clog("skipping diagram " + newName.getValue());
+                            clog("skipping diagram " + existing.getName().getValue());
                         }
                     }
                     // TaskFactoryLocator.getInstance().startUpgradeTask(Action.point,r );
@@ -1119,6 +1131,7 @@ public class UpgradeTask  extends HttpServlet
 
                         final Entity entity = EntityModelFactory.createEntity(u.getName(), "", EntityType.user, ProtectionLevel.onlyMe, "", "");
                         final Entity r = EntityTransactionFactory.getDaoInstance(null).addUpdateEntity(entity);
+
                         UserEntity userEntity = new UserEntity(r);
                         userEntity.setFacebookID(u.getFacebookID());
                         userEntity.setFacebookToken(u.getFacebookToken());

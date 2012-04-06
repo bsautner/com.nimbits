@@ -20,7 +20,9 @@ import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.valueblobstore.*;
+import com.nimbits.server.entity.*;
 import com.nimbits.server.gson.*;
+import com.nimbits.server.orm.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.value.*;
 
@@ -56,7 +58,9 @@ public class PointMaintTask extends HttpServlet {
 
     public static void consolidateBlobs(final Entity e) throws NimbitsException {
         // n = UserTransactionFactory.getInstance().(p.getUserFK());
-        final Point p = PointServiceFactory.getInstance().getPointByKey(e.getKey());
+       // final Point p = PointServiceFactory.getInstance().getPointByKey(e.getKey());
+        final Point p = (Point) EntityServiceFactory.getInstance().getEntityByKey(e.getKey(), PointEntity.class.getName());
+
         final List<ValueBlobStore> stores = RecordedValueTransactionFactory.getDaoInstance(p).getAllStores();
         if (stores.size() > 0) {
 

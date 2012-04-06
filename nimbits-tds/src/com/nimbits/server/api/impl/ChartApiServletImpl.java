@@ -26,6 +26,7 @@ import com.nimbits.client.model.value.*;
 import com.nimbits.server.api.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.feed.*;
+import com.nimbits.server.orm.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.time.*;
 import com.nimbits.server.value.*;
@@ -126,13 +127,14 @@ public class ChartApiServletImpl extends ApiServlet {
             for (final EntityName pointName : pointList) {
 
 
-                e = EntityServiceFactory.getInstance().getEntityByName(u, pointName,EntityType.point);
-                if (e != null) {
-                    p = PointServiceFactory.getInstance().getPointByKey(e.getKey());
+                p = (Point) EntityServiceFactory.getInstance().getEntityByName(u, pointName,PointEntity.class.getName());
+                if (p != null) {
 
-                    if (p != null) {
+                  //  p = (Point) EntityServiceFactory.getInstance().getEntityByKey(e.getKey(), PointEntity.class.getName());
+
+                    {
                         //Entity e = EntityServiceFactory.getInstance().getEntityByUUID(p.getEntity());
-                        if (e.getProtectionLevel().equals(ProtectionLevel.everyone) || !u.isRestricted()) {
+                        if (p.getProtectionLevel().equals(ProtectionLevel.everyone) || !u.isRestricted()) {
 
 
                             values = (timespan != null) ?

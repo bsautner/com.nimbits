@@ -27,6 +27,7 @@ import com.nimbits.server.blob.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.export.*;
 import com.nimbits.server.feed.*;
+import com.nimbits.server.orm.*;
 import com.nimbits.server.task.*;
 import com.nimbits.server.user.*;
 import com.nimbits.server.value.*;
@@ -51,7 +52,10 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 //
     @Override
     public Entity copyPoint(User u, Entity originalEntity, EntityName newName) throws NimbitsException {
-        final Point storedPoint = PointServiceFactory.getInstance().getPointByKey(originalEntity.getKey());
+
+        //final Point storedPoint = PointServiceFactory.getInstance().getPointByKey(originalEntity.getKey());
+        Point storedPoint = (Point) EntityTransactionFactory.getDaoInstance(u).getEntityByKey(originalEntity.getKey(), PointEntity.class);
+
         final Point newPoint = PointModelFactory.createPointModel(storedPoint);
 
 
@@ -66,20 +70,21 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     public Map<String, Point> getPoints(Map<String, Entity> entities) throws NimbitsException {
         List<Entity> entityList = new ArrayList<Entity>(entities.values());
 
-        List<Point> points =  PointTransactionsFactory.getInstance(getUser()).getPoints(entityList);
+        List<Entity> points =  PointTransactionsFactory.getInstance(getUser()).getPoints(entityList);
         Map<String, Point> retObj = new HashMap<String, Point>(points.size());
         Value v;
-        for (Point p : points) {
+        for (Entity p : points) {
+            Point px = (Point) p;
             v  = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
-            p.setValue(v);
-            retObj.put(p.getKey(), p);
+            px.setValue(v);
+            retObj.put(p.getKey(), px);
         }
         return retObj;
 
     }
 
     @Override
-    public void deletePoint(User u, Entity entity) {
+    public void deletePoint(User u, Entity entity) throws NimbitsException {
           Point deleted = PointTransactionsFactory.getInstance(u).deletePoint(entity);
           TaskFactory.getInstance().startDeleteDataTask(deleted, false, 0);
     }
@@ -100,9 +105,9 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
     @Override
         public Point addPoint(final User user,final Entity entity) throws NimbitsException {
-        final Entity r = EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
-        final Point newPoint =  PointTransactionsFactory.getInstance(user).addPoint(r);
-        notifyFeedOfNewPoint(user, entity);
+        //final Entity r = EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
+        final Point newPoint =  PointTransactionsFactory.getInstance(user).addPoint(entity);
+      //  notifyFeedOfNewPoint(user, entity);
         return newPoint;
     }
 
@@ -113,9 +118,8 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public Point addPoint(final User user, final Entity entity, final Point point) throws NimbitsException {
-        Entity result =  EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
-        notifyFeedOfNewPoint(user, entity);
-        return PointTransactionsFactory.getInstance(user).addPoint(result, point);
+
+        return PointTransactionsFactory.getInstance(user).addPoint(entity, point);
     }
 
     @Override
@@ -146,7 +150,7 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 //    }
 
     @Override
-    public List<Point> getPoints(final User u, final List<Entity> entities) {
+    public List<Entity> getPoints(final User u, final List<Entity> entities) throws NimbitsException {
         return PointTransactionsFactory.getInstance(u).getPoints(entities);
     }
 //    //End RPC Calls
@@ -192,10 +196,10 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
     }
 
-    @Override
-    public Point getPointByKey(final String uuid) throws NimbitsException {
-        return PointTransactionsFactory.getInstance(null).getPointByKey(uuid);
-    }
+//    @Override
+//    public Point getPointByKey(final String uuid) throws NimbitsException {
+//        return PointTransactionsFactory.getInstance(null).getPointByKey(uuid);
+//    }
 
 //    @Override
 //    public List<Point> getAllPoints(int start, int end) {
@@ -209,7 +213,7 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 //
 //
     @Override
-    public List<Point> getIdlePoints() {
+    public List<Entity> getIdlePoints() throws NimbitsException {
         return PointTransactionsFactory.getInstance(null).getIdlePoints();
     }
 }

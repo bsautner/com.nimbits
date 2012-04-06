@@ -25,10 +25,11 @@ import com.nimbits.client.model.value.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.logging.*;
-import com.nimbits.server.point.*;
+import com.nimbits.server.orm.*;
 import com.nimbits.server.value.*;
 
 import javax.jdo.*;
+import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.*;
 import java.math.*;
@@ -66,7 +67,7 @@ public class ProcessBatchTask extends HttpServlet {
 
     }
 
-    private void processBatch(final HttpServletRequest req, final HttpServletResponse resp) throws IOException, NimbitsException {
+    private void processBatch(final ServletRequest req, final ServletResponse resp) throws IOException, NimbitsException {
 
         final Gson gson = GsonFactory.getInstance();
         final String userJson = req.getParameter(Parameters.pointUser.getText());
@@ -80,39 +81,36 @@ public class ProcessBatchTask extends HttpServlet {
         final Enumeration enumeration = req.getParameterNames();
         final Map m = req.getParameterMap();
 
-        final Map<EntityName, Entity> points = new HashMap<EntityName, Entity>(Const.CONST_MAX_BATCH_COUNT);
+        final Map<EntityName, Point> points = new HashMap<EntityName, Point>(Const.CONST_MAX_BATCH_COUNT);
 
         if (u != null) {
             while (enumeration.hasMoreElements()) {
                 processQueryString(enumeration, m, u);
             }
-            Entity entity;
+            Point point;
             Collections.sort(timestamps);
             BatchValue b;
             Value v;
-            Point p;
+
             for (final long l : timestamps) {
                b = timestampValueMap.get(l);
                 if (points.containsKey(b.pointName)) {
-                    entity = points.get(b.pointName);
+                    point = points.get(b.pointName);
 
                 } else {
-                    entity = EntityServiceFactory.getInstance().getEntityByName(u, b.pointName,EntityType.point);
-                    if (entity != null) {
-                        points.put(b.pointName, entity);
+
+                    point = (Point) EntityServiceFactory.getInstance().getEntityByName(u, b.pointName,PointEntity.class.getName());
+
+                    if (point != null) {
+                        points.put(b.pointName, point);
                     }
                 }
-                if (entity != null) {
+                if (point != null) {
                     try {
-                       v = ValueModelFactory.createValueModel(0.0, 0.0, b.value, b.timestamp, entity.getKey(), b.note);
-                       p = PointServiceFactory.getInstance().getPointByKey(entity.getKey());
-                       if (p != null) {
-                        RecordedValueServiceFactory.getInstance().recordValue(b.u, p, v, false);
-                       }
-                        else {
-                           LogHelper.log(ProcessBatchTask.class,"Batch service could not find a point named " + entity.getName() + " but the entity existed!");
+                       v = ValueModelFactory.createValueModel(0.0, 0.0, b.value, b.timestamp, point.getKey(), b.note);
 
-                       }
+                        RecordedValueServiceFactory.getInstance().recordValue(b.u, point, v, false);
+
                     } catch (NimbitsException ex) {
 
                         LogHelper.logException(ProcessBatchTask.class, ex);
@@ -171,8 +169,8 @@ public class ProcessBatchTask extends HttpServlet {
         }
 
         if (m.containsKey(T + x)) {
-            final String[] timestamps = (String[]) m.get(T + x);
-            final String valTime = timestamps[0];
+            final String[] timestampArray = (String[]) m.get(T + x);
+            final String valTime = timestampArray[0];
             final BigDecimal time = new BigDecimal(valTime);
 
             timestamp = new Date(time.longValue());
@@ -194,12 +192,12 @@ public class ProcessBatchTask extends HttpServlet {
         private final Date timestamp;
         private final Double value;
 
-        public BatchValue(final User u, final EntityName pointName, final Date timestamp,
-                          final Double value, final String valNote) {
+        private BatchValue(final User u, final EntityName pointName, final Date timestamp,
+                           final Double value, final String valNote) {
             super();
             this.u = u;
             this.pointName = pointName;
-            this.timestamp = timestamp;
+            this.timestamp = new Date(timestamp.getTime());
             this.value = value;
             this.note = valNote;
 

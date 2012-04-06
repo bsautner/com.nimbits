@@ -159,19 +159,25 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
        return  deleteEntity(u, entity);
     }
 
+
+
     @Override
-    public Entity getEntityByKey(final String key) throws NimbitsException {
-       return EntityTransactionFactory.getInstance(getUser()).getEntityByKey(key);
+    public Entity getEntityByKey(final String key, final String className) throws NimbitsException {
+        try {
+            return EntityTransactionFactory.getInstance(getUser()).getEntityByKey(key, Class.forName(className));
+        } catch (ClassNotFoundException e) {
+            throw new NimbitsException(e);
+        }
     }
 
     @Override
-    public Map<String, Entity> getEntityMap(final EntityType type) throws NimbitsException {
-       return EntityTransactionFactory.getInstance(getUser()).getEntityMap(type);
+    public Map<String, Entity> getEntityMap(final EntityType type, final int limit) throws NimbitsException {
+       return EntityTransactionFactory.getInstance(getUser()).getEntityMap(type, limit);
     }
 
     @Override
-    public Map<String, Entity> getEntityMap(final User user, final EntityType type) throws NimbitsException {
-        return EntityTransactionFactory.getInstance(user).getEntityMap(type);
+    public Map<String, Entity> getEntityMap(final User user, final EntityType type, final int limit) throws NimbitsException {
+        return EntityTransactionFactory.getInstance(user).getEntityMap(type, limit);
     }
 
     @Override
@@ -210,6 +216,14 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
         return EntityTransactionFactory.getInstance(user).getEntityByName(name, type);
     }
 
+    @Override
+    public Entity getEntityByName(final User user, final EntityName name, String className) throws NimbitsException {
+        try {
+            return EntityTransactionFactory.getInstance(user).getEntityByName(name, Class.forName(className));
+        } catch (ClassNotFoundException e) {
+            throw new NimbitsException(e);
+        }
+    }
 
     @Override
     public Entity getEntityByName(final EntityName name, final EntityType type) throws NimbitsException {
@@ -227,14 +241,26 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     }
 
     @Override
+    public Entity getEntityByName(EntityName name, Class<?> cls) throws NimbitsException {
+        return EntityTransactionFactory.getInstance(getUser()).getEntityByName(name, cls);
+    }
+
+    @Override
     public Entity addUpdateEntity(final User user, final Entity entity) throws NimbitsException {
         return EntityTransactionFactory.getInstance(user).addUpdateEntity(entity);
     }
 
     @Override
-    public Entity getEntityByKey(final User user, final String entityId) throws NimbitsException {
-        return EntityTransactionFactory.getInstance(user).getEntityByKey(entityId);
+    public Entity getEntityByKey(final User user, final String entityId, final String className) throws NimbitsException {
+        try {
+            return EntityTransactionFactory.getInstance(user).getEntityByKey(entityId, Class.forName(className));
+        } catch (ClassNotFoundException e) {
+            throw new NimbitsException(e);
+        }
     }
 
-
+    @Override
+    public Entity getEntityByKey(String uuid, Class<?> cls) throws NimbitsException {
+        throw new NimbitsException("Not Implemented");
+    }
 }

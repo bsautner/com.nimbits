@@ -19,6 +19,7 @@ import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.relationship.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.server.entity.*;
@@ -39,8 +40,8 @@ import java.util.*;
 @SuppressWarnings("unchecked")
 public class EntityDaoImpl implements  EntityTransactions {
 
+    private static final int INT = 1024;
     private final User user;
-    private Entity entity;
 
 
     public EntityDaoImpl(final User user) {
@@ -48,21 +49,24 @@ public class EntityDaoImpl implements  EntityTransactions {
     }
 
     @Override
-    public Map<String, Entity> getEntityMap(final EntityType type) throws NimbitsException {
+    public Map<String, Entity> getEntityMap(final EntityType type, final int limit) throws NimbitsException {
 
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final Query q1 = pm.newQuery(EntityStore.class);
         q1.setFilter("owner==b && entityType==t");
         q1.declareParameters("String b, Integer t");
+        q1.setRange(0, limit);
         try {
 
-            final List<Entity> result = (List<Entity>) q1.execute(user.getKey(), type.getCode());
-            final List<Entity> models = EntityModelFactory.createEntities(user, result);
-            final Map<String, Entity> retObj = new HashMap<String, Entity>(models.size());
-            for (final Entity e : models) {
+            final Collection<Entity> result = (Collection<Entity>) q1.execute(user.getKey(), type.getCode());
 
-                retObj.put(e.getKey(), e);
+            final Map<String, Entity> retObj = new HashMap<String, Entity>(result.size());
+            for (final Entity e : result) {
+                Entity model = createModel(e, type);
+
+
+                retObj.put(model.getKey(), model);
             }
             return retObj;
 
@@ -85,7 +89,7 @@ public class EntityDaoImpl implements  EntityTransactions {
         q1.declareParameters("String b, Integer t");
         try {
 
-            final List<Entity> result = (List<Entity>) q1.execute(user.getKey(), type.getCode());
+            final Collection<Entity> result = (Collection<Entity>) q1.execute(user.getKey(), type.getCode());
             final List<Entity> models = EntityModelFactory.createEntities(user, result);
             final Map<EntityName, Entity> retObj = new HashMap<EntityName, Entity>(models.size());
             for (final Entity e : models) {
@@ -125,7 +129,9 @@ public class EntityDaoImpl implements  EntityTransactions {
 
 
         try {
-            if (! Utils.isEmptyString(entity.getKey())) {
+            if (Utils.isEmptyString(entity.getKey())) {
+                return addEntity(entity, pm);
+            } else {
 
                 final Transaction tx = pm.currentTransaction();
                 final Entity result = pm.getObjectById(EntityStore.class, entity.getKey());
@@ -137,14 +143,10 @@ public class EntityDaoImpl implements  EntityTransactions {
                     result.setParent(entity.getParent());
                     result.setBlobKey(entity.getBlobKey());
                     tx.commit();
-                    return EntityModelFactory.createEntity(user,result);
-                }
-                else {
+                    return EntityModelFactory.createEntity(user, result);
+                } else {
                     return addEntity(entity, pm);
                 }
-            }
-            else {
-                return addEntity(entity, pm);
             }
         } finally {
             pm.close();
@@ -155,7 +157,7 @@ public class EntityDaoImpl implements  EntityTransactions {
     }
 
     private Entity addEntity(final Entity entity, final PersistenceManager pm) throws NimbitsException {
-        this.entity = entity;
+
         if (entity.getEntityType().isUniqueNameFlag()) {
             checkDuplicateEntity(entity);
 
@@ -181,11 +183,11 @@ public class EntityDaoImpl implements  EntityTransactions {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
-        final Map<String, Entity> connections = getEntityMap(EntityType.userConnection);
-        final List<String> uuids = new ArrayList<String>(connections.size() + 1);
+        final Map<String, Entity> connections = getEntityMap(EntityType.userConnection, 1000);
+        final Collection<String> uuids = new ArrayList<String>(connections.size() + 1);
         uuids.add(user.getKey());
 
-        List<String> connectedUserKeys = new ArrayList<String>(connections.size());
+        Collection<String> connectedUserKeys = new ArrayList<String>(connections.size());
         Map<String, Relationship> relationshipMap = new HashMap<String, Relationship>(connections.size());
 
         for (final Entity e : connections.values()) {
@@ -201,7 +203,7 @@ public class EntityDaoImpl implements  EntityTransactions {
         final Query q1 = pm.newQuery(EntityStore.class, ":p.contains(owner)");
 
         try {
-            final List<Entity> result = (List<Entity>) q1.execute(uuids);
+            final Collection<Entity> result = (Collection<Entity>) q1.execute(uuids);
 
             List<Entity> r =  EntityModelFactory.createEntities(user, result);
             for (Entity entity1 : r) {
@@ -229,12 +231,12 @@ public class EntityDaoImpl implements  EntityTransactions {
         final Query q1 = pm.newQuery(EntityStore.class);
         q1.setFilter("parent==b");
         q1.declareParameters("String b");
-        final List<Entity> retObj = new ArrayList<Entity>(1024);
+        final List<Entity> retObj = new ArrayList<Entity>(INT);
 
 
 
-        final List<Entity> result = (List<Entity>) q1.execute(entity.getKey());
-        if (result.size() > 0) {
+        final Collection<Entity> result = (Collection<Entity>) q1.execute(entity.getKey());
+        if (!result.isEmpty()) {
             retObj.addAll(result);
             List<Entity> children;
             for (final Entity e : result) {
@@ -252,12 +254,12 @@ public class EntityDaoImpl implements  EntityTransactions {
         final Query q1 = pm.newQuery(EntityStore.class);
         q1.setFilter("parent==b && entityType==t");
         q1.declareParameters("String b, Integer t");
-        final List<Entity> retObj = new ArrayList<Entity>(1024);
+        final List<Entity> retObj = new ArrayList<Entity>(INT);
 
 
 
-        final List<Entity> result = (List<Entity>) q1.execute(entity.getKey(), type.getCode());
-        if (result.size() > 0) {
+        final Collection<Entity> result = (Collection<Entity>) q1.execute(entity.getKey(), type.getCode());
+        if (!result.isEmpty()) {
             retObj.addAll(result);
             List<Entity> children;
             for (final Entity e : result) {
@@ -301,19 +303,18 @@ public class EntityDaoImpl implements  EntityTransactions {
     }
 
     @Override
-
-    public Entity getEntityByKey(final String uuid) throws NimbitsException {
+    public Entity getEntityByKey(final String uuid, final Class<?> cls) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
 
         try {
-            if (! Utils.isEmptyString(uuid)) {
-                final Entity result =  pm.getObjectById(EntityStore.class, uuid);
-                return EntityModelFactory.createEntity(user,result);
-
-            }
-            else {
+            if (Utils.isEmptyString(uuid)) {
                 return null;
+            } else {
+                final Entity result = (Entity) pm.getObjectById(cls, uuid);
+                return createModel(result, cls);
+              //  return EntityModelFactory.createEntity(user, result);
+
             }
         } catch (JDOObjectNotFoundException ex) {
             return null;
@@ -361,35 +362,41 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     @Override
     public Entity getEntityByName(EntityName name, EntityType type) throws NimbitsException {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final List<Entity> c;
+        if (type.equals(EntityType.point)) {
 
-        try {
-            final Query q1 = pm.newQuery(EntityStore.class);
-            if (user != null) {
-                q1.setFilter("name==b && owner==o && entityType==t");
-                q1.declareParameters("String b, String o, Integer t");
-                q1.setRange(0, 1);
-                c = (List<Entity>) q1.execute(name.getValue(), user.getKey(), type.getCode());
-            }
-            else {
-                q1.setFilter("name==b && entityType==t");
-                q1.declareParameters("String b, Integer t");
-                q1.setRange(0, 1);
-                c = (List<Entity>) q1.execute(name.getValue(), type.getCode());
-            }
-            if (c.size() > 0) {
+             return getEntityByName(name, PointEntity.class);
+        }
+        else {
 
-                final Entity result = c.get(0);
-                return EntityModelFactory.createEntity(user,  result);
+            final PersistenceManager pm = PMF.get().getPersistenceManager();
+            final List<Entity> c;
 
-            }
-            else {
-                return null;
-            }
+            try {
+                final Query q1 = pm.newQuery(EntityStore.class);
+                if (user != null) {
+                    q1.setFilter("name==b && owner==o && entityType==t");
+                    q1.declareParameters("String b, String o, Integer t");
+                    q1.setRange(0, 1);
+                    c = (List<Entity>) q1.execute(name.getValue(), user.getKey(), type.getCode());
+                }
+                else {
+                    q1.setFilter("name==b && entityType==t");
+                    q1.declareParameters("String b, Integer t");
+                    q1.setRange(0, 1);
+                    c = (List<Entity>) q1.execute(name.getValue(), type.getCode());
+                }
+                if (c.isEmpty()) {
+                    return null;
+                } else {
 
-        } finally {
-            pm.close();
+                    final Entity result = c.get(0);
+                    return EntityModelFactory.createEntity(user, result);
+
+                }
+
+            } finally {
+                pm.close();
+            }
         }
     }
 
@@ -404,10 +411,10 @@ public class EntityDaoImpl implements  EntityTransactions {
                 q1.setFilter("name==b && entityType==t");
                 q1.declareParameters("String b, Integer t");
                 q1.setRange(0, 1);
-                final List<Entity> c = (List<Entity>) q1.execute(
+                final Collection<Entity> c = (Collection<Entity>) q1.execute(
                         entity.getName().getValue(),
                         entity.getEntityType().getCode());
-                if (c.size() > 0) {
+                if (!c.isEmpty()) {
 
                     throw new NimbitsException("A User with the email address " + entity.getName().getValue() +
                             " already exists. Entities of type [" + entity.getEntityType().name() + "] must have a " +
@@ -424,11 +431,11 @@ public class EntityDaoImpl implements  EntityTransactions {
                 q1.setFilter("name==b && owner==o && entityType==t");
                 q1.declareParameters("String b, String o, Integer t");
                 q1.setRange(0, 1);
-                final List<Entity> c = (List<Entity>) q1.execute(
+                final Collection<Entity> c = (Collection<Entity>) q1.execute(
                         entity.getName().getValue(),
                         user.getKey(),
                         entity.getEntityType().getCode());
-                if (c.size() > 0) {
+                if (!c.isEmpty()) {
 
                     throw new NimbitsException("An Entity with the name " + entity.getName().getValue() +
                             " already exists. Entities of type [" + entity.getEntityType().name() + "] must have a " +
@@ -457,7 +464,7 @@ public class EntityDaoImpl implements  EntityTransactions {
         q1.declareParameters("Integer t");
         try {
 
-            final List<Entity> result = (List<Entity>) q1.execute(type.getCode());
+            final Collection<Entity> result = (Collection<Entity>) q1.execute(type.getCode());
             final List<Entity> models = EntityModelFactory.createEntities(null, result);
             final Map<String, Entity> retObj = new HashMap<String, Entity>(models.size());
             for (final Entity e : models) {
@@ -475,6 +482,67 @@ public class EntityDaoImpl implements  EntityTransactions {
     @Override
     public void removeEntityFromCache(final Entity entity) throws NimbitsException {
         throw new NimbitsException(UserMessages.ERROR_NOT_IMPLEMENTED);
+    }
+
+    @Override
+    public Entity getEntityByName(final EntityName name,final Class<?> cls) throws NimbitsException {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final List<Entity> c;
+
+        try {
+            final Query q1 = pm.newQuery(cls);
+            if (user != null) {
+                q1.setFilter("name==b && owner==o");
+                q1.declareParameters("String b, String o");
+                q1.setRange(0, 1);
+                c = (List<Entity>) q1.execute(name.getValue(), user.getKey());
+            }
+            else {
+                q1.setFilter("name==b && entityType==t");
+                q1.declareParameters("String b, Integer t");
+                q1.setRange(0, 1);
+                c = (List<Entity>) q1.execute(name.getValue());
+            }
+            if (c.isEmpty()) {
+                return null;
+            } else {
+
+                final Entity result = c.get(0);
+                return createModel(result, cls);
+
+            }
+
+        } finally {
+            pm.close();
+        }
+    }
+
+
+    private Entity createModel(Entity entity, Class<?> cls) throws NimbitsException {
+
+        if (cls.equals(PointEntity.class)) {
+            return PointModelFactory.createPointModel(entity);
+        }
+        else {
+            return EntityModelFactory.createEntity(user, entity);
+        }
+
+    }
+
+    private Entity createModel(Entity entity, EntityType type) throws NimbitsException {
+        try {
+            if (Utils.isEmptyString(type.getClassName())) {
+                return  EntityModelFactory.createEntity(user, entity);
+            }
+            else {
+                return createModel(entity, Class.forName(type.getClassName()));
+            }
+
+
+        } catch (ClassNotFoundException e) {
+            return EntityModelFactory.createEntity(user, entity);
+        }
+
     }
 
 

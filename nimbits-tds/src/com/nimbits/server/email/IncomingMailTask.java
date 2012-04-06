@@ -24,6 +24,7 @@ import com.nimbits.client.model.value.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.feed.*;
 import com.nimbits.server.logging.*;
+import com.nimbits.server.orm.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.user.*;
 import com.nimbits.server.value.*;
@@ -31,6 +32,7 @@ import com.nimbits.server.value.*;
 import javax.servlet.http.*;
 import java.util.*;
 import java.util.logging.*;
+import java.util.regex.*;
 
 public class IncomingMailTask extends HttpServlet {
 
@@ -40,6 +42,9 @@ public class IncomingMailTask extends HttpServlet {
     private static final long serialVersionUID = 1L;
     //  private final Map<String, Point> points = new HashMap<String, Point>();
     private static final Logger log = Logger.getLogger(IncomingMailTask.class.getName());
+    private static final Pattern COMPILE = Pattern.compile(",");
+    private static final Pattern PATTERN = Pattern.compile("\n");
+    private static final Pattern COMPILE1 = Pattern.compile("\r");
 
 
     @Override
@@ -57,7 +62,7 @@ public class IncomingMailTask extends HttpServlet {
             log.info("Incoming mail post: " + internetAddress);
             u = UserTransactionFactory.getInstance().getNimbitsUser(internetAddress);
 
-            final String content = inContent.replaceAll("\n", "").replaceAll("\r", "");
+            final String content = COMPILE1.matcher(PATTERN.matcher(inContent).replaceAll("")).replaceAll("");
             final String Data[] = content.split(";");
             log.info("Incoming mail post: " + inContent);
 
@@ -79,14 +84,14 @@ public class IncomingMailTask extends HttpServlet {
     }
 
     void processLine(final User u, final String s) throws NimbitsException {
-        final String emailLine[] = s.split(",");
+        final String emailLine[] = COMPILE.split(s);
         final EntityName pointName = CommonFactoryLocator.getInstance().createName(emailLine[0], EntityType.point);
 
-        Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName,EntityType.point);
-        final Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
+        Point e = (Point) EntityServiceFactory.getInstance().getEntityByName(u, pointName,PointEntity.class.getName());
 
-        if (point != null) {
-            sendValue(u, point, emailLine);
+
+        if (e != null) {
+            sendValue(u, e, emailLine);
         }
     }
 

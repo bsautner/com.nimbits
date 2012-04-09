@@ -123,7 +123,7 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
 
 
     @Override
-    public List<Subscription> getSubscriptionsToPoint(final Point point) {
+    public List<Subscription> getSubscriptionsToPoint(final Entity point) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final List<Subscription> results;
         final List<Subscription> retObj;

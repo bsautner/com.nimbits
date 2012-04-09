@@ -18,6 +18,7 @@ import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.server.entity.*;
+import com.nimbits.server.orm.EntityStore;
 import com.nimbits.server.task.*;
 
 import javax.servlet.http.*;
@@ -39,20 +40,20 @@ public class SummaryCron  extends HttpServlet {
 
     @Override
     @SuppressWarnings(Const.WARNING_UNCHECKED)
-    public void doGet(HttpServletRequest req, HttpServletResponse resp)
+    public void doGet(final HttpServletRequest req, final HttpServletResponse resp)
             throws IOException {
 
-        Map<String, Entity> result = null;
+        final Map<String, Entity> result;
         try {
-            result = EntityServiceFactory.getInstance().getSystemWideEntityMap(EntityType.summary);
+            result = EntityTransactionFactory.getInstance(null).getSystemWideEntityMap(EntityType.summary, EntityStore.class);
 
-        for (Entity entity : result.values()) {
-            TaskFactory.getInstance().startSummaryTask(entity);
+            for (final Entity entity : result.values()) {
+                TaskFactory.getInstance().startSummaryTask(entity);
 
 
-        }
+            }
         } catch (NimbitsException e) {
-          log.severe(e.getMessage());
+            log.severe(e.getMessage());
         }
 
     }

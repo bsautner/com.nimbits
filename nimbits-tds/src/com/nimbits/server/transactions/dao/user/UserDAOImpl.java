@@ -13,23 +13,32 @@
 
 package com.nimbits.server.transactions.dao.user;
 
-import com.nimbits.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.connection.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.orm.*;
-import com.nimbits.server.user.*;
-import twitter4j.auth.*;
+import com.nimbits.PMF;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.constants.UserMessages;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.connection.Connection;
+import com.nimbits.client.model.connection.ConnectionRequestModelFactory;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.user.UserModelFactory;
+import com.nimbits.server.orm.ConnectionRequestEntity;
+import com.nimbits.server.orm.UserEntity;
+import com.nimbits.server.user.UserTransactions;
+import twitter4j.auth.AccessToken;
 
-import javax.jdo.*;
+import javax.jdo.JDOObjectNotFoundException;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
 import java.util.*;
-import java.util.logging.*;
+import java.util.logging.Logger;
 
 @SuppressWarnings("unchecked")
 public class UserDAOImpl implements UserTransactions {
@@ -73,9 +82,10 @@ public class UserDAOImpl implements UserTransactions {
         try {
             final EntityName name = CommonFactoryLocator.getInstance().createName(internetAddress.getValue(), EntityType.user);
             final Entity entity =  EntityModelFactory.createEntity(name, "", EntityType.user, ProtectionLevel.onlyMe,
-                    "","");
-            final Entity r = EntityTransactionFactory.getDaoInstance(null).addUpdateEntity(entity);
-            final UserEntity u = new UserEntity(r);
+                    name.getValue(),name.getValue(),name.getValue());
+           // final Entity r = EntityTransactionFactory.getDaoInstance(null).addUpdateEntity(entity);
+            final UserEntity u = new UserEntity(entity);
+
             u.setSecret(UUID.randomUUID().toString());
             pm.makePersistent(u);
             return  UserModelFactory.createUserModel(u);

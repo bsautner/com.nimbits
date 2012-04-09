@@ -13,18 +13,21 @@
 
 package com.nimbits.server.transactions.memcache.value;
 
-import com.google.appengine.api.memcache.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.timespan.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.client.model.valueblobstore.*;
-import com.nimbits.server.logging.*;
-import com.nimbits.server.task.*;
-import com.nimbits.server.transactions.memcache.*;
-import com.nimbits.server.value.*;
+import com.google.appengine.api.memcache.InvalidValueException;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.MemCacheKey;
+import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.timespan.Timespan;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.valueblobstore.ValueBlobStore;
+import com.nimbits.server.logging.LogHelper;
+import com.nimbits.server.task.TaskFactory;
+import com.nimbits.server.value.RecordedValueTransactionFactory;
+import com.nimbits.server.value.RecordedValueTransactions;
 
 import java.util.*;
 
@@ -39,11 +42,11 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
 
     private final MemcacheService buffer;
     private final MemcacheService cacheShared;
-    private final Point point;
+    private final Entity point;
     private final String currentValueCacheKey;
-    private final static String valueListCacheKey = "VALUE_LIST_CACHE_KEY";
+    private final static String valueListCacheKey = SettingType.serverVersion.getDefaultValue() + "VALUE_LIST_CACHE_KEY";
 
-    public ValueMemCacheImpl(final Point point) {
+    public ValueMemCacheImpl(final Entity point) {
         this.point = point;
         final String safe = point.getKey().replace('@', '-').replace('/', '-').replace(' ', '_');
         final String bufferNamespace = MemCacheKey.valueCache + safe;
@@ -53,25 +56,34 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
         cacheShared = MemcacheServiceFactory.getMemcacheService();
     }
 
-    private void addPointToActiveList() {
+    protected void addPointToActiveList() {
+        Map<String, Entity> points;
         if (cacheShared.contains(MemCacheKey.activePoints)) {
-            Map<String, Point> points = (Map<String, Point>) cacheShared.get(MemCacheKey.activePoints);
-            if (points == null) { //contains a null map?
-                points = new HashMap<String, Point>(1);
-                points.put(point.getKey(), point);
-                cacheShared.delete(MemCacheKey.activePoints);
-                cacheShared.put(MemCacheKey.activePoints, points);
-            }
-            else if (! points.containsKey(point.getKey())) {
-                points.put(point.getKey(), point);
-                cacheShared.delete(MemCacheKey.activePoints);
-                cacheShared.put(MemCacheKey.activePoints, points);
+            try {
+                points = (Map<String, Entity>) cacheShared.get(MemCacheKey.activePoints);
+                if (points == null) { //contains a null map?
+                    points = new HashMap<String, Entity>(1);
+                    points.put(point.getKey(), point);
+                    cacheShared.delete(MemCacheKey.activePoints);
+                    cacheShared.put(MemCacheKey.activePoints, points);
+                }
+                else if (! points.containsKey(point.getKey())) {
+                    points.put(point.getKey(), point);
+                    cacheShared.delete(MemCacheKey.activePoints);
+                    cacheShared.put(MemCacheKey.activePoints, points);
 
+                }
+            } catch (InvalidValueException e) {
+                cacheShared.clearAll();
+                points = new HashMap<String, Entity>(1);
+                points.put(point.getKey(), point);
+                cacheShared.delete(MemCacheKey.activePoints);
+                cacheShared.put(MemCacheKey.activePoints, points);
             }
 
         }
         else {
-            final Map<String, Point> points = new HashMap<String, Point>(1);
+            points = new HashMap<String, Entity>(1);
             points.put(point.getKey(), point);
             cacheShared.put(MemCacheKey.activePoints, points);
         }

@@ -13,15 +13,17 @@
 
 package com.nimbits.server.transactions.dao.intelligence;
 
-import com.nimbits.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.intelligence.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.server.intelligence.*;
-import com.nimbits.server.orm.*;
+import com.nimbits.PMF;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.intelligence.Intelligence;
+import com.nimbits.client.model.intelligence.IntelligenceFactory;
+import com.nimbits.server.intelligence.IntelligenceTransactions;
+import com.nimbits.server.orm.IntelligenceEntity;
 
-import javax.jdo.*;
-import java.util.*;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
+import java.util.List;
 
 /**
  * Created by Benjamin Sautner
@@ -105,7 +107,7 @@ public class IntelligenceDAOImpl implements IntelligenceTransactions {
     }
 
     @Override
-    public List<Intelligence> getIntelligence(final Point point) {
+    public List<Intelligence> getIntelligences(final Entity point) {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 

@@ -13,29 +13,35 @@
 
 package com.nimbits.server.task;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.summary.*;
-import com.nimbits.client.model.timespan.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.feed.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.logging.*;
-import com.nimbits.server.orm.*;
-import com.nimbits.server.point.*;
-import com.nimbits.server.summary.*;
-import com.nimbits.server.user.*;
-import com.nimbits.server.value.*;
-import org.apache.commons.math3.stat.descriptive.*;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.enums.SummaryType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModel;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.summary.Summary;
+import com.nimbits.client.model.timespan.Timespan;
+import com.nimbits.client.model.timespan.TimespanModelFactory;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.server.entity.EntityServiceFactory;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.logging.LogHelper;
+import com.nimbits.server.orm.PointEntity;
+import com.nimbits.server.summary.SummaryServiceFactory;
+import com.nimbits.server.summary.SummaryTransactionFactory;
+import com.nimbits.server.user.UserServiceFactory;
+import com.nimbits.server.value.RecordedValueServiceFactory;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
-import javax.servlet.http.*;
-import java.io.*;
-import java.util.*;
-import java.util.logging.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Logger;
 
 
 /**
@@ -55,55 +61,58 @@ public class SummaryTask  extends HttpServlet {
 
         final String json = req.getParameter(Parameters.json.getText());
         final Entity entity = GsonFactory.getInstance().fromJson(json, EntityModel.class);
-
+        log.info(json);
         final User user;
         try {
             user = UserServiceFactory.getInstance().getUserByKey(entity.getOwner());
 
             final Summary summary = SummaryTransactionFactory.getInstance(user).readSummary(entity);
-            final Date now = new Date();
-            final long d = new Date().getTime() - summary.getSummaryIntervalMs();
-            if (summary.getLastProcessed().getTime() < d) {
+            if (summary==null) {
+                log.severe("Summary was null");
+            }
+            else{
+                final Date now = new Date();
+                final long d = new Date().getTime() - summary.getSummaryIntervalMs();
+                if (summary.getLastProcessed().getTime() < d) {
 
-                try {
-                   // final Point source = PointServiceFactory.getInstance().getPointByKey(summary.getEntity());
-                    final Point source = (Point) EntityServiceFactory.getInstance().getEntityByKey(summary.getEntity(), PointEntity.class.getName());
+                    try {
+                        // final Point source = PointServiceFactory.getInstance().getPointByKey(summary.getEntity());
+                        final Point source = (Point) EntityServiceFactory.getInstance().getEntityByKey(summary.getEntity(), PointEntity.class.getName());
 
-                    final Timespan span = TimespanModelFactory.createTimespan(new Date(now.getTime() - summary.getSummaryIntervalMs()), now);
-                    final List<Value> values;
-                    values = RecordedValueServiceFactory.getInstance().getDataSegment(source, span);
+                        final Timespan span = TimespanModelFactory.createTimespan(new Date(now.getTime() - summary.getSummaryIntervalMs()), now);
+                        final List<Value> values;
+                        values = RecordedValueServiceFactory.getInstance().getDataSegment(source, span);
 
-                    final double[] doubles = new double[values.size()];
-                    for (int i = 0; i< values.size(); i++) {
-                        doubles[i] = values.get(i).getDoubleValue();
-                    }
-                    if (!values.isEmpty()) {
-                        // final Entity targetEntity = EntityServiceFactory.getInstance().getEntityByUUID(summary.getTargetPointUUID());
-                      //  final Point target = PointServiceFactory.getInstance().getPointByKey(summary.getTargetPointUUID());
-                        final Point target = (Point) EntityServiceFactory.getInstance().getEntityByKey(summary.getTargetPointUUID(), PointEntity.class.getName());
+                        final double[] doubles = new double[values.size()];
+                        for (int i = 0; i< values.size(); i++) {
+                            doubles[i] = values.get(i).getDoubleValue();
+                        }
+                        if (!values.isEmpty()) {
+                            // final Entity targetEntity = EntityServiceFactory.getInstance().getEntityByUUID(summary.getTargetPointUUID());
+                            //  final Point target = PointServiceFactory.getInstance().getPointByKey(summary.getTargetPointUUID());
+                            final Point target = (Point) EntityServiceFactory.getInstance().getEntityByKey(summary.getTargetPointUUID(), PointEntity.class.getName());
 
-                        final double result = getValue(summary.getSummaryType(), doubles);
-                        final Value value = ValueModelFactory.createValueModel(result);
+                            final double result = getValue(summary.getSummaryType(), doubles);
+                            final Value value = ValueModelFactory.createValueModel(result);
 
-                        RecordedValueServiceFactory.getInstance().recordValue(user, target, value, false);
+                            RecordedValueServiceFactory.getInstance().recordValue(user, target, value, false);
 
-                        SummaryServiceFactory.getInstance().updateLastProcessed(entity);
-                    }
-                } catch (NimbitsException e) {
-                    log.severe(e.getMessage());
-                    if (user != null) {
-                        FeedServiceFactory.getInstance().postToFeed(user, e);
+                            SummaryServiceFactory.getInstance().updateLastProcessed(entity);
+                        }
+                    } catch (NimbitsException e) {
+                        LogHelper.logException(this.getClass(), e);
+
+
                     }
 
                 }
-
             }
         } catch (NimbitsException e) {
             LogHelper.logException(this.getClass(), e);
         }
     }
 
-    protected static double getValue(final SummaryType type, double[] doubles) {
+    protected static double getValue(final SummaryType type, final double[] doubles) {
         DescriptiveStatistics d = new DescriptiveStatistics(doubles);
 
         switch (type) {

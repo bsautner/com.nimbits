@@ -13,15 +13,15 @@
 
 package com.nimbits.client.service.calculation;
 
-import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.exception.*;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.calculation.Calculation;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
 
-import java.util.*;
+import java.util.List;
 
 public interface CalculationServiceAsync {
     void getCalculation(final Entity entity, final AsyncCallback<Calculation> async);
@@ -32,7 +32,7 @@ public interface CalculationServiceAsync {
 
     void getCalculations(final Entity entity, final AsyncCallback<List<Calculation>> async);
 
-    void processCalculations(final User u, final Point point, final Value value, final AsyncCallback<Void> async) throws NimbitsException;
+    void processCalculations(final User u, final Entity point, final Value value, final AsyncCallback<Void> async) throws NimbitsException;
 
     void addUpdateCalculation(final User u, final Entity entity, final EntityName name, final Calculation calculation, final AsyncCallback<Entity> async);
 

@@ -53,7 +53,6 @@ public interface EntityServiceAsync {
 
     void getEntityMap(User user, EntityType type, final int limit, AsyncCallback<Map<String, Entity>> async);
 
-    void getSystemWideEntityMap(EntityType type, AsyncCallback<Map<String, Entity>> async);
 
     void getEntityByName(User user, EntityName name, String className, AsyncCallback<Entity> async);
 }

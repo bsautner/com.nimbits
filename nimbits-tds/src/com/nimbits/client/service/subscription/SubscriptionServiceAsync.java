@@ -25,7 +25,7 @@ import java.util.*;
 public interface SubscriptionServiceAsync {
     void processSubscriptions(final User user, final Point point, final Value v, AsyncCallback<Void> async);
 
-    void getSubscriptionsToPoint(Point point, AsyncCallback<List<Subscription>> async);
+    void getSubscriptionsToPoint(Entity point, AsyncCallback<List<Subscription>> async);
 
     void updateSubscriptionLastSent(Subscription subscription, AsyncCallback<Void> async);
 

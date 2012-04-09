@@ -13,23 +13,29 @@
 
 package com.nimbits.server.task;
 
-import com.google.gson.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.valueblobstore.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.orm.*;
-import com.nimbits.server.point.*;
-import com.nimbits.server.value.*;
+import com.google.gson.Gson;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModel;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.valueblobstore.ValueBlobStore;
+import com.nimbits.server.entity.EntityServiceFactory;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.logging.LogHelper;
+import com.nimbits.server.orm.PointEntity;
+import com.nimbits.server.user.UserServiceFactory;
+import com.nimbits.server.value.RecordedValueTransactionFactory;
 
-import javax.servlet.http.*;
-import java.io.*;
-import java.util.*;
-import java.util.logging.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 
 public class PointMaintTask extends HttpServlet {
 
@@ -40,35 +46,44 @@ public class PointMaintTask extends HttpServlet {
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
 
+
+
+        try {
+            processPost(req, resp);
+
+        } catch (Exception ex) {
+            LogHelper.logException(this.getClass(), ex);
+        }
+
+    }
+
+
+    protected static void processPost(final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException {
         final Gson gson = GsonFactory.getInstance();
         resp.setContentType(Const.CONTENT_TYPE_HTML);
 
         final String j = req.getParameter(Parameters.json.getText());
         final Entity e = gson.fromJson(j, EntityModel.class);
-
-        try {
-            consolidateBlobs(e);
-
-
-        } catch (Exception ex) {
-           log.severe(ex.getMessage());
-        }
+        final User u = UserServiceFactory.getInstance().getUserByKey(e.getOwner());
+        consolidateBlobs(u, e);
 
     }
 
-    public static void consolidateBlobs(final Entity e) throws NimbitsException {
+
+    public static void consolidateBlobs(final User u, final Entity e) throws NimbitsException {
         // n = UserTransactionFactory.getInstance().(p.getUserFK());
-       // final Point p = PointServiceFactory.getInstance().getPointByKey(e.getKey());
-        final Point p = (Point) EntityServiceFactory.getInstance().getEntityByKey(e.getKey(), PointEntity.class.getName());
+        // final Point p = PointServiceFactory.getInstance().getPointByKey(e.getKey());
+        final Point p = (Point) EntityServiceFactory.getInstance().getEntityByKey(u, e.getKey(), PointEntity.class.getName());
 
         final List<ValueBlobStore> stores = RecordedValueTransactionFactory.getDaoInstance(p).getAllStores();
-        if (stores.size() > 0) {
-
+        if (! stores.isEmpty()) {
+            log.info("Consolidating " + stores.size() + " blob stores");
             final List<Long> dates = new ArrayList<Long>(stores.size());
             for (final ValueBlobStore store : stores) {
                 //consolidate blobs that have more than one date.
                 if (dates.contains(store.getTimestamp().getTime())) {
                     RecordedValueTransactionFactory.getDaoInstance(p).consolidateDate(store.getTimestamp());
+                    log.info("Consolidating " + store.getTimestamp());
                 }
                 else {
                     dates.add(store.getTimestamp().getTime());

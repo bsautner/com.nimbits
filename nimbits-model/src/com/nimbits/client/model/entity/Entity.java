@@ -3,11 +3,11 @@ package com.nimbits.client.model.entity;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.point.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.point.Point;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.List;
 
 /**
  * Created by Benjamin Sautner
@@ -17,6 +17,11 @@ import java.util.*;
  */
 public interface Entity  extends Serializable {
     EntityName getName() throws NimbitsException;
+
+    String getUUID();
+
+    void setUUID(String uuid);
+
 
     void setName(EntityName name) throws NimbitsException;
 
@@ -54,6 +59,7 @@ public interface Entity  extends Serializable {
 
     void setBlobKey(String blobKey);
 
-    void setPoints(List<Entity> points);
+    void setPoints(List<Point> points);
+
 
 }

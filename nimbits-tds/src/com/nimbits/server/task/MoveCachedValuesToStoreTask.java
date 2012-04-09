@@ -13,15 +13,18 @@
 
 package com.nimbits.server.task;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.value.*;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModel;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.value.RecordedValueTransactionFactory;
 
-import javax.servlet.http.*;
-import java.io.*;
-import java.util.logging.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.logging.Logger;
 
 /**
  * Created by Benjamin Sautner
@@ -41,7 +44,7 @@ public class MoveCachedValuesToStoreTask extends HttpServlet
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
 
         final String pointJson = req.getParameter(Parameters.point.getText());
-        final Point point = GsonFactory.getInstance().fromJson(pointJson, PointModel.class);
+        final Entity point = GsonFactory.getInstance().fromJson(pointJson, EntityModel.class);
         try {
             RecordedValueTransactionFactory.getInstance(point).moveValuesFromCacheToStore();
         } catch (NimbitsException e) {

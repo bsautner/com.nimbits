@@ -214,13 +214,13 @@ public class NimbitsClientImpl implements NimbitsClient {
 
     public Value recordValueWithGet(final EntityName name, final double value, final Date timestamp) throws IOException, NimbitsException {
         final String u = host + Path.PATH_CURRENT_VALUE;
-        String params = "point=" + URLEncoder.encode(name.getValue(), Const.CONST_ENCODING) +
+        final String params = "point=" + URLEncoder.encode(name.getValue(), Const.CONST_ENCODING) +
                 "&timestamp=" + timestamp.getTime() +
                 "&value=" + value;
 
-        String json = doGGet(u, params);
+        final String json = doGGet(u, params);
         System.out.println(json);
-        double d = Double.valueOf(json);
+        final double d = Double.valueOf(json);
         return ValueModelFactory.createValueModel(d);
 
         //return gson.fromJson(json, ValueModel.class);

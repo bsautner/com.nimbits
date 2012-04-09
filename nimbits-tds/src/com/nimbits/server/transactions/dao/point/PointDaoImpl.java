@@ -38,10 +38,10 @@ public class PointDaoImpl implements PointTransactions {
         this.u = u;
     }
 
-    public static List<Entity> createPointModels(final Collection<Entity> points) throws NimbitsException {
-        final List<Entity> retObj = new ArrayList<Entity>(points.size());
+    public static List<Point> createPointModels(final Collection<Point> points) throws NimbitsException {
+        final List<Point> retObj = new ArrayList<Point>(points.size());
 
-        for (final Entity p : points) {
+        for (final Point p : points) {
             retObj.add(PointModelFactory.createPointModel(p));
         }
 
@@ -50,28 +50,6 @@ public class PointDaoImpl implements PointTransactions {
 
     }
 
-
-    private Point getPointWithLegacyId(String uuid) throws NimbitsException {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-
-        try {
-            Query q = pm.newQuery(PointEntity.class);
-            q.setFilter("legacyKey==l");
-            q.declareParameters("String l");
-            List<Point> results = (List<Point>) q.execute(uuid);
-            if (results.size() > 0) {
-                log.info("used legacy point" + uuid);
-                return PointModelFactory.createPointModel(results.get(0));
-            }
-            else {
-                return null;
-            }
-
-        }
-        finally {
-            pm.close();
-        }
-    }
 
     @Override
     public Point updatePoint(final Point update) throws NimbitsException {
@@ -145,12 +123,12 @@ public class PointDaoImpl implements PointTransactions {
 
     @SuppressWarnings(Const.WARNING_UNCHECKED)
     @Override
-    public List<Entity> getAllPoints() throws NimbitsException {
+    public List<Point> getAllPoints() throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         try {
             final Query q = pm.newQuery(PointEntity.class);
-            final Collection<Entity> result = (Collection<Entity>) q.execute();
+            final Collection<Point> result = (Collection<Point>) q.execute();
             return createPointModels( result);
 
         } finally {
@@ -176,10 +154,10 @@ public class PointDaoImpl implements PointTransactions {
     }
 
     @Override
-    public Point addPoint(final Entity entity, final Point point) throws NimbitsException {
+    public Point addPoint(final Point point) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
-            final PointEntity jdoPoint = new PointEntity(entity, point);
+            final PointEntity jdoPoint = new PointEntity(  point);
 
             pm.makePersistent(jdoPoint);
 
@@ -191,14 +169,14 @@ public class PointDaoImpl implements PointTransactions {
 
     @SuppressWarnings(Const.WARNING_UNCHECKED)
     @Override
-    public List<Entity> getPoints(final List<Entity> entities) throws NimbitsException {
+    public List<Point> getPoints(final List<Entity> entities) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
 
         // final Query q1 = pm.newQuery(PointEntity.class, ":p.contains(uuid)");
 
         try {
-            Collection<Entity> points = new ArrayList<Entity>(entities.size());
+            Collection<Point> points = new ArrayList<Point>(entities.size());
             for (final Entity e : entities) {
                 if (e.getEntityType().equals(EntityType.point)) {
                     points.add( pm.getObjectById(PointEntity.class, e.getKey()));
@@ -275,16 +253,16 @@ public class PointDaoImpl implements PointTransactions {
     */
     @SuppressWarnings(Const.WARNING_UNCHECKED)
     @Override
-    public List<Entity> getAllPoints(final int start, final int end) throws NimbitsException {
+    public List<Point> getAllPoints(final int start, final int end) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final List<Entity> retObj;
+        final List<Point> retObj;
         try {
 
             final Query q = pm.newQuery(PointEntity.class);
             q.setRange(start, end);
-            final List<Entity> points = (List<Entity>) q.execute();
+            final List<Point> points = (List<Point>) q.execute();
 
-            retObj = createPointModels((Collection<Entity>) points);
+            retObj = createPointModels(  points);
             return retObj;
         } finally {
             pm.close();
@@ -296,18 +274,18 @@ public class PointDaoImpl implements PointTransactions {
 
     @SuppressWarnings(Const.WARNING_UNCHECKED)
     @Override
-    public List<Entity> getIdlePoints() throws NimbitsException {
+    public List<Point> getIdlePoints() throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        List<Entity> retObj;
+        List<Point> retObj;
         try {
-            final List<Entity> points;
+            final List<Point> points;
 
             final Query q = pm
                     .newQuery(PointEntity.class);
             q.setFilter("idleAlarmOn == k && idleAlarmSent  == c");
             q.declareParameters("Long k, Long c");
 
-            points = (List<Entity>) q.execute(true, false);
+            points = (List<Point>) q.execute(true, false);
             retObj = createPointModels( points);
         } finally {
             pm.close();

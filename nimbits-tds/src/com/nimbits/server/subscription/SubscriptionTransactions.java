@@ -35,7 +35,7 @@ public interface SubscriptionTransactions {
 
     List<Subscription> getSubscriptionsToPointByType(final Point point, final SubscriptionType type);
 
-    List<Subscription> getSubscriptionsToPoint(final Point point);
+    List<Subscription> getSubscriptionsToPoint(final Entity point);
 
     void updateSubscriptionLastSent(final Subscription subscription);
 

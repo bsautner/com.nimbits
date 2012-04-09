@@ -4,11 +4,12 @@ import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.CommonIdentifier;
+import com.nimbits.client.model.point.Point;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.List;
 
 /**
  * Created by Benjamin Sautner
@@ -20,6 +21,7 @@ public class EntityModel  implements Serializable, Entity {
 
 
     private String name;
+    private String key;
     private String description;
     private int entityType;
     private int protectionLevel;
@@ -29,7 +31,9 @@ public class EntityModel  implements Serializable, Entity {
     private String owner;
     private boolean readOnly = false;
     private String blobKey;
-    private List<Entity> points;
+    private String uuid;
+    private static final long serialVersionUID =3455345353L;
+    private List<Point> points;
 
     public EntityModel(final CommonIdentifier name,
                        final String description,
@@ -37,7 +41,8 @@ public class EntityModel  implements Serializable, Entity {
                        final ProtectionLevel protectionLevel,
                        final String parent,
                        final String owner,
-                       final String blobKey) {
+                       final String blobKey,
+                       final String uuid) {
         this.name = name.getValue();
         this.description = description;
         this.entityType = entityType.getCode();
@@ -46,11 +51,13 @@ public class EntityModel  implements Serializable, Entity {
         this.protectionLevel = protectionLevel.getCode();
         this.alertType = AlertType.OK.getCode();
         this.blobKey = blobKey;
+        this.uuid = uuid;
 
     }
     public EntityModel() {
     }
     public EntityModel(final Entity entity) throws NimbitsException {
+        this.key = entity.getKey();
         this.name = entity.getName().getValue();
         this.description = entity.getDescription();
         this.entityType = entity.getEntityType().getCode();
@@ -60,15 +67,15 @@ public class EntityModel  implements Serializable, Entity {
         this.protectionLevel = entity.getProtectionLevel().getCode();
         this.alertType = entity.getAlertType().getCode();
         this.blobKey = entity.getBlobKey();
-
+        this.uuid = entity.getUUID();
     }
 
-    public List<Entity> getPoints() {
+    public List<Point> getPoints() {
         return points;
     }
 
     @Override
-    public void setPoints(List<Entity> points) {
+    public void setPoints(final List<Point> points) {
         this.points = points;
     }
 
@@ -80,7 +87,17 @@ public class EntityModel  implements Serializable, Entity {
     }
 
     @Override
-    public void setName(EntityName name) {
+    public String getUUID() {
+        return uuid;
+    }
+
+    @Override
+    public void setUUID(final String uuid) {
+      this.uuid = uuid;
+    }
+
+    @Override
+    public void setName(final EntityName name) {
         this.name = name.getValue();
     }
 
@@ -90,7 +107,7 @@ public class EntityModel  implements Serializable, Entity {
     }
 
     @Override
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
 
@@ -100,7 +117,7 @@ public class EntityModel  implements Serializable, Entity {
     }
 
     @Override
-    public void setEntityType(EntityType entityType) {
+    public void setEntityType(final EntityType entityType) {
         this.entityType = entityType.getCode();
     }
 
@@ -115,7 +132,7 @@ public class EntityModel  implements Serializable, Entity {
     }
 
     @Override
-    public void setParent(String parent) {
+    public void setParent(final String parent) {
         this.parent = parent;
     }
 
@@ -125,7 +142,7 @@ public class EntityModel  implements Serializable, Entity {
     }
 
     @Override
-    public void setProtectionLevel(ProtectionLevel protectionLevel) {
+    public void setProtectionLevel(final ProtectionLevel protectionLevel) {
         this.protectionLevel = protectionLevel.getCode();
     }
 
@@ -135,7 +152,7 @@ public class EntityModel  implements Serializable, Entity {
     }
 
     @Override
-    public void setOwner(String owner) {
+    public void setOwner(final String owner) {
         this.owner = owner;
     }
 
@@ -145,7 +162,7 @@ public class EntityModel  implements Serializable, Entity {
     }
 
     @Override
-    public void setAlertType(AlertType alertType) {
+    public void setAlertType(final AlertType alertType) {
        this.alertType = alertType.getCode();
     }
 
@@ -155,7 +172,7 @@ public class EntityModel  implements Serializable, Entity {
     }
 
     @Override
-    public void setReadOnly(boolean readOnly) {
+    public void setReadOnly(final boolean readOnly) {
         this.readOnly = readOnly;
     }
 
@@ -165,11 +182,11 @@ public class EntityModel  implements Serializable, Entity {
         return blobKey;
     }
     @Override
-    public void setBlobKey(String blobKey) {
+    public void setBlobKey(final String blobKey) {
         this.blobKey = blobKey;
     }
 
-
-
-
+    public void setKey(String key) {
+        this.key = key;
+    }
 }

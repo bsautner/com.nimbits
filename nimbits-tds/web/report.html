@@ -142,10 +142,10 @@ function getPoint(_callback, _base, _uuid, _count, _start, _end) {
 
     function pointHandler() {
         if (invocation.readyState == 4 && invocation.status == 200) {
-            alert(invocation.responseText);
+          //  alert(invocation.responseText);
 
             var obj = (eval('(' + invocation.responseText + ')'));
-            alert(obj.name);
+
             if (obj.entityType == 1) {
 
                 var current = (eval('(' + obj.value + ')'));
@@ -262,8 +262,8 @@ function loadGraph(data, obj) {
 function callback(obj) {
     var data = [];
 
-    var uuid = (obj.entityType == 1) ? obj.uuid : obj.entity;
-
+    var uuid =  obj.uuid;
+    var host = "http://" + window.location.hostname;
 
     responseObject = obj;
     document.getElementById("all").style.display = "block";
@@ -274,13 +274,13 @@ function callback(obj) {
     document.getElementById("uuid").innerHTML = "<a href='report.html?uuid=" + uuid + "'>" + uuid + "</a>";
 
     document.getElementById("QR").src = "https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl=" +
-            obj.host + "?uuid=" + obj.uuid;
+            host + "?uuid=" + obj.uuid;
 
-    document.getElementById("s1").innerHTML = obj.host + "/service/point?format=json&uuid=" + uuid;
-    document.getElementById("a1").href = obj.host + "/service/point?format=json&uuid=" + uuid;
+    document.getElementById("s1").innerHTML = host + "/service/point?format=json&uuid=" + uuid;
+    document.getElementById("a1").href =host + "/service/point?format=json&uuid=" + uuid;
 
-    document.getElementById("s2").innerHTML = obj.host + "/service/point?count=100&uuid=" + uuid;
-    document.getElementById("a2").href = obj.host + "/service/point?count=20&uuid=" + uuid;
+    document.getElementById("s2").innerHTML = host + "/service/point?count=100&uuid=" + uuid;
+    document.getElementById("a2").href = host + "/service/point?count=20&uuid=" + uuid;
 
 
 
@@ -293,18 +293,19 @@ function callback(obj) {
     var start;
     var end;
     var yAxis = "";
-
+    var uuid = obj.uuid;
     if (obj.entityType == 1) {
+
 
         document.getElementById("data").style.display = "block";
 
         document.getElementById("yOption").checked = false;
         document.getElementById("yOption").disabled = true;
-        document.getElementById("s3").innerHTML = obj.host + "/service/currentvalue?uuid=" + obj.uuid;
-        document.getElementById("a3").href = obj.host + "/service/currentvalue?uuid=" + obj.uuid;
-        document.getElementById("subscribe").href = obj.host + "/nimbits.html?action=subscribe&uuid=" + obj.uuid;
-        document.getElementById("s4").innerHTML = obj.host + "/service/currentvalue?uuid=" + obj.uuid;
-        document.getElementById("a4").href = obj.host + "/service/currentvalue?format=json&uuid=" + obj.uuid;
+        document.getElementById("s3").innerHTML = host + "/service/currentvalue?uuid=" + uuid;
+        document.getElementById("a3").href =  host + "/service/currentvalue?uuid=" +uuid;
+        document.getElementById("subscribe").href =  host + "?action=subscribe&uuid=" + uuid;
+        document.getElementById("s4").innerHTML = host +  "/service/currentvalue?uuid="  +uuid;
+        document.getElementById("a4").href = host + "/service/currentvalue?format=json&uuid=" + uuid;
         labels.push("date");
         labels.push(obj.name);
         pointNames.push(obj.name);
@@ -317,20 +318,20 @@ function callback(obj) {
         // document.getElementById("state").className = alertLabel[current.alertState];
         var unit = obj.unit != null ? obj.unit : "";
         document.getElementById("status").innerHTML =
-                "<span class='" + alertLabel[current.alertState] + "'>"
+                "<span class='" + alertLabel[current.st] + "'>"
                         + obj.name + ": "
-                        + current.d + unit + "  " + current.note
-                        + alertState[current.alertState]
+                        + current.d + unit + "  " + current.n
+                        + alertState[current.st]
                         + "</span><br />";
 
-        document.getElementById("dataText").value = current.data;
+        document.getElementById("dataText").value = current.dx;
       //  document.getElementById("meter").style.display = "block";
         //document.getElementById("meter").src = "meter.html";
 
         for (i = values.length-1; i > -1; i--) {
 
             var value = (eval('(' + values[i] + ')'));
-            var date = new Date(value.timestamp);
+            var date = new Date(value.t);
             if (start == null) {
                 start = date;
             }
@@ -343,6 +344,7 @@ function callback(obj) {
             else if (date > end) {
                 end = date;
             }
+
             data.push([date, value.d]);
 
         }
@@ -367,7 +369,7 @@ function callback(obj) {
 
             document.getElementById("status").innerHTML +=
                     "<span class='" + alertLabel[current.alertState] + "'>"
-                            + "<a href=\"report.html?uuid=" + px.uuid + "&hist=" + obj.uuid + "\">"
+                            + "<a href=\"report.html?uuid=" + px.uuid + "&hist=" +  + uuid + "\">"
                             + px.name + ": "
                             + current.d + unit + "  " + current.note
                             + alertState[current.alertState]
@@ -381,7 +383,7 @@ function callback(obj) {
                 c++;
 
 
-                var date2 = new Date(vx.timestamp);
+                var date2 = new Date(vx.t);
                 if (start == null) {
                     start = date2;
                 }

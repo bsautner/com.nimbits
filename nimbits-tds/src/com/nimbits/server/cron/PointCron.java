@@ -13,36 +13,41 @@
 
 package com.nimbits.server.cron;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.task.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.server.entity.EntityTransactionFactory;
+import com.nimbits.server.logging.LogHelper;
+import com.nimbits.server.task.TaskFactory;
 
-import javax.servlet.http.*;
-import java.io.*;
-import java.util.*;
-import java.util.logging.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Map;
+import java.util.logging.Logger;
 
-public class PointMaint extends HttpServlet {
+public class
+        PointCron extends HttpServlet {
     /**
      *
      */
     private static final long serialVersionUID = 1L;
-    private static final Logger log = Logger.getLogger(PointMaint.class.getName());
+    private static final Logger log = Logger.getLogger(PointCron.class.getName());
 
     @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp)
             throws IOException {
 
+
             try {
-                final Map<String,Entity> e = EntityTransactionFactory.getDaoInstance(null).getSystemWideEntityMap(EntityType.point);
-                for (final Entity en : e.values()) {
+                final Map<String,Point> e = EntityTransactionFactory.getDaoInstance(null).getSystemWidePointMap();
+                log.info("PointMaint processing " + e.values().size() + " points");
+                for (final Point en : e.values()) {
                     TaskFactory.getInstance().startPointMaintTask(en);
                 }
 
             } catch (NimbitsException e1) {
-              log.severe(e1.getMessage());
+                LogHelper.logException(this.getClass(), e1);
             }
 
         }

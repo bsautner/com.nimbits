@@ -9,7 +9,7 @@ import java.util.*;
  * Time: 1:36 PM
  */
 public enum EntityType {
-    user(0, true,  ""),
+    user(0, true,  "com.nimbits.server.orm.UserEntity"),
     point(1, true, "com.nimbits.server.orm.PointEntity"),
     category(2, false,  "com.nimbits.server.orm.EntityStore"),
     file(4, false, "com.nimbits.server.orm.EntityStore"),

@@ -41,9 +41,22 @@ public class EntityModelFactory {
                                       final ProtectionLevel protectionLevel,
                                       final String parentUUID,
                                       final String ownerUUID,
-                                      final String blobKey) {
+                                      final String blobKey,
+                                      final String uuid ) {
         return new EntityModel(name, description, entityType, protectionLevel,  parentUUID,
-                ownerUUID, blobKey);
+                ownerUUID, blobKey, uuid);
+    }
+
+
+    public static Entity createEntity(final EntityName name,
+                                      final String description,
+                                      final EntityType entityType,
+                                      final ProtectionLevel protectionLevel,
+                                      final String parentUUID,
+                                      final String ownerUUID,
+                                      final String uuid) {
+        return new EntityModel(name, description, entityType, protectionLevel,  parentUUID,
+                ownerUUID, "", uuid);
     }
     public static Entity createEntity(final EntityName name,
                                       final String description,
@@ -52,14 +65,13 @@ public class EntityModelFactory {
                                       final String parentUUID,
                                       final String ownerUUID) {
         return new EntityModel(name, description, entityType, protectionLevel,  parentUUID,
-                ownerUUID, "");
+                ownerUUID, "", null);
     }
-
     public static Entity createEntity(final User user) throws NimbitsException {
         final EntityName name = CommonFactoryLocator.getInstance().createName(user.getEmail().getValue(), EntityType.user);
 
         return createEntity(name, "", EntityType.user, ProtectionLevel.onlyMe,
-                user.getKey(), user.getKey());
+                user.getKey(), user.getKey(),null);
 
     }
 
@@ -130,7 +142,7 @@ public class EntityModelFactory {
                 null,
 
                 null,
-                null);
+                null,null);
     }
 
 
@@ -141,11 +153,11 @@ public class EntityModelFactory {
                 ProtectionLevel.everyone,
                 u.getKey(),
                 u.getKey(),
-                u.getKey()) : new EntityModel(name,
+                u.getKey(),null) : new EntityModel(name,
                 "",
                 EntityType.point,
                 ProtectionLevel.everyone,
-
+                null,
                 null,
                 null,
                 null);

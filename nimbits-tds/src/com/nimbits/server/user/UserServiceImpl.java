@@ -268,9 +268,9 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
         EntityName a = CommonFactoryLocator.getInstance().createName(acceptor.getEmail().getValue(), EntityType.userConnection);
         EntityName r = CommonFactoryLocator.getInstance().createName(requester.getEmail().getValue(), EntityType.userConnection);
-        final Entity rConnection = EntityModelFactory.createEntity(a, "", EntityType.userConnection, ProtectionLevel.onlyMe,  requester.getKey(), requester.getKey());
+        final Entity rConnection = EntityModelFactory.createEntity(a, "", EntityType.userConnection, ProtectionLevel.onlyMe,  requester.getKey(), requester.getKey(), UUID.randomUUID().toString());
 
-        final Entity aConnection = EntityModelFactory.createEntity(r, "", EntityType.userConnection, ProtectionLevel.onlyMe, acceptor.getKey(), acceptor.getKey());
+        final Entity aConnection = EntityModelFactory.createEntity(r, "", EntityType.userConnection, ProtectionLevel.onlyMe, acceptor.getKey(), acceptor.getKey(), UUID.randomUUID().toString());
 
         Entity newAcceptorEntity = EntityServiceFactory.getInstance().addUpdateEntity(acceptor, aConnection);
         Entity newRequestorEntity = EntityServiceFactory.getInstance().addUpdateEntity(requester,rConnection);

@@ -199,7 +199,7 @@
 
     <servlet>
         <servlet-name>PointMaint</servlet-name>
-        <servlet-class>com.nimbits.server.cron.PointMaint</servlet-class>
+        <servlet-class>com.nimbits.server.cron.PointCron</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>PointMaint</servlet-name>

@@ -68,23 +68,23 @@ public class FeedPanel  extends LayoutContainer {
 
     @Override
     protected void onAttach() {
-        Timer updater = new RefreshTimer();
+        final Timer updater = new RefreshTimer();
         updater.scheduleRepeating(Const.DEFAULT_TIMER_UPDATE_SPEED);
         updater.run();
         super.onAttach();
     }
 
     private static ComboBox<FeedTypeOption> optionComboBox(final FeedType selectedValue) {
-        ComboBox<FeedTypeOption> combo = new ComboBox<FeedTypeOption>();
+        final ComboBox<FeedTypeOption> combo = new ComboBox<FeedTypeOption>();
 
-        List<FeedTypeOption> ops = new ArrayList<FeedTypeOption>(FeedType.values().length);
+        final List<FeedTypeOption> ops = new ArrayList<FeedTypeOption>(FeedType.values().length);
 
-        for (FeedType type : FeedType.values()) {
+        for (final FeedType type : FeedType.values()) {
             ops.add(new FeedTypeOption(type));
         }
 
 
-        ListStore<FeedTypeOption> store = new ListStore<FeedTypeOption>();
+        final ListStore<FeedTypeOption> store = new ListStore<FeedTypeOption>();
 
         store.add(ops);
 
@@ -94,20 +94,20 @@ public class FeedPanel  extends LayoutContainer {
         combo.setTriggerAction(ComboBox.TriggerAction.ALL);
         combo.setStore(store);
 
-        FeedTypeOption selected = combo.getStore().findModel(Parameters.value.getText(), selectedValue.getCode());
+        final FeedTypeOption selected = combo.getStore().findModel(Parameters.value.getText(), selectedValue.getCode());
         combo.setValue(selected);
 
         return combo;
 
     }
 
-    private void updateValues(boolean reset) {
+    private void updateValues(final boolean reset) {
         final ListStore<GxtFeedModel> store  = view.getStore();
         if (reset) {
             store.removeAll();
         }
         if (store != null) {
-            FeedAsync service = GWT.create(Feed.class);
+            final FeedAsync service = GWT.create(Feed.class);
             service.getFeed(10, connectionEntityKey, new UpdateValuesAsyncCallback(store));
         }
     }
@@ -115,12 +115,12 @@ public class FeedPanel  extends LayoutContainer {
 
 
     @Override
-    protected void onRender(Element parent, int index) {
+    protected void onRender(final Element parent, final int index) {
         super.onRender(parent, index);
         setBorders(false);
        // setScrollMode(Style.Scroll.AUTOY);
 
-        ContentPanel panel = new ContentPanel();
+        final ContentPanel panel = new ContentPanel();
         panel.setLayout(new RowLayout(Style.Orientation.HORIZONTAL));
         panel.setHeight(HEIGHT);
         panel.setWidth("100%");
@@ -141,9 +141,9 @@ public class FeedPanel  extends LayoutContainer {
         view.getSelectionModel().addListener(Events.SelectionChange,
                 new SelectionChangedEventListener());
 
-        ToolBar bar = feedToolbar();
+        final ToolBar bar = feedToolbar();
         panel.setTopComponent(bar);
-        panel.add(view, new RowData(1, -1, new Margins(4)));
+        panel.add(view, new RowData(1, -1, new Margins(0)));
         view.setBorders(true);
         view.setHeight(HEIGHT1);
         panel.setFrame(true);
@@ -156,40 +156,42 @@ public class FeedPanel  extends LayoutContainer {
 
     private ToolBar feedToolbar() {
         final FeedAsync service = GWT.create(Feed.class);
-        ToolBar bar = new ToolBar();
+        final Button btn = new Button("Refresh");
 
-        ButtonGroup group = new ButtonGroup(1);
+        final ToolBar bar = new ToolBar();
+
+        final ButtonGroup group = new ButtonGroup(1);
         group.setHeading("Feed Options");
         group.setHeaderVisible(false);
         group.setBodyBorder(false);
         group.setAutoWidth(true);
         group.setWidth("100%");
         group.setBorders(false);
-        Button btn = new Button("Refresh");
+        group.setFrame(false);
+
         btn.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.refresh()));
         btn.setIconAlign(Style.IconAlign.LEFT);
-
         btn.addSelectionListener(new RefreshButtonEventSelectionListener());
 
 
         feedType = optionComboBox(FeedType.all);
         feedType.addSelectionChangedListener(new FeedTypeOptionSelectionChangedListener());
-        group.add(new LabelToolItem("Show:"));
-        group.add(feedType);
-        group.setBodyBorder(true);
 
-
-        group.add(new LabelToolItem("Switch to connected user's Feed:"));
-        EntityCombo entityCombo = new EntityCombo(EntityType.userConnection, "", "");
+        final EntityCombo entityCombo = new EntityCombo(EntityType.userConnection, "", "");
         entityCombo.addSelectionChangedListener(new ConnectionSelectionChangedListener());
-        group.add(entityCombo);
 
-        group.add(new LabelToolItem("Update Status:"));
+
         final TextArea status = new TextArea();
         status.addKeyListener(new StatusKeyDownListener(service, status));
         status.setWidth("100%");
+
+        group.add(new LabelToolItem("Show:"));
+        group.add(feedType);
+        group.add(new LabelToolItem("Switch to connected user's Feed:"));
+
+        group.add(entityCombo);
+        group.add(new LabelToolItem("Update Status:"));
         group.add(status);
-        group.setBodyBorder(true);
 
 
         group.add(btn);

@@ -63,7 +63,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
 
     @Override
-    public List<Subscription> getSubscriptionsToPoint(final Point point) {
+    public List<Subscription> getSubscriptionsToPoint(final Entity point) {
         return SubscriptionTransactionFactory.getInstance(null).getSubscriptionsToPoint(point);
     }
 
@@ -159,14 +159,14 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
             if (entity.getOwner().equals(user.getKey())) {   //subscribe to your own data
                 final Entity s = EntityModelFactory.createEntity(name, "",EntityType.subscription,
-                        ProtectionLevel.onlyMe, entity.getKey(), user.getKey());
+                        ProtectionLevel.onlyMe, entity.getKey(), user.getKey(), UUID.randomUUID().toString());
                 final Entity r = EntityServiceFactory.getInstance().addUpdateEntity(user, s);
                 SubscriptionTransactionFactory.getInstance(user).subscribe(r, subscription);
                 return  r;
             }
             else { //subscribe to some elses data
                 final Entity s = EntityModelFactory.createEntity(name, "",EntityType.subscription,
-                        ProtectionLevel.onlyMe,  user.getKey(), user.getKey());
+                        ProtectionLevel.onlyMe,  user.getKey(), user.getKey(), UUID.randomUUID().toString());
 
                 SubscriptionTransactionFactory.getInstance(user).subscribe(s, subscription);
                 return  EntityServiceFactory.getInstance().addUpdateEntity(user, s);
@@ -260,7 +260,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
         if (entity.getProtectionLevel().equals(ProtectionLevel.everyone)) {
 
-            final List<Value> values = RecordedValueServiceFactory.getInstance().getTopDataSeries(p, 10).getValues();
+            final List<Value> values = RecordedValueServiceFactory.getInstance().getTopDataSeries(p, 10);
             if (values.isEmpty()) {
                 picture.append("http://app.nimbits.com/resources/images/logo.png");
             } else {

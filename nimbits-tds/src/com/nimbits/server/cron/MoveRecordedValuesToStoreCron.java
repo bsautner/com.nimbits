@@ -42,10 +42,14 @@ public class MoveRecordedValuesToStoreCron extends HttpServlet {
 
         final MemcacheService cacheShared = MemcacheServiceFactory.getMemcacheService();
         if (cacheShared.contains(MemCacheKey.activePoints)) {
-            final Map<String, Point> points = (Map<String, Point>) cacheShared.get(MemCacheKey.activePoints);
-            cacheShared.delete(MemCacheKey.activePoints); //TODO possible race condition with record value service
-            for (final Point point : points.values()) {
-                  TaskFactory.getInstance().startMoveCachedValuesToStoreTask(point);
+            try {
+                final Map<String, Point> points = (Map<String, Point>) cacheShared.get(MemCacheKey.activePoints);
+                cacheShared.delete(MemCacheKey.activePoints); //TODO possible race condition with record value service
+                for (final Point point : points.values()) {
+                      TaskFactory.getInstance().startMoveCachedValuesToStoreTask(point);
+                }
+            } catch (InvalidValueException e) {
+                cacheShared.clearAll();
             }
 
         }

@@ -13,25 +13,29 @@
 
 package com.nimbits.server.calculation;
 
-import com.google.gwt.user.server.rpc.*;
-import com.nimbits.client.common.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.calculation.Calculation;
-import com.nimbits.client.model.calculation.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.client.service.calculation.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.feed.*;
-import com.nimbits.server.orm.*;
-import com.nimbits.server.point.*;
-import com.nimbits.server.user.*;
-import com.nimbits.server.value.*;
+import com.nimbits.client.model.calculation.CalculationModelFactory;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.client.service.calculation.CalculationService;
+import com.nimbits.server.entity.EntityServiceFactory;
+import com.nimbits.server.feed.FeedServiceFactory;
+import com.nimbits.server.orm.PointEntity;
+import com.nimbits.server.user.UserServiceFactory;
+import com.nimbits.server.value.RecordedValueServiceFactory;
 
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by bsautner
@@ -65,7 +69,7 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
 
 
             final Entity e = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe,
-                    calculation.getTrigger(), u.getKey());
+                    calculation.getTrigger(), u.getKey(), UUID.randomUUID().toString());
             retObj = EntityServiceFactory.getInstance().addUpdateEntity(u, e);
             final Calculation c = CalculationModelFactory.createCalculation(calculation.getTrigger(), e.getKey(), calculation.getEnabled(),
                     calculation.getFormula(), calculation.getTarget(), calculation.getX(),
@@ -78,7 +82,7 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
         else if (entity.getEntityType().equals(EntityType.point) && Utils.isEmptyString(calculation.getKey())) {
 
             Entity e = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe,
-                    entity.getKey(), u.getKey());
+                    entity.getKey(), u.getKey(), UUID.randomUUID().toString());
             retObj = EntityServiceFactory.getInstance().addUpdateEntity(e);
             Calculation c = CalculationModelFactory.createCalculation(entity.getKey(), e.getKey(), calculation.getEnabled(),
                     calculation.getFormula(), calculation.getTarget(), calculation.getX(),
@@ -120,11 +124,11 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
     }
 
     @Override
-    public void processCalculations(final User u, final Point point, final Value value) throws NimbitsException {
+    public void processCalculations(final User u, final Entity point, final Value value) throws NimbitsException {
 
-        final Entity e = EntityServiceFactory.getInstance().getEntityByKey(u, point.getKey(), EntityStore.class.getName());
+//        final Entity e = EntityServiceFactory.getInstance().getEntityByKey(u, point.getKey(), EntityStore.class.getName());
 
-        final List<Calculation> calculations = getCalculations(e);
+        final List<Calculation> calculations = getCalculations(point);
         Point target;
         Value result;
         for (final Calculation c : calculations) {

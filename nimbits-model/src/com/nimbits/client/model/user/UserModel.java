@@ -17,6 +17,7 @@ package com.nimbits.client.model.user;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.EntityModel;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -25,9 +26,9 @@ import java.util.Date;
 //import com.google.appengine.api.users.User;
 
 
-public class UserModel implements Serializable, User {
+public class UserModel extends EntityModel implements Serializable, User {
 
-    private String key;
+   // private String key;
 
     private Date dateCreated;
 
@@ -54,12 +55,14 @@ public class UserModel implements Serializable, User {
     private static final long serialVersionUID =1L;
 
     public UserModel() {
+        super();
     }
 
 
 
     public UserModel(final User u) throws NimbitsException {
-        this.key = u.getKey();
+        super(u);
+       // this.key = u.getKey();
         this.dateCreated = u.getDateCreated();
         this.lastLoggedIn = u.getLastLoggedIn();
         this.secret = u.getSecret();
@@ -74,7 +77,7 @@ public class UserModel implements Serializable, User {
 
     @Override
     public String getKey() {
-        return this.key;
+        return super.getKey();
     }
 
     @Override

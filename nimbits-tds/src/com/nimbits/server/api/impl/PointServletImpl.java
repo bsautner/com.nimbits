@@ -28,6 +28,7 @@ import com.nimbits.server.api.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.feed.*;
 import com.nimbits.server.gson.*;
+import com.nimbits.server.logging.LogHelper;
 import com.nimbits.server.orm.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.time.*;
@@ -132,10 +133,10 @@ public class PointServletImpl extends ApiServlet {
 
             if (containsParam(Parameters.uuid)) {
 
-                final Point point = (Point) EntityServiceFactory.getInstance().getEntityByKey(getParam(Parameters.uuid), PointEntity.class.getName());
+                final Entity entity =   EntityServiceFactory.getInstance().getEntityByKey(getParam(Parameters.uuid), PointEntity.class.getName());
 
-                if (point != null) {
-                    outputPoint(getParam(Parameters.count), getParam(Parameters.format), startParam, endParam, offsetParam, out, point);
+                if (entity != null) {
+                    outputPoint(getParam(Parameters.count), getParam(Parameters.format), startParam, endParam, offsetParam, out, entity);
                 } else {
                     final Entity category = EntityServiceFactory.getInstance().getEntityByKey(user, EntityStore.class.getName(),getParam(Parameters.uuid));
 
@@ -146,12 +147,12 @@ public class PointServletImpl extends ApiServlet {
 //                                u.setRestricted(true);
 //                            }
                             final List<Entity> children = EntityServiceFactory.getInstance().getEntityChildren(user, category, EntityType.point);
-                            final List<Entity> points = PointServiceFactory.getInstance().getPoints(user, children);// PointServiceFactory.getInstance().getPointsByCategory(u, category);
+                            final List<Point> points = PointServiceFactory.getInstance().getPoints(user, children);// PointServiceFactory.getInstance().getPointsByCategory(u, category);
 
                             //todo remove point from list if private
                             for (final Entity e : points) {
-                                Point p = (Point) e;
-                                p.setValues(getRecordedValues(getParam(Parameters.count), startParam, endParam, offsetParam, p).getValues());
+                                final Point p = (Point) e;
+                                p.setValues(getRecordedValues(getParam(Parameters.count), startParam, endParam, offsetParam, p));
                                 p.setValue(RecordedValueServiceFactory.getInstance().getCurrentValue(p));
 
 
@@ -170,13 +171,15 @@ public class PointServletImpl extends ApiServlet {
 
             out.close();
         } catch (IOException e) {
-            if (user != null) {
-                FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(e));
-            }
+            LogHelper.logException(this.getClass(), e);
+//            if (user != null) {
+//                FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(e));
+//            }
         } catch (NimbitsException e) {
-            if (user != null) {
-                FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(e));
-            }
+            LogHelper.logException(this.getClass(), e);
+//            if (user != null) {
+//                FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(e));
+//            }
         }
 
     }
@@ -208,7 +211,7 @@ public class PointServletImpl extends ApiServlet {
         }
 
         entity = EntityModelFactory.createEntity(pointName,"", EntityType.point, ProtectionLevel.everyone,
-                parent, u.getKey());
+                parent, u.getKey(), UUID.randomUUID().toString());
 
         retObj = PointServiceFactory.getInstance().addPoint(u, entity);
 
@@ -232,11 +235,9 @@ public class PointServletImpl extends ApiServlet {
 
         final Point point = gson.fromJson(json, PointModel.class);
 
-        final Entity entity = EntityModelFactory.createEntity(name,"", EntityType.point,
-                ProtectionLevel.everyone,
-                parent, u.getKey() );
 
-        return PointServiceFactory.getInstance().addPoint(u, entity, point);
+
+        return PointServiceFactory.getInstance().addPoint(u, point);
 
     }
 
@@ -257,10 +258,11 @@ public class PointServletImpl extends ApiServlet {
 
 
 
-    private static void outputPoint(final String countParam, final String format, final String startParam, final String endParam, final String offsetParam, final PrintWriter out, final Point point) throws NimbitsException {
+    private static void outputPoint(final String countParam, final String format, final String startParam, final String endParam, final String offsetParam, final PrintWriter out, final Entity baseEntity) throws NimbitsException {
 
 
-        final Point p = getRecordedValues(countParam, startParam, endParam, offsetParam, point);
+        final Point p = (Point) baseEntity;
+        p.setValues(getRecordedValues(countParam, startParam, endParam, offsetParam, baseEntity));
 
         final Value current = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
         p.setValue(current);
@@ -280,8 +282,8 @@ public class PointServletImpl extends ApiServlet {
         return type;
     }
 
-    private static Point getRecordedValues(final String countParam, final String start, final String end, final String offsetParam, final Point point) throws NimbitsException {
-        final Point retPoint;
+    private static List<Value>  getRecordedValues(final String countParam, final String start, final String end, final String offsetParam, final Entity point) throws NimbitsException {
+
         if (!Utils.isEmptyString(countParam)) {
             int count;
             try {
@@ -292,19 +294,18 @@ public class PointServletImpl extends ApiServlet {
             if (count > 1000) {
                 count = 1000;
             }
-            retPoint = RecordedValueServiceFactory.getInstance().getTopDataSeries(point, count);
+            return  RecordedValueServiceFactory.getInstance().getTopDataSeries(point, count);
 
         } else if (!Utils.isEmptyString(start) && !Utils.isEmptyString(end) && !Utils.isEmptyString(end)) {
             final int offset = Integer.valueOf(offsetParam);
             final Timespan ts = TimespanServiceFactory.getInstance().createTimespan(start, end, offset);
 
-            final List<Value> values = RecordedValueServiceFactory.getInstance().getDataSegment(point, ts);
-            retPoint = point;
-            retPoint.setValues(values);
+             return RecordedValueServiceFactory.getInstance().getDataSegment(point, ts);
+
         } else {
-            retPoint = point;
+           return new ArrayList<Value>(0);
         }
-        return retPoint;
+
     }
 
 
@@ -323,10 +324,9 @@ public class PointServletImpl extends ApiServlet {
                 final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
                 final Entity e = EntityServiceFactory.getInstance().getEntityByName(user, pointName,EntityType.point);
                 if (e != null) {
-                    final Point p = (Point) EntityServiceFactory.getInstance().getEntityByKey(e.getKey(), PointEntity.class.getName());
 
 
-                    result = gson.toJson(p);
+                    result = gson.toJson(e);
                     out.println(result);
                 }
                 else {
@@ -337,7 +337,7 @@ public class PointServletImpl extends ApiServlet {
                 final EntityName categoryName = CommonFactoryLocator.getInstance().createName(categoryNameParam, EntityType.category);
                 final Entity c = EntityServiceFactory.getInstance().getEntityByName(user, categoryName,EntityType.category);//  CategoryServiceFactory.getInstance().getCategory(u, categoryName);
                 final List<Entity> children = EntityServiceFactory.getInstance().getEntityChildren(user, c, EntityType.point);
-                final List<Entity> points =   PointServiceFactory.getInstance().getPoints(user, children);
+                final List<Point> points =   PointServiceFactory.getInstance().getPoints(user, children);
 
                 //final List<Point> points = PointServiceFactory.getInstance().getPointsByCategory(u, c);
                 result = gson.toJson(points, GsonFactory.pointListType);

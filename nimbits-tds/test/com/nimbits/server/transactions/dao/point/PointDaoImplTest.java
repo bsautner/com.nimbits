@@ -13,17 +13,19 @@
 
 package com.nimbits.server.transactions.dao.point;
 
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.orm.*;
-import com.nimbits.server.point.*;
-import helper.*;
-import static org.junit.Assert.*;
-import org.junit.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.server.entity.EntityServiceFactory;
+import com.nimbits.server.orm.PointEntity;
+import com.nimbits.server.point.PointTransactionsFactory;
+import helper.NimbitsServletTest;
+import org.junit.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by bsautner
@@ -39,7 +41,7 @@ public class PointDaoImplTest extends NimbitsServletTest{
         List<Entity> e = new ArrayList<Entity>(2);
         e.add(EntityServiceFactory.getInstance().getEntityByKey(point.getKey(),PointEntity.class.getName()));
         e.add(EntityServiceFactory.getInstance().getEntityByKey(pointChild.getKey(),PointEntity.class.getName()));
-        List<Entity> result = PointTransactionsFactory.getInstance(user).getPoints(e);
+        List<Point> result = PointTransactionsFactory.getInstance(user).getPoints(e);
         assertEquals(2, result.size());
 
 

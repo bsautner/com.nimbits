@@ -64,7 +64,7 @@ public class SummaryServiceImpl  extends RemoteServiceServlet implements Summary
         if (entity.getEntityType().equals(EntityType.point)) {
 
             Entity newEntity = EntityModelFactory.createEntity(name, "", EntityType.summary,
-                    ProtectionLevel.onlyMe, entity.getKey(), u.getKey());
+                    ProtectionLevel.onlyMe, entity.getKey(), u.getKey(), UUID.randomUUID().toString());
             Entity createdEntity = EntityServiceFactory.getInstance().addUpdateEntity(u, newEntity);
             Summary newSummary = SummaryModelFactory.createSummary(newEntity.getKey(), entity.getKey(), update.getTargetPointUUID(), update.getSummaryType(),
                     update.getSummaryIntervalMs(), new Date());

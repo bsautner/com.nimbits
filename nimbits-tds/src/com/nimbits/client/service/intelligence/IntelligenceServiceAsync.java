@@ -40,7 +40,7 @@ public interface IntelligenceServiceAsync {
 
     void addUpdateIntelligence(Entity entity, EntityName name, Intelligence update, AsyncCallback<Entity> error);
 
-    void processIntelligence(User u, Point point, AsyncCallback<Void> async) throws NimbitsException;
+    void processIntelligence(User u, Entity point, AsyncCallback<Void> async) throws NimbitsException;
 
     void processInput(final Intelligence intelligence, final Point targetPoint, final String processedInput, AsyncCallback<Value> async);
 

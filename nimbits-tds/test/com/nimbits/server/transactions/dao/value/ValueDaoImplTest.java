@@ -13,22 +13,40 @@
 
 package com.nimbits.server.transactions.dao.value;
 
-import com.google.appengine.api.blobstore.*;
-import com.google.appengine.api.datastore.*;
-import static com.google.appengine.api.datastore.FetchOptions.Builder.*;
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.BlobstoreService;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.files.*;
-import com.google.appengine.tools.development.testing.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.server.time.*;
-import org.junit.*;
-import static org.junit.Assert.*;
+import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
+import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModelFactory;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.server.time.TimespanServiceFactory;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-import java.io.*;
-import java.nio.*;
-import java.nio.channels.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
 import java.util.*;
+
+import static com.google.appengine.api.datastore.FetchOptions.Builder.withLimit;
+import static org.junit.Assert.*;
 
 /**
  * Created by Benjamin Sautner
@@ -40,10 +58,13 @@ public class ValueDaoImplTest {
     private Point point;
     ValueDAOImpl dao;
     @Before
-    public void setUp() {
+    public void setUp() throws NimbitsException {
+        EntityName name = CommonFactoryLocator.getInstance().createName("e", EntityType.point);
 
+        com.nimbits.client.model.entity.Entity entity = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.everyone, "", "");
         helper.setUp();
-        point = PointModelFactory.createPointModel();
+
+        point = PointModelFactory.createPointModel(entity);
         dao = new ValueDAOImpl(point);
     }
 
@@ -207,11 +228,19 @@ public class ValueDaoImplTest {
 
 
     @Test
-    public void testGetRecordedValuePrecedingTimestampMultiplePoints() {
+    public void testGetRecordedValuePrecedingTimestampMultiplePoints() throws NimbitsException {
         final List<Value> values = loadSomeDataOverDays();
-        final Point point1 = PointModelFactory.createPointModel();
-        final Point point2 = PointModelFactory.createPointModel();
-        final Point point3 = PointModelFactory.createPointModel();
+        EntityName name1 = CommonFactoryLocator.getInstance().createName("1", EntityType.point);
+        EntityName name2 = CommonFactoryLocator.getInstance().createName("1", EntityType.point);
+        EntityName name3 = CommonFactoryLocator.getInstance().createName("1", EntityType.point);
+        com.nimbits.client.model.entity.Entity entity1 = EntityModelFactory.createEntity(name1, "", EntityType.point, ProtectionLevel.everyone, "", "");
+        com.nimbits.client.model.entity.Entity entity2 = EntityModelFactory.createEntity(name2, "", EntityType.point, ProtectionLevel.everyone, "", "");
+        com.nimbits.client.model.entity.Entity entity3 = EntityModelFactory.createEntity(name3, "", EntityType.point, ProtectionLevel.everyone, "", "");
+
+
+        final Point point1 = PointModelFactory.createPointModel(entity1);
+        final Point point2 = PointModelFactory.createPointModel(entity2);
+        final Point point3 = PointModelFactory.createPointModel(entity3);
 
         final ValueDAOImpl dao1 = new ValueDAOImpl(point1);
         final ValueDAOImpl dao2 = new ValueDAOImpl(point2);

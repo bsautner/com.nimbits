@@ -126,7 +126,7 @@ public class TaskImpl implements Task {
     }
 
     @Override
-    public void startRecordValueTask(final User u, final Point point, final Value value, final boolean loopFlag) {
+    public void startRecordValueTask(final User u, final Entity point, final Value value, final boolean loopFlag) {
         try {
             if (Double.valueOf(value.getDoubleValue()).isInfinite()) {
                 return;
@@ -219,7 +219,7 @@ public class TaskImpl implements Task {
     }
 
     @Override
-    public void startMoveCachedValuesToStoreTask(final Point point) {
+    public void startMoveCachedValuesToStoreTask(final Entity point) {
         final String json = gson.toJson(point);
 
         final Queue queue =  QueueFactory.getQueue(overrideQueue ? DEFAULT : TASK_MOVE);

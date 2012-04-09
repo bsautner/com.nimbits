@@ -19,6 +19,7 @@ import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.service.entity.*;
 import com.nimbits.server.blob.*;
@@ -56,7 +57,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
         final User u = getUser();
 
         final Entity e = EntityModelFactory.createEntity(name, "", type, ProtectionLevel.everyone,
-                u.getKey(), u.getKey());
+                u.getKey(), u.getKey(), UUID.randomUUID().toString());
         final Entity r = EntityTransactionFactory.getInstance(u).addUpdateEntity(e);
         switch (type) {
             case point:
@@ -71,7 +72,12 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
 
     @Override
     public List<Entity> deleteEntity(final User user, final Entity entity) throws NimbitsException {
-       final List<Entity> deleted =  EntityTransactionFactory.getInstance(user).deleteEntity(entity);
+        final List<Entity> deleted;
+        try {
+            deleted = EntityTransactionFactory.getInstance(user).deleteEntity(entity, Class.forName(entity.getEntityType().getClassName()));
+        } catch (ClassNotFoundException e) {
+           throw  new NimbitsException(e);
+        }
         for (final Entity e : deleted) {
             EntityTransactionFactory.getInstance(user).removeEntityFromCache(e);
             CoreFactory.getInstance().reportDeleteToCore(entity);
@@ -86,12 +92,9 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
             case user:
                 break;
             case point:
-                PointServiceFactory.getInstance().deletePoint(user, entity);
-
-                break;
+                 break;
             case category:
-
-                break;
+                 break;
             case file:
                 BlobServiceFactory.getInstance().deleteBlob(entity);
                 break;
@@ -132,6 +135,11 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     public List<Entity> getEntities() throws NimbitsException {
 
          return EntityTransactionFactory.getInstance(getUser()).getEntities();
+    }
+
+    @Override
+    public List<Entity> deleteEntity(Entity entity, Class<?> cls) throws NimbitsException {
+        throw new NimbitsException("not implemented");
     }
 
     @Override
@@ -217,7 +225,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     }
 
     @Override
-    public Entity getEntityByName(final User user, final EntityName name, String className) throws NimbitsException {
+    public Entity getEntityByName(final User user, final EntityName name, final String className) throws NimbitsException {
         try {
             return EntityTransactionFactory.getInstance(user).getEntityByName(name, Class.forName(className));
         } catch (ClassNotFoundException e) {
@@ -231,8 +239,13 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     }
 
     @Override
-    public Map<String, Entity> getSystemWideEntityMap(final EntityType type) throws NimbitsException {
-        return EntityTransactionFactory.getInstance(null).getSystemWideEntityMap(type);
+    public Map<String, Entity> getSystemWideEntityMap(final EntityType type, final Class<?> cls) throws NimbitsException {
+        return EntityTransactionFactory.getInstance(null).getSystemWideEntityMap(type, cls);
+    }
+
+    @Override
+    public Map<String, Point> getSystemWidePointMap() throws NimbitsException {
+        return EntityTransactionFactory.getInstance(null).getSystemWidePointMap();
     }
 
     @Override

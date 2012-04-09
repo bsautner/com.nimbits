@@ -32,7 +32,7 @@ import java.util.*;
 @RemoteServiceRelativePath("subscribe")
 public interface SubscriptionService  extends RemoteService {
     void processSubscriptions(final User u, final Point point, final Value v) throws NimbitsException;
-    List<Subscription> getSubscriptionsToPoint(Point point);
+    List<Subscription> getSubscriptionsToPoint(Entity point);
     void updateSubscriptionLastSent(Subscription subscription);
     Entity subscribe(Entity entity, Subscription subscription, EntityName name) throws NimbitsException;
     Subscription readSubscription(final Entity point) throws NimbitsException;

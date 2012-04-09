@@ -17,6 +17,7 @@ import com.google.appengine.api.memcache.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.*;
 import com.nimbits.server.entity.*;
 
@@ -42,7 +43,7 @@ public class EntityCacheImpl implements EntityTransactions {
     }
 
     @Override
-    public Entity getEntityByName(EntityName name, Class<?> cls) throws NimbitsException {
+    public Entity getEntityByName(final EntityName name, final Class<?> cls) throws NimbitsException {
         return EntityTransactionFactory.getDaoInstance(user).getEntityByName(name, cls);
     }
 
@@ -82,7 +83,7 @@ public class EntityCacheImpl implements EntityTransactions {
     @Override
     public Entity addUpdateEntity(final Entity entity) throws NimbitsException {
 
-        Entity result =   EntityTransactionFactory.getDaoInstance(user).addUpdateEntity(entity);
+        final Entity result =   EntityTransactionFactory.getDaoInstance(user).addUpdateEntity(entity);
         addEntityToCache(result);
         return result;
     }
@@ -93,18 +94,18 @@ public class EntityCacheImpl implements EntityTransactions {
     }
 
     @Override
-    public List<Entity> deleteEntity(final Entity entity) throws NimbitsException {
+    public List<Entity> deleteEntity(final Entity entity, final Class<?> cls) throws NimbitsException {
 
         removeEntityFromCache(entity);
-        return EntityTransactionFactory.getDaoInstance(user).deleteEntity(entity);
+        return EntityTransactionFactory.getDaoInstance(user).deleteEntity(entity, cls);
     }
 
     @Override
-    public Entity getEntityByKey(final String uuid, Class<?> cls) throws NimbitsException {
+    public Entity getEntityByKey(final String uuid, final Class<?> cls) throws NimbitsException {
         if (cache.contains(uuid)) {
 
             try {
-                Entity e =  (Entity) cache.get(uuid);
+                final Entity e =  (Entity) cache.get(uuid);
                 return e != null ? e : getEntityFromStore(uuid, cls);
             } catch (InvalidValueException e1) {
                 return getEntityFromStore(uuid, cls);
@@ -117,7 +118,7 @@ public class EntityCacheImpl implements EntityTransactions {
     }
 
     private Entity getEntityFromStore(final String key, final Class<?> cls) throws NimbitsException {
-        Entity result = EntityTransactionFactory.getDaoInstance(user).getEntityByKey(key, cls);
+        final Entity result = EntityTransactionFactory.getDaoInstance(user).getEntityByKey(key, cls);
         addEntityToCache(result);
         return result;
     }
@@ -128,7 +129,12 @@ public class EntityCacheImpl implements EntityTransactions {
     }
 
     @Override
-    public Map<String, Entity> getSystemWideEntityMap(final EntityType type) throws NimbitsException {
-        return  EntityTransactionFactory.getDaoInstance(user).getSystemWideEntityMap(type);
+    public Map<String, Entity> getSystemWideEntityMap(final EntityType type, final Class<?> cls) throws NimbitsException {
+        return  EntityTransactionFactory.getDaoInstance(user).getSystemWideEntityMap(type, cls);
+    }
+
+    @Override
+    public Map<String, Point> getSystemWidePointMap() throws NimbitsException {
+        return  EntityTransactionFactory.getDaoInstance(user).getSystemWidePointMap();
     }
 }

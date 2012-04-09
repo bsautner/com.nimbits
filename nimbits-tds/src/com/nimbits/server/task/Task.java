@@ -34,13 +34,13 @@ public interface Task {
 
     void startProcessBatchTask(final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException;
 
-    void startRecordValueTask(final User u, final Point point, final Value value, final boolean loopFlag);
+    void startRecordValueTask(final User u, final Entity point, final Value value, final boolean loopFlag);
 
     void startIncomingMailTask(final String address, final String content);
 
     void startPointMaintTask(final Entity point);
 
-    void startMoveCachedValuesToStoreTask(final Point point);
+    void startMoveCachedValuesToStoreTask(final Entity point);
 
     void startUpgradeTask(Action action, Entity entity, int s);
 

@@ -55,7 +55,7 @@ public class IdlePointCron extends HttpServlet {
     }
 
     protected static int processGet() throws NimbitsException {
-        final List<Entity> points = PointServiceFactory.getInstance().getIdlePoints();
+        final List<Point> points = PointServiceFactory.getInstance().getIdlePoints();
 
         for (final Entity p : points) {
             try {

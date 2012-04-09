@@ -11,26 +11,24 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server.intelligence;
+package com.nimbits.server.orm;
 
+import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.intelligence.Intelligence;
 
-import java.util.List;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.PersistenceCapable;
 
 /**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 2/21/12
- * Time: 11:48 AM
+ * Created by bsautner
+ * User: benjamin
+ * Date: 4/8/12
+ * Time: 10:53 AM
  */
-public interface IntelligenceTransactions {
+@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
+public class SimpleEntity extends EntityStore {
 
-    public Intelligence getIntelligence(Entity entity);
-
-    Intelligence addUpdateIntelligence(Entity entity, Intelligence update);
-
-    List<Intelligence> getIntelligences(Entity point);
-
-    void deleteIntelligence(Entity entity);
+    public SimpleEntity(Entity entity) throws NimbitsException {
+        super(entity);
+    }
 }

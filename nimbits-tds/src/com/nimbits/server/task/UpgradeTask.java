@@ -13,40 +13,45 @@
 
 package com.nimbits.server.task;
 
-import com.google.appengine.api.datastore.*;
-import com.google.appengine.api.memcache.*;
-import com.nimbits.*;
+import com.google.appengine.api.datastore.DatastoreTimeoutException;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import com.nimbits.PMF;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
+import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.calculation.Calculation;
-import com.nimbits.client.model.calculation.*;
-import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.calculation.CalculationModelFactory;
+import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.relationship.*;
-import com.nimbits.client.model.subscription.*;
-import com.nimbits.client.model.timespan.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.server.calculation.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.gson.*;
+import com.nimbits.client.model.entity.EntityModel;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.relationship.Relationship;
+import com.nimbits.client.model.subscription.Subscription;
+import com.nimbits.client.model.subscription.SubscriptionFactory;
+import com.nimbits.client.model.timespan.Timespan;
+import com.nimbits.client.model.timespan.TimespanModelFactory;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.server.calculation.CalculationServiceFactory;
+import com.nimbits.server.entity.EntityServiceFactory;
+import com.nimbits.server.entity.EntityTransactionFactory;
+import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.orm.*;
-import com.nimbits.server.point.*;
-import com.nimbits.server.relationship.*;
-import com.nimbits.server.subscription.*;
-import com.nimbits.server.user.*;
-import com.nimbits.server.value.*;
-import com.nimbits.shared.*;
-import org.datanucleus.exceptions.*;
+import com.nimbits.server.relationship.RelationshipTransactionFactory;
+import com.nimbits.server.subscription.SubscriptionTransactionFactory;
+import com.nimbits.server.user.UserTransactionFactory;
+import com.nimbits.server.value.RecordedValueTransactionFactory;
+import com.nimbits.server.value.RecordedValueTransactions;
+import com.nimbits.shared.Utils;
+import org.datanucleus.exceptions.NucleusObjectNotFoundException;
 
 import javax.jdo.*;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
-import java.util.logging.*;
+import java.util.logging.Logger;
 
 /**
  * Created by bsautner
@@ -160,7 +165,7 @@ public class UpgradeTask  extends HttpServlet
                                         ProtectionLevel protectionLevel = c.getProtectionLevel() == null ? ProtectionLevel.onlyMe : ProtectionLevel.get(c.getProtectionLevel());
 
                                         Entity newCat = EntityModelFactory.createEntity(name, "", EntityType.category,protectionLevel,
-                                                user.getKey(), user.getKey());
+                                                user.getKey(), user.getKey(), UUID.randomUUID().toString());
 
                                         EntityServiceFactory.getInstance().addUpdateEntity(user, newCat);
                                     }
@@ -265,7 +270,7 @@ public class UpgradeTask  extends HttpServlet
 
                                     }
                                     final Entity pointEntity = EntityModelFactory.createEntity(name, p.getDescription(), EntityType.point,
-                                            protectionLevel,  parent, userEntity.getKey());
+                                            protectionLevel,  parent, userEntity.getKey(), p.getUUID());
                                     final Entity newPoint = EntityServiceFactory.getInstance().addUpdateEntity(user, pointEntity);
 
 
@@ -599,7 +604,7 @@ public class UpgradeTask  extends HttpServlet
                                             Entity existing = EntityTransactionFactory.getDaoInstance(user).getEntityByName(cName, EntityType.calculation);
                                             if (existing == null) {
                                                 Entity ce = EntityModelFactory.createEntity(cName, "", EntityType.calculation, ProtectionLevel.onlyMe, trigger.getKey(),
-                                                        user.getKey());
+                                                        user.getKey(), UUID.randomUUID().toString());
                                                 Entity rce = EntityServiceFactory.getInstance().addUpdateEntity(user, ce);
                                                 Calculation calcEntity = CalculationModelFactory.createCalculation(trigger.getKey(), true, calc.getFormula(),
                                                         T, X, Y, Z);
@@ -848,7 +853,7 @@ public class UpgradeTask  extends HttpServlet
 
 
         Entity sentity = EntityModelFactory.createEntity(newName, "",EntityType.subscription,
-                ProtectionLevel.onlyMe, p.getKey(), u.getKey());
+                ProtectionLevel.onlyMe, p.getKey(), u.getKey(), UUID.randomUUID().toString());
 
         EntityName subscribedToPointName = CommonFactoryLocator.getInstance().createName(legacy.getName(), EntityType.point);
         Entity exists = EntityTransactionFactory.getDaoInstance(u).getEntityByName(newName, EntityType.subscription);
@@ -1006,7 +1011,7 @@ public class UpgradeTask  extends HttpServlet
 
                                 if (existing == null) {
                                     final Entity entity = EntityModelFactory.createEntity(name, "",EntityType.userConnection, ProtectionLevel.onlyMe,
-                                            user.getKey(), user.getKey());
+                                            user.getKey(), user.getKey(), UUID.randomUUID().toString());
                                     clog("created connection " + name.getValue());
                                     Entity newEntity = EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
                                     RelationshipTransactionFactory.getInstance().createRelationship(newEntity, connectedUser.getKey());
@@ -1129,7 +1134,7 @@ public class UpgradeTask  extends HttpServlet
 
                     if (existingUser == null &&  existingUserEntity == null) {
 
-                        final Entity entity = EntityModelFactory.createEntity(u.getName(), "", EntityType.user, ProtectionLevel.onlyMe, "", "");
+                        final Entity entity = EntityModelFactory.createEntity(u.getName(), "", EntityType.user, ProtectionLevel.onlyMe, "", "", UUID.randomUUID().toString());
                         final Entity r = EntityTransactionFactory.getDaoInstance(null).addUpdateEntity(entity);
 
                         UserEntity userEntity = new UserEntity(r);

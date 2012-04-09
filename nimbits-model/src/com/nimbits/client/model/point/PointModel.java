@@ -29,7 +29,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
     private static final int DEFAULT_EXPIRE = 90;
     //private int entityType = EntityType.point.getCode();
 
-    private String key;
+   // private String key;
 
     private double highAlarm = 0.0;
 
@@ -54,21 +54,21 @@ public class PointModel extends EntityModel implements Serializable, Point {
 
     private double filterValue;
 
-    public PointModel(final Entity entity) throws NimbitsException {
-        super(entity);
-        this.key = entity.getKey();
+    public PointModel(final Entity point) throws NimbitsException {
+        super(point);
+
 
     }
 
 
 
     // Constructors
-    public PointModel(final Entity e, final Point point) throws NimbitsException {
-        super(e);
+    public PointModel(final Point point) throws NimbitsException {
+        super(point);
         this.highAlarm = point.getHighAlarm();
         this.expire = point.getExpire();
         this.unit = point.getUnit();
-        this.key = point.getKey();
+
         this.lowAlarm = point.getLowAlarm();
         this.highAlarmOn = point.isHighAlarmOn();
         this.lowAlarmOn = point.isLowAlarmOn();
@@ -237,6 +237,6 @@ public class PointModel extends EntityModel implements Serializable, Point {
     }
     @Override
     public String getKey() {
-        return key;
+        return super.getKey();
     }
 }

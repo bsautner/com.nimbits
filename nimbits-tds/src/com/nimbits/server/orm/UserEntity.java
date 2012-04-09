@@ -13,25 +13,26 @@
 
 package com.nimbits.server.orm;
 
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.email.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.user.User;
 
-import javax.jdo.annotations.*;
-import java.util.*;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.NotPersistent;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+import java.util.Date;
 
 
 //import com.google.appengine.api.users.User;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
-public class UserEntity implements User {
-    @PrimaryKey
-    @Persistent
-    private Key key;
+public class UserEntity extends EntityStore implements User {
+//    @PrimaryKey
+//    @Persistent
+//    private Key key;
 
     @Persistent
     private Date dateCreated;
@@ -112,10 +113,11 @@ public class UserEntity implements User {
     protected UserEntity() {
     }
 
-    public UserEntity(final Entity entity) {
+    public UserEntity(final Entity entity) throws NimbitsException {
+        super(entity);
         dateCreated = new Date();
         lastLoggedIn = dateCreated;
-        this.key = KeyFactory.createKey(UserEntity.class.getSimpleName(), entity.getKey());
+      //  this.key = KeyFactory.createKey(UserEntity.class.getSimpleName(), entity.getKey());
 
     }
 
@@ -135,10 +137,11 @@ public class UserEntity implements User {
     public void setRestricted(final boolean restricted) {
         this.restricted = restricted;
     }
-    @Override
-    public String getKey() {
-        return key.getName();
-    }
+
+//    @Override
+//    public String getKey() {
+//        return key.getName();
+//    }
     @Override
     public EmailAddress getEmail() throws NimbitsException {
         return CommonFactoryLocator.getInstance().createEmailAddress(key.getName());
@@ -153,7 +156,6 @@ public class UserEntity implements User {
     }
 
 
-//    public long getID() {
-//        return id == null ? 0 : id;
-//    }
+
+
 }

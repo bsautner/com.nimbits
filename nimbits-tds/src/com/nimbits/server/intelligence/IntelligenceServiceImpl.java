@@ -13,35 +13,45 @@
 
 package com.nimbits.server.intelligence;
 
-import com.google.gwt.user.server.rpc.*;
-import com.nimbits.client.common.*;
-import com.nimbits.client.constants.*;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.constants.Path;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.intelligence.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.client.service.intelligence.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.feed.*;
-import com.nimbits.server.http.*;
-import com.nimbits.server.orm.*;
-import com.nimbits.server.point.*;
-import com.nimbits.server.settings.*;
-import com.nimbits.server.user.*;
-import com.nimbits.server.value.*;
-import org.w3c.dom.*;
-import org.xml.sax.*;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.intelligence.Intelligence;
+import com.nimbits.client.model.intelligence.IntelligenceModelFactory;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.client.service.intelligence.IntelligenceService;
+import com.nimbits.server.entity.EntityServiceFactory;
+import com.nimbits.server.feed.FeedServiceFactory;
+import com.nimbits.server.http.HttpCommonFactory;
+import com.nimbits.server.orm.PointEntity;
+import com.nimbits.server.settings.SettingsServiceFactory;
+import com.nimbits.server.user.UserServiceFactory;
+import com.nimbits.server.value.RecordedValueServiceFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
-import javax.xml.parsers.*;
-import java.io.*;
-import java.net.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.*;
-import java.util.logging.*;
+import java.util.logging.Logger;
 
 /**
  * Created by Benjamin Sautner
@@ -193,7 +203,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
 
             Entity e = EntityModelFactory.createEntity(name, "", EntityType.intelligence, ProtectionLevel.onlyMe,
-                    update.getTrigger(), u.getKey());
+                    update.getTrigger(), u.getKey(), UUID.randomUUID().toString());
             retObj = EntityServiceFactory.getInstance().addUpdateEntity(u, e);
             Intelligence c = IntelligenceModelFactory.createIntelligenceModel(e.getKey(),
                     update.getEnabled(), update.getResultTarget(), update.getTarget(), update.getInput(), update.getNodeId(),
@@ -206,7 +216,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
         else if (entity.getEntityType().equals(EntityType.point) && Utils.isEmptyString(update.getKey())) {
 
             Entity e = EntityModelFactory.createEntity(name, "", EntityType.intelligence, ProtectionLevel.onlyMe,
-                    entity.getKey(), u.getKey());
+                    entity.getKey(), u.getKey(), UUID.randomUUID().toString());
             retObj = EntityServiceFactory.getInstance().addUpdateEntity(e);
             Intelligence c = IntelligenceModelFactory.createIntelligenceModel(e.getKey(),
                     update.getEnabled(), update.getResultTarget(), update.getTarget(), update.getInput(), update.getNodeId(),
@@ -231,8 +241,8 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
     }
 
     @Override
-    public void processIntelligence(final User u, final Point point) throws NimbitsException {
-        List<Intelligence> list = IntelligenceServiceFactory.getDaoInstance().getIntelligence(point);
+    public void processIntelligence(final User u, final Entity point) throws NimbitsException {
+        List<Intelligence> list = IntelligenceServiceFactory.getDaoInstance().getIntelligences(point);
 
         for (Intelligence i : list) {
             try {

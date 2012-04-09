@@ -198,12 +198,12 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>PointMaint</servlet-name>
-        <servlet-class>com.nimbits.server.cron.PointMaint</servlet-class>
+        <servlet-name>PointCron</servlet-name>
+        <servlet-class>com.nimbits.server.cron.PointCron</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>PointMaint</servlet-name>
-        <url-pattern>/cron/PointMaint</url-pattern>
+        <servlet-name>PointCron</servlet-name>
+        <url-pattern>/cron/point</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>QuotaResetCron</servlet-name>
@@ -502,7 +502,14 @@
         <url-pattern>/admin/upgrade</url-pattern>
     </servlet-mapping>
 
-
+    <servlet>
+        <servlet-name>com.nimbits.nimbits RecoveryServlet</servlet-name>
+        <servlet-class>com.nimbits.server.admin.RecoveryServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>com.nimbits.nimbits RecoveryServlet</servlet-name>
+        <url-pattern>/admin/recover</url-pattern>
+    </servlet-mapping>
 
     <servlet>
         <servlet-name>com.nimbits.nimbits UserReportService</servlet-name>

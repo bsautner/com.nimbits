@@ -13,23 +13,30 @@
 
 package com.nimbits.server.value;
 
-import com.google.gwt.http.client.*;
-import com.google.gwt.user.server.rpc.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.timespan.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.client.service.recordedvalues.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.orm.*;
-import com.nimbits.server.point.*;
-import com.nimbits.server.task.*;
-import com.nimbits.server.user.*;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.enums.AlertType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModel;
+import com.nimbits.client.model.timespan.Timespan;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.client.service.recordedvalues.RecordedValueService;
+import com.nimbits.server.entity.EntityServiceFactory;
+import com.nimbits.server.entity.EntityTransactionFactory;
+import com.nimbits.server.orm.PointEntity;
+import com.nimbits.server.task.TaskFactory;
+import com.nimbits.server.user.UserServiceFactory;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 
 public class RecordedValueServiceImpl extends RemoteServiceServlet implements
@@ -39,71 +46,33 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
 
 
-    @Override
-    public Value getCurrentValue(final Entity entity) throws NimbitsException {
 
-        // final User u = UserServiceFactory.getInstance().getAppUserUsingGoogleAuth();
-        //  final User pointOwner = UserTransactionFactory.getInstance().getNimbitsUserByID(pointOwnerId);
-       // final Point p = PointServiceFactory.getInstance().getPointByKey(entity.getKey());
-        Point p = (Point) EntityServiceFactory.getInstance().getEntityByKey(entity.getKey(), PointEntity.class.getName());
-
-
-        return getCurrentValue(p);
-
-
-    }
-
-    @Override
-    public List<Value> getTopDataSeries(final Point point,
-                                        final int maxValues,
-                                        final Date endDate) throws NimbitsException {
-        return RecordedValueTransactionFactory.getInstance(point).getTopDataSeries(maxValues, endDate);
-    }
 
     @Override
     public List<Value> getTopDataSeries(final Entity entity,
                                         final int maxValues,
                                         final Date endDate) throws NimbitsException {
-        Point p = (Point) EntityServiceFactory.getInstance().getEntityByKey(entity.getKey(), PointEntity.class.getName());
-        return RecordedValueTransactionFactory.getInstance(p).getTopDataSeries(maxValues, endDate);
-    }
-    //called from RPC Client
-    @Override
-    public List<Point> getDataSeries(final List<Point> points,
-                                     final Timespan timespan) throws NimbitsException {
-
-        return getDataSeries1(points, timespan);
-
+//        final Point p = (Point) EntityServiceFactory.getInstance().getEntityByKey(entity.getKey(), PointEntity.class.getName());
+        return RecordedValueTransactionFactory.getInstance(entity).getTopDataSeries(maxValues, endDate);
     }
 
-    @Override
-    public List<Value> getCache(final Point point) throws NimbitsException {
-        return RecordedValueTransactionFactory.getInstance(point).getBuffer();
-    }
+
+
     @Override
     public List<Value> getCache(final Entity entity) throws NimbitsException {
       //  final Point point = PointServiceFactory.getInstance().getPointByKey(entity.getKey());
-        Point p = (Point) EntityServiceFactory.getInstance().getEntityByKey(entity.getKey(), PointEntity.class.getName());
-        return RecordedValueTransactionFactory.getInstance(p).getBuffer();
+      //  final Point p = (Point) EntityServiceFactory.getInstance().getEntityByKey(entity.getKey(), PointEntity.class.getName());
+        return RecordedValueTransactionFactory.getInstance(entity).getBuffer();
     }
 
-    @Override
-    public List<Value> getPieceOfDataSegment(final Point point,
-                                             final Timespan timespan,
-                                             final int start,
-                                             final int end) throws NimbitsException {
 
-        return RecordedValueTransactionFactory.getInstance(point).getDataSegment(timespan, start, end);
-    }
 
     @Override
     public List<Value> getPieceOfDataSegment(final Entity entity,
                                              final Timespan timespan,
                                              final int start,
                                              final int end) throws NimbitsException {
-      //  final Point point = PointServiceFactory.getInstance().getPointByKey(entity.getKey());
-        Point point = (Point) EntityServiceFactory.getInstance().getEntityByKey(entity.getKey(), PointEntity.class.getName());
-        return RecordedValueTransactionFactory.getInstance(point).getDataSegment(timespan, start, end);
+          return RecordedValueTransactionFactory.getInstance(entity).getDataSegment(timespan, start, end);
     }
 
     @Override
@@ -114,28 +83,26 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
                 this.getThreadLocalRequest());
 
 //        final Point px = PointServiceFactory.getInstance().getPointByKey(point.getKey());
-        Point px = (Point) EntityServiceFactory.getInstance().getEntityByKey(point.getKey(), PointEntity.class.getName());
-        return recordValue(u, px, value, false);
+     //   final Point px = (Point) EntityServiceFactory.getInstance().getEntityByKey(point.getKey(), PointEntity.class.getName());
+        return recordValue(u,point, value, false);
     }
 
 
     @Override
-    public Point getTopDataSeries(final Point point,
+    public List<Value> getTopDataSeries(final Entity point,
                                   final int maxValues) throws NimbitsException {
 
-        final List<Value> v = RecordedValueTransactionFactory.getInstance(point).getTopDataSeries(maxValues);
-        point.setValues(v);
-        return point;
+        return RecordedValueTransactionFactory.getInstance(point).getTopDataSeries(maxValues);
 
     }
 
     @Override
-    public List<Value> getDataSegment(final Point point, final Timespan timespan, final int start, final int end) throws NimbitsException {
+    public List<Value> getDataSegment(final Entity point, final Timespan timespan, final int start, final int end) throws NimbitsException {
         return RecordedValueTransactionFactory.getInstance(point).getDataSegment(timespan, start, end);
     }
 
     @Override
-    public List<Value> getDataSegment(final Point point, final Timespan timespan) throws NimbitsException {
+    public List<Value> getDataSegment(final Entity point, final Timespan timespan) throws NimbitsException {
         return RecordedValueTransactionFactory.getInstance(point).getDataSegment(timespan);
     }
 
@@ -149,25 +116,14 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
         final Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName, PointEntity.class.getName());
       //  final Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
 
-        return (e != null) ? recordValue(u, (PointModel) e, value, false) : null;
+        return (e != null) ? recordValue(u, e, value, false) : null;
 
     }
 
 
-    private static List<Point> getDataSeries1(final List<Point> points,
-                                              final Timespan timespan) throws NimbitsException {
-
-
-        for (final Point point : points) {
-
-            point.setValues(RecordedValueTransactionFactory.getInstance(point).getDataSegment(timespan));
-        }
-
-        return points;
-    }
 
     @Override
-    public Value getPrevValue(final Point point,
+    public Value getPrevValue(final Entity point,
                               final Date timestamp) throws NimbitsException {
 
 
@@ -178,14 +134,14 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
 
     @Override
-    public Value getCurrentValue(final Point p) throws NimbitsException {
+    public Value getCurrentValue(final Entity p) throws NimbitsException {
 
 
         if (p != null) {
 
             final Value v = getPrevValue(p, new Date());
             if (v != null) {
-                final AlertType alertType = getAlertType(p, v);
+                final AlertType alertType = getAlertType((Point) p, v);
                 return ValueModelFactory.createValueModel(v, alertType);
 
             }
@@ -295,7 +251,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public Value recordValue(final User u,
-                             final Point point,
+                             final Entity entity,
                              final Value value,
                              final boolean loopFlag) throws NimbitsException {
 
@@ -304,15 +260,21 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
         Value retObj = null;
 
         final boolean ignored = false;
+        final Point point  = (entity instanceof PointModel)
+                ? (Point) entity
+                : (Point) EntityTransactionFactory.getInstance(u).getEntityByKey(entity.getKey(),PointEntity.class);
 
-        final boolean ignoredByDate = ignoreDataByExpirationDate(point, value, ignored);
+
+
+
+        final boolean ignoredByDate = ignoreDataByExpirationDate( point, value, ignored);
       //  final boolean ignoredByOwnership = ignoreDataByOwnership(u, point, ignored);
-        final boolean ignoredByCompression = ignoreByCompression(point, value);
+        final boolean ignoredByCompression = ignoreByCompression(  point, value);
 
         if (!ignoredByDate &&  !ignoredByCompression) {
 
             retObj = RecordedValueTransactionFactory.getInstance(point).recordValue(value);
-            final AlertType t = (getAlertType(point, retObj));
+            final AlertType t = (getAlertType((Point) point, retObj));
             final Value v = ValueModelFactory.createValueModel(retObj, t);
             TaskFactory.getInstance().startRecordValueTask(u, point, v, loopFlag);
         }
@@ -330,12 +292,12 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 //        return ignored;
 //    }
 
-    private static boolean ignoreDataByExpirationDate(final Point point, final Value value, final boolean ignored) {
+    private static boolean ignoreDataByExpirationDate(final Point p, final Value value, final boolean ignored) {
         boolean retVal = ignored;
 
-        if (point.getExpire() > 0) {
+        if ( p.getExpire() > 0) {
             final Calendar c = Calendar.getInstance();
-            c.add(Calendar.DATE, point.getExpire() * -1);
+            c.add(Calendar.DATE, p.getExpire() * -1);
             if (value.getTimestamp().getTime() < c.getTimeInMillis()) {
                 retVal = true;
             }

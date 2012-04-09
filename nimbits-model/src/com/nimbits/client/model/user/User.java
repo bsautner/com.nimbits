@@ -13,8 +13,9 @@
 
 package com.nimbits.client.model.user;
 
-import com.nimbits.client.exception.*;
+import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.Entity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -26,10 +27,10 @@ import java.util.Date;
  * Date: 4/16/11
  * Time: 4:10 PM
  */
-public interface User extends Serializable {
+public interface User extends Entity, Serializable {
 
 
-    String getKey();
+ //   String getKey();
 
     Date getDateCreated();
 

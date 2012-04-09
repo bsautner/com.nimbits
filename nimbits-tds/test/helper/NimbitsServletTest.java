@@ -31,6 +31,10 @@ import com.nimbits.server.user.*;
 import org.junit.*;
 import org.springframework.mock.web.*;
 
+import java.util.UUID;
+
+import static org.junit.Assert.assertNotNull;
+
 /**
  * Created by Benjamin Sautner
  * User: bsautner
@@ -84,9 +88,10 @@ public class NimbitsServletTest {
         groupName = CommonFactoryLocator.getInstance().createName("group1", EntityType.point);
         resp = new MockHttpServletResponse();
         userTransactionsDao = UserTransactionFactory.getDAOInstance();
-        userTransactionsDao.createNimbitsUser(emailAddress);
+        User r = userTransactionsDao.createNimbitsUser(emailAddress);
+        assertNotNull(r);
         user = userTransactionsDao.getNimbitsUser(emailAddress);
-
+        assertNotNull(user);
         settingsDAO = SettingTransactionsFactory.getDaoInstance();
 
         req.addParameter(Parameters.email.getText(), email);
@@ -94,15 +99,15 @@ public class NimbitsServletTest {
         req.addParameter(Parameters.point.getText(), pointName.getValue());
         req.addParameter(Parameters.value.getText(), "1.234");
 
-        Entity c = EntityModelFactory.createEntity(groupName, "", EntityType.category, ProtectionLevel.everyone, user.getKey(), user.getKey());
+        Entity c = EntityModelFactory.createEntity(groupName, "", EntityType.category, ProtectionLevel.everyone, user.getKey(), user.getKey(), UUID.randomUUID().toString());
         c = EntityServiceFactory.getInstance().addUpdateEntity(c);
 
-        pointEntity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone,  c.getKey(), user.getKey());
+        pointEntity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone,  c.getKey(), user.getKey(), UUID.randomUUID().toString());
         point = pointService.addPoint(user, pointEntity);
 
-        pointChildEntity = EntityModelFactory.createEntity(pointChildName, "", EntityType.point, ProtectionLevel.everyone, point.getKey(), user.getKey());
+        pointChildEntity = EntityModelFactory.createEntity(pointChildName, "", EntityType.point, ProtectionLevel.everyone, point.getKey(), user.getKey(), UUID.randomUUID().toString());
        pointChild =  pointService.addPoint(user, pointChildEntity);
-
+         assertNotNull(pointChild);
 
     }
 

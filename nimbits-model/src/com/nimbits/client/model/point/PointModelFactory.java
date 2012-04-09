@@ -6,10 +6,11 @@
 
 package com.nimbits.client.model.point;
 
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by bsautner
@@ -23,19 +24,26 @@ public class PointModelFactory {
     private PointModelFactory() {
     }
 
-    public static PointModel createPointModel() {
+    public static PointModel createPointModel(final Entity entity) throws NimbitsException {
 
-        return new PointModel();
-
-    }
-
-
-
-    public static PointModel createPointModel(final Entity p) throws NimbitsException {
-
-        return new PointModel(p);
+        return new PointModel(entity);
 
     }
 
 
+
+    public static PointModel createPointModel(final Point point) throws NimbitsException {
+
+        return new PointModel(point);
+
+    }
+
+
+    public static List<Point> createPointModels(final List<Point> result) throws NimbitsException {
+        final List<Point> r = new ArrayList<Point>(result.size());
+        for (final Point p : result) {
+            r.add(createPointModel(p));
+        }
+        return r;
+    }
 }

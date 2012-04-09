@@ -23,16 +23,13 @@ import com.nimbits.client.model.value.*;
 import java.util.*;
 
 public interface RecordedValueServiceAsync {
-    void getDataSeries(final List<Point> arrayList, final Timespan timespan, final AsyncCallback<List<Point>> asyncCallback);
 
-    void getTopDataSeries(final Point point, final int maxValues,
-                          final AsyncCallback<Point> asyncCallback);
+    void getTopDataSeries(final Entity point, final int maxValues,
+                          final AsyncCallback<List<Value>> asyncCallback);
 
-    void getCurrentValue(final Point p, final AsyncCallback<Value> asyncCallback);
 
-    void getPieceOfDataSegment(final Point point, final Timespan timespan, final int start, final int end, final AsyncCallback<List<Value>> asyncCallback);
 
-    void getPrevValue(final Point p, final Date date, final AsyncCallback<Value> callback);
+    void getPrevValue(final Entity p, final Date date, final AsyncCallback<Value> callback);
 
     void recordValue(final User u, final EntityName pointName, final Value value, final AsyncCallback<Value> callback);
 
@@ -40,24 +37,24 @@ public interface RecordedValueServiceAsync {
 
     void getLastRecordedDate(final List<Point> points, final AsyncCallback<Date> callback);
 
-    void getTopDataSeries(final Point point, int maxValues, final Date endDate, final AsyncCallback<List<Value>> async);
+   // void getTopDataSeries(final Point point, int maxValues, final Date endDate, final AsyncCallback<List<Value>> async);
 
     void getTopDataSeries(final Entity entity, int maxValues, final Date endDate, final AsyncCallback<List<Value>> async);
 
     void getCurrentValue(Entity entity, final AsyncCallback<Value> async);
 
-    void recordValue(final User u, final Point target, final Value value, final boolean loopFlag, AsyncCallback<Value> async);
+    void recordValue(final User u, final Entity target, final Value value, final boolean loopFlag, AsyncCallback<Value> async);
 
-    void getDataSegment(final Point point,
+    void getDataSegment(final Entity point,
                         final Timespan timespan,
                         final int start,
                         final int end, AsyncCallback<List<Value>> async);
 
-    void getDataSegment(final Point point,
+    void getDataSegment(final Entity point,
                         final Timespan timespan, AsyncCallback<List<Value>> async);
 
 
-    void getCache(final Point point, AsyncCallback<List<Value>> async);
+    //void getCache(final Point point, AsyncCallback<List<Value>> async);
 
     void getCache(final Entity entity, AsyncCallback<List<Value>> async);
 

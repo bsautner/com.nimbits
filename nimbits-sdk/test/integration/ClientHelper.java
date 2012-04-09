@@ -49,7 +49,7 @@ class ClientHelper {
     public static NimbitsClient client() throws NimbitsException {
        email =  "test@example.com";
 
-        password = "92fd54a3-5d3b-4bfe-8636-7c9104c0012e";
+        password = "35cfafde-3fc4-4b27-b2e1-d291cc5af4a4";
 
         //  private final static String appscale =  "http://127.0.0.1:8888";
        url ="http://192.168.1.2:8081";

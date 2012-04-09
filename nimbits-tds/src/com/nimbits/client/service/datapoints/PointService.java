@@ -27,39 +27,25 @@ import java.util.*;
 @RemoteServiceRelativePath("point")
 public interface PointService extends RemoteService {
 
-    Point addPoint(User user, Entity entity, Point point) throws NimbitsException;
+    Point addPoint(User user,  Point point) throws NimbitsException;
 
     Point addPoint(EntityName name) throws NimbitsException;
 
     Point addPoint(final User user, final Entity entity) throws NimbitsException;
 
- //   Point getPointByID(final User u, final long id) throws NimbitsException;
-
-  //  List<Point> getPoints() throws NimbitsException;
-
-     List<Entity> getPoints(final User u, List<Entity> entities) throws NimbitsException;
+    List<Point> getPoints(final User u, List<Entity> entities) throws NimbitsException;
 
     Point updatePoint(final Point point) throws NimbitsException;
 
     Point updatePoint(final User u, final Point point) throws NimbitsException;
 
-   //  List<Point> getPoints(final User u) throws NimbitsException;
-
-  //  Point getPointByKey(final String uuid) throws NimbitsException;
-
-   // Point getPointByID(final long id) throws NimbitsException;
-
     String exportData(final Map<EntityName, Entity> points, final ExportType exportType, final Map<EntityName, List<Value>> values) throws NimbitsException;
 
-   // List<Point> getAllPoints(final int start, final int end);
-
-     List<Entity> getIdlePoints() throws NimbitsException;
-
-   // List<Point> getAllPoints();
+    List<Point> getIdlePoints() throws NimbitsException;
 
     Entity copyPoint(final User u, final Entity originalEntity, final EntityName newName) throws NimbitsException;
 
     Map<String,Point> getPoints(final Map<String, Entity> entities) throws NimbitsException;
-  //
-    void deletePoint(final User user, final Entity entity) throws NimbitsException;
+
+
 }

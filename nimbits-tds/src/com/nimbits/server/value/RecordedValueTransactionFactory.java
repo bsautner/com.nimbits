@@ -13,23 +13,25 @@
 
 package com.nimbits.server.value;
 
-import com.nimbits.client.model.point.*;
-import com.nimbits.server.orm.*;
-import com.nimbits.server.transactions.dao.value.*;
-import com.nimbits.server.transactions.memcache.value.*;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.server.orm.DataPoint;
+import com.nimbits.server.transactions.dao.value.RecordedValueDAOImpl;
+import com.nimbits.server.transactions.dao.value.ValueDAOImpl;
+import com.nimbits.server.transactions.memcache.value.ValueMemCacheImpl;
 
 public class RecordedValueTransactionFactory {
 
     protected RecordedValueTransactionFactory() {
     }
 
-    public static RecordedValueTransactions getInstance(final Point point) {
+    public static RecordedValueTransactions getInstance(final Entity point) {
 
         return new ValueMemCacheImpl(point);
 
     }
 
-    public static RecordedValueTransactions getDaoInstance(final Point point) {
+    public static RecordedValueTransactions getDaoInstance(final Entity point) {
 
         return new ValueDAOImpl(point);
 

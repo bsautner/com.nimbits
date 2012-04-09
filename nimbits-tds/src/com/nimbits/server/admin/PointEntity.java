@@ -26,7 +26,7 @@ import javax.jdo.annotations.Persistent;
 import java.util.List;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
-public class PointEntity extends EntityStore implements Point {
+public class PointEntity extends EntityStore  {
     private static final int DEFAULT_EXPIRE = 90;
     private static final double DEFAULT_FILTER_VALUE = 0.1;
 
@@ -73,32 +73,32 @@ public class PointEntity extends EntityStore implements Point {
 
 
 
-    @Override
+
     public boolean isIdleAlarmOn() {
         return (idleAlarmOn == null) ? false : idleAlarmOn;
     }
 
-    @Override
+
     public void setIdleAlarmOn(final boolean idleAlarmOn) {
         this.idleAlarmOn = idleAlarmOn;
     }
 
-    @Override
+
     public int getIdleSeconds() {
         return (idleSeconds == null) ? 0 : idleSeconds;
     }
 
-    @Override
+
     public void setIdleSeconds(final int idleSeconds) {
         this.idleSeconds = idleSeconds;
     }
 
-    @Override
+
     public boolean getIdleAlarmSent() {
         return (idleAlarmSent == null) ? false : idleAlarmSent;
     }
 
-    @Override
+
     public void setIdleAlarmSent(final boolean idleAlarmSent) {
         this.idleAlarmSent = idleAlarmSent;
     }
@@ -159,25 +159,25 @@ public class PointEntity extends EntityStore implements Point {
     private Value value;
 
 
-     @Override
+
     public int getExpire() {
         return expire;
     }
 
 
-    @Override
+
     public double getHighAlarm() {
         return (highAlarm == null) ? 0.0 : highAlarm;
 
     }
 
-    @Override
+
     public double getLowAlarm() {
         return lowAlarm;
     }
 
 
-    @Override
+
     public String getUnit() {
         return unit;
     }
@@ -192,82 +192,82 @@ public class PointEntity extends EntityStore implements Point {
         return values;
     }
 
-    @Override
+
     public boolean isHighAlarmOn() {
         return (highAlarmOn == null) ? false : highAlarmOn;
 
     }
 
-    @Override
+
     public boolean isLowAlarmOn() {
         return (lowAlarmOn == null) ? false : lowAlarmOn;
     }
-    @Override
+
     public void setExpire(final int expire) {
         this.expire = expire;
     }
 
-//    @Override
+//
 //    public void setFormula(final String formula) {
 //        this.formula = formula;
 //    }
 
-    @Override
+
     public void setHighAlarm(final double highAlarm) {
         this.highAlarm = highAlarm;
     }
 
-    @Override
+
     public void setHighAlarmOn(final boolean highAlarmOn) {
         this.highAlarmOn = highAlarmOn;
     }
 
-    @Override
+
     public void setLowAlarm(final double lowAlarm) {
         this.lowAlarm = lowAlarm;
     }
 
-    @Override
+
     public void setLowAlarmOn(final boolean lowAlarmOn) {
         this.lowAlarmOn = lowAlarmOn;
     }
 
-    @Override
+
     public void setUnit(final String unit) {
         this.unit = unit;
     }
 
-    @Override
+
     public void setValue(final Value value) {
         this.value = value;
     }
 
-    @Override
+
     public void setValues(final List<Value> values) {
         this.values = values;
     }
 
-    @Override
+
     public FilterType getFilterType() {
         return filterType == null ? FilterType.fixedHysteresis : FilterType.get(filterType);
     }
 
-    @Override
+
     public void setFilterType(final FilterType filterType) {
         this.filterType = filterType.getCode();
     }
 
-    @Override
+
     public double getFilterValue() {
         return filterValue == null ? 0.0 : filterValue;
     }
 
-    @Override
+
     public void setFilterValue(final double value) {
         this.filterValue = value;
     }
 
-    @Override
+
     public String getKey() {
         return super.getKey();
     }

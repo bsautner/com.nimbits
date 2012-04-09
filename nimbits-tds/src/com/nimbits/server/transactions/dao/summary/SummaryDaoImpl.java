@@ -14,6 +14,7 @@
 package com.nimbits.server.transactions.dao.summary;
 
 import com.nimbits.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.summary.*;
 import com.nimbits.client.model.user.*;
@@ -50,13 +51,13 @@ public class SummaryDaoImpl implements SummaryTransactions {
 
 
     @Override
-    public void addOrUpdateSummary(final Entity entity,final Summary summary)  {
+    public Summary addOrUpdateSummary(final Summary summary) throws NimbitsException {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
 
         try {
-            final SummaryEntity result = readSummaryEntity(pm, entity);
+            final SummaryEntity result = readSummaryEntity(pm, summary);
             if (result != null) {
 
                 final Transaction tx = pm.currentTransaction();
@@ -66,10 +67,12 @@ public class SummaryDaoImpl implements SummaryTransactions {
                 result.setSummaryType(summary.getSummaryType());
                 tx.commit();
                 pm.flush();
+                return SummaryModelFactory.createSummary(result);
             }
             else {
-                final SummaryEntity s = new SummaryEntity(entity, summary);
+                final SummaryEntity s = new SummaryEntity(summary);
                 pm.makePersistent(s);
+                return SummaryModelFactory.createSummary(s);
              }
         }
         finally {
@@ -78,7 +81,7 @@ public class SummaryDaoImpl implements SummaryTransactions {
     }
 
     @Override
-    public Summary readSummary(final Entity entity) {
+    public Summary readSummary(final Entity entity) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         try {

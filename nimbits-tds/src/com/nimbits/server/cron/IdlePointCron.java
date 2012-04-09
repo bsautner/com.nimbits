@@ -81,7 +81,8 @@ public class IdlePointCron extends HttpServlet {
                 !p.getIdleAlarmSent()) {
 
             p.setIdleAlarmSent(true);
-            PointServiceFactory.getInstance().updatePoint(u, p);
+            EntityServiceFactory.getInstance().addUpdateEntity(u, p);
+           // PointServiceFactory.getInstance().updatePoint(u, p);
             final Value va = ValueModelFactory.createValueModel(v, AlertType.IdleAlert);
             SubscriptionServiceFactory.getInstance().processSubscriptions(u, p,va);
 

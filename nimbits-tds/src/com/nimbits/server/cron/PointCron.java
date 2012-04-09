@@ -13,10 +13,13 @@
 
 package com.nimbits.server.cron;
 
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.server.entity.EntityTransactionFactory;
 import com.nimbits.server.logging.LogHelper;
+import com.nimbits.server.orm.*;
 import com.nimbits.server.task.TaskFactory;
 
 import javax.servlet.http.HttpServlet;
@@ -40,9 +43,9 @@ public class
 
 
             try {
-                final Map<String,Point> e = EntityTransactionFactory.getDaoInstance(null).getSystemWidePointMap();
+                final Map<String,Entity> e = EntityTransactionFactory.getDaoInstance(null).getSystemWideEntityMap(EntityType.point, PointEntity.class);
                 log.info("PointMaint processing " + e.values().size() + " points");
-                for (final Point en : e.values()) {
+                for (final Entity en : e.values()) {
                     TaskFactory.getInstance().startPointMaintTask(en);
                 }
 

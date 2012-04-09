@@ -33,11 +33,14 @@ import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.timespan.TimespanModelFactory;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.server.admin.legacy.orm.*;
 import com.nimbits.server.calculation.CalculationServiceFactory;
 import com.nimbits.server.entity.EntityServiceFactory;
 import com.nimbits.server.entity.EntityTransactionFactory;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.orm.*;
+import com.nimbits.server.orm.PointEntity;
+import com.nimbits.server.orm.UserEntity;
 import com.nimbits.server.relationship.RelationshipTransactionFactory;
 import com.nimbits.server.subscription.SubscriptionTransactionFactory;
 import com.nimbits.server.user.UserTransactionFactory;
@@ -97,7 +100,7 @@ public class UpgradeTask  extends HttpServlet
                     break;
 
                 case subscribe:
-                    doSubscriptions(req);
+                    //doSubscriptions(req);
                     break;
 
                 case record:
@@ -332,94 +335,94 @@ public class UpgradeTask  extends HttpServlet
 
     }
 
-    protected static void doSubscriptions(final HttpServletRequest req) throws NimbitsException {
-        final PersistenceManager pm;
-        pm = PMF.get().getPersistenceManager();
-        final Query q = pm.newQuery(DataPoint.class);
-        int s = Integer.valueOf(req.getParameter("s"));
-
-        q.setRange(s, s+100);
-        List<DataPoint> points = (List<DataPoint>) q.execute();
-
-        clog("Upgrading subscriptions");
-
-        HashMap<Long, NimbitsUser> map = new HashMap<Long, NimbitsUser>(s);
-
-        NimbitsUser legacyUser;
-        Entity userEntity ;
-        PointCatagory cx = null;
-
-
-        if (points.size() > 0) {
-            clog("upgrading subscriptions " + s + " to " + (s+100));
-            for (DataPoint p : points) {
-                try {
-                    EntityName name = CommonFactoryLocator.getInstance().createName(p.getName(), EntityType.point);
-                    final ProtectionLevel protectionLevel = (p.getPublic() != null && p.getPublic()) ? ProtectionLevel.everyone : ProtectionLevel.onlyMe;
-                    legacyUser = getLegUser(pm, p.getUserFK());
-                    if (legacyUser != null) {
-                        userEntity = EntityTransactionFactory.getDaoInstance(null).getEntityByName(legacyUser.getName(), EntityType.user);
-                        User user = UserTransactionFactory.getDAOInstance().getUserByKey(userEntity.getKey());
-
-                        if (user != null) {
-                            cx = getLegCat(pm, p.getCatID());
-                            if (cx != null) {
-
-                                Entity completedPoint = EntityTransactionFactory.getDaoInstance(user).getEntityByName(name, EntityType.point);
-                                if (completedPoint == null) {
-                                    log.severe("should have found a completed point entity here" + p.getName());
-                                }
-                                else {
-                                  //  Point point = PointTransactionsFactory.getDaoInstance(user).getPointByKey(completedPoint.getKey());
-                                    Point point = (Point) EntityTransactionFactory.getDaoInstance(user).getEntityByKey(completedPoint.getKey(), PointEntity.class);
-
-
-                                    if (point != null) {
-                                        createSubscriptions(user, p, completedPoint);
-                                    }
-                                    else {
-                                        log.severe("should have found a completed point here" + p.getName());
-                                    }
-                                }
-                            }
-                            else {
-                                log.severe("could not find category for point: " + p.getName());
-                            }
-                        }
-                        else {
-                            log.severe("could not find point owner for point: " + p.getName());
-                        }
-                    }
-                    else {
-                        log.severe("could not find point owner for point: " + p.getName());
-                    }
-                }
-
-                catch (NimbitsException ex) {
-
-                    log.severe(ex.getMessage());
-                }
-
-
-            }
-            TaskFactory.getInstance().startUpgradeTask(Action.subscribe,null, s+100 );
-        }
-        else {
-            clog("completed subscription upgrade " + s);
-            TaskFactory.getInstance().startUpgradeTask(Action.calculation, null, 0 );
-            TaskFactory.getInstance().startUpgradeTask(Action.diagram, null, 0 );
-            TaskFactory.getInstance().startUpgradeTask(Action.user, null, 0 );
-            TaskFactory.getInstance().startUpgradeTask(Action.record,null, 0);
-        }
-
-
-
-
-
-
-        pm.close();
-
-    }
+//    protected static void doSubscriptions(final HttpServletRequest req) throws NimbitsException {
+//        final PersistenceManager pm;
+//        pm = PMF.get().getPersistenceManager();
+//        final Query q = pm.newQuery(DataPoint.class);
+//        int s = Integer.valueOf(req.getParameter("s"));
+//
+//        q.setRange(s, s+100);
+//        List<DataPoint> points = (List<DataPoint>) q.execute();
+//
+//        clog("Upgrading subscriptions");
+//
+//        HashMap<Long, NimbitsUser> map = new HashMap<Long, NimbitsUser>(s);
+//
+//        NimbitsUser legacyUser;
+//        Entity userEntity ;
+//        PointCatagory cx = null;
+//
+//
+//        if (points.size() > 0) {
+//            clog("upgrading subscriptions " + s + " to " + (s+100));
+//            for (DataPoint p : points) {
+//                try {
+//                    EntityName name = CommonFactoryLocator.getInstance().createName(p.getName(), EntityType.point);
+//                    final ProtectionLevel protectionLevel = (p.getPublic() != null && p.getPublic()) ? ProtectionLevel.everyone : ProtectionLevel.onlyMe;
+//                    legacyUser = getLegUser(pm, p.getUserFK());
+//                    if (legacyUser != null) {
+//                        userEntity = EntityTransactionFactory.getDaoInstance(null).getEntityByName(legacyUser.getName(), EntityType.user);
+//                        User user = UserTransactionFactory.getDAOInstance().getUserByKey(userEntity.getKey());
+//
+//                        if (user != null) {
+//                            cx = getLegCat(pm, p.getCatID());
+//                            if (cx != null) {
+//
+//                                Entity completedPoint = EntityTransactionFactory.getDaoInstance(user).getEntityByName(name, EntityType.point);
+//                                if (completedPoint == null) {
+//                                    log.severe("should have found a completed point entity here" + p.getName());
+//                                }
+//                                else {
+//                                  //  Point point = PointTransactionsFactory.getDaoInstance(user).getPointByKey(completedPoint.getKey());
+//                                    Point point = (Point) EntityTransactionFactory.getDaoInstance(user).getEntityByKey(completedPoint.getKey(), PointEntity.class);
+//
+//
+//                                    if (point != null) {
+//                                        //createSubscriptions(user, p, completedPoint);
+//                                    }
+//                                    else {
+//                                        log.severe("should have found a completed point here" + p.getName());
+//                                    }
+//                                }
+//                            }
+//                            else {
+//                                log.severe("could not find category for point: " + p.getName());
+//                            }
+//                        }
+//                        else {
+//                            log.severe("could not find point owner for point: " + p.getName());
+//                        }
+//                    }
+//                    else {
+//                        log.severe("could not find point owner for point: " + p.getName());
+//                    }
+//                }
+//
+//                catch (NimbitsException ex) {
+//
+//                    log.severe(ex.getMessage());
+//                }
+//
+//
+//            }
+//            TaskFactory.getInstance().startUpgradeTask(Action.subscribe,null, s+100 );
+//        }
+//        else {
+//            clog("completed subscription upgrade " + s);
+//            TaskFactory.getInstance().startUpgradeTask(Action.calculation, null, 0 );
+//            TaskFactory.getInstance().startUpgradeTask(Action.diagram, null, 0 );
+//            TaskFactory.getInstance().startUpgradeTask(Action.user, null, 0 );
+//            TaskFactory.getInstance().startUpgradeTask(Action.record,null, 0);
+//        }
+//
+//
+//
+//
+//
+//
+//        pm.close();
+//
+//    }
 
     protected static void startValue(final HttpServletRequest req) throws NimbitsException {
         final PersistenceManager pm;
@@ -605,10 +608,10 @@ public class UpgradeTask  extends HttpServlet
                                             if (existing == null) {
                                                 Entity ce = EntityModelFactory.createEntity(cName, "", EntityType.calculation, ProtectionLevel.onlyMe, trigger.getKey(),
                                                         user.getKey(), UUID.randomUUID().toString());
-                                                Entity rce = EntityServiceFactory.getInstance().addUpdateEntity(user, ce);
-                                                Calculation calcEntity = CalculationModelFactory.createCalculation(trigger.getKey(), true, calc.getFormula(),
+                                               // Entity rce = EntityServiceFactory.getInstance().addUpdateEntity(user, ce);
+                                                Calculation calcEntity = CalculationModelFactory.createCalculation(ce, trigger.getKey(), true, calc.getFormula(),
                                                         T, X, Y, Z);
-                                                CalculationServiceFactory.getDaoInstance(user).addUpdateCalculation(rce, calcEntity);
+                                                 EntityServiceFactory.getInstance().addUpdateEntity(calcEntity);
                                                 clog("Created calc" + legacyPoint.getName());
 
                                             }
@@ -806,72 +809,72 @@ public class UpgradeTask  extends HttpServlet
 //
 //
 
-    private static void createSubscriptions(User u, DataPoint p, Entity subscivedEntity) {
-        boolean enabled = p.isHighAlarmOn() ||p.isLowAlarmOn() || p.getIdleAlarmOn();
-
-        try {
-            int delay = (p.getAlarmDelay() > 30) ?  p.getAlarmDelay() : 30;
-
-            if ( p.getAlarmToFacebook()) {
-                EntityName name = CommonFactoryLocator.getInstance().createName(p.getName() + " facebook alert", EntityType.subscription);
-                createSubscription(u, subscivedEntity, p, enabled, delay, name, SubscriptionType.anyAlert, SubscriptionNotifyMethod.facebook);
-            }
-            if ( p.getSendAlarmTweet()) {
-                EntityName name = CommonFactoryLocator.getInstance().createName(p.getName() + " twitter alert", EntityType.subscription);
-                createSubscription(u, subscivedEntity, p, enabled, delay, name, SubscriptionType.anyAlert, SubscriptionNotifyMethod.twitter);
-            }
-            if (p.getSendAlarmIM() != null && p.getSendAlarmIM()) {
-                EntityName name = CommonFactoryLocator.getInstance().createName(p.getName() + " xmpp alert", EntityType.subscription);
-                createSubscription(u, subscivedEntity, p, enabled, delay, name, SubscriptionType.anyAlert, SubscriptionNotifyMethod.instantMessage);
-            }
-            if (p.getAlarmToEmail() != null && p.getAlarmToEmail()) {
-                EntityName name = CommonFactoryLocator.getInstance().createName(p.getName() + " email alert", EntityType.subscription);
-                createSubscription(u, subscivedEntity, p, enabled, delay, name, SubscriptionType.anyAlert, SubscriptionNotifyMethod.email);
-            }
-            if (p.getIdleAlarmOn() != null && p.getIdleAlarmOn()) {
-                EntityName name = CommonFactoryLocator.getInstance().createName(p.getName() + " idle alert", EntityType.subscription);
-                createSubscription(u, subscivedEntity, p, p.getIdleAlarmOn(),
-                        delay, name, SubscriptionType.idle, SubscriptionNotifyMethod.email);
-            }
-            if (p.getPostToFacebook() != null && p.getPostToFacebook()) {
-                EntityName name = CommonFactoryLocator.getInstance().createName(p.getName() + " facebook alert", EntityType.subscription);
-                createSubscription(u,subscivedEntity,  p, enabled, delay, name, SubscriptionType.newValue, SubscriptionNotifyMethod.facebook);
-            }
-        } catch (Exception ex) {
-            clog(ex.getMessage());
-        }
-    }
+//    private static void createSubscriptions(User u, DataPoint p, Entity subscivedEntity) {
+//        boolean enabled = p.isHighAlarmOn() ||p.isLowAlarmOn() || p.getIdleAlarmOn();
+//
+//        try {
+//            int delay = (p.getAlarmDelay() > 30) ?  p.getAlarmDelay() : 30;
+//
+//            if ( p.getAlarmToFacebook()) {
+//                EntityName name = CommonFactoryLocator.getInstance().createName(p.getName() + " facebook alert", EntityType.subscription);
+//                createSubscription(u, subscivedEntity, p, enabled, delay, name, SubscriptionType.anyAlert, SubscriptionNotifyMethod.facebook);
+//            }
+//            if ( p.getSendAlarmTweet()) {
+//                EntityName name = CommonFactoryLocator.getInstance().createName(p.getName() + " twitter alert", EntityType.subscription);
+//                createSubscription(u, subscivedEntity, p, enabled, delay, name, SubscriptionType.anyAlert, SubscriptionNotifyMethod.twitter);
+//            }
+//            if (p.getSendAlarmIM() != null && p.getSendAlarmIM()) {
+//                EntityName name = CommonFactoryLocator.getInstance().createName(p.getName() + " xmpp alert", EntityType.subscription);
+//                createSubscription(u, subscivedEntity, p, enabled, delay, name, SubscriptionType.anyAlert, SubscriptionNotifyMethod.instantMessage);
+//            }
+//            if (p.getAlarmToEmail() != null && p.getAlarmToEmail()) {
+//                EntityName name = CommonFactoryLocator.getInstance().createName(p.getName() + " email alert", EntityType.subscription);
+//                createSubscription(u, subscivedEntity, p, enabled, delay, name, SubscriptionType.anyAlert, SubscriptionNotifyMethod.email);
+//            }
+//            if (p.getIdleAlarmOn() != null && p.getIdleAlarmOn()) {
+//                EntityName name = CommonFactoryLocator.getInstance().createName(p.getName() + " idle alert", EntityType.subscription);
+//                createSubscription(u, subscivedEntity, p, p.getIdleAlarmOn(),
+//                        delay, name, SubscriptionType.idle, SubscriptionNotifyMethod.email);
+//            }
+//            if (p.getPostToFacebook() != null && p.getPostToFacebook()) {
+//                EntityName name = CommonFactoryLocator.getInstance().createName(p.getName() + " facebook alert", EntityType.subscription);
+//                createSubscription(u,subscivedEntity,  p, enabled, delay, name, SubscriptionType.newValue, SubscriptionNotifyMethod.facebook);
+//            }
+//        } catch (Exception ex) {
+//            clog(ex.getMessage());
+//        }
+//    }
     //
-    private static void createSubscription(User u, Entity p, DataPoint legacy, boolean enabled, int delay, EntityName newName,
-                                           SubscriptionType type, SubscriptionNotifyMethod method) throws NimbitsException {
-
-
-        Subscription subscription = SubscriptionFactory.createSubscription(p.getKey(),
-                type, method, delay,
-                new Date(), legacy.getSendAlertsAsJson(), enabled);
-
-
-
-        Entity sentity = EntityModelFactory.createEntity(newName, "",EntityType.subscription,
-                ProtectionLevel.onlyMe, p.getKey(), u.getKey(), UUID.randomUUID().toString());
-
-        EntityName subscribedToPointName = CommonFactoryLocator.getInstance().createName(legacy.getName(), EntityType.point);
-        Entity exists = EntityTransactionFactory.getDaoInstance(u).getEntityByName(newName, EntityType.subscription);
-        if (exists==null) {
-            clog("created subscription " + newName.getValue());
-            Entity r = EntityServiceFactory.getInstance().addUpdateEntity(u, sentity);
-            SubscriptionTransactionFactory.getInstance(u).subscribe(r, subscription);
-        }
-        else {
-            Subscription s = SubscriptionTransactionFactory.getInstance(u).readSubscription(exists);
-            if (s!= null) {
-
-
-            }
-
-            clog("Skipping" + newName.getValue());
-        }
-    }
+//    private static void createSubscription(User u, Entity p, DataPoint legacy, boolean enabled, int delay, EntityName newName,
+//                                           SubscriptionType type, SubscriptionNotifyMethod method) throws NimbitsException {
+//
+//        Entity sEntity = EntityModelFactory.createEntity(newName, "",EntityType.subscription,
+//                ProtectionLevel.onlyMe, p.getKey(), u.getKey(), UUID.randomUUID().toString());
+//        Subscription subscription = SubscriptionFactory.createSubscription(sEntity, p.getKey(),
+//                type, method, delay,
+//                new Date(), legacy.getSendAlertsAsJson(), enabled);
+//
+//
+//
+//
+//
+//        EntityName subscribedToPointName = CommonFactoryLocator.getInstance().createName(legacy.getName(), EntityType.point);
+//        Entity exists = EntityTransactionFactory.getDaoInstance(u).getEntityByName(newName, EntityType.subscription);
+//        if (exists==null) {
+//            clog("created subscription " + newName.getValue());
+//           // Entity r = EntityServiceFactory.getInstance().addUpdateEntity(u, sentity);
+//            SubscriptionTransactionFactory.getInstance(u).subscribe( subscription);
+//        }
+//        else {
+//            Subscription s = SubscriptionTransactionFactory.getInstance(u).readSubscription(exists);
+//            if (s!= null) {
+//
+//
+//            }
+//
+//            clog("Skipping" + newName.getValue());
+//        }
+//    }
     //
 
 

@@ -15,12 +15,15 @@ package com.nimbits.client.model.intelligence;
 
 
 import com.nimbits.client.enums.IntelligenceResultTarget;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.entity.*;
 
 import java.io.Serializable;
 
 
-public class IntelligenceModel implements Serializable, Intelligence {
+public class IntelligenceModel  extends EntityModel implements Serializable, Intelligence {
     private static final long serialVersionUID =1L;
+
     private boolean enabled;
 
     private int resultTarget;
@@ -33,21 +36,20 @@ public class IntelligenceModel implements Serializable, Intelligence {
 
     private boolean resultsInPlainText;
 
-    private String key;
-
     private String trigger;
 
     private IntelligenceModel() {
     }
 
-    public IntelligenceModel(final String key,
+    public IntelligenceModel(final Entity entity,
                              final boolean enabled,
                              final IntelligenceResultTarget resultTarget,
                              final String target,
                              final String input,
                              final String nodeId,
                              final boolean resultsInPlainText,
-                             final String trigger) {
+                             final String trigger) throws NimbitsException {
+        super(entity);
         this.enabled = enabled;
         this.resultTarget = resultTarget.getCode();
         this.target = target;
@@ -55,18 +57,19 @@ public class IntelligenceModel implements Serializable, Intelligence {
         this.nodeId = nodeId;
         this.resultsInPlainText = resultsInPlainText;
         this.trigger = trigger;
-        this.key = key;
+
 
     }
 
-    public IntelligenceModel(final Intelligence intelligence) {
+    public IntelligenceModel(final Intelligence intelligence) throws NimbitsException {
+        super(intelligence);
         this.enabled = intelligence.getEnabled();
         this.resultTarget = intelligence.getResultTarget().getCode();
         this.target = intelligence.getTarget();
         this.input = intelligence.getInput();
         this.nodeId = intelligence.getNodeId();
         this.resultsInPlainText = intelligence.getResultsInPlainText();
-        this.key = intelligence.getKey();
+
         this.trigger = intelligence.getTrigger();
 
     }
@@ -76,10 +79,6 @@ public class IntelligenceModel implements Serializable, Intelligence {
         return enabled;
     }
 
-    @Override
-    public String getKey() {
-        return key;
-    }
 
     @Override
     public void setEnabled(final boolean enabled) {
@@ -98,12 +97,12 @@ public class IntelligenceModel implements Serializable, Intelligence {
 
     @Override
     public String getTarget() {
-       return this.target;
+        return this.target;
     }
 
     @Override
     public void setTarget(String target) {
-       this.target = target;
+        this.target = target;
     }
 
 

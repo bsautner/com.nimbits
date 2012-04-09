@@ -13,6 +13,7 @@
 
 package com.nimbits.server.xmpp;
 
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.xmpp.*;
@@ -27,9 +28,9 @@ import java.util.*;
  */
 public interface XmppTransaction  {
 
-    void addResource(Entity entity, XmppResource resource);
+    void addResource(XmppResource resource) throws NimbitsException;
 
-    List<XmppResource> getPointXmppResources(Point point);
+    List<XmppResource> getPointXmppResources(Point point) throws NimbitsException;
 
     void deleteResource(Entity entity);
 

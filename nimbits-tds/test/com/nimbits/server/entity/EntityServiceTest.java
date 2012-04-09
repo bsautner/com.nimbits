@@ -20,6 +20,8 @@ import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.*;
+import com.nimbits.server.point.*;
 import helper.NimbitsServletTest;
 import org.junit.Test;
 
@@ -40,15 +42,16 @@ public class EntityServiceTest extends NimbitsServletTest {
     public void deleteEntityTest() throws NimbitsException {
 
         List<Entity> entities =  EntityServiceFactory.getInstance().getEntities();
-        assertTrue(entities.size() > 0);
+        assertTrue(!entities.isEmpty());
         Entity e = EntityServiceFactory.getInstance().getEntityByName(pointName,EntityType.point);
+        assertNotNull(e);
         Entity c = EntityServiceFactory.getInstance().getEntityByName(pointChildName,EntityType.point);
         Entity g = EntityServiceFactory.getInstance().getEntityByName(groupName,EntityType.category);
-        assertNotNull(e);
+
         assertNotNull(c);
         assertNotNull(g);
         List<Entity> children =  EntityServiceFactory.getInstance().getChildren(g, EntityType.point);
-        assertTrue(children.size() > 0);
+        assertTrue(!children.isEmpty());
 
         EntityServiceFactory.getInstance().deleteEntity(g);
         e = EntityServiceFactory.getInstance().getEntityByName(pointName,EntityType.point);
@@ -70,11 +73,14 @@ public class EntityServiceTest extends NimbitsServletTest {
         Entity model = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.everyone,
                user.getKey(), user.getKey());
 
-        Entity e = EntityServiceFactory.getInstance().addUpdateEntity(model);
+      //  Entity e = EntityServiceFactory.getInstance().addUpdateEntity(model);
         Entity model2 = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.everyone,
               user.getKey(), user.getKey());
-        Entity e2 = EntityServiceFactory.getInstance().addUpdateEntity(model2);
-
+        ///Entity e2 = EntityServiceFactory.getInstance().addUpdateEntity(model2);
+        Point p1 = PointModelFactory.createPointModel(model);
+        PointServiceFactory.getInstance().addPoint(user, p1);
+        Point p2 = PointModelFactory.createPointModel(model2);
+        PointServiceFactory.getInstance().addPoint(user, p2);
 
     }
     @Test
@@ -99,7 +105,7 @@ public class EntityServiceTest extends NimbitsServletTest {
     public void getEntitiesTest() throws NimbitsException {
 
         List<Entity> entities =  EntityServiceFactory.getInstance().getEntities();
-        assertTrue(entities.size() > 0);
+        assertTrue(!entities.isEmpty());
 
     }
 

@@ -14,6 +14,7 @@
 package com.nimbits.server.subscription;
 
 import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.subscription.*;
@@ -29,13 +30,13 @@ import java.util.*;
 public interface SubscriptionTransactions {
 
 
-    void subscribe(final Entity entity, final Subscription subscription);
+  //  void subscribe(final Subscription subscription) throws NimbitsException;
 
-    Subscription readSubscription(final Entity entity);
+    //Subscription readSubscription(final Entity entity) throws NimbitsException;
 
-    List<Subscription> getSubscriptionsToPointByType(final Point point, final SubscriptionType type);
+    List<Subscription> getSubscriptionsToPointByType(final Point point, final SubscriptionType type) throws NimbitsException;
 
-    List<Subscription> getSubscriptionsToPoint(final Entity point);
+    List<Subscription> getSubscriptionsToPoint(final Entity point) throws NimbitsException;
 
     void updateSubscriptionLastSent(final Subscription subscription);
 

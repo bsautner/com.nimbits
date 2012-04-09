@@ -33,11 +33,7 @@ public interface EntityService extends RemoteService {
 
     Entity addUpdateEntity(final Entity entity) throws NimbitsException;
 
-    Entity addUpdateEntity(final EntityName entity, final EntityType type) throws NimbitsException;
-
     List<Entity> deleteEntity(Entity entity) throws NimbitsException;
-
-
 
     Map<String, Entity> getEntityMap(EntityType type, final int limit) throws NimbitsException;
 
@@ -49,9 +45,7 @@ public interface EntityService extends RemoteService {
 
     List<Entity> getChildren(Entity parentEntity, EntityType type) throws NimbitsException;
 
-
-
-    Entity addUpdateEntity(User user, Entity aConnection) throws NimbitsException;
+    Entity addUpdateEntity(User user, Entity entity) throws NimbitsException;
 
     Entity getEntityByKey(String uuid, String className) throws NimbitsException;
 
@@ -64,7 +58,6 @@ public interface EntityService extends RemoteService {
     List<Entity> deleteEntity(User u, Entity entity) throws NimbitsException;
 
     List<Entity> getEntityChildren(User u, Entity c, EntityType point) throws NimbitsException;
-
 
     Entity getEntityByName(User user, EntityName name,String className) throws NimbitsException;
 }

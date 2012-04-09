@@ -32,6 +32,7 @@ import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.connection.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
 import com.nimbits.client.service.entity.*;
 import com.nimbits.client.service.user.*;
 import com.nimbits.client.ui.helper.*;
@@ -309,9 +310,10 @@ public class MainMenuBar extends ToolBar {
 
                 try {
                     EntityName name = CommonFactoryLocator.getInstance().createName(newEntityName, EntityType.point);
-
+                    Entity entity = EntityModelFactory.createEntity(name, EntityType.point);
+                    Point p = PointModelFactory.createPointModel(entity);
                     //     Entity entity = EntityModelFactory.createEntity(name, EntityType.point);
-                    service.addUpdateEntity(name, EntityType.point,  new AsyncCallback<Entity>() {
+                    service.addUpdateEntity(p, new AsyncCallback<Entity>() {
                         @Override
                         public void onFailure(Throwable caught) {
                             FeedbackHelper.showError(caught);

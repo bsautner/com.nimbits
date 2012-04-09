@@ -39,7 +39,7 @@ public interface IntelligenceService extends RemoteService {
 
     String addDataToInput(final User user, final Intelligence intelligence) throws NimbitsException;
 
-    Intelligence getIntelligence(final Entity entity);
+    Intelligence getIntelligence(final Entity entity) throws NimbitsException;
 
     Entity addUpdateIntelligence(final Entity entity, final EntityName name, final Intelligence update) throws NimbitsException;
 

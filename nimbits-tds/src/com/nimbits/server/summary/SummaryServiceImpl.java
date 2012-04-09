@@ -58,24 +58,24 @@ public class SummaryServiceImpl  extends RemoteServiceServlet implements Summary
     }
 
     @Override
-    public Entity addUpdateSummary(final Entity entity,final Summary update,final EntityName name) throws NimbitsException {
+    public Entity addUpdateSummary(final Summary update,final EntityName name) throws NimbitsException {
         User u = getUser();
 
-        if (entity.getEntityType().equals(EntityType.point)) {
+        if (update.getEntityType().equals(EntityType.point)) {
 
             Entity newEntity = EntityModelFactory.createEntity(name, "", EntityType.summary,
-                    ProtectionLevel.onlyMe, entity.getKey(), u.getKey(), UUID.randomUUID().toString());
-            Entity createdEntity = EntityServiceFactory.getInstance().addUpdateEntity(u, newEntity);
-            Summary newSummary = SummaryModelFactory.createSummary(newEntity.getKey(), entity.getKey(), update.getTargetPointUUID(), update.getSummaryType(),
+                    ProtectionLevel.onlyMe, update.getKey(), u.getKey(), UUID.randomUUID().toString());
+        //    Entity createdEntity = EntityServiceFactory.getInstance().addUpdateEntity(u, newEntity);
+            Summary newSummary = SummaryModelFactory.createSummary(newEntity,  update.getKey(), update.getTargetPointUUID(), update.getSummaryType(),
                     update.getSummaryIntervalMs(), new Date());
 
-            SummaryTransactionFactory.getInstance(u).addOrUpdateSummary(createdEntity, newSummary);
-            return createdEntity;
+            return SummaryTransactionFactory.getInstance(u).addOrUpdateSummary(newSummary);
+
         }
         else {
-            EntityServiceFactory.getInstance().addUpdateEntity(u, entity);
-            SummaryTransactionFactory.getInstance(u).addOrUpdateSummary(entity, update);
-            return entity;
+
+            return SummaryTransactionFactory.getInstance(u).addOrUpdateSummary(update);
+
         }
 
     }

@@ -14,6 +14,8 @@
 package com.nimbits.client.model.intelligence;
 
 import com.nimbits.client.enums.IntelligenceResultTarget;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.entity.*;
 
 import java.io.Serializable;
 
@@ -23,15 +25,13 @@ import java.io.Serializable;
  * Date: 10/29/11
  * Time: 3:14 PM
  */
-public interface Intelligence extends Serializable {
+public interface Intelligence extends Entity, Serializable {
 
     boolean getEnabled();
 
     String getTrigger();
 
     void setTrigger(String trigger);
-
-    String getKey();
 
     void setEnabled(final boolean enabled);
 
@@ -55,5 +55,6 @@ public interface Intelligence extends Serializable {
 
     void setResultsInPlainText(final boolean resultsInPlainText);
 
-
+    @Override
+    void update(Entity update) throws NimbitsException;
 }

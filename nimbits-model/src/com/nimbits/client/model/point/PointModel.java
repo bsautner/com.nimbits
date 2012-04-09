@@ -13,7 +13,7 @@
 
 package com.nimbits.client.model.point;
 
-import com.nimbits.client.enums.EntityType;
+
 import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
@@ -232,11 +232,6 @@ public class PointModel extends EntityModel implements Serializable, Point {
         this.idleAlarmSent = idleAlarmSent;
     }
 
-    public EntityType getEntityType() {
-        return  (super.getEntityType());
-    }
-    @Override
-    public String getKey() {
-        return super.getKey();
-    }
+
+
 }

@@ -1,8 +1,6 @@
 package com.nimbits.client.model.entity;
 
-import com.nimbits.client.enums.AlertType;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.common.CommonIdentifier;
@@ -79,6 +77,15 @@ public class EntityModel  implements Serializable, Entity {
         this.points = points;
     }
 
+    @Override
+    public void update(Entity update) throws NimbitsException {
+        this.description = (update.getDescription());
+        this.name = (update.getName().getValue());
+        this.protectionLevel = (update.getProtectionLevel().getCode());
+        this.parent = (update.getParent());
+        this.blobKey = (update.getBlobKey());
+        this.uuid = (update.getUUID());
+    }
 
 
     @Override
@@ -93,7 +100,7 @@ public class EntityModel  implements Serializable, Entity {
 
     @Override
     public void setUUID(final String uuid) {
-      this.uuid = uuid;
+        this.uuid = uuid;
     }
 
     @Override
@@ -163,7 +170,7 @@ public class EntityModel  implements Serializable, Entity {
 
     @Override
     public void setAlertType(final AlertType alertType) {
-       this.alertType = alertType.getCode();
+        this.alertType = alertType.getCode();
     }
 
     @Override
@@ -189,4 +196,5 @@ public class EntityModel  implements Serializable, Entity {
     public void setKey(String key) {
         this.key = key;
     }
+
 }

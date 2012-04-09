@@ -52,22 +52,22 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
 
     }
 
-    @Override
-    public Entity addUpdateEntity(final EntityName name, final EntityType type) throws NimbitsException {
-        final User u = getUser();
-
-        final Entity e = EntityModelFactory.createEntity(name, "", type, ProtectionLevel.everyone,
-                u.getKey(), u.getKey(), UUID.randomUUID().toString());
-        final Entity r = EntityTransactionFactory.getInstance(u).addUpdateEntity(e);
-        switch (type) {
-            case point:
-                PointServiceFactory.getInstance().addPoint(u, r);
-
-
-        }
-
-        return r;
-    }
+//    @Override
+//    public Entity addUpdateEntity(final EntityName name, final EntityType type) throws NimbitsException {
+//        final User u = getUser();
+//
+//        final Entity e = EntityModelFactory.createEntity(name, "", type, ProtectionLevel.everyone,
+//                u.getKey(), u.getKey(), UUID.randomUUID().toString());
+//        final Entity r = EntityTransactionFactory.getInstance(u).addUpdateEntity(e);
+//        switch (type) {
+//            case point:
+//                PointServiceFactory.getInstance().addPoint(u, r);
+//
+//
+//        }
+//
+//        return r;
+//    }
 
 
     @Override
@@ -151,7 +151,9 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
         if (Utils.isEmptyString(entity.getParent())) {
             entity.setParent(u.getKey());
         }
-
+        if (Utils.isEmptyString(entity.getUUID())) {
+            entity.setUUID(UUID.randomUUID().toString());
+        }
 
         final Entity e=  addUpdateEntity(u, entity);
         CoreFactory.getInstance().reportUpdateToCore(e);
@@ -241,11 +243,6 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     @Override
     public Map<String, Entity> getSystemWideEntityMap(final EntityType type, final Class<?> cls) throws NimbitsException {
         return EntityTransactionFactory.getInstance(null).getSystemWideEntityMap(type, cls);
-    }
-
-    @Override
-    public Map<String, Point> getSystemWidePointMap() throws NimbitsException {
-        return EntityTransactionFactory.getInstance(null).getSystemWidePointMap();
     }
 
     @Override

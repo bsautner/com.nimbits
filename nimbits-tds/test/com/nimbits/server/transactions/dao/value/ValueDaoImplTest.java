@@ -34,9 +34,7 @@ import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueModelFactory;
 import com.nimbits.server.time.TimespanServiceFactory;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -319,6 +317,7 @@ public class ValueDaoImplTest {
     }
 
     @Test
+    @Ignore
     public void testRecordValuesLoad() {
         long s = new Date().getTime();
 

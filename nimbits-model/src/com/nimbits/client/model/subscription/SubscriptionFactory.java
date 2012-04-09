@@ -1,6 +1,8 @@
 package com.nimbits.client.model.subscription;
 
 import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.entity.*;
 
 import java.util.*;
 
@@ -15,20 +17,21 @@ public class SubscriptionFactory {
     private SubscriptionFactory() {
     }
 
-    public static Subscription createSubscription(Subscription subscription) {
+    public static Subscription createSubscription(Subscription subscription) throws NimbitsException {
         return new SubscriptionModel(subscription);
 
     }
 
     public static Subscription createSubscription(
+            final Entity entity,
             final String subscribedEntity,
             final SubscriptionType type,
             final SubscriptionNotifyMethod method,
             final double maxRepeat,
             final Date lastSent,
             final boolean formatJson,
-            final boolean enabled) {
-        return new SubscriptionModel(
+            final boolean enabled) throws NimbitsException {
+        return new SubscriptionModel(entity,
                 subscribedEntity,
                 type,
                 method,
@@ -37,7 +40,7 @@ public class SubscriptionFactory {
         );
 
     }
-    public static List<Subscription> createSubscriptions(Collection<Subscription> subscriptions) {
+    public static List<Subscription> createSubscriptions(Collection<Subscription> subscriptions) throws NimbitsException {
         final List<Subscription> retObj = new ArrayList<Subscription>(subscriptions.size());
         for (final Subscription s : subscriptions) {
             retObj.add(createSubscription(s));

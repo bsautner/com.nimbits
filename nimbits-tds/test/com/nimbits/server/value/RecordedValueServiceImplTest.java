@@ -16,6 +16,7 @@ package com.nimbits.server.value;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.server.entity.*;
 import helper.*;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
@@ -63,7 +64,8 @@ public class RecordedValueServiceImplTest extends NimbitsServletTest {
         assertFalse(impl.ignoreByCompression(point, ValueModelFactory.createValueModel(D2)));
 
         point.setFilterType(FilterType.percentageHysteresis);
-        pointService.updatePoint(point);
+        EntityServiceFactory.getInstance().addUpdateEntity(point);
+      //  pointService.updatePoint(point);
         RecordedValueServiceFactory.getInstance().recordValue(user, point, ValueModelFactory.createValueModel(100), false);
         Thread.sleep(10);
         assertTrue(impl.ignoreByCompression(point, ValueModelFactory.createValueModel(105)));

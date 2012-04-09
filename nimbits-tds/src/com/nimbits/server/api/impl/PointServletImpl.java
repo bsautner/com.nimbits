@@ -213,7 +213,8 @@ public class PointServletImpl extends ApiServlet {
         entity = EntityModelFactory.createEntity(pointName,"", EntityType.point, ProtectionLevel.everyone,
                 parent, u.getKey(), UUID.randomUUID().toString());
 
-        retObj = PointServiceFactory.getInstance().addPoint(u, entity);
+        Point point = PointModelFactory.createPointModel(entity);
+        retObj = (Point) EntityServiceFactory.getInstance().addUpdateEntity(point);
 
 
         return retObj;
@@ -237,13 +238,14 @@ public class PointServletImpl extends ApiServlet {
 
 
 
-        return PointServiceFactory.getInstance().addPoint(u, point);
+        return (Point) EntityServiceFactory.getInstance().addUpdateEntity(u, point);
 
     }
 
     private static Point updatePoint(final User u, final String json) throws NimbitsException {
         final Point point = gson.fromJson(json, PointModel.class);
-        return PointServiceFactory.getInstance().updatePoint(u, point);
+        return (Point) EntityServiceFactory.getInstance().addUpdateEntity(u, point);
+        //return PointServiceFactory.getInstance().updatePoint(u, point);
 
     }
 

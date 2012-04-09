@@ -133,8 +133,4 @@ public class EntityCacheImpl implements EntityTransactions {
         return  EntityTransactionFactory.getDaoInstance(user).getSystemWideEntityMap(type, cls);
     }
 
-    @Override
-    public Map<String, Point> getSystemWidePointMap() throws NimbitsException {
-        return  EntityTransactionFactory.getDaoInstance(user).getSystemWidePointMap();
-    }
 }

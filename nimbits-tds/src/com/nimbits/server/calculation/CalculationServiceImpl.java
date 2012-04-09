@@ -57,25 +57,26 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
 
 
     @Override
-    public Calculation getCalculation(Entity entity) {
+    public Calculation getCalculation(Entity entity) throws NimbitsException {
         return CalculationServiceFactory.getDaoInstance(getUser()).getCalculation(entity);
     }
 
     @Override
     public Entity addUpdateCalculation(User u, Entity entity, EntityName name, Calculation calculation) throws NimbitsException {
-        Entity retObj = null;
+       // Entity retObj = null;
 
         if (entity == null) {
 
 
             final Entity e = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe,
                     calculation.getTrigger(), u.getKey(), UUID.randomUUID().toString());
-            retObj = EntityServiceFactory.getInstance().addUpdateEntity(u, e);
-            final Calculation c = CalculationModelFactory.createCalculation(calculation.getTrigger(), e.getKey(), calculation.getEnabled(),
+
+            final Calculation c = CalculationModelFactory.createCalculation(e, calculation.getTrigger(), calculation.getEnabled(),
                     calculation.getFormula(), calculation.getTarget(), calculation.getX(),
                     calculation.getY(), calculation.getZ());
 
-            CalculationServiceFactory.getDaoInstance(u).addUpdateCalculation(retObj, c);
+            return EntityServiceFactory.getInstance().addUpdateEntity(c);
+
 
 
         }
@@ -83,25 +84,27 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
 
             Entity e = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe,
                     entity.getKey(), u.getKey(), UUID.randomUUID().toString());
-            retObj = EntityServiceFactory.getInstance().addUpdateEntity(e);
-            Calculation c = CalculationModelFactory.createCalculation(entity.getKey(), e.getKey(), calculation.getEnabled(),
+           // retObj = EntityServiceFactory.getInstance().addUpdateEntity(e);
+            Calculation c = CalculationModelFactory.createCalculation(entity.getKey(), calculation.getEnabled(),
                     calculation.getFormula(), calculation.getTarget(), calculation.getX(),
                     calculation.getY(), calculation.getZ());
 
-            CalculationServiceFactory.getDaoInstance(u).addUpdateCalculation(retObj, c);
+            return EntityServiceFactory.getInstance().addUpdateEntity(c);
 
 
         }
         else if (entity.getEntityType().equals(EntityType.calculation)) {
             entity.setName(name);
-            CalculationServiceFactory.getDaoInstance(u).addUpdateCalculation(entity, calculation);
-            return EntityServiceFactory.getInstance().addUpdateEntity(entity);
+            return EntityServiceFactory.getInstance().addUpdateEntity(calculation);
+
 
 
         }
+        else {
+            return null;
+        }
 
 
-        return  retObj;
     }
 
     @Override
@@ -119,7 +122,8 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
 
 
     @Override
-    public List<Calculation> getCalculations(Entity entity) {
+    public List<Calculation> getCalculations(Entity entity) throws NimbitsException {
+
         return CalculationServiceFactory.getDaoInstance(getUser()).getCalculations(entity);
     }
 
@@ -143,7 +147,7 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
                     RecordedValueServiceFactory.getInstance().recordValue(u, target, result, true);
                 } catch (NimbitsException e1) {
                     c.setEnabled(false);
-                    CalculationServiceFactory.getDaoInstance(u).addUpdateCalculation(null, c);
+                    EntityServiceFactory.getInstance().addUpdateEntity(c);
                     if (u != null) {
                         FeedServiceFactory.getInstance().postToFeed(u, e1);
                     }

@@ -14,6 +14,7 @@
 package com.nimbits.server.orm;
 
 import com.google.appengine.api.datastore.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.calculation.*;
 import com.nimbits.client.model.entity.Entity;
 
@@ -27,13 +28,9 @@ import javax.jdo.annotations.*;
  */
 
 
-@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
+@PersistenceCapable
+public class CalcEntity extends EntityStore implements Calculation {
 
-public class CalcEntity implements Calculation {
-
-    @PrimaryKey
-    @Persistent
-    private com.google.appengine.api.datastore.Key key;
 
     @Persistent
     private String formula;
@@ -58,13 +55,14 @@ public class CalcEntity implements Calculation {
 
 
 
-    public CalcEntity() {
+    protected CalcEntity() {
     }
 
 
 
-    public CalcEntity(Entity entity, Calculation calculation) {
-        this.key = KeyFactory.createKey(CalcEntity.class.getSimpleName(), entity.getKey());
+    public CalcEntity(Calculation calculation) throws NimbitsException {
+        super(calculation);
+
         this.formula = calculation.getFormula();
         this.enabled = calculation.getEnabled();
         this.targetVar = calculation.getTarget();
@@ -138,9 +136,15 @@ public class CalcEntity implements Calculation {
         this.enabled = b;
     }
 
-
     @Override
-    public String getKey() {
-        return key.getName();
+    public void update(Entity update) throws NimbitsException {
+        super.update(update);
+        Calculation c = (Calculation) update;
+        this.enabled = (c.getEnabled());
+        this.formula = (c.getFormula());
+        this.targetVar = (c.getTarget());
+        this.xVar = (c.getX());
+        this.yVar = (c.getY());
+        this.zVar = (c.getZ());
     }
 }

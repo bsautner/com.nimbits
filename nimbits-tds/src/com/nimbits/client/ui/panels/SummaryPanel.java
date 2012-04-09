@@ -219,24 +219,28 @@ public class SummaryPanel extends NavigationEventProvider {
 
                 SummaryType summaryType =   typeCombo.getValue().getMethod();
 
-                final Summary update;
+                Summary update = null;
 
                 if (entity.getEntityType().equals(EntityType.summary) && summary != null) {
 
-                    update = SummaryModelFactory.createSummary(summary.getKey(),
-                            summary.getEntity(), summary.getTargetPointUUID(), summaryType,
-                            spinnerField.getValue().intValue() * 60 * 60 * 1000, new Date());
+                    try {
+                        update = SummaryModelFactory.createSummary(entity,
+                                summary.getEntity(), summary.getTargetPointUUID(), summaryType,
+                                spinnerField.getValue().intValue() * 60 * 60 * 1000, new Date());
+                    } catch (NimbitsException e) {
+                        FeedbackHelper.showError(e);
+                    }
 
                 }
                 else {
-                    update = SummaryModelFactory.createSummary(null,
+                    update = SummaryModelFactory.createSummary(
                             entity.getKey(),targetCombo.getValue().getUUID() , summaryType,
                             spinnerField.getValue().intValue() * 60 * 60 * 1000, new Date());
 
                 }
 
 
-                service.addUpdateSummary(entity, update, name, new AsyncCallback<Entity>() {
+                service.addUpdateSummary( update, name, new AsyncCallback<Entity>() {
                     @Override
                     public void onFailure(Throwable caught) {
                         FeedbackHelper.showError(caught);

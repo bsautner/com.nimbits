@@ -178,8 +178,14 @@ public class CalculationPanel extends NavigationEventProvider {
 
             @Override
             public void componentSelected(ButtonEvent buttonEvent) {
-                final Calculation update = createCalculation(xCombo, yCombo, zCombo, targetcombo, enabled, formula);
-               runEquation(update);
+                final Calculation update;
+                try {
+                    update = createCalculation(xCombo, yCombo, zCombo, targetcombo, enabled, formula);
+                    runEquation(update);
+                } catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
+                }
+
             }
         });
 
@@ -190,17 +196,16 @@ public class CalculationPanel extends NavigationEventProvider {
                 CalculationServiceAsync service = GWT.create(CalculationService.class);
                 final MessageBox box = MessageBox.wait("Progress",
                         "Creating Calculation", "please wait...");
+                final Calculation update;
                 box.show();
                 EntityName name;
                 try {
                     name = CommonFactoryLocator.getInstance().createName(nameField.getValue(), EntityType.calculation);
+                     update = createCalculation(xCombo, yCombo, zCombo, targetcombo, enabled, formula);
                 } catch (NimbitsException e) {
                     FeedbackHelper.showError(e);
                     return;
                 }
-
-
-                final Calculation update = createCalculation(xCombo, yCombo, zCombo, targetcombo, enabled, formula);
 
                 service.addUpdateCalculation(entity, name, update, new AsyncCallback<Entity>() {
                     @Override
@@ -300,7 +305,7 @@ public class CalculationPanel extends NavigationEventProvider {
         vp.add(c);
     }
 
-    private Calculation createCalculation(EntityCombo xCombo, EntityCombo yCombo, EntityCombo zCombo, EntityCombo targetcombo, CheckBox enabled, TextField<String> formula) {
+    private Calculation createCalculation(EntityCombo xCombo, EntityCombo yCombo, EntityCombo zCombo, EntityCombo targetcombo, CheckBox enabled, TextField<String> formula) throws NimbitsException {
         final Calculation update;
 
 
@@ -312,7 +317,11 @@ public class CalculationPanel extends NavigationEventProvider {
         if (entity.getEntityType().equals(EntityType.calculation) && calculation != null) {
 
             update  = CalculationModelFactory.createCalculation
-                    (calculation.getTrigger(), calculation.getKey(), enabled.getValue(), formula.getValue(), target,
+                    (entity,
+                            calculation.getTrigger(),
+                            enabled.getValue(),
+                            formula.getValue(),
+                            target,
                     x, y, z);
 
         }

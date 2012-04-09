@@ -80,39 +80,57 @@ public class EntityStore implements Entity {
 
     }
 
+    public EntityStore(Key key, String name, String uuid, String description, Integer entityType, Integer protectionLevel, String parent, String owner, int alertType, BlobKey blobKey ) {
+        this.key = key;
+        this.name = name;
+        this.uuid = uuid;
+        this.description = description;
+        this.entityType = entityType;
+        this.protectionLevel = protectionLevel;
+        this.parent = parent;
+        this.owner = owner;
+        this.alertType = alertType;
+        this.blobKey = blobKey;
+
+    }
 
     public EntityStore(final Entity entity) throws NimbitsException {
 
         final EntityName saferName = CommonFactoryLocator.getInstance().createName(entity.getName().getValue(), entity.getEntityType());
-        if (Utils.isEmptyString(entity.getKey())) {
+        try {
+            Class cls = Class.forName(entity.getEntityType().getClassName());
 
-       //    this.key = KeyFactory.createKey(EntityStore.class.getSimpleName(), UUID.randomUUID().toString());
-             if (entity.getEntityType().equals(EntityType.user)) {
-              this.key = KeyFactory.createKey(UserEntity.class.getSimpleName(), saferName.getValue());
-            }
 
-            else if (entity.getEntityType().equals(EntityType.point)) {
-                this.key =  KeyFactory.createKey(PointEntity.class.getSimpleName(), entity.getOwner() + '/' + saferName.getValue());
+            if (Utils.isEmptyString(entity.getKey())) {
+
+                if (entity.getEntityType().equals(EntityType.user)) {
+                    this.key = KeyFactory.createKey(cls.getSimpleName(), saferName.getValue());
+                }
+
+                else if (entity.getEntityType().equals(EntityType.point)) {
+                    this.key =  KeyFactory.createKey(cls.getSimpleName(), entity.getOwner() + '/' + saferName.getValue());
+                }
+                else {
+                    this.key = KeyFactory.createKey(cls.getSimpleName(), UUID.randomUUID().toString());
+                }
+
             }
             else {
-                this.key = KeyFactory.createKey(EntityStore.class.getSimpleName(), UUID.randomUUID().toString());
+                this.key = KeyFactory.createKey(cls.getSimpleName(), entity.getKey());
             }
-
+            this.uuid = entity.getUUID();
+            this.name = saferName.getValue();
+            this.description = entity.getDescription();
+            this.entityType = entity.getEntityType().getCode();
+            this.parent = entity.getParent();
+            this.owner = entity.getOwner();
+            this.protectionLevel = entity.getProtectionLevel().getCode();
+            if (! Utils.isEmptyString(entity.getBlobKey()))  {
+                this.blobKey = new BlobKey(entity.getBlobKey());
+            }
+        } catch (ClassNotFoundException e) {
+            throw new NimbitsException(e);
         }
-        else {
-            this.key = KeyFactory.createKey(SimpleEntity.class.getSimpleName(), entity.getKey());
-        }
-        this.uuid = entity.getUUID();
-        this.name = saferName.getValue();
-        this.description = entity.getDescription();
-        this.entityType = entity.getEntityType().getCode();
-        this.parent = entity.getParent();
-        this.owner = entity.getOwner();
-        this.protectionLevel = entity.getProtectionLevel().getCode();
-        if (! Utils.isEmptyString(entity.getBlobKey()))  {
-            this.blobKey = new BlobKey(entity.getBlobKey());
-        }
-
     }
 
     public EntityStore(final Class<?> cls, final Entity entity) throws NimbitsException {
@@ -284,7 +302,18 @@ public class EntityStore implements Entity {
         //not implemented
     }
 
+    @Override
+    public void update(Entity update) throws NimbitsException {
+        this.description = (update.getDescription());
+        this.name = (update.getName().getValue());
+        this.protectionLevel = (update.getProtectionLevel().getCode());
+        this.parent = (update.getParent());
+        if (! Utils.isEmptyString(update.getBlobKey())) {
+            this.blobKey = new BlobKey(update.getBlobKey());
+        }
 
+        this.uuid = (update.getUUID());
+    }
 
 
 }

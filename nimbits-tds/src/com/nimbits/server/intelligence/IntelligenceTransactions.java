@@ -13,6 +13,7 @@
 
 package com.nimbits.server.intelligence;
 
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.intelligence.Intelligence;
 
@@ -26,11 +27,9 @@ import java.util.List;
  */
 public interface IntelligenceTransactions {
 
-    public Intelligence getIntelligence(Entity entity);
+    public Intelligence getIntelligence(Entity entity) throws NimbitsException;
 
-    Intelligence addUpdateIntelligence(Entity entity, Intelligence update);
-
-    List<Intelligence> getIntelligences(Entity point);
+    List<Intelligence> getIntelligences(Entity point) throws NimbitsException;
 
     void deleteIntelligence(Entity entity);
 }

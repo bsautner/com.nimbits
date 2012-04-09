@@ -14,6 +14,7 @@
 package com.nimbits.server.transactions.dao.calculation;
 
 import com.nimbits.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.calculation.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
@@ -38,7 +39,7 @@ public class CalculationDAOImpl implements CalculationTransactions {
     }
 
     @Override
-    public Calculation getCalculation(final Entity entity) {
+    public Calculation getCalculation(final Entity entity) throws NimbitsException {
 
 
 
@@ -59,7 +60,7 @@ public class CalculationDAOImpl implements CalculationTransactions {
     }
 
     @Override
-    public List<Calculation> getCalculations(final Entity entity) {
+    public List<Calculation> getCalculations(final Entity entity) throws NimbitsException {
 
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -97,53 +98,10 @@ public class CalculationDAOImpl implements CalculationTransactions {
         }
     }
 
-    @Override
-    public Calculation addUpdateCalculation(final Entity entity, final Calculation calculation) {
-
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final List<CalcEntity> results;
 
 
-        try {
-
-            if (calculation.getKey() != null ) {
-                final CalcEntity result = pm.getObjectById(CalcEntity.class, calculation.getKey());
-                if (result != null) {
-                    final Transaction tx = pm.currentTransaction();
-                    tx.begin();
-                    result.setEnabled(calculation.getEnabled());
-                    result.setFormula(calculation.getFormula());
-                    result.setTarget(calculation.getTarget());
-                    result.setX(calculation.getX());
-                    result.setY(calculation.getY());
-                    result.setZ(calculation.getZ());
-
-                    tx.commit();
-                    //retObj = EntityTransactionFactory.getInstance(user).getEntityByUUID(result.getKey());
-                    pm.flush();
-                    return CalculationModelFactory.createCalculation(result);
-                }
-                else {
-                    return createCalc(entity, calculation, pm);
-                }
-            }
-
-            else {
-
-                return createCalc(entity, calculation, pm);
-
-            }
-
-
-        }
-        finally {
-            pm.close();
-        }
-
-    }
-
-    private Calculation createCalc(Entity entity, Calculation calculation, PersistenceManager pm) {
-        final CalcEntity s = new CalcEntity(entity, calculation);
+    private Calculation createCalc(Calculation calculation, PersistenceManager pm) throws NimbitsException {
+        final CalcEntity s = new CalcEntity(calculation);
         pm.makePersistent(s);
         return CalculationModelFactory.createCalculation(s);
     }

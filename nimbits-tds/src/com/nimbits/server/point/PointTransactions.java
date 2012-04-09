@@ -33,7 +33,7 @@ public interface PointTransactions {
 
 
 
-    Point updatePoint(final Point point) throws NimbitsException;
+    //Point updatePoint(final Point point) throws NimbitsException;
 
   //  void deletePoint(final Point p) throws NimbitsException;
 
@@ -47,11 +47,13 @@ public interface PointTransactions {
 
     List<Point> getAllPoints() throws NimbitsException;
 
-    Point addPoint(final Entity entity) throws NimbitsException;
+    //Point addPoint(final Entity entity) throws NimbitsException;
 
-    Point addPoint(final Point point) throws NimbitsException;
+    //Point addPoint(final Point point) throws NimbitsException;
 
     List<Point>  getPoints(final List<Entity> entities) throws NimbitsException;
 
     Point deletePoint(final Entity entity) throws NimbitsException;
+
+
 }

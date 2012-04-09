@@ -84,7 +84,7 @@ public class XmppServiceImpl extends RemoteServiceServlet implements XMPPService
     }
 
     @Override
-    public List<XmppResource> getPointXmppResources(User user, Point point) {
+    public List<XmppResource> getPointXmppResources(User user, Point point) throws NimbitsException {
         return XmppTransactionFactory.getInstance(user).getPointXmppResources(point);
     }
 
@@ -95,10 +95,10 @@ public class XmppServiceImpl extends RemoteServiceServlet implements XMPPService
 
             Entity entity = EntityModelFactory.createEntity(resourceName, "", EntityType.resource, ProtectionLevel.onlyMe,
                     targetPointEntity.getKey(),getUser().getKey() , UUID.randomUUID().toString());
-            Entity retObj = EntityServiceFactory.getInstance().addUpdateEntity(entity);
-            XmppResource resource = XmppResourceFactory.createXmppResource(entity.getKey(), targetPointEntity.getKey());
-            XmppTransactionFactory.getInstance(u).addResource(entity, resource);
-            return retObj;
+          //  Entity retObj = EntityServiceFactory.getInstance().addUpdateEntity(entity);
+            XmppResource resource = XmppResourceFactory.createXmppResource(entity, targetPointEntity.getKey());
+            XmppTransactionFactory.getInstance(u).addResource(resource);
+            return resource;
         }
         else {
             return null;

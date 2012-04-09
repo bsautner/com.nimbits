@@ -61,5 +61,8 @@ public interface Entity  extends Serializable {
 
     void setPoints(List<Point> points);
 
+    void update(Entity update) throws NimbitsException;
+
+
 
 }

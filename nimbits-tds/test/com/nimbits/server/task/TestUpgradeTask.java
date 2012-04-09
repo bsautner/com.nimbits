@@ -20,8 +20,10 @@ import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
+import com.nimbits.server.admin.legacy.orm.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.orm.*;
+import com.nimbits.server.orm.UserEntity;
 import helper.*;
 import static org.junit.Assert.*;
 import org.junit.*;
@@ -38,6 +40,7 @@ import java.util.*;
 public class TestUpgradeTask extends NimbitsServletTest {
 
     @Test
+    @Ignore
     public void doUserTest() throws NimbitsException {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();

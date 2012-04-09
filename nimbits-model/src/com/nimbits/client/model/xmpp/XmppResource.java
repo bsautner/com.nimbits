@@ -1,5 +1,7 @@
 package com.nimbits.client.model.xmpp;
 
+import com.nimbits.client.model.entity.*;
+
 import java.io.*;
 
 /**
@@ -8,9 +10,8 @@ import java.io.*;
  * Date: 3/15/12
  * Time: 12:39 PM
  */
-public interface XmppResource extends Serializable {
+public interface XmppResource extends Entity, Serializable {
 
-    String getKey();
 
     String getEntity();
 }

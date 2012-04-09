@@ -103,10 +103,12 @@ public class NimbitsServletTest {
         c = EntityServiceFactory.getInstance().addUpdateEntity(c);
 
         pointEntity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone,  c.getKey(), user.getKey(), UUID.randomUUID().toString());
-        point = pointService.addPoint(user, pointEntity);
+        point = (Point) EntityServiceFactory.getInstance().addUpdateEntity(user, pointEntity);
+       // point = pointService.addPoint(user, pointEntity);
 
         pointChildEntity = EntityModelFactory.createEntity(pointChildName, "", EntityType.point, ProtectionLevel.everyone, point.getKey(), user.getKey(), UUID.randomUUID().toString());
-       pointChild =  pointService.addPoint(user, pointChildEntity);
+        pointChild = (Point) EntityServiceFactory.getInstance().addUpdateEntity(user, pointChildEntity);
+      // pointChild =  pointService.addPoint(user, pointChildEntity);
          assertNotNull(pointChild);
 
     }

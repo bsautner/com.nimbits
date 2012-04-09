@@ -37,13 +37,13 @@ public class PointMemCacheImpl implements PointTransactions {
 
     private final MemcacheService cache;
 
-    @Override
-    public Point addPoint( final Point point) throws NimbitsException {
-        final Point retObj = PointTransactionsFactory.getDaoInstance(u).addPoint(point);
-        purgeMemCache(retObj);
-        updateMap(retObj);
-        return retObj;
-    }
+//    @Override
+//    public Point addPoint( final Point point) throws NimbitsException {
+//        final Point retObj = PointTransactionsFactory.getDaoInstance(u).addPoint(point);
+//        purgeMemCache(retObj);
+//        updateMap(retObj);
+//        return retObj;
+//    }
 
 
     public PointMemCacheImpl(final User user) {
@@ -83,14 +83,14 @@ public class PointMemCacheImpl implements PointTransactions {
 
 
 
-    @Override
-    public Point updatePoint(final Point point) throws NimbitsException {
-
-        Point retObj = PointTransactionsFactory.getDaoInstance(u).updatePoint(point);
-        updateMap(retObj);
-        return retObj;
-
-    }
+//    @Override
+//    public Point updatePoint(final Point point) throws NimbitsException {
+//
+//        Point retObj = PointTransactionsFactory.getDaoInstance(u).updatePoint(point);
+//        updateMap(retObj);
+//        return retObj;
+//
+//    }
 
 //    @Override
 //    public void deletePoint(final Point point) throws NimbitsException {
@@ -113,12 +113,12 @@ public class PointMemCacheImpl implements PointTransactions {
 
     }
 
-    @Override
-    public Point addPoint(final Entity entity) throws NimbitsException {
-        final Point retObj = PointTransactionsFactory.getDaoInstance(u).addPoint(entity);
-        updateMap(retObj);
-        return retObj;
-    }
+//    @Override
+//    public Point addPoint(final Entity entity) throws NimbitsException {
+//        final Point retObj = PointTransactionsFactory.getDaoInstance(u).addPoint(entity);
+//        updateMap(retObj);
+//        return retObj;
+//    }
 
     @Override
     public List<Point> getPoints(final List<Entity> entities) throws NimbitsException {

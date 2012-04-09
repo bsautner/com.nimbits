@@ -15,6 +15,7 @@ package com.nimbits.server.orm;
 
 import com.google.appengine.api.datastore.*;
 import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.subscription.*;
 
@@ -29,12 +30,8 @@ import java.util.*;
  * Time: 2:47 PM
  */
 
-@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
-public class SubscriptionEntity implements Serializable, Subscription {
-
-    @PrimaryKey
-    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    private com.google.appengine.api.datastore.Key key;
+@PersistenceCapable()
+public class SubscriptionEntity extends EntityStore implements Serializable, Subscription {
 
     @Persistent
     private String subscribedEntity;
@@ -60,8 +57,8 @@ public class SubscriptionEntity implements Serializable, Subscription {
     public SubscriptionEntity() {
     }
 
-    public SubscriptionEntity(final Entity entity, final Subscription subscription) {
-
+    public SubscriptionEntity(final Subscription subscription) throws NimbitsException {
+        super(subscription);
         this.notifyMethod = subscription.getNotifyMethod().getCode();
         this.subscriptionType = subscription.getSubscriptionType().getCode();
         this.maxRepeat = subscription.getMaxRepeat();
@@ -69,34 +66,33 @@ public class SubscriptionEntity implements Serializable, Subscription {
         this.notifyFormatJson = subscription.getNotifyFormatJson();
         this.enabled = subscription.getEnabled();
         this.subscribedEntity = subscription.getSubscribedEntity();
-        this.key =  KeyFactory.createKey(SubscriptionEntity.class.getSimpleName(), entity.getKey());
     }
 
 
 
     @Override
     public String getKey() {
-      return key.getName();
+        return key.getName();
     }
 
-     @Override
+    @Override
     public double getMaxRepeat() {
         return this.maxRepeat;
     }
 
     @Override
     public void setMaxRepeat(double maxRepeat) {
-      this.maxRepeat = maxRepeat;
+        this.maxRepeat = maxRepeat;
     }
 
     @Override
     public Date getLastSent() {
-      return lastSent;
+        return lastSent;
     }
 
     @Override
     public void setLastSent(Date lastSent) {
-       this.lastSent = lastSent;
+        this.lastSent = lastSent;
     }
     @Override
     public String getSubscribedEntity() {
@@ -140,5 +136,15 @@ public class SubscriptionEntity implements Serializable, Subscription {
         this.subscriptionType = subscriptionType.getCode();
     }
 
-
+    @Override
+    public void update(Entity update) throws NimbitsException {
+        super.update(update);
+        Subscription s = (Subscription)update;
+        notifyMethod = (s.getNotifyMethod().getCode());
+        subscriptionType = (s.getSubscriptionType().getCode());
+        lastSent = (s.getLastSent());
+        maxRepeat = (s.getMaxRepeat());
+        enabled = (s.getEnabled());
+        notifyFormatJson = (s.getNotifyFormatJson());
+    }
 }

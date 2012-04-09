@@ -11,21 +11,21 @@ import java.util.*;
 public enum EntityType {
     user(0, true,  "com.nimbits.server.orm.UserEntity"),
     point(1, true, "com.nimbits.server.orm.PointEntity"),
-    category(2, false,  "com.nimbits.server.orm.EntityStore"),
-    file(4, false, "com.nimbits.server.orm.EntityStore"),
-    subscription(5, false, ""),
-    userConnection(6, false, ""),
-    calculation(7, false, ""),
-    intelligence(8, false, ""),
+    category(2, false,  "com.nimbits.server.orm.SimpleEntity"),
+    file(4, false, "com.nimbits.server.orm.SimpleEntity"),
+    subscription(5, false, "com.nimbits.server.orm.SubscriptionEntity"),
+    userConnection(6, false, "com.nimbits.server.orm.EntityStore"),
+    calculation(7, false, "com.nimbits.server.orm.CalcEntity"),
+    intelligence(8, false, "com.nimbits.server.orm.IntelligenceEntity"),
     feed(9, false,  "com.nimbits.server.orm.PointEntity"),
-    resource(10, true, ""),
-    summary(11, false, ""),
-    instance(12, false, "");
+    resource(10, true, "com.nimbits.server.orm.XmppResourceEntity"),
+    summary(11, false, "com.nimbits.server.orm.SummaryEntity"),
+    instance(12, false, "com.nimbits.server.orm.EntityStore");
     private static final Map<Integer, EntityType> lookup = new HashMap<Integer, EntityType>(EntityType.values().length);
 
     static {
         for (EntityType s : EnumSet.allOf(EntityType.class))
-            lookup.put(s.getCode(), s);
+            lookup.put(s.code, s);
     }
 
     private final int code;

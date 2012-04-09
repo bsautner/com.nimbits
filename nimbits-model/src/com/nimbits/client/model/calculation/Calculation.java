@@ -1,5 +1,8 @@
 package com.nimbits.client.model.calculation;
 
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.entity.*;
+
 import java.io.Serializable;
 
 /**
@@ -8,9 +11,7 @@ import java.io.Serializable;
  * Date: 12/24/11
  * Time: 4:52 PM
  */
-public interface Calculation extends Serializable {
-
-    String getKey();
+public interface Calculation extends Entity, Serializable {
 
     String getTrigger();
 
@@ -27,4 +28,7 @@ public interface Calculation extends Serializable {
     String getZ();
 
     void setEnabled(boolean b);
+
+    @Override
+    void update(Entity update) throws NimbitsException;
 }

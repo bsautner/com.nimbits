@@ -1,6 +1,8 @@
 package com.nimbits.client.model.summary;
 
 import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.entity.*;
 
 import java.util.*;
 
@@ -10,11 +12,8 @@ import java.util.*;
  * Date: 3/16/12
  * Time: 9:59 AM
  */
-public class SummaryModel implements Summary {
+public class SummaryModel extends EntityModel implements Summary {
 
-
-
-    private String uuid;
     private String entity;
     private String targetPointUUID;
     private Integer summaryType;
@@ -23,13 +22,13 @@ public class SummaryModel implements Summary {
 
 
     public SummaryModel(
-            final String uuid,
+
             final String entity,
             final String targetPointUUID,
             final SummaryType summaryType,
             final long summaryIntervalMs,
             final Date lastProcessed ) {
-        this.uuid = uuid;
+
         this.entity = entity;
         this.targetPointUUID = targetPointUUID;
         this.summaryType = summaryType.getCode();
@@ -37,9 +36,24 @@ public class SummaryModel implements Summary {
         this.lastProcessed = lastProcessed;
 
     }
+    public SummaryModel(
+            final Entity entity,
+            final String targetEntity,
+            final String targetPointUUID,
+            final SummaryType summaryType,
+            final long summaryIntervalMs,
+            final Date lastProcessed ) throws NimbitsException {
+        super(entity);
+        this.entity = targetEntity;
+        this.targetPointUUID = targetPointUUID;
+        this.summaryType = summaryType.getCode();
+        this.summaryIntervalMs = summaryIntervalMs;
+        this.lastProcessed = lastProcessed;
 
-    public SummaryModel(Summary summary) {
-        this.uuid = summary.getKey();
+    }
+
+    public SummaryModel(Summary summary) throws NimbitsException {
+       super(summary);
         this.entity = summary.getEntity();
         this.targetPointUUID = summary.getTargetPointUUID();
         this.summaryType = summary.getSummaryType().getCode();
@@ -51,10 +65,7 @@ public class SummaryModel implements Summary {
     public SummaryModel() {
     }
 
-    @Override
-    public String getKey() {
-        return uuid;
-    }
+
 
     @Override
     public String getEntity() {

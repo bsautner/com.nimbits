@@ -1,6 +1,8 @@
 package com.nimbits.client.model.subscription;
 
 import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.entity.*;
 
 import java.io.*;
 import java.util.*;
@@ -11,9 +13,9 @@ import java.util.*;
  * Date: 1/17/12
  * Time: 3:02 PM
  */
-public class SubscriptionModel implements Serializable, Subscription  {
+public class SubscriptionModel extends EntityModel implements Serializable, Subscription  {
 
-    private String key;
+
     private String subscribedEntity;
     private int notifyMethod;
     private int subscriptionType;
@@ -26,7 +28,8 @@ public class SubscriptionModel implements Serializable, Subscription  {
     private SubscriptionModel() {
     }
 
-    public SubscriptionModel(Subscription subscription) {
+    public SubscriptionModel(Subscription subscription) throws NimbitsException {
+        super(subscription);
         this.subscribedEntity = subscription.getSubscribedEntity();
         this.notifyMethod = subscription.getNotifyMethod().getCode();
         this.subscriptionType = subscription.getSubscriptionType().getCode();
@@ -34,16 +37,19 @@ public class SubscriptionModel implements Serializable, Subscription  {
         this.lastSent = subscription.getLastSent();
         this.notifyFormatJson = subscription.getNotifyFormatJson();
         this.enabled = subscription.getEnabled();
-        this.key = subscription.getKey();
+
     }
 
-    public SubscriptionModel(String subscribedEntity,
+    public SubscriptionModel(
+            Entity entity,
+            String subscribedEntity,
                              SubscriptionType subscriptionType,
                              SubscriptionNotifyMethod subscriptionNotifyMethod,
                              double maxRepeat,
                              Date lastSent,
                              boolean formatJson,
-                             boolean enabled) {
+                             boolean enabled) throws NimbitsException {
+        super(entity);
         this.subscribedEntity = subscribedEntity;
         this.subscriptionType = subscriptionType.getCode();
         this.notifyMethod = subscriptionNotifyMethod.getCode();
@@ -100,11 +106,6 @@ public class SubscriptionModel implements Serializable, Subscription  {
     public void setSubscriptionType(SubscriptionType subscriptionType) {
         this.subscriptionType = subscriptionType.getCode();
     }
-    @Override
-    public String getKey() {
-        return this.key;
-    }
-
 
     @Override
     public double getMaxRepeat() {

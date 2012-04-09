@@ -31,6 +31,7 @@ import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.subscription.*;
+import com.nimbits.client.service.entity.*;
 import com.nimbits.client.service.subscription.*;
 import com.nimbits.client.ui.helper.*;
 
@@ -86,16 +87,16 @@ public class SubscriptionPanel extends NavigationEventProvider {
 
     }
     private void getExistingSubscription() {
-        SubscriptionServiceAsync service = GWT.create(SubscriptionService.class);
-        service.readSubscription(entity, new AsyncCallback<Subscription>() {
+        EntityServiceAsync service = GWT.create(EntityService.class);
+        service.getEntityByKey(entity.getKey(), entity.getEntityType().getClassName(), new AsyncCallback<Entity>() {
             @Override
             public void onFailure(Throwable caught) {
-                GWT.log(caught.getMessage(), caught);
+              FeedbackHelper.showError(caught);
             }
 
             @Override
-            public void onSuccess(Subscription result) {
-                subscription = result;
+            public void onSuccess(Entity result) {
+                subscription = (Subscription) result;
                 try {
                     createForm();
                 } catch (NimbitsException e) {
@@ -105,6 +106,7 @@ public class SubscriptionPanel extends NavigationEventProvider {
                 doLayout();
             }
         });
+
     }
 
 
@@ -262,28 +264,38 @@ public class SubscriptionPanel extends NavigationEventProvider {
                 SubscriptionType subscriptionType =  typeCombo.getValue().getMethod();
 
 
-                final Subscription update;
+                Subscription update = null;
+                try {
+                    if (entity.getEntityType().equals(EntityType.subscription) && subscription != null) {
 
-                if (entity.getEntityType().equals(EntityType.subscription) && subscription != null) {
 
-                    update = SubscriptionFactory.createSubscription(
-                            subscription.getSubscribedEntity(),
-                            subscriptionType,
-                            subscriptionNotifyMethod,
-                            spinnerField.getValue().doubleValue(),
-                            new Date(0),
-                            machine.getValue(),
-                            enabled.getValue());
-                }
-                else {
-                    update = SubscriptionFactory.createSubscription(
-                            entity.getKey(),
-                            subscriptionType,
-                            subscriptionNotifyMethod,
-                            spinnerField.getValue().doubleValue(),
-                            new Date(0),
-                            machine.getValue(),
-                            enabled.getValue());
+                        update = SubscriptionFactory.createSubscription(
+                                entity,
+                                subscription.getSubscribedEntity(),
+                                subscriptionType,
+                                subscriptionNotifyMethod,
+                                spinnerField.getValue().doubleValue(),
+                                new Date(0),
+                                machine.getValue(),
+                                enabled.getValue());
+
+                    }
+                    else {
+
+                        Entity newEntity = EntityModelFactory.createEntity(entity.getName(), "", EntityType.subscription
+                        , ProtectionLevel.onlyMe, entity.getParent(), "");
+                        update = SubscriptionFactory.createSubscription(
+                                newEntity,
+                                entity.getKey(),
+                                subscriptionType,
+                                subscriptionNotifyMethod,
+                                spinnerField.getValue().doubleValue(),
+                                new Date(0),
+                                machine.getValue(),
+                                enabled.getValue());
+                    }
+                } catch (NimbitsException e) {
+                   FeedbackHelper.showError(e);
                 }
                 EntityName name = null;
                 try {
@@ -341,8 +353,8 @@ public class SubscriptionPanel extends NavigationEventProvider {
             }
 
             private void setMachineEnabled(SubscriptionNotifyMethod method) {
-                machine.setEnabled( method.isJsonCompatible());
-                if (! method.isJsonCompatible()) {
+                machine.setEnabled(method.isJsonCompatible());
+                if (!method.isJsonCompatible()) {
                     machine.setValue(false);
                 }
             }

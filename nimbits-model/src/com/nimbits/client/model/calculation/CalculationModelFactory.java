@@ -13,6 +13,9 @@
 
 package com.nimbits.client.model.calculation;
 
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.entity.*;
+
 import java.util.*;
 
 /**
@@ -26,7 +29,7 @@ public class CalculationModelFactory {
     private CalculationModelFactory() {
     }
 
-    public static Calculation createCalculation(Calculation calculation) {
+    public static Calculation createCalculation(Calculation calculation) throws NimbitsException {
         return new CalculationModel(calculation);
     }
 
@@ -35,12 +38,8 @@ public class CalculationModelFactory {
 
         return new CalculationModel(trigger,  enabled, f, target,  x,y, z);
     }
-    public static Calculation createCalculation(final String trigger, final String key, final boolean enabled, final String f, final String target, final String x, final String y, final String z) {
 
-
-        return new CalculationModel(trigger, key, enabled, f, target,  x,y, z);
-    }
-    public static List<Calculation> createCalculations(Collection<Calculation> calculations) {
+    public static List<Calculation> createCalculations(Collection<Calculation> calculations) throws NimbitsException {
         List<Calculation> retObj = new ArrayList<Calculation>(calculations.size());
         for (final Calculation c : calculations) {
             retObj.add(createCalculation(c));
@@ -51,4 +50,8 @@ public class CalculationModelFactory {
     }
 
 
+    public static Calculation createCalculation(Entity entity, final String trigger, final boolean enabled, final String f, final String target, final String x, final String y, final String z) throws NimbitsException {
+        return new CalculationModel(entity, trigger,  enabled, f, target,  x,y, z);
+
+    }
 }

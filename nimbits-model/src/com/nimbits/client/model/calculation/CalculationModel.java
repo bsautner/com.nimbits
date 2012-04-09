@@ -1,5 +1,8 @@
 package com.nimbits.client.model.calculation;
 
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.entity.*;
+
 import java.io.Serializable;
 
 /**
@@ -8,9 +11,9 @@ import java.io.Serializable;
  * Date: 12/24/11
  * Time: 4:53 PM
  */
-public class CalculationModel implements Serializable, Calculation {
+public class CalculationModel extends EntityModel implements Serializable, Calculation {
     private static final long serialVersionUID =1L;
-    private String key;
+
     private String target;
     private String formula;
     private String x;
@@ -23,8 +26,8 @@ public class CalculationModel implements Serializable, Calculation {
     protected CalculationModel() {
     }
 
-    public CalculationModel(Calculation calculation) {
-        this.key = calculation.getKey();
+    public CalculationModel(Calculation calculation) throws NimbitsException {
+        super(calculation);
         this.target = calculation.getTarget();
         this.formula = calculation.getFormula();
         this.x = calculation.getX();
@@ -45,8 +48,9 @@ public class CalculationModel implements Serializable, Calculation {
         this.enabled = enabled;
 
     }
-    public CalculationModel(final String trigger,final String key, final boolean enabled, final String f, final String target, final String x, final String y, final String z) {
-        this.key = key;
+
+    public CalculationModel(Entity entity, String trigger, boolean enabled, String f, String target, String x, String y, String z) throws NimbitsException {
+        super(entity);
         this.trigger = trigger;
         this.target = target;
         this.formula = f;
@@ -54,8 +58,8 @@ public class CalculationModel implements Serializable, Calculation {
         this.y = y;
         this.z = z;
         this.enabled = enabled;
-
     }
+
 
     @Override
     public String getFormula() {
@@ -93,12 +97,19 @@ public class CalculationModel implements Serializable, Calculation {
         this.enabled = b;
     }
 
-    public String getKey() {
-        return key;
-    }
-
     @Override
     public String getTrigger() {
         return  this.trigger;
+    }
+    @Override
+    public void update(Entity update) throws NimbitsException {
+        super.update(update);
+        Calculation c = (Calculation) update;
+        this.enabled = (c.getEnabled());
+        this.formula = (c.getFormula());
+        this.target = (c.getTarget());
+        this.x = (c.getX());
+        this.y = (c.getY());
+        this.z = (c.getZ());
     }
 }

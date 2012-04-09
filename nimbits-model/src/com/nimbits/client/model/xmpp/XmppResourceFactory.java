@@ -1,5 +1,8 @@
 package com.nimbits.client.model.xmpp;
 
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.entity.*;
+
 /**
  * Created by Benjamin Sautner
  * User: bsautner
@@ -8,12 +11,12 @@ package com.nimbits.client.model.xmpp;
  */
 public class XmppResourceFactory {
 
-    public static XmppResource createXmppResource(XmppResource resource) {
+    public static XmppResource createXmppResource(XmppResource resource) throws NimbitsException {
         return new XmppResourceModel(resource);
 
     }
-    public static XmppResource createXmppResource(String uuid, String entity) {
-        return new XmppResourceModel(uuid, entity);
 
+    public static XmppResource createXmppResource(Entity entity, String key) throws NimbitsException {
+        return new XmppResourceModel(entity, key);
     }
 }

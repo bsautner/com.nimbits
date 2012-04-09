@@ -14,6 +14,7 @@
 package com.nimbits.server.transactions.dao.intelligence;
 
 import com.nimbits.PMF;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.intelligence.Intelligence;
 import com.nimbits.client.model.intelligence.IntelligenceFactory;
@@ -36,7 +37,7 @@ public class IntelligenceDAOImpl implements IntelligenceTransactions {
 
 
     @Override
-    public Intelligence getIntelligence(final Entity entity) {
+    public Intelligence getIntelligence(final Entity entity) throws NimbitsException {
         Intelligence retObj = null;
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
@@ -55,59 +56,17 @@ public class IntelligenceDAOImpl implements IntelligenceTransactions {
         }
     }
 
-    @Override
-    public Intelligence addUpdateIntelligence(final Entity entity, final Intelligence update) {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
 
 
-
-        try {
-
-
-            if (entity.getKey() != null) {
-                final Intelligence result = pm.getObjectById(IntelligenceEntity.class, entity.getKey());
-                if (result != null) {
-
-                    final Transaction tx = pm.currentTransaction();
-                    tx.begin();
-                    result.setEnabled(update.getEnabled());
-                    result.setInput(update.getInput());
-                    result.setTarget(update.getTarget());
-                    result.setNodeId(update.getNodeId());
-                    result.setResultsInPlainText(update.getResultsInPlainText());
-                    result.setResultTarget(update.getResultTarget());
-                    result.setTrigger(update.getTrigger());
-
-                    tx.commit();
-                    pm.flush();
-                    return IntelligenceFactory.createIntelligence(result);
-                }
-                else {
-                    return createIntelligence(entity, update, pm);
-                }
-
-            }
-            else {
-                return createIntelligence(entity, update, pm);
-
-            }
-
-
-        }
-        finally {
-            pm.close();
-        }
-    }
-
-    private Intelligence createIntelligence(Entity entity, Intelligence update, PersistenceManager pm) {
-        final IntelligenceEntity s = new IntelligenceEntity(entity, update);
+    private Intelligence createIntelligence(Intelligence update, PersistenceManager pm) throws NimbitsException {
+        final IntelligenceEntity s = new IntelligenceEntity(update);
 
         pm.makePersistent(s);
         return IntelligenceFactory.createIntelligence(s);
     }
 
     @Override
-    public List<Intelligence> getIntelligences(final Entity point) {
+    public List<Intelligence> getIntelligences(final Entity point) throws NimbitsException {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
@@ -118,9 +77,6 @@ public class IntelligenceDAOImpl implements IntelligenceTransactions {
             q.setRange(0,1);
             final List<Intelligence> results = (List<Intelligence>) q.execute(point.getKey(), true);
             return  IntelligenceFactory.createIntelligences(results);
-        } catch (NullPointerException ex) {
-            ex.printStackTrace();
-            return null;
         } finally {
             pm.close();
         }

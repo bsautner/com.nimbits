@@ -237,9 +237,9 @@ public class PointPanel extends LayoutContainer {
 
 
 
-
-        PointServiceAsync service = GWT.create(PointService.class);
-        service.updatePoint(point, new AsyncCallback<Point>() {
+        EntityServiceAsync service = GWT.create(EntityService.class);
+       // PointServiceAsync service = GWT.create(PointService.class);
+        service.addUpdateEntity(point, new AsyncCallback<Entity>() {
             @Override
             public void onFailure(Throwable caught) {
                 MessageBox.alert("Alert", caught.getMessage(), null);
@@ -247,7 +247,7 @@ public class PointPanel extends LayoutContainer {
             }
 
             @Override
-            public void onSuccess(Point result) {
+            public void onSuccess(Entity result) {
 
                 try {
                     notifyPointUpdatedListener();

@@ -74,12 +74,6 @@ public class UserModel extends EntityModel implements Serializable, User {
         this.facebookID = u.getFacebookID();
     }
 
-
-    @Override
-    public String getKey() {
-        return super.getKey();
-    }
-
     @Override
     public Date getDateCreated() {
         return new Date(this.dateCreated.getTime());
@@ -150,8 +144,6 @@ public class UserModel extends EntityModel implements Serializable, User {
     public boolean isRestricted() {
         return restricted;
     }
-
-
 
     @Override
     public void setRestricted(final boolean restricted) {

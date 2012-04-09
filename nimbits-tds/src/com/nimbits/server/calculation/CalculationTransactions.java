@@ -13,6 +13,7 @@
 
 package com.nimbits.server.calculation;
 
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.calculation.*;
 import com.nimbits.client.model.entity.*;
 
@@ -26,11 +27,9 @@ import java.util.*;
  */
 public interface CalculationTransactions {
 
-    Calculation getCalculation(final Entity entity);
+    Calculation getCalculation(final Entity entity) throws NimbitsException;
 
-    Calculation addUpdateCalculation(final Entity entity, final Calculation calculation);
-
-    List<Calculation> getCalculations(final Entity entity);
+    List<Calculation> getCalculations(final Entity entity) throws NimbitsException;
 
     void deleteCalculation(final Entity entity);
 }

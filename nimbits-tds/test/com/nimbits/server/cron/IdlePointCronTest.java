@@ -14,6 +14,7 @@
 package com.nimbits.server.cron;
 
 import com.nimbits.client.exception.*;
+import com.nimbits.server.entity.*;
 import com.nimbits.server.point.*;
 import helper.*;
 import static org.junit.Assert.*;
@@ -34,7 +35,8 @@ public class IdlePointCronTest extends NimbitsServletTest {
         point.setIdleSeconds(1);
         point.setIdleAlarmOn(true);
         try {
-            PointServiceFactory.getInstance().updatePoint(user, point);
+            EntityServiceFactory.getInstance().addUpdateEntity(user, point);
+           // PointServiceFactory.getInstance().updatePoint(user, point);
 
            final int c =  IdlePointCron.processGet();
             assertEquals(1, c);

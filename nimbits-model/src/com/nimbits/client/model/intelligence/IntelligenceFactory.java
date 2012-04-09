@@ -13,6 +13,8 @@
 
 package com.nimbits.client.model.intelligence;
 
+import com.nimbits.client.exception.*;
+
 import java.util.*;
 
 /**
@@ -23,12 +25,12 @@ import java.util.*;
  */
 public class IntelligenceFactory {
 
-    public static Intelligence createIntelligence(Intelligence intelligence) {
+    public static Intelligence createIntelligence(Intelligence intelligence) throws NimbitsException {
         return new IntelligenceModel(intelligence);
 
     }
 
-    public static List<Intelligence> createIntelligences(Collection<Intelligence> results) {
+    public static List<Intelligence> createIntelligences(Collection<Intelligence> results) throws NimbitsException {
         final List<Intelligence> retObj = new ArrayList<Intelligence>(results.size());
         for (final Intelligence i : results) {
             retObj.add(createIntelligence(i));

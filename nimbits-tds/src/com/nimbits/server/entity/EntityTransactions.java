@@ -46,8 +46,6 @@ public interface EntityTransactions {
 
     Map<String, Entity> getSystemWideEntityMap( final EntityType type, final Class<?> cls) throws NimbitsException;
 
-    Map<String, Point> getSystemWidePointMap() throws NimbitsException;
-
     void removeEntityFromCache( final Entity entity) throws NimbitsException;
 
     Entity getEntityByName( final EntityName name,  final Class<?> cls) throws NimbitsException;

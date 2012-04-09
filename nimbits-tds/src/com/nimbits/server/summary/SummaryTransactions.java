@@ -13,6 +13,7 @@
 
 package com.nimbits.server.summary;
 
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.summary.*;
 
@@ -24,9 +25,9 @@ import com.nimbits.client.model.summary.*;
  */
 public interface SummaryTransactions {
 
-    void addOrUpdateSummary(final Entity entity,final Summary summary);
+    Summary addOrUpdateSummary(final Summary summary) throws NimbitsException;
 
-    Summary readSummary(final Entity entity);
+    Summary readSummary(final Entity entity) throws NimbitsException;
 
     void updateLastProcessed(final Entity entity);
 

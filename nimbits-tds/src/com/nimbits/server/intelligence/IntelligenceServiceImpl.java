@@ -190,7 +190,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
     }
 
     @Override
-    public Intelligence getIntelligence(Entity entity) {
+    public Intelligence getIntelligence(Entity entity) throws NimbitsException {
         return IntelligenceServiceFactory.getDaoInstance().getIntelligence(entity);
     }
 
@@ -204,12 +204,12 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
             Entity e = EntityModelFactory.createEntity(name, "", EntityType.intelligence, ProtectionLevel.onlyMe,
                     update.getTrigger(), u.getKey(), UUID.randomUUID().toString());
-            retObj = EntityServiceFactory.getInstance().addUpdateEntity(u, e);
-            Intelligence c = IntelligenceModelFactory.createIntelligenceModel(e.getKey(),
+
+            Intelligence c = IntelligenceModelFactory.createIntelligenceModel(e,
                     update.getEnabled(), update.getResultTarget(), update.getTarget(), update.getInput(), update.getNodeId(),
                     update.getResultsInPlainText(), update.getTrigger());
+            EntityServiceFactory.getInstance().addUpdateEntity(c);
 
-            IntelligenceServiceFactory.getDaoInstance().addUpdateIntelligence(retObj, c);
 
 
         }
@@ -217,19 +217,19 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
             Entity e = EntityModelFactory.createEntity(name, "", EntityType.intelligence, ProtectionLevel.onlyMe,
                     entity.getKey(), u.getKey(), UUID.randomUUID().toString());
-            retObj = EntityServiceFactory.getInstance().addUpdateEntity(e);
-            Intelligence c = IntelligenceModelFactory.createIntelligenceModel(e.getKey(),
+
+            Intelligence c = IntelligenceModelFactory.createIntelligenceModel(e,
                     update.getEnabled(), update.getResultTarget(), update.getTarget(), update.getInput(), update.getNodeId(),
                     update.getResultsInPlainText(), update.getTrigger());
 
-            IntelligenceServiceFactory.getDaoInstance().addUpdateIntelligence(retObj, c);
+            EntityServiceFactory.getInstance().addUpdateEntity(c);
 
 
         }
         else if (entity.getEntityType().equals(EntityType.intelligence)) {
             entity.setName(name);
-            IntelligenceServiceFactory.getDaoInstance().addUpdateIntelligence(entity, update);
 
+            EntityServiceFactory.getInstance().addUpdateEntity(entity);
             return EntityServiceFactory.getInstance().addUpdateEntity(entity);
 
 
@@ -259,7 +259,8 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
                 i.setEnabled(false);
                 FeedServiceFactory.getInstance().postToFeed(u, new NimbitsException("An error occured when processing an intelligence" +
                         " expression - intelligence on data point has been disabled  " + e.getMessage()));
-                IntelligenceServiceFactory.getDaoInstance().addUpdateIntelligence(null, i);
+                EntityServiceFactory.getInstance().addUpdateEntity(i);
+
 
             }
 

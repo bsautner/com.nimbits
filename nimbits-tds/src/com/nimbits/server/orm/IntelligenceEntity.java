@@ -15,6 +15,8 @@ package com.nimbits.server.orm;
 
 import com.google.appengine.api.datastore.*;
 import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.calculation.*;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.intelligence.*;
 
@@ -27,11 +29,7 @@ import javax.jdo.annotations.*;
  * Time: 10:50 AM
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
-public class IntelligenceEntity implements Intelligence {
-
-    @PrimaryKey
-    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    private com.google.appengine.api.datastore.Key key;
+public class IntelligenceEntity extends EntityStore implements Intelligence {
 
     @Persistent
     private Boolean enabled;
@@ -58,8 +56,8 @@ public class IntelligenceEntity implements Intelligence {
     }
 
 
-    public IntelligenceEntity(final Entity entity, final Intelligence intelligence) {
-        this.key = KeyFactory.createKey(IntelligenceEntity.class.getSimpleName(), entity.getKey());
+    public IntelligenceEntity(final Intelligence intelligence) throws NimbitsException {
+        super(intelligence);
         this.enabled = intelligence.getEnabled();
         this.resultTarget = intelligence.getResultTarget().getCode();
         this.target = intelligence.getTarget();
@@ -67,7 +65,7 @@ public class IntelligenceEntity implements Intelligence {
         this.nodeId = intelligence.getNodeId();
         this.resultsInPlainText = intelligence.getResultsInPlainText();
         this.trigger = intelligence.getTrigger();
-   }
+    }
 
 
     @Override
@@ -82,7 +80,7 @@ public class IntelligenceEntity implements Intelligence {
 
     @Override
     public void setTrigger(final String trigger) {
-      this.trigger = trigger;
+        this.trigger = trigger;
     }
 
     @Override
@@ -136,11 +134,26 @@ public class IntelligenceEntity implements Intelligence {
         this.resultsInPlainText = resultsInPlainText;
     }
 
+    @Override
     public String getTarget() {
         return target;
     }
 
+    @Override
     public void setTarget(final String target) {
         this.target = target;
+    }
+
+    @Override
+    public void update(Entity update) throws NimbitsException {
+        super.update(update);
+        Intelligence c = (Intelligence) update;
+        this.enabled = (c.getEnabled());
+        this.input = (c.getInput());
+        this.target = (c.getTarget());
+        this.nodeId = (c.getNodeId());
+        this.resultsInPlainText = (c.getResultsInPlainText());
+        this.resultTarget = (c.getResultTarget().getCode());
+        this.trigger = (c.getTrigger());
     }
 }

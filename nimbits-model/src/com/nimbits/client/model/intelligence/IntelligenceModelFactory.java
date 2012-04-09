@@ -14,6 +14,8 @@
 package com.nimbits.client.model.intelligence;
 
 import com.nimbits.client.enums.IntelligenceResultTarget;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.entity.*;
 
 /**
  * Created by bsautner
@@ -26,22 +28,22 @@ public class IntelligenceModelFactory {
     private IntelligenceModelFactory() {
     }
 
-    public static Intelligence createIntelligenceModel(Intelligence i) {
+    public static Intelligence createIntelligenceModel(Intelligence i) throws NimbitsException {
         return new IntelligenceModel(i);
 
     }
 
 
-    public static Intelligence createIntelligenceModel(final String uuid,
+    public static Intelligence createIntelligenceModel(final Entity entity,
                                                        final boolean enabled,
                                                        final IntelligenceResultTarget resultTarget,
                                                        final String targetPoint,
                                                        final String input,
                                                        final String nodeId,
                                                        final boolean resultsInPlainText,
-                                                       final String trigger) {
+                                                       final String trigger) throws NimbitsException {
 
-        return new IntelligenceModel(uuid, enabled, resultTarget, targetPoint, input, nodeId, resultsInPlainText, trigger);
+        return new IntelligenceModel(entity, enabled, resultTarget, targetPoint, input, nodeId, resultsInPlainText, trigger);
 
     }
 

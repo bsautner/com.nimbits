@@ -29,7 +29,7 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.service.datapoints.PointService;
 import com.nimbits.server.blob.BlobStoreFactory;
-import com.nimbits.server.entity.EntityTransactionFactory;
+import com.nimbits.server.entity.*;
 import com.nimbits.server.export.ExportHelperFactory;
 import com.nimbits.server.orm.PointEntity;
 import com.nimbits.server.user.UserServiceFactory;
@@ -52,7 +52,7 @@ public class PointServiceImpl extends RemoteServiceServlet implements
         }
         return u;
     }
-//
+    //
     @Override
     public Entity copyPoint(User u, Entity originalEntity, EntityName newName) throws NimbitsException {
 
@@ -62,8 +62,8 @@ public class PointServiceImpl extends RemoteServiceServlet implements
         final Point newPoint = PointModelFactory.createPointModel(storedPoint);
         newPoint.setName(newName);
 
-
-        return addPoint(u, newPoint);
+        return EntityServiceFactory.getInstance().addUpdateEntity(u, newPoint);
+      //  return addPoint(u, newPoint);
 
     }
 
@@ -84,47 +84,56 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
     }
 
-
-
-    @Override
-    public Point updatePoint(final Point point) throws NimbitsException {
-        final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
-                this.getThreadLocalRequest());
-        return updatePoint(u, point);
-    }
-
-    @Override
-    public Point updatePoint(final User u, final Point point) throws NimbitsException {
-
-        return PointTransactionsFactory.getInstance(u).updatePoint(point);
-    }
-
-
-    @Override
-        public Point addPoint(final User user,final Entity entity) throws NimbitsException {
-        //final Entity r = EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
-        final Point newPoint =  PointTransactionsFactory.getInstance(user).addPoint(entity);
-      //  notifyFeedOfNewPoint(user, entity);
-        return newPoint;
-    }
-
-
-    @Override
-    public Point addPoint(final User user, final Point point) throws NimbitsException {
-
-        return PointTransactionsFactory.getInstance(user).addPoint(point);
-    }
-
     @Override
     public Point addPoint(EntityName name) throws NimbitsException {
-        User u = getUser();
-
-        Entity r = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.everyone,
-               u.getKey(), u.getKey(), UUID.randomUUID().toString());
-        return addPoint(u, r);
-
-
+        Entity e = EntityModelFactory.createEntity(name, EntityType.point);
+        return (Point) EntityServiceFactory.getInstance().addUpdateEntity(e);
     }
+
+    @Override
+    public void addPoint(User user, Point point) throws NimbitsException {
+        EntityServiceFactory.getInstance().addUpdateEntity(user, point);
+    }
+
+
+//    @Override
+//    public Point updatePoint(final Point point) throws NimbitsException {
+//        final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
+//                this.getThreadLocalRequest());
+//        return updatePoint(u, point);
+//    }
+
+//    @Override
+//    public Point updatePoint(final User u, final Point point) throws NimbitsException {
+//
+//        return PointTransactionsFactory.getInstance(u).updatePoint(point);
+//    }
+
+
+//    @Override
+//    public Point addPoint(final User user,final Entity entity) throws NimbitsException {
+//        //final Entity r = EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
+//
+//
+//
+//
+//        final Point newPoint =  PointTransactionsFactory.getInstance(user).addPoint(entity);
+//        //  notifyFeedOfNewPoint(user, entity);
+//        return newPoint;
+//    }
+
+
+
+//    @Override
+//    public Point addPoint(EntityName name) throws NimbitsException {
+//        User u = getUser();
+//
+//        Entity r = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.everyone,
+//                u.getKey(), u.getKey(), UUID.randomUUID().toString());
+//        return addPoint(u, r);
+//
+//
+//    }
 
 
     @Override

@@ -14,6 +14,7 @@
 package com.nimbits.client.model.point;
 
 import com.nimbits.client.enums.FilterType;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.value.Value;
 
@@ -28,8 +29,6 @@ import java.util.List;
  */
 public interface Point extends Entity, Serializable {
 
-    @Override
-    String getKey();
 
     int getExpire();
 
@@ -82,4 +81,7 @@ public interface Point extends Entity, Serializable {
     double getFilterValue();
 
     void setFilterValue(double value);
+
+    @Override
+    void update(Entity update) throws NimbitsException;
 }

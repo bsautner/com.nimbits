@@ -172,8 +172,13 @@ public class IntelligencePanel extends NavigationEventProvider {
             public void componentSelected(ButtonEvent buttonEvent) {
                 IntelligenceResultTarget target = intelTargetRadioNumber.getValue() ? IntelligenceResultTarget.value
                         : IntelligenceResultTarget.data;
-                final Intelligence update = createUpdate(target,
-                        intelEnabled, intelTargetPoint, intelFormula, intelNodeId, intelPlainText);
+                  Intelligence update = null;
+                try {
+                    update = createUpdate(target, nameField.getValue(),
+                            intelEnabled, intelTargetPoint, intelFormula, intelNodeId, intelPlainText);
+                } catch (NimbitsException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
                 IntelligenceServiceAsync service = GWT.create(IntelligenceService.class);
                 service.processInput(update, new AsyncCallback<Value>() {
                     @Override
@@ -216,8 +221,13 @@ public class IntelligencePanel extends NavigationEventProvider {
                 IntelligenceResultTarget target = intelTargetRadioNumber.getValue() ? IntelligenceResultTarget.value
                         : IntelligenceResultTarget.data;
 
-                final Intelligence update = createUpdate(target, intelEnabled,
-                        intelTargetPoint, intelFormula, intelNodeId, intelPlainText);
+                Intelligence update = null;
+                try {
+                    update = createUpdate(target, nameField.getValue(),  intelEnabled,
+                            intelTargetPoint, intelFormula, intelNodeId, intelPlainText);
+                } catch (NimbitsException e) {
+         FeedbackHelper.showError(e);
+                }
 
                 service.addUpdateIntelligence(entity, name, update, new AsyncCallback<Entity>() {
                     @Override
@@ -360,11 +370,15 @@ public class IntelligencePanel extends NavigationEventProvider {
         vp.add(c);
     }
 
-    private Intelligence createUpdate(IntelligenceResultTarget target, CheckBox intelEnabled, EntityCombo intelTargetPoint, TextArea intelFormula, TextField<String> intelNodeId, CheckBox intelPlainText) {
+    private Intelligence createUpdate(IntelligenceResultTarget target, String n, CheckBox intelEnabled, EntityCombo intelTargetPoint, TextArea intelFormula, TextField<String> intelNodeId, CheckBox intelPlainText) throws NimbitsException {
 
         if (entity.getEntityType().equals(EntityType.point)) {
+            EntityName name = CommonFactoryLocator.getInstance().createName(n, EntityType.intelligence);
+            Entity e = EntityModelFactory.createEntity(name,"", EntityType.intelligence, ProtectionLevel.onlyMe,
+                    entity.getKey(), entity.getOwner());
+
             return IntelligenceModelFactory.createIntelligenceModel(
-                    "",
+                    e,
                     intelEnabled.getValue(),
                     target,
                     intelTargetPoint.getValue().getBaseEntity().getKey(),
@@ -374,7 +388,7 @@ public class IntelligencePanel extends NavigationEventProvider {
         }
         else {
             return IntelligenceModelFactory.createIntelligenceModel(
-                    intelligence.getKey(),
+                    entity,
                     intelEnabled.getValue(),
                     target,
                     intelTargetPoint.getValue().getUUID(),

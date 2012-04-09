@@ -21,6 +21,7 @@ import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.server.entity.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.value.*;
 import helper.*;
@@ -40,7 +41,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
 
     @Test
     public void testCalcs() throws NimbitsException, InterruptedException {
-        //TODO pass test
+
 
         final EntityName targetName = CommonFactoryLocator.getInstance().createName("TARGET" + UUID.randomUUID().toString(), EntityType.point);
         final EntityName triggerName = CommonFactoryLocator.getInstance().createName("TRIGGER" + UUID.randomUUID().toString(), EntityType.point);
@@ -55,7 +56,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         final Point trigger = PointServiceFactory.getInstance().addPoint(triggerName);
         final Point target = PointServiceFactory.getInstance().addPoint(targetName);
 
-        final Point y =PointServiceFactory.getInstance().addPoint( yName);
+        final Point y =PointServiceFactory.getInstance().addPoint(yName);
         final Point z = PointServiceFactory.getInstance().addPoint(zName);
 
         assertNotNull(y);
@@ -71,7 +72,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         final double ry = r.nextDouble();
         final double rz = r.nextDouble();
 
-        final Calculation calculation = CalculationModelFactory.createCalculation(trigger.getKey(), UUID.randomUUID().toString(),
+        final Calculation calculation = CalculationModelFactory.createCalculation(trigger, trigger.getKey(),
                 true, "x+y+z+" + r1, target.getKey(), trigger.getKey(), y.getKey(), z.getKey());
 
         final Entity ce = CalculationServiceFactory.getInstance().addUpdateCalculation(null, cName, calculation);
@@ -79,8 +80,8 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
 
         final Calculation c = CalculationServiceFactory.getInstance().getCalculation(ce);
         assertNotNull(c);
-
-        PointServiceFactory.getInstance().updatePoint(trigger);
+        EntityServiceFactory.getInstance().addUpdateEntity(trigger);
+        //PointServiceFactory.getInstance().updatePoint(trigger);
 
         RecordedValueServiceFactory.getInstance().recordValue(user,yName, ValueModelFactory.createValueModel(ry));
 
@@ -98,7 +99,8 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         final Value vz = RecordedValueServiceFactory.getInstance().getCurrentValue(z);
         assertEquals(vz.getDoubleValue(), rz, 0.0001);
 
-        Thread.sleep(100);
+        Thread.sleep(1000);
+        CalculationServiceFactory.getInstance().processCalculations(user, trigger, vt);
         final Value endResult =RecordedValueServiceFactory.getInstance().getCurrentValue(target);
         assertNotNull(endResult);
         assertEquals(r1 + r2 + ry + rz, endResult.getDoubleValue(), 0.001);

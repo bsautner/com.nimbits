@@ -14,6 +14,7 @@
 package com.nimbits.server.transactions.dao.xmpp;
 
 import com.nimbits.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
@@ -37,13 +38,13 @@ public class XmppDaoImpl implements XmppTransaction {
     public XmppDaoImpl(final User u) {
 
     }
-    public void addResource(final Entity entity, final XmppResource resource)  {
+    public void addResource(final XmppResource resource) throws NimbitsException {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
 
         try {
-            final XmppResourceEntity s = new XmppResourceEntity(entity, resource);
+            final XmppResourceEntity s = new XmppResourceEntity(resource);
             pm.makePersistent(s);
 
         }
@@ -54,7 +55,7 @@ public class XmppDaoImpl implements XmppTransaction {
     }
 
     @Override
-    public List<XmppResource> getPointXmppResources(final Point point) {
+    public List<XmppResource> getPointXmppResources(final Point point) throws NimbitsException {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final List<XmppResource> results;

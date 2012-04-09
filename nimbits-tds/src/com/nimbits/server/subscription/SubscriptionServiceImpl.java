@@ -63,7 +63,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
 
     @Override
-    public List<Subscription> getSubscriptionsToPoint(final Entity point) {
+    public List<Subscription> getSubscriptionsToPoint(final Entity point) throws NimbitsException {
         return SubscriptionTransactionFactory.getInstance(null).getSubscriptionsToPoint(point);
     }
 
@@ -151,8 +151,9 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
         final User user = getUser();
         if (entity.getEntityType().equals(EntityType.subscription)) {
             entity.setName(name);
-            SubscriptionTransactionFactory.getInstance(user).subscribe(entity,subscription);
-            return  EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
+            subscription.setName(name);
+           // SubscriptionTransactionFactory.getInstance(user).subscribe(subscription);
+            return  EntityServiceFactory.getInstance().addUpdateEntity(user, subscription);
 
         }
         else { //new
@@ -160,31 +161,32 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
             if (entity.getOwner().equals(user.getKey())) {   //subscribe to your own data
                 final Entity s = EntityModelFactory.createEntity(name, "",EntityType.subscription,
                         ProtectionLevel.onlyMe, entity.getKey(), user.getKey(), UUID.randomUUID().toString());
-                final Entity r = EntityServiceFactory.getInstance().addUpdateEntity(user, s);
-                SubscriptionTransactionFactory.getInstance(user).subscribe(r, subscription);
+                 Subscription su = SubscriptionFactory.createSubscription(subscription);
+                 final Entity r = EntityServiceFactory.getInstance().addUpdateEntity(user, su);
+                //SubscriptionTransactionFactory.getInstance(user).subscribe(r, subscription);
                 return  r;
             }
             else { //subscribe to some elses data
                 final Entity s = EntityModelFactory.createEntity(name, "",EntityType.subscription,
                         ProtectionLevel.onlyMe,  user.getKey(), user.getKey(), UUID.randomUUID().toString());
-
-                SubscriptionTransactionFactory.getInstance(user).subscribe(s, subscription);
+                Subscription su = SubscriptionFactory.createSubscription(subscription);
+             //   SubscriptionTransactionFactory.getInstance(user).subscribe(s, subscription);
                 return  EntityServiceFactory.getInstance().addUpdateEntity(user, s);
             }
         }
 
     }
-
-    @Override
-    public Subscription readSubscription(final Entity entity) throws NimbitsException {
-        return SubscriptionTransactionFactory.getInstance(getUser()).readSubscription(entity);
-    }
+//
+//    @Override
+//    public Subscription readSubscription(final Entity entity) throws NimbitsException {
+//        return SubscriptionTransactionFactory.getInstance(getUser()).readSubscription(entity);
+//    }
 
     @Override
     public Entity getSubscribedEntity(final Entity entity) throws NimbitsException {
-        final Subscription subscription =
-                SubscriptionTransactionFactory.getInstance(getUser()).readSubscription(entity);
-        return EntityServiceFactory.getInstance().getEntityByKey(getUser(), subscription.getSubscribedEntity(), PointEntity.class.getName());
+       return  (Subscription) EntityServiceFactory.getInstance().getEntityByKey(entity.getKey(), SubscriptionEntity.class.getName());
+     //           SubscriptionTransactionFactory.getInstance(getUser()).readSubscription(entity);
+      //  return EntityServiceFactory.getInstance().getEntityByKey(getUser(), subscription.getSubscribedEntity(), PointEntity.class.getName());
 
     }
 

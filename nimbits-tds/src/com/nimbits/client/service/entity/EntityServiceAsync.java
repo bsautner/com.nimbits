@@ -25,8 +25,6 @@ public interface EntityServiceAsync {
 
     void addUpdateEntity(final Entity entity, AsyncCallback<Entity> async);
 
-    void addUpdateEntity(final EntityName name ,EntityType type,  AsyncCallback<Entity> async);
-
     void getEntityByKey(String uuid, String className, AsyncCallback<Entity> async);
 
     void copyEntity(Entity originalEntity, EntityName newName, AsyncCallback<Entity> async);
@@ -52,7 +50,6 @@ public interface EntityServiceAsync {
     void getEntityChildren(User u, Entity c, EntityType point, AsyncCallback<List<Entity>> async);
 
     void getEntityMap(User user, EntityType type, final int limit, AsyncCallback<Map<String, Entity>> async);
-
 
     void getEntityByName(User user, EntityName name, String className, AsyncCallback<Entity> async);
 }

@@ -15,6 +15,7 @@ package com.nimbits.server.orm;
 
 import com.google.appengine.api.datastore.*;
 import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.summary.*;
 
@@ -29,13 +30,8 @@ import java.util.*;
  */
 
 @SuppressWarnings("unused")
-@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
-public class SummaryEntity implements Summary {
-
-    @PrimaryKey
-    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    private com.google.appengine.api.datastore.Key key;
-
+@PersistenceCapable
+public class SummaryEntity extends EntityStore implements Summary {
 
     @Persistent
     private String entity;
@@ -56,8 +52,8 @@ public class SummaryEntity implements Summary {
     protected SummaryEntity() {
     }
 
-    public SummaryEntity(final Entity entity, final Summary summary) {
-        this.key = KeyFactory.createKey(SummaryEntity.class.getSimpleName(), entity.getKey());
+    public SummaryEntity(final Summary summary) throws NimbitsException {
+        super(summary);
         this.entity = summary.getEntity();
         this.targetPointUUID = summary.getTargetPointUUID();
         this.summaryType = summary.getSummaryType().getCode();
@@ -66,29 +62,6 @@ public class SummaryEntity implements Summary {
 
     }
 
-//    public SummaryEntity(final String uuid,
-//                         final String entity,
-//                         final String targetPointUUID,
-//                         final SummaryType summaryType,
-//                         final Long summaryIntervalMs,
-//                         final Date lastProcessed,
-//                         final ProtectionLevel protectionLevel) {
-//
-//        this.uuid = uuid;
-//        this.entity = entity;
-//        this.targetPointUUID = targetPointUUID;
-//        this.summaryType = summaryType.getCode();
-//        this.summaryIntervalMs = summaryIntervalMs;
-//        this.lastProcessed = lastProcessed;
-//
-//    }
-
-
-
-    @Override
-    public String getKey() {
-        return key.getName();
-    }
 
     @Override
     public String getEntity() {

@@ -28,11 +28,9 @@ import java.util.Date;
 
 //import com.google.appengine.api.users.User;
 
-@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
+@PersistenceCapable
 public class UserEntity extends EntityStore implements User {
-//    @PrimaryKey
-//    @Persistent
-//    private Key key;
+
 
     @Persistent
     private Date dateCreated;
@@ -63,6 +61,17 @@ public class UserEntity extends EntityStore implements User {
      */
     private static final long serialVersionUID = 1L;
 
+    public UserEntity(Entity entity, Date dateCreated, Date lastLoggedIn, Long facebookID, String facebookToken, String secret, String twitterToken, String twitterTokenSecret, boolean restricted) throws NimbitsException {
+        super(entity);
+        this.dateCreated = dateCreated;
+        this.lastLoggedIn = lastLoggedIn;
+        this.facebookID = facebookID;
+        this.facebookToken = facebookToken;
+        this.secret = secret;
+        this.twitterToken = twitterToken;
+        this.twitterTokenSecret = twitterTokenSecret;
+        this.restricted = restricted;
+    }
 
     @Override
     public Date getDateCreated() {

@@ -18,6 +18,7 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.server.task.*;
 
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.NotPersistent;
@@ -25,7 +26,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import java.util.List;
 
-@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
+@PersistenceCapable
 public class PointEntity extends EntityStore implements Point {
     private static final int DEFAULT_EXPIRE = 90;
     private static final double DEFAULT_FILTER_VALUE = 0.1;
@@ -111,6 +112,26 @@ public class PointEntity extends EntityStore implements Point {
         super(PointEntity.class, entity);
 
     }
+
+    public PointEntity(Entity entity, Double highAlarm, int expire, String unit, Double filterValue, Integer filterType, Double lowAlarm, Boolean highAlarmOn, Boolean lowAlarmOn, Boolean idleAlarmOn, Integer idleSeconds, Boolean idleAlarmSent, String legacyKey, Double target, List<Value> values, Value value) throws NimbitsException {
+        super(entity);
+        this.highAlarm = highAlarm;
+        this.expire = expire;
+        this.unit = unit;
+        this.filterValue = filterValue;
+        this.filterType = filterType;
+        this.lowAlarm = lowAlarm;
+        this.highAlarmOn = highAlarmOn;
+        this.lowAlarmOn = lowAlarmOn;
+        this.idleAlarmOn = idleAlarmOn;
+        this.idleSeconds = idleSeconds;
+        this.idleAlarmSent = idleAlarmSent;
+        this.legacyKey = legacyKey;
+        this.target = target;
+        this.values = values;
+        this.value = value;
+    }
+
     public PointEntity(final Entity entity, final com.nimbits.server.admin.PointEntity point) throws NimbitsException {
         super(PointEntity.class, entity);
         this.highAlarm = point.getHighAlarm();
@@ -267,16 +288,26 @@ public class PointEntity extends EntityStore implements Point {
         this.filterValue = value;
     }
 
-    @Override
-    public String getKey() {
-        return super.getKey();
-    }
-
     public void setLegacyKey(String legacyKey) {
         this.legacyKey = legacyKey;
     }
 
     public String getLegacyKey() {
         return legacyKey;
+    }
+
+    @Override
+    public void update(Entity update) throws NimbitsException {
+        super.update(update);
+        Point p = (Point) update;
+        this.highAlarm = (p.getHighAlarm());
+        this.lowAlarm = (p.getLowAlarm());
+        this.unit = (p.getUnit());
+        this.expire = (p.getExpire());
+        this.idleAlarmOn = (p.isIdleAlarmOn());
+        this.idleAlarmSent = (p.getIdleAlarmSent());
+        this.idleSeconds = (p.getIdleSeconds());
+        this.filterType = (p.getFilterType().getCode());
+        this.filterValue = (p.getFilterValue());
     }
 }

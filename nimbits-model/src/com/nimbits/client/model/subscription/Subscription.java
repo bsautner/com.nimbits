@@ -1,6 +1,8 @@
 package com.nimbits.client.model.subscription;
 
 import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.entity.*;
 
 import java.io.*;
 import java.util.*;
@@ -11,9 +13,7 @@ import java.util.*;
  * Date: 1/17/12
  * Time: 3:01 PM
  */
-public interface Subscription extends Serializable {
-
-    String getKey();
+public interface Subscription extends Entity, Serializable {
 
     double getMaxRepeat();
 
@@ -43,4 +43,6 @@ public interface Subscription extends Serializable {
 
     void setSubscriptionType(SubscriptionType subscriptionType);
 
+    @Override
+    void update(Entity update) throws NimbitsException;
 }

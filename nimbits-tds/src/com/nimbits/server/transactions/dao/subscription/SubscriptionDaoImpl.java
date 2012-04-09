@@ -15,6 +15,7 @@ package com.nimbits.server.transactions.dao.subscription;
 
 import com.nimbits.*;
 import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.subscription.*;
@@ -39,10 +40,10 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
     }
 
 
-    @Override
-    public void subscribe(final Entity entity, final Subscription subscription) {
-        addOrUpdateSubscription(entity, subscription);
-    }
+//    @Override
+//    public void subscribe(final Subscription subscription) throws NimbitsException {
+//        addOrUpdateSubscription(subscription);
+//    }
 
     private static SubscriptionEntity getSubscription(final PersistenceManager pm, final Entity entity) {
       return getSubscription(pm, entity.getKey());
@@ -60,70 +61,10 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
 
 
     }
-    private static void addOrUpdateSubscription(final Entity entity, final Subscription subscription)  {
-
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-
-
-        try {
-
-
-
-            final SubscriptionEntity result = getSubscription(pm, entity);
-            if (result != null) {
-                final Transaction tx = pm.currentTransaction();
-                tx.begin();
-                result.setNotifyMethod(subscription.getNotifyMethod());
-                result.setSubscriptionType(subscription.getSubscriptionType());
-                result.setLastSent(subscription.getLastSent());
-                result.setMaxRepeat(subscription.getMaxRepeat());
-                result.setEnabled(subscription.getEnabled());
-                result.setNotifyFormatJson(subscription.getNotifyFormatJson());
-                tx.commit();
-                //retObj = EntityTransactionFactory.getInstance(user).getEntityByUUID(result.getKey());
-                pm.flush();
-
-            }
-
-                else {
-                    final SubscriptionEntity s = new SubscriptionEntity(entity, subscription);
-                    pm.makePersistent(s);
-
-                }
-
-
-            }
-            finally {
-                pm.close();
-            }
-
-        }
-
-    @Override
-    public Subscription readSubscription(final Entity entity)  {
-
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-
-        Subscription retObj = null;
-        try {
-
-            final SubscriptionEntity result = getSubscription(pm, entity);
-            if (result != null) {
-
-                retObj = SubscriptionFactory.createSubscription(result);
-            }
-            return retObj;
-        }
-        finally {
-            pm.close();
-        }
-
-    }
-
 
 
     @Override
-    public List<Subscription> getSubscriptionsToPoint(final Entity point) {
+    public List<Subscription> getSubscriptionsToPoint(final Entity point) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final List<Subscription> results;
         final List<Subscription> retObj;
@@ -141,7 +82,7 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
     }
 
     @Override
-    public List<Subscription> getSubscriptionsToPointByType(final Point point, final SubscriptionType type) {
+    public List<Subscription> getSubscriptionsToPointByType(final Point point, final SubscriptionType type) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final List<Subscription> results;
         final List<Subscription> retObj;

@@ -98,7 +98,8 @@ public class ProcessBatchTask extends HttpServlet {
                     point = points.get(b.pointName);
 
                 } else {
-
+                    LogHelper.log(this.getClass(), b.pointName.getValue());
+                    LogHelper.log(this.getClass(), u.getEmail().getValue());
                     point = (Point) EntityServiceFactory.getInstance().getEntityByName(u, b.pointName,PointEntity.class.getName());
 
                     if (point != null) {

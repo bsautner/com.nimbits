@@ -19,7 +19,9 @@ import com.nimbits.client.constants.UserMessages;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.calculation.*;
+import com.nimbits.client.model.category.CategoryFactory;
 import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.file.FileFactory;
 import com.nimbits.client.model.intelligence.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.relationship.Relationship;
@@ -190,19 +192,19 @@ public class EntityDaoImpl implements  EntityTransactions {
                 commit = new UserEntity(entity);
                 break;
             case point:
-               commit = new PointEntity(entity);
+                commit = new PointEntity(entity);
                 break;
             case category:
-               commit = new SimpleEntity(entity);
+                commit = new CategoryEntity(entity);
                 break;
             case file:
-                commit = new SimpleEntity(entity);
+                commit = new FileEntity(entity);
                 break;
             case subscription:
                 commit = new SubscriptionEntity((Subscription) entity);
                 break;
             case userConnection:
-                commit = new SimpleEntity(entity);
+                commit = new CategoryEntity(entity);
                 break;
             case calculation:
                 commit = new CalcEntity((Calculation) entity);
@@ -220,10 +222,10 @@ public class EntityDaoImpl implements  EntityTransactions {
                 commit = new SummaryEntity((Summary) entity);
                 break;
             case instance:
-                commit = new SimpleEntity(entity);
+                commit = new CategoryEntity(entity);
                 break;
             default:
-                commit = new SimpleEntity(entity);
+                commit = new CategoryEntity(entity);
         }
 
 
@@ -266,41 +268,46 @@ public class EntityDaoImpl implements  EntityTransactions {
             }
 
         }
-
-        final Query q1 = pm.newQuery(PointEntity.class, ":p.contains(owner)");
-
-//        final Query q2 = pm.newQuery(PointEntity.class, ":p.contains(owner)");
-
-
-        try {
-            final List<Entity> result = (List<Entity>) q1.execute(uuids);
-            // final List<Point> result2 = (List<Point>) q2.execute(uuids);
+        try{
+            List<Entity> retObj = new ArrayList<Entity>(1024);
+          //  List<String> keyStore = new ArrayList<String>(1024);
 
 
-            final List<Entity> entities =  createModels(result);
-            // List<Point> points = PointModelFactory.createPointModels(result2);
+            for (EntityType type : EntityType.values()) {
+                try {
+                    if (type.isTreeGridItem()) {
+                        final Query q1 = pm.newQuery(Class.forName(type.getClassName()), ":p.contains(owner)");
+                        final List<Entity> result = (List<Entity>) q1.execute(uuids);
+                        final List<Entity> entities =  createModels(result);
+                        for (final Entity entity1 : entities) {
 
-            for (final Entity entity1 : entities) {
+                            if (connectedUserKeys.contains(entity1.getParent())) {
+                                final Relationship rx = relationshipMap.get(entity1.getParent());
+                                entity1.setParent(rx.getKey());
+                            }
 
-                if (connectedUserKeys.contains(entity1.getParent())) {
-                    final Relationship rx = relationshipMap.get(entity1.getParent());
-                    entity1.setParent(rx.getKey());
+                          //  if (! keyStore.contains(entity1.getKey())) {
+
+                            //    keyStore.add(entity1.getKey());
+                                retObj.add(entity1);
+                          //  }
+                        }
+
+
+
+                    }
+
                 }
-
-
+                catch (NullPointerException e) {
+                    log.info(e.getMessage());
+                    log.info("caused by type not existing in store");
+                }
+                catch (ClassNotFoundException e) {
+                    LogHelper.logException(this.getClass(), e);
+                }
             }
-//            for (final Point p : points) {
-//                if (! p.getName().getValue().equals(Const.TEXT_DATA_FEED)) {
-//                    if (connectedUserKeys.contains(p.getParent()) ) {
-//                        final Relationship rx = relationshipMap.get(p.getParent());
-//                        p.setParent(rx.getKey());
-//                    }
-//                    entities.add(p);
-//                }
-//
-//
-//            }
-            return entities;
+
+            return retObj;
 
 
 
@@ -630,9 +637,9 @@ public class EntityDaoImpl implements  EntityTransactions {
             case point:
                 return PointModelFactory.createPointModel(entity);
             case category:
-                return EntityModelFactory.createSimpleEntity(entity);
+                return CategoryFactory.createCategory(entity);
             case file:
-                return EntityModelFactory.createSimpleEntity(entity);
+                return FileFactory.createFile(entity);
             case subscription:
                 return SubscriptionFactory.createSubscription((Subscription) entity);
             case userConnection:

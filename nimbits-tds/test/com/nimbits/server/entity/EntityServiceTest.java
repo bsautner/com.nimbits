@@ -21,6 +21,7 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.*;
+import com.nimbits.server.orm.PointEntity;
 import com.nimbits.server.point.*;
 import helper.NimbitsServletTest;
 import org.junit.Test;
@@ -106,6 +107,13 @@ public class EntityServiceTest extends NimbitsServletTest {
 
         List<Entity> entities =  EntityServiceFactory.getInstance().getEntities();
         assertTrue(!entities.isEmpty());
+
+    }
+
+    @Test
+    public void getEntityByNameTest() throws NimbitsException {
+        Point  r = (Point) EntityServiceFactory.getInstance().getEntityByName(user, pointName,PointEntity.class.getName());
+        assertNotNull(r);
 
     }
 

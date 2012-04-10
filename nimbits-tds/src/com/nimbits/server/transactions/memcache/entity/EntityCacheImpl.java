@@ -13,15 +13,21 @@
 
 package com.nimbits.server.transactions.memcache.entity;
 
-import com.google.appengine.api.memcache.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.entity.*;
+import com.google.appengine.api.memcache.InvalidValueException;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.MemCacheKey;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.user.User;
+import com.nimbits.server.entity.EntityTransactionFactory;
+import com.nimbits.server.entity.EntityTransactions;
+import com.nimbits.server.logging.LogHelper;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Benjamin Sautner
@@ -56,6 +62,7 @@ public class EntityCacheImpl implements EntityTransactions {
 
     public EntityCacheImpl(final User u) {
         this.user = u;
+        LogHelper.log(this.getClass(), "EntityCacheImpl user is null?" + (u == null));
 
         cache = user != null
                 ? MemcacheServiceFactory.getMemcacheService(MemCacheKey.userNamespace.name() + user.getKey().replace('@', '-'))

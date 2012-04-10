@@ -28,6 +28,7 @@ import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModelFactory;
+import com.nimbits.server.logging.LogHelper;
 import com.nimbits.server.orm.ConnectionRequestEntity;
 import com.nimbits.server.orm.UserEntity;
 import com.nimbits.server.user.UserTransactions;
@@ -83,7 +84,7 @@ public class UserDAOImpl implements UserTransactions {
             final EntityName name = CommonFactoryLocator.getInstance().createName(internetAddress.getValue(), EntityType.user);
             final Entity entity =  EntityModelFactory.createEntity(name, "", EntityType.user, ProtectionLevel.onlyMe,
                     name.getValue(),name.getValue(),name.getValue());
-           // final Entity r = EntityTransactionFactory.getDaoInstance(null).addUpdateEntity(entity);
+            // final Entity r = EntityTransactionFactory.getDaoInstance(null).addUpdateEntity(entity);
             final UserEntity u = new UserEntity(entity);
 
             u.setSecret(UUID.randomUUID().toString());
@@ -116,8 +117,11 @@ public class UserDAOImpl implements UserTransactions {
                 }
 
             }
-
-        } finally {
+        } catch (Exception ex) {
+            log.info(internetAddress.getValue());
+            LogHelper.logException(this.getClass(), ex);
+        }
+        finally {
             pm.close();
         }
         return retObj;
@@ -237,7 +241,7 @@ public class UserDAOImpl implements UserTransactions {
 
 
 
-       // return affectedUsers;
+        // return affectedUsers;
 
     }
 
@@ -264,9 +268,9 @@ public class UserDAOImpl implements UserTransactions {
     public User updateTwitter(final EmailAddress internetAddress, final AccessToken token) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
-         try {
+        try {
 
-             final User u = getUserByKey(pm, internetAddress.getValue());
+            final User u = getUserByKey(pm, internetAddress.getValue());
             if (u != null) {
                 final Transaction tx = pm.currentTransaction();
                 tx.begin();
@@ -274,10 +278,10 @@ public class UserDAOImpl implements UserTransactions {
                 u.setTwitterToken(token.getToken());
                 u.setTwitterTokenSecret(token.getTokenSecret());
                 tx.commit();
-               return  UserModelFactory.createUserModel(u);
+                return  UserModelFactory.createUserModel(u);
 
             }
-             else {
+            else {
                 throw new NimbitsException(UserMessages.ERROR_USER_NOT_FOUND);
             }
 

@@ -13,7 +13,6 @@
 
 package com.nimbits.server.task;
 
-import com.google.appengine.api.datastore.DatastoreTimeoutException;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.nimbits.PMF;
 import com.nimbits.client.enums.*;
@@ -22,38 +21,30 @@ import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.calculation.CalculationModelFactory;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.relationship.Relationship;
-import com.nimbits.client.model.subscription.Subscription;
-import com.nimbits.client.model.subscription.SubscriptionFactory;
-import com.nimbits.client.model.timespan.Timespan;
-import com.nimbits.client.model.timespan.TimespanModelFactory;
 import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.server.admin.legacy.orm.*;
-import com.nimbits.server.calculation.CalculationServiceFactory;
+import com.nimbits.server.admin.legacy.orm.NimbitsUser;
+import com.nimbits.server.admin.legacy.orm.PointCatagory;
 import com.nimbits.server.entity.EntityServiceFactory;
 import com.nimbits.server.entity.EntityTransactionFactory;
-import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.orm.*;
+import com.nimbits.server.orm.CalculationEntity;
+import com.nimbits.server.orm.DataPoint;
 import com.nimbits.server.orm.PointEntity;
 import com.nimbits.server.orm.UserEntity;
 import com.nimbits.server.relationship.RelationshipTransactionFactory;
-import com.nimbits.server.subscription.SubscriptionTransactionFactory;
 import com.nimbits.server.user.UserTransactionFactory;
-import com.nimbits.server.value.RecordedValueTransactionFactory;
-import com.nimbits.server.value.RecordedValueTransactions;
-import com.nimbits.shared.Utils;
 import org.datanucleus.exceptions.NucleusObjectNotFoundException;
 
 import javax.jdo.*;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 /**
@@ -730,56 +721,56 @@ public class UpgradeTask  extends HttpServlet
     }
     //
     protected static void doValue(final HttpServletRequest req) {
-        final PersistenceManager pm;
-        pm = PMF.get().getPersistenceManager();
-        int s = Integer.valueOf(req.getParameter("s"));
-        try {
-            clog("doing values " + s + " to " +  (s + 100));
-
-            final Entity pointEntity = GsonFactory.getInstance().fromJson(req.getParameter(Parameters.json.getText()), EntityModel.class);
-            final User u = UserTransactionFactory.getDAOInstance().getUserByKey(pointEntity.getOwner());
-            if (u != null) {
-                clog(u.getEmail().getValue() + pointEntity.getName().getValue());
-                final NimbitsUser nu = getLegUser(pm, u.getEmail().getValue());
-                final DataPoint leg = getLegPoint(pm, nu.getId(), pointEntity.getName().getValue());
-                if (leg != null) {
-
-                  //  final Point point = PointServiceFactory.getInstance().getPointByKey(pointEntity.getKey());
-                    Point point = (Point) EntityTransactionFactory.getDaoInstance(u).getEntityByKey(pointEntity.getKey(), PointEntity.class);
-
-                    final RecordedValueTransactions old =  RecordedValueTransactionFactory.getLegacyInstance(leg);
-                    final RecordedValueTransactions dao =  RecordedValueTransactionFactory.getDaoInstance(point);
-                    final Timespan timespan = TimespanModelFactory.createTimespan(leg.getCreateDate(), new Date());
-
-
-                    final List<Value> values;
-                    try {
-                        values = old.getDataSegment(timespan,s, s + 100 );
-
-                        final int cx = values.size();
-                        if (cx > 0) {
-                            dao.recordValues(values);
-                            clog("Saved " + values.size() + " values");
-                            TaskFactory.getInstance().startUpgradeTask(Action.value,pointEntity, s+100 );
-
-                        }
-                        else {
-                            clog("Done value transfer" + pointEntity.getName().getValue());
-                        }
-                    } catch (DatastoreTimeoutException e) {
-                        TaskFactory.getInstance().startUpgradeTask(Action.value,pointEntity, s);
-                    }
-
-                }
-                else {
-                    log.severe(pointEntity.getName() + " didn't exist");
-                }
-            }
-        } catch (NimbitsException e) {
-            log.severe(e.getMessage());
-        } finally {
-            pm.close();
-        }
+//        final PersistenceManager pm;
+//        pm = PMF.get().getPersistenceManager();
+//        int s = Integer.valueOf(req.getParameter("s"));
+//        try {
+//            clog("doing values " + s + " to " +  (s + 100));
+//
+//            final Entity pointEntity = GsonFactory.getInstance().fromJson(req.getParameter(Parameters.json.getText()), EntityModel.class);
+//            final User u = UserTransactionFactory.getDAOInstance().getUserByKey(pointEntity.getOwner());
+//            if (u != null) {
+//                clog(u.getEmail().getValue() + pointEntity.getName().getValue());
+//                final NimbitsUser nu = getLegUser(pm, u.getEmail().getValue());
+//                final DataPoint leg = getLegPoint(pm, nu.getId(), pointEntity.getName().getValue());
+//                if (leg != null) {
+//
+//                  //  final Point point = PointServiceFactory.getInstance().getPointByKey(pointEntity.getKey());
+//                    Point point = (Point) EntityTransactionFactory.getDaoInstance(u).getEntityByKey(pointEntity.getKey(), PointEntity.class);
+//
+//                    final RecordedValueTransactions old =  RecordedValueTransactionFactory.getLegacyInstance(leg);
+//                    final RecordedValueTransactions dao =  RecordedValueTransactionFactory.getDaoInstance(point);
+//                    final Timespan timespan = TimespanModelFactory.createTimespan(leg.getCreateDate(), new Date());
+//
+//
+//                    final List<Value> values;
+//                    try {
+//                        values = old.getDataSegment(timespan,s, s + 100 );
+//
+//                        final int cx = values.size();
+//                        if (cx > 0) {
+//                            dao.recordValues(values);
+//                            clog("Saved " + values.size() + " values");
+//                            TaskFactory.getInstance().startUpgradeTask(Action.value,pointEntity, s+100 );
+//
+//                        }
+//                        else {
+//                            clog("Done value transfer" + pointEntity.getName().getValue());
+//                        }
+//                    } catch (DatastoreTimeoutException e) {
+//                        TaskFactory.getInstance().startUpgradeTask(Action.value,pointEntity, s);
+//                    }
+//
+//                }
+//                else {
+//                    log.severe(pointEntity.getName() + " didn't exist");
+//                }
+//            }
+//        } catch (NimbitsException e) {
+//            log.severe(e.getMessage());
+//        } finally {
+//            pm.close();
+//        }
 
     }
     //
@@ -916,68 +907,68 @@ public class UpgradeTask  extends HttpServlet
     protected static void doDiagram(  ) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
-        try {
-            final Query d = pm.newQuery(DiagramEntity.class);
-
-            Collection<DiagramEntity> diagrams = (Collection<DiagramEntity>) d.execute();
-            clog("processing " + diagrams.size() + "diagrams");
-            for (DiagramEntity diagramEntity : diagrams) {
-
-                try {
-                    PointCatagory c = getLegCat(pm, diagramEntity.categoryFk);
-                    NimbitsUser u = getLegUser(pm, diagramEntity.userFk);
-                    EntityName newName = CommonFactoryLocator.getInstance().createName(diagramEntity.name + ".svg");
-
-                    if (c!= null && u != null) {
-
-                        Entity userEntity = EntityTransactionFactory.getDaoInstance(null).getEntityByName(u.getName(), EntityType.user);
-                        User user = UserTransactionFactory.getDAOInstance().getUserByKey(userEntity.getKey());
-
-                        Entity existing = EntityTransactionFactory.getInstance(user).getEntityByName(newName, EntityType.file);
-                        if (existing == null) {
-
-
-                            String parent;
-                            if (c.getName().equals(N) || c.getName().equals("System")) {
-                                parent = user.getKey();
-                            }
-                            else {
-                                EntityName cName = CommonFactoryLocator.getInstance().createName(c.getName());
-                                Entity newCat = EntityTransactionFactory.getDaoInstance(user).getEntityByName(cName, EntityType.category);
-                                if (newCat != null){
-                                    parent = newCat.getKey();
-                                }
-                                else {
-                                    parent = user.getKey();
-                                }
-                            }
-                            if (Utils.isEmptyString(parent)) {
-                                parent = u.getKey();
-                            }
-                            ProtectionLevel protectionLevel = ProtectionLevel.get(diagramEntity.protectionLevel);
-
-                            Entity e = EntityModelFactory.createEntity(newName, "", EntityType.file,
-                                    protectionLevel, parent, u.getKey(), diagramEntity.blobKey.getKeyString());
-
-                            Entity r = EntityServiceFactory.getInstance().addUpdateEntity(user, e);
-                            clog("created diagram " + newName.getValue());
-                        }
-                        else {
-                            clog("skipping diagram " + existing.getName().getValue());
-                        }
-                    }
-                    // TaskFactoryLocator.getInstance().startUpgradeTask(Action.point,r );
-                } catch (NimbitsException e) {
-                    log.severe(e.getMessage());
-                }
-
-            }
-            clog("done processing diagrams");
-
-
-        } finally {
-            pm.close();
-        }
+//        try {
+//////            final Query d = pm.newQuery(DiagramEntity.class);
+//////
+//////            Collection<DiagramEntity> diagrams = (Collection<DiagramEntity>) d.execute();
+//////            clog("processing " + diagrams.size() + "diagrams");
+//////            for (DiagramEntity diagramEntity : diagrams) {
+//////
+//////                try {
+//////                    PointCatagory c = getLegCat(pm, diagramEntity.categoryFk);
+//////                    NimbitsUser u = getLegUser(pm, diagramEntity.userFk);
+//////                    EntityName newName = CommonFactoryLocator.getInstance().createName(diagramEntity.name + ".svg");
+//////
+//////                    if (c!= null && u != null) {
+//////
+//////                        Entity userEntity = EntityTransactionFactory.getDaoInstance(null).getEntityByName(u.getName(), EntityType.user);
+//////                        User user = UserTransactionFactory.getDAOInstance().getUserByKey(userEntity.getKey());
+//////
+//////                        Entity existing = EntityTransactionFactory.getInstance(user).getEntityByName(newName, EntityType.file);
+//////                        if (existing == null) {
+//////
+//////
+//////                            String parent;
+//////                            if (c.getName().equals(N) || c.getName().equals("System")) {
+//////                                parent = user.getKey();
+//////                            }
+//////                            else {
+//////                                EntityName cName = CommonFactoryLocator.getInstance().createName(c.getName());
+//////                                Entity newCat = EntityTransactionFactory.getDaoInstance(user).getEntityByName(cName, EntityType.category);
+//////                                if (newCat != null){
+//////                                    parent = newCat.getKey();
+//////                                }
+//////                                else {
+//////                                    parent = user.getKey();
+//////                                }
+//////                            }
+//////                            if (Utils.isEmptyString(parent)) {
+//////                                parent = u.getKey();
+//////                            }
+//////                            ProtectionLevel protectionLevel = ProtectionLevel.get(diagramEntity.protectionLevel);
+//////
+//////                            Entity e = EntityModelFactory.createEntity(newName, "", EntityType.file,
+//////                                    protectionLevel, parent, u.getKey(), diagramEntity.blobKey.getKeyString());
+//////
+//////                            Entity r = EntityServiceFactory.getInstance().addUpdateEntity(user, e);
+//////                            clog("created diagram " + newName.getValue());
+//////                        }
+//////                        else {
+//////                            clog("skipping diagram " + existing.getName().getValue());
+//////                        }
+//////                    }
+////                    // TaskFactoryLocator.getInstance().startUpgradeTask(Action.point,r );
+////                } catch (NimbitsException e) {
+////                    log.severe(e.getMessage());
+////                }
+//
+//            }
+//            clog("done processing diagrams");
+//
+//
+//        } finally {
+//            pm.close();
+//        }
 
     }
 

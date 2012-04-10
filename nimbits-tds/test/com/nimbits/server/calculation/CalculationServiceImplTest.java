@@ -15,7 +15,6 @@ package com.nimbits.server.calculation;
 
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.calculation.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;

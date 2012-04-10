@@ -23,6 +23,9 @@ import com.nimbits.client.service.feed.*;
  */
 public class FeedServiceFactory {
 
+    private FeedServiceFactory() {
+    }
+
     public static Feed getInstance(){
         return new FeedImpl();
     }

@@ -25,7 +25,10 @@ import com.nimbits.server.http.*;
  */
 public class GoogleURLShortener   {
 
-   public static String shortenURL(final String longURl) {
+    private GoogleURLShortener() {
+    }
+
+    public static String shortenURL(final String longURl) {
        final URLResource urlResource = new URLResource(longURl);
        final String json = GsonFactory.getInstance().toJson(urlResource);
        final String u = HttpCommonFactory.getInstance().doJsonPost( Path.PATH_GOOGLE_URL_SHORTENER, "",json);
@@ -37,7 +40,7 @@ public class GoogleURLShortener   {
 
        private String longUrl;
 
-       private URLResource(String longUrl) {
+       URLResource(String longUrl) {
            this.longUrl = longUrl;
        }
    }

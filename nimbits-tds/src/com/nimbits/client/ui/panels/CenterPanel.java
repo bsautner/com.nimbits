@@ -73,13 +73,13 @@ public class CenterPanel extends NavigationEventProvider {
     }
 
     NavigationPanel createNavigationPanel() {
-        final NavigationPanel navTree = new NavigationPanel(loginInfo.getUser(), settings, action);
+        final NavigationPanel navTree = new NavigationPanel(loginInfo.getUser(), settings);
 
 
         navTree.addEntityClickedListeners(new EntityClickedListener() {
 
             @Override
-            public void onEntityClicked(final GxtModel c)  {
+            public void onEntityClicked(final TreeModel c)  {
                 addEntity(c);
 
             }
@@ -98,7 +98,7 @@ public class CenterPanel extends NavigationEventProvider {
 
         navTree.addValueEnteredListeners(new ValueEnteredListener() {
             @Override
-            public void onValueEntered(GxtModel model, Value value) {
+            public void onValueEntered(TreeModel model, Value value) {
                 AnnotatedTimeLinePanel p;
               for (int i = 0; i < chartContainer.getItemCount(); i++) {
                   p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
@@ -166,7 +166,7 @@ public class CenterPanel extends NavigationEventProvider {
         MainMenuBar toolBar = new MainMenuBar(loginInfo, settings);
         toolBar.addEntityModifiedListeners(new MainMenuBar.EntityModifiedListener() {
             @Override
-            public void onEntityModified(GxtModel model, Action action) throws NimbitsException {
+            public void onEntityModified(TreeModel model, Action action) throws NimbitsException {
                 switch (action) {
                     case update: case create:
                         navigationPanel.addUpdateTreeModel(model, false);
@@ -279,7 +279,7 @@ public class CenterPanel extends NavigationEventProvider {
         });
     }
 
-    public void addEntity(final GxtModel model) {
+    public void addEntity(final TreeModel model) {
         try {
         switch (model.getEntityType()) {
             case user:
@@ -325,7 +325,7 @@ public class CenterPanel extends NavigationEventProvider {
         });
     }
    //chart
-    private void chartEntity(final GxtModel model) {
+    private void chartEntity(final TreeModel model) {
         for (int i = 0; i < chartContainer.getItemCount(); i++) {
             AnnotatedTimeLinePanel p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
             if (p.isSelected()) {

@@ -13,21 +13,18 @@
 
 package com.nimbits.server.entity;
 
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
+import com.nimbits.server.orm.*;
 import com.nimbits.server.point.*;
-import helper.NimbitsServletTest;
-import org.junit.Test;
-
-import java.util.List;
-
+import helper.*;
 import static org.junit.Assert.*;
+import org.junit.*;
+
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner
@@ -106,6 +103,13 @@ public class EntityServiceTest extends NimbitsServletTest {
 
         List<Entity> entities =  EntityServiceFactory.getInstance().getEntities();
         assertTrue(!entities.isEmpty());
+
+    }
+
+    @Test
+    public void getEntityByNameTest() throws NimbitsException {
+        Point  r = (Point) EntityServiceFactory.getInstance().getEntityByName(user, pointName,PointEntity.class.getName());
+        assertNotNull(r);
 
     }
 

@@ -40,11 +40,6 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
     }
 
 
-//    @Override
-//    public void subscribe(final Subscription subscription) throws NimbitsException {
-//        addOrUpdateSubscription(subscription);
-//    }
-
     private static SubscriptionEntity getSubscription(final PersistenceManager pm, final Entity entity) {
       return getSubscription(pm, entity.getKey());
 

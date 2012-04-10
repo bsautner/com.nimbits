@@ -25,6 +25,9 @@ import com.nimbits.server.transactions.memcache.entity.*;
  */
 public class EntityTransactionFactory {
 
+    private EntityTransactionFactory() {
+    }
+
     public static EntityTransactions getInstance(User user) {
         return new EntityCacheImpl(user);
     }

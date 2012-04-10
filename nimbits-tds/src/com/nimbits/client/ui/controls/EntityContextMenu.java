@@ -28,6 +28,7 @@ import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
+import com.nimbits.client.model.TreeModel;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.service.entity.*;
@@ -47,7 +48,7 @@ import java.util.*;
 public class EntityContextMenu extends Menu {
 
     private EntityTree<ModelData> tree;
-    private GxtModel currentModel;
+    private TreeModel currentModel;
     private static final String PARAM_DEFAULT_WINDOW_OPTIONS = "menubar=no," +
             "location=false," +
             "resizable=yes," +
@@ -74,14 +75,14 @@ public class EntityContextMenu extends Menu {
         this.entityModifiedListeners.add(listener);
     }
 
-    void notifyEntityModifiedListener(final GxtModel model, final Action action) throws NimbitsException {
+    void notifyEntityModifiedListener(final TreeModel model, final Action action) throws NimbitsException {
         for (EntityModifiedListener listener : entityModifiedListeners) {
             listener.onEntityModified(model, action);
         }
     }
 
     public interface EntityModifiedListener {
-        void onEntityModified(final GxtModel model, final Action action) throws NimbitsException;
+        void onEntityModified(final TreeModel model, final Action action) throws NimbitsException;
 
     }
 
@@ -124,7 +125,7 @@ public class EntityContextMenu extends Menu {
     public void showAt(int x, int y) {
         super.showAt(x, y);
         ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
-        currentModel = (GxtModel)selectedModel;
+        currentModel = (TreeModel)selectedModel;
         deleteContext.setEnabled(!currentModel.getEntityType().equals(EntityType.user) || ! currentModel.isReadOnly());
         subscribeContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) ||currentModel.getEntityType().equals(EntityType.category));
         reportContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.category));
@@ -149,7 +150,7 @@ public class EntityContextMenu extends Menu {
         retObj.addSelectionListener(new SelectionListener<MenuEvent>() {
             public void componentSelected(MenuEvent ce) {
                 ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
-                currentModel = (GxtModel)selectedModel;
+                currentModel = (TreeModel)selectedModel;
                 if (! currentModel.isReadOnly()) {
                     MessageBox.confirm("Confirm", "Are you sure you want delete this? Doing so will permanently delete it including all of it's children (points, documents data etc)"
                             , deleteEntityListener);
@@ -169,7 +170,7 @@ public class EntityContextMenu extends Menu {
         retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.formula()));
         retObj.addSelectionListener(new SelectionListener<MenuEvent>() {
             public void componentSelected(MenuEvent ce) {
-                GxtModel selectedModel = (GxtModel) tree.getSelectionModel().getSelectedItem();
+                TreeModel selectedModel = (TreeModel) tree.getSelectionModel().getSelectedItem();
                 Entity entity = selectedModel.getBaseEntity();
                 try {
                     showCalcPanel(entity);
@@ -190,7 +191,7 @@ public class EntityContextMenu extends Menu {
         retObj.addSelectionListener(new SelectionListener<MenuEvent>() {
             public void componentSelected(MenuEvent ce) {
                 ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
-                currentModel = (GxtModel) selectedModel;
+                currentModel = (TreeModel) selectedModel;
 
                 if (currentModel != null) {
                     if (currentModel.getEntityType().equals(EntityType.point) && ! currentModel.isReadOnly()) {
@@ -219,7 +220,7 @@ public class EntityContextMenu extends Menu {
         retObj.addSelectionListener(new SelectionListener<MenuEvent>() {
             public void componentSelected(MenuEvent ce) {
                 ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
-                currentModel = (GxtModel) selectedModel;
+                currentModel = (TreeModel) selectedModel;
                 Entity entity =  currentModel.getBaseEntity();
 
                 if (entity.getEntityType().equals(EntityType.subscription)  ||
@@ -263,7 +264,7 @@ public class EntityContextMenu extends Menu {
         retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.connect()));
         retObj.addSelectionListener(new SelectionListener<MenuEvent>() {
             public void componentSelected(MenuEvent ce) {
-                GxtModel selectedModel = (GxtModel) tree.getSelectionModel().getSelectedItem();
+                TreeModel selectedModel = (TreeModel) tree.getSelectionModel().getSelectedItem();
                 Entity entity = selectedModel.getBaseEntity();
                 try {
                     showIntelligencePanel(entity);
@@ -309,7 +310,7 @@ public class EntityContextMenu extends Menu {
         retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.edit()));
         retObj.addSelectionListener(new SelectionListener<MenuEvent>() {
             public void componentSelected(MenuEvent ce) {
-                GxtModel selectedModel = (GxtModel) tree.getSelectionModel().getSelectedItem();
+                TreeModel selectedModel = (TreeModel) tree.getSelectionModel().getSelectedItem();
                 Entity entity = selectedModel.getBaseEntity();
 
                 try {
@@ -389,7 +390,7 @@ public class EntityContextMenu extends Menu {
         retObj.addSelectionListener(new SelectionListener<MenuEvent>() {
             public void componentSelected(MenuEvent ce) {
                 ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
-                currentModel = (GxtModel) selectedModel;
+                currentModel = (TreeModel) selectedModel;
                 Entity entity =  currentModel.getBaseEntity();
                 //TODO for now only subscribe to points
                 if (entity.getEntityType().equals(EntityType.subscription)  ||
@@ -410,7 +411,7 @@ public class EntityContextMenu extends Menu {
         retObj.addSelectionListener(new SelectionListener<MenuEvent>() {
             public void componentSelected(MenuEvent ce) {
                 ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
-                currentModel = (GxtModel) selectedModel;
+                currentModel = (TreeModel) selectedModel;
                 final MessageBox box;
                 if (currentModel.getEntityType().equals(EntityType.point) && ! currentModel.isReadOnly()) {
                     box= MessageBox.prompt(
@@ -436,7 +437,7 @@ public class EntityContextMenu extends Menu {
         retObj.addSelectionListener(new SelectionListener<MenuEvent>() {
             public void componentSelected(MenuEvent ce) {
                 ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
-                GxtModel model = (GxtModel) selectedModel;
+                TreeModel model = (TreeModel) selectedModel;
                 if (model.getEntityType().equals(EntityType.point) || model.getEntityType().equals(EntityType.category)) {
                     Entity p =  model.getBaseEntity();
                     try {
@@ -518,7 +519,7 @@ public class EntityContextMenu extends Menu {
                     @Override
                     public void onSuccess(Entity entity) {
                         box.close();
-                        GxtModel model = null;
+                        TreeModel model = null;
                         try {
                             model = new GxtModel(entity);
                             notifyEntityModifiedListener(model, Action.create);

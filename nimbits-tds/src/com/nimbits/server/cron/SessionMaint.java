@@ -39,7 +39,7 @@ public class SessionMaint extends HttpServlet {
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        final Set<Key> keys = new HashSet<Key>();
+        final Collection<Key> keys = new HashSet<Key>(1000);
         final DatastoreService store = DatastoreServiceFactory.getDatastoreService();
         final Query q = new Query("_ah_SESSION").setKeysOnly();
         int count=0;

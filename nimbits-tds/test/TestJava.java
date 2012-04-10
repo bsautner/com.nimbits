@@ -1,7 +1,6 @@
-import com.nimbits.client.model.entity.*;
 import com.nimbits.server.orm.*;
+import static org.junit.Assert.*;
 import org.junit.*;
-import static org.junit.Assert.assertEquals;
 
 /**
  * Created by Benjamin Sautner

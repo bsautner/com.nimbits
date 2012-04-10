@@ -13,31 +13,26 @@
 
 package com.nimbits.server.api.impl;
 
-import com.nimbits.client.common.Utils;
-import com.nimbits.client.constants.UserMessages;
-import com.nimbits.client.constants.Words;
+import com.nimbits.client.common.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModel;
-import com.nimbits.client.model.value.ValueModelFactory;
-import com.nimbits.server.api.ApiServlet;
-import com.nimbits.server.entity.EntityServiceFactory;
-import com.nimbits.server.feed.FeedServiceFactory;
-import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.logging.LogHelper;
-import com.nimbits.server.orm.PointEntity;
-import com.nimbits.server.value.RecordedValueServiceFactory;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.server.api.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.feed.*;
+import com.nimbits.server.gson.*;
+import com.nimbits.server.logging.*;
+import com.nimbits.server.orm.*;
+import com.nimbits.server.value.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Date;
+import javax.servlet.http.*;
+import java.io.*;
+import java.util.*;
 
 
 
@@ -78,7 +73,7 @@ public class ValueServletImpl extends ApiServlet {
         if (user != null && ! user.isRestricted()) {
 
             final EntityName pointName = CommonFactoryLocator.getInstance().createName(getParam(Parameters.point), EntityType.point);
-            final Point point = (Point) EntityServiceFactory.getInstance().getEntityByName(user, pointName,PointEntity.class.getName());
+            final Entity point = EntityServiceFactory.getInstance().getEntityByName(user, pointName,PointEntity.class.getName());
 
             if (point != null) {
 
@@ -180,28 +175,22 @@ public class ValueServletImpl extends ApiServlet {
 
         final Value value;
 
-        if ((u == null || u.isRestricted()) && ! p.getProtectionLevel().equals(ProtectionLevel.everyone)) {
+        if ((u == null || u.isRestricted()) && !p.getProtectionLevel().equals(ProtectionLevel.everyone)) {
             throw new NimbitsException(UserMessages.RESPONSE_PROTECTED_POINT);
-        } else {
-            if (nv != null && (u != null && !u.isRestricted())) {
-                // record the value, but not if this is a public
-                // request
-                final Value newValue = ValueModelFactory.createValueModel(
-                        nv.getLatitude(), nv.getLongitude(), nv.getDoubleValue(),
-                        nv.getTimestamp(), nv.getNote(), nv.getData());
-
-
-                value = RecordedValueServiceFactory.getInstance().recordValue(u, p, newValue, false);
-            } else {
-                value = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
-            }
-            if (value!= null) {
-            result = format.equals(Parameters.json.getText()) ? GsonFactory.getInstance().toJson(value) : String.valueOf(value.getDoubleValue());
-            }
-            else {
-                result = "";
-            }
         }
+        if (nv != null && (u != null && !u.isRestricted())) {
+            // record the value, but not if this is a public
+            // request
+            final Value newValue = ValueModelFactory.createValueModel(
+                    nv.getLatitude(), nv.getLongitude(), nv.getDoubleValue(),
+                    nv.getTimestamp(), nv.getNote(), nv.getData());
+
+
+            value = RecordedValueServiceFactory.getInstance().recordValue(u, p, newValue, false);
+        } else {
+            value = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
+        }
+        result = value != null ? format.equals(Parameters.json.getText()) ? GsonFactory.getInstance().toJson(value) : String.valueOf(value.getDoubleValue()) : "";
 
 
         return result;

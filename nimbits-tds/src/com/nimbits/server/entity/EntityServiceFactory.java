@@ -23,6 +23,9 @@ import com.nimbits.client.service.entity.*;
  */
 public class EntityServiceFactory {
 
+    private EntityServiceFactory() {
+    }
+
     public static EntityService getInstance() {
         return new EntityServiceImpl();
     }

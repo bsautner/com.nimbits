@@ -13,18 +13,14 @@
 
 package com.nimbits.server.orm;
 
-import com.nimbits.client.enums.FilterType;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.point.Point;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.server.task.*;
 
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.NotPersistent;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
-import java.util.List;
+import javax.jdo.annotations.*;
+import java.util.*;
 
 @PersistenceCapable
 public class PointEntity extends EntityStore implements Point {
@@ -132,24 +128,7 @@ public class PointEntity extends EntityStore implements Point {
         this.value = value;
     }
 
-    public PointEntity(final Entity entity, final com.nimbits.server.admin.PointEntity point) throws NimbitsException {
-        super(PointEntity.class, entity);
-        this.highAlarm = point.getHighAlarm();
-        this.expire = point.getExpire();
-        this.unit = point.getUnit();
-        this.lowAlarm = point.getLowAlarm();
-        this.highAlarmOn = point.isHighAlarmOn();
-        this.lowAlarmOn = point.isLowAlarmOn();
-        this.idleAlarmOn = point.isIdleAlarmOn();
-        this.idleSeconds = point.getIdleSeconds();
-        this.idleAlarmSent = point.getIdleAlarmSent();
 
-        this.values = point.getValues();
-        this.value = point.getValue();
-        this.filterType = point.getFilterType().getCode();
-        this.filterValue = point.getFilterValue();
-
-    }
 
     public PointEntity(final Point point) throws NimbitsException {
         super(PointEntity.class, point);

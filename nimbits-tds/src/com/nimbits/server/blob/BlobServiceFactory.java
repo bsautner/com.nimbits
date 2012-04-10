@@ -23,6 +23,9 @@ import com.nimbits.client.service.blob.*;
  */
 public class BlobServiceFactory {
 
+    private BlobServiceFactory() {
+    }
+
     public static BlobService getInstance() {
 
         return new BlobServiceImpl();

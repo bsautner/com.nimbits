@@ -33,6 +33,7 @@ import com.google.gwt.user.client.ui.*;
 import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.*;
+import com.nimbits.client.model.TreeModel;
 import com.nimbits.client.model.feed.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.service.feed.*;
@@ -341,9 +342,9 @@ public class FeedPanel  extends LayoutContainer {
         }
     }
 
-    private class ConnectionSelectionChangedListener extends SelectionChangedListener<GxtModel> {
+    private class ConnectionSelectionChangedListener extends SelectionChangedListener<TreeModel> {
         @Override
-        public void selectionChanged(SelectionChangedEvent<GxtModel> gxtModelSelectionChangedEvent) {
+        public void selectionChanged(SelectionChangedEvent<TreeModel> gxtModelSelectionChangedEvent) {
            connectionEntityKey =gxtModelSelectionChangedEvent.getSelectedItem().getUUID();
             updateValues(true);
         }

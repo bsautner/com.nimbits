@@ -16,6 +16,7 @@ import javax.jdo.*;
  */
 public class RelationshipDAOImpl implements RelationshipTransaction {
 
+    @Override
     public Relationship createRelationship(final Entity entity, final String relatedEntityKey) {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();

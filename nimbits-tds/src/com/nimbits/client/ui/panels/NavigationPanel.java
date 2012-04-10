@@ -28,6 +28,7 @@ import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
+import com.nimbits.client.model.TreeModel;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
@@ -41,11 +42,10 @@ import com.nimbits.client.ui.helper.*;
 import java.util.*;
 
 
-class NavigationPanel extends NavigationEventProvider {
+public class NavigationPanel extends NavigationEventProvider {
 
     private EntityTree<ModelData> tree;
-
-    private Timer updater;
+     private Timer updater;
     private boolean expanded = false;
     private Map<SettingType, String> settings;
     private List<String> parents;
@@ -55,7 +55,7 @@ class NavigationPanel extends NavigationEventProvider {
     private final static int valueColumnIndex = 1;
 
     public NavigationPanel(final User user,
-                           final Map<SettingType, String> settings, Action action) {
+                           final Map<SettingType, String> settings) {
 
         this.settings = settings;
         this.user = user;
@@ -67,44 +67,17 @@ class NavigationPanel extends NavigationEventProvider {
 
     }
 
-
-
-    public void setSaveWithCurrentTime(boolean saveWithCurrentTime) {
-        //TODO wire up to menu
-        this.saveWithCurrentTime = saveWithCurrentTime;
-    }
-
     public void toggleExpansion() {
-        if (!expanded) {
-            tree.expandAll();
-            expanded=true;
-        }
-        else {
+        if (expanded) {
             tree.collapseAll();
-            expanded=false;
+            expanded = false;
+        } else {
+            tree.expandAll();
+            expanded = true;
         }
     }
 
-    private void addEntity(final Entity entity) {
-        if (! Utils.isEmptyString(entity.getParent()) && ! parents.contains(entity.getParent())) {
-            parents.add(entity.getParent());
-        }
-
-    }
-
-    private void createTree(final List<Entity> result) throws NimbitsException {
-        final TreeGridDropTarget target = new TreeGridDropTarget(tree);
-        target.setAllowSelfAsSource(true);
-        target.setFeedback(Feedback.BOTH);
-        tree.addListener(Events.AfterEdit, afterEditListener);
-        treePropertyBuilder();
-        treeStoreBuilder(result);
-        treeDNDBuilder();
-        removeAll();
-        add(tree);
-    }
-
-    private void updateModel(Value value, GxtModel model) {
+    private void updateModel(Value value, TreeModel model) {
         model.set(Parameters.value.getText(), value.getValueWithNote());
         model.set(Parameters.data.getText(), value.getData());
         model.set(Parameters.timestamp.getText(), value.getTimestamp());
@@ -115,147 +88,13 @@ class NavigationPanel extends NavigationEventProvider {
         notifyValueEnteredListener(model, value);
     }
 
-    private void treePropertyBuilder() {
-        context = new EntityContextMenu(tree, settings);
-        context.addEntityModifiedListeners(new EntityContextMenu.EntityModifiedListener() {
-            @Override
-            public void onEntityModified(GxtModel model, Action action) throws NimbitsException {
-                switch (action) {
-                    case delete: {
-                        removeEntity(model);
-                        break;
-                    }
-                    case update: case create:
-                        addUpdateTreeModel(model, false);
-                        break;
-                }
-            }
-        });
-        tree.setContextMenu(context);
-        tree.setStateful(true);
-
-        tree.setClicksToEdit(EditorGrid.ClicksToEdit.ONE);
-        tree.setTrackMouseOver(true);
-        //tree.getView().setAutoFill(true);
-        tree.addListener(Events.RowDoubleClick, treeDoubleClickListener);
-    }
-
-    private void treeDNDBuilder() {
-        TreeGridDragSource source = new TreeGridDragSource(tree);
-        source.addDNDListener(new DNDListener() {
-            ModelData selectedModel;
-
-            @Override
-            public void dragStart(DNDEvent e) {
-                super.dragStart(e);
-                selectedModel = tree.getSelectionModel().getSelectedItem();
-                GxtModel gxtModel = (GxtModel)selectedModel;
-
-                e.setCancelled(  gxtModel.isReadOnly());
-                e.getStatus().setStatus(  ! gxtModel.isReadOnly());
-
-            }
-
-            @Override
-            public void dragDrop(final DNDEvent e) {
-                super.dragDrop(e);
-                if (!(e.getTarget().getInnerHTML().equals("&nbsp;"))) {
-                    if (selectedModel instanceof GxtModel) {
-                        final GxtModel model = (GxtModel) selectedModel;
-                        selectedModel.set(Parameters.name.getText(), model.getName().getValue());
-                        final Entity draggedEntity =  model.getBaseEntity();
-                        final Entity target = getDropTarget(e.getTarget().getInnerText());
-                        e.setCancelled(  target.isReadOnly());
-                        e.getStatus().setStatus(  ! target.isReadOnly());
-
-
-                        if (! model.isReadOnly() && ! target.isReadOnly()){
-                            moveEntity(draggedEntity, target);
-                        }
-
-
-                    }
-
-                }
-            }
-        });
-    }
-
-    private Entity getDropTarget(String targetName) {
-
-        ModelData modelData = tree.getTreeStore().findModel(Parameters.name.getText(), targetName);
-        return ((GxtModel) modelData).getBaseEntity();
-
-
-    }
-
-    private void moveEntity(Entity draggedEntity, Entity target) {
-
-        if (! target.getOwner().equals(draggedEntity.getOwner())) {
-
-        EntityServiceAsync service = GWT.create(EntityService.class);
-        draggedEntity.setParent(target.getKey());
-
-        service.addUpdateEntity(draggedEntity, new AsyncCallback<Entity>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                GWT.log(caught.getMessage(), caught);
-            }
-
-            @Override
-            public void onSuccess(Entity result) {
-
-            }
-        });
-        }
-    }
-
-    private void addChildrenToModel(final List<Entity> result, List<String> parents, GxtModel model) throws NimbitsException {
-
-
-        for (final Entity entity : result) {
-            if (! entity.getEntityType().equals(EntityType.user)) {// entity.getEntity().equals(this.user.getKey()) ) {
-                if (entity.getParent().equals(model.getUUID())) {
-                    GxtModel model2 = new GxtModel(entity);
-                    if (parents.contains(entity.getKey()) && ! entity.getEntityType().equals(EntityType.user)) {
-                        addChildrenToModel(result, parents, model2);
-                    }
-
-                    model.add(model2);
-                }
-            }
-        }
-        // return model;
-    }
-
-    private GxtModel treeStoreBuilder(final List<Entity> result) throws NimbitsException {
-
-        final List<ModelData> model = new ArrayList<ModelData>();
-        parents = new ArrayList<String>();
-        for (final Entity entity : result) {
-            addEntity(entity);
-
-        }
-
-        final GxtModel userModel = new GxtModel(user);
-
-        addChildrenToModel(result, parents, userModel);
-
-        model.add(userModel);
-
-        tree.getTreeStore().add(model, true);
-
-        return userModel;
-
-    }
-
-    public void addUpdateTreeModel(final GxtModel model, final boolean refresh) throws NimbitsException {
+    public void addUpdateTreeModel(final TreeModel model, final boolean refresh) throws NimbitsException {
 
         if (tree != null && tree.getStore() != null) {
 
             final ModelData mx = tree.getTreeStore().findModel(Parameters.id.getText(), model.getBaseEntity().getKey());
             if (mx != null) {
-                final GxtModel m = (GxtModel)mx;
+                final TreeModel m = (TreeModel)mx;
                 m.update(model.getBaseEntity());
                 tree.getTreeStore().update(m);
                 if (! refresh) {
@@ -273,153 +112,385 @@ class NavigationPanel extends NavigationEventProvider {
         }
     }
 
-    private void removeEntity(GxtModel currentModel) {
-
-        if (tree != null && tree.getStore() != null) {
-
-
-            GxtModel m = (GxtModel) tree.getTreeStore().findModel(Parameters.id.getText(), currentModel.getBaseEntity().getKey());
-            tree.getTreeStore().remove(m);
-
-        }
-    }
-
-//    @Override
-//    protected void afterRender() {
-//        super.afterRender();
-//        layout(true);
-//    }
-
     @Override
     protected void onAttach() {
-        updater = new Timer() {
-            @Override
-            public void run() {
-
-                updateValues();
-
-            }
-        };
+        updater = new RefreshTimer();
         updater.scheduleRepeating(Const.DEFAULT_TIMER_UPDATE_SPEED);
         updater.run();
         super.onAttach();
     }
 
-    private void updateValues()  {
-        if (tree != null) {
+    //service calls
+    public void getUserEntities(final boolean refresh)  {
 
-            reloadCurrentValues( getVisiblePoints());
+
+        final EntityServiceAsync service = GWT.create(EntityService.class);
+        service.getEntities(new GetUserListAsyncCallback(refresh));
+
+    }
+
+    public void saveAll() {
+
+        //  final List<GxtModel> models = grid.getSelectionModel().getSelectedItems();
+        RecordedValueServiceAsync service = GWT.create(RecordedValueService.class);
+
+        for (final ModelData x :  tree.getTreeStore().findModels(Parameters.dirty.getText(), "yes")) {
+            final TreeModel model = (TreeModel)x;
+            Date date = model.get(Parameters.timestamp.getText()) == null ? new Date() : (Date) model.get(Parameters.timestamp.getText());
+            final Date timestamp = saveWithCurrentTime ? new Date() : date;
+            final String v = model.get(Parameters.value.getText());
+//            final String note = model.get(Const.Params.PARAM_NOTE);
+//            final String data = model.get(Const.PARAM_DATA);
+            final Value value = ValueModelFactory.createValueModel(v, timestamp, model.getId());
+
+            service.recordValue(model.getBaseEntity(), value, new SaveValueAsyncCallback(model));
+            model.setDirty(false);
         }
+        tree.getTreeStore().commitChanges();
+
+
+
     }
 
-    private Map<String, Entity> getVisiblePoints() {
-        final Map<String, Entity> entityMap = new HashMap<String, Entity>();
-
-        if (tree != null) {
-            for (final ModelData m : tree.getTreeStore().getAllItems()) {
-                final GxtModel model = (GxtModel) m;
-                try {
-                    if (model != null
-                            && model.getParent() != null
-                            && !model.isDirty()
-                            && model.getEntityType().equals(EntityType.point)
-                            )  {
-                        if (tree.isExpanded(model.getParent())) {
-                            entityMap.put(model.getUUID(), model.getBaseEntity());
-                        }
-                    }
-                } catch (Exception e) {
-                    GWT.log(e.getMessage(), e);
-                }
-            }
-        }
-        return entityMap;
-    }
-
-    private void reloadCurrentValues(Map<String, Entity> entityMap) {
-        final PointServiceAsync service = GWT.create(PointService.class);
-        service.getPoints(entityMap, new AsyncCallback<Map<String, Point>>() {
-
-            @Override
-            public void onFailure(Throwable throwable) {
-                GWT.log(throwable.getMessage(), throwable);
-            }
-
-            @Override
-            public void onSuccess(Map<String, Point> stringPointMap) {
-                final TreeStore<ModelData> models = tree.getTreeStore();
-                for (final ModelData m : models.getAllItems()) {
-                    final GxtModel model = (GxtModel) m;
-                    if (!model.isDirty() && model.getEntityType().equals(EntityType.point)) {
-
-                        if (stringPointMap.containsKey(model.getUUID())) {
-                            Point p = stringPointMap.get(model.getUUID());
-                            if (p.getValue() == null) {
-                                model.setAlertType(AlertType.OK);
-                                model.setValue(ValueModelFactory.createValueModel(0.0));
-                            }
-                            else {
-                                model.setAlertType(p.getValue().getAlertState());
-                                model.setValue(p.getValue());
-                            }
-
-
-                        }
-                        models.update(m);
-                    }
-
-                }
-            }
-        });
-    }
-
-    private final Listener<TreeGridEvent<ModelData>> treeDoubleClickListener = new Listener<TreeGridEvent<ModelData>>() {
+    private static class MoveEntityAsyncCallback implements AsyncCallback<Entity> {
         @Override
-        public void handleEvent(TreeGridEvent<ModelData> be) {
-            ModelData mx = tree.getSelectionModel()
-                    .getSelectedItem();
+        public void onFailure(Throwable caught) {
+            GWT.log(caught.getMessage(), caught);
+        }
 
-            if (mx != null) {
-                GxtModel model = ((GxtModel) mx);
+        @Override
+        public void onSuccess(Entity result) {
 
-                try {
-                switch (model.getBaseEntity().getEntityType()) {
-                    case user:
-                        break;
-                    case point:  case category: case file: case subscription: case feed:
-                        notifyEntityClickedListener(model);
-                        break;
-                    case userConnection:
-                        break;
-                    case calculation:
-                        context.showCalcPanel(model.getBaseEntity());
-                        break;
-                    case summary:
-                        context.showSummaryPanel(model.getBaseEntity());
-                        break;
-                    case intelligence:
-                        context.showIntelligencePanel(model.getBaseEntity());
-                        break;
+        }
+    }
+
+    private class SaveValueAsyncCallback implements AsyncCallback<Value> {
+        private final TreeModel model;
+
+        private SaveValueAsyncCallback(TreeModel model) {
+            this.model = model;
+        }
+
+        @Override
+        public void onFailure(final Throwable throwable) {
+
+            GWT.log(throwable.getMessage(), throwable);
+        }
+
+        @Override
+        public void onSuccess(final Value aValue) {
+            updateModel(aValue, model);
+
+        }
+    }
+
+    private class GetUserListAsyncCallback implements AsyncCallback<List<Entity>> {
+        private final boolean refresh;
+
+        private GetUserListAsyncCallback(boolean refresh) {
+            this.refresh = refresh;
+        }
+
+        @Override
+        public void onFailure(Throwable caught) {
+            GWT.log(caught.getMessage(), caught);
+        }
+
+        @Override
+        public void onSuccess(List<Entity> result) {
+
+            try {
+            if (refresh) {
+                for (Entity e : result) {
+
+
+                        addUpdateTreeModel(new GxtModel(e), true);
 
 
                 }
+            }
+            else {
+
+                    createTree(result);
+
+                doLayout();
+            }
+            } catch (NimbitsException e) {
+                FeedbackHelper.showError(e);
+            }
+
+        }
+        private void createTree(final List<Entity> result) throws NimbitsException {
+            final TreeGridDropTarget target = new TreeGridDropTarget(tree);
+            target.setAllowSelfAsSource(true);
+            target.setFeedback(Feedback.BOTH);
+            tree.addListener(Events.AfterEdit, new GridEventListener());
+            treePropertyBuilder();
+            treeStoreBuilder(result);
+            treeDNDBuilder();
+            removeAll();
+            add(tree);
+        }
+        private void treeDNDBuilder() {
+            TreeGridDragSource source = new TreeGridDragSource(tree);
+            source.addDNDListener(new DNDListener());
+        }
+        private TreeModel treeStoreBuilder(final List<Entity> result) throws NimbitsException {
+
+            final List<ModelData> model = new ArrayList<ModelData>(result.size());
+            parents = new ArrayList<String>(result.size());
+            for (final Entity entity : result) {
+                addEntity(entity);
+
+            }
+
+            final TreeModel userModel = new GxtModel(user);
+
+            addChildrenToModel(result, parents, userModel);
+
+            model.add(userModel);
+
+            tree.getTreeStore().add(model, true);
+
+            return userModel;
+
+        }
+        private void addEntity(final Entity entity) {
+            if (! Utils.isEmptyString(entity.getParent()) && ! parents.contains(entity.getParent())) {
+                parents.add(entity.getParent());
+            }
+
+        }
+        private void addChildrenToModel(final List<Entity> result, List<String> parents, TreeModel model) throws NimbitsException {
+
+
+            for (final Entity entity : result) {
+                if (! entity.getEntityType().equals(EntityType.user)) {// entity.getEntity().equals(this.user.getKey()) ) {
+                    if (entity.getParent().equals(model.getUUID())) {
+                        TreeModel model2 = new GxtModel(entity);
+                        if (parents.contains(entity.getKey()) && ! entity.getEntityType().equals(EntityType.user)) {
+                            addChildrenToModel(result, parents, model2);
+                        }
+
+                        model.add(model2);
+                    }
                 }
-                catch (NimbitsException e) {
-                    FeedbackHelper.showError(e);
+            }
+            // return model;
+        }
+        private void treePropertyBuilder() {
+            context = new EntityContextMenu(tree, settings);
+            context.addEntityModifiedListeners(new EntityModifiedListener());
+            tree.setContextMenu(context);
+            tree.setStateful(true);
+
+            tree.setClicksToEdit(EditorGrid.ClicksToEdit.ONE);
+            tree.setTrackMouseOver(true);
+            //tree.getView().setAutoFill(true);
+            tree.addListener(Events.RowDoubleClick, new TreeDoubleClickGridEventListener());
+
+        }
+
+
+        private class EntityModifiedListener implements EntityContextMenu.EntityModifiedListener {
+            @Override
+            public void onEntityModified(TreeModel model, Action action) throws NimbitsException {
+                switch (action) {
+                    case delete: {
+                        removeEntity(model);
+                        break;
+                    }
+                    case update: case create:
+                        addUpdateTreeModel(model, false);
+                        break;
+                    default:
+                        break;
                 }
+            }
+            private void removeEntity(TreeModel currentModel) {
+
+                if (tree != null && tree.getStore() != null) {
 
 
+                    ModelData m =  tree.getTreeStore().findModel(Parameters.id.getText(), currentModel.getBaseEntity().getKey());
+                    tree.getTreeStore().remove(m);
 
+                }
             }
         }
 
-    };
+        private class TreeDoubleClickGridEventListener implements Listener<TreeGridEvent<ModelData>> {
+            @Override
+            public void handleEvent(TreeGridEvent<ModelData> be) {
+                ModelData mx = tree.getSelectionModel()
+                        .getSelectedItem();
 
-    private final Listener<GridEvent> afterEditListener = new Listener<GridEvent>() {
+                if (mx != null) {
+                    TreeModel model = ((TreeModel) mx);
+
+                    try {
+                        switch (model.getBaseEntity().getEntityType()) {
+                            case user:
+                                break;
+                            case point:
+                                break;
+                            case category:
+                                break;
+                            case file:
+                                break;
+                            case subscription:
+                                break;
+                            case feed:
+                                notifyEntityClickedListener(model);
+                                break;
+                            case userConnection:
+                                break;
+                            case calculation:
+                                context.showCalcPanel(model.getBaseEntity());
+                                break;
+                            case summary:
+                                context.showSummaryPanel(model.getBaseEntity());
+                                break;
+                            case intelligence:
+                                context.showIntelligencePanel(model.getBaseEntity());
+                                break;
+                            case resource:
+                                break;
+                            case instance:
+                                break;
+                        }
+                    }
+                    catch (NimbitsException e) {
+                        FeedbackHelper.showError(e);
+                    }
+
+
+
+                }
+            }
+
+        }
+    }
+
+    private class RecordValueCallback implements AsyncCallback<Value> {
+        private final GridEvent be;
+        private final TreeModel model;
+
+        private RecordValueCallback(GridEvent be, TreeModel model) {
+            this.be = be;
+            this.model = model;
+        }
+
+        @Override
+        public void onFailure(final Throwable throwable) {
+            be.getRecord().reject(false);
+            updater.cancel();
+        }
+
+        @Override
+        public void onSuccess(final Value value) {
+            be.getRecord().commit(false);
+            model.setDirty(false);
+            updateModel(value, model);
+
+        }
+    }
+
+    private class ReloadAsyncCallback implements AsyncCallback<Map<String, Point>> {
+
+        @Override
+        public void onFailure(Throwable throwable) {
+            GWT.log(throwable.getMessage(), throwable);
+        }
+
+        @Override
+        public void onSuccess(Map<String, Point> stringPointMap) {
+            final TreeStore<ModelData> models = tree.getTreeStore();
+            for (final ModelData m : models.getAllItems()) {
+                final TreeModel model = (TreeModel) m;
+                if (!model.isDirty() && model.getEntityType().equals(EntityType.point)) {
+
+                    if (stringPointMap.containsKey(model.getUUID())) {
+                        Point p = stringPointMap.get(model.getUUID());
+                        if (p.getValue() == null) {
+                            model.setAlertType(AlertType.OK);
+                            model.setValue(ValueModelFactory.createValueModel(0.0));
+                        }
+                        else {
+                            model.setAlertType(p.getValue().getAlertState());
+                            model.setValue(p.getValue());
+                        }
+
+
+                    }
+                    models.update(m);
+                }
+
+            }
+        }
+    }
+
+    private class DNDListener extends com.extjs.gxt.ui.client.event.DNDListener {
+        ModelData selectedModel;
+
+        @Override
+        public void dragStart(DNDEvent e) {
+            super.dragStart(e);
+            selectedModel = tree.getSelectionModel().getSelectedItem();
+            TreeModel treeModel = (TreeModel)selectedModel;
+
+            e.setCancelled(  treeModel.isReadOnly());
+            e.getStatus().setStatus(  ! treeModel.isReadOnly());
+
+        }
+
+        @Override
+        public void dragDrop(final DNDEvent e) {
+            super.dragDrop(e);
+            if (!(e.getTarget().getInnerHTML().equals("&nbsp;"))) {
+                if (selectedModel instanceof TreeModel) {
+                    final TreeModel model = (TreeModel) selectedModel;
+                    selectedModel.set(Parameters.name.getText(), model.getName().getValue());
+                    final Entity draggedEntity =  model.getBaseEntity();
+                    final Entity target = getDropTarget(e.getTarget().getInnerText());
+                    e.setCancelled(  target.isReadOnly());
+                    e.getStatus().setStatus(  ! target.isReadOnly());
+
+
+                    if (! model.isReadOnly() && ! target.isReadOnly()){
+                        moveEntity(draggedEntity, target);
+                    }
+
+
+                }
+
+            }
+        }
+        private Entity getDropTarget(String targetName) {
+
+            ModelData modelData = tree.getTreeStore().findModel(Parameters.name.getText(), targetName);
+            return ((TreeModel) modelData).getBaseEntity();
+
+
+        }
+        private void moveEntity(Entity draggedEntity, Entity target) {
+
+            if (! target.getOwner().equals(draggedEntity.getOwner())) {
+
+                EntityServiceAsync service = GWT.create(EntityService.class);
+                draggedEntity.setParent(target.getKey());
+
+                service.addUpdateEntity(draggedEntity, new MoveEntityAsyncCallback());
+            }
+        }
+
+    }
+
+    private class GridEventListener implements Listener<GridEvent> {
 
         @Override
         public void handleEvent(final GridEvent be) {
-            final GxtModel model = (GxtModel) be.getModel();
+            final TreeModel model = (TreeModel) be.getModel();
 
             if (be.getColIndex() == valueColumnIndex) { //only save when the value is updated
 
@@ -441,21 +512,7 @@ class NavigationPanel extends NavigationEventProvider {
                     final Value value = ValueModelFactory.createValueModel(valueAndNote, timestamp, uuid);
 
                     RecordedValueServiceAsync service = GWT.create(RecordedValueService.class);
-                    service.recordValue(entity, value, new AsyncCallback<Value>() {
-                        @Override
-                        public void onFailure(final Throwable throwable) {
-                            be.getRecord().reject(false);
-                            updater.cancel();
-                        }
-
-                        @Override
-                        public void onSuccess(final Value value) {
-                            be.getRecord().commit(false);
-                            model.setDirty(false);
-                            updateModel(value, model);
-
-                        }
-                    });
+                    service.recordValue(entity, value, new RecordValueCallback(be, model));
 
                 }
             }
@@ -463,80 +520,45 @@ class NavigationPanel extends NavigationEventProvider {
                 model.setDirty(true);
             }
         }
-    };
+    }
 
-    //service calls
-    public void getUserEntities(final boolean refresh)  {
+    private class RefreshTimer extends Timer {
+        @Override
+        public void run() {
 
+            if (tree != null) {
 
-        final EntityServiceAsync service = GWT.create(EntityService.class);
-        service.getEntities(new AsyncCallback<List<Entity>>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                GWT.log(caught.getMessage(), caught);
+                reloadCurrentValues( getVisiblePoints());
             }
 
-            @Override
-            public void onSuccess(List<Entity> result) {
+        }
+        private void reloadCurrentValues(Map<String, Entity> entityMap) {
+            final PointServiceAsync service = GWT.create(PointService.class);
+            service.getPoints(entityMap, new ReloadAsyncCallback());
+        }
 
-                try {
-                if (refresh) {
-                    for (Entity e : result) {
+        private Map<String, Entity> getVisiblePoints() {
+            final Map<String, Entity> entityMap = new HashMap<String, Entity>(tree.getTreeStore().getAllItems().size());
 
-
-                            addUpdateTreeModel(new GxtModel(e), true);
-
-
+            if (tree != null) {
+                for (final ModelData m : tree.getTreeStore().getAllItems()) {
+                    final TreeModel model = (TreeModel) m;
+                    try {
+                        if (model != null
+                                && model.getParent() != null
+                                && !model.isDirty()
+                                && model.getEntityType().equals(EntityType.point)
+                                )  {
+                            if (tree.isExpanded(model.getParent())) {
+                                entityMap.put(model.getUUID(), model.getBaseEntity());
+                            }
+                        }
+                    } catch (Exception e) {
+                        GWT.log(e.getMessage(), e);
                     }
                 }
-                else {
-
-                        createTree(result);
-
-                    doLayout();
-                }
-                } catch (NimbitsException e) {
-                    FeedbackHelper.showError(e);
-                }
-
             }
-        });
-
-    }
-
-    public void saveAll() {
-
-        //  final List<GxtModel> models = grid.getSelectionModel().getSelectedItems();
-        RecordedValueServiceAsync service = GWT.create(RecordedValueService.class);
-
-        for (final ModelData x :  tree.getTreeStore().findModels(Parameters.dirty.getText(), "yes")) {
-            final GxtModel model = (GxtModel)x;
-            Date date = model.get(Parameters.timestamp.getText()) == null ? new Date() : (Date) model.get(Parameters.timestamp.getText());
-            final Date timestamp = saveWithCurrentTime ? new Date() : date;
-            final String v = model.get(Parameters.value.getText());
-//            final String note = model.get(Const.Params.PARAM_NOTE);
-//            final String data = model.get(Const.PARAM_DATA);
-            final Value value = ValueModelFactory.createValueModel(v, timestamp, model.getId());
-
-            service.recordValue(model.getBaseEntity(), value, new AsyncCallback<Value>() {
-                @Override
-                public void onFailure(final Throwable throwable) {
-
-                    GWT.log(throwable.getMessage(), throwable);
-                }
-
-                @Override
-                public void onSuccess(final Value value) {
-                    updateModel(value, model);
-
-                }
-            });
-            model.setDirty(false);
+            return entityMap;
         }
-        tree.getTreeStore().commitChanges();
-
-
-
     }
-
 }

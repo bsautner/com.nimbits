@@ -28,7 +28,6 @@ import com.nimbits.server.entity.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.json.*;
 import com.nimbits.server.orm.*;
-import com.nimbits.server.point.*;
 import com.nimbits.server.user.*;
 import com.nimbits.server.value.*;
 
@@ -36,12 +35,15 @@ import javax.servlet.http.*;
 import java.io.*;
 import java.util.*;
 import java.util.logging.*;
+import java.util.regex.*;
 
 
 @SuppressWarnings("serial")
 public class XMPPReceiverServlet extends HttpServlet {
 
     private static final Logger log = Logger.getLogger(XMPPReceiverServlet.class.getName());
+    private static final Pattern COMPILE = Pattern.compile("/");
+    private static final Pattern PATTERN = Pattern.compile("=");
 
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse res)
@@ -52,21 +54,20 @@ public class XMPPReceiverServlet extends HttpServlet {
             final Message message = xmpp.parseMessage(req);
             final JID fromJid = message.getFromJid();
             final String body = message.getBody();
-            final String j[] = fromJid.getId().split("/");
+            final String j[] = COMPILE.split(fromJid.getId());
             final String email = j[0].toLowerCase();
             final EmailAddress internetAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
             log.info("XMPP Message recieved " + email + ":   " + message);
-            User u;
 
-            u = UserTransactionFactory.getInstance().getNimbitsUser(internetAddress);
+            User u = UserTransactionFactory.getInstance().getNimbitsUser(internetAddress);
             if (u != null) {
                 if (body.toLowerCase().trim().equals("ls")) {
                     //sendPointList(u);
-                } else if (body.indexOf("=") > 0) {
+                } else if (body.indexOf('=') > 0) {
 
                     recordNewValue(body, u);
 
-                } else if ((!body.trim().equals("?")) && body.endsWith("?")) {
+                } else if (!body.trim().equals("?") && !body.isEmpty() && body.charAt(body.length() - 1) == '?') {
 
                     sendCurrentValue(body, u);
 
@@ -94,7 +95,7 @@ public class XMPPReceiverServlet extends HttpServlet {
         // ...
     }
 
-    private void processJson(final User u,final String body) throws NimbitsException {
+    private static void processJson(final User u, final String body) throws NimbitsException {
         log.info(body);
 
         Gson gson = GsonFactory.getInstance();
@@ -122,7 +123,7 @@ public class XMPPReceiverServlet extends HttpServlet {
         }
     }
 
-    private void sendHelp(User u) throws NimbitsException {
+    private static void sendHelp(User u) throws NimbitsException {
         XmppServiceFactory.getInstance().sendMessage("Usage:", u.getEmail());
         XmppServiceFactory.getInstance().sendMessage("? | Help", u.getEmail());
         XmppServiceFactory.getInstance().sendMessage("c pointname | Create a data point", u.getEmail());
@@ -131,7 +132,7 @@ public class XMPPReceiverServlet extends HttpServlet {
         XmppServiceFactory.getInstance().sendMessage("pointname=Foo Bar | record a text value to that point", u.getEmail());
     }
 
-    private void createPoint(final String body, final User u) throws NimbitsException {
+    private static void createPoint(final String body, final User u) throws NimbitsException {
 
 
         EntityName pointName = CommonFactoryLocator.getInstance().createName(body.substring(1).trim(), EntityType.point);
@@ -146,8 +147,8 @@ public class XMPPReceiverServlet extends HttpServlet {
 
     }
 
-    private void recordNewValue(final String body,final User u) throws NimbitsException {
-        String b[] = body.split("=");
+    private static void recordNewValue(final CharSequence body, final User u) throws NimbitsException {
+        String b[] = PATTERN.split(body);
         if (b.length == 2) {
 
             EntityName pointName = CommonFactoryLocator.getInstance().createName(b[0], EntityType.point);
@@ -170,23 +171,22 @@ public class XMPPReceiverServlet extends HttpServlet {
 
 
 
-    private void sendCurrentValue(final String body, final User u) throws NimbitsException {
-        if (!Utils.isEmptyString(body) && body.endsWith("?")) {
+    private static void sendCurrentValue(final String body, final User u) throws NimbitsException {
+        if (!Utils.isEmptyString(body) && !body.isEmpty() && body.charAt(body.length() - 1) == '?') {
             final EntityName pointName = CommonFactoryLocator.getInstance().createName(body.replace("?", ""), EntityType.point);
 
             Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName,EntityType.point);
            // Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
-            Point point = (Point) EntityServiceFactory.getInstance().getEntityByKey(e.getKey(), PointEntity.class.getName());
-
-            String t = "";
+            Entity point = EntityServiceFactory.getInstance().getEntityByKey(e.getKey(), PointEntity.class.getName());
 
             final Value v = RecordedValueServiceFactory.getInstance().getPrevValue(point, new Date());
             if (v != null) {
-                if (v.getNote() != null && v.getNote().length() > 0) {
+                String t = "";
+                if (v.getNote() != null && !v.getNote().isEmpty()) {
                     t = v.getNote();
                 }
-                XmppServiceFactory.getInstance().sendMessage(e.getName().getValue() + "="
-                        + v.getDoubleValue() + " " + t, u.getEmail());
+                XmppServiceFactory.getInstance().sendMessage(e.getName().getValue() + '='
+                        + v.getDoubleValue() + ' ' + t, u.getEmail());
             } else {
                 XmppServiceFactory.getInstance().sendMessage(pointName.getValue() + " has no data", u.getEmail());
 

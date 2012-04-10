@@ -29,11 +29,10 @@ import com.nimbits.server.point.*;
 import com.nimbits.server.settings.*;
 import com.nimbits.server.user.*;
 import org.junit.*;
+import static org.junit.Assert.*;
 import org.springframework.mock.web.*;
 
-import java.util.UUID;
-
-import static org.junit.Assert.assertNotNull;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner

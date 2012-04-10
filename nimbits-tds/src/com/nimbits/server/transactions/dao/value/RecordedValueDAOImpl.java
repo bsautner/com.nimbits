@@ -21,7 +21,6 @@ import com.nimbits.client.model.timespan.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.model.valueblobstore.*;
 import com.nimbits.server.admin.legacy.orm.*;
-import com.nimbits.server.orm.*;
 import com.nimbits.server.value.*;
 
 import javax.jdo.*;

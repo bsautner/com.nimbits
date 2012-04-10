@@ -20,6 +20,8 @@ package com.nimbits.server.core;
  * Time: 10:31 AM
  */
 public class CoreFactory {
+    private CoreFactory() {
+    }
 
     // private Core instance;
 

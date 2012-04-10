@@ -65,6 +65,7 @@ public class Const {
     @Deprecated //delete when all blobstores have length
     public static final long CONST_DEFAULT_BLOB_LENGTH = 100000;
     public static final int CONST_DEFAULT_LIST_SIZE = 1024;
+    public static final String CONST_ANON_EMAIL = "uncle_nobody@nimbits.com";
 
 
 // --------------------------- CONSTRUCTORS ---------------------------

@@ -13,22 +13,19 @@
 
 package com.nimbits.server.orm;
 
-import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.*;
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
-import com.nimbits.client.common.Utils;
-import com.nimbits.client.enums.AlertType;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.google.appengine.api.datastore.*;
+import com.nimbits.client.common.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
 
 import javax.jdo.annotations.*;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by bsautner
@@ -101,23 +98,7 @@ public class EntityStore implements Entity {
             Class cls = Class.forName(entity.getEntityType().getClassName());
 
 
-            if (Utils.isEmptyString(entity.getKey())) {
-
-                if (entity.getEntityType().equals(EntityType.user)) {
-                    this.key = KeyFactory.createKey(cls.getSimpleName(), saferName.getValue());
-                }
-
-                else if (entity.getEntityType().equals(EntityType.point)) {
-                    this.key =  KeyFactory.createKey(cls.getSimpleName(), entity.getOwner() + '/' + saferName.getValue());
-                }
-                else {
-                    this.key = KeyFactory.createKey(cls.getSimpleName(), UUID.randomUUID().toString());
-                }
-
-            }
-            else {
-                this.key = KeyFactory.createKey(cls.getSimpleName(), entity.getKey());
-            }
+            setKey(cls, entity, saferName);
             this.uuid = entity.getUUID();
             this.name = saferName.getValue();
             this.description = entity.getDescription();
@@ -136,21 +117,7 @@ public class EntityStore implements Entity {
     public EntityStore(final Class<?> cls, final Entity entity) throws NimbitsException {
 
         final EntityName saferName = CommonFactoryLocator.getInstance().createName(entity.getName().getValue(), entity.getEntityType());
-        if (Utils.isEmptyString(entity.getKey())) {
-            if (entity.getEntityType().equals(EntityType.user)) {
-                this.key = KeyFactory.createKey(cls.getSimpleName(), saferName.getValue());
-            }
-            else if (entity.getEntityType().equals(EntityType.point)) {
-                this.key =  KeyFactory.createKey(cls.getSimpleName(), entity.getOwner() + '/' + saferName.getValue());
-            }
-            else {
-                this.key = KeyFactory.createKey(cls.getSimpleName(), UUID.randomUUID().toString());
-            }
-
-        }
-        else {
-            this.key = KeyFactory.createKey(cls.getSimpleName(), entity.getKey());
-        }
+        setKey(cls, entity, saferName);
         this.uuid = entity.getUUID();
         this.name = saferName.getValue();
         this.description = entity.getDescription();
@@ -162,6 +129,15 @@ public class EntityStore implements Entity {
             this.blobKey = new BlobKey(entity.getBlobKey());
         }
 
+    }
+
+    private void setKey(Class<?> cls, Entity entity, CommonIdentifier saferName) {
+        this.key = Utils.isEmptyString(entity.getKey())
+                ? entity.getEntityType().equals(EntityType.user)
+                ? KeyFactory.createKey(cls.getSimpleName(), saferName.getValue())
+                : entity.getEntityType().equals(EntityType.point)
+                ? KeyFactory.createKey(cls.getSimpleName(), entity.getOwner() + '/' + saferName.getValue())
+                : KeyFactory.createKey(cls.getSimpleName(), UUID.randomUUID().toString()) : KeyFactory.createKey(cls.getSimpleName(), entity.getKey());
     }
 
     @Override
@@ -225,7 +201,7 @@ public class EntityStore implements Entity {
 
     @Override
     public String getParent() {
-        return (parent);
+        return parent;
     }
 
     @Override
@@ -245,7 +221,7 @@ public class EntityStore implements Entity {
 
     @Override
     public String getOwner() {
-        return (owner);
+        return owner;
     }
 
     @Override
@@ -260,7 +236,7 @@ public class EntityStore implements Entity {
 
     @Override
     public void setAlertType(final AlertType alertType) {
-        this.alertType=(alertType.getCode());
+        this.alertType= alertType.getCode();
     }
 
     @Override
@@ -304,15 +280,15 @@ public class EntityStore implements Entity {
 
     @Override
     public void update(Entity update) throws NimbitsException {
-        this.description = (update.getDescription());
-        this.name = (update.getName().getValue());
-        this.protectionLevel = (update.getProtectionLevel().getCode());
-        this.parent = (update.getParent());
+        this.description = update.getDescription();
+        this.name = update.getName().getValue();
+        this.protectionLevel = update.getProtectionLevel().getCode();
+        this.parent = update.getParent();
         if (! Utils.isEmptyString(update.getBlobKey())) {
             this.blobKey = new BlobKey(update.getBlobKey());
         }
 
-        this.uuid = (update.getUUID());
+        this.uuid = update.getUUID();
     }
 
 

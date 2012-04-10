@@ -23,7 +23,7 @@ import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.connection.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.user.*;
 import com.nimbits.client.service.user.UserService;
 import com.nimbits.server.email.*;
 import com.nimbits.server.entity.*;
@@ -80,16 +80,16 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
                 user = UserTransactionFactory.getInstance().getNimbitsUser(email);
                 if (user != null) {
-                    user.setRestricted(true);
+                    user.setAuthLevel(AuthLevel.restricted);
 
                     if (!Utils.isEmptyString(secret) && !Utils.isEmptyString(user.getSecret()) && user.getSecret().equals(secret)) {
-                        user.setRestricted(false);
+                        user.setAuthLevel(AuthLevel.readWrite);
                     }
-                    if (user.isRestricted()) {
+                    if (user.getAuthLevel().equals(AuthLevel.restricted)) {
 
                         if (googleUserService.getCurrentUser() != null
                                 && googleUserService.getCurrentUser().getEmail().equalsIgnoreCase(user.getEmail().getValue())) {
-                            user.setRestricted(false);
+                            user.setAuthLevel(AuthLevel.readWrite);
                         }
                     }
                 } else {
@@ -121,7 +121,28 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
     }
 
+    @Override
+      public User getAdmin() throws NimbitsException {
+            String adminStr = "bsautner@gmail.com"; //SettingsServiceFactory.getInstance().getSetting(SettingType.admin);
 
+            User admin = com.nimbits.server.user.UserServiceFactory.getInstance().getUserByKey(adminStr);
+            admin.setAuthLevel(AuthLevel.admin);
+            return admin;
+      }
+
+    @Override
+    public User getAnonUser()  {
+        User u = new UserModel();
+        try {
+            String adminStr = Const.CONST_ANON_EMAIL;
+            u.setName(CommonFactoryLocator.getInstance().createName(adminStr, EntityType.user));
+        } catch (NimbitsException e) {
+            return u;
+        }
+
+
+        return u;
+    }
     @Override
     public User getAppUserUsingGoogleAuth() throws NimbitsException {
         final com.google.appengine.api.users.UserService u = UserServiceFactory.getUserService();

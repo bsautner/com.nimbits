@@ -13,32 +13,23 @@
 
 package com.nimbits.server.transactions.dao.user;
 
-import com.nimbits.PMF;
-import com.nimbits.client.constants.Const;
-import com.nimbits.client.constants.UserMessages;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.connection.Connection;
-import com.nimbits.client.model.connection.ConnectionRequestModelFactory;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.user.UserModelFactory;
-import com.nimbits.server.orm.ConnectionRequestEntity;
-import com.nimbits.server.orm.UserEntity;
-import com.nimbits.server.user.UserTransactions;
-import twitter4j.auth.AccessToken;
+import com.nimbits.*;
+import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.connection.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.server.logging.*;
+import com.nimbits.server.orm.*;
+import com.nimbits.server.user.*;
+import twitter4j.auth.*;
 
-import javax.jdo.JDOObjectNotFoundException;
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
+import javax.jdo.*;
 import java.util.*;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 @SuppressWarnings("unchecked")
 public class UserDAOImpl implements UserTransactions {
@@ -83,7 +74,7 @@ public class UserDAOImpl implements UserTransactions {
             final EntityName name = CommonFactoryLocator.getInstance().createName(internetAddress.getValue(), EntityType.user);
             final Entity entity =  EntityModelFactory.createEntity(name, "", EntityType.user, ProtectionLevel.onlyMe,
                     name.getValue(),name.getValue(),name.getValue());
-           // final Entity r = EntityTransactionFactory.getDaoInstance(null).addUpdateEntity(entity);
+            // final Entity r = EntityTransactionFactory.getDaoInstance(null).addUpdateEntity(entity);
             final UserEntity u = new UserEntity(entity);
 
             u.setSecret(UUID.randomUUID().toString());
@@ -116,8 +107,13 @@ public class UserDAOImpl implements UserTransactions {
                 }
 
             }
-
-        } finally {
+        } catch (Exception ex) {
+            if (internetAddress != null) {
+                log.info(internetAddress.getValue());
+            }
+            LogHelper.logException(this.getClass(), ex);
+        }
+        finally {
             pm.close();
         }
         return retObj;
@@ -237,7 +233,7 @@ public class UserDAOImpl implements UserTransactions {
 
 
 
-       // return affectedUsers;
+        // return affectedUsers;
 
     }
 
@@ -264,9 +260,9 @@ public class UserDAOImpl implements UserTransactions {
     public User updateTwitter(final EmailAddress internetAddress, final AccessToken token) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
-         try {
+        try {
 
-             final User u = getUserByKey(pm, internetAddress.getValue());
+            final User u = getUserByKey(pm, internetAddress.getValue());
             if (u != null) {
                 final Transaction tx = pm.currentTransaction();
                 tx.begin();
@@ -274,10 +270,10 @@ public class UserDAOImpl implements UserTransactions {
                 u.setTwitterToken(token.getToken());
                 u.setTwitterTokenSecret(token.getTokenSecret());
                 tx.commit();
-               return  UserModelFactory.createUserModel(u);
+                return  UserModelFactory.createUserModel(u);
 
             }
-             else {
+            else {
                 throw new NimbitsException(UserMessages.ERROR_USER_NOT_FOUND);
             }
 

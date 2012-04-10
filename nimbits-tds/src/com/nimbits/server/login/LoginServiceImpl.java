@@ -22,7 +22,10 @@ import com.nimbits.client.model.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.service.*;
+import com.nimbits.server.entity.*;
 import com.nimbits.server.feed.*;
+import com.nimbits.server.logging.*;
+import com.nimbits.server.orm.*;
 import com.nimbits.server.user.*;
 
 import java.util.*;
@@ -48,12 +51,16 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
             loginInfo.setUserAdmin(userService.isUserAdmin());
 
             loginInfo.setLogoutUrl(userService.createLogoutURL(requestUri));
-            com.nimbits.client.model.user.User u = UserTransactionFactory.getInstance().getNimbitsUser(internetAddress);
+            com.nimbits.client.model.user.User u = (com.nimbits.client.model.user.User) EntityTransactionFactory.getInstance(null).getEntityByKey(internetAddress.getValue(), UserEntity.class);// UserTransactionFactory.getInstance().getNimbitsUser(internetAddress);
 
             if (u == null) {
+                LogHelper.log(this.getClass(), "Created a new user");
                 u = UserTransactionFactory.getInstance().createNimbitsUser(internetAddress);
-                sendUserCreatedFeed(u);
-                sendWelcomeFeed(u);
+               // sendUserCreatedFeed(u);
+               // sendWelcomeFeed(u);
+            }
+            else {
+                LogHelper.log(this.getClass(), "found a new user" + user.getEmail());
             }
             UserTransactionFactory.getInstance().updateLastLoggedIn(u, new Date());
 

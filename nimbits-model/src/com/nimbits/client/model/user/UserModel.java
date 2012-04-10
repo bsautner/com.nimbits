@@ -14,6 +14,7 @@
 package com.nimbits.client.model.user;
 
 
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
@@ -44,29 +45,30 @@ public class UserModel extends EntityModel implements Serializable, User {
 
     private String twitterTokenSecret;
 
-    private boolean restricted;
-
     private long facebookID;
 
+    private int authLevel = AuthLevel.readWrite.getCode();
 
     /**
      *
      */
     private static final long serialVersionUID =1L;
 
+    @SuppressWarnings("unused")
     public UserModel() {
         super();
+        authLevel= AuthLevel.restricted.getCode();
+
     }
 
 
 
     public UserModel(final User u) throws NimbitsException {
         super(u);
-       // this.key = u.getKey();
         this.dateCreated = u.getDateCreated();
         this.lastLoggedIn = u.getLastLoggedIn();
         this.secret = u.getSecret();
-        this.restricted = u.isRestricted();
+        this.authLevel = u.getAuthLevel().getCode();
         this.emailAddress = u.getEmail().getValue();
         this.facebookToken = u.getFacebookToken();
         this.twitterToken = u.getTwitterToken();
@@ -136,19 +138,26 @@ public class UserModel extends EntityModel implements Serializable, User {
     }
 
     @Override
-    public void setSecret(final String secret) {
-        this.secret = secret;
+    public AuthLevel getAuthLevel() {
+        return AuthLevel.get(this.authLevel);
+    }
+
+    @Override
+    public void setAuthLevel(AuthLevel level) {
+        this.authLevel =level.getCode();
     }
 
     @Override
     public boolean isRestricted() {
-        return restricted;
+        return AuthLevel.get(this.authLevel).equals(AuthLevel.restricted);
     }
 
     @Override
-    public void setRestricted(final boolean restricted) {
-        this.restricted = restricted;
+    public void setSecret(final String secret) {
+        this.secret = secret;
     }
+
+
 
     @Override
     public EmailAddress getEmail() throws NimbitsException {

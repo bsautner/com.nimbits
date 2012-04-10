@@ -13,37 +13,31 @@
 
 package com.nimbits.server.feed;
 
-import com.google.gson.JsonSyntaxException;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.nimbits.client.common.Utils;
-import com.nimbits.client.constants.Const;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.FeedType;
-import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.feed.FeedValue;
-import com.nimbits.client.model.feed.FeedValueModel;
+import com.google.gson.*;
+import com.google.gwt.user.server.rpc.*;
+import com.nimbits.client.common.*;
+import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.feed.*;
 import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.relationship.Relationship;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModelFactory;
-import com.nimbits.client.service.feed.Feed;
-import com.nimbits.server.common.ServerInfoImpl;
+import com.nimbits.client.model.relationship.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.client.service.feed.*;
+import com.nimbits.server.common.*;
 import com.nimbits.server.entity.*;
-import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.logging.LogHelper;
-import com.nimbits.server.relationship.RelationshipTransactionFactory;
-import com.nimbits.server.user.UserServiceFactory;
-import com.nimbits.server.value.RecordedValueServiceFactory;
+import com.nimbits.server.gson.*;
+import com.nimbits.server.logging.*;
+import com.nimbits.server.relationship.*;
+import com.nimbits.server.user.*;
+import com.nimbits.server.value.*;
 import org.apache.commons.lang3.exception.*;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.io.*;
+import java.net.*;
 import java.util.*;
 
 
@@ -58,6 +52,8 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
     private static final int MAX_LENGTH = 1024;
 
     private static final int SIZE = 1024;
+    private static final int LENGTH = 200;
+    private static final int OFFSET = 500;
 
 
     private User getUser() {
@@ -73,7 +69,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
     public void postToFeed(final User user, final Entity entity, final Point originalPoint, final Value value, final FeedType type) throws NimbitsException {
         final Point point = getFeedPoint(user);
         if (point != null) {
-            final FeedValue feedValue = new FeedValueModel((valueToHtml(entity, originalPoint, value)), value.getData(), type);
+            final FeedValue feedValue = new FeedValueModel(valueToHtml(entity, originalPoint, value), value.getData(), type);
             final String json = GsonFactory.getSimpleInstance().toJson(feedValue);
             final Value v = ValueModelFactory.createValueModel(value, json);
             RecordedValueServiceFactory.getInstance().recordValue(user, point, v, false);
@@ -83,7 +79,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
     @Override
     public void postToFeed(final User user, final Throwable ex) {
         LogHelper.logException(this.getClass(), ex);
-         try {
+        try {
             postToFeed(user, ExceptionUtils.getStackTrace(ex), FeedType.error);
 
 
@@ -98,7 +94,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
         final Point point = getFeedPoint(user);
 
         if (point != null)  {
-            final String shortened = message.length() > 200 ? message.substring(0, 200) : message;
+            final String shortened = message.length() > LENGTH ? message.substring(0, LENGTH) : message;
 
             final String finalMessage;
             try {
@@ -112,13 +108,15 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
             final Value value = ValueModelFactory.createValueModel(0.0, 0.0, Const.CONST_IGNORED_NUMBER_VALUE,
                     new Date(),"", json);
             final Value v = ValueModelFactory.createValueModel(value, json);
+
             RecordedValueServiceFactory.getInstance().recordValue(user, point, v, false);
+
         }
 
     }
 
     private String  generatePostToFeedHtml(final String shortMessage, final String originalMessage, final FeedType type) throws UnsupportedEncodingException {
-        final StringBuilder sb = new StringBuilder(MAX_LENGTH+500) ;
+        final StringBuilder sb = new StringBuilder(MAX_LENGTH + OFFSET) ;
         final String start ="<p style=\"white-space: normal;width:150px\"><img style=\"float:left;\" ";
         switch (type) {
 
@@ -151,14 +149,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
                         .append("/resources/images/logo.png\" width=\"40\" height=\"40\">");
         }
 
-        final String shortenedOriginal;
-
-        if (originalMessage.length() > MAX_LENGTH) {
-            shortenedOriginal = originalMessage.substring(0, MAX_LENGTH);
-        }
-        else {
-            shortenedOriginal = originalMessage;
-        }
+        final String shortenedOriginal = originalMessage.length() > MAX_LENGTH ? originalMessage.substring(0, MAX_LENGTH) : originalMessage;
 
         sb.append("<a href=\"#\" onclick=\"window.open('feed.html?content=")
                 .append(URLEncoder.encode(shortenedOriginal, Const.CONST_ENCODING) )
@@ -174,7 +165,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
 
 
 
-    private String valueToHtml(final Entity entity, final Point point, final Value value) {
+    private String valueToHtml(final Entity entity, final Entity point, final Value value) {
         final StringBuilder sb = new StringBuilder(SIZE);
         if (! (Double.compare(value.getDoubleValue(), Const.CONST_IGNORED_NUMBER_VALUE) == 0)) {
             sb.append("<img style=\"float:left\" src=\"")
@@ -248,8 +239,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
     public List<FeedValue> getFeed(final int count, final String relationshipEntityKey) throws NimbitsException {
 
         final User loggedInUser = getUser();
-        final User feedUser;
-        feedUser = getFeedUser(relationshipEntityKey, loggedInUser);
+        final User feedUser = getFeedUser(relationshipEntityKey, loggedInUser);
 
         if (feedUser != null) {
 
@@ -261,13 +251,14 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
             else {
                 final List<Value> values = RecordedValueServiceFactory.getInstance().getTopDataSeries(point, count, new Date());
                 final List<FeedValue> retObj = new ArrayList<FeedValue>(values.size());
-                FeedValue fv;
 
                 for (final Value v : values) {
                     if (! Utils.isEmptyString(v.getData())) {
                         try {
-                            fv =  GsonFactory.getInstance().fromJson(v.getData(), FeedValueModel.class);
-                            retObj.add(fv);
+                            retObj.add(
+                                    GsonFactory.getInstance().fromJson(v.getData(),
+                                            FeedValueModel.class)
+                            );
                         } catch (JsonSyntaxException ignored) {
 
                         }
@@ -283,25 +274,21 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
     }
 
     private static User getFeedUser(final String relationshipEntityKey, final User loggedInUser) throws NimbitsException {
-        final User feedUser;
+
         if (loggedInUser != null && loggedInUser.getKey().equals(relationshipEntityKey)) {
 
-            feedUser = loggedInUser;
-
-
+            return loggedInUser;
         }
         else {
             final Relationship r = RelationshipTransactionFactory.getInstance().getRelationship(relationshipEntityKey);
 
             if (r != null) {
                 final String feedOwnersUUID = r.getForeignKey();
-                feedUser = UserServiceFactory.getInstance().getUserByKey(feedOwnersUUID);
+                return UserServiceFactory.getInstance().getUserByKey(feedOwnersUUID);
             }
-            else {
-                feedUser = null;
-            }
+            throw new NimbitsException("Feed User not found");
         }
-        return feedUser;
+
     }
 
     private Point createFeedPoint(final User user) throws NimbitsException {
@@ -312,7 +299,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
                 ProtectionLevel.onlyConnection, user.getKey(), user.getKey(), UUID.randomUUID().toString());
         // final Entity r = EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
 
-         Point point = PointModelFactory.createPointModel(entity);
+        Point point = PointModelFactory.createPointModel(entity);
 
         final Point result = (Point) EntityServiceFactory.getInstance().addUpdateEntity(point);
 
@@ -320,7 +307,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
         postToFeed(user, "A new data point has been created for your data feed. Your data feed is just " +
                 "a data point. Points are capable of storing numbers, text, json and xml data. Nimbits uses " +
                 "a single data point to drive this feed.", FeedType.info);
-        return point;
+        return result;
 
     }
 

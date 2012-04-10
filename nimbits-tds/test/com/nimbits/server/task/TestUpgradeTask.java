@@ -13,23 +13,9 @@
 
 package com.nimbits.server.task;
 
-import com.nimbits.*;
-import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.admin.legacy.orm.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.orm.*;
-import com.nimbits.server.orm.UserEntity;
 import helper.*;
-import static org.junit.Assert.*;
 import org.junit.*;
-
-import javax.jdo.*;
-import java.util.*;
 
 /**
  * Created by bsautner
@@ -43,54 +29,54 @@ public class TestUpgradeTask extends NimbitsServletTest {
     @Ignore
     public void doUserTest() throws NimbitsException {
 
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-
-        for (int i = 0; i < 10; i++) {
-
-            EmailAddress em = CommonFactoryLocator.getInstance().createEmailAddress("b" + i + "@test.com");
-            NimbitsUser nimbitsUser = new NimbitsUser(em, UUID.randomUUID().toString());
-            NimbitsUser r = pm.makePersistent(nimbitsUser);
-            System.out.println(r.getId());
-            NimbitsUser rx = UpgradeTask.getLegUser(pm, r.getId());
-            assertNotNull(rx);
-            for (int x = 0; x < 2; x++) {
-                PointCatagory cx = new PointCatagory(r.getId(), UUID.randomUUID().toString(), "", UUID.randomUUID().toString(), 0);
-                pm.makePersistent(cx);
-                for (int px = 0; px < 2; px++ ) {
-                    DataPoint dp = new DataPoint();
-                    dp.setUserFK(r.getId());
-                    dp.setCatID(cx.getId());
-                    dp.setName(UUID.randomUUID().toString());
-                    pm.makePersistent(dp);
-                }
-            }
-
-
-        }
-        pm.close();
-        final PersistenceManager pm2 = PMF.get().getPersistenceManager();
-        req.addParameter("s", "0");
-        UpgradeTask.doStart(req);
-
-        Query q = pm2.newQuery(UserEntity.class);
-        List<User> users = (List<User>) q.execute();
-        assertEquals(11, users.size());
-        UpgradeTask.doCategory2(req);
-        UpgradeTask.doPoint2(req);
-        for (User u : users) {
-            Map<String, Entity> cmap = EntityServiceFactory.getInstance().getEntityMap(u, EntityType.category, 1000);
-            Map<String, Entity> pmap = EntityServiceFactory.getInstance().getEntityMap(u, EntityType.point, 1000);
-            if (u.getEmail().getValue().contains("test.com")) {
-                assertEquals(2, cmap.size());
-                assertEquals(4, pmap.size());
-            }
-            else {
-                assertEquals(1, cmap.size());
-            }
-            for (Entity cx : cmap.values()) {
-
-            }
-        }
+//        final PersistenceManager pm = PMF.get().getPersistenceManager();
+//
+//        for (int i = 0; i < 10; i++) {
+//
+//            EmailAddress em = CommonFactoryLocator.getInstance().createEmailAddress("b" + i + "@test.com");
+//            NimbitsUser nimbitsUser = new NimbitsUser(em, UUID.randomUUID().toString());
+//            NimbitsUser r = pm.makePersistent(nimbitsUser);
+//            System.out.println(r.getId());
+//            NimbitsUser rx = UpgradeTask.getLegUser(pm, r.getId());
+//            assertNotNull(rx);
+//            for (int x = 0; x < 2; x++) {
+//                PointCatagory cx = new PointCatagory(r.getId(), UUID.randomUUID().toString(), "", UUID.randomUUID().toString(), 0);
+//                pm.makePersistent(cx);
+//                for (int px = 0; px < 2; px++ ) {
+//                    DataPoint dp = new DataPoint();
+//                    dp.setUserFK(r.getId());
+//                    dp.setCatID(cx.getId());
+//                    dp.setName(UUID.randomUUID().toString());
+//                    pm.makePersistent(dp);
+//                }
+//            }
+//
+//
+//        }
+//        pm.close();
+//        final PersistenceManager pm2 = PMF.get().getPersistenceManager();
+//        req.addParameter("s", "0");
+//        UpgradeTask.doStart(req);
+//
+//        Query q = pm2.newQuery(UserEntity.class);
+//        List<User> users = (List<User>) q.execute();
+//        assertEquals(11, users.size());
+//        UpgradeTask.doCategory2(req);
+//        UpgradeTask.doPoint2(req);
+//        for (User u : users) {
+//            Map<String, Entity> cmap = EntityServiceFactory.getInstance().getEntityMap(u, EntityType.category, 1000);
+//            Map<String, Entity> pmap = EntityServiceFactory.getInstance().getEntityMap(u, EntityType.point, 1000);
+//            if (u.getEmail().getValue().contains("test.com")) {
+//                assertEquals(2, cmap.size());
+//                assertEquals(4, pmap.size());
+//            }
+//            else {
+//                assertEquals(1, cmap.size());
+//            }
+//            for (Entity cx : cmap.values()) {
+//
+//            }
+//        }
 
 
 

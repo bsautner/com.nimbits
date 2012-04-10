@@ -13,43 +13,31 @@
 
 package com.nimbits.client;
 
-import com.extjs.gxt.ui.client.Style;
-import com.extjs.gxt.ui.client.Style.LayoutRegion;
-import com.extjs.gxt.ui.client.util.Margins;
-import com.extjs.gxt.ui.client.widget.ContentPanel;
-import com.extjs.gxt.ui.client.widget.Viewport;
-import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
-import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
-import com.extjs.gxt.ui.client.widget.layout.FillLayout;
-import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Cookies;
+import com.extjs.gxt.ui.client.*;
+import com.extjs.gxt.ui.client.Style.*;
+import com.extjs.gxt.ui.client.util.*;
+import com.extjs.gxt.ui.client.widget.*;
+import com.extjs.gxt.ui.client.widget.layout.*;
+import com.google.gwt.core.client.*;
+import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.Window.Location;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.nimbits.client.common.Utils;
-import com.nimbits.client.constants.Const;
-import com.nimbits.client.constants.UserMessages;
-import com.nimbits.client.constants.Words;
+import com.google.gwt.user.client.Window.*;
+import com.google.gwt.user.client.rpc.*;
+import com.google.gwt.user.client.ui.*;
+import com.nimbits.client.common.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.GxtModel;
-import com.nimbits.client.model.LoginInfo;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.service.LoginService;
-import com.nimbits.client.service.LoginServiceAsync;
-import com.nimbits.client.service.entity.EntityService;
-import com.nimbits.client.service.entity.EntityServiceAsync;
-import com.nimbits.client.service.settings.SettingsService;
-import com.nimbits.client.service.settings.SettingsServiceAsync;
-import com.nimbits.client.service.twitter.TwitterService;
-import com.nimbits.client.service.twitter.TwitterServiceAsync;
-import com.nimbits.client.ui.helper.EntityOpenHelper;
-import com.nimbits.client.ui.helper.FeedbackHelper;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.service.*;
+import com.nimbits.client.service.entity.*;
+import com.nimbits.client.service.settings.*;
+import com.nimbits.client.service.twitter.*;
+import com.nimbits.client.ui.helper.*;
 import com.nimbits.client.ui.panels.*;
 
-import java.util.Map;
+import java.util.*;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>
@@ -270,7 +258,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
             final FeedPanel feedPanel = new FeedPanel(loginInfo.getUser());
             centerPanel.addEntityClickedListeners(new EntityClickedListener() {
                 @Override
-                public void onEntityClicked(final GxtModel entity) {
+                public void onEntityClicked(final TreeModel entity) {
                     if (entity.getEntityType().equals(EntityType.feed)) {
                         feedPanel.reload();
                     }
@@ -450,7 +438,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
                 public void onEntityAdded(final Entity model) throws NimbitsException {
                     w.hide();
                     Cookies.removeCookie(Action.subscribe.name());
-                    final GxtModel mx = new GxtModel(result);
+                    final TreeModel mx = new GxtModel(result);
                     centerPanel.addEntity(mx);
                     //  mainPanel.addEntity(result);
 

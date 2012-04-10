@@ -13,17 +13,15 @@
 
 package com.nimbits.server.orm;
 
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.user.User;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.user.*;
 
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.NotPersistent;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
-import java.util.Date;
+import javax.jdo.annotations.*;
+import java.util.*;
 
 
 //import com.google.appengine.api.users.User;
@@ -55,23 +53,12 @@ public class UserEntity extends EntityStore implements User {
 
     // A user that can only work with public data
     @NotPersistent
-    private boolean restricted;
+    private int authLevel = AuthLevel.readWrite.getCode();
     /**
      *
      */
     private static final long serialVersionUID = 1L;
 
-    public UserEntity(Entity entity, Date dateCreated, Date lastLoggedIn, Long facebookID, String facebookToken, String secret, String twitterToken, String twitterTokenSecret, boolean restricted) throws NimbitsException {
-        super(entity);
-        this.dateCreated = dateCreated;
-        this.lastLoggedIn = lastLoggedIn;
-        this.facebookID = facebookID;
-        this.facebookToken = facebookToken;
-        this.secret = secret;
-        this.twitterToken = twitterToken;
-        this.twitterTokenSecret = twitterTokenSecret;
-        this.restricted = restricted;
-    }
 
     @Override
     public Date getDateCreated() {
@@ -139,15 +126,20 @@ public class UserEntity extends EntityStore implements User {
         this.secret = secret;
     }
     @Override
-    public boolean isRestricted() {
-        return restricted;
+    public AuthLevel getAuthLevel() {
+        return AuthLevel.get(this.authLevel);
     }
     @Override
-    public void setRestricted(final boolean restricted) {
-        this.restricted = restricted;
+    public void setAuthLevel(final AuthLevel level) {
+        this.authLevel = level.getCode();
     }
 
-//    @Override
+    @Override
+    public boolean isRestricted() {
+        return AuthLevel.get(this.authLevel).equals(AuthLevel.restricted);
+    }
+
+    //    @Override
 //    public String getKey() {
 //        return key.getName();
 //    }

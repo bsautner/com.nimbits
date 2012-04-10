@@ -17,7 +17,6 @@ import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.email.*;
 import com.nimbits.server.counter.*;
 import com.nimbits.server.settings.*;
 import com.nimbits.server.transactions.dao.counter.*;

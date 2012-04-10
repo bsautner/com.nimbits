@@ -15,7 +15,6 @@ package com.nimbits.client.service.feed;
 
 import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.feed.*;
 import com.nimbits.client.model.point.*;

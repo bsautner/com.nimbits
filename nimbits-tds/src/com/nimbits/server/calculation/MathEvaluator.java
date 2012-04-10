@@ -222,6 +222,7 @@ public class MathEvaluator {
     }
 
     protected class Node {
+        private static final int INT = 1024;
         public String nString = null;
         public Operator nOperator = null;
         public Node nLeft = null;
@@ -439,7 +440,7 @@ public class MathEvaluator {
 
         void _D(String s) {
             //String nbSpaces = "";
-            StringBuilder b = new StringBuilder();
+            StringBuilder b = new StringBuilder(INT);
             for (int i = 0; i < nLevel; i++) {
                 b.append("  ");
             }
@@ -447,7 +448,7 @@ public class MathEvaluator {
         }
     }
 
-    protected static void _D(String s) {
-        //	System.err.println(s);
-    }
+//    protected static void _D(String s) {
+//        //	System.err.println(s);
+//    }
 }

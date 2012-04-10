@@ -13,11 +13,9 @@
 
 package com.nimbits.server.orm;
 
-import com.google.appengine.api.datastore.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.calculation.*;
-import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.intelligence.*;
 
 import javax.jdo.annotations.*;

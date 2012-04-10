@@ -14,7 +14,6 @@
 package com.nimbits.client.service.intelligence;
 
 import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.intelligence.*;
 import com.nimbits.client.model.point.*;

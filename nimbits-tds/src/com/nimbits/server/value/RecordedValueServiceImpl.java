@@ -13,30 +13,22 @@
 
 package com.nimbits.server.value;
 
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.nimbits.client.enums.AlertType;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointModel;
-import com.nimbits.client.model.timespan.Timespan;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModelFactory;
-import com.nimbits.client.service.recordedvalues.RecordedValueService;
-import com.nimbits.server.entity.EntityServiceFactory;
-import com.nimbits.server.entity.EntityTransactionFactory;
-import com.nimbits.server.orm.PointEntity;
-import com.nimbits.server.task.TaskFactory;
-import com.nimbits.server.user.UserServiceFactory;
+import com.google.gwt.http.client.*;
+import com.google.gwt.user.server.rpc.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.timespan.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.client.service.recordedvalues.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.orm.*;
+import com.nimbits.server.task.*;
+import com.nimbits.server.user.*;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 public class RecordedValueServiceImpl extends RemoteServiceServlet implements
@@ -210,18 +202,18 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
             switch (point.getFilterType()) {
 
                 case fixedHysteresis:
-                    return ((v.getDoubleValue() <= (pv.getDoubleValue() + point.getFilterValue()))
-                            && (v.getDoubleValue() >= (pv.getDoubleValue() - point.getFilterValue()))
-                            && (v.getNote().equals(pv.getNote()))
-                            && (v.getLatitude() == pv.getLatitude())
-                            && (v.getLongitude() == pv.getLongitude())
-                            && (v.getData().equals(pv.getData())));
+                    return v.getDoubleValue() <= pv.getDoubleValue() + point.getFilterValue()
+                            && v.getDoubleValue() >= pv.getDoubleValue() - point.getFilterValue()
+                            && v.getNote().equals(pv.getNote())
+                            && v.getLatitude() == pv.getLatitude()
+                            && v.getLongitude() == pv.getLongitude()
+                            && v.getData().equals(pv.getData());
 
                 case percentageHysteresis:
                     if (point.getFilterValue() > 0) {
-                        final double p = pv.getDoubleValue() *  (point.getFilterValue() /100);
-                        return (v.getDoubleValue() <= (pv.getDoubleValue() + p))
-                                && (v.getDoubleValue() >= (pv.getDoubleValue() - p));
+                        final double p = pv.getDoubleValue() * point.getFilterValue() /100;
+                        return v.getDoubleValue() <= pv.getDoubleValue() + p
+                                && v.getDoubleValue() >= pv.getDoubleValue() - p;
 
 
                     }
@@ -231,10 +223,10 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
                     }
 
                 case ceiling:
-                    return (v.getDoubleValue() >= point.getFilterValue());
+                    return v.getDoubleValue() >= point.getFilterValue();
 
                 case floor:
-                    return (v.getDoubleValue() <= point.getFilterValue());
+                    return v.getDoubleValue() <= point.getFilterValue();
 
                 case none:
                     return false;
@@ -260,7 +252,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
         Value retObj = null;
 
         final boolean ignored = false;
-        final Point point  = (entity instanceof PointModel)
+        final Point point  = entity instanceof PointModel
                 ? (Point) entity
                 : (Point) EntityTransactionFactory.getInstance(u).getEntityByKey(entity.getKey(),PointEntity.class);
 
@@ -274,7 +266,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
         if (!ignoredByDate &&  !ignoredByCompression) {
 
             retObj = RecordedValueTransactionFactory.getInstance(point).recordValue(value);
-            final AlertType t = (getAlertType((Point) point, retObj));
+            final AlertType t = getAlertType(point, retObj);
             final Value v = ValueModelFactory.createValueModel(retObj, t);
             TaskFactory.getInstance().startRecordValueTask(u, point, v, loopFlag);
         }

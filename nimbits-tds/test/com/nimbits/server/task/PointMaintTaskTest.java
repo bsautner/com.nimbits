@@ -13,20 +13,16 @@
 
 package com.nimbits.server.task;
 
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.server.entity.EntityTransactionFactory;
-import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.orm.PointEntity;
-import helper.NimbitsServletTest;
-import org.junit.Test;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.gson.*;
+import helper.*;
+import static org.junit.Assert.*;
+import org.junit.*;
 
-import java.util.Map;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import java.util.*;
 
 /**
  * Created by bsautner
@@ -40,7 +36,7 @@ public class PointMaintTaskTest extends NimbitsServletTest {
     @Test
     public void testGet() throws NimbitsException {
 
-        final Map<String,Entity> e = EntityTransactionFactory.getDaoInstance(null).getSystemWideEntityMap(EntityType.point, PointEntity.class);
+        final Map<String,Entity> e = EntityTransactionFactory.getDaoInstance(null).getSystemWideEntityMap(EntityType.point);
         assertTrue(e.size() > 0);
 
         for (final Entity en : e.values()) {

@@ -17,6 +17,9 @@ package com.nimbits.server.blob;
 public class BlobStoreFactory {
     private static BlobStore instance;
 
+    private BlobStoreFactory() {
+    }
+
     public static BlobStore getInstance() {
         if (instance == null) {
             instance = new BlobStoreImpl();

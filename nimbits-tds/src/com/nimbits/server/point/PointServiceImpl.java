@@ -14,26 +14,21 @@
 package com.nimbits.server.point;
 
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ExportType;
-import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointModelFactory;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.service.datapoints.PointService;
-import com.nimbits.server.blob.BlobStoreFactory;
+import com.google.gwt.user.server.rpc.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.client.service.datapoints.*;
+import com.nimbits.server.blob.*;
 import com.nimbits.server.entity.*;
-import com.nimbits.server.export.ExportHelperFactory;
-import com.nimbits.server.orm.PointEntity;
-import com.nimbits.server.user.UserServiceFactory;
-import com.nimbits.server.value.RecordedValueServiceFactory;
+import com.nimbits.server.export.*;
+import com.nimbits.server.orm.*;
+import com.nimbits.server.user.*;
+import com.nimbits.server.value.*;
 
 import java.util.*;
 
@@ -96,46 +91,6 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     }
 
 
-//    @Override
-//    public Point updatePoint(final Point point) throws NimbitsException {
-//        final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
-//                this.getThreadLocalRequest());
-//        return updatePoint(u, point);
-//    }
-
-//    @Override
-//    public Point updatePoint(final User u, final Point point) throws NimbitsException {
-//
-//        return PointTransactionsFactory.getInstance(u).updatePoint(point);
-//    }
-
-
-//    @Override
-//    public Point addPoint(final User user,final Entity entity) throws NimbitsException {
-//        //final Entity r = EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
-//
-//
-//
-//
-//        final Point newPoint =  PointTransactionsFactory.getInstance(user).addPoint(entity);
-//        //  notifyFeedOfNewPoint(user, entity);
-//        return newPoint;
-//    }
-
-
-
-//    @Override
-//    public Point addPoint(EntityName name) throws NimbitsException {
-//        User u = getUser();
-//
-//        Entity r = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.everyone,
-//                u.getKey(), u.getKey(), UUID.randomUUID().toString());
-//        return addPoint(u, r);
-//
-//
-//    }
-
-
     @Override
     public List<Point> getPoints(final User u, final List<Entity> entities) throws NimbitsException {
         return PointTransactionsFactory.getInstance(u).getPoints(entities);
@@ -175,6 +130,6 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public List<Point> getIdlePoints() throws NimbitsException {
-        return PointTransactionsFactory.getInstance(null).getIdlePoints();
+        return PointTransactionsFactory.getInstance(UserServiceFactory.getServerInstance().getAdmin()).getIdlePoints();
     }
 }

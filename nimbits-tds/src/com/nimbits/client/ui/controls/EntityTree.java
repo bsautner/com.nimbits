@@ -18,7 +18,7 @@ import com.extjs.gxt.ui.client.store.*;
 import com.extjs.gxt.ui.client.widget.grid.*;
 import com.extjs.gxt.ui.client.widget.treegrid.*;
 import com.google.gwt.user.client.ui.*;
-import com.nimbits.client.model.*;
+import com.nimbits.client.model.TreeModel;
 import com.nimbits.client.ui.icons.*;
 
 import java.util.*;
@@ -46,9 +46,9 @@ public class EntityTree<ModelData extends com.extjs.gxt.ui.client.data.ModelData
             @Override
             public AbstractImagePrototype getIcon(com.extjs.gxt.ui.client.data.ModelData model) {
 
-                switch (((GxtModel) model).getEntityType()) {
+                switch (((TreeModel) model).getEntityType()) {
                     case point:
-                        switch (((GxtModel) model).getAlertType()) {
+                        switch (((TreeModel) model).getAlertType()) {
                             case IdleAlert:
                                 return AbstractImagePrototype.create(Icons.INSTANCE.point_idle());
                             case HighAlert:

@@ -21,7 +21,6 @@ import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.server.gson.*;
 
-
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.*;

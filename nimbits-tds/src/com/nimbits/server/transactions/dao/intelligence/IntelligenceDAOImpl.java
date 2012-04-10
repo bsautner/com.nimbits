@@ -13,18 +13,15 @@
 
 package com.nimbits.server.transactions.dao.intelligence;
 
-import com.nimbits.PMF;
+import com.nimbits.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.intelligence.Intelligence;
-import com.nimbits.client.model.intelligence.IntelligenceFactory;
-import com.nimbits.server.intelligence.IntelligenceTransactions;
-import com.nimbits.server.orm.IntelligenceEntity;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.intelligence.*;
+import com.nimbits.server.intelligence.*;
+import com.nimbits.server.orm.*;
 
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
-import java.util.List;
+import javax.jdo.*;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner
@@ -47,7 +44,7 @@ public class IntelligenceDAOImpl implements IntelligenceTransactions {
             q.declareParameters("String k");
             q.setRange(0,1);
             final List<Intelligence> results = (List<Intelligence>) q.execute(entity.getKey());
-            if (results.size() > 0) {
+            if (!results.isEmpty()) {
                 retObj = IntelligenceFactory.createIntelligence(results.get(0));
             }
             return retObj;
@@ -58,7 +55,7 @@ public class IntelligenceDAOImpl implements IntelligenceTransactions {
 
 
 
-    private Intelligence createIntelligence(Intelligence update, PersistenceManager pm) throws NimbitsException {
+    private static Intelligence createIntelligence(Intelligence update, PersistenceManager pm) throws NimbitsException {
         final IntelligenceEntity s = new IntelligenceEntity(update);
 
         pm.makePersistent(s);
@@ -75,7 +72,7 @@ public class IntelligenceDAOImpl implements IntelligenceTransactions {
             q.setFilter("target == k && enabled == e");
             q.declareParameters("String k, Boolean e");
             q.setRange(0,1);
-            final List<Intelligence> results = (List<Intelligence>) q.execute(point.getKey(), true);
+            final Collection<Intelligence> results = (Collection<Intelligence>) q.execute(point.getKey(), true);
             return  IntelligenceFactory.createIntelligences(results);
         } finally {
             pm.close();
@@ -91,7 +88,7 @@ public class IntelligenceDAOImpl implements IntelligenceTransactions {
             final Query q = pm.newQuery(IntelligenceEntity.class, "uuid == k");
             q.declareParameters("String k");
             q.setRange(0,1);
-            final List<Intelligence> results = (List<Intelligence>) q.execute(entity.getKey());
+            final Collection<Intelligence> results = (List<Intelligence>) q.execute(entity.getKey());
             pm.deletePersistentAll(results);
 
         } finally {

@@ -13,10 +13,9 @@
 
 package com.nimbits.server.orm;
 
-import com.google.appengine.api.datastore.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.calculation.*;
-import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.*;
 
 import javax.jdo.annotations.*;
 
@@ -58,7 +57,16 @@ public class CalcEntity extends EntityStore implements Calculation {
     protected CalcEntity() {
     }
 
-
+    public CalcEntity(Entity entity, String formula, String trigger, Boolean enabled, String xVar, String yVar, String zVar, String targetVar) throws NimbitsException {
+        super(entity);
+        this.formula = formula;
+        this.trigger = trigger;
+        this.enabled = enabled;
+        this.xVar = xVar;
+        this.yVar = yVar;
+        this.zVar = zVar;
+        this.targetVar = targetVar;
+    }
 
     public CalcEntity(Calculation calculation) throws NimbitsException {
         super(calculation);

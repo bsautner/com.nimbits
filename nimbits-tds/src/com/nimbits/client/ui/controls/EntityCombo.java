@@ -26,14 +26,14 @@ import com.nimbits.client.ui.helper.*;
 
 import java.util.*;
 
-public class EntityCombo extends ComboBox<GxtModel> {
+public class EntityCombo extends ComboBox<TreeModel> {
 
 
     public EntityCombo(final EntityType type,
                        final String selectedUUID,
                        final String emptyText) {
 
-        final ListStore<GxtModel> cbStore = new ListStore<GxtModel>();
+        final ListStore<TreeModel> cbStore = new ListStore<TreeModel>();
         final EntityServiceAsync service = GWT.create(EntityService.class);
         setEmptyText(emptyText);
         setStore(cbStore);
@@ -53,7 +53,7 @@ public class EntityCombo extends ComboBox<GxtModel> {
             @Override
             public void onSuccess(final Map<String, Entity> result) {
                 setEmptyText(emptyText);
-                GxtModel model;
+                TreeModel model;
                 for (final Entity e : result.values()) {
 
                     try {

@@ -15,9 +15,8 @@ package com.nimbits.client.service.calculation;
 
 import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.calculation.Calculation;
+import com.nimbits.client.model.calculation.*;
 import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 

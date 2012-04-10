@@ -87,13 +87,7 @@ public class SummaryDaoImpl implements SummaryTransactions {
         try {
 
             final SummaryEntity result = readSummaryEntity(pm, entity);
-            if (result != null) {
-
-                return SummaryModelFactory.createSummary(result);
-            }
-            else {
-                return null;
-            }
+            return result != null ? SummaryModelFactory.createSummary(result) : null;
         }
         finally {
             pm.close();

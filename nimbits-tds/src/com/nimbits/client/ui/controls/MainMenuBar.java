@@ -406,7 +406,7 @@ public class MainMenuBar extends ToolBar {
         return connectionRequest;
     }
     public interface EntityModifiedListener {
-        void onEntityModified(final GxtModel model, final Action action) throws NimbitsException;
+        void onEntityModified(final TreeModel model, final Action action) throws NimbitsException;
 
     }
     private Collection<EntityModifiedListener> entityModifiedListeners = new ArrayList<EntityModifiedListener>(1);
@@ -414,7 +414,7 @@ public class MainMenuBar extends ToolBar {
         this.entityModifiedListeners.add(listener);
     }
 
-    void notifyEntityModifiedListener(final GxtModel model, final Action action) throws NimbitsException {
+    void notifyEntityModifiedListener(final TreeModel model, final Action action) throws NimbitsException {
         for (EntityModifiedListener listener : entityModifiedListeners) {
             listener.onEntityModified(model, action);
         }

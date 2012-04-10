@@ -25,7 +25,6 @@ import com.nimbits.server.entity.*;
 import com.nimbits.server.feed.*;
 import com.nimbits.server.logging.*;
 import com.nimbits.server.orm.*;
-import com.nimbits.server.point.*;
 import com.nimbits.server.user.*;
 import com.nimbits.server.value.*;
 
@@ -45,6 +44,7 @@ public class IncomingMailTask extends HttpServlet {
     private static final Pattern COMPILE = Pattern.compile(",");
     private static final Pattern PATTERN = Pattern.compile("\n");
     private static final Pattern COMPILE1 = Pattern.compile("\r");
+    private static final Pattern COMPILE2 = Pattern.compile(";");
 
 
     @Override
@@ -63,7 +63,7 @@ public class IncomingMailTask extends HttpServlet {
             u = UserTransactionFactory.getInstance().getNimbitsUser(internetAddress);
 
             final String content = COMPILE1.matcher(PATTERN.matcher(inContent).replaceAll("")).replaceAll("");
-            final String Data[] = content.split(";");
+            final String Data[] = COMPILE2.split(content);
             log.info("Incoming mail post: " + inContent);
 
             if (u != null) {
@@ -83,11 +83,11 @@ public class IncomingMailTask extends HttpServlet {
 
     }
 
-    void processLine(final User u, final String s) throws NimbitsException {
+    static void processLine(final User u, final CharSequence s) throws NimbitsException {
         final String emailLine[] = COMPILE.split(s);
         final EntityName pointName = CommonFactoryLocator.getInstance().createName(emailLine[0], EntityType.point);
 
-        Point e = (Point) EntityServiceFactory.getInstance().getEntityByName(u, pointName,PointEntity.class.getName());
+        Entity e =  EntityServiceFactory.getInstance().getEntityByName(u, pointName,PointEntity.class.getName());
 
 
         if (e != null) {
@@ -96,7 +96,7 @@ public class IncomingMailTask extends HttpServlet {
     }
 
     private static void sendValue(final User u,
-                                  final Point point,
+                                  final Entity point,
                                   final String k[]) throws NimbitsException {
 
 
@@ -109,7 +109,7 @@ public class IncomingMailTask extends HttpServlet {
             try {
                 v = Double.valueOf(k[1].trim());
             } catch (NumberFormatException e1) {
-                log.info("Invalid mail message from: " + u.getEmail() + " " + k[0] + "," + k[1]);
+                log.info("Invalid mail message from: " + u.getEmail() + ' ' + k[0] + ',' + k[1]);
             }
 
             if (k.length == 3) {
@@ -119,16 +119,12 @@ public class IncomingMailTask extends HttpServlet {
                     timestamp = Long.parseLong(ts);
                 } catch (NumberFormatException e) {
                     timestamp = new Date().getTime();
-                    log.info("Invalid mail message from: " + u.getEmail() + " " + k[0] + "," + k[1] + "," + k[2]);
+                    log.info("Invalid mail message from: " + u.getEmail() + ' ' + k[0] + ',' + k[1] + ',' + k[2]);
                 }
             } else {
                 timestamp = new Date().getTime();
             }
-            if (k.length == 4) {
-                note = (k[3].trim());
-            } else {
-                note = "";
-            }
+            note = k.length == 4 ? k[3].trim() : "";
             final Value value = ValueModelFactory.createValueModel(0.0, 0.0, v, new Date(timestamp), point.getKey(), note);
             try {
                 RecordedValueServiceFactory.getInstance().recordValue(u, point, value, false);

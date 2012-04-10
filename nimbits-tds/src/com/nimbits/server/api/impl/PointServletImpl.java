@@ -28,7 +28,7 @@ import com.nimbits.server.api.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.feed.*;
 import com.nimbits.server.gson.*;
-import com.nimbits.server.logging.LogHelper;
+import com.nimbits.server.logging.*;
 import com.nimbits.server.orm.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.time.*;
@@ -87,8 +87,8 @@ public class PointServletImpl extends ApiServlet {
                             out.println(retJson);
 
                         } else if (!Utils.isEmptyString(pointNameParam) && !Utils.isEmptyString(getParam(Parameters.json))) {
-                            final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
-                            final Point point = createPointWithJson(user,pointName, categoryName, getParam(Parameters.json));
+                          //  final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
+                            final Point point = createPointWithJson(user, categoryName, getParam(Parameters.json));
                             final String retJson = gson.toJson(point);
                             out.println(retJson);
                         }
@@ -220,7 +220,7 @@ public class PointServletImpl extends ApiServlet {
         return retObj;
     }
 
-    private static Point createPointWithJson(final User u, final EntityName name, final EntityName categoryName, final String json) throws NimbitsException {
+    private static Point createPointWithJson(final User u, final EntityName categoryName, final String json) throws NimbitsException {
 
 
         final String parent;
@@ -235,7 +235,7 @@ public class PointServletImpl extends ApiServlet {
 
 
         final Point point = gson.fromJson(json, PointModel.class);
-
+        point.setParent(parent);
 
 
         return (Point) EntityServiceFactory.getInstance().addUpdateEntity(u, point);

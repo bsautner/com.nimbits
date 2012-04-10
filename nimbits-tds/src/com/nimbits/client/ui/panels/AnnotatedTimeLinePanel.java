@@ -40,6 +40,7 @@ import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
+import com.nimbits.client.model.TreeModel;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.timespan.*;
@@ -113,7 +114,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
     }
     //data
 
-    private void addPointDataToTable(final GxtModel entity, final List<Value> values) throws NimbitsException {
+    private void addPointDataToTable(final TreeModel entity, final List<Value> values) throws NimbitsException {
         int PointColumn;
         boolean found = false;
 
@@ -198,7 +199,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
     //end data
 
 
-    public void addValue(final GxtModel model, final Value value) throws NimbitsException {
+    public void addValue(final TreeModel model, final Value value) throws NimbitsException {
         if (points.size() == 0 || points.containsKey(model.getName()))  {
             if (timespan != null) {
                 Date end = (timespan.getEnd().getTime() > value.getTimestamp().getTime()) ? value.getTimestamp() : timespan.getEnd();
@@ -328,7 +329,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
 
     }
 
-    public void addEntityModel(GxtModel model) {
+    public void addEntityModel(TreeModel model) {
         //  Entity entity = model.getBaseEntity();
         if (!points.containsKey(model.getName()) && points.size() < 10) {
             if (model.getEntityType().equals(EntityType.point)) {
@@ -337,11 +338,11 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
             }
         }
         for (ModelData child : model.getChildren()) {
-            addEntityModel((GxtModel) child);
+            addEntityModel((TreeModel) child);
         }
     }
 
-    private void addPointToChart(final GxtModel model) {
+    private void addPointToChart(final TreeModel model) {
 
         final int start = 0;
         final int end = 1000;
@@ -354,7 +355,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
         }
     }
 
-    private void loadValuesThatExist(final GxtModel model) {
+    private void loadValuesThatExist(final TreeModel model) {
         final RecordedValueServiceAsync dataService = GWT.create(RecordedValueService.class);
 
         dataService.getTopDataSeries(model.getBaseEntity(), 100, new Date(), new AsyncCallback<List<Value>>() {
@@ -399,7 +400,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
         this.endDateSelector.setValue(fmt.format(ts.getEnd()));
     }
 
-    private void loadDataSegment(final GxtModel p, final int start, final int end) {
+    private void loadDataSegment(final TreeModel p, final int start, final int end) {
         final RecordedValueServiceAsync dataService = GWT.create(RecordedValueService.class);
         final MessageBox box = MessageBox.wait("Progress",
                 "Loading " + p.getName().getValue() + " archived values " + start + " to " + end, "Loading...");
@@ -430,7 +431,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
         });
     }
 
-    private void loadMemCache(final GxtModel model) {
+    private void loadMemCache(final TreeModel model) {
         final RecordedValueServiceAsync dataService = GWT.create(RecordedValueService.class);
         final MessageBox box = MessageBox.wait("Progress",
                 "Loading Buffered Data", "Loading...");
@@ -465,21 +466,21 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
             protected void onDragDrop(final DNDEvent event) {
                 super.onDragDrop(event);
                 List<TreeStoreModel> t = event.getData();
-                GxtModel p;
+                TreeModel p;
                 for (final TreeStoreModel a : t) {
-                    p = (GxtModel) a.getModel();
+                    p = (TreeModel) a.getModel();
                     handleDrop(p);
                 }
             }
         };
     }
 
-    private void handleDrop(final GxtModel p) {
+    private void handleDrop(final TreeModel p) {
         if (p.getEntityType().equals(EntityType.point)) {
             addEntityModel(p);
         }
         for (final ModelData x : p.getChildren()) {
-            handleDrop((GxtModel)x);
+            handleDrop((TreeModel)x);
         }
     }
 

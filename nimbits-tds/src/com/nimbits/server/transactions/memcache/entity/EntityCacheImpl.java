@@ -17,9 +17,9 @@ import com.google.appengine.api.memcache.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.*;
 import com.nimbits.server.entity.*;
+import com.nimbits.server.logging.*;
 
 import java.util.*;
 
@@ -56,6 +56,10 @@ public class EntityCacheImpl implements EntityTransactions {
 
     public EntityCacheImpl(final User u) {
         this.user = u;
+        LogHelper.log(this.getClass(), "EntityCacheImpl user is null?" + (u == null));
+        if (u != null) {
+        LogHelper.log(this.getClass(), "EntityCacheImpl user key is null?" + (u.getKey() == null));
+        }
 
         cache = user != null
                 ? MemcacheServiceFactory.getMemcacheService(MemCacheKey.userNamespace.name() + user.getKey().replace('@', '-'))
@@ -129,8 +133,8 @@ public class EntityCacheImpl implements EntityTransactions {
     }
 
     @Override
-    public Map<String, Entity> getSystemWideEntityMap(final EntityType type, final Class<?> cls) throws NimbitsException {
-        return  EntityTransactionFactory.getDaoInstance(user).getSystemWideEntityMap(type, cls);
+    public Map<String, Entity> getSystemWideEntityMap(final EntityType type) throws NimbitsException {
+        return  EntityTransactionFactory.getDaoInstance(user).getSystemWideEntityMap(type);
     }
 
 }

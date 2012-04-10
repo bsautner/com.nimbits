@@ -33,7 +33,8 @@ import java.io.*;
  * Time: 5:42 PM
  */
 @SuppressWarnings("unused")
-public class GxtModel extends BaseTreeModel implements Serializable {
+public class GxtModel extends BaseTreeModel implements TreeModel {
+    private static final int INT = 40;
     private String uuid;
     private EntityName name;
     private AlertType alertType;
@@ -60,75 +61,90 @@ public class GxtModel extends BaseTreeModel implements Serializable {
         set(Parameters.dirty.getText(), Parameters.no.getText());
     }
 
+    @Override
     public AlertType getAlertType() {
         return alertType;
     }
 
+    @Override
     public void setAlertType(AlertType alertType) {
         this.alertType = alertType;
     }
 
+    @Override
     public EntityType getEntityType() {
         return entityType;
     }
 
 
+    @Override
     public String getId() {
         return uuid;
     }
 
+    @Override
     public void setId(String id) {
         this.uuid = id;
     }
 
+    @Override
     public EntityName getName() {
         return this.name;
     }
 
+    @Override
     public void setName(EntityName name) {
         this.name = name;
     }
 
+    @Override
     public boolean isReadOnly() {
         return isReadOnly;
     }
 
+    @Override
     public void setReadOnly(boolean readOnly) {
         isReadOnly = readOnly;
     }
 
+    @Override
     public boolean isDirty() {
 
         return isDirty;
     }
 
+    @Override
     public void setDirty(boolean dirty) {
         set(Parameters.dirty.getText(), dirty ? Parameters.yes.getText() : Parameters.no.getText());
         isDirty = dirty;
     }
 
+    @Override
     public String getUUID() {
         return uuid;
     }
 
+    @Override
     public void setValue(Value value) {
 
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(INT);
         if ( value.getDoubleValue() != Const.CONST_IGNORED_NUMBER_VALUE) {
             sb.append(value.getDoubleValue());
         }
         if (! Utils.isEmptyString(value.getNote())) {
-            sb.append(" ");
+            sb.append(' ');
             sb.append(value.getNote());
         }
         set(Parameters.value.getText(), sb.toString().trim());
         this.value = value;
     }
 
+    @Override
     public Entity getBaseEntity() {
         return baseEntity;
     }
 
+    @Override
     public void update(Entity entity) throws NimbitsException {
        setEntityValues(entity);
     }

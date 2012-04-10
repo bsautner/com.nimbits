@@ -13,9 +13,7 @@
 
 package com.nimbits.server.orm;
 
-import com.google.appengine.api.datastore.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.xmpp.*;
 
 import javax.jdo.annotations.*;
@@ -27,7 +25,7 @@ import javax.jdo.annotations.*;
  * Time: 12:36 PM
  */
 @SuppressWarnings("unused")
-@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
+@PersistenceCapable
 public class XmppResourceEntity extends EntityStore implements XmppResource {
 
 

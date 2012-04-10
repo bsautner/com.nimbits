@@ -13,10 +13,9 @@
 
 package com.nimbits.server.orm;
 
-import com.google.appengine.api.datastore.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.subscription.*;
 
 import javax.jdo.annotations.*;
@@ -55,6 +54,17 @@ public class SubscriptionEntity extends EntityStore implements Serializable, Sub
     private Boolean enabled;
 
     public SubscriptionEntity() {
+    }
+
+    public SubscriptionEntity(Entity entity, String subscribedEntity, Integer notifyMethod, Integer subscriptionType, Double maxRepeat, Date lastSent, Boolean notifyFormatJson, Boolean enabled) throws NimbitsException {
+        super(entity);
+        this.subscribedEntity = subscribedEntity;
+        this.notifyMethod = notifyMethod;
+        this.subscriptionType = subscriptionType;
+        this.maxRepeat = maxRepeat;
+        this.lastSent = lastSent;
+        this.notifyFormatJson = notifyFormatJson;
+        this.enabled = enabled;
     }
 
     public SubscriptionEntity(final Subscription subscription) throws NimbitsException {

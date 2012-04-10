@@ -35,6 +35,7 @@ public class BlobServiceImpl  extends RemoteServiceServlet implements
         return blobstoreService.createUploadUrl(url);
     }
 
+    @Override
     public void deleteBlob(Entity entity) {
         blobstoreService.delete(new BlobKey(entity.getBlobKey()));
     }

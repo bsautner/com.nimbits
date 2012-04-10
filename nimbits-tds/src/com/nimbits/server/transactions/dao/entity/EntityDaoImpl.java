@@ -14,28 +14,30 @@
 package com.nimbits.server.transactions.dao.entity;
 
 
-import com.nimbits.PMF;
-import com.nimbits.client.constants.UserMessages;
+import com.nimbits.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.calculation.*;
+import com.nimbits.client.model.category.*;
 import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.file.*;
 import com.nimbits.client.model.intelligence.*;
 import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.relationship.Relationship;
+import com.nimbits.client.model.relationship.*;
 import com.nimbits.client.model.subscription.*;
 import com.nimbits.client.model.summary.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.xmpp.*;
-import com.nimbits.server.entity.EntityTransactions;
-import com.nimbits.server.logging.LogHelper;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.logging.*;
 import com.nimbits.server.orm.*;
-import com.nimbits.server.relationship.RelationshipTransactionFactory;
-import com.nimbits.shared.Utils;
+import com.nimbits.server.relationship.*;
+import com.nimbits.shared.*;
 
 import javax.jdo.*;
 import java.util.*;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 /**
  * Created by Benjamin Sautner
@@ -47,7 +49,8 @@ import java.util.logging.Logger;
 @SuppressWarnings("unchecked")
 public class EntityDaoImpl implements  EntityTransactions {
 
-    private static final int INT = 1024;
+    private static final int INT1 = 1024;
+    private static final int INT = INT1;
     private final User user;
     final Logger log = Logger.getLogger(EntityDaoImpl.class.getName());
 
@@ -193,16 +196,16 @@ public class EntityDaoImpl implements  EntityTransactions {
                 commit = new PointEntity(entity);
                 break;
             case category:
-                commit = new SimpleEntity(entity);
+                commit = new CategoryEntity(entity);
                 break;
             case file:
-                commit = new SimpleEntity(entity);
+                commit = new FileEntity(entity);
                 break;
             case subscription:
                 commit = new SubscriptionEntity((Subscription) entity);
                 break;
             case userConnection:
-                commit = new SimpleEntity(entity);
+                commit = new CategoryEntity(entity);
                 break;
             case calculation:
                 commit = new CalcEntity((Calculation) entity);
@@ -220,10 +223,10 @@ public class EntityDaoImpl implements  EntityTransactions {
                 commit = new SummaryEntity((Summary) entity);
                 break;
             case instance:
-                commit = new SimpleEntity(entity);
+                commit = new CategoryEntity(entity);
                 break;
             default:
-                commit = new SimpleEntity(entity);
+                commit = new CategoryEntity(entity);
         }
 
 
@@ -266,41 +269,42 @@ public class EntityDaoImpl implements  EntityTransactions {
             }
 
         }
-
-        final Query q1 = pm.newQuery(PointEntity.class, ":p.contains(owner)");
-
-//        final Query q2 = pm.newQuery(PointEntity.class, ":p.contains(owner)");
+        try{
+            List<Entity> retObj = new ArrayList<Entity>(INT1);
 
 
-        try {
-            final Collection<Entity> result = (Collection<Entity>) q1.execute(uuids);
-            // final List<Point> result2 = (List<Point>) q2.execute(uuids);
+            for (EntityType type : EntityType.values()) {
+                try {
+                    if (type.isTreeGridItem()) {
+                        final Query q1 = pm.newQuery(Class.forName(type.getClassName()), ":p.contains(owner)");
+                        final Collection<Entity> result = (Collection<Entity>) q1.execute(uuids);
+                        final List<Entity> entities =  createModels(result);
+                        for (final Entity entity1 : entities) {
+
+                            if (connectedUserKeys.contains(entity1.getParent())) {
+                                final Relationship rx = relationshipMap.get(entity1.getParent());
+                                entity1.setParent(rx.getKey());
+                            }
+
+                            retObj.add(entity1);
+
+                        }
 
 
-            final List<Entity> entities =  createModels(result);
-            // List<Point> points = PointModelFactory.createPointModels(result2);
 
-            for (final Entity entity1 : entities) {
+                    }
 
-                if (connectedUserKeys.contains(entity1.getParent())) {
-                    final Relationship rx = relationshipMap.get(entity1.getParent());
-                    entity1.setParent(rx.getKey());
                 }
-
-
+                catch (NullPointerException e) {
+                    log.info(e.getMessage());
+                    log.info("caused by type not existing in store");
+                }
+                catch (ClassNotFoundException e) {
+                    LogHelper.logException(this.getClass(), e);
+                }
             }
-//            for (final Point p : points) {
-//                if (! p.getName().getValue().equals(Const.TEXT_DATA_FEED)) {
-//                    if (connectedUserKeys.contains(p.getParent()) ) {
-//                        final Relationship rx = relationshipMap.get(p.getParent());
-//                        p.setParent(rx.getKey());
-//                    }
-//                    entities.add(p);
-//                }
-//
-//
-//            }
-            return entities;
+
+            return retObj;
 
 
 
@@ -418,23 +422,16 @@ public class EntityDaoImpl implements  EntityTransactions {
         }
     }
 
-    private Entity getEntityByUUID(final String uuid, final Class<?> cls) throws NimbitsException {
+    public Entity getEntityByUUID(final String uuid, final Class<?> cls) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
             final Query q1 = pm.newQuery(cls);
             q1.setFilter("uuid==u");
             q1.declareParameters("String u");
             q1.setRange(0, 1);
-            // final List<Entity> retObj = new ArrayList<Entity>(1);
-            try {
-                final Collection<Entity> result = (Collection<Entity>) q1.execute(uuid);
-                return result.isEmpty() ? null : createModel(result.iterator().next());
-            } catch (NimbitsException e) {
-                return null;
 
-            } catch (NullPointerException e) {
-                return null;
-            }
+            final Collection<Entity> result = (Collection<Entity>) q1.execute(uuid);
+            return result.isEmpty() ? null : createModel(result.iterator().next());
         } finally {
             pm.close();
         }
@@ -545,14 +542,14 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     @Override
 
-    public Map<String, Entity> getSystemWideEntityMap(final EntityType type, final Class<?> cls) throws NimbitsException {
+    public Map<String, Entity> getSystemWideEntityMap(final EntityType type) throws NimbitsException {
 
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         try {
 
-            final Query q1 = pm.newQuery(cls);
+            final Query q1 = pm.newQuery(Class.forName(type.getClassName()));
 
             final List<Entity> result = (List<Entity>) q1.execute(type.getCode());
             LogHelper.log(this.getClass(), "system wide search found " + result.size());
@@ -564,6 +561,8 @@ public class EntityDaoImpl implements  EntityTransactions {
             }
             return retObj;
 
+        } catch (ClassNotFoundException e) {
+            throw new NimbitsException(e);
         } finally {
             pm.close();
         }
@@ -632,10 +631,10 @@ public class EntityDaoImpl implements  EntityTransactions {
                 retObj = PointModelFactory.createPointModel(entity);
                 break;
             case category:
-                retObj = EntityModelFactory.createSimpleEntity(entity);
+                retObj = CategoryFactory.createCategory(entity);
                 break;
             case file:
-                retObj = EntityModelFactory.createSimpleEntity(entity);
+                retObj = FileFactory.createFile(entity);
                 break;
             case subscription:
                 retObj = SubscriptionFactory.createSubscription((Subscription) entity);
@@ -665,7 +664,8 @@ public class EntityDaoImpl implements  EntityTransactions {
 
         }
         if (retObj != null) {
-            final boolean isOwner = (user != null) && retObj.getOwner().equals(user.getKey());
+
+            final boolean isOwner = isOwner(retObj);
             final boolean isReadable = entityIsReadable(entity, isOwner);
             if (!isReadable) {
                 retObj = null;
@@ -680,7 +680,14 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     }
 
+    private boolean isOwner(Entity retObj) {
+        return user != null && (user.getAuthLevel().equals(AuthLevel.admin) || retObj.getOwner().equals(user.getKey()));
+    }
+
     private boolean entityIsReadable(  final Entity e, final boolean isOwner) {
+
+
+
         boolean retVal =  ((e.getEntityType().equals(EntityType.user) ||
                 isOwner ||
                 e.getProtectionLevel().equals(ProtectionLevel.everyone) ||

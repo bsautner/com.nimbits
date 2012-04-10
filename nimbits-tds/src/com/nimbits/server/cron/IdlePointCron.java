@@ -56,7 +56,7 @@ public class IdlePointCron extends HttpServlet {
 
     protected static int processGet() throws NimbitsException {
         final List<Point> points = PointServiceFactory.getInstance().getIdlePoints();
-
+        log.info("Processing " + points.size() + " potentially idle points");
         for (final Entity p : points) {
             try {
                 checkIdle((Point) p);
@@ -72,8 +72,8 @@ public class IdlePointCron extends HttpServlet {
         final Calendar c = Calendar.getInstance();
         c.add(Calendar.SECOND, p.getIdleSeconds() * -1);
 
-        final Entity entity = EntityServiceFactory.getInstance().getEntityByKey(null, p.getKey());
-        final User u = UserTransactionFactory.getInstance().getUserByKey(entity.getOwner());
+
+        final User u = UserTransactionFactory.getInstance().getUserByKey(p.getOwner());
         final Value v = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
 
         if (p.getIdleSeconds() > 0 && v != null &&

@@ -24,7 +24,6 @@ import com.nimbits.client.model.user.*;
 import com.nimbits.server.orm.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.task.*;
-import com.nimbits.shared.*;
 
 import javax.jdo.*;
 import javax.servlet.http.*;
@@ -33,10 +32,9 @@ import java.util.logging.*;
 @SuppressWarnings(Const.WARNING_UNCHECKED)
 public class PointDaoImpl implements PointTransactions {
     private final Logger log = Logger.getLogger(PointDaoImpl.class.getName());
-    private final User u;
 
     public PointDaoImpl(final User u) {
-        this.u = u;
+        User u1 = u;
     }
 
     public static List<Point> createPointModels(final Collection<Point> points) throws NimbitsException {
@@ -51,76 +49,6 @@ public class PointDaoImpl implements PointTransactions {
 
     }
 
-
-//    @Override
-//    public Point updatePoint(final Point update) throws NimbitsException {
-//        final PersistenceManager pm = PMF.get().getPersistenceManager();
-//        Point retObj = null;
-//        try {
-//            final PointEntity original = pm.getObjectById(PointEntity.class, update.getKey());
-//
-//            if (original != null) {
-//                final Transaction tx = pm.currentTransaction();
-//                tx.begin();
-//                original.setHighAlarm(update.getHighAlarm());
-//                original.setLowAlarm(update.getLowAlarm());
-//                original.setUnit(update.getUnit());
-//                original.setExpire(update.getExpire());
-//                original.setIdleAlarmOn(update.isIdleAlarmOn());
-//                original.setIdleAlarmSent(update.getIdleAlarmSent());
-//                original.setIdleSeconds(update.getIdleSeconds());
-//                original.setFilterType(update.getFilterType());
-//                original.setFilterValue(update.getFilterValue());
-//                tx.commit();
-//                retObj = PointModelFactory.createPointModel(original);
-//
-//            }
-//            return retObj;
-//        }
-//
-//        finally {
-//            pm.close();
-//
-//        }
-//
-//
-//
-//    }
-
-    /* (non-Javadoc)
-      * @see com.nimbits.server.point.PointTransactions#getPointByUUID(java.lang.String)
-      */
-//    @Override
-//    @SuppressWarnings(Const.WARNING_UNCHECKED)
-//    public Point getPointByKey(final String entity) throws NimbitsException {
-//        final PersistenceManager pm = PMF.get().getPersistenceManager();
-//        Point p;
-//
-//        try {
-//
-//            p =   pm.getObjectById(PointEntity.class, entity);
-//            return PointModelFactory.createPointModel(p);
-//        }
-//        catch (IllegalArgumentException e) {
-//            throw new NimbitsException(e);
-//        }
-//        catch (JDOObjectNotFoundException ex) {
-//
-//            p = getPointWithLegacyId(entity);
-//            if (p != null) {
-//                return PointModelFactory.createPointModel(p);
-//            }
-//            else {
-//                return null;
-//            }
-//
-//
-//
-//        } finally {
-//            pm.close();
-//        }
-//
-//    }
 
     @SuppressWarnings(Const.WARNING_UNCHECKED)
     @Override
@@ -137,50 +65,11 @@ public class PointDaoImpl implements PointTransactions {
         }
     }
 
-//    @Override
-//    public Point addPoint(final Entity entity) throws NimbitsException {
-//        final PersistenceManager pm = PMF.get().getPersistenceManager();
-//        try {
-//
-//            if (Utils.isEmptyString(entity.getOwner())) {
-//                entity.setOwner(u.getEmail().getValue());
-//            }
-//            if (Utils.isEmptyString(entity.getParent())) {
-//                entity.setParent(u.getEmail().getValue());
-//            }
-//            final PointEntity jdoPoint = new PointEntity(entity);
-//            jdoPoint.setFilterValue(Const.DEFAULT_POINT_COMPRESSION);
-//            jdoPoint.setFilterType(FilterType.fixedHysteresis);
-//            jdoPoint.setExpire(Const.DEFAULT_DATA_EXPIRE_DAYS);
-//            pm.makePersistent(jdoPoint);
-//
-//            return PointModelFactory.createPointModel(jdoPoint);
-//        } finally {
-//            pm.close();
-//        }
-//    }
-
-//    @Override
-//    public Point addPoint(final Point point) throws NimbitsException {
-//        final PersistenceManager pm = PMF.get().getPersistenceManager();
-//        try {
-//            final PointEntity jdoPoint = new PointEntity(  point);
-//
-//            pm.makePersistent(jdoPoint);
-//
-//            return PointModelFactory.createPointModel(jdoPoint);
-//        } finally {
-//            pm.close();
-//        }
-//    }
 
     @SuppressWarnings(Const.WARNING_UNCHECKED)
     @Override
     public List<Point> getPoints(final List<Entity> entities) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-
-
-        // final Query q1 = pm.newQuery(PointEntity.class, ":p.contains(uuid)");
 
         try {
             Collection<Point> points = new ArrayList<Point>(entities.size());
@@ -201,7 +90,6 @@ public class PointDaoImpl implements PointTransactions {
     public Point deletePoint(final Entity entity) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
-        final List<PointEntity> points;
         try {
 
 
@@ -267,7 +155,7 @@ public class PointDaoImpl implements PointTransactions {
 
             final Query q = pm.newQuery(PointEntity.class);
             q.setRange(start, end);
-            final List<Point> points = (List<Point>) q.execute();
+            final Collection<Point> points = (Collection<Point>) q.execute();
 
             retObj = createPointModels(  points);
             return retObj;

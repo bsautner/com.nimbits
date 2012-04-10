@@ -32,7 +32,7 @@ import java.util.logging.*;
 
 public class XmppServiceImpl extends RemoteServiceServlet implements XMPPService {
 
-    private static final Logger log = Logger.getLogger(XmppServiceImpl.class.getName());
+   // private static final Logger log = Logger.getLogger(XmppServiceImpl.class.getName());
 
     private static final long serialVersionUID = 1L;
     private User getUser() {
@@ -44,6 +44,7 @@ public class XmppServiceImpl extends RemoteServiceServlet implements XMPPService
         }
 
     }
+    @Override
     public void sendMessage(final String msgBody, final EmailAddress email) {
 
 
@@ -67,13 +68,13 @@ public class XmppServiceImpl extends RemoteServiceServlet implements XMPPService
 
     @Override
     public void sendMessage(final List<XmppResource> resources, final String message, final EmailAddress email) throws NimbitsException {
+        JID jid;
         for (XmppResource resource : resources) {
             Entity entity = EntityServiceFactory.getInstance().getEntityByKey(resource.getKey(),PointEntity.class.getName());
-            final JID jid;
             if (entity != null) {
-              jid = new JID(email.getValue() + "/" + entity.getName().getValue());
+                jid = new JID(email.getValue() + '/' + entity.getName().getValue());
                 send(message, jid);
-                log.info("stanza sent with jid: " + email.getValue() + "/" + entity.getName().getValue());
+               // log.info("stanza sent with jid: " + email.getValue() + "/" + entity.getName().getValue());
             }
         }
     }

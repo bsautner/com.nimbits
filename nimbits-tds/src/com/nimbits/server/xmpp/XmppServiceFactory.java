@@ -19,6 +19,9 @@ public class XmppServiceFactory {
 
     private static XmppServiceImpl instance;
 
+    private XmppServiceFactory() {
+    }
+
     public static XMPPService getInstance() {
         if (instance == null) {
             instance = new XmppServiceImpl();

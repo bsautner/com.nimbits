@@ -3,9 +3,8 @@ package com.nimbits.server.transactions.memcache.user;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.user.*;
 import helper.*;
+import static org.junit.Assert.*;
 import org.junit.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by Benjamin Sautner

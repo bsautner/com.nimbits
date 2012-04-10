@@ -38,6 +38,7 @@ public class XmppDaoImpl implements XmppTransaction {
     public XmppDaoImpl(final User u) {
 
     }
+    @Override
     public void addResource(final XmppResource resource) throws NimbitsException {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();

@@ -17,18 +17,20 @@ import com.nimbits.client.service.recordedvalues.*;
 
 public class RecordedValueServiceFactory {
 
-    private static RecordedValueService instance;
 
-
-    protected RecordedValueServiceFactory() {
+    private RecordedValueServiceFactory() {
         // Exists only to defeat instantiation.
     }
 
-    public static RecordedValueService getInstance() {
-        if (instance == null) {
-            instance = new RecordedValueServiceImpl();
+    private static class RecordedValueServiceHolder {
+        static final RecordedValueService instance = new RecordedValueServiceImpl();
+
+        private RecordedValueServiceHolder() {
         }
-        return instance;
+    }
+
+    public static RecordedValueService getInstance() {
+        return RecordedValueServiceHolder.instance;
 
 
     }

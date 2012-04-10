@@ -13,6 +13,7 @@
 
 package com.nimbits.client.model.user;
 
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
@@ -60,9 +61,9 @@ public interface User extends Entity, Serializable {
 
     String getSecret();
 
-    void setRestricted(final boolean restricted);
+    AuthLevel getAuthLevel();
+
+    void setAuthLevel(AuthLevel level);
 
     boolean isRestricted();
-
-
 }

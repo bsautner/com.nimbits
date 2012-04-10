@@ -16,7 +16,6 @@ package com.nimbits.server.entity;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.Point;
 
 import java.util.*;
 
@@ -44,7 +43,7 @@ public interface EntityTransactions {
 
     Entity getEntityByName( final EntityName name,  final EntityType type) throws NimbitsException;
 
-    Map<String, Entity> getSystemWideEntityMap( final EntityType type, final Class<?> cls) throws NimbitsException;
+    Map<String, Entity> getSystemWideEntityMap(final EntityType type) throws NimbitsException;
 
     void removeEntityFromCache( final Entity entity) throws NimbitsException;
 

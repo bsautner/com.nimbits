@@ -17,8 +17,6 @@ import com.extjs.gxt.ui.client.data.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.feed.*;
 
-import java.io.*;
-
 /**
  * Created by Benjamin Sautner
  * User: bsautner

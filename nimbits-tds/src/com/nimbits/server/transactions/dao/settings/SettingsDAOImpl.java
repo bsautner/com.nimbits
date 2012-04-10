@@ -37,12 +37,11 @@ public class SettingsDAOImpl implements SettingTransactions {
             q.setRange(0, 1);
             q.declareParameters("String n");
             final List<ServerSetting> a = (List<ServerSetting>) q.execute(setting.getName());
-            if (a.size() > 0) {
+            if (a.isEmpty()) {
+                throw new NimbitsException(setting.getName() + " setting not found.");
+            } else {
                 s = a.get(0);
                 retVal = s.getValue();
-            }
-            else {
-                throw new NimbitsException(setting.getName() + " setting not found.");
             }
         } finally {
             pm.close();
@@ -61,7 +60,7 @@ public class SettingsDAOImpl implements SettingTransactions {
             q.setRange(0, 1);
             q.declareParameters("String n");
             final List<ServerSetting> a = (List<ServerSetting>) q.execute(name.getName());
-            if (a.size() > 0) {
+            if (!a.isEmpty()) {
                 final Transaction tx = pm.currentTransaction();
                 tx.begin();
                 s = a.get(0);
@@ -87,7 +86,7 @@ public class SettingsDAOImpl implements SettingTransactions {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
             final Query q = pm.newQuery(ServerSetting.class);
-            final List<ServerSetting> l = (List<ServerSetting>) q.execute();
+            final Iterable<ServerSetting> l = (Iterable<ServerSetting>) q.execute();
             final Map<SettingType, String> settings = new HashMap<SettingType, String>(SettingType.values().length);
             for (final ServerSetting s : l) {
                 SettingType type = s.getSetting();

@@ -18,7 +18,6 @@ import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.server.entity.*;
-import com.nimbits.server.orm.EntityStore;
 import com.nimbits.server.task.*;
 
 import javax.servlet.http.*;
@@ -45,7 +44,7 @@ public class SummaryCron  extends HttpServlet {
 
         final Map<String, Entity> result;
         try {
-            result = EntityTransactionFactory.getInstance(null).getSystemWideEntityMap(EntityType.summary, EntityStore.class);
+            result = EntityTransactionFactory.getInstance(null).getSystemWideEntityMap(EntityType.summary);
 
             for (final Entity entity : result.values()) {
                 TaskFactory.getInstance().startSummaryTask(entity);

@@ -38,7 +38,6 @@ import com.nimbits.client.service.entity.*;
 import com.nimbits.client.ui.controls.*;
 import com.nimbits.client.ui.helper.*;
 import com.nimbits.client.ui.icons.*;
-import com.nimbits.server.orm.*;
 
 
 /**

@@ -13,28 +13,22 @@
 
 package com.nimbits.server.task;
 
-import com.google.gson.Gson;
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModel;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointModel;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.user.UserModel;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModel;
-import com.nimbits.server.calculation.CalculationServiceFactory;
-import com.nimbits.server.entity.EntityTransactionFactory;
-import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.intelligence.IntelligenceServiceFactory;
-import com.nimbits.server.logging.LogHelper;
-import com.nimbits.server.orm.PointEntity;
-import com.nimbits.server.subscription.SubscriptionServiceFactory;
+import com.google.gson.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.server.calculation.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.gson.*;
+import com.nimbits.server.intelligence.*;
+import com.nimbits.server.logging.*;
+import com.nimbits.server.orm.*;
+import com.nimbits.server.subscription.*;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 
 public class RecordValueTask extends HttpServlet {
 

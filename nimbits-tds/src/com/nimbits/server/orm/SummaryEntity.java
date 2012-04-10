@@ -13,10 +13,8 @@
 
 package com.nimbits.server.orm;
 
-import com.google.appengine.api.datastore.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.summary.*;
 
 import javax.jdo.annotations.*;

@@ -37,6 +37,7 @@ import java.util.logging.*;
 public class CoreImpl implements Core {
     private static final Logger log = Logger.getLogger(CoreImpl.class.getName());
 
+    @Override
     public void reportDeleteToCore(final Entity entity) {
         try {
             if (SettingTransactionsFactory.getInstance().getSetting(SettingType.serverIsDiscoverable).equals("1")) {
@@ -57,6 +58,7 @@ public class CoreImpl implements Core {
     }
 
 
+    @Override
     public void reportUpdateToCore(final Entity entity) {
         try {
             final String serverUrl = ServerInfoImpl.getFullServerURL(null);

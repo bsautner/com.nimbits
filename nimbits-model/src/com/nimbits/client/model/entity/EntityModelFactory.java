@@ -7,7 +7,9 @@ import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.user.User;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by bsautner
@@ -34,11 +36,7 @@ public class EntityModelFactory {
         return new EntityModel(entity);
 
     }
-    public static Entity createSimpleEntity(final Entity entity) throws NimbitsException {
 
-        return new SimpleEntityModel(entity);
-
-    }
     public static Entity createEntity(final EntityName name,
                                       final String description,
                                       final EntityType entityType,

@@ -21,7 +21,7 @@ import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.server.common.*;
-import com.nimbits.server.logging.LogHelper;
+import com.nimbits.server.logging.*;
 import com.nimbits.server.settings.*;
 
 import javax.mail.*;

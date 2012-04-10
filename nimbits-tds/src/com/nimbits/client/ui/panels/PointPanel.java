@@ -34,12 +34,10 @@ import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
-import com.nimbits.client.service.datapoints.*;
 import com.nimbits.client.service.entity.*;
 import com.nimbits.client.ui.controls.*;
 import com.nimbits.client.ui.helper.*;
 import com.nimbits.client.ui.icons.*;
-import com.nimbits.server.orm.*;
 
 import java.util.*;
 

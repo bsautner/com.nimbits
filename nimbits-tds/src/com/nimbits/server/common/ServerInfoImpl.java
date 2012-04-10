@@ -15,7 +15,6 @@ package com.nimbits.server.common;
 
 
 import javax.servlet.*;
-import javax.servlet.http.*;
 
 /**
  * Created by bsautner

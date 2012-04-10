@@ -13,20 +13,15 @@
 
 package com.nimbits.server.transactions.dao.user;
 
-import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
-import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.user.User;
-import com.nimbits.server.user.UserTransactionFactory;
-import helper.NimbitsServletTest;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import com.google.appengine.tools.development.testing.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.server.user.*;
+import helper.*;
+import org.junit.*;
+import static org.junit.Assert.*;
 
 /**
  * Created by bsautner

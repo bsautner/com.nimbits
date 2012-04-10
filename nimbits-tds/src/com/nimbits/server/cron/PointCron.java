@@ -14,20 +14,21 @@
 package com.nimbits.server.cron;
 
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.server.entity.EntityTransactionFactory;
-import com.nimbits.server.logging.LogHelper;
-import com.nimbits.server.orm.*;
-import com.nimbits.server.task.TaskFactory;
+import com.nimbits.client.model.user.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.logging.*;
+import com.nimbits.server.settings.*;
+import com.nimbits.server.task.*;
+import com.nimbits.server.user.*;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Map;
-import java.util.logging.Logger;
+import javax.servlet.http.*;
+import java.io.*;
+import java.util.*;
+import java.util.logging.*;
 
 public class
         PointCron extends HttpServlet {
@@ -42,9 +43,14 @@ public class
             throws IOException {
 
 
+
             try {
-                final Map<String,Entity> e = EntityTransactionFactory.getDaoInstance(null).getSystemWideEntityMap(EntityType.point, PointEntity.class);
-                log.info("PointMaint processing " + e.values().size() + " points");
+                User admin =UserServiceFactory.getServerInstance().getAdmin();
+
+                final Map<String,Entity> e =
+                        EntityTransactionFactory.getDaoInstance(admin)
+                                .getSystemWideEntityMap(EntityType.point);
+                resp.getWriter().println("PointMaint processing " + e.values().size() + " points<BR>");
                 for (final Entity en : e.values()) {
                     TaskFactory.getInstance().startPointMaintTask(en);
                 }
@@ -54,5 +60,6 @@ public class
             }
 
         }
+
 
 }

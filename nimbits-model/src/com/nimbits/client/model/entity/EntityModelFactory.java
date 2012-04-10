@@ -100,43 +100,8 @@ public class EntityModelFactory {
 
     }
 
-    public static List<Entity> createEntities(final User user,final Collection<Entity> result) throws NimbitsException {
-        final List<Entity> entities = new ArrayList<Entity>(result.size());
-        for (final Entity e : result) {
-
-            final boolean isOwner = (user != null) && e.getOwner().equals(user.getKey());
-
-            if (entityIsReadable(user, e, isOwner))
-            {
-
-                final Entity r = createEntity(user, e);
-
-                entities.add(r);
-            }
-
-        }
-        return entities;
-
-    }
-
-    private static boolean entityIsReadable(final User user, final Entity e, final boolean owner) {
-        boolean retVal =  ((e.getEntityType().equals(EntityType.user) ||
-                owner ||
-                e.getProtectionLevel().equals(ProtectionLevel.everyone) ||
-                e.getProtectionLevel().equals(ProtectionLevel.onlyConnection))
-
-        );
-
-        if (e.getEntityType().equals(EntityType.userConnection) && ! e.getOwner().equals(user.getKey())) {
-            retVal = false;
-        }
-        if (e.getEntityType().equals(EntityType.summary) && user == null) {
-            retVal = true; //this is a system request from the summary cron job.
-        }
-        return retVal;
 
 
-    }
 
     public static Entity createEntity(final EntityName name, final EntityType entityType) {
         return new EntityModel(name,

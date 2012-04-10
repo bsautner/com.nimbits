@@ -16,7 +16,7 @@ package com.nimbits.server.transactions.dao.entity;
 
 import com.nimbits.PMF;
 import com.nimbits.client.constants.UserMessages;
-import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.calculation.*;
 import com.nimbits.client.model.entity.*;
@@ -69,7 +69,7 @@ public class EntityDaoImpl implements  EntityTransactions {
             q1.setRange(0, limit);
 
 
-            final List<Entity> result = (List<Entity>) q1.execute(user.getKey(), type.getCode());
+            final Collection<Entity> result = (Collection<Entity>) q1.execute(user.getKey(), type.getCode());
 
             final Map<String, Entity> retObj = new HashMap<String, Entity>(result.size());
             for (final Entity e : result) {
@@ -107,7 +107,7 @@ public class EntityDaoImpl implements  EntityTransactions {
             final Query q1 = pm.newQuery(Class.forName(type.getClassName()));
             q1.setFilter("owner==b && entityType==t");
             q1.declareParameters("String b, Integer t");
-            final List<Entity> result = (List<Entity>) q1.execute(user.getKey(), type.getCode());
+            final Collection<Entity> result = (Collection<Entity>) q1.execute(user.getKey(), type.getCode());
             final List<Entity> models = createModels(result);
             final Map<EntityName, Entity> retObj = new HashMap<EntityName, Entity>(models.size());
             for (final Entity e : models) {
@@ -190,10 +190,10 @@ public class EntityDaoImpl implements  EntityTransactions {
                 commit = new UserEntity(entity);
                 break;
             case point:
-               commit = new PointEntity(entity);
+                commit = new PointEntity(entity);
                 break;
             case category:
-               commit = new SimpleEntity(entity);
+                commit = new SimpleEntity(entity);
                 break;
             case file:
                 commit = new SimpleEntity(entity);
@@ -273,7 +273,7 @@ public class EntityDaoImpl implements  EntityTransactions {
 
 
         try {
-            final List<Entity> result = (List<Entity>) q1.execute(uuids);
+            final Collection<Entity> result = (Collection<Entity>) q1.execute(uuids);
             // final List<Point> result2 = (List<Point>) q2.execute(uuids);
 
 
@@ -320,7 +320,7 @@ public class EntityDaoImpl implements  EntityTransactions {
 
 
 
-        final List<Entity> result = (List<Entity>) q1.execute(entity.getKey());
+        final Collection<Entity> result = (Collection<Entity>) q1.execute(entity.getKey());
         if (!result.isEmpty()) {
             retObj.addAll(result);
             List<Entity> children;
@@ -613,7 +613,7 @@ public class EntityDaoImpl implements  EntityTransactions {
 
 
 
-    private List<Entity> createModels(final List<Entity> entity) throws NimbitsException {
+    private List<Entity> createModels(final Collection<Entity> entity) throws NimbitsException {
         final List<Entity> retObj = new ArrayList<Entity>(entity.size());
         for (final Entity e : entity) {
             retObj.add(createModel(e));
@@ -622,41 +622,80 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     }
     private Entity createModel(final Entity entity ) throws NimbitsException {
-
+        Entity retObj;
         switch (entity.getEntityType()) {
 
             case user:
-                return UserModelFactory.createUserModel((User) entity);
+                retObj = UserModelFactory.createUserModel((User) entity);
+                break;
             case point:
-                return PointModelFactory.createPointModel(entity);
+                retObj = PointModelFactory.createPointModel(entity);
+                break;
             case category:
-                return EntityModelFactory.createSimpleEntity(entity);
+                retObj = EntityModelFactory.createSimpleEntity(entity);
+                break;
             case file:
-                return EntityModelFactory.createSimpleEntity(entity);
+                retObj = EntityModelFactory.createSimpleEntity(entity);
+                break;
             case subscription:
-                return SubscriptionFactory.createSubscription((Subscription) entity);
+                retObj = SubscriptionFactory.createSubscription((Subscription) entity);
+                break;
             case userConnection:
-                return UserModelFactory.createUserModel((User) entity);//?
+                retObj = UserModelFactory.createUserModel((User) entity);//?
+                break;
             case calculation:
-                return CalculationModelFactory.createCalculation((Calculation) entity);
+                retObj = CalculationModelFactory.createCalculation((Calculation) entity);
+                break;
             case intelligence:
-                return IntelligenceModelFactory.createIntelligenceModel((Intelligence) entity);
+                retObj = IntelligenceModelFactory.createIntelligenceModel((Intelligence) entity);
+                break;
             case feed:
-                return PointModelFactory.createPointModel(entity);
+                retObj = PointModelFactory.createPointModel(entity);
+                break;
             case resource:
-                return XmppResourceFactory.createXmppResource((XmppResource) entity);
+                retObj = XmppResourceFactory.createXmppResource((XmppResource) entity);
+                break;
             case summary:
-                return SummaryModelFactory.createSummary((Summary) entity);
+                retObj = SummaryModelFactory.createSummary((Summary) entity);
+                break;
             case instance:
-                return null;
-            default:return null;
+                retObj = null;
+                break;
+            default:retObj = null;
+
+        }
+        if (retObj != null) {
+            final boolean isOwner = (user != null) && retObj.getOwner().equals(user.getKey());
+            final boolean isReadable = entityIsReadable(entity, isOwner);
+            if (!isReadable) {
+                retObj = null;
+            }
+            else if (! isOwner) {
+                retObj.setReadOnly(true);
+            }
         }
 
-
-
+        return retObj;
 
 
     }
 
+    private boolean entityIsReadable(  final Entity e, final boolean isOwner) {
+        boolean retVal =  ((e.getEntityType().equals(EntityType.user) ||
+                isOwner ||
+                e.getProtectionLevel().equals(ProtectionLevel.everyone) ||
+                e.getProtectionLevel().equals(ProtectionLevel.onlyConnection))
 
+        );
+
+        if (e.getEntityType().equals(EntityType.userConnection) && ! e.getOwner().equals(user.getKey())) {
+            retVal = false;
+        }
+        if (e.getEntityType().equals(EntityType.summary) && user == null) {
+            retVal = true; //this is a system request from the summary cron job.
+        }
+        return retVal;
+
+
+    }
 }

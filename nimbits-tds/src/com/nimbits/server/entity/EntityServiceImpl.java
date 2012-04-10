@@ -45,10 +45,14 @@ import java.util.*;
 @SuppressWarnings("unchecked")
 public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTransactions, EntityService {
 
-    private User getUser() throws NimbitsException {
+    private User getUser()  {
 
+        try {
             return UserServiceFactory.getServerInstance().getHttpRequestUser(
                     this.getThreadLocalRequest());
+        } catch (NimbitsException e) {
+            return null; //todo - return a limited, anon user account
+        }
 
     }
 

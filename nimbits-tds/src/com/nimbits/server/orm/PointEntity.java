@@ -65,14 +65,10 @@ public class PointEntity extends EntityStore implements Point {
     @Persistent
     private Boolean idleAlarmSent;
 
-    @Persistent
-    private String legacyKey;
-
-
 
     @Override
     public boolean isIdleAlarmOn() {
-        return (idleAlarmOn == null) ? false : idleAlarmOn;
+        return idleAlarmOn == null ? false : idleAlarmOn;
     }
 
     @Override
@@ -82,7 +78,7 @@ public class PointEntity extends EntityStore implements Point {
 
     @Override
     public int getIdleSeconds() {
-        return (idleSeconds == null) ? 0 : idleSeconds;
+        return idleSeconds == null ? 0 : idleSeconds;
     }
 
     @Override
@@ -92,7 +88,7 @@ public class PointEntity extends EntityStore implements Point {
 
     @Override
     public boolean getIdleAlarmSent() {
-        return (idleAlarmSent == null) ? false : idleAlarmSent;
+        return idleAlarmSent == null ? false : idleAlarmSent;
     }
 
     @Override
@@ -109,7 +105,7 @@ public class PointEntity extends EntityStore implements Point {
 
     }
 
-    public PointEntity(Entity entity, Double highAlarm, int expire, String unit, Double filterValue, Integer filterType, Double lowAlarm, Boolean highAlarmOn, Boolean lowAlarmOn, Boolean idleAlarmOn, Integer idleSeconds, Boolean idleAlarmSent, String legacyKey, Double target, List<Value> values, Value value) throws NimbitsException {
+    public PointEntity(Entity entity, Double highAlarm, int expire, String unit, Double filterValue, Integer filterType, Double lowAlarm, Boolean highAlarmOn, Boolean lowAlarmOn, Boolean idleAlarmOn, Integer idleSeconds, Boolean idleAlarmSent, List<Value> values, Value value) throws NimbitsException {
         super(entity);
         this.highAlarm = highAlarm;
         this.expire = expire;
@@ -122,8 +118,6 @@ public class PointEntity extends EntityStore implements Point {
         this.idleAlarmOn = idleAlarmOn;
         this.idleSeconds = idleSeconds;
         this.idleAlarmSent = idleAlarmSent;
-        this.legacyKey = legacyKey;
-        this.target = target;
         this.values = values;
         this.value = value;
     }
@@ -150,8 +144,6 @@ public class PointEntity extends EntityStore implements Point {
     }
 
 
-    @Persistent
-    private Double target;
 
     @NotPersistent
     private List<Value> values;
@@ -167,7 +159,7 @@ public class PointEntity extends EntityStore implements Point {
 
     @Override
     public double getHighAlarm() {
-        return (highAlarm == null) ? 0.0 : highAlarm;
+        return highAlarm == null ? 0.0 : highAlarm;
 
     }
 
@@ -182,11 +174,13 @@ public class PointEntity extends EntityStore implements Point {
         return unit;
     }
 
+    @Override
     @NotPersistent
     public Value getValue() {
         return value;
     }
 
+    @Override
     @NotPersistent
     public List<Value> getValues() {
         return values;
@@ -194,13 +188,13 @@ public class PointEntity extends EntityStore implements Point {
 
     @Override
     public boolean isHighAlarmOn() {
-        return (highAlarmOn == null) ? false : highAlarmOn;
+        return highAlarmOn == null ? false : highAlarmOn;
 
     }
 
     @Override
     public boolean isLowAlarmOn() {
-        return (lowAlarmOn == null) ? false : lowAlarmOn;
+        return lowAlarmOn == null ? false : lowAlarmOn;
     }
     @Override
     public void setExpire(final int expire) {
@@ -267,26 +261,19 @@ public class PointEntity extends EntityStore implements Point {
         this.filterValue = value;
     }
 
-    public void setLegacyKey(String legacyKey) {
-        this.legacyKey = legacyKey;
-    }
-
-    public String getLegacyKey() {
-        return legacyKey;
-    }
 
     @Override
     public void update(Entity update) throws NimbitsException {
         super.update(update);
         Point p = (Point) update;
-        this.highAlarm = (p.getHighAlarm());
-        this.lowAlarm = (p.getLowAlarm());
-        this.unit = (p.getUnit());
-        this.expire = (p.getExpire());
-        this.idleAlarmOn = (p.isIdleAlarmOn());
-        this.idleAlarmSent = (p.getIdleAlarmSent());
-        this.idleSeconds = (p.getIdleSeconds());
-        this.filterType = (p.getFilterType().getCode());
-        this.filterValue = (p.getFilterValue());
+        this.highAlarm = p.getHighAlarm();
+        this.lowAlarm = p.getLowAlarm();
+        this.unit = p.getUnit();
+        this.expire = p.getExpire();
+        this.idleAlarmOn = p.isIdleAlarmOn();
+        this.idleAlarmSent = p.getIdleAlarmSent();
+        this.idleSeconds = p.getIdleSeconds();
+        this.filterType = p.getFilterType().getCode();
+        this.filterValue = p.getFilterValue();
     }
 }

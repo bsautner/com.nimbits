@@ -628,13 +628,13 @@ public class EntityDaoImpl implements  EntityTransactions {
                 retObj = UserModelFactory.createUserModel((User) entity);
                 break;
             case point:
-                retObj = PointModelFactory.createPointModel(entity);
+                retObj = PointModelFactory.createPointModel((Point) entity);
                 break;
             case category:
-                retObj = CategoryFactory.createCategory(entity);
+                retObj = CategoryFactory.createCategory((Category) entity);
                 break;
             case file:
-                retObj = FileFactory.createFile(entity);
+                retObj = FileFactory.createFile((File) entity);
                 break;
             case subscription:
                 retObj = SubscriptionFactory.createSubscription((Subscription) entity);
@@ -649,7 +649,7 @@ public class EntityDaoImpl implements  EntityTransactions {
                 retObj = IntelligenceModelFactory.createIntelligenceModel((Intelligence) entity);
                 break;
             case feed:
-                retObj = PointModelFactory.createPointModel(entity);
+                retObj = PointModelFactory.createPointModel((Point) entity);
                 break;
             case resource:
                 retObj = XmppResourceFactory.createXmppResource((XmppResource) entity);

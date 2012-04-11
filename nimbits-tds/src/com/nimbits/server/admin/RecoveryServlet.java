@@ -341,7 +341,7 @@ public class RecoveryServlet extends HttpServlet {
                 com.nimbits.server.orm.PointEntity np = new com.nimbits.server.orm.PointEntity(e,
                         p.getHighAlarm(), p.getExpire(), p.getUnit(), p.getFilterValue(), p.getFilterType().getCode(),
                         p.getLowAlarm(), p.isHighAlarmOn(), p.isLowAlarmOn(), p.idleAlarmOn,p.getIdleSeconds(), p.getIdleAlarmSent(),
-                        p.getLegacyKey(), 0.0,null, null);
+                        null, null);
 
                 if (p.getName().getValue().equals("Data Feed Channel")) {
                     pm.deletePersistent(p);

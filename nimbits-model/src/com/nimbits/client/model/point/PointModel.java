@@ -54,13 +54,31 @@ public class PointModel extends EntityModel implements Serializable, Point {
 
     private double filterValue;
 
-    public PointModel(final Entity point) throws NimbitsException {
-        super(point);
-
-
+    public PointModel(Entity entity,
+                      double highAlarm,
+                      int expire,
+                      String unit,
+                      double lowAlarm,
+                      boolean highAlarmOn,
+                      boolean lowAlarmOn,
+                      boolean idleAlarmOn,
+                      Integer idleSeconds,
+                      boolean idleAlarmSent,
+                      FilterType filterType,
+                      double filterValue) throws NimbitsException {
+        super(entity);
+        this.highAlarm = highAlarm;
+        this.expire = expire;
+        this.unit = unit;
+        this.lowAlarm = lowAlarm;
+        this.highAlarmOn = highAlarmOn;
+        this.lowAlarmOn = lowAlarmOn;
+        this.idleAlarmOn = idleAlarmOn;
+        this.idleSeconds = idleSeconds;
+        this.idleAlarmSent = idleAlarmSent;
+        this.filterType = filterType.getCode();
+        this.filterValue = filterValue;
     }
-
-
 
     // Constructors
     public PointModel(final Point point) throws NimbitsException {

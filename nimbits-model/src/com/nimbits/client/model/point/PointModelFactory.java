@@ -6,11 +6,11 @@
 
 package com.nimbits.client.model.point;
 
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by bsautner
@@ -24,22 +24,42 @@ public class PointModelFactory {
     private PointModelFactory() {
     }
 
-    public static PointModel createPointModel(final Entity entity) throws NimbitsException {
 
-        return new PointModel(entity);
-
-    }
-
-
-
-    public static PointModel createPointModel(final Point point) throws NimbitsException {
+    public static Point createPointModel(final Point point) throws NimbitsException {
 
         return new PointModel(point);
 
     }
+    public static Point createPointModel(Entity entity,
+                                         double highAlarm,
+                                         int expire,
+                                         String unit,
+                                         double lowAlarm,
+                                         boolean highAlarmOn,
+                                         boolean lowAlarmOn,
+                                         boolean idleAlarmOn,
+                                         Integer idleSeconds,
+                                         boolean idleAlarmSent,
+                                         FilterType filterType,
+                                         double filterValue) throws NimbitsException {
+        return new PointModel(
+                entity,  highAlarm,
+                expire,  unit,  lowAlarm,
+                highAlarmOn,  lowAlarmOn,
+                idleAlarmOn,  idleSeconds,  idleAlarmSent,
+                filterType,  filterValue);
+    }
 
+    public static Point createPointModel(Entity entity) throws NimbitsException {
+        return new PointModel(
+                entity,  0.0,
+                90,  "", 0.0,
+                false,  false,
+                false,  0,   false,
+                FilterType.fixedHysteresis,0.1);
+    }
 
-    public static List<Point> createPointModels(final List<Point> result) throws NimbitsException {
+        public static List<Point> createPointModels(final Collection<Point> result) throws NimbitsException {
         final List<Point> r = new ArrayList<Point>(result.size());
         for (final Point p : result) {
             r.add(createPointModel(p));

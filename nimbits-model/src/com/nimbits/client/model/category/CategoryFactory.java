@@ -24,7 +24,10 @@ import com.nimbits.client.model.entity.Entity;
  */
 public class CategoryFactory {
 
-    public static Category createCategory(Entity e) throws NimbitsException {
+    private CategoryFactory() {
+    }
+
+    public static Category createCategory(Category e) throws NimbitsException {
         return new CategoryModel(e);
     }
 

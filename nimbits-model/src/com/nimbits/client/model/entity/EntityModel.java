@@ -54,18 +54,20 @@ public class EntityModel  implements Serializable, Entity {
     }
     public EntityModel() {
     }
-    public EntityModel(final Entity entity) throws NimbitsException {
-        this.key = entity.getKey();
-        this.name = entity.getName().getValue();
-        this.description = entity.getDescription();
-        this.entityType = entity.getEntityType().getCode();
-        this.entity =entity.getKey();
-        this.parent = entity.getParent();
-        this.owner = entity.getOwner();
-        this.protectionLevel = entity.getProtectionLevel().getCode();
-        this.alertType = entity.getAlertType().getCode();
-        this.blobKey = entity.getBlobKey();
-        this.uuid = entity.getUUID();
+    public EntityModel(final Entity anEntity) throws NimbitsException {
+     if (anEntity != null) {
+        this.key = anEntity.getKey();
+        this.name = anEntity.getName().getValue();
+        this.description = anEntity.getDescription();
+        this.entityType = anEntity.getEntityType().getCode();
+        this.entity =anEntity.getKey();
+        this.parent = anEntity.getParent();
+        this.owner = anEntity.getOwner();
+        this.protectionLevel = anEntity.getProtectionLevel().getCode();
+        this.alertType = anEntity.getAlertType().getCode();
+        this.blobKey = anEntity.getBlobKey();
+        this.uuid = anEntity.getUUID();
+    }
     }
 
     public List<Point> getPoints() {
@@ -79,12 +81,12 @@ public class EntityModel  implements Serializable, Entity {
 
     @Override
     public void update(Entity update) throws NimbitsException {
-        this.description = (update.getDescription());
-        this.name = (update.getName().getValue());
-        this.protectionLevel = (update.getProtectionLevel().getCode());
-        this.parent = (update.getParent());
-        this.blobKey = (update.getBlobKey());
-        this.uuid = (update.getUUID());
+        this.description = update.getDescription();
+        this.name = update.getName().getValue();
+        this.protectionLevel = update.getProtectionLevel().getCode();
+        this.parent = update.getParent();
+        this.blobKey = update.getBlobKey();
+        this.uuid = update.getUUID();
     }
 
 

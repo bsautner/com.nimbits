@@ -34,6 +34,7 @@ import javax.servlet.http.*;
 import java.io.*;
 import java.math.*;
 import java.util.*;
+import java.util.logging.*;
 
 /**
  * Created by bsautner
@@ -48,7 +49,7 @@ public class ProcessBatchTask extends HttpServlet {
     private static final String T = "t";
     private static final String N = "n";
     private static final long serialVersionUID = 1L;
-
+    final Logger log = Logger.getLogger(ProcessBatchTask.class.getName());
 
     private Map<Long, BatchValue> timestampValueMap;
     private List<Long> timestamps;
@@ -67,12 +68,12 @@ public class ProcessBatchTask extends HttpServlet {
 
     }
 
-    private void processBatch(final ServletRequest req, final ServletResponse resp) throws IOException, NimbitsException {
+    protected void processBatch(final ServletRequest req, final ServletResponse resp) throws IOException, NimbitsException {
 
         final Gson gson = GsonFactory.getInstance();
         final String userJson = req.getParameter(Parameters.pointUser.getText());
         final User u = gson.fromJson(userJson, UserModel.class);
-
+        log.info(userJson);
 
 
         timestampValueMap = new HashMap<Long, BatchValue>(Const.CONST_MAX_BATCH_COUNT);
@@ -87,13 +88,11 @@ public class ProcessBatchTask extends HttpServlet {
             while (enumeration.hasMoreElements()) {
                 processQueryString(enumeration, m, u);
             }
-            Point point;
             Collections.sort(timestamps);
-            BatchValue b;
-            Value v;
 
             for (final long l : timestamps) {
-               b = timestampValueMap.get(l);
+                BatchValue b = timestampValueMap.get(l);
+                Point point;
                 if (points.containsKey(b.pointName)) {
                     point = points.get(b.pointName);
 
@@ -108,7 +107,7 @@ public class ProcessBatchTask extends HttpServlet {
                 }
                 if (point != null) {
                     try {
-                       v = ValueModelFactory.createValueModel(0.0, 0.0, b.value, b.timestamp, point.getKey(), b.note);
+                        Value v = ValueModelFactory.createValueModel(0.0, 0.0, b.value, b.timestamp, point.getKey(), b.note);
 
                         RecordedValueServiceFactory.getInstance().recordValue(b.u, point, v, false);
 
@@ -159,7 +158,6 @@ public class ProcessBatchTask extends HttpServlet {
         }
 
 
-        Date timestamp;
         final String[] points = (String[]) m.get(P + x);
         final EntityName pointName = CommonFactoryLocator.getInstance().createName(points[0], EntityType.point);
         String note = "";
@@ -169,6 +167,8 @@ public class ProcessBatchTask extends HttpServlet {
             note = notes[0];
         }
 
+
+        Date timestamp;
         if (m.containsKey(T + x)) {
             final String[] timestampArray = (String[]) m.get(T + x);
             final String valTime = timestampArray[0];
@@ -187,14 +187,14 @@ public class ProcessBatchTask extends HttpServlet {
     }
 
     private static class BatchValue {
-        private final String note;
-        private final User u;
-        private final EntityName pointName;
-        private final Date timestamp;
-        private final Double value;
+        final String note;
+        final User u;
+        final EntityName pointName;
+        final Date timestamp;
+        final Double value;
 
-        private BatchValue(final User u, final EntityName pointName, final Date timestamp,
-                           final Double value, final String valNote) {
+        BatchValue(final User u, final EntityName pointName, final Date timestamp,
+                   final Double value, final String valNote) {
             super();
             this.u = u;
             this.pointName = pointName;

@@ -25,6 +25,7 @@ import com.nimbits.client.service.datapoints.*;
 import com.nimbits.client.service.settings.*;
 import com.nimbits.server.api.impl.*;
 import com.nimbits.server.entity.*;
+import com.nimbits.server.gson.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.settings.*;
 import com.nimbits.server.user.*;
@@ -97,7 +98,8 @@ public class NimbitsServletTest {
         req.addParameter(Parameters.secret.getText(),user.getSecret() );
         req.addParameter(Parameters.point.getText(), pointName.getValue());
         req.addParameter(Parameters.value.getText(), "1.234");
-
+        String userJson = GsonFactory.getInstance().toJson(user);
+        req.addParameter(Parameters.pointUser.getText(), userJson);
         Entity c = EntityModelFactory.createEntity(groupName, "", EntityType.category, ProtectionLevel.everyone, user.getKey(), user.getKey(), UUID.randomUUID().toString());
         c = EntityServiceFactory.getInstance().addUpdateEntity(c);
 

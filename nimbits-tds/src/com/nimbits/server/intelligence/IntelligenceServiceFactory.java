@@ -23,22 +23,30 @@ import com.nimbits.server.transactions.dao.intelligence.*;
  * Time: 6:47 PM
  */
 public class IntelligenceServiceFactory {
-    private static IntelligenceService instance;
 
-    public static IntelligenceService getInstance() {
-        if (instance == null) {
-            instance = new IntelligenceServiceImpl();
-        }
-        return instance;
+    private IntelligenceServiceFactory() {
     }
 
-    public static IntelligenceTransactions daoInstance;
+    private static class IntelligenceServiceHolder {
+        static final IntelligenceService instance = new IntelligenceServiceImpl();
+
+        private IntelligenceServiceHolder() {
+        }
+    }
+
+    public static IntelligenceService getInstance() {
+        return IntelligenceServiceHolder.instance;
+    }
+
+    private static class IntelligenceTransactionsHolder {
+        static final IntelligenceTransactions daoInstance = new IntelligenceDAOImpl();
+
+        private IntelligenceTransactionsHolder() {
+        }
+    }
 
     public static IntelligenceTransactions getDaoInstance() {
-        if (daoInstance == null) {
-            daoInstance = new IntelligenceDAOImpl();
-        }
-        return daoInstance;
+        return IntelligenceTransactionsHolder.daoInstance;
     }
 
 }

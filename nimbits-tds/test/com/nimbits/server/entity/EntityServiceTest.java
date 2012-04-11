@@ -74,9 +74,9 @@ public class EntityServiceTest extends NimbitsServletTest {
         Entity model2 = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.everyone,
               user.getKey(), user.getKey());
         ///Entity e2 = EntityServiceFactory.getInstance().addUpdateEntity(model2);
-        Point p1 = PointModelFactory.createPointModel(model);
+        Point p1 = PointModelFactory.createPointModel( model);
         PointServiceFactory.getInstance().addPoint(user, p1);
-        Point p2 = PointModelFactory.createPointModel(model2);
+        Point p2 = PointModelFactory.createPointModel( model2);
         PointServiceFactory.getInstance().addPoint(user, p2);
 
     }

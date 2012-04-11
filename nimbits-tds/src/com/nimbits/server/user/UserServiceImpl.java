@@ -126,6 +126,10 @@ public class UserServiceImpl extends RemoteServiceServlet implements
             String adminStr = "bsautner@gmail.com"; //SettingsServiceFactory.getInstance().getSetting(SettingType.admin);
 
             User admin = com.nimbits.server.user.UserServiceFactory.getInstance().getUserByKey(adminStr);
+
+            if (admin == null) {
+                return new UserModel(null);
+            }
             admin.setAuthLevel(AuthLevel.admin);
             return admin;
       }

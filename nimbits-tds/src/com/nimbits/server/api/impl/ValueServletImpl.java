@@ -78,29 +78,26 @@ public class ValueServletImpl extends ApiServlet {
             if (point != null) {
 
 
-                {
+                final Value v;
 
-                    final Value v;
+                if (Utils.isEmptyString(getParam(Parameters.json))) {
+                    final double latitude = getDoubleFromParam(getParam(Parameters.lat));
+                    final double longitude = getDoubleFromParam(getParam(Parameters.lng));
+                    final double value = getDoubleFromParam(getParam(Parameters.value));
+                    final Date timestamp = getParam(Parameters.timestamp) != null ? new Date(Long.parseLong(getParam(Parameters.timestamp))) : new Date();
+                    v = ValueModelFactory.createValueModel(latitude, longitude, value, timestamp, getParam(Parameters.note), getParam(Parameters.json));
+                } else {
+                    final Value vx = GsonFactory.getInstance().fromJson(getParam(Parameters.json), ValueModel.class);
 
-                    if (Utils.isEmptyString(getParam(Parameters.json))) {
-                        final double latitude = getDoubleFromParam(getParam(Parameters.lat));
-                        final double longitude = getDoubleFromParam(getParam(Parameters.lng));
-                        final double value = getDoubleFromParam(getParam(Parameters.value));
-                        final Date timestamp = (getParam(Parameters.timestamp) != null) ? (new Date(Long.parseLong(getParam(Parameters.timestamp)))) : new Date();
-                        v = ValueModelFactory.createValueModel(latitude, longitude, value, timestamp, getParam(Parameters.note), getParam(Parameters.json));
-                    } else {
-                        final Value vx = GsonFactory.getInstance().fromJson(getParam(Parameters.json), ValueModel.class);
-
-                        v = ValueModelFactory.createValueModel(vx.getLatitude(), vx.getLongitude(), vx.getDoubleValue(), vx.getTimestamp(),
-                                vx.getNote(), vx.getData(), AlertType.OK);
-                    }
-
-                    final Value result = RecordedValueServiceFactory.getInstance().recordValue(user, point, v, false);
-                    final PrintWriter out = resp.getWriter();
-                    final String j = GsonFactory.getInstance().toJson(result);
-                    out.print(j);
-
+                    v = ValueModelFactory.createValueModel(vx.getLatitude(), vx.getLongitude(), vx.getDoubleValue(), vx.getTimestamp(),
+                            vx.getNote(), vx.getData(), AlertType.OK);
                 }
+
+                final Value result = RecordedValueServiceFactory.getInstance().recordValue(user, point, v, false);
+                final PrintWriter out = resp.getWriter();
+                final String j = GsonFactory.getInstance().toJson(result);
+                out.print(j);
+
             }
             else {
                 FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(UserMessages.ERROR_POINT_NOT_FOUND));
@@ -136,7 +133,7 @@ public class ValueServletImpl extends ApiServlet {
     private static double getDoubleFromParam(final String valueStr) {
         double retVal;
         try {
-            retVal = (valueStr != null) ? Double.valueOf(valueStr) : 0;
+            retVal = valueStr != null ? Double.valueOf(valueStr) : 0;
         } catch (NumberFormatException e) {
             retVal = 0;
         }
@@ -150,8 +147,6 @@ public class ValueServletImpl extends ApiServlet {
             final Value nv,
             final User u) throws NimbitsException {
         final Point p;
-
-        final String result;
 
         if (!Utils.isEmptyString(uuid)) {
             p = (Point) EntityServiceFactory.getInstance().getEntityByKey(uuid, PointEntity.class.getName());
@@ -173,12 +168,11 @@ public class ValueServletImpl extends ApiServlet {
         }
 
 
-        final Value value;
-
         if ((u == null || u.isRestricted()) && !p.getProtectionLevel().equals(ProtectionLevel.everyone)) {
             throw new NimbitsException(UserMessages.RESPONSE_PROTECTED_POINT);
         }
-        if (nv != null && (u != null && !u.isRestricted())) {
+        final Value value;
+        if (nv != null && u != null && !u.isRestricted()) {
             // record the value, but not if this is a public
             // request
             final Value newValue = ValueModelFactory.createValueModel(
@@ -190,10 +184,9 @@ public class ValueServletImpl extends ApiServlet {
         } else {
             value = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
         }
-        result = value != null ? format.equals(Parameters.json.getText()) ? GsonFactory.getInstance().toJson(value) : String.valueOf(value.getDoubleValue()) : "";
 
 
-        return result;
+        return value != null ? format.equals(Parameters.json.getText()) ? GsonFactory.getInstance().toJson(value) : String.valueOf(value.getDoubleValue()) : "";
     }
 
 

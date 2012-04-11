@@ -54,7 +54,7 @@ public class PointServletImpl extends ApiServlet {
             final PrintWriter out = resp.getWriter();
 
 
-            if ((user != null) && (!user.isRestricted())) {
+            if (user != null && !user.isRestricted()) {
 
                 final String pointNameParam = Utils.isEmptyString(getParam(Parameters.name)) ?
                         getParam(Parameters.point) : getParam(Parameters.name);
@@ -62,7 +62,7 @@ public class PointServletImpl extends ApiServlet {
 
 
                 final String actionParam = req.getParameter(Parameters.action.getText());
-                final Action action = (Utils.isEmptyString(actionParam)) ? Action.create : Action.get(actionParam);
+                final Action action = Utils.isEmptyString(actionParam) ? Action.create : Action.get(actionParam);
 
 
 
@@ -197,27 +197,23 @@ public class PointServletImpl extends ApiServlet {
         return c;
     }
 
-    private static Point createPoint(final User u, final EntityName pointName, final EntityName categoryName) throws NimbitsException {
-        final Point retObj;
-        final Entity category;
-        final Entity entity;
+    protected static Point createPoint(final User u, final EntityName pointName, final EntityName categoryName) throws NimbitsException {
         final String parent;
         if (categoryName != null) {
-            category = getCategoryWithParam(categoryName, u);
+            final Entity category = getCategoryWithParam(categoryName, u);
             parent = category.getKey();
         }
         else {
             parent = u.getKey();
         }
 
-        entity = EntityModelFactory.createEntity(pointName,"", EntityType.point, ProtectionLevel.everyone,
+        final Entity entity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone,
                 parent, u.getKey(), UUID.randomUUID().toString());
 
         Point point = PointModelFactory.createPointModel(entity);
-        retObj = (Point) EntityServiceFactory.getInstance().addUpdateEntity(point);
 
 
-        return retObj;
+        return (Point) EntityServiceFactory.getInstance().addUpdateEntity(point);
     }
 
     private static Point createPointWithJson(final User u, final EntityName categoryName, final String json) throws NimbitsException {
@@ -278,10 +274,8 @@ public class PointServletImpl extends ApiServlet {
 
 
     private static ExportType getOutputType(final String format) {
-        final ExportType type;
-        type = Utils.isEmptyString(format) ? ExportType.json : ExportType.valueOf(format);
 
-        return type;
+        return Utils.isEmptyString(format) ? ExportType.json : ExportType.valueOf(format);
     }
 
     private static List<Value>  getRecordedValues(final String countParam, final String start, final String end, final String offsetParam, final Entity point) throws NimbitsException {

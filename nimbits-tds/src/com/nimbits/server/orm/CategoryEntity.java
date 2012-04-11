@@ -14,6 +14,7 @@
 package com.nimbits.server.orm;
 
 import com.nimbits.client.exception.*;
+import com.nimbits.client.model.category.*;
 import com.nimbits.client.model.entity.*;
 
 import javax.jdo.annotations.*;
@@ -26,7 +27,7 @@ import java.util.*;
  * Time: 10:53 AM
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
-public class CategoryEntity extends EntityStore {
+public class CategoryEntity extends EntityStore implements Category {
 
     @Persistent
     private final Date createDate;

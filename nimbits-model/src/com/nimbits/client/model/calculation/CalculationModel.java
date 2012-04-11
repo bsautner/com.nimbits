@@ -105,11 +105,11 @@ public class CalculationModel extends EntityModel implements Serializable, Calcu
     public void update(Entity update) throws NimbitsException {
         super.update(update);
         Calculation c = (Calculation) update;
-        this.enabled = (c.getEnabled());
-        this.formula = (c.getFormula());
-        this.target = (c.getTarget());
-        this.x = (c.getX());
-        this.y = (c.getY());
-        this.z = (c.getZ());
+        this.enabled = c.getEnabled();
+        this.formula = c.getFormula();
+        this.target = c.getTarget();
+        this.x = c.getX();
+        this.y = c.getY();
+        this.z = c.getZ();
     }
 }

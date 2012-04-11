@@ -65,6 +65,7 @@ public class UserModel extends EntityModel implements Serializable, User {
 
     public UserModel(final User u) throws NimbitsException {
         super(u);
+        if (u != null) {
         this.dateCreated = u.getDateCreated();
         this.lastLoggedIn = u.getLastLoggedIn();
         this.secret = u.getSecret();
@@ -74,6 +75,11 @@ public class UserModel extends EntityModel implements Serializable, User {
         this.twitterToken = u.getTwitterToken();
         this.twitterTokenSecret = u.getTwitterTokenSecret();
         this.facebookID = u.getFacebookID();
+        }
+        else {
+            this.authLevel = AuthLevel.restricted.getCode();
+
+        }
     }
 
     @Override

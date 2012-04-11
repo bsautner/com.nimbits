@@ -24,7 +24,10 @@ import com.nimbits.client.model.entity.Entity;
  */
 public class FileFactory {
 
-    public static File createFile(Entity e) throws NimbitsException {
+    private FileFactory() {
+    }
+
+    public static File createFile(File e) throws NimbitsException {
 
         return new FileModel(e);
     }

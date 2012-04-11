@@ -253,44 +253,7 @@ public class DataPointIntegrationTest extends TestCase {
         //
     }
 
-    @Test
-    public void TestCompressionWithBatch() throws NimbitsException {
-        Point p = PointModelFactory.createPointModel(null);
 
-       EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString()));
-        p.setFilterValue(2.0);
-        ClientHelper.client().addPoint(name, p);
-        StringBuilder b = new StringBuilder();
-
-        try {
-
-            for (int i = 0; i < 40; i++) {
-                b.append("&p").append(i).append("=").append(URLEncoder.encode(name.getValue(), Const.CONST_ENCODING)).append("&v").append(i).append("=").append(i).append("&t").append(i).append("=").append(new Date().getTime());
-
-                Thread.sleep(1000);
-
-            }
-            //  System.out.println(b.toString());
-            System.out.println(ClientHelper.client().recordBatch(b.toString()));
-            double retVal = 0.0;
-
-            Thread.sleep(1000);
-            List<Value> v = ClientHelper.client().getSeries(name, 10);
-            for (Value x : v) {
-                retVal += x.getDoubleValue();
-                System.out.println(x.getDoubleValue() + "  " + x.getTimestamp());
-
-            }
-            Assert.assertEquals(255.0, retVal);
-            ClientHelper.client().deletePoint(name);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-           fail();
-        }
-
-    }
 
 //    @Test
 //    public void loadRandomDataIntoB1UsingKey() throws InterruptedException, IOException {
@@ -315,53 +278,7 @@ public class DataPointIntegrationTest extends TestCase {
 //    }
 
 
-    public void testCompressionWithBatchWithMissingPoints() throws NimbitsException {
-        final Point p = PointModelFactory.createPointModel(null);
 
-        final EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString(), EntityType.point));
-
-        p.setFilterValue(2.0);
-        ClientHelper.client().addPoint(name, p);
-        final StringBuilder b = new StringBuilder(1024);
-
-        try {
-
-            for (int i = 0; i < 40; i++) {
-                b.append("&p")
-                .append(i)
-                .append('=')
-                .append(URLEncoder.encode(name.getValue(), Const.CONST_ENCODING))
-                .append("&v")
-                .append(i)
-                .append('=')
-                .append(i)
-                .append("&t")
-                .append(i)
-                .append('=')
-                .append(new Date().getTime());
-                Thread.sleep(100);
-
-            }
-               b.append("&p41=32423fsdfsdf&v41=324fsdsd");   //add garbage to make sure the service doesn't choke.
-            System.out.println(b.toString());
-            System.out.println(ClientHelper.client().recordBatch(b.toString()));
-            double retVal = 0.0;
-
-            Thread.sleep(2000);
-            final List<Value> v = ClientHelper.client().getSeries(name, 10);
-            for (final Value x : v) {
-                retVal += x.getDoubleValue();
-                System.out.println(x.getDoubleValue() + "  " + x.getTimestamp());
-            }
-            Assert.assertEquals(255.0, retVal);
-            ClientHelper.client().deletePoint(name);
-        } catch (IOException e) {
-         fail();
-        } catch (InterruptedException e) {
-            fail();
-        }
-
-    }
 
 
     private static double testCompression(final EntityName name) throws NimbitsException {

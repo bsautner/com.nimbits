@@ -82,6 +82,4 @@ public interface Point extends Entity, Serializable {
 
     void setFilterValue(double value);
 
-    @Override
-    void update(Entity update) throws NimbitsException;
 }

@@ -28,16 +28,24 @@ import com.nimbits.server.logging.*;
 import com.nimbits.server.orm.*;
 import com.nimbits.server.subscription.*;
 
+import javax.servlet.*;
 import javax.servlet.http.*;
+import java.util.logging.*;
 
 public class RecordValueTask extends HttpServlet {
 
-
+    final Logger log = Logger.getLogger(RecordValueTask.class.getName());
     private static final long serialVersionUID = 1L;
 
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
 
+        processRequest(req);
+
+
+    }
+
+    protected void processRequest(ServletRequest req) {
         final Gson gson = GsonFactory.getInstance();
         final String userJson = req.getParameter(Parameters.pointUser.getText());
         final String pointJson = req.getParameter(Parameters.pointJson.getText());
@@ -45,17 +53,19 @@ public class RecordValueTask extends HttpServlet {
         final String loopFlagParam = req.getParameter(Parameters.loop.getText());
         final Entity entity = gson.fromJson(pointJson, EntityModel.class);
         final Value value = gson.fromJson(valueJson, ValueModel.class);
+        log.info(userJson);
+        log.info(pointJson);
+        log.info(valueJson);
 
         final boolean loopFlag = Boolean.valueOf(loopFlagParam);
         final User u = gson.fromJson(userJson, UserModel.class);
-        final Point point;
         try {
-            point = (entity instanceof PointModel)
+            final Point point = entity instanceof Point
                     ? (Point) entity
-                    : (Point) EntityTransactionFactory.getInstance(u).getEntityByKey(entity.getKey(),PointEntity.class);
+                    : (Point) EntityTransactionFactory.getInstance(u).getEntityByKey(entity.getKey(), PointEntity.class);
 
-        if (!loopFlag) {
-            //todo - these service calls need their memcache trans classes
+            if (!loopFlag) {
+
             try {
 
                 CalculationServiceFactory.getInstance().processCalculations(u, point, value);
@@ -71,13 +81,7 @@ public class RecordValueTask extends HttpServlet {
         } catch (NimbitsException e) {
            LogHelper.logException(this.getClass(), e);
         }
-
-
     }
-
-
-
-
 
 
 }

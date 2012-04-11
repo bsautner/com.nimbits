@@ -69,7 +69,7 @@ public class CalculationDAOImpl implements CalculationTransactions {
             final Query q = pm.newQuery(CalcEntity.class);
             q.setFilter("trigger == k");
             q.declareParameters("String k");
-            final List<Calculation> results = (List<Calculation>) q.execute(entity.getKey());
+            final Collection<Calculation> results = (Collection<Calculation>) q.execute(entity.getKey());
             return CalculationModelFactory.createCalculations(results);
 
         } finally {
@@ -90,7 +90,7 @@ public class CalculationDAOImpl implements CalculationTransactions {
             q.setFilter("trigger == k");
             q.declareParameters("String k");
             q.setRange(0,1);
-            final List<Calculation> results = (List<Calculation>) q.execute(entity.getKey());
+            final Collection<Calculation> results = (Collection<Calculation>) q.execute(entity.getKey());
             pm.deletePersistentAll(results);
 
         } finally {
@@ -100,7 +100,7 @@ public class CalculationDAOImpl implements CalculationTransactions {
 
 
 
-    private Calculation createCalc(Calculation calculation, PersistenceManager pm) throws NimbitsException {
+    private static Calculation createCalc(final Calculation calculation, final PersistenceManager pm) throws NimbitsException {
         final CalcEntity s = new CalcEntity(calculation);
         pm.makePersistent(s);
         return CalculationModelFactory.createCalculation(s);

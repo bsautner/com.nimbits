@@ -403,11 +403,11 @@ public class SubscriptionPanel extends NavigationEventProvider {
     }
 
 
-    private class DeliveryMethodOption extends BaseModelData {
+    private static class DeliveryMethodOption extends BaseModelData {
         SubscriptionNotifyMethod method;
 
 
-        public DeliveryMethodOption(SubscriptionNotifyMethod value) {
+        private DeliveryMethodOption(SubscriptionNotifyMethod value) {
             this.method = value;
             set(Parameters.value.getText(), value.getCode());
             set(Parameters.name.getText(), value.getText());

@@ -15,7 +15,7 @@ import java.util.List;
  * Date: 2/7/12
  * Time: 10:50 AM
  */
-public interface Entity  extends Serializable {
+public interface Entity  extends Serializable, Comparable<Entity> {
     EntityName getName() throws NimbitsException;
 
     String getUUID();

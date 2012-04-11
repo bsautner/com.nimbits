@@ -184,16 +184,13 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public Entity getSubscribedEntity(final Entity entity) throws NimbitsException {
-       return  (Subscription) EntityServiceFactory.getInstance().getEntityByKey(entity.getKey(), SubscriptionEntity.class.getName());
+       return EntityServiceFactory.getInstance().getEntityByKey(entity.getKey(), SubscriptionEntity.class.getName());
      //           SubscriptionTransactionFactory.getInstance(getUser()).readSubscription(entity);
       //  return EntityServiceFactory.getInstance().getEntityByKey(getUser(), subscription.getSubscribedEntity(), PointEntity.class.getName());
 
     }
 
-    @Override
-    public void deleteSubscription(final User u, final Entity entity) {
-        SubscriptionTransactionFactory.getInstance(u).deleteSubscription(entity);
-    }
+
 
     private static void sendNotification(final User user, final Entity entity, final Subscription subscription, final Point point, final Value value) throws NimbitsException {
         switch (subscription.getNotifyMethod()) {
@@ -249,9 +246,9 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
         TwitterServiceFactory.getInstance().sendTweet(u, message.toString());
     }
 
-    private static void postToFB(final Point p, final Entity entity, final User u, final Value v) throws NimbitsException {
+    private static void postToFB(final Entity p, final Entity entity, final User u, final Value v) throws NimbitsException {
 
-        String m = ("Data Point #" + entity.getName().getValue() + " = " + v.getDoubleValue());
+        String m = "Data Point #" + entity.getName().getValue() + " = " + v.getDoubleValue();
         if (v.getNote() != null) {
             m += ' ' + v.getNote();
         }

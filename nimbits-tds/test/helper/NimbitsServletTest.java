@@ -94,23 +94,30 @@ public class NimbitsServletTest {
         assertNotNull(user);
         settingsDAO = SettingTransactionsFactory.getDaoInstance();
 
-        req.addParameter(Parameters.email.getText(), email);
-        req.addParameter(Parameters.secret.getText(),user.getSecret() );
-        req.addParameter(Parameters.point.getText(), pointName.getValue());
-        req.addParameter(Parameters.value.getText(), "1.234");
-        String userJson = GsonFactory.getInstance().toJson(user);
-        req.addParameter(Parameters.pointUser.getText(), userJson);
         Entity c = EntityModelFactory.createEntity(groupName, "", EntityType.category, ProtectionLevel.everyone, user.getKey(), user.getKey(), UUID.randomUUID().toString());
         c = EntityServiceFactory.getInstance().addUpdateEntity(c);
 
         pointEntity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone,  c.getKey(), user.getKey(), UUID.randomUUID().toString());
         point = (Point) EntityServiceFactory.getInstance().addUpdateEntity(user, pointEntity);
-       // point = pointService.addPoint(user, pointEntity);
+        // point = pointService.addPoint(user, pointEntity);
 
         pointChildEntity = EntityModelFactory.createEntity(pointChildName, "", EntityType.point, ProtectionLevel.everyone, point.getKey(), user.getKey(), UUID.randomUUID().toString());
         pointChild = (Point) EntityServiceFactory.getInstance().addUpdateEntity(user, pointChildEntity);
-      // pointChild =  pointService.addPoint(user, pointChildEntity);
-         assertNotNull(pointChild);
+        // pointChild =  pointService.addPoint(user, pointChildEntity);
+        assertNotNull(pointChild);
+
+        req.addParameter(Parameters.email.getText(), email);
+        req.addParameter(Parameters.secret.getText(),user.getSecret() );
+        req.addParameter(Parameters.point.getText(), pointName.getValue());
+        req.addParameter(Parameters.value.getText(), "1.234");
+        String userJson = GsonFactory.getInstance().toJson(user);
+        String pointJson = GsonFactory.getInstance().toJson(point);
+
+        req.addParameter(Parameters.pointUser.getText(), userJson);
+        req.addParameter(Parameters.pointJson.getText(), pointJson);
+
+
+
 
     }
 

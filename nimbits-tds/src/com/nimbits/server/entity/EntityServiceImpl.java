@@ -50,7 +50,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
             return UserServiceFactory.getServerInstance().getHttpRequestUser(
                     this.getThreadLocalRequest());
         } catch (NimbitsException e) {
-           return UserServiceFactory.getServerInstance().getAnonUser();
+            return UserServiceFactory.getServerInstance().getAnonUser();
         }
 
     }
@@ -63,7 +63,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
         try {
             deleted = EntityTransactionFactory.getInstance(user).deleteEntity(entity, Class.forName(entity.getEntityType().getClassName()));
         } catch (ClassNotFoundException e) {
-           throw  new NimbitsException(e);
+            throw  new NimbitsException(e);
         }
         for (final Entity e : deleted) {
             EntityTransactionFactory.getInstance(user).removeEntityFromCache(e);
@@ -74,39 +74,13 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
         //todo - delete or disable subscriptions to entity
 
 
-        switch (entity.getEntityType()) {
-
-            case user:
-                break;
-            case point:
-                 break;
-            case category:
-                 break;
-            case file:
-                BlobServiceFactory.getInstance().deleteBlob(entity);
-                break;
-            case subscription:
-                SubscriptionServiceFactory.getInstance().deleteSubscription(user, entity);
-                break;
-            case userConnection:
-                break;
-            case calculation:
-                CalculationServiceFactory.getInstance().deleteCalculation(user, entity);
-                break;
-            case intelligence:
-                IntelligenceServiceFactory.getInstance().deleteIntelligence(user, entity);
-                break;
-            case feed:
-                break;
-            case resource:
-                XmppServiceFactory.getInstance().deleteResource(user, entity);
-                break;
-            case summary:
-                SummaryServiceFactory.getInstance().deleteSummary(user, entity);
-                break;
+        if  (entity.getEntityType().equals(EntityType.file)) {
+            BlobServiceFactory.getInstance().deleteBlob(entity);
         }
 
-         return deleted;
+
+
+        return deleted;
 
 
 
@@ -120,8 +94,9 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
 
     @Override
     public List<Entity> getEntities() throws NimbitsException {
-
-         return EntityTransactionFactory.getInstance(getUser()).getEntities();
+        List<Entity> retVal =EntityTransactionFactory.getInstance(getUser()).getEntities();
+        Collections.sort(retVal);
+        return retVal;
     }
 
     @Override
@@ -153,7 +128,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
         if (u == null)  {
             u = UserServiceFactory.getInstance().getUserByKey(entity.getOwner());
         }
-       return  deleteEntity(u, entity);
+        return  deleteEntity(u, entity);
     }
 
 
@@ -169,7 +144,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
 
     @Override
     public Map<String, Entity> getEntityMap(final EntityType type, final int limit) throws NimbitsException {
-       return EntityTransactionFactory.getInstance(getUser()).getEntityMap(type, limit);
+        return EntityTransactionFactory.getInstance(getUser()).getEntityMap(type, limit);
     }
 
     @Override
@@ -189,7 +164,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
         switch (newEntity.getEntityType()) {
 
             case user:
-                 return null;
+                return null;
             case point:
                 return PointServiceFactory.getInstance().copyPoint(getUser(), originalEntity, newName);
             case category:

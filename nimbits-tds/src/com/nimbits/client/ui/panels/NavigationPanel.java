@@ -153,6 +153,9 @@ public class NavigationPanel extends NavigationEventProvider {
     }
 
     private static class MoveEntityAsyncCallback implements AsyncCallback<Entity> {
+        MoveEntityAsyncCallback() {
+        }
+
         @Override
         public void onFailure(Throwable caught) {
             GWT.log(caught.getMessage(), caught);
@@ -167,7 +170,7 @@ public class NavigationPanel extends NavigationEventProvider {
     private class SaveValueAsyncCallback implements AsyncCallback<Value> {
         private final TreeModel model;
 
-        private SaveValueAsyncCallback(TreeModel model) {
+        SaveValueAsyncCallback(TreeModel model) {
             this.model = model;
         }
 
@@ -187,7 +190,7 @@ public class NavigationPanel extends NavigationEventProvider {
     private class GetUserListAsyncCallback implements AsyncCallback<List<Entity>> {
         private final boolean refresh;
 
-        private GetUserListAsyncCallback(boolean refresh) {
+        GetUserListAsyncCallback(boolean refresh) {
             this.refresh = refresh;
         }
 
@@ -293,6 +296,9 @@ public class NavigationPanel extends NavigationEventProvider {
 
 
         private class EntityModifiedListener implements EntityContextMenu.EntityModifiedListener {
+            EntityModifiedListener() {
+            }
+
             @Override
             public void onEntityModified(TreeModel model, Action action) throws NimbitsException {
                 switch (action) {
@@ -320,13 +326,16 @@ public class NavigationPanel extends NavigationEventProvider {
         }
 
         private class TreeDoubleClickGridEventListener implements Listener<TreeGridEvent<ModelData>> {
+            TreeDoubleClickGridEventListener() {
+            }
+
             @Override
             public void handleEvent(TreeGridEvent<ModelData> be) {
                 ModelData mx = tree.getSelectionModel()
                         .getSelectedItem();
 
                 if (mx != null) {
-                    TreeModel model = ((TreeModel) mx);
+                    TreeModel model = (TreeModel) mx;
 
                     try {
                         switch (model.getBaseEntity().getEntityType()) {
@@ -398,6 +407,9 @@ public class NavigationPanel extends NavigationEventProvider {
 
     private class ReloadAsyncCallback implements AsyncCallback<Map<String, Point>> {
 
+        ReloadAsyncCallback() {
+        }
+
         @Override
         public void onFailure(Throwable throwable) {
             GWT.log(throwable.getMessage(), throwable);
@@ -433,6 +445,9 @@ public class NavigationPanel extends NavigationEventProvider {
     private class DNDListener extends com.extjs.gxt.ui.client.event.DNDListener {
         ModelData selectedModel;
 
+        DNDListener() {
+        }
+
         @Override
         public void dragStart(DNDEvent e) {
             super.dragStart(e);
@@ -447,7 +462,7 @@ public class NavigationPanel extends NavigationEventProvider {
         @Override
         public void dragDrop(final DNDEvent e) {
             super.dragDrop(e);
-            if (!(e.getTarget().getInnerHTML().equals("&nbsp;"))) {
+            if (!e.getTarget().getInnerHTML().equals("&nbsp;")) {
                 if (selectedModel instanceof TreeModel) {
                     final TreeModel model = (TreeModel) selectedModel;
                     selectedModel.set(Parameters.name.getText(), model.getName().getValue());
@@ -475,7 +490,7 @@ public class NavigationPanel extends NavigationEventProvider {
         }
         private void moveEntity(Entity draggedEntity, Entity target) {
 
-            if (! target.getOwner().equals(draggedEntity.getOwner())) {
+            if ( target.getOwner().equals(draggedEntity.getOwner())) {
 
                 EntityServiceAsync service = GWT.create(EntityService.class);
                 draggedEntity.setParent(target.getKey());
@@ -487,6 +502,9 @@ public class NavigationPanel extends NavigationEventProvider {
     }
 
     private class GridEventListener implements Listener<GridEvent> {
+
+        GridEventListener() {
+        }
 
         @Override
         public void handleEvent(final GridEvent be) {
@@ -523,6 +541,9 @@ public class NavigationPanel extends NavigationEventProvider {
     }
 
     private class RefreshTimer extends Timer {
+        RefreshTimer() {
+        }
+
         @Override
         public void run() {
 

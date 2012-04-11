@@ -148,11 +148,11 @@ public class CalcEntity extends EntityStore implements Calculation {
     public void update(Entity update) throws NimbitsException {
         super.update(update);
         Calculation c = (Calculation) update;
-        this.enabled = (c.getEnabled());
-        this.formula = (c.getFormula());
-        this.targetVar = (c.getTarget());
-        this.xVar = (c.getX());
-        this.yVar = (c.getY());
-        this.zVar = (c.getZ());
+        this.enabled = c.getEnabled();
+        this.formula = c.getFormula();
+        this.targetVar = c.getTarget();
+        this.xVar = c.getX();
+        this.yVar = c.getY();
+        this.zVar = c.getZ();
     }
 }

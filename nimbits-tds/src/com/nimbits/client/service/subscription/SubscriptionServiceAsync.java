@@ -32,9 +32,6 @@ public interface SubscriptionServiceAsync {
 
     void subscribe(Entity entity, Subscription subscription, EntityName name, AsyncCallback<Entity> async);
 
-    //void readSubscription(final Entity point, AsyncCallback<Subscription> async);
-
     void getSubscribedEntity(final Entity entity, AsyncCallback<Entity> async);
 
-    void deleteSubscription(User u, Entity entity, AsyncCallback<Void> async);
 }

@@ -19,7 +19,6 @@ import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.calculation.*;
 import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.service.calculation.*;
@@ -126,15 +125,13 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
 //        final Entity e = EntityServiceFactory.getInstance().getEntityByKey(u, point.getKey(), EntityStore.class.getName());
 
         final List<Calculation> calculations = getCalculations(point);
-        Point target;
-        Value result;
         for (final Calculation c : calculations) {
             if (c.getEnabled()) {
 
 
                 try {
 
-                    target = (Point) EntityServiceFactory.getInstance().getEntityByKey(c.getTarget(), PointEntity.class.getName());
+                    Entity target =   EntityServiceFactory.getInstance().getEntityByKey(u, c.getTarget(), PointEntity.class.getName());
                     if (target == null) {
                         log.severe("Point target was null " + c.getTarget());
                         log.severe(c.getFormula());
@@ -142,7 +139,7 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
                     }
                     else {
                         log.info("Solving calc");
-                        result= solveEquation(c);
+                        Value result = solveEquation(c);
                         log.info("result" + result);
                         RecordedValueServiceFactory.getInstance().recordValue(u, target, result, true);
                     }
@@ -161,12 +158,10 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
     @Override
     public  Value solveEquation(final Calculation calculation) throws NimbitsException {
 
-        Double retVal;
-
         final MathEvaluator m = new MathEvaluator(calculation.getFormula());
 
 
-        if (!(Utils.isEmptyString(calculation.getX())) && calculation.getFormula().contains("x")) {
+        if (!Utils.isEmptyString(calculation.getX()) && calculation.getFormula().contains("x")) {
             //  Point p = PointServiceFactory.getInstance().getPointByKey(calculation.getX());
             Entity p =  EntityServiceFactory.getInstance().getEntityByKey(calculation.getX(), PointEntity.class.getName());
 
@@ -177,7 +172,7 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
                 m.addVariable("x", d);
             }
         }
-        if (!(Utils.isEmptyString(calculation.getY())) && calculation.getFormula().contains("y")) {
+        if (!Utils.isEmptyString(calculation.getY()) && calculation.getFormula().contains("y")) {
             Entity p =  EntityServiceFactory.getInstance().getEntityByKey(calculation.getY(), PointEntity.class.getName());
 
             // Point p = PointServiceFactory.getInstance().getPointByKey(calculation.getY());
@@ -188,7 +183,7 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
             }
 
         }
-        if (!(Utils.isEmptyString(calculation.getZ())) && calculation.getFormula().contains("z")) {
+        if (!Utils.isEmptyString(calculation.getZ()) && calculation.getFormula().contains("z")) {
             Entity p =  EntityServiceFactory.getInstance().getEntityByKey(calculation.getZ(), PointEntity.class.getName());
 
             //  Point p = PointServiceFactory.getInstance().getPointByKey(calculation.getZ());
@@ -199,7 +194,7 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
             }
         }
 
-        retVal = m.getValue();
+        Double retVal = m.getValue();
 
 
         if (retVal == null) {

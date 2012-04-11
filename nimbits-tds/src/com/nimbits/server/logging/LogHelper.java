@@ -25,8 +25,11 @@ import java.util.logging.*;
  */
 public class LogHelper {
 
-    public static void logException(final Class<?> processBatchTaskClass, final Throwable ex) {
-        final Logger log = Logger.getLogger(processBatchTaskClass.getName());
+    private LogHelper() {
+    }
+
+    public static void logException(final Class<?> c, final Throwable ex) {
+        final Logger log = Logger.getLogger(c.getName());
         log.severe(ex.getMessage());
         log.severe(ExceptionUtils.getStackTrace(ex));
 

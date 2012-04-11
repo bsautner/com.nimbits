@@ -112,23 +112,6 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
 
     }
 
-    @Override
-    public void deleteSubscription(final Entity entity) {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
 
-        final Subscription retObj = null;
-        try {
-            final SubscriptionEntity result = getSubscription(pm, entity);
-            if (result != null) {
-
-                pm.deletePersistent(result);
-            }
-
-        }
-        finally {
-            pm.close();
-        }
-
-    }
 
 }

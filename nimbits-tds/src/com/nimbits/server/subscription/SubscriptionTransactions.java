@@ -30,9 +30,6 @@ import java.util.*;
 public interface SubscriptionTransactions {
 
 
-  //  void subscribe(final Subscription subscription) throws NimbitsException;
-
-    //Subscription readSubscription(final Entity entity) throws NimbitsException;
 
     List<Subscription> getSubscriptionsToPointByType(final Point point, final SubscriptionType type) throws NimbitsException;
 
@@ -40,5 +37,5 @@ public interface SubscriptionTransactions {
 
     void updateSubscriptionLastSent(final Subscription subscription);
 
-    void deleteSubscription(final Entity entity);
+
 }

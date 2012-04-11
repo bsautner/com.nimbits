@@ -292,4 +292,8 @@ public class EntityStore implements Entity {
     }
 
 
+    @Override
+    public int compareTo(Entity entity) {
+        return 0;
+    }
 }

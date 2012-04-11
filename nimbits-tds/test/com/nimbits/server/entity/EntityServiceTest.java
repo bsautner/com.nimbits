@@ -103,7 +103,11 @@ public class EntityServiceTest extends NimbitsServletTest {
 
         List<Entity> entities =  EntityServiceFactory.getInstance().getEntities();
         assertTrue(!entities.isEmpty());
-
+        int last = 0;
+        for (Entity e : entities) {
+            assertTrue(e.getEntityType().getOrder() >= last);
+            last = e.getEntityType().getOrder(); //proves sorting is working based on type order
+        }
     }
 
     @Test

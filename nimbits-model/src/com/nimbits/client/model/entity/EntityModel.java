@@ -5,6 +5,7 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.value.*;
 
 import java.io.Serializable;
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.List;
  * Date: 2/7/12
  * Time: 11:06 AM
  */
-public class EntityModel  implements Serializable, Entity {
+public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
 
 
     private String name;
@@ -199,4 +200,13 @@ public class EntityModel  implements Serializable, Entity {
         this.key = key;
     }
 
+    @Override
+    public int compareTo(Entity that) {
+        int type = EntityType.get(this.entityType).getOrder().compareTo(that.getEntityType().getOrder());
+        try {
+            return type == 0 ? this.name.compareTo(that.getName().getValue()) : type;
+        } catch (NimbitsException e) {
+            return -1;
+        }
+    }
 }

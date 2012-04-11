@@ -45,6 +45,9 @@ import java.util.*;
  */
 public class SummaryPanel extends NavigationEventProvider {
 
+    private static final int SECONDS_MINUTES = 60;
+    private static final int WIDTH = 350;
+    private static final double MAX_VALUE = 24d;
     FormData formdata;
     VerticalPanel vp;
 
@@ -86,32 +89,14 @@ public class SummaryPanel extends NavigationEventProvider {
     }
     private void getExistingSummary() {
         SummaryServiceAsync service = GWT.create(SummaryService.class);
-        service.readSummary(entity, new AsyncCallback<Summary>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                GWT.log(caught.getMessage(), caught);
-            }
-
-            @Override
-            public void onSuccess(Summary result) {
-                summary = result;
-                try {
-                    createForm();
-                    add(vp);
-                    doLayout();
-                } catch (NimbitsException e) {
-                    FeedbackHelper.showError(e);
-                }
-
-            }
-        });
+        service.readSummary(entity, new ReadSummaryAsyncCallback());
     }
 
 
-    private ComboBox<SummaryTypeOption> summaryTypeOptionComboBox(final String title,final SummaryType selectedValue) {
+    private static ComboBox<SummaryTypeOption> summaryTypeOptionComboBox(final String title, final SummaryType selectedValue) {
         ComboBox<SummaryTypeOption> combo = new ComboBox<SummaryTypeOption>();
 
-        ArrayList<SummaryTypeOption> ops = new ArrayList<SummaryTypeOption>();
+        List<SummaryTypeOption> ops = new ArrayList<SummaryTypeOption>(SummaryType.values().length);
 
 
         ops.add(new SummaryTypeOption(SummaryType.average));
@@ -147,15 +132,15 @@ public class SummaryPanel extends NavigationEventProvider {
     private void createForm() throws NimbitsException {
 
         FormPanel simple = new FormPanel();
-        simple.setWidth(350);
+        simple.setWidth(WIDTH);
         simple.setFrame(true);
         simple.setHeaderVisible(false);
         simple.setBodyBorder(false);
         simple.setFrame(false);
 
-        final EntityName name;
         final TextField<String> summaryName = new TextField<String>();
         summaryName.setFieldLabel("Summary Name");
+        final EntityName name;
         try {
         if (summary != null && entity.getEntityType().equals(EntityType.summary)) {
             summaryName.setValue(entity.getName().getValue());
@@ -172,7 +157,7 @@ public class SummaryPanel extends NavigationEventProvider {
 
        // int alertSelected = (subscription == null) ? SubscriptionNotifyMethod.none.getCode() : subscription.getAlertNotifyMethod().getCode();
 
-        SummaryType type =  (summary == null) ? SummaryType.average : summary.getSummaryType() ;
+        SummaryType type =  summary == null ? SummaryType.average : summary.getSummaryType() ;
         final ComboBox<SummaryTypeOption> typeCombo = summaryTypeOptionComboBox("Summary Type", type);
 
 
@@ -187,7 +172,7 @@ public class SummaryPanel extends NavigationEventProvider {
         spinnerField.getPropertyEditor().setFormat(NumberFormat.getFormat("00"));
         spinnerField.setFieldLabel("Timespan (hours)");
         spinnerField.setMinValue(1d);
-        spinnerField.setMaxValue(24d);
+        spinnerField.setMaxValue(MAX_VALUE);
         spinnerField.setValue(summary == null ? 8 : summary.getSummaryIntervalHours());
 
         String target = summary == null ? null : summary.getTargetPointUUID();
@@ -196,75 +181,9 @@ public class SummaryPanel extends NavigationEventProvider {
 
         Button submit = new Button("Submit");
         Button cancel = new Button("Cancel");
-        cancel.addSelectionListener(new SelectionListener<ButtonEvent>() {
+        cancel.addSelectionListener(new CancelButtonEventSelectionListener());
 
-
-            @Override
-            public void componentSelected(ButtonEvent buttonEvent) {
-                try {
-                    notifyEntityAddedListener(null);
-                } catch (NimbitsException e) {
-                    FeedbackHelper.showError(e);
-                }
-            }
-        });
-
-        submit.addSelectionListener(new SelectionListener<ButtonEvent>() {
-            @Override
-            public void componentSelected(ButtonEvent buttonEvent) {
-                SummaryServiceAsync service = GWT.create(SummaryService.class);
-                final MessageBox box = MessageBox.wait("Progress",
-                        "Create Summary", "please wit...");
-                box.show();
-
-                SummaryType summaryType =   typeCombo.getValue().getMethod();
-
-                Summary update = null;
-
-                if (entity.getEntityType().equals(EntityType.summary) && summary != null) {
-
-                    try {
-                        update = SummaryModelFactory.createSummary(entity,
-                                summary.getEntity(), summary.getTargetPointUUID(), summaryType,
-                                spinnerField.getValue().intValue() * 60 * 60 * 1000, new Date());
-                    } catch (NimbitsException e) {
-                        FeedbackHelper.showError(e);
-                    }
-
-                }
-                else {
-                    update = SummaryModelFactory.createSummary(
-                            entity.getKey(),targetCombo.getValue().getUUID() , summaryType,
-                            spinnerField.getValue().intValue() * 60 * 60 * 1000, new Date());
-
-                }
-
-
-                service.addUpdateSummary( update, name, new AsyncCallback<Entity>() {
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        FeedbackHelper.showError(caught);
-                        box.close();
-                        try {
-                            notifyEntityAddedListener(null);
-                        } catch (NimbitsException e) {
-                            FeedbackHelper.showError(e);
-                        }
-                    }
-
-                    @Override
-                    public void onSuccess(Entity result) {
-                        box.close();
-                        try {
-                            notifyEntityAddedListener(result);
-                        } catch (NimbitsException e) {
-                            FeedbackHelper.showError(e);
-                        }
-                    }
-                });
-
-            }
-        });
+        submit.addSelectionListener(new SubmitEventSelectionListener(typeCombo, spinnerField, targetCombo, name));
 
 
         Html h = new Html("<p>The summation process runs once an hour and can compute a summary value (such as an average) " +
@@ -318,11 +237,11 @@ public class SummaryPanel extends NavigationEventProvider {
     }
 
 
-    private class SummaryTypeOption extends BaseModelData {
+    private static class SummaryTypeOption extends BaseModelData {
         SummaryType type;
 
 
-        public SummaryTypeOption(SummaryType value) {
+        SummaryTypeOption(SummaryType value) {
             this.type = value;
             set(Parameters.value.getText(), value.getCode());
             set(Parameters.name.getText(), value.getText());
@@ -333,4 +252,119 @@ public class SummaryPanel extends NavigationEventProvider {
         }
     }
 
+    private class UpdateEntityAsyncCallback implements AsyncCallback<Entity> {
+        private final MessageBox box;
+
+        UpdateEntityAsyncCallback(MessageBox box) {
+            this.box = box;
+        }
+
+        @Override
+        public void onFailure(Throwable caught) {
+            FeedbackHelper.showError(caught);
+            box.close();
+            try {
+                notifyEntityAddedListener(null);
+            } catch (NimbitsException e) {
+                FeedbackHelper.showError(e);
+            }
+        }
+
+        @Override
+        public void onSuccess(Entity result) {
+            box.close();
+            try {
+                notifyEntityAddedListener(result);
+            } catch (NimbitsException e) {
+                FeedbackHelper.showError(e);
+            }
+        }
+    }
+
+    private class SubmitEventSelectionListener extends SelectionListener<ButtonEvent> {
+        private final ComboBox<SummaryTypeOption> typeCombo;
+        private final SpinnerField spinnerField;
+        private final EntityCombo targetCombo;
+        private final EntityName name;
+
+        SubmitEventSelectionListener(ComboBox<SummaryTypeOption> typeCombo, SpinnerField spinnerField, EntityCombo targetCombo, EntityName name) {
+            this.typeCombo = typeCombo;
+            this.spinnerField = spinnerField;
+            this.targetCombo = targetCombo;
+            this.name = name;
+        }
+
+        @Override
+        public void componentSelected(ButtonEvent buttonEvent) {
+            SummaryServiceAsync service = GWT.create(SummaryService.class);
+            final MessageBox box = MessageBox.wait("Progress",
+                    "Create Summary", "please wit...");
+            box.show();
+
+            SummaryType summaryType =   typeCombo.getValue().getMethod();
+
+            Summary update = null;
+
+            if (entity.getEntityType().equals(EntityType.summary) && summary != null) {
+
+                try {
+                    update = SummaryModelFactory.createSummary(entity,
+                            summary.getEntity(), summary.getTargetPointUUID(), summaryType,
+                            spinnerField.getValue().intValue() * SECONDS_MINUTES * SECONDS_MINUTES * 1000, new Date());
+                } catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
+                }
+
+            }
+            else {
+                update = SummaryModelFactory.createSummary(
+                        entity.getKey(), targetCombo.getValue().getUUID() , summaryType,
+                        spinnerField.getValue().intValue() * SECONDS_MINUTES * SECONDS_MINUTES * 1000, new Date());
+
+            }
+
+
+            service.addUpdateSummary( update, name, new UpdateEntityAsyncCallback(box));
+
+        }
+    }
+
+    private class ReadSummaryAsyncCallback implements AsyncCallback<Summary> {
+        ReadSummaryAsyncCallback() {
+        }
+
+        @Override
+        public void onFailure(Throwable caught) {
+            GWT.log(caught.getMessage(), caught);
+        }
+
+        @Override
+        public void onSuccess(Summary result) {
+            summary = result;
+            try {
+                createForm();
+                add(vp);
+                doLayout();
+            } catch (NimbitsException e) {
+                FeedbackHelper.showError(e);
+            }
+
+        }
+    }
+
+    private class CancelButtonEventSelectionListener extends SelectionListener<ButtonEvent> {
+
+
+        CancelButtonEventSelectionListener() {
+        }
+
+        @Override
+        public void componentSelected(ButtonEvent buttonEvent) {
+            try {
+                notifyEntityAddedListener(null);
+            } catch (NimbitsException e) {
+                FeedbackHelper.showError(e);
+            }
+        }
+    }
 }

@@ -43,6 +43,7 @@ public class PointServletImpl extends ApiServlet {
 
     private final static Gson gson = GsonFactory.getInstance();
     private static final long serialVersionUID = 1L;
+    private static final int INT = 1024;
 
 
     @Override
@@ -87,7 +88,7 @@ public class PointServletImpl extends ApiServlet {
                             out.println(retJson);
 
                         } else if (!Utils.isEmptyString(pointNameParam) && !Utils.isEmptyString(getParam(Parameters.json))) {
-                          //  final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
+                            //  final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
                             final Point point = createPointWithJson(user, categoryName, getParam(Parameters.json));
                             final String retJson = gson.toJson(point);
                             out.println(retJson);
@@ -115,10 +116,21 @@ public class PointServletImpl extends ApiServlet {
     @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp) {
 
+        try {
+            final PrintWriter out = resp.getWriter();
 
+            out.print(processGet(req, resp));
+        } catch (IOException ignored) {
+
+        }
+    }
+
+    protected String processGet(HttpServletRequest req, HttpServletResponse resp) {
+
+        StringBuilder sb = new StringBuilder(INT);
         try {
 
-            final PrintWriter out = resp.getWriter();
+
             doInit(req, resp, ExportType.plain);
 
 
@@ -133,56 +145,52 @@ public class PointServletImpl extends ApiServlet {
 
             if (containsParam(Parameters.uuid)) {
 
-                final Entity entity =   EntityServiceFactory.getInstance().getEntityByKey(getParam(Parameters.uuid), PointEntity.class.getName());
-
+                Entity entity =   EntityServiceFactory.getInstance().getEntityByKey(getParam(Parameters.uuid), PointEntity.class.getName());
+                if (entity == null) {
+                    entity=  EntityServiceFactory.getInstance().getEntityByKey(user, CategoryEntity.class.getName(),getParam(Parameters.uuid));
+                }
                 if (entity != null) {
-                    outputPoint(getParam(Parameters.count), getParam(Parameters.format), startParam, endParam, offsetParam, out, entity);
-                } else {
-                    final Entity category = EntityServiceFactory.getInstance().getEntityByKey(user, EntityStore.class.getName(),getParam(Parameters.uuid));
+                    if (entity.getEntityType().equals(EntityType.point)) {
+                        sb.append(outputPoint(getParam(Parameters.count), getParam(Parameters.format), startParam, endParam, offsetParam, entity));
+                    }
+                    else {
+                        if (okToReport(user, entity)) {
 
-                    if (category != null) {
-                        if (okToReport(user, category)) {
-//                            if (u == null) {
-//                                u = UserServiceFactory.getServerInstance().getUserByID(category.getUserFK());
-//                                u.setRestricted(true);
-//                            }
-                            final List<Entity> children = EntityServiceFactory.getInstance().getEntityChildren(user, category, EntityType.point);
-                            final List<Point> points = PointServiceFactory.getInstance().getPoints(user, children);// PointServiceFactory.getInstance().getPointsByCategory(u, category);
+                            final List<Entity> children = EntityServiceFactory.getInstance().getEntityChildren(user, entity, EntityType.point);
+                            final List<Point> points = new ArrayList<Point>(children.size());
 
                             //todo remove point from list if private
-                            for (final Entity e : points) {
+                            for (final Entity e : children) {
                                 final Point p = (Point) e;
                                 p.setValues(getRecordedValues(getParam(Parameters.count), startParam, endParam, offsetParam, p));
                                 p.setValue(RecordedValueServiceFactory.getInstance().getCurrentValue(p));
-
+                                points.add(p);
 
                             }
-                            category.setPoints(points);
+                            entity.setChildren(points);
 
-                            final String json = GsonFactory.getInstance().toJson(category);
-                            out.print(json);
+                            final String json = GsonFactory.getInstance().toJson(entity);
+                            sb.append(json);
 
                         }
                     }
+
+
                 }
+
+
             } else {
-                getPointObjects(getParam(Parameters.category), pointNameParam, out);
+                sb.append(getPointObjects(getParam(Parameters.category), pointNameParam));
             }
 
-            out.close();
-        } catch (IOException e) {
-            LogHelper.logException(this.getClass(), e);
-//            if (user != null) {
-//                FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(e));
-//            }
+
         } catch (NimbitsException e) {
             LogHelper.logException(this.getClass(), e);
-//            if (user != null) {
-//                FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(e));
-//            }
-        }
 
+        }
+        return sb.toString();
     }
+
     private static Entity getCategoryWithParam(final EntityName categoryName, final User u) throws NimbitsException {
 
         // Category c = CategoryServiceFactory.getInstance().getCategory(u, categoryName);
@@ -256,7 +264,8 @@ public class PointServletImpl extends ApiServlet {
 
 
 
-    private static void outputPoint(final String countParam, final String format, final String startParam, final String endParam, final String offsetParam, final PrintWriter out, final Entity baseEntity) throws NimbitsException {
+    private static String outputPoint(final String countParam, final String format, final String startParam,
+                                      final String endParam, final String offsetParam, final Entity baseEntity) throws NimbitsException {
 
 
         final Point p = (Point) baseEntity;
@@ -265,10 +274,7 @@ public class PointServletImpl extends ApiServlet {
         final Value current = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
         p.setValue(current);
         final ExportType type = getOutputType(format);
-        if (type.equals(ExportType.json)) {
-            final String json = gson.toJson(p);
-            out.print(json);
-        }
+        return type.equals(ExportType.json) ? gson.toJson(p) : "";
 
     }
 
@@ -296,10 +302,10 @@ public class PointServletImpl extends ApiServlet {
             final int offset = Integer.valueOf(offsetParam);
             final Timespan ts = TimespanServiceFactory.getInstance().createTimespan(start, end, offset);
 
-             return RecordedValueServiceFactory.getInstance().getDataSegment(point, ts);
+            return RecordedValueServiceFactory.getInstance().getDataSegment(point, ts);
 
         } else {
-           return new ArrayList<Value>(0);
+            return new ArrayList<Value>(0);
         }
 
     }
@@ -311,38 +317,31 @@ public class PointServletImpl extends ApiServlet {
         return c.getProtectionLevel().equals(ProtectionLevel.everyone) || !(u == null || u.isRestricted());
     }
 
-    private static void getPointObjects(final String categoryNameParam, final String pointNameParam, final PrintWriter out) throws NimbitsException {
+    protected  static String getPointObjects(final String categoryNameParam, final String pointNameParam ) throws NimbitsException {
 
         if (user != null) {
 
-            final String result;
+
             if (!Utils.isEmptyString(pointNameParam)) {
                 final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
                 final Entity e = EntityServiceFactory.getInstance().getEntityByName(user, pointName,EntityType.point);
-                if (e != null) {
-
-
-                    result = gson.toJson(e);
-                    out.println(result);
-                }
-                else {
-                    FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException("Error calling " +
-                            "Point Service. " + pointNameParam + " not found"));
-                }
+                return e != null ? gson.toJson(e) : "Error calling " +
+                        "Point Service. " + pointNameParam + " not found";
             } else if (!Utils.isEmptyString(categoryNameParam)) {
                 final EntityName categoryName = CommonFactoryLocator.getInstance().createName(categoryNameParam, EntityType.category);
-                final Entity c = EntityServiceFactory.getInstance().getEntityByName(user, categoryName,EntityType.category);//  CategoryServiceFactory.getInstance().getCategory(u, categoryName);
+                final Entity c = EntityServiceFactory.getInstance().getEntityByName(user, categoryName,EntityType.category);
                 final List<Entity> children = EntityServiceFactory.getInstance().getEntityChildren(user, c, EntityType.point);
-                final List<Point> points =   PointServiceFactory.getInstance().getPoints(user, children);
+                return  gson.toJson(children, GsonFactory.pointListType);
 
-                //final List<Point> points = PointServiceFactory.getInstance().getPointsByCategory(u, c);
-                result = gson.toJson(points, GsonFactory.pointListType);
-                out.println(result);
+            }
+            else {
+                return "Missing params";
             }
 
         } else {
-            out.println(UserMessages.RESPONSE_PERMISSION_DENIED);
+            return UserMessages.RESPONSE_PERMISSION_DENIED;
         }
+
     }
 }
 

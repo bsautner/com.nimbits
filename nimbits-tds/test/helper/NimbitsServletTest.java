@@ -16,6 +16,7 @@ package helper;
 import com.google.appengine.tools.development.testing.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
+import com.nimbits.client.model.category.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.entity.*;
@@ -70,7 +71,7 @@ public class NimbitsServletTest {
     public Point pointChild;
     public Entity pointEntity;
     public Entity pointChildEntity;
-
+    public Category group;
 
 
     @Before
@@ -95,9 +96,9 @@ public class NimbitsServletTest {
         settingsDAO = SettingTransactionsFactory.getDaoInstance();
 
         Entity c = EntityModelFactory.createEntity(groupName, "", EntityType.category, ProtectionLevel.everyone, user.getKey(), user.getKey(), UUID.randomUUID().toString());
-        c = EntityServiceFactory.getInstance().addUpdateEntity(c);
+        group = (Category) EntityServiceFactory.getInstance().addUpdateEntity(c);
 
-        pointEntity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone,  c.getKey(), user.getKey(), UUID.randomUUID().toString());
+        pointEntity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone,  group.getKey(), user.getKey(), UUID.randomUUID().toString());
         point = (Point) EntityServiceFactory.getInstance().addUpdateEntity(user, pointEntity);
         // point = pointService.addPoint(user, pointEntity);
 

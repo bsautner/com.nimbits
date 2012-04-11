@@ -30,7 +30,6 @@ public class ValueDeserializer implements JsonDeserializer<Value> {
     public Value deserialize(final JsonElement jsonElement, final Type type, final JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         final JsonPrimitive jsonPrimitive = (JsonPrimitive) jsonElement;
         final String json = jsonPrimitive.getAsString();
-        final Value retObj = GsonFactory.getSimpleInstance().fromJson(json, ValueModel.class);
-        return retObj;
+        return GsonFactory.getSimpleInstance().fromJson(json, ValueModel.class);
     }
 }

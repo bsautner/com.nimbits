@@ -134,7 +134,8 @@ public class EntityDaoImpl implements  EntityTransactions {
     public List<Entity> getChildren(final Entity parentEntity, final EntityType type) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
-            return getEntityChildren(pm, parentEntity, type);
+            List<Entity> r =  getEntityChildren(pm, parentEntity, type);
+            return createModels(r);
         }
         finally {
             pm.close();

@@ -38,6 +38,8 @@ import java.util.*;
 public class CalculationServiceImplTest extends NimbitsServletTest {
 
 
+    private static final double DELTA = 0.0001;
+
     @Test
     public void testCalcs() throws NimbitsException, InterruptedException {
 
@@ -88,21 +90,21 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         Thread.sleep(100);
         final Value vt = RecordedValueServiceFactory.getInstance().recordValue(user, triggerName,  ValueModelFactory.createValueModel(r2));
 
-        assertEquals(vt.getDoubleValue(), r2, 0.0001);
+        assertEquals(vt.getDoubleValue(), r2, DELTA);
 
 
 
         final Value vy =RecordedValueServiceFactory.getInstance().getCurrentValue(y);// ClientHelper.client().getCurrentRecordedValue(yName);
-        assertEquals(vy.getDoubleValue(), ry, 0.0001);
+        assertEquals(vy.getDoubleValue(), ry, DELTA);
 
         final Value vz = RecordedValueServiceFactory.getInstance().getCurrentValue(z);
-        assertEquals(vz.getDoubleValue(), rz, 0.0001);
+        assertEquals(vz.getDoubleValue(), rz, DELTA);
 
         Thread.sleep(1000);
         CalculationServiceFactory.getInstance().processCalculations(user, trigger, vt);
         final Value endResult =RecordedValueServiceFactory.getInstance().getCurrentValue(target);
         assertNotNull(endResult);
-        assertEquals(r1 + r2 + ry + rz, endResult.getDoubleValue(), 0.001);
+        assertEquals(r1 + r2 + ry + rz, endResult.getDoubleValue(), DELTA);
 
     }
 }

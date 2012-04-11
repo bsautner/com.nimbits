@@ -108,7 +108,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
         final Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName, PointEntity.class.getName());
       //  final Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
 
-        return (e != null) ? recordValue(u, e, value, false) : null;
+        return e != null ? recordValue(u, e, value, false) : null;
 
     }
 
@@ -123,7 +123,18 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
 
     }
+    @Override
+    public Map<String, Entity> getCurrentValues(Map<String, Point> entities) throws NimbitsException {
+        Map<String, Entity> retObj = new HashMap<String, Entity>(entities.size());
+        for (Point p : entities.values()) {
 
+            Value v = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
+            p.setValue(v);
+            retObj.put(p.getKey(), p);
+        }
+        return retObj;
+
+    }
 
     @Override
     public Value getCurrentValue(final Entity p) throws NimbitsException {
@@ -153,7 +164,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
         if (point.isHighAlarmOn() || point.isLowAlarmOn()) {
 
-            if (point.isHighAlarmOn() && (value.getDoubleValue() >= point.getHighAlarm())) {
+            if (point.isHighAlarmOn() && value.getDoubleValue() >= point.getHighAlarm()) {
                 retObj = AlertType.HighAlert;
             }
             if (point.isLowAlarmOn() && value.getDoubleValue() <= point.getLowAlarm()) {
@@ -301,13 +312,12 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
     @Override
     public Date getLastRecordedDate(final List<Point> points) throws NimbitsException {
         Date retVal = null;
-        Value rx;
 
         for (final Point p : points) {
             final List<Value> r = RecordedValueTransactionFactory.getInstance(p).getTopDataSeries(1);
 
             if (!r.isEmpty()) {
-                rx = r.get(0);
+                Value rx = r.get(0);
                 if (retVal == null) {
                     retVal = rx.getTimestamp();
                 } else if (retVal.getTime() < rx.getTimestamp().getTime()) {

@@ -302,10 +302,9 @@ public class NavigationPanel extends NavigationEventProvider {
             @Override
             public void onEntityModified(TreeModel model, Action action) throws NimbitsException {
                 switch (action) {
-                    case delete: {
+                    case delete:
                         removeEntity(model);
                         break;
-                    }
                     case update: case create:
                         addUpdateTreeModel(model, false);
                         break;
@@ -385,7 +384,7 @@ public class NavigationPanel extends NavigationEventProvider {
         private final GridEvent be;
         private final TreeModel model;
 
-        private RecordValueCallback(GridEvent be, TreeModel model) {
+        RecordValueCallback(GridEvent be, TreeModel model) {
             this.be = be;
             this.model = model;
         }
@@ -405,7 +404,7 @@ public class NavigationPanel extends NavigationEventProvider {
         }
     }
 
-    private class ReloadAsyncCallback implements AsyncCallback<Map<String, Point>> {
+    private class ReloadAsyncCallback implements AsyncCallback<Map<String, Entity>> {
 
         ReloadAsyncCallback() {
         }
@@ -416,14 +415,14 @@ public class NavigationPanel extends NavigationEventProvider {
         }
 
         @Override
-        public void onSuccess(Map<String, Point> stringPointMap) {
+        public void onSuccess(Map<String, Entity> stringPointMap) {
             final TreeStore<ModelData> models = tree.getTreeStore();
             for (final ModelData m : models.getAllItems()) {
                 final TreeModel model = (TreeModel) m;
                 if (!model.isDirty() && model.getEntityType().equals(EntityType.point)) {
 
                     if (stringPointMap.containsKey(model.getUUID())) {
-                        Point p = stringPointMap.get(model.getUUID());
+                        Point p = (Point) stringPointMap.get(model.getUUID());
                         if (p.getValue() == null) {
                             model.setAlertType(AlertType.OK);
                             model.setValue(ValueModelFactory.createValueModel(0.0));
@@ -553,13 +552,13 @@ public class NavigationPanel extends NavigationEventProvider {
             }
 
         }
-        private void reloadCurrentValues(Map<String, Entity> entityMap) {
-            final PointServiceAsync service = GWT.create(PointService.class);
-            service.getPoints(entityMap, new ReloadAsyncCallback());
+        private void reloadCurrentValues(Map<String, Point> entityMap) {
+            final RecordedValueServiceAsync service = GWT.create(RecordedValueService.class);
+            service.getCurrentValues(entityMap, new ReloadAsyncCallback());
         }
 
-        private Map<String, Entity> getVisiblePoints() {
-            final Map<String, Entity> entityMap = new HashMap<String, Entity>(tree.getTreeStore().getAllItems().size());
+        private Map<String, Point> getVisiblePoints() {
+            final Map<String, Point> entityMap = new HashMap<String, Point>(tree.getTreeStore().getAllItems().size());
 
             if (tree != null) {
                 for (final ModelData m : tree.getTreeStore().getAllItems()) {
@@ -571,7 +570,7 @@ public class NavigationPanel extends NavigationEventProvider {
                                 && model.getEntityType().equals(EntityType.point)
                                 )  {
                             if (tree.isExpanded(model.getParent())) {
-                                entityMap.put(model.getUUID(), model.getBaseEntity());
+                                entityMap.put(model.getUUID(), (Point) model.getBaseEntity());
                             }
                         }
                     } catch (Exception e) {

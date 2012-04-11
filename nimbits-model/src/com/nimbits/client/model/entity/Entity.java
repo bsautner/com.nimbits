@@ -4,7 +4,8 @@ import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.*;
+
 
 import java.io.Serializable;
 import java.util.List;
@@ -59,10 +60,9 @@ public interface Entity  extends Serializable, Comparable<Entity> {
 
     void setBlobKey(String blobKey);
 
-    void setPoints(List<Point> points);
+    void setChildren(List<Point> children);
 
     void update(Entity update) throws NimbitsException;
 
-
-
+    List<Point> getChildren();
 }

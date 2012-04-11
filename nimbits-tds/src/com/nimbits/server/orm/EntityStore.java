@@ -274,9 +274,10 @@ public class EntityStore implements Entity {
     }
 
     @Override
-    public void setPoints(final List<Point> points) {
-        //not implemented
+    public void setChildren(List<Point> children) {
+
     }
+
 
     @Override
     public void update(Entity update) throws NimbitsException {
@@ -289,6 +290,11 @@ public class EntityStore implements Entity {
         }
 
         this.uuid = update.getUUID();
+    }
+
+    @Override
+    public List<Point> getChildren() {
+        return null;
     }
 
 

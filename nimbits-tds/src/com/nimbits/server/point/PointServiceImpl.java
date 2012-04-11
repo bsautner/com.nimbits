@@ -27,7 +27,6 @@ import com.nimbits.server.blob.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.export.*;
 import com.nimbits.server.orm.*;
-import com.nimbits.server.user.*;
 import com.nimbits.server.value.*;
 
 import java.util.*;
@@ -37,16 +36,6 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
     private static final long serialVersionUID = 1L;
 
-    private User getUser() {
-        User u;
-        try {
-            u = UserServiceFactory.getServerInstance().getHttpRequestUser(
-                    this.getThreadLocalRequest());
-        } catch (NimbitsException e) {
-            u = null;
-        }
-        return u;
-    }
     //
     @Override
     public Entity copyPoint(User u, Entity originalEntity, EntityName newName) throws NimbitsException {
@@ -62,22 +51,8 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
     }
 
-    @Override
-    public Map<String, Point> getPoints(Map<String, Entity> entities) throws NimbitsException {
-        List<Entity> entityList = new ArrayList<Entity>(entities.values());
 
-        List<Point> points =  PointTransactionsFactory.getInstance(getUser()).getPoints(entityList);
-        Map<String, Point> retObj = new HashMap<String, Point>(points.size());
-        Value v;
-        for (Point p : points) {
 
-            v  = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
-            p.setValue(v);
-            retObj.put(p.getKey(), p);
-        }
-        return retObj;
-
-    }
 
     @Override
     public Point addPoint(EntityName name) throws NimbitsException {
@@ -91,10 +66,7 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     }
 
 
-    @Override
-    public List<Point> getPoints(final User u, final List<Entity> entities) throws NimbitsException {
-        return PointTransactionsFactory.getInstance(u).getPoints(entities);
-    }
+
 
 
     @Override
@@ -130,6 +102,6 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public List<Point> getIdlePoints() throws NimbitsException {
-        return PointTransactionsFactory.getInstance(UserServiceFactory.getServerInstance().getAdmin()).getIdlePoints();
+        return PointServiceFactory.getDaoInstance().getIdlePoints();
     }
 }

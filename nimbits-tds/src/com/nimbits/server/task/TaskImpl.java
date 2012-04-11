@@ -73,17 +73,22 @@ public class TaskImpl implements Task {
                                     final int exp) {
 
 
-        final Queue queue =  QueueFactory.getQueue(overrideQueue ? DEFAULT : QUEUE_DELETE_DATA);
-        if (onlyExpired) {
-            queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_DATA_TASK)
-                    .param(Parameters.json.getText(),  GsonFactory.getInstance().toJson(point))
-                    .param(Parameters.exp.getText(), Long.toString(exp))
+        try {
+            final Queue queue =  QueueFactory.getQueue(overrideQueue ? DEFAULT : QUEUE_DELETE_DATA);
+            if (onlyExpired) {
+                queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_DATA_TASK)
+                        .param(Parameters.json.getText(),  GsonFactory.getInstance().toJson(point))
+                        .param(Parameters.exp.getText(), Long.toString(exp))
 
-            );
-        } else {
-            queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_DATA_TASK)
-                    .param(Parameters.json.getText(),  GsonFactory.getInstance().toJson(point))
-            );
+                );
+            } else {
+                queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_DATA_TASK)
+                        .param(Parameters.json.getText(),  GsonFactory.getInstance().toJson(point))
+                );
+            }
+        } catch (Exception e) {
+            overrideQueue = true;
+            startDeleteDataTask(point, onlyExpired, exp);
         }
 
 

@@ -64,4 +64,5 @@ public interface RecordedValueService extends RemoteService {
                                final Timespan timespan) throws NimbitsException;
 
 
+    Map<String, Entity> getCurrentValues(Map<String, Point> entities) throws NimbitsException;
 }

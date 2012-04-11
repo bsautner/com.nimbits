@@ -18,6 +18,7 @@ import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.valueblobstore.*;
 import com.nimbits.server.entity.*;
@@ -59,26 +60,32 @@ public class PointMaintTask extends HttpServlet {
         resp.setContentType(Const.CONTENT_TYPE_HTML);
 
         final String j = req.getParameter(Parameters.json.getText());
-        final Entity e = gson.fromJson(j, EntityModel.class);
+        final Point e = gson.fromJson(j, PointModel.class);
         final User u = UserServiceFactory.getInstance().getUserByKey(e.getOwner());
+        if (e.getExpire() > 0) {
+            TaskFactory.getInstance().startDeleteDataTask(
+                    e,
+                    true, e.getExpire());
+        }
         consolidateBlobs(u, e);
 
     }
 
 
+
     public static void consolidateBlobs(final User u, final Entity e) throws NimbitsException {
         // n = UserTransactionFactory.getInstance().(p.getUserFK());
         // final Point p = PointServiceFactory.getInstance().getPointByKey(e.getKey());
-        final Entity p =EntityServiceFactory.getInstance().getEntityByKey(u, e.getKey(), PointEntity.class.getName());
 
-        final List<ValueBlobStore> stores = RecordedValueTransactionFactory.getDaoInstance(p).getAllStores();
+
+        final List<ValueBlobStore> stores = RecordedValueTransactionFactory.getDaoInstance(e).getAllStores();
         if (! stores.isEmpty()) {
             log.info("Consolidating " + stores.size() + " blob stores");
             final Collection<Long> dates = new ArrayList<Long>(stores.size());
             for (final ValueBlobStore store : stores) {
                 //consolidate blobs that have more than one date.
                 if (dates.contains(store.getTimestamp().getTime())) {
-                    RecordedValueTransactionFactory.getDaoInstance(p).consolidateDate(store.getTimestamp());
+                    RecordedValueTransactionFactory.getDaoInstance(e).consolidateDate(store.getTimestamp());
                     log.info("Consolidating " + store.getTimestamp());
                 }
                 else {

@@ -59,4 +59,6 @@ public interface RecordedValueServiceAsync {
     void getCache(final Entity entity, AsyncCallback<List<Value>> async);
 
     void getPieceOfDataSegment(final Entity entity, final Timespan timespan, final int start, final int end, AsyncCallback<List<Value>> async);
+
+    void getCurrentValues(Map<String, Point> entities, AsyncCallback<Map<String, Entity>> async);
 }

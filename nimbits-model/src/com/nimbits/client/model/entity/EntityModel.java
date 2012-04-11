@@ -32,7 +32,7 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
     private String blobKey;
     private String uuid;
     private static final long serialVersionUID =3455345353L;
-    private List<Point> points;
+    private List<Point> children;
 
     public EntityModel(final CommonIdentifier name,
                        final String description,
@@ -71,13 +71,14 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
     }
     }
 
-    public List<Point> getPoints() {
-        return points;
+    @Override
+    public List<Point> getChildren() {
+        return children;
     }
 
     @Override
-    public void setPoints(final List<Point> points) {
-        this.points = points;
+    public void setChildren(final List<Point> someChildren) {
+        this.children = someChildren;
     }
 
     @Override

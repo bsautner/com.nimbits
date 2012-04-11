@@ -14,11 +14,9 @@
 package com.nimbits.server.point;
 
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.entity.*;
+
 import com.nimbits.client.model.point.*;
 
-import javax.servlet.http.*;
 import java.util.*;
 
 /**
@@ -29,31 +27,10 @@ import java.util.*;
  */
 public interface PointTransactions {
 
-    //List<Point> getPoints() throws NimbitsException;
-
-
-
-    //Point updatePoint(final Point point) throws NimbitsException;
-
-  //  void deletePoint(final Point p) throws NimbitsException;
-
-    Point checkPoint(final HttpServletRequest req, final EmailAddress email, final Point point) throws NimbitsException;
-
-    List<Point> getAllPoints(final int start,final  int end) throws NimbitsException;
 
     List<Point> getIdlePoints() throws NimbitsException;
 
-  //  Point getPointByKey(final String uuid) throws NimbitsException;
 
-    List<Point> getAllPoints() throws NimbitsException;
-
-    //Point addPoint(final Entity entity) throws NimbitsException;
-
-    //Point addPoint(final Point point) throws NimbitsException;
-
-    List<Point>  getPoints(final List<Entity> entities) throws NimbitsException;
-
-    Point deletePoint(final Entity entity) throws NimbitsException;
 
 
 }

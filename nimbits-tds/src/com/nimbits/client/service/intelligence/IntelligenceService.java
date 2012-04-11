@@ -47,5 +47,5 @@ public interface IntelligenceService extends RemoteService {
 
     Value processInput(final Intelligence update) throws NimbitsException;
 
-    void deleteIntelligence(final User u, final Entity entity);
+
 }

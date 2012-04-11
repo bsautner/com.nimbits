@@ -26,10 +26,5 @@ import java.util.*;
  * Time: 11:48 AM
  */
 public interface IntelligenceTransactions {
-
-    public Intelligence getIntelligence(Entity entity) throws NimbitsException;
-
     List<Intelligence> getIntelligences(Entity point) throws NimbitsException;
-
-    void deleteIntelligence(Entity entity);
-}
+ }

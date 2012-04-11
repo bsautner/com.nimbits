@@ -38,26 +38,7 @@ public class CalculationDAOImpl implements CalculationTransactions {
 
     }
 
-    @Override
-    public Calculation getCalculation(final Entity entity) throws NimbitsException {
 
-
-
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-
-        try {
-            final Calculation c = pm.getObjectById(CalcEntity.class, entity.getKey());
-            return CalculationModelFactory.createCalculation(c);
-
-
-        } finally {
-            pm.close();
-        }
-
-
-
-
-    }
 
     @Override
     public List<Calculation> getCalculations(final Entity entity) throws NimbitsException {
@@ -99,11 +80,5 @@ public class CalculationDAOImpl implements CalculationTransactions {
     }
 
 
-
-    private static Calculation createCalc(final Calculation calculation, final PersistenceManager pm) throws NimbitsException {
-        final CalcEntity s = new CalcEntity(calculation);
-        pm.makePersistent(s);
-        return CalculationModelFactory.createCalculation(s);
-    }
 }
 

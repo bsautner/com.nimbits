@@ -14,7 +14,6 @@
 package com.nimbits.server.point;
 
 import com.nimbits.client.exception.*;
-
 import com.nimbits.client.model.point.*;
 
 import java.util.*;

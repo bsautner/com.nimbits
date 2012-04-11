@@ -52,7 +52,8 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
 
     @Override
     public Calculation getCalculation(Entity entity) throws NimbitsException {
-        return CalculationServiceFactory.getDaoInstance(getUser()).getCalculation(entity);
+        return (Calculation) EntityServiceFactory.getInstance().getEntityByKey(getUser(), entity.getKey(), CalcEntity.class.getName());
+
     }
 
     @Override

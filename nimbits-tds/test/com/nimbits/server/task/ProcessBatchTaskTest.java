@@ -1,10 +1,7 @@
 package com.nimbits.server.task;
 
-import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.server.entity.*;
@@ -12,16 +9,9 @@ import com.nimbits.server.gson.*;
 import com.nimbits.server.orm.*;
 import com.nimbits.server.value.*;
 import helper.*;
-import junit.framework.*;
+import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.Assert;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import org.junit.Test;
 
-import java.io.*;
-import java.net.*;
 import java.util.*;
 
 /**

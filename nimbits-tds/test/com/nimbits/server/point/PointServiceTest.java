@@ -3,17 +3,13 @@ package com.nimbits.server.point;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.common.impl.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.orm.*;
 import helper.*;
+import static org.junit.Assert.*;
 import org.junit.*;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-
-import java.util.*;
 
 /**
  * Created by Benjamin Sautner

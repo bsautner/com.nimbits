@@ -37,6 +37,9 @@ public class RecordedValueServiceImplTest extends NimbitsServletTest {
 
     @Test
     public void ignoreByCompressionTest() throws NimbitsException, InterruptedException {
+        point.setFilterValue(0.1);
+        EntityServiceFactory.getInstance().addUpdateEntity(point);
+
 
         Value value = ValueModelFactory.createValueModel(D);
         Thread.sleep(10);

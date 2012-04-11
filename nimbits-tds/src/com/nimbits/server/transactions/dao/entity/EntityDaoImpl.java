@@ -259,9 +259,8 @@ public class EntityDaoImpl implements  EntityTransactions {
 
         final Collection<String> connectedUserKeys = new ArrayList<String>(connections.size());
         final Map<String, Relationship> relationshipMap = new HashMap<String, Relationship>(connections.size());
-        Relationship r;
         for (final Entity e : connections.values()) {
-            r = RelationshipTransactionFactory.getInstance().getRelationship(e);
+            Relationship r = RelationshipTransactionFactory.getInstance().getRelationship(e);
 
             if (r != null) {
                 relationshipMap.put(r.getForeignKey(), r);
@@ -328,9 +327,8 @@ public class EntityDaoImpl implements  EntityTransactions {
         final Collection<Entity> result = (Collection<Entity>) q1.execute(entity.getKey());
         if (!result.isEmpty()) {
             retObj.addAll(result);
-            List<Entity> children;
             for (final Entity e : result) {
-                children = getEntityChildren(pm, e);
+                List<Entity> children = getEntityChildren(pm, e);
                 retObj.addAll(children);
             }
         }
@@ -354,9 +352,8 @@ public class EntityDaoImpl implements  EntityTransactions {
             final Collection<Entity> result = (Collection<Entity>) q1.execute(entity.getKey(), type.getCode());
             if (!result.isEmpty()) {
                 retObj.addAll(result);
-                List<Entity> children;
                 for (final Entity e : result) {
-                    children = getEntityChildren(pm, e);
+                    List<Entity> children = getEntityChildren(pm, e);
                     retObj.addAll(children);
                 }
             }
@@ -581,10 +578,10 @@ public class EntityDaoImpl implements  EntityTransactions {
     @Override
     public Entity getEntityByName(final EntityName name,final Class<?> cls) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final List<Entity> c;
 
         try {
             final Query q1 = pm.newQuery(cls);
+            final List<Entity> c;
             if (user != null) {
                 q1.setFilter("name==b && owner==o");
                 q1.declareParameters("String b, String o");
@@ -659,9 +656,10 @@ public class EntityDaoImpl implements  EntityTransactions {
                 retObj = SummaryModelFactory.createSummary((Summary) entity);
                 break;
             case instance:
-                retObj = null;
-                break;
-            default:retObj = null;
+               throw new NimbitsException("Not implemented");
+
+            default:
+                throw new NimbitsException("Not implemented");
 
         }
         if (retObj != null) {
@@ -689,12 +687,10 @@ public class EntityDaoImpl implements  EntityTransactions {
 
 
 
-        boolean retVal =  ((e.getEntityType().equals(EntityType.user) ||
+        boolean retVal = e.getEntityType().equals(EntityType.user) ||
                 isOwner ||
                 e.getProtectionLevel().equals(ProtectionLevel.everyone) ||
-                e.getProtectionLevel().equals(ProtectionLevel.onlyConnection))
-
-        );
+                e.getProtectionLevel().equals(ProtectionLevel.onlyConnection);
 
         if (e.getEntityType().equals(EntityType.userConnection) && ! e.getOwner().equals(user.getKey())) {
             retVal = false;

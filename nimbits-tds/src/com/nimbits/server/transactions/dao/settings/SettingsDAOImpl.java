@@ -32,7 +32,6 @@ public class SettingsDAOImpl implements SettingTransactions {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         String retVal;
         try {
-            final ServerSetting s;
             final Query q = pm.newQuery(ServerSetting.class, "name == n");
             q.setRange(0, 1);
             q.declareParameters("String n");
@@ -40,7 +39,7 @@ public class SettingsDAOImpl implements SettingTransactions {
             if (a.isEmpty()) {
                 throw new NimbitsException(setting.getName() + " setting not found.");
             } else {
-                s = a.get(0);
+                final ServerSetting s = a.get(0);
                 retVal = s.getValue();
             }
         } finally {
@@ -54,7 +53,6 @@ public class SettingsDAOImpl implements SettingTransactions {
     public void updateSetting(final SettingType name, final String newValue) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
-            final ServerSetting s;
 
             final Query q = pm.newQuery(ServerSetting.class, "name == n");
             q.setRange(0, 1);
@@ -63,7 +61,7 @@ public class SettingsDAOImpl implements SettingTransactions {
             if (!a.isEmpty()) {
                 final Transaction tx = pm.currentTransaction();
                 tx.begin();
-                s = a.get(0);
+                final ServerSetting s = a.get(0);
                 s.setValue(newValue);
                 tx.commit();
 

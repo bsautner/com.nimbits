@@ -18,7 +18,6 @@ import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.orm.*;
-import com.nimbits.server.point.*;
 import com.nimbits.server.value.*;
 import helper.*;
 import static org.junit.Assert.*;

@@ -22,16 +22,11 @@ import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.service.entity.*;
 import com.nimbits.server.blob.*;
-import com.nimbits.server.calculation.*;
 import com.nimbits.server.core.*;
 import com.nimbits.server.feed.*;
-import com.nimbits.server.intelligence.*;
 import com.nimbits.server.orm.*;
 import com.nimbits.server.point.*;
-import com.nimbits.server.subscription.*;
-import com.nimbits.server.summary.*;
 import com.nimbits.server.user.*;
-import com.nimbits.server.xmpp.*;
 
 import java.util.*;
 

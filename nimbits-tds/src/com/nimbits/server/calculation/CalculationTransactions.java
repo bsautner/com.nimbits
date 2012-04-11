@@ -27,8 +27,6 @@ import java.util.*;
  */
 public interface CalculationTransactions {
 
-    Calculation getCalculation(final Entity entity) throws NimbitsException;
-
     List<Calculation> getCalculations(final Entity entity) throws NimbitsException;
 
     void deleteCalculation(final Entity entity);

@@ -15,19 +15,13 @@ package com.nimbits.server.transactions.dao.point;
 
 import com.nimbits.*;
 import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.server.orm.*;
 import com.nimbits.server.point.*;
-import com.nimbits.server.task.*;
 
 import javax.jdo.*;
-import javax.servlet.http.*;
 import java.util.*;
-import java.util.logging.*;
 @SuppressWarnings(Const.WARNING_UNCHECKED)
 public class PointDaoImpl implements PointTransactions {
    // private final Logger log = Logger.getLogger(PointDaoImpl.class.getName());

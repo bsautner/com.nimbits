@@ -13,7 +13,6 @@
 
 package com.nimbits.server.xmpp;
 
-import com.nimbits.client.model.user.*;
 import com.nimbits.server.transactions.dao.xmpp.*;
 
 /**
@@ -24,9 +23,18 @@ import com.nimbits.server.transactions.dao.xmpp.*;
  */
 public class XmppTransactionFactory {
 
+    private XmppTransactionFactory() {
+    }
 
-    public static XmppTransaction getInstance(User u) {
-        return new XmppDaoImpl(u);
+    private static class XmppTransactionHolder {
+        static final XmppTransaction instance = new XmppDaoImpl();
+
+        private XmppTransactionHolder() {
+        }
+    }
+
+    public static XmppTransaction getInstance() {
+        return XmppTransactionHolder.instance;
     }
 
 }

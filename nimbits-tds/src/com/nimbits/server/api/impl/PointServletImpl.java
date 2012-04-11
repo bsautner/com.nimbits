@@ -30,7 +30,6 @@ import com.nimbits.server.feed.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.logging.*;
 import com.nimbits.server.orm.*;
-import com.nimbits.server.point.*;
 import com.nimbits.server.time.*;
 import com.nimbits.server.value.*;
 

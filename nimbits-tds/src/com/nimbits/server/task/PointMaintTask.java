@@ -21,10 +21,8 @@ import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.valueblobstore.*;
-import com.nimbits.server.entity.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.logging.*;
-import com.nimbits.server.orm.*;
 import com.nimbits.server.user.*;
 import com.nimbits.server.value.*;
 

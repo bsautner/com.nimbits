@@ -180,7 +180,8 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
     @Override
     public Intelligence getIntelligence(Entity entity) throws NimbitsException {
-        return IntelligenceServiceFactory.getDaoInstance().getIntelligence(entity);
+        return (Intelligence) EntityTransactionFactory.getInstance(getUser()).getEntityByKey(entity.getKey(), IntelligenceEntity.class);
+        //return IntelligenceServiceFactory.getDaoInstance().getIntelligence(entity);
     }
 
     @Override
@@ -267,11 +268,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
     }
 
-    @Override
-    public void deleteIntelligence(final User u, final Entity entity) {
-        IntelligenceServiceFactory.getDaoInstance().deleteIntelligence(entity);
 
-    }
 
 
     private String addDataToInput(final User u, final String input) throws NimbitsException {

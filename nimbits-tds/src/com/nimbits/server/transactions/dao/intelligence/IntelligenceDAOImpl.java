@@ -33,34 +33,8 @@ import java.util.*;
 public class IntelligenceDAOImpl implements IntelligenceTransactions {
 
 
-    @Override
-    public Intelligence getIntelligence(final Entity entity) throws NimbitsException {
-        Intelligence retObj = null;
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-
-        try {
-            final Query q = pm.newQuery(IntelligenceEntity.class);
-            q.setFilter("uuid == k");
-            q.declareParameters("String k");
-            q.setRange(0,1);
-            final List<Intelligence> results = (List<Intelligence>) q.execute(entity.getKey());
-            if (!results.isEmpty()) {
-                retObj = IntelligenceFactory.createIntelligence(results.get(0));
-            }
-            return retObj;
-        } finally {
-            pm.close();
-        }
-    }
 
 
-
-    private static Intelligence createIntelligence(Intelligence update, PersistenceManager pm) throws NimbitsException {
-        final IntelligenceEntity s = new IntelligenceEntity(update);
-
-        pm.makePersistent(s);
-        return IntelligenceFactory.createIntelligence(s);
-    }
 
     @Override
     public List<Intelligence> getIntelligences(final Entity point) throws NimbitsException {
@@ -79,20 +53,4 @@ public class IntelligenceDAOImpl implements IntelligenceTransactions {
         }
     }
 
-    @Override
-    public void deleteIntelligence(final Entity entity) {
-
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-
-        try {
-            final Query q = pm.newQuery(IntelligenceEntity.class, "uuid == k");
-            q.declareParameters("String k");
-            q.setRange(0,1);
-            final Collection<Intelligence> results = (List<Intelligence>) q.execute(entity.getKey());
-            pm.deletePersistentAll(results);
-
-        } finally {
-            pm.close();
-        }
-    }
 }

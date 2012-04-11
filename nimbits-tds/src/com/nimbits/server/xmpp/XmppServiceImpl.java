@@ -28,7 +28,6 @@ import com.nimbits.server.orm.*;
 import com.nimbits.server.user.*;
 
 import java.util.*;
-import java.util.logging.*;
 
 public class XmppServiceImpl extends RemoteServiceServlet implements XMPPService {
 

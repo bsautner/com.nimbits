@@ -9,8 +9,7 @@ import com.nimbits.client.model.point.*;
 import com.nimbits.server.gson.*;
 import helper.*;
 import org.junit.*;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import java.util.*;
 

@@ -13,17 +13,19 @@
 
 package com.nimbits.server.transactions.dao.point;
 
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.orm.*;
-import com.nimbits.server.value.*;
-import helper.*;
-import static org.junit.Assert.*;
-import org.junit.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.server.entity.EntityServiceFactory;
+import com.nimbits.server.orm.PointEntity;
+import com.nimbits.server.value.RecordedValueServiceFactory;
+import helper.NimbitsServletTest;
+import org.junit.Test;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by bsautner
@@ -38,8 +40,8 @@ public class PointDaoImplTest extends NimbitsServletTest{
 
         Map<String, Point> e = new HashMap<String, Point>(2);
 
-        e.put(point.getKey(), (Point) EntityServiceFactory.getInstance().getEntityByKey(point.getKey(),PointEntity.class.getName()));
-        e.put(pointChild.getKey(), (Point) EntityServiceFactory.getInstance().getEntityByKey(pointChild.getKey(), PointEntity.class.getName()));
+        e.put(point.getKey(), (Point) EntityServiceFactory.getInstance().getEntityByKey(point.getKey(),PointEntity.class.getName()).get(0));
+        e.put(pointChild.getKey(), (Point) EntityServiceFactory.getInstance().getEntityByKey(pointChild.getKey(), PointEntity.class.getName()).get(0));
         Map<String, Entity> result = RecordedValueServiceFactory.getInstance().getCurrentValues(e);
         assertEquals(2, result.size());
 

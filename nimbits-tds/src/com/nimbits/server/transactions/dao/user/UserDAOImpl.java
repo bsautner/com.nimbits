@@ -66,28 +66,6 @@ public class UserDAOImpl implements UserTransactions {
     }
 
 
-    @Override
-    public User createNimbitsUser(final EmailAddress internetAddress) throws NimbitsException {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-
-        try {
-            final EntityName name = CommonFactoryLocator.getInstance().createName(internetAddress.getValue(), EntityType.user);
-            final Entity entity =  EntityModelFactory.createEntity(name, "", EntityType.user, ProtectionLevel.onlyMe,
-                    name.getValue(),name.getValue(),name.getValue());
-            // final Entity r = EntityTransactionFactory.getDaoInstance(null).addUpdateEntity(entity);
-            final UserEntity u = new UserEntity(entity);
-
-            u.setSecret(UUID.randomUUID().toString());
-            pm.makePersistent(u);
-            return  UserModelFactory.createUserModel(u);
-
-        } finally {
-            pm.close();
-        }
-
-
-    }
-
 
     /* (non-Javadoc)
     * @see com.nimbits.server.user.UserTransactions#getNimbitsUser(java.lang.String, boolean, java.lang.String)
@@ -190,7 +168,7 @@ public class UserDAOImpl implements UserTransactions {
 
     }
     @Override
-    public List<Connection> getPendingConnectionRequests(final EmailAddress internetAddress) throws NimbitsException {
+    public List<ConnectionRequest> getPendingConnectionRequests(final EmailAddress internetAddress) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
             final Query q = pm.newQuery(ConnectionRequestEntity.class);
@@ -240,7 +218,7 @@ public class UserDAOImpl implements UserTransactions {
 
 
     @Override
-    public Connection makeConnectionRequest(final User u, final EmailAddress emailAddress) throws NimbitsException {
+    public ConnectionRequest makeConnectionRequest(final User u, final EmailAddress emailAddress) throws NimbitsException {
         final ConnectionRequestEntity f = new ConnectionRequestEntity(u.getKey(), u.getEmail(), emailAddress, UUID.randomUUID().toString());
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -348,7 +326,7 @@ public class UserDAOImpl implements UserTransactions {
             final List<User> retObj = new ArrayList<User>(result.size());
             if (!result.isEmpty()) {
 
-                for (final Connection c : result) {
+                for (final ConnectionRequest c : result) {
                     u = getNimbitsUser(c.getTargetEmail());
                     retObj.add( UserModelFactory.createUserModel(u));
 

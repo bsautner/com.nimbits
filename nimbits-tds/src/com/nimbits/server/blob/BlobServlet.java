@@ -78,7 +78,7 @@ public class BlobServlet extends HttpServlet {
             }
             else if (uploadType.equals(UploadType.updatedFile.name()) && entityId != null) {
 
-                entity = EntityServiceFactory.getInstance().getEntityByKey(u, entityId, EntityStore.class.getName());
+                entity = EntityServiceFactory.getInstance().getEntityByKey(u, entityId, EntityStore.class.getName()).get(0);
                 entity.setBlobKey(blobKey.getKeyString());
 
 

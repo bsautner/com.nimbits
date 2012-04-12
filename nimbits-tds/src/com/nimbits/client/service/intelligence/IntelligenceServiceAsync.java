@@ -47,5 +47,5 @@ public interface IntelligenceServiceAsync {
 
     void processInput(Intelligence update, AsyncCallback<Value> async);
 
-    void deleteIntelligence(final User u, final Entity entity, AsyncCallback<Void> async);
+
 }

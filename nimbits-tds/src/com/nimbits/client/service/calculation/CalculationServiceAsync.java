@@ -27,7 +27,7 @@ public interface CalculationServiceAsync {
 
     void addUpdateCalculation(final Entity entity, final EntityName name, final Calculation calculation, final AsyncCallback<Entity> async);
 
-    void solveEquation(final Calculation calculation, final AsyncCallback<Value> async);
+    void solveEquation(final User u, final Calculation calculation, final AsyncCallback<Value> async);
 
     void getCalculations(final Entity entity, final AsyncCallback<List<Calculation>> async) throws NimbitsException;
 

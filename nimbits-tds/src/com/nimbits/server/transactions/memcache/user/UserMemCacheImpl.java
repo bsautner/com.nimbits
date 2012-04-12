@@ -75,13 +75,6 @@ public class UserMemCacheImpl implements UserTransactions {
 
 
 
-    @Override
-    public User createNimbitsUser(final EmailAddress emailAddress) throws NimbitsException {
-        final User u = UserTransactionFactory.getDAOInstance().createNimbitsUser(emailAddress);
-        addUserToCache(u);
-
-        return u;
-    }
 
     @Override
     public User setFacebookToken(final EmailAddress emailAddress, final String token, final long facebookId) throws NimbitsException {
@@ -143,12 +136,12 @@ public class UserMemCacheImpl implements UserTransactions {
 
 
     @Override
-    public Connection makeConnectionRequest(final User u, final EmailAddress email) throws NimbitsException {
+    public ConnectionRequest makeConnectionRequest(final User u, final EmailAddress email) throws NimbitsException {
         return UserTransactionFactory.getDAOInstance().makeConnectionRequest(u, email);
     }
 
     @Override
-    public List<Connection> getPendingConnectionRequests(final EmailAddress email) throws NimbitsException {
+    public List<ConnectionRequest> getPendingConnectionRequests(final EmailAddress email) throws NimbitsException {
         return UserTransactionFactory.getDAOInstance().getPendingConnectionRequests(email);
     }
 

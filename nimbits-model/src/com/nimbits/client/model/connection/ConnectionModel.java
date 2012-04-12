@@ -11,30 +11,29 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server.orm;
+package com.nimbits.client.model.connection;
 
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.category.*;
-import com.nimbits.client.model.entity.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModel;
 
-import javax.jdo.annotations.*;
-import java.util.*;
+import java.io.Serializable;
 
 /**
- * Created by bsautner
- * User: benjamin
- * Date: 4/8/12
- * Time: 10:53 AM
+ * Created by Benjamin Sautner
+ * User: bsautner
+ * Date: 4/9/12
+ * Time: 2:17 PM
  */
-@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
-public class CategoryEntity extends EntityStore implements Category {
+public class ConnectionModel extends EntityModel implements Serializable, Connection {
 
-    private static final long serialVersionUID = -4488132572071199717L;
-    @Persistent
-    private final Date createDate;
+    private static final long serialVersionUID = 943183302829417495L;
 
-    public CategoryEntity(final Entity entity) throws NimbitsException {
+    protected ConnectionModel() {
+
+    }
+
+    public ConnectionModel(final Entity entity) throws NimbitsException {
         super(entity);
-        createDate = new Date();
     }
 }

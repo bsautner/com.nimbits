@@ -6,9 +6,12 @@
 
 package com.nimbits.client.model.user;
 
-import com.nimbits.client.exception.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by bsautner
@@ -35,7 +38,10 @@ public class UserModelFactory {
         return new UserModel(u);
     }
 
+    public static User createUserModel(final Entity entity) throws NimbitsException {
 
+        return new UserModel(entity);
+    }
 
 
 

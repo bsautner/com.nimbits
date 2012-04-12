@@ -406,7 +406,7 @@ public class DiagramPanel extends LayoutContainer {
                     processTextNodeActions(pointMap.get(entity.getName()), result, actions, o);
                 }
                 EntityServiceAsync service = GWT.create(EntityService.class);
-                service.getEntityByKey(entity.getKey(), EntityType.point.getClassName(),  new AsyncCallback<Entity>() {
+                service.getEntityByKey(entity.getKey(), EntityType.point.getClassName(),  new AsyncCallback<List<Entity>>() {
 
                     @Override
                     public void onFailure(Throwable caught) {
@@ -414,10 +414,10 @@ public class DiagramPanel extends LayoutContainer {
                     }
 
                     @Override
-                    public void onSuccess(final Entity p) {
+                    public void onSuccess(final List<Entity> p) {
                         try {
 
-                            pointMap.put(entity.getName(), (Point) p);
+                            pointMap.put(entity.getName(), (Point) p.get(0));
                             processTextNodeActions((Point) p, result, actions, o);
                         } catch (NimbitsException e) {
                             FeedbackHelper.showError(e);
@@ -593,7 +593,7 @@ public class DiagramPanel extends LayoutContainer {
             if (result != null) {
 
                 EntityServiceAsync service = GWT.create(EntityService.class);
-                service.getEntityByKey(entity.getKey(), EntityType.point.getClassName(), new AsyncCallback<Entity>() {
+                service.getEntityByKey(entity.getKey(), EntityType.point.getClassName(), new AsyncCallback<List<Entity>>() {
 
                     @Override
                     public void onFailure(Throwable caught) {
@@ -601,8 +601,8 @@ public class DiagramPanel extends LayoutContainer {
                     }
 
                     @Override
-                    public void onSuccess(Entity point) {
-                        Point p = (Point) point;
+                    public void onSuccess(List<Entity> point) {
+                        Point p = (Point) point.get(0);
 
                         for (String action : actions) {
                             if (action.equals(Action.value.getCode())) {
@@ -776,15 +776,15 @@ public class DiagramPanel extends LayoutContainer {
             final Entity entity = pointEntityMap.get(pointName);
 
             EntityServiceAsync service = GWT.create(EntityService.class);
-            service.getEntityByKey(entity.getKey(), EntityType.point.getClassName(), new AsyncCallback<Entity>() {
+            service.getEntityByKey(entity.getKey(), EntityType.point.getClassName(), new AsyncCallback<List<Entity>>() {
                 @Override
                 public void onFailure(Throwable caught) {
                     //auto generated
                 }
 
                 @Override
-                public void onSuccess(Entity point) {
-                    Point p = (Point) point;
+                public void onSuccess(List<Entity> point) {
+                    Point p = (Point) point.get(0);
                     for (String action : actions) {
                         if (action.equals(Action.value.getCode())) {
                             o.getElement().setInnerText(String.valueOf(result.getDoubleValue()));

@@ -95,7 +95,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
                     }
                 } else {
                     if (googleUserService.getCurrentUser() != null && googleUserService.getCurrentUser().getEmail().equalsIgnoreCase(email.getValue())) {
-                        user = UserTransactionFactory.getInstance().createNimbitsUser(email);
+                        user = createUserRecord(email);
                     } else if (googleUserService.getCurrentUser() != null && !googleUserService.getCurrentUser().getEmail().equalsIgnoreCase(email.getValue())) {
                         throw new NimbitsException("While the current user is authenticated, the email provided does not match " +
                                 "the authenticated user, so the system is confused and cannot authenticate the request. " +
@@ -121,7 +121,18 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         return user;
 
     }
+    @Override
+    public com.nimbits.client.model.user.User createUserRecord(final EmailAddress internetAddress) throws NimbitsException {
+        final com.nimbits.client.model.user.User u;
+        final EntityName name = CommonFactoryLocator.getInstance().createName(internetAddress.getValue(), EntityType.user);
+        final Entity entity =  EntityModelFactory.createEntity(name, "", EntityType.user, ProtectionLevel.onlyMe,
+                name.getValue(), name.getValue(), name.getValue());
 
+        final com.nimbits.client.model.user.User newUser = UserModelFactory.createUserModel(entity);
+        newUser.setSecret(UUID.randomUUID().toString());
+        u = (com.nimbits.client.model.user.User) EntityServiceFactory.getInstance().addUpdateEntity(newUser);
+        return u;
+    }
     @Override
       public User getAdmin() throws NimbitsException {
             String adminStr = "bsautner@gmail.com"; //SettingsServiceFactory.getInstance().getSetting(SettingType.admin);
@@ -193,7 +204,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     @Override
     public void sendConnectionRequest(final EmailAddress email) throws NimbitsException {
         final User user = getAppUserUsingGoogleAuth();
-        final Connection f = UserTransactionFactory.getInstance().makeConnectionRequest(user, email);
+        final ConnectionRequest f = UserTransactionFactory.getInstance().makeConnectionRequest(user, email);
 
 
         if (f != null) {
@@ -271,7 +282,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
                 "</P>";
     }
     @Override
-    public List<Connection> getPendingConnectionRequests(final EmailAddress email) throws NimbitsException {
+    public List<ConnectionRequest> getPendingConnectionRequests(final EmailAddress email) throws NimbitsException {
         return UserTransactionFactory.getInstance().getPendingConnectionRequests(email);
     }
 

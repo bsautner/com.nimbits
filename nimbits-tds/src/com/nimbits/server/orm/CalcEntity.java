@@ -31,6 +31,7 @@ import javax.jdo.annotations.*;
 public class CalcEntity extends EntityStore implements Calculation {
 
 
+    private static final long serialVersionUID = 9086813823531611499L;
     @Persistent
     private String formula;
 
@@ -57,7 +58,14 @@ public class CalcEntity extends EntityStore implements Calculation {
     protected CalcEntity() {
     }
 
-    public CalcEntity(Entity entity, String formula, String trigger, Boolean enabled, String xVar, String yVar, String zVar, String targetVar) throws NimbitsException {
+    public CalcEntity(final Entity entity,
+                      final String formula,
+                      final String trigger,
+                      final Boolean enabled,
+                      final String xVar,
+                      final String yVar,
+                      final String zVar,
+                      final String targetVar) throws NimbitsException {
         super(entity);
         this.formula = formula;
         this.trigger = trigger;
@@ -68,7 +76,7 @@ public class CalcEntity extends EntityStore implements Calculation {
         this.targetVar = targetVar;
     }
 
-    public CalcEntity(Calculation calculation) throws NimbitsException {
+    public CalcEntity(final Calculation calculation) throws NimbitsException {
         super(calculation);
 
         this.formula = calculation.getFormula();
@@ -92,17 +100,9 @@ public class CalcEntity extends EntityStore implements Calculation {
         return formula;
     }
 
-    public void setFormula(String formula) {
-        this.formula = formula;
-    }
-
     @Override
     public Boolean getEnabled() {
         return enabled == null ? false : enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
     }
 
     @Override
@@ -110,44 +110,31 @@ public class CalcEntity extends EntityStore implements Calculation {
         return targetVar;
     }
 
-    public void setTarget(String target) {
-        this.targetVar = target;
-    }
-
     @Override
     public String getX() {
         return xVar;
     }
 
-    public void setX(String x) {
-        this.xVar = x;
-    }
 
     @Override
     public String getY() {
         return yVar ;
     }
 
-    public void setY(String y) {
-        this.yVar  = y;
-    }
-    public void setZ(String z) {
-        this.zVar  = z;
-    }
     @Override
     public String getZ() {
         return zVar;
     }
 
     @Override
-    public void setEnabled(boolean b) {
+    public void setEnabled(final boolean b) {
         this.enabled = b;
     }
 
     @Override
-    public void update(Entity update) throws NimbitsException {
+    public void update(final Entity update) throws NimbitsException {
         super.update(update);
-        Calculation c = (Calculation) update;
+        final Calculation c = (Calculation) update;
         this.enabled = c.getEnabled();
         this.formula = c.getFormula();
         this.targetVar = c.getTarget();

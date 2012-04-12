@@ -1,15 +1,16 @@
 package com.nimbits.server.point;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.orm.*;
-import helper.*;
-import static org.junit.Assert.*;
-import org.junit.*;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.server.entity.EntityTransactionFactory;
+import com.nimbits.server.orm.PointEntity;
+import helper.NimbitsServletTest;
+import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by Benjamin Sautner
@@ -25,7 +26,7 @@ public class PointServiceTest extends NimbitsServletTest {
         EntityName name = CommonFactoryLocator.getInstance().createName("FOO", EntityType.point);
         Point p = PointServiceFactory.getInstance().addPoint(name);
         assertNotNull(p);
-        Point x = (Point) EntityTransactionFactory.getDaoInstance(null).getEntityByKey(p.getKey(), PointEntity.class);
+        Point x = (Point) EntityTransactionFactory.getDaoInstance(null).getEntityByKey(p.getKey(), PointEntity.class).get(0);
         assertNotNull(x);
     }
 

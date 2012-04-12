@@ -358,15 +358,18 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
         final EntityServiceAsync service = GWT.create(EntityService.class);
 
-        service.getEntityByKey(uuid,EntityType.point.getClassName(), new AsyncCallback<Entity>() {
+        service.getEntityByKey(uuid,EntityType.point.getClassName(), new AsyncCallback<List<Entity>>() {
             @Override
             public void onFailure(final Throwable caught) {
                 FeedbackHelper.showError(caught);
             }
 
             @Override
-            public void onSuccess(final Entity entity) {
+            public void onSuccess(final List<Entity> r) {
                 try {
+                    if (! r.isEmpty()) {
+                        Entity entity = r.get(0);
+
                     switch (entity.getEntityType()) {
 
                         case user:
@@ -393,6 +396,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
                         case feed:
                             break;
                     }
+                    }
                 } catch (NimbitsException e) {
                     FeedbackHelper.showError(e);
                 }
@@ -412,7 +416,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
     }
 
 
-    private class SubscriptionPanelAsyncCallback implements AsyncCallback<Entity> {
+    private class SubscriptionPanelAsyncCallback implements AsyncCallback<List<Entity>> {
         private final Map<SettingType, String> settings;
 
         public SubscriptionPanelAsyncCallback(final Map<SettingType, String> settings) {
@@ -425,8 +429,8 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         }
 
         @Override
-        public void onSuccess(final Entity result) {
-            final SubscriptionPanel dp = new SubscriptionPanel(result, settings);
+        public void onSuccess(final List<Entity> result) {
+            final SubscriptionPanel dp = new SubscriptionPanel(result.get(0), settings);
 
             final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
             w.setWidth(500);
@@ -438,7 +442,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
                 public void onEntityAdded(final Entity model) throws NimbitsException {
                     w.hide();
                     Cookies.removeCookie(Action.subscribe.name());
-                    final TreeModel mx = new GxtModel(result);
+                    final TreeModel mx = new GxtModel(result.get(0));
                     centerPanel.addEntity(mx);
                     //  mainPanel.addEntity(result);
 

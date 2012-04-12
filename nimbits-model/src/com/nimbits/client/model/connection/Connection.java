@@ -11,27 +11,18 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server.user;
+package com.nimbits.client.model.connection;
 
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.entity.Entity;
 
-import javax.servlet.http.*;
+import java.io.Serializable;
 
 /**
  * Created by Benjamin Sautner
- * User: benjamin
- * Date: 4/17/11
- * Time: 7:17 PM
+ * User: bsautner
+ * Date: 4/9/12
+ * Time: 2:18 PM
  */
-public interface UserServerService {
-    User getHttpRequestUser(final HttpServletRequest req) throws NimbitsException;
+public interface Connection extends Entity, Serializable {
 
-
-    User getAdmin() throws NimbitsException;
-
-    User getAnonUser();
-
-    User createUserRecord(EmailAddress internetAddress) throws NimbitsException;
 }

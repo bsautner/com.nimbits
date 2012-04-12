@@ -1,11 +1,14 @@
 package com.nimbits.client.model.entity;
 
-import com.nimbits.client.enums.*;
+import com.nimbits.client.enums.AlertType;
+import com.nimbits.client.enums.AuthLevel;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.user.User;
 
 import java.io.Serializable;
 import java.util.List;
@@ -201,13 +204,40 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
         this.key = key;
     }
 
+    @SuppressWarnings("MethodWithMultipleReturnPoints")
     @Override
-    public int compareTo(Entity that) {
-        int type = EntityType.get(this.entityType).getOrder().compareTo(that.getEntityType().getOrder());
+    public int compareTo(final Entity that) {
+        final int type = EntityType.get(this.entityType).getOrder().compareTo(that.getEntityType().getOrder());
         try {
             return type == 0 ? this.name.compareTo(that.getName().getValue()) : type;
         } catch (NimbitsException e) {
             return -1;
         }
+    }
+
+    @Override
+    public boolean isOwner(final User user) {
+        return user != null && (user.getAuthLevel().equals(AuthLevel.admin) || this.getOwner().equals(user.getKey()));
+    }
+
+    @Override
+    public boolean entityIsReadable(final User user) {
+
+
+
+        boolean retVal = this.getEntityType().equals(EntityType.user) ||
+                isOwner(user) ||
+                this.getProtectionLevel().equals(ProtectionLevel.everyone) ||
+                this.getProtectionLevel().equals(ProtectionLevel.onlyConnection);
+
+        if (this.getEntityType().equals(EntityType.userConnection) && ! this.getOwner().equals(user.getKey())) {
+            retVal = false;
+        }
+        if (this.getEntityType().equals(EntityType.summary) && user == null) {
+            retVal = true; //this is a system request from the summary cron job.
+        }
+        return retVal;
+
+
     }
 }

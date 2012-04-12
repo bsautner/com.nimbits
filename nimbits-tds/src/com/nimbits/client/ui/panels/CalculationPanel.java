@@ -13,31 +13,42 @@
 
 package com.nimbits.client.ui.panels;
 
-import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.util.*;
+import com.extjs.gxt.ui.client.event.ButtonEvent;
+import com.extjs.gxt.ui.client.event.SelectionListener;
+import com.extjs.gxt.ui.client.util.Margins;
+import com.extjs.gxt.ui.client.util.Padding;
 import com.extjs.gxt.ui.client.widget.*;
-import com.extjs.gxt.ui.client.widget.VerticalPanel;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.CheckBox;
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
-import com.extjs.gxt.ui.client.widget.form.*;
-import com.extjs.gxt.ui.client.widget.layout.*;
-import com.google.gwt.core.client.*;
-import com.google.gwt.user.client.*;
-import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.calculation.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.client.service.calculation.*;
-import com.nimbits.client.service.entity.*;
-import com.nimbits.client.ui.controls.*;
-import com.nimbits.client.ui.helper.*;
-import com.nimbits.client.ui.icons.*;
+import com.extjs.gxt.ui.client.widget.form.TextField;
+import com.extjs.gxt.ui.client.widget.layout.BoxLayout;
+import com.extjs.gxt.ui.client.widget.layout.FormData;
+import com.extjs.gxt.ui.client.widget.layout.HBoxLayout;
+import com.extjs.gxt.ui.client.widget.layout.HBoxLayoutData;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.nimbits.client.constants.UserMessages;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.calculation.Calculation;
+import com.nimbits.client.model.calculation.CalculationModelFactory;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.service.calculation.CalculationService;
+import com.nimbits.client.service.calculation.CalculationServiceAsync;
+import com.nimbits.client.service.entity.EntityService;
+import com.nimbits.client.service.entity.EntityServiceAsync;
+import com.nimbits.client.ui.controls.EntityCombo;
+import com.nimbits.client.ui.helper.FeedbackHelper;
+import com.nimbits.client.ui.icons.Icons;
+
+import java.util.List;
 
 
 /**
@@ -53,9 +64,11 @@ public class CalculationPanel extends NavigationEventProvider {
 
     private Entity entity;
     private Calculation calculation;
+    private User user;
 
-    public CalculationPanel(Entity entity) {
+    public CalculationPanel(final User user, final Entity entity) {
         this.entity = entity;
+        this.user = user;
 
 
     }
@@ -84,15 +97,15 @@ public class CalculationPanel extends NavigationEventProvider {
 
 
     private void getExisting() {
-        CalculationServiceAsync service = GWT.create(CalculationService.class);
+        final CalculationServiceAsync service = GWT.create(CalculationService.class);
         service.getCalculation(entity, new AsyncCallback<Calculation>() {
             @Override
-            public void onFailure(Throwable caught) {
+            public void onFailure(final Throwable caught) {
                 GWT.log(caught.getMessage(), caught);
             }
 
             @Override
-            public void onSuccess(Calculation result) {
+            public void onSuccess(final Calculation result) {
                 calculation = result;
                 try {
                     createForm();
@@ -109,7 +122,7 @@ public class CalculationPanel extends NavigationEventProvider {
 
     private void createForm() throws NimbitsException {
 
-        FormPanel simple = new FormPanel();
+        final FormPanel simple = new FormPanel();
         simple.setWidth(350);
         simple.setFrame(true);
         simple.setHeaderVisible(false);
@@ -125,10 +138,10 @@ public class CalculationPanel extends NavigationEventProvider {
         } else {
             nameField.setValue(entity.getName().getValue() + " Calc");
         }
-        String xc = calculation == null ? null : calculation.getX();
-        String yc =calculation == null ? null : calculation.getY();
-        String zc = calculation == null ? null : calculation.getZ();
-        String targetc = calculation == null ? null : calculation.getTarget();
+        final String xc = calculation == null ? null : calculation.getX();
+        final String yc =calculation == null ? null : calculation.getY();
+        final String zc = calculation == null ? null : calculation.getZ();
+        final String targetc = calculation == null ? null : calculation.getTarget();
 
         final EntityCombo targetcombo = new EntityCombo(EntityType.point, targetc, UserMessages.MESSAGE_SELECT_POINT);
         targetcombo.setFieldLabel("Target");
@@ -149,9 +162,9 @@ public class CalculationPanel extends NavigationEventProvider {
         enabled.setBoxLabel("Enabled");
         enabled.setLabelSeparator("");
 
-        Button submit = new Button("Submit");
-        Button cancel = new Button("Cancel");
-        Button test = new Button("Test");
+        final Button submit = new Button("Submit");
+        final Button cancel = new Button("Cancel");
+        final Button test = new Button("Test");
         test.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.play()));
 
         final TextField<String> formula = new TextField<String>();
@@ -162,7 +175,7 @@ public class CalculationPanel extends NavigationEventProvider {
 
 
             @Override
-            public void componentSelected(ButtonEvent buttonEvent) {
+            public void componentSelected(final ButtonEvent buttonEvent) {
                 try {
                     notifyEntityAddedListener(null);
                 } catch (NimbitsException e) {
@@ -192,12 +205,12 @@ public class CalculationPanel extends NavigationEventProvider {
         submit.addSelectionListener(new SelectionListener<ButtonEvent>() {
             @Override
             public void componentSelected(ButtonEvent buttonEvent) {
-                CalculationServiceAsync service = GWT.create(CalculationService.class);
+                final CalculationServiceAsync service = GWT.create(CalculationService.class);
                 final MessageBox box = MessageBox.wait("Progress",
                         "Creating Calculation", "please wait...");
                 final Calculation update;
                 box.show();
-                EntityName name;
+                final EntityName name;
                 try {
                     name = CommonFactoryLocator.getInstance().createName(nameField.getValue(), EntityType.calculation);
                      update = createCalculation(xCombo, yCombo, zCombo, targetcombo, enabled, formula);
@@ -208,7 +221,7 @@ public class CalculationPanel extends NavigationEventProvider {
 
                 service.addUpdateCalculation(entity, name, update, new AsyncCallback<Entity>() {
                     @Override
-                    public void onFailure(Throwable e) {
+                    public void onFailure(final Throwable e) {
                         GWT.log(e.getMessage(), e);
                         box.close();
                         MessageBox.alert("Error", e.getMessage(), null);
@@ -235,7 +248,7 @@ public class CalculationPanel extends NavigationEventProvider {
         });
 
 
-        Html h = new Html("<p>Whenever the current data point records a new number value, a calculation can be triggered using any of your " +
+        final Html h = new Html("<p>Whenever the current data point records a new number value, a calculation can be triggered using any of your " +
                 "other data points current values as a variables. The result of the calculation can then be stored in another data point.</p>" +
                 "<BR><p>Use this menu to add a formula. You can add an x, y and z variable and specify the data point used for each one. </p>" +
                 "<br><p>Supported symbols are: *, +, -, *, /, ^, %, cos, sin, tan, acos, asin, atan, sqrt, sqr, log, min, max, ceil, floor, abs, neg, rndr.</p>" +
@@ -251,18 +264,18 @@ public class CalculationPanel extends NavigationEventProvider {
 
         }
         else {
-            EntityServiceAsync svc = GWT.create(EntityService.class);
+            final EntityServiceAsync svc = GWT.create(EntityService.class);
 
-            svc.getEntityByKey(calculation.getTrigger(), EntityType.point.getClassName(),  new AsyncCallback<Entity>() {
+            svc.getEntityByKey(calculation.getTrigger(), EntityType.point.getClassName(),  new AsyncCallback<List<Entity>>() {
                 @Override
-                public void onFailure(Throwable throwable) {
+                public void onFailure(final Throwable throwable) {
                     GWT.log(throwable.getMessage(), throwable);
                 }
 
                 @Override
-                public void onSuccess(Entity point) {
+                public void onSuccess(final List<Entity> point) {
                     try {
-                        pn.setHtml("<p><b>Trigger Point Name: </b>" + point.getName().getValue() + "</p>");
+                        pn.setHtml("<p><b>Trigger Point Name: </b>" + point.get(0).getName().getValue() + "</p>");
                     } catch (NimbitsException e) {
                         FeedbackHelper.showError(e);
                     }
@@ -285,15 +298,15 @@ public class CalculationPanel extends NavigationEventProvider {
         simple.add(zCombo, formdata);
         simple.add(enabled, formdata);
 
-        LayoutContainer c = new LayoutContainer();
-        HBoxLayout layout = new HBoxLayout();
+        final LayoutContainer c = new LayoutContainer();
+        final HBoxLayout layout = new HBoxLayout();
         layout.setPadding(new Padding(5));
         layout.setHBoxLayoutAlign(HBoxLayout.HBoxLayoutAlign.MIDDLE);
         layout.setPack(BoxLayout.BoxLayoutPack.END);
         c.setLayout(layout);
         cancel.setWidth(100);
         submit.setWidth(100);
-        HBoxLayoutData layoutData = new HBoxLayoutData(new Margins(0, 5, 0, 0));
+        final HBoxLayoutData layoutData = new HBoxLayoutData(new Margins(0, 5, 0, 0));
         c.add(test, layoutData);
         c.add(cancel, layoutData);
         c.add(submit, layoutData);
@@ -304,14 +317,14 @@ public class CalculationPanel extends NavigationEventProvider {
         vp.add(c);
     }
 
-    private Calculation createCalculation(EntityCombo xCombo, EntityCombo yCombo, EntityCombo zCombo, EntityCombo targetcombo, CheckBox enabled, TextField<String> formula) throws NimbitsException {
+    private Calculation createCalculation(final EntityCombo xCombo, final EntityCombo yCombo, final EntityCombo zCombo, final EntityCombo targetcombo, final CheckBox enabled, final TextField<String> formula) throws NimbitsException {
         final Calculation update;
 
 
-        String x =xCombo.getValue() == null ? null : xCombo.getValue().getUUID();
-        String y =yCombo.getValue() == null ? null : yCombo.getValue().getUUID();
-        String z =zCombo.getValue() == null ? null : zCombo.getValue().getUUID();
-        String target =targetcombo.getValue() == null ? null : targetcombo.getValue().getUUID();
+        final String x =xCombo.getValue() == null ? null : xCombo.getValue().getUUID();
+        final String y =yCombo.getValue() == null ? null : yCombo.getValue().getUUID();
+        final String z =zCombo.getValue() == null ? null : zCombo.getValue().getUUID();
+        final String target =targetcombo.getValue() == null ? null : targetcombo.getValue().getUUID();
 
         if (entity.getEntityType().equals(EntityType.calculation) && calculation != null) {
 
@@ -335,7 +348,7 @@ public class CalculationPanel extends NavigationEventProvider {
 
 
 
-    private static void runEquation(final Calculation calculation1)   {
+    private void runEquation(final Calculation calculation1)   {
         final Dialog simple = new Dialog();
         simple.setHeading("Test Result");
         simple.setButtons(Dialog.OK);
@@ -345,7 +358,7 @@ public class CalculationPanel extends NavigationEventProvider {
 
         simple.setHideOnButtonClick(true);
         final CalculationServiceAsync service = GWT.create(CalculationService.class);
-        service.solveEquation(calculation1, new AsyncCallback<Value>() {
+        service.solveEquation(user, calculation1, new AsyncCallback<Value>() {
             @Override
             public void onFailure(final Throwable throwable) {
                 simple.addText(throwable.getMessage());

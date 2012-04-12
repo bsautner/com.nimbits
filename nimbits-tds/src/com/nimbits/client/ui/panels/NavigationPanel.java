@@ -281,7 +281,7 @@ public class NavigationPanel extends NavigationEventProvider {
             // return model;
         }
         private void treePropertyBuilder() {
-            context = new EntityContextMenu(tree, settings);
+            context = new EntityContextMenu(user, tree, settings);
             context.addEntityModifiedListeners(new EntityModifiedListener());
             tree.setContextMenu(context);
             tree.setStateful(true);

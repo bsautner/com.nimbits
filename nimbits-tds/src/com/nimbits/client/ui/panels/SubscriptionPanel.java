@@ -88,15 +88,15 @@ public class SubscriptionPanel extends NavigationEventProvider {
     }
     private void getExistingSubscription() {
         EntityServiceAsync service = GWT.create(EntityService.class);
-        service.getEntityByKey(entity.getKey(), entity.getEntityType().getClassName(), new AsyncCallback<Entity>() {
+        service.getEntityByKey(entity.getKey(), entity.getEntityType().getClassName(), new AsyncCallback<List<Entity>>() {
             @Override
             public void onFailure(Throwable caught) {
               FeedbackHelper.showError(caught);
             }
 
             @Override
-            public void onSuccess(Entity result) {
-                subscription = (Subscription) result;
+            public void onSuccess(List<Entity> result) {
+                subscription = (Subscription) result.get(0);
                 try {
                     createForm();
                 } catch (NimbitsException e) {

@@ -89,13 +89,13 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
                 log.info("Processing Subscription " + subscription.getKey());
                 subscription.setLastSent(new Date());
                 SubscriptionServiceFactory.getInstance().updateSubscriptionLastSent(subscription);
-                final Entity subscriptionEntity = EntityServiceFactory.getInstance().getEntityByKey(user, subscription.getKey(), EntityStore.class.getName());
+                final List<Entity> subscriptionEntity = EntityServiceFactory.getInstance().getEntityByKey(user, subscription.getKey(), EntityStore.class.getName());
                 //todo - handle subscribed to object deleted
-                if (subscriptionEntity != null ) {
+                if (! subscriptionEntity.isEmpty() ) {
 
-                    final Entity pointEntity = EntityServiceFactory.getInstance().getEntityByKey(null, point.getKey());
+                    final Entity pointEntity = EntityServiceFactory.getInstance().getEntityByKey(null, point.getKey()).get(0);
 
-                    final User subscriber = UserServiceFactory.getInstance().getUserByKey(subscriptionEntity.getOwner());
+                    final User subscriber = UserServiceFactory.getInstance().getUserByKey(subscriptionEntity.get(0).getOwner());
                     final AlertType alert = v.getAlertState();
 
                     switch (subscription.getSubscriptionType()) {
@@ -184,7 +184,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public Entity getSubscribedEntity(final Entity entity) throws NimbitsException {
-       return EntityServiceFactory.getInstance().getEntityByKey(entity.getKey(), SubscriptionEntity.class.getName());
+       return EntityServiceFactory.getInstance().getEntityByKey(entity.getKey(), SubscriptionEntity.class.getName()).get(0);
      //           SubscriptionTransactionFactory.getInstance(getUser()).readSubscription(entity);
       //  return EntityServiceFactory.getInstance().getEntityByKey(getUser(), subscription.getSubscribedEntity(), PointEntity.class.getName());
 

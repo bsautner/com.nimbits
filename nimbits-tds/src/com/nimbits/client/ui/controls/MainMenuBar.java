@@ -359,7 +359,7 @@ public class MainMenuBar extends ToolBar {
         final Button connectionRequest = new Button("Connection Requests(" + connectionCount + ")");
 
         connectionRequest.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.add16()));
-        service.getPendingConnectionRequests(loginInfo.getEmailAddress(), new AsyncCallback<List<Connection>>() {
+        service.getPendingConnectionRequests(loginInfo.getEmailAddress(), new AsyncCallback<List<ConnectionRequest>>() {
 
             @Override
             public void onFailure(Throwable caught) {
@@ -368,7 +368,7 @@ public class MainMenuBar extends ToolBar {
             }
 
             @Override
-            public void onSuccess(final List<Connection> result) {
+            public void onSuccess(final List<ConnectionRequest> result) {
 
                 try {
                     if (result.isEmpty()) {
@@ -377,7 +377,7 @@ public class MainMenuBar extends ToolBar {
                         final Menu scrollMenu = new Menu();
                         scrollMenu.setMaxHeight(MAX_HEIGHT);
                         MenuItem m;
-                        for (final Connection r : result) {
+                        for (final ConnectionRequest r : result) {
                             m = acceptConnectionMenuItem(scrollMenu, r);
                             scrollMenu.add(m);
                         }
@@ -394,7 +394,7 @@ public class MainMenuBar extends ToolBar {
                 }
             }
 
-            private MenuItem acceptConnectionMenuItem(final Menu scrollMenu, final Connection r) throws NimbitsException {
+            private MenuItem acceptConnectionMenuItem(final Menu scrollMenu, final ConnectionRequest r) throws NimbitsException {
                 final MenuItem m = new MenuItem(r.getRequestorEmail().getValue());
                 m.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.connection()));
                 m.addListener(Events.Select, new AcceptConnectionBaseEventListener(r, scrollMenu, m, connectionRequest));
@@ -647,12 +647,12 @@ public class MainMenuBar extends ToolBar {
     }
 
     private class ApproveConnectionMessageBoxEventListener implements Listener<MessageBoxEvent> {
-        private final Connection r;
+        private final ConnectionRequest r;
         private final Menu scrollMenu;
         private final MenuItem m;
         private final Button connectionRequest;
 
-        public ApproveConnectionMessageBoxEventListener(Connection r, Menu scrollMenu, MenuItem m, Button connectionRequest) {
+        public ApproveConnectionMessageBoxEventListener(ConnectionRequest r, Menu scrollMenu, MenuItem m, Button connectionRequest) {
             this.r = r;
             this.scrollMenu = scrollMenu;
             this.m = m;
@@ -678,7 +678,7 @@ public class MainMenuBar extends ToolBar {
         }
 
         private void acceptConnection(
-                final Connection r,
+                final ConnectionRequest r,
                 boolean accepted) throws NimbitsException {
             UserServiceAsync userService;
             userService = GWT.create(UserService.class);
@@ -711,12 +711,12 @@ public class MainMenuBar extends ToolBar {
 
     private class AcceptConnectionBaseEventListener implements Listener<BaseEvent> {
 
-        private final Connection r;
+        private final ConnectionRequest r;
         private final Menu scrollMenu;
         private final MenuItem m;
         private final Button connectionRequest;
 
-        public AcceptConnectionBaseEventListener(Connection r, Menu scrollMenu, MenuItem m, Button connectionRequest) {
+        public AcceptConnectionBaseEventListener(ConnectionRequest r, Menu scrollMenu, MenuItem m, Button connectionRequest) {
             this.r = r;
             this.scrollMenu = scrollMenu;
             this.m = m;

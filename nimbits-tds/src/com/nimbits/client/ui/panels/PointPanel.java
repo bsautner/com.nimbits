@@ -100,15 +100,15 @@ public class PointPanel extends LayoutContainer {
 
     private void loadForm()  {
         final EntityServiceAsync service = GWT.create(EntityService.class);
-        service.getEntityByKey(entity.getKey(), EntityType.point.getClassName(), new AsyncCallback<Entity>() {
+        service.getEntityByKey(entity.getKey(), EntityType.point.getClassName(), new AsyncCallback<List<Entity>>() {
             @Override
             public void onFailure(Throwable caught) {
                 GWT.log(caught.getMessage());
             }
 
             @Override
-            public void onSuccess(final Entity p) {
-                buildForm((Point) p);
+            public void onSuccess(final List<Entity> p) {
+                buildForm((Point) p.get(0));
             }
 
             private void buildForm(final Point p) {

@@ -13,22 +13,25 @@
 
 package com.nimbits.server.login;
 
-import com.google.appengine.api.users.*;
+import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.gwt.user.server.rpc.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.service.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.feed.*;
-import com.nimbits.server.logging.*;
-import com.nimbits.server.orm.*;
-import com.nimbits.server.user.*;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.enums.FeedType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.LoginInfo;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.service.LoginService;
+import com.nimbits.server.entity.EntityTransactionFactory;
+import com.nimbits.server.feed.FeedServiceFactory;
+import com.nimbits.server.logging.LogHelper;
+import com.nimbits.server.orm.UserEntity;
+import com.nimbits.server.user.UserTransactionFactory;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 public class LoginServiceImpl extends RemoteServiceServlet implements LoginService {
 
@@ -51,16 +54,17 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
             loginInfo.setUserAdmin(userService.isUserAdmin());
 
             loginInfo.setLogoutUrl(userService.createLogoutURL(requestUri));
-            com.nimbits.client.model.user.User u = (com.nimbits.client.model.user.User) EntityTransactionFactory.getInstance(null).getEntityByKey(internetAddress.getValue(), UserEntity.class);// UserTransactionFactory.getInstance().getNimbitsUser(internetAddress);
+            final List<Entity> list =   EntityTransactionFactory.getInstance(null).getEntityByKey(internetAddress.getValue(), UserEntity.class);
+            final com.nimbits.client.model.user.User  u;
 
-            if (u == null) {
+            if (list.isEmpty()) {
                 LogHelper.log(this.getClass(), "Created a new user");
-                u = UserTransactionFactory.getInstance().createNimbitsUser(internetAddress);
+                u = com.nimbits.server.user.UserServiceFactory.getServerInstance().createUserRecord(internetAddress);
                // sendUserCreatedFeed(u);
                // sendWelcomeFeed(u);
             }
             else {
-                LogHelper.log(this.getClass(), "found a new user" + user.getEmail());
+               u = (com.nimbits.client.model.user.User) list.get(0);
             }
             UserTransactionFactory.getInstance().updateLastLoggedIn(u, new Date());
 
@@ -74,6 +78,8 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
         }
         return loginInfo;
     }
+
+
 
     private static void sendWelcomeFeed(com.nimbits.client.model.user.User u) throws NimbitsException {
 

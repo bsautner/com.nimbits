@@ -26,7 +26,7 @@ public interface UserService extends RemoteService {
 
     String updateSecret() throws NimbitsException;
     void sendConnectionRequest(final EmailAddress email) throws NimbitsException;
-    List<Connection> getPendingConnectionRequests(final EmailAddress email) throws NimbitsException;
+    List<ConnectionRequest> getPendingConnectionRequests(final EmailAddress email) throws NimbitsException;
     void connectionRequestReply(final EmailAddress targetEmail, final EmailAddress RequestorEmail, final Long key, final boolean accepted) throws NimbitsException;
     User getAppUserUsingGoogleAuth() throws NimbitsException;
     String getSecret() throws NimbitsException;

@@ -25,7 +25,7 @@ import java.util.*;
 
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
-public class ConnectionRequestEntity implements Connection {
+public class ConnectionRequestEntity implements ConnectionRequest {
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Key key;
@@ -55,7 +55,7 @@ public class ConnectionRequestEntity implements Connection {
     protected  ConnectionRequestEntity() {
     }
 
-    public ConnectionRequestEntity(final Connection c) throws NimbitsException {
+    public ConnectionRequestEntity(final ConnectionRequest c) throws NimbitsException {
         this.requestorID = c.getRequestorID();
         this.targetEmail = c.getTargetEmail().getValue();
         this.requestorEmail = c.getRequestorEmail().getValue();

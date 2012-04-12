@@ -69,9 +69,9 @@ public class XmppServiceImpl extends RemoteServiceServlet implements XMPPService
     public void sendMessage(final List<XmppResource> resources, final String message, final EmailAddress email) throws NimbitsException {
         JID jid;
         for (XmppResource resource : resources) {
-            Entity entity = EntityServiceFactory.getInstance().getEntityByKey(resource.getKey(),PointEntity.class.getName());
-            if (entity != null) {
-                jid = new JID(email.getValue() + '/' + entity.getName().getValue());
+            List<Entity> entity = EntityServiceFactory.getInstance().getEntityByKey(resource.getKey(),PointEntity.class.getName());
+            if (! entity.isEmpty()) {
+                jid = new JID(email.getValue() + '/' + entity.get(0).getName().getValue());
                 send(message, jid);
                // log.info("stanza sent with jid: " + email.getValue() + "/" + entity.getName().getValue());
             }
@@ -80,12 +80,12 @@ public class XmppServiceImpl extends RemoteServiceServlet implements XMPPService
 
     @Override
     public void deleteResource(User u, Entity entity) {
-      XmppTransactionFactory.getInstance(u).deleteResource(entity);
+      XmppTransactionFactory.getInstance().deleteResource(entity);
     }
 
     @Override
     public List<XmppResource> getPointXmppResources(User user, Point point) throws NimbitsException {
-        return XmppTransactionFactory.getInstance(user).getPointXmppResources(point);
+        return XmppTransactionFactory.getInstance().getPointXmppResources(point);
     }
 
     @Override
@@ -97,7 +97,7 @@ public class XmppServiceImpl extends RemoteServiceServlet implements XMPPService
                     targetPointEntity.getKey(),getUser().getKey() , UUID.randomUUID().toString());
           //  Entity retObj = EntityServiceFactory.getInstance().addUpdateEntity(entity);
             XmppResource resource = XmppResourceFactory.createXmppResource(entity, targetPointEntity.getKey());
-            XmppTransactionFactory.getInstance(u).addResource(resource);
+            XmppTransactionFactory.getInstance().addResource(resource);
             return resource;
         }
         else {

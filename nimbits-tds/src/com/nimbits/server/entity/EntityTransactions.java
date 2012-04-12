@@ -39,13 +39,11 @@ public interface EntityTransactions {
 
     List<Entity> deleteEntity( final Entity entity,final Class<?> cls) throws NimbitsException;
 
-    Entity getEntityByKey( final String uuid,  final Class<?> cls) throws NimbitsException;
-
-    Entity getEntityByName( final EntityName name,  final EntityType type) throws NimbitsException;
+    List<Entity> getEntityByKey( final String uuid,  final Class<?> cls) throws NimbitsException;
 
     Map<String, Entity> getSystemWideEntityMap(final EntityType type) throws NimbitsException;
 
     void removeEntityFromCache( final Entity entity) throws NimbitsException;
 
-    Entity getEntityByName( final EntityName name,  final Class<?> cls) throws NimbitsException;
+    List<Entity> getEntityByName( final EntityName name,  final Class<?> cls) throws NimbitsException;
 }

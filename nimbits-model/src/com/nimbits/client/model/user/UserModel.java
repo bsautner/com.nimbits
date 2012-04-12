@@ -18,6 +18,7 @@ import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
 
 import java.io.Serializable;
@@ -80,6 +81,15 @@ public class UserModel extends EntityModel implements Serializable, User {
             this.authLevel = AuthLevel.restricted.getCode();
 
         }
+    }
+
+    public UserModel(final Entity entity) throws NimbitsException {
+        super(entity);
+        this.dateCreated = new Date();
+        this.lastLoggedIn =  new Date();
+        this.authLevel = AuthLevel.readWrite.getCode();
+        this.emailAddress = entity.getName().getValue();
+
     }
 
     @Override

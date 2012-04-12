@@ -13,27 +13,30 @@
 
 package com.nimbits.server.orm;
 
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.category.*;
-import com.nimbits.client.model.entity.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.category.Category;
+import com.nimbits.client.model.entity.Entity;
 
-import javax.jdo.annotations.*;
-import java.util.*;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+import java.util.Date;
 
 /**
  * Created by bsautner
  * User: benjamin
- * Date: 4/8/12
- * Time: 10:53 AM
+ * Date: 4/11/12
+ * Time: 6:18 PM
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
-public class CategoryEntity extends EntityStore implements Category {
+public class ConnectionEntity extends EntityStore implements Category {
 
-    private static final long serialVersionUID = -4488132572071199717L;
+
+    private static final long serialVersionUID = 653954371977705551L;
     @Persistent
     private final Date createDate;
 
-    public CategoryEntity(final Entity entity) throws NimbitsException {
+    public ConnectionEntity(final Entity entity) throws NimbitsException {
         super(entity);
         createDate = new Date();
     }

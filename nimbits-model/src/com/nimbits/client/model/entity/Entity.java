@@ -5,6 +5,7 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.User;
 
 
 import java.io.Serializable;
@@ -65,4 +66,8 @@ public interface Entity  extends Serializable, Comparable<Entity> {
     void update(Entity update) throws NimbitsException;
 
     List<Point> getChildren();
+
+    boolean isOwner(User user);
+
+    boolean entityIsReadable(User user);
 }

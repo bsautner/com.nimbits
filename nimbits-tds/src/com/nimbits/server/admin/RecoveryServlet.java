@@ -80,12 +80,12 @@ public class RecoveryServlet extends HttpServlet {
                     List<NimbitsUser> oldU = (List<NimbitsUser>) q2.execute();
                     if (oldU.size() > 0) {
                         NimbitsUser u = oldU.get(0);
-                        User ux = (User) EntityTransactionFactory.getDaoInstance(null).getEntityByKey(u.getEmail().getValue(), UserEntity.class);
+                        User ux = (User) EntityTransactionFactory.getDaoInstance(null).getEntityByKey(u.getEmail().getValue(), UserEntity.class).get(0);
                         out.println(p.getCalculationEntity().getFormula() + "<br>");
                         out.println(ux.getEmail().getValue() + "</br>");
                         String tvar = null, xvar, yvar, zvar, targetVar;
 
-                        Point trigger = (Point) EntityTransactionFactory.getDaoInstance(admin).getEntityByKey(u.getEmail().getValue() + '/' + p.getName(), PointEntity.class);
+                        Point trigger = (Point) EntityTransactionFactory.getDaoInstance(admin).getEntityByKey(u.getEmail().getValue() + '/' + p.getName(), PointEntity.class).get(0);
                         if (trigger != null) {
                             out.println("tigger" + trigger.getName().getValue() + "</br>");
                             tvar = trigger.getKey();
@@ -129,7 +129,7 @@ public class RecoveryServlet extends HttpServlet {
             List<DataPoint> xs = (List<DataPoint>) qx.execute();
             if (!xs.isEmpty()) {
                 DataPoint X = xs.get(0);
-                Entity xp = EntityTransactionFactory.getDaoInstance(admin).getEntityByKey(u.getEmail().getValue() + '/' + X.getName(), PointEntity.class);
+                Entity xp = EntityTransactionFactory.getDaoInstance(admin).getEntityByKey(u.getEmail().getValue() + '/' + X.getName(), PointEntity.class).get(0);
                 if (xp != null) {
                     out.println("X" + xp.getName().getValue() + "</br>");
                     return  xp.getKey();
@@ -148,7 +148,7 @@ public class RecoveryServlet extends HttpServlet {
             List<DataPoint> s = (List<DataPoint>) q.execute();
             if (!s.isEmpty()) {
                 DataPoint P = s.get(0);
-                Entity xp = EntityTransactionFactory.getDaoInstance(admin).getEntityByKey(u.getEmail().getValue() + '/' + P.getName(), PointEntity.class);
+                Entity xp = EntityTransactionFactory.getDaoInstance(admin).getEntityByKey(u.getEmail().getValue() + '/' + P.getName(), PointEntity.class).get(0);
                 if (xp != null) {
                     out.println("Y" + xp.getName().getValue() + "</br>");
                     return  xp.getKey();
@@ -167,7 +167,7 @@ public class RecoveryServlet extends HttpServlet {
             List<DataPoint> s = (List<DataPoint>) q.execute();
             if (!s.isEmpty()) {
                 DataPoint P = s.get(0);
-                Entity xp = EntityTransactionFactory.getDaoInstance(admin).getEntityByKey(u.getEmail().getValue() + '/' + P.getName(), PointEntity.class);
+                Entity xp = EntityTransactionFactory.getDaoInstance(admin).getEntityByKey(u.getEmail().getValue() + '/' + P.getName(), PointEntity.class).get(0);
                 if (xp != null) {
                     out.println("Z" + xp.getName().getValue() + "</br>");
                     return  xp.getKey();
@@ -187,7 +187,7 @@ public class RecoveryServlet extends HttpServlet {
             List<DataPoint> s = (List<DataPoint>) q.execute();
             if (!s.isEmpty()) {
                 DataPoint P = s.get(0);
-                Entity xp = EntityTransactionFactory.getDaoInstance(admin).getEntityByKey(u.getEmail().getValue() + '/' + P.getName(), PointEntity.class);
+                Entity xp = EntityTransactionFactory.getDaoInstance(admin).getEntityByKey(u.getEmail().getValue() + '/' + P.getName(), PointEntity.class).get(0);
                 if (xp != null) {
                     out.println("getTarget" + xp.getName().getValue() + "</br>");
                     return  xp.getKey();

@@ -29,7 +29,7 @@ public interface UserServiceAsync {
 
     void sendConnectionRequest(final EmailAddress email, final AsyncCallback<Void> asyncCallback);
 
-    void getPendingConnectionRequests(final EmailAddress email, final AsyncCallback<List<Connection>> asyncCallback) throws NimbitsException;
+    void getPendingConnectionRequests(final EmailAddress email, final AsyncCallback<List<ConnectionRequest>> asyncCallback) throws NimbitsException;
 
     void connectionRequestReply(final EmailAddress targetEmail, final EmailAddress requestorEmail, final Long key, final boolean accepted, final AsyncCallback<Void> asyncCallback);
 

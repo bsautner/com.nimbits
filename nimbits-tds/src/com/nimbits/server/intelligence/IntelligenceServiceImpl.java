@@ -180,7 +180,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
     @Override
     public Intelligence getIntelligence(Entity entity) throws NimbitsException {
-        return (Intelligence) EntityTransactionFactory.getInstance(getUser()).getEntityByKey(entity.getKey(), IntelligenceEntity.class);
+        return (Intelligence) EntityTransactionFactory.getInstance(getUser()).getEntityByKey(entity.getKey(), IntelligenceEntity.class).get(0);
         //return IntelligenceServiceFactory.getDaoInstance().getIntelligence(entity);
     }
 
@@ -232,16 +232,16 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
     @Override
     public void processIntelligence(final User u, final Entity point) throws NimbitsException {
-        List<Intelligence> list = IntelligenceServiceFactory.getDaoInstance().getIntelligences(point);
+        final List<Intelligence> list = IntelligenceServiceFactory.getDaoInstance().getIntelligences(point);
 
-        for (Intelligence i : list) {
+        for (final Intelligence i : list) {
             try {
                // Point target = PointServiceFactory.getInstance().getPointByKey(i.getTarget());
-                final Point target = (Point) EntityServiceFactory.getInstance().getEntityByKey(i.getTarget(), PointEntity.class.getName());
+                final Entity target = (Point) EntityServiceFactory.getInstance().getEntityByKey(i.getTarget(), PointEntity.class.getName()).get(0);
 
                 if (target!= null) {
 
-                    Value v = processInput(i);
+                    final Value v = processInput(i);
                     RecordedValueServiceFactory.getInstance().recordValue(u, target, v, true);
 
                 }
@@ -261,7 +261,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
     @Override
     public Value processInput(final Intelligence update) throws NimbitsException {
         String processedInput = addDataToInput(getUser(), update.getInput());
-        final Point target = (Point) EntityServiceFactory.getInstance().getEntityByKey(update.getTarget(), PointEntity.class.getName());
+        final Point target = (Point) EntityServiceFactory.getInstance().getEntityByKey(update.getTarget(), PointEntity.class.getName()).get(0);
 
       //  Point target = PointServiceFactory.getInstance().getPointByKey(update.getTarget());
         return processInput(update, target, processedInput);
@@ -292,7 +292,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
 
                    // Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName,EntityType.point);
-                    Point inputPoint = (Point) EntityServiceFactory.getInstance().getEntityByName(u, pointName,PointEntity.class.getName());
+                    Point inputPoint = (Point) EntityServiceFactory.getInstance().getEntityByName(u, pointName,PointEntity.class.getName()).get(0);;
 
                     // inputPoint= PointServiceFactory.getInstance().getPointByKey(e.getKey());
                    // inputPoint = (Point) EntityServiceFactory.getInstance().getEntityByKey(e.getKey(), PointEntity.class.getName());

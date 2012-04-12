@@ -13,19 +13,24 @@
 
 package com.nimbits.server.orm;
 
-import com.google.appengine.api.blobstore.*;
+import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.*;
-import com.nimbits.client.common.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
+import com.google.appengine.api.datastore.KeyFactory;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.enums.AlertType;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
 
 import javax.jdo.annotations.*;
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by bsautner
@@ -38,6 +43,7 @@ import java.util.*;
 @Inheritance(strategy = InheritanceStrategy.SUBCLASS_TABLE)
 public class EntityStore implements Entity {
 
+    private static final long serialVersionUID = 5539781607214211456L;
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     protected Key key;
@@ -297,9 +303,19 @@ public class EntityStore implements Entity {
         return null;
     }
 
+    @Override
+    public boolean isOwner(final User user) {
+        return false;
+    }
 
     @Override
-    public int compareTo(Entity entity) {
+    public boolean entityIsReadable(final User user) {
+        return false;
+    }
+
+
+    @Override
+    public int compareTo(final Entity entity) {
         return 0;
     }
 }

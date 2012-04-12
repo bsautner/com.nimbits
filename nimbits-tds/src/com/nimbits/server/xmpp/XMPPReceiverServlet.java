@@ -109,7 +109,7 @@ public class XMPPReceiverServlet extends HttpServlet {
         switch (action) {
             case record:
               //  Point point = PointServiceFactory.getInstance().getPointByKey(p.getKey());
-                Point point = (Point) EntityServiceFactory.getInstance().getEntityByKey(p.getKey(), PointEntity.class.getName());
+                Point point = (Point) EntityServiceFactory.getInstance().getEntityByKey(p.getKey(), PointEntity.class.getName()).get(0);
 
                 if (point != null) {
 
@@ -175,9 +175,9 @@ public class XMPPReceiverServlet extends HttpServlet {
         if (!Utils.isEmptyString(body) && !body.isEmpty() && body.charAt(body.length() - 1) == '?') {
             final EntityName pointName = CommonFactoryLocator.getInstance().createName(body.replace("?", ""), EntityType.point);
 
-            Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName,EntityType.point);
+            Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName,EntityType.point).get(0);
            // Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
-            Entity point = EntityServiceFactory.getInstance().getEntityByKey(e.getKey(), PointEntity.class.getName());
+            Entity point = EntityServiceFactory.getInstance().getEntityByKey(e.getKey(), PointEntity.class.getName()).get(0);
 
             final Value v = RecordedValueServiceFactory.getInstance().getPrevValue(point, new Date());
             if (v != null) {

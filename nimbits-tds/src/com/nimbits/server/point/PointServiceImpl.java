@@ -40,7 +40,7 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     public Entity copyPoint(User u, Entity originalEntity, EntityName newName) throws NimbitsException {
 
         //final Point storedPoint = PointServiceFactory.getInstance().getPointByKey(originalEntity.getKey());
-        Point storedPoint = (Point) EntityTransactionFactory.getDaoInstance(u).getEntityByKey(originalEntity.getKey(), PointEntity.class);
+        Point storedPoint = (Point) EntityTransactionFactory.getDaoInstance(u).getEntityByKey(originalEntity.getKey(), PointEntity.class).get(0);
 
         final Point newPoint = PointModelFactory.createPointModel(storedPoint);
         newPoint.setName(newName);

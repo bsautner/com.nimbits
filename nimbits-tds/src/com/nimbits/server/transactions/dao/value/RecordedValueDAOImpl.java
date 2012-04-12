@@ -13,22 +13,27 @@
 
 package com.nimbits.server.transactions.dao.value;
 
-import com.nimbits.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.timespan.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.client.model.valueblobstore.*;
-import com.nimbits.server.admin.legacy.orm.*;
-import com.nimbits.server.value.*;
+import com.nimbits.PMF;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.timespan.Timespan;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.client.model.valueblobstore.ValueBlobStore;
+import com.nimbits.server.admin.legacy.orm.DataPoint;
+import com.nimbits.server.admin.legacy.orm.RecordedValue;
 
-import javax.jdo.*;
-import java.util.*;
-import java.util.logging.*;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 @SuppressWarnings("unchecked")
 @Deprecated
-public class RecordedValueDAOImpl implements RecordedValueTransactions {
+public class RecordedValueDAOImpl   {
     private static final Logger log = Logger.getLogger(RecordedValueDAOImpl.class.getName());
     private final DataPoint point;
 
@@ -41,7 +46,7 @@ public class RecordedValueDAOImpl implements RecordedValueTransactions {
 
 
     @SuppressWarnings(Const.WARNING_UNCHECKED)
-    @Override
+
     public Value getRecordedValuePrecedingTimestamp(final Date timestamp) {
         Value retObj;
         final PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -75,7 +80,7 @@ public class RecordedValueDAOImpl implements RecordedValueTransactions {
 
 
 
-    @Override
+
     public List<Value> getTopDataSeries(final int maxValues) {
 
         List<Value> retObj = null;
@@ -102,7 +107,7 @@ public class RecordedValueDAOImpl implements RecordedValueTransactions {
         return retObj;
     }
 
-    @Override
+
     public List<Value> getTopDataSeries(final int maxValues, final Date endDate) {
         List<Value> retObj = null;
         final PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -129,7 +134,7 @@ public class RecordedValueDAOImpl implements RecordedValueTransactions {
     }
 
     @SuppressWarnings(Const.WARNING_UNCHECKED)
-    @Override
+
     public List<Value> getDataSegment(final Timespan timespan) {
         List<Value> retObj = null;
         final PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -161,7 +166,7 @@ public class RecordedValueDAOImpl implements RecordedValueTransactions {
         return retObj;
     }
 
-    @Override
+
     public List<Value> getDataSegment(final Timespan timespan, final int start, final int end) {
         final List<Value> retObj;
 
@@ -196,12 +201,12 @@ public class RecordedValueDAOImpl implements RecordedValueTransactions {
 
     }
 
-    @Override
+
     public List<Value> getBuffer() {
         return null;  //auto generated
     }
 
-    @Override
+
     public Value recordValue(final Value v)   {
         return null;
 
@@ -223,22 +228,22 @@ public class RecordedValueDAOImpl implements RecordedValueTransactions {
 
     }
 
-    @Override
+
     public void moveValuesFromCacheToStore() throws NimbitsException {
         throw new NimbitsException("Not Implemented");
     }
 
-    @Override
+
     public List<Value> getCache(final Timespan timespan) throws NimbitsException {
         throw new NimbitsException("Not Implemented");
     }
 
-    @Override
+
     public List<ValueBlobStore> getAllStores() throws NimbitsException {
         throw new NimbitsException("Not Implemented");
     }
 
-    @Override
+
     public void consolidateDate(final Date timestamp) throws NimbitsException {
         throw new NimbitsException("Not Implemented");
     }

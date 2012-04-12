@@ -14,29 +14,46 @@
 package com.nimbits.client.model.connection;
 
 import com.nimbits.client.exception.*;
-import com.nimbits.server.orm.*;
+import com.nimbits.client.model.email.*;
 
+import java.io.*;
 import java.util.*;
 
 /**
  * Created by bsautner
  * User: benjamin
  * Date: 4/17/11
- * Time: 12:54 PM
+ * Time: 12:53 PM
  */
-public class ConnectionRequestModelFactory {
+public interface ConnectionRequest extends Serializable {
 
+    String getRequestorID();
 
-    public static ConnectionRequestModel CreateConnectionRequestModel(final ConnectionRequestEntity c) throws NimbitsException {
-        return new ConnectionRequestModel(c);
-    }
+    void setRequestorID(final String requestorID);
 
-    public static List<ConnectionRequest> CreateConnectionRequestModels(final List<ConnectionRequestEntity> cl) throws NimbitsException {
-        final List<ConnectionRequest> retObj = new ArrayList<ConnectionRequest>(cl.size());
-        for (final ConnectionRequestEntity c : cl) {
-            retObj.add(new ConnectionRequestModel(c));
-        }
-        return retObj;
-    }
+    EmailAddress getTargetEmail() throws NimbitsException;
 
+    void setTargetEmail(final EmailAddress targetEmail);
+
+    Date getRequestDate();
+
+    void setRequestDate(final Date requestDate);
+
+    Date getApprovedDate();
+
+    void setApprovedDate(final Date approvedDate);
+
+    Boolean getApproved();
+
+    void setApproved(final boolean approved);
+
+    Long getKey();
+
+    void setRequestorEmail(final EmailAddress requestorEmail);
+
+    EmailAddress getRequestorEmail() throws NimbitsException;
+
+    void setRejected(final boolean rejected);
+
+    Boolean getRejected();
 }

@@ -62,7 +62,7 @@ public class RecordValueTask extends HttpServlet {
         try {
             final Point point = entity instanceof Point
                     ? (Point) entity
-                    : (Point) EntityTransactionFactory.getInstance(u).getEntityByKey(entity.getKey(), PointEntity.class);
+                    : (Point) EntityTransactionFactory.getInstance(u).getEntityByKey(entity.getKey(), PointEntity.class).get(0);
 
             if (!loopFlag) {
 

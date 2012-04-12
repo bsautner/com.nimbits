@@ -73,7 +73,7 @@ public class ValueServletImpl extends ApiServlet {
         if (user != null && ! user.isRestricted()) {
 
             final EntityName pointName = CommonFactoryLocator.getInstance().createName(getParam(Parameters.point), EntityType.point);
-            final Entity point = EntityServiceFactory.getInstance().getEntityByName(user, pointName,PointEntity.class.getName());
+            final Entity point = EntityServiceFactory.getInstance().getEntityByName(user, pointName,PointEntity.class.getName()).get(0);
 
             if (point != null) {
 
@@ -149,13 +149,13 @@ public class ValueServletImpl extends ApiServlet {
         final Point p;
 
         if (!Utils.isEmptyString(uuid)) {
-            p = (Point) EntityServiceFactory.getInstance().getEntityByKey(uuid, PointEntity.class.getName());
+            p = (Point) EntityServiceFactory.getInstance().getEntityByKey(uuid, PointEntity.class.getName()).get(0);
 
         }
         else if (!Utils.isEmptyString(pointNameParam)) {
             final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
             LogHelper.log(ValueServletImpl.class, "Getting point "  + pointNameParam);
-            p = (Point) EntityServiceFactory.getInstance().getEntityByName(u, pointName,PointEntity.class.getName());
+            p = (Point) EntityServiceFactory.getInstance().getEntityByName(u, pointName,PointEntity.class.getName()).get(0);
             if (p == null) {
                 throw new NimbitsException(UserMessages.ERROR_POINT_NOT_FOUND);
 

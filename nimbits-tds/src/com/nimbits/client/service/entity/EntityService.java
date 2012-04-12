@@ -47,17 +47,17 @@ public interface EntityService extends RemoteService {
 
     Entity addUpdateEntity(User user, Entity entity) throws NimbitsException;
 
-    Entity getEntityByKey(String uuid, String className) throws NimbitsException;
+    List<Entity> getEntityByKey(String uuid, String className) throws NimbitsException;
 
-    Entity getEntityByKey(User u, String entityId, String className) throws NimbitsException;
+    List<Entity> getEntityByKey(User u, String entityId, String className) throws NimbitsException;
 
-    Entity getEntityByName(User u, EntityName name, EntityType type) throws NimbitsException;
+    List<Entity> getEntityByName(User u, EntityName name, EntityType type) throws NimbitsException;
 
-    Entity getEntityByName(EntityName name, EntityType type) throws NimbitsException;
+    List<Entity> getEntityByName(EntityName name, EntityType type) throws NimbitsException;
 
     List<Entity> deleteEntity(User u, Entity entity) throws NimbitsException;
 
     List<Entity> getEntityChildren(User u, Entity c, EntityType point) throws NimbitsException;
 
-    Entity getEntityByName(User user, EntityName name,String className) throws NimbitsException;
+    List<Entity>  getEntityByName(User user, EntityName name,String className) throws NimbitsException;
 }

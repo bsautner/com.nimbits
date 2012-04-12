@@ -1,9 +1,8 @@
 package com.nimbits.client.model.feed;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.*;
+import com.nimbits.client.enums.FeedType;
 
-import java.io.*;
+import java.io.Serializable;
 
 
 
@@ -14,12 +13,13 @@ import java.io.*;
  * Time: 12:58 PM
  */
 public class FeedValueModel  implements Serializable, FeedValue {
-    private String feedHtml;
-    private String originalData;
-    private int feedType;
+    private static final long serialVersionUID = 4425524296491533685L;
+    private String feedHtml = null;
+    private String originalData = null;
+    private int feedType = 0;
 
-    public FeedValueModel(final String feedHtml,final String originalData, FeedType feedType) {
-        this.feedHtml = feedHtml;
+    public FeedValueModel(final String aFeedHtml,final String originalData, final FeedType feedType) {
+        this.feedHtml = aFeedHtml;
         this.originalData = originalData;
         this.feedType = feedType.getCode();
     }
@@ -38,7 +38,7 @@ public class FeedValueModel  implements Serializable, FeedValue {
         return feedHtml;
     }
     @Override
-    public void setFeedHtml(String feedHtml) {
+    public void setFeedHtml(final String feedHtml) {
         this.feedHtml = feedHtml;
     }
     @Override
@@ -46,7 +46,7 @@ public class FeedValueModel  implements Serializable, FeedValue {
         return originalData;
     }
     @Override
-    public void setOriginalData(String originalData) {
+    public void setOriginalData(final String originalData) {
         this.originalData = originalData;
     }
 }

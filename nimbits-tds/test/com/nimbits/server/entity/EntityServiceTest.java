@@ -13,18 +13,23 @@
 
 package com.nimbits.server.entity;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.server.orm.*;
-import com.nimbits.server.point.*;
-import helper.*;
-import static org.junit.Assert.*;
-import org.junit.*;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModelFactory;
+import com.nimbits.server.orm.PointEntity;
+import com.nimbits.server.point.PointServiceFactory;
+import helper.NimbitsServletTest;
+import org.junit.Test;
 
-import java.util.*;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 /**
  * Created by Benjamin Sautner
@@ -32,33 +37,30 @@ import java.util.*;
  * Date: 3/29/12
  * Time: 2:27 PM
  */
+@SuppressWarnings("FeatureEnvy")
 public class EntityServiceTest extends NimbitsServletTest {
 
 
     @Test
     public void deleteEntityTest() throws NimbitsException {
 
-        List<Entity> entities =  EntityServiceFactory.getInstance().getEntities();
+        final List<Entity> entities =  EntityServiceFactory.getInstance().getEntities();
         assertTrue(!entities.isEmpty());
-        Entity e = EntityServiceFactory.getInstance().getEntityByName(pointName,EntityType.point);
+        Entity e = EntityServiceFactory.getInstance().getEntityByName(pointName,EntityType.point).get(0);
         assertNotNull(e);
-        Entity c = EntityServiceFactory.getInstance().getEntityByName(pointChildName,EntityType.point);
-        Entity g = EntityServiceFactory.getInstance().getEntityByName(groupName,EntityType.category);
+        Entity c = EntityServiceFactory.getInstance().getEntityByName(pointChildName,EntityType.point).get(0);
+        Entity g = EntityServiceFactory.getInstance().getEntityByName(groupName,EntityType.category).get(0);
 
         assertNotNull(c);
         assertNotNull(g);
-        List<Entity> children =  EntityServiceFactory.getInstance().getChildren(g, EntityType.point);
+        final List<Entity> children =  EntityServiceFactory.getInstance().getChildren(g, EntityType.point);
         assertTrue(!children.isEmpty());
 
         EntityServiceFactory.getInstance().deleteEntity(g);
-        e = EntityServiceFactory.getInstance().getEntityByName(pointName,EntityType.point);
-        c = EntityServiceFactory.getInstance().getEntityByName(pointChildName,EntityType.point);
-        g = EntityServiceFactory.getInstance().getEntityByName(groupName,EntityType.category);
+        assertTrue(EntityServiceFactory.getInstance().getEntityByName(pointName,EntityType.point).isEmpty());
+        assertTrue(EntityServiceFactory.getInstance().getEntityByName(pointChildName,EntityType.point).isEmpty());
+        assertTrue(EntityServiceFactory.getInstance().getEntityByName(groupName,EntityType.category).isEmpty());
 
-
-        assertNull(g);
-        assertNull(e);
-        assertNull(c);
 
 
     }
@@ -112,7 +114,7 @@ public class EntityServiceTest extends NimbitsServletTest {
 
     @Test
     public void getEntityByNameTest() throws NimbitsException {
-        Point  r = (Point) EntityServiceFactory.getInstance().getEntityByName(user, pointName,PointEntity.class.getName());
+        Point  r = (Point) EntityServiceFactory.getInstance().getEntityByName(user, pointName,PointEntity.class.getName()).get(0);;
         assertNotNull(r);
 
     }

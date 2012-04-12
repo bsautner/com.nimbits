@@ -69,7 +69,7 @@ public class SummaryTask  extends HttpServlet {
 
                     try {
                         // final Point source = PointServiceFactory.getInstance().getPointByKey(summary.getEntity());
-                        final Point source = (Point) EntityServiceFactory.getInstance().getEntityByKey(summary.getEntity(), PointEntity.class.getName());
+                        final Point source = (Point) EntityServiceFactory.getInstance().getEntityByKey(summary.getEntity(), PointEntity.class.getName()).get(0);
 
                         final Timespan span = TimespanModelFactory.createTimespan(new Date(now.getTime() - summary.getSummaryIntervalMs()), now);
                         final List<Value> values;
@@ -82,7 +82,7 @@ public class SummaryTask  extends HttpServlet {
                         if (!values.isEmpty()) {
                             // final Entity targetEntity = EntityServiceFactory.getInstance().getEntityByUUID(summary.getTargetPointUUID());
                             //  final Point target = PointServiceFactory.getInstance().getPointByKey(summary.getTargetPointUUID());
-                            final Point target = (Point) EntityServiceFactory.getInstance().getEntityByKey(summary.getTargetPointUUID(), PointEntity.class.getName());
+                            final Point target = (Point) EntityServiceFactory.getInstance().getEntityByKey(summary.getTargetPointUUID(), PointEntity.class.getName()).get(0);
 
                             final double result = getValue(summary.getSummaryType(), doubles);
                             final Value value = ValueModelFactory.createValueModel(result);

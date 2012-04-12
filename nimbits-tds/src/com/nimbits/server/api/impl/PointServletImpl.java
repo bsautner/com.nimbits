@@ -144,9 +144,9 @@ public class PointServletImpl extends ApiServlet {
 
             if (containsParam(Parameters.uuid)) {
 
-                Entity entity =   EntityServiceFactory.getInstance().getEntityByKey(getParam(Parameters.uuid), PointEntity.class.getName());
+                Entity entity =   EntityServiceFactory.getInstance().getEntityByKey(getParam(Parameters.uuid), PointEntity.class.getName()).get(0);
                 if (entity == null) {
-                    entity=  EntityServiceFactory.getInstance().getEntityByKey(user, CategoryEntity.class.getName(),getParam(Parameters.uuid));
+                    entity=  EntityServiceFactory.getInstance().getEntityByKey(user, CategoryEntity.class.getName(),getParam(Parameters.uuid)).get(0);
                 }
                 if (entity != null) {
                     if (entity.getEntityType().equals(EntityType.point)) {
@@ -194,10 +194,10 @@ public class PointServletImpl extends ApiServlet {
 
         // Category c = CategoryServiceFactory.getInstance().getCategory(u, categoryName);
 
-        Entity c = EntityServiceFactory.getInstance().getEntityByName(u, categoryName,EntityType.category);
+        Entity c = EntityServiceFactory.getInstance().getEntityByName(u, categoryName,EntityType.category).get(0);
 
         if (c == null) {
-            c = EntityServiceFactory.getInstance().getEntityByName(u,  CommonFactoryLocator.getInstance().createName(u.getEmail().getValue(), EntityType.user), EntityType.user);
+            c = EntityServiceFactory.getInstance().getEntityByName(u,  CommonFactoryLocator.getInstance().createName(u.getEmail().getValue(), EntityType.user), EntityType.user).get(0);
         }
 
 
@@ -254,9 +254,9 @@ public class PointServletImpl extends ApiServlet {
 
     private static void deletePoint(final User u, final String pointNameParam) throws NimbitsException {
         final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
-        final Entity entity = EntityServiceFactory.getInstance().getEntityByName(u, pointName,EntityType.point);
-        if (entity != null) {
-            EntityServiceFactory.getInstance().deleteEntity(u, entity);
+        final List<Entity> entity = EntityServiceFactory.getInstance().getEntityByName(u, pointName,EntityType.point);
+        if (! entity.isEmpty()) {
+            EntityServiceFactory.getInstance().deleteEntity(u, entity.get(0));
 
         }
     }
@@ -323,12 +323,12 @@ public class PointServletImpl extends ApiServlet {
 
             if (!Utils.isEmptyString(pointNameParam)) {
                 final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
-                final Entity e = EntityServiceFactory.getInstance().getEntityByName(user, pointName,EntityType.point);
+                final Entity e = EntityServiceFactory.getInstance().getEntityByName(user, pointName,EntityType.point).get(0);
                 return e != null ? gson.toJson(e) : "Error calling " +
                         "Point Service. " + pointNameParam + " not found";
             } else if (!Utils.isEmptyString(categoryNameParam)) {
                 final EntityName categoryName = CommonFactoryLocator.getInstance().createName(categoryNameParam, EntityType.category);
-                final Entity c = EntityServiceFactory.getInstance().getEntityByName(user, categoryName,EntityType.category);
+                final Entity c = EntityServiceFactory.getInstance().getEntityByName(user, categoryName,EntityType.category).get(0);
                 final List<Entity> children = EntityServiceFactory.getInstance().getEntityChildren(user, c, EntityType.point);
                 return  gson.toJson(children, GsonFactory.pointListType);
 

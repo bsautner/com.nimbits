@@ -126,7 +126,7 @@ public class ChartApiServletImpl extends ApiServlet {
             for (final EntityName pointName : pointList) {
 
 
-                p = (Point) EntityServiceFactory.getInstance().getEntityByName(u, pointName,PointEntity.class.getName());
+                p = (Point) EntityServiceFactory.getInstance().getEntityByName(u, pointName,PointEntity.class.getName()).get(0);
                 if (p != null) {
 
                   //  p = (Point) EntityServiceFactory.getInstance().getEntityByKey(e.getKey(), PointEntity.class.getName());

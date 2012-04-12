@@ -105,10 +105,10 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
                              final Value value) throws NimbitsException {
 
 
-        final Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName, PointEntity.class.getName());
+        final List<Entity> e = EntityServiceFactory.getInstance().getEntityByName(u, pointName, PointEntity.class.getName());
       //  final Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
 
-        return e != null ? recordValue(u, e, value, false) : null;
+        return ! e.isEmpty() ? recordValue(u, e.get(0), value, false) : null;
 
     }
 
@@ -265,7 +265,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
         final boolean ignored = false;
         final Point point  = entity instanceof PointModel
                 ? (Point) entity
-                : (Point) EntityTransactionFactory.getInstance(u).getEntityByKey(entity.getKey(),PointEntity.class);
+                : (Point) EntityTransactionFactory.getInstance(u).getEntityByKey(entity.getKey(),PointEntity.class).get(0);
 
 
 

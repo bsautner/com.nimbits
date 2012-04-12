@@ -13,30 +13,21 @@
 
 package com.nimbits.client.model.connection;
 
-import com.nimbits.client.exception.*;
-import com.nimbits.server.orm.*;
-
-import java.util.*;
+import com.nimbits.client.exception.NimbitsException;
 
 /**
  * Created by bsautner
  * User: benjamin
- * Date: 4/17/11
- * Time: 12:54 PM
+ * Date: 4/9/12
+ * Time: 7:09 PM
  */
-public class ConnectionRequestModelFactory {
+public class ConnectionFactory {
 
-
-    public static ConnectionRequestModel CreateConnectionRequestModel(final ConnectionRequestEntity c) throws NimbitsException {
-        return new ConnectionRequestModel(c);
+    private ConnectionFactory() {
     }
 
-    public static List<ConnectionRequest> CreateConnectionRequestModels(final List<ConnectionRequestEntity> cl) throws NimbitsException {
-        final List<ConnectionRequest> retObj = new ArrayList<ConnectionRequest>(cl.size());
-        for (final ConnectionRequestEntity c : cl) {
-            retObj.add(new ConnectionRequestModel(c));
-        }
-        return retObj;
+    public static Connection createCreateConnection(final Connection e) throws NimbitsException {
+        return new ConnectionModel(e);
     }
 
 }

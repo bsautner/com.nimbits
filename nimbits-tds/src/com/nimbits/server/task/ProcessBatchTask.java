@@ -92,16 +92,17 @@ public class ProcessBatchTask extends HttpServlet {
 
             for (final long l : timestamps) {
                 BatchValue b = timestampValueMap.get(l);
-                Point point;
+                Point point = null;
                 if (points.containsKey(b.pointName)) {
                     point = points.get(b.pointName);
 
                 } else {
                     LogHelper.log(this.getClass(), b.pointName.getValue());
                     LogHelper.log(this.getClass(), u.getEmail().getValue());
-                    point = (Point) EntityServiceFactory.getInstance().getEntityByName(u, b.pointName,PointEntity.class.getName());
+                    final List<Entity> pointTmp =   EntityServiceFactory.getInstance().getEntityByName(u, b.pointName,PointEntity.class.getName()) ;
 
-                    if (point != null) {
+                    if (! pointTmp.isEmpty()) {
+                        point = (Point) pointTmp.get(0);
                         points.put(b.pointName, point);
                     }
                 }

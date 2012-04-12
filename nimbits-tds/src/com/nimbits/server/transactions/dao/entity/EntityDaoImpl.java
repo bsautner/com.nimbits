@@ -14,30 +14,42 @@
 package com.nimbits.server.transactions.dao.entity;
 
 
-import com.nimbits.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.calculation.*;
-import com.nimbits.client.model.category.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.file.*;
-import com.nimbits.client.model.intelligence.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.relationship.*;
-import com.nimbits.client.model.subscription.*;
-import com.nimbits.client.model.summary.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.xmpp.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.logging.*;
+import com.nimbits.PMF;
+import com.nimbits.client.constants.UserMessages;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.calculation.Calculation;
+import com.nimbits.client.model.calculation.CalculationModelFactory;
+import com.nimbits.client.model.category.Category;
+import com.nimbits.client.model.category.CategoryFactory;
+import com.nimbits.client.model.connection.Connection;
+import com.nimbits.client.model.connection.ConnectionFactory;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.file.File;
+import com.nimbits.client.model.file.FileFactory;
+import com.nimbits.client.model.intelligence.Intelligence;
+import com.nimbits.client.model.intelligence.IntelligenceModelFactory;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModelFactory;
+import com.nimbits.client.model.relationship.Relationship;
+import com.nimbits.client.model.subscription.Subscription;
+import com.nimbits.client.model.subscription.SubscriptionFactory;
+import com.nimbits.client.model.summary.Summary;
+import com.nimbits.client.model.summary.SummaryModelFactory;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.user.UserModelFactory;
+import com.nimbits.client.model.xmpp.XmppResource;
+import com.nimbits.client.model.xmpp.XmppResourceFactory;
+import com.nimbits.server.entity.EntityTransactions;
+import com.nimbits.server.logging.LogHelper;
 import com.nimbits.server.orm.*;
-import com.nimbits.server.relationship.*;
-import com.nimbits.shared.*;
+import com.nimbits.server.relationship.RelationshipTransactionFactory;
+import com.nimbits.shared.Utils;
 
 import javax.jdo.*;
 import java.util.*;
-import java.util.logging.*;
+import java.util.logging.Logger;
 
 /**
  * Created by Benjamin Sautner
@@ -46,7 +58,7 @@ import java.util.logging.*;
  * Time: 10:46 AM
  */
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "FeatureEnvy"})
 public class EntityDaoImpl implements  EntityTransactions {
 
     private static final int INT1 = 1024;
@@ -76,19 +88,17 @@ public class EntityDaoImpl implements  EntityTransactions {
 
             final Map<String, Entity> retObj = new HashMap<String, Entity>(result.size());
             for (final Entity e : result) {
-                final Entity model = createModel(e);
-
-
-                retObj.put(model.getKey(), model);
+                final List<Entity> models = createModel(e);
+                if (! models.isEmpty()) {
+                    Entity model = models.get(0);
+                    retObj.put(model.getKey(), model);
+                }
             }
             return retObj;
 
 
         } catch (ClassNotFoundException e) {
             throw new NimbitsException(e);
-        }  catch (NullPointerException e) {
-            log.severe(e.getMessage());
-            return new HashMap<String, Entity>(0);
         }
 
         finally {
@@ -134,7 +144,7 @@ public class EntityDaoImpl implements  EntityTransactions {
     public List<Entity> getChildren(final Entity parentEntity, final EntityType type) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
-            List<Entity> r =  getEntityChildren(pm, parentEntity, type);
+            final List<Entity> r =  getEntityChildren(pm, parentEntity, type);
             return createModels(r);
         }
         finally {
@@ -153,22 +163,32 @@ public class EntityDaoImpl implements  EntityTransactions {
 
 
         try {
+            final Entity retObj;
             if (Utils.isEmptyString(entity.getKey())) {
-                return addEntity(entity, pm);
+                retObj =  addEntity(entity, pm);
             } else {
 
                 final Transaction tx = pm.currentTransaction();
-                Class cls = Class.forName(entity.getEntityType().getClassName());
+                final Class cls = Class.forName(entity.getEntityType().getClassName());
                 final Entity result = (Entity) pm.getObjectById(cls, entity.getKey());
+
                 if (result != null) {
                     tx.begin();
                     result.update(entity);
                     tx.commit();
-                    return createModel(result);
+                    final List<Entity> model = createModel(result);
+                    if (model.isEmpty()) {
+                        throw new NimbitsException("error creating model");
+                    }
+                    else {
+                        retObj = model.get(0);
+                    }
                 } else {
-                    return addEntity(entity, pm);
+                    retObj= addEntity(entity, pm);
                 }
+
             }
+            return retObj;
         } catch (ClassNotFoundException e) {
             LogHelper.logException(this.getClass(), e);
             throw new NimbitsException(e);
@@ -186,6 +206,35 @@ public class EntityDaoImpl implements  EntityTransactions {
             checkDuplicateEntity(entity);
 
         }
+        final Entity commit;
+        commit = downcastEntity(entity);
+
+
+        if (Utils.isEmptyString(commit.getUUID())) {
+            commit.setUUID(UUID.randomUUID().toString());
+        }
+
+        pm.makePersistent(commit);
+        if (entity.getEntityType().equals(EntityType.user) ){
+            final Transaction tx = pm.currentTransaction();
+            tx.begin();
+            entity.setParent(entity.getKey());
+            entity.setOwner(entity.getKey());
+            tx.commit();
+
+        }
+        final List<Entity> r = createModel(commit);
+
+        if (r.isEmpty()) {
+            throw new NimbitsException("Error creating model");
+        }
+        else {
+            return r.get(0);
+        }
+    }
+
+    @SuppressWarnings({"OverlyCoupledMethod", "OverlyLongMethod", "OverlyComplexMethod"})
+    private static Entity downcastEntity(final Entity entity) throws NimbitsException {
         final Entity commit;
         switch (entity.getEntityType()) {
 
@@ -229,22 +278,7 @@ public class EntityDaoImpl implements  EntityTransactions {
             default:
                 commit = new CategoryEntity(entity);
         }
-
-
-        if (Utils.isEmptyString(commit.getUUID())) {
-            commit.setUUID(UUID.randomUUID().toString());
-        }
-
-        pm.makePersistent(commit);
-        if (entity.getEntityType().equals(EntityType.user) ){
-            final Transaction tx = pm.currentTransaction();
-            tx.begin();
-            entity.setParent(entity.getKey());
-            entity.setOwner(entity.getKey());
-            tx.commit();
-
-        }
-        return createModel(commit);
+        return commit;
     }
 
 
@@ -257,23 +291,15 @@ public class EntityDaoImpl implements  EntityTransactions {
         final Collection<String> uuids = new ArrayList<String>(connections.size() + 1);
         uuids.add(user.getKey());
 
-        final Collection<String> connectedUserKeys = new ArrayList<String>(connections.size());
+
         final Map<String, Relationship> relationshipMap = new HashMap<String, Relationship>(connections.size());
-        for (final Entity e : connections.values()) {
-            Relationship r = RelationshipTransactionFactory.getInstance().getRelationship(e);
 
-            if (r != null) {
-                relationshipMap.put(r.getForeignKey(), r);
-                uuids.add(r.getForeignKey());
-                connectedUserKeys.add(r.getForeignKey());
-            }
-
-        }
+        final Collection<String> connectedUserKeys = getConnectedUserKeys(connections, uuids, relationshipMap);
         try{
-            List<Entity> retObj = new ArrayList<Entity>(INT1);
+            final List<Entity> retObj = new ArrayList<Entity>(INT1);
 
 
-            for (EntityType type : EntityType.values()) {
+            for (final EntityType type : EntityType.values()) {
                 try {
                     if (type.isTreeGridItem()) {
                         final Query q1 = pm.newQuery(Class.forName(type.getClassName()), ":p.contains(owner)");
@@ -313,6 +339,21 @@ public class EntityDaoImpl implements  EntityTransactions {
         }
 
 
+    }
+
+    private Collection<String> getConnectedUserKeys(Map<String, Entity> connections, Collection<String> uuids, Map<String, Relationship> relationshipMap) {
+        final Collection<String> connectedUserKeys = new ArrayList<String>(connections.size());
+        for (final Entity e : connections.values()) {
+            final Relationship r = RelationshipTransactionFactory.getInstance().getRelationship(e);
+
+            if (r != null) {
+                relationshipMap.put(r.getForeignKey(), r);
+                uuids.add(r.getForeignKey());
+                connectedUserKeys.add(r.getForeignKey());
+            }
+
+        }
+        return connectedUserKeys;
     }
 
     private static List<Entity> getEntityChildren(final PersistenceManager pm, final Entity entity) {
@@ -396,31 +437,29 @@ public class EntityDaoImpl implements  EntityTransactions {
     }
 
     @Override
-    public Entity getEntityByKey(final String uuid, final Class<?> cls) throws NimbitsException {
+    public List<Entity> getEntityByKey(final String uuid, final Class<?> cls) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-
+        final List<Entity> retObj = new ArrayList<Entity>(1);
 
         try {
-            if (Utils.isEmptyString(uuid)) {
-                return null;
-            } else {
-                final Entity result = (Entity) pm.getObjectById(cls, uuid);
+            if (! Utils.isEmptyString(uuid)) {
 
-                return createModel(result);
+                final Entity result = (Entity) pm.getObjectById(cls, uuid);
+                final List<Entity> r = createModel(result);
+                retObj.addAll(r);
 
 
             }
+            return retObj;
         } catch (JDOObjectNotFoundException ex) {
 
             return getEntityByUUID(uuid, cls); //maybe they gave us a uuid
-        } catch (JDOFatalUserException ex) {
-            return null;
-        } finally {
+        }  finally {
             pm.close();
         }
     }
 
-    public Entity getEntityByUUID(final String uuid, final Class<?> cls) throws NimbitsException {
+    private List<Entity> getEntityByUUID(final String uuid, final Class<?> cls) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
             final Query q1 = pm.newQuery(cls);
@@ -429,59 +468,98 @@ public class EntityDaoImpl implements  EntityTransactions {
             q1.setRange(0, 1);
 
             final Collection<Entity> result = (Collection<Entity>) q1.execute(uuid);
-            return result.isEmpty() ? null : createModel(result.iterator().next());
-        } finally {
-            pm.close();
-        }
-
-    }
-
-
-
-    @Override
-    public Entity getEntityByName(EntityName name, EntityType type) throws NimbitsException {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-        try {
-            if (type.equals(EntityType.point)) {
-
-                return getEntityByName(name, Class.forName(type.getClassName()));
+            final List<Entity> retObj;
+            if (result.isEmpty()) {
+                retObj = Collections.emptyList();
             }
             else {
-
-
-                final List<Entity> c;
-
-
-                Class cls = Class.forName(type.getClassName());
-                final Query q1 = pm.newQuery(cls);
-                if (user != null) {
-                    q1.setFilter("name==b && owner==o && entityType==t");
-                    q1.declareParameters("String b, String o, Integer t");
-                    q1.setRange(0, 1);
-                    c = (List<Entity>) q1.execute(name.getValue(), user.getKey(), type.getCode());
-                }
-                else {
-                    q1.setFilter("name==b && entityType==t");
-                    q1.declareParameters("String b, Integer t");
-                    q1.setRange(0, 1);
-                    c = (List<Entity>) q1.execute(name.getValue(), type.getCode());
-                }
-                if (c.isEmpty()) {
-                    return null;
-                } else {
-
-                    final Entity result = c.get(0);
-                    return createModel(result);
-
-                }
+                retObj= createModel(result.iterator().next());
             }
-        } catch (ClassNotFoundException e) {
-            throw new NimbitsException(e);
+            return retObj;
         } finally {
             pm.close();
         }
 
     }
+
+    @Override
+    public List<Entity> getEntityByName(final EntityName name,final Class<?> cls) throws NimbitsException {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+
+        try {
+            final Query q1 = pm.newQuery(cls);
+            final List<Entity> c;
+            if (user != null) {
+                q1.setFilter("name==b && owner==o");
+                q1.declareParameters("String b, String o");
+                q1.setRange(0, 1);
+                c = (List<Entity>) q1.execute(name.getValue(), user.getKey());
+            }
+            else {
+                q1.setFilter("name==b && entityType==t");
+                q1.declareParameters("String b, Integer t");
+                q1.setRange(0, 1);
+                c = (List<Entity>) q1.execute(name.getValue());
+            }
+            if (c.isEmpty()) {
+                return Collections.emptyList();
+            } else {
+
+                final Entity result = c.get(0);
+                return createModel(result);
+
+            }
+
+        } finally {
+            pm.close();
+        }
+    }
+
+
+//    @Override
+//    public List<Entity> getEntityByName(final EntityName name, final EntityType type) throws NimbitsException {
+//        final PersistenceManager pm = PMF.get().getPersistenceManager();
+//        try {
+//            if (type.equals(EntityType.point)) {
+//
+//                return getEntityByName(name, Class.forName(type.getClassName()));
+//            }
+//            else {
+//
+//
+//                final List<Entity> c;
+//
+//
+//                final Class cls = Class.forName(type.getClassName());
+//                final Query q1 = pm.newQuery(cls);
+//                if (user != null) {
+//                    q1.setFilter("name==b && owner==o && entityType==t");
+//                    q1.declareParameters("String b, String o, Integer t");
+//                    q1.setRange(0, 1);
+//                    c = (List<Entity>) q1.execute(name.getValue(), user.getKey(), type.getCode());
+//                }
+//                else {
+//                    q1.setFilter("name==b && entityType==t");
+//                    q1.declareParameters("String b, Integer t");
+//                    q1.setRange(0, 1);
+//                    c = (List<Entity>) q1.execute(name.getValue(), type.getCode());
+//                }
+//                if (c.isEmpty()) {
+//                    return null;
+//                } else {
+//
+//                    final Entity result = c.get(0);
+//                    return createModel(result);
+//
+//                }
+//            }
+//        } catch (ClassNotFoundException e) {
+//            throw new NimbitsException(e);
+//        } finally {
+//            pm.close();
+//        }
+//
+//    }
 
     private void checkDuplicateEntity(final Entity entity) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -575,131 +653,74 @@ public class EntityDaoImpl implements  EntityTransactions {
         throw new NimbitsException(UserMessages.ERROR_NOT_IMPLEMENTED);
     }
 
-    @Override
-    public Entity getEntityByName(final EntityName name,final Class<?> cls) throws NimbitsException {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-
-        try {
-            final Query q1 = pm.newQuery(cls);
-            final List<Entity> c;
-            if (user != null) {
-                q1.setFilter("name==b && owner==o");
-                q1.declareParameters("String b, String o");
-                q1.setRange(0, 1);
-                c = (List<Entity>) q1.execute(name.getValue(), user.getKey());
-            }
-            else {
-                q1.setFilter("name==b && entityType==t");
-                q1.declareParameters("String b, Integer t");
-                q1.setRange(0, 1);
-                c = (List<Entity>) q1.execute(name.getValue());
-            }
-            if (c.isEmpty()) {
-                return null;
-            } else {
-
-                final Entity result = c.get(0);
-                return createModel(result);
-
-            }
-
-        } finally {
-            pm.close();
-        }
-    }
 
 
 
     private List<Entity> createModels(final Collection<Entity> entity) throws NimbitsException {
         final List<Entity> retObj = new ArrayList<Entity>(entity.size());
         for (final Entity e : entity) {
-            retObj.add(createModel(e));
+            final List<Entity> r =createModel(e);
+            retObj.addAll(r);
         }
         return retObj;
 
     }
-    private Entity createModel(final Entity entity ) throws NimbitsException {
-        Entity retObj;
+    private List<Entity> createModel(final Entity entity ) throws NimbitsException {
+        final Entity model;
         switch (entity.getEntityType()) {
 
             case user:
-                retObj = UserModelFactory.createUserModel((User) entity);
+                model = UserModelFactory.createUserModel((User) entity);
                 break;
             case point:
-                retObj = PointModelFactory.createPointModel((Point) entity);
+                model = PointModelFactory.createPointModel((Point) entity);
                 break;
             case category:
-                retObj = CategoryFactory.createCategory((Category) entity);
+                model = CategoryFactory.createCategory((Category) entity);
                 break;
             case file:
-                retObj = FileFactory.createFile((File) entity);
+                model = FileFactory.createFile((File) entity);
                 break;
             case subscription:
-                retObj = SubscriptionFactory.createSubscription((Subscription) entity);
+                model = SubscriptionFactory.createSubscription((Subscription) entity);
                 break;
             case userConnection:
-                retObj = UserModelFactory.createUserModel((User) entity);//?
+                model = ConnectionFactory.createCreateConnection((Connection) entity);
                 break;
             case calculation:
-                retObj = CalculationModelFactory.createCalculation((Calculation) entity);
+                model = CalculationModelFactory.createCalculation((Calculation) entity);
                 break;
             case intelligence:
-                retObj = IntelligenceModelFactory.createIntelligenceModel((Intelligence) entity);
+                model = IntelligenceModelFactory.createIntelligenceModel((Intelligence) entity);
                 break;
             case feed:
-                retObj = PointModelFactory.createPointModel((Point) entity);
+                model = PointModelFactory.createPointModel((Point) entity);
                 break;
             case resource:
-                retObj = XmppResourceFactory.createXmppResource((XmppResource) entity);
+                model = XmppResourceFactory.createXmppResource((XmppResource) entity);
                 break;
             case summary:
-                retObj = SummaryModelFactory.createSummary((Summary) entity);
+                model = SummaryModelFactory.createSummary((Summary) entity);
                 break;
             case instance:
-               throw new NimbitsException("Not implemented");
+                throw new NimbitsException("Not implemented");
 
             default:
                 throw new NimbitsException("Not implemented");
 
         }
-        if (retObj != null) {
-
-            final boolean isOwner = isOwner(retObj);
-            final boolean isReadable = entityIsReadable(entity, isOwner);
-            if (!isReadable) {
-                retObj = null;
-            }
-            else if (! isOwner) {
-                retObj.setReadOnly(true);
-            }
+        final List<Entity> retObj = new ArrayList<Entity>(1);
+        if (model.entityIsReadable(user)) {
+            model.setReadOnly(! entity.isOwner(user) );
+            retObj.add(model);
         }
+
 
         return retObj;
 
 
     }
 
-    private boolean isOwner(Entity retObj) {
-        return user != null && (user.getAuthLevel().equals(AuthLevel.admin) || retObj.getOwner().equals(user.getKey()));
-    }
-
-    private boolean entityIsReadable(  final Entity e, final boolean isOwner) {
 
 
-
-        boolean retVal = e.getEntityType().equals(EntityType.user) ||
-                isOwner ||
-                e.getProtectionLevel().equals(ProtectionLevel.everyone) ||
-                e.getProtectionLevel().equals(ProtectionLevel.onlyConnection);
-
-        if (e.getEntityType().equals(EntityType.userConnection) && ! e.getOwner().equals(user.getKey())) {
-            retVal = false;
-        }
-        if (e.getEntityType().equals(EntityType.summary) && user == null) {
-            retVal = true; //this is a system request from the summary cron job.
-        }
-        return retVal;
-
-
-    }
 }

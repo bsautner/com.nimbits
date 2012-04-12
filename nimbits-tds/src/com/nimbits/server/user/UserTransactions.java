@@ -23,7 +23,7 @@ import java.util.*;
 
 public interface UserTransactions {
 
-    User createNimbitsUser(final EmailAddress emailAddress) throws NimbitsException;
+
 
     User setFacebookToken(final EmailAddress emailAddress, final String token, final long facebookId) throws NimbitsException;
 
@@ -33,9 +33,9 @@ public interface UserTransactions {
 
     User updateSecret(final EmailAddress emailAddress, final UUID uuid) throws NimbitsException;
 
-    Connection makeConnectionRequest(final User u, final EmailAddress emailAddress) throws NimbitsException;
+    ConnectionRequest makeConnectionRequest(final User u, final EmailAddress emailAddress) throws NimbitsException;
 
-    List<Connection> getPendingConnectionRequests(final EmailAddress emailAddress) throws NimbitsException;
+    List<ConnectionRequest> getPendingConnectionRequests(final EmailAddress emailAddress) throws NimbitsException;
 
     void updateConnectionRequest(final Long key, final User requestor, final User acceptor, final boolean accepted) throws NimbitsException;
 

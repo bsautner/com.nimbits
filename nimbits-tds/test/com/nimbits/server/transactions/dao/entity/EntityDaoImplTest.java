@@ -13,16 +13,23 @@
 
 package com.nimbits.server.transactions.dao.entity;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.orm.*;
-import helper.*;
-import static org.junit.Assert.*;
-import org.junit.*;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModelFactory;
+import com.nimbits.server.entity.EntityServiceFactory;
+import com.nimbits.server.entity.EntityTransactionFactory;
+import com.nimbits.server.orm.PointEntity;
+import helper.NimbitsServletTest;
+import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by bsautner
@@ -42,7 +49,7 @@ public class EntityDaoImplTest extends NimbitsServletTest {
         Point add = PointModelFactory.createPointModel(entity);
         Point result = (Point) EntityServiceFactory.getInstance().addUpdateEntity(user, add);
         //Entity result = EntityTransactionFactory.getDaoInstance(user).addUpdateEntity(entity);
-        Entity r = EntityTransactionFactory.getDaoInstance(user).getEntityByKey(result.getKey(),PointEntity.class);
+        Entity r = EntityTransactionFactory.getDaoInstance(user).getEntityByKey(result.getKey(), PointEntity.class).get(0);
         assertNotNull(r);
         assertNotNull(result);
         assertNotNull(result.getKey());
@@ -52,7 +59,7 @@ public class EntityDaoImplTest extends NimbitsServletTest {
         Point px = (Point) EntityServiceFactory.getInstance().addUpdateEntity(point);
 
         //Point rp = PointTransactionsFactory.getDaoInstance(user).getPointByKey(result.getKey());
-        Point rp = (Point) EntityTransactionFactory.getDaoInstance(user).getEntityByKey(result.getKey(), PointEntity.class);
+        Point rp = (Point) EntityTransactionFactory.getDaoInstance(user).getEntityByKey(result.getKey(), PointEntity.class).get(0);
 
         assertNotNull(px);
        assertNotNull(rp);
@@ -68,7 +75,7 @@ public class EntityDaoImplTest extends NimbitsServletTest {
         final Entity entity = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.everyone, "", "");
         final Point result = (Point) EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
         //Entity result = EntityTransactionFactory.getDaoInstance(user).addUpdateEntity(entity);
-        final Entity r = EntityTransactionFactory.getDaoInstance(user).getEntityByKey(result.getKey(),PointEntity.class);
+        final Entity r = EntityTransactionFactory.getDaoInstance(user).getEntityByKey(result.getKey(), PointEntity.class).get(0);
         assertNotNull(r);
         assertNotNull(result);
         assertNotNull(result.getKey());
@@ -78,12 +85,12 @@ public class EntityDaoImplTest extends NimbitsServletTest {
         //final Point px = PointTransactionsFactory.getDaoInstance(user).addPoint(point);
 
         //Point rp = PointTransactionsFactory.getDaoInstance(user).getPointByKey(result.getKey());
-        final Point rp = (Point) EntityTransactionFactory.getDaoInstance(user).getEntityByKey(result.getKey(), PointEntity.class);
+        final Point rp = (Point) EntityTransactionFactory.getDaoInstance(user).getEntityByKey(result.getKey(), PointEntity.class).get(0);
 
        // assertNotNull(px);
         assertNotNull(rp);
         EntityTransactionFactory.getDaoInstance(user).deleteEntity(r, PointEntity.class);
-        Entity d = EntityTransactionFactory.getDaoInstance(user).getEntityByKey(result.getKey(),PointEntity.class);
-        assertNull(d);
+        assertTrue(EntityTransactionFactory.getDaoInstance(user).getEntityByKey(result.getKey(),PointEntity.class).isEmpty());
+
     }
 }

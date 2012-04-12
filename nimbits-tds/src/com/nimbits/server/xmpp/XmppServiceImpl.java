@@ -67,11 +67,10 @@ public class XmppServiceImpl extends RemoteServiceServlet implements XMPPService
 
     @Override
     public void sendMessage(final List<XmppResource> resources, final String message, final EmailAddress email) throws NimbitsException {
-        JID jid;
         for (XmppResource resource : resources) {
             List<Entity> entity = EntityServiceFactory.getInstance().getEntityByKey(resource.getKey(),PointEntity.class.getName());
             if (! entity.isEmpty()) {
-                jid = new JID(email.getValue() + '/' + entity.get(0).getName().getValue());
+                JID jid = new JID(email.getValue() + '/' + entity.get(0).getName().getValue());
                 send(message, jid);
                // log.info("stanza sent with jid: " + email.getValue() + "/" + entity.getName().getValue());
             }

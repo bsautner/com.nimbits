@@ -27,6 +27,7 @@ import com.nimbits.server.intelligence.*;
 import com.nimbits.server.logging.*;
 import com.nimbits.server.orm.*;
 import com.nimbits.server.subscription.*;
+import com.nimbits.server.summary.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -71,6 +72,7 @@ public class RecordValueTask extends HttpServlet {
                 CalculationServiceFactory.getInstance().processCalculations(u, point, value);
                 IntelligenceServiceFactory.getInstance().processIntelligence(u, point);
                 SubscriptionServiceFactory.getInstance().processSubscriptions(u,  point, value);
+                SummaryServiceFactory.getInstance().processSummaries(u, point);
             } catch (NimbitsException e) {
                 LogHelper.logException(RecordValueTask.class, e);
             }

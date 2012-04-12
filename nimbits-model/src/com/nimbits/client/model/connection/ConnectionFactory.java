@@ -14,6 +14,7 @@
 package com.nimbits.client.model.connection;
 
 import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.*;
 
 /**
  * Created by bsautner
@@ -29,5 +30,7 @@ public class ConnectionFactory {
     public static Connection createCreateConnection(final Connection e) throws NimbitsException {
         return new ConnectionModel(e);
     }
-
+    public static Connection createCreateConnection(final Entity e) throws NimbitsException {
+        return new ConnectionModel(e);
+    }
 }

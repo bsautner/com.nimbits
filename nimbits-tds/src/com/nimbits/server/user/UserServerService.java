@@ -28,7 +28,6 @@ import javax.servlet.http.*;
 public interface UserServerService {
     User getHttpRequestUser(final HttpServletRequest req) throws NimbitsException;
 
-
     User getAdmin() throws NimbitsException;
 
     User getAnonUser();

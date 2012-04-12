@@ -24,7 +24,6 @@ public interface Entity  extends Serializable, Comparable<Entity> {
 
     void setUUID(String uuid);
 
-
     void setName(EntityName name) throws NimbitsException;
 
     String getDescription();
@@ -70,4 +69,6 @@ public interface Entity  extends Serializable, Comparable<Entity> {
     boolean isOwner(User user);
 
     boolean entityIsReadable(User user);
+
+
 }

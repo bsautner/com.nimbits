@@ -22,6 +22,9 @@ import com.extjs.gxt.ui.client.widget.*;
  * Time: 10:32 AM
  */
 public class FeedbackHelper {
+    private FeedbackHelper() {
+    }
+
     public static void showError(Throwable caught) {
         final MessageBox box = MessageBox.alert("Error", caught.getMessage(), null);
         box.show();

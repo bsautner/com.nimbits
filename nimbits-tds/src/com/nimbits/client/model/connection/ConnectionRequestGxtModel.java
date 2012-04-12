@@ -21,7 +21,7 @@ import java.io.*;
 import java.util.*;
 
 
-public class ConnectionRequestModel extends BaseModelData implements Serializable, ConnectionRequest {
+public class ConnectionRequestGxtModel extends BaseModelData implements Serializable, ConnectionRequest {
     private Long key;
     private String requestorID;
     private EmailAddress requestorEmail;
@@ -33,10 +33,10 @@ public class ConnectionRequestModel extends BaseModelData implements Serializabl
     private static final long serialVersionUID = 1L;
 
     @SuppressWarnings("unused")
-    protected ConnectionRequestModel() {
+    protected ConnectionRequestGxtModel() {
     }
 
-    public ConnectionRequestModel(ConnectionRequest c) throws NimbitsException {
+    public ConnectionRequestGxtModel(ConnectionRequest c) throws NimbitsException {
         this.requestorID = c.getRequestorID();
         this.targetEmail = c.getTargetEmail();
         this.requestorEmail = c.getRequestorEmail();

@@ -86,7 +86,6 @@ public class EntityCacheImpl implements EntityTransactions {
 
     @Override
     public Entity addUpdateEntity(final Entity entity) throws NimbitsException {
-
         final Entity result =   EntityTransactionFactory.getDaoInstance(user).addUpdateEntity(entity);
         addEntityToCache(result);
         return result;

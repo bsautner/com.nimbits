@@ -8,7 +8,7 @@ import com.nimbits.server.entity.EntityServiceFactory;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.orm.PointEntity;
 import com.nimbits.server.value.RecordedValueServiceFactory;
-import helper.NimbitsServletTest;
+import com.nimbits.server.NimbitsServletTest;
 import org.junit.Test;
 
 import java.util.Date;

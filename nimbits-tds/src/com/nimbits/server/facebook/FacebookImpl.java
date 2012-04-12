@@ -19,17 +19,21 @@ import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.service.facebook.*;
+import com.nimbits.server.entity.*;
 import com.nimbits.server.google.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.http.*;
+import com.nimbits.server.orm.*;
 import com.nimbits.server.settings.*;
 import com.nimbits.server.user.*;
 
 import javax.servlet.http.*;
 import java.io.*;
 import java.net.*;
+import java.util.*;
 import java.util.logging.*;
 
 
@@ -57,7 +61,11 @@ public class FacebookImpl extends RemoteServiceServlet implements FacebookServic
         final HttpSession session = request.getSession();
         session.setAttribute(Parameters.email.getText(), u.getEmail());
 
-        UserTransactionFactory.getInstance().setFacebookToken(u.getEmail(), token, f.getId());
+            u.setFacebookID(f.getId());
+            u.setFacebookToken(token);
+            EntityServiceFactory.getInstance().addUpdateEntity(u, u);
+
+
 
         updateStatus(token, "Added Nimbits services for facebook.",
                 Path.PATH_LOGO_IMG, "http://www.nimbits.com",

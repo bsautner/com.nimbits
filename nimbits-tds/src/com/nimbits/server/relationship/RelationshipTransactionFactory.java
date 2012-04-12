@@ -10,6 +10,9 @@ import com.nimbits.server.transactions.dao.relationship.*;
  */
 public class RelationshipTransactionFactory {
 
+    private RelationshipTransactionFactory() {
+    }
+
     public static RelationshipTransaction getInstance() {
 
         return new RelationshipDAOImpl();

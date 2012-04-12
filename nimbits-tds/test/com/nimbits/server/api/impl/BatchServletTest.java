@@ -1,6 +1,6 @@
 package com.nimbits.server.api.impl;
 
-import helper.*;
+import com.nimbits.server.*;
 import org.junit.*;
 
 /**

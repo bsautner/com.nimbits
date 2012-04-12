@@ -40,9 +40,9 @@ public class ProtectionLevelOptions extends RadioGroup {
         radioProtectionPublic.setBoxLabel(ProtectionLevel.everyone.getText());
 
         if (entity != null) {
-            radioProtectionConnections.setValue((entity.getProtectionLevel().equals(ProtectionLevel.onlyConnection)));
-            radioProtectionMe.setValue((entity.getProtectionLevel().equals(ProtectionLevel.onlyMe)));
-            radioProtectionPublic.setValue((entity.getProtectionLevel().equals(ProtectionLevel.everyone)));
+            radioProtectionConnections.setValue(entity.getProtectionLevel().equals(ProtectionLevel.onlyConnection));
+            radioProtectionMe.setValue(entity.getProtectionLevel().equals(ProtectionLevel.onlyMe));
+            radioProtectionPublic.setValue(entity.getProtectionLevel().equals(ProtectionLevel.everyone));
         }
         else {
             radioProtectionPublic.setValue(true);
@@ -57,16 +57,10 @@ public class ProtectionLevelOptions extends RadioGroup {
     }
 
     public ProtectionLevel getProtectionLevel() {
-        if (radioProtectionMe.getValue()) {
-            return (ProtectionLevel.onlyMe);
-        } else if (radioProtectionConnections.getValue()) {
-            return (ProtectionLevel.onlyConnection);
-        } else if (radioProtectionPublic.getValue()) {
-            return (ProtectionLevel.everyone);
-        }
-        else {
-            return ProtectionLevel.onlyMe;
-        }
+        return radioProtectionMe.getValue()
+                ? ProtectionLevel.onlyMe : radioProtectionConnections.getValue()
+                ? ProtectionLevel.onlyConnection : radioProtectionPublic.getValue()
+                ? ProtectionLevel.everyone : ProtectionLevel.onlyMe;
     }
 
 

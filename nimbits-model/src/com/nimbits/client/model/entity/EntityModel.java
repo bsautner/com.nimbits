@@ -19,6 +19,7 @@ import java.util.List;
  * Date: 2/7/12
  * Time: 11:06 AM
  */
+@SuppressWarnings("InstanceofInterfaces")
 public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
 
 
@@ -137,12 +138,12 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
 
     @Override
     public String getKey() {
-        return (this.entity);
+        return this.entity;
     }
 
     @Override
     public String getParent() {
-        return (parent);
+        return parent;
     }
 
     @Override
@@ -162,7 +163,7 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
 
     @Override
     public String getOwner() {
-        return (owner);
+        return owner;
     }
 
     @Override
@@ -200,10 +201,6 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
         this.blobKey = blobKey;
     }
 
-    public void setKey(String key) {
-        this.key = key;
-    }
-
     @SuppressWarnings("MethodWithMultipleReturnPoints")
     @Override
     public int compareTo(final Entity that) {
@@ -217,7 +214,7 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
 
     @Override
     public boolean isOwner(final User user) {
-        return user != null && (user.getAuthLevel().equals(AuthLevel.admin) || this.getOwner().equals(user.getKey()));
+        return user != null && (user.getAuthLevel().equals(AuthLevel.admin) || this.owner.equals(user.getKey()));
     }
 
     @Override
@@ -230,7 +227,7 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
                 this.getProtectionLevel().equals(ProtectionLevel.everyone) ||
                 this.getProtectionLevel().equals(ProtectionLevel.onlyConnection);
 
-        if (this.getEntityType().equals(EntityType.userConnection) && ! this.getOwner().equals(user.getKey())) {
+        if (this.getEntityType().equals(EntityType.userConnection) && !this.owner.equals(user.getKey())) {
             retVal = false;
         }
         if (this.getEntityType().equals(EntityType.summary) && user == null) {
@@ -239,5 +236,62 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
         return retVal;
 
 
+    }
+
+    @SuppressWarnings({"NonFinalFieldReferenceInEquals", "CastToConcreteClass"})
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof EntityModel)) return false;
+
+        EntityModel that = (EntityModel) o;
+
+        if (alertType != that.alertType) return false;
+        if (entityType != that.entityType) return false;
+        if (protectionLevel != that.protectionLevel) return false;
+        if (readOnly != that.readOnly) return false;
+        if (blobKey != null ? !blobKey.equals(that.blobKey) : that.blobKey != null) return false;
+        if (description != null ? !description.equals(that.description) : that.description != null) return false;
+        if (entity != null ? !entity.equals(that.entity) : that.entity != null) return false;
+        if (key != null ? !key.equals(that.key) : that.key != null) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (owner != null ? !owner.equals(that.owner) : that.owner != null) return false;
+        if (parent != null ? !parent.equals(that.parent) : that.parent != null) return false;
+
+        return true;
+    }
+
+    @SuppressWarnings("NonFinalFieldReferencedInHashCode")
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (key != null ? key.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + entityType;
+        result = 31 * result + protectionLevel;
+        result = 31 * result + alertType;
+        result = 31 * result + (entity != null ? entity.hashCode() : 0);
+        result = 31 * result + (parent != null ? parent.hashCode() : 0);
+        result = 31 * result + (owner != null ? owner.hashCode() : 0);
+        result = 31 * result + (readOnly ? 1 : 0);
+        result = 31 * result + (blobKey != null ? blobKey.hashCode() : 0);
+        return result;
+    }
+
+    @Override()
+    public String toString() {
+        return "EntityModel{" +
+                "blobKey='" + blobKey + '\'' +
+                ", readOnly=" + readOnly +
+                ", owner='" + owner + '\'' +
+                ", parent='" + parent + '\'' +
+                ", entity='" + entity + '\'' +
+                ", alertType=" + alertType +
+                ", protectionLevel=" + protectionLevel +
+                ", entityType=" + entityType +
+                ", description='" + description + '\'' +
+                ", key='" + key + '\'' +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

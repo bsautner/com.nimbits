@@ -24,6 +24,7 @@ import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.server.admin.legacy.orm.*;
+import com.nimbits.server.admin.legacy.orm.EntityStore;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.orm.*;
 import com.nimbits.server.settings.*;
@@ -48,7 +49,48 @@ public class RecoveryServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        PrintWriter out = resp.getWriter();
+        Query q = pm.newQuery(EntityStore.class);
+        q.setFilter("entityType == 6");
+        List<EntityStore> old = (List<EntityStore>) q.execute();
+        List<ConnectionEntity> newE = (List<ConnectionEntity>) pm.newQuery(ConnectionEntity.class).execute();
+        out.println("Starting : " + old.size() + "  " + newE.size()+ "<br>");
+        List<String> done = new ArrayList<String>(newE.size());
+        for (ConnectionEntity c : newE) {
+            done.add(c.getOwner() + c.getName());
+        }
 
+
+        for (EntityStore x : old) {
+            if (! done.contains(x.getOwner() + x.getName())) {
+                if (x.getOwner().equals("bsautner@gmail.com")) {
+                    Entity e = EntityModelFactory.createEntity(x.getName(), "", EntityType.userConnection,
+                            ProtectionLevel.onlyMe, x.getOwner(), x.getOwner());
+
+                    Entity ex = EntityModelFactory.createEntity(x.getName(), "", EntityType.userConnection,
+                            ProtectionLevel.onlyMe, x.getOwner(), x.getOwner());
+                    try {
+                        ConnectionEntity cx = new ConnectionEntity(ex);
+                        out.println(ex.getName() + " " + ex.getOwner() + "<br>");
+                        EntityServiceFactory.getInstance().addUpdateEntity(cx);
+                        pm.deletePersistent(x);
+
+                    } catch (NimbitsException e1) {
+                        out.println(e1.getMessage());
+                    }
+
+
+                }
+
+
+            }
+
+
+        }
+    }
+
+    private void fixCalcsUsingOldEntity(HttpServletResponse resp) throws IOException {
         //don't delete this it;s a good 3.1.9 upgrade
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         PrintWriter out = resp.getWriter();
@@ -269,7 +311,7 @@ public class RecoveryServlet extends HttpServlet {
 
         for (FileEntity c : newC) {
             map.put(c.getKey(), c);
-            out.println(c.getName() + "  " + c.getKey() + " " + c.getEntityType().name() +  "<br>");
+            out.println(c.getName() + "  " + c.getKey() + ' ' + c.getEntityType().name() +  "<br>");
         }
         for (EntityStore e : old) {
             if (! map.containsKey(e.getKey())) {

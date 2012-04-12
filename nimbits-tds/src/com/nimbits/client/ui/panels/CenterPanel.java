@@ -44,6 +44,7 @@ import java.util.*;
  */
 public class CenterPanel extends NavigationEventProvider {
     private static final String DEFAULT_CHART_NAME = "Chart";
+    private static final int HEIGHT = 450;
     // private final Map<String, Entity> entities = new HashMap<String, Entity>();
     // private final Map<String, AnnotatedTimeLinePanel> lines = new HashMap<String, AnnotatedTimeLinePanel>();
 
@@ -62,6 +63,7 @@ public class CenterPanel extends NavigationEventProvider {
 
     }
 
+    @Override
     protected void onRender(final Element target, final int index) {
         super.onRender(target, index);
         try {
@@ -117,8 +119,8 @@ public class CenterPanel extends NavigationEventProvider {
     private void loadLayout() throws NimbitsException {
 
         final ContentPanel panel = new ContentPanel( );
-        chartHeight  = Double.valueOf((Window.getClientHeight() * .9)  / 2).intValue();
-        int navHeight  = Double.valueOf((Window.getClientHeight())  / 2).intValue()-50;
+        chartHeight  = Double.valueOf(Window.getClientHeight() * .9 / 2).intValue();
+        int navHeight  = Double.valueOf(Window.getClientHeight() / 2).intValue()-50;
         MainMenuBar toolBar = initToolbar(loginInfo, settings);
         panel.setTopComponent(toolBar);
         panel.setLayout(new RowLayout(Style.Orientation.VERTICAL));
@@ -147,7 +149,7 @@ public class CenterPanel extends NavigationEventProvider {
 
         if (action != Action.android) {
             ContentPanel chartPanel = new ContentPanel();
-            chartPanel.setHeight(450);
+            chartPanel.setHeight(HEIGHT);
             chartPanel.setFrame(true);
             chartPanel.setHeaderVisible(false);
             chartPanel.add(chartContainer);
@@ -184,7 +186,7 @@ public class CenterPanel extends NavigationEventProvider {
                         navigationPanel.toggleExpansion();
                         break;
                     case logout:
-                        final String logoutUrl = (loginInfo != null) ? loginInfo.getLogoutUrl() : Path.PATH_NIMBITS_HOME;
+                        final String logoutUrl = loginInfo != null ? loginInfo.getLogoutUrl() : Path.PATH_NIMBITS_HOME;
                         Window.Location.replace(logoutUrl);
                         break;
                     case xmpp:
@@ -244,39 +246,12 @@ public class CenterPanel extends NavigationEventProvider {
 
     private void sendXMPPInvite() {
         XMPPServiceAsync IMService = GWT.create(XMPPService.class);
-        IMService.sendInvite(new AsyncCallback<Void>() {
-
-            @Override
-            public void onFailure(Throwable caught) {
-
-
-            }
-
-            @Override
-            public void onSuccess(Void result) {
-                Window.alert("Please check your instant messaging client for an invite to chat from nimbits1.appspot.com. You must accept the invitation in order for Nimbits to IM you.");
-
-            }
-
-        });
+        IMService.sendInvite(new XMPPInviteAsyncCallback());
     }
 
     private void twitterAuthorise() throws NimbitsException {
         TwitterServiceAsync twitterService = GWT.create(TwitterService.class);
-        twitterService.twitterAuthorise(loginInfo.getEmailAddress(), new AsyncCallback<String>() {
-
-            @Override
-            public void onFailure(Throwable caught) {
-                GWT.log(caught.getMessage(), caught);
-            }
-
-            @Override
-            public void onSuccess(String result) {
-                //	Window.alert(result);
-                Window.Location.replace(result);
-            }
-
-        });
+        twitterService.twitterAuthorise(loginInfo.getEmailAddress(), new TwitterAuthoriseAsyncCallback());
     }
 
     public void addEntity(final TreeModel model) {
@@ -308,21 +283,7 @@ public class CenterPanel extends NavigationEventProvider {
 
     private void displaySubscription(final Entity entity) {
         SubscriptionServiceAsync service = GWT.create(SubscriptionService.class);
-        service.getSubscribedEntity(entity, new AsyncCallback<Entity>() {
-
-            @Override
-            public void onFailure(Throwable caught) {
-                GWT.log(caught.getMessage(), caught);
-            }
-            @Override
-            public void onSuccess(Entity result) {
-                try {
-                    addEntity( new GxtModel(result));
-                } catch (NimbitsException e) {
-                    FeedbackHelper.showError(e);
-                }
-            }
-        });
+        service.getSubscribedEntity(entity, new GetSubscribedEntityAsyncCallback());
     }
    //chart
     private void chartEntity(final TreeModel model) {
@@ -334,6 +295,52 @@ public class CenterPanel extends NavigationEventProvider {
         }
     }
 
+    private static class TwitterAuthoriseAsyncCallback implements AsyncCallback<String> {
+
+        @Override
+        public void onFailure(Throwable caught) {
+            GWT.log(caught.getMessage(), caught);
+        }
+
+        @Override
+        public void onSuccess(String result) {
+            //	Window.alert(result);
+            Window.Location.replace(result);
+        }
+
+    }
+
+    private static class XMPPInviteAsyncCallback implements AsyncCallback<Void> {
+
+        @Override
+        public void onFailure(Throwable caught) {
 
 
+        }
+
+        @Override
+        public void onSuccess(Void result) {
+            Window.alert("Please check your instant messaging client for an invite to chat from nimbits1.appspot.com. You must accept the invitation in order for Nimbits to IM you.");
+
+        }
+
+    }
+
+
+    private class GetSubscribedEntityAsyncCallback implements AsyncCallback<Entity> {
+
+        @Override
+        public void onFailure(Throwable caught) {
+            GWT.log(caught.getMessage(), caught);
+        }
+
+        @Override
+        public void onSuccess(Entity result) {
+            try {
+                addEntity( new GxtModel(result));
+            } catch (NimbitsException e) {
+                FeedbackHelper.showError(e);
+            }
+        }
+    }
 }

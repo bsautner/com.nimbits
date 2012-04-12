@@ -29,6 +29,7 @@ import com.nimbits.client.service.user.UserService;
 import com.nimbits.server.email.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.feed.*;
+import com.nimbits.server.orm.*;
 import com.nimbits.server.relationship.*;
 
 import javax.servlet.http.*;
@@ -46,8 +47,6 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     public User getHttpRequestUser(final HttpServletRequest req) throws NimbitsException {
 
 
-        EmailAddress email;
-        User user;
         String emailParam = null;
         String secret = null;
         HttpSession session = null;
@@ -60,91 +59,84 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         }
 
 
-        if (emailParam != null && emailParam.equals(Const.TEST_ACCOUNT)) {
-            user = UserTransactionFactory.getInstance().getNimbitsUser(CommonFactoryLocator.getInstance().createEmailAddress(emailParam));
+        EmailAddress email = Utils.isEmptyString(emailParam) ? null : CommonFactoryLocator.getInstance().createEmailAddress(emailParam);
 
-        } else {
+        if (email == null && session != null && session.getAttribute(Parameters.email.getText()) != null) {
+            email = (EmailAddress) session.getAttribute(Parameters.email.getText());
+        }
 
-            email = (Utils.isEmptyString(emailParam)) ? null : CommonFactoryLocator.getInstance().createEmailAddress(emailParam);
-
-            if (email == null && session != null && (session.getAttribute(Parameters.email.getText()) != null)) {
-                email = (EmailAddress) session.getAttribute(Parameters.email.getText());
-            }
-
-            if (email == null && googleUserService.getCurrentUser() != null) {
-                email = CommonFactoryLocator.getInstance().createEmailAddress(googleUserService.getCurrentUser().getEmail());
-            }
+        if (email == null && googleUserService.getCurrentUser() != null) {
+            email = CommonFactoryLocator.getInstance().createEmailAddress(googleUserService.getCurrentUser().getEmail());
+        }
 
 
-            if (email != null) {
+        User user = null;
+        if (email != null) {
+
+            List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(
+                    com.nimbits.server.user.UserServiceFactory.getServerInstance().getAnonUser(), //avoid infinite recursion
+                    email.getValue(), UserEntity.class.getName());
 
 
-                user = UserTransactionFactory.getInstance().getNimbitsUser(email);
-                if (user != null) {
-                    user.setAuthLevel(AuthLevel.restricted);
+            if (result.isEmpty()) {
+                if (googleUserService.getCurrentUser() != null && googleUserService.getCurrentUser().getEmail().equalsIgnoreCase(email.getValue())) {
+                    user = createUserRecord(email);
+                } else if (googleUserService.getCurrentUser() != null && !googleUserService.getCurrentUser().getEmail().equalsIgnoreCase(email.getValue())) {
+                    throw new NimbitsException("While the current user is authenticated, the email provided does not match " +
+                            "the authenticated user, so the system is confused and cannot authenticate the request. " +
+                            "Please report this error.");
+                } else if (googleUserService.getCurrentUser() == null) {
+                    throw new NimbitsException(email.getValue() + " was provided but could not be found. Please log into nimbits with an account " +
+                            " registered with google at least once.");
+                }
 
-                    if (!Utils.isEmptyString(secret) && !Utils.isEmptyString(user.getSecret()) && user.getSecret().equals(secret)) {
+
+            } else {
+                user = (User) result.get(0);
+                user.setAuthLevel(AuthLevel.restricted);
+
+                if (!Utils.isEmptyString(secret) && !Utils.isEmptyString(user.getSecret()) && user.getSecret().equals(secret)) {
+                    user.setAuthLevel(AuthLevel.readWrite);
+                }
+                if (user.getAuthLevel().equals(AuthLevel.restricted)) {
+
+                    if (googleUserService.getCurrentUser() != null
+                            && googleUserService.getCurrentUser().getEmail().equalsIgnoreCase(user.getEmail().getValue())) {
                         user.setAuthLevel(AuthLevel.readWrite);
                     }
-                    if (user.getAuthLevel().equals(AuthLevel.restricted)) {
-
-                        if (googleUserService.getCurrentUser() != null
-                                && googleUserService.getCurrentUser().getEmail().equalsIgnoreCase(user.getEmail().getValue())) {
-                            user.setAuthLevel(AuthLevel.readWrite);
-                        }
-                    }
-                } else {
-                    if (googleUserService.getCurrentUser() != null && googleUserService.getCurrentUser().getEmail().equalsIgnoreCase(email.getValue())) {
-                        user = createUserRecord(email);
-                    } else if (googleUserService.getCurrentUser() != null && !googleUserService.getCurrentUser().getEmail().equalsIgnoreCase(email.getValue())) {
-                        throw new NimbitsException("While the current user is authenticated, the email provided does not match " +
-                                "the authenticated user, so the system is confused and cannot authenticate the request. " +
-                                "Please report this error.");
-                    } else if (googleUserService.getCurrentUser() == null) {
-                        throw new NimbitsException(email.getValue() + " was provided but could not be found. Please log into nimbits with an account " +
-                                " registered with google at least once.");
-                    }
-
-
                 }
-            } else {
-                throw new NimbitsException("There was no account connected to this request which requires authentication");
             }
+        } else {
+            throw new NimbitsException("There was no account connected to this request which requires authentication");
         }
 
-        if (user == null) {
 
-            throw new NimbitsException("The user identity could not be found in the session, database, or via google authentication." +
-                    " Please report this error to support@nimbits.com");
-        }
 
         return user;
 
     }
     @Override
     public com.nimbits.client.model.user.User createUserRecord(final EmailAddress internetAddress) throws NimbitsException {
-        final com.nimbits.client.model.user.User u;
         final EntityName name = CommonFactoryLocator.getInstance().createName(internetAddress.getValue(), EntityType.user);
         final Entity entity =  EntityModelFactory.createEntity(name, "", EntityType.user, ProtectionLevel.onlyMe,
                 name.getValue(), name.getValue(), name.getValue());
 
         final com.nimbits.client.model.user.User newUser = UserModelFactory.createUserModel(entity);
         newUser.setSecret(UUID.randomUUID().toString());
-        u = (com.nimbits.client.model.user.User) EntityServiceFactory.getInstance().addUpdateEntity(newUser);
-        return u;
+        return (User) EntityServiceFactory.getInstance().addUpdateEntity(newUser);
     }
     @Override
-      public User getAdmin() throws NimbitsException {
-            String adminStr = "bsautner@gmail.com"; //SettingsServiceFactory.getInstance().getSetting(SettingType.admin);
+    public User getAdmin() throws NimbitsException {
+        String adminStr = "bsautner@gmail.com"; //SettingsServiceFactory.getInstance().getSetting(SettingType.admin);
 
-            User admin = com.nimbits.server.user.UserServiceFactory.getInstance().getUserByKey(adminStr);
+        User admin = com.nimbits.server.user.UserServiceFactory.getInstance().getUserByKey(adminStr);
 
-            if (admin == null) {
-                return new UserModel(null);
-            }
-            admin.setAuthLevel(AuthLevel.admin);
-            return admin;
-      }
+        if (admin == null) {
+            return new UserModel(null);
+        }
+        admin.setAuthLevel(AuthLevel.admin);
+        return admin;
+    }
 
     @Override
     public User getAnonUser()  {
@@ -167,7 +159,11 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         User retObj = null;
         if (u.getCurrentUser() != null) {
             final EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(u.getCurrentUser().getEmail());
-            retObj = UserTransactionFactory.getInstance().getNimbitsUser(emailAddress);
+            List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(emailAddress.getValue(), UserEntity.class.getName());
+            if (! result.isEmpty()) {
+                retObj = (User) result.get(0);
+            }
+
         }
 
         return retObj;
@@ -177,14 +173,25 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     public String getSecret() throws NimbitsException {
 
         final String email = UserServiceFactory.getUserService().getCurrentUser().getEmail().toLowerCase();
-        final EmailAddress internetAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
-        final User u = UserTransactionFactory.getInstance().getNimbitsUser(internetAddress);
-        return u.getSecret();
+        final EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
+        List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(emailAddress.getValue(), UserEntity.class.getName());
+        if (result.isEmpty()) {
+            throw new NimbitsException(UserMessages.ERROR_USER_NOT_FOUND);
+        } else {
+            return ((User) result.get(0)).getSecret();
+        }
+
     }
 
     @Override
     public User getUserByKey(final String key) throws NimbitsException {
-        return UserTransactionFactory.getInstance().getUserByKey(key);
+        List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(key, UserEntity.class.getName());
+        if (result.isEmpty()) {
+            throw new NimbitsException(UserMessages.ERROR_USER_NOT_FOUND);
+        } else {
+            return (User) result.get(0);
+        }
+
     }
 
 
@@ -193,10 +200,20 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
         final String email = UserServiceFactory.getUserService().getCurrentUser().getEmail().toLowerCase();
         final EmailAddress internetAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
-        final UUID secret = UUID.randomUUID();
-        UserTransactionFactory.getInstance().updateSecret(internetAddress, secret);
-        EmailServiceFactory.getInstance().sendEmail(internetAddress, "Your Nimbits Secret has been reset to: " + secret.toString(), "Reset Nimbits Secret");
-        return secret.toString();
+        final String secret = UUID.randomUUID().toString();
+
+        List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(email, UserEntity.class.getName());
+        if (result.isEmpty()) {
+            throw new NimbitsException(UserMessages.ERROR_USER_NOT_FOUND);
+        } else {
+            User u = (User) result.get(0);
+            u.setSecret(secret);
+            EntityServiceFactory.getInstance().addUpdateEntity(u);
+            EmailServiceFactory.getInstance().sendEmail(internetAddress, "Your Nimbits Secret has been reset to: " + secret.toString(), "Reset Nimbits Secret");
+
+            return secret;
+        }
+
     }
 
 
@@ -300,23 +317,25 @@ public class UserServiceImpl extends RemoteServiceServlet implements
                                        final Long key,
                                        final boolean accepted) throws NimbitsException {
         final User acceptor = getAppUserUsingGoogleAuth();
+        List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(requesterEmail.getValue(), UserEntity.class.getName());
 
-        final User requester = UserTransactionFactory.getInstance().getNimbitsUser(requesterEmail);
+        if (result.isEmpty()) {
+            throw new NimbitsException(UserMessages.ERROR_USER_NOT_FOUND);
+        } else {
+            final User requester = (User) result.get(0);
+            EntityName a = CommonFactoryLocator.getInstance().createName(acceptor.getEmail().getValue(), EntityType.userConnection);
+            EntityName r = CommonFactoryLocator.getInstance().createName(requester.getEmail().getValue(), EntityType.userConnection);
+            final Entity rConnection = EntityModelFactory.createEntity(a, "", EntityType.userConnection, ProtectionLevel.onlyMe,  requester.getKey(), requester.getKey(), UUID.randomUUID().toString());
+            final Entity aConnection = EntityModelFactory.createEntity(r, "", EntityType.userConnection, ProtectionLevel.onlyMe, acceptor.getKey(), acceptor.getKey(), UUID.randomUUID().toString());
+            Connection ac = ConnectionFactory.createCreateConnection(aConnection);
+            Connection rc = ConnectionFactory.createCreateConnection(rConnection);
+            Entity newAcceptorEntity = EntityServiceFactory.getInstance().addUpdateEntity(acceptor, ac);
+            Entity newRequestorEntity = EntityServiceFactory.getInstance().addUpdateEntity(requester,rc);
+           // RelationshipTransactionFactory.getInstance().createRelationship(newRequestorEntity, acceptor.getKey());
+           // RelationshipTransactionFactory.getInstance().createRelationship(newAcceptorEntity, requester.getKey());
+            UserTransactionFactory.getInstance().updateConnectionRequest(key, requester, acceptor, accepted);
 
-        EntityName a = CommonFactoryLocator.getInstance().createName(acceptor.getEmail().getValue(), EntityType.userConnection);
-        EntityName r = CommonFactoryLocator.getInstance().createName(requester.getEmail().getValue(), EntityType.userConnection);
-        final Entity rConnection = EntityModelFactory.createEntity(a, "", EntityType.userConnection, ProtectionLevel.onlyMe,  requester.getKey(), requester.getKey(), UUID.randomUUID().toString());
-
-        final Entity aConnection = EntityModelFactory.createEntity(r, "", EntityType.userConnection, ProtectionLevel.onlyMe, acceptor.getKey(), acceptor.getKey(), UUID.randomUUID().toString());
-
-        Entity newAcceptorEntity = EntityServiceFactory.getInstance().addUpdateEntity(acceptor, aConnection);
-        Entity newRequestorEntity = EntityServiceFactory.getInstance().addUpdateEntity(requester,rConnection);
-
-        RelationshipTransactionFactory.getInstance().createRelationship(newRequestorEntity, acceptor.getKey());
-        RelationshipTransactionFactory.getInstance().createRelationship(newAcceptorEntity, requester.getKey());
-
-        UserTransactionFactory.getInstance().updateConnectionRequest(key, requester, acceptor, accepted);
-
+        }
 
 
 

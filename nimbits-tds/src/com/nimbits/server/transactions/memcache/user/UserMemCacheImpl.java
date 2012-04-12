@@ -20,7 +20,6 @@ import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.server.transactions.memcache.*;
 import com.nimbits.server.user.*;
-import twitter4j.auth.*;
 
 import java.util.*;
 
@@ -76,31 +75,31 @@ public class UserMemCacheImpl implements UserTransactions {
 
 
 
-    @Override
-    public User setFacebookToken(final EmailAddress emailAddress, final String token, final long facebookId) throws NimbitsException {
-        final User u = UserTransactionFactory.getDAOInstance().setFacebookToken(emailAddress, token, facebookId);
-        addUserToCache(u);
-        return u;
-    }
+//    @Override
+//    public User setFacebookToken(final EmailAddress emailAddress, final String token, final long facebookId) throws NimbitsException {
+//        final User u = UserTransactionFactory.getDAOInstance().setFacebookToken(emailAddress, token, facebookId);
+//        addUserToCache(u);
+//        return u;
+//    }
 
-    @Override
-    public User getNimbitsUser(final EmailAddress emailAddress) throws NimbitsException {
-
-        User u = getUserFromCache(emailAddress);
-        if (u != null) {
-            return u;
-        } else {
-            u = UserTransactionFactory.getDAOInstance().getNimbitsUser(emailAddress);
-            if (u != null) {
-                addUserToCache(u);
-                return u;
-            } else {
-                return null;
-            }
-        }
-
-
-    }
+//    @Override
+//    public User getNimbitsUser(final EmailAddress emailAddress) throws NimbitsException {
+//
+//        User u = getUserFromCache(emailAddress);
+//        if (u != null) {
+//            return u;
+//        } else {
+//            u = UserTransactionFactory.getDAOInstance().getNimbitsUser(emailAddress);
+//            if (u != null) {
+//                addUserToCache(u);
+//                return u;
+//            } else {
+//                return null;
+//            }
+//        }
+//
+//
+//    }
 
     @Override
     public List<User> getAllUsers(final String sortColumn, final int count) {
@@ -125,14 +124,14 @@ public class UserMemCacheImpl implements UserTransactions {
     }
 
 
-    @Override
-    public User updateSecret(final EmailAddress emailAddress, final UUID uuid) throws NimbitsException {
-
-        final User u = UserTransactionFactory.getDAOInstance().updateSecret(emailAddress, uuid);
-        addUserToCache(u);
-        return u;
-
-    }
+//    @Override
+//    public User updateSecret(final EmailAddress emailAddress, final UUID uuid) throws NimbitsException {
+//
+//        final User u = UserTransactionFactory.getDAOInstance().updateSecret(emailAddress, uuid);
+//        addUserToCache(u);
+//        return u;
+//
+//    }
 
 
     @Override
@@ -151,34 +150,34 @@ public class UserMemCacheImpl implements UserTransactions {
 
     }
 
-    @Override
-    public User updateTwitter(final EmailAddress email, final AccessToken token) throws NimbitsException {
-        final User u = UserTransactionFactory.getDAOInstance().updateTwitter(email, token);
-        addUserToCache(u);
-        return u;
+//    @Override
+//    public User updateTwitter(final EmailAddress email, final AccessToken token) throws NimbitsException {
+//        final User u = UserTransactionFactory.getDAOInstance().updateTwitter(email, token);
+//        addUserToCache(u);
+//        return u;
+//
+//    }
+//
+//    @Override
+//    public User updateLastLoggedIn(final User user, final Date LastLoggedIn) throws NimbitsException {
+//        final User u = UserTransactionFactory.getDAOInstance().updateLastLoggedIn(user, LastLoggedIn);
+//        addUserToCache(u);
+//        return u;
+//    }
 
-    }
-
-    @Override
-    public User updateLastLoggedIn(final User user, final Date LastLoggedIn) throws NimbitsException {
-        final User u = UserTransactionFactory.getDAOInstance().updateLastLoggedIn(user, LastLoggedIn);
-        addUserToCache(u);
-        return u;
-    }
-
-    @Override
-    public User getUserByKey(final String subscriberUUID) throws NimbitsException {
-        return UserTransactionFactory.getDAOInstance().getUserByKey(subscriberUUID);
-    }
+//    @Override
+//    public User getUserByKey(final String subscriberUUID) throws NimbitsException {
+//        return UserTransactionFactory.getDAOInstance().getUserByKey(subscriberUUID);
+//    }
 
     @Override
     public List<User> getConnectionRequests(final List<String> connections) throws NimbitsException {
         return UserTransactionFactory.getDAOInstance().getConnectionRequests(connections);
     }
 
-    @Override
-    public List<User> getUsers() throws NimbitsException {
-        return UserTransactionFactory.getDAOInstance().getUsers();
-    }
+//    @Override
+//    public List<User> getUsers() throws NimbitsException {
+//        return UserTransactionFactory.getDAOInstance().getUsers();
+//    }
 
 }

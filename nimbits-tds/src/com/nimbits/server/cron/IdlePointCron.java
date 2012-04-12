@@ -22,6 +22,7 @@ import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.logging.*;
+import com.nimbits.server.orm.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.subscription.*;
 import com.nimbits.server.user.*;
@@ -72,8 +73,10 @@ public class IdlePointCron extends HttpServlet {
         final Calendar c = Calendar.getInstance();
         c.add(Calendar.SECOND, p.getIdleSeconds() * -1);
 
+        List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(p.getOwner(), UserEntity.class.getName());
+       if (! result.isEmpty()) {
+        User u = (User) result.get(0);
 
-        final User u = UserTransactionFactory.getInstance().getUserByKey(p.getOwner());
         final Value v = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
 
         if (p.getIdleSeconds() > 0 && v != null &&
@@ -88,6 +91,7 @@ public class IdlePointCron extends HttpServlet {
 
 
 
+        }
         }
     }
 

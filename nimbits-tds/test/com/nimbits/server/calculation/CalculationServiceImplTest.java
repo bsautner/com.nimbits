@@ -20,10 +20,11 @@ import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.server.*;
 import com.nimbits.server.entity.*;
+import com.nimbits.server.orm.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.value.*;
-import helper.*;
 import static org.junit.Assert.*;
 import org.junit.*;
 
@@ -73,14 +74,21 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         final double ry = r.nextDouble();
         final double rz = r.nextDouble();
 
-        final Calculation calculation = CalculationModelFactory.createCalculation(trigger, trigger.getKey(),
+        EntityName name = CommonFactoryLocator.getInstance().createName("Calc 1", EntityType.calculation);
+        Entity en = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe, trigger.getKey(),
+                user.getKey());
+
+        final Calculation calculation = CalculationModelFactory.createCalculation(en, trigger.getKey(),
                 true, "x+y+z+" + r1, target.getKey(), trigger.getKey(), y.getKey(), z.getKey());
 
-        final Entity ce = CalculationServiceFactory.getInstance().addUpdateCalculation(null, cName, calculation);
+        final Entity ce = EntityServiceFactory.getInstance().addUpdateEntity(calculation);
+
         assertNotNull(ce);
 
-        final Calculation c = CalculationServiceFactory.getInstance().getCalculation(ce);
+        final List<Entity> c =EntityServiceFactory.getInstance().getEntityByKey(ce.getKey(), CalcEntity.class.getName());// CalculationServiceFactory.getInstance().getCalculation(ce);
         assertNotNull(c);
+        assertFalse(c.isEmpty());
+
         EntityServiceFactory.getInstance().addUpdateEntity(trigger);
         //PointServiceFactory.getInstance().updatePoint(trigger);
 

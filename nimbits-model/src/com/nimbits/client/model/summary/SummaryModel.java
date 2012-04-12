@@ -15,54 +15,54 @@ import java.util.*;
 public class SummaryModel extends EntityModel implements Summary {
 
     private String entity;
-    private String targetPointUUID;
+    private String target;
     private Integer summaryType;
     private Long summaryIntervalMs;
     private Date lastProcessed;
 
 
-    public SummaryModel(
-
-            final String entity,
-            final String targetPointUUID,
-            final SummaryType summaryType,
-            final long summaryIntervalMs,
-            final Date lastProcessed ) {
-
-        this.entity = entity;
-        this.targetPointUUID = targetPointUUID;
-        this.summaryType = summaryType.getCode();
-        this.summaryIntervalMs = summaryIntervalMs;
-        this.lastProcessed = lastProcessed;
-
-    }
+//    public SummaryModel(
+//
+//            final String entity,
+//            final String targetPointUUID,
+//            final SummaryType summaryType,
+//            final long summaryIntervalMs,
+//            final Date lastProcessed ) {
+//
+//        this.entity = entity;
+//        this.targetPointUUID = targetPointUUID;
+//        this.summaryType = summaryType.getCode();
+//        this.summaryIntervalMs = summaryIntervalMs;
+//        this.lastProcessed = new Date(lastProcessed.getTime());
+//
+//    }
     public SummaryModel(
             final Entity entity,
             final String targetEntity,
-            final String targetPointUUID,
+            final String target,
             final SummaryType summaryType,
             final long summaryIntervalMs,
             final Date lastProcessed ) throws NimbitsException {
         super(entity);
         this.entity = targetEntity;
-        this.targetPointUUID = targetPointUUID;
+        this.target = target;
         this.summaryType = summaryType.getCode();
         this.summaryIntervalMs = summaryIntervalMs;
-        this.lastProcessed = lastProcessed;
+        this.lastProcessed = new Date(lastProcessed.getTime());
 
     }
 
     public SummaryModel(Summary summary) throws NimbitsException {
        super(summary);
         this.entity = summary.getEntity();
-        this.targetPointUUID = summary.getTargetPointUUID();
+        this.target = summary.getTarget();
         this.summaryType = summary.getSummaryType().getCode();
         this.summaryIntervalMs = summary.getSummaryIntervalMs();
         this.lastProcessed = summary.getLastProcessed();
 
     }
 
-    public SummaryModel() {
+    protected SummaryModel() {
     }
 
 
@@ -73,8 +73,8 @@ public class SummaryModel extends EntityModel implements Summary {
     }
 
     @Override
-    public String getTargetPointUUID() {
-        return targetPointUUID;
+    public String getTarget() {
+        return target;
     }
 
     @Override
@@ -88,13 +88,18 @@ public class SummaryModel extends EntityModel implements Summary {
     }
 
     @Override
-    public int getSummaryIntervalHours() {
-        return (int) (summaryIntervalMs / (1000 * 60 * 60));
+    public int getSummaryIntervalSeconds() {
+        return (int) (summaryIntervalMs / 1000);
     }
 
     @Override
     public Date getLastProcessed() {
         return lastProcessed;
+    }
+
+    @Override
+    public void setLastProcessed(Date date) {
+        this.lastProcessed = new Date(date.getTime());
     }
 
 

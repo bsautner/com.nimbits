@@ -18,15 +18,12 @@ import com.nimbits.client.constants.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.user.*;
 import com.nimbits.server.email.*;
 import com.nimbits.server.quota.*;
-import com.nimbits.server.user.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.*;
-import java.util.*;
 import java.util.logging.*;
 
 /**
@@ -40,6 +37,7 @@ public class QuotaResetCron  extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final Logger log = Logger.getLogger(QuotaResetCron.class.getName());
     private static final int LIMIT = 5000;
+    private static final int INT = 1024;
 
     @Override
     @SuppressWarnings(Const.WARNING_UNCHECKED)
@@ -56,11 +54,9 @@ public class QuotaResetCron  extends HttpServlet {
     }
 
     protected static void processGet(ServletResponse resp) throws NimbitsException, IOException {
-        final List<User> users = UserTransactionFactory.getInstance().getUsers();
-        StringBuilder sb = new StringBuilder(users.size() * 100);
+      //  final Map<String, com.nimbits.client.model.entity.Entity> users = EntityTransactionFactory.getInstance(UserServiceFactory.getServerInstance().getAdmin()).getSystemWideEntityMap(EntityType.user);
 
-        Quota quota;
-        int c;
+        StringBuilder sb = new StringBuilder(INT);
 
 
         final DatastoreService store = DatastoreServiceFactory.getDatastoreService();
@@ -68,12 +64,11 @@ public class QuotaResetCron  extends HttpServlet {
         final Query q = new Query("UserEntity").setKeysOnly();
 
         sb.append("<html><body><table>");
-        EmailAddress em;
         for (final Entity e : store.prepare(q).asList(FetchOptions.Builder.withLimit(LIMIT))) {
-            em = CommonFactoryLocator.getInstance().createEmailAddress(e.getKey().getName());
+            EmailAddress em = CommonFactoryLocator.getInstance().createEmailAddress(e.getKey().getName());
 
-            quota = QuotaFactory.getInstance(em);
-            c = quota.getCount();
+            Quota quota = QuotaFactory.getInstance(em);
+            int c = quota.getCount();
             if (c > 1) {
                 sb.append("<tr><td>").append(em .getValue()).append("</td><td>").append(c).append("</td></tr>");
             }

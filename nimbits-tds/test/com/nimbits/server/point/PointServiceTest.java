@@ -7,7 +7,7 @@ import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.server.entity.EntityTransactionFactory;
 import com.nimbits.server.orm.PointEntity;
-import helper.NimbitsServletTest;
+import com.nimbits.server.NimbitsServletTest;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;

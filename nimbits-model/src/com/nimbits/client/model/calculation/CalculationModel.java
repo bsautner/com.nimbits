@@ -38,16 +38,16 @@ public class CalculationModel extends EntityModel implements Serializable, Calcu
     }
 
 
-    public CalculationModel(final String trigger, final boolean enabled, final String f, final String target, final String x, final String y, final String z) {
-        this.trigger = trigger;
-        this.target = target;
-        this.formula = f;
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.enabled = enabled;
-
-    }
+//    public CalculationModel(final String trigger, final boolean enabled, final String f, final String target, final String x, final String y, final String z) {
+//        this.trigger = trigger;
+//        this.target = target;
+//        this.formula = f;
+//        this.x = x;
+//        this.y = y;
+//        this.z = z;
+//        this.enabled = enabled;
+//
+//    }
 
     public CalculationModel(Entity entity, String trigger, boolean enabled, String f, String target, String x, String y, String z) throws NimbitsException {
         super(entity);

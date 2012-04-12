@@ -2,7 +2,7 @@ package com.nimbits.server.transactions.memcache.user;
 
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.user.*;
-import helper.*;
+import com.nimbits.server.*;
 import static org.junit.Assert.*;
 import org.junit.*;
 
@@ -12,7 +12,7 @@ import org.junit.*;
  * Date: 4/5/12
  * Time: 3:41 PM
  */
-public class UserMemCacheImplTest extends NimbitsServletTest{
+public class UserMemCacheImplTest extends NimbitsServletTest {
 
     @Test
     public void testCache() throws NimbitsException {

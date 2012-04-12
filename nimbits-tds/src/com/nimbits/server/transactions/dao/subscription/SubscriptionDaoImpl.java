@@ -73,38 +73,20 @@ public class SubscriptionDaoImpl implements SubscriptionTransactions {
         }
     }
 
-    @Override
-    public List<Subscription> getSubscriptionsToPointByType(final Point point, final SubscriptionType type) throws NimbitsException {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-        try {
-            final Query q = pm.newQuery(SubscriptionEntity.class, "subscribedEntity==p && subscriptionType==t && enabled==e" );
-            q.declareParameters("String p, Integer t, Boolean e");
-            final Collection<Subscription> results = (Collection<Subscription>) q.execute(point.getKey(), type.getCode(), true);
-            return SubscriptionFactory.createSubscriptions(results);
-        }
-        finally {
-            pm.close();
-        }
-    }
-    @Override
-    public void updateSubscriptionLastSent(final Subscription subscription) {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+//    @Override
+//    public List<Subscription> getSubscriptionsToPointByType(final Point point, final SubscriptionType type) throws NimbitsException {
+//        final PersistenceManager pm = PMF.get().getPersistenceManager();
+//        try {
+//            final Query q = pm.newQuery(SubscriptionEntity.class, "subscribedEntity==p && subscriptionType==t && enabled==e" );
+//            q.declareParameters("String p, Integer t, Boolean e");
+//            final Collection<Subscription> results = (Collection<Subscription>) q.execute(point.getKey(), type.getCode(), true);
+//            return SubscriptionFactory.createSubscriptions(results);
+//        }
+//        finally {
+//            pm.close();
+//        }
+//    }
 
-        try {
-            final SubscriptionEntity result = getSubscription(pm, subscription.getKey());
-            if (result != null) {
-                final Transaction tx = pm.currentTransaction();
-                tx.begin();
-
-                result.setLastSent(new Date());
-                tx.commit();
-            }
-        } finally {
-            pm.close();
-        }
-
-
-    }
 
 
 

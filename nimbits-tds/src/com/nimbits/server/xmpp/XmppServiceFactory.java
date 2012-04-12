@@ -17,16 +17,18 @@ import com.nimbits.client.service.xmpp.*;
 
 public class XmppServiceFactory {
 
-    private static XmppServiceImpl instance;
-
     private XmppServiceFactory() {
     }
 
-    public static XMPPService getInstance() {
-        if (instance == null) {
-            instance = new XmppServiceImpl();
+    private static class XMPPServiceHolder {
+        static final XMPPService instance = new XmppServiceImpl();
+
+        private XMPPServiceHolder() {
         }
-        return instance;
+    }
+
+    public static XMPPService getInstance() {
+        return XMPPServiceHolder.instance;
 
     }
 

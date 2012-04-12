@@ -44,35 +44,46 @@ public class EntityCombo extends ComboBox<TreeModel> {
 
 
 
-        service.getEntityMap(type, 100,  new AsyncCallback<Map<String, Entity>>() {
-            @Override
-            public void onFailure(final Throwable caught) {
-                GWT.log(caught.getMessage(), caught);
-            }
+        service.getEntityMap(type, 100, new GetEntityMapAsyncCallback(emptyText, cbStore, selectedUUID));
 
-            @Override
-            public void onSuccess(final Map<String, Entity> result) {
-                setEmptyText(emptyText);
-                TreeModel model;
-                for (final Entity e : result.values()) {
 
-                    try {
-                        model = new GxtModel(e);
-                        cbStore.add(model);
-                        if (model.getBaseEntity().getKey().equals(selectedUUID)) {
-                            setValue(model);
-                        }
-                    } catch (NimbitsException e1) {
-                        FeedbackHelper.showError(e1);
+
+
+    }
+
+    private class GetEntityMapAsyncCallback implements AsyncCallback<Map<String, Entity>> {
+        private final String emptyText;
+        private final ListStore<TreeModel> cbStore;
+        private final String selectedUUID;
+
+        GetEntityMapAsyncCallback(String emptyText, ListStore<TreeModel> cbStore, String selectedUUID) {
+            this.emptyText = emptyText;
+            this.cbStore = cbStore;
+            this.selectedUUID = selectedUUID;
+        }
+
+        @Override
+        public void onFailure(final Throwable caught) {
+            GWT.log(caught.getMessage(), caught);
+        }
+
+        @Override
+        public void onSuccess(final Map<String, Entity> result) {
+            setEmptyText(emptyText);
+            for (final Entity e : result.values()) {
+
+                try {
+                    TreeModel model = new GxtModel(e);
+                    cbStore.add(model);
+                    if (model.getBaseEntity().getKey().equals(selectedUUID)) {
+                        setValue(model);
                     }
-
-
+                } catch (NimbitsException e1) {
+                    FeedbackHelper.showError(e1);
                 }
+
+
             }
-        });
-
-
-
-
+        }
     }
 }

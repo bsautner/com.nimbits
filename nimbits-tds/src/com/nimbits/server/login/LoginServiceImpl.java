@@ -24,7 +24,7 @@ import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.service.LoginService;
-import com.nimbits.server.entity.EntityTransactionFactory;
+import com.nimbits.server.entity.*;
 import com.nimbits.server.feed.FeedServiceFactory;
 import com.nimbits.server.logging.LogHelper;
 import com.nimbits.server.orm.UserEntity;
@@ -66,7 +66,8 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
             else {
                u = (com.nimbits.client.model.user.User) list.get(0);
             }
-            UserTransactionFactory.getInstance().updateLastLoggedIn(u, new Date());
+            u.setLastLoggedIn(new Date());
+            EntityServiceFactory.getInstance().addUpdateEntity(u, u);
 
             loginInfo.setUser(u);
 
@@ -84,20 +85,20 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
     private static void sendWelcomeFeed(com.nimbits.client.model.user.User u) throws NimbitsException {
 
         final String message =
-                ("<b>Welcome To Nimbits!</b> <br> This is your data feed channel, you can subscribe " +
+                "<b>Welcome To Nimbits!</b> <br> This is your data feed channel, you can subscribe " +
                 "to data points and see events like high and low alerts here. You can get started by creating " +
                 "a new data point using the File menu. Right click on the point to configure its compression, " +
                 "alerts, calculations etc. " +
                 "You can find other shared data points on <a href=\"http://www.nimbits.com\" " +
                 "target=\"_blank\" >nimbits.com</a> and subscribe to their " +
                 "alerts. Use the connection request button to invite other Nimbits users to connect to your account so " +
-                "you can see each others data.");
+                "you can see each others data.";
         FeedServiceFactory.getInstance().postToFeed(u, message, FeedType.info);
     }
     private static void sendUserCreatedFeed(com.nimbits.client.model.user.User u) throws NimbitsException {
 
         final String message =
-                ("New Nimbits user registered successfully");
+                "New Nimbits user registered successfully";
         FeedServiceFactory.getInstance().postToFeed(u, message, FeedType.info);
     }
 

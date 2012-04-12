@@ -278,25 +278,10 @@
         <url-pattern>/cron/move</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>summaryCron</servlet-name>
-        <servlet-class>com.nimbits.server.cron.SummaryCron</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>summaryCron</servlet-name>
-        <url-pattern>/cron/summary</url-pattern>
-    </servlet-mapping>
 
 
 
-    <servlet>
-        <servlet-name>summaryTask</servlet-name>
-        <servlet-class>com.nimbits.server.task.SummaryTask</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>summaryTask</servlet-name>
-        <url-pattern>/task/summary</url-pattern>
-    </servlet-mapping>
+
     <servlet>
         <servlet-name>ProcessBatchTask</servlet-name>
         <servlet-class>com.nimbits.server.task.ProcessBatchTask</servlet-class>
@@ -340,30 +325,6 @@
         <servlet-name>currentValueServlet</servlet-name>
         <url-pattern>/service/currentvalue</url-pattern>
     </servlet-mapping>
-
-    <servlet>
-        <servlet-name>calculationServlet</servlet-name>
-        <servlet-class>com.nimbits.server.api.impl.CalculationServletImpl</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>calculationServlet</servlet-name>
-        <url-pattern>/service/calculation</url-pattern>
-    </servlet-mapping>
-
-
-
-    <!--<servlet>-->
-        <!--<servlet-name>categoryServlet</servlet-name>-->
-        <!--<servlet-class>com.nimbits.server.pointcategory.CategoryWebService</servlet-class>-->
-    <!--</servlet>-->
-    <!--<servlet-mapping>-->
-        <!--<servlet-name>categoryServlet</servlet-name>-->
-        <!--<url-pattern>/service/catagory</url-pattern>-->
-    <!--</servlet-mapping>-->
-    <!--<servlet-mapping>-->
-        <!--<servlet-name>categoryServlet</servlet-name>-->
-        <!--<url-pattern>/service/category</url-pattern>-->
-    <!--</servlet-mapping>-->
 
 
     <servlet>

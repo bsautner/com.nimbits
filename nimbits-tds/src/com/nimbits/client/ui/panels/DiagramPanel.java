@@ -49,14 +49,14 @@ public class DiagramPanel extends LayoutContainer {
 
     private SVGImage image;
     private OMSVGSVGElement svg;
-    private Map<EntityName, Entity> pointEntityMap = new HashMap<EntityName, Entity>();
-    private Map<EntityName, Point> pointMap = new HashMap<EntityName, Point>();
-    private Map<EntityName, Entity> diagrams = new HashMap<EntityName, Entity>();
+    private Map<EntityName, Entity> pointEntityMap = new HashMap<EntityName, Entity>(10);
+    private Map<EntityName, Point> pointMap = new HashMap<EntityName, Point>(10);
+    private Map<EntityName, Entity> diagrams = new HashMap<EntityName, Entity>(10);
 
     private final RecordedValueServiceAsync recordedValueService = GWT.create(RecordedValueService.class);
     //private final Set<EntityName> pointsInDiagram = new HashSet<EntityName>();
-    private final Set<EntityName> diagramsInDiagram = new HashSet<EntityName>();
-    private final Map<String, String> originalFill = new HashMap<String, String>();
+    private final Set<EntityName> diagramsInDiagram = new HashSet<EntityName>(10);
+    private final Map<String, String> originalFill = new HashMap<String, String>(10);
 
 
     private final Entity diagram;
@@ -65,7 +65,7 @@ public class DiagramPanel extends LayoutContainer {
 
     public DiagramPanel(final Entity aDiagram, boolean showHeader) {
         final FlowPanel imagePanel = new FlowPanel();
-        final String resourceUrl = Path.PATH_BLOB_SERVICE + "?" + Parameters.blobkey.getText() + "=" + aDiagram.getBlobKey();
+        final String resourceUrl = Path.PATH_BLOB_SERVICE + '?' + Parameters.blobkey.getText() + '=' + aDiagram.getBlobKey();
         this.diagram = aDiagram;
         ContentPanel mainPanel = new ContentPanel();
         mainPanel.setFrame(true);

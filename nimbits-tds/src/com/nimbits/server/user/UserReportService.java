@@ -41,9 +41,9 @@ public class UserReportService extends HttpServlet {
         String c = req.getParameter(Parameters.count.getText());
         String email = req.getParameter(Parameters.email.getText());
         final PrintWriter out = resp.getWriter();
-        int count = 100;
         try {
-        if (! Utils.isEmptyString(c)) {
+            int count = 100;
+            if (! Utils.isEmptyString(c)) {
             count = Integer.valueOf(c);
         }
 
@@ -97,7 +97,7 @@ public class UserReportService extends HttpServlet {
 
         out.close();
     }
-    private ShardedCounter getOrCreateCounter(EmailAddress email) {
+    private static ShardedCounter getOrCreateCounter(CommonIdentifier email) {
         CounterFactory factory = new CounterFactory();
         ShardedCounter counter = factory.getCounter(email.getValue());
         if (counter == null) {

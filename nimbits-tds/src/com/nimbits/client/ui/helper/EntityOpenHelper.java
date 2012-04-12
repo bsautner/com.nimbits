@@ -27,6 +27,9 @@ import com.nimbits.client.model.entity.*;
  */
 public class EntityOpenHelper {
 
+    private EntityOpenHelper() {
+    }
+
     public static void showEntity(final Entity entity) throws NimbitsException {
         if (isSVG(entity)) {
             openNewEntityWindow(entity);
@@ -40,7 +43,7 @@ public class EntityOpenHelper {
     }
 
     private static void openNewEntityWindow(Entity entity) throws NimbitsException {
-        Window.open("/" + "?" + Parameters.uuid.getText() + "=" + entity.getKey(), entity.getName().getValue(), "");
+        Window.open('/' + "?" + Parameters.uuid.getText() + '=' + entity.getKey(), entity.getName().getValue(), "");
     }
 
     public static boolean isSVG(final Entity entity) throws NimbitsException {
@@ -48,7 +51,7 @@ public class EntityOpenHelper {
     }
 
     public  static void showBlob(final Entity entity) throws NimbitsException {
-        final String resourceUrl = Path.PATH_BLOB_SERVICE + "?" + Parameters.blobkey.getText() + "=" + entity.getBlobKey();
+        final String resourceUrl = Path.PATH_BLOB_SERVICE + '?' + Parameters.blobkey.getText() + '=' + entity.getBlobKey();
         Window.open(resourceUrl, entity.getName().getValue(), "");
     }
 

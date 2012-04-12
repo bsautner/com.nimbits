@@ -30,20 +30,6 @@ public class PointDaoImpl implements PointTransactions {
 
     }
 
-    private static List<Point> createPointModels(final Collection<Point> points) throws NimbitsException {
-        final List<Point> retObj = new ArrayList<Point>(points.size());
-
-        for (final Point p : points) {
-            retObj.add(PointModelFactory.createPointModel(p));
-        }
-
-        return retObj;
-
-
-    }
-
-
-
 
     @Override
     public List<Point> getIdlePoints() throws NimbitsException {
@@ -57,7 +43,7 @@ public class PointDaoImpl implements PointTransactions {
             q.declareParameters("Long k, Long c");
 
             final Collection<Point> points = (Collection<Point>) q.execute(true, false);
-            retObj = createPointModels( points);
+            retObj =PointModelFactory.createPointModels(points);// createPointModels( points);
         } finally {
             pm.close();
         }

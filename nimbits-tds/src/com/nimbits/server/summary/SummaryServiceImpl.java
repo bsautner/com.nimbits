@@ -17,10 +17,17 @@ import com.google.gwt.user.server.rpc.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.summary.*;
+import com.nimbits.client.model.timespan.*;
 import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
 import com.nimbits.client.service.summary.*;
-import com.nimbits.server.user.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.logging.*;
+import com.nimbits.server.orm.*;
+import com.nimbits.server.value.*;
+import org.apache.commons.math3.stat.descriptive.*;
 
 import java.util.*;
 
@@ -33,50 +40,77 @@ import java.util.*;
  */
 public class SummaryServiceImpl  extends RemoteServiceServlet implements SummaryService {
 
-    private User getUser() throws NimbitsException {
-
-        return UserServiceFactory.getServerInstance().getHttpRequestUser(
-                this.getThreadLocalRequest());
-
-    }
 
     @Override
-    public Summary readSummary(Entity entity) throws NimbitsException {
-        return   SummaryTransactionFactory.getInstance(getUser()).readSummary(entity);
-    }
+    public void processSummaries(User user, Point point) throws NimbitsException {
+        List<Summary> list = SummaryTransactionFactory.getInstance(user).readSummariesToEntity(point);
+        for (Summary summary : list) {
+            final Date now = new Date();
+            final long d = new Date().getTime() - summary.getSummaryIntervalMs();
+            if (summary.getLastProcessed().getTime() < d) {
 
-    @Override
-    public void updateLastProcessed(Entity entity) {
-        SummaryTransactionFactory.getInstance(null).updateLastProcessed(entity);
+                try {
 
-    }
+                    final List<Entity> results =  EntityServiceFactory.getInstance().getEntityByKey(summary.getEntity(), PointEntity.class.getName());
+                    if (! results.isEmpty()) {
+                        final Entity source = results.get(0);
+                        final Timespan span = TimespanModelFactory.createTimespan(new Date(now.getTime() - summary.getSummaryIntervalMs()), now);
+                        final List<Value> values = RecordedValueServiceFactory.getInstance().getDataSegment(source, span);
 
-    @Override
-    public void deleteSummary(User u, Entity entity) {
-       SummaryTransactionFactory.getInstance(u).deleteSummary(entity);
-    }
 
-    @Override
-    public Entity addUpdateSummary(final Summary update,final EntityName name) throws NimbitsException {
-        User u = getUser();
+                        if (!values.isEmpty()) {
+                            final double[] doubles = new double[values.size()];
+                            for (int i = 0; i< values.size(); i++) {
+                                doubles[i] = values.get(i).getDoubleValue();
+                            }
+                            final List<Entity> targetResults =  EntityServiceFactory.getInstance().getEntityByKey(summary.getTarget(), PointEntity.class.getName());
+                            if (! targetResults.isEmpty()) {
+                                final Entity target = targetResults.get(0);
+                                final double result = getValue(summary.getSummaryType(), doubles);
+                                final Value value = ValueModelFactory.createValueModel(result);
 
-        if (update.getEntityType().equals(EntityType.point)) {
+                                RecordedValueServiceFactory.getInstance().recordValue(user, target, value, false);
+                                summary.setLastProcessed(new Date());
+                                EntityServiceFactory.getInstance().addUpdateEntity(user, summary);
 
-            Entity newEntity = EntityModelFactory.createEntity(name, "", EntityType.summary,
-                    ProtectionLevel.onlyMe, update.getKey(), u.getKey(), UUID.randomUUID().toString());
-        //    Entity createdEntity = EntityServiceFactory.getInstance().addUpdateEntity(u, newEntity);
-            Summary newSummary = SummaryModelFactory.createSummary(newEntity,  update.getKey(), update.getTargetPointUUID(), update.getSummaryType(),
-                    update.getSummaryIntervalMs(), new Date());
+                            }
+                        }
+                    }
+                } catch (NimbitsException e) {
+                    LogHelper.logException(this.getClass(), e);
 
-            return SummaryTransactionFactory.getInstance(u).addOrUpdateSummary(newSummary);
 
+                }
+
+            }
         }
-        else {
-
-            return SummaryTransactionFactory.getInstance(u).addOrUpdateSummary(update);
-
-        }
 
     }
+    @Override
+    public double getValue(final SummaryType type, final double[] doubles) {
+        DescriptiveStatistics d = new DescriptiveStatistics(doubles);
+
+        switch (type) {
+
+            case average:
+                return d.getMean();
+            case standardDeviation:
+                return d.getStandardDeviation();
+            case max:
+                return d.getMax();
+            case min:
+                return d.getMin();
+            case skewness:
+                return d.getSkewness();
+            case sum:
+                return d.getSum();
+            case variance:
+                return d.getVariance();
+
+            default:
+                return 0;
+        }
+    }
+
 
 }

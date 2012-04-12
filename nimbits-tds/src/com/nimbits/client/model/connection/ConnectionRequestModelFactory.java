@@ -27,14 +27,14 @@ import java.util.*;
 public class ConnectionRequestModelFactory {
 
 
-    public static ConnectionRequestModel CreateConnectionRequestModel(final ConnectionRequestEntity c) throws NimbitsException {
-        return new ConnectionRequestModel(c);
+    public static ConnectionRequestGxtModel CreateConnectionRequestModel(final ConnectionRequestEntity c) throws NimbitsException {
+        return new ConnectionRequestGxtModel(c);
     }
 
     public static List<ConnectionRequest> CreateConnectionRequestModels(final List<ConnectionRequestEntity> cl) throws NimbitsException {
         final List<ConnectionRequest> retObj = new ArrayList<ConnectionRequest>(cl.size());
         for (final ConnectionRequestEntity c : cl) {
-            retObj.add(new ConnectionRequestModel(c));
+            retObj.add(new ConnectionRequestGxtModel(c));
         }
         return retObj;
     }

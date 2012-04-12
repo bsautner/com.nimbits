@@ -28,7 +28,7 @@ public interface SubscriptionServiceAsync {
 
     void getSubscriptionsToPoint(Entity point, AsyncCallback<List<Subscription>> async) throws NimbitsException;
 
-    void updateSubscriptionLastSent(Subscription subscription, AsyncCallback<Void> async);
+    void updateSubscriptionLastSent(Subscription subscription, AsyncCallback<Void> async) throws NimbitsException;
 
     void subscribe(Entity entity, Subscription subscription, EntityName name, AsyncCallback<Entity> async);
 

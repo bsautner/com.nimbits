@@ -31,13 +31,12 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.nimbits.client.constants.UserMessages;
-import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.calculation.CalculationModelFactory;
 import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.service.calculation.CalculationService;
@@ -59,8 +58,8 @@ import java.util.List;
  */
 public class CalculationPanel extends NavigationEventProvider {
 
-    FormData formdata;
-    VerticalPanel vp;
+    private FormData formdata;
+    private VerticalPanel vp;
 
     private Entity entity;
     private Calculation calculation;
@@ -97,25 +96,27 @@ public class CalculationPanel extends NavigationEventProvider {
 
 
     private void getExisting() {
-        final CalculationServiceAsync service = GWT.create(CalculationService.class);
-        service.getCalculation(entity, new AsyncCallback<Calculation>() {
+        EntityServiceAsync service = GWT.create(EntityService.class);
+        service.getEntityByKey(entity.getKey(), EntityType.calculation.getClassName(), new AsyncCallback<List<Entity>>() {
             @Override
-            public void onFailure(final Throwable caught) {
-                GWT.log(caught.getMessage(), caught);
+            public void onFailure(Throwable caught) {
+                //auto generated
             }
 
             @Override
-            public void onSuccess(final Calculation result) {
-                calculation = result;
-                try {
-                    createForm();
-                } catch (NimbitsException e) {
-                    FeedbackHelper.showError(e);
-                }
-                add(vp);
-                doLayout();
+            public void onSuccess(List<Entity> result) {
+              if (! result.isEmpty()) {
+                  calculation = (Calculation) result.get(0);
+                  try {
+                      createForm();
+                  } catch (NimbitsException e) {
+                      FeedbackHelper.showError(e);
+                  }
+              }
             }
         });
+
+
     }
 
 
@@ -192,7 +193,8 @@ public class CalculationPanel extends NavigationEventProvider {
             public void componentSelected(ButtonEvent buttonEvent) {
                 final Calculation update;
                 try {
-                    update = createCalculation(xCombo, yCombo, zCombo, targetcombo, enabled, formula);
+                    EntityName name = CommonFactoryLocator.getInstance().createName(nameField.getValue(), EntityType.calculation);
+                    update = createCalculation(name, xCombo, yCombo, zCombo, targetcombo, enabled, formula);
                     runEquation(update);
                 } catch (NimbitsException e) {
                     FeedbackHelper.showError(e);
@@ -205,21 +207,21 @@ public class CalculationPanel extends NavigationEventProvider {
         submit.addSelectionListener(new SelectionListener<ButtonEvent>() {
             @Override
             public void componentSelected(ButtonEvent buttonEvent) {
-                final CalculationServiceAsync service = GWT.create(CalculationService.class);
+                final EntityServiceAsync service = GWT.create(EntityService.class);
                 final MessageBox box = MessageBox.wait("Progress",
                         "Creating Calculation", "please wait...");
                 final Calculation update;
                 box.show();
                 final EntityName name;
                 try {
-                    name = CommonFactoryLocator.getInstance().createName(nameField.getValue(), EntityType.calculation);
-                     update = createCalculation(xCombo, yCombo, zCombo, targetcombo, enabled, formula);
+                     name = CommonFactoryLocator.getInstance().createName(nameField.getValue(), EntityType.calculation);
+                     update = createCalculation(name, xCombo, yCombo, zCombo, targetcombo, enabled, formula);
                 } catch (NimbitsException e) {
                     FeedbackHelper.showError(e);
                     return;
                 }
 
-                service.addUpdateCalculation(entity, name, update, new AsyncCallback<Entity>() {
+                service.addUpdateEntity(update, new AsyncCallback<Entity>() {
                     @Override
                     public void onFailure(final Throwable e) {
                         GWT.log(e.getMessage(), e);
@@ -317,7 +319,7 @@ public class CalculationPanel extends NavigationEventProvider {
         vp.add(c);
     }
 
-    private Calculation createCalculation(final EntityCombo xCombo, final EntityCombo yCombo, final EntityCombo zCombo, final EntityCombo targetcombo, final CheckBox enabled, final TextField<String> formula) throws NimbitsException {
+    private Calculation createCalculation(final EntityName name, final EntityCombo xCombo, final EntityCombo yCombo, final EntityCombo zCombo, final EntityCombo targetcombo, final CheckBox enabled, final TextField<String> formula) throws NimbitsException {
         final Calculation update;
 
 
@@ -338,7 +340,10 @@ public class CalculationPanel extends NavigationEventProvider {
 
         }
         else {
-            update = CalculationModelFactory.createCalculation(entity.getKey(),  enabled.getValue(), formula.getValue(),target,
+
+            Entity e = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe
+            , entity.getKey(), entity.getOwner());
+            update = CalculationModelFactory.createCalculation(e, entity.getKey(),  enabled.getValue(), formula.getValue(),target,
                     x, y, z);
 
         }

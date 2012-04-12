@@ -31,7 +31,7 @@ import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.summary.*;
-import com.nimbits.client.service.summary.*;
+import com.nimbits.client.service.entity.*;
 import com.nimbits.client.ui.controls.*;
 import com.nimbits.client.ui.helper.*;
 
@@ -45,17 +45,19 @@ import java.util.*;
  */
 public class SummaryPanel extends NavigationEventProvider {
 
-    private static final int SECONDS_MINUTES = 60;
+
     private static final int WIDTH = 350;
-    private static final double MAX_VALUE = 24d;
-    FormData formdata;
-    VerticalPanel vp;
+    private static final double MAX_VALUE = 31556926d;
+    private static final int SECONDS_IN_HOUR = 3600;
+    private FormData formdata;
+    private VerticalPanel vp;
 
     private Entity entity;
     private Summary summary;
     public SummaryPanel(Entity entity) {
         this.entity = entity;
     }
+
     @Override
     protected void onRender(final Element parent, final int index) {
         super.onRender(parent, index);
@@ -87,11 +89,12 @@ public class SummaryPanel extends NavigationEventProvider {
 
 
     }
-    private void getExistingSummary() {
-        SummaryServiceAsync service = GWT.create(SummaryService.class);
-        service.readSummary(entity, new ReadSummaryAsyncCallback());
-    }
 
+    private void getExistingSummary() {
+
+        EntityServiceAsync service = GWT.create(EntityService.class);
+        service.getEntityByKey(entity.getKey(), EntityType.summary.getClassName(), new ReadSummaryAsyncCallback());
+    }
 
     private static ComboBox<SummaryTypeOption> summaryTypeOptionComboBox(final String title, final SummaryType selectedValue) {
         ComboBox<SummaryTypeOption> combo = new ComboBox<SummaryTypeOption>();
@@ -127,8 +130,6 @@ public class SummaryPanel extends NavigationEventProvider {
 
     }
 
-
-
     private void createForm() throws NimbitsException {
 
         FormPanel simple = new FormPanel();
@@ -142,12 +143,12 @@ public class SummaryPanel extends NavigationEventProvider {
         summaryName.setFieldLabel("Summary Name");
         final EntityName name;
         try {
-        if (summary != null && entity.getEntityType().equals(EntityType.summary)) {
-            summaryName.setValue(entity.getName().getValue());
-        }
-        else {
-            summaryName.setValue(entity.getName().getValue() + " Average");
-        }
+            if (summary != null && entity.getEntityType().equals(EntityType.summary)) {
+                summaryName.setValue(entity.getName().getValue());
+            }
+            else {
+                summaryName.setValue(entity.getName().getValue() + " Average");
+            }
 
             name = CommonFactoryLocator.getInstance().createName(summaryName.getValue(), EntityType.summary);
         } catch (NimbitsException caught) {
@@ -155,7 +156,7 @@ public class SummaryPanel extends NavigationEventProvider {
             return;
         }
 
-       // int alertSelected = (subscription == null) ? SubscriptionNotifyMethod.none.getCode() : subscription.getAlertNotifyMethod().getCode();
+        // int alertSelected = (subscription == null) ? SubscriptionNotifyMethod.none.getCode() : subscription.getAlertNotifyMethod().getCode();
 
         SummaryType type =  summary == null ? SummaryType.average : summary.getSummaryType() ;
         final ComboBox<SummaryTypeOption> typeCombo = summaryTypeOptionComboBox("Summary Type", type);
@@ -170,12 +171,12 @@ public class SummaryPanel extends NavigationEventProvider {
         spinnerField.setIncrement(1d);
         spinnerField.getPropertyEditor().setType(Double.class);
         spinnerField.getPropertyEditor().setFormat(NumberFormat.getFormat("00"));
-        spinnerField.setFieldLabel("Timespan (hours)");
+        spinnerField.setFieldLabel("Timespan (Seconds)");
         spinnerField.setMinValue(1d);
         spinnerField.setMaxValue(MAX_VALUE);
-        spinnerField.setValue(summary == null ? 8 : summary.getSummaryIntervalHours());
+        spinnerField.setValue(summary == null ? SECONDS_IN_HOUR : summary.getSummaryIntervalSeconds());
 
-        String target = summary == null ? null : summary.getTargetPointUUID();
+        String target = summary == null ? null : summary.getTarget();
         final EntityCombo targetCombo = new EntityCombo(EntityType.point, target, UserMessages.MESSAGE_SELECT_POINT );
         targetCombo.setFieldLabel("Target");
 
@@ -236,7 +237,6 @@ public class SummaryPanel extends NavigationEventProvider {
 
     }
 
-
     private static class SummaryTypeOption extends BaseModelData {
         SummaryType type;
 
@@ -296,40 +296,51 @@ public class SummaryPanel extends NavigationEventProvider {
 
         @Override
         public void componentSelected(ButtonEvent buttonEvent) {
-            SummaryServiceAsync service = GWT.create(SummaryService.class);
+            EntityServiceAsync service = GWT.create(EntityService.class);
             final MessageBox box = MessageBox.wait("Progress",
                     "Create Summary", "please wit...");
             box.show();
 
             SummaryType summaryType =   typeCombo.getValue().getMethod();
 
-            Summary update = null;
+            Summary update;
 
             if (entity.getEntityType().equals(EntityType.summary) && summary != null) {
 
                 try {
                     update = SummaryModelFactory.createSummary(entity,
-                            summary.getEntity(), summary.getTargetPointUUID(), summaryType,
-                            spinnerField.getValue().intValue() * SECONDS_MINUTES * SECONDS_MINUTES * 1000, new Date());
+                            summary.getEntity(), summary.getTarget(), summaryType,
+                            spinnerField.getValue().intValue() * 1000, new Date());
+                    service.addUpdateEntity(update, new UpdateEntityAsyncCallback(box));
                 } catch (NimbitsException e) {
                     FeedbackHelper.showError(e);
                 }
 
             }
             else {
-                update = SummaryModelFactory.createSummary(
-                        entity.getKey(), targetCombo.getValue().getUUID() , summaryType,
-                        spinnerField.getValue().intValue() * SECONDS_MINUTES * SECONDS_MINUTES * 1000, new Date());
+                try {
+                    Entity en = EntityModelFactory.createEntity(name, "", EntityType.summary, ProtectionLevel.onlyMe, entity.getKey(), entity.getOwner());
+                    update = SummaryModelFactory.createSummary(en,
+                            entity.getKey(), targetCombo.getValue().getUUID() , summaryType,
+                            spinnerField.getValue().intValue() * 1000, new Date());
+
+
+
+
+                    if (update != null) {
+                        update.setName(name);
+                        service.addUpdateEntity(update, new UpdateEntityAsyncCallback(box));
+                    }
+
+                } catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
+                }
 
             }
-
-
-            service.addUpdateSummary( update, name, new UpdateEntityAsyncCallback(box));
-
         }
     }
 
-    private class ReadSummaryAsyncCallback implements AsyncCallback<Summary> {
+    private class ReadSummaryAsyncCallback implements AsyncCallback<List<Entity>> {
         ReadSummaryAsyncCallback() {
         }
 
@@ -339,15 +350,18 @@ public class SummaryPanel extends NavigationEventProvider {
         }
 
         @Override
-        public void onSuccess(Summary result) {
-            summary = result;
-            try {
-                createForm();
-                add(vp);
-                doLayout();
-            } catch (NimbitsException e) {
-                FeedbackHelper.showError(e);
+        public void onSuccess(List<Entity> result) {
+            if (! result.isEmpty()) {
+                summary = (Summary) result.get(0);
+                try {
+                    createForm();
+                    add(vp);
+                    doLayout();
+                } catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
+                }
             }
+
 
         }
     }
@@ -368,3 +382,5 @@ public class SummaryPanel extends NavigationEventProvider {
         }
     }
 }
+
+

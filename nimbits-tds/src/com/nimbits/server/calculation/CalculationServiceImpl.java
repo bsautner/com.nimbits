@@ -46,6 +46,7 @@ import java.util.logging.Logger;
  */
 public class CalculationServiceImpl extends RemoteServiceServlet implements CalculationService {
     final Logger log = Logger.getLogger(CalculationServiceImpl.class.getName());
+
     private User getUser() {
         try {
             return UserServiceFactory.getServerInstance().getHttpRequestUser(
@@ -57,68 +58,10 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
 
 
 
-    @Override
-    public Calculation getCalculation(Entity entity) throws NimbitsException {
-        return (Calculation) EntityServiceFactory.getInstance().getEntityByKey(getUser(), entity.getKey(), CalcEntity.class.getName()).get(0);
-
-    }
-
-    @Override
-    public Entity addUpdateCalculation(User u, Entity entity, EntityName name, Calculation calculation) throws NimbitsException {
-        // Entity retObj = null;
-
-        if (entity == null) {
-
-
-            final Entity e = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe,
-                    calculation.getTrigger(), u.getKey(), UUID.randomUUID().toString());
-
-            final Calculation c = CalculationModelFactory.createCalculation(e, calculation.getTrigger(), calculation.getEnabled(),
-                    calculation.getFormula(), calculation.getTarget(), calculation.getX(),
-                    calculation.getY(), calculation.getZ());
-
-            return EntityServiceFactory.getInstance().addUpdateEntity(c);
 
 
 
-        }
-        else if (entity.getEntityType().equals(EntityType.point) && Utils.isEmptyString(calculation.getKey())) {
 
-
-            Calculation c = CalculationModelFactory.createCalculation(entity.getKey(), calculation.getEnabled(),
-                    calculation.getFormula(), calculation.getTarget(), calculation.getX(),
-                    calculation.getY(), calculation.getZ());
-
-            return EntityServiceFactory.getInstance().addUpdateEntity(c);
-
-
-        }
-        else if (entity.getEntityType().equals(EntityType.calculation)) {
-            entity.setName(name);
-            return EntityServiceFactory.getInstance().addUpdateEntity(calculation);
-
-
-
-        }
-        else {
-            return null;
-        }
-
-
-    }
-
-    @Override
-    public void deleteCalculation(final User u, final Entity entity) {
-        CalculationServiceFactory.getDaoInstance(u).deleteCalculation(entity);
-    }
-
-    @Override
-    public Entity addUpdateCalculation(Entity entity, EntityName name, Calculation calculation) throws NimbitsException {
-        User u = getUser();
-        return addUpdateCalculation(u, entity, name, calculation);
-    }
-
-    //Section - Calls from RPC Client
 
 
     @Override
@@ -144,6 +87,7 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
                         log.severe("Point target was null " + c.getTarget());
                         log.severe(c.getFormula());
                         log.severe("trigger: " + c.getTrigger());
+                        disableCalc(u, c);
                     }
                     else {
                         log.info("Solving calc" + c.getFormula());
@@ -153,17 +97,19 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
                     }
                 } catch (NimbitsException e1) {
                     LogHelper.logException(this.getClass(), e1);
-                    c.setEnabled(false);
-                    EntityServiceFactory.getInstance().addUpdateEntity(u, c);
-//                    if (u != null) {
-//                        FeedServiceFactory.getInstance().postToFeed(u, e1);
-//                    }
+                    disableCalc(u, c);
                 }
 
 
             }
         }
     }
+
+    private static void disableCalc(User u, Calculation c) throws NimbitsException {
+        c.setEnabled(false);
+        EntityServiceFactory.getInstance().addUpdateEntity(u, c);
+    }
+
     @Override
     public  Value solveEquation(final User user, final Calculation calculation) throws NimbitsException {
 

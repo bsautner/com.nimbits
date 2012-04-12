@@ -59,6 +59,8 @@ import java.util.Map;
  */
 public class EntityContextMenu extends Menu {
 
+    private static final int WIDTH = 600;
+    private static final int HEIGHT = 600;
     private EntityTree<ModelData> tree;
     private TreeModel currentModel;
     private static final String PARAM_DEFAULT_WINDOW_OPTIONS = "menubar=no," +
@@ -102,7 +104,7 @@ public class EntityContextMenu extends Menu {
     public EntityContextMenu(final User user, final EntityTree<ModelData> tree, final Map<SettingType, String> settings) {
         super();
         this.user = user;
-        entityModifiedListeners = new ArrayList<EntityModifiedListener>();
+        entityModifiedListeners = new ArrayList<EntityModifiedListener>(1);
         this.tree = tree;
         this.settings = settings;
         deleteContext = deleteContext();
@@ -160,17 +162,7 @@ public class EntityContextMenu extends Menu {
 
         retObj.setText("Delete");
         retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.delete()));
-        retObj.addSelectionListener(new SelectionListener<MenuEvent>() {
-            public void componentSelected(MenuEvent ce) {
-                ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
-                currentModel = (TreeModel)selectedModel;
-                if (! currentModel.isReadOnly()) {
-                    MessageBox.confirm("Confirm", "Are you sure you want delete this? Doing so will permanently delete it including all of it's children (points, documents data etc)"
-                            , deleteEntityListener);
-                }
-
-            }
-        });
+        retObj.addSelectionListener(new DeleteMenuEventSelectionListener());
         return retObj;
 
 
@@ -181,18 +173,7 @@ public class EntityContextMenu extends Menu {
 
         retObj.setText("Calculation");
         retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.formula()));
-        retObj.addSelectionListener(new SelectionListener<MenuEvent>() {
-            public void componentSelected(MenuEvent ce) {
-                TreeModel selectedModel = (TreeModel) tree.getSelectionModel().getSelectedItem();
-                Entity entity = selectedModel.getBaseEntity();
-                try {
-                    showCalcPanel(entity);
-                } catch (NimbitsException e) {
-                    FeedbackHelper.showError(e);
-                }
-            }
-
-        });
+        retObj.addSelectionListener(new CalcMenuEventSelectionListener());
         return retObj;
     }
 
@@ -250,8 +231,8 @@ public class EntityContextMenu extends Menu {
     public void showSummaryPanel(Entity entity) {
         SummaryPanel dp = new SummaryPanel(entity);
         final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
-        w.setWidth(500);
-        w.setHeight(500);
+        w.setWidth(WIDTH);
+        w.setHeight(HEIGHT);
         w.setHeading("Summary");
         w.add(dp);
         dp.addEntityAddedListener(new NavigationEventProvider.EntityAddedListener() {
@@ -294,8 +275,8 @@ public class EntityContextMenu extends Menu {
         IntelligencePanel dp = new IntelligencePanel(entity);
 
         final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
-        w.setWidth(500);
-        w.setHeight(500);
+        w.setWidth(WIDTH);
+        w.setHeight(HEIGHT);
         if (entity.getEntityType().equals(EntityType.point)) {
             w.setHeading("Intelligence triggered when data is recorded to " + entity.getName().getValue());
         }
@@ -333,10 +314,10 @@ public class EntityContextMenu extends Menu {
 
                             CategoryPropertyPanel dp = new CategoryPropertyPanel(entity);
                             final Window w = new Window();
-                            w.setWidth(500);
-                            w.setHeight(400);
+                            w.setWidth(WIDTH);
+                            w.setHeight(HEIGHT);
                             try {
-                                w.setHeading(entity.getName().getValue() + " " + Words.WORD_PROPERTIES);
+                                w.setHeading(entity.getName().getValue() + ' ' + Words.WORD_PROPERTIES);
                             } catch (NimbitsException e) {
                                 FeedbackHelper.showError(e);
                             }
@@ -345,7 +326,7 @@ public class EntityContextMenu extends Menu {
                             break;
 
                         }
-                        case point: {
+                        case point:
 
 
                             createPointPropertyWindow(entity);
@@ -354,39 +335,33 @@ public class EntityContextMenu extends Menu {
                             break;
 
 
-                        }
-
-                        case subscription: {
+                        case subscription:
                             showSubscriptionPanel(entity);
                             break;
-                        }
-                        case calculation: {
+                        case calculation:
 
                             showCalcPanel(entity);
 
                             break;
-                        }
-                        case intelligence: {
+                        case intelligence:
 
                             showIntelligencePanel(entity);
 
                             break;
-                        }
                         case summary:
                             showSummaryPanel(entity);
                             break;
-                        case file: {
+                        case file:
                             FilePropertyPanel dp = new FilePropertyPanel(entity);
                             final Window w = new Window();
-                            w.setWidth(500);
-                            w.setHeight(400);
+                            w.setWidth(WIDTH);
+                            w.setHeight(HEIGHT);
 
-                            w.setHeading(entity.getName().getValue() + " " + Words.WORD_PROPERTIES);
+                            w.setHeading(entity.getName().getValue() + ' ' + Words.WORD_PROPERTIES);
 
                             w.add(dp);
                             w.show();
                             break;
-                        }
                     }
                 } catch (NimbitsException e) {
                     FeedbackHelper.showError(e);
@@ -603,7 +578,8 @@ public class EntityContextMenu extends Menu {
 
 
         window.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.connect()));
-        window.setSize(466, 520);
+        window.setWidth(WIDTH);
+        window.setHeight(HEIGHT);
         window.setPlain(false);
         window.setModal(true);
         window.setBlinkModal(true);
@@ -619,8 +595,8 @@ public class EntityContextMenu extends Menu {
         SubscriptionPanel dp = new SubscriptionPanel(entity, settings);
 
         final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
-        w.setWidth(500);
-        w.setHeight(500);
+        w.setWidth(WIDTH);
+        w.setHeight(HEIGHT);
         w.setHeading("Subscribe");
         w.add(dp);
         dp.addEntityAddedListener(new NavigationEventProvider.EntityAddedListener() {
@@ -640,8 +616,8 @@ public class EntityContextMenu extends Menu {
         CalculationPanel dp = new CalculationPanel(user, entity);
 
         final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
-        w.setWidth(600);
-        w.setHeight(600);
+        w.setWidth(WIDTH);
+        w.setHeight(HEIGHT);
         if (entity.getEntityType().equals(EntityType.point)) {
             w.setHeading("Calculations triggered when data is recorded to " + entity.getName().getValue());
         }
@@ -650,17 +626,52 @@ public class EntityContextMenu extends Menu {
 
         }
         w.add(dp);
-        dp.addEntityAddedListener(new NavigationEventProvider.EntityAddedListener() {
-            @Override
-            public void onEntityAdded(Entity entity) throws NimbitsException {
-                w.hide();
-                notifyEntityModifiedListener(new GxtModel(entity), Action.create);
-
-            }
-        });
+        dp.addEntityAddedListener(new EntityAddedListener(w));
 
         w.show();
     }
 
 
+    private class EntityAddedListener implements NavigationEventProvider.EntityAddedListener {
+        private final Window w;
+
+        private EntityAddedListener(Window w) {
+            this.w = w;
+        }
+
+        @Override
+        public void onEntityAdded(Entity entity) throws NimbitsException {
+            w.hide();
+            notifyEntityModifiedListener(new GxtModel(entity), Action.create);
+
+        }
+    }
+
+    private class DeleteMenuEventSelectionListener extends SelectionListener<MenuEvent> {
+        DeleteMenuEventSelectionListener() {
+        }
+
+        public void componentSelected(MenuEvent ce) {
+            ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
+            currentModel = (TreeModel)selectedModel;
+            if (! currentModel.isReadOnly()) {
+                MessageBox.confirm("Confirm", "Are you sure you want delete this? Doing so will permanently delete it including all of it's children (points, documents data etc)"
+                        , deleteEntityListener);
+            }
+
+        }
+    }
+
+    private class CalcMenuEventSelectionListener extends SelectionListener<MenuEvent> {
+        public void componentSelected(MenuEvent ce) {
+            TreeModel selectedModel = (TreeModel) tree.getSelectionModel().getSelectedItem();
+            Entity entity = selectedModel.getBaseEntity();
+            try {
+                showCalcPanel(entity);
+            } catch (NimbitsException e) {
+                FeedbackHelper.showError(e);
+            }
+        }
+
+    }
 }

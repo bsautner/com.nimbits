@@ -28,7 +28,6 @@ import com.extjs.gxt.ui.client.widget.toolbar.*;
 import com.google.gwt.core.client.*;
 import com.google.gwt.i18n.client.*;
 import com.google.gwt.user.client.*;
-import static com.google.gwt.user.client.Window.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.visualization.client.AbstractDataTable.*;
@@ -52,6 +51,9 @@ import com.nimbits.client.ui.icons.*;
 import java.util.*;
 @SuppressWarnings("unchecked")
 public class AnnotatedTimeLinePanel extends LayoutContainer {
+    private static final int WIDTH = 500;
+    private static final int HEIGHT = 300;
+    private static final int ENTER_KEY = 13;
     private final DateTimeFormat fmt = DateTimeFormat.getFormat(Const.FORMAT_DATE_TIME);
 
     private AnnotatedTimeLine line;
@@ -92,11 +94,11 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
     public AnnotatedTimeLinePanel(final boolean showHeader, final String name) {
         this.headerVisible = showHeader;
         this.name = name;
-        points = new HashMap<EntityName, Entity>();
-        valueMap = new HashMap<EntityName, List<Value>>();
+        points = new HashMap<EntityName, Entity>(10);
+        valueMap = new HashMap<EntityName, List<Value>>(100);
         endDateSelector = new TextField();
         startDateSelector = new TextField();
-        chartRemovedListeners = new ArrayList<ChartRemovedListener>();
+        chartRemovedListeners = new ArrayList<ChartRemovedListener>(1);
     }
 
     public String getName() {
@@ -115,17 +117,15 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
     //data
 
     private void addPointDataToTable(final TreeModel entity, final List<Value> values) throws NimbitsException {
-        int PointColumn;
-        boolean found = false;
 
         removePointDataFromTable(CommonFactoryLocator.getInstance().createName(DEFAULT_EMPTY_COL, EntityType.point));
 
         int r = dataTable.getNumberOfColumns();
         int currentRow = dataTable.getNumberOfRows();
-        PointColumn = dataTable.getNumberOfColumns();
-        String s;
+        int PointColumn = dataTable.getNumberOfColumns();
+        boolean found = false;
         for (int i = 0; i < r; i++) {
-            s = dataTable.getColumnLabel(i);
+            String s = dataTable.getColumnLabel(i);
             if (s.equals(entity.getName().getValue())) {
                 PointColumn = i;
                 found = true;
@@ -144,10 +144,10 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
             if (valueMap.containsKey(entity.getName())) {
                 List<Value> list =   valueMap.get(entity.getName());
                 if (list == null) {
-                    list = new ArrayList<Value>();
-                    list.addAll(values);
+                    List<Value> valueArrayList = new ArrayList<Value>(values.size());
+                    valueArrayList.addAll(values);
                     valueMap.remove(entity.getName());
-                    valueMap.put(entity.getName(), list);
+                    valueMap.put(entity.getName(), valueArrayList);
                 }
                 else {
                     valueMap.get(entity.getName()).addAll(values);
@@ -156,8 +156,6 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
             else {
                 valueMap.put(entity.getName(), values);
             }
-            String note;
-            String name;
             for (final Value v : values) {
 
 //                points.get(entity.getName()).getValues().add(v);
@@ -166,12 +164,12 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
                 dataTable.setValue(currentRow, 0, v.getTimestamp());
                 dataTable.setValue(currentRow, PointColumn, v.getDoubleValue());
 
-               note = v.getNote();
-                name =entity.getName().getValue();
+                String note = v.getNote();
+                String name = entity.getName().getValue();
 
                 if (Utils.isEmptyString(note)) {
-                    note = null;
-                    name = null;
+                    note = "";
+                    name = "";
                 }
 
                 //note = null;
@@ -183,11 +181,10 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
         }
     }
 
-    private void removePointDataFromTable(final EntityName pointName) {
+    private void removePointDataFromTable(final CommonIdentifier pointName) {
         int r = dataTable.getNumberOfColumns();
-        String s;
         for (int i = 0; i < r; i++) {
-           s = dataTable.getColumnLabel(i);
+            String s = dataTable.getColumnLabel(i);
             if (s.equals(pointName.getValue())) {
                 dataTable.removeColumns(i, i + 2);
                 break;
@@ -200,10 +197,10 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
 
 
     public void addValue(final TreeModel model, final Value value) throws NimbitsException {
-        if (points.size() == 0 || points.containsKey(model.getName()))  {
+        if (points.isEmpty() || points.containsKey(model.getName()))  {
             if (timespan != null) {
-                Date end = (timespan.getEnd().getTime() > value.getTimestamp().getTime()) ? value.getTimestamp() : timespan.getEnd();
-                Date start = (timespan.getStart().getTime() < value.getTimestamp().getTime()) ? value.getTimestamp() : timespan.getStart();
+                Date end = timespan.getEnd().getTime() > value.getTimestamp().getTime() ? value.getTimestamp() : timespan.getEnd();
+                Date start = timespan.getStart().getTime() < value.getTimestamp().getTime() ? value.getTimestamp() : timespan.getStart();
                 if (value.getTimestamp().getTime() < start.getTime()) {
                     start = value.getTimestamp();
                 }
@@ -275,7 +272,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
                 addEmptyDataToTable();
 
                 layout();
-                if (points != null && points.size() > 0) {
+                if (points != null && !points.isEmpty()) {
 
                     refreshChart();
 
@@ -344,13 +341,12 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
 
     private void addPointToChart(final TreeModel model) {
 
-        final int start = 0;
-        final int end = 1000;
-
         if (timespan == null) {
             loadValuesThatExist(model);
         } else {
             loadMemCache(model);
+            final int start = 0;
+            final int end = 1000;
             loadDataSegment(model, start, end);
         }
     }
@@ -358,40 +354,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
     private void loadValuesThatExist(final TreeModel model) {
         final RecordedValueServiceAsync dataService = GWT.create(RecordedValueService.class);
 
-        dataService.getTopDataSeries(model.getBaseEntity(), 100, new Date(), new AsyncCallback<List<Value>>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                GWT.log(caught.getMessage());
-            }
-
-            @Override
-            public void onSuccess(final List<Value> result) {
-                Value oldest, newest;
-
-                if (result.size() > 0) {
-                    oldest = result.get(result.size() - 1);
-
-
-                    newest = result.get(0);
-
-
-                    timespan = TimespanModelFactory.createTimespan(oldest.getTimestamp(), newest.getTimestamp());
-                    setTimespan(timespan);
-                }
-
-
-                try {
-                    addPointDataToTable(model, result);
-                } catch (NimbitsException e) {
-                    FeedbackHelper.showError(e);
-                }
-
-                drawChart();
-
-
-                // box.close();
-            }
-        });
+        dataService.getTopDataSeries(model.getBaseEntity(), 100, new Date(), new TopSeriesListAsyncCallback(model));
     }
 
     public void setTimespan(Timespan ts) {
@@ -406,29 +369,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
                 "Loading " + p.getName().getValue() + " archived values " + start + " to " + end, "Loading...");
         box.show();
         //   Timespan timespan = new TimespanModel(startDate, endDate);
-        dataService.getPieceOfDataSegment(p.getBaseEntity(), timespan, start, end, new AsyncCallback<List<Value>>() {
-            @Override
-            public void onFailure(final Throwable caught) {
-                box.close();
-                FeedbackHelper.showError(caught);
-            }
-
-            @Override
-            public void onSuccess(final List<Value> result) {
-                try {
-                    addPointDataToTable(p, result);
-                } catch (NimbitsException e) {
-                    FeedbackHelper.showError(e);
-                }
-                if (result.size() > 0) {
-                    loadDataSegment(p, end + 1, end + 1000);
-                } else {
-                    drawChart();
-                }
-
-                box.close();
-            }
-        });
+        dataService.getPieceOfDataSegment(p.getBaseEntity(), timespan, start, end, new GetSegmentAsyncCallback(box, p, end));
     }
 
     private void loadMemCache(final TreeModel model) {
@@ -437,42 +378,14 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
                 "Loading Buffered Data", "Loading...");
         box.show();
         //   Timespan timespan = new TimespanModel(startDate, endDate);
-        dataService.getCache(model.getBaseEntity(), new AsyncCallback<List<Value>>() {
-            @Override
-            public void onFailure(final Throwable caught) {
-                FeedbackHelper.showError(caught);
-                box.close();
-            }
-
-            @Override
-            public void onSuccess(final List<Value> result) {
-                try {
-                    addPointDataToTable(model, result);
-                } catch (NimbitsException e) {
-                    FeedbackHelper.showError(e);
-                }
-
-                box.close();
-            }
-        });
+        dataService.getCache(model.getBaseEntity(), new GetMemCacheListAsyncCallback(box, model));
 
 
     }
 
     private void setDropTarget(final Component container) {
         //    DropTarget target = new DropTarget(container) {
-        new DropTarget(container) {
-            @Override
-            protected void onDragDrop(final DNDEvent event) {
-                super.onDragDrop(event);
-                List<TreeStoreModel> t = event.getData();
-                TreeModel p;
-                for (final TreeStoreModel a : t) {
-                    p = (TreeModel) a.getModel();
-                    handleDrop(p);
-                }
-            }
-        };
+        new LineDropTarget(container);
     }
 
     private void handleDrop(final TreeModel p) {
@@ -500,7 +413,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
         if (points.containsKey(entity.getName())) {
             points.remove(entity.getName());
         }
-        if (points.size() == 0) {
+        if (points.isEmpty()) {
             try {
                 removePointDataFromTable(CommonFactoryLocator.getInstance().createName(DEFAULT_EMPTY_COL, EntityType.point));
                 addEmptyDataToTable();
@@ -515,14 +428,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
 
     private ToolButton closeToolbarButton() {
         return new ToolButton("x-tool-close",
-                new SelectionListener<IconButtonEvent>() {
-                    boolean isMax;
-
-                    @Override
-                    public void componentSelected(final IconButtonEvent ce) {
-                        notifyChartRemovedListener();
-                    }
-                });
+                new CloseIconButtonEventSelectionListener());
     }
     private ToolBar toolbar() {
         final ToolBar toolBar = new ToolBar();
@@ -623,7 +529,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
         endDateSelector.addListener(Events.KeyPress, new Listener<FieldEvent>() {
             @Override
             public void handleEvent(FieldEvent be) {
-                if (be.getKeyCode() == 13) {
+                if (be.getKeyCode() == ENTER_KEY) {
 
                     refreshChart();
 
@@ -642,7 +548,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
         startDateSelector.addListener(Events.KeyPress, new Listener<FieldEvent>() {
             @Override
             public void handleEvent(FieldEvent be) {
-                if (be.getKeyCode() == 13) {
+                if (be.getKeyCode() == ENTER_KEY) {
 
                     refreshChart();
 
@@ -672,18 +578,144 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
         export.addListener(Events.OnClick, new Listener<BaseEvent>() {
             @Override
             public void handleEvent(final BaseEvent be) {
-                if (points.size() > 0) {
+                if (points.isEmpty()) {
+                    com.google.gwt.user.client.Window.alert("Please select a point, and load some data into the chart. Then you can use this button");
+                } else {
                     Window w = new Window();
                     w.setHeading("Export Options");
-                    w.setWidth(500);
-                    w.setHeight(300);
-                    w.add((new ExportPanel(points, valueMap)));
+                    w.setWidth(WIDTH);
+                    w.setHeight(HEIGHT);
+                    w.add(new ExportPanel(points, valueMap));
                     w.show();
-                } else {
-                    alert("Please select a point, and load some data into the chart. Then you can use this button");
                 }
             }
         });
         return export;
+    }
+
+    private class TopSeriesListAsyncCallback implements AsyncCallback<List<Value>> {
+        private final TreeModel model;
+
+        private TopSeriesListAsyncCallback(TreeModel model) {
+            this.model = model;
+        }
+
+        @Override
+        public void onFailure(Throwable caught) {
+            GWT.log(caught.getMessage());
+        }
+
+        @Override
+        public void onSuccess(final List<Value> result) {
+
+            if (!result.isEmpty()) {
+                Value oldest = result.get(result.size() - 1);
+
+
+                Value newest = result.get(0);
+
+
+                timespan = TimespanModelFactory.createTimespan(oldest.getTimestamp(), newest.getTimestamp());
+                setTimespan(timespan);
+            }
+
+
+            try {
+                addPointDataToTable(model, result);
+            } catch (NimbitsException e) {
+                FeedbackHelper.showError(e);
+            }
+
+            drawChart();
+
+
+            // box.close();
+        }
+    }
+
+    private class GetSegmentAsyncCallback implements AsyncCallback<List<Value>> {
+        private final MessageBox box;
+        private final TreeModel p;
+        private final int end;
+
+        private GetSegmentAsyncCallback(MessageBox box, TreeModel p, int end) {
+            this.box = box;
+            this.p = p;
+            this.end = end;
+        }
+
+        @Override
+        public void onFailure(final Throwable caught) {
+            box.close();
+            FeedbackHelper.showError(caught);
+        }
+
+        @Override
+        public void onSuccess(final List<Value> result) {
+            try {
+                addPointDataToTable(p, result);
+            } catch (NimbitsException e) {
+                FeedbackHelper.showError(e);
+            }
+            if (!result.isEmpty()) {
+                loadDataSegment(p, end + 1, end + 1000);
+            } else {
+                drawChart();
+            }
+
+            box.close();
+        }
+    }
+
+    private class GetMemCacheListAsyncCallback implements AsyncCallback<List<Value>> {
+        private final MessageBox box;
+        private final TreeModel model;
+
+        private GetMemCacheListAsyncCallback(MessageBox box, TreeModel model) {
+            this.box = box;
+            this.model = model;
+        }
+
+        @Override
+        public void onFailure(final Throwable caught) {
+            FeedbackHelper.showError(caught);
+            box.close();
+        }
+
+        @Override
+        public void onSuccess(final List<Value> result) {
+            try {
+                addPointDataToTable(model, result);
+            } catch (NimbitsException e) {
+                FeedbackHelper.showError(e);
+            }
+
+            box.close();
+        }
+    }
+
+    private class LineDropTarget extends DropTarget {
+        private LineDropTarget(Component container) {
+            super(container);
+        }
+
+        @Override
+        protected void onDragDrop(final DNDEvent event) {
+            super.onDragDrop(event);
+            List<TreeStoreModel> t = event.getData();
+            for (final TreeStoreModel a : t) {
+                TreeModel p = (TreeModel) a.getModel();
+                handleDrop(p);
+            }
+        }
+    }
+
+    private class CloseIconButtonEventSelectionListener extends SelectionListener<IconButtonEvent> {
+        boolean isMax;
+
+        @Override
+        public void componentSelected(final IconButtonEvent ce) {
+            notifyChartRemovedListener();
+        }
     }
 }

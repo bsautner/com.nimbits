@@ -15,7 +15,7 @@ package com.nimbits.server.cron;
 
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import helper.*;
+import com.nimbits.server.*;
 import static org.junit.Assert.*;
 import org.junit.*;
 

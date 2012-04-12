@@ -17,11 +17,16 @@ import com.google.appengine.tools.development.testing.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
+import com.nimbits.server.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.orm.*;
 import com.nimbits.server.user.*;
-import helper.*;
 import org.junit.*;
 import static org.junit.Assert.*;
+
+import java.util.*;
 
 /**
  * Created by bsautner
@@ -51,7 +56,13 @@ public class UserDaoTest extends NimbitsServletTest {
         User u =UserServiceFactory.getServerInstance().createUserRecord(e);
         assertNotNull(u);
         assertEquals(e.getValue(), u.getEmail().getValue());
-        User r = UserTransactionFactory.getInstance().getUserByKey(e.getValue());
+            List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(u,e.getValue(), UserEntity.class.getName());
+            assertFalse(result.isEmpty());
+
+
+            User r = (User) result.get(0);
+
+
         assertNotNull(r);
             assertEquals(e.getValue(), r.getEmail().getValue());
             assertNotNull(r.getDateCreated());

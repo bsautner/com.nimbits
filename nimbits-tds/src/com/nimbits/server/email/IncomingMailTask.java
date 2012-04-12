@@ -56,16 +56,18 @@ public class IncomingMailTask extends HttpServlet {
         try {
             internetAddress = CommonFactoryLocator.getInstance().createEmailAddress(fromAddress);
 
-            final User u;
+
 
             log.info("Incoming mail post: " + internetAddress);
-            u = UserTransactionFactory.getInstance().getNimbitsUser(internetAddress);
+            //u = UserTransactionFactory.getInstance().getNimbitsUser(internetAddress);
+            List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(internetAddress.getValue(), UserEntity.class.getName());
 
             final String content = COMPILE1.matcher(PATTERN.matcher(inContent).replaceAll("")).replaceAll("");
             final String Data[] = COMPILE2.split(content);
             log.info("Incoming mail post: " + inContent);
 
-            if (u != null) {
+            if (! result.isEmpty()) {
+                final User u = (User) result.get(0);
                 if (Data.length > 0) {
                     for (String s : Data) {
                         processLine(u, s);

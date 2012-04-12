@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-package helper;
+package com.nimbits.server;
 
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
@@ -34,6 +34,7 @@ import com.nimbits.client.service.settings.SettingsService;
 import com.nimbits.server.api.impl.ValueServletImpl;
 import com.nimbits.server.entity.EntityServiceFactory;
 import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.orm.*;
 import com.nimbits.server.point.PointServiceFactory;
 import com.nimbits.server.settings.SettingTransactions;
 import com.nimbits.server.settings.SettingTransactionsFactory;
@@ -42,11 +43,12 @@ import com.nimbits.server.user.UserServiceFactory;
 import com.nimbits.server.user.UserTransactionFactory;
 import com.nimbits.server.user.UserTransactions;
 import org.junit.After;
+import static org.junit.Assert.assertFalse;
 import org.junit.Before;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -105,7 +107,13 @@ public class NimbitsServletTest {
         userTransactionsDao = UserTransactionFactory.getDAOInstance();
         User r = UserServiceFactory.getServerInstance().createUserRecord(emailAddress);
         assertNotNull(r);
-        user = userTransactionsDao.getNimbitsUser(emailAddress);
+
+
+        List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(emailAddress.getValue(), UserEntity.class.getName());
+        assertFalse(result.isEmpty());
+
+
+        user = (User) result.get(0);
         assertNotNull(user);
         settingsDAO = SettingTransactionsFactory.getDaoInstance();
 

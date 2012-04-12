@@ -17,21 +17,30 @@ package com.nimbits.server.user;
 import com.nimbits.client.service.user.*;
 
 public class UserServiceFactory {
-    private static UserService instance;
-    private static UserServerService serverInstance;
 
+    private UserServiceFactory() {
+    }
+
+
+    private static class UserServiceHolder {
+        static final UserService instance = new UserServiceImpl();
+
+        private UserServiceHolder() {
+        }
+    }
 
     public static UserService getInstance() {
-        if (instance == null) {
-            instance = new UserServiceImpl();
+        return UserServiceHolder.instance;
+    }
+
+    private static class UserServerServiceHolder {
+        static final UserServerService serverInstance = new UserServiceImpl();
+
+        private UserServerServiceHolder() {
         }
-        return instance;
     }
 
     public static UserServerService getServerInstance() {
-        if (serverInstance == null) {
-            serverInstance = new UserServiceImpl();
-        }
-        return serverInstance;
+        return UserServerServiceHolder.serverInstance;
     }
 }

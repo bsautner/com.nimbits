@@ -6,10 +6,10 @@ import com.nimbits.client.model.calculation.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.server.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.value.*;
-import helper.*;
 import static org.junit.Assert.*;
 import org.junit.*;
 

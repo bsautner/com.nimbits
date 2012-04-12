@@ -24,6 +24,9 @@ import com.nimbits.server.transactions.dao.summary.*;
  */
 public class SummaryTransactionFactory {
 
+    private SummaryTransactionFactory() {
+    }
+
     public static SummaryTransactions getInstance(final User u) {
         return new SummaryDaoImpl(u);
     }

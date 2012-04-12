@@ -14,8 +14,10 @@
 package com.nimbits.client.service.summary;
 
 import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.summary.*;
 import com.nimbits.client.model.user.*;
 
@@ -28,11 +30,7 @@ import com.nimbits.client.model.user.*;
 @RemoteServiceRelativePath("summary")
 public interface SummaryService  extends RemoteService {
 
-    Summary readSummary(final Entity entity) throws NimbitsException;
+    double getValue(SummaryType type, double[] doubles);
 
-    Entity addUpdateSummary(final Summary update, final EntityName name) throws NimbitsException;
-
-    void updateLastProcessed(final Entity entity);
-
-    void deleteSummary(final User u, final Entity entity);
+    void processSummaries(User u, Point point) throws NimbitsException;
 }

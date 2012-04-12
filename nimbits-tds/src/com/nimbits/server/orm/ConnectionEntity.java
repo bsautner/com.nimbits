@@ -15,6 +15,7 @@ package com.nimbits.server.orm;
 
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.category.Category;
+import com.nimbits.client.model.connection.*;
 import com.nimbits.client.model.entity.Entity;
 
 import javax.jdo.annotations.IdentityType;
@@ -29,7 +30,7 @@ import java.util.Date;
  * Time: 6:18 PM
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
-public class ConnectionEntity extends EntityStore implements Category {
+public class ConnectionEntity extends EntityStore implements Connection {
 
 
     private static final long serialVersionUID = 653954371977705551L;
@@ -40,4 +41,5 @@ public class ConnectionEntity extends EntityStore implements Category {
         super(entity);
         createDate = new Date();
     }
+
 }

@@ -68,8 +68,11 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public void updateSubscriptionLastSent(final Subscription subscription) {
-        SubscriptionTransactionFactory.getInstance(null).updateSubscriptionLastSent(subscription);
+    public void updateSubscriptionLastSent(final Subscription subscription) throws NimbitsException {
+        subscription.setLastSent(new Date());
+        User u = UserServiceFactory.getServerInstance().getAnonUser();
+        EntityServiceFactory.getInstance().addUpdateEntity(u, subscription);
+      //  SubscriptionTransactionFactory.getInstance(null).updateSubscriptionLastSent(subscription);
     }
 
 
@@ -83,7 +86,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
         for (final Subscription subscription : subscriptions) {
 
-            if (subscription.getLastSent().getTime() + (subscription.getMaxRepeat() * SECONDS * 1000) < new Date().getTime()) {
+            if (subscription.getLastSent().getTime() + subscription.getMaxRepeat() * SECONDS * 1000 < new Date().getTime()) {
 
 
                 log.info("Processing Subscription " + subscription.getKey());

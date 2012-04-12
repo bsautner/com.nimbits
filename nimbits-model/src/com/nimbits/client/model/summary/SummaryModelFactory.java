@@ -14,29 +14,30 @@ import java.util.*;
  */
 public class SummaryModelFactory {
 
+    private SummaryModelFactory() {
+    }
+
     public static SummaryModel createSummary(Summary model) throws NimbitsException {
         return new SummaryModel(model);
     }
 
-    public static SummaryModel createSummary(
-
-            final String entity,
-            final String targetPointUUID,
-            final SummaryType summaryType,
-            final long summaryIntervalMs,
-            final Date lastProcessed) {
-        return new SummaryModel(entity, targetPointUUID, summaryType, summaryIntervalMs, lastProcessed);
-
-    }
 
     public static SummaryModel createSummary(
             final Entity e,
             final String entity,
-            final String targetPointUUID,
+            final String target,
             final SummaryType summaryType,
             final long summaryIntervalMs,
             final Date lastProcessed) throws NimbitsException {
-        return new SummaryModel(e, entity, targetPointUUID, summaryType, summaryIntervalMs, lastProcessed);
+        return new SummaryModel(e, entity, target, summaryType, summaryIntervalMs, lastProcessed);
 
+    }
+
+    public static List<Summary> createSummaries(List<Summary> result) throws NimbitsException {
+        List<Summary> retObj = new ArrayList<Summary>(result.size());
+        for (Summary s : result) {
+            retObj.add(createSummary(s));
+        }
+        return retObj;
     }
 }

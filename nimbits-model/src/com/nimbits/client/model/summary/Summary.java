@@ -16,16 +16,17 @@ public interface Summary  extends Entity, Serializable {
 
     String getEntity();
 
-    String getTargetPointUUID();
+    String getTarget();
 
     SummaryType getSummaryType();
 
     long getSummaryIntervalMs();
 
-    int getSummaryIntervalHours();
+    int getSummaryIntervalSeconds();
 
     Date getLastProcessed();
 
+    void setLastProcessed(final Date date);
 
 
 }

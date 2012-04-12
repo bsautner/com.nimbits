@@ -35,7 +35,7 @@ public class SummaryEntity extends EntityStore implements Summary {
     private String entity;
 
     @Persistent
-    private String targetPointUUID;
+    private String target;
 
     @Persistent
     private Integer summaryType;
@@ -53,7 +53,7 @@ public class SummaryEntity extends EntityStore implements Summary {
     public SummaryEntity(final Summary summary) throws NimbitsException {
         super(summary);
         this.entity = summary.getEntity();
-        this.targetPointUUID = summary.getTargetPointUUID();
+        this.target = summary.getTarget();
         this.summaryType = summary.getSummaryType().getCode();
         this.summaryIntervalMs = summary.getSummaryIntervalMs();
         this.lastProcessed = summary.getLastProcessed();
@@ -67,8 +67,8 @@ public class SummaryEntity extends EntityStore implements Summary {
     }
 
     @Override
-    public String getTargetPointUUID() {
-        return targetPointUUID;
+    public String getTarget() {
+        return target;
     }
 
     @Override
@@ -82,8 +82,8 @@ public class SummaryEntity extends EntityStore implements Summary {
     }
 
     @Override
-    public int getSummaryIntervalHours() {
-        return (int) (summaryIntervalMs / (1000 * 60 * 60));
+    public int getSummaryIntervalSeconds() {
+        return (int) (summaryIntervalMs / 1000);
     }
 
     @Override
@@ -99,6 +99,7 @@ public class SummaryEntity extends EntityStore implements Summary {
         this.summaryIntervalMs = summaryIntervalMs;
     }
 
+    @Override
     public void setLastProcessed(final Date lastProcessed) {
         this.lastProcessed = lastProcessed;
     }

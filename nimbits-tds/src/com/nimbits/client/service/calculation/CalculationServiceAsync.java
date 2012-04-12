@@ -23,9 +23,6 @@ import com.nimbits.client.model.value.*;
 import java.util.*;
 
 public interface CalculationServiceAsync {
-    void getCalculation(final Entity entity, final AsyncCallback<Calculation> async);
-
-    void addUpdateCalculation(final Entity entity, final EntityName name, final Calculation calculation, final AsyncCallback<Entity> async);
 
     void solveEquation(final User u, final Calculation calculation, final AsyncCallback<Value> async);
 
@@ -33,7 +30,5 @@ public interface CalculationServiceAsync {
 
     void processCalculations(final User u, final Entity point, final Value value, final AsyncCallback<Void> async);
 
-    void addUpdateCalculation(final User u, final Entity entity, final EntityName name, final Calculation calculation, final AsyncCallback<Entity> async);
 
-    void deleteCalculation(final User u, final Entity entity, final AsyncCallback<Void> async);
 }

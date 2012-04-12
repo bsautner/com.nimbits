@@ -44,7 +44,7 @@ import java.util.*;
 public class NavigationPanel extends NavigationEventProvider {
 
     private EntityTree<ModelData> tree;
-     private Timer updater;
+    private Timer updater;
     private boolean expanded = false;
     private Map<SettingType, String> settings;
     private List<String> parents;
@@ -340,12 +340,15 @@ public class NavigationPanel extends NavigationEventProvider {
                             case user:
                                 break;
                             case point:
+                                notifyEntityClickedListener(model);
                                 break;
                             case category:
+                                notifyEntityClickedListener(model);
                                 break;
                             case file:
                                 break;
                             case subscription:
+                                notifyEntityClickedListener(model);
                                 break;
                             case feed:
                                 notifyEntityClickedListener(model);
@@ -560,24 +563,32 @@ public class NavigationPanel extends NavigationEventProvider {
             final Map<String, Point> entityMap = new HashMap<String, Point>(tree.getTreeStore().getAllItems().size());
 
             if (tree != null) {
-                for (final ModelData m : tree.getTreeStore().getAllItems()) {
-                    final TreeModel model = (TreeModel) m;
-                    try {
-                        if (model != null
-                                && model.getParent() != null
-                                && !model.isDirty()
-                                && model.getEntityType().equals(EntityType.point)
-                                )  {
-                            if (tree.isExpanded(model.getParent())) {
-                                entityMap.put(model.getUUID(), (Point) model.getBaseEntity());
-                            }
-                        }
-                    } catch (Exception e) {
-                        GWT.log(e.getMessage(), e);
-                    }
-                }
+                addExpandedValueToMap(entityMap);
             }
             return entityMap;
+        }
+
+        private void addExpandedValueToMap(final Map<String, Point> entityMap) {
+            for (final ModelData m : tree.getTreeStore().getAllItems()) {
+                final TreeModel model = (TreeModel) m;
+                try {
+                    putModelInMap(entityMap, model);
+                } catch (Exception ignored) { //null pointer when tree is completely collapsed.
+
+                }
+            }
+        }
+
+        private void putModelInMap(Map<String, Point> entityMap, TreeModel model) {
+            if (model != null
+                    && model.getParent() != null
+                    && !model.isDirty()
+                    && model.getEntityType().equals(EntityType.point)
+                    )  {
+                if (tree.isExpanded(model.getParent())) {
+                    entityMap.put(model.getUUID(), (Point) model.getBaseEntity());
+                }
+            }
         }
     }
 }

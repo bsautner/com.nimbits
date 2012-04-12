@@ -23,13 +23,18 @@ import com.nimbits.client.service.twitter.*;
  */
 public class TwitterServiceFactory {
 
-    private static TwitterService instance;
+    private TwitterServiceFactory() {
+    }
+
+    private static class TwitterServiceHolder {
+        static final TwitterService instance = new TwitterImpl();
+
+        private TwitterServiceHolder() {
+        }
+    }
 
     public static TwitterService getInstance() {
-        if (instance == null) {
-            instance = new TwitterImpl();
-        }
-        return instance;
+        return TwitterServiceHolder.instance;
     }
 
 }

@@ -24,7 +24,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.server.orm.PointEntity;
 import com.nimbits.server.point.PointServiceFactory;
-import helper.NimbitsServletTest;
+import com.nimbits.server.NimbitsServletTest;
 import org.junit.Test;
 
 import java.util.List;
@@ -46,10 +46,10 @@ public class EntityServiceTest extends NimbitsServletTest {
 
         final List<Entity> entities =  EntityServiceFactory.getInstance().getEntities();
         assertTrue(!entities.isEmpty());
-        Entity e = EntityServiceFactory.getInstance().getEntityByName(pointName,EntityType.point).get(0);
+        Entity e = EntityServiceFactory.getInstance().getEntityByName(pointName, EntityType.point).get(0);
         assertNotNull(e);
-        Entity c = EntityServiceFactory.getInstance().getEntityByName(pointChildName,EntityType.point).get(0);
-        Entity g = EntityServiceFactory.getInstance().getEntityByName(groupName,EntityType.category).get(0);
+        Entity c = EntityServiceFactory.getInstance().getEntityByName(pointChildName, EntityType.point).get(0);
+        Entity g = EntityServiceFactory.getInstance().getEntityByName(groupName, EntityType.category).get(0);
 
         assertNotNull(c);
         assertNotNull(g);
@@ -114,9 +114,30 @@ public class EntityServiceTest extends NimbitsServletTest {
 
     @Test
     public void getEntityByNameTest() throws NimbitsException {
-        Point  r = (Point) EntityServiceFactory.getInstance().getEntityByName(user, pointName,PointEntity.class.getName()).get(0);;
+        Point  r = (Point) EntityServiceFactory.getInstance().getEntityByName(user, pointName, PointEntity.class.getName()).get(0);;
         assertNotNull(r);
 
+    }
+
+    @Test
+    public void readOnlyTest() throws NimbitsException {
+
+        List<Entity> r =EntityServiceFactory.getInstance().getEntities();
+        for (Entity e : r) {
+            assertTrue(e.isReadOnly() != e.getOwner().equals(user.getKey()));
+        }
+
+    }
+
+    @Test
+    public void testEntitySecurity() throws NimbitsException {
+        List<Entity> r =EntityServiceFactory.getInstance().getEntities();
+        for (Entity e : r) {
+            if (user.getKey().equals(e.getOwner())) {
+                assertTrue(e.isOwner(user));
+            }
+            assertTrue(e.entityIsReadable(user));
+        }
     }
 
 }

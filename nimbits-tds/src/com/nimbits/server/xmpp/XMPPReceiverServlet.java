@@ -58,9 +58,11 @@ public class XMPPReceiverServlet extends HttpServlet {
             final String email = j[0].toLowerCase();
             final EmailAddress internetAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
             log.info("XMPP Message recieved " + email + ":   " + message);
+            List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(email, UserEntity.class.getName());
+            if (! result.isEmpty()) {
+                User u = (User) result.get(0);
 
-            User u = UserTransactionFactory.getInstance().getNimbitsUser(internetAddress);
-            if (u != null) {
+
                 if (body.toLowerCase().trim().equals("ls")) {
                     //sendPointList(u);
                 } else if (body.indexOf('=') > 0) {

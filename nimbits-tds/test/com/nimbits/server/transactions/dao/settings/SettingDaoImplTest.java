@@ -15,8 +15,8 @@ package com.nimbits.server.transactions.dao.settings;
 
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
+import com.nimbits.server.*;
 import com.nimbits.server.cron.*;
-import helper.*;
 import static org.junit.Assert.*;
 import org.junit.*;
 

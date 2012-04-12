@@ -75,9 +75,8 @@ public class EntityDaoImpl implements  EntityTransactions {
 
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final Query q1;
         try {
-            q1 = pm.newQuery(Class.forName(type.getClassName()));
+            final Query q1 = pm.newQuery(Class.forName(type.getClassName()));
 
             q1.setFilter("owner==b && entityType==t");
             q1.declareParameters("String b, Integer t");
@@ -160,7 +159,7 @@ public class EntityDaoImpl implements  EntityTransactions {
     public Entity addUpdateEntity(final Entity entity) throws NimbitsException {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-
+        log.info(entity.toString());
 
         try {
             final Entity retObj;
@@ -206,8 +205,7 @@ public class EntityDaoImpl implements  EntityTransactions {
             checkDuplicateEntity(entity);
 
         }
-        final Entity commit;
-        commit = downcastEntity(entity);
+        final Entity commit = downcastEntity(entity);
 
 
         if (Utils.isEmptyString(commit.getUUID())) {
@@ -255,7 +253,7 @@ public class EntityDaoImpl implements  EntityTransactions {
                 commit = new SubscriptionEntity((Subscription) entity);
                 break;
             case userConnection:
-                commit = new CategoryEntity(entity);
+                commit = new ConnectionEntity(entity);
                 break;
             case calculation:
                 commit = new CalcEntity((Calculation) entity);
@@ -288,13 +286,20 @@ public class EntityDaoImpl implements  EntityTransactions {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         final Map<String, Entity> connections = getEntityMap(EntityType.userConnection, 1000);
-        final Collection<String> uuids = new ArrayList<String>(connections.size() + 1);
-        uuids.add(user.getKey());
+        final Collection<String> ownerKeys = new ArrayList<String>(connections.size() + 1);
+        for (Entity c : connections.values()) {
+            ownerKeys.add(c.getName().getValue());
+        }
+        ownerKeys.addAll(connections.keySet());
+        ownerKeys.add(user.getKey());
 
 
-        final Map<String, Relationship> relationshipMap = new HashMap<String, Relationship>(connections.size());
-
-        final Collection<String> connectedUserKeys = getConnectedUserKeys(connections, uuids, relationshipMap);
+        final Map<String, Entity> relationshipMap = new HashMap<String, Entity>(connections.size());
+        for (Entity e : connections.values()) {
+            relationshipMap.put(e.getName().getValue(), e);
+        }
+       // final Collection<String> connectedUserKeys = getConnectedUserKeys(connections, uuids, relationshipMap);
+      // connectedUserKeys.addAll(connections.keySet());
         try{
             final List<Entity> retObj = new ArrayList<Entity>(INT1);
 
@@ -303,13 +308,14 @@ public class EntityDaoImpl implements  EntityTransactions {
                 try {
                     if (type.isTreeGridItem()) {
                         final Query q1 = pm.newQuery(Class.forName(type.getClassName()), ":p.contains(owner)");
-                        final Collection<Entity> result = (Collection<Entity>) q1.execute(uuids);
+                        final Collection<Entity> result = (Collection<Entity>) q1.execute(ownerKeys);
                         final List<Entity> entities =  createModels(result);
                         for (final Entity entity1 : entities) {
 
-                            if (connectedUserKeys.contains(entity1.getParent())) {
-                                final Relationship rx = relationshipMap.get(entity1.getParent());
-                                entity1.setParent(rx.getKey());
+                            if (relationshipMap.containsKey(entity1.getParent())) {
+                               // final Relationship rx = relationshipMap.get(entity1.getParent());
+                                Entity c = relationshipMap.get(entity1.getParent());
+                                entity1.setParent(c.getKey());
                             }
 
                             retObj.add(entity1);
@@ -341,20 +347,20 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     }
 
-    private Collection<String> getConnectedUserKeys(Map<String, Entity> connections, Collection<String> uuids, Map<String, Relationship> relationshipMap) {
-        final Collection<String> connectedUserKeys = new ArrayList<String>(connections.size());
-        for (final Entity e : connections.values()) {
-            final Relationship r = RelationshipTransactionFactory.getInstance().getRelationship(e);
-
-            if (r != null) {
-                relationshipMap.put(r.getForeignKey(), r);
-                uuids.add(r.getForeignKey());
-                connectedUserKeys.add(r.getForeignKey());
-            }
-
-        }
-        return connectedUserKeys;
-    }
+//    private static Collection<String> getConnectedUserKeys(Map<String, Entity> connections, Collection<String> uuids, Map<String, Relationship> relationshipMap) {
+//        final Collection<String> connectedUserKeys = new ArrayList<String>(connections.size());
+//        for (final Entity e : connections.values()) {
+//            final Relationship r = RelationshipTransactionFactory.getInstance().getRelationship(e);
+//
+//            if (r != null) {
+//                relationshipMap.put(r.getForeignKey(), r);
+//                uuids.add(r.getForeignKey());
+//                connectedUserKeys.add(r.getForeignKey());
+//            }
+//
+//        }
+//        return connectedUserKeys;
+//    }
 
     private static List<Entity> getEntityChildren(final PersistenceManager pm, final Entity entity) {
 
@@ -468,14 +474,7 @@ public class EntityDaoImpl implements  EntityTransactions {
             q1.setRange(0, 1);
 
             final Collection<Entity> result = (Collection<Entity>) q1.execute(uuid);
-            final List<Entity> retObj;
-            if (result.isEmpty()) {
-                retObj = Collections.emptyList();
-            }
-            else {
-                retObj= createModel(result.iterator().next());
-            }
-            return retObj;
+            return result.isEmpty() ?  Collections.<Entity>emptyList() : createModel(result.iterator().next());
         } finally {
             pm.close();
         }
@@ -711,7 +710,8 @@ public class EntityDaoImpl implements  EntityTransactions {
         }
         final List<Entity> retObj = new ArrayList<Entity>(1);
         if (model.entityIsReadable(user)) {
-            model.setReadOnly(! entity.isOwner(user) );
+            boolean isOwner = model.isOwner(user);
+            model.setReadOnly(!isOwner );
             retObj.add(model);
         }
 

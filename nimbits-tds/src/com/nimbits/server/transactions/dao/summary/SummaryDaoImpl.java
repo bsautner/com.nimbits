@@ -114,7 +114,22 @@ public class SummaryDaoImpl implements SummaryTransactions {
             pm.close();
         }
     }
+    @Override
+    public List<Summary> readSummariesToEntity(final Entity entity) throws NimbitsException {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
 
+        try {
+            final Query q = pm.newQuery(SummaryEntity.class);
+            q.setFilter("entity == e");
+            q.declareParameters("String e");
+            List<Summary> result = (List<Summary>) q.execute(entity.getKey());
+            return SummaryModelFactory.createSummaries(result);
+
+        }
+        finally {
+            pm.close();
+        }
+    }
     @Override
     public void deleteSummary(final Entity entity) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();

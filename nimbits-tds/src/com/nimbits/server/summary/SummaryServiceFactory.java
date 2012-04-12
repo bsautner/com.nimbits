@@ -23,6 +23,9 @@ import com.nimbits.client.service.summary.*;
  */
 public class SummaryServiceFactory {
 
+    private SummaryServiceFactory() {
+    }
+
     public static SummaryService getInstance() {
 
         return new SummaryServiceImpl();

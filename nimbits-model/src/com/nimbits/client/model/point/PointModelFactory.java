@@ -59,7 +59,7 @@ public class PointModelFactory {
                 FilterType.fixedHysteresis,0.1);
     }
 
-        public static List<Point> createPointModels(final Collection<Point> result) throws NimbitsException {
+    public static List<Point> createPointModels(final Collection<Point> result) throws NimbitsException {
         final List<Point> r = new ArrayList<Point>(result.size());
         for (final Point p : result) {
             r.add(createPointModel(p));

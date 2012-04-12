@@ -32,9 +32,6 @@ import java.util.*;
 public interface CalculationService  extends RemoteService {
 
 
-    Calculation getCalculation(final Entity entity) throws NimbitsException;
-
-    Entity addUpdateCalculation(final Entity entity, final EntityName name, final Calculation calculation) throws NimbitsException;
 
     Value solveEquation(final User u, final Calculation calculation) throws NimbitsException;
 
@@ -42,7 +39,5 @@ public interface CalculationService  extends RemoteService {
 
     void processCalculations(final User u, final Entity point, final Value value) throws NimbitsException;
 
-    Entity addUpdateCalculation(final User u, final Entity entity, final EntityName name, final Calculation calculation) throws NimbitsException;
 
-    void deleteCalculation(final User u, final Entity entity);
 }

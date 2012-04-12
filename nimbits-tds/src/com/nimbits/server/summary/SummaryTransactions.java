@@ -17,6 +17,8 @@ import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.summary.*;
 
+import java.util.*;
+
 /**
  * Created by Benjamin Sautner
  * User: bsautner
@@ -32,4 +34,6 @@ public interface SummaryTransactions {
     void updateLastProcessed(final Entity entity);
 
     void deleteSummary(final Entity entity);
+
+    List<Summary> readSummariesToEntity(Entity entity) throws NimbitsException;
 }

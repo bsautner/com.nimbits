@@ -76,7 +76,7 @@ public class NavigationPanel extends NavigationEventProvider {
         }
     }
 
-    private void updateModel(Value value, TreeModel model) {
+    private void updateModel(final Value value, final TreeModel model) {
         model.set(Parameters.value.getText(), value.getValueWithNote());
         model.set(Parameters.data.getText(), value.getData());
         model.set(Parameters.timestamp.getText(), value.getTimestamp());
@@ -551,7 +551,7 @@ public class NavigationPanel extends NavigationEventProvider {
             }
 
         }
-        private void reloadCurrentValues(Map<String, Point> entityMap) {
+        private void reloadCurrentValues(final Map<String, Point> entityMap) {
             final RecordedValueServiceAsync service = GWT.create(RecordedValueService.class);
             service.getCurrentValues(entityMap, new ReloadAsyncCallback());
         }

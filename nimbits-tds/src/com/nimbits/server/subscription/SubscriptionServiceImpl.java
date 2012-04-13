@@ -77,14 +77,14 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
                 subscription.setLastSent(new Date());
                 EntityServiceFactory.getInstance().addUpdateEntity(user, subscription);
 
-                final List<Entity> subscriptionEntity = EntityServiceFactory.getInstance().getEntityByKey(user, subscription.getKey(), EntityStore.class.getName());
-                //todo - handle subscribed to object deleted
+                final List<Entity> subscriptionEntity = EntityServiceFactory.getInstance().getEntityByKey(user, subscription.getKey(),SubscriptionEntity.class.getName());
+
                 if (subscriptionEntity.isEmpty()) {
 
 
                 } else {
 
-                    final Entity pointEntity = EntityServiceFactory.getInstance().getEntityByKey(null, point.getKey()).get(0);
+                   // final List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(UserServiceFactory.getServerInstance().getAdmin(), point.getKey(), ).get(0);
 
                     final User subscriber = UserServiceFactory.getInstance().getUserByKey(subscriptionEntity.get(0).getOwner());
                     final AlertType alert = v.getAlertState();
@@ -96,26 +96,26 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
                             break;
                         case anyAlert:
                             if (!alert.equals(AlertType.OK) && (point.isHighAlarmOn() || point.isLowAlarmOn())) {
-                                sendNotification(subscriber, pointEntity, subscription, point, v);
+                                sendNotification(subscriber, point, subscription, point, v);
                             }
                             break;
                         case high:
                             if (alert.equals(AlertType.HighAlert) && point.isHighAlarmOn()) {
-                                sendNotification(subscriber, pointEntity, subscription, point, v);
+                                sendNotification(subscriber, point, subscription, point, v);
                             }
                             break;
                         case low:
                             if (alert.equals(AlertType.LowAlert) && point.isLowAlarmOn()) {
-                                sendNotification(subscriber, pointEntity, subscription, point, v);
+                                sendNotification(subscriber, point, subscription, point, v);
                             }
                             break;
                         case idle:
                             if (alert.equals(AlertType.IdleAlert) && point.isIdleAlarmOn()) {
-                                sendNotification(subscriber, pointEntity, subscription, point, v);
+                                sendNotification(subscriber, point, subscription, point, v);
                             }
                             break;
                         case newValue:
-                            sendNotification(subscriber, pointEntity, subscription, point, v);
+                            sendNotification(subscriber, point, subscription, point, v);
                             break;
                         case changed:
                             break;

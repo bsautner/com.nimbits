@@ -17,6 +17,8 @@ import com.nimbits.client.model.user.*;
 import com.nimbits.server.transactions.dao.entity.*;
 import com.nimbits.server.transactions.memcache.entity.*;
 
+import java.util.*;
+
 /**
  * Created by Benjamin Sautner
  * User: bsautner
@@ -25,15 +27,40 @@ import com.nimbits.server.transactions.memcache.entity.*;
  */
 public class EntityTransactionFactory {
 
+
     private EntityTransactionFactory() {
     }
 
+
+
+
+    private static class MapHolder {
+        static final Map<String, EntityTransactions> daoMap = new HashMap<String, EntityTransactions>(10);
+        static final Map<String, EntityTransactions> cacheMap = new HashMap<String, EntityTransactions>(10);
+        private MapHolder() {
+        }
+    }
     public static EntityTransactions getInstance(User user) {
-        return new EntityCacheImpl(user);
+        if (MapHolder.cacheMap.containsKey(user.getKey())) {
+            return MapHolder.cacheMap.get(user.getKey());
+        }
+        else {
+            EntityTransactions instance =  new EntityCacheImpl(user);
+            MapHolder.cacheMap.put(user.getKey(), instance);
+            return instance;
+        }
+
     }
 
     public static EntityTransactions getDaoInstance(User user) {
-        return new EntityDaoImpl(user);
+        if (MapHolder.daoMap.containsKey(user.getKey())) {
+            return MapHolder.daoMap.get(user.getKey());
+        }
+        else {
+            EntityTransactions instance =  new EntityDaoImpl(user);
+            MapHolder.daoMap.put(user.getKey(), instance);
+            return instance;
+        }
     }
 
 }

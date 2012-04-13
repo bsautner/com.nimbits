@@ -49,8 +49,8 @@ public class EntityCacheImpl implements EntityTransactions {
 
     private void addEntityToCache(final Entity entity) throws NimbitsException {
         if (entity != null) {
-        removeEntityFromCache(entity);
-        cache.put(entity.getKey(), entity);
+            removeEntityFromCache(entity);
+            cache.put(entity.getKey(), entity);
         }
     }
 
@@ -58,7 +58,7 @@ public class EntityCacheImpl implements EntityTransactions {
         this.user = u;
         LogHelper.log(this.getClass(), "EntityCacheImpl user is null?" + (u == null));
         if (u != null) {
-        LogHelper.log(this.getClass(), "EntityCacheImpl user key is null?" + (u.getKey() == null));
+            LogHelper.log(this.getClass(), "EntityCacheImpl user key is null?" + (u.getKey() == null));
         }
 
         cache = user != null && user.getKey() != null
@@ -66,11 +66,8 @@ public class EntityCacheImpl implements EntityTransactions {
                 : MemcacheServiceFactory.getMemcacheService(MemCacheKey.defaultNamespace.name());
     }
 
-
-
     @Override
     public Map<String, Entity> getEntityMap(final EntityType type, final int limit) throws NimbitsException {
-
         return  EntityTransactionFactory.getDaoInstance(user).getEntityMap(type, limit);
     }
 
@@ -98,16 +95,13 @@ public class EntityCacheImpl implements EntityTransactions {
 
     @Override
     public List<Entity> deleteEntity(final Entity entity, final Class<?> cls) throws NimbitsException {
-
         removeEntityFromCache(entity);
         return EntityTransactionFactory.getDaoInstance(user).deleteEntity(entity, cls);
     }
 
     @Override
     public List<Entity> getEntityByKey(final String key, final Class<?> cls) throws NimbitsException {
-
         if (cache.contains(key)) {
-
             try {
                 final Entity e =  (Entity) cache.get(key);
                 return e != null ? Arrays.asList(e) : getEntityFromStore(key, cls);
@@ -125,7 +119,7 @@ public class EntityCacheImpl implements EntityTransactions {
     private  List<Entity> getEntityFromStore(final String key, final Class<?> cls) throws NimbitsException {
         final List<Entity> result = EntityTransactionFactory.getDaoInstance(user).getEntityByKey(key, cls);
         if (! result.isEmpty()) {
-        addEntityToCache(result.get(0));
+            addEntityToCache(result.get(0));
         }
         return result;
     }

@@ -50,7 +50,9 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
             loginInfo.setUserAdmin(userService.isUserAdmin());
 
             loginInfo.setLogoutUrl(userService.createLogoutURL(requestUri));
-            final List<Entity> list =   EntityTransactionFactory.getInstance(null).getEntityByKey(internetAddress.getValue(), UserEntity.class);
+            final List<Entity> list =   EntityTransactionFactory.getInstance(
+                    com.nimbits.server.user.UserServiceFactory.getServerInstance().getAnonUser())
+                    .getEntityByKey(internetAddress.getValue(), UserEntity.class);
             final com.nimbits.client.model.user.User  u;
 
             if (list.isEmpty()) {

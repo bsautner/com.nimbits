@@ -30,7 +30,6 @@ import com.nimbits.server.email.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.feed.*;
 import com.nimbits.server.orm.*;
-import com.nimbits.server.relationship.*;
 
 import javax.servlet.http.*;
 import java.util.*;
@@ -74,7 +73,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         if (email != null) {
 
             List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(
-                    com.nimbits.server.user.UserServiceFactory.getServerInstance().getAnonUser(), //avoid infinite recursion
+                    com.nimbits.server.user.UserServiceFactory.getServerInstance().getAdmin(), //avoid infinite recursion
                     email.getValue(), UserEntity.class.getName());
 
 
@@ -129,13 +128,11 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     public User getAdmin() throws NimbitsException {
         String adminStr = "bsautner@gmail.com"; //SettingsServiceFactory.getInstance().getSetting(SettingType.admin);
 
-        User admin = com.nimbits.server.user.UserServiceFactory.getInstance().getUserByKey(adminStr);
+        User u = new UserModel();
+        u.setName(CommonFactoryLocator.getInstance().createName(adminStr, EntityType.user));
 
-        if (admin == null) {
-            return new UserModel(null);
-        }
-        admin.setAuthLevel(AuthLevel.admin);
-        return admin;
+        u.setAuthLevel(AuthLevel.admin);
+        return u;
     }
 
     @Override
@@ -209,7 +206,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
             User u = (User) result.get(0);
             u.setSecret(secret);
             EntityServiceFactory.getInstance().addUpdateEntity(u);
-            EmailServiceFactory.getInstance().sendEmail(internetAddress, "Your Nimbits Secret has been reset to: " + secret.toString(), "Reset Nimbits Secret");
+            EmailServiceFactory.getInstance().sendEmail(internetAddress, "Your Nimbits Secret has been reset to: " + secret, "Reset Nimbits Secret");
 
             return secret;
         }
@@ -329,10 +326,8 @@ public class UserServiceImpl extends RemoteServiceServlet implements
             final Entity aConnection = EntityModelFactory.createEntity(r, "", EntityType.userConnection, ProtectionLevel.onlyMe, acceptor.getKey(), acceptor.getKey(), UUID.randomUUID().toString());
             Connection ac = ConnectionFactory.createCreateConnection(aConnection);
             Connection rc = ConnectionFactory.createCreateConnection(rConnection);
-            Entity newAcceptorEntity = EntityServiceFactory.getInstance().addUpdateEntity(acceptor, ac);
-            Entity newRequestorEntity = EntityServiceFactory.getInstance().addUpdateEntity(requester,rc);
-           // RelationshipTransactionFactory.getInstance().createRelationship(newRequestorEntity, acceptor.getKey());
-           // RelationshipTransactionFactory.getInstance().createRelationship(newAcceptorEntity, requester.getKey());
+            EntityServiceFactory.getInstance().addUpdateEntity(acceptor, ac);
+            EntityServiceFactory.getInstance().addUpdateEntity(requester,rc);
             UserTransactionFactory.getInstance().updateConnectionRequest(key, requester, acceptor, accepted);
 
         }

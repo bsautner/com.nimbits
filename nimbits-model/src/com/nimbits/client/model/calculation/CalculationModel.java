@@ -22,7 +22,7 @@ public class CalculationModel extends EntityModel implements Serializable, Calcu
     private boolean enabled;
     private String trigger;
 
-
+    @SuppressWarnings("unused")
     protected CalculationModel() {
     }
 

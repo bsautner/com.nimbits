@@ -15,6 +15,7 @@ package com.nimbits.server.orm;
 
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.summary.*;
 
 import javax.jdo.annotations.*;
@@ -101,6 +102,19 @@ public class SummaryEntity extends EntityStore implements Summary {
 
     @Override
     public void setLastProcessed(final Date lastProcessed) {
-        this.lastProcessed = lastProcessed;
+        this.lastProcessed = new Date(lastProcessed.getTime());
+    }
+
+    @Override
+    public void update(final Entity update) throws NimbitsException {
+        super.update(update);
+        final Summary summary = (Summary)update;
+        this.entity = summary.getEntity();
+        this.target = summary.getTarget();
+        this.summaryType = summary.getSummaryType().getCode();
+        this.summaryIntervalMs = summary.getSummaryIntervalMs();
+        this.lastProcessed = summary.getLastProcessed();
+
+
     }
 }

@@ -13,23 +13,18 @@
 
 package com.nimbits.server.entity;
 
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointModelFactory;
-import com.nimbits.server.orm.PointEntity;
-import com.nimbits.server.point.PointServiceFactory;
-import com.nimbits.server.NimbitsServletTest;
-import org.junit.Test;
-
-import java.util.List;
-
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.server.*;
+import com.nimbits.server.orm.*;
+import com.nimbits.server.point.*;
 import static org.junit.Assert.*;
+import org.junit.*;
+
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner
@@ -77,9 +72,9 @@ public class EntityServiceTest extends NimbitsServletTest {
               user.getKey(), user.getKey());
         ///Entity e2 = EntityServiceFactory.getInstance().addUpdateEntity(model2);
         Point p1 = PointModelFactory.createPointModel( model);
-        PointServiceFactory.getInstance().addPoint(user, p1);
+        EntityServiceFactory.getInstance().addUpdateEntity(p1);
         Point p2 = PointModelFactory.createPointModel( model2);
-        PointServiceFactory.getInstance().addPoint(user, p2);
+        EntityServiceFactory.getInstance().addUpdateEntity(p2);
 
     }
     @Test

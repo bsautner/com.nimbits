@@ -37,4 +37,6 @@ public class CategoryEntity extends EntityStore implements Category {
         super(entity);
         createDate = new Date();
     }
+
+
 }

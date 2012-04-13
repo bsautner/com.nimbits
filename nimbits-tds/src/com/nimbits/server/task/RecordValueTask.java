@@ -67,21 +67,19 @@ public class RecordValueTask extends HttpServlet {
 
             if (!loopFlag) {
 
-            try {
+
 
                 CalculationServiceFactory.getInstance().processCalculations(u, point, value);
                 IntelligenceServiceFactory.getInstance().processIntelligence(u, point);
                 SubscriptionServiceFactory.getInstance().processSubscriptions(u,  point, value);
                 SummaryServiceFactory.getInstance().processSummaries(u, point);
-            } catch (NimbitsException e) {
-                LogHelper.logException(RecordValueTask.class, e);
+
+
+
             }
 
-
-        }
-
         } catch (NimbitsException e) {
-           LogHelper.logException(this.getClass(), e);
+            LogHelper.logException(this.getClass(), e);
         }
     }
 

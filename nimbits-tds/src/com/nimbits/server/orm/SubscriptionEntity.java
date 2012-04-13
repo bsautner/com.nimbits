@@ -53,19 +53,11 @@ public class SubscriptionEntity extends EntityStore implements Serializable, Sub
     @Persistent
     private Boolean enabled;
 
-    public SubscriptionEntity() {
+    @SuppressWarnings("unused")
+    protected SubscriptionEntity() {
     }
 
-    public SubscriptionEntity(Entity entity, String subscribedEntity, Integer notifyMethod, Integer subscriptionType, Double maxRepeat, Date lastSent, Boolean notifyFormatJson, Boolean enabled) throws NimbitsException {
-        super(entity);
-        this.subscribedEntity = subscribedEntity;
-        this.notifyMethod = notifyMethod;
-        this.subscriptionType = subscriptionType;
-        this.maxRepeat = maxRepeat;
-        this.lastSent = lastSent;
-        this.notifyFormatJson = notifyFormatJson;
-        this.enabled = enabled;
-    }
+
 
     public SubscriptionEntity(final Subscription subscription) throws NimbitsException {
         super(subscription);
@@ -102,7 +94,7 @@ public class SubscriptionEntity extends EntityStore implements Serializable, Sub
 
     @Override
     public void setLastSent(Date lastSent) {
-        this.lastSent = lastSent;
+        this.lastSent = new Date(lastSent.getTime());
     }
     @Override
     public String getSubscribedEntity() {
@@ -150,11 +142,11 @@ public class SubscriptionEntity extends EntityStore implements Serializable, Sub
     public void update(Entity update) throws NimbitsException {
         super.update(update);
         Subscription s = (Subscription)update;
-        notifyMethod = (s.getNotifyMethod().getCode());
-        subscriptionType = (s.getSubscriptionType().getCode());
-        lastSent = (s.getLastSent());
-        maxRepeat = (s.getMaxRepeat());
-        enabled = (s.getEnabled());
-        notifyFormatJson = (s.getNotifyFormatJson());
+        notifyMethod = s.getNotifyMethod().getCode();
+        subscriptionType = s.getSubscriptionType().getCode();
+        lastSent = s.getLastSent();
+        maxRepeat = s.getMaxRepeat();
+        enabled = s.getEnabled();
+        notifyFormatJson = s.getNotifyFormatJson();
     }
 }

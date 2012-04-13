@@ -16,12 +16,8 @@ package com.nimbits.server.user;
 import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.user.*;
-import com.nimbits.server.counter.*;
 import com.nimbits.server.logging.*;
-import com.nimbits.server.transactions.dao.counter.*;
 
 import javax.servlet.http.*;
 import java.io.*;
@@ -34,6 +30,8 @@ import java.util.*;
  * Time: 4:21 PM
  */
 public class UserReportService extends HttpServlet {
+
+    private static final int INT = 60;
 
     @Override
     public void doGet(final HttpServletRequest req,final HttpServletResponse resp) throws IOException {
@@ -63,7 +61,7 @@ public class UserReportService extends HttpServlet {
             out.println("</TR>");
 
             for (final User u : users) {
-                boolean returnedUser = !(u.getLastLoggedIn().getTime() - u.getDateCreated().getTime() > 1000 * 60);
+                boolean returnedUser = !(u.getLastLoggedIn().getTime() - u.getDateCreated().getTime() > 1000 * INT);
 
                 if (returnedUser) {
                     out.println("<TR  bgcolor=\"#006633\">");
@@ -77,8 +75,8 @@ public class UserReportService extends HttpServlet {
                 out.println("<TD>" + u.getLastLoggedIn() + "</TD>");
                 out.println("<TD>" + u.getDateCreated() + "</TD>");
 
-                ShardedCounter counter = getOrCreateCounter(u.getEmail());
-                out.println("<TD>" +counter.getCount() + "</TD>");
+              //  ShardedCounter counter = getOrCreateCounter(u.getEmail());
+                //out.println("<TD>" +counter.getCount() + "</TD>");
                 out.println("</TR>");
 
             }
@@ -86,8 +84,8 @@ public class UserReportService extends HttpServlet {
             out.println("</table>");
         }
         else {
-            EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
-            out.println("<h5>" + getOrCreateCounter(emailAddress).getCount() + "</h5>");
+          //  EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
+          //  out.println("<h5>" + getOrCreateCounter(emailAddress).getCount() + "</h5>");
 
             out.println();
         }
@@ -97,14 +95,5 @@ public class UserReportService extends HttpServlet {
 
         out.close();
     }
-    private static ShardedCounter getOrCreateCounter(CommonIdentifier email) {
-        CounterFactory factory = new CounterFactory();
-        ShardedCounter counter = factory.getCounter(email.getValue());
-        if (counter == null) {
-            counter = factory.createCounter(email.getValue());
-            counter.addShard();
 
-        }
-        return counter;
-    }
 }

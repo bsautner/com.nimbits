@@ -43,7 +43,7 @@ public class SummaryServiceImpl  extends RemoteServiceServlet implements Summary
 
     @Override
     public void processSummaries(User user, Point point) throws NimbitsException {
-        List<Summary> list = SummaryTransactionFactory.getInstance(user).readSummariesToEntity(point);
+        List<Summary> list = SummaryTransactionFactory.getInstance().readSummariesToEntity(point);
         for (Summary summary : list) {
             final Date now = new Date();
             final long d = new Date().getTime() - summary.getSummaryIntervalMs();

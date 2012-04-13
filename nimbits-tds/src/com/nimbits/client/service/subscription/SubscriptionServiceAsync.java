@@ -14,7 +14,6 @@
 package com.nimbits.client.service.subscription;
 
 import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.subscription.*;
@@ -26,11 +25,7 @@ import java.util.*;
 public interface SubscriptionServiceAsync {
     void processSubscriptions(final User user, final Point point, final Value v, AsyncCallback<Void> async);
 
-    void getSubscriptionsToPoint(Entity point, AsyncCallback<List<Subscription>> async) throws NimbitsException;
-
-    void updateSubscriptionLastSent(Subscription subscription, AsyncCallback<Void> async) throws NimbitsException;
-
-    void subscribe(Entity entity, Subscription subscription, EntityName name, AsyncCallback<Entity> async);
+    void getSubscriptionsToPoint(Entity point, AsyncCallback<List<Subscription>> async);
 
     void getSubscribedEntity(final Entity entity, AsyncCallback<Entity> async);
 

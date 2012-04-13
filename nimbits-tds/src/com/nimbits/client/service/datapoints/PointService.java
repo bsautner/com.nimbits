@@ -35,5 +35,5 @@ public interface PointService extends RemoteService {
 
     Point addPoint(EntityName name) throws NimbitsException;
 
-    void addPoint(User user, Point point) throws NimbitsException;
+
 }

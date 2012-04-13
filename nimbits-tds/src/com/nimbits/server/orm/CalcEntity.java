@@ -54,7 +54,7 @@ public class CalcEntity extends EntityStore implements Calculation {
     private String targetVar;
 
 
-
+    @SuppressWarnings("unused")
     protected CalcEntity() {
     }
 

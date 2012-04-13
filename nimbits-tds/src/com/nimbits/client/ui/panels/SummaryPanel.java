@@ -52,8 +52,8 @@ public class SummaryPanel extends NavigationEventProvider {
     private FormData formdata;
     private VerticalPanel vp;
 
-    private Entity entity;
-    private Summary summary;
+    private final Entity entity;
+
     public SummaryPanel(Entity entity) {
         this.entity = entity;
     }
@@ -61,40 +61,22 @@ public class SummaryPanel extends NavigationEventProvider {
     @Override
     protected void onRender(final Element parent, final int index) {
         super.onRender(parent, index);
-        // setLayout(new FillLayout());
         formdata = new FormData("-20");
         vp = new VerticalPanel();
         vp.setSpacing(10);
 
-        if (entity != null) {
-            if (entity.getEntityType().equals(EntityType.summary)) {
-                getExistingSummary();
-            }
-            else {
-                try {
-                    createForm();
-                    add(vp);
-                    doLayout();
-                } catch (NimbitsException e) {
-                    FeedbackHelper.showError(e);
-                }
-
-            }
-
-        }
-        else {
-            createNotFoundForm();
+        try {
+            createForm();
+            add(vp);
             doLayout();
+        } catch (NimbitsException e) {
+            FeedbackHelper.showError(e);
         }
 
 
+
     }
 
-    private void getExistingSummary() {
-
-        EntityServiceAsync service = GWT.create(EntityService.class);
-        service.getEntityByKey(entity.getKey(), EntityType.summary.getClassName(), new ReadSummaryAsyncCallback());
-    }
 
     private static ComboBox<SummaryTypeOption> summaryTypeOptionComboBox(final String title, final SummaryType selectedValue) {
         ComboBox<SummaryTypeOption> combo = new ComboBox<SummaryTypeOption>();
@@ -141,32 +123,6 @@ public class SummaryPanel extends NavigationEventProvider {
 
         final TextField<String> summaryName = new TextField<String>();
         summaryName.setFieldLabel("Summary Name");
-        final EntityName name;
-        try {
-            if (summary != null && entity.getEntityType().equals(EntityType.summary)) {
-                summaryName.setValue(entity.getName().getValue());
-            }
-            else {
-                summaryName.setValue(entity.getName().getValue() + " Average");
-            }
-
-            name = CommonFactoryLocator.getInstance().createName(summaryName.getValue(), EntityType.summary);
-        } catch (NimbitsException caught) {
-            FeedbackHelper.showError(caught);
-            return;
-        }
-
-        // int alertSelected = (subscription == null) ? SubscriptionNotifyMethod.none.getCode() : subscription.getAlertNotifyMethod().getCode();
-
-        SummaryType type =  summary == null ? SummaryType.average : summary.getSummaryType() ;
-        final ComboBox<SummaryTypeOption> typeCombo = summaryTypeOptionComboBox("Summary Type", type);
-
-
-
-
-
-
-
         final SpinnerField spinnerField = new SpinnerField();
         spinnerField.setIncrement(1d);
         spinnerField.getPropertyEditor().setType(Double.class);
@@ -174,68 +130,93 @@ public class SummaryPanel extends NavigationEventProvider {
         spinnerField.setFieldLabel("Timespan (Seconds)");
         spinnerField.setMinValue(1d);
         spinnerField.setMaxValue(MAX_VALUE);
-        spinnerField.setValue(summary == null ? SECONDS_IN_HOUR : summary.getSummaryIntervalSeconds());
-
-        String target = summary == null ? null : summary.getTarget();
-        final EntityCombo targetCombo = new EntityCombo(EntityType.point, target, UserMessages.MESSAGE_SELECT_POINT );
-        targetCombo.setFieldLabel("Target");
-
-        Button submit = new Button("Submit");
-        Button cancel = new Button("Cancel");
-        cancel.addSelectionListener(new CancelButtonEventSelectionListener());
-
-        submit.addSelectionListener(new SubmitEventSelectionListener(typeCombo, spinnerField, targetCombo, name));
-
-
-        Html h = new Html("<p>The summation process runs once an hour and can compute a summary value (such as an average) " +
-                "based on the interval you set here (i.e a setting of 8 will computer an 8 hour average every 8 hours) using the " +
-                "data recorded to the selected data point, storing the result in the select pre-existing target point.</p>");
-
-
-        Html pn = new Html("<p><b>Name: </b>" + entity.getName().getValue() + "</p>");
 
 
 
 
 
-        vp.add(h);
-        vp.add(pn);
-        simple.add(summaryName, formdata);
-        simple.add(typeCombo, formdata);
+        try {
+            SummaryType type;
+            String target = null;
 
-        simple.add(spinnerField, formdata);
-        simple.add(targetCombo, formdata);
-        LayoutContainer c = new LayoutContainer();
-        HBoxLayout layout = new HBoxLayout();
-        layout.setPadding(new Padding(5));
-        layout.setHBoxLayoutAlign(HBoxLayout.HBoxLayoutAlign.MIDDLE);
-        layout.setPack(BoxLayout.BoxLayoutPack.END);
-        c.setLayout(layout);
-        cancel.setWidth(100);
-        submit.setWidth(100);
-        HBoxLayoutData layoutData = new HBoxLayoutData(new Margins(0, 5, 0, 0));
-        c.add(cancel, layoutData);
-        c.add(submit, layoutData);
+            if (entity.getEntityType().equals(EntityType.summary)) {
+                Summary summary = (Summary)entity;
+                summaryName.setValue(entity.getName().getValue());
+                type = summary.getSummaryType();
+                spinnerField.setValue(summary.getSummaryIntervalSeconds());
+                target = summary.getTarget();
+            }
+            else {
+                summaryName.setValue(entity.getName().getValue() + " Average");
+                type = SummaryType.average;
+                spinnerField.setValue(SECONDS_IN_HOUR);
+
+            }
+
+            final EntityName name = CommonFactoryLocator.getInstance().createName(summaryName.getValue(), EntityType.summary);
+
+
+            // int alertSelected = (subscription == null) ? SubscriptionNotifyMethod.none.getCode() : subscription.getAlertNotifyMethod().getCode();
+
+
+            final ComboBox<SummaryTypeOption> typeCombo = summaryTypeOptionComboBox("Summary Type", type);
 
 
 
-        vp.add(simple);
-        vp.add(c);
+
+
+
+
+
+            final EntityCombo targetCombo = new EntityCombo(EntityType.point, target, UserMessages.MESSAGE_SELECT_POINT );
+            targetCombo.setFieldLabel("Target");
+
+            Button submit = new Button("Submit");
+            Button cancel = new Button("Cancel");
+            cancel.addSelectionListener(new CancelButtonEventSelectionListener());
+
+            submit.addSelectionListener(new SubmitEventSelectionListener(typeCombo, spinnerField, targetCombo, name));
+
+
+            Html h = new Html("<p>The summation process runs once an hour and can compute a summary value (such as an average) " +
+                    "based on the interval you set here (i.e a setting of 8 will computer an 8 hour average every 8 hours) using the " +
+                    "data recorded to the selected data point, storing the result in the select pre-existing target point.</p>");
+
+
+            Html pn = new Html("<p><b>Name: </b>" + entity.getName().getValue() + "</p>");
+
+
+
+
+
+            vp.add(h);
+            vp.add(pn);
+            simple.add(summaryName, formdata);
+            simple.add(typeCombo, formdata);
+
+            simple.add(spinnerField, formdata);
+            simple.add(targetCombo, formdata);
+            LayoutContainer c = new LayoutContainer();
+            HBoxLayout layout = new HBoxLayout();
+            layout.setPadding(new Padding(5));
+            layout.setHBoxLayoutAlign(HBoxLayout.HBoxLayoutAlign.MIDDLE);
+            layout.setPack(BoxLayout.BoxLayoutPack.END);
+            c.setLayout(layout);
+            cancel.setWidth(100);
+            submit.setWidth(100);
+            HBoxLayoutData layoutData = new HBoxLayoutData(new Margins(0, 5, 0, 0));
+            c.add(cancel, layoutData);
+            c.add(submit, layoutData);
+
+
+
+            vp.add(simple);
+            vp.add(c);
+        } catch (NimbitsException caught) {
+            FeedbackHelper.showError(caught);
+        }
     }
 
-    private void createNotFoundForm() {
-
-
-
-        Html h = new Html("<p>Sorry, the UUID provided for the point you're trying to subscribe too " +
-                " can not be located. It has either been deleted or marked as private by the point owner.");
-
-
-
-
-        vp.add(h);
-
-    }
 
     private static class SummaryTypeOption extends BaseModelData {
         SummaryType type;
@@ -305,9 +286,10 @@ public class SummaryPanel extends NavigationEventProvider {
 
             Summary update;
 
-            if (entity.getEntityType().equals(EntityType.summary) && summary != null) {
+            if (entity.getEntityType().equals(EntityType.summary)) {
 
                 try {
+                   Summary summary = (Summary)entity;
                     update = SummaryModelFactory.createSummary(entity,
                             summary.getEntity(), summary.getTarget(), summaryType,
                             spinnerField.getValue().intValue() * 1000, new Date());
@@ -340,31 +322,7 @@ public class SummaryPanel extends NavigationEventProvider {
         }
     }
 
-    private class ReadSummaryAsyncCallback implements AsyncCallback<List<Entity>> {
-        ReadSummaryAsyncCallback() {
-        }
 
-        @Override
-        public void onFailure(Throwable caught) {
-            GWT.log(caught.getMessage(), caught);
-        }
-
-        @Override
-        public void onSuccess(List<Entity> result) {
-            if (! result.isEmpty()) {
-                summary = (Summary) result.get(0);
-                try {
-                    createForm();
-                    add(vp);
-                    doLayout();
-                } catch (NimbitsException e) {
-                    FeedbackHelper.showError(e);
-                }
-            }
-
-
-        }
-    }
 
     private class CancelButtonEventSelectionListener extends SelectionListener<ButtonEvent> {
 

@@ -242,7 +242,7 @@ public class FeedPanel  extends LayoutContainer {
         FeedType type;
 
 
-        private FeedTypeOption(FeedType value) {
+        FeedTypeOption(FeedType value) {
             this.type = value;
             set(Parameters.value.getText(), value.getCode());
             set(Parameters.name.getText(), value.getText());
@@ -288,6 +288,9 @@ public class FeedPanel  extends LayoutContainer {
     }
 
     private class RefreshTimer extends Timer {
+        RefreshTimer() {
+        }
+
         @Override
         public void run() {
 

@@ -23,7 +23,6 @@ import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.feed.*;
 import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.relationship.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.service.feed.*;
@@ -31,7 +30,6 @@ import com.nimbits.server.common.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.logging.*;
-import com.nimbits.server.relationship.*;
 import com.nimbits.server.user.*;
 import com.nimbits.server.value.*;
 import org.apache.commons.lang3.exception.*;
@@ -61,7 +59,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
             return UserServiceFactory.getServerInstance().getHttpRequestUser(
                     this.getThreadLocalRequest());
         } catch (NimbitsException e) {
-            return null;
+            return UserServiceFactory.getServerInstance().getAnonUser();
         }
     }
 
@@ -275,19 +273,19 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
 
     private static User getFeedUser(final String relationshipEntityKey, final User loggedInUser) throws NimbitsException {
 
-        if (loggedInUser != null && loggedInUser.getKey().equals(relationshipEntityKey)) {
+       // if (loggedInUser != null && loggedInUser.getKey().equals(relationshipEntityKey)) {
 
             return loggedInUser;
-        }
-        else {
-            final Relationship r = RelationshipTransactionFactory.getInstance().getRelationship(relationshipEntityKey);
-
-            if (r != null) {
-                final String feedOwnersUUID = r.getForeignKey();
-                return UserServiceFactory.getInstance().getUserByKey(feedOwnersUUID);
-            }
-            throw new NimbitsException("Feed User not found");
-        }
+//        }
+//        else {
+//            final Relationship r = RelationshipTransactionFactory.getInstance().getRelationship(relationshipEntityKey);
+//
+//            if (r != null) {
+//                final String feedOwnersUUID = r.getForeignKey();
+//                return UserServiceFactory.getInstance().getUserByKey(feedOwnersUUID);
+//            }
+//            throw new NimbitsException("Feed User not found");
+//        }
 
     }
 

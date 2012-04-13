@@ -1,21 +1,18 @@
 package com.nimbits.server.task;
 
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.server.entity.EntityServiceFactory;
-import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.orm.PointEntity;
-import com.nimbits.server.value.RecordedValueServiceFactory;
-import com.nimbits.server.NimbitsServletTest;
-import org.junit.Test;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.server.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.gson.*;
+import com.nimbits.server.orm.*;
+import com.nimbits.server.value.*;
 import static org.junit.Assert.*;
+import org.junit.*;
+
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner

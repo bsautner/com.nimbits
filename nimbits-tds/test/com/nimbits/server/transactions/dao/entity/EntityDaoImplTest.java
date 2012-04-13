@@ -13,24 +13,16 @@
 
 package com.nimbits.server.transactions.dao.entity;
 
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointModelFactory;
-import com.nimbits.server.entity.EntityServiceFactory;
-import com.nimbits.server.entity.EntityTransactionFactory;
-import com.nimbits.server.orm.PointEntity;
-import com.nimbits.server.NimbitsServletTest;
-import static org.junit.Assert.assertFalse;
-import org.junit.Test;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.server.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.orm.*;
+import static org.junit.Assert.*;
+import org.junit.*;
 
 import java.util.*;
 

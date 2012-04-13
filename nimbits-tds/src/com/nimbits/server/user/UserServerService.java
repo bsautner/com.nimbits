@@ -14,7 +14,7 @@
 package com.nimbits.server.user;
 
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.user.*;
 
 import javax.servlet.http.*;

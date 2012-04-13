@@ -50,23 +50,11 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
     }
 
-
-
-
     @Override
     public Point addPoint(EntityName name) throws NimbitsException {
         Entity e = EntityModelFactory.createEntity(name, EntityType.point);
         return (Point) EntityServiceFactory.getInstance().addUpdateEntity(e);
     }
-
-    @Override
-    public void addPoint(User user, Point point) throws NimbitsException {
-        EntityServiceFactory.getInstance().addUpdateEntity(user, point);
-    }
-
-
-
-
 
     @Override
     public String exportData(final Map<EntityName, Entity> points, final ExportType exportType, final Map<EntityName, List<Value>> values) throws NimbitsException {
@@ -97,7 +85,6 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
 
     }
-
 
     @Override
     public List<Point> getIdlePoints() throws NimbitsException {

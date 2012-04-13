@@ -26,7 +26,7 @@ import java.util.Date;
  */
 public interface Value extends Serializable, Comparable<Value> {
 
-    long getId();
+
 
     String getNote();
 

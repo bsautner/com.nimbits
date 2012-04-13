@@ -27,13 +27,5 @@ import java.util.*;
  */
 public interface SummaryTransactions {
 
-    Summary addOrUpdateSummary(final Summary summary) throws NimbitsException;
-
-    Summary readSummary(final Entity entity) throws NimbitsException;
-
-    void updateLastProcessed(final Entity entity);
-
-    void deleteSummary(final Entity entity);
-
     List<Summary> readSummariesToEntity(Entity entity) throws NimbitsException;
 }

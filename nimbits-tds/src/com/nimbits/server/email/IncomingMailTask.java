@@ -24,7 +24,6 @@ import com.nimbits.server.entity.*;
 import com.nimbits.server.feed.*;
 import com.nimbits.server.logging.*;
 import com.nimbits.server.orm.*;
-import com.nimbits.server.user.*;
 import com.nimbits.server.value.*;
 
 import javax.servlet.http.*;

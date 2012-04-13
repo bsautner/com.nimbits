@@ -23,7 +23,7 @@ import java.util.*;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 @Deprecated
-public class RecordedValue implements Value {
+public class RecordedValue {
 
     /**
      *
@@ -78,22 +78,22 @@ public class RecordedValue implements Value {
     public RecordedValue() {
     }
 
-    @Override
+
     public long getId() {
         return id == null ? 0 : id;
     }
 
-    @Override
+
     public String getNote() {
         return note == null ? "" : note;
     }
 
-    @Override
+
     public double getLatitude() {
         return lat == null ? 0 : lat;
     }
 
-    @Override
+
     public double getLongitude() {
         return lng == null ? 0 : lng;
     }
@@ -103,7 +103,7 @@ public class RecordedValue implements Value {
         return null;  //auto generated
     }
 
-//    @Override
+//
 //    public long getPoint() {
 //        return pointFK;
 //    }
@@ -117,7 +117,7 @@ public class RecordedValue implements Value {
         return d == null ? 0.0 : d;
     }
 
-    @Override
+
     public String getValueWithNote() {
         StringBuilder sb = new StringBuilder();
         if ( this.d != Const.CONST_IGNORED_NUMBER_VALUE) {
@@ -135,7 +135,7 @@ public class RecordedValue implements Value {
         return timestamp;
     }
 
-    @Override
+
     public AlertType getAlertState() {
         return alertState == null ? AlertType.OK : alertState;
     }
@@ -145,13 +145,13 @@ public class RecordedValue implements Value {
         this.alertState = alertState;
     }
 
-    @Override
+
     public String getData() {
         return data == null ? "" : data;
     }
 
 
-    @Override
+
     public int compareTo(Value value) {
         return 0;
     }

@@ -146,12 +146,12 @@ public class IntelligenceEntity extends EntityStore implements Intelligence {
     public void update(Entity update) throws NimbitsException {
         super.update(update);
         Intelligence c = (Intelligence) update;
-        this.enabled = (c.getEnabled());
-        this.input = (c.getInput());
-        this.target = (c.getTarget());
-        this.nodeId = (c.getNodeId());
-        this.resultsInPlainText = (c.getResultsInPlainText());
-        this.resultTarget = (c.getResultTarget().getCode());
-        this.trigger = (c.getTrigger());
+        this.enabled = c.getEnabled();
+        this.input = c.getInput();
+        this.target = c.getTarget();
+        this.nodeId = c.getNodeId();
+        this.resultsInPlainText = c.getResultsInPlainText();
+        this.resultTarget = c.getResultTarget().getCode();
+        this.trigger = c.getTrigger();
     }
 }

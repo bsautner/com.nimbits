@@ -17,7 +17,6 @@ import com.nimbits.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.summary.*;
-import com.nimbits.client.model.user.*;
 import com.nimbits.server.orm.*;
 import com.nimbits.server.summary.*;
 
@@ -34,86 +33,11 @@ import java.util.*;
 @SuppressWarnings({"unchecked", "unused"})
 public class SummaryDaoImpl implements SummaryTransactions {
 
-    public SummaryDaoImpl(final User u) {
-
-    }
-
-    private static SummaryEntity readSummaryEntity(final PersistenceManager pm, final Entity entity) {
-
-         try {
-             return pm.getObjectById(SummaryEntity.class, entity.getKey());
-         }
-         catch (JDOObjectNotFoundException ex) {
-             return null;
-         }
+    public SummaryDaoImpl() {
 
     }
 
 
-    @Override
-    public Summary addOrUpdateSummary(final Summary summary) throws NimbitsException {
-
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-
-
-        try {
-            final SummaryEntity result = readSummaryEntity(pm, summary);
-            if (result != null) {
-
-                final Transaction tx = pm.currentTransaction();
-                tx.begin();
-                result.setLastProcessed(new Date());
-                result.setSummaryIntervalMs(summary.getSummaryIntervalMs());
-                result.setSummaryType(summary.getSummaryType());
-                tx.commit();
-                pm.flush();
-                return SummaryModelFactory.createSummary(result);
-            }
-            else {
-                final SummaryEntity s = new SummaryEntity(summary);
-                pm.makePersistent(s);
-                return SummaryModelFactory.createSummary(s);
-             }
-        }
-        finally {
-            pm.close();
-        }
-    }
-
-    @Override
-    public Summary readSummary(final Entity entity) throws NimbitsException {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-
-        try {
-
-            final SummaryEntity result = readSummaryEntity(pm, entity);
-            return result != null ? SummaryModelFactory.createSummary(result) : null;
-        }
-        finally {
-            pm.close();
-        }
-    }
-
-    @Override
-    public void updateLastProcessed(final Entity entity) {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-
-        try {
-            final SummaryEntity result = readSummaryEntity(pm, entity);
-            if (result != null) {
-
-                final Transaction tx = pm.currentTransaction();
-                tx.begin();
-                result.setLastProcessed(new Date());
-                tx.commit();
-                pm.flush();
-            }
-
-        }
-        finally {
-            pm.close();
-        }
-    }
     @Override
     public List<Summary> readSummariesToEntity(final Entity entity) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -130,20 +54,5 @@ public class SummaryDaoImpl implements SummaryTransactions {
             pm.close();
         }
     }
-    @Override
-    public void deleteSummary(final Entity entity) {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
 
-
-        try {
-
-            final SummaryEntity result = readSummaryEntity(pm, entity);
-            if (result != null) {
-            pm.deletePersistentAll(result);
-            }
-        }
-        finally {
-            pm.close();
-        }
-    }
 }

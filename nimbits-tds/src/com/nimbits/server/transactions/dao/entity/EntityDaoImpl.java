@@ -14,42 +14,29 @@
 package com.nimbits.server.transactions.dao.entity;
 
 
-import com.nimbits.PMF;
-import com.nimbits.client.constants.UserMessages;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.calculation.Calculation;
-import com.nimbits.client.model.calculation.CalculationModelFactory;
-import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.CategoryFactory;
-import com.nimbits.client.model.connection.Connection;
-import com.nimbits.client.model.connection.ConnectionFactory;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.file.File;
-import com.nimbits.client.model.file.FileFactory;
-import com.nimbits.client.model.intelligence.Intelligence;
-import com.nimbits.client.model.intelligence.IntelligenceModelFactory;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointModelFactory;
-import com.nimbits.client.model.relationship.Relationship;
-import com.nimbits.client.model.subscription.Subscription;
-import com.nimbits.client.model.subscription.SubscriptionFactory;
-import com.nimbits.client.model.summary.Summary;
-import com.nimbits.client.model.summary.SummaryModelFactory;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.user.UserModelFactory;
-import com.nimbits.client.model.xmpp.XmppResource;
-import com.nimbits.client.model.xmpp.XmppResourceFactory;
-import com.nimbits.server.entity.EntityTransactions;
-import com.nimbits.server.logging.LogHelper;
+import com.nimbits.*;
+import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.calculation.*;
+import com.nimbits.client.model.category.*;
+import com.nimbits.client.model.connection.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.file.*;
+import com.nimbits.client.model.intelligence.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.subscription.*;
+import com.nimbits.client.model.summary.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.xmpp.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.logging.*;
 import com.nimbits.server.orm.*;
-import com.nimbits.server.relationship.RelationshipTransactionFactory;
-import com.nimbits.shared.Utils;
+import com.nimbits.shared.*;
 
 import javax.jdo.*;
 import java.util.*;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 /**
  * Created by Benjamin Sautner
@@ -61,8 +48,8 @@ import java.util.logging.Logger;
 @SuppressWarnings({"unchecked", "FeatureEnvy"})
 public class EntityDaoImpl implements  EntityTransactions {
 
-    private static final int INT1 = 1024;
-    private static final int INT = INT1;
+    private static final int INT = 1024;
+
     private final User user;
     final Logger log = Logger.getLogger(EntityDaoImpl.class.getName());
 
@@ -160,8 +147,8 @@ public class EntityDaoImpl implements  EntityTransactions {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         log.info(entity.toString());
-
         try {
+
             final Entity retObj;
             if (Utils.isEmptyString(entity.getKey())) {
                 retObj =  addEntity(entity, pm);
@@ -188,6 +175,8 @@ public class EntityDaoImpl implements  EntityTransactions {
 
             }
             return retObj;
+        } catch (JDOObjectNotFoundException e) {
+            return addEntity(entity, pm);
         } catch (ClassNotFoundException e) {
             LogHelper.logException(this.getClass(), e);
             throw new NimbitsException(e);
@@ -301,7 +290,7 @@ public class EntityDaoImpl implements  EntityTransactions {
        // final Collection<String> connectedUserKeys = getConnectedUserKeys(connections, uuids, relationshipMap);
       // connectedUserKeys.addAll(connections.keySet());
         try{
-            final List<Entity> retObj = new ArrayList<Entity>(INT1);
+            final List<Entity> retObj = new ArrayList<Entity>(INT);
 
 
             for (final EntityType type : EntityType.values()) {

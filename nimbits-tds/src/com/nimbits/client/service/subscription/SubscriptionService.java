@@ -33,9 +33,6 @@ import java.util.*;
 public interface SubscriptionService  extends RemoteService {
     void processSubscriptions(final User u, final Point point, final Value v) throws NimbitsException;
     List<Subscription> getSubscriptionsToPoint(Entity point) throws NimbitsException;
-    void updateSubscriptionLastSent(Subscription subscription) throws NimbitsException;
-    Entity subscribe(Entity entity, Subscription subscription, EntityName name) throws NimbitsException;
-
     Entity getSubscribedEntity(final Entity entity) throws NimbitsException;
 
 }

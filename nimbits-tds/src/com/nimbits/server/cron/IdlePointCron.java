@@ -25,7 +25,6 @@ import com.nimbits.server.logging.*;
 import com.nimbits.server.orm.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.subscription.*;
-import com.nimbits.server.user.*;
 import com.nimbits.server.value.*;
 import org.apache.commons.lang3.exception.*;
 

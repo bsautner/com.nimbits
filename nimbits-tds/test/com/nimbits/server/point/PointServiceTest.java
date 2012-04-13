@@ -1,16 +1,15 @@
 package com.nimbits.server.point;
 
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.server.entity.EntityTransactionFactory;
-import com.nimbits.server.orm.PointEntity;
-import com.nimbits.server.NimbitsServletTest;
-import org.junit.Test;
-
-import static org.junit.Assert.assertNotNull;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.server.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.orm.*;
+import static org.junit.Assert.*;
+import org.junit.*;
 
 /**
  * Created by Benjamin Sautner

@@ -64,7 +64,7 @@ public class RecoveryServlet extends HttpServlet {
 
         for (EntityStore x : old) {
             if (! done.contains(x.getOwner() + x.getName())) {
-                if (x.getOwner().equals("bsautner@gmail.com")) {
+              //  if (x.getOwner().equals("bsautner@gmail.com")) {
                     Entity e = EntityModelFactory.createEntity(x.getName(), "", EntityType.userConnection,
                             ProtectionLevel.onlyMe, x.getOwner(), x.getOwner());
 
@@ -81,7 +81,7 @@ public class RecoveryServlet extends HttpServlet {
                     }
 
 
-                }
+             //   }
 
 
             }

@@ -35,10 +35,6 @@ public interface IntelligenceServiceAsync {
 
     void getHTMLContent(final String responseXML, AsyncCallback<Map<String, String>> async);
 
-    void getIntelligence(Entity entity, AsyncCallback<Intelligence> asyncCallback);
-
-    void addUpdateIntelligence(Entity entity, EntityName name, Intelligence update, AsyncCallback<Entity> error);
-
     void processIntelligence(User u, Entity point, AsyncCallback<Void> async);
 
     void processInput(final Intelligence intelligence, final Point targetPoint, final String processedInput, AsyncCallback<Value> async);

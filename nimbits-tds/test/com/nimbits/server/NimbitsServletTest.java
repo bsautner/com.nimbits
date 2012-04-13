@@ -13,44 +13,29 @@
 
 package com.nimbits.server;
 
-import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
-import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
-import com.google.appengine.tools.development.testing.LocalTaskQueueTestConfig;
-import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.service.datapoints.PointService;
-import com.nimbits.client.service.settings.SettingsService;
-import com.nimbits.server.api.impl.ValueServletImpl;
-import com.nimbits.server.entity.EntityServiceFactory;
-import com.nimbits.server.gson.GsonFactory;
+import com.google.appengine.tools.development.testing.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.category.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.service.datapoints.*;
+import com.nimbits.client.service.settings.*;
+import com.nimbits.server.api.impl.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.gson.*;
 import com.nimbits.server.orm.*;
-import com.nimbits.server.point.PointServiceFactory;
-import com.nimbits.server.settings.SettingTransactions;
-import com.nimbits.server.settings.SettingTransactionsFactory;
-import com.nimbits.server.settings.SettingsServiceFactory;
-import com.nimbits.server.user.UserServiceFactory;
-import com.nimbits.server.user.UserTransactionFactory;
-import com.nimbits.server.user.UserTransactions;
-import org.junit.After;
-import static org.junit.Assert.assertFalse;
-import org.junit.Before;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
+import com.nimbits.server.point.*;
+import com.nimbits.server.settings.*;
+import com.nimbits.server.user.*;
+import org.junit.*;
+import static org.junit.Assert.*;
+import org.springframework.mock.web.*;
 
 import java.util.*;
-
-import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by Benjamin Sautner

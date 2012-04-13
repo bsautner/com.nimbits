@@ -13,10 +13,8 @@
 
 package com.nimbits.server.subscription;
 
-import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.subscription.*;
 
 import java.util.*;

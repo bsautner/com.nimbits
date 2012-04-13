@@ -70,7 +70,6 @@ public class CalculationDAOImpl implements CalculationTransactions {
             final Query q = pm.newQuery(CalcEntity.class);
             q.setFilter("trigger == k");
             q.declareParameters("String k");
-            q.setRange(0,1);
             final Collection<Calculation> results = (Collection<Calculation>) q.execute(entity.getKey());
             pm.deletePersistentAll(results);
 

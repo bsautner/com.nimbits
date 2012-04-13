@@ -30,5 +30,5 @@ public interface PointServiceAsync {
     void getIdlePoints(final AsyncCallback<List<Point>> async) throws NimbitsException;
     void copyPoint(User u, Entity originalEntity, EntityName newName, AsyncCallback<Entity> async);
     void addPoint(EntityName name, AsyncCallback<Point> async) throws NimbitsException;
-    void addPoint(User user, Point point, AsyncCallback<Void> async);
+
 }

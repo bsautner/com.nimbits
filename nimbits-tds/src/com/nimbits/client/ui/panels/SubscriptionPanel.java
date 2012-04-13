@@ -32,7 +32,6 @@ import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.subscription.*;
 import com.nimbits.client.service.entity.*;
-import com.nimbits.client.service.subscription.*;
 import com.nimbits.client.ui.helper.*;
 
 import java.util.*;
@@ -45,17 +44,20 @@ import java.util.*;
  */
 public class SubscriptionPanel extends NavigationEventProvider {
 
-    FormData formdata;
-    VerticalPanel vp;
+    private static final int REPEAT_DEFAULT = 30;
+    private static final double MIN_VALUE = 5d;
+    private static final int WIDTH = 350;
+    private static final double MAX_VALUE = 1000d;
+    private FormData formdata;
+    private VerticalPanel vp;
+    private final Entity entity;
+    private final Map<SettingType, String> settings;
 
-    private Entity entity;
-    private Subscription subscription;
-    private Map<SettingType, String> settings;
     public SubscriptionPanel(Entity entity, Map<SettingType, String> settings) {
         this.entity = entity;
         this.settings = settings;
-
     }
+
     @Override
     protected void onRender(final Element parent, final int index) {
         super.onRender(parent, index);
@@ -64,65 +66,33 @@ public class SubscriptionPanel extends NavigationEventProvider {
         vp = new VerticalPanel();
         vp.setSpacing(10);
 
-        if (entity != null) {
-            if (entity.getEntityType().equals(EntityType.subscription)) {
-                getExistingSubscription();
-            }
-            else {
-                try {
-                    createForm();
-                } catch (NimbitsException e) {
-                    FeedbackHelper.showError(e);
-                }
-                add(vp);
-                doLayout();
-            }
 
-        }
-        else {
-            createNotFoundForm();
+        try {
+            createForm();
+            add(vp);
             doLayout();
+        } catch (NimbitsException e) {
+            FeedbackHelper.showError(e);
         }
 
 
-    }
-    private void getExistingSubscription() {
-        EntityServiceAsync service = GWT.create(EntityService.class);
-        service.getEntityByKey(entity.getKey(), entity.getEntityType().getClassName(), new AsyncCallback<List<Entity>>() {
-            @Override
-            public void onFailure(Throwable caught) {
-              FeedbackHelper.showError(caught);
-            }
 
-            @Override
-            public void onSuccess(List<Entity> result) {
-                subscription = (Subscription) result.get(0);
-                try {
-                    createForm();
-                } catch (NimbitsException e) {
-                    FeedbackHelper.showError(e);
-                }
-                add(vp);
-                doLayout();
-            }
-        });
+
+
 
     }
 
 
-    private ComboBox<SubscriptionTypeOption> subscriptionTypeOptionComboBox(final String title,final SubscriptionType selectedValue) {
+
+    private static ComboBox<SubscriptionTypeOption> subscriptionTypeOptionComboBox(final String title, final SubscriptionType selectedValue) {
         ComboBox<SubscriptionTypeOption> combo = new ComboBox<SubscriptionTypeOption>();
 
-        ArrayList<SubscriptionTypeOption> ops = new ArrayList<SubscriptionTypeOption>();
+        List<SubscriptionTypeOption> ops = new ArrayList<SubscriptionTypeOption>(SubscriptionType.values().length);
 
+        for (SubscriptionType type : SubscriptionType.values()) {
+            ops.add(new SubscriptionTypeOption(type));
+        }
 
-        ops.add(new SubscriptionTypeOption(SubscriptionType.none));
-        ops.add(new SubscriptionTypeOption(SubscriptionType.newValue));
-        ops.add(new SubscriptionTypeOption(SubscriptionType.anyAlert));
-        ops.add(new SubscriptionTypeOption(SubscriptionType.high));
-        ops.add(new SubscriptionTypeOption(SubscriptionType.low));
-        ops.add(new SubscriptionTypeOption(SubscriptionType.idle));
-        ops.add(new SubscriptionTypeOption(SubscriptionType.changed));
         ListStore<SubscriptionTypeOption> store = new ListStore<SubscriptionTypeOption>();
 
         store.add(ops);
@@ -143,9 +113,9 @@ public class SubscriptionPanel extends NavigationEventProvider {
     private ComboBox<DeliveryMethodOption> deliveryMethodComboBox(final String title, final SubscriptionNotifyMethod selectedValue) {
         ComboBox<DeliveryMethodOption> combo = new ComboBox<DeliveryMethodOption>();
 
-        ArrayList<DeliveryMethodOption> ops = new ArrayList<DeliveryMethodOption>();
+        List<DeliveryMethodOption> ops = new ArrayList<DeliveryMethodOption>(SubscriptionNotifyMethod.values().length);
 
-        DeliveryMethodOption none = (new DeliveryMethodOption(SubscriptionNotifyMethod.none));
+        DeliveryMethodOption none = new DeliveryMethodOption(SubscriptionNotifyMethod.none);
         ops.add(none);
         ops.add(new DeliveryMethodOption(SubscriptionNotifyMethod.email));
         ops.add(new DeliveryMethodOption(SubscriptionNotifyMethod.feed));
@@ -182,161 +152,77 @@ public class SubscriptionPanel extends NavigationEventProvider {
     private void createForm() throws NimbitsException {
 
         FormPanel simple = new FormPanel();
-        simple.setWidth(350);
+        simple.setWidth(WIDTH);
         simple.setFrame(true);
         simple.setHeaderVisible(false);
         simple.setBodyBorder(false);
         simple.setFrame(false);
+        final TextField<String> subscriptionName = new TextField<String>();
+        subscriptionName.setFieldLabel("Subscription Name");
 
+        final CheckBox machine = new CheckBox();
+        machine.setBoxLabel("Send message in JSON format");
+
+        final CheckBox enabled = new CheckBox();
+
+        final SpinnerField spinnerField = new SpinnerField();
+        spinnerField.setIncrement(MIN_VALUE);
+        spinnerField.getPropertyEditor().setType(Double.class);
+        spinnerField.getPropertyEditor().setFormat(NumberFormat.getFormat("00"));
+        spinnerField.setFieldLabel("Repeat limit (Minutes)");
+        spinnerField.setMinValue(MIN_VALUE);
+        spinnerField.setMaxValue(MAX_VALUE);
         // int alertSelected = (subscription == null) ? SubscriptionNotifyMethod.none.getCode() : subscription.getAlertNotifyMethod().getCode();
+        SubscriptionType type;
+        SubscriptionNotifyMethod method;
+        if (entity.getEntityType().equals(EntityType.subscription)) {
+            Subscription subscription = (Subscription) entity;
+            type= subscription.getSubscriptionType();
+            method =subscription.getNotifyMethod();
+            subscriptionName.setValue(entity.getName().getValue());
+            spinnerField.setValue(subscription.getMaxRepeat());
 
-        SubscriptionType type =  (subscription == null) ? SubscriptionType.none : subscription.getSubscriptionType() ;
-        SubscriptionNotifyMethod method = (subscription==null) ? SubscriptionNotifyMethod.none : subscription.getNotifyMethod();
+            machine.setValue(subscription.getNotifyFormatJson());
+            machine.setLabelSeparator("");
+            machine.setEnabled(subscription.getNotifyMethod().isJsonCompatible());
+            enabled.setValue(subscription.getEnabled());
+
+
+        }
+        else {
+            type = SubscriptionType.none;
+            method = SubscriptionNotifyMethod.none;
+            subscriptionName.setValue(entity.getName().getValue() + " Subscription");
+            spinnerField.setValue(REPEAT_DEFAULT);
+        }
+
         final ComboBox<SubscriptionTypeOption> typeCombo = subscriptionTypeOptionComboBox("When this happens", type);
         final ComboBox<DeliveryMethodOption> methodCombo = deliveryMethodComboBox("Relay Data To", method);
 
 
 
 
-        final TextField<String> subscriptionName = new TextField<String>();
-        subscriptionName.setFieldLabel("Subscription Name");
-        try {
-            if (subscription != null && entity.getEntityType().equals(EntityType.subscription)) {
-                subscriptionName.setValue(entity.getName().getValue());
-            }
-            else {
-                subscriptionName.setValue(entity.getName().getValue() + " Subscription");
-            }
-        }
-        catch (NimbitsException e) {
-            FeedbackHelper.showError(e);
-        }
-
-
-        final SpinnerField spinnerField = new SpinnerField();
-        spinnerField.setIncrement(5d);
-        spinnerField.getPropertyEditor().setType(Double.class);
-        spinnerField.getPropertyEditor().setFormat(NumberFormat.getFormat("00"));
-        spinnerField.setFieldLabel("Repeat limit (Minutes)");
-        spinnerField.setMinValue(5d);
-
-        spinnerField.setValue(subscription == null ? 30 : subscription.getMaxRepeat());
-        spinnerField.setMaxValue(1000d);
 
 
 
-        final CheckBox machine = new CheckBox();
-        machine.setBoxLabel("Send message in JSON format");
-        machine.setValue(subscription != null && subscription.getNotifyFormatJson());
-        machine.setLabelSeparator("");
-        if (subscription != null) {
-            machine.setEnabled(subscription.getNotifyMethod().isJsonCompatible());
-        }
-        final CheckBox enabled = new CheckBox();
-        enabled.setValue(subscription != null && subscription.getEnabled());
+
+
+
+
         enabled.setBoxLabel("Enabled");
         enabled.setLabelSeparator("");
 
         Button submit = new Button("Submit");
         Button cancel = new Button("Cancel");
-        cancel.addSelectionListener(new SelectionListener<ButtonEvent>() {
+        cancel.addSelectionListener(new CancelButtonEventSelectionListener());
 
-
-            @Override
-            public void componentSelected(ButtonEvent buttonEvent) {
-                try {
-                    notifyEntityAddedListener(null);
-                } catch (NimbitsException e) {
-                    FeedbackHelper.showError(e);
-                }
-            }
-        });
-
-        submit.addSelectionListener(new SelectionListener<ButtonEvent>() {
-            @Override
-            public void componentSelected(ButtonEvent buttonEvent) {
-                SubscriptionServiceAsync service = GWT.create(SubscriptionService.class);
-                final MessageBox box = MessageBox.wait("Progress",
-                        "Subscribing to your point", "loading...");
-                box.show();
-
-                SubscriptionNotifyMethod subscriptionNotifyMethod = methodCombo.getValue().getMethod();
-                SubscriptionType subscriptionType =  typeCombo.getValue().getMethod();
-
-
-                Subscription update = null;
-                try {
-                    if (entity.getEntityType().equals(EntityType.subscription) && subscription != null) {
-
-
-                        update = SubscriptionFactory.createSubscription(
-                                entity,
-                                subscription.getSubscribedEntity(),
-                                subscriptionType,
-                                subscriptionNotifyMethod,
-                                spinnerField.getValue().doubleValue(),
-                                new Date(0),
-                                machine.getValue(),
-                                enabled.getValue());
-
-                    }
-                    else {
-
-                        Entity newEntity = EntityModelFactory.createEntity(entity.getName(), "", EntityType.subscription
-                        , ProtectionLevel.onlyMe, entity.getParent(), "");
-                        update = SubscriptionFactory.createSubscription(
-                                newEntity,
-                                entity.getKey(),
-                                subscriptionType,
-                                subscriptionNotifyMethod,
-                                spinnerField.getValue().doubleValue(),
-                                new Date(0),
-                                machine.getValue(),
-                                enabled.getValue());
-                    }
-                } catch (NimbitsException e) {
-                   FeedbackHelper.showError(e);
-                }
-                EntityName name = null;
-                try {
-                    name = CommonFactoryLocator.getInstance().createName(subscriptionName.getValue(), EntityType.subscription);
-                } catch (NimbitsException caught) {
-                    FeedbackHelper.showError(caught);
-                    return;
-                }
-                service.subscribe(entity, update ,name, new AsyncCallback<Entity>() {
-                    @Override
-                    public void onFailure(Throwable e) {
-                        GWT.log(e.getMessage(), e);
-                        box.close();
-                        MessageBox.alert("Error", e.getMessage(), null);
-                        try {
-                            notifyEntityAddedListener(null);
-                        } catch (NimbitsException e1) {
-                            FeedbackHelper.showError(e);
-                        }
-                    }
-
-                    @Override
-                    public void onSuccess(final Entity result) {
-                        box.close();
-
-                        try {
-                            notifyEntityAddedListener(result);
-                        } catch (NimbitsException e) {
-                            FeedbackHelper.showError(e);
-                        }
-                    }
-                });
-
-            }
-        });
+        submit.addSelectionListener(new SubmitButtonEventSelectionListener(methodCombo, typeCombo, subscriptionName, enabled, machine, spinnerField));
 
 
         Html h = new Html("<p>You can subscribe to this data point to receive alerts when it " +
                 "receives new data or goes into an alert state (high, low or idle). Select how " +
                 "you would like to be notified when this data point receives new data.</p> " +
-                "<br><p><b>Be Careful!</b> Subscribing any new value on a data point that is updated at a " +
+                "<br><p><b>Be Careful!</b> Subscribing to any new value on a data point that is updated at a " +
                 "high frequency can result in hundreds of emails or posts to your social network! Select a high " +
                 "update frequency to limit the number of alerts you receive</p>" +
                 "<br><p> In order to receive facebook, twitter and IM message, " +
@@ -346,19 +232,7 @@ public class SubscriptionPanel extends NavigationEventProvider {
         Html pn = new Html("<p><b>Name: </b>" + entity.getName().getValue() + "</p>");
 
 
-        methodCombo.addSelectionChangedListener(new SelectionChangedListener<DeliveryMethodOption>() {
-            @Override
-            public void selectionChanged(SelectionChangedEvent<DeliveryMethodOption> deliveryMethodOptionSelectionChangedEvent) {
-                setMachineEnabled(deliveryMethodOptionSelectionChangedEvent.getSelectedItem().getMethod());
-            }
-
-            private void setMachineEnabled(SubscriptionNotifyMethod method) {
-                machine.setEnabled(method.isJsonCompatible());
-                if (!method.isJsonCompatible()) {
-                    machine.setValue(false);
-                }
-            }
-        });
+        methodCombo.addSelectionChangedListener(new DeliveryMethodOptionSelectionChangedListener(machine));
 
 
         vp.add(h);
@@ -388,26 +262,12 @@ public class SubscriptionPanel extends NavigationEventProvider {
         vp.add(c);
     }
 
-    private void createNotFoundForm() {
-
-
-
-        Html h = new Html("<p>Sorry, the UUID provided for the point you're trying to subscribe too " +
-                " can not be located. It has either been deleted or marked as private by the point owner.");
-
-
-
-
-        vp.add(h);
-
-    }
-
 
     private static class DeliveryMethodOption extends BaseModelData {
         SubscriptionNotifyMethod method;
 
 
-        private DeliveryMethodOption(SubscriptionNotifyMethod value) {
+        DeliveryMethodOption(SubscriptionNotifyMethod value) {
             this.method = value;
             set(Parameters.value.getText(), value.getCode());
             set(Parameters.name.getText(), value.getText());
@@ -418,11 +278,31 @@ public class SubscriptionPanel extends NavigationEventProvider {
         }
     }
 
-    private class SubscriptionTypeOption extends BaseModelData {
+    private static class DeliveryMethodOptionSelectionChangedListener extends SelectionChangedListener<DeliveryMethodOption> {
+        private final CheckBox machine;
+
+        DeliveryMethodOptionSelectionChangedListener(CheckBox machine) {
+            this.machine = machine;
+        }
+
+        @Override
+        public void selectionChanged(SelectionChangedEvent<DeliveryMethodOption> deliveryMethodOptionSelectionChangedEvent) {
+            setMachineEnabled(deliveryMethodOptionSelectionChangedEvent.getSelectedItem().getMethod());
+        }
+
+        private void setMachineEnabled(SubscriptionNotifyMethod method) {
+            machine.setEnabled(method.isJsonCompatible());
+            if (!method.isJsonCompatible()) {
+                machine.setValue(false);
+            }
+        }
+    }
+
+    private static class SubscriptionTypeOption extends BaseModelData {
         SubscriptionType type;
 
 
-        public SubscriptionTypeOption(SubscriptionType value) {
+        SubscriptionTypeOption(SubscriptionType value) {
             this.type = value;
             set(Parameters.value.getText(), value.getCode());
             set(Parameters.name.getText(), value.getText());
@@ -433,4 +313,116 @@ public class SubscriptionPanel extends NavigationEventProvider {
         }
     }
 
+    private class UpdateEntityAsyncCallback implements AsyncCallback<Entity> {
+
+        final MessageBox box;
+        UpdateEntityAsyncCallback(final MessageBox box) {
+            this.box = box;
+        }
+
+        @Override
+        public void onFailure(Throwable caught) {
+            box.close();
+            FeedbackHelper.showError(caught);
+        }
+
+        @Override
+        public void onSuccess(Entity result) {
+            try {
+                box.close();
+                notifyEntityAddedListener(result);
+            } catch (NimbitsException e) {
+                FeedbackHelper.showError(e);
+            }
+        }
+    }
+
+    private class CancelButtonEventSelectionListener extends SelectionListener<ButtonEvent> {
+
+
+        CancelButtonEventSelectionListener() {
+        }
+
+        @Override
+        public void componentSelected(ButtonEvent buttonEvent) {
+            try {
+                notifyEntityAddedListener(null);
+            } catch (NimbitsException e) {
+                FeedbackHelper.showError(e);
+            }
+        }
+    }
+
+    private class SubmitButtonEventSelectionListener extends SelectionListener<ButtonEvent> {
+        private final ComboBox<DeliveryMethodOption> methodCombo;
+        private final ComboBox<SubscriptionTypeOption> typeCombo;
+        private final TextField<String> subscriptionName;
+        private final CheckBox enabled;
+        private final CheckBox machine;
+        private final SpinnerField spinnerField;
+
+        SubmitButtonEventSelectionListener(ComboBox<DeliveryMethodOption> methodCombo, ComboBox<SubscriptionTypeOption> typeCombo, TextField<String> subscriptionName, CheckBox enabled, CheckBox machine, SpinnerField spinnerField) {
+            this.methodCombo = methodCombo;
+            this.typeCombo = typeCombo;
+            this.subscriptionName = subscriptionName;
+            this.enabled = enabled;
+            this.machine = machine;
+            this.spinnerField = spinnerField;
+        }
+
+        @Override
+        public void componentSelected(ButtonEvent buttonEvent) {
+
+            final MessageBox box = MessageBox.wait("Progress",
+                    "Subscribing to your point", "loading...");
+            box.show();
+
+            SubscriptionNotifyMethod subscriptionNotifyMethod = methodCombo.getValue().getMethod();
+            SubscriptionType subscriptionType =  typeCombo.getValue().getMethod();
+            try {
+                EntityName name = CommonFactoryLocator.getInstance().createName(subscriptionName.getValue(), EntityType.subscription);
+
+
+                final Subscription update;
+
+                if (entity.getEntityType().equals(EntityType.subscription)) {
+
+                    update = (Subscription) entity;
+                    update.setName(name);
+                    update.setEnabled(enabled.getValue());
+                    update.setSubscriptionType(subscriptionType);
+                    update.setNotifyMethod(subscriptionNotifyMethod);
+                    update.setNotifyFormatJson(machine.getValue());
+                    update.setMaxRepeat(spinnerField.getValue().doubleValue());
+                    update.setLastSent(new Date());
+
+
+                }
+                else {
+                    String parent;
+                    parent = entity.isReadOnly() ? "" : entity.getKey();
+
+                    Entity newEntity = EntityModelFactory.createEntity(name, "", EntityType.subscription
+                            , ProtectionLevel.onlyMe, parent, entity.getOwner());
+                    update = SubscriptionFactory.createSubscription(
+                            newEntity,
+                            entity.getKey(),
+                            subscriptionType,
+                            subscriptionNotifyMethod,
+                            spinnerField.getValue().doubleValue(),
+                            new Date(0),
+                            machine.getValue(),
+                            enabled.getValue());
+                }
+
+                EntityServiceAsync service = GWT.create(EntityService.class);
+                service.addUpdateEntity(update, new UpdateEntityAsyncCallback(box));
+
+
+
+            } catch (NimbitsException e) {
+                FeedbackHelper.showError(e);
+            }
+        }
+    }
 }

@@ -139,10 +139,6 @@ public class UserEntity extends EntityStore implements User {
         return AuthLevel.get(this.authLevel).equals(AuthLevel.restricted);
     }
 
-    //    @Override
-//    public String getKey() {
-//        return key.getName();
-//    }
     @Override
     public EmailAddress getEmail() throws NimbitsException {
         return CommonFactoryLocator.getInstance().createEmailAddress(key.getName());
@@ -152,11 +148,19 @@ public class UserEntity extends EntityStore implements User {
         return facebookID == null ? 0 : facebookID;
     }
 
-    public void setDateCreated(Date dateCreated) {
-        this.dateCreated = new Date(dateCreated.getTime());
+    @Override
+    public void update(Entity update) throws NimbitsException {
+        super.update(update);
+        User u = (User)update;
+        this.lastLoggedIn = u.getLastLoggedIn();
+        this.facebookID = u.getFacebookID();
+        this.facebookToken = u.getFacebookToken();
+        this.secret = u.getSecret();
+        this.twitterToken = u.getTwitterToken();
+        this.twitterTokenSecret = u.getTwitterTokenSecret();
+
+
     }
-
-
 
 
 }

@@ -263,9 +263,9 @@ public class PointEntity extends EntityStore implements Point {
 
 
     @Override
-    public void update(Entity update) throws NimbitsException {
+    public void update(final Entity update) throws NimbitsException {
         super.update(update);
-        Point p = (Point) update;
+        final Point p = (Point) update;
         this.highAlarm = p.getHighAlarm();
         this.lowAlarm = p.getLowAlarm();
         this.unit = p.getUnit();

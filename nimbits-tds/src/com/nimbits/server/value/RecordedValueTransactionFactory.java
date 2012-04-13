@@ -14,13 +14,12 @@
 package com.nimbits.server.value;
 
 import com.nimbits.client.model.entity.*;
-import com.nimbits.server.admin.legacy.orm.*;
 import com.nimbits.server.transactions.dao.value.*;
 import com.nimbits.server.transactions.memcache.value.*;
 
 public class RecordedValueTransactionFactory {
 
-    protected RecordedValueTransactionFactory() {
+    private RecordedValueTransactionFactory() {
     }
 
     public static RecordedValueTransactions getInstance(final Entity point) {
@@ -35,10 +34,10 @@ public class RecordedValueTransactionFactory {
 
     }
 
-    public static RecordedValueTransactions getLegacyInstance(final DataPoint point) {
-
-        return null;//new RecordedValueDAOImpl(point);
-
-    }
+//    public static RecordedValueTransactions getLegacyInstance(final DataPoint point) {
+//
+//        return null;//new RecordedValueDAOImpl(point);
+//
+//    }
 
 }

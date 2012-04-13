@@ -28,7 +28,6 @@ import com.nimbits.client.service.twitter.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.orm.*;
 import com.nimbits.server.settings.*;
-import com.nimbits.server.user.*;
 import twitter4j.*;
 import twitter4j.auth.*;
 import twitter4j.conf.*;

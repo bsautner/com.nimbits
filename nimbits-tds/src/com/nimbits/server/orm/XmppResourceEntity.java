@@ -14,6 +14,7 @@
 package com.nimbits.server.orm;
 
 import com.nimbits.client.exception.*;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.xmpp.*;
 
 import javax.jdo.annotations.*;
@@ -43,5 +44,12 @@ public class XmppResourceEntity extends EntityStore implements XmppResource {
     @Override
     public String getEntity() {
         return entity;
+    }
+
+    @Override
+    public void update(Entity update) throws NimbitsException {
+        super.update(update);
+        XmppResource resource = (XmppResource) update;
+        this.entity = resource.getEntity();
     }
 }

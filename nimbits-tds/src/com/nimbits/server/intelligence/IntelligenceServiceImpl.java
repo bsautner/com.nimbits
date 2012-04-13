@@ -50,6 +50,8 @@ import java.util.logging.*;
  */
 public class IntelligenceServiceImpl extends RemoteServiceServlet implements IntelligenceService {
     private static final Logger log = Logger.getLogger(IntelligenceServiceImpl.class.getName());
+    private static final int INT = 1014;
+
     private User getUser() {
         try {
             return UserServiceFactory.getServerInstance().getHttpRequestUser(
@@ -59,7 +61,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
         }
     }
 
-    private String key() {
+    private static String key() {
         try {
             return SettingsServiceFactory.getInstance().getSetting(SettingType.wolframKey);
         } catch (NimbitsException e) {
@@ -69,12 +71,11 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
     }
 
-    private String getTextFromResponse(final String responseXML) {
-        DocumentBuilder db;
+    private static String getTextFromResponse(final String responseXML) {
         String retVal = "";
 
         try {
-            db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             InputSource is = new InputSource();
             is.setCharacterStream(new StringReader(responseXML));
             Document doc = db.parse(is);
@@ -95,13 +96,13 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
         return retVal;
     }
 
+    @Override
     public Map<String, String> getHTMLContent(final String responseXML) {
-        Map<String, String> retObj = new HashMap<String, String>();
-        DocumentBuilder db;
+        Map<String, String> retObj = new HashMap<String, String>(INT);
         try {
 
 
-            db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             InputSource is = new InputSource();
             is.setCharacterStream(new StringReader(responseXML));
             Document doc = db.parse(is);
@@ -110,11 +111,11 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
             NodeList x = queryResult.getChildNodes();
 
             for (int i = 0; i < x.getLength(); i++) {
-                String name = x.item(i).getNodeName();
-                if (name.equals("pod")) {
-                    name += i;
+                StringBuilder name = new StringBuilder(x.item(i).getNodeName());
+                if (name.toString().equals("pod")) {
+                    name.append(i);
                 }
-                retObj.put(name, x.item(i).getTextContent());
+                retObj.put(name.toString(), x.item(i).getTextContent());
 
 
             }
@@ -178,57 +179,6 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
         return addDataToInput(u, i.getInput());
     }
 
-    @Override
-    public Intelligence getIntelligence(Entity entity) throws NimbitsException {
-        return (Intelligence) EntityTransactionFactory.getInstance(getUser()).getEntityByKey(entity.getKey(), IntelligenceEntity.class).get(0);
-        //return IntelligenceServiceFactory.getDaoInstance().getIntelligence(entity);
-    }
-
-    @Override
-    public Entity addUpdateIntelligence(final Entity entity, final EntityName name, final Intelligence update) throws NimbitsException {
-
-        Entity retObj = null;
-        User u = getUser();
-        if (entity == null) {
-
-
-            Entity e = EntityModelFactory.createEntity(name, "", EntityType.intelligence, ProtectionLevel.onlyMe,
-                    update.getTrigger(), u.getKey(), UUID.randomUUID().toString());
-
-            Intelligence c = IntelligenceModelFactory.createIntelligenceModel(e,
-                    update.getEnabled(), update.getResultTarget(), update.getTarget(), update.getInput(), update.getNodeId(),
-                    update.getResultsInPlainText(), update.getTrigger());
-            EntityServiceFactory.getInstance().addUpdateEntity(c);
-
-
-
-        }
-        else if (entity.getEntityType().equals(EntityType.point) && Utils.isEmptyString(update.getKey())) {
-
-            Entity e = EntityModelFactory.createEntity(name, "", EntityType.intelligence, ProtectionLevel.onlyMe,
-                    entity.getKey(), u.getKey(), UUID.randomUUID().toString());
-
-            Intelligence c = IntelligenceModelFactory.createIntelligenceModel(e,
-                    update.getEnabled(), update.getResultTarget(), update.getTarget(), update.getInput(), update.getNodeId(),
-                    update.getResultsInPlainText(), update.getTrigger());
-
-            EntityServiceFactory.getInstance().addUpdateEntity(c);
-
-
-        }
-        else if (entity.getEntityType().equals(EntityType.intelligence)) {
-            entity.setName(name);
-
-            EntityServiceFactory.getInstance().addUpdateEntity(entity);
-            return EntityServiceFactory.getInstance().addUpdateEntity(entity);
-
-
-        }
-
-        return retObj;
-
-
-    }
 
     @Override
     public void processIntelligence(final User u, final Entity point) throws NimbitsException {
@@ -292,7 +242,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
 
                    // Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName,EntityType.point);
-                    Point inputPoint = (Point) EntityServiceFactory.getInstance().getEntityByName(u, pointName,PointEntity.class.getName()).get(0);;
+                    Point inputPoint = (Point) EntityServiceFactory.getInstance().getEntityByName(u, pointName, PointEntity.class.getName()).get(0);;
 
                     // inputPoint= PointServiceFactory.getInstance().getPointByKey(e.getKey());
                    // inputPoint = (Point) EntityServiceFactory.getInstance().getEntityByKey(e.getKey(), PointEntity.class.getName());

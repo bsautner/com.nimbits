@@ -103,13 +103,8 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
 
     @Override
     public Entity addUpdateEntity(final Entity entity) throws NimbitsException {
-        final User u;
-        if (entity.getEntityType().equals(EntityType.user)) {
-            u = (User) entity;
-        }
-        else {
-            u = getUser();
-        }
+        final User u = entity.getEntityType().equals(EntityType.user) ? (User) entity : getUser();
+
         if (Utils.isEmptyString(entity.getOwner())) {
             entity.setOwner(u.getKey());
         }

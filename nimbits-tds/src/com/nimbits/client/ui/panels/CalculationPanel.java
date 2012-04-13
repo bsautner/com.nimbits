@@ -13,37 +13,33 @@
 
 package com.nimbits.client.ui.panels;
 
-import com.extjs.gxt.ui.client.event.ButtonEvent;
-import com.extjs.gxt.ui.client.event.SelectionListener;
-import com.extjs.gxt.ui.client.util.Margins;
-import com.extjs.gxt.ui.client.util.Padding;
+import com.extjs.gxt.ui.client.event.*;
+import com.extjs.gxt.ui.client.util.*;
 import com.extjs.gxt.ui.client.widget.*;
+import com.extjs.gxt.ui.client.widget.VerticalPanel;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.CheckBox;
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
-import com.extjs.gxt.ui.client.widget.form.TextField;
+import com.extjs.gxt.ui.client.widget.form.*;
 import com.extjs.gxt.ui.client.widget.layout.*;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.nimbits.client.constants.UserMessages;
+import com.google.gwt.core.client.*;
+import com.google.gwt.user.client.*;
+import com.google.gwt.user.client.rpc.*;
+import com.google.gwt.user.client.ui.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.calculation.Calculation;
-import com.nimbits.client.model.calculation.CalculationModelFactory;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.calculation.*;
+import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.service.calculation.CalculationService;
-import com.nimbits.client.service.calculation.CalculationServiceAsync;
-import com.nimbits.client.service.entity.EntityService;
-import com.nimbits.client.service.entity.EntityServiceAsync;
-import com.nimbits.client.ui.controls.EntityCombo;
-import com.nimbits.client.ui.helper.FeedbackHelper;
-import com.nimbits.client.ui.icons.Icons;
-import java.util.regex.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.client.service.calculation.*;
+import com.nimbits.client.service.entity.*;
+import com.nimbits.client.ui.controls.*;
+import com.nimbits.client.ui.helper.*;
+import com.nimbits.client.ui.icons.*;
+
 
 
 /**
@@ -55,7 +51,7 @@ import java.util.regex.*;
 public class CalculationPanel extends NavigationEventProvider {
 
     private static final int WIDTH = 350;
-    private static final Pattern COMPILE = Pattern.compile("/");
+
     private FormData formdata;
     private VerticalPanel vp;
     private Entity entity;
@@ -77,11 +73,7 @@ public class CalculationPanel extends NavigationEventProvider {
         vp = new VerticalPanel();
         vp.setSpacing(10);
 
-     //   if (entity.getEntityType().equals(EntityType.calculation)) {
-            //getExisting();
-         //   doLayout();
- //       }
-    //    else {
+
             try {
                 createForm();
                 add(vp);
@@ -90,16 +82,9 @@ public class CalculationPanel extends NavigationEventProvider {
                 FeedbackHelper.showError(e);
             }
 
-      //  }
+
 
     }
-
-//    private void getExisting() {
-//        EntityServiceAsync service = GWT.create(EntityService.class);
-//        service.getEntityByKey(entity.getKey(), EntityType.calculation.getClassName(), new GetExistingCalcAsyncCallback());
-//
-//
-//    }
 
     private void createForm() throws NimbitsException {
 
@@ -127,10 +112,7 @@ public class CalculationPanel extends NavigationEventProvider {
             targetKey = ((Calculation)entity).getTarget();
             enabled.setValue(((Calculation)entity).getEnabled());
             formula.setValue(((Calculation)entity).getFormula());
-//            pn.setHtml("<p><b>Trigger Point Name: </b>" + COMPILE.split(entity.getKey())[1] + "</p>");
-          //  final EntityServiceAsync svc = GWT.create(EntityService.class);
-
-           // svc.getEntityByKey(calculation.getTrigger(), EntityType.point.getClassName(), new GetEntityAsyncCallback(pn));
+            pn.setHtml("<p><b>Trigger Point Name: </b>" +  entity.getKey() + "</p>");
 
         } else {
             nameField.setValue(entity.getName().getValue() + " Calc");

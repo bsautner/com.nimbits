@@ -13,10 +13,9 @@
 
 package com.nimbits.client.service;
 
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.LoginInfo;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.*;
 
 @RemoteServiceRelativePath("login")
 public interface LoginService extends RemoteService {

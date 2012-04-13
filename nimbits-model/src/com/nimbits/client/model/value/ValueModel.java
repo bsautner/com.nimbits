@@ -26,7 +26,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
      *
      */
 
-    long id;
+
     double lt;
     double lg;
     double d;
@@ -46,7 +46,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
 
 
     public ValueModel(final Value v) {
-        this.id = v.getId();
+
         this.lt = v.getLatitude();
         this.lg = v.getLongitude();
         this.d = v.getDoubleValue();
@@ -58,7 +58,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
     }
 
     public ValueModel(final Value v, final String dataOverride) {
-        this.id = v.getId();
+
         this.lt = v.getLatitude();
         this.lg = v.getLongitude();
         this.d = v.getDoubleValue();
@@ -76,7 +76,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
                       final String note,
                       final String data,
                       final AlertType alert) {
-        this.id = 0;
+
         this.lt = lat;
         this.lg = lng;
         this.d = d;
@@ -87,12 +87,6 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
     }
 
 
-
-    //
-    @Override
-    public long getId() {
-        return id;
-    }
 
 
     @Override

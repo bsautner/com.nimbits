@@ -47,7 +47,7 @@ public class ShardedCounter {
 
     public ShardedCounter(final String counterName) {
         this.counterName = counterName;
-        cache = null;
+       // cache = null;
         try {
             cache = CacheManager.getInstance().getCacheFactory().createCache(
                     Collections.emptyMap());

@@ -13,11 +13,10 @@
 
 package com.nimbits.server.calculation;
 
-import com.nimbits.client.exception.NimbitsException;
-import org.apache.commons.lang3.StringUtils;
+import com.nimbits.client.exception.*;
+import org.apache.commons.lang3.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 @SuppressWarnings("unchecked")
 public class MathEvaluatorImpl implements MathEvaluator {
     private static Operator[] operators = null;

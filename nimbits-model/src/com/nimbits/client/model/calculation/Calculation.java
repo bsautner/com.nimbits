@@ -27,20 +27,20 @@ public interface Calculation extends Entity, Serializable {
 
     String getZ();
 
-    void setEnabled(boolean b);
+    void setEnabled(final boolean b);
 
     @Override
-    void update(Entity update) throws NimbitsException;
+    void update(final Entity update) throws NimbitsException;
 
-    void setZ(String z);
+    void setZ(final String z);
 
-    void setTrigger(String trigger);
+    void setTrigger(final String trigger);
 
-    void setY(String y);
+    void setY(final String y);
 
-    void setX(String x);
+    void setX(final String x);
 
-    void setFormula(String formula);
+    void setFormula(final String formula);
 
-    void setTarget(String target);
+    void setTarget(final String target);
 }

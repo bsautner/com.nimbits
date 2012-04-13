@@ -19,7 +19,6 @@ import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.server.api.*;
@@ -38,7 +37,6 @@ import java.util.*;
 
 public class ValueServletImpl extends ApiServlet {
 
-    private static final long serialVersionUID = 1L;
 
 
     @Override
@@ -46,11 +44,8 @@ public class ValueServletImpl extends ApiServlet {
 
         try {
             processPost(req, resp);
-
         } catch (NimbitsException e) {
-            if (user != null) {
-                FeedServiceFactory.getInstance().postToFeed(user, e);
-            }
+            LogHelper.logException(this.getClass(), e);
         }
 
     }
@@ -59,10 +54,8 @@ public class ValueServletImpl extends ApiServlet {
 
         try {
             processGet(req, resp);
-
         } catch (NimbitsException e) {
-
-            LogHelper.logException(this.getClass(), e);
+             LogHelper.logException(this.getClass(), e);
         }
 
     }
@@ -73,7 +66,7 @@ public class ValueServletImpl extends ApiServlet {
         if (user != null && ! user.isRestricted()) {
 
             final EntityName pointName = CommonFactoryLocator.getInstance().createName(getParam(Parameters.point), EntityType.point);
-            final Entity point = EntityServiceFactory.getInstance().getEntityByName(user, pointName,PointEntity.class.getName()).get(0);
+            final Entity point = EntityServiceFactory.getInstance().getEntityByName(user, pointName, PointEntity.class.getName()).get(0);
 
             if (point != null) {
 
@@ -106,7 +99,6 @@ public class ValueServletImpl extends ApiServlet {
         }
 
     }
-
 
     public static void processGet(final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException, IOException {
         doInit(req, resp, ExportType.plain);
@@ -146,47 +138,46 @@ public class ValueServletImpl extends ApiServlet {
             final String format,
             final Value nv,
             final User u) throws NimbitsException {
-        final Point p;
 
+        final List<Entity> result;
         if (!Utils.isEmptyString(uuid)) {
-            p = (Point) EntityServiceFactory.getInstance().getEntityByKey(uuid, PointEntity.class.getName()).get(0);
-
+            result = EntityServiceFactory.getInstance().getEntityByKey(uuid, PointEntity.class.getName());
         }
         else if (!Utils.isEmptyString(pointNameParam)) {
             final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
             LogHelper.log(ValueServletImpl.class, "Getting point "  + pointNameParam);
-            p = (Point) EntityServiceFactory.getInstance().getEntityByName(u, pointName,PointEntity.class.getName()).get(0);
-            if (p == null) {
-                throw new NimbitsException(UserMessages.ERROR_POINT_NOT_FOUND);
-
-            }
-
-
+            result = EntityServiceFactory.getInstance().getEntityByName(u, pointName,PointEntity.class.getName());
         }
         else {
             throw new NimbitsException(UserMessages.ERROR_POINT_NOT_FOUND);
         }
 
-
-        if ((u == null || u.isRestricted()) && !p.getProtectionLevel().equals(ProtectionLevel.everyone)) {
-            throw new NimbitsException(UserMessages.RESPONSE_PROTECTED_POINT);
+        if (result.isEmpty()) {
+            throw new NimbitsException(UserMessages.ERROR_POINT_NOT_FOUND);
         }
-        final Value value;
-        if (nv != null && u != null && !u.isRestricted()) {
-            // record the value, but not if this is a public
-            // request
-            final Value newValue = ValueModelFactory.createValueModel(
-                    nv.getLatitude(), nv.getLongitude(), nv.getDoubleValue(),
-                    nv.getTimestamp(), nv.getNote(), nv.getData());
+        else {
+
+            final Entity p = result.get(0);
+            if ((u == null || u.isRestricted()) && !p.getProtectionLevel().equals(ProtectionLevel.everyone)) {
+                throw new NimbitsException(UserMessages.RESPONSE_PROTECTED_POINT);
+            }
+            final Value value;
+            if (nv != null && u != null && !u.isRestricted()) {
+                // record the value, but not if this is a public
+                // request
+                final Value newValue = ValueModelFactory.createValueModel(
+                        nv.getLatitude(), nv.getLongitude(), nv.getDoubleValue(),
+                        nv.getTimestamp(), nv.getNote(), nv.getData());
 
 
-            value = RecordedValueServiceFactory.getInstance().recordValue(u, p, newValue, false);
-        } else {
-            value = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
+                value = RecordedValueServiceFactory.getInstance().recordValue(u, p, newValue, false);
+            } else {
+                value = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
+            }
+            return value != null ? format.equals(Parameters.json.getText()) ? GsonFactory.getInstance().toJson(value) : String.valueOf(value.getDoubleValue()) : "";
+
         }
 
-
-        return value != null ? format.equals(Parameters.json.getText()) ? GsonFactory.getInstance().toJson(value) : String.valueOf(value.getDoubleValue()) : "";
     }
 
 

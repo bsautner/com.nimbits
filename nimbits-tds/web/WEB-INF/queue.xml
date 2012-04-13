@@ -35,10 +35,6 @@
         <name>pointmaint</name>
         <rate>10/s</rate>
     </queue>
-    <queue>
-        <name>summary</name>
-        <rate>5/s</rate>
-    </queue>
 
     <queue>
         <name>incommingmail</name>

@@ -19,7 +19,6 @@ import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
@@ -28,7 +27,6 @@ import com.nimbits.server.entity.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.json.*;
 import com.nimbits.server.orm.*;
-import com.nimbits.server.user.*;
 import com.nimbits.server.value.*;
 
 import javax.servlet.http.*;
@@ -56,7 +54,7 @@ public class XMPPReceiverServlet extends HttpServlet {
             final String body = message.getBody();
             final String j[] = COMPILE.split(fromJid.getId());
             final String email = j[0].toLowerCase();
-            final EmailAddress internetAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
+
             log.info("XMPP Message recieved " + email + ":   " + message);
             List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(email, UserEntity.class.getName());
             if (! result.isEmpty()) {
@@ -177,7 +175,7 @@ public class XMPPReceiverServlet extends HttpServlet {
         if (!Utils.isEmptyString(body) && !body.isEmpty() && body.charAt(body.length() - 1) == '?') {
             final EntityName pointName = CommonFactoryLocator.getInstance().createName(body.replace("?", ""), EntityType.point);
 
-            Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName,EntityType.point).get(0);
+            Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName, EntityType.point).get(0);
            // Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
             Entity point = EntityServiceFactory.getInstance().getEntityByKey(e.getKey(), PointEntity.class.getName()).get(0);
 

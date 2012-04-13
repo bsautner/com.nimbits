@@ -17,7 +17,6 @@ import com.nimbits.client.exception.*;
 import com.nimbits.client.model.connection.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.user.*;
-import twitter4j.auth.*;
 
 import java.util.*;
 

@@ -13,24 +13,18 @@
 
 package com.nimbits.server.transactions.dao.value;
 
-import com.nimbits.PMF;
-import com.nimbits.client.constants.Const;
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.timespan.Timespan;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModelFactory;
-import com.nimbits.client.model.valueblobstore.ValueBlobStore;
-import com.nimbits.server.admin.legacy.orm.DataPoint;
-import com.nimbits.server.admin.legacy.orm.RecordedValue;
+import com.nimbits.*;
+import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.timespan.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.valueblobstore.*;
+import com.nimbits.server.admin.legacy.orm.*;
 
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
+import javax.jdo.*;
+import java.util.*;
+import java.util.logging.*;
 @SuppressWarnings("unchecked")
 @Deprecated
 public class RecordedValueDAOImpl   {

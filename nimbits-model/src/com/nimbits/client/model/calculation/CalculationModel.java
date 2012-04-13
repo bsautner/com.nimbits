@@ -59,7 +59,30 @@ public class CalculationModel extends EntityModel implements Serializable, Calcu
         this.z = z;
         this.enabled = enabled;
     }
-
+    @Override
+    public void setTarget(String target) {
+        this.target = target;
+    }
+    @Override
+    public void setFormula(String formula) {
+        this.formula = formula;
+    }
+    @Override
+    public void setX(String x) {
+        this.x = x;
+    }
+    @Override
+    public void setY(String y) {
+        this.y = y;
+    }
+    @Override
+    public void setZ(String z) {
+        this.z = z;
+    }
+    @Override
+    public void setTrigger(String trigger) {
+        this.trigger = trigger;
+    }
 
     @Override
     public String getFormula() {

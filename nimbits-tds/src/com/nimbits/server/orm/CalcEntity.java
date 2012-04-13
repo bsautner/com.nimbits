@@ -88,6 +88,39 @@ public class CalcEntity extends EntityStore implements Calculation {
         this.trigger = calculation.getTrigger();
     }
 
+    @Override
+    public void setFormula(String formula) {
+        this.formula = formula;
+    }
+
+    @Override
+    public void setTrigger(String trigger) {
+        this.trigger = trigger;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    @Override
+    public void setY(String xVar) {
+        this.xVar = xVar;
+    }
+
+    @Override
+    public void setX(String yVar) {
+        this.yVar = yVar;
+    }
+
+    @Override
+    public void setZ(String zVar) {
+        this.zVar = zVar;
+    }
+
+    @Override
+    public void setTarget(String targetVar) {
+        this.targetVar = targetVar;
+    }
 
     @Override
     public String getTrigger() {

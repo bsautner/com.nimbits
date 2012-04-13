@@ -31,4 +31,16 @@ public interface Calculation extends Entity, Serializable {
 
     @Override
     void update(Entity update) throws NimbitsException;
+
+    void setZ(String z);
+
+    void setTrigger(String trigger);
+
+    void setY(String y);
+
+    void setX(String x);
+
+    void setFormula(String formula);
+
+    void setTarget(String target);
 }

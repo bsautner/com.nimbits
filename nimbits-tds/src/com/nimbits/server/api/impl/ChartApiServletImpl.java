@@ -120,12 +120,12 @@ public class ChartApiServletImpl extends ApiServlet {
             for (final EntityName pointName : pointList) {
 
 
-                Entity p = EntityServiceFactory.getInstance().getEntityByName(u, pointName, PointEntity.class.getName()).get(0);
-                if (p != null) {
+                List<Entity> list = EntityServiceFactory.getInstance().getEntityByName(u, pointName, PointEntity.class.getName());
+                if (list.isEmpty()) {
+                    log.info("Couldn't find a point in the chart request.");
+                } else {
+                    Entity p = list.get(0);
 
-                  //  p = (Point) EntityServiceFactory.getInstance().getEntityByKey(e.getKey(), PointEntity.class.getName());
-
-                    //Entity e = EntityServiceFactory.getInstance().getEntityByUUID(p.getEntity());
                     if (p.getProtectionLevel().equals(ProtectionLevel.everyone) || !u.isRestricted()) {
 
 
@@ -149,9 +149,6 @@ public class ChartApiServletImpl extends ApiServlet {
 
 
                 }
-                else {
-                    log.info("Couldn't find a point in the chart request.");
-                }
                 if (params.lastIndexOf(Const.DELIMITER_BAR) > 0) {
                     params.deleteCharAt(params.lastIndexOf(Const.DELIMITER_BAR));
                 }
@@ -171,28 +168,22 @@ public class ChartApiServletImpl extends ApiServlet {
         connection.setRequestMethod(Const.METHOD_POST);
         connection.setReadTimeout(Const.DEFAULT_HTTP_TIMEOUT);
         final OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-
-
-
-            writer.write(params);
-
-            final InputStream is = connection.getInputStream();
-            resp.setContentType(ExportType.png.getCode());
-            final int length = connection.getContentLength();
-            log.info(params);
-            final OutputStream out = resp.getOutputStream();
-            resp.setContentLength(length);
-            byte[] buffer = new byte[length];
-            int i;
-            while ((i = is.read(buffer)) >= 0) {
-                out.write(buffer, 0, i);
-            }
-           out.flush();
-
-           // writer.close();
-
-
+        writer.write(params);
+        writer.close();
+        final InputStream is = connection.getInputStream();
+        resp.setContentType(ExportType.png.getCode());
+        final int length = connection.getContentLength();
+        log.info(params);
+        final OutputStream out = resp.getOutputStream();
+        resp.setContentLength(length);
+        byte[] buffer = new byte[length];
+        int i;
+        while ((i = is.read(buffer)) >= 0) {
+            out.write(buffer, 0, i);
+        }
+        out.close();
     }
+
 
     private static List<EntityName> createPointList(final String pointsListParam, final String pointParamName) throws NimbitsException {
         final List<EntityName> pointList = new ArrayList<EntityName>(10);

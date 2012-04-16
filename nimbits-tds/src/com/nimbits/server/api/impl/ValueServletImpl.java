@@ -45,7 +45,9 @@ public class ValueServletImpl extends ApiServlet {
         try {
             processPost(req, resp);
         } catch (NimbitsException e) {
+            if (! e.getMessage().equals(UserMessages.ERROR_POINT_NOT_FOUND)) {
             LogHelper.logException(this.getClass(), e);
+            }
         }
 
     }

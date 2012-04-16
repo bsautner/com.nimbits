@@ -238,6 +238,12 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
 
     }
 
+    @Override
+    public void validate() throws NimbitsException {
+      throw new NimbitsException("Do not validate models");
+    }
+
+
     @SuppressWarnings({"NonFinalFieldReferenceInEquals", "CastToConcreteClass"})
     @Override
     public boolean equals(Object o) {

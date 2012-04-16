@@ -291,7 +291,7 @@ public class SummaryPanel extends NavigationEventProvider {
                 try {
                    Summary summary = (Summary)entity;
                     update = SummaryModelFactory.createSummary(entity,
-                            summary.getEntity(), summary.getTarget(), summaryType,
+                            summary.getSource(), summary.getTarget(), summaryType,
                             spinnerField.getValue().intValue() * 1000, new Date());
                     service.addUpdateEntity(update, new UpdateEntityAsyncCallback(box));
                 } catch (NimbitsException e) {

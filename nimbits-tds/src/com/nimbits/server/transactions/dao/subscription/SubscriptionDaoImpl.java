@@ -17,7 +17,6 @@ import com.nimbits.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.subscription.*;
-import com.nimbits.client.model.user.*;
 import com.nimbits.server.orm.*;
 import com.nimbits.server.subscription.*;
 
@@ -33,28 +32,9 @@ import java.util.*;
 @SuppressWarnings({"unchecked", "unused"})
 public class SubscriptionDaoImpl implements SubscriptionTransactions {
 
-    public SubscriptionDaoImpl(final User u) {
+    public SubscriptionDaoImpl() {
 
     }
-
-
-    private static SubscriptionEntity getSubscription(final PersistenceManager pm, final Entity entity) {
-      return getSubscription(pm, entity.getKey());
-
-
-    }
-    private static SubscriptionEntity getSubscription(final PersistenceManager pm, final String key) {
-        try {
-            return pm.getObjectById(SubscriptionEntity.class, key);
-
-        }
-        catch (JDOObjectNotFoundException ex) {
-            return null;
-        }
-
-
-    }
-
 
     @Override
     public List<Subscription> getSubscriptionsToPoint(final Entity point) throws NimbitsException {

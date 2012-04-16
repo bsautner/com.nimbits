@@ -19,11 +19,11 @@ public enum SubscriptionType {
    changed(6, "Any Updates");
 
 
-    private static final Map<Integer, SubscriptionType> lookup = new HashMap<Integer, SubscriptionType>();
+    private static final Map<Integer, SubscriptionType> lookup = new HashMap<Integer, SubscriptionType>(7);
 
     static {
         for (SubscriptionType s : EnumSet.allOf(SubscriptionType.class))
-            lookup.put(s.getCode(), s);
+            lookup.put(s.code, s);
     }
 
     private final int code;

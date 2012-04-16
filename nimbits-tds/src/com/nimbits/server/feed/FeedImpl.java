@@ -48,7 +48,6 @@ import java.util.*;
 public class FeedImpl extends RemoteServiceServlet implements Feed {
 
     private static final int MAX_LENGTH = 1024;
-
     private static final int SIZE = 1024;
     private static final int LENGTH = 200;
     private static final int OFFSET = 500;

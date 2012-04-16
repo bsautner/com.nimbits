@@ -156,7 +156,7 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
             if (buffer.contains(currentValueCacheKey)) {
                 final Value mostRecentCache = (Value) buffer.get(currentValueCacheKey);
 
-                if (mostRecentCache == null || (v.getTimestamp().getTime() > mostRecentCache.getTimestamp().getTime())) {
+                if (mostRecentCache == null || v.getTimestamp().getTime() > mostRecentCache.getTimestamp().getTime()) {
                     buffer.delete(currentValueCacheKey);
                     buffer.put(currentValueCacheKey, v);
                 }
@@ -215,9 +215,8 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
     public List<Value> getCache(final Timespan timespan) {
 
         List<Value> retObj = null;
-        final List<Long> x;
         if (buffer.contains(valueListCacheKey)) {
-            x = (List<Long>) buffer.get(valueListCacheKey);
+            final Collection<Long> x = (Collection<Long>) buffer.get(valueListCacheKey);
             final Map<Long, Object> valueMap = buffer.getAll(x);
             final ValueComparator bvc = new ValueComparator(valueMap);
             final Map<Long, Object> sorted_map = new TreeMap(bvc);
@@ -247,10 +246,9 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
     public List<Value> getBuffer() {
 
 
-            final List<Long> x;
-            if (buffer.contains(valueListCacheKey)) {
-                x = (List<Long>) buffer.get(valueListCacheKey);
-                final Map<Long, Object> valueMap = buffer.getAll(x);
+        if (buffer.contains(valueListCacheKey)) {
+            final Collection<Long> x = (Collection<Long>) buffer.get(valueListCacheKey);
+            final Map<Long, Object> valueMap = buffer.getAll(x);
                 final ValueComparator bvc = new ValueComparator(valueMap);
                 final Map<Long, Object> sorted_map = new TreeMap(bvc);
                 sorted_map.putAll(valueMap);
@@ -352,7 +350,7 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
         sorted_map.putAll(valueMap);
         final List<Value> retObj = new ArrayList<Value>(sorted_map.keySet().size());
         for (final Map.Entry<Long, Object> longObjectEntry : sorted_map.entrySet()) {
-            if ((longObjectEntry.getKey() >= timespan.getStart().getTime() - 1000) && (longObjectEntry.getKey() <= timespan.getEnd().getTime() + 1000)) {
+            if (longObjectEntry.getKey() >= timespan.getStart().getTime() - 1000 && longObjectEntry.getKey() <= timespan.getEnd().getTime() + 1000) {
                 retObj.add((Value) longObjectEntry.getValue());
             }
         }

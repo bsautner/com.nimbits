@@ -12,8 +12,6 @@
  */
 
 package com.nimbits.server.calculation;
-
-import com.nimbits.client.model.user.*;
 import com.nimbits.client.service.calculation.*;
 import com.nimbits.server.transactions.dao.calculation.*;
 
@@ -32,8 +30,8 @@ public class CalculationServiceFactory {
         return new CalculationServiceImpl();
     }
 
-    public static CalculationTransactions getDaoInstance(User user) {
-        return new CalculationDAOImpl(user);
+    public static CalculationTransactions getDaoInstance() {
+        return new CalculationDAOImpl();
     }
 
 }

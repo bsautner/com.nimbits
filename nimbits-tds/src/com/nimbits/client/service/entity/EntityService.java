@@ -60,4 +60,6 @@ public interface EntityService extends RemoteService {
     List<Entity> getEntityChildren(User u, Entity c, EntityType point) throws NimbitsException;
 
     List<Entity>  getEntityByName(User user, EntityName name,String className) throws NimbitsException;
+
+    List<Entity> getEntitiesBySource(Entity source, EntityType type) throws NimbitsException;
 }

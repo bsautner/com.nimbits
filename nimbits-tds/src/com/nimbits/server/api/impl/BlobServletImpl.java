@@ -89,13 +89,14 @@ public class BlobServletImpl extends ApiServlet {
 
         } catch (NimbitsException e) {
            if (user != null) {
-               FeedServiceFactory.getInstance().postToFeed(super.user, e);
+               FeedServiceFactory.getInstance().postToFeed(user, e);
            }
         }
 
 
     }
 
+    @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
         BlobKey blobKey = new BlobKey(req.getParameter(Parameters.blobkey.getText()));
         blobstoreService.serve(blobKey, res);

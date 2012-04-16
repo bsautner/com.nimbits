@@ -250,7 +250,7 @@ public class MainMenuBar extends ToolBar {
     }
     private MenuItem newKeyButton() {
         MenuItem item = new MenuItem("Get or Reset Secret Key");
-        item.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.Key()));
+        item.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.key()));
         item.addListener(Events.OnClick, new ResetSecretBaseEventListener());
         return item;
     }

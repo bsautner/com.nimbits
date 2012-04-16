@@ -23,11 +23,19 @@ import com.nimbits.client.service.subscription.*;
  */
 public class SubscriptionServiceFactory {
 
+    private SubscriptionServiceFactory() {
+    }
 
+    private static class SubscriptionServiceHolder {
+        static final SubscriptionService instance = new SubscriptionServiceImpl();
+
+        private SubscriptionServiceHolder() {
+        }
+    }
 
     public static SubscriptionService getInstance() {
 
-        return new SubscriptionServiceImpl();
+        return SubscriptionServiceHolder.instance;
     }
 
 

@@ -82,31 +82,31 @@ public enum SettingType {
         return name;
     }
     private static class SettingConstants {
-        private static final String CONST_SERVER_VERSION = "3.2.0.6";
-        private static final String SETTING_LOCAL_DEV_ACCOUNT = "SETTING_LOCAL_DEV_ACCOUNT";
-        private static final String SETTING_LOCAL_DEV_KEY = "SETTING_LOCAL_DEV_KEY";
-        private static final String SETTING_LOCAL_DEV_PATH = "SETTING_LOCAL_DEV_PATH";
+        static final String CONST_SERVER_VERSION = "3.2.0.7";
+        static final String SETTING_LOCAL_DEV_ACCOUNT = "SETTING_LOCAL_DEV_ACCOUNT";
+        static final String SETTING_LOCAL_DEV_KEY = "SETTING_LOCAL_DEV_KEY";
+        static final String SETTING_LOCAL_DEV_PATH = "SETTING_LOCAL_DEV_PATH";
 
 
 
-        private static final String SETTING_ENABLE_CONNECTIONS = "enableConnections";
-        private static final String SETTING_ADMIN = "admin";
-        private static final String SETTING_LAST_CHECKED = "lastChecked";
-        private static final String SETTING_FACEBOOK_CLIENT_ID = "facebookClientId";
-        private static final String SETTING_FACEBOOK_SECRET = "facebookSecret";
-        private static final String SETTING_FACEBOOK_REDIRECT_URL = "facebookRedirectUrl";
-        private static final String SETTING_SERVER_IS_DISCOVERABLE = "serverIsDiscoverable";
-        private static final String SETTING_BILLING_ENABLED = "SETTING_BILLING_ENABLED";
-        private static final String SETTING_WOLFRAM = "wolframAlphaKey";
-        private static final String SETTING_TWITTER_CLIENT_ID = "twitterClientId";
-        private static final String SETTING_TWITTER_SECRET = "twitterSecret";
-        private static final String SETTING_VERSION = "version";
-        private static final String SETTING_FACEBOOK_API_KEY = "facebookApiKey";
-        private static final String SETTING_SOURCE = "source";
-        private static final String SETTING_TEST_ACCOUNT = "testAccount";
-        private static final String SETTING_TEST_PASSWORD = "testPassword";
-        private static final String SETTING_TEST_URL = "testURL";
-        private static final String SETTING_ENABLE_QUOTA = "SETTING_ENABLE_QUOTA";
+        static final String SETTING_ENABLE_CONNECTIONS = "enableConnections";
+        static final String SETTING_ADMIN = "admin";
+        static final String SETTING_LAST_CHECKED = "lastChecked";
+        static final String SETTING_FACEBOOK_CLIENT_ID = "facebookClientId";
+        static final String SETTING_FACEBOOK_SECRET = "facebookSecret";
+        static final String SETTING_FACEBOOK_REDIRECT_URL = "facebookRedirectUrl";
+        static final String SETTING_SERVER_IS_DISCOVERABLE = "serverIsDiscoverable";
+        static final String SETTING_BILLING_ENABLED = "SETTING_BILLING_ENABLED";
+        static final String SETTING_WOLFRAM = "wolframAlphaKey";
+        static final String SETTING_TWITTER_CLIENT_ID = "twitterClientId";
+        static final String SETTING_TWITTER_SECRET = "twitterSecret";
+        static final String SETTING_VERSION = "version";
+        static final String SETTING_FACEBOOK_API_KEY = "facebookApiKey";
+        static final String SETTING_SOURCE = "source";
+        static final String SETTING_TEST_ACCOUNT = "testAccount";
+        static final String SETTING_TEST_PASSWORD = "testPassword";
+        static final String SETTING_TEST_URL = "testURL";
+        static final String SETTING_ENABLE_QUOTA = "SETTING_ENABLE_QUOTA";
 
         private SettingConstants() {
         }

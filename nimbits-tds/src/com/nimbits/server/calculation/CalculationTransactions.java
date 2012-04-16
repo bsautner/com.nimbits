@@ -29,5 +29,5 @@ public interface CalculationTransactions {
 
     List<Calculation> getCalculations(final Entity entity) throws NimbitsException;
 
-    void deleteCalculation(final Entity entity);
+
 }

@@ -14,11 +14,11 @@ public enum ValueType {
 
     rawData(0), statisticShard(1), counter(2), calculated(3), mobile(4), manualEntry(5), emailBatch(6), xmpp(7), nonexistent(8);
 
-    private static final Map<Integer, ValueType> lookup = new HashMap<Integer, ValueType>();
+    private static final Map<Integer, ValueType> lookup = new HashMap<Integer, ValueType>(9);
 
     static {
         for (ValueType s : EnumSet.allOf(ValueType.class))
-            lookup.put(s.getCode(), s);
+            lookup.put(s.code, s);
     }
 
     private final int code;

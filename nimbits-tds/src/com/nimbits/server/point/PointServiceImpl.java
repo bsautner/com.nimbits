@@ -17,6 +17,7 @@ package com.nimbits.server.point;
 import com.google.gwt.user.server.rpc.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
+import com.nimbits.client.model.accesskey.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;

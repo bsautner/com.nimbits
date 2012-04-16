@@ -16,16 +16,18 @@ package com.nimbits.server.email;
 
 public class EmailServiceFactory {
 
-    private static EmailService instance;
-
     private EmailServiceFactory() {
     }
 
-    public static EmailService getInstance() {
-        if (instance == null) {
-            instance = new EmailServiceImpl();
-        }
+    private static class EmailServiceHolder {
+        static final EmailService instance = new EmailServiceImpl();
 
-        return instance;
+        private EmailServiceHolder() {
+        }
+    }
+
+    public static EmailService getInstance() {
+
+        return EmailServiceHolder.instance;
     }
 }

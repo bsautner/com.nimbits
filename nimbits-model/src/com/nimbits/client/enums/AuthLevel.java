@@ -15,11 +15,11 @@ public enum AuthLevel {
     admin(3);
 
 
-    private static final Map<Integer, AuthLevel> lookup = new HashMap<Integer, AuthLevel>();
+    private static final Map<Integer, AuthLevel> lookup = new HashMap<Integer, AuthLevel>(3);
 
     static {
         for (AuthLevel s : EnumSet.allOf(AuthLevel.class))
-            lookup.put(s.getCode(), s);
+            lookup.put(s.code, s);
     }
 
     private final int code;

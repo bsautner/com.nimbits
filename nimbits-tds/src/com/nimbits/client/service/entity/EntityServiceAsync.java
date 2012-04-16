@@ -52,4 +52,6 @@ public interface EntityServiceAsync {
     void getEntityMap(User user, EntityType type, final int limit, AsyncCallback<Map<String, Entity>> async);
 
     void getEntityByName(User user, EntityName name, String className, AsyncCallback<List<Entity>> async);
+
+    void getEntitiesBySource(Entity source, EntityType type, AsyncCallback<List<Entity>> async);
 }

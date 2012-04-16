@@ -26,8 +26,14 @@ public class SummaryServiceFactory {
     private SummaryServiceFactory() {
     }
 
-    public static SummaryService getInstance() {
+    private static class SummaryServiceHolder {
+        static final SummaryService instance = new SummaryServiceImpl();
 
-        return new SummaryServiceImpl();
+        private SummaryServiceHolder() {
+        }
+    }
+
+    public static SummaryService getInstance() {
+        return SummaryServiceHolder.instance;
     }
 }

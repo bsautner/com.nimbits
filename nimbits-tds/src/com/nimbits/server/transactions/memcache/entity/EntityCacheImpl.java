@@ -47,6 +47,11 @@ public class EntityCacheImpl implements EntityTransactions {
         return EntityTransactionFactory.getDaoInstance(user).getEntityByName(name, cls);
     }
 
+    @Override
+    public List<Entity> getEntitiesBySource(Entity source, Class<?> cls) throws NimbitsException {
+        return EntityTransactionFactory.getDaoInstance(user).getEntitiesBySource(source, cls);
+    }
+
     private void addEntityToCache(final Entity entity) throws NimbitsException {
         if (entity != null) {
             removeEntityFromCache(entity);
@@ -123,8 +128,6 @@ public class EntityCacheImpl implements EntityTransactions {
         }
         return result;
     }
-
-
 
     @Override
     public Map<String, Entity> getSystemWideEntityMap(final EntityType type) throws NimbitsException {

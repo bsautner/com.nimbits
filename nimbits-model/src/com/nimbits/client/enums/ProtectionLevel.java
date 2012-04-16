@@ -16,11 +16,11 @@ public enum ProtectionLevel {
     everyone(2, "Everyone");
 
 
-    private static final Map<Integer, ProtectionLevel> lookup = new HashMap<Integer, ProtectionLevel>();
+    private static final Map<Integer, ProtectionLevel> lookup = new HashMap<Integer, ProtectionLevel>(3);
 
     static {
         for (ProtectionLevel s : EnumSet.allOf(ProtectionLevel.class))
-            lookup.put(s.getCode(), s);
+            lookup.put(s.code, s);
     }
 
     private final int code;

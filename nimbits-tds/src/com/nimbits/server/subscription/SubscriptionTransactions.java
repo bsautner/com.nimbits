@@ -27,13 +27,7 @@ import java.util.*;
  */
 public interface SubscriptionTransactions {
 
-
-
-   // List<Subscription> getSubscriptionsToPointByType(final Point point, final SubscriptionType type) throws NimbitsException;
-
     List<Subscription> getSubscriptionsToPoint(final Entity point) throws NimbitsException;
-
-   // void updateSubscriptionLastSent(final Subscription subscription);
 
 
 }

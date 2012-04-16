@@ -55,7 +55,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public List<Subscription> getSubscriptionsToPoint(final Entity point) throws NimbitsException {
-        return SubscriptionTransactionFactory.getInstance(null).getSubscriptionsToPoint(point);
+        return SubscriptionTransactionFactory.getInstance().getSubscriptionsToPoint(point);
     }
 
 

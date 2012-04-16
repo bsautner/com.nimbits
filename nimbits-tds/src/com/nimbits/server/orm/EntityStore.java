@@ -133,6 +133,8 @@ public class EntityStore implements Entity {
 
     }
 
+
+
     private void setKey(final Class<?> cls, final Entity entity, final CommonIdentifier saferName) {
         this.key = Utils.isEmptyString(entity.getKey())
                 ? entity.getEntityType().equals(EntityType.user)
@@ -292,6 +294,7 @@ public class EntityStore implements Entity {
         }
 
         this.uuid = update.getUUID();
+        validate();
     }
 
     @Override
@@ -305,14 +308,60 @@ public class EntityStore implements Entity {
     }
 
     @Override
-    public boolean entityIsReadable(final User user) {
-        return false;
+    public boolean entityIsReadable(final User user) throws NimbitsException {
+       throw new NimbitsException("Not Impletmented");
+    }
+
+    @Override
+    public void validate() throws NimbitsException {
+       if (Utils.isEmptyString(owner) || Utils.isEmptyString(this.name) || Utils.isEmptyString(this.parent)) {
+          throw new NimbitsException("Entity was missing required data, validation failed");
+       }
     }
 
 
     @Override
     public int compareTo(final Entity entity) {
         return 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof EntityStore)) return false;
+
+        EntityStore that = (EntityStore) o;
+
+        if (alertType != that.alertType) return false;
+        if (readOnly != that.readOnly) return false;
+        if (blobKey != null ? !blobKey.equals(that.blobKey) : that.blobKey != null) return false;
+        if (description != null ? !description.equals(that.description) : that.description != null) return false;
+        if (entityType != null ? !entityType.equals(that.entityType) : that.entityType != null) return false;
+        if (key != null ? !key.equals(that.key) : that.key != null) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (owner != null ? !owner.equals(that.owner) : that.owner != null) return false;
+        if (parent != null ? !parent.equals(that.parent) : that.parent != null) return false;
+        if (protectionLevel != null ? !protectionLevel.equals(that.protectionLevel) : that.protectionLevel != null)
+            return false;
+        if (uuid != null ? !uuid.equals(that.uuid) : that.uuid != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = key != null ? key.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (uuid != null ? uuid.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (entityType != null ? entityType.hashCode() : 0);
+        result = 31 * result + (protectionLevel != null ? protectionLevel.hashCode() : 0);
+        result = 31 * result + (parent != null ? parent.hashCode() : 0);
+        result = 31 * result + (owner != null ? owner.hashCode() : 0);
+        result = 31 * result + alertType;
+        result = 31 * result + (blobKey != null ? blobKey.hashCode() : 0);
+        result = 31 * result + (readOnly ? 1 : 0);
+        return result;
     }
 
 

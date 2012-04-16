@@ -17,6 +17,7 @@ import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.user.*;
+import com.nimbits.server.entity.*;
 import com.nimbits.server.quota.*;
 import com.nimbits.server.user.*;
 
@@ -60,15 +61,24 @@ public class ApiServlet extends HttpServlet {
                 Parameters.points,
                 Parameters.count,
                 Parameters.autoscale,
-                Parameters.category
+                Parameters.category,
+                Parameters.key
 
         };
+
 
 
 
         for (final Parameters s : items) {
             paramMap.put(s, req.getParameter(s.getText()));
         }
+
+        if (containsParam(Parameters.key)) {
+
+           // EntityServiceFactory.getInstance().getEntitiesBySource(paramMap.get(Parameters.key), EntityType.accessKey.getClassName());
+
+        }
+
         addResponseHeaders(resp, type);
 
 

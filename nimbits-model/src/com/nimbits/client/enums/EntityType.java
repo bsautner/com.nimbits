@@ -1,5 +1,6 @@
 package com.nimbits.client.enums;
 
+import java.io.*;
 import java.util.*;
 
 /**
@@ -8,7 +9,7 @@ import java.util.*;
  * Date: 12/29/11
  * Time: 1:36 PM
  */
-public enum EntityType {
+public enum EntityType implements Serializable {
     user(0, true, true, 0, "com.nimbits.server.orm.UserEntity"),
     point(1, true,true,2, "com.nimbits.server.orm.PointEntity"),
     category(2, false,true, 1, "com.nimbits.server.orm.CategoryEntity"),
@@ -20,7 +21,8 @@ public enum EntityType {
     feed(9, false,false,  8, "com.nimbits.server.orm.PointEntity"),
     resource(10, true,true, 9, "com.nimbits.server.orm.XmppResourceEntity"),
     summary(11, false, true, 10,"com.nimbits.server.orm.SummaryEntity"),
-    instance(12, false, false, 11, "com.nimbits.server.orm.CategoryEntity");
+    instance(12, false, false, 11, "com.nimbits.server.orm.CategoryEntity"),
+    accessKey(13, true, true, 13, "com.nimbits.server.orm.AccessKeyEntity");
     private static final Map<Integer, EntityType> lookup = new HashMap<Integer, EntityType>(EntityType.values().length);
 
     static {

@@ -12,8 +12,6 @@
  */
 
 package com.nimbits.server.subscription;
-
-import com.nimbits.client.model.user.*;
 import com.nimbits.server.transactions.dao.subscription.*;
 
 /**
@@ -23,11 +21,20 @@ import com.nimbits.server.transactions.dao.subscription.*;
  * Time: 4:20 PM
  */
 public class SubscriptionTransactionFactory {
-    private static SubscriptionTransactions instance;
+
+    private SubscriptionTransactionFactory() {
+    }
 
 
-    public static SubscriptionTransactions getInstance(final User u) {
-        return new SubscriptionDaoImpl(u);
+    private static class SubscriptionTransactionsHolder {
+        static final SubscriptionTransactions instance = new SubscriptionDaoImpl();
+
+        private SubscriptionTransactionsHolder() {
+        }
+    }
+
+    public static SubscriptionTransactions getInstance() {
+        return SubscriptionTransactionsHolder.instance;
     }
 
 }

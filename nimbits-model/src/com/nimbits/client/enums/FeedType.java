@@ -18,11 +18,11 @@ public enum FeedType {
     ;
 
 
-    private static final Map<Integer, FeedType> lookup = new HashMap<Integer, FeedType>();
+    private static final Map<Integer, FeedType> lookup = new HashMap<Integer, FeedType>(5);
 
     static {
         for (FeedType s : EnumSet.allOf(FeedType.class))
-            lookup.put(s.getCode(), s);
+            lookup.put(s.code, s);
     }
 
     private final int code;

@@ -50,7 +50,7 @@ public class BatchServletImpl extends ApiServlet {
 
     @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp) {
-       //todo go through all servlets, make them like currentvalue
+
 
         try {
             doInit(req, resp, ExportType.plain);

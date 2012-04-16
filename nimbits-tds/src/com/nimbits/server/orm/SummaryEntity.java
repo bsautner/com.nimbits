@@ -53,7 +53,7 @@ public class SummaryEntity extends EntityStore implements Summary {
 
     public SummaryEntity(final Summary summary) throws NimbitsException {
         super(summary);
-        this.entity = summary.getEntity();
+        this.entity = summary.getSource();
         this.target = summary.getTarget();
         this.summaryType = summary.getSummaryType().getCode();
         this.summaryIntervalMs = summary.getSummaryIntervalMs();
@@ -63,7 +63,7 @@ public class SummaryEntity extends EntityStore implements Summary {
 
 
     @Override
-    public String getEntity() {
+    public String getSource() {
         return entity;
     }
 
@@ -109,7 +109,7 @@ public class SummaryEntity extends EntityStore implements Summary {
     public void update(final Entity update) throws NimbitsException {
         super.update(update);
         final Summary summary = (Summary)update;
-        this.entity = summary.getEntity();
+        this.entity = summary.getSource();
         this.target = summary.getTarget();
         this.summaryType = summary.getSummaryType().getCode();
         this.summaryIntervalMs = summary.getSummaryIntervalMs();

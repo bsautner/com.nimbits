@@ -62,10 +62,10 @@ public class QuotaImpl implements Quota {
 
 
     private static ShardedCounter getOrCreateCounter(final CommonIdentifier email) {
-        final CounterFactory factory = new CounterFactory();
-        ShardedCounter counter = factory.getCounter(email.getValue());
+
+        ShardedCounter counter = CounterFactory.getCounter(email.getValue());
         if (counter == null) {
-            counter = factory.createCounter(email.getValue());
+            counter = CounterFactory.createCounter(email.getValue());
             counter.addShard();
 
         }

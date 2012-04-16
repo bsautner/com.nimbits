@@ -26,8 +26,16 @@ public class EntityServiceFactory {
     private EntityServiceFactory() {
     }
 
+    private static class EntityServiceHolder {
+        static final EntityService instance = new EntityServiceImpl();
+
+        private EntityServiceHolder() {
+        }
+    }
+
     public static EntityService getInstance() {
-        return new EntityServiceImpl();
+
+        return EntityServiceHolder.instance;
     }
 
 

@@ -24,7 +24,6 @@ import com.nimbits.client.service.calculation.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.logging.*;
 import com.nimbits.server.orm.*;
-import com.nimbits.server.user.*;
 import com.nimbits.server.value.*;
 
 import java.util.*;
@@ -39,27 +38,10 @@ import java.util.logging.*;
 public class CalculationServiceImpl extends RemoteServiceServlet implements CalculationService {
     final Logger log = Logger.getLogger(CalculationServiceImpl.class.getName());
 
-    private User getUser() {
-        try {
-            return UserServiceFactory.getServerInstance().getHttpRequestUser(
-                    this.getThreadLocalRequest());
-        } catch (NimbitsException e) {
-            return null;
-        }
-    }
-
-
-
-
-
-
-
-
-
     @Override
     public List<Calculation> getCalculations(Entity entity) throws NimbitsException {
 
-        return CalculationServiceFactory.getDaoInstance(getUser()).getCalculations(entity);
+        return CalculationServiceFactory.getDaoInstance().getCalculations(entity);
     }
 
     @Override

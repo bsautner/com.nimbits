@@ -90,6 +90,8 @@ public class EntityTree<ModelData extends com.extjs.gxt.ui.client.data.ModelData
                     return AbstractImagePrototype.create(Icons.INSTANCE.filter());
                 case summary:
                     return AbstractImagePrototype.create(Icons.INSTANCE.summary());
+                case accessKey:
+                    return AbstractImagePrototype.create(Icons.INSTANCE.key());
                 default:
                     return AbstractImagePrototype.create(Icons.INSTANCE.point_ok());
 

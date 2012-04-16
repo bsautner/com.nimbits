@@ -11,11 +11,11 @@ import java.util.*;
 public enum DateFormatType {
 
     unixEpoch("unix"), json("json");
-    private static final Map<String, DateFormatType> lookup = new HashMap<String, DateFormatType>();
+    private static final Map<String, DateFormatType> lookup = new HashMap<String, DateFormatType>(2);
 
     static {
         for (DateFormatType s : EnumSet.allOf(DateFormatType.class))
-            lookup.put(s.getCode(), s);
+            lookup.put(s.code, s);
     }
 
     private final String code;

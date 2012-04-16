@@ -77,7 +77,7 @@ public class ApiCounterShard {
     }
 
     public void increment(int amount) {
-        count = count + amount;
+        count += amount;
     }
 
 }

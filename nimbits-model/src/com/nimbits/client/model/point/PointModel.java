@@ -27,9 +27,6 @@ import java.util.List;
 public class PointModel extends EntityModel implements Serializable, Point {
 
     private static final int DEFAULT_EXPIRE = 90;
-    //private int entityType = EntityType.point.getCode();
-
-   // private String key;
 
     private double highAlarm = 0.0;
 

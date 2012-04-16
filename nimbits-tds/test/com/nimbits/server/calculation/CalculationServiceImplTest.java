@@ -52,7 +52,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         final EntityName zName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString(), EntityType.point);
 
 
-        final EntityName cName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString(), EntityType.calculation);
+        //final EntityName cName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString(), EntityType.calculation);
         // Category c = ClientHelper.client().addCategory(cName);
         // assertNotNull(c);
         final Point trigger = PointServiceFactory.getInstance().addPoint(triggerName);

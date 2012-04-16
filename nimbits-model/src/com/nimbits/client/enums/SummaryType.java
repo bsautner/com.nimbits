@@ -21,11 +21,11 @@ public enum SummaryType {
 
     ;
 
-    private static final Map<Integer, SummaryType> lookup = new HashMap<Integer, SummaryType>();
+    private static final Map<Integer, SummaryType> lookup = new HashMap<Integer, SummaryType>(8);
 
     static {
         for (SummaryType s : EnumSet.allOf(SummaryType.class))
-            lookup.put(s.getCode(), s);
+            lookup.put(s.code, s);
     }
 
     private final int code;

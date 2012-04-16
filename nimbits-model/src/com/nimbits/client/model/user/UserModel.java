@@ -30,7 +30,6 @@ import java.util.Date;
 
 public class UserModel extends EntityModel implements Serializable, User {
 
-   // private String key;
 
     private Date dateCreated;
 
@@ -62,20 +61,18 @@ public class UserModel extends EntityModel implements Serializable, User {
 
     }
 
-
-
     public UserModel(final User u) throws NimbitsException {
         super(u);
         if (u != null) {
-        this.dateCreated = u.getDateCreated();
-        this.lastLoggedIn = u.getLastLoggedIn();
-        this.secret = u.getSecret();
-        this.authLevel = u.getAuthLevel().getCode();
-        this.emailAddress = u.getEmail().getValue();
-        this.facebookToken = u.getFacebookToken();
-        this.twitterToken = u.getTwitterToken();
-        this.twitterTokenSecret = u.getTwitterTokenSecret();
-        this.facebookID = u.getFacebookID();
+            this.dateCreated = u.getDateCreated();
+            this.lastLoggedIn = u.getLastLoggedIn();
+            this.secret = u.getSecret();
+            this.authLevel = u.getAuthLevel().getCode();
+            this.emailAddress = u.getEmail().getValue();
+            this.facebookToken = u.getFacebookToken();
+            this.twitterToken = u.getTwitterToken();
+            this.twitterTokenSecret = u.getTwitterTokenSecret();
+            this.facebookID = u.getFacebookID();
         }
         else {
             this.authLevel = AuthLevel.restricted.getCode();

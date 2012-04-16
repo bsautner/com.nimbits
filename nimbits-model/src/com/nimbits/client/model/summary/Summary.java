@@ -14,7 +14,7 @@ import java.util.*;
  */
 public interface Summary  extends Entity, Serializable {
 
-    String getEntity();
+    String getSource();
 
     String getTarget();
 

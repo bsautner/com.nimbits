@@ -21,11 +21,11 @@ public enum ExportType {
     unknown("", "dat"),
     currentStatusReport(Const.CONTENT_TYPE_HTML, "html");
 
-    private static final Map<String, ExportType> lookup = new HashMap<String, ExportType>();
+    private static final Map<String, ExportType> lookup = new HashMap<String, ExportType>(11);
 
     static {
         for (ExportType s : EnumSet.allOf(ExportType.class))
-            lookup.put(s.getCode(), s);
+            lookup.put(s.mimeType, s);
     }
 
     private final String mimeType;

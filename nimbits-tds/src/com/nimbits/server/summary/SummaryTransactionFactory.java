@@ -26,8 +26,15 @@ public class SummaryTransactionFactory {
     private SummaryTransactionFactory() {
     }
 
+    private static class SummaryTransactionsHolder {
+        static final SummaryTransactions instance = new SummaryDaoImpl();
+
+        private SummaryTransactionsHolder() {
+        }
+    }
+
     public static SummaryTransactions getInstance() {
-        return new SummaryDaoImpl();
+        return SummaryTransactionsHolder.instance;
     }
 
 }

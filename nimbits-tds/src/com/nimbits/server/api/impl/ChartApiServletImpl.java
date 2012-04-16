@@ -19,7 +19,6 @@ import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.timespan.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
@@ -48,26 +47,26 @@ public class ChartApiServletImpl extends ApiServlet {
     private static final String chartDateCode = "&chd=t:";
     private static final int INT = 512;
     private static final Pattern COMPILE = Pattern.compile(",");
-    private static final String DEFAULT="https://chart.googleapis.com/chart?chst=d_weather&chld=taped_y|rainy-sunny|point%20not%20found";
 
     @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
+        processGet(req, resp);
+    }
+
+    protected static void processGet(HttpServletRequest req, HttpServletResponse resp) {
         final String formatParam = req.getParameter(Parameters.format.getText());
 
 
-
-        final Timespan timespan;
         try {
             doInit(req, resp, getContentType(formatParam));
-            timespan = getTimestamp(req);
-
+            final Timespan timespan = getTimestamp(req);
 
 
             final ExportType type = getContentType(formatParam);
             log.info(req.getQueryString());
             log.info(req.getParameter(Parameters.email.getText()));
 
-            final boolean doScale = (!Utils.isEmptyString(getParam(Parameters.autoscale)) && getParam(Parameters.autoscale).equals(Words.WORD_TRUE));
+            final boolean doScale = !Utils.isEmptyString(getParam(Parameters.autoscale)) && getParam(Parameters.autoscale).equals(Words.WORD_TRUE);
 
             if (user==null)  {
                 log.severe("Null user in chart api");
@@ -97,13 +96,11 @@ public class ChartApiServletImpl extends ApiServlet {
     }
 
     private static ExportType getContentType(String formatParam) {
-        ExportType type;
 
-        type = Utils.isEmptyString(formatParam)
+        return Utils.isEmptyString(formatParam)
                 ? ExportType.png : formatParam.equals("image")
                 ? ExportType.png : formatParam.equals("table")
                 ? ExportType.table : ExportType.plain;
-        return type;
     }
 
 
@@ -118,41 +115,36 @@ public class ChartApiServletImpl extends ApiServlet {
         StringBuilder params = new StringBuilder(INT);
         params.append(req.getQueryString());
         params.append(chartDateCode);
-        Entity e;
-        Point p;
-        List<Value> values;
 
         if (u != null) {
             for (final EntityName pointName : pointList) {
 
 
-                p = (Point) EntityServiceFactory.getInstance().getEntityByName(u, pointName,PointEntity.class.getName()).get(0);
+                Entity p = EntityServiceFactory.getInstance().getEntityByName(u, pointName, PointEntity.class.getName()).get(0);
                 if (p != null) {
 
                   //  p = (Point) EntityServiceFactory.getInstance().getEntityByKey(e.getKey(), PointEntity.class.getName());
 
-                    {
-                        //Entity e = EntityServiceFactory.getInstance().getEntityByUUID(p.getEntity());
-                        if (p.getProtectionLevel().equals(ProtectionLevel.everyone) || !u.isRestricted()) {
+                    //Entity e = EntityServiceFactory.getInstance().getEntityByUUID(p.getEntity());
+                    if (p.getProtectionLevel().equals(ProtectionLevel.everyone) || !u.isRestricted()) {
 
 
-                            values = (timespan != null) ?
+                        List<Value> values = timespan != null ?
 
-                                    RecordedValueServiceFactory.getInstance().getDataSegment(p, timespan) :
-                                    RecordedValueServiceFactory.getInstance().getTopDataSeries(p, valueCount);
+                                RecordedValueServiceFactory.getInstance().getDataSegment(p, timespan) :
+                                RecordedValueServiceFactory.getInstance().getTopDataSeries(p, valueCount);
 
 
-                            for (final Value v : values) {
-                                params.append(v.getDoubleValue()).append(Const.DELIMITER_COMMA);
-
-                            }
-                            if (params.lastIndexOf(Const.DELIMITER_COMMA) > 0) {
-                                params.deleteCharAt(params.lastIndexOf(Const.DELIMITER_COMMA));
-
-                            }
-                            params.append(Const.DELIMITER_BAR);
+                        for (final Value v : values) {
+                            params.append(v.getDoubleValue()).append(Const.DELIMITER_COMMA);
 
                         }
+                        if (params.lastIndexOf(Const.DELIMITER_COMMA) > 0) {
+                            params.deleteCharAt(params.lastIndexOf(Const.DELIMITER_COMMA));
+
+                        }
+                        params.append(Const.DELIMITER_BAR);
+
                     }
 
 
@@ -179,20 +171,27 @@ public class ChartApiServletImpl extends ApiServlet {
         connection.setRequestMethod(Const.METHOD_POST);
         connection.setReadTimeout(Const.DEFAULT_HTTP_TIMEOUT);
         final OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-        writer.write(params);
-        writer.close();
-        final InputStream is = connection.getInputStream();
-        resp.setContentType(ExportType.png.getCode());
-        final int length = connection.getContentLength();
-        log.info(params);
-        final OutputStream out = resp.getOutputStream();
-        resp.setContentLength(length);
-        byte[] buffer = new byte[length];
-        int i;
-        while ((i = is.read(buffer)) >= 0) {
-            out.write(buffer, 0, i);
-        }
-        out.close();
+
+
+
+            writer.write(params);
+
+            final InputStream is = connection.getInputStream();
+            resp.setContentType(ExportType.png.getCode());
+            final int length = connection.getContentLength();
+            log.info(params);
+            final OutputStream out = resp.getOutputStream();
+            resp.setContentLength(length);
+            byte[] buffer = new byte[length];
+            int i;
+            while ((i = is.read(buffer)) >= 0) {
+                out.write(buffer, 0, i);
+            }
+           out.flush();
+
+           // writer.close();
+
+
     }
 
     private static List<EntityName> createPointList(final String pointsListParam, final String pointParamName) throws NimbitsException {
@@ -200,7 +199,7 @@ public class ChartApiServletImpl extends ApiServlet {
         if (!Utils.isEmptyString(pointParamName)) {
             pointList.add(CommonFactoryLocator.getInstance().createName(pointParamName, EntityType.point));
         } else if (!Utils.isEmptyString(pointsListParam)) {
-            final String[] p1 = (COMPILE.split(pointsListParam));
+            final String[] p1 = COMPILE.split(pointsListParam);
             final List<String> pointsParams = Arrays.asList(p1);
             for (String pn : pointsParams) {
                 pointList.add(CommonFactoryLocator.getInstance().createName(pn, EntityType.point));
@@ -210,7 +209,6 @@ public class ChartApiServletImpl extends ApiServlet {
     }
 
     private static Timespan getTimestamp(ServletRequest req) throws NimbitsException {
-        Timespan timespan = null;
         String startDate = req.getParameter(Parameters.sd.getText());
         String endDate = req.getParameter(Parameters.ed.getText());
         //support for legacy st param
@@ -222,6 +220,7 @@ public class ChartApiServletImpl extends ApiServlet {
             endDate = req.getParameter("et");
         }
 
+        Timespan timespan = null;
         if (startDate != null && endDate != null) {
 
             timespan = TimespanServiceFactory.getInstance().createTimespan(startDate, endDate);

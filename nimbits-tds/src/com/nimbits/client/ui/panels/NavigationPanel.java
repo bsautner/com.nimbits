@@ -366,8 +366,12 @@ public class NavigationPanel extends NavigationEventProvider {
                                 context.showIntelligencePanel(model.getBaseEntity());
                                 break;
                             case resource:
+
                                 break;
                             case instance:
+                                break;
+                            case accessKey:
+                                context.showKeyPanel(model.getBaseEntity());
                                 break;
                         }
                     }

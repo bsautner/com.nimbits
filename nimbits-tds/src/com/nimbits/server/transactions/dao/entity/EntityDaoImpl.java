@@ -18,6 +18,7 @@ import com.nimbits.*;
 import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
+import com.nimbits.client.model.accesskey.*;
 import com.nimbits.client.model.calculation.*;
 import com.nimbits.client.model.category.*;
 import com.nimbits.client.model.connection.*;
@@ -146,7 +147,7 @@ public class EntityDaoImpl implements  EntityTransactions {
     public Entity addUpdateEntity(final Entity entity) throws NimbitsException {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        getLog().info(entity.toString());
+        log.info(entity.toString());
         try {
 
             final Entity retObj;
@@ -161,6 +162,7 @@ public class EntityDaoImpl implements  EntityTransactions {
                 if (result != null) {
                     tx.begin();
                     result.update(entity);
+
                     tx.commit();
                     final List<Entity> model = createModel(result);
                     if (model.isEmpty()) {
@@ -170,6 +172,7 @@ public class EntityDaoImpl implements  EntityTransactions {
                         retObj = model.get(0);
                     }
                 } else {
+
                     retObj= addEntity(entity, pm);
                 }
 
@@ -200,13 +203,17 @@ public class EntityDaoImpl implements  EntityTransactions {
         if (Utils.isEmptyString(commit.getUUID())) {
             commit.setUUID(UUID.randomUUID().toString());
         }
-
+        if (! commit.getEntityType().equals(EntityType.user)) {
+            commit.validate();
+        }
         pm.makePersistent(commit);
+
         if (entity.getEntityType().equals(EntityType.user) ){
             final Transaction tx = pm.currentTransaction();
             tx.begin();
             entity.setParent(entity.getKey());
             entity.setOwner(entity.getKey());
+
             tx.commit();
 
         }
@@ -262,6 +269,9 @@ public class EntityDaoImpl implements  EntityTransactions {
             case instance:
                 commit = new CategoryEntity(entity);
                 break;
+            case accessKey:
+                commit = new AccessKeyEntity((AccessKey) entity);
+                break;
             default:
                 commit = new CategoryEntity(entity);
         }
@@ -287,8 +297,8 @@ public class EntityDaoImpl implements  EntityTransactions {
         for (Entity e : connections.values()) {
             relationshipMap.put(e.getName().getValue(), e);
         }
-       // final Collection<String> connectedUserKeys = getConnectedUserKeys(connections, uuids, relationshipMap);
-      // connectedUserKeys.addAll(connections.keySet());
+        // final Collection<String> connectedUserKeys = getConnectedUserKeys(connections, uuids, relationshipMap);
+        // connectedUserKeys.addAll(connections.keySet());
         try{
             final List<Entity> retObj = new ArrayList<Entity>(INT);
 
@@ -302,7 +312,7 @@ public class EntityDaoImpl implements  EntityTransactions {
                         for (final Entity entity1 : entities) {
 
                             if (relationshipMap.containsKey(entity1.getParent())) {
-                               // final Relationship rx = relationshipMap.get(entity1.getParent());
+                                // final Relationship rx = relationshipMap.get(entity1.getParent());
                                 Entity c = relationshipMap.get(entity1.getParent());
                                 entity1.setParent(c.getKey());
                             }
@@ -317,8 +327,8 @@ public class EntityDaoImpl implements  EntityTransactions {
 
                 }
                 catch (NullPointerException e) {
-                    getLog().info(e.getMessage());
-                    getLog().info("caused by type not existing in store");
+                    log.info(e.getMessage());
+                    log.info("caused by type not existing in store");
                 }
                 catch (ClassNotFoundException e) {
                     LogHelper.logException(this.getClass(), e);
@@ -429,6 +439,26 @@ public class EntityDaoImpl implements  EntityTransactions {
         } finally {
             pm.close();
         }
+    }
+
+    @Override
+    public List<Entity> getEntitiesBySource(final Entity source, final Class<?>cls) throws NimbitsException {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        try {
+
+
+            Query q = pm.newQuery(cls);
+            q.setFilter("source == s && enabled== e");
+            q.declareParameters("String s, Boolean e");
+            Collection<Entity> result = (Collection<Entity>) q.execute(source.getKey(), true);
+            return createModels(result);
+
+
+        }  finally {
+            pm.close();
+        }
+
+
     }
 
     @Override
@@ -690,11 +720,11 @@ public class EntityDaoImpl implements  EntityTransactions {
             case summary:
                 model = SummaryModelFactory.createSummary((Summary) entity);
                 break;
-            case instance:
-                throw new NimbitsException("Not implemented");
-
+            case accessKey:
+                model = AccessKeyFactory.createAccessKey((AccessKey) entity);
+                break;
             default:
-                throw new NimbitsException("Not implemented");
+                throw new NimbitsException("Can't create an entity model without a known type");
 
         }
         final List<Entity> retObj = new ArrayList<Entity>(1);
@@ -703,6 +733,9 @@ public class EntityDaoImpl implements  EntityTransactions {
             model.setReadOnly(!isOwner );
             retObj.add(model);
         }
+        else {
+            log.info("did not return an entity because user" + user.getKey() + " could not read " + model.toString());
+        }
 
 
         return retObj;
@@ -710,8 +743,4 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     }
 
-
-    public Logger getLog() {
-        return log;
-    }
 }

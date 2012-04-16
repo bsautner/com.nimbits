@@ -21,23 +21,21 @@ public class SettingTransactionsFactory {
     private SettingTransactionsFactory() {
     }
 
-    private static SettingTransactions daoInstance;
-    private static SettingTransactions memInstance;
+
+    private static class SettingTransactionsHolder {
+        static final SettingTransactions daoInstance = new SettingsDAOImpl();
+        static final SettingTransactions memInstance = new SettingMemCacheImpl();
+        private SettingTransactionsHolder() {
+        }
+    }
 
     public static SettingTransactions getInstance() {
-        if (memInstance == null) {
-            memInstance = new SettingMemCacheImpl();
-
-        }
-        return memInstance;
+        return SettingTransactionsHolder.memInstance;
     }
 
     public static SettingTransactions getDaoInstance() {
-        if (daoInstance == null) {
-            daoInstance = new SettingsDAOImpl();
 
-        }
-        return daoInstance;
+        return SettingTransactionsHolder.daoInstance;
     }
 }
 

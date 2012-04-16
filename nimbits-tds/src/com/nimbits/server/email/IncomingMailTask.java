@@ -51,10 +51,8 @@ public class IncomingMailTask extends HttpServlet {
         final String fromAddress = req.getParameter(Parameters.fromAddress.getText());
         final String inContent = req.getParameter(Parameters.inContent.getText());
 
-        final EmailAddress internetAddress;
         try {
-            internetAddress = CommonFactoryLocator.getInstance().createEmailAddress(fromAddress);
-
+            final EmailAddress internetAddress = CommonFactoryLocator.getInstance().createEmailAddress(fromAddress);
 
 
             log.info("Incoming mail post: " + internetAddress);
@@ -65,21 +63,21 @@ public class IncomingMailTask extends HttpServlet {
             final String Data[] = COMPILE2.split(content);
             log.info("Incoming mail post: " + inContent);
 
-            if (! result.isEmpty()) {
+            if (result.isEmpty()) {
+                log.severe("Null user for incoming mail:" + fromAddress);
+
+            } else {
                 final User u = (User) result.get(0);
                 if (Data.length > 0) {
                     for (String s : Data) {
                         processLine(u, s);
                     }
                 }
-            } else {
-                log.severe("Null user for incoming mail:" + fromAddress);
-
             }
         } catch (NimbitsException e) {
             LogHelper.logException(this.getClass(), e);
         }
-        //TODO add users to list of spammers
+
 
     }
 
@@ -100,18 +98,16 @@ public class IncomingMailTask extends HttpServlet {
                                   final String k[]) throws NimbitsException {
 
 
-        long timestamp;
-        Double v = 0.0;
-        String note;
-
         if (k != null && k.length > 1) {
 
+            Double v = 0.0;
             try {
                 v = Double.valueOf(k[1].trim());
             } catch (NumberFormatException e1) {
                 log.info("Invalid mail message from: " + u.getEmail() + ' ' + k[0] + ',' + k[1]);
             }
 
+            long timestamp;
             if (k.length == 3) {
 
                 try {
@@ -124,7 +120,7 @@ public class IncomingMailTask extends HttpServlet {
             } else {
                 timestamp = new Date().getTime();
             }
-            note = k.length == 4 ? k[3].trim() : "";
+            String note = k.length == 4 ? k[3].trim() : "";
             final Value value = ValueModelFactory.createValueModel(0.0, 0.0, v, new Date(timestamp), point.getKey(), note);
             try {
                 RecordedValueServiceFactory.getInstance().recordValue(u, point, value, false);

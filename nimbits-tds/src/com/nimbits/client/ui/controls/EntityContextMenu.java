@@ -69,6 +69,7 @@ public class EntityContextMenu extends Menu {
     private MenuItem xmppContext;
     private MenuItem summaryContext;
     private MenuItem intelligenceContext;
+    private MenuItem keyContext;
     private Map<SettingType, String> settings;
     private final User user;
 
@@ -105,12 +106,15 @@ public class EntityContextMenu extends Menu {
         intelligenceContext = intelligenceContext();
         xmppContext = xmppResourceContext();
         summaryContext = summaryContext();
+        keyContext = keyContext();
+
         add(propertyContext);
         add(copyContext);
         add(deleteContext);
 
         add(subscribeContext);
         add(reportContext);
+        //add(keyContext);
         add(calcContext);
         add(summaryContext);
         add(xmppContext);
@@ -121,6 +125,8 @@ public class EntityContextMenu extends Menu {
 
 
     }
+
+
 
     @Override
     public void showAt(int x, int y) {
@@ -136,6 +142,7 @@ public class EntityContextMenu extends Menu {
         xmppContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.resource));
         summaryContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.summary));
 
+        keyContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.accessKey));
 
         propertyContext().setEnabled(!currentModel.isReadOnly());
 
@@ -180,7 +187,14 @@ public class EntityContextMenu extends Menu {
         return retObj;
 
     }
+    private MenuItem keyContext() {
+        MenuItem retObj = new MenuItem();
+        retObj.setText("New Read/Write Key");
+        retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.key()));
+        retObj.addSelectionListener(new KeyMenuEventSelectionListener());
+        return retObj;
 
+    }
     private MenuItem intelligenceContext() {
         final MenuItem retObj = new MenuItem();
 
@@ -217,6 +231,17 @@ public class EntityContextMenu extends Menu {
         w.setHeading("Summary");
         w.add(dp);
         dp.addEntityAddedListener(new SummaryEntityAddedListener(w));
+
+        w.show();
+    }
+    public void showKeyPanel(Entity entity) {
+        AccessKeyPanel dp = new AccessKeyPanel(entity);
+        final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
+        w.setWidth(WIDTH);
+        w.setHeight(HEIGHT);
+        w.setHeading("Read/Write Key");
+        w.add(dp);
+        dp.addEntityAddedListener(new EntityAddedListener(w));
 
         w.show();
     }
@@ -771,4 +796,22 @@ public class EntityContextMenu extends Menu {
 
         }
     }
+    private class KeyMenuEventSelectionListener extends SelectionListener<MenuEvent> {
+        KeyMenuEventSelectionListener() {
+        }
+
+        @Override
+        public void componentSelected(MenuEvent ce) {
+            ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
+            currentModel = (TreeModel) selectedModel;
+            Entity entity =  currentModel.getBaseEntity();
+
+            if (entity.getEntityType().equals(EntityType.accessKey)  ||
+                    entity.getEntityType().equals(EntityType.point)) {
+                showKeyPanel(entity);
+            }
+
+        }
+    }
+
 }

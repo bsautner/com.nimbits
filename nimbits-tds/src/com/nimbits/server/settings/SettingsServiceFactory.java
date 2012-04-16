@@ -16,18 +16,21 @@ package com.nimbits.server.settings;
 import com.nimbits.client.service.settings.*;
 
 public class SettingsServiceFactory {
-    private static SettingsService instance;
 
 
     private SettingsServiceFactory() {
         // Exists only to defeat instantiation.
     }
 
-    public static SettingsService getInstance() {
-        if (instance == null) {
-            instance = new SettingServiceImpl();
+    private static class SettingsServiceHolder {
+        static final SettingsService instance = new SettingServiceImpl();
+
+        private SettingsServiceHolder() {
         }
-        return instance;
+    }
+
+    public static SettingsService getInstance() {
+        return SettingsServiceHolder.instance;
 
 
     }

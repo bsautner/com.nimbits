@@ -31,11 +31,11 @@ public enum SubscriptionDeliveryMethod {
 
 
 
-    private static final Map<Integer, SubscriptionDeliveryMethod> lookup = new HashMap<Integer, SubscriptionDeliveryMethod>();
+    private static final Map<Integer, SubscriptionDeliveryMethod> lookup = new HashMap<Integer, SubscriptionDeliveryMethod>(6);
 
     static {
         for (SubscriptionDeliveryMethod s : EnumSet.allOf(SubscriptionDeliveryMethod.class))
-            lookup.put(s.getCode(), s);
+            lookup.put(s.code, s);
     }
 
     private final int code;

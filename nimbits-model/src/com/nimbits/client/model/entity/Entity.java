@@ -68,7 +68,8 @@ public interface Entity  extends Serializable, Comparable<Entity> {
 
     boolean isOwner(User user);
 
-    boolean entityIsReadable(User user);
+    boolean entityIsReadable(User user) throws NimbitsException;
 
 
+    void validate() throws NimbitsException;
 }

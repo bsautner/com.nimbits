@@ -69,7 +69,7 @@ public class MailHandlerServletImpl extends ApiServlet {
     private static String getContent(final MimeMessage message, final String contentType)
             throws MessagingException, IOException {
 
-        return (contentType.contains(Words.WORD_MULTI_PART)) ? getMultipartContent(message) : (String) message.getContent();
+        return contentType.contains(Words.WORD_MULTI_PART) ? getMultipartContent(message) : (String) message.getContent();
 
     }
 

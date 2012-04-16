@@ -26,11 +26,11 @@ import java.util.Map;
 public enum IntelligenceResultTarget {
     data(1), value(2);
 
-    private static final Map<Integer, IntelligenceResultTarget> lookup = new HashMap<Integer, IntelligenceResultTarget>();
+    private static final Map<Integer, IntelligenceResultTarget> lookup = new HashMap<Integer, IntelligenceResultTarget>(2);
 
     static {
         for (IntelligenceResultTarget s : EnumSet.allOf(IntelligenceResultTarget.class))
-            lookup.put(s.getCode(), s);
+            lookup.put(s.code, s);
     }
 
     private final int code;

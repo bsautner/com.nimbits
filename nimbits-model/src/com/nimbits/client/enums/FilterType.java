@@ -25,13 +25,17 @@ import java.util.Map;
  */
 public enum FilterType {
 
-      fixedHysteresis(0, "Fixed Hysteresis"), percentageHysteresis(1, "Percentage Hysteresis"), ceiling(2, "Ceiling"), floor(3, "Floor"), none(4, "None");
+    fixedHysteresis(0, "Fixed Hysteresis"),
+    percentageHysteresis(1, "Percentage Hysteresis"),
+    ceiling(2, "Ceiling"),
+    floor(3, "Floor"),
+    none(4, "None");
 
-    private static final Map<Integer, FilterType> lookup = new HashMap<Integer, FilterType>();
+    private static final Map<Integer, FilterType> lookup = new HashMap<Integer, FilterType>(4);
 
     static {
         for (FilterType s : EnumSet.allOf(FilterType.class))
-            lookup.put(s.getCode(), s);
+            lookup.put(s.code, s);
     }
 
     private final int code;

@@ -31,11 +31,11 @@ public enum DisplayType {
     IdleAlarm(5),
     Diagram(6);
 
-    private static final Map<Integer, DisplayType> lookup = new HashMap<Integer, DisplayType>();
+    private static final Map<Integer, DisplayType> lookup = new HashMap<Integer, DisplayType>(6);
 
     static {
         for (DisplayType s : EnumSet.allOf(DisplayType.class))
-            lookup.put(s.getCode(), s);
+            lookup.put(s.code, s);
     }
 
     private final int code;

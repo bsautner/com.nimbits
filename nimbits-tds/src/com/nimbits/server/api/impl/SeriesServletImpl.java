@@ -43,9 +43,7 @@ public class SeriesServletImpl extends ApiServlet {
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp) {
 
         try {
-        String result;
-        doInit(req, resp, ExportType.plain);
-        int count;
+            doInit(req, resp, ExportType.plain);
 
 
         String segStr = req.getParameter(Parameters.seg.getText());
@@ -64,9 +62,9 @@ public class SeriesServletImpl extends ApiServlet {
         }
 
 
-            count = Utils.isEmptyString(getParam(Parameters.count)) ? 10 : Integer.valueOf(getParam(Parameters.count));
+            int count = Utils.isEmptyString(getParam(Parameters.count)) ? 10 : Integer.valueOf(getParam(Parameters.count));
 
-        if (count > 1000) {
+            if (count > 1000) {
             count = 1000;
         }
         if (Utils.isEmptyString(segStr)) {
@@ -105,7 +103,7 @@ public class SeriesServletImpl extends ApiServlet {
                     }
 
 
-                    result = GsonFactory.getInstance().toJson(values);
+                    String result = GsonFactory.getInstance().toJson(values);
                     out.println(result);
                     out.close();
                 }

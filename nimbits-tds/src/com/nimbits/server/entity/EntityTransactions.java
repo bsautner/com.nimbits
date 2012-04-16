@@ -46,4 +46,6 @@ public interface EntityTransactions {
     void removeEntityFromCache( final Entity entity) throws NimbitsException;
 
     List<Entity> getEntityByName( final EntityName name,  final Class<?> cls) throws NimbitsException;
+
+    List<Entity> getEntitiesBySource(Entity source, Class<?> cls) throws NimbitsException;
 }

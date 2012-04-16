@@ -28,16 +28,14 @@ public class UserServletImpl extends HttpServlet {
 
     @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
-        final String result;
-        final PrintWriter out;
         final Action action = Action.get(req.getParameter(Parameters.action.getText()));
 
         if (!(action == null) && action.equals(Action.download)) {
-            out = resp.getWriter();
+            final PrintWriter out = resp.getWriter();
             final List<User> users = UserTransactionFactory.getInstance().getAllUsers("dateCreated ascending", 1000);
 
 
-            result = GsonFactory.getInstance().toJson(users, GsonFactory.userListType);
+            final String result = GsonFactory.getInstance().toJson(users, GsonFactory.userListType);
             out.println(result);
         }
         if (!(action == null) && action.equals(Action.create)) {

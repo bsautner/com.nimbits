@@ -148,7 +148,7 @@ public interface Icons extends ClientBundle {
     ImageResource Pause();
 
     @Source("PrimaryKeyHS.png")
-    ImageResource Key();
+    ImageResource key();
 
     @Source("Help.png")
     ImageResource Help();

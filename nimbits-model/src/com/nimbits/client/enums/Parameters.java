@@ -86,11 +86,11 @@ public enum Parameters {
      record(ParamConstants.ACTION_RECORD),
      server(ParamConstants.PARAM_SERVER);
 
-    private static final Map<String, Parameters> lookup = new HashMap<String, Parameters>();
+    private static final Map<String, Parameters> lookup = new HashMap<String, Parameters>(100);
 
     static {
         for (Parameters s : EnumSet.allOf(Parameters.class))
-            lookup.put(s.getText(), s);
+            lookup.put(s.text, s);
     }
 
     private final String text;
@@ -112,7 +112,7 @@ public enum Parameters {
         return text;
     }
 
-    private class ParamConstants {
+    private static class ParamConstants {
 
        public static final String PARAM_ACTION = "action";
        public static final String PARAM_AUTO_SCALE = "autoscale";
@@ -188,7 +188,10 @@ public enum Parameters {
        public static final String PARAM_APP_ID = "appid";
        public static final String ACTION_RECORD = "record";
        public static final String PARAM_SERVER = "server";
-   }
+
+        private ParamConstants() {
+        }
+    }
 
 
 }

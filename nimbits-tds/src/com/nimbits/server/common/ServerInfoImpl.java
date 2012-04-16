@@ -30,7 +30,7 @@ public class ServerInfoImpl {
 
     public static String getFullServerURL(final ServletRequest req) {
      try {
-         return (req == null) ? getUrl() : req.getScheme() + "://" + req.getServerName() + ':' + req.getServerPort();
+         return req == null ? getUrl() : req.getScheme() + "://" + req.getServerName() + ':' + req.getServerPort();
 
      }
      catch (NullPointerException ex) {

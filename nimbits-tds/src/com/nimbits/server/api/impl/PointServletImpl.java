@@ -158,7 +158,7 @@ public class PointServletImpl extends ApiServlet {
                             final List<Entity> children = EntityServiceFactory.getInstance().getEntityChildren(user, entity, EntityType.point);
                             final List<Point> points = new ArrayList<Point>(children.size());
 
-                            //todo remove point from list if private
+
                             for (final Entity e : children) {
                                 final Point p = (Point) e;
                                 p.setValues(getRecordedValues(getParam(Parameters.count), startParam, endParam, offsetParam, p));
@@ -311,7 +311,7 @@ public class PointServletImpl extends ApiServlet {
 
 
 
-    //todo make ok for connections
+
     private static boolean okToReport(final User u, final Entity c) {
         return c.getProtectionLevel().equals(ProtectionLevel.everyone) || !(u == null || u.isRestricted());
     }

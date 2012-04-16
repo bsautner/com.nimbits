@@ -22,7 +22,7 @@ public enum MemCacheKey {
     entityMap(6, SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_ENTITY_MAP),
     userPointNamespace(7, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_USER_POINT_NAMESPACE);
 
-    private static final Map<Integer, MemCacheKey> lookup = new HashMap<Integer, MemCacheKey>(MemCacheKey.values().length);
+    private static final Map<Integer, MemCacheKey> lookup = new HashMap<Integer, MemCacheKey>(8);
 
     static {
         for (MemCacheKey s : EnumSet.allOf(MemCacheKey.class))

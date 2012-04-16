@@ -57,7 +57,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements
         if (Utils.isEmptyString(s)) {
             s = paramName.getDefaultValue();
         }
-        return (s != null && s.equals(Const.TRUE));
+        return s != null && s.equals(Const.TRUE);
 
     }
 

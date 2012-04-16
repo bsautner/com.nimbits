@@ -28,13 +28,13 @@ public class Utils {
     }
 
     public static boolean isEmptyString(final String string) {
-        return (string == null || string.trim().isEmpty());
+        return string == null || string.trim().isEmpty();
     }
 
 
     public static double roundDouble(final double d) {
         int ix = (int) (d * DOUBLE); // scale it
-        return ((double) ix) / DOUBLE;
+        return (double) ix / DOUBLE;
     }
 
 

@@ -13,6 +13,8 @@
 
 package com.nimbits.client.model.setting;
 
+import com.nimbits.client.enums.SettingType;
+
 import java.io.*;
 
 /**
@@ -22,7 +24,10 @@ import java.io.*;
  * Time: 3:41 PM
  */
 public interface Setting extends Serializable {
-    String getName();
+
+    SettingType getSetting();
 
     String getValue();
+
+    void setValue(String newValue);
 }

@@ -40,7 +40,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
     public LoginInfo login(final String requestUri) throws NimbitsException {
         final UserService userService = UserServiceFactory.getUserService();
         final User user = userService.getCurrentUser();
-        final LoginInfo loginInfo = new LoginInfo();
+        final LoginInfo loginInfo = new LoginInfo(); //TODO replace with factory
 
         if (user != null) {
             final EmailAddress internetAddress = CommonFactoryLocator.getInstance().createEmailAddress(user.getEmail());

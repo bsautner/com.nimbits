@@ -92,7 +92,7 @@ public class SettingMemCacheImpl implements SettingTransactions {
                 return (Map<SettingType, String>) cache.get(MemCacheKey.allSettings);
 
             } else {
-                Map<SettingType, String> settings = SettingTransactionsFactory.getDaoInstance().getSettings();
+                final Map<SettingType, String> settings = SettingTransactionsFactory.getDaoInstance().getSettings();
                 cache.put(MemCacheKey.allSettings, settings);
                 return settings;
             }

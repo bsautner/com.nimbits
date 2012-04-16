@@ -97,7 +97,7 @@ public class EntityStore implements Entity {
 
         final EntityName saferName = CommonFactoryLocator.getInstance().createName(entity.getName().getValue(), entity.getEntityType());
         try {
-            Class cls = Class.forName(entity.getEntityType().getClassName());
+            final Class cls = Class.forName(entity.getEntityType().getClassName());
 
 
             setKey(cls, entity, saferName);
@@ -133,7 +133,7 @@ public class EntityStore implements Entity {
 
     }
 
-    private void setKey(Class<?> cls, Entity entity, CommonIdentifier saferName) {
+    private void setKey(final Class<?> cls, final Entity entity, final CommonIdentifier saferName) {
         this.key = Utils.isEmptyString(entity.getKey())
                 ? entity.getEntityType().equals(EntityType.user)
                 ? KeyFactory.createKey(cls.getSimpleName(), saferName.getValue())
@@ -276,13 +276,13 @@ public class EntityStore implements Entity {
     }
 
     @Override
-    public void setChildren(List<Point> children) {
+    public void setChildren(final List<Point> children) {
 
     }
 
 
     @Override
-    public void update(Entity update) throws NimbitsException {
+    public void update(final Entity update) throws NimbitsException {
         this.description = update.getDescription();
         this.name = update.getName().getValue();
         this.protectionLevel = update.getProtectionLevel().getCode();

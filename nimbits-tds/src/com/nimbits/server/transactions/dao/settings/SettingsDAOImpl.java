@@ -13,14 +13,19 @@
 
 package com.nimbits.server.transactions.dao.settings;
 
-import com.nimbits.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.server.orm.*;
-import com.nimbits.server.settings.*;
+import com.nimbits.PMF;
+import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.setting.Setting;
+import com.nimbits.server.orm.ServerSetting;
+import com.nimbits.server.settings.SettingTransactions;
 
-import javax.jdo.*;
-import java.util.*;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @SuppressWarnings("unchecked")
@@ -39,7 +44,7 @@ public class SettingsDAOImpl implements SettingTransactions {
             if (a.isEmpty()) {
                 throw new NimbitsException(setting.getName() + " setting not found.");
             } else {
-                final ServerSetting s = a.get(0);
+                final Setting s = a.get(0);
                 retVal = s.getValue();
             }
         } finally {
@@ -57,11 +62,11 @@ public class SettingsDAOImpl implements SettingTransactions {
             final Query q = pm.newQuery(ServerSetting.class, "name == n");
             q.setRange(0, 1);
             q.declareParameters("String n");
-            final List<ServerSetting> a = (List<ServerSetting>) q.execute(name.getName());
+            final List<Setting> a = (List<Setting>) q.execute(name.getName());
             if (!a.isEmpty()) {
                 final Transaction tx = pm.currentTransaction();
                 tx.begin();
-                final ServerSetting s = a.get(0);
+                final Setting s =  a.get(0);
                 s.setValue(newValue);
                 tx.commit();
 
@@ -86,8 +91,8 @@ public class SettingsDAOImpl implements SettingTransactions {
             final Query q = pm.newQuery(ServerSetting.class);
             final Iterable<ServerSetting> l = (Iterable<ServerSetting>) q.execute();
             final Map<SettingType, String> settings = new HashMap<SettingType, String>(SettingType.values().length);
-            for (final ServerSetting s : l) {
-                SettingType type = s.getSetting();
+            for (final Setting s : l) {
+                final SettingType type = s.getSetting();
                 if (type != null) { //this can happen if an old setting in the db isn't in the enum anymore
                 settings.put(s.getSetting(), s.getValue());
                 }
@@ -103,7 +108,7 @@ public class SettingsDAOImpl implements SettingTransactions {
     public void addSetting(final SettingType name, final String value) {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
-            final ServerSetting s = new ServerSetting(value, name);
+            final Setting s = new ServerSetting(value, name);
             pm.makePersistent(s);
         } finally {
             pm.close();

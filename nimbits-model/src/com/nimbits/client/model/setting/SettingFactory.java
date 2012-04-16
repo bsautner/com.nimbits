@@ -13,37 +13,17 @@
 
 package com.nimbits.client.model.setting;
 
-import com.nimbits.client.enums.SettingType;
-
 /**
- * Created by Benjamin Sautner
+ * Created by bsautner
  * User: benjamin
- * Date: 5/5/11
- * Time: 3:41 PM
+ * Date: 4/14/12
+ * Time: 10:48 AM
  */
-public class SettingModel implements Setting {
-    private static final long serialVersionUID = 4376024128461099128L;
-    private String name;
-    private String value;
+public class SettingFactory {
 
-    public SettingModel(final Setting setting) {
-        this.name = setting.getValue();
-        this.value = setting.getValue();
-    }
-
-    @Override
-    public SettingType getSetting() {
-        return SettingType.get(this.name);
-    }
-
-    @Override
-    public String getValue() {
-        return value;
-    }
-
-    @Override
-    public void setValue(final String newValue) {
-         this.value = newValue;
+    public static Setting createSetting(Setting setting) {
+        return new SettingModel(setting);
 
     }
+
 }

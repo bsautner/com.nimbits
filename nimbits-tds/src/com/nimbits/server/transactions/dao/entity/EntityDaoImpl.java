@@ -51,7 +51,7 @@ public class EntityDaoImpl implements  EntityTransactions {
     private static final int INT = 1024;
 
     private final User user;
-    final Logger log = Logger.getLogger(EntityDaoImpl.class.getName());
+    private final Logger log = Logger.getLogger(EntityDaoImpl.class.getName());
 
     public EntityDaoImpl(final User user) {
         this.user = user;
@@ -146,7 +146,7 @@ public class EntityDaoImpl implements  EntityTransactions {
     public Entity addUpdateEntity(final Entity entity) throws NimbitsException {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        log.info(entity.toString());
+        getLog().info(entity.toString());
         try {
 
             final Entity retObj;
@@ -317,8 +317,8 @@ public class EntityDaoImpl implements  EntityTransactions {
 
                 }
                 catch (NullPointerException e) {
-                    log.info(e.getMessage());
-                    log.info("caused by type not existing in store");
+                    getLog().info(e.getMessage());
+                    getLog().info("caused by type not existing in store");
                 }
                 catch (ClassNotFoundException e) {
                     LogHelper.logException(this.getClass(), e);
@@ -376,7 +376,7 @@ public class EntityDaoImpl implements  EntityTransactions {
     private static List<Entity> getEntityChildren(final PersistenceManager pm, final Entity entity, final EntityType type) throws NimbitsException {
 
         try {
-            Class cls = Class.forName(type.getClassName());
+            final Class cls = Class.forName(type.getClassName());
 
             final Query q1 = pm.newQuery(cls);
             q1.setFilter("parent==b && entityType==t");
@@ -389,7 +389,7 @@ public class EntityDaoImpl implements  EntityTransactions {
             if (!result.isEmpty()) {
                 retObj.addAll(result);
                 for (final Entity e : result) {
-                    List<Entity> children = getEntityChildren(pm, e);
+                    final List<Entity> children = getEntityChildren(pm, e);
                     retObj.addAll(children);
                 }
             }
@@ -699,7 +699,7 @@ public class EntityDaoImpl implements  EntityTransactions {
         }
         final List<Entity> retObj = new ArrayList<Entity>(1);
         if (model.entityIsReadable(user)) {
-            boolean isOwner = model.isOwner(user);
+            final boolean isOwner = model.isOwner(user);
             model.setReadOnly(!isOwner );
             retObj.add(model);
         }
@@ -711,5 +711,7 @@ public class EntityDaoImpl implements  EntityTransactions {
     }
 
 
-
+    public Logger getLog() {
+        return log;
+    }
 }

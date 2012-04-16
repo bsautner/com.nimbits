@@ -33,6 +33,9 @@ public class LoginInfo implements Serializable {
     private User user;
     private boolean userAdmin;
 
+    public LoginInfo() {
+    }
+
     public boolean isUserAdmin() {
         return userAdmin;
     }

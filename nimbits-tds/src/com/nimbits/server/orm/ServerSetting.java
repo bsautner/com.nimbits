@@ -13,22 +13,23 @@
 
 package com.nimbits.server.orm;
 
-import com.nimbits.client.enums.*;
+import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.model.setting.Setting;
 
 import javax.jdo.annotations.*;
 
+@SuppressWarnings("unused")
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
-public class ServerSetting {
+public class ServerSetting implements Setting {
 
+    private static final long serialVersionUID = 8358325780044920423L;
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    public Long id;
-
-    private static final long serialVersionUID = 1L;
-    // Constructors
+    private Long id;
 
 
-    public ServerSetting() {
+
+    private ServerSetting() {
     }
 
     public ServerSetting(final String value, final SettingType setting) {
@@ -41,23 +42,20 @@ public class ServerSetting {
     @Persistent
     private String value;
 
+
+    @Override
     public SettingType getSetting() {
         return SettingType.get(name);
     }
 
-
-
-    public void setName(SettingType setting) {
-        this.name = setting.getName();
-    }
-
+    @Override
     public String getValue() {
         return value;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    @Override
+    public void setValue(final String newValue) {
+        this.value = newValue;
     }
-
 
 }

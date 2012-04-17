@@ -16,9 +16,9 @@ package com.nimbits.server.transactions.dao.point;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
-import com.nimbits.server.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.orm.*;
+import com.nimbits.server.user.*;
 import com.nimbits.server.value.*;
 import static org.junit.Assert.*;
 import org.junit.*;
@@ -31,7 +31,7 @@ import java.util.*;
  * Date: 4/1/12
  * Time: 8:02 PM
  */
-public class PointDaoImplTest extends NimbitsServletTest{
+public class PointDaoImplTest extends NimbitsServletTest {
 
     @Test
     public void getPointsTest() throws NimbitsException {

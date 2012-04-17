@@ -17,6 +17,7 @@ import com.google.appengine.api.datastore.*;
 import com.nimbits.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
+import com.nimbits.client.model.accesskey.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.entity.Entity;
@@ -30,6 +31,7 @@ import com.nimbits.server.orm.*;
 import com.nimbits.server.settings.*;
 import com.nimbits.server.transactions.dao.entity.*;
 import com.nimbits.server.user.*;
+import com.nimbits.shared.*;
 
 import javax.jdo.*;
 import javax.jdo.Query;
@@ -49,6 +51,41 @@ public class RecoveryServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        PrintWriter out = resp.getWriter();
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        Query q = pm.newQuery(UserEntity.class);
+        List<UserEntity> all = (List<UserEntity>) q.execute();
+
+
+        for (UserEntity u : all) {
+
+
+
+            try {
+                EntityName name = CommonFactoryLocator.getInstance().createName("Secret API Key", EntityType.accessKey);
+                Entity n = EntityModelFactory.createEntity(name, "", EntityType.accessKey, ProtectionLevel.onlyMe,
+                        u.getKey(), u.getKey());
+                String secret = u.getSecret();
+                if (Utils.isEmptyString(secret)) {
+                    secret = UUID.randomUUID().toString();
+                }
+                out.println(secret + "<br>");
+                AccessKey model = AccessKeyFactory.createAccessKey(n, secret, u.getKey(), AuthLevel.readWriteAll);
+                AccessKeyEntity en = new AccessKeyEntity(model);
+                pm.makePersistent(en);
+            } catch (NimbitsException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+
+        }
+
+
+
+
+
+    }
+
+    private void upgradeCalcs(HttpServletResponse resp) throws IOException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         PrintWriter out = resp.getWriter();
         Query q = pm.newQuery(EntityStore.class);
@@ -64,24 +101,24 @@ public class RecoveryServlet extends HttpServlet {
 
         for (EntityStore x : old) {
             if (! done.contains(x.getOwner() + x.getName())) {
-              //  if (x.getOwner().equals("bsautner@gmail.com")) {
-                    Entity e = EntityModelFactory.createEntity(x.getName(), "", EntityType.userConnection,
-                            ProtectionLevel.onlyMe, x.getOwner(), x.getOwner());
+                //  if (x.getOwner().equals("bsautner@gmail.com")) {
+                Entity e = EntityModelFactory.createEntity(x.getName(), "", EntityType.userConnection,
+                        ProtectionLevel.onlyMe, x.getOwner(), x.getOwner());
 
-                    Entity ex = EntityModelFactory.createEntity(x.getName(), "", EntityType.userConnection,
-                            ProtectionLevel.onlyMe, x.getOwner(), x.getOwner());
-                    try {
-                        ConnectionEntity cx = new ConnectionEntity(ex);
-                        out.println(ex.getName() + " " + ex.getOwner() + "<br>");
-                        EntityServiceFactory.getInstance().addUpdateEntity(cx);
-                        pm.deletePersistent(x);
+                Entity ex = EntityModelFactory.createEntity(x.getName(), "", EntityType.userConnection,
+                        ProtectionLevel.onlyMe, x.getOwner(), x.getOwner());
+                try {
+                    ConnectionEntity cx = new ConnectionEntity(ex);
+                    out.println(ex.getName() + " " + ex.getOwner() + "<br>");
+                    EntityServiceFactory.getInstance().addUpdateEntity(cx);
+                    pm.deletePersistent(x);
 
-                    } catch (NimbitsException e1) {
-                        out.println(e1.getMessage());
-                    }
+                } catch (NimbitsException e1) {
+                    out.println(e1.getMessage());
+                }
 
 
-             //   }
+                //   }
 
 
             }
@@ -97,64 +134,64 @@ public class RecoveryServlet extends HttpServlet {
         final Query q1 = pm.newQuery(DataPoint.class);
         try {
 
-        List<CalcEntity> calcEntities = (List<CalcEntity>) pm.newQuery(CalcEntity.class).execute();
-        out.println("deleting" + calcEntities.size());
-        pm.deletePersistentAll(calcEntities);
+            List<CalcEntity> calcEntities = (List<CalcEntity>) pm.newQuery(CalcEntity.class).execute();
+            out.println("deleting" + calcEntities.size());
+            pm.deletePersistentAll(calcEntities);
 
 
 
-        List<DataPoint> oldC = (List<DataPoint>) q1.execute();
-        String adminStr = SettingsServiceFactory.getInstance().getSetting(SettingType.admin);
-        EmailAddress emailAddress = null;
+            List<DataPoint> oldC = (List<DataPoint>) q1.execute();
+            String adminStr = SettingsServiceFactory.getInstance().getSetting(SettingType.admin);
+            EmailAddress emailAddress = null;
 
-        emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(adminStr);
+            emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(adminStr);
 
-        User admin = UserServiceFactory.getInstance().getUserByKey("bsautner@gmail.com");
-        admin.setAuthLevel(AuthLevel.admin);
-        for (DataPoint p : oldC) {
-            if (p.getCalculationEntity() != null) {
+            User admin = UserServiceFactory.getInstance().getUserByKey("bsautner@gmail.com");
+            // admin.setAuthLevel(AuthLevel.admin);
+            for (DataPoint p : oldC) {
+                if (p.getCalculationEntity() != null) {
 
-                EntityDaoImpl impl = new EntityDaoImpl(null);
-                try {
-                    final Query q2 = pm.newQuery(NimbitsUser.class);
-                    q2.setRange(0, 1);
-                    q2.setFilter("id == " + p.getUserFK());
-                    List<NimbitsUser> oldU = (List<NimbitsUser>) q2.execute();
-                    if (oldU.size() > 0) {
-                        NimbitsUser u = oldU.get(0);
-                        User ux = (User) EntityTransactionFactory.getDaoInstance(null).getEntityByKey(u.getEmail().getValue(), UserEntity.class).get(0);
-                        out.println(p.getCalculationEntity().getFormula() + "<br>");
-                        out.println(ux.getEmail().getValue() + "</br>");
-                        String tvar = null, xvar, yvar, zvar, targetVar;
+                    EntityDaoImpl impl = new EntityDaoImpl(null);
+                    try {
+                        final Query q2 = pm.newQuery(NimbitsUser.class);
+                        q2.setRange(0, 1);
+                        q2.setFilter("id == " + p.getUserFK());
+                        List<NimbitsUser> oldU = (List<NimbitsUser>) q2.execute();
+                        if (oldU.size() > 0) {
+                            NimbitsUser u = oldU.get(0);
+                            User ux = (User) EntityTransactionFactory.getDaoInstance(null).getEntityByKey(u.getEmail().getValue(), UserEntity.class).get(0);
+                            out.println(p.getCalculationEntity().getFormula() + "<br>");
+                            out.println(ux.getEmail().getValue() + "</br>");
+                            String tvar = null, xvar, yvar, zvar, targetVar;
 
-                        Point trigger = (Point) EntityTransactionFactory.getDaoInstance(admin).getEntityByKey(u.getEmail().getValue() + '/' + p.getName(), PointEntity.class).get(0);
-                        if (trigger != null) {
-                            out.println("tigger" + trigger.getName().getValue() + "</br>");
-                            tvar = trigger.getKey();
+                            Point trigger = (Point) EntityTransactionFactory.getDaoInstance(admin).getEntityByKey(u.getEmail().getValue() + '/' + p.getName(), PointEntity.class).get(0);
+                            if (trigger != null) {
+                                out.println("tigger" + trigger.getName().getValue() + "</br>");
+                                tvar = trigger.getKey();
+                            }
+                            xvar = getXVar(pm, out, admin, p, u);
+                            yvar = getYVar(pm, out, admin, p, u);
+                            zvar = getZVar(pm, out, admin, p, u);
+                            targetVar = getTVar(pm, out, admin, p, u);
+                            EntityName name = CommonFactoryLocator.getInstance().createName(p.getName() + " calc", EntityType.calculation);
+
+                            Entity e = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe,
+                                    trigger.getKey(), u.getEmail().getValue());
+                            CalcEntity cv = new CalcEntity(e, p.getCalculationEntity().getFormula(),tvar,  p.getCalculationEntity().getEnabled()
+                                    , xvar, yvar, zvar, targetVar);
+                            pm.makePersistent(cv);
+
                         }
-                        xvar = getXVar(pm, out, admin, p, u);
-                        yvar = getYVar(pm, out, admin, p, u);
-                        zvar = getZVar(pm, out, admin, p, u);
-                        targetVar = getTVar(pm, out, admin, p, u);
-                        EntityName name = CommonFactoryLocator.getInstance().createName(p.getName() + " calc", EntityType.calculation);
+                        // Point point = (Point) impl.getEntityByUUID(p.getUUID(), PointEntity.class);
 
-                        Entity e = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe,
-                                trigger.getKey(), u.getEmail().getValue());
-                        CalcEntity cv = new CalcEntity(e, p.getCalculationEntity().getFormula(),tvar,  p.getCalculationEntity().getEnabled()
-                                , xvar, yvar, zvar, targetVar);
-                         pm.makePersistent(cv);
 
+                        // out.println("Trigger: " + point.getName().getValue() + "<br>");
+                    } catch (NimbitsException e) {
+                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                     }
-                   // Point point = (Point) impl.getEntityByUUID(p.getUUID(), PointEntity.class);
-
-
-                   // out.println("Trigger: " + point.getName().getValue() + "<br>");
-                } catch (NimbitsException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                 }
-            }
 
-        }
+            }
 
 
         } catch (NimbitsException e) {

@@ -1,5 +1,6 @@
 package com.nimbits.client.model.accesskey;
 
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 
@@ -20,7 +21,7 @@ public class AccessKeyFactory {
 
     }
 
-    public static AccessKey createAccessKey(Entity en, String key, String source) throws NimbitsException {
-        return new AccessKeyModel(en, key, source);
+    public static AccessKey createAccessKey(Entity en, String code, String scope, AuthLevel level) throws NimbitsException {
+        return new AccessKeyModel(en, code, scope, level);
     }
 }

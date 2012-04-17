@@ -140,7 +140,7 @@ public class NavigationPanel extends NavigationEventProvider {
             final String v = model.get(Parameters.value.getText());
 //            final String note = model.get(Const.Params.PARAM_NOTE);
 //            final String data = model.get(Const.PARAM_DATA);
-            final Value value = ValueModelFactory.createValueModel(v, timestamp, model.getId());
+            final Value value = ValueModelFactory.createValueModel(v, timestamp);
 
             service.recordValue(model.getBaseEntity(), value, new SaveValueAsyncCallback(model));
             model.setDirty(false);
@@ -533,7 +533,7 @@ public class NavigationPanel extends NavigationEventProvider {
                         timestamp = new Date();
                     }
 
-                    final Value value = ValueModelFactory.createValueModel(valueAndNote, timestamp, uuid);
+                    final Value value = ValueModelFactory.createValueModel(valueAndNote, timestamp);
 
                     RecordedValueServiceAsync service = GWT.create(RecordedValueService.class);
                     service.recordValue(entity, value, new RecordValueCallback(be, model));

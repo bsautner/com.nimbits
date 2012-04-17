@@ -29,6 +29,9 @@ import java.util.List;
  * Time: 2:27 PM
  */
 public class ValueModelFactory {
+    private ValueModelFactory() {
+    }
+
     public static ValueModel createValueModel(final Value v) {
 
         return new ValueModel(v);
@@ -69,7 +72,6 @@ public class ValueModelFactory {
                                               final double lng,
                                               final double d,
                                               final Date timestamp,
-                                              final String pointUUID,
                                               final String note) {
 
         return new ValueModel(lat, lng, d, timestamp, note, "", AlertType.OK);
@@ -98,15 +100,15 @@ public class ValueModelFactory {
         return new ValueModel(0.0, 0.0, d, timestamp,note, "",AlertType.OK);
 
     }
-    public static ValueModel createValueModel(final String valueAndNote, final Date timestamp, final String uuid) {
-        return createValueFromString(valueAndNote, timestamp, uuid);
+    public static ValueModel createValueModel(final String valueAndNote, final Date timestamp) {
+        return createValueFromString(valueAndNote, timestamp);
 
     }
-    private static ValueModel createValueFromString(final String valueAndNote, final Date timestamp, final String uuid) {
+    private static ValueModel createValueFromString(final String valueAndNote, final Date timestamp) {
         double d = 0;
         String note = null;
         String sample = valueAndNote.trim();
-        if (sample != null && sample.length() > 0) {
+        if (sample != null && !sample.isEmpty()) {
 
             if (sample.contains(" ")) {
                 String a[] = sample.split(" ");
@@ -122,7 +124,7 @@ public class ValueModelFactory {
             else {
                 try {
                     d =  Double.parseDouble(sample);
-                    note = null;
+                    note = "";
                 }
                 catch (NumberFormatException ex) {
                     note = sample;
@@ -134,8 +136,8 @@ public class ValueModelFactory {
 
         return new ValueModel(0.0, 0.0, d, timestamp, note, "", AlertType.OK);
     }
-    public static List<Value> createValueModels(final List<Value> values) {
-        final LinkedList<Value> retObj = new LinkedList<Value>();
+    public static List<Value> createValueModels(final Iterable<Value> values) {
+        final List<Value> retObj = new LinkedList<Value>();
         if (values != null) {
             for (final Value v : values) {
                 retObj.add(createValueModel(v));
@@ -151,18 +153,27 @@ public class ValueModelFactory {
                                          final String note,
                                          final String lat,
                                          final String lng,
-                                         final String data) throws NimbitsException {
+                                         final String dataStr) throws NimbitsException {
 
 
-        final double value;
+        double value = 0.0;
+        String data = dataStr;
+        try {
+            value = Double.valueOf(valueStr);
+
+        } catch (NumberFormatException e) {
+            data += valueStr;
+        }
+
+
         final Date timestamp;
         final double latitude;
         final double longitude;
         try {
-            value = (Double.valueOf(valueStr));
-            timestamp = (new Date());
-            latitude = (lat != null) ? Double.valueOf(lat) : 0;
-            longitude = (lng != null) ? Double.valueOf(lng) : 0;
+
+            timestamp = new Date();
+            latitude = lat != null ? Double.valueOf(lat) : 0;
+            longitude = lng != null ? Double.valueOf(lng) : 0;
         } catch (NumberFormatException e) {
             throw new NimbitsException(e.getMessage());
         }

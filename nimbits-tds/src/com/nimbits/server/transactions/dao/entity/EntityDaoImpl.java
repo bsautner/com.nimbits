@@ -95,7 +95,6 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     }
 
-
     @Override
     public Map<EntityName, Entity> getEntityNameMap(final EntityType type) throws NimbitsException {
 
@@ -125,8 +124,6 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     }
 
-
-
     @Override
     public List<Entity> getChildren(final Entity parentEntity, final EntityType type) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -141,7 +138,6 @@ public class EntityDaoImpl implements  EntityTransactions {
 
 
     }
-
 
     @Override
     public Entity addUpdateEntity(final Entity entity) throws NimbitsException {
@@ -227,57 +223,6 @@ public class EntityDaoImpl implements  EntityTransactions {
         }
     }
 
-    @SuppressWarnings({"OverlyCoupledMethod", "OverlyLongMethod", "OverlyComplexMethod"})
-    private static Entity downcastEntity(final Entity entity) throws NimbitsException {
-        final Entity commit;
-        switch (entity.getEntityType()) {
-
-
-            case user:
-                commit = new UserEntity(entity);
-                break;
-            case point:
-                commit = new PointEntity(entity);
-                break;
-            case category:
-                commit = new CategoryEntity(entity);
-                break;
-            case file:
-                commit = new FileEntity(entity);
-                break;
-            case subscription:
-                commit = new SubscriptionEntity((Subscription) entity);
-                break;
-            case userConnection:
-                commit = new ConnectionEntity(entity);
-                break;
-            case calculation:
-                commit = new CalcEntity((Calculation) entity);
-                break;
-            case intelligence:
-                commit = new IntelligenceEntity((Intelligence) entity);
-                break;
-            case feed:
-                commit = new PointEntity(entity);
-                break;
-            case resource:
-                commit = new XmppResourceEntity((XmppResource) entity);
-                break;
-            case summary:
-                commit = new SummaryEntity((Summary) entity);
-                break;
-            case instance:
-                commit = new CategoryEntity(entity);
-                break;
-            case accessKey:
-                commit = new AccessKeyEntity((AccessKey) entity);
-                break;
-            default:
-                commit = new CategoryEntity(entity);
-        }
-        return commit;
-    }
-
 
     @Override
     public List<Entity> getEntities() throws NimbitsException {
@@ -346,21 +291,6 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     }
 
-//    private static Collection<String> getConnectedUserKeys(Map<String, Entity> connections, Collection<String> uuids, Map<String, Relationship> relationshipMap) {
-//        final Collection<String> connectedUserKeys = new ArrayList<String>(connections.size());
-//        for (final Entity e : connections.values()) {
-//            final Relationship r = RelationshipTransactionFactory.getInstance().getRelationship(e);
-//
-//            if (r != null) {
-//                relationshipMap.put(r.getForeignKey(), r);
-//                uuids.add(r.getForeignKey());
-//                connectedUserKeys.add(r.getForeignKey());
-//            }
-//
-//        }
-//        return connectedUserKeys;
-//    }
-
     private static List<Entity> getEntityChildren(final PersistenceManager pm, final Entity entity) {
 
         final Query q1 = pm.newQuery(PointEntity.class);
@@ -411,10 +341,7 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     }
 
-
-
     @Override
-
     public List<Entity> deleteEntity(final Entity entity, final Class<?> cls) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
@@ -446,13 +373,11 @@ public class EntityDaoImpl implements  EntityTransactions {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
 
-
             Query q = pm.newQuery(cls);
             q.setFilter("source == s && enabled== e");
             q.declareParameters("String s, Boolean e");
             Collection<Entity> result = (Collection<Entity>) q.execute(source.getKey(), true);
             return createModels(result);
-
 
         }  finally {
             pm.close();
@@ -533,51 +458,39 @@ public class EntityDaoImpl implements  EntityTransactions {
         }
     }
 
+    @Override
+    public Map<String, Entity> getSystemWideEntityMap(final EntityType type) throws NimbitsException {
 
-//    @Override
-//    public List<Entity> getEntityByName(final EntityName name, final EntityType type) throws NimbitsException {
-//        final PersistenceManager pm = PMF.get().getPersistenceManager();
-//        try {
-//            if (type.equals(EntityType.point)) {
-//
-//                return getEntityByName(name, Class.forName(type.getClassName()));
-//            }
-//            else {
-//
-//
-//                final List<Entity> c;
-//
-//
-//                final Class cls = Class.forName(type.getClassName());
-//                final Query q1 = pm.newQuery(cls);
-//                if (user != null) {
-//                    q1.setFilter("name==b && owner==o && entityType==t");
-//                    q1.declareParameters("String b, String o, Integer t");
-//                    q1.setRange(0, 1);
-//                    c = (List<Entity>) q1.execute(name.getValue(), user.getKey(), type.getCode());
-//                }
-//                else {
-//                    q1.setFilter("name==b && entityType==t");
-//                    q1.declareParameters("String b, Integer t");
-//                    q1.setRange(0, 1);
-//                    c = (List<Entity>) q1.execute(name.getValue(), type.getCode());
-//                }
-//                if (c.isEmpty()) {
-//                    return null;
-//                } else {
-//
-//                    final Entity result = c.get(0);
-//                    return createModel(result);
-//
-//                }
-//            }
-//        } catch (ClassNotFoundException e) {
-//            throw new NimbitsException(e);
-//        } finally {
-//            pm.close();
-//        }
-//
-//    }
+
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+
+        try {
+
+            final Query q1 = pm.newQuery(Class.forName(type.getClassName()));
+
+            final List<Entity> result = (List<Entity>) q1.execute(type.getCode());
+            LogHelper.log(this.getClass(), "system wide search found " + result.size());
+            final List<Entity> models = createModels(result);
+            final Map<String, Entity> retObj = new HashMap<String, Entity>(models.size());
+
+            for (final Entity e : models) {
+                retObj.put(e.getKey(), e);
+            }
+            return retObj;
+
+        } catch (ClassNotFoundException e) {
+            throw new NimbitsException(e);
+        } finally {
+            pm.close();
+        }
+
+
+    }
+
+    @Override
+    public void removeEntityFromCache(final Entity entity) throws NimbitsException {
+        throw new NimbitsException(UserMessages.ERROR_NOT_IMPLEMENTED);
+    }
 
     private void checkDuplicateEntity(final Entity entity) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -634,46 +547,6 @@ public class EntityDaoImpl implements  EntityTransactions {
         }
     }
 
-    @Override
-
-    public Map<String, Entity> getSystemWideEntityMap(final EntityType type) throws NimbitsException {
-
-
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-
-        try {
-
-            final Query q1 = pm.newQuery(Class.forName(type.getClassName()));
-
-            final List<Entity> result = (List<Entity>) q1.execute(type.getCode());
-            LogHelper.log(this.getClass(), "system wide search found " + result.size());
-            final List<Entity> models = createModels(result);
-            final Map<String, Entity> retObj = new HashMap<String, Entity>(models.size());
-
-            for (final Entity e : models) {
-                retObj.put(e.getKey(), e);
-            }
-            return retObj;
-
-        } catch (ClassNotFoundException e) {
-            throw new NimbitsException(e);
-        } finally {
-            pm.close();
-        }
-
-
-    }
-
-
-
-    @Override
-    public void removeEntityFromCache(final Entity entity) throws NimbitsException {
-        throw new NimbitsException(UserMessages.ERROR_NOT_IMPLEMENTED);
-    }
-
-
-
-
     private List<Entity> createModels(final Collection<Entity> entity) throws NimbitsException {
         final List<Entity> retObj = new ArrayList<Entity>(entity.size());
         for (final Entity e : entity) {
@@ -683,6 +556,7 @@ public class EntityDaoImpl implements  EntityTransactions {
         return retObj;
 
     }
+
     private List<Entity> createModel(final Entity entity ) throws NimbitsException {
         final Entity model;
         switch (entity.getEntityType()) {
@@ -734,7 +608,7 @@ public class EntityDaoImpl implements  EntityTransactions {
             retObj.add(model);
         }
         else {
-            log.info("did not return an entity because user" + user.getKey() + " could not read " + model.toString());
+            log.info("did not return an entity because user " + user.getKey() + " could not read " + model.toString());
         }
 
 
@@ -743,4 +617,54 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     }
 
+    @SuppressWarnings({"OverlyCoupledMethod", "OverlyLongMethod", "OverlyComplexMethod"})
+    private static Entity downcastEntity(final Entity entity) throws NimbitsException {
+        final Entity commit;
+        switch (entity.getEntityType()) {
+
+
+            case user:
+                commit = new UserEntity(entity);
+                break;
+            case point:
+                commit = new PointEntity(entity);
+                break;
+            case category:
+                commit = new CategoryEntity(entity);
+                break;
+            case file:
+                commit = new FileEntity(entity);
+                break;
+            case subscription:
+                commit = new SubscriptionEntity((Subscription) entity);
+                break;
+            case userConnection:
+                commit = new ConnectionEntity(entity);
+                break;
+            case calculation:
+                commit = new CalcEntity((Calculation) entity);
+                break;
+            case intelligence:
+                commit = new IntelligenceEntity((Intelligence) entity);
+                break;
+            case feed:
+                commit = new PointEntity(entity);
+                break;
+            case resource:
+                commit = new XmppResourceEntity((XmppResource) entity);
+                break;
+            case summary:
+                commit = new SummaryEntity((Summary) entity);
+                break;
+            case instance:
+                commit = new CategoryEntity(entity);
+                break;
+            case accessKey:
+                commit = new AccessKeyEntity((AccessKey) entity);
+                break;
+            default:
+                commit = new CategoryEntity(entity);
+        }
+        return commit;
+    }
 }

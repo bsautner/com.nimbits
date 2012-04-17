@@ -33,4 +33,7 @@ public interface UserServerService {
     User getAnonUser();
 
     User createUserRecord(EmailAddress internetAddress) throws NimbitsException;
+
+
+
 }

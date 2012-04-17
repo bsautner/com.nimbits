@@ -1,5 +1,6 @@
 package com.nimbits.client.model.accesskey;
 
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 
@@ -13,8 +14,9 @@ import java.io.*;
  */
 public class AccessKeyModel extends EntityModel implements AccessKey, Serializable {
 
-    private String accessKey;
-    private String source;
+    private String code;
+    private String scope;
+    private int authLevel;
 
     @SuppressWarnings("unused")
     private AccessKeyModel() {
@@ -22,33 +24,46 @@ public class AccessKeyModel extends EntityModel implements AccessKey, Serializab
 
     public AccessKeyModel(final AccessKey anEntity) throws NimbitsException {
         super(anEntity);
-        this.accessKey = anEntity.getAccessKey();
-        this.source = anEntity.getSource();
+        this.code = anEntity.getCode();
+        this.scope = anEntity.getScope();
+        this.authLevel = anEntity.getAuthLevel().getCode();
+
     }
 
     @Override
-    public String getAccessKey() {
-        return accessKey;
+    public String getCode() {
+        return code;
     }
 
-    public AccessKeyModel(final Entity anEntity, final String accessKey, final String source) throws NimbitsException {
+    public AccessKeyModel(final Entity anEntity, final String code, final String scope, final AuthLevel level) throws NimbitsException {
         super(anEntity);
-        this.accessKey = accessKey;
-        this.source = source;
+        this.code = code;
+        this.scope = scope;
+        this.authLevel = level.getCode();
     }
 
     @Override
-    public void setAccessKey(final String accessKey) {
-        this.accessKey = accessKey;
+    public void setCode(final String code) {
+        this.code = code;
     }
 
     @Override
-    public String getSource() {
-       return this.source;
+    public String getScope() {
+        return this.scope;
     }
 
     @Override
-    public void setSource(final String source) {
-      this.source = source;
+    public void setScope(String scope) {
+      this.scope = scope;
+    }
+
+    @Override
+    public AuthLevel getAuthLevel() {
+        return AuthLevel.get(this.authLevel);
+    }
+
+    @Override
+    public void setAuthLevel(AuthLevel level) {
+       this.authLevel = level.getCode();
     }
 }

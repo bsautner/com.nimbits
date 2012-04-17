@@ -17,6 +17,7 @@ import com.google.gson.*;
 import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
+import com.nimbits.client.model.accesskey.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
@@ -72,8 +73,15 @@ public class ProcessBatchTask extends HttpServlet {
 
         final Gson gson = GsonFactory.getInstance();
         final String userJson = req.getParameter(Parameters.pointUser.getText());
+
+
         final User u = gson.fromJson(userJson, UserModel.class);
+        final String keyJson = req.getParameter(Parameters.key.getText());
         log.info(userJson);
+        log.info(keyJson);
+
+        List<AccessKey> keys = gson.fromJson(keyJson, GsonFactory.accessKeyListType);
+        u.addAccessKeys(keys);
 
 
         timestampValueMap = new HashMap<Long, BatchValue>(Const.CONST_MAX_BATCH_COUNT);
@@ -108,7 +116,7 @@ public class ProcessBatchTask extends HttpServlet {
                 }
                 if (point != null) {
                     try {
-                        Value v = ValueModelFactory.createValueModel(0.0, 0.0, b.value, b.timestamp, point.getKey(), b.note);
+                        Value v = ValueModelFactory.createValueModel(0.0, 0.0, b.value, b.timestamp, b.note);
 
                         RecordedValueServiceFactory.getInstance().recordValue(b.u, point, v, false);
 

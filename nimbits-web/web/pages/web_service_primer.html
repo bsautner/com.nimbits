@@ -11,16 +11,20 @@
   ~ Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
   -->
 <script type="text/javascript" src="/include/rawfile.js">  </script>
-<h4>Web Services</h4>
+<h4 style="margin: 10px">Web Services</h4>
 
-<p>
-    You can push and pull data from a Nimbits Server,
-    be it your own instance or the public server using a collection of Web Services.
-    The web services allows you to create data points, categories, and record data to your points
-    in many different ways. In general, all web service respond to simple <strong>POST</strong>
-    and <strong>GET</strong> actions and respond with
-    text, or JSON data.
-</p>
+
+<span class="row">
+
+             <span class="span6">
+                 <p>
+                     You can push and pull data from a Nimbits Server,
+                     be it your own instance or the public server using a collection of Web Services.
+                     The web services allows you to create data points, categories, and record data to your points
+                     in many different ways. In general, all web service respond to simple <strong>POST</strong>
+                     and <strong>GET</strong> actions and respond with
+                     text, or JSON data.
+                 </p>
 <p>
     You can program against the web services, or use them directly by putting the url to a service
     in a spreadsheet like Excel or Google Docs.
@@ -28,27 +32,57 @@
 </p>
 <p>
     Each web service call must be properly authenticated. This can be done simply by providing your
-    email address and Nimbits client key. (you can get a key by logging into Nimbits and clicking the secret key button)
+    email address and Nimbits client key.
 </p>
+
 
 <p>Start any web request with these parameters in the post or get command:</P>
 <pre class="prettyprint">
-           http://appid.appspot.com/service/theservice?email=test@example.com&secret=yoursecretkey&...
+           http://appid.appspot.com/service/theservice?email=test@example.com&key=youraccesskey&...
          </pre>
-
-<p>
-    The Web services will also accept Google Account credentials using authentication tokens from Google or an
-    android phone. We greatly simplify doing this with the nimbits SDK, which already has the code you need to use
-    Google accounts to authenticate to the web services.
+<p><span class="label label-warning">@Deprected Warning: use key instead of the old 'secret' param. 'secret= has been deprecated</span>
 </p>
 
+<h4>Access Keys</h4>
+
+
+                    <p>You can have many access keys on your account that, when provided, tell nimbits what you can do. Access keys can be configured
+                        with global access, or limited to only being able to read from a single data point. Create an access key by logging into
+                        Nimbits and right clicking on your user name or a data point.  From there you can enter your access key code, which can
+                        be any string or any length. This makes it easy to have a short url for posting to a low security point or sharing
+                        semi-private keys with others which you can easily revoke. </p>
+
+                 <p>
+                     The Web services will also accept Google Account credentials using authentication tokens from Google or an
+                     android phone. We greatly simplify doing this with the nimbits SDK, which already has the code you need to use
+                     Google accounts to authenticate to the web services.
+                 </p>
+                 <p>
+                     If you are a Java or .Net developer you can simply use the Nimbits SDK on the <a href="#download"
+                                                                                                      onclick="getContent('pages/download.html')">Download</a>
+                     page.
+                     The SDK calls all of our web services exactly the way they are documented here, and they already have the
+                     authentication,
+                     and code you need to talk to a Nimbits Server.
+
+
+                 </p>
+
+            </span>
+            <span class="span4" style="border-color: navy;border-style: solid;border-width:1px ">
+                <p><img style="border: 1px; border-top-style: solid; margin-right: 5px; margin-top: 5px" src="/images/screens/keys.PNG">  </p>
+                 <p> <img style="border: 1px; border-top-style: solid; margin-right: 5px; margin-top: 5px" src="/images/screens/keycreation.PNG">   </p>
+
+
+            </span>
+
+        </span>
 <p>
-    If you are a Java or .Net developer you can simply use the Nimbits SDK on the <a href="#download"
-                                                                                     onclick="getContent('pages/download.html')">Download</a>
-    page.
-    The SDK calls all of our web services exactly the way they are documented here, and they already have the
-    authentication,
-    and code you need to talk to a Nimbits Server.
+
+
 
 
 </p>
+
+
+

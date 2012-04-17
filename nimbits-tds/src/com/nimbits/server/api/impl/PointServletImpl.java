@@ -54,7 +54,7 @@ public class PointServletImpl extends ApiServlet {
             final PrintWriter out = resp.getWriter();
 
 
-            if (user != null && !user.isRestricted()) {
+            if (user != null &&  ! user.isRestricted()) {
 
                 final String pointNameParam = Utils.isEmptyString(getParam(Parameters.name)) ?
                         getParam(Parameters.point) : getParam(Parameters.name);
@@ -313,7 +313,7 @@ public class PointServletImpl extends ApiServlet {
 
 
     private static boolean okToReport(final User u, final Entity c) {
-        return c.getProtectionLevel().equals(ProtectionLevel.everyone) || !(u == null || u.isRestricted());
+        return c.getProtectionLevel().equals(ProtectionLevel.everyone) || !(u == null || ! u.isRestricted());
     }
 
     protected  static String getPointObjects(final String categoryNameParam, final String pointNameParam ) throws NimbitsException {

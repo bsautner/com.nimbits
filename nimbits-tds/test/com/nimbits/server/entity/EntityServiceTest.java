@@ -18,9 +18,8 @@ import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
-import com.nimbits.server.*;
 import com.nimbits.server.orm.*;
-import com.nimbits.server.point.*;
+import com.nimbits.server.user.*;
 import static org.junit.Assert.*;
 import org.junit.*;
 
@@ -128,6 +127,7 @@ public class EntityServiceTest extends NimbitsServletTest {
     public void testEntitySecurity() throws NimbitsException {
         List<Entity> r =EntityServiceFactory.getInstance().getEntities();
         for (Entity e : r) {
+
             if (user.getKey().equals(e.getOwner())) {
                 assertTrue(e.isOwner(user));
             }

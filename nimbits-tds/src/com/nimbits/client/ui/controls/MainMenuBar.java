@@ -56,7 +56,6 @@ public class MainMenuBar extends ToolBar {
 
     private final Listener<MessageBoxEvent> createNewFolderListener = new NewFolderMessageBoxEventListener();
     private final Listener<MessageBoxEvent> createNewPointListener = new NewPointMessageBoxEventListener();
-    private final Listener<MessageBoxEvent> newKeyListener= new NewKeyMessageBoxEventListener();
     private final Listener<BaseEvent> uploadFileListener = new UploadFileBaseEventListener();
     private Collection<EntityModifiedListener> entityModifiedListeners = new ArrayList<EntityModifiedListener>(1);
 
@@ -160,7 +159,7 @@ public class MainMenuBar extends ToolBar {
         Button button = new Button("Action");
         Menu menu = new Menu();
 
-        menu.add(newKeyButton());
+
 
         if (settings.containsKey(SettingType.twitterClientId) && !Utils.isEmptyString(settings.get(SettingType.twitterClientId)) && loginInfo != null)
         {
@@ -248,12 +247,7 @@ public class MainMenuBar extends ToolBar {
 
 
     }
-    private MenuItem newKeyButton() {
-        MenuItem item = new MenuItem("Get or Reset Secret Key");
-        item.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.key()));
-        item.addListener(Events.OnClick, new ResetSecretBaseEventListener());
-        return item;
-    }
+
 
 
     private Button pendingConnectionsButton() throws NimbitsException {
@@ -485,57 +479,6 @@ public class MainMenuBar extends ToolBar {
 
             box.addCallback(createNewFolderListener);
         }
-    }
-
-    private class ResetSecretBaseEventListener implements Listener<BaseEvent> {
-
-        ResetSecretBaseEventListener() {
-        }
-
-        @Override
-        public void handleEvent(BaseEvent be) {
-            service.getSecret(new ResetSecretAsyncCallback());
-
-        }
-
-        private class ResetSecretAsyncCallback implements AsyncCallback<String> {
-            ResetSecretAsyncCallback() {
-            }
-
-            @Override
-            public void onFailure(Throwable caught) {
-                FeedbackHelper.showError(caught);
-            }
-
-            @Override
-            public void onSuccess(String s) {
-                MessageBox.confirm("Reset Your Key",
-                        "Your secret Key is currently set to: " + s +
-                                "<br> Press YES to generate a new secret key and to have it emailed to the account you are currently logged in with. " +
-                                "Your old key will no longer be valid. You can use your key to use Nimbits web services.",
-                        newKeyListener);
-
-            }
-        }
-    }
-
-    private static class ResetSecretAsyncCallback implements AsyncCallback<String> {
-
-        ResetSecretAsyncCallback() {
-        }
-
-        @Override
-        public void onFailure(Throwable caught) {
-
-            FeedbackHelper.showError(caught);
-        }
-
-        @Override
-        public void onSuccess(String key) {
-            com.google.gwt.user.client.Window.alert("Your new secret has been reset to: " + key + " and a copy has been emailed to you. Your old secret key is no longer valid.");
-
-        }
-
     }
 
     private class ApproveConnectionMessageBoxEventListener implements Listener<MessageBoxEvent> {
@@ -796,20 +739,5 @@ public class MainMenuBar extends ToolBar {
         }
     }
 
-    private static class NewKeyMessageBoxEventListener implements Listener<MessageBoxEvent> {
-        NewKeyMessageBoxEventListener() {
-        }
 
-        @Override
-        public void handleEvent(MessageBoxEvent ce) {
-            Button btn = ce.getButtonClicked();
-            final UserServiceAsync us = GWT.create(UserService.class);
-
-            if (btn.getText().toLowerCase().equals("yes")) {
-                us.updateSecret(new ResetSecretAsyncCallback());
-
-            }
-
-        }
-    }
 }

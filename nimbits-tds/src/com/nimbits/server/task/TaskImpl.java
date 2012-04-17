@@ -111,7 +111,7 @@ public class TaskImpl implements Task {
         final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
 
         final String userJson = gson.toJson(u);
-
+        final String keyJson = gson.toJson(u.getAccessKeys());
         final TaskOptions options = TaskOptions.Builder.withUrl(PATH_TASK_PROCESS_BATCH);
         final Enumeration enumeration = req.getParameterNames();
         final Map m = req.getParameterMap();
@@ -123,6 +123,7 @@ public class TaskImpl implements Task {
         }
 
         options.param(Parameters.pointUser.getText(), userJson);
+        options.param(Parameters.key.getText(), keyJson);
 
         queue.add(options);
 
@@ -140,15 +141,16 @@ public class TaskImpl implements Task {
             final String userJson = gson.toJson(u);
             final String pointJson = gson.toJson(point);
             final String valueJson = gson.toJson(value);
-
+            final String keyJson = gson.toJson(u.getAccessKeys());
             queue.add(TaskOptions.Builder
                     .withUrl(PATH_TASK_RECORD_VALUE).taskName(UUID.randomUUID().toString())
                     .param(Parameters.pointUser.getText(), userJson)
                     .param(Parameters.pointJson.getText(), pointJson)
                     .param(Parameters.valueJson.getText(), valueJson)
                     .param(Parameters.loop.getText(), String.valueOf(loopFlag))
+                    .param(Parameters.key.getText(), keyJson));
 
-            );
+
         } catch (IllegalStateException ex) {
             overrideQueue = true;
             startRecordValueTask(u, point, value,  loopFlag);

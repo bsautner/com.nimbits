@@ -19,7 +19,7 @@ public class PointSerializer implements JsonSerializer<Point> {
 
     @Override
     public JsonElement serialize(Point src, Type type, JsonSerializationContext jsonSerializationContext) {
-        final String j = GsonFactory.getPointInstance().toJson(src);
+        final String j = GsonFactory.getInstance().toJson(src);
         return new JsonPrimitive(j);
     }
 }

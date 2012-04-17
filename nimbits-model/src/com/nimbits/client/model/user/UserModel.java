@@ -16,13 +16,15 @@ package com.nimbits.client.model.user;
 
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
+import com.nimbits.client.model.accesskey.*;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
+import com.nimbits.server.gson.*;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.*;
 
 
 //import com.google.appengine.api.users.User;
@@ -39,15 +41,14 @@ public class UserModel extends EntityModel implements Serializable, User {
 
     private String facebookToken;
 
-    private String secret;
-
     private String twitterToken;
 
     private String twitterTokenSecret;
 
     private long facebookID;
 
-    private int authLevel = AuthLevel.readWrite.getCode();
+    @DoNotSerializePolicy
+    private List<AccessKey> accessKeys;
 
     /**
      *
@@ -57,7 +58,7 @@ public class UserModel extends EntityModel implements Serializable, User {
     @SuppressWarnings("unused")
     public UserModel() {
         super();
-        authLevel= AuthLevel.restricted.getCode();
+
 
     }
 
@@ -66,8 +67,7 @@ public class UserModel extends EntityModel implements Serializable, User {
         if (u != null) {
             this.dateCreated = u.getDateCreated();
             this.lastLoggedIn = u.getLastLoggedIn();
-            this.secret = u.getSecret();
-            this.authLevel = u.getAuthLevel().getCode();
+            this.accessKeys = u.getAccessKeys();
             this.emailAddress = u.getEmail().getValue();
             this.facebookToken = u.getFacebookToken();
             this.twitterToken = u.getTwitterToken();
@@ -75,7 +75,6 @@ public class UserModel extends EntityModel implements Serializable, User {
             this.facebookID = u.getFacebookID();
         }
         else {
-            this.authLevel = AuthLevel.restricted.getCode();
 
         }
     }
@@ -84,7 +83,6 @@ public class UserModel extends EntityModel implements Serializable, User {
         super(entity);
         this.dateCreated = new Date();
         this.lastLoggedIn =  new Date();
-        this.authLevel = AuthLevel.readWrite.getCode();
         this.emailAddress = entity.getName().getValue();
 
     }
@@ -146,30 +144,40 @@ public class UserModel extends EntityModel implements Serializable, User {
     }
 
     @Override
-    public String getSecret() {
-        return secret;
-    }
-
-    @Override
-    public AuthLevel getAuthLevel() {
-        return AuthLevel.get(this.authLevel);
-    }
-
-    @Override
-    public void setAuthLevel(AuthLevel level) {
-        this.authLevel =level.getCode();
-    }
-
-    @Override
     public boolean isRestricted() {
-        return AuthLevel.get(this.authLevel).equals(AuthLevel.restricted);
+        if (accessKeys == null) {
+            return true;
+        }
+        for (AccessKey key : accessKeys) {
+            if (key.getAuthLevel().compareTo(AuthLevel.restricted) > 0)
+            {
+                return false;
+            }
+        }
+        return true;
+
     }
 
     @Override
-    public void setSecret(final String secret) {
-        this.secret = secret;
+    public List<AccessKey> getAccessKeys() {
+        return this.accessKeys == null ? new ArrayList<AccessKey>(1) : this.accessKeys;
     }
 
+    @Override
+    public void addAccessKey(AccessKey key) {
+        if (accessKeys == null) {
+            accessKeys = new ArrayList<AccessKey>(1);
+        }
+        accessKeys.add(key);
+    }
+
+    @Override
+    public void addAccessKeys(List<AccessKey> key) {
+        if (accessKeys == null) {
+            accessKeys = new ArrayList<AccessKey>(key.size());
+        }
+        accessKeys.addAll(key);
+    }
 
 
     @Override

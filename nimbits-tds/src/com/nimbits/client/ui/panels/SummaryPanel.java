@@ -83,17 +83,9 @@ public class SummaryPanel extends NavigationEventProvider {
 
         List<SummaryTypeOption> ops = new ArrayList<SummaryTypeOption>(SummaryType.values().length);
 
-
-        ops.add(new SummaryTypeOption(SummaryType.average));
-        ops.add(new SummaryTypeOption(SummaryType.standardDeviation));
-        ops.add(new SummaryTypeOption(SummaryType.min));
-        ops.add(new SummaryTypeOption(SummaryType.max));
-        ops.add(new SummaryTypeOption(SummaryType.skewness));
-        ops.add(new SummaryTypeOption(SummaryType.sum));
-        ops.add(new SummaryTypeOption(SummaryType.variance));
-
-
-
+        for (SummaryType type : SummaryType.values()) {
+            ops.add(new SummaryTypeOption(type));
+        }
 
         ListStore<SummaryTypeOption> store = new ListStore<SummaryTypeOption>();
 

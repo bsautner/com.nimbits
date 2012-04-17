@@ -121,7 +121,7 @@ public class IncomingMailTask extends HttpServlet {
                 timestamp = new Date().getTime();
             }
             String note = k.length == 4 ? k[3].trim() : "";
-            final Value value = ValueModelFactory.createValueModel(0.0, 0.0, v, new Date(timestamp), point.getKey(), note);
+            final Value value = ValueModelFactory.createValueModel(0.0, 0.0, v, new Date(timestamp), note);
             try {
                 RecordedValueServiceFactory.getInstance().recordValue(u, point, value, false);
             } catch (NimbitsException e) {

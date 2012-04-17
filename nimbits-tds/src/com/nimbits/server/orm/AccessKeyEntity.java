@@ -1,5 +1,6 @@
 package com.nimbits.server.orm;
 
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.accesskey.*;
@@ -18,17 +19,17 @@ import java.util.*;
 @PersistenceCapable()
 public class AccessKeyEntity extends EntityStore implements AccessKey {
 
-    @Persistent
-    private Date createDate;
 
     @Persistent
-    private String accessKey;
+    private String code;
 
     @Persistent
-    private String source;
+    private String scope;
 
     @Persistent
     private boolean enabled;
+
+    private int authLevel;
 
     public AccessKeyEntity() {
 
@@ -36,20 +37,21 @@ public class AccessKeyEntity extends EntityStore implements AccessKey {
 
     public AccessKeyEntity(final AccessKey entity) throws NimbitsException {
         super(entity);
-        this.accessKey = entity.getAccessKey();
-        this.source = entity.getSource();
+        this.code = entity.getCode();
+        this.scope = entity.getScope();
         this.enabled = true;
-        createDate = new Date();
+        this.authLevel = entity.getAuthLevel().getCode();
+
     }
 
     @Override
-    public String getAccessKey() {
-        return this.accessKey;
+    public String getCode() {
+        return this.code;
     }
 
     @Override
-    public void setAccessKey(String accessKey) {
-        this.accessKey = accessKey;
+    public void setCode(String code) {
+        this.code = code;
 
     }
 
@@ -57,32 +59,52 @@ public class AccessKeyEntity extends EntityStore implements AccessKey {
     public void update(Entity update) throws NimbitsException {
         super.update(update);
         AccessKey k = (AccessKey)update;
-        this.accessKey = k.getAccessKey();
-        this.source = k.getSource();
+        this.code = k.getCode();
+        this.scope = k.getScope();
         this.enabled = true;
+        this.authLevel = ((AccessKey) update).getAuthLevel().getCode();
     }
 
     @Override
     public void validate() throws NimbitsException {
         super.validate();
-        if (Utils.isEmptyString(this.accessKey)) {
+        if (Utils.isEmptyString(this.code)) {
             throw new NimbitsException("Access Key must not be empty, you can delete the key if you don't want it anymore.");
         }
 
-        if (Utils.isEmptyString(this.source)) {
+        if (Utils.isEmptyString(this.scope)) {
             throw new NimbitsException("Source must not be empty");
+        }
+
+        if (AuthLevel.get(this.authLevel).equals(AuthLevel.readPoint) ||
+                AuthLevel.get(this.authLevel).equals(AuthLevel.readWritePoint)) {
+            if (Utils.isEmptyString(this.scope)) {
+                throw new NimbitsException("Auth Keys with an auth level of point, must have a target point key set");
+
+            }
         }
     }
 
     @Override
-    public String getSource() {
-        return source;
+    public String getScope() {
+        return scope;
     }
 
     @Override
-    public void setSource(String source) {
-        this.source = source;
+    public void setScope(String scope) {
+        this.scope = scope;
     }
+
+    @Override
+    public AuthLevel getAuthLevel() {
+        return AuthLevel.get(this.authLevel);
+    }
+
+    @Override
+    public void setAuthLevel(AuthLevel level) {
+       this.authLevel = level.getCode();
+    }
+
 
 }
 

@@ -93,6 +93,7 @@ public class EntityContextMenu extends Menu {
 
     public EntityContextMenu(final User user, final EntityTree<ModelData> tree, final Map<SettingType, String> settings) {
         super();
+        MenuItem propertyContext = propertyContext();
         this.user = user;
         entityModifiedListeners = new ArrayList<EntityModifiedListener>(1);
         this.tree = tree;
@@ -100,7 +101,6 @@ public class EntityContextMenu extends Menu {
         deleteContext = deleteContext();
         subscribeContext = subscribeContext();
         reportContext = reportContext();
-        MenuItem propertyContext = propertyContext();
         copyContext = copyContext();
         calcContext = calcContext();
         intelligenceContext = intelligenceContext();
@@ -111,10 +111,9 @@ public class EntityContextMenu extends Menu {
         add(propertyContext);
         add(copyContext);
         add(deleteContext);
-
         add(subscribeContext);
         add(reportContext);
-        //add(keyContext);
+        add(keyContext);
         add(calcContext);
         add(summaryContext);
         add(xmppContext);
@@ -142,7 +141,7 @@ public class EntityContextMenu extends Menu {
         xmppContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.resource));
         summaryContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.summary));
 
-        keyContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.accessKey));
+        keyContext.setEnabled(currentModel.getEntityType().equals(EntityType.user) || currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.accessKey));
 
         propertyContext().setEnabled(!currentModel.isReadOnly());
 
@@ -807,7 +806,7 @@ public class EntityContextMenu extends Menu {
             Entity entity =  currentModel.getBaseEntity();
 
             if (entity.getEntityType().equals(EntityType.accessKey)  ||
-                    entity.getEntityType().equals(EntityType.point)) {
+                    entity.getEntityType().equals(EntityType.point) || entity.getEntityType().equals(EntityType.user)) {
                 showKeyPanel(entity);
             }
 

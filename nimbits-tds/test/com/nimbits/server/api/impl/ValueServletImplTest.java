@@ -17,9 +17,9 @@ import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.value.*;
-import com.nimbits.server.*;
 import com.nimbits.server.cron.*;
 import com.nimbits.server.settings.*;
+import com.nimbits.server.user.*;
 import static org.junit.Assert.*;
 import org.junit.*;
 

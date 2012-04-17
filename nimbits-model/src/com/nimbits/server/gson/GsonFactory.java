@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.nimbits.client.constants.Const;
 
+import com.nimbits.client.model.accesskey.*;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityDescriptionModel;
@@ -26,11 +27,10 @@ import java.util.List;
  * Time: 12:13 PM
  */
 public class GsonFactory {
-    private static Gson instance;
 
     public final static Type pointListType = new TypeToken<List<PointModel>>() {
     }.getType();
-    public final static Type entityListType = new TypeToken<List<EntityModel>>() {
+    public final static Type accessKeyListType = new TypeToken<List<AccessKeyModel>>() {
     }.getType();
     public final static Type userListType = new TypeToken<List<UserModel>>() {
     }.getType();
@@ -44,14 +44,13 @@ public class GsonFactory {
     }
 
 
-    public static Gson getInstance() {
-       if (instance == null) {
-        instance = new GsonBuilder()
+    private static class GsonHolder {
+        static final Gson instance = new GsonBuilder()
                 .setDateFormat(Const.GSON_DATE_FORMAT)
                 .serializeNulls()
                 .addSerializationExclusionStrategy(new NimbitsExclusionStrategy(null))
-                .registerTypeAdapter(Intelligence.class, new IntelligenceSerializer())
-                .registerTypeAdapter(Intelligence.class, new IntelligenceDeserializer())
+                .registerTypeAdapter(Intelligence.class, new AccessKeySerializer())
+                .registerTypeAdapter(AccessKey.class, new AccessKeyDeserializer())
                 .registerTypeAdapter(Value.class, new ValueDeserializer())
                 .registerTypeAdapter(Value.class, new ValueSerializer())
                 .registerTypeAdapter(Point.class, new PointSerializer())
@@ -63,8 +62,13 @@ public class GsonFactory {
                         // .registerTypeAdapter(Date.class, new DateDeserializer())
                         //  .registerTypeAdapter(Date.class, new DateSerializer())
                 .create();
+
+        private GsonHolder() {
         }
-        return instance;
+    }
+
+    public static Gson getInstance() {
+        return GsonHolder.instance;
     }
 
     public static Gson getSimpleInstance() {
@@ -74,15 +78,6 @@ public class GsonFactory {
                 .create();
     }
 
-    public static Gson getPointInstance() {
-        return new GsonBuilder()
-                .setDateFormat(Const.GSON_DATE_FORMAT)
-                .serializeNulls()
-                .registerTypeAdapter(Intelligence.class, new IntelligenceSerializer())
-                .registerTypeAdapter(Intelligence.class, new IntelligenceDeserializer())
-                .registerTypeAdapter(Calculation.class, new CalculationSerializer())
-                .registerTypeAdapter(Calculation.class, new CalculationDeserializer())
-                .create();
-    }
+
 
 }

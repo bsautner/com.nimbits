@@ -5,7 +5,7 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.server.NimbitsServletTest;
+import com.nimbits.server.user.NimbitsServletTest;
 import com.nimbits.server.entity.EntityTransactionFactory;
 import com.nimbits.server.orm.PointEntity;
 import org.junit.Test;

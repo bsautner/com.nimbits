@@ -6,8 +6,8 @@ import com.nimbits.client.model.category.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
-import com.nimbits.server.*;
 import com.nimbits.server.gson.*;
+import com.nimbits.server.user.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 

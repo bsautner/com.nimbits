@@ -10,9 +10,13 @@ import java.util.*;
  */
 public enum AuthLevel {
 
-    restricted(1),
-    readWrite(2),
-    admin(3);
+    restricted(1, "Read Only Public Data", false),
+    readPoint(2, "Read Single Point", true),
+    readWritePoint(3, "Read/Write To Single Point",true),
+    readAll(4, "Read all points", true),
+    readWriteAll(5, "Read/Write to all points", true),
+    admin(6, "Admin - Read/Write/Delete all",false);
+
 
 
     private static final Map<Integer, AuthLevel> lookup = new HashMap<Integer, AuthLevel>(3);
@@ -23,9 +27,13 @@ public enum AuthLevel {
     }
 
     private final int code;
+    private final String text;
+    private final boolean userVisible;
 
-    private AuthLevel(int code) {
-        this.code = code;
+    private AuthLevel(int aCode, String aText, boolean userVisible) {
+        this.code = aCode;
+        this.text = aText;
+        this.userVisible = userVisible;
     }
 
     public int getCode() {
@@ -36,4 +44,11 @@ public enum AuthLevel {
         return lookup.get(code);
     }
 
+    public String getText() {
+        return text;
+    }
+
+    public boolean isUserVisible() {
+        return userVisible;
+    }
 }

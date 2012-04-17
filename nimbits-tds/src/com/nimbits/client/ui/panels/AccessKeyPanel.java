@@ -13,7 +13,9 @@
 
 package com.nimbits.client.ui.panels;
 
+import com.extjs.gxt.ui.client.data.*;
 import com.extjs.gxt.ui.client.event.*;
+import com.extjs.gxt.ui.client.store.*;
 import com.extjs.gxt.ui.client.util.*;
 import com.extjs.gxt.ui.client.widget.*;
 import com.extjs.gxt.ui.client.widget.button.*;
@@ -29,6 +31,8 @@ import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.accesskey.*;
 import com.nimbits.client.service.entity.*;
 import com.nimbits.client.ui.helper.*;
+
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner
@@ -86,22 +90,41 @@ public class AccessKeyPanel extends NavigationEventProvider {
         key.setFieldLabel("Key");
 
 
-
-
+        RadioGroup radioGroup = new RadioGroup();
+        Radio userRadio = new Radio();
+        userRadio.setBoxLabel("User");
+        Radio pointRadio = new Radio();
+        pointRadio.setBoxLabel("Point");
 
         try {
 
-
+            AuthLevel level = null;
             if (entity.getEntityType().equals(EntityType.accessKey)) {
                 AccessKey accessKey = (AccessKey) entity;
                 name.setValue(entity.getName().getValue());
-                key.setValue(accessKey.getAccessKey());
+                key.setValue(accessKey.getCode());
+                level = ((AccessKey) entity).getAuthLevel();
+                radioGroup.setReadOnly(true);
+                userRadio.setValue(accessKey.getAuthLevel().compareTo(AuthLevel.readAll) >= 0);
+                pointRadio.setValue(accessKey.getAuthLevel().compareTo(AuthLevel.readAll) < 0);
             }
             else {
-                name.setValue(entity.getName().getValue() + " Read/Write Key");
+                name.setValue(entity.getName().getValue() + " Access Key");
                 key.setValue("");
+
+                if (entity.getEntityType().equals(EntityType.user)) {
+                    userRadio.setValue(true);
+                    pointRadio.disable();
+                    level = AuthLevel.readWriteAll;
+                }
+                else if (entity.getEntityType().equals(EntityType.point)) {
+                    pointRadio.setValue(true);
+                    level = AuthLevel.readPoint;
+
+                }
             }
 
+            final ComboBox<TypeOption> typeCombo = typeOptionComboBox("Permission Level", level);
 
 
 
@@ -110,13 +133,14 @@ public class AccessKeyPanel extends NavigationEventProvider {
             Button cancel = new Button("Cancel");
             cancel.addSelectionListener(new CancelButtonEventSelectionListener());
 
-            submit.addSelectionListener(new SubmitEventSelectionListener(name, key));
+            submit.addSelectionListener(new SubmitEventSelectionListener(name, key, typeCombo, userRadio, pointRadio));
 
 
             Html h = new Html("<p>If you create a read/write key for a data point, the only credentials an api call " +
-                    "needs to provide, is the point's UUID and the key you enter here. This can help save space " +
+                    "needs to provide is the point's UUID and the key you enter here. This can help save space " +
                     "on low powered micro-controller projects but will weaken your security. Anyone with this key code may " +
-                    "read and write data to this point.</p>");
+                    "read and/or write data to this point depending on these settings. You can also create a key with a global scope, " +
+                    "allowing the same level of access to any point</p>");
 
 
             Html pn = new Html("<p><b>Name: </b>" + entity.getName().getValue() + "</p>");
@@ -126,12 +150,24 @@ public class AccessKeyPanel extends NavigationEventProvider {
 
 
 
+
+
+
+
+
+            radioGroup.setFieldLabel("Scope");
+            radioGroup.add(userRadio);
+            radioGroup.add(pointRadio);
+
+
+
             vp.add(h);
             vp.add(pn);
             vp.add(pu);
             simple.add(name, formdata);
             simple.add(key, formdata);
-
+            simple.add(typeCombo, formdata);
+            simple.add(radioGroup, formdata);
             LayoutContainer c = new LayoutContainer();
             HBoxLayout layout = new HBoxLayout();
             layout.setPadding(new Padding(5));
@@ -189,11 +225,16 @@ public class AccessKeyPanel extends NavigationEventProvider {
 
         private final TextField<String> name;
         private final TextField<String> k;
+        private final ComboBox<TypeOption> typeCombo;
+        private final Radio userRadio;
 
-
-        SubmitEventSelectionListener(final TextField<String> name, final TextField<String> k) throws NimbitsException {
+        private final Radio pointRadio ;
+        SubmitEventSelectionListener(final TextField<String> name, final TextField<String> k, final ComboBox<TypeOption> typeCombo, Radio userRadio, Radio pointRadio) throws NimbitsException {
             this.name =  name;
             this.k = k;
+            this.typeCombo = typeCombo;
+            this.userRadio = userRadio;
+            this.pointRadio = pointRadio;
         }
 
         @Override
@@ -210,7 +251,8 @@ public class AccessKeyPanel extends NavigationEventProvider {
 
                     AccessKey accessKey = (AccessKey)entity;
                     accessKey.setName(newName);
-                    accessKey.setAccessKey(k.getValue());
+                    accessKey.setCode(k.getValue());
+
 
                     service.addUpdateEntity(accessKey, new UpdateEntityAsyncCallback(box));
 
@@ -219,14 +261,25 @@ public class AccessKeyPanel extends NavigationEventProvider {
                 else {
 
                     Entity en = EntityModelFactory.createEntity(newName, "", EntityType.accessKey, ProtectionLevel.onlyMe, entity.getKey(), entity.getOwner());
-                    AccessKey update =AccessKeyFactory.createAccessKey(en, k.getValue(), entity.getKey());
+                    String scope;
+                    if (userRadio.getValue()) {
+                        scope = entity.getOwner();
+                    }
+                    else {
+                        scope = entity.getKey();
+                    }
+
+                    AccessKey update =AccessKeyFactory.createAccessKey(en, k.getValue(), scope,typeCombo.getValue().getMethod());
 
 
 
                     if (update != null) {
                         update.setName(newName);
-                        update.setAccessKey(k.getValue());
+                        update.setCode(k.getValue());
                         service.addUpdateEntity(update, new UpdateEntityAsyncCallback(box));
+
+
+
                     }
 
 
@@ -238,7 +291,47 @@ public class AccessKeyPanel extends NavigationEventProvider {
         }
     }
 
+    private static ComboBox<TypeOption> typeOptionComboBox(final String title, final AuthLevel selectedValue) {
+        ComboBox<TypeOption> combo = new ComboBox<TypeOption>();
 
+        List<TypeOption> ops = new ArrayList<TypeOption>(SummaryType.values().length);
+
+        for (AuthLevel type : AuthLevel.values()) {
+            if (type.isUserVisible()) {
+                ops.add(new TypeOption(type));
+            }
+        }
+
+        ListStore<TypeOption> store = new ListStore<TypeOption>();
+
+        store.add(ops);
+
+        combo.setFieldLabel(title);
+        combo.setDisplayField(Parameters.name.getText());
+        combo.setValueField(Parameters.value.getText());
+        combo.setTriggerAction(ComboBox.TriggerAction.ALL);
+        combo.setStore(store);
+
+        TypeOption selected = combo.getStore().findModel(Parameters.value.getText(), selectedValue.getCode());
+        combo.setValue(selected);
+
+        return combo;
+
+    }
+    private static class TypeOption extends BaseModelData {
+        AuthLevel type;
+
+
+        TypeOption(AuthLevel value) {
+            this.type = value;
+            set(Parameters.value.getText(), value.getCode());
+            set(Parameters.name.getText(), value.getText());
+        }
+
+        public AuthLevel getMethod() {
+            return type;
+        }
+    }
 
     private class CancelButtonEventSelectionListener extends SelectionListener<ButtonEvent> {
 

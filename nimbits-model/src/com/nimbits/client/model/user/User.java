@@ -13,13 +13,14 @@
 
 package com.nimbits.client.model.user;
 
-import com.nimbits.client.enums.*;
+
 import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.accesskey.*;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.*;
 
 
 /**
@@ -30,8 +31,6 @@ import java.util.Date;
  */
 public interface User extends Entity, Serializable {
 
-
- //   String getKey();
 
     Date getDateCreated();
 
@@ -57,13 +56,11 @@ public interface User extends Entity, Serializable {
 
     void setFacebookID(final long facebookID);
 
-    void setSecret(final String secret);
-
-    String getSecret();
-
-    AuthLevel getAuthLevel();
-
-    void setAuthLevel(AuthLevel level);
-
     boolean isRestricted();
+
+    void addAccessKey(AccessKey key);
+
+    void addAccessKeys(List<AccessKey> key);
+
+    List<AccessKey> getAccessKeys();
 }

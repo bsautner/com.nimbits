@@ -17,6 +17,7 @@ import com.google.gwt.http.client.*;
 import com.google.gwt.user.server.rpc.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
+import com.nimbits.client.model.accesskey.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.timespan.*;
@@ -252,6 +253,28 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
     }
 
+    private static boolean ignoreByAuthLevel(User u, Entity entity) throws NimbitsException {
+
+        if (u.isRestricted()) {
+           return true;
+        }
+
+        boolean ok = false;
+        for (AccessKey key : u.getAccessKeys()) {
+            if (key.getAuthLevel().equals(AuthLevel.admin)) {
+              return false;
+            }
+            if (key.getScope().equals(entity.getKey()) || key.getScope().equals(entity.getOwner())) {
+                if (key.getAuthLevel().compareTo(AuthLevel.readWritePoint) >= 0)
+               return false;
+
+            }
+        }
+
+        return true;
+
+    }
+
     @Override
     public Value recordValue(final User u,
                              final Entity entity,
@@ -260,31 +283,33 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
 
         //	RecordedValue prevValue = null;
-        Value retObj = null;
 
-        final boolean ignored = false;
         final Point point  = entity instanceof PointModel
                 ? (Point) entity
                 : (Point) EntityTransactionFactory.getInstance(u).getEntityByKey(entity.getKey(),PointEntity.class).get(0);
 
 
+        if (ignoreByAuthLevel(u, entity)) {
+            throw new NimbitsException("Could not record value do to permissions levels being to low for a write operation");
+        } else {
+
+            final boolean ignored = false;
+            final boolean ignoredByDate = ignoreDataByExpirationDate(point, value, ignored);
+
+            final boolean ignoredByCompression = ignoreByCompression(point, value);
+
+            Value retObj = null;
+            if (!ignoredByDate && !ignoredByCompression) {
+
+                retObj = RecordedValueTransactionFactory.getInstance(point).recordValue(value);
+                final AlertType t = getAlertType(point, retObj);
+                final Value v = ValueModelFactory.createValueModel(retObj, t);
+                TaskFactory.getInstance().startRecordValueTask(u, point, v, loopFlag);
+            }
 
 
-        final boolean ignoredByDate = ignoreDataByExpirationDate( point, value, ignored);
-      //  final boolean ignoredByOwnership = ignoreDataByOwnership(u, point, ignored);
-        final boolean ignoredByCompression = ignoreByCompression(  point, value);
-
-        if (!ignoredByDate &&  !ignoredByCompression) {
-
-            retObj = RecordedValueTransactionFactory.getInstance(point).recordValue(value);
-            final AlertType t = getAlertType(point, retObj);
-            final Value v = ValueModelFactory.createValueModel(retObj, t);
-            TaskFactory.getInstance().startRecordValueTask(u, point, v, loopFlag);
+            return retObj == null ? value : retObj;
         }
-
-
-        return retObj == null ? value : retObj;
-
     }
 
 //    private static boolean ignoreDataByOwnership(final User u, final Point point, boolean ignored) {

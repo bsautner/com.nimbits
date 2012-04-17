@@ -2,7 +2,7 @@ package com.nimbits.server.transactions.memcache.user;
 
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.user.*;
-import com.nimbits.server.*;
+import com.nimbits.server.user.*;
 import static org.junit.Assert.*;
 import org.junit.*;
 

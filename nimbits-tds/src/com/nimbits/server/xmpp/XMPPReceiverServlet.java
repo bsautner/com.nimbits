@@ -159,7 +159,7 @@ public class XMPPReceiverServlet extends HttpServlet {
 
 
                 if (u != null) {
-                    Value value = ValueModelFactory.createValueModel(0.0, 0.0, v, new Date(), null, "");
+                    Value value = ValueModelFactory.createValueModel(0.0, 0.0, v, new Date(), "");
                     RecordedValueServiceFactory.getInstance().recordValue(u, pointName, value);
                 }
             } catch (NumberFormatException ignored) {

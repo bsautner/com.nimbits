@@ -15,6 +15,7 @@ package com.nimbits.server.orm;
 
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
+import com.nimbits.client.model.accesskey.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.entity.*;
@@ -43,6 +44,7 @@ public class UserEntity extends EntityStore implements User {
     private String facebookToken;
 
     @Persistent
+    @Deprecated
     private String secret;
 
     @Persistent
@@ -53,7 +55,7 @@ public class UserEntity extends EntityStore implements User {
 
     // A user that can only work with public data
     @NotPersistent
-    private int authLevel = AuthLevel.readWrite.getCode();
+    private List<AccessKey> accessKeys;
     /**
      *
      */
@@ -113,30 +115,51 @@ public class UserEntity extends EntityStore implements User {
         super(entity);
         dateCreated = new Date();
         lastLoggedIn = dateCreated;
-      //  this.key = KeyFactory.createKey(UserEntity.class.getSimpleName(), entity.getKey());
+        //  this.key = KeyFactory.createKey(UserEntity.class.getSimpleName(), entity.getKey());
 
     }
 
-    @Override
+
+    @Deprecated
     public String getSecret() {
         return secret;
     }
+
     @Override
-    public void setSecret(final String secret) {
-        this.secret = secret;
-    }
-    @Override
-    public AuthLevel getAuthLevel() {
-        return AuthLevel.get(this.authLevel);
-    }
-    @Override
-    public void setAuthLevel(final AuthLevel level) {
-        this.authLevel = level.getCode();
+    public List<AccessKey> getAccessKeys() {
+        return this.accessKeys == null ? new ArrayList<AccessKey>(1) : this.accessKeys;
     }
 
     @Override
+    public void addAccessKey(AccessKey key) {
+        if (accessKeys == null) {
+            accessKeys = new ArrayList<AccessKey>(1);
+        }
+        accessKeys.add(key);
+    }
+
+    @Override
+    public void addAccessKeys(List<AccessKey> key) {
+        if (accessKeys == null) {
+            accessKeys = new ArrayList<AccessKey>(key.size());
+        }
+        accessKeys.addAll(key);
+    }
+
+
+    @Override
     public boolean isRestricted() {
-        return AuthLevel.get(this.authLevel).equals(AuthLevel.restricted);
+        if (accessKeys == null) {
+            return true;
+        }
+        for (AccessKey key : accessKeys) {
+            if (key.getAuthLevel().compareTo(AuthLevel.restricted) > 0)
+            {
+                return false;
+            }
+        }
+        return true;
+
     }
 
     @Override
@@ -155,7 +178,6 @@ public class UserEntity extends EntityStore implements User {
         this.lastLoggedIn = u.getLastLoggedIn();
         this.facebookID = u.getFacebookID();
         this.facebookToken = u.getFacebookToken();
-        this.secret = u.getSecret();
         this.twitterToken = u.getTwitterToken();
         this.twitterTokenSecret = u.getTwitterTokenSecret();
 

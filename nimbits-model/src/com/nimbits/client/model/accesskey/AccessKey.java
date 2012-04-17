@@ -1,5 +1,6 @@
 package com.nimbits.client.model.accesskey;
 
+import com.nimbits.client.enums.*;
 import com.nimbits.client.model.entity.*;
 
 import java.io.*;
@@ -12,11 +13,18 @@ import java.io.*;
  */
 public interface AccessKey extends Entity, Serializable {
 
-    String getAccessKey();
+    String getCode();
 
-    void setAccessKey(final String accessKey);
+    void setCode(final String code);
 
-    String getSource();
+    String getScope();
 
-    void setSource(final String source);
+    void setScope(final String scope);
+
+    AuthLevel getAuthLevel();
+
+    void setAuthLevel(AuthLevel level);
+
+
+
 }

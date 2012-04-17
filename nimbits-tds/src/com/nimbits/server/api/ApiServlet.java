@@ -73,11 +73,7 @@ public class ApiServlet extends HttpServlet {
             paramMap.put(s, req.getParameter(s.getText()));
         }
 
-        if (containsParam(Parameters.key)) {
 
-           // EntityServiceFactory.getInstance().getEntitiesBySource(paramMap.get(Parameters.key), EntityType.accessKey.getClassName());
-
-        }
 
         addResponseHeaders(resp, type);
 

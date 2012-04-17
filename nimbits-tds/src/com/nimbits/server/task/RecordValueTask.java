@@ -16,6 +16,7 @@ package com.nimbits.server.task;
 import com.google.gson.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
+import com.nimbits.client.model.accesskey.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
@@ -31,6 +32,7 @@ import com.nimbits.server.summary.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
+import java.util.*;
 import java.util.logging.*;
 
 public class RecordValueTask extends HttpServlet {
@@ -54,13 +56,20 @@ public class RecordValueTask extends HttpServlet {
         final String loopFlagParam = req.getParameter(Parameters.loop.getText());
         final Entity entity = gson.fromJson(pointJson, EntityModel.class);
         final Value value = gson.fromJson(valueJson, ValueModel.class);
+
+        final String keyJson = req.getParameter(Parameters.key.getText());
+        List<AccessKey> keys = gson.fromJson(keyJson, GsonFactory.accessKeyListType);
+
+
         log.info(userJson);
         log.info(pointJson);
         log.info(valueJson);
-
+        log.info(keyJson);
         final boolean loopFlag = Boolean.valueOf(loopFlagParam);
         final User u = gson.fromJson(userJson, UserModel.class);
+        u.addAccessKeys(keys);
         try {
+
             final Point point = entity instanceof Point
                     ? (Point) entity
                     : (Point) EntityTransactionFactory.getInstance(u).getEntityByKey(entity.getKey(), PointEntity.class).get(0);

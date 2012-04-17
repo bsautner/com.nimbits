@@ -14,7 +14,6 @@ public enum SummaryType {
     skewness(2, "Skewness"),
     sum(3, "Sum"),
     variance(4, "Variance"),
-//    kurtosis(5, "Kurtosis"),
     max(6, "Max"),
     min(7, "Min")
 

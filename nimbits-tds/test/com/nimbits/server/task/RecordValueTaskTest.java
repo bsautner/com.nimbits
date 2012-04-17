@@ -6,9 +6,9 @@ import com.nimbits.client.model.calculation.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.value.*;
-import com.nimbits.server.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.gson.*;
+import com.nimbits.server.user.*;
 import com.nimbits.server.value.*;
 import static org.junit.Assert.*;
 import org.junit.*;
@@ -20,11 +20,16 @@ import org.junit.*;
  * Time: 11:11 AM
  */
 public class RecordValueTaskTest extends NimbitsServletTest {
-
+    private void addAuth() {
+        String userJson = GsonFactory.getInstance().toJson(user);
+        req.addParameter(Parameters.pointUser.getText(), userJson);
+        String keyJson = GsonFactory.getInstance().toJson(user.getAccessKeys());
+        req.addParameter(Parameters.key.getText(), keyJson);
+    }
     @Test
     public void testPostWithCalcs() throws NimbitsException {
         RecordValueTask task = new RecordValueTask();
-
+        addAuth();
         Entity e = EntityModelFactory.createEntity(CommonFactoryLocator.getInstance().createName("calc1"),
                 "", EntityType.calculation, ProtectionLevel.onlyMe, point.getKey(), user.getKey());
 

@@ -20,10 +20,10 @@ import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.value.*;
-import com.nimbits.server.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.orm.*;
 import com.nimbits.server.point.*;
+import com.nimbits.server.user.*;
 import com.nimbits.server.value.*;
 import static org.junit.Assert.*;
 import org.junit.*;
@@ -108,7 +108,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         final Value vz = RecordedValueServiceFactory.getInstance().getCurrentValue(z);
         assertEquals(vz.getDoubleValue(), rz, DELTA);
 
-        Thread.sleep(1000);
+        Thread.sleep(100);
         CalculationServiceFactory.getInstance().processCalculations(user, trigger, vt);
         final Value endResult =RecordedValueServiceFactory.getInstance().getCurrentValue(target);
         assertNotNull(endResult);

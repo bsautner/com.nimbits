@@ -29,7 +29,7 @@ public interface UserService extends RemoteService {
     List<ConnectionRequest> getPendingConnectionRequests(final EmailAddress email) throws NimbitsException;
     void connectionRequestReply(final EmailAddress targetEmail, final EmailAddress RequestorEmail, final Long key, final boolean accepted) throws NimbitsException;
     User getAppUserUsingGoogleAuth() throws NimbitsException;
-    String getSecret() throws NimbitsException;
+   // String getSecret() throws NimbitsException;
     User getUserByKey(String subscriberUUID) throws NimbitsException;
     List<User> getConnectionRequests(List<String> connections) throws NimbitsException;
 

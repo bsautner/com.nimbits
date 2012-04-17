@@ -5,6 +5,7 @@ import com.nimbits.client.enums.AuthLevel;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.accesskey.*;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.point.Point;
@@ -60,19 +61,19 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
     public EntityModel() {
     }
     public EntityModel(final Entity anEntity) throws NimbitsException {
-     if (anEntity != null) {
-        this.key = anEntity.getKey();
-        this.name = anEntity.getName().getValue();
-        this.description = anEntity.getDescription();
-        this.entityType = anEntity.getEntityType().getCode();
-        this.entity =anEntity.getKey();
-        this.parent = anEntity.getParent();
-        this.owner = anEntity.getOwner();
-        this.protectionLevel = anEntity.getProtectionLevel().getCode();
-        this.alertType = anEntity.getAlertType().getCode();
-        this.blobKey = anEntity.getBlobKey();
-        this.uuid = anEntity.getUUID();
-    }
+        if (anEntity != null) {
+            this.key = anEntity.getKey();
+            this.name = anEntity.getName().getValue();
+            this.description = anEntity.getDescription();
+            this.entityType = anEntity.getEntityType().getCode();
+            this.entity =anEntity.getKey();
+            this.parent = anEntity.getParent();
+            this.owner = anEntity.getOwner();
+            this.protectionLevel = anEntity.getProtectionLevel().getCode();
+            this.alertType = anEntity.getAlertType().getCode();
+            this.blobKey = anEntity.getBlobKey();
+            this.uuid = anEntity.getUUID();
+        }
     }
 
     @Override
@@ -214,7 +215,19 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
 
     @Override
     public boolean isOwner(final User user) {
-        return user != null && (user.getAuthLevel().equals(AuthLevel.admin) || this.owner.equals(user.getKey()));
+        if (user != null && this.owner.equals(user.getKey())) {
+            return true;
+        }
+        if (user != null && user.getAccessKeys() != null) {
+            for (AccessKey key : user.getAccessKeys()) {
+                if (key.getAuthLevel().equals(AuthLevel.admin)) {
+                    return true;
+                }
+            }
+
+        }
+        return false;
+
     }
 
     @Override
@@ -233,6 +246,9 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
         if (this.getEntityType().equals(EntityType.summary) && user == null) {
             retVal = true; //this is a system request from the summary cron job.
         }
+        if (this.getEntityType().equals(EntityType.accessKey)) {
+
+        }
         return retVal;
 
 
@@ -240,7 +256,7 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
 
     @Override
     public void validate() throws NimbitsException {
-      throw new NimbitsException("Do not validate models");
+        throw new NimbitsException("Do not validate models");
     }
 
 

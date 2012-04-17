@@ -14,8 +14,8 @@
 package com.nimbits.server.cron;
 
 import com.nimbits.client.exception.*;
-import com.nimbits.server.*;
 import com.nimbits.server.entity.*;
+import com.nimbits.server.user.*;
 import static org.junit.Assert.*;
 import org.junit.*;
 

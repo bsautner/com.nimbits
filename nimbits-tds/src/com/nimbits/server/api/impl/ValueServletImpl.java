@@ -80,7 +80,7 @@ public class ValueServletImpl extends ApiServlet {
                     final double longitude = getDoubleFromParam(getParam(Parameters.lng));
                     final double value = getDoubleFromParam(getParam(Parameters.value));
                     final Date timestamp = getParam(Parameters.timestamp) != null ? new Date(Long.parseLong(getParam(Parameters.timestamp))) : new Date();
-                    v = ValueModelFactory.createValueModel(latitude, longitude, value, timestamp, getParam(Parameters.note), getParam(Parameters.json));
+                    v = ValueModelFactory.createValueModel(latitude, longitude, value, timestamp, getParam(Parameters.json));
                 } else {
                     final Value vx = GsonFactory.getInstance().fromJson(getParam(Parameters.json), ValueModel.class);
 
@@ -169,7 +169,7 @@ public class ValueServletImpl extends ApiServlet {
                 // request
                 final Value newValue = ValueModelFactory.createValueModel(
                         nv.getLatitude(), nv.getLongitude(), nv.getDoubleValue(),
-                        nv.getTimestamp(), nv.getNote(), nv.getData());
+                        nv.getTimestamp(), nv.getData());
 
 
                 value = RecordedValueServiceFactory.getInstance().recordValue(u, p, newValue, false);

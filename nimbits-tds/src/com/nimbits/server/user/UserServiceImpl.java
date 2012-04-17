@@ -19,6 +19,7 @@ import com.nimbits.client.common.*;
 import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
+import com.nimbits.client.model.accesskey.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.connection.*;
 import com.nimbits.client.model.email.*;
@@ -47,13 +48,16 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
 
         String emailParam = null;
-        String secret = null;
         HttpSession session = null;
         final com.google.appengine.api.users.UserService googleUserService = UserServiceFactory.getUserService();
-
+        String secret = null;
         if (req != null) {
             emailParam = req.getParameter(Parameters.email.getText());
             secret = req.getParameter(Parameters.secret.getText());
+            if (Utils.isEmptyString(secret)) {
+                secret = req.getParameter(Parameters.key.getText());
+            }
+
             session = req.getSession();
         }
 
@@ -80,6 +84,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
             if (result.isEmpty()) {
                 if (googleUserService.getCurrentUser() != null && googleUserService.getCurrentUser().getEmail().equalsIgnoreCase(email.getValue())) {
                     user = createUserRecord(email);
+                    user.addAccessKey(authenticatedKey(user));
                 } else if (googleUserService.getCurrentUser() != null && !googleUserService.getCurrentUser().getEmail().equalsIgnoreCase(email.getValue())) {
                     throw new NimbitsException("While the current user is authenticated, the email provided does not match " +
                             "the authenticated user, so the system is confused and cannot authenticate the request. " +
@@ -92,16 +97,27 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
             } else {
                 user = (User) result.get(0);
-                user.setAuthLevel(AuthLevel.restricted);
+              //
 
-                if (!Utils.isEmptyString(secret) && !Utils.isEmptyString(user.getSecret()) && user.getSecret().equals(secret)) {
-                    user.setAuthLevel(AuthLevel.readWrite);
+
+                if (!Utils.isEmptyString(secret)) {
+                  //all we have is an email of an existing user, let's see what they can do.
+                  Map<String, Entity> keys = EntityServiceFactory.getInstance().getEntityMap(user, EntityType.accessKey, 1000);
+                  for (Entity k : keys.values()) {
+                      if (((AccessKey)k).getCode().equals(secret)) {
+                          user.addAccessKey((AccessKey) k);
+                      }
+                  }
+
+
                 }
-                if (user.getAuthLevel().equals(AuthLevel.restricted)) {
+
+                if (user.isRestricted()) {
 
                     if (googleUserService.getCurrentUser() != null
                             && googleUserService.getCurrentUser().getEmail().equalsIgnoreCase(user.getEmail().getValue())) {
-                        user.setAuthLevel(AuthLevel.readWrite);
+
+                        user.addAccessKey(authenticatedKey(user)); //they are logged in
                     }
                 }
             }
@@ -114,6 +130,14 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         return user;
 
     }
+
+    protected static AccessKey authenticatedKey(User user) throws NimbitsException {
+
+        EntityName name = CommonFactoryLocator.getInstance().createName("AUTHENTICATED_KEY", EntityType.accessKey);
+        Entity en = EntityModelFactory.createEntity(name, "",EntityType.accessKey, ProtectionLevel.onlyMe, user.getKey(), user.getKey());
+        return AccessKeyFactory.createAccessKey(en, "AUTHENTICATED_KEY", user.getKey(), AuthLevel.admin);
+    }
+
     @Override
     public com.nimbits.client.model.user.User createUserRecord(final EmailAddress internetAddress) throws NimbitsException {
         final EntityName name = CommonFactoryLocator.getInstance().createName(internetAddress.getValue(), EntityType.user);
@@ -121,17 +145,20 @@ public class UserServiceImpl extends RemoteServiceServlet implements
                 name.getValue(), name.getValue(), name.getValue());
 
         final com.nimbits.client.model.user.User newUser = UserModelFactory.createUserModel(entity);
-        newUser.setSecret(UUID.randomUUID().toString());
+      // newUser.setSecret(UUID.randomUUID().toString());
         return (User) EntityServiceFactory.getInstance().addUpdateEntity(newUser);
     }
     @Override
     public User getAdmin() throws NimbitsException {
-        String adminStr = "bsautner@gmail.com"; //SettingsServiceFactory.getInstance().getSetting(SettingType.admin);
+        String adminStr = "support@nimbits.com"; //SettingsServiceFactory.getInstance().getSetting(SettingType.admin);
 
         User u = new UserModel();
         u.setName(CommonFactoryLocator.getInstance().createName(adminStr, EntityType.user));
-
-        u.setAuthLevel(AuthLevel.admin);
+        Entity en = EntityModelFactory.createEntity(u.getName(), "", EntityType.accessKey, ProtectionLevel.onlyMe,
+               adminStr, adminStr);
+        AccessKey key = AccessKeyFactory.createAccessKey(en, adminStr, "", AuthLevel.admin);
+        u.addAccessKey(key);
+        //u.setAuthLevel(AuthLevel.admin);
         return u;
     }
 
@@ -148,6 +175,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
         return u;
     }
+
     @Override
     public User getAppUserUsingGoogleAuth() throws NimbitsException {
         final com.google.appengine.api.users.UserService u = UserServiceFactory.getUserService();
@@ -166,19 +194,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         return retObj;
     }
 
-    @Override
-    public String getSecret() throws NimbitsException {
 
-        final String email = UserServiceFactory.getUserService().getCurrentUser().getEmail().toLowerCase();
-        final EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
-        List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(emailAddress.getValue(), UserEntity.class.getName());
-        if (result.isEmpty()) {
-            throw new NimbitsException(UserMessages.ERROR_USER_NOT_FOUND);
-        } else {
-            return ((User) result.get(0)).getSecret();
-        }
-
-    }
 
     @Override
     public User getUserByKey(final String key) throws NimbitsException {
@@ -204,7 +220,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
             throw new NimbitsException(UserMessages.ERROR_USER_NOT_FOUND);
         } else {
             User u = (User) result.get(0);
-            u.setSecret(secret);
+          //  u.setSecret(secret);
             EntityServiceFactory.getInstance().addUpdateEntity(u);
             EmailServiceFactory.getInstance().sendEmail(internetAddress, "Your Nimbits Secret has been reset to: " + secret, "Reset Nimbits Secret");
 

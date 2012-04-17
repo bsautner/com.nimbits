@@ -14,7 +14,7 @@
 package com.nimbits.server.task;
 
 import com.nimbits.client.exception.*;
-import com.nimbits.server.*;
+import com.nimbits.server.user.*;
 import org.junit.*;
 
 /**

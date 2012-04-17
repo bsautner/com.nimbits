@@ -16,7 +16,7 @@
 <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
     <!--<async-session-persistence enabled="true"/>-->
     <application>nimbits1</application>
-    <version>345</version>
+    <version>346</version>
     <sessions-enabled>true</sessions-enabled>
     <inbound-services>
         <service>mail</service>

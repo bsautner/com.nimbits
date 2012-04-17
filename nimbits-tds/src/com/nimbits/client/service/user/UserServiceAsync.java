@@ -25,7 +25,7 @@ public interface UserServiceAsync {
 
     void updateSecret(final AsyncCallback<String> asyncCallback);
 
-    void getSecret(final AsyncCallback<String> asyncCallback);
+   // void getSecret(final AsyncCallback<String> asyncCallback);
 
     void sendConnectionRequest(final EmailAddress email, final AsyncCallback<Void> asyncCallback);
 

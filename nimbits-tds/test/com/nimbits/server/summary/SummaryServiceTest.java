@@ -19,8 +19,8 @@ import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.summary.*;
 import com.nimbits.client.model.value.*;
-import com.nimbits.server.*;
 import com.nimbits.server.entity.*;
+import com.nimbits.server.user.*;
 import com.nimbits.server.value.*;
 import org.junit.*;
 
@@ -32,7 +32,7 @@ import java.util.*;
  * Date: 3/16/12
  * Time: 12:53 PM
  */
-public class SummaryServiceTest extends NimbitsServletTest{
+public class SummaryServiceTest extends NimbitsServletTest {
     private static final int SUMMARY_INTERVAL_MS = 60000;
     private static final double DELTA = 0.001;
     double[] v ={1,2,3};

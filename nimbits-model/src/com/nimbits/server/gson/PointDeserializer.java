@@ -19,6 +19,6 @@ public class PointDeserializer implements JsonDeserializer<Point> {
 
         final JsonPrimitive jsonPrimitive = (JsonPrimitive) jsonElement;
         final String json = jsonPrimitive.getAsString();
-        return GsonFactory.getPointInstance().fromJson(json, PointModel.class);
+        return GsonFactory.getInstance().fromJson(json, PointModel.class);
     }
 }

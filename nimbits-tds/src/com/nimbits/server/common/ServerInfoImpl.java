@@ -43,8 +43,8 @@ public class ServerInfoImpl {
         String environment = System.getProperty("com.google.appengine.runtime.environment");
         if (environment.equals("Production")) {
             String applicationId = System.getProperty("com.google.appengine.application.id");
-            String version = System.getProperty("com.google.appengine.application.version");
-           return  "http://"+version+ '.' +applicationId+".appspot.com/";
+            //String version = System.getProperty("com.google.appengine.application.version");
+           return  "http://" +applicationId+".appspot.com/";
         } else {
            return TEST_URL;
         }

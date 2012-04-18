@@ -17,6 +17,7 @@ import com.google.appengine.api.memcache.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.logging.*;
@@ -48,8 +49,13 @@ public class EntityCacheImpl implements EntityTransactions {
     }
 
     @Override
-    public List<Entity> getEntitiesBySource(Entity source, Class<?> cls) throws NimbitsException {
+    public List<Entity> getEntitiesBySource(final Entity source, final Class<?> cls) throws NimbitsException {
         return EntityTransactionFactory.getDaoInstance(user).getEntitiesBySource(source, cls);
+    }
+
+    @Override
+    public List<Point> getIdlePoints() throws NimbitsException {
+        return EntityTransactionFactory.getDaoInstance(user).getIdlePoints();
     }
 
     private void addEntityToCache(final Entity entity) throws NimbitsException {

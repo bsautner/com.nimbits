@@ -30,6 +30,8 @@
     <inherits name="org.vectomatic.libgwtsvg"/>
     <inherits name="com.extjs.gxt.themes.Themes"/>
     <inherits name="com.google.gwt.http.HTTP"/>
+    <script src="feed.js"></script>
+    <script src="jquery-1.7.1.js"></script>
     <source path='client'/>
 
 

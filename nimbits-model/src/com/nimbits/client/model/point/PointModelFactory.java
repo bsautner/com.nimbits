@@ -50,14 +50,7 @@ public class PointModelFactory {
                 filterType,  filterValue);
     }
 
-    public static Point createPointModel(Entity entity) throws NimbitsException {
-        return new PointModel(
-                entity,  0.0,
-                90,  "", 0.0,
-                false,  false,
-                false,  0,   false,
-                FilterType.fixedHysteresis,0.1);
-    }
+
 
     public static List<Point> createPointModels(final Collection<Point> result) throws NimbitsException {
         final List<Point> r = new ArrayList<Point>(result.size());
@@ -65,5 +58,9 @@ public class PointModelFactory {
             r.add(createPointModel(p));
         }
         return r;
+    }
+
+    public static Point createPointModel(Entity entity) throws NimbitsException {
+        return  PointModelFactory.createPointModel(entity,0.0, 90, "", 0.0, false, false, false, 0, false, FilterType.fixedHysteresis, 0.1 );
     }
 }

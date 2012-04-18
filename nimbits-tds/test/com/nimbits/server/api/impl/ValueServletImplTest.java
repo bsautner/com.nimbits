@@ -13,17 +13,19 @@
 
 package com.nimbits.server.api.impl;
 
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.server.cron.*;
-import com.nimbits.server.settings.*;
-import com.nimbits.server.user.*;
-import static org.junit.Assert.*;
-import org.junit.*;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.server.NimbitsServletTest;
+import com.nimbits.server.cron.SystemMaint;
+import com.nimbits.server.settings.SettingsServiceFactory;
+import org.junit.Test;
 
-import java.io.*;
+import java.io.IOException;
+
+import static org.junit.Assert.*;
 
 /**
  * Created by Benjamin Sautner

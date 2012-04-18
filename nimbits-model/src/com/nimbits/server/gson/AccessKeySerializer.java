@@ -11,25 +11,27 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server.point;
+package com.nimbits.server.gson;
 
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.point.*;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.nimbits.client.model.accesskey.AccessKey;
 
-import java.util.*;
+import java.lang.reflect.Type;
 
 /**
  * Created by bsautner
  * User: benjamin
- * Date: 9/30/11
- * Time: 2:12 PM
+ * Date: 11/10/11
+ * Time: 7:28 PM
  */
-public interface PointTransactions {
+public class AccessKeySerializer implements JsonSerializer<AccessKey> {
 
-
-    List<Point> getIdlePoints() throws NimbitsException;
-
-
-
-
+    @Override
+    public JsonElement serialize(final AccessKey src, final Type type, final JsonSerializationContext jsonSerializationContext) {
+        final String j = GsonFactory.getSimpleInstance().toJson(src);
+        return new JsonPrimitive(j);
+    }
 }

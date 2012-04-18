@@ -49,7 +49,7 @@ public class AccessKeyPanel extends NavigationEventProvider {
 
     private final Entity entity;
 
-    public AccessKeyPanel(Entity entity) {
+    public AccessKeyPanel(final Entity entity) {
         this.entity = entity;
     }
 
@@ -229,7 +229,11 @@ public class AccessKeyPanel extends NavigationEventProvider {
         private final Radio userRadio;
 
         private final Radio pointRadio ;
-        SubmitEventSelectionListener(final TextField<String> name, final TextField<String> k, final ComboBox<TypeOption> typeCombo, Radio userRadio, Radio pointRadio) throws NimbitsException {
+        SubmitEventSelectionListener(final TextField<String> name,
+                                     final TextField<String> k,
+                                     final ComboBox<TypeOption> typeCombo,
+                                     final Radio userRadio,
+                                     final Radio pointRadio) throws NimbitsException {
             this.name =  name;
             this.k = k;
             this.typeCombo = typeCombo;
@@ -252,7 +256,7 @@ public class AccessKeyPanel extends NavigationEventProvider {
                     AccessKey accessKey = (AccessKey)entity;
                     accessKey.setName(newName);
                     accessKey.setCode(k.getValue());
-
+                    accessKey.setAuthLevel(typeCombo.getValue().getMethod());
 
                     service.addUpdateEntity(accessKey, new UpdateEntityAsyncCallback(box));
 

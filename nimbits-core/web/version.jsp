@@ -13,7 +13,7 @@
     <title></title>
 </head>
 <body>
- <%=Const.CONST_SERVER_VERSION%>
+
 
 </body>
 </html>

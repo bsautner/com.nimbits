@@ -13,27 +13,30 @@
 
 package com.nimbits.server.task;
 
-import com.google.gson.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.accesskey.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.server.calculation.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.intelligence.*;
-import com.nimbits.server.logging.*;
-import com.nimbits.server.orm.*;
-import com.nimbits.server.subscription.*;
-import com.nimbits.server.summary.*;
+import com.google.gson.Gson;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModel;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.user.UserModel;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.ValueModel;
+import com.nimbits.server.calculation.CalculationServiceFactory;
+import com.nimbits.server.entity.EntityTransactionFactory;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.intelligence.IntelligenceServiceFactory;
+import com.nimbits.server.logging.LogHelper;
+import com.nimbits.server.orm.PointEntity;
+import com.nimbits.server.subscription.SubscriptionServiceFactory;
+import com.nimbits.server.summary.SummaryServiceFactory;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.util.*;
-import java.util.logging.*;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.logging.Logger;
 
 public class RecordValueTask extends HttpServlet {
 
@@ -57,35 +60,29 @@ public class RecordValueTask extends HttpServlet {
         final Entity entity = gson.fromJson(pointJson, EntityModel.class);
         final Value value = gson.fromJson(valueJson, ValueModel.class);
 
-        final String keyJson = req.getParameter(Parameters.key.getText());
-        List<AccessKey> keys = gson.fromJson(keyJson, GsonFactory.accessKeyListType);
+
+
 
 
         log.info(userJson);
         log.info(pointJson);
         log.info(valueJson);
-        log.info(keyJson);
+
         final boolean loopFlag = Boolean.valueOf(loopFlagParam);
         final User u = gson.fromJson(userJson, UserModel.class);
-        u.addAccessKeys(keys);
+
         try {
 
             final Point point = entity instanceof Point
                     ? (Point) entity
                     : (Point) EntityTransactionFactory.getInstance(u).getEntityByKey(entity.getKey(), PointEntity.class).get(0);
 
-            if (!loopFlag) {
-
-
-
+            //if (!loopFlag) {
                 CalculationServiceFactory.getInstance().processCalculations(u, point, value);
                 IntelligenceServiceFactory.getInstance().processIntelligence(u, point);
                 SubscriptionServiceFactory.getInstance().processSubscriptions(u,  point, value);
                 SummaryServiceFactory.getInstance().processSummaries(u, point);
-
-
-
-            }
+          //  }
 
         } catch (NimbitsException e) {
             LogHelper.logException(this.getClass(), e);

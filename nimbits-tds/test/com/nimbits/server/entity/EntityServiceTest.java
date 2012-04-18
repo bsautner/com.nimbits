@@ -13,17 +13,22 @@
 
 package com.nimbits.server.entity;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.server.orm.*;
-import com.nimbits.server.user.*;
-import static org.junit.Assert.*;
-import org.junit.*;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModelFactory;
+import com.nimbits.server.NimbitsServletTest;
+import com.nimbits.server.orm.PointEntity;
+import org.junit.Test;
 
-import java.util.*;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 /**
  * Created by Benjamin Sautner
@@ -134,5 +139,8 @@ public class EntityServiceTest extends NimbitsServletTest {
             assertTrue(e.entityIsReadable(user));
         }
     }
+
+
+
 
 }

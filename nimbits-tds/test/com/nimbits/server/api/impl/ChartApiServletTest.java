@@ -1,7 +1,7 @@
 package com.nimbits.server.api.impl;
 
-import com.nimbits.server.user.*;
-import org.junit.*;
+import com.nimbits.server.NimbitsServletTest;
+import org.junit.Test;
 
 /**
  * Created by Benjamin Sautner

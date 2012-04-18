@@ -11,15 +11,19 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.client.service;
+  function showFeed(_content) {
 
-import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
+      $.post("/service/feed",
+          { content: _content},
+          function(data){
+              var win=window.open('about:blank');
+              with(win.document)
+              {
+                  open();
+                  write(data);
+                  close();
+              }
+          }
+      );
 
-@RemoteServiceRelativePath("login")
-public interface LoginService extends RemoteService {
-    LoginInfo login(final String requestUri) throws NimbitsException;
-
-
-}
+  }

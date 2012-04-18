@@ -1,17 +1,23 @@
 package com.nimbits.server.task;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.calculation.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.user.*;
-import com.nimbits.server.value.*;
-import static org.junit.Assert.*;
-import org.junit.*;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.calculation.Calculation;
+import com.nimbits.client.model.calculation.CalculationModelFactory;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.server.NimbitsServletTest;
+import com.nimbits.server.entity.EntityServiceFactory;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.value.RecordedValueServiceFactory;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by Benjamin Sautner

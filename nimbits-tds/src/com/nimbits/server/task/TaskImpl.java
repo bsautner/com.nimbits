@@ -14,19 +14,24 @@
 package com.nimbits.server.task;
 
 import com.google.appengine.api.taskqueue.Queue;
-import com.google.appengine.api.taskqueue.*;
-import com.google.gson.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.user.*;
+import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.taskqueue.TaskOptions;
+import com.google.gson.Gson;
+import com.nimbits.client.enums.Action;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.server.gson.GsonFactory;
 
-import javax.servlet.http.*;
-import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Enumeration;
+import java.util.Map;
+import java.util.UUID;
+import java.util.logging.Logger;
 
 
 /**
@@ -56,7 +61,7 @@ public class TaskImpl implements Task {
     private static final String PATH_TASK_PROCESS_BATCH = "/task/processbatchtask";
     private static final String PATH_INCOMING_MAIL_QUEUE = "/task/incommingmail";
     private static final String PATH_DELETE_DATA_TASK = "/task/DeleteRecordedValuesTask";
-   // private static final Logger log = Logger.getLogger(TaskImpl.class.getName());
+    private static final Logger log = Logger.getLogger(TaskImpl.class.getName());
     private boolean overrideQueue;
 
 
@@ -104,28 +109,36 @@ public class TaskImpl implements Task {
 
 
     @Override
-    public void startProcessBatchTask(final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException {
+    public void startProcessBatchTask(final User user, final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException {
 
 
-        final com.google.appengine.api.taskqueue.Queue queue =  QueueFactory.getQueue(overrideQueue ? DEFAULT : QUEUE_PROCESS_BATCH);
-        final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
+        try {
+            final Queue queue =  QueueFactory.getQueue(overrideQueue ? DEFAULT : QUEUE_PROCESS_BATCH);
 
-        final String userJson = gson.toJson(u);
-        final String keyJson = gson.toJson(u.getAccessKeys());
-        final TaskOptions options = TaskOptions.Builder.withUrl(PATH_TASK_PROCESS_BATCH);
-        final Enumeration enumeration = req.getParameterNames();
-        final Map m = req.getParameterMap();
+            overrideQueue = false;
 
-        while (enumeration.hasMoreElements()) {
-            final String param = enumeration.nextElement().toString();
-            final String value = ((String[]) m.get(param))[0];
-            options.param(param, value);
+            final String userJson = gson.toJson(user);
+
+            log.info(userJson);
+
+            final TaskOptions options = TaskOptions.Builder.withUrl(PATH_TASK_PROCESS_BATCH);
+
+            final Enumeration enumeration = req.getParameterNames();
+            final Map m = req.getParameterMap();
+
+            while (enumeration.hasMoreElements()) {
+                final String param = enumeration.nextElement().toString();
+                final String value = ((String[]) m.get(param))[0];
+                options.param(param, value);
+            }
+
+            options.param(Parameters.pointUser.getText(), userJson);
+
+            queue.add(options);
+        } catch (Exception e) {
+            overrideQueue = true;
+            startProcessBatchTask(user, req, resp);
         }
-
-        options.param(Parameters.pointUser.getText(), userJson);
-        options.param(Parameters.key.getText(), keyJson);
-
-        queue.add(options);
 
 
     }
@@ -141,14 +154,14 @@ public class TaskImpl implements Task {
             final String userJson = gson.toJson(u);
             final String pointJson = gson.toJson(point);
             final String valueJson = gson.toJson(value);
-            final String keyJson = gson.toJson(u.getAccessKeys());
+
             queue.add(TaskOptions.Builder
                     .withUrl(PATH_TASK_RECORD_VALUE).taskName(UUID.randomUUID().toString())
                     .param(Parameters.pointUser.getText(), userJson)
                     .param(Parameters.pointJson.getText(), pointJson)
                     .param(Parameters.valueJson.getText(), valueJson)
-                    .param(Parameters.loop.getText(), String.valueOf(loopFlag))
-                    .param(Parameters.key.getText(), keyJson));
+                    .param(Parameters.loop.getText(), String.valueOf(loopFlag)));
+
 
 
         } catch (IllegalStateException ex) {

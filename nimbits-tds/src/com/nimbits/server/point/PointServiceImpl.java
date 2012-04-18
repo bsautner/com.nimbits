@@ -14,22 +14,27 @@
 package com.nimbits.server.point;
 
 
-import com.google.gwt.user.server.rpc.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.accesskey.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.client.service.datapoints.*;
-import com.nimbits.server.blob.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.export.*;
-import com.nimbits.server.orm.*;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ExportType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModelFactory;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.service.datapoints.PointService;
+import com.nimbits.server.blob.BlobStoreFactory;
+import com.nimbits.server.entity.EntityServiceFactory;
+import com.nimbits.server.entity.EntityTransactionFactory;
+import com.nimbits.server.export.ExportHelperFactory;
+import com.nimbits.server.orm.PointEntity;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 public class PointServiceImpl extends RemoteServiceServlet implements
         PointService {
@@ -38,10 +43,10 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
     //
     @Override
-    public Entity copyPoint(User u, Entity originalEntity, EntityName newName) throws NimbitsException {
+    public Entity copyPoint(final User u, final Entity originalEntity, final EntityName newName) throws NimbitsException {
 
         //final Point storedPoint = PointServiceFactory.getInstance().getPointByKey(originalEntity.getKey());
-        Point storedPoint = (Point) EntityTransactionFactory.getDaoInstance(u).getEntityByKey(originalEntity.getKey(), PointEntity.class).get(0);
+        final Point storedPoint = (Point) EntityTransactionFactory.getDaoInstance(u).getEntityByKey(originalEntity.getKey(), PointEntity.class).get(0);
 
         final Point newPoint = PointModelFactory.createPointModel(storedPoint);
         newPoint.setName(newName);
@@ -52,8 +57,8 @@ public class PointServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public Point addPoint(EntityName name) throws NimbitsException {
-        Entity e = EntityModelFactory.createEntity(name, EntityType.point);
+    public Point addPoint(final EntityName name) throws NimbitsException {
+        final Entity e = EntityModelFactory.createEntity(name, EntityType.point);
         return (Point) EntityServiceFactory.getInstance().addUpdateEntity(e);
     }
 
@@ -65,8 +70,8 @@ public class PointServiceImpl extends RemoteServiceServlet implements
         switch (exportType) {
             case csvSeparateColumns:
                 data = ExportHelperFactory.getInstance().exportPointDataToCSVSeparateColumns(points, values);
-                Entity entity = points.values().iterator().next();
-                EntityName name;
+                final Entity entity = points.values().iterator().next();
+                final EntityName name;
                 name = entity != null ? entity.getName() : CommonFactoryLocator.getInstance().createName("nimbits_export", EntityType.file);
                 return BlobStoreFactory.getInstance().createFile(name, data, exportType);
 
@@ -87,8 +92,5 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
     }
 
-    @Override
-    public List<Point> getIdlePoints() throws NimbitsException {
-        return PointServiceFactory.getDaoInstance().getIdlePoints();
-    }
+
 }

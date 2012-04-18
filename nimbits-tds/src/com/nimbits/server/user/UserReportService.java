@@ -13,15 +13,20 @@
 
 package com.nimbits.server.user;
 
-import com.nimbits.client.common.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.logging.*;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.user.User;
+import com.nimbits.server.counter.CounterFactory;
+import com.nimbits.server.logging.LogHelper;
+import com.nimbits.server.transactions.dao.counter.ShardedCounter;
 
-import javax.servlet.http.*;
-import java.io.*;
-import java.util.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
 
 /**
  * Created by Benjamin Sautner
@@ -75,8 +80,12 @@ public class UserReportService extends HttpServlet {
                 out.println("<TD>" + u.getLastLoggedIn() + "</TD>");
                 out.println("<TD>" + u.getDateCreated() + "</TD>");
 
-              //  ShardedCounter counter = getOrCreateCounter(u.getEmail());
-                //out.println("<TD>" +counter.getCount() + "</TD>");
+                ShardedCounter counter = CounterFactory.getCounter(u.getEmail().getValue());
+                if (counter != null) {
+                    out.println("<TD>" + CounterFactory.getCounter(counter.getCount()+ "</TD>"));
+                }
+
+
                 out.println("</TR>");
 
             }

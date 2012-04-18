@@ -1,0 +1,60 @@
+<!--
+  ~ Copyright (c) 2010 Tonic Solutions LLC.
+  ~
+  ~ http://www.nimbits.com
+  ~
+  ~
+  ~ Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.gnu.org/licenses/gpl.html
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+  -->
+
+<html>
+<head>
+
+    <script type="text/javascript" src="/assets/js/jquery/jquery-1.7.1.js"></script>
+    <script type="text/javascript">
+        var c=0;
+        var t;
+        var timer_is_on=0;
+
+        function timedCount()
+        {
+            var r1=Math.floor(Math.random()*11);
+            var r2=Math.floor(Math.random()*11);
+
+
+            $.post("http://app.nimbits.com/service/batch",
+                    { email: "bsautner@gmail.com", p2: "batch monitor 2", v2: r2, p1: "batch monitor 1", v1: r1, key:"key" },
+                    function(data){
+
+                    }
+            );
+
+
+            c=c+1;
+            t=setTimeout("timedCount()",1000);
+        }
+
+        function doTimer()
+        {
+            if (!timer_is_on)
+            {
+                timer_is_on=1;
+                timedCount();
+            }
+        }
+    </script>
+</head>
+
+<body>
+<form>
+    <input type="button" value="Start" onClick="doTimer()">
+     <span>batch service</span>
+</form>
+
+</body>
+</html>
+

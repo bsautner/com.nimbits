@@ -17,7 +17,7 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.server.user.NimbitsServletTest;
+import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.entity.EntityTransactionFactory;
 import com.nimbits.server.gson.GsonFactory;
 import org.junit.Test;

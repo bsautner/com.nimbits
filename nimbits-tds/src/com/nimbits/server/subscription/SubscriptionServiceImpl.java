@@ -70,7 +70,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
         for (final Subscription subscription : subscriptions) {
 
-            if (subscription.getLastSent().getTime() + subscription.getMaxRepeat() * SECONDS * 1000 < new Date().getTime()) {
+            if  (subscription.getLastSent().getTime() + subscription.getMaxRepeat() * SECONDS * 1000 < new Date().getTime()) {
 
 
                 log.info("Processing Subscription " + subscription.getKey());
@@ -86,7 +86,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
                    // final List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(UserServiceFactory.getServerInstance().getAdmin(), point.getKey(), ).get(0);
 
-                    final User subscriber = UserServiceFactory.getInstance().getUserByKey(subscriptionEntity.get(0).getOwner());
+                    final User subscriber = UserServiceFactory.getInstance().getUserByKey(subscriptionEntity.get(0).getOwner(), AuthLevel.readWriteAll);
                     final AlertType alert = v.getAlertState();
 
                     switch (subscription.getSubscriptionType()) {

@@ -13,15 +13,16 @@
 
 package com.nimbits.server.transactions.dao.settings;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.server.cron.*;
-import com.nimbits.server.user.*;
-import static org.junit.Assert.*;
-import org.junit.*;
+import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.server.NimbitsServletTest;
+import com.nimbits.server.cron.SystemMaint;
+import org.junit.Test;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.Map;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by bsautner

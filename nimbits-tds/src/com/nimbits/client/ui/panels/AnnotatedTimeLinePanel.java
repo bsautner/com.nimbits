@@ -71,7 +71,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
     private static final String DEFAULT_EMPTY_COL = "EMPTY";
 
     @Override
-    protected void onResize(int width, int height) {
+    protected void onResize(final int width, final int height) {
         super.onResize(width, height);
         refreshSize(width);
     }
@@ -86,7 +86,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
     }
 
     void notifyChartRemovedListener() {
-        for (ChartRemovedListener ChartRemovedClickedListener : chartRemovedListeners) {
+        for (final ChartRemovedListener ChartRemovedClickedListener : chartRemovedListeners) {
             ChartRemovedClickedListener.onChartRemovedClicked();
         }
     }
@@ -120,12 +120,12 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
 
         removePointDataFromTable(CommonFactoryLocator.getInstance().createName(DEFAULT_EMPTY_COL, EntityType.point));
 
-        int r = dataTable.getNumberOfColumns();
+        final int r = dataTable.getNumberOfColumns();
         int currentRow = dataTable.getNumberOfRows();
         int PointColumn = dataTable.getNumberOfColumns();
         boolean found = false;
         for (int i = 0; i < r; i++) {
-            String s = dataTable.getColumnLabel(i);
+            final String s = dataTable.getColumnLabel(i);
             if (s.equals(entity.getName().getValue())) {
                 PointColumn = i;
                 found = true;
@@ -377,7 +377,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
         final MessageBox box = MessageBox.wait("Progress",
                 "Loading Buffered Data", "Loading...");
         box.show();
-        //   Timespan timespan = new TimespanModel(startDate, endDate);
+
         dataService.getCache(model.getBaseEntity(), new GetMemCacheListAsyncCallback(box, model));
 
 
@@ -687,6 +687,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
             try {
                 addPointDataToTable(model, result);
             } catch (NimbitsException e) {
+                box.close();
                 FeedbackHelper.showError(e);
             }
 

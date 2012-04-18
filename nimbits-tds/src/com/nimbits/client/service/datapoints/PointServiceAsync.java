@@ -27,7 +27,6 @@ import java.util.*;
 public interface PointServiceAsync {
 
     void exportData(final Map<EntityName, Entity> points, ExportType exportType, final Map<EntityName, List<Value>> values, AsyncCallback<String> async);
-    void getIdlePoints(final AsyncCallback<List<Point>> async) throws NimbitsException;
     void copyPoint(User u, Entity originalEntity, EntityName newName, AsyncCallback<Entity> async);
     void addPoint(EntityName name, AsyncCallback<Point> async) throws NimbitsException;
 

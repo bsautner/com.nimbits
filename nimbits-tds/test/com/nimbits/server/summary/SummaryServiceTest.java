@@ -13,18 +13,26 @@
 
 package com.nimbits.server.summary;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.summary.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.user.*;
-import com.nimbits.server.value.*;
-import org.junit.*;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.SummaryType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.summary.Summary;
+import com.nimbits.client.model.summary.SummaryModelFactory;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.server.NimbitsServletTest;
+import com.nimbits.server.entity.EntityServiceFactory;
+import com.nimbits.server.value.RecordedValueServiceFactory;
+import org.junit.Assert;
+import org.junit.Test;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Benjamin Sautner

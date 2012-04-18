@@ -14,17 +14,18 @@
 package com.nimbits.client.model.user;
 
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.accesskey.*;
+import com.nimbits.client.enums.AuthLevel;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
-import com.nimbits.server.gson.*;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 //import com.google.appengine.api.users.User;
@@ -47,7 +48,7 @@ public class UserModel extends EntityModel implements Serializable, User {
 
     private long facebookID;
 
-    @DoNotSerializePolicy
+
     private List<AccessKey> accessKeys;
 
     /**

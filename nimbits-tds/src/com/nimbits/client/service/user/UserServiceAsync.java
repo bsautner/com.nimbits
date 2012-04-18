@@ -14,7 +14,9 @@
 package com.nimbits.client.service.user;
 
 import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.enums.AuthLevel;
 import com.nimbits.client.exception.*;
+import com.nimbits.client.model.LoginInfo;
 import com.nimbits.client.model.connection.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.user.*;
@@ -23,9 +25,6 @@ import java.util.*;
 
 public interface UserServiceAsync {
 
-    void updateSecret(final AsyncCallback<String> asyncCallback);
-
-   // void getSecret(final AsyncCallback<String> asyncCallback);
 
     void sendConnectionRequest(final EmailAddress email, final AsyncCallback<Void> asyncCallback);
 
@@ -35,8 +34,9 @@ public interface UserServiceAsync {
 
     void getAppUserUsingGoogleAuth(final AsyncCallback<User> async);
 
-    void getUserByKey(final String subscriberUUID, final AsyncCallback<User> async) throws NimbitsException;
+    void getUserByKey(final String key, AuthLevel authLevel, final AsyncCallback<User> async) throws NimbitsException;
 
     void getConnectionRequests(final List<String> connections, final AsyncCallback<List<User>> async) throws NimbitsException;
 
+    void login(String requestUri, AsyncCallback<LoginInfo> async);
 }

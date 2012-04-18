@@ -16,6 +16,7 @@ package com.nimbits.client.service.entity;
 import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.*;
 
 import java.util.*;
@@ -54,4 +55,6 @@ public interface EntityServiceAsync {
     void getEntityByName(User user, EntityName name, String className, AsyncCallback<List<Entity>> async);
 
     void getEntitiesBySource(Entity source, EntityType type, AsyncCallback<List<Entity>> async);
+
+    void getIdlePoints(AsyncCallback<List<Point>> async);
 }

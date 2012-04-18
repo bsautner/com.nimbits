@@ -30,11 +30,13 @@ import com.nimbits.server.task.*;
 import com.nimbits.server.user.*;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 
 public class RecordedValueServiceImpl extends RemoteServiceServlet implements
         RecordedValueService, RequestCallback {
 
+    static final Logger log = Logger.getLogger(RecordedValueServiceImpl.class.getName());
     private static final long serialVersionUID = 1L;
 
 
@@ -53,8 +55,8 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public List<Value> getCache(final Entity entity) throws NimbitsException {
-      //  final Point point = PointServiceFactory.getInstance().getPointByKey(entity.getKey());
-      //  final Point p = (Point) EntityServiceFactory.getInstance().getEntityByKey(entity.getKey(), PointEntity.class.getName());
+        //  final Point point = PointServiceFactory.getInstance().getPointByKey(entity.getKey());
+        //  final Point p = (Point) EntityServiceFactory.getInstance().getEntityByKey(entity.getKey(), PointEntity.class.getName());
         return RecordedValueTransactionFactory.getInstance(entity).getBuffer();
     }
 
@@ -65,7 +67,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
                                              final Timespan timespan,
                                              final int start,
                                              final int end) throws NimbitsException {
-          return RecordedValueTransactionFactory.getInstance(entity).getDataSegment(timespan, start, end);
+        return RecordedValueTransactionFactory.getInstance(entity).getDataSegment(timespan, start, end);
     }
 
     @Override
@@ -76,14 +78,14 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
                 this.getThreadLocalRequest());
 
 //        final Point px = PointServiceFactory.getInstance().getPointByKey(point.getKey());
-     //   final Point px = (Point) EntityServiceFactory.getInstance().getEntityByKey(point.getKey(), PointEntity.class.getName());
+        //   final Point px = (Point) EntityServiceFactory.getInstance().getEntityByKey(point.getKey(), PointEntity.class.getName());
         return recordValue(u,point, value, false);
     }
 
 
     @Override
     public List<Value> getTopDataSeries(final Entity point,
-                                  final int maxValues) throws NimbitsException {
+                                        final int maxValues) throws NimbitsException {
 
         return RecordedValueTransactionFactory.getInstance(point).getTopDataSeries(maxValues);
 
@@ -107,7 +109,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
 
         final List<Entity> e = EntityServiceFactory.getInstance().getEntityByName(u, pointName, PointEntity.class.getName());
-      //  final Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
+        //  final Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
 
         return ! e.isEmpty() ? recordValue(u, e.get(0), value, false) : null;
 
@@ -253,20 +255,23 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
     }
 
-    private static boolean ignoreByAuthLevel(User u, Entity entity) throws NimbitsException {
-
+    private static boolean ignoreByAuthLevel(final User u, final Entity entity) throws NimbitsException {
+        for (AccessKey k : u.getAccessKeys()) {
+            log.info("key: " + k.getCode() + ' '  + k.getScope() + ' '  + entity.getKey());
+        }
         if (u.isRestricted()) {
-           return true;
+            return true;
         }
 
-        boolean ok = false;
-        for (AccessKey key : u.getAccessKeys()) {
+
+        for (final AccessKey key : u.getAccessKeys()) {
             if (key.getAuthLevel().equals(AuthLevel.admin)) {
-              return false;
+                return false;
             }
             if (key.getScope().equals(entity.getKey()) || key.getScope().equals(entity.getOwner())) {
-                if (key.getAuthLevel().compareTo(AuthLevel.readWritePoint) >= 0)
-               return false;
+                if (key.getAuthLevel().compareTo(AuthLevel.readWritePoint) >= 0) {
+                    return false;
+                }
 
             }
         }

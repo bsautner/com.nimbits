@@ -1,13 +1,13 @@
 package com.nimbits.server.orm;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.accesskey.*;
-import com.nimbits.shared.*;
+import com.nimbits.client.enums.AuthLevel;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.accesskey.AccessKey;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.shared.Utils;
 
-import javax.jdo.annotations.*;
-import java.util.*;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
 
 /**
  * Created by Benjamin Sautner
@@ -20,6 +20,7 @@ import java.util.*;
 public class AccessKeyEntity extends EntityStore implements AccessKey {
 
 
+    private static final long serialVersionUID = 5218131660944424648L;
     @Persistent
     private String code;
 
@@ -27,11 +28,13 @@ public class AccessKeyEntity extends EntityStore implements AccessKey {
     private String scope;
 
     @Persistent
+    @SuppressWarnings("unused")
     private boolean enabled;
 
     private int authLevel;
 
-    public AccessKeyEntity() {
+    @SuppressWarnings("unused")
+    protected AccessKeyEntity() {
 
     }
 
@@ -50,19 +53,21 @@ public class AccessKeyEntity extends EntityStore implements AccessKey {
     }
 
     @Override
-    public void setCode(String code) {
+    public void setCode(final String code) {
         this.code = code;
 
     }
 
     @Override
-    public void update(Entity update) throws NimbitsException {
+    public void update(final Entity update) throws NimbitsException {
         super.update(update);
-        AccessKey k = (AccessKey)update;
+
+        final AccessKey k = (AccessKey)update;
         this.code = k.getCode();
         this.scope = k.getScope();
         this.enabled = true;
-        this.authLevel = ((AccessKey) update).getAuthLevel().getCode();
+        this.authLevel = k.getAuthLevel().getCode();
+        validate();
     }
 
     @Override
@@ -91,7 +96,7 @@ public class AccessKeyEntity extends EntityStore implements AccessKey {
     }
 
     @Override
-    public void setScope(String scope) {
+    public void setScope(final String scope) {
         this.scope = scope;
     }
 
@@ -101,7 +106,7 @@ public class AccessKeyEntity extends EntityStore implements AccessKey {
     }
 
     @Override
-    public void setAuthLevel(AuthLevel level) {
+    public void setAuthLevel(final AuthLevel level) {
        this.authLevel = level.getCode();
     }
 

@@ -39,10 +39,7 @@
     <!--<url-pattern>/appstats/*</url-pattern>-->
     <!--</servlet-mapping>-->
 
-    <servlet>
-        <servlet-name>loginService</servlet-name>
-        <servlet-class>com.nimbits.server.login.LoginServiceImpl</servlet-class>
-    </servlet>
+
 
     <servlet-mapping>
         <servlet-name>summaryService</servlet-name>
@@ -85,10 +82,6 @@
     </servlet-mapping>
 
 
-    <servlet-mapping>
-        <servlet-name>loginService</servlet-name>
-        <url-pattern>/nimbits/login</url-pattern>
-    </servlet-mapping>
 
     <servlet>
         <servlet-name>dataService</servlet-name>
@@ -327,7 +320,14 @@
         <url-pattern>/service/currentvalue</url-pattern>
     </servlet-mapping>
 
-
+    <servlet>
+        <servlet-name>feedServlet</servlet-name>
+        <servlet-class>com.nimbits.server.api.impl.FeedServletImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>feedServlet</servlet-name>
+        <url-pattern>/service/feed</url-pattern>
+    </servlet-mapping>
 
 
     <!--<servlet>-->

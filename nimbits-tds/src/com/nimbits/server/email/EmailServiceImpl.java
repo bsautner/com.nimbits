@@ -145,7 +145,7 @@ public class EmailServiceImpl implements EmailService {
         final Properties props = new Properties();
         final Session session = Session.getDefaultInstance(props, null);
         final StringBuilder message = new StringBuilder(INT);
-        message.append("<p>This is an alert email from <A HREF=www.nimbits.com>Nimbits Data Logger</A></p>")
+        message.append("<p>This is an alert email from <A HREF=www.nimbits.com>nimbits.com</A></p>")
                 .append("<p>Data Point: ").append(entity.getName().getValue()).append("</p>");
 
 
@@ -175,7 +175,7 @@ public class EmailServiceImpl implements EmailService {
         }
 
 
-        message.append("<p></p>").append("<p><a href =\"").append(ServerInfoImpl.getFullServerURL(null)).append("?uuid=").append(point.getKey()).append("\">Go to Current Status Report</a></p>");
+        message.append("<p></p>").append("<p><a href =\"").append(ServerInfoImpl.getFullServerURL(null)).append("?uuid=").append(point.getUUID()).append("\">Go to Current Status Report</a></p>");
 
 
 

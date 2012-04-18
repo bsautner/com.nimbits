@@ -52,10 +52,7 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
         final List<Calculation> calculations = getCalculations(point);
         for (final Calculation c : calculations) {
             if (c.getEnabled()) {
-
-
                 try {
-
                     final List<Entity> target =   EntityServiceFactory.getInstance().getEntityByKey(u, c.getTarget(), PointEntity.class.getName());
                     if (target.isEmpty()) {
                         log.severe("Point target was null " + c.getTarget());

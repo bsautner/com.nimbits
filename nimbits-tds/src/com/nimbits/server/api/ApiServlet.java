@@ -13,16 +13,20 @@
 
 package com.nimbits.server.api;
 
-import com.nimbits.client.common.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.quota.*;
-import com.nimbits.server.user.*;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.enums.ExportType;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.user.User;
+import com.nimbits.server.quota.QuotaFactory;
+import com.nimbits.server.user.UserServiceFactory;
 
-import javax.servlet.http.*;
-import java.util.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Created by Benjamin Sautner
@@ -34,7 +38,7 @@ public class ApiServlet extends HttpServlet {
 
     protected static User user;
     private static Map<Parameters, String> paramMap;
-
+    final static Logger log = Logger.getLogger(ApiServlet.class.getName());
 
 
 
@@ -43,7 +47,12 @@ public class ApiServlet extends HttpServlet {
         user = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
         if (user != null) {
             QuotaFactory.getInstance(user.getEmail()).incrementCounter();
+            log.info(user.getKey());
+            log.info("keys: " + user.getAccessKeys().size());
         }
+
+
+
         paramMap = new EnumMap<Parameters, String>(Parameters.class);
 
         final Parameters[] items = {

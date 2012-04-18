@@ -146,7 +146,7 @@ public class RecoveryServlet extends HttpServlet {
 
             emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(adminStr);
 
-            User admin = UserServiceFactory.getInstance().getUserByKey("bsautner@gmail.com");
+            User admin = UserServiceFactory.getInstance().getUserByKey("bsautner@gmail.com", AuthLevel.admin);
             // admin.setAuthLevel(AuthLevel.admin);
             for (DataPoint p : oldC) {
                 if (p.getCalculationEntity() != null) {

@@ -623,7 +623,7 @@ public class MainMenuBar extends ToolBar {
                 try {
                     EntityName name = CommonFactoryLocator.getInstance().createName(newEntityName, EntityType.point);
                     Entity entity = EntityModelFactory.createEntity(name, EntityType.point);
-                    Point p = PointModelFactory.createPointModel(entity);
+                    Point p = PointModelFactory.createPointModel(entity,0.0, 90, "", 0.0, false, false, false, 0, false,FilterType.fixedHysteresis, 0.1 );
                     //     Entity entity = EntityModelFactory.createEntity(name, EntityType.point);
                     service.addUpdateEntity(p, new NewPointEntityAsyncCallback(box));
                 } catch (NimbitsException caught) {

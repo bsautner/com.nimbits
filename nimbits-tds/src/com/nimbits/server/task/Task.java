@@ -32,7 +32,7 @@ public interface Task {
 
     void startDeleteDataTask(final Point point, final boolean onlyExpired, final int exp);
 
-    void startProcessBatchTask(final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException;
+    void startProcessBatchTask(User user, final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException;
 
     void startRecordValueTask(final User u, final Entity point, final Value value, final boolean loopFlag);
 

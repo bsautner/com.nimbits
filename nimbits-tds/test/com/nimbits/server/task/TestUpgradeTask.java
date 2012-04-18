@@ -13,9 +13,10 @@
 
 package com.nimbits.server.task;
 
-import com.nimbits.client.exception.*;
-import com.nimbits.server.user.*;
-import org.junit.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.server.NimbitsServletTest;
+import org.junit.Ignore;
+import org.junit.Test;
 
 /**
  * Created by bsautner

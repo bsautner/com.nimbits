@@ -13,8 +13,7 @@
 
 package com.nimbits.server.point;
 
-import com.nimbits.client.service.datapoints.*;
-import com.nimbits.server.transactions.dao.point.*;
+import com.nimbits.client.service.datapoints.PointService;
 
 public class PointServiceFactory {
     private PointServiceFactory() {
@@ -33,14 +32,5 @@ public class PointServiceFactory {
 
     }
 
-    private static class PointDaoImplHolder {
-        static final PointTransactions daoInstance = new PointDaoImpl();
 
-        private PointDaoImplHolder() {
-        }
-    }
-
-    public static PointTransactions getDaoInstance() {
-        return PointDaoImplHolder.daoInstance;
-    }
 }

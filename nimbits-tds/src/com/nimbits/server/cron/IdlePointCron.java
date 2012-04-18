@@ -13,25 +13,28 @@
 
 package com.nimbits.server.cron;
 
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.logging.*;
-import com.nimbits.server.orm.*;
-import com.nimbits.server.point.*;
-import com.nimbits.server.subscription.*;
-import com.nimbits.server.value.*;
-import org.apache.commons.lang3.exception.*;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.AlertType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.server.entity.EntityServiceFactory;
+import com.nimbits.server.logging.LogHelper;
+import com.nimbits.server.orm.UserEntity;
+import com.nimbits.server.subscription.SubscriptionServiceFactory;
+import com.nimbits.server.value.RecordedValueServiceFactory;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
-import javax.servlet.http.*;
-import java.io.*;
-import java.util.*;
-import java.util.logging.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.List;
+import java.util.logging.Logger;
 
 public class IdlePointCron extends HttpServlet {
     /**
@@ -55,7 +58,7 @@ public class IdlePointCron extends HttpServlet {
     }
 
     protected static int processGet() throws NimbitsException {
-        final List<Point> points = PointServiceFactory.getInstance().getIdlePoints();
+        final List<Point> points =  EntityServiceFactory.getInstance().getIdlePoints();
         log.info("Processing " + points.size() + " potentially idle points");
         for (final Entity p : points) {
             try {

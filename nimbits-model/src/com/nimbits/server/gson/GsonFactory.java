@@ -4,13 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.nimbits.client.constants.Const;
-
-import com.nimbits.client.model.accesskey.*;
+import com.nimbits.client.model.accesskey.AccessKey;
+import com.nimbits.client.model.accesskey.AccessKeyModel;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityDescriptionModel;
-import com.nimbits.client.model.entity.EntityModel;
-import com.nimbits.client.model.intelligence.Intelligence;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.UserModel;
@@ -49,7 +47,7 @@ public class GsonFactory {
                 .setDateFormat(Const.GSON_DATE_FORMAT)
                 .serializeNulls()
                 .addSerializationExclusionStrategy(new NimbitsExclusionStrategy(null))
-                .registerTypeAdapter(Intelligence.class, new AccessKeySerializer())
+                .registerTypeAdapter(AccessKey.class, new AccessKeySerializer())
                 .registerTypeAdapter(AccessKey.class, new AccessKeyDeserializer())
                 .registerTypeAdapter(Value.class, new ValueDeserializer())
                 .registerTypeAdapter(Value.class, new ValueSerializer())

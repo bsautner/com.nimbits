@@ -80,7 +80,7 @@ public class EntityContextMenu extends Menu {
     }
 
     private void notifyEntityModifiedListener(final TreeModel model, final Action action) throws NimbitsException {
-        for (EntityModifiedListener listener : entityModifiedListeners) {
+        for (final EntityModifiedListener listener : entityModifiedListeners) {
             listener.onEntityModified(model, action);
         }
     }
@@ -93,7 +93,7 @@ public class EntityContextMenu extends Menu {
 
     public EntityContextMenu(final User user, final EntityTree<ModelData> tree, final Map<SettingType, String> settings) {
         super();
-        MenuItem propertyContext = propertyContext();
+        final MenuItem propertyContext = propertyContext();
         this.user = user;
         entityModifiedListeners = new ArrayList<EntityModifiedListener>(1);
         this.tree = tree;
@@ -128,9 +128,9 @@ public class EntityContextMenu extends Menu {
 
 
     @Override
-    public void showAt(int x, int y) {
+    public void showAt(final int x, final int y) {
         super.showAt(x, y);
-        ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
+        final ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
         currentModel = (TreeModel)selectedModel;
         deleteContext.setEnabled(!currentModel.getEntityType().equals(EntityType.user) || ! currentModel.isReadOnly());
         subscribeContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) ||currentModel.getEntityType().equals(EntityType.category));
@@ -149,7 +149,7 @@ public class EntityContextMenu extends Menu {
     }
 
     private MenuItem deleteContext() {
-        MenuItem retObj = new MenuItem();
+        final MenuItem retObj = new MenuItem();
 
 
         retObj.setText("Delete");
@@ -179,15 +179,15 @@ public class EntityContextMenu extends Menu {
     }
 
     private MenuItem summaryContext() {
-        MenuItem retObj = new MenuItem();
-        retObj.setText("New Summary Point");
+        final MenuItem retObj = new MenuItem();
+        retObj.setText("Summarize");
         retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.summary()));
         retObj.addSelectionListener(new SummaryMenuEventSelectionListener());
         return retObj;
 
     }
     private MenuItem keyContext() {
-        MenuItem retObj = new MenuItem();
+        final MenuItem retObj = new MenuItem();
         retObj.setText("New Read/Write Key");
         retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.key()));
         retObj.addSelectionListener(new KeyMenuEventSelectionListener());
@@ -203,7 +203,7 @@ public class EntityContextMenu extends Menu {
         return retObj;
     }
 
-    public void showIntelligencePanel(Entity entity) throws NimbitsException {
+    public void showIntelligencePanel(final Entity entity) throws NimbitsException {
         IntelligencePanel dp = new IntelligencePanel(entity);
 
         final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
@@ -222,7 +222,7 @@ public class EntityContextMenu extends Menu {
         w.show();
     }
 
-    public void showSummaryPanel(Entity entity) {
+    public void showSummaryPanel(final Entity entity) {
         SummaryPanel dp = new SummaryPanel(entity);
         final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
         w.setWidth(WIDTH);
@@ -233,7 +233,7 @@ public class EntityContextMenu extends Menu {
 
         w.show();
     }
-    public void showKeyPanel(Entity entity) {
+    public void showKeyPanel(final Entity entity) {
         AccessKeyPanel dp = new AccessKeyPanel(entity);
         final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
         w.setWidth(WIDTH);
@@ -246,7 +246,7 @@ public class EntityContextMenu extends Menu {
     }
 
     private MenuItem propertyContext() {
-        MenuItem retObj = new MenuItem();
+        final MenuItem retObj = new MenuItem();
 
         retObj.setText("Edit");
         retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.edit()));
@@ -255,7 +255,7 @@ public class EntityContextMenu extends Menu {
     }
 
     private MenuItem subscribeContext() {
-        MenuItem retObj = new MenuItem();
+        final MenuItem retObj = new MenuItem();
         retObj.setText("Subscribe");
         retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.plugin()));
         retObj.addSelectionListener(new SubscribeMenuEventSelectionListener());
@@ -263,7 +263,7 @@ public class EntityContextMenu extends Menu {
     }
 
     private MenuItem copyContext() {
-        MenuItem retObj = new MenuItem();
+        final MenuItem retObj = new MenuItem();
         retObj.setText("Copy");
         retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.album()));
         retObj.addSelectionListener(new CopyMenuEventSelectionListener());
@@ -271,7 +271,7 @@ public class EntityContextMenu extends Menu {
     }
 
     private MenuItem reportContext() {
-        MenuItem retObj = new MenuItem();
+        final MenuItem retObj = new MenuItem();
         retObj.setText("Report");
         retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.form()));
         retObj.addSelectionListener(new ReportMenuEventSelectionListener());
@@ -299,7 +299,7 @@ public class EntityContextMenu extends Menu {
     }
 
     public void showCalcPanel(final Entity entity) throws NimbitsException {
-        CalculationPanel dp = new CalculationPanel(user, entity);
+        final CalculationPanel dp = new CalculationPanel(user, entity);
 
         final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
         w.setWidth(WIDTH);
@@ -320,12 +320,12 @@ public class EntityContextMenu extends Menu {
     private class EntityAddedListener implements NavigationEventProvider.EntityAddedListener {
         private final Window w;
 
-        EntityAddedListener(Window w) {
+        EntityAddedListener(final Window w) {
             this.w = w;
         }
 
         @Override
-        public void onEntityAdded(Entity entity) throws NimbitsException {
+        public void onEntityAdded(final Entity entity) throws NimbitsException {
             w.hide();
             notifyEntityModifiedListener(new GxtModel(entity), Action.create);
 
@@ -337,8 +337,8 @@ public class EntityContextMenu extends Menu {
         }
 
         @Override
-        public void componentSelected(MenuEvent ce) {
-            ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
+        public void componentSelected(final MenuEvent ce) {
+            final ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
             currentModel = (TreeModel)selectedModel;
             if (! currentModel.isReadOnly()) {
                 MessageBox.confirm("Confirm", "Are you sure you want delete this? Doing so will permanently delete it including all of it's children (points, documents data etc)"
@@ -353,9 +353,9 @@ public class EntityContextMenu extends Menu {
         }
 
         @Override
-        public void componentSelected(MenuEvent ce) {
-            TreeModel selectedModel = (TreeModel) tree.getSelectionModel().getSelectedItem();
-            Entity entity = selectedModel.getBaseEntity();
+        public void componentSelected(final MenuEvent ce) {
+            final TreeModel selectedModel = (TreeModel) tree.getSelectionModel().getSelectedItem();
+            final Entity entity = selectedModel.getBaseEntity();
             try {
                 showCalcPanel(entity);
             } catch (NimbitsException e) {
@@ -368,18 +368,18 @@ public class EntityContextMenu extends Menu {
     private class CreateXMPPEntityAsyncCallback implements AsyncCallback<Entity> {
         private final MessageBox box;
 
-        CreateXMPPEntityAsyncCallback(MessageBox box) {
+        CreateXMPPEntityAsyncCallback(final MessageBox box) {
             this.box = box;
         }
 
         @Override
-        public void onFailure(Throwable caught) {
+        public void onFailure(final Throwable caught) {
             box.close();
             FeedbackHelper.showError(caught);
         }
 
         @Override
-        public void onSuccess(Entity result) {
+        public void onSuccess(final Entity result) {
             try {
                 notifyEntityModifiedListener(new GxtModel(result), Action.create);
             } catch (NimbitsException e) {
@@ -397,13 +397,13 @@ public class EntityContextMenu extends Menu {
 
 
         @Override
-        public void handleEvent(MessageBoxEvent be) {
+        public void handleEvent(final MessageBoxEvent be) {
             newEntityName = be.getValue();
             if (!Utils.isEmptyString(newEntityName)) {
                 final MessageBox box = MessageBox.wait("Progress",
                         "Creating your new XMPP Resource", "Creating: " + newEntityName);
                 box.show();
-                XMPPServiceAsync serviceAsync = GWT.create(XMPPService.class);
+                final XMPPServiceAsync serviceAsync = GWT.create(XMPPService.class);
                 EntityName name = null;
                 try {
                     name = CommonFactoryLocator.getInstance().createName(newEntityName, EntityType.resource);
@@ -419,21 +419,21 @@ public class EntityContextMenu extends Menu {
     private class CopyEntityAsyncCallback implements AsyncCallback<Entity> {
         private final MessageBox box;
 
-        CopyEntityAsyncCallback(MessageBox box) {
+        CopyEntityAsyncCallback(final MessageBox box) {
             this.box = box;
         }
 
         @Override
-        public void onFailure(Throwable caught) {
+        public void onFailure(final Throwable caught) {
             box.close();
             FeedbackHelper.showError(caught);
         }
 
         @Override
-        public void onSuccess(Entity entity) {
+        public void onSuccess(final Entity entity) {
             box.close();
             try {
-                TreeModel model = new GxtModel(entity);
+                final TreeModel model = new GxtModel(entity);
                 notifyEntityModifiedListener(model, Action.create);
             } catch (NimbitsException e) {
                 FeedbackHelper.showError(e);
@@ -457,14 +457,14 @@ public class EntityContextMenu extends Menu {
                 final MessageBox box = MessageBox.wait("Progress",
                         "Creating your data point channel into the cloud", "Creating: " + newEntityName);
                 box.show();
-                EntityServiceAsync service = GWT.create(EntityService.class);
+                final EntityServiceAsync service = GWT.create(EntityService.class);
                 EntityName name = null;
                 try {
                     name = CommonFactoryLocator.getInstance().createName(newEntityName, EntityType.point);
                 } catch (NimbitsException caught) {
                     FeedbackHelper.showError(caught);
                 }
-                Entity entity =  currentModel.getBaseEntity();
+                final Entity entity =  currentModel.getBaseEntity();
 
                 service.copyEntity(entity, name, new CopyEntityAsyncCallback(box));
 
@@ -477,12 +477,12 @@ public class EntityContextMenu extends Menu {
         }
 
         @Override
-        public void onFailure(Throwable caught) {
+        public void onFailure(final Throwable caught) {
             FeedbackHelper.showError(caught);
         }
 
         @Override
-        public void onSuccess(List<Entity> result) {
+        public void onSuccess(final List<Entity> result) {
             try {
                 notifyEntityModifiedListener(currentModel, Action.delete);
             } catch (NimbitsException e) {
@@ -497,11 +497,11 @@ public class EntityContextMenu extends Menu {
         }
 
         @Override
-        public void componentSelected(MenuEvent ce) {
-            ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
-            TreeModel model = (TreeModel) selectedModel;
+        public void componentSelected(final MenuEvent ce) {
+            final ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
+            final TreeModel model = (TreeModel) selectedModel;
             if (model.getEntityType().equals(EntityType.point) || model.getEntityType().equals(EntityType.category)) {
-                Entity p =  model.getBaseEntity();
+                final Entity p =  model.getBaseEntity();
                 try {
                     openUrl(p.getUUID(), p.getName().getValue());
                 } catch (NimbitsException e) {
@@ -513,8 +513,8 @@ public class EntityContextMenu extends Menu {
 
         }
 
-        private void openUrl(String uuid, String title) {
-            String u = com.google.gwt.user.client.Window.Location.getHref()
+        private void openUrl(final String uuid, final String title) {
+            final String u = com.google.gwt.user.client.Window.Location.getHref()
                     + "?uuid=" + uuid
                     + "&count=10";
             com.google.gwt.user.client.Window.open(u, title, PARAM_DEFAULT_WINDOW_OPTIONS);
@@ -526,10 +526,10 @@ public class EntityContextMenu extends Menu {
         }
 
         @Override
-        public void componentSelected(MenuEvent ce) {
-            ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
+        public void componentSelected(final MenuEvent ce) {
+            final ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
             currentModel = (TreeModel) selectedModel;
-            Entity entity =  currentModel.getBaseEntity();
+            final Entity entity =  currentModel.getBaseEntity();
 
             if (entity.getEntityType().equals(EntityType.subscription)  ||
                     entity.getEntityType().equals(EntityType.point)) {
@@ -544,16 +544,16 @@ public class EntityContextMenu extends Menu {
         }
 
         @Override
-        public void componentSelected(MenuEvent ce) {
-            TreeModel selectedModel = (TreeModel) tree.getSelectionModel().getSelectedItem();
-            Entity entity = selectedModel.getBaseEntity();
+        public void componentSelected(final MenuEvent ce) {
+            final TreeModel selectedModel = (TreeModel) tree.getSelectionModel().getSelectedItem();
+            final Entity entity = selectedModel.getBaseEntity();
 
             try {
                 switch (selectedModel.getEntityType()) {
                     case category:  {
 
 
-                        CategoryPropertyPanel dp = new CategoryPropertyPanel(entity);
+                        final CategoryPropertyPanel dp = new CategoryPropertyPanel(entity);
                         final Window w = new Window();
                         w.setWidth(WIDTH);
                         w.setHeight(HEIGHT);
@@ -593,7 +593,7 @@ public class EntityContextMenu extends Menu {
                         showSummaryPanel(entity);
                         break;
                     case file:
-                        FilePropertyPanel dp = new FilePropertyPanel(entity);
+                        final FilePropertyPanel dp = new FilePropertyPanel(entity);
                         final Window w = new Window();
                         w.setWidth(WIDTH);
                         w.setHeight(HEIGHT);
@@ -609,7 +609,7 @@ public class EntityContextMenu extends Menu {
             }
         }
 
-        private void createPointPropertyWindow(Entity entity) throws NimbitsException {
+        private void createPointPropertyWindow(final Entity entity) throws NimbitsException {
             final Window window = new Window();
 
 
@@ -638,7 +638,7 @@ public class EntityContextMenu extends Menu {
             }
 
             @Override
-            public void onPointUpdated(Entity result) throws NimbitsException {
+            public void onPointUpdated(final Entity result) throws NimbitsException {
                 notifyEntityModifiedListener(new GxtModel(result), Action.create);
             }
         }
@@ -647,12 +647,12 @@ public class EntityContextMenu extends Menu {
     private class SubscribeEntityAddedListener implements NavigationEventProvider.EntityAddedListener {
         private final Window w;
 
-        SubscribeEntityAddedListener(Window w) {
+        SubscribeEntityAddedListener(final Window w) {
             this.w = w;
         }
 
         @Override
-        public void onEntityAdded(Entity entity) throws NimbitsException {
+        public void onEntityAdded(final Entity entity) throws NimbitsException {
             w.hide();
             Cookies.removeCookie(Action.subscribe.name());
             notifyEntityModifiedListener(new GxtModel(entity), Action.create);
@@ -665,8 +665,8 @@ public class EntityContextMenu extends Menu {
         }
 
         @Override
-        public void componentSelected(MenuEvent ce) {
-            ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
+        public void componentSelected(final MenuEvent ce) {
+            final ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
             currentModel = (TreeModel) selectedModel;
 
             if (currentModel != null) {
@@ -691,12 +691,12 @@ public class EntityContextMenu extends Menu {
     private class IntelligenceEntityAddedListener implements NavigationEventProvider.EntityAddedListener {
         private final Window w;
 
-        IntelligenceEntityAddedListener(Window w) {
+        IntelligenceEntityAddedListener(final Window w) {
             this.w = w;
         }
 
         @Override
-        public void onEntityAdded(Entity entity) throws NimbitsException {
+        public void onEntityAdded(final Entity entity) throws NimbitsException {
             w.hide();
             notifyEntityModifiedListener(new GxtModel(entity), Action.create);
 
@@ -709,7 +709,7 @@ public class EntityContextMenu extends Menu {
 
         @Override
         public void handleEvent(MessageBoxEvent ce) {
-            com.extjs.gxt.ui.client.widget.button.Button btn = ce.getButtonClicked();
+            final com.extjs.gxt.ui.client.widget.button.Button btn = ce.getButtonClicked();
             final EntityServiceAsync service = GWT.create(EntityService.class);
 
             if (btn.getText().equals(Words.WORD_YES)) {
@@ -726,7 +726,7 @@ public class EntityContextMenu extends Menu {
 
         @Override
         public void componentSelected(MenuEvent ce) {
-            ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
+            final ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
             currentModel = (TreeModel) selectedModel;
             final MessageBox box;
             if (currentModel.getEntityType().equals(EntityType.point) && ! currentModel.isReadOnly()) {
@@ -747,9 +747,9 @@ public class EntityContextMenu extends Menu {
         }
 
         @Override
-        public void componentSelected(MenuEvent ce) {
-            TreeModel selectedModel = (TreeModel) tree.getSelectionModel().getSelectedItem();
-            Entity entity = selectedModel.getBaseEntity();
+        public void componentSelected(final MenuEvent ce) {
+            final TreeModel selectedModel = (TreeModel) tree.getSelectionModel().getSelectedItem();
+            final Entity entity = selectedModel.getBaseEntity();
             try {
                 showIntelligencePanel(entity);
             } catch (NimbitsException e) {
@@ -762,12 +762,12 @@ public class EntityContextMenu extends Menu {
     private class SummaryEntityAddedListener implements NavigationEventProvider.EntityAddedListener {
         private final Window w;
 
-        SummaryEntityAddedListener(Window w) {
+        SummaryEntityAddedListener(final Window w) {
             this.w = w;
         }
 
         @Override
-        public void onEntityAdded(Entity entity) throws NimbitsException {
+        public void onEntityAdded(final Entity entity) throws NimbitsException {
             w.hide();
             Cookies.removeCookie(Action.subscribe.name());
 //                if (entity.getEntityType().equals(EntityType.point)) {
@@ -783,10 +783,10 @@ public class EntityContextMenu extends Menu {
         }
 
         @Override
-        public void componentSelected(MenuEvent ce) {
-            ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
+        public void componentSelected(final MenuEvent ce) {
+            final ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
             currentModel = (TreeModel) selectedModel;
-            Entity entity =  currentModel.getBaseEntity();
+            final Entity entity =  currentModel.getBaseEntity();
 
             if (entity.getEntityType().equals(EntityType.subscription)  ||
                     entity.getEntityType().equals(EntityType.point)) {
@@ -800,10 +800,10 @@ public class EntityContextMenu extends Menu {
         }
 
         @Override
-        public void componentSelected(MenuEvent ce) {
-            ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
+        public void componentSelected(final MenuEvent ce) {
+            final ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
             currentModel = (TreeModel) selectedModel;
-            Entity entity =  currentModel.getBaseEntity();
+            final Entity entity =  currentModel.getBaseEntity();
 
             if (entity.getEntityType().equals(EntityType.accessKey)  ||
                     entity.getEntityType().equals(EntityType.point) || entity.getEntityType().equals(EntityType.user)) {

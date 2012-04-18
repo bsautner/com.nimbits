@@ -32,7 +32,8 @@ public class BatchServletImpl extends ApiServlet {
 
         try {
             doInit(req, resp, ExportType.plain);
-            TaskFactory.getInstance().startProcessBatchTask(req, resp);
+
+            TaskFactory.getInstance().startProcessBatchTask(user, req, resp);
         } catch (NimbitsException e) {
             if (user != null) {
                 FeedServiceFactory.getInstance().postToFeed(user, e);
@@ -54,7 +55,7 @@ public class BatchServletImpl extends ApiServlet {
 
         try {
             doInit(req, resp, ExportType.plain);
-            TaskFactory.getInstance().startProcessBatchTask(req, resp);
+            TaskFactory.getInstance().startProcessBatchTask(user, req, resp);
         } catch (NimbitsException e) {
             if (user != null) {
                 FeedServiceFactory.getInstance().postToFeed(user, e);

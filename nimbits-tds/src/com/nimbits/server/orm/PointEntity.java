@@ -271,9 +271,25 @@ public class PointEntity extends EntityStore implements Point {
         this.unit = p.getUnit();
         this.expire = p.getExpire();
         this.idleAlarmOn = p.isIdleAlarmOn();
+        this.highAlarmOn = p.isHighAlarmOn();
+        this.lowAlarmOn = p.isLowAlarmOn();
         this.idleAlarmSent = p.getIdleAlarmSent();
         this.idleSeconds = p.getIdleSeconds();
         this.filterType = p.getFilterType().getCode();
         this.filterValue = p.getFilterValue();
+        validate();
+    }
+
+    @Override
+    public void validate() throws NimbitsException {
+        super.validate();
+
+        if (this.lowAlarm > this.highAlarm) {
+            throw new NimbitsException("Low Alarm setting is less than the high alarm setting");
+        }
+        if (this.expire < 0) {
+            throw new NimbitsException("Expiration date for data must be a positive integer");
+        }
+
     }
 }

@@ -57,7 +57,27 @@ public class EntityDaoImpl implements  EntityTransactions {
     public EntityDaoImpl(final User user) {
         this.user = user;
     }
+    @Override
+    public List<Point> getIdlePoints() throws NimbitsException {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        List<Point> retObj;
+        try {
 
+            final Query q = pm
+                    .newQuery(PointEntity.class);
+            q.setFilter("idleAlarmOn == k && idleAlarmSent  == c");
+            q.declareParameters("Long k, Long c");
+
+            final Collection<Point> points = (Collection<Point>) q.execute(true, false);
+            retObj =PointModelFactory.createPointModels(points);// createPointModels( points);
+        } finally {
+            pm.close();
+        }
+
+
+        return retObj;
+
+    }
     @Override
     public Map<String, Entity> getEntityMap(final EntityType type, final int limit) throws NimbitsException {
 
@@ -176,9 +196,13 @@ public class EntityDaoImpl implements  EntityTransactions {
             return retObj;
         } catch (JDOObjectNotFoundException e) {
             return addEntity(entity, pm);
+        } catch (ConcurrentModificationException e) {
+            throw new NimbitsException(e);
         } catch (ClassNotFoundException e) {
             LogHelper.logException(this.getClass(), e);
             throw new NimbitsException(e);
+
+
         } finally {
             pm.close();
         }

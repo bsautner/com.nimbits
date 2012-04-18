@@ -17,6 +17,7 @@ import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.*;
 
 import java.util.*;
@@ -62,4 +63,6 @@ public interface EntityService extends RemoteService {
     List<Entity>  getEntityByName(User user, EntityName name,String className) throws NimbitsException;
 
     List<Entity> getEntitiesBySource(Entity source, EntityType type) throws NimbitsException;
+
+    List<Point> getIdlePoints() throws NimbitsException;
 }

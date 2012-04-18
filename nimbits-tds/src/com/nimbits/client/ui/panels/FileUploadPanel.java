@@ -14,24 +14,32 @@
 package com.nimbits.client.ui.panels;
 
 import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.widget.*;
-import com.extjs.gxt.ui.client.widget.button.*;
-import com.extjs.gxt.ui.client.widget.form.*;
-import com.extjs.gxt.ui.client.widget.form.FormPanel.*;
-import com.google.gwt.core.client.*;
-import com.google.gwt.user.client.*;
-import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.service.*;
-import com.nimbits.client.service.blob.*;
-import com.nimbits.client.ui.helper.*;
+import com.extjs.gxt.ui.client.widget.LayoutContainer;
+import com.extjs.gxt.ui.client.widget.button.Button;
+import com.extjs.gxt.ui.client.widget.form.FileUploadField;
+import com.extjs.gxt.ui.client.widget.form.FormPanel;
+import com.extjs.gxt.ui.client.widget.form.FormPanel.Encoding;
+import com.extjs.gxt.ui.client.widget.form.FormPanel.Method;
+import com.extjs.gxt.ui.client.widget.form.HiddenField;
+import com.extjs.gxt.ui.client.widget.form.TextArea;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.nimbits.client.constants.Path;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.enums.UploadType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.LoginInfo;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.service.blob.BlobService;
+import com.nimbits.client.service.blob.BlobServiceAsync;
+import com.nimbits.client.service.user.UserService;
+import com.nimbits.client.service.user.UserServiceAsync;
+import com.nimbits.client.ui.helper.FeedbackHelper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by bsautner
@@ -126,7 +134,7 @@ public class FileUploadPanel extends LayoutContainer {
         final HiddenField<String> fileNameHiddenField=new HiddenField<String>();
         fileNameHiddenField.setName(Parameters.fileName.getText());
         panel.add(fileNameHiddenField);
-        LoginServiceAsync loginService = GWT.create(LoginService.class);
+        UserServiceAsync loginService = GWT.create(UserService.class);
         loginService.login(GWT.getHostPageBaseURL(),
                 new AsyncCallback<LoginInfo>() {
                     @Override

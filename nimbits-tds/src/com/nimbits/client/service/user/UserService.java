@@ -14,7 +14,9 @@
 package com.nimbits.client.service.user;
 
 import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.enums.AuthLevel;
 import com.nimbits.client.exception.*;
+import com.nimbits.client.model.LoginInfo;
 import com.nimbits.client.model.connection.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.user.*;
@@ -24,15 +26,15 @@ import java.util.*;
 @RemoteServiceRelativePath("user")
 public interface UserService extends RemoteService {
 
-    String updateSecret() throws NimbitsException;
+
     void sendConnectionRequest(final EmailAddress email) throws NimbitsException;
     List<ConnectionRequest> getPendingConnectionRequests(final EmailAddress email) throws NimbitsException;
     void connectionRequestReply(final EmailAddress targetEmail, final EmailAddress RequestorEmail, final Long key, final boolean accepted) throws NimbitsException;
     User getAppUserUsingGoogleAuth() throws NimbitsException;
    // String getSecret() throws NimbitsException;
-    User getUserByKey(String subscriberUUID) throws NimbitsException;
+    User getUserByKey(String subscriberUUID, AuthLevel authLevel) throws NimbitsException;
     List<User> getConnectionRequests(List<String> connections) throws NimbitsException;
 
 
-
+    LoginInfo login(String requestUri) throws NimbitsException;
 }

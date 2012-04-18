@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (c) 2010 Tonic Solutions LLC.
   ~
@@ -12,14 +11,13 @@
   ~ Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
   -->
 
-<!--- please change the version and app name below to match your app engine configuration -->
-<appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
-    <!--<async-session-persistence enabled="true"/>-->
-    <application>nimbits1</application>
-    <version>348</version>
-    <sessions-enabled>true</sessions-enabled>
-    <inbound-services>
-        <service>mail</service>
-        <service>xmpp_message</service>
-    </inbound-services>
-</appengine-web-app>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+
+</body>
+</html>

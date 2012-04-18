@@ -13,14 +13,16 @@
 
 package com.nimbits.server.value;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.user.*;
+import com.nimbits.client.enums.FilterType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.server.NimbitsServletTest;
+import com.nimbits.server.entity.EntityServiceFactory;
+import org.junit.Test;
+
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
-import org.junit.*;
 
 /**
  * Created by bsautner

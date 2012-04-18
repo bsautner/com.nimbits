@@ -59,7 +59,7 @@ public class PointMaintTask extends HttpServlet {
 
         final String j = req.getParameter(Parameters.json.getText());
         final Point e = gson.fromJson(j, PointModel.class);
-        final User u = UserServiceFactory.getInstance().getUserByKey(e.getOwner());
+        final User u = UserServiceFactory.getInstance().getUserByKey(e.getOwner(), AuthLevel.admin);
         if (e.getExpire() > 0) {
             TaskFactory.getInstance().startDeleteDataTask(
                     e,

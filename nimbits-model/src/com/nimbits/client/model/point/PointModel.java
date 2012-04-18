@@ -51,7 +51,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
 
     private double filterValue;
 
-    public PointModel(Entity entity,
+    public PointModel(final Entity entity,
                       double highAlarm,
                       int expire,
                       String unit,

@@ -13,29 +13,36 @@
 
 package com.nimbits.server.feed;
 
-import com.google.gson.*;
-import com.google.gwt.user.server.rpc.*;
-import com.nimbits.client.common.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.feed.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.client.service.feed.*;
-import com.nimbits.server.common.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.logging.*;
-import com.nimbits.server.user.*;
-import com.nimbits.server.value.*;
-import org.apache.commons.lang3.exception.*;
+import com.google.gson.JsonSyntaxException;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.FeedType;
+import com.nimbits.client.enums.FilterType;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.feed.FeedValue;
+import com.nimbits.client.model.feed.FeedValueModel;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModelFactory;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.client.service.feed.Feed;
+import com.nimbits.server.common.ServerInfoImpl;
+import com.nimbits.server.entity.EntityServiceFactory;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.logging.LogHelper;
+import com.nimbits.server.user.UserServiceFactory;
+import com.nimbits.server.value.RecordedValueServiceFactory;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
-import java.io.*;
-import java.net.*;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 
@@ -146,10 +153,10 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
                         .append("/resources/images/logo.png\" width=\"40\" height=\"40\">");
         }
 
-        final String shortenedOriginal = originalMessage.length() > MAX_LENGTH ? originalMessage.substring(0, MAX_LENGTH) : originalMessage;
+       // final String shortenedOriginal = originalMessage.length() > MAX_LENGTH ? originalMessage.substring(0, MAX_LENGTH) : originalMessage;
 
-        sb.append("<a href=\"#\" onclick=\"window.open('feed.html?content=")
-                .append(URLEncoder.encode(shortenedOriginal, Const.CONST_ENCODING) )
+        sb.append("<a href=\"#\" onclick=\"showFeed('")
+                .append(originalMessage)
                 .append("');\">")
                 .append("<span>")
                 .append(new Date())
@@ -295,8 +302,8 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
         final Entity entity = EntityModelFactory.createEntity(name, "", EntityType.feed,
                 ProtectionLevel.onlyConnection, user.getKey(), user.getKey(), UUID.randomUUID().toString());
         // final Entity r = EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
-
-        Point point = PointModelFactory.createPointModel(entity);
+        Point point = PointModelFactory.createPointModel(entity,0.0, 90, "", 0.0, false, false, false, 0, false, FilterType.fixedHysteresis, 0.1 );
+       // Point point = PointModelFactory.createPointModel(entity);
 
         final Point result = (Point) EntityServiceFactory.getInstance().addUpdateEntity(point);
 

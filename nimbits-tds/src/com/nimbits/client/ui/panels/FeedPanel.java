@@ -38,6 +38,7 @@ import com.nimbits.client.model.feed.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.service.feed.*;
 import com.nimbits.client.ui.controls.*;
+import com.nimbits.client.ui.helper.FeedbackHelper;
 import com.nimbits.client.ui.icons.*;
 
 import java.util.*;
@@ -358,13 +359,13 @@ public class FeedPanel  extends LayoutContainer {
         private final FeedAsync service;
         private final TextArea status;
 
-        private StatusKeyDownListener(FeedAsync service, TextArea status) {
+        private StatusKeyDownListener(final FeedAsync service, final TextArea status) {
             this.service = service;
             this.status = status;
         }
 
         @Override
-        public void componentKeyDown(ComponentEvent event) {
+        public void componentKeyDown(final ComponentEvent event) {
             if (event.getKeyCode() == ENTER_KEY) {
                 service.postToFeed(user, status.getValue(), FeedType.status, new PostToFeedAsyncCallback());
             }
@@ -373,7 +374,7 @@ public class FeedPanel  extends LayoutContainer {
         private class PostToFeedAsyncCallback implements AsyncCallback<Void> {
             @Override
             public void onFailure(Throwable throwable) {
-                reload();
+                FeedbackHelper.showError(throwable);
             }
 
             @Override

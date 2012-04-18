@@ -13,18 +13,25 @@
 
 package com.nimbits.server.transactions.dao.entity;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.orm.*;
-import com.nimbits.server.user.*;
-import static org.junit.Assert.*;
-import org.junit.*;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModelFactory;
+import com.nimbits.server.NimbitsServletTest;
+import com.nimbits.server.entity.EntityServiceFactory;
+import com.nimbits.server.entity.EntityTransactionFactory;
+import com.nimbits.server.orm.PointEntity;
+import org.junit.Test;
 
-import java.util.*;
+import java.util.List;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by bsautner
@@ -62,6 +69,48 @@ public class EntityDaoImplTest extends NimbitsServletTest {
 
 
     }
+
+
+    @Test
+    public void addUpdateAlertsEntityTest3() throws NimbitsException {
+
+        EntityName name = CommonFactoryLocator.getInstance().createName("e534", EntityType.point);
+
+        Entity entity = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.everyone, user.getKey(), user.getKey());
+        // Point result = PointServiceFactory.getInstance().addPoint(user, entity);
+        Point add = PointModelFactory.createPointModel(entity);
+        Entity result = EntityServiceFactory.getInstance().addUpdateEntity(user, add);
+        //Entity result = EntityTransactionFactory.getDaoInstance(user).addUpdateEntity(entity);
+        Entity r = EntityTransactionFactory.getDaoInstance(user).getEntityByKey(result.getKey(), PointEntity.class).get(0);
+        assertNotNull(r);
+        assertNotNull(result);
+        assertNotNull(result.getKey());
+        assertNotNull(r.getKey());
+
+        Point point1 = PointModelFactory.createPointModel(r);
+        Point px = (Point) EntityServiceFactory.getInstance().addUpdateEntity(point1);
+
+        //Point rp = PointTransactionsFactory.getDaoInstance(user).getPointByKey(result.getKey());
+        Point rp = (Point) EntityTransactionFactory.getDaoInstance(user).getEntityByKey(result.getKey(), PointEntity.class).get(0);
+
+        rp.setHighAlarmOn(true);
+        rp.setLowAlarmOn(true);
+        rp.setIdleAlarmOn(true);
+        EntityTransactionFactory.getDaoInstance(user).addUpdateEntity(rp);
+        Point xp = (Point) EntityTransactionFactory.getDaoInstance(user).getEntityByKey(rp.getKey(), PointEntity.class).get(0);
+        assertTrue(xp.isHighAlarmOn());
+        assertTrue(xp.isLowAlarmOn());
+        assertTrue(xp.isIdleAlarmOn());
+
+
+
+        assertNotNull(px);
+        assertNotNull(rp);
+
+
+
+    }
+
     @Test
     public void deleteEntityTest() throws NimbitsException {
 

@@ -144,7 +144,7 @@ public class TaskImpl implements Task {
     }
 
     @Override
-    public void startRecordValueTask(final User u, final Entity point, final Value value, final boolean loopFlag) {
+    public void startRecordValueTask(final User u, final Entity point, final Value value) {
         try {
             if (Double.valueOf(value.getDoubleValue()).isInfinite()) {
                 return;
@@ -159,14 +159,14 @@ public class TaskImpl implements Task {
                     .withUrl(PATH_TASK_RECORD_VALUE).taskName(UUID.randomUUID().toString())
                     .param(Parameters.pointUser.getText(), userJson)
                     .param(Parameters.pointJson.getText(), pointJson)
-                    .param(Parameters.valueJson.getText(), valueJson)
-                    .param(Parameters.loop.getText(), String.valueOf(loopFlag)));
+                    .param(Parameters.valueJson.getText(), valueJson));
+
 
 
 
         } catch (IllegalStateException ex) {
             overrideQueue = true;
-            startRecordValueTask(u, point, value,  loopFlag);
+            startRecordValueTask(u, point, value);
         }
 
     }

@@ -16,7 +16,6 @@ package com.nimbits.server.entity;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.Point;
 
 import java.util.*;
 
@@ -50,5 +49,9 @@ public interface EntityTransactions {
 
     List<Entity> getEntitiesBySource(Entity source, Class<?> cls) throws NimbitsException;
 
-    List<Point> getIdlePoints() throws NimbitsException;
+    List<Entity> getEntityByTrigger(Entity entity, Class<?> cls) throws NimbitsException;
+
+    List<Entity> getIdleEntities() throws NimbitsException;
+
+    List<Entity> getSubscriptionsToEntity(Entity subscribedEntity) throws NimbitsException;
 }

@@ -24,7 +24,6 @@ import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.xmpp.*;
 import com.nimbits.client.service.xmpp.XMPPService;
 import com.nimbits.server.entity.*;
-import com.nimbits.server.orm.*;
 import com.nimbits.server.user.*;
 
 import java.util.*;
@@ -68,7 +67,7 @@ public class XmppServiceImpl extends RemoteServiceServlet implements XMPPService
     @Override
     public void sendMessage(final List<XmppResource> resources, final String message, final EmailAddress email) throws NimbitsException {
         for (XmppResource resource : resources) {
-            List<Entity> entity = EntityServiceFactory.getInstance().getEntityByKey(resource.getKey(),PointEntity.class.getName());
+            List<Entity> entity = EntityServiceFactory.getInstance().getEntityByKey(resource.getKey(),EntityType.point);
             if (! entity.isEmpty()) {
                 JID jid = new JID(email.getValue() + '/' + entity.get(0).getName().getValue());
                 send(message, jid);
@@ -94,9 +93,9 @@ public class XmppServiceImpl extends RemoteServiceServlet implements XMPPService
 
             Entity entity = EntityModelFactory.createEntity(resourceName, "", EntityType.resource, ProtectionLevel.onlyMe,
                     targetPointEntity.getKey(),getUser().getKey() , UUID.randomUUID().toString());
-          //  Entity retObj = EntityServiceFactory.getInstance().addUpdateEntity(entity);
+
             XmppResource resource = XmppResourceFactory.createXmppResource(entity, targetPointEntity.getKey());
-            XmppTransactionFactory.getInstance().addResource(resource);
+           EntityServiceFactory.getInstance().addUpdateEntity(u, resource);
             return resource;
         }
         else {

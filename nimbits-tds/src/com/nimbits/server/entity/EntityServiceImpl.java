@@ -15,11 +15,10 @@ package com.nimbits.server.entity;
 
 import com.google.gwt.user.server.rpc.*;
 import com.nimbits.client.common.*;
-import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.file.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.service.entity.*;
 import com.nimbits.server.blob.*;
@@ -38,7 +37,7 @@ import java.util.*;
  * Time: 12:05 PM
  */
 @SuppressWarnings("unchecked")
-public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTransactions, EntityService {
+public class EntityServiceImpl  extends RemoteServiceServlet implements EntityService {
 
     private static final long serialVersionUID = -6442025194172745189L;
 
@@ -69,11 +68,9 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
             FeedServiceFactory.getInstance().postToFeed(user,entity.getEntityType().name() +
                     ' ' + entity.getName().toString() + " deleted ", FeedType.info);
         }
-        //todo - delete or disable subscriptions to entity
-
 
         if  (entity.getEntityType().equals(EntityType.file)) {
-            BlobServiceFactory.getInstance().deleteBlob(entity);
+            BlobServiceFactory.getInstance().deleteBlob((File) entity);
         }
 
 
@@ -97,10 +94,6 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
         return retVal;
     }
 
-    @Override
-    public List<Entity> deleteEntity(final Entity entity, final Class<?> cls) throws NimbitsException {
-        throw new NimbitsException("not implemented");
-    }
 
     @Override
     public Entity addUpdateEntity(final Entity entity) throws NimbitsException {
@@ -132,9 +125,9 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
 
 
     @Override
-    public List<Entity>  getEntityByKey(final String key, final String className) throws NimbitsException {
+    public List<Entity>  getEntityByKey(final String key, final EntityType type) throws NimbitsException {
         try {
-            return EntityTransactionFactory.getInstance(getUser()).getEntityByKey(key, Class.forName(className));
+            return EntityTransactionFactory.getInstance(getUser()).getEntityByKey(key, Class.forName(type.getClassName()));
         } catch (ClassNotFoundException e) {
             throw new NimbitsException(e);
         }
@@ -191,31 +184,14 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     }
 
     @Override
-    public List<Entity>  getEntityByName(final User user, final EntityName name, final String className) throws NimbitsException {
-        try {
-            return EntityTransactionFactory.getInstance(user).getEntityByName(name, Class.forName(className));
-        } catch (ClassNotFoundException e) {
-            throw new NimbitsException(e);
-        }
-    }
-
-    @Override
-    public List<Entity> getEntitiesBySource(final Entity source, final EntityType type) throws NimbitsException {
+    public List<Entity> getEntityByTrigger(User user, Entity trigger, EntityType type) throws NimbitsException {
         try {
             final Class cls = Class.forName(type.getClassName());
-            return EntityTransactionFactory.getInstance(getUser()).getEntitiesBySource(source, cls);
-        } catch (ClassNotFoundException e) {
-           throw new NimbitsException(e);
-        }
-    }
-
-    @Override
-    public List<Entity>  getEntityByName(final EntityName name, final EntityType type) throws NimbitsException {
-        try {
-            return EntityTransactionFactory.getInstance(getUser()).getEntityByName(name,Class.forName(type.getClassName()));
+            return EntityTransactionFactory.getInstance(user).getEntityByTrigger(trigger, cls);
         } catch (ClassNotFoundException e) {
             throw new NimbitsException(e);
         }
+
     }
 
     @Override
@@ -224,24 +200,14 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     }
 
     @Override
-    public void removeEntityFromCache(final Entity entity) throws NimbitsException {
-        throw new NimbitsException(UserMessages.ERROR_NOT_IMPLEMENTED);
+    public List<Entity> getIdleEntities() throws NimbitsException {
+        return EntityTransactionFactory.getInstance(UserServiceFactory.getServerInstance().getAdmin()).getIdleEntities();
     }
 
     @Override
-    public List<Entity>  getEntityByName(final EntityName name, final Class<?> cls) throws NimbitsException {
-        return EntityTransactionFactory.getInstance(getUser()).getEntityByName(name, cls);
-    }
+    public List<Entity> getSubscriptionsToEntity(final User user, final Entity subscribedEntity) throws NimbitsException {
+        return EntityTransactionFactory.getInstance(user).getSubscriptionsToEntity(subscribedEntity);
 
-    @Override
-    public List<Entity> getEntitiesBySource(final Entity source, final Class<?> cls) throws NimbitsException {
-
-        return EntityTransactionFactory.getInstance(getUser()).getEntitiesBySource(source, cls);
-    }
-
-    @Override
-    public List<Point> getIdlePoints() throws NimbitsException {
-        return EntityTransactionFactory.getInstance(UserServiceFactory.getServerInstance().getAdmin()).getIdlePoints();
     }
 
     @Override
@@ -252,16 +218,12 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
     }
 
     @Override
-    public List<Entity>  getEntityByKey(final User user, final String entityId, final String className) throws NimbitsException {
+    public List<Entity>  getEntityByKey(final User user, final String entityId, final EntityType type) throws NimbitsException {
         try {
-            return EntityTransactionFactory.getInstance(user).getEntityByKey(entityId, Class.forName(className));
+            return EntityTransactionFactory.getInstance(user).getEntityByKey(entityId, Class.forName(type.getClassName()));
         } catch (ClassNotFoundException e) {
             throw new NimbitsException(e);
         }
     }
 
-    @Override
-    public List<Entity>  getEntityByKey(final String uuid, final Class<?> cls) throws NimbitsException {
-        throw new NimbitsException("Not Implemented");
-    }
 }

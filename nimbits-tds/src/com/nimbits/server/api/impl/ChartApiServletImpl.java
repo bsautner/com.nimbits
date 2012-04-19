@@ -25,7 +25,6 @@ import com.nimbits.client.model.value.*;
 import com.nimbits.server.api.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.feed.*;
-import com.nimbits.server.orm.*;
 import com.nimbits.server.time.*;
 import com.nimbits.server.value.*;
 
@@ -120,7 +119,7 @@ public class ChartApiServletImpl extends ApiServlet {
             for (final EntityName pointName : pointList) {
 
 
-                List<Entity> list = EntityServiceFactory.getInstance().getEntityByName(u, pointName, PointEntity.class.getName());
+                List<Entity> list = EntityServiceFactory.getInstance().getEntityByName(u, pointName, EntityType.point);
                 if (list.isEmpty()) {
                     log.info("Couldn't find a point in the chart request.");
                 } else {

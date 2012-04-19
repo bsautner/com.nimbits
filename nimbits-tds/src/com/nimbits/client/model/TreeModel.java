@@ -36,7 +36,7 @@ public interface TreeModel extends com.extjs.gxt.ui.client.data.TreeModel, Seria
 
     void setDirty(boolean dirty);
 
-    String getUUID();
+    String getKey();
 
     void setValue(Value value);
 

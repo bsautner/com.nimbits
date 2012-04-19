@@ -28,8 +28,6 @@ import java.util.*;
  */
 public interface XmppTransaction  {
 
-    void addResource(XmppResource resource) throws NimbitsException;
-
     List<XmppResource> getPointXmppResources(Point point) throws NimbitsException;
 
     void deleteResource(Entity entity);

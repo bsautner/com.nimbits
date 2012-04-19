@@ -23,7 +23,6 @@ import com.nimbits.client.model.value.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.feed.*;
 import com.nimbits.server.logging.*;
-import com.nimbits.server.orm.*;
 import com.nimbits.server.value.*;
 
 import javax.servlet.http.*;
@@ -57,7 +56,7 @@ public class IncomingMailTask extends HttpServlet {
 
             log.info("Incoming mail post: " + internetAddress);
             //u = UserTransactionFactory.getInstance().getNimbitsUser(internetAddress);
-            List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(internetAddress.getValue(), UserEntity.class.getName());
+            List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(internetAddress.getValue(), EntityType.user);
 
             final String content = COMPILE1.matcher(PATTERN.matcher(inContent).replaceAll("")).replaceAll("");
             final String Data[] = COMPILE2.split(content);
@@ -85,7 +84,7 @@ public class IncomingMailTask extends HttpServlet {
         final String emailLine[] = COMPILE.split(s);
         final EntityName pointName = CommonFactoryLocator.getInstance().createName(emailLine[0], EntityType.point);
 
-        List<Entity> e =  EntityServiceFactory.getInstance().getEntityByName(u, pointName,PointEntity.class.getName());
+        List<Entity> e =  EntityServiceFactory.getInstance().getEntityByName(u, pointName,EntityType.point);
 
 
         if (! e.isEmpty()) {
@@ -123,7 +122,7 @@ public class IncomingMailTask extends HttpServlet {
             String note = k.length == 4 ? k[3].trim() : "";
             final Value value = ValueModelFactory.createValueModel(0.0, 0.0, v, new Date(timestamp), note);
             try {
-                RecordedValueServiceFactory.getInstance().recordValue(u, point, value, false);
+                RecordedValueServiceFactory.getInstance().recordValue(u, point, value);
             } catch (NimbitsException e) {
                 log.severe(e.getMessage());
                 if (u != null) {

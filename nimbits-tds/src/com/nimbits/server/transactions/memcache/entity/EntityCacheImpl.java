@@ -17,10 +17,8 @@ import com.google.appengine.api.memcache.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.*;
 import com.nimbits.server.entity.*;
-import com.nimbits.server.logging.*;
 
 import java.util.*;
 
@@ -34,6 +32,13 @@ import java.util.*;
 public class EntityCacheImpl implements EntityTransactions {
     private final User user;
     private final MemcacheService cache;
+    public EntityCacheImpl(final User u) {
+        this.user = u;
+
+        cache = user != null && user.getKey() != null
+                ? MemcacheServiceFactory.getMemcacheService(MemCacheKey.userNamespace.name() + user.getKey().replace('@', '-'))
+                : MemcacheServiceFactory.getMemcacheService(MemCacheKey.defaultNamespace.name());
+    }
 
     @Override
     public void removeEntityFromCache(final Entity entity) throws NimbitsException {
@@ -54,8 +59,18 @@ public class EntityCacheImpl implements EntityTransactions {
     }
 
     @Override
-    public List<Point> getIdlePoints() throws NimbitsException {
-        return EntityTransactionFactory.getDaoInstance(user).getIdlePoints();
+    public List<Entity> getEntityByTrigger(Entity entity, Class<?> cls) throws NimbitsException {
+        return EntityTransactionFactory.getDaoInstance(user).getEntityByTrigger(entity, cls);
+    }
+
+    @Override
+    public List<Entity> getIdleEntities() throws NimbitsException {
+        return EntityTransactionFactory.getDaoInstance(user).getIdleEntities();
+    }
+
+    @Override
+    public List<Entity> getSubscriptionsToEntity(Entity subscribedEntity) throws NimbitsException {
+        return EntityTransactionFactory.getDaoInstance(user).getSubscriptionsToEntity(subscribedEntity);
     }
 
     private void addEntityToCache(final Entity entity) throws NimbitsException {
@@ -65,17 +80,7 @@ public class EntityCacheImpl implements EntityTransactions {
         }
     }
 
-    public EntityCacheImpl(final User u) {
-        this.user = u;
-        LogHelper.log(this.getClass(), "EntityCacheImpl user is null?" + (u == null));
-        if (u != null) {
-            LogHelper.log(this.getClass(), "EntityCacheImpl user key is null?" + (u.getKey() == null));
-        }
 
-        cache = user != null && user.getKey() != null
-                ? MemcacheServiceFactory.getMemcacheService(MemCacheKey.userNamespace.name() + user.getKey().replace('@', '-'))
-                : MemcacheServiceFactory.getMemcacheService(MemCacheKey.defaultNamespace.name());
-    }
 
     @Override
     public Map<String, Entity> getEntityMap(final EntityType type, final int limit) throws NimbitsException {

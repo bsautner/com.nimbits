@@ -13,35 +13,27 @@
 
 package com.nimbits.server.task;
 
-import com.google.gson.Gson;
-import com.nimbits.client.constants.Const;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.user.UserModel;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModelFactory;
-import com.nimbits.server.entity.EntityServiceFactory;
-import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.logging.LogHelper;
-import com.nimbits.server.orm.PointEntity;
-import com.nimbits.server.value.RecordedValueServiceFactory;
+import com.google.gson.*;
+import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.gson.*;
+import com.nimbits.server.logging.*;
+import com.nimbits.server.value.*;
 
-import javax.jdo.JDOException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.math.BigDecimal;
+import javax.jdo.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.io.*;
+import java.math.*;
 import java.util.*;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 /**
  * Created by bsautner
@@ -118,7 +110,7 @@ public class ProcessBatchTask extends HttpServlet {
                 } else {
                     LogHelper.log(this.getClass(), b.getPointName().getValue());
                     LogHelper.log(this.getClass(), u.getEmail().getValue());
-                    final List<Entity> pointTmp =   EntityServiceFactory.getInstance().getEntityByName(u, b.getPointName(),PointEntity.class.getName()) ;
+                    final List<Entity> pointTmp =   EntityServiceFactory.getInstance().getEntityByName(u, b.getPointName(),EntityType.point) ;
 
                     if (! pointTmp.isEmpty()) {
                         point = (Point) pointTmp.get(0);
@@ -129,7 +121,7 @@ public class ProcessBatchTask extends HttpServlet {
                     try {
                         final Value v = ValueModelFactory.createValueModel(0.0, 0.0, b.getValue(), b.getTimestamp(), b.getNote());
 
-                        RecordedValueServiceFactory.getInstance().recordValue(b.getU(), point, v, false);
+                        RecordedValueServiceFactory.getInstance().recordValue(b.getU(), point, v);
 
                     } catch (NimbitsException ex) {
 

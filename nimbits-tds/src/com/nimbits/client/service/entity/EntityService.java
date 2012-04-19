@@ -17,7 +17,6 @@ import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.*;
 
 import java.util.*;
@@ -30,39 +29,40 @@ import java.util.*;
  */
 @RemoteServiceRelativePath("entity")
 public interface EntityService extends RemoteService {
+
     List<Entity> getEntities() throws NimbitsException;
 
     Entity addUpdateEntity(final Entity entity) throws NimbitsException;
 
-    List<Entity> deleteEntity(Entity entity) throws NimbitsException;
+    Entity addUpdateEntity(final User user, final Entity entity) throws NimbitsException;
 
-    Map<String, Entity> getEntityMap(EntityType type, final int limit) throws NimbitsException;
+    List<Entity> deleteEntity(final Entity entity) throws NimbitsException;
 
-    Map<String, Entity> getEntityMap(User user, EntityType type, final int limit) throws NimbitsException;
+    Map<String, Entity> getEntityMap(final EntityType type, final int limit) throws NimbitsException;
 
-    Map<EntityName, Entity> getEntityNameMap(EntityType type) throws NimbitsException;
+    Map<String, Entity> getEntityMap(final User user, final EntityType type, final int limit) throws NimbitsException;
 
-    Entity copyEntity(Entity originalEntity, EntityName newName) throws NimbitsException;
+    Map<EntityName, Entity> getEntityNameMap(final EntityType type) throws NimbitsException;
 
-    List<Entity> getChildren(Entity parentEntity, EntityType type) throws NimbitsException;
+    Entity copyEntity(final Entity originalEntity, final EntityName newName) throws NimbitsException;
 
-    Entity addUpdateEntity(User user, Entity entity) throws NimbitsException;
+    List<Entity> getChildren(final Entity parentEntity, final EntityType type) throws NimbitsException;
 
-    List<Entity> getEntityByKey(String uuid, String className) throws NimbitsException;
+    List<Entity> getEntityByKey(final String key, final EntityType type) throws NimbitsException;
 
-    List<Entity> getEntityByKey(User u, String entityId, String className) throws NimbitsException;
+    List<Entity> getEntityByKey(final User u, final String key, final EntityType type) throws NimbitsException;
 
-    List<Entity> getEntityByName(User u, EntityName name, EntityType type) throws NimbitsException;
+    List<Entity> getEntityByName(final User u, final EntityName name, final EntityType type) throws NimbitsException;
 
-    List<Entity> getEntityByName(EntityName name, EntityType type) throws NimbitsException;
+    List<Entity> deleteEntity(final User u, final Entity entity) throws NimbitsException;
 
-    List<Entity> deleteEntity(User u, Entity entity) throws NimbitsException;
+    List<Entity> getEntityChildren(final User u, final Entity c, final EntityType point) throws NimbitsException;
 
-    List<Entity> getEntityChildren(User u, Entity c, EntityType point) throws NimbitsException;
+    List<Entity> getEntityByTrigger(final User user, final Entity entity, final EntityType type) throws NimbitsException;
 
-    List<Entity>  getEntityByName(User user, EntityName name,String className) throws NimbitsException;
+    List<Entity> getIdleEntities() throws NimbitsException;
 
-    List<Entity> getEntitiesBySource(Entity source, EntityType type) throws NimbitsException;
+    List<Entity> getSubscriptionsToEntity(final User user, final Entity subscribedEntity) throws NimbitsException;
 
-    List<Point> getIdlePoints() throws NimbitsException;
+    Map<String, Entity> getSystemWideEntityMap(final EntityType type) throws NimbitsException;
 }

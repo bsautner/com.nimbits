@@ -26,7 +26,6 @@ import com.nimbits.client.model.value.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.json.*;
-import com.nimbits.server.orm.*;
 import com.nimbits.server.value.*;
 
 import javax.servlet.http.*;
@@ -46,19 +45,20 @@ public class XMPPReceiverServlet extends HttpServlet {
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse res)
             throws IOException {
-
+        User u = null;
+        String body = null;
         try {
             final XMPPService xmpp = XMPPServiceFactory.getXMPPService();
             final Message message = xmpp.parseMessage(req);
             final JID fromJid = message.getFromJid();
-            final String body = message.getBody();
+            body = message.getBody();
             final String j[] = COMPILE.split(fromJid.getId());
             final String email = j[0].toLowerCase();
 
             log.info("XMPP Message recieved " + email + ":   " + message);
-            List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(email, UserEntity.class.getName());
+            List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(email, EntityType.user);
             if (! result.isEmpty()) {
-                User u = (User) result.get(0);
+                u =  (User) result.get(0);
 
 
                 if (body.toLowerCase().trim().equals("ls")) {
@@ -82,11 +82,18 @@ public class XMPPReceiverServlet extends HttpServlet {
                 } else if (JsonHelper.isJson(body)) { //it's json from the sdk
                     processJson(u, body);
                 } else {
-                    XmppServiceFactory.getInstance().sendMessage("I received your message but couldn't understand it.", u.getEmail());
+                    XmppServiceFactory.getInstance().sendMessage(":( I don't understand " + body, u.getEmail());
                 }
             }
         } catch (NimbitsException e) {
             log.severe(e.getMessage());
+            if (u != null) {
+                try {
+                    XmppServiceFactory.getInstance().sendMessage(":-o I don't understand " + body + " " + e.getMessage(), u.getEmail());
+                } catch (NimbitsException e1) {
+                    log.severe(e.getMessage());
+                }
+            }
 //            if (u != null) {
 //                IMFactory.getInstance().sendMessage(e.getMessage(), u.getEmail());
 //            }
@@ -108,12 +115,12 @@ public class XMPPReceiverServlet extends HttpServlet {
 
         switch (action) {
             case record:
-              //  Point point = PointServiceFactory.getInstance().getPointByKey(p.getKey());
-                Point point = (Point) EntityServiceFactory.getInstance().getEntityByKey(p.getKey(), PointEntity.class.getName()).get(0);
+                //  Point point = PointServiceFactory.getInstance().getPointByKey(p.getKey());
+                Point point = (Point) EntityServiceFactory.getInstance().getEntityByKey(p.getKey(), EntityType.point).get(0);
 
                 if (point != null) {
 
-                    final Value v = RecordedValueServiceFactory.getInstance().recordValue(u, point, p.getValue(), false);
+                    final Value v = RecordedValueServiceFactory.getInstance().recordValue(u, point, p.getValue());
                     point.setValue(v);
                     String result = gson.toJson(point);
                     XmppServiceFactory.getInstance().sendMessage(result, u.getEmail());
@@ -177,8 +184,8 @@ public class XMPPReceiverServlet extends HttpServlet {
             final EntityName pointName = CommonFactoryLocator.getInstance().createName(body.replace("?", ""), EntityType.point);
 
             Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName, EntityType.point).get(0);
-           // Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
-            Entity point = EntityServiceFactory.getInstance().getEntityByKey(e.getKey(), PointEntity.class.getName()).get(0);
+            // Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
+            Entity point = EntityServiceFactory.getInstance().getEntityByKey(e.getKey(), EntityType.point).get(0);
 
             final Value v = RecordedValueServiceFactory.getInstance().getPrevValue(point, new Date());
             if (v != null) {

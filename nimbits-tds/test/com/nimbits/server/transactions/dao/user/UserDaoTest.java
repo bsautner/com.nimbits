@@ -13,24 +13,20 @@
 
 package com.nimbits.server.transactions.dao.user;
 
-import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
-import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.user.User;
-import com.nimbits.server.NimbitsServletTest;
-import com.nimbits.server.entity.EntityServiceFactory;
-import com.nimbits.server.orm.UserEntity;
-import com.nimbits.server.user.UserServiceFactory;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.util.List;
-
+import com.google.appengine.tools.development.testing.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.server.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.user.*;
+import org.junit.*;
 import static org.junit.Assert.*;
+
+import java.util.*;
 
 /**
  * Created by bsautner
@@ -60,14 +56,14 @@ public class UserDaoTest extends NimbitsServletTest {
         User u =UserServiceFactory.getServerInstance().createUserRecord(e);
         assertNotNull(u);
         assertEquals(e.getValue(), u.getEmail().getValue());
-            List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(u,e.getValue(), UserEntity.class.getName());
+            List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(u,e.getValue(), EntityType.user);
             assertFalse(result.isEmpty());
 
 
             User r = (User) result.get(0);
 
 
-        assertNotNull(r);
+            assertNotNull(r);
             assertEquals(e.getValue(), r.getEmail().getValue());
             assertNotNull(r.getDateCreated());
 

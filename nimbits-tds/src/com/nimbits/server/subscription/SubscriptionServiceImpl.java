@@ -29,7 +29,6 @@ import com.nimbits.server.entity.*;
 import com.nimbits.server.facebook.*;
 import com.nimbits.server.feed.*;
 import com.nimbits.server.gson.*;
-import com.nimbits.server.orm.*;
 import com.nimbits.server.twitter.*;
 import com.nimbits.server.user.*;
 import com.nimbits.server.value.*;
@@ -53,10 +52,6 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
 
 
-    @Override
-    public List<Subscription> getSubscriptionsToPoint(final Entity point) throws NimbitsException {
-        return SubscriptionTransactionFactory.getInstance().getSubscriptionsToPoint(point);
-    }
 
 
 
@@ -65,11 +60,12 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
     public void processSubscriptions(final User user, final Point point, final Value v) throws NimbitsException {
 
 
-        final List<Subscription> subscriptions= getSubscriptionsToPoint(point);
+        final List<Entity> subscriptions= EntityServiceFactory.getInstance().getSubscriptionsToEntity(user, point);
         log.info("processing " + subscriptions.size() + " subscriptions");
 
-        for (final Subscription subscription : subscriptions) {
+        for (final Entity entity : subscriptions) {
 
+            Subscription subscription = (Subscription) entity;
             if  (subscription.getLastSent().getTime() + subscription.getMaxRepeat() * SECONDS * 1000 < new Date().getTime()) {
 
 
@@ -77,7 +73,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
                 subscription.setLastSent(new Date());
                 EntityServiceFactory.getInstance().addUpdateEntity(user, subscription);
 
-                final List<Entity> subscriptionEntity = EntityServiceFactory.getInstance().getEntityByKey(user, subscription.getKey(),SubscriptionEntity.class.getName());
+                final List<Entity> subscriptionEntity = EntityServiceFactory.getInstance().getEntityByKey(user, subscription.getKey(),EntityType.subscription);
 
                 if (subscriptionEntity.isEmpty()) {
 
@@ -135,7 +131,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public Entity getSubscribedEntity(final Entity entity) throws NimbitsException {
-       return EntityServiceFactory.getInstance().getEntityByKey(entity.getKey(), SubscriptionEntity.class.getName()).get(0);
+       return EntityServiceFactory.getInstance().getEntityByKey(entity.getKey(), EntityType.subscription).get(0);
      //           SubscriptionTransactionFactory.getInstance(getUser()).readSubscription(entity);
       //  return EntityServiceFactory.getInstance().getEntityByKey(getUser(), subscription.getSubscribedEntity(), PointEntity.class.getName());
 

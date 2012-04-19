@@ -13,30 +13,20 @@
 
 package com.nimbits.server.calculation;
 
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.calculation.Calculation;
-import com.nimbits.client.model.calculation.CalculationModelFactory;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModelFactory;
-import com.nimbits.server.NimbitsServletTest;
-import com.nimbits.server.entity.EntityServiceFactory;
-import com.nimbits.server.orm.CalcEntity;
-import com.nimbits.server.point.PointServiceFactory;
-import com.nimbits.server.value.RecordedValueServiceFactory;
-import org.junit.Test;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.calculation.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.server.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.point.*;
+import com.nimbits.server.value.*;
+import org.junit.*;
 
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
-
-import static org.junit.Assert.*;
+import java.util.*;
 
 /**
  * Created by bsautner
@@ -69,14 +59,13 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         final Point y =PointServiceFactory.getInstance().addPoint(yName);
         final Point z = PointServiceFactory.getInstance().addPoint(zName);
 
-        assertNotNull(y);
-        assertNotNull(z);
-        assertNotNull(trigger);
-        assertNotNull(trigger.getKey());
-        assertNotNull(target);
-        assertNotNull(target.getKey());
+        org.junit.Assert.assertNotNull(y);
+        org.junit.Assert.assertNotNull(z);
+        org.junit.Assert.assertNotNull(trigger);
+        org.junit.Assert.assertNotNull(trigger.getKey());
+        org.junit.Assert.assertNotNull(target);
+        org.junit.Assert.assertNotNull(target.getKey());
         final Random r = new Random();
-
         final double r1 = r.nextDouble();
         final double r2 = r.nextDouble();
         final double ry = r.nextDouble();
@@ -91,11 +80,11 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
 
         final Entity ce = EntityServiceFactory.getInstance().addUpdateEntity(calculation);
 
-        assertNotNull(ce);
+        org.junit.Assert.assertNotNull(ce);
 
-        final List<Entity> c =EntityServiceFactory.getInstance().getEntityByKey(ce.getKey(), CalcEntity.class.getName());// CalculationServiceFactory.getInstance().getCalculation(ce);
-        assertNotNull(c);
-        assertFalse(c.isEmpty());
+        final List<Entity> c =EntityServiceFactory.getInstance().getEntityByKey(user, ce.getKey(), EntityType.calculation);// CalculationServiceFactory.getInstance().getCalculation(ce);
+        org.junit.Assert.assertNotNull(c);
+        org.junit.Assert.assertFalse(c.isEmpty());
 
         EntityServiceFactory.getInstance().addUpdateEntity(trigger);
         //PointServiceFactory.getInstance().updatePoint(trigger);
@@ -103,24 +92,256 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         RecordedValueServiceFactory.getInstance().recordValue(user,yName, ValueModelFactory.createValueModel(ry));
 
         RecordedValueServiceFactory.getInstance().recordValue(user, zName, ValueModelFactory.createValueModel(rz));
-        Thread.sleep(100);
+        Thread.sleep(200);
         final Value vt = RecordedValueServiceFactory.getInstance().recordValue(user, triggerName,  ValueModelFactory.createValueModel(r2));
 
-        assertEquals(vt.getDoubleValue(), r2, DELTA);
-
-
+        org.junit.Assert.assertEquals(vt.getDoubleValue(), r2, DELTA);
 
         final Value vy =RecordedValueServiceFactory.getInstance().getCurrentValue(y);// ClientHelper.client().getCurrentRecordedValue(yName);
-        assertEquals(vy.getDoubleValue(), ry, DELTA);
+        org.junit.Assert.assertEquals(vy.getDoubleValue(), ry, DELTA);
 
         final Value vz = RecordedValueServiceFactory.getInstance().getCurrentValue(z);
-        assertEquals(vz.getDoubleValue(), rz, DELTA);
+        org.junit.Assert.assertEquals(vz.getDoubleValue(), rz, DELTA);
 
-        Thread.sleep(100);
+        Thread.sleep(1000);
         CalculationServiceFactory.getInstance().processCalculations(user, trigger, vt);
+        Thread.sleep(1000);
         final Value endResult =RecordedValueServiceFactory.getInstance().getCurrentValue(target);
-        assertNotNull(endResult);
-        assertEquals(r1 + r2 + ry + rz, endResult.getDoubleValue(), DELTA);
+        org.junit.Assert.assertNotNull(endResult);
+        org.junit.Assert.assertEquals(r1 + r2 + ry + rz, endResult.getDoubleValue(), DELTA);
+
+    }
+
+    @Test(expected=NimbitsException.class)
+    public void testCalcLoop() throws NimbitsException, InterruptedException {
+
+        final EntityName targetName = CommonFactoryLocator.getInstance().createName("TARGET" + UUID.randomUUID().toString(), EntityType.point);
+        final EntityName triggerName = CommonFactoryLocator.getInstance().createName("TRIGGER" + UUID.randomUUID().toString(), EntityType.point);
+
+        final EntityName yName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString(), EntityType.point);
+        final EntityName zName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString(), EntityType.point);
+
+        //final EntityName cName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString(), EntityType.calculation);
+        // Category c = ClientHelper.client().addCategory(cName);
+        // assertNotNull(c);
+        final Point trigger = PointServiceFactory.getInstance().addPoint(triggerName);
+        final Point target = PointServiceFactory.getInstance().addPoint(targetName);
+
+        final Point y =PointServiceFactory.getInstance().addPoint(yName);
+        final Point z = PointServiceFactory.getInstance().addPoint(zName);
+
+        org.junit.Assert.assertNotNull(y);
+        org.junit.Assert.assertNotNull(z);
+        org.junit.Assert.assertNotNull(trigger);
+        org.junit.Assert.assertNotNull(trigger.getKey());
+        org.junit.Assert.assertNotNull(target);
+        org.junit.Assert.assertNotNull(target.getKey());
+
+
+        EntityName name = CommonFactoryLocator.getInstance().createName("Calc 1", EntityType.calculation);
+        Entity en = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe, trigger.getKey(),
+                user.getKey());
+
+        final Calculation calculation = CalculationModelFactory.createCalculation(en, trigger.getKey(),
+                true, "x+y+z", trigger.getKey(), trigger.getKey(), y.getKey(), z.getKey());
+
+        final Entity ce = EntityServiceFactory.getInstance().addUpdateEntity(calculation);
+
+        org.junit.Assert.assertNotNull(ce);
+
+        final List<Entity> c =EntityServiceFactory.getInstance().getEntityByKey(user, ce.getKey(), EntityType.calculation);// CalculationServiceFactory.getInstance().getCalculation(ce);
+        org.junit.Assert.assertNotNull(c);
+        org.junit.Assert.assertFalse(c.isEmpty());
+
+        EntityServiceFactory.getInstance().addUpdateEntity(trigger);
+        //PointServiceFactory.getInstance().updatePoint(trigger);
+
+    }
+
+
+    @Test(expected=NimbitsException.class)
+    public void testCalcRecursion() throws NimbitsException, InterruptedException {
+
+        final EntityName targetName = CommonFactoryLocator.getInstance().createName("TARGET", EntityType.point);
+        final EntityName targetName2 = CommonFactoryLocator.getInstance().createName("TARGET2", EntityType.point);
+        final EntityName triggerName = CommonFactoryLocator.getInstance().createName("TRIGGER", EntityType.point);
+        final EntityName triggerName2 = CommonFactoryLocator.getInstance().createName("TRIGGER2", EntityType.point);
+
+        final Point trigger = PointServiceFactory.getInstance().addPoint(triggerName);
+        final Point target = PointServiceFactory.getInstance().addPoint(targetName);
+        final Point target2 = PointServiceFactory.getInstance().addPoint(targetName2);
+        final Point trigger2 = PointServiceFactory.getInstance().addPoint(triggerName2);
+
+        org.junit.Assert.assertNotNull(trigger);
+        org.junit.Assert.assertNotNull(trigger.getKey());
+        org.junit.Assert.assertNotNull(target);
+        org.junit.Assert.assertNotNull(target.getKey());
+
+
+        EntityName name = CommonFactoryLocator.getInstance().createName("calc", EntityType.calculation);
+        Entity en = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe, user.getKey(),
+                user.getKey());
+
+        final Calculation calculation = CalculationModelFactory.createCalculation(en, trigger.getKey(),
+                true, "1+1", target.getKey(),"","", "");
+
+        EntityServiceFactory.getInstance().addUpdateEntity(calculation);
+
+
+        Entity en2 = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe, user.getKey(),
+                user.getKey());
+
+        final Calculation calculation2 = CalculationModelFactory.createCalculation(en2, target.getKey(),
+                true, "1+1", target2.getKey(), "", "", "");
+
+        EntityServiceFactory.getInstance().addUpdateEntity(calculation2);
+
+        Entity en3 = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe, user.getKey(),
+                user.getKey());
+
+        final Calculation calculation3 = CalculationModelFactory.createCalculation(en3,  target2.getKey(),
+                true, "1+1", trigger.getKey(), "", "", "");
+
+        EntityServiceFactory.getInstance().addUpdateEntity(calculation3);
+
+    }
+
+
+
+    @Test(expected=NimbitsException.class)
+    public void testBadCalc1() throws NimbitsException, InterruptedException {
+
+
+        final EntityName targetName = CommonFactoryLocator.getInstance().createName("TARGET" + UUID.randomUUID().toString(), EntityType.point);
+        final EntityName triggerName = CommonFactoryLocator.getInstance().createName("TRIGGER" + UUID.randomUUID().toString(), EntityType.point);
+
+        final EntityName yName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString(), EntityType.point);
+        final EntityName zName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString(), EntityType.point);
+        final Point trigger = PointServiceFactory.getInstance().addPoint(triggerName);
+        final Point target = PointServiceFactory.getInstance().addPoint(targetName);
+
+        final Point y =PointServiceFactory.getInstance().addPoint(yName);
+        final Point z = PointServiceFactory.getInstance().addPoint(zName);
+
+
+        EntityName name = CommonFactoryLocator.getInstance().createName("Calc 1", EntityType.calculation);
+        Entity en = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe, trigger.getKey(),
+                user.getKey());
+
+        final Calculation calculation = CalculationModelFactory.createCalculation(en, trigger.getKey(),
+                true, "X+y+z", target.getKey(), trigger.getKey(), y.getKey(), z.getKey());
+
+        EntityServiceFactory.getInstance().addUpdateEntity(calculation);
+
+
+    }
+
+    @Test(expected=NimbitsException.class)
+    public void testBadCalcY() throws NimbitsException, InterruptedException {
+
+
+        final EntityName targetName = CommonFactoryLocator.getInstance().createName("TARGET" + UUID.randomUUID().toString(), EntityType.point);
+        final EntityName triggerName = CommonFactoryLocator.getInstance().createName("TRIGGER" + UUID.randomUUID().toString(), EntityType.point);
+
+        final EntityName yName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString(), EntityType.point);
+        final EntityName zName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString(), EntityType.point);
+        final Point trigger = PointServiceFactory.getInstance().addPoint(triggerName);
+        final Point target = PointServiceFactory.getInstance().addPoint(targetName);
+
+        final Point y =PointServiceFactory.getInstance().addPoint(yName);
+        final Point z = PointServiceFactory.getInstance().addPoint(zName);
+
+
+        EntityName name = CommonFactoryLocator.getInstance().createName("Calc 1", EntityType.calculation);
+        Entity en = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe, trigger.getKey(),
+                user.getKey());
+
+        final Calculation calculation = CalculationModelFactory.createCalculation(en, trigger.getKey(),
+                true, "x+Y+z", target.getKey(), trigger.getKey(), y.getKey(), z.getKey());
+
+        EntityServiceFactory.getInstance().addUpdateEntity(calculation);
+
+
+    }
+    @Test(expected=NimbitsException.class)
+    public void testBadCalcZ() throws NimbitsException, InterruptedException {
+
+
+        final EntityName targetName = CommonFactoryLocator.getInstance().createName("TARGET" + UUID.randomUUID().toString(), EntityType.point);
+        final EntityName triggerName = CommonFactoryLocator.getInstance().createName("TRIGGER" + UUID.randomUUID().toString(), EntityType.point);
+
+        final EntityName yName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString(), EntityType.point);
+        final EntityName zName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString(), EntityType.point);
+        final Point trigger = PointServiceFactory.getInstance().addPoint(triggerName);
+        final Point target = PointServiceFactory.getInstance().addPoint(targetName);
+
+        final Point y =PointServiceFactory.getInstance().addPoint(yName);
+        final Point z = PointServiceFactory.getInstance().addPoint(zName);
+
+
+        EntityName name = CommonFactoryLocator.getInstance().createName("Calc 1", EntityType.calculation);
+        Entity en = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe, trigger.getKey(),
+                user.getKey());
+
+        final Calculation calculation = CalculationModelFactory.createCalculation(en, trigger.getKey(),
+                true, "x+y+Z", target.getKey(), trigger.getKey(), y.getKey(), z.getKey());
+
+        EntityServiceFactory.getInstance().addUpdateEntity(calculation);
+
+
+    }
+    @Test(expected=NimbitsException.class)
+    public void testBadCalcMissingZ() throws NimbitsException, InterruptedException {
+
+
+        final EntityName targetName = CommonFactoryLocator.getInstance().createName("TARGET" + UUID.randomUUID().toString(), EntityType.point);
+        final EntityName triggerName = CommonFactoryLocator.getInstance().createName("TRIGGER" + UUID.randomUUID().toString(), EntityType.point);
+
+        final EntityName yName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString(), EntityType.point);
+        final Point trigger = PointServiceFactory.getInstance().addPoint(triggerName);
+        final Point target = PointServiceFactory.getInstance().addPoint(targetName);
+
+        final Point y =PointServiceFactory.getInstance().addPoint(yName);
+
+
+
+        EntityName name = CommonFactoryLocator.getInstance().createName("Calc 1", EntityType.calculation);
+        Entity en = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe, trigger.getKey(),
+                user.getKey());
+
+        final Calculation calculation = CalculationModelFactory.createCalculation(en, trigger.getKey(),
+                true, "x+y+z", target.getKey(), trigger.getKey(), y.getKey(),"");
+
+        EntityServiceFactory.getInstance().addUpdateEntity(calculation);
+
+
+    }
+
+    @Test(expected=NimbitsException.class)
+    public void testBadCalcMissingX() throws NimbitsException, InterruptedException {
+
+
+        final EntityName targetName = CommonFactoryLocator.getInstance().createName("TARGET" + UUID.randomUUID().toString(), EntityType.point);
+        final EntityName triggerName = CommonFactoryLocator.getInstance().createName("TRIGGER" + UUID.randomUUID().toString(), EntityType.point);
+
+        final EntityName yName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString(), EntityType.point);
+        final EntityName zName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString(), EntityType.point);
+        final Point trigger = PointServiceFactory.getInstance().addPoint(triggerName);
+        final Point target = PointServiceFactory.getInstance().addPoint(targetName);
+
+        final Point y =PointServiceFactory.getInstance().addPoint(yName);
+        final Point z = PointServiceFactory.getInstance().addPoint(zName);
+
+
+        EntityName name = CommonFactoryLocator.getInstance().createName("Calc 1", EntityType.calculation);
+        Entity en = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe, trigger.getKey(),
+                user.getKey());
+
+        final Calculation calculation = CalculationModelFactory.createCalculation(en, trigger.getKey(),
+                true, "x+y+z", target.getKey(), "", y.getKey(),z.getKey());
+
+        EntityServiceFactory.getInstance().addUpdateEntity(calculation);
+
 
     }
 }

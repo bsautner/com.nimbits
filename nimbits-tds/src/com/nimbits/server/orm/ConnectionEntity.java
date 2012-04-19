@@ -18,7 +18,6 @@ import com.nimbits.client.model.connection.*;
 import com.nimbits.client.model.entity.*;
 
 import javax.jdo.annotations.*;
-import java.util.*;
 
 /**
  * Created by bsautner
@@ -31,12 +30,14 @@ public class ConnectionEntity extends EntityStore implements Connection {
 
 
     private static final long serialVersionUID = 653954371977705551L;
-    @Persistent
-    private final Date createDate;
+
+    @SuppressWarnings("unused")
+    protected ConnectionEntity() {
+    }
 
     public ConnectionEntity(final Entity entity) throws NimbitsException {
         super(entity);
-        createDate = new Date();
+
     }
 
 }

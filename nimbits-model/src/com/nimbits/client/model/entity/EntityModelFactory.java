@@ -43,23 +43,13 @@ public class EntityModelFactory {
                                       final ProtectionLevel protectionLevel,
                                       final String parentUUID,
                                       final String ownerUUID,
-                                      final String blobKey,
                                       final String uuid ) {
         return new EntityModel(name, description, entityType, protectionLevel,  parentUUID,
-                ownerUUID, blobKey, uuid);
+                ownerUUID, uuid);
     }
 
 
-    public static Entity createEntity(final EntityName name,
-                                      final String description,
-                                      final EntityType entityType,
-                                      final ProtectionLevel protectionLevel,
-                                      final String parentUUID,
-                                      final String ownerUUID,
-                                      final String uuid) {
-        return new EntityModel(name, description, entityType, protectionLevel,  parentUUID,
-                ownerUUID, "", uuid);
-    }
+
     public static Entity createEntity(final EntityName name,
                                       final String description,
                                       final EntityType entityType,
@@ -67,7 +57,7 @@ public class EntityModelFactory {
                                       final String parentUUID,
                                       final String ownerUUID) {
         return new EntityModel(name, description, entityType, protectionLevel,  parentUUID,
-                ownerUUID, "", null);
+                ownerUUID, "");
     }
     public static Entity createEntity(final User user) throws NimbitsException {
         final EntityName name = CommonFactoryLocator.getInstance().createName(user.getEmail().getValue(), EntityType.user);
@@ -109,25 +99,29 @@ public class EntityModelFactory {
                 null,
 
                 null,
-                null,null);
+                null);
     }
 
 
-    public static Entity createEntity(final User u, final EntityName name) {
-        return u != null ? new EntityModel(name,
+    public static Entity createEntity(final Entity user, final EntityName name) {
+        return user != null ? new EntityModel(name,
                 "",
                 EntityType.point,
                 ProtectionLevel.everyone,
-                u.getKey(),
-                u.getKey(),
-                u.getKey(),null) : new EntityModel(name,
+                user.getKey(),
+                user.getKey(),
+                user.getKey())
+
+                :
+
+                new EntityModel(name,
                 "",
                 EntityType.point,
                 ProtectionLevel.everyone,
                 null,
-                null,
-                null,
-                null);
+                null,null
+
+                );
     }
 
 

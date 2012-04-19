@@ -32,9 +32,6 @@ public class UserEntity extends EntityStore implements User {
 
 
     @Persistent
-    private Date dateCreated;
-
-    @Persistent
     private Date lastLoggedIn;
 
     @Persistent
@@ -42,10 +39,6 @@ public class UserEntity extends EntityStore implements User {
 
     @Persistent
     private String facebookToken;
-
-    @Persistent
-    @Deprecated
-    private String secret;
 
     @Persistent
     private String twitterToken;
@@ -62,10 +55,7 @@ public class UserEntity extends EntityStore implements User {
     private static final long serialVersionUID = 1L;
 
 
-    @Override
-    public Date getDateCreated() {
-        return dateCreated;
-    }
+
 
     @Override
     public Date getLastLoggedIn() {
@@ -113,16 +103,9 @@ public class UserEntity extends EntityStore implements User {
 
     public UserEntity(final Entity entity) throws NimbitsException {
         super(entity);
-        dateCreated = new Date();
-        lastLoggedIn = dateCreated;
+       lastLoggedIn = new Date();
         //  this.key = KeyFactory.createKey(UserEntity.class.getSimpleName(), entity.getKey());
 
-    }
-
-
-    @Deprecated
-    public String getSecret() {
-        return secret;
     }
 
     @Override
@@ -136,14 +119,6 @@ public class UserEntity extends EntityStore implements User {
             accessKeys = new ArrayList<AccessKey>(1);
         }
         accessKeys.add(key);
-    }
-
-    @Override
-    public void addAccessKeys(List<AccessKey> key) {
-        if (accessKeys == null) {
-            accessKeys = new ArrayList<AccessKey>(key.size());
-        }
-        accessKeys.addAll(key);
     }
 
 
@@ -180,9 +155,11 @@ public class UserEntity extends EntityStore implements User {
         this.facebookToken = u.getFacebookToken();
         this.twitterToken = u.getTwitterToken();
         this.twitterTokenSecret = u.getTwitterTokenSecret();
-
-
     }
 
+    @Override
+    public void validate() throws NimbitsException {
+        super.validate();
 
+    }
 }

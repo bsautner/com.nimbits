@@ -33,19 +33,6 @@ public class CalculationModelFactory {
         return new CalculationModel(calculation);
     }
 
-
-
-    public static List<Calculation> createCalculations(Collection<Calculation> calculations) throws NimbitsException {
-        List<Calculation> retObj = new ArrayList<Calculation>(calculations.size());
-        for (final Calculation c : calculations) {
-            retObj.add(createCalculation(c));
-        }
-        return retObj;
-
-
-    }
-
-
     public static Calculation createCalculation(Entity entity, final String trigger, final boolean enabled, final String f, final String target, final String x, final String y, final String z) throws NimbitsException {
         return new CalculationModel(entity, trigger,  enabled, f, target,  x,y, z);
 

@@ -25,7 +25,7 @@ import com.extjs.gxt.ui.client.widget.form.TextArea;
 import com.extjs.gxt.ui.client.widget.layout.*;
 import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.*;
-import static com.google.gwt.user.client.Window.alert;
+import static com.google.gwt.user.client.Window.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
 import com.nimbits.client.constants.*;
@@ -36,7 +36,6 @@ import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.intelligence.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.service.entity.*;
-import com.nimbits.client.service.intelligence.*;
 import com.nimbits.client.ui.controls.*;
 import com.nimbits.client.ui.helper.*;
 import com.nimbits.client.ui.icons.*;
@@ -97,9 +96,8 @@ public class IntelligencePanel extends NavigationEventProvider {
         final TextArea intelFormula = new TextArea();
 
         final TextField<String> intelNodeId = new TextField<String>();
-        final RadioGroup targetOption = new RadioGroup();
-        final Radio intelTargetRadioNumber = new Radio();
-        final Radio intelTargetRadioData = new Radio();
+
+
         final CheckBox intelEnabled = new CheckBox();
         final CheckBox intelPlainText = new CheckBox();
 
@@ -138,8 +136,7 @@ public class IntelligencePanel extends NavigationEventProvider {
 
             @Override
             public void componentSelected(ButtonEvent buttonEvent) {
-                IntelligenceResultTarget target = intelTargetRadioNumber.getValue() ? IntelligenceResultTarget.value
-                        : IntelligenceResultTarget.data;
+
                 alert("Intelligence testing is temporarily unavailable");
 //                Intelligence update = createUpdate();
 //
@@ -151,7 +148,7 @@ public class IntelligencePanel extends NavigationEventProvider {
         });
 
 
-        submit.addSelectionListener(new SubmitButtonEventSelectionListener(nameField, intelTargetRadioNumber, intelTargetPoint, intelEnabled, intelFormula, intelNodeId, intelPlainText));
+        submit.addSelectionListener(new SubmitButtonEventSelectionListener(nameField, intelTargetPoint, intelEnabled, intelFormula, intelNodeId, intelPlainText));
 
 
         Html h = new Html("<p>Whenever the this point receives a new value, a query can be made " +
@@ -167,26 +164,8 @@ public class IntelligencePanel extends NavigationEventProvider {
         intelNodeId.setFieldLabel("Pod ID");
 
 
-        intelTargetRadioNumber.setBoxLabel("Number Value");
-        intelTargetRadioData.setBoxLabel("Text Data");
-        intelTargetRadioNumber.setValue(true);
-
-        intelTargetRadioNumber.addListener(Events.OnClick, new TargetRadioClickBaseEventListener(intelTargetRadioNumber, intelNodeId, intelPlainText));
-
-        intelTargetRadioData.addListener(Events.OnClick, new TagetBaseEventListener(intelTargetRadioNumber, intelNodeId, intelPlainText));
-
 
         intelTargetPoint.setFieldLabel("Target Point");
-
-
-        targetOption.setFieldLabel("Cell Result As");
-        targetOption.add(intelTargetRadioNumber);
-        targetOption.add(intelTargetRadioData);
-
-
-
-
-
 
         intelEnabled.setBoxLabel("Enabled");
         intelEnabled.setLabelSeparator("");
@@ -200,10 +179,8 @@ public class IntelligencePanel extends NavigationEventProvider {
 
             Intelligence intelligence = (Intelligence)entity;
 
-            intelEnabled.setValue(intelligence.getEnabled());
+            intelEnabled.setValue(intelligence.isEnabled());
             intelPlainText.setValue(intelligence.getResultsInPlainText());
-            intelTargetRadioData.setValue(intelligence.getResultTarget() == IntelligenceResultTarget.data);
-            intelTargetRadioNumber.setValue(intelligence.getResultTarget() == IntelligenceResultTarget.value);
             intelFormula.setValue(intelligence.getInput());
             intelNodeId.setValue(intelligence.getNodeId());
 
@@ -217,7 +194,6 @@ public class IntelligencePanel extends NavigationEventProvider {
         simple.add(nameField, formdata);
         simple.add(intelFormula, formdata);
         simple.add(intelNodeId, formdata);
-        simple.add(targetOption, formdata);
         simple.add(intelTargetPoint, formdata);
         simple.add(intelPlainText, formdata);
         simple.add(intelEnabled, formdata);
@@ -360,16 +336,16 @@ public class IntelligencePanel extends NavigationEventProvider {
 
     private class SubmitButtonEventSelectionListener extends SelectionListener<ButtonEvent> {
         private final TextField<String> nameField;
-        private final Radio intelTargetRadioNumber;
+
         private final EntityCombo intelTargetPoint;
         private final CheckBox intelEnabled;
         private final TextArea intelFormula;
         private final TextField<String> intelNodeId;
         private final CheckBox intelPlainText;
 
-        SubmitButtonEventSelectionListener(TextField<String> nameField, Radio intelTargetRadioNumber, EntityCombo intelTargetPoint, CheckBox intelEnabled, TextArea intelFormula, TextField<String> intelNodeId, CheckBox intelPlainText) {
+        SubmitButtonEventSelectionListener(TextField<String> nameField, EntityCombo intelTargetPoint, CheckBox intelEnabled, TextArea intelFormula, TextField<String> intelNodeId, CheckBox intelPlainText) {
             this.nameField = nameField;
-            this.intelTargetRadioNumber = intelTargetRadioNumber;
+
             this.intelTargetPoint = intelTargetPoint;
             this.intelEnabled = intelEnabled;
             this.intelFormula = intelFormula;
@@ -397,11 +373,10 @@ public class IntelligencePanel extends NavigationEventProvider {
 
         private Intelligence createUpdate() throws NimbitsException {
             Intelligence update;
-            IntelligenceResultTarget target = intelTargetRadioNumber.getValue() ? IntelligenceResultTarget.value
-                    : IntelligenceResultTarget.data;
+
             EntityName name = CommonFactoryLocator.getInstance().createName(nameField.getValue(), EntityType.calculation);
 
-            if (entity.getEntityType().equals(EntityType.intelligence)) {
+       if (entity.getEntityType().equals(EntityType.intelligence)) {
             update = (Intelligence)entity;
             update.setTarget( intelTargetPoint.getValue().getBaseEntity().getKey());
             update.setEnabled(intelEnabled.getValue());
@@ -414,8 +389,7 @@ public class IntelligencePanel extends NavigationEventProvider {
             update = IntelligenceModelFactory.createIntelligenceModel(
                     e,
                     intelEnabled.getValue(),
-                    target,
-                    intelTargetPoint.getValue().getUUID(),
+                    intelTargetPoint.getValue().getId(),
                     intelFormula.getValue(),
                     intelNodeId.getValue(),
                     intelPlainText.getValue(),

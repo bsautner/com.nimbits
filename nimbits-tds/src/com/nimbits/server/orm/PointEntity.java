@@ -277,7 +277,7 @@ public class PointEntity extends EntityStore implements Point {
         this.idleSeconds = p.getIdleSeconds();
         this.filterType = p.getFilterType().getCode();
         this.filterValue = p.getFilterValue();
-        validate();
+
     }
 
     @Override

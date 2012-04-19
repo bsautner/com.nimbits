@@ -268,7 +268,7 @@ public class NavigationPanel extends NavigationEventProvider {
 
             for (final Entity entity : result) {
                 if (! entity.getEntityType().equals(EntityType.user)) {// entity.getEntity().equals(this.user.getKey()) ) {
-                    if (entity.getParent().equals(model.getUUID())) {
+                    if (entity.getParent().equals(model.getKey())) {
                         TreeModel model2 = new GxtModel(entity);
                         if (parents.contains(entity.getKey()) && ! entity.getEntityType().equals(EntityType.user)) {
                             addChildrenToModel(result, parents, model2);
@@ -428,8 +428,8 @@ public class NavigationPanel extends NavigationEventProvider {
                 final TreeModel model = (TreeModel) m;
                 if (!model.isDirty() && model.getEntityType().equals(EntityType.point)) {
 
-                    if (stringPointMap.containsKey(model.getUUID())) {
-                        Point p = (Point) stringPointMap.get(model.getUUID());
+                    if (stringPointMap.containsKey(model.getKey())) {
+                        Point p = (Point) stringPointMap.get(model.getKey());
                         if (p.getValue() == null) {
                             model.setAlertType(AlertType.OK);
                             model.setValue(ValueModelFactory.createValueModel(0.0));
@@ -591,7 +591,7 @@ public class NavigationPanel extends NavigationEventProvider {
                     && model.getEntityType().equals(EntityType.point)
                     )  {
                 if (tree.isExpanded(model.getParent())) {
-                    entityMap.put(model.getUUID(), (Point) model.getBaseEntity());
+                    entityMap.put(model.getKey(), (Point) model.getBaseEntity());
                 }
             }
         }

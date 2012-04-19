@@ -18,6 +18,7 @@ import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.file.*;
 
 /**
  * Created by Benjamin Sautner
@@ -35,7 +36,7 @@ public class EntityOpenHelper {
             openNewEntityWindow(entity);
         }
         else if (entity.getEntityType().equals(EntityType.file)) {
-           showBlob(entity);
+           showBlob((File) entity);
         }
         else {
             openNewEntityWindow(entity);
@@ -50,7 +51,7 @@ public class EntityOpenHelper {
         return entity.getName().getValue().toLowerCase().endsWith(Const.FILE_TYPE_SVG);
     }
 
-    public  static void showBlob(final Entity entity) throws NimbitsException {
+    public  static void showBlob(final File entity) throws NimbitsException {
         final String resourceUrl = Path.PATH_BLOB_SERVICE + '?' + Parameters.blobkey.getText() + '=' + entity.getBlobKey();
         Window.open(resourceUrl, entity.getName().getValue(), "");
     }

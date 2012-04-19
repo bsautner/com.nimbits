@@ -13,12 +13,13 @@
 
 package com.nimbits.server.orm;
 
+import com.google.appengine.api.blobstore.*;
+import com.nimbits.client.common.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.file.*;
 
 import javax.jdo.annotations.*;
-import java.util.*;
 
 /**
  * Created by bsautner
@@ -30,10 +31,43 @@ import java.util.*;
 public class FileEntity extends EntityStore implements File {
 
     @Persistent
-    private final Date createDate;
+    private BlobKey blobKey;
 
-    public FileEntity(final Entity entity) throws NimbitsException {
+    public FileEntity(final File entity) throws NimbitsException {
         super(entity);
-        createDate = new Date();
+        if (! Utils.isEmptyString(entity.getBlobKey()))  {
+            this.blobKey = new BlobKey(entity.getBlobKey());
+        }
+
+    }
+
+    @Override
+    public String getBlobKey() {
+        return blobKey != null ? this.blobKey.getKeyString() : null;
+    }
+
+    @Override
+    public void setBlobKey(final String blobKey) {
+        if (! Utils.isEmptyString(blobKey)) {
+            this.blobKey = new BlobKey(blobKey);
+        }
+
+    }
+
+    @Override
+    public void update(Entity update) throws NimbitsException {
+        super.update(update);
+        File f = (File) update;
+        if (! Utils.isEmptyString(f.getBlobKey())) {
+            this.blobKey = new BlobKey(f.getBlobKey());
+        }
+    }
+
+    @Override
+    public void validate() throws NimbitsException {
+        super.validate();
+        if (this.blobKey == null || Utils.isEmptyString(this.blobKey.getKeyString())) {
+            throw new NimbitsException("Empty blobkey");
+        }
     }
 }

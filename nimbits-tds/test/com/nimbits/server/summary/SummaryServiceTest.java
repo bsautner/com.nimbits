@@ -43,32 +43,34 @@ import java.util.Random;
 public class SummaryServiceTest extends NimbitsServletTest {
     private static final int SUMMARY_INTERVAL_MS = 60000;
     private static final double DELTA = 0.001;
+    private static final int INT = 50;
     double[] v ={1,2,3};
 
 
     @Test
     public void testProcessGet() throws NimbitsException, InterruptedException {
 
-        EntityName n = CommonFactoryLocator.getInstance().createName("summary test");
+        EntityName n = CommonFactoryLocator.getInstance().createName("summary test", EntityType.summary);
         Entity e = EntityModelFactory.createEntity(n, EntityType.summary);
         Summary summary = SummaryModelFactory.createSummary(e,point.getKey(),
-                pointChild.getKey(),SummaryType.average, SUMMARY_INTERVAL_MS, new Date(0));
+                pointChild.getKey(),true, SummaryType.average, SUMMARY_INTERVAL_MS, new Date(0));
         point.setFilterValue(0.0);
         EntityServiceFactory.getInstance().addUpdateEntity(point);
         EntityServiceFactory.getInstance().addUpdateEntity(summary);
-        List<Summary> r = SummaryTransactionFactory.getInstance().readSummariesToEntity(point);
+        final List<Entity> r = EntityServiceFactory.getInstance().getEntityByTrigger(user, point, EntityType.summary);
+
+
         Assert.assertFalse(r.isEmpty());
-         int x = 0;
+
         int c = 100;
         double[]  d = new double[c];
         Random rand = new Random();
         for (int i = 0; i < c; i++){
             double dx = rand.nextDouble() * 100;
             Value value = ValueModelFactory.createValueModel(dx);
-            Value vr = RecordedValueServiceFactory.getInstance().recordValue(user, point, value, false);
-                   x += i;
+            Value vr = RecordedValueServiceFactory.getInstance().recordValue(user, point, value);
             Assert.assertNotNull(vr);
-            Thread.sleep(50);
+            Thread.sleep(INT);
             d[i] = dx;
         }
         double com = SummaryServiceFactory.getInstance().getValue(SummaryType.average, d);

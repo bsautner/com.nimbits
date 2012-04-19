@@ -35,9 +35,7 @@ public interface CalculationService  extends RemoteService {
 
     Value solveEquation(final User u, final Calculation calculation) throws NimbitsException;
 
-    List<Calculation> getCalculations(final Entity entity) throws NimbitsException;
-
-    void processCalculations(final User u, final Entity point, final Value value) throws NimbitsException;
+     void processCalculations(final User u, final Entity point, final Value value) throws NimbitsException;
 
 
 }

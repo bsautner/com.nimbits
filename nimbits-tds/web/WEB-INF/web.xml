@@ -158,6 +158,15 @@
         <servlet-name>blobService</servlet-name>
         <url-pattern>/nimbits/blob</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>blobServlet</servlet-name>
+        <servlet-class>com.nimbits.server.api.impl.BlobServletImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>blobServlet</servlet-name>
+        <url-pattern>/service/blob</url-pattern>
+    </servlet-mapping>
+
 
     <servlet-mapping>
         <servlet-name>userService</servlet-name>
@@ -413,14 +422,7 @@
     </servlet-mapping>
 
 
-    <servlet>
-        <servlet-name>blobServlet</servlet-name>
-        <servlet-class>com.nimbits.server.api.impl.BlobServletImpl</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>blobServlet</servlet-name>
-        <url-pattern>/service/blob</url-pattern>
-    </servlet-mapping>
+
 
     <servlet>
         <servlet-name>batchServlet</servlet-name>

@@ -33,9 +33,6 @@ import java.util.List;
 
 public class UserModel extends EntityModel implements Serializable, User {
 
-
-    private Date dateCreated;
-
     private Date lastLoggedIn;
 
     private String emailAddress;
@@ -66,7 +63,6 @@ public class UserModel extends EntityModel implements Serializable, User {
     public UserModel(final User u) throws NimbitsException {
         super(u);
         if (u != null) {
-            this.dateCreated = u.getDateCreated();
             this.lastLoggedIn = u.getLastLoggedIn();
             this.accessKeys = u.getAccessKeys();
             this.emailAddress = u.getEmail().getValue();
@@ -82,16 +78,12 @@ public class UserModel extends EntityModel implements Serializable, User {
 
     public UserModel(final Entity entity) throws NimbitsException {
         super(entity);
-        this.dateCreated = new Date();
         this.lastLoggedIn =  new Date();
         this.emailAddress = entity.getName().getValue();
 
     }
 
-    @Override
-    public Date getDateCreated() {
-        return new Date(this.dateCreated.getTime());
-    }
+
 
     @Override
     public Date getLastLoggedIn() {
@@ -172,13 +164,7 @@ public class UserModel extends EntityModel implements Serializable, User {
         accessKeys.add(key);
     }
 
-    @Override
-    public void addAccessKeys(List<AccessKey> key) {
-        if (accessKeys == null) {
-            accessKeys = new ArrayList<AccessKey>(key.size());
-        }
-        accessKeys.addAll(key);
-    }
+
 
 
     @Override

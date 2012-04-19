@@ -31,4 +31,8 @@ public class FileFactory {
 
         return new FileModel(e);
     }
+    public static File createFile(Entity e) throws NimbitsException {
+
+        return new FileModel(e);
+    }
 }

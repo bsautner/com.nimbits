@@ -3,6 +3,7 @@ package com.nimbits.client.model.summary;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.trigger.*;
 
 import java.util.*;
 
@@ -12,10 +13,8 @@ import java.util.*;
  * Date: 3/16/12
  * Time: 9:59 AM
  */
-public class SummaryModel extends EntityModel implements Summary {
+public class SummaryModel extends TriggerModel implements Summary {
 
-    private String source;
-    private String target;
     private Integer summaryType;
     private Long summaryIntervalMs;
     private Date lastProcessed;
@@ -23,14 +22,14 @@ public class SummaryModel extends EntityModel implements Summary {
 
     public SummaryModel(
             final Entity entity,
-            final String targetEntity,
+            final String trigger,
             final String target,
+            final boolean enabled,
             final SummaryType summaryType,
             final long summaryIntervalMs,
             final Date lastProcessed ) throws NimbitsException {
-        super(entity);
-        this.source = targetEntity;
-        this.target = target;
+        super(entity, trigger, target, enabled);
+
         this.summaryType = summaryType.getCode();
         this.summaryIntervalMs = summaryIntervalMs;
         this.lastProcessed = new Date(lastProcessed.getTime());
@@ -39,28 +38,17 @@ public class SummaryModel extends EntityModel implements Summary {
 
     public SummaryModel(Summary summary) throws NimbitsException {
        super(summary);
-        this.source = summary.getSource();
-        this.target = summary.getTarget();
+
         this.summaryType = summary.getSummaryType().getCode();
         this.summaryIntervalMs = summary.getSummaryIntervalMs();
         this.lastProcessed = summary.getLastProcessed();
 
     }
 
+    @SuppressWarnings("unused")
     protected SummaryModel() {
     }
 
-
-
-    @Override
-    public String getSource() {
-        return source;
-    }
-
-    @Override
-    public String getTarget() {
-        return target;
-    }
 
     @Override
     public SummaryType getSummaryType() {

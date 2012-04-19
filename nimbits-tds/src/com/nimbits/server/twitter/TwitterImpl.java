@@ -26,7 +26,6 @@ import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.twitter.*;
 import com.nimbits.server.entity.*;
-import com.nimbits.server.orm.*;
 import com.nimbits.server.settings.*;
 import twitter4j.*;
 import twitter4j.auth.*;
@@ -105,7 +104,7 @@ public class TwitterImpl extends RemoteServiceServlet implements
 
         try {
             AccessToken accessToken = twitter.getOAuthAccessToken(requestToken);
-            List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(email.getValue(), UserEntity.class.getName());
+            List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(email.getValue(), EntityType.user);
             if (! result.isEmpty()) {
                 User u = (User) result.get(0);
                 u.setTwitterToken(accessToken.getToken());

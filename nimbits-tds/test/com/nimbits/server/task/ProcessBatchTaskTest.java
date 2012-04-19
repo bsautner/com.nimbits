@@ -1,21 +1,17 @@
 package com.nimbits.server.task;
 
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.server.NimbitsServletTest;
-import com.nimbits.server.entity.EntityServiceFactory;
-import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.orm.PointEntity;
-import com.nimbits.server.value.RecordedValueServiceFactory;
-import org.junit.Test;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.server.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.gson.*;
+import com.nimbits.server.value.*;
 import static org.junit.Assert.*;
+import org.junit.*;
+
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner
@@ -82,7 +78,7 @@ public class ProcessBatchTaskTest extends NimbitsServletTest {
         addAuth();
         point.setFilterValue(2.0);
         EntityServiceFactory.getInstance().addUpdateEntity(point);
-        Point r = (Point) EntityServiceFactory.getInstance().getEntityByKey(point.getKey(), PointEntity.class.getName()).get(0);
+        Point r = (Point) EntityServiceFactory.getInstance().getEntityByKey(point.getKey(), EntityType.point).get(0);
         assertNotNull(r);
         assertEquals(2.0,r.getFilterValue(),  DELTA);
 
@@ -120,7 +116,7 @@ public class ProcessBatchTaskTest extends NimbitsServletTest {
         addAuth();
         point.setFilterValue(2.0);
         EntityServiceFactory.getInstance().addUpdateEntity(point);
-        Point r = (Point) EntityServiceFactory.getInstance().getEntityByKey(point.getKey(), PointEntity.class.getName()).get(0);
+        Point r = (Point) EntityServiceFactory.getInstance().getEntityByKey(point.getKey(), EntityType.point).get(0);
         assertNotNull(r);
         assertEquals(2.0,r.getFilterValue(),  DELTA);
 

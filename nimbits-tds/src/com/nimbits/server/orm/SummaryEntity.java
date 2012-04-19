@@ -30,13 +30,7 @@ import java.util.*;
 
 @SuppressWarnings("unused")
 @PersistenceCapable
-public class SummaryEntity extends EntityStore implements Summary {
-
-    @Persistent
-    private String entity;
-
-    @Persistent
-    private String target;
+public class SummaryEntity extends TriggerEntity implements Summary {
 
     @Persistent
     private Integer summaryType;
@@ -53,8 +47,6 @@ public class SummaryEntity extends EntityStore implements Summary {
 
     public SummaryEntity(final Summary summary) throws NimbitsException {
         super(summary);
-        this.entity = summary.getSource();
-        this.target = summary.getTarget();
         this.summaryType = summary.getSummaryType().getCode();
         this.summaryIntervalMs = summary.getSummaryIntervalMs();
         this.lastProcessed = summary.getLastProcessed();
@@ -62,15 +54,6 @@ public class SummaryEntity extends EntityStore implements Summary {
     }
 
 
-    @Override
-    public String getSource() {
-        return entity;
-    }
-
-    @Override
-    public String getTarget() {
-        return target;
-    }
 
     @Override
     public SummaryType getSummaryType() {
@@ -109,12 +92,8 @@ public class SummaryEntity extends EntityStore implements Summary {
     public void update(final Entity update) throws NimbitsException {
         super.update(update);
         final Summary summary = (Summary)update;
-        this.entity = summary.getSource();
-        this.target = summary.getTarget();
         this.summaryType = summary.getSummaryType().getCode();
         this.summaryIntervalMs = summary.getSummaryIntervalMs();
         this.lastProcessed = summary.getLastProcessed();
-
-
     }
 }

@@ -37,22 +37,7 @@ public class XmppDaoImpl implements XmppTransaction {
     public XmppDaoImpl() {
 
     }
-    @Override
-    public void addResource(final XmppResource resource) throws NimbitsException {
 
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-
-
-        try {
-            final XmppResourceEntity s = new XmppResourceEntity(resource);
-            pm.makePersistent(s);
-
-        }
-        finally {
-            pm.close();
-        }
-
-    }
 
     @Override
     public List<XmppResource> getPointXmppResources(final Point point) throws NimbitsException {

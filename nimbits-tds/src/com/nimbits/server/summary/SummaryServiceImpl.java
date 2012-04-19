@@ -25,7 +25,6 @@ import com.nimbits.client.model.value.*;
 import com.nimbits.client.service.summary.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.logging.*;
-import com.nimbits.server.orm.*;
 import com.nimbits.server.value.*;
 import org.apache.commons.math3.stat.descriptive.*;
 
@@ -43,15 +42,18 @@ public class SummaryServiceImpl  extends RemoteServiceServlet implements Summary
 
     @Override
     public void processSummaries(final User user,final  Point point) throws NimbitsException {
-        final List<Summary> list = SummaryTransactionFactory.getInstance().readSummariesToEntity(point);
-        for (final Summary summary : list) {
+        final List<Entity> list = EntityServiceFactory.getInstance().getEntityByTrigger(user, point, EntityType.summary);
+
+
+        for (final Entity entity : list) {
             final Date now = new Date();
+            Summary summary = (Summary) entity;
             final long d = new Date().getTime() - summary.getSummaryIntervalMs();
             if (summary.getLastProcessed().getTime() < d) {
 
                 try {
 
-                    final List<Entity> results =  EntityServiceFactory.getInstance().getEntityByKey(summary.getSource(), PointEntity.class.getName());
+                    final List<Entity> results =  EntityServiceFactory.getInstance().getEntityByKey(summary.getTrigger(),EntityType.point);
                     if (! results.isEmpty()) {
                         final Entity source = results.get(0);
                         final Timespan span = TimespanModelFactory.createTimespan(new Date(now.getTime() - summary.getSummaryIntervalMs()), now);
@@ -63,13 +65,13 @@ public class SummaryServiceImpl  extends RemoteServiceServlet implements Summary
                             for (int i = 0; i< values.size(); i++) {
                                 doubles[i] = values.get(i).getDoubleValue();
                             }
-                            final List<Entity> targetResults =  EntityServiceFactory.getInstance().getEntityByKey(summary.getTarget(), PointEntity.class.getName());
+                            final List<Entity> targetResults =  EntityServiceFactory.getInstance().getEntityByKey(summary.getTarget(), EntityType.point);
                             if (! targetResults.isEmpty()) {
                                 final Entity target = targetResults.get(0);
                                 final double result = getValue(summary.getSummaryType(), doubles);
                                 final Value value = ValueModelFactory.createValueModel(result);
 
-                                RecordedValueServiceFactory.getInstance().recordValue(user, target, value, false);
+                                RecordedValueServiceFactory.getInstance().recordValue(user, target, value);
                                 summary.setLastProcessed(new Date());
                                 EntityServiceFactory.getInstance().addUpdateEntity(user, summary);
 

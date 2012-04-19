@@ -1,9 +1,8 @@
 package com.nimbits.client.model.calculation;
 
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.trigger.*;
 
-import java.io.Serializable;
+import java.io.*;
 
 /**
  * Created by bsautner
@@ -11,15 +10,9 @@ import java.io.Serializable;
  * Date: 12/24/11
  * Time: 4:52 PM
  */
-public interface Calculation extends Entity, Serializable {
-
-    String getTrigger();
+public interface Calculation extends Trigger, Serializable {
 
     String getFormula();
-
-    Boolean getEnabled();
-
-    String getTarget();
 
     String getX();
 
@@ -27,14 +20,7 @@ public interface Calculation extends Entity, Serializable {
 
     String getZ();
 
-    void setEnabled(final boolean b);
-
-    @Override
-    void update(final Entity update) throws NimbitsException;
-
     void setZ(final String z);
-
-    void setTrigger(final String trigger);
 
     void setY(final String y);
 
@@ -42,5 +28,4 @@ public interface Calculation extends Entity, Serializable {
 
     void setFormula(final String formula);
 
-    void setTarget(final String target);
 }

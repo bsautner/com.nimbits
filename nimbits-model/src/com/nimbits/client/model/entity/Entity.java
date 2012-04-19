@@ -9,7 +9,7 @@ import com.nimbits.client.model.user.User;
 
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner
@@ -56,10 +56,6 @@ public interface Entity  extends Serializable, Comparable<Entity> {
 
     void setReadOnly(boolean readOnly);
 
-    String getBlobKey();
-
-    void setBlobKey(String blobKey);
-
     void setChildren(List<Point> children);
 
     void update(Entity update) throws NimbitsException;
@@ -70,6 +66,9 @@ public interface Entity  extends Serializable, Comparable<Entity> {
 
     boolean entityIsReadable(User user) throws NimbitsException;
 
+    Date getDateCreated();
 
     void validate() throws NimbitsException;
+
+    void setDateCreated(Date dateCreated);
 }

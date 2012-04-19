@@ -14,21 +14,16 @@
 package com.nimbits.client.model.intelligence;
 
 
-import com.nimbits.client.enums.IntelligenceResultTarget;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.trigger.*;
 
-import java.io.Serializable;
+import java.io.*;
 
 
-public class IntelligenceModel  extends EntityModel implements Serializable, Intelligence {
+public class IntelligenceModel  extends TriggerModel implements Serializable, Intelligence {
+
     private static final long serialVersionUID =1L;
-
-    private boolean enabled;
-
-    private int resultTarget;
-
-    private String target;
 
     private String input;
 
@@ -36,74 +31,36 @@ public class IntelligenceModel  extends EntityModel implements Serializable, Int
 
     private boolean resultsInPlainText;
 
-    private String trigger;
-
+    @SuppressWarnings("unused")
     private IntelligenceModel() {
     }
 
     public IntelligenceModel(final Entity entity,
                              final boolean enabled,
-                             final IntelligenceResultTarget resultTarget,
                              final String target,
                              final String input,
                              final String nodeId,
                              final boolean resultsInPlainText,
                              final String trigger) throws NimbitsException {
-        super(entity);
-        this.enabled = enabled;
-        this.resultTarget = resultTarget.getCode();
-        this.target = target;
+        super(entity, target, trigger, enabled);
         this.input = input;
         this.nodeId = nodeId;
         this.resultsInPlainText = resultsInPlainText;
-        this.trigger = trigger;
+
 
 
     }
 
     public IntelligenceModel(final Intelligence intelligence) throws NimbitsException {
         super(intelligence);
-        this.enabled = intelligence.getEnabled();
-        this.resultTarget = intelligence.getResultTarget().getCode();
-        this.target = intelligence.getTarget();
+
         this.input = intelligence.getInput();
         this.nodeId = intelligence.getNodeId();
         this.resultsInPlainText = intelligence.getResultsInPlainText();
 
-        this.trigger = intelligence.getTrigger();
 
     }
 
-    @Override
-    public boolean getEnabled() {
-        return enabled;
-    }
-
-
-    @Override
-    public void setEnabled(final boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    @Override
-    public IntelligenceResultTarget getResultTarget() {
-        return IntelligenceResultTarget.get(resultTarget);
-    }
-
-    @Override
-    public void setResultTarget(IntelligenceResultTarget resultTarget) {
-        this.resultTarget = resultTarget.getCode();
-    }
-
-    @Override
-    public String getTarget() {
-        return this.target;
-    }
-
-    @Override
-    public void setTarget(String target) {
-        this.target = target;
-    }
 
 
     @Override
@@ -135,13 +92,6 @@ public class IntelligenceModel  extends EntityModel implements Serializable, Int
     public void setResultsInPlainText(boolean resultsInPlainText) {
         this.resultsInPlainText = resultsInPlainText;
     }
-    @Override
-    public String getTrigger() {
-        return trigger;
-    }
-    @Override
-    public void setTrigger(String trigger) {
-        this.trigger = trigger;
-    }
+
 
 }

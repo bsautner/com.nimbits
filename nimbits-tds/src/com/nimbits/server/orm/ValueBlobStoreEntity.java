@@ -29,8 +29,6 @@ import java.util.*;
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 public class ValueBlobStoreEntity  implements ValueBlobStore {
 
-    private static final long serialVersionUID = 1L;
-
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private com.google.appengine.api.datastore.Key key;
@@ -74,42 +72,47 @@ public class ValueBlobStoreEntity  implements ValueBlobStore {
     }
 
 
-    public ValueBlobStoreEntity() {
-    }
-
-
+    @Override
     public String getEntity() {
         return entity;
     }
 
+    @Override
     public Date getTimestamp() {
         return new Date(timestamp);
     }
 
+    @Override
     public String getPath() {
         return path;
     }
 
+    @Override
     public Date getMaxTimestamp() {
         return new Date(maxTimestamp);
     }
 
+    @Override
     public void setMaxTimestamp(Date maxTimestamp) {
         this.maxTimestamp = maxTimestamp.getTime();
     }
 
+    @Override
     public Date getMinTimestamp() {
         return new Date(minTimestamp);
     }
 
+    @Override
     public void setMinTimestamp(Date minTimestamp) {
         this.minTimestamp = minTimestamp.getTime();
     }
 
+    @Override
     public String getBlobKey() {
         return blobkey.getKeyString();
     }
 
+    @Override
     public long getLength() {
         return length != null ? length : Const.CONST_DEFAULT_BLOB_LENGTH;
     }

@@ -349,7 +349,7 @@ public class FeedPanel  extends LayoutContainer {
     private class ConnectionSelectionChangedListener extends SelectionChangedListener<TreeModel> {
         @Override
         public void selectionChanged(SelectionChangedEvent<TreeModel> gxtModelSelectionChangedEvent) {
-           connectionEntityKey =gxtModelSelectionChangedEvent.getSelectedItem().getUUID();
+           connectionEntityKey =gxtModelSelectionChangedEvent.getSelectedItem().getKey();
             updateValues(true);
         }
     }

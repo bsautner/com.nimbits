@@ -26,7 +26,6 @@ import com.nimbits.server.entity.*;
 import com.nimbits.server.feed.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.logging.*;
-import com.nimbits.server.orm.*;
 import com.nimbits.server.value.*;
 
 import javax.servlet.http.*;
@@ -68,7 +67,7 @@ public class ValueServletImpl extends ApiServlet {
         if (user != null && ! user.isRestricted()) {
 
             final EntityName pointName = CommonFactoryLocator.getInstance().createName(getParam(Parameters.point), EntityType.point);
-            final Entity point = EntityServiceFactory.getInstance().getEntityByName(user, pointName, PointEntity.class.getName()).get(0);
+            final Entity point = EntityServiceFactory.getInstance().getEntityByName(user, pointName, EntityType.point).get(0);
 
             if (point != null) {
 
@@ -88,7 +87,7 @@ public class ValueServletImpl extends ApiServlet {
                             vx.getNote(), vx.getData(), AlertType.OK);
                 }
 
-                final Value result = RecordedValueServiceFactory.getInstance().recordValue(user, point, v, false);
+                final Value result = RecordedValueServiceFactory.getInstance().recordValue(user, point, v);
                 final PrintWriter out = resp.getWriter();
                 final String j = GsonFactory.getInstance().toJson(result);
                 out.print(j);
@@ -143,12 +142,12 @@ public class ValueServletImpl extends ApiServlet {
 
         final List<Entity> result;
         if (!Utils.isEmptyString(uuid)) {
-            result = EntityServiceFactory.getInstance().getEntityByKey(uuid, PointEntity.class.getName());
+            result = EntityServiceFactory.getInstance().getEntityByKey(u, uuid, EntityType.point);
         }
         else if (!Utils.isEmptyString(pointNameParam)) {
             final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
             LogHelper.log(ValueServletImpl.class, "Getting point "  + pointNameParam);
-            result = EntityServiceFactory.getInstance().getEntityByName(u, pointName,PointEntity.class.getName());
+            result = EntityServiceFactory.getInstance().getEntityByName(u, pointName,EntityType.point);
         }
         else {
             throw new NimbitsException(UserMessages.ERROR_POINT_NOT_FOUND);
@@ -172,7 +171,7 @@ public class ValueServletImpl extends ApiServlet {
                         nv.getTimestamp(), nv.getData());
 
 
-                value = RecordedValueServiceFactory.getInstance().recordValue(u, p, newValue, false);
+                value = RecordedValueServiceFactory.getInstance().recordValue(u, p, newValue);
             } else {
                 value = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
             }

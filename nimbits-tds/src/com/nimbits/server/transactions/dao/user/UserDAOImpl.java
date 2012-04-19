@@ -15,6 +15,7 @@ package com.nimbits.server.transactions.dao.user;
 
 import com.nimbits.*;
 import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.connection.*;
 import com.nimbits.client.model.email.*;
@@ -31,7 +32,6 @@ import java.util.logging.*;
 public class UserDAOImpl implements UserTransactions {
     private static final Logger log = Logger.getLogger(UserDAOImpl.class.getName());
     private static final int MAX_REQUESTS = 25;
-
 
     @Override
     @SuppressWarnings(Const.WARNING_UNCHECKED)
@@ -95,8 +95,6 @@ public class UserDAOImpl implements UserTransactions {
 
     }
 
-
-
     @Override
     public ConnectionRequest makeConnectionRequest(final User u, final EmailAddress emailAddress) throws NimbitsException {
         final ConnectionRequestEntity f = new ConnectionRequestEntity(u.getKey(), u.getEmail(), emailAddress, UUID.randomUUID().toString());
@@ -114,8 +112,6 @@ public class UserDAOImpl implements UserTransactions {
 
     }
 
-
-
     @Override
     public List<User> getConnectionRequests(final List<String> connections) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -128,7 +124,7 @@ public class UserDAOImpl implements UserTransactions {
             if (!result.isEmpty()) {
 
                 for (final ConnectionRequest c : result) {
-                    User u = (User) EntityServiceFactory.getInstance().getEntityByKey(c.getTargetEmail().getValue(), UserEntity.class.getName());
+                    User u = (User) EntityServiceFactory.getInstance().getEntityByKey(c.getTargetEmail().getValue(), EntityType.user);
                     retObj.add( UserModelFactory.createUserModel(u));
 
                 }

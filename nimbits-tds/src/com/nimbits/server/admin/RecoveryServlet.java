@@ -13,28 +13,22 @@
 
 package com.nimbits.server.admin;
 
-import com.google.appengine.api.datastore.*;
 import com.nimbits.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.accesskey.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.server.admin.legacy.orm.*;
-import com.nimbits.server.admin.legacy.orm.EntityStore;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.orm.*;
 import com.nimbits.server.settings.*;
 import com.nimbits.server.transactions.dao.entity.*;
 import com.nimbits.server.user.*;
-import com.nimbits.shared.*;
 
 import javax.jdo.*;
-import javax.jdo.Query;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.*;
@@ -53,31 +47,56 @@ public class RecoveryServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PrintWriter out = resp.getWriter();
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        Query q = pm.newQuery(UserEntity.class);
-        List<UserEntity> all = (List<UserEntity>) q.execute();
+        Query q = pm.newQuery(CalcEntity.class);
+        List<CalcEntity> all = (List<CalcEntity>) q.execute();
 
-
-        for (UserEntity u : all) {
-
-
+        for (CalcEntity c : all) {
 
             try {
-                EntityName name = CommonFactoryLocator.getInstance().createName("Secret API Key", EntityType.accessKey);
-                Entity n = EntityModelFactory.createEntity(name, "", EntityType.accessKey, ProtectionLevel.onlyMe,
-                        u.getKey(), u.getKey());
-                String secret = u.getSecret();
-                if (Utils.isEmptyString(secret)) {
-                    secret = UUID.randomUUID().toString();
+                if (c.isEnabled()) {
+                    c.validate();
+                    out.println("<BR><P>" + c.getFormula() + " " + c.getOwner() + " is OK!" + "</P>");
                 }
-                out.println(secret + "<br>");
-                AccessKey model = AccessKeyFactory.createAccessKey(n, secret, u.getKey(), AuthLevel.readWriteAll);
-                AccessKeyEntity en = new AccessKeyEntity(model);
-                pm.makePersistent(en);
-            } catch (NimbitsException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                else {
+                    out.println("<BR><P>Failed to validate: " + c.getFormula() + " " + c.getOwner() + " was disabled" + "</P>");
+                }
+            }
+            catch (NimbitsException ex) {
+//               Transaction tx = pm.currentTransaction();
+//                c.setEnabled(false);
+//                tx.commit();
+
+                out.println("<BR><P>Failed to validate: " + c.getFormula() + " " + c.getOwner() + " "
+                        + c.getTrigger() + ">>" + c.getTarget()
+                        + ex.getMessage() + "</P>");
             }
 
         }
+        pm.close();
+
+//
+//
+//        for (UserEntity u : all) {
+//
+//
+//
+//            try {
+//                EntityName name = CommonFactoryLocator.getInstance().createName("Secret API Key", EntityType.accessKey);
+//                Entity n = EntityModelFactory.createEntity(name, "", EntityType.accessKey, ProtectionLevel.onlyMe,
+//                        u.getKey(), u.getKey());
+//                String secret = u.getSecret();
+//                if (Utils.isEmptyString(secret)) {
+//                    secret = UUID.randomUUID().toString();
+//                }
+//                out.println(secret + "<br>");
+//                AccessKey model = AccessKeyFactory.createAccessKey(n, secret, u.getKey(), AuthLevel.readWriteAll);
+//                AccessKeyEntity en = new AccessKeyEntity(model);
+//                pm.makePersistent(en);
+//            } catch (NimbitsException e) {
+//                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+//            }
+//
+//        }
 
 
 
@@ -276,168 +295,168 @@ public class RecoveryServlet extends HttpServlet {
         return null;
 
     }
-    private void doCalc(HttpServletResponse resp) throws IOException {
-        //fixUsers(resp);
-        //dopoints(resp);
-        PrintWriter out = resp.getWriter();
-        //fixfiles(resp);
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final Query q1 = pm.newQuery(CalcEntity.class);
-        List<CalcEntity> oldC = (List<CalcEntity>) q1.execute();
+//    private void doCalc(HttpServletResponse resp) throws IOException {
+//        //fixUsers(resp);
+//        //dopoints(resp);
+//        PrintWriter out = resp.getWriter();
+//        //fixfiles(resp);
+//        final PersistenceManager pm = PMF.get().getPersistenceManager();
+//        final Query q1 = pm.newQuery(CalcEntity.class);
+//        List<CalcEntity> oldC = (List<CalcEntity>) q1.execute();
+//
+//
+//        final Query q2 = pm.newQuery(CalcEntity.class);
+//        List<com.nimbits.server.orm.CalcEntity> newC = (List<com.nimbits.server.orm.CalcEntity>) q2.execute();
+//
+//        final Query q3 = pm.newQuery( EntityStore.class);
+//        q3.setFilter("entityType==7");
+//        List< EntityStore> oldE
+//                = (List< EntityStore>)
+//                q3.execute();
+//
+//        Map<String, EntityStore> enMap = new HashMap<String, EntityStore>();
+//        for (EntityStore m : oldE) {
+//            enMap.put(m.getKey(), m);
+//        }
+//        out.println("xStarting " + oldC.size() + "  " + newC.size()  + "  " + oldE.size() +  "<BR>");
+//        for (CalcEntity c : oldC) {
+//            if (enMap.containsKey(c.getKey())) {
+//                Key key = KeyFactory.createKey(com.nimbits.server.orm.CalcEntity.class.getSimpleName(), c.getKey());
+//                EntityStore e  = enMap.get(c.getKey());
+//                Entity ec = new com.nimbits.server.orm.EntityStore(key, e.getName().getValue(), e.getUUID(), e.getDescription(), EntityType.calculation.getCode(),
+//                        e.getProtectionLevel().getCode(), e.getParent(), e.getOwner(), 0 );
+//                try {
+//                    com.nimbits.server.orm.CalcEntity cx = new com.nimbits.server.orm.CalcEntity(ec, c.getFormula(), c.getTrigger(), c.isEnabled(), c.getX()
+//                            , c.getY(), c.getZ(), c.getTarget());
+//                    out.println(c.getFormula() + "<BR>");
+//                    pm.deletePersistent(e);
+//                    pm.deletePersistent(c);
+//                    pm.makePersistent(cx);
+//
+//                } catch (NimbitsException e1) {
+//                    out.println(e1.getMessage());
+//                }
+//
+//            }
+//            else {
+//                pm.deletePersistent(c);
+//            }
+//
+//
+//
+//        }
+//        pm.close();
+//    }
 
+//    private void fixfiles(HttpServletResponse resp) throws IOException {
+//        PrintWriter out = resp.getWriter();
+//
+//        final PersistenceManager pm = PMF.get().getPersistenceManager();
+//        final Query q1 = pm.newQuery(FileEntity.class);
+//        List<FileEntity> newC = (List<FileEntity>) q1.execute();
+//
+//
+//        final Query q2 = pm.newQuery(EntityStore.class);
+//        q2.setFilter("entityType==4");
+//        List<EntityStore> old = (List<EntityStore>)
+//                q2.execute();
+//
+//
+//        Map<String, FileEntity> map = new HashMap<String,FileEntity>();
+//        out.println("xStarting " + old.size() + "  " + newC.size() +  "<BR>");
+//
+//        for (FileEntity c : newC) {
+//            map.put(c.getKey(), c);
+//            out.println(c.getName() + "  " + c.getKey() + ' ' + c.getEntityType().name() +  "<br>");
+//        }
+//        for (EntityStore e : old) {
+//            if (! map.containsKey(e.getKey())) {
+//                // if (e.getName().getValue().equals("Nimbits Stats")) {
+//                Key k = KeyFactory.createKey(FileEntity.class.getSimpleName(), e.getKey());
+//                com.nimbits.server.orm.EntityStore store = new com.nimbits.server.orm.EntityStore(
+//                        k, e.getName().getValue(), e.getUUID(), e.getDescription(), EntityType.file.getCode(),
+//                        e.getProtectionLevel().getCode(), e.getParent(), e.getOwner(), 0, null);
+//                try {
+//                    FileEntity commit = new FileEntity(store);
+//                    out.println(e.getName() + "  " + commit.getKey() + "<br>");
+//                    pm.makePersistent(commit);
+//                    pm.deletePersistent(e);
+//                } catch (NimbitsException e1) {
+//                    out.println(e1);
+//                    //    }
+//                }
+//
+//
+//            }
+//
+//        }
+//    }
 
-        final Query q2 = pm.newQuery(CalcEntity.class);
-        List<com.nimbits.server.orm.CalcEntity> newC = (List<com.nimbits.server.orm.CalcEntity>) q2.execute();
-
-        final Query q3 = pm.newQuery( EntityStore.class);
-        q3.setFilter("entityType==7");
-        List< EntityStore> oldE
-                = (List< EntityStore>)
-                q3.execute();
-
-        Map<String, EntityStore> enMap = new HashMap<String, EntityStore>();
-        for (EntityStore m : oldE) {
-            enMap.put(m.getKey(), m);
-        }
-        out.println("xStarting " + oldC.size() + "  " + newC.size()  + "  " + oldE.size() +  "<BR>");
-        for (CalcEntity c : oldC) {
-            if (enMap.containsKey(c.getKey())) {
-                Key key = KeyFactory.createKey(com.nimbits.server.orm.CalcEntity.class.getSimpleName(), c.getKey());
-                EntityStore e  = enMap.get(c.getKey());
-                Entity ec = new com.nimbits.server.orm.EntityStore(key, e.getName().getValue(), e.getUUID(), e.getDescription(), EntityType.calculation.getCode(),
-                        e.getProtectionLevel().getCode(), e.getParent(), e.getOwner(), 0, null );
-                try {
-                    com.nimbits.server.orm.CalcEntity cx = new com.nimbits.server.orm.CalcEntity(ec, c.getFormula(), c.getTrigger(), c.getEnabled(), c.getX()
-                            , c.getY(), c.getZ(), c.getTarget());
-                    out.println(c.getFormula() + "<BR>");
-                    pm.deletePersistent(e);
-                    pm.deletePersistent(c);
-                    pm.makePersistent(cx);
-
-                } catch (NimbitsException e1) {
-                    out.println(e1.getMessage());
-                }
-
-            }
-            else {
-                pm.deletePersistent(c);
-            }
-
-
-
-        }
-        pm.close();
-    }
-
-    private void fixfiles(HttpServletResponse resp) throws IOException {
-        PrintWriter out = resp.getWriter();
-
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final Query q1 = pm.newQuery(FileEntity.class);
-        List<FileEntity> newC = (List<FileEntity>) q1.execute();
-
-
-        final Query q2 = pm.newQuery(EntityStore.class);
-        q2.setFilter("entityType==4");
-        List<EntityStore> old = (List<EntityStore>)
-                q2.execute();
-
-
-        Map<String, FileEntity> map = new HashMap<String,FileEntity>();
-        out.println("xStarting " + old.size() + "  " + newC.size() +  "<BR>");
-
-        for (FileEntity c : newC) {
-            map.put(c.getKey(), c);
-            out.println(c.getName() + "  " + c.getKey() + ' ' + c.getEntityType().name() +  "<br>");
-        }
-        for (EntityStore e : old) {
-            if (! map.containsKey(e.getKey())) {
-                // if (e.getName().getValue().equals("Nimbits Stats")) {
-                Key k = KeyFactory.createKey(FileEntity.class.getSimpleName(), e.getKey());
-                com.nimbits.server.orm.EntityStore store = new com.nimbits.server.orm.EntityStore(
-                        k, e.getName().getValue(), e.getUUID(), e.getDescription(), EntityType.file.getCode(),
-                        e.getProtectionLevel().getCode(), e.getParent(), e.getOwner(), 0, null);
-                try {
-                    FileEntity commit = new FileEntity(store);
-                    out.println(e.getName() + "  " + commit.getKey() + "<br>");
-                    pm.makePersistent(commit);
-                    pm.deletePersistent(e);
-                } catch (NimbitsException e1) {
-                    out.println(e1);
-                    //    }
-                }
-
-
-            }
-
-        }
-    }
-
-    private void dopoints(HttpServletResponse resp) throws IOException {
-        PrintWriter out = resp.getWriter();
-
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final Query q1 = pm.newQuery(PointEntity.class);
-        List<PointEntity> old = (List<PointEntity>) q1.execute();
-
-
-//        final Query q2 = pm.newQuery(com.nimbits.server.orm.PointEntity.class);
-//        List<com.nimbits.server.orm.PointEntity> oldEntities = (List<com.nimbits.server.orm.PointEntity>) q1.execute();
-
-        final Query q2 = pm.newQuery(EntityStore.class);
-        q2.setFilter("entityType==2");
-        List<EntityStore> oldEntities = (List<EntityStore>)
-                q2.execute();
-        Map<String, EntityStore> map = new HashMap<String,EntityStore>();
-
-        for ( EntityStore s : oldEntities) {
-
-            out.println("!" + s.getName() + " " + s.getKey() + "</br>");
-            map.put(s.getKey(), s);
-        }
-
-        final Query q3 = pm.newQuery(PointEntity.class);
-        List<com.nimbits.server.orm.PointEntity> newP = (List<com.nimbits.server.orm.PointEntity>) q1.execute();
-
-
-        out.println("xStarting " + old.size() + "  " + oldEntities.size() + " " + newP.size() +  "<BR>");
-
-
-        for (PointEntity p : old) {
-            if (map.containsKey(p.getKey())) {
-                out.println("****" + p.getName().getValue() + " " + p.getKey() + "<br>");
-            }
-            else {
-                out.println(p.getName().getValue() + " " + p.getKey() + "<br>");
-            }
-
-            Key k = KeyFactory.createKey(com.nimbits.server.orm.PointEntity.class.getSimpleName(), p.getKey());
-            Entity e = new com.nimbits.server.orm.EntityStore(k, p.getName().getValue(), p.getUUID(), p.getDescription(),
-                    EntityType.point.getCode(), p.getProtectionLevel().getCode(), p.getParent(), p.getOwner(),
-                    p.getAlertType().getCode(), null);
-
-            try {
-                com.nimbits.server.orm.PointEntity np = new com.nimbits.server.orm.PointEntity(e,
-                        p.getHighAlarm(), p.getExpire(), p.getUnit(), p.getFilterValue(), p.getFilterType().getCode(),
-                        p.getLowAlarm(), p.isHighAlarmOn(), p.isLowAlarmOn(), p.idleAlarmOn,p.getIdleSeconds(), p.getIdleAlarmSent(),
-                        null, null);
-
-                if (p.getName().getValue().equals("Data Feed Channel")) {
-                    pm.deletePersistent(p);
-                    //pm.makePersistent(np);
-                    if (map.containsKey(p.getKey())) {
-                        pm.deletePersistent(map.get(p.getKey()));
-                    }
-                }
-
-
-            } catch (NimbitsException e1) {
-                e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-        }
-        pm.close();
-    }
-
+//    private void dopoints(HttpServletResponse resp) throws IOException {
+//        PrintWriter out = resp.getWriter();
+//
+//        final PersistenceManager pm = PMF.get().getPersistenceManager();
+//        final Query q1 = pm.newQuery(PointEntity.class);
+//        List<PointEntity> old = (List<PointEntity>) q1.execute();
+//
+//
+////        final Query q2 = pm.newQuery(com.nimbits.server.orm.PointEntity.class);
+////        List<com.nimbits.server.orm.PointEntity> oldEntities = (List<com.nimbits.server.orm.PointEntity>) q1.execute();
+//
+//        final Query q2 = pm.newQuery(EntityStore.class);
+//        q2.setFilter("entityType==2");
+//        List<EntityStore> oldEntities = (List<EntityStore>)
+//                q2.execute();
+//        Map<String, EntityStore> map = new HashMap<String,EntityStore>();
+//
+//        for ( EntityStore s : oldEntities) {
+//
+//            out.println("!" + s.getName() + " " + s.getKey() + "</br>");
+//            map.put(s.getKey(), s);
+//        }
+//
+//        final Query q3 = pm.newQuery(PointEntity.class);
+//        List<com.nimbits.server.orm.PointEntity> newP = (List<com.nimbits.server.orm.PointEntity>) q1.execute();
+//
+//
+//        out.println("xStarting " + old.size() + "  " + oldEntities.size() + " " + newP.size() +  "<BR>");
+//
+//
+//        for (PointEntity p : old) {
+//            if (map.containsKey(p.getKey())) {
+//                out.println("****" + p.getName().getValue() + " " + p.getKey() + "<br>");
+//            }
+//            else {
+//                out.println(p.getName().getValue() + " " + p.getKey() + "<br>");
+//            }
+//
+//            Key k = KeyFactory.createKey(com.nimbits.server.orm.PointEntity.class.getSimpleName(), p.getKey());
+//            Entity e = new com.nimbits.server.orm.EntityStore(k, p.getName().getValue(), p.getUUID(), p.getDescription(),
+//                    EntityType.point.getCode(), p.getProtectionLevel().getCode(), p.getParent(), p.getOwner(),
+//                    p.getAlertType().getCode(), null);
+//
+//            try {
+//                com.nimbits.server.orm.PointEntity np = new com.nimbits.server.orm.PointEntity(e,
+//                        p.getHighAlarm(), p.getExpire(), p.getUnit(), p.getFilterValue(), p.getFilterType().getCode(),
+//                        p.getLowAlarm(), p.isHighAlarmOn(), p.isLowAlarmOn(), p.idleAlarmOn,p.getIdleSeconds(), p.getIdleAlarmSent(),
+//                        null, null);
+//
+//                if (p.getName().getValue().equals("Data Feed Channel")) {
+//                    pm.deletePersistent(p);
+//                    //pm.makePersistent(np);
+//                    if (map.containsKey(p.getKey())) {
+//                        pm.deletePersistent(map.get(p.getKey()));
+//                    }
+//                }
+//
+//
+//            } catch (NimbitsException e1) {
+//                e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+//            }
+//        }
+//        pm.close();
+//    }
+//
 
 
 //    private void old(HttpServletRequest req, HttpServletResponse resp) throws IOException {

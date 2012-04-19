@@ -18,7 +18,6 @@ import com.nimbits.client.model.category.*;
 import com.nimbits.client.model.entity.*;
 
 import javax.jdo.annotations.*;
-import java.util.*;
 
 /**
  * Created by bsautner
@@ -30,13 +29,24 @@ import java.util.*;
 public class CategoryEntity extends EntityStore implements Category {
 
     private static final long serialVersionUID = -4488132572071199717L;
-    @Persistent
-    private final Date createDate;
 
-    public CategoryEntity(final Entity entity) throws NimbitsException {
-        super(entity);
-        createDate = new Date();
+    @SuppressWarnings("unused")
+    protected CategoryEntity() {
     }
 
 
+    public CategoryEntity(final Entity entity) throws NimbitsException {
+        super(entity);
+
+    }
+//
+//    @Override
+//    public void update(Entity update) throws NimbitsException {
+//        super.update(update);
+//    }
+//
+//    @Override
+//    public void validate() throws NimbitsException {
+//        super.validate();
+//    }
 }

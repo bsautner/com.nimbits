@@ -16,7 +16,7 @@ package com.nimbits.server.blob;
 import com.google.appengine.api.blobstore.*;
 import com.google.gwt.http.client.*;
 import com.google.gwt.user.server.rpc.*;
-import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.file.*;
 import com.nimbits.client.service.blob.*;
 
 /**
@@ -36,7 +36,7 @@ public class BlobServiceImpl  extends RemoteServiceServlet implements
     }
 
     @Override
-    public void deleteBlob(Entity entity) {
+    public void deleteBlob(File entity) {
         blobstoreService.delete(new BlobKey(entity.getBlobKey()));
     }
 

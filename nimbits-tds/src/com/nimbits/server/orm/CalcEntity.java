@@ -16,6 +16,7 @@ package com.nimbits.server.orm;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.calculation.*;
 import com.nimbits.client.model.entity.*;
+import com.nimbits.server.orm.validation.*;
 
 import javax.jdo.annotations.*;
 
@@ -28,18 +29,13 @@ import javax.jdo.annotations.*;
 
 
 @PersistenceCapable
-public class CalcEntity extends EntityStore implements Calculation {
+public class CalcEntity extends TriggerEntity implements Calculation {
 
 
     private static final long serialVersionUID = 9086813823531611499L;
+
     @Persistent
     private String formula;
-
-    @Persistent
-    private String trigger;
-
-    @Persistent
-    private Boolean enabled;
 
     @Persistent
     private String xVar;
@@ -50,8 +46,7 @@ public class CalcEntity extends EntityStore implements Calculation {
     @Persistent
     private String zVar;
 
-    @Persistent
-    private String targetVar;
+
 
 
     @SuppressWarnings("unused")
@@ -66,40 +61,26 @@ public class CalcEntity extends EntityStore implements Calculation {
                       final String yVar,
                       final String zVar,
                       final String targetVar) throws NimbitsException {
-        super(entity);
+        super(entity, trigger, targetVar, enabled);
         this.formula = formula;
-        this.trigger = trigger;
-        this.enabled = enabled;
         this.xVar = xVar;
         this.yVar = yVar;
         this.zVar = zVar;
-        this.targetVar = targetVar;
-    }
+     }
 
     public CalcEntity(final Calculation calculation) throws NimbitsException {
         super(calculation);
 
         this.formula = calculation.getFormula();
-        this.enabled = calculation.getEnabled();
-        this.targetVar = calculation.getTarget();
         this.xVar = calculation.getX();
         this.yVar = calculation.getY();
         this.zVar = calculation.getZ();
-        this.trigger = calculation.getTrigger();
+
     }
 
     @Override
     public void setFormula(String formula) {
         this.formula = formula;
-    }
-
-    @Override
-    public void setTrigger(String trigger) {
-        this.trigger = trigger;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
     }
 
     @Override
@@ -118,36 +99,14 @@ public class CalcEntity extends EntityStore implements Calculation {
     }
 
     @Override
-    public void setTarget(String targetVar) {
-        this.targetVar = targetVar;
-    }
-
-    @Override
-    public String getTrigger() {
-        return this.trigger;
-    }
-
-
-    @Override
     public String getFormula() {
         return formula;
-    }
-
-    @Override
-    public Boolean getEnabled() {
-        return enabled == null ? false : enabled;
-    }
-
-    @Override
-    public String getTarget() {
-        return targetVar;
     }
 
     @Override
     public String getX() {
         return xVar;
     }
-
 
     @Override
     public String getY() {
@@ -159,20 +118,54 @@ public class CalcEntity extends EntityStore implements Calculation {
         return zVar;
     }
 
-    @Override
-    public void setEnabled(final boolean b) {
-        this.enabled = b;
-    }
 
     @Override
     public void update(final Entity update) throws NimbitsException {
         super.update(update);
         final Calculation c = (Calculation) update;
-        this.enabled = c.getEnabled();
         this.formula = c.getFormula();
-        this.targetVar = c.getTarget();
         this.xVar = c.getX();
         this.yVar = c.getY();
         this.zVar = c.getZ();
     }
+
+    @Override
+    public void validate() throws NimbitsException {
+        super.validate();
+        if (formula.isEmpty()) {
+            throw new NimbitsException("Invalid Formula");
+        }
+        if (targetVar.equals(trigger)) {
+            throw new NimbitsException("Infinite Recursion, a target point cannot be the trigger.");
+        }
+
+        if (formula.contains("x") && xVar.isEmpty()) {
+          throw new NimbitsException("Error in calc, your formula contains an x variable but no x point source.");
+        }
+
+        if (formula.contains("X")) {
+            throw new NimbitsException("Error in calc. Please use a lower case x instead of X");
+        }
+
+        if (formula.contains("y") && yVar.isEmpty()) {
+            throw new NimbitsException("Error in calc, your formula contains a y variable but no y point source..");
+        }
+
+        if (formula.contains("Y")) {
+            throw new NimbitsException("Error in calc. Please use a lower case y instead of Y");
+        }
+
+        if (formula.contains("z") && zVar.isEmpty()) {
+            throw new NimbitsException("Error in calc, your formula contains a z variable but no z point source.");
+        }
+
+        if (formula.contains("Z")) {
+            throw new NimbitsException("Error in calc. Please use a lower case z instead of Z");
+        }
+
+        RecursionValidation.validate(this);
+
+    }
+
+
 }

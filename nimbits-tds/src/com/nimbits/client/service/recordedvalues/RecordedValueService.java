@@ -37,7 +37,7 @@ public interface RecordedValueService extends RemoteService {
 
     List<Value> getPieceOfDataSegment(final Entity entity, final Timespan timespan, final int start, final int end) throws NimbitsException;
 
-    Value recordValue(final User u, final Entity target, final Value value, final boolean loopFlag) throws NimbitsException;
+    Value recordValue(final User u, final Entity target, final Value value) throws NimbitsException;
 
     //rpc
     Value recordValue(final User u, final EntityName pointName, final Value value) throws NimbitsException;

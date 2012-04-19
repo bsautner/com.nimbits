@@ -26,10 +26,11 @@ public class SummaryModelFactory {
             final Entity e,
             final String entity,
             final String target,
+            final boolean enabled,
             final SummaryType summaryType,
             final long summaryIntervalMs,
             final Date lastProcessed) throws NimbitsException {
-        return new SummaryModel(e, entity, target, summaryType, summaryIntervalMs, lastProcessed);
+        return new SummaryModel(e, entity, target, enabled, summaryType, summaryIntervalMs, lastProcessed);
 
     }
 

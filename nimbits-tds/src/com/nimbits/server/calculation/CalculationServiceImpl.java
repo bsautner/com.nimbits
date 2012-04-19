@@ -15,15 +15,16 @@ package com.nimbits.server.calculation;
 
 import com.google.gwt.user.server.rpc.*;
 import com.nimbits.client.common.*;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.calculation.*;
 import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.trigger.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.service.calculation.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.logging.*;
-import com.nimbits.server.orm.*;
 import com.nimbits.server.value.*;
 
 import java.util.*;
@@ -38,22 +39,16 @@ import java.util.logging.*;
 public class CalculationServiceImpl extends RemoteServiceServlet implements CalculationService {
     final Logger log = Logger.getLogger(CalculationServiceImpl.class.getName());
 
-    @Override
-    public List<Calculation> getCalculations(Entity entity) throws NimbitsException {
-
-        return CalculationServiceFactory.getDaoInstance().getCalculations(entity);
-    }
 
     @Override
     public void processCalculations(final User u, final Entity point, final Value value) throws NimbitsException {
 
-//        final Entity e = EntityServiceFactory.getInstance().getEntityByKey(u, point.getKey(), EntityStore.class.getName());
-
-        final List<Calculation> calculations = getCalculations(point);
-        for (final Calculation c : calculations) {
-            if (c.getEnabled()) {
+        final List<Entity> calculations = EntityServiceFactory.getInstance().getEntityByTrigger(u, point, EntityType.calculation);
+        for (final Entity entity : calculations) {
+                Calculation c = (Calculation)entity;
                 try {
-                    final List<Entity> target =   EntityServiceFactory.getInstance().getEntityByKey(u, c.getTarget(), PointEntity.class.getName());
+
+                    final List<Entity> target =   EntityServiceFactory.getInstance().getEntityByKey(u, c.getTarget(),EntityType.point);
                     if (target.isEmpty()) {
                         log.severe("Point target was null " + c.getTarget());
                         log.severe(c.getFormula());
@@ -64,19 +59,17 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
                         log.info("Solving calc" + c.getFormula());
                         final Value result = solveEquation(u, c);
                         log.info("result" + result);
-                        RecordedValueServiceFactory.getInstance().recordValue(u, target.get(0), result, true);
+                        RecordedValueServiceFactory.getInstance().recordValue(u, target.get(0), result);
                     }
                 } catch (NimbitsException e1) {
                     LogHelper.logException(this.getClass(), e1);
                     disableCalc(u, c);
                 }
 
-
-            }
         }
     }
 
-    private static void disableCalc(User u, Calculation c) throws NimbitsException {
+    private static void disableCalc(User u, Trigger c) throws NimbitsException {
         c.setEnabled(false);
         EntityServiceFactory.getInstance().addUpdateEntity(u, c);
     }
@@ -89,7 +82,7 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
 
         if (!Utils.isEmptyString(calculation.getX()) && calculation.getFormula().contains("x")) {
             //  Point p = PointServiceFactory.getInstance().getPointByKey(calculation.getX());
-            final Entity p =  EntityServiceFactory.getInstance().getEntityByKey(user, calculation.getX(), PointEntity.class.getName()).get(0);
+            final Entity p =  EntityServiceFactory.getInstance().getEntityByKey(user, calculation.getX(), EntityType.point).get(0);
 
             if (p != null) {
                 log.info("calc has an x car and i found " + p.getName());
@@ -103,7 +96,7 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
             }
         }
         if (!Utils.isEmptyString(calculation.getY()) && calculation.getFormula().contains("y")) {
-            final Entity p =  EntityServiceFactory.getInstance().getEntityByKey(user, calculation.getY(), PointEntity.class.getName()).get(0);
+            final Entity p =  EntityServiceFactory.getInstance().getEntityByKey(user, calculation.getY(), EntityType.point).get(0);
 
             // Point p = PointServiceFactory.getInstance().getPointByKey(calculation.getY());
             if (p != null) {
@@ -114,7 +107,7 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
 
         }
         if (!Utils.isEmptyString(calculation.getZ()) && calculation.getFormula().contains("z")) {
-            final Entity p =  EntityServiceFactory.getInstance().getEntityByKey(user, calculation.getZ(), PointEntity.class.getName()).get(0);
+            final Entity p =  EntityServiceFactory.getInstance().getEntityByKey(user, calculation.getZ(), EntityType.point).get(0);
 
             //  Point p = PointServiceFactory.getInstance().getPointByKey(calculation.getZ());
             if (p != null) {

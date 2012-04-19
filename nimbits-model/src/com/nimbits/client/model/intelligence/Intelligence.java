@@ -12,10 +12,9 @@
  */
 
 package com.nimbits.client.model.intelligence;
-
-import com.nimbits.client.enums.IntelligenceResultTarget;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.trigger.*;
 
 import java.io.Serializable;
 
@@ -25,23 +24,8 @@ import java.io.Serializable;
  * Date: 10/29/11
  * Time: 3:14 PM
  */
-public interface Intelligence extends Entity, Serializable {
+public interface Intelligence extends Trigger, Serializable {
 
-    boolean getEnabled();
-
-    String getTrigger();
-
-    void setTrigger(String trigger);
-
-    void setEnabled(final boolean enabled);
-
-    IntelligenceResultTarget getResultTarget();
-
-    void setResultTarget(final IntelligenceResultTarget resultTarget);
-
-    String getTarget();
-
-    void setTarget(final String target);
 
     String getInput();
 

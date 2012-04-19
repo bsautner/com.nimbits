@@ -16,17 +16,17 @@ package com.nimbits.client.service.entity;
 import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.*;
 
 import java.util.*;
 
+@SuppressWarnings("unused")
 public interface EntityServiceAsync {
     void getEntities(AsyncCallback<List<Entity>> async);
 
     void addUpdateEntity(final Entity entity, AsyncCallback<Entity> async);
 
-    void getEntityByKey(String uuid, String className, AsyncCallback<List<Entity> > async);
+    void getEntityByKey(String uuid, final EntityType type, AsyncCallback<List<Entity> > async);
 
     void copyEntity(Entity originalEntity, EntityName newName, AsyncCallback<Entity> async);
 
@@ -36,11 +36,9 @@ public interface EntityServiceAsync {
 
     void getChildren(Entity parentEntity, EntityType type, AsyncCallback<List<Entity>> async);
 
-    void getEntityByName(EntityName name, EntityType type, AsyncCallback<List<Entity> > async);
-
     void addUpdateEntity(User user, Entity aConnection, AsyncCallback<Entity> async);
 
-    void getEntityByKey(User u, String entityId, String className, AsyncCallback<List<Entity> > async);
+    void getEntityByKey(User u, String entityId, EntityType type, AsyncCallback<List<Entity> > async);
 
     void getEntityByName(User u, EntityName name, EntityType type, AsyncCallback<List<Entity> > async);
 
@@ -52,9 +50,11 @@ public interface EntityServiceAsync {
 
     void getEntityMap(User user, EntityType type, final int limit, AsyncCallback<Map<String, Entity>> async);
 
-    void getEntityByName(User user, EntityName name, String className, AsyncCallback<List<Entity>> async);
+    void getIdleEntities(AsyncCallback<List<Entity>> async);
 
-    void getEntitiesBySource(Entity source, EntityType type, AsyncCallback<List<Entity>> async);
+    void getEntityByTrigger(User user, Entity entity, EntityType type, AsyncCallback<List<Entity>> async);
 
-    void getIdlePoints(AsyncCallback<List<Point>> async);
+    void getSubscriptionsToEntity(User user, Entity subscribedEntity, AsyncCallback<List<Entity>> async);
+
+    void getSystemWideEntityMap(EntityType type, AsyncCallback<Map<String, Entity>> async);
 }

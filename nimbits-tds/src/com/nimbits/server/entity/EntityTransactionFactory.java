@@ -35,12 +35,12 @@ public class EntityTransactionFactory {
 
 
     private static class MapHolder {
-        static final Map<String, EntityTransactions> daoMap = new HashMap<String, EntityTransactions>(10);
-        static final Map<String, EntityTransactions> cacheMap = new HashMap<String, EntityTransactions>(10);
+        static final Map<String, EntityTransactions> daoMap = new HashMap<String, EntityTransactions>(100);
+        static final Map<String, EntityTransactions> cacheMap = new HashMap<String, EntityTransactions>(100);
         private MapHolder() {
         }
     }
-    public static EntityTransactions getInstance(User user) {
+    public static EntityTransactions getInstance(final User user) {
         if (MapHolder.cacheMap.containsKey(user.getKey())) {
             return MapHolder.cacheMap.get(user.getKey());
         }
@@ -52,7 +52,7 @@ public class EntityTransactionFactory {
 
     }
 
-    public static EntityTransactions getDaoInstance(User user) {
+    public static EntityTransactions getDaoInstance(final User user) {
         if (MapHolder.daoMap.containsKey(user.getKey())) {
             return MapHolder.daoMap.get(user.getKey());
         }

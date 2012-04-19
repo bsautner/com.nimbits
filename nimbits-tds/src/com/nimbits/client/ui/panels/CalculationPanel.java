@@ -32,6 +32,7 @@ import com.nimbits.client.exception.*;
 import com.nimbits.client.model.calculation.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.trigger.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.service.calculation.*;
@@ -109,8 +110,8 @@ public class CalculationPanel extends NavigationEventProvider {
             xc = ((Calculation)entity).getX();
             yc =((Calculation)entity).getY();
             zc = ((Calculation)entity).getZ();
-            targetKey = ((Calculation)entity).getTarget();
-            enabled.setValue(((Calculation)entity).getEnabled());
+            targetKey = ((Trigger) entity).getTarget();
+            enabled.setValue(((Trigger) entity).isEnabled());
             formula.setValue(((Calculation)entity).getFormula());
             pn.setHtml("<p><b>Trigger Point Name: </b>" +  entity.getKey() + "</p>");
 
@@ -202,10 +203,10 @@ public class CalculationPanel extends NavigationEventProvider {
         final Calculation c;
 
 
-        final String x =xCombo.getValue() == null ? null : xCombo.getValue().getUUID();
-        final String y =yCombo.getValue() == null ? null : yCombo.getValue().getUUID();
-        final String z =zCombo.getValue() == null ? null : zCombo.getValue().getUUID();
-        final String target =targetcombo.getValue() == null ? null : targetcombo.getValue().getUUID();
+        final String x =xCombo.getValue() == null ? null : xCombo.getValue().getKey();
+        final String y =yCombo.getValue() == null ? null : yCombo.getValue().getKey();
+        final String z =zCombo.getValue() == null ? null : zCombo.getValue().getKey();
+        final String target =targetcombo.getValue() == null ? null : targetcombo.getValue().getKey();
 
         if (entity.getEntityType().equals(EntityType.calculation)) {
             c = (Calculation)entity;

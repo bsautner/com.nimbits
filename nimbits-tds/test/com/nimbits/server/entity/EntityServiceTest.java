@@ -13,22 +13,16 @@
 
 package com.nimbits.server.entity;
 
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointModelFactory;
-import com.nimbits.server.NimbitsServletTest;
-import com.nimbits.server.orm.PointEntity;
-import org.junit.Test;
-
-import java.util.List;
-
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.server.*;
 import static org.junit.Assert.*;
+import org.junit.*;
+
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner
@@ -45,10 +39,10 @@ public class EntityServiceTest extends NimbitsServletTest {
 
         final List<Entity> entities =  EntityServiceFactory.getInstance().getEntities();
         assertTrue(!entities.isEmpty());
-        Entity e = EntityServiceFactory.getInstance().getEntityByName(pointName, EntityType.point).get(0);
+        Entity e = EntityServiceFactory.getInstance().getEntityByKey(user, point.getKey(), EntityType.point).get(0);
         assertNotNull(e);
-        Entity c = EntityServiceFactory.getInstance().getEntityByName(pointChildName, EntityType.point).get(0);
-        Entity g = EntityServiceFactory.getInstance().getEntityByName(groupName, EntityType.category).get(0);
+        Entity c = EntityServiceFactory.getInstance().getEntityByKey(user, pointChild.getKey(), EntityType.point).get(0);
+        Entity g = EntityServiceFactory.getInstance().getEntityByKey(user, group.getKey(), EntityType.point).get(0);
 
         assertNotNull(c);
         assertNotNull(g);
@@ -56,9 +50,9 @@ public class EntityServiceTest extends NimbitsServletTest {
         assertTrue(!children.isEmpty());
 
         EntityServiceFactory.getInstance().deleteEntity(g);
-        assertTrue(EntityServiceFactory.getInstance().getEntityByName(pointName,EntityType.point).isEmpty());
-        assertTrue(EntityServiceFactory.getInstance().getEntityByName(pointChildName,EntityType.point).isEmpty());
-        assertTrue(EntityServiceFactory.getInstance().getEntityByName(groupName,EntityType.category).isEmpty());
+        assertTrue(EntityServiceFactory.getInstance().getEntityByKey(user, point.getKey(), EntityType.point).isEmpty());
+        assertTrue(EntityServiceFactory.getInstance().getEntityByKey(user, pointChild.getKey(), EntityType.point).isEmpty());
+        assertTrue(EntityServiceFactory.getInstance().getEntityByKey(user, group.getKey(), EntityType.point).isEmpty());
 
 
 
@@ -113,7 +107,7 @@ public class EntityServiceTest extends NimbitsServletTest {
 
     @Test
     public void getEntityByNameTest() throws NimbitsException {
-        Point  r = (Point) EntityServiceFactory.getInstance().getEntityByName(user, pointName, PointEntity.class.getName()).get(0);;
+        Point  r = (Point) EntityServiceFactory.getInstance().getEntityByName(user, pointName, EntityType.point).get(0);;
         assertNotNull(r);
 
     }

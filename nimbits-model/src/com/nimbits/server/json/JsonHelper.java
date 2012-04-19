@@ -11,6 +11,9 @@ import com.google.gson.JsonParser;
  */
 public class JsonHelper {
 
+    private JsonHelper() {
+    }
+
     public static boolean isJson(final String sample) {
         try {
             new JsonParser().parse(sample);

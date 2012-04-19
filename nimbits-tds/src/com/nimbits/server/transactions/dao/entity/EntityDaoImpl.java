@@ -57,10 +57,25 @@ public class EntityDaoImpl implements  EntityTransactions {
     public EntityDaoImpl(final User user) {
         this.user = user;
     }
+
     @Override
-    public List<Point> getIdlePoints() throws NimbitsException {
+    public List<Entity> getSubscriptionsToEntity(final Entity subscribedEntity) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        List<Point> retObj;
+        try {
+            final Query q = pm.newQuery(SubscriptionEntity.class);
+            q.setFilter("subscribedEntity==p && enabled==e");
+            q.declareParameters("String p, Boolean e");
+            final Collection<Entity> results = (Collection<Entity>) q.execute(subscribedEntity.getKey(), true);
+            return createModels(results);
+        }
+        finally {
+            pm.close();
+        }
+    }
+    @Override
+    public List<Entity> getIdleEntities() throws NimbitsException {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+
         try {
 
             final Query q = pm
@@ -68,16 +83,31 @@ public class EntityDaoImpl implements  EntityTransactions {
             q.setFilter("idleAlarmOn == k && idleAlarmSent  == c");
             q.declareParameters("Long k, Long c");
 
-            final Collection<Point> points = (Collection<Point>) q.execute(true, false);
-            retObj =PointModelFactory.createPointModels(points);// createPointModels( points);
+            final Collection<Entity> points = (Collection<Entity>) q.execute(true, false);
+            return  createModels( points);
         } finally {
             pm.close();
         }
 
 
-        return retObj;
 
     }
+
+    @Override
+    public List<Entity> getEntityByTrigger(final Entity entity, final Class<?> cls) throws NimbitsException {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        try {
+            final Query q = pm.newQuery(cls);
+            q.setFilter("trigger == k && enabled == true");
+            q.declareParameters("String k");
+            final Collection<Entity> results = (Collection<Entity>) q.execute(entity.getKey());
+            return createModels(results);
+        } finally {
+            pm.close();
+        }
+    }
+
+
     @Override
     public Map<String, Entity> getEntityMap(final EntityType type, final int limit) throws NimbitsException {
 
@@ -226,6 +256,7 @@ public class EntityDaoImpl implements  EntityTransactions {
         if (! commit.getEntityType().equals(EntityType.user)) {
             commit.validate();
         }
+        commit.setDateCreated(new Date());
         pm.makePersistent(commit);
 
         if (entity.getEntityType().equals(EntityType.user) ){
@@ -233,7 +264,7 @@ public class EntityDaoImpl implements  EntityTransactions {
             tx.begin();
             entity.setParent(entity.getKey());
             entity.setOwner(entity.getKey());
-
+            //entity.validate();
             tx.commit();
 
         }
@@ -657,7 +688,7 @@ public class EntityDaoImpl implements  EntityTransactions {
                 commit = new CategoryEntity(entity);
                 break;
             case file:
-                commit = new FileEntity(entity);
+                commit = new FileEntity((File) entity);
                 break;
             case subscription:
                 commit = new SubscriptionEntity((Subscription) entity);

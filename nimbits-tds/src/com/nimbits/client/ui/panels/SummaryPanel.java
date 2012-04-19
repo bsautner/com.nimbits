@@ -283,7 +283,7 @@ public class SummaryPanel extends NavigationEventProvider {
                 try {
                    Summary summary = (Summary)entity;
                     update = SummaryModelFactory.createSummary(entity,
-                            summary.getSource(), summary.getTarget(), summaryType,
+                            summary.getTrigger(), summary.getTarget(), true, summaryType,
                             spinnerField.getValue().intValue() * 1000, new Date());
                     service.addUpdateEntity(update, new UpdateEntityAsyncCallback(box));
                 } catch (NimbitsException e) {
@@ -295,7 +295,7 @@ public class SummaryPanel extends NavigationEventProvider {
                 try {
                     Entity en = EntityModelFactory.createEntity(name, "", EntityType.summary, ProtectionLevel.onlyMe, entity.getKey(), entity.getOwner());
                     update = SummaryModelFactory.createSummary(en,
-                            entity.getKey(), targetCombo.getValue().getUUID() , summaryType,
+                            entity.getKey(), targetCombo.getValue().getId(),true, summaryType,
                             spinnerField.getValue().intValue() * 1000, new Date());
 
 

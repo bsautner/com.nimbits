@@ -43,7 +43,7 @@ public interface RecordedValueServiceAsync {
 
     void getCurrentValue(Entity entity, final AsyncCallback<Value> async);
 
-    void recordValue(final User u, final Entity target, final Value value, final boolean loopFlag, AsyncCallback<Value> async);
+    void recordValue(final User u, final Entity target, final Value value, AsyncCallback<Value> async);
 
     void getDataSegment(final Entity point,
                         final Timespan timespan,

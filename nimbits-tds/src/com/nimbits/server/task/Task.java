@@ -34,7 +34,7 @@ public interface Task {
 
     void startProcessBatchTask(User user, final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException;
 
-    void startRecordValueTask(final User u, final Entity point, final Value value, final boolean loopFlag);
+    void startRecordValueTask(final User u, final Entity point, final Value value);
 
     void startIncomingMailTask(final String address, final String content);
 

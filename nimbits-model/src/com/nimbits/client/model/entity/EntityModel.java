@@ -12,7 +12,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner
@@ -34,8 +34,9 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
     private String parent;
     private String owner;
     private boolean readOnly = false;
-    private String blobKey;
+
     private String uuid;
+    private Date dateCreated;
     private static final long serialVersionUID =3455345353L;
     private List<Point> children;
 
@@ -45,7 +46,6 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
                        final ProtectionLevel protectionLevel,
                        final String parent,
                        final String owner,
-                       final String blobKey,
                        final String uuid) {
         this.name = name.getValue();
         this.description = description;
@@ -54,14 +54,16 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
         this.owner = owner;
         this.protectionLevel = protectionLevel.getCode();
         this.alertType = AlertType.OK.getCode();
-        this.blobKey = blobKey;
+
         this.uuid = uuid;
+        this.dateCreated = new Date();
 
     }
     public EntityModel() {
     }
     public EntityModel(final Entity anEntity) throws NimbitsException {
         if (anEntity != null) {
+            this.dateCreated = anEntity.getDateCreated();
             this.key = anEntity.getKey();
             this.name = anEntity.getName().getValue();
             this.description = anEntity.getDescription();
@@ -71,8 +73,8 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
             this.owner = anEntity.getOwner();
             this.protectionLevel = anEntity.getProtectionLevel().getCode();
             this.alertType = anEntity.getAlertType().getCode();
-            this.blobKey = anEntity.getBlobKey();
             this.uuid = anEntity.getUUID();
+
         }
     }
 
@@ -92,7 +94,6 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
         this.name = update.getName().getValue();
         this.protectionLevel = update.getProtectionLevel().getCode();
         this.parent = update.getParent();
-        this.blobKey = update.getBlobKey();
         this.uuid = update.getUUID();
     }
 
@@ -193,14 +194,7 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
     }
 
 
-    @Override
-    public String getBlobKey() {
-        return blobKey;
-    }
-    @Override
-    public void setBlobKey(final String blobKey) {
-        this.blobKey = blobKey;
-    }
+
 
     @SuppressWarnings("MethodWithMultipleReturnPoints")
     @Override
@@ -231,6 +225,22 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
     }
 
     @Override
+    public Date getDateCreated() {
+
+        return dateCreated;
+    }
+
+    @Override
+    public void validate() throws NimbitsException {
+        throw new NimbitsException("not implemented");
+    }
+
+    @Override
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = new Date(dateCreated.getTime());
+    }
+
+    @Override
     public boolean entityIsReadable(final User user) {
 
 
@@ -254,10 +264,6 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
 
     }
 
-    @Override
-    public void validate() throws NimbitsException {
-        throw new NimbitsException("Do not validate models");
-    }
 
 
     @SuppressWarnings({"NonFinalFieldReferenceInEquals", "CastToConcreteClass"})
@@ -272,7 +278,6 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
         if (entityType != that.entityType) return false;
         if (protectionLevel != that.protectionLevel) return false;
         if (readOnly != that.readOnly) return false;
-        if (blobKey != null ? !blobKey.equals(that.blobKey) : that.blobKey != null) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
         if (entity != null ? !entity.equals(that.entity) : that.entity != null) return false;
         if (key != null ? !key.equals(that.key) : that.key != null) return false;
@@ -296,14 +301,12 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
         result = 31 * result + (parent != null ? parent.hashCode() : 0);
         result = 31 * result + (owner != null ? owner.hashCode() : 0);
         result = 31 * result + (readOnly ? 1 : 0);
-        result = 31 * result + (blobKey != null ? blobKey.hashCode() : 0);
         return result;
     }
 
     @Override()
     public String toString() {
         return "EntityModel{" +
-                "blobKey='" + blobKey + '\'' +
                 ", readOnly=" + readOnly +
                 ", owner='" + owner + '\'' +
                 ", parent='" + parent + '\'' +

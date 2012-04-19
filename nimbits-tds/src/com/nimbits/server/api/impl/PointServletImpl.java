@@ -29,7 +29,6 @@ import com.nimbits.server.entity.*;
 import com.nimbits.server.feed.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.logging.*;
-import com.nimbits.server.orm.*;
 import com.nimbits.server.time.*;
 import com.nimbits.server.value.*;
 
@@ -43,6 +42,8 @@ public class PointServletImpl extends ApiServlet {
     private final static Gson gson = GsonFactory.getInstance();
     private static final long serialVersionUID = 1L;
     private static final int INT = 1024;
+    private static final int EXPIRE = 90;
+    private static final double FILTER_VALUE = 0.1;
 
 
     @Override
@@ -144,9 +145,9 @@ public class PointServletImpl extends ApiServlet {
 
             if (containsParam(Parameters.uuid)) {
 
-                Entity entity =   EntityServiceFactory.getInstance().getEntityByKey(getParam(Parameters.uuid), PointEntity.class.getName()).get(0);
+                Entity entity =   EntityServiceFactory.getInstance().getEntityByKey(getParam(Parameters.uuid), EntityType.point).get(0);
                 if (entity == null) {
-                    entity=  EntityServiceFactory.getInstance().getEntityByKey(user, CategoryEntity.class.getName(),getParam(Parameters.uuid)).get(0);
+                    entity=  EntityServiceFactory.getInstance().getEntityByKey(user, getParam(Parameters.uuid), EntityType.category).get(0);
                 }
                 if (entity != null) {
                     if (entity.getEntityType().equals(EntityType.point)) {
@@ -216,7 +217,8 @@ public class PointServletImpl extends ApiServlet {
 
         final Entity entity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone,
                 parent, u.getKey(), UUID.randomUUID().toString());
-        Point point = PointModelFactory.createPointModel(entity,0.0, 90, "", 0.0, false, false, false, 0, false, FilterType.fixedHysteresis, 0.1 );
+        Point point = PointModelFactory.createPointModel(entity,0.0, EXPIRE, "", 0.0,
+                false, false, false, 0, false, FilterType.fixedHysteresis, FILTER_VALUE);
 
 
 

@@ -13,7 +13,7 @@
 
 package com.nimbits.server.calculation;
 import com.nimbits.client.service.calculation.*;
-import com.nimbits.server.transactions.dao.calculation.*;
+
 
 /**
  * Created by bsautner
@@ -26,12 +26,17 @@ public class CalculationServiceFactory {
     private CalculationServiceFactory() {
     }
 
-    public static CalculationService getInstance() {
-        return new CalculationServiceImpl();
+    private static class CalculationServiceHolder {
+        static final CalculationService instance = new CalculationServiceImpl();
+
+        private CalculationServiceHolder() {
+        }
     }
 
-    public static CalculationTransactions getDaoInstance() {
-        return new CalculationDAOImpl();
+    public static CalculationService getInstance() {
+        return CalculationServiceHolder.instance;
+
     }
+
 
 }

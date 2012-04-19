@@ -26,11 +26,22 @@ import java.io.*;
  * Time: 7:07 PM
  */
 public class FileModel extends EntityModel implements Serializable, File {
+    private String blobKey;
 
     protected FileModel() {
     }
 
     public FileModel(Entity entity) throws NimbitsException {
         super(entity);
+        blobKey = ((File)entity).getBlobKey();
+    }
+
+    @Override
+    public String getBlobKey() {
+        return blobKey;
+    }
+    @Override
+    public void setBlobKey(final String blobKey) {
+        this.blobKey = blobKey;
     }
 }

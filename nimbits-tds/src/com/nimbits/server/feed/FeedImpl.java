@@ -76,7 +76,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
             final FeedValue feedValue = new FeedValueModel(valueToHtml(entity, originalPoint, value), value.getData(), type);
             final String json = GsonFactory.getSimpleInstance().toJson(feedValue);
             final Value v = ValueModelFactory.createValueModel(value, json);
-            RecordedValueServiceFactory.getInstance().recordValue(user, point, v, false);
+            RecordedValueServiceFactory.getInstance().recordValue(user, point, v);
         }
     }
 
@@ -113,7 +113,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
                     new Date(), json);
             final Value v = ValueModelFactory.createValueModel(value, json);
 
-            RecordedValueServiceFactory.getInstance().recordValue(user, point, v, false);
+            RecordedValueServiceFactory.getInstance().recordValue(user, point, v);
 
         }
 

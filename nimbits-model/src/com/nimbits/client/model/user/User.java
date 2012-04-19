@@ -31,9 +31,6 @@ import java.util.*;
  */
 public interface User extends Entity, Serializable {
 
-
-    Date getDateCreated();
-
     Date getLastLoggedIn();
 
     void setLastLoggedIn(final Date lastLoggedIn);
@@ -59,8 +56,6 @@ public interface User extends Entity, Serializable {
     boolean isRestricted();
 
     void addAccessKey(AccessKey key);
-
-    void addAccessKeys(List<AccessKey> key);
 
     List<AccessKey> getAccessKeys();
 }

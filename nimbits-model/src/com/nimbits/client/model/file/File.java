@@ -24,4 +24,9 @@ import java.io.Serializable;
  * Time: 7:07 PM
  */
 public interface File extends Entity, Serializable {
+
+    String getBlobKey();
+
+    void setBlobKey(String blobKey);
+
 }

@@ -36,10 +36,11 @@ public class RecordedValueServiceImplTest extends NimbitsServletTest {
     private static final double D = 1.23;
     private static final double D1 = 2.23;
     private static final int D2 = 11;
+    private static final double VALUE = 0.1;
 
     @Test
     public void ignoreByCompressionTest() throws NimbitsException, InterruptedException {
-        point.setFilterValue(0.1);
+        point.setFilterValue(VALUE);
         EntityServiceFactory.getInstance().addUpdateEntity(point);
 
 
@@ -49,7 +50,7 @@ public class RecordedValueServiceImplTest extends NimbitsServletTest {
 
         Value value3 = ValueModelFactory.createValueModel(D1);
 
-        RecordedValueServiceFactory.getInstance().recordValue(user, point, value, false);
+        RecordedValueServiceFactory.getInstance().recordValue(user, point, value);
         Thread.sleep(1000);
         RecordedValueServiceImpl impl = new RecordedValueServiceImpl();
         assertTrue(impl.ignoreByCompression(point, value2));
@@ -71,7 +72,7 @@ public class RecordedValueServiceImplTest extends NimbitsServletTest {
         point.setFilterType(FilterType.percentageHysteresis);
         EntityServiceFactory.getInstance().addUpdateEntity(point);
       //  pointService.updatePoint(point);
-        RecordedValueServiceFactory.getInstance().recordValue(user, point, ValueModelFactory.createValueModel(100), false);
+        RecordedValueServiceFactory.getInstance().recordValue(user, point, ValueModelFactory.createValueModel(100));
         Thread.sleep(10);
         assertTrue(impl.ignoreByCompression(point, ValueModelFactory.createValueModel(105)));
         assertTrue(impl.ignoreByCompression(point, ValueModelFactory.createValueModel(95)));

@@ -13,7 +13,6 @@
 
 package com.nimbits.server.orm;
 
-import com.google.appengine.api.blobstore.*;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.*;
 import com.nimbits.client.common.*;
@@ -63,13 +62,13 @@ public class EntityStore implements Entity {
     private String parent;
 
     @Persistent
-    private String owner;
+    String owner;
 
     @NotPersistent
     private int alertType;
 
     @Persistent
-    private BlobKey blobKey;
+    Date dateCreated;
 
     @NotPersistent
     private boolean readOnly;
@@ -79,19 +78,18 @@ public class EntityStore implements Entity {
 
     }
 
-    public EntityStore(Key key, String name, String uuid, String description, Integer entityType, Integer protectionLevel, String parent, String owner, int alertType, BlobKey blobKey ) {
-        this.key = key;
-        this.name = name;
-        this.uuid = uuid;
-        this.description = description;
-        this.entityType = entityType;
-        this.protectionLevel = protectionLevel;
-        this.parent = parent;
-        this.owner = owner;
-        this.alertType = alertType;
-        this.blobKey = blobKey;
-
-    }
+//    public EntityStore(Key key, String name, String uuid, String description, Integer entityType, Integer protectionLevel, String parent, String owner, int alertType) {
+//        this.key = key;
+//        this.name = name;
+//        this.uuid = uuid;
+//        this.description = description;
+//        this.entityType = entityType;
+//        this.protectionLevel = protectionLevel;
+//        this.parent = parent;
+//        this.owner = owner;
+//        this.alertType = alertType;
+//        this.dateCreated = new Date();
+//    }
 
     public EntityStore(final Entity entity) throws NimbitsException {
 
@@ -108,9 +106,7 @@ public class EntityStore implements Entity {
             this.parent = entity.getParent();
             this.owner = entity.getOwner();
             this.protectionLevel = entity.getProtectionLevel().getCode();
-            if (! Utils.isEmptyString(entity.getBlobKey()))  {
-                this.blobKey = new BlobKey(entity.getBlobKey());
-            }
+
         } catch (ClassNotFoundException e) {
             throw new NimbitsException(e);
         }
@@ -127,9 +123,7 @@ public class EntityStore implements Entity {
         this.parent = entity.getParent();
         this.owner = entity.getOwner();
         this.protectionLevel = entity.getProtectionLevel().getCode();
-        if (! Utils.isEmptyString(entity.getBlobKey()))  {
-            this.blobKey = new BlobKey(entity.getBlobKey());
-        }
+
 
     }
 
@@ -264,18 +258,7 @@ public class EntityStore implements Entity {
 //        this.entity = newUUID;
 //    }
 
-    @Override
-    public String getBlobKey() {
-        return blobKey != null ? this.blobKey.getKeyString() : null;
-    }
 
-    @Override
-    public void setBlobKey(final String blobKey) {
-        if (! Utils.isEmptyString(blobKey)) {
-            this.blobKey = new BlobKey(blobKey);
-        }
-
-    }
 
     @Override
     public void setChildren(final List<Point> children) {
@@ -289,10 +272,10 @@ public class EntityStore implements Entity {
         this.name = update.getName().getValue();
         this.protectionLevel = update.getProtectionLevel().getCode();
         this.parent = update.getParent();
-        if (! Utils.isEmptyString(update.getBlobKey())) {
-            this.blobKey = new BlobKey(update.getBlobKey());
-        }
 
+        if (this.dateCreated==null) {
+            this.dateCreated = new Date();
+        }
         this.uuid = update.getUUID();
         validate();
     }
@@ -309,22 +292,32 @@ public class EntityStore implements Entity {
 
     @Override
     public boolean entityIsReadable(final User user) throws NimbitsException {
-       throw new NimbitsException("Not Impletmented");
+       throw new NimbitsException("Not Implemented");
     }
 
-    @Override
+
     public void validate() throws NimbitsException {
+
        if (Utils.isEmptyString(owner) || Utils.isEmptyString(this.name) || Utils.isEmptyString(this.parent)) {
           throw new NimbitsException("Entity was missing required data, validation failed");
        }
     }
+    @Override
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
 
+    @Override
+    public Date getDateCreated() {
+        return dateCreated;
+    }
 
     @Override
     public int compareTo(final Entity entity) {
         return 0;
     }
 
+    @SuppressWarnings("NonFinalFieldReferenceInEquals")
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -334,7 +327,6 @@ public class EntityStore implements Entity {
 
         if (alertType != that.alertType) return false;
         if (readOnly != that.readOnly) return false;
-        if (blobKey != null ? !blobKey.equals(that.blobKey) : that.blobKey != null) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
         if (entityType != null ? !entityType.equals(that.entityType) : that.entityType != null) return false;
         if (key != null ? !key.equals(that.key) : that.key != null) return false;
@@ -348,6 +340,7 @@ public class EntityStore implements Entity {
         return true;
     }
 
+    @SuppressWarnings("NonFinalFieldReferencedInHashCode")
     @Override
     public int hashCode() {
         int result = key != null ? key.hashCode() : 0;
@@ -359,7 +352,6 @@ public class EntityStore implements Entity {
         result = 31 * result + (parent != null ? parent.hashCode() : 0);
         result = 31 * result + (owner != null ? owner.hashCode() : 0);
         result = 31 * result + alertType;
-        result = 31 * result + (blobKey != null ? blobKey.hashCode() : 0);
         result = 31 * result + (readOnly ? 1 : 0);
         return result;
     }

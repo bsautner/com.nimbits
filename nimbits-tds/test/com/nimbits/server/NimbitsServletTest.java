@@ -13,49 +13,29 @@
 
 package com.nimbits.server;
 
-import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
-import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
-import com.google.appengine.tools.development.testing.LocalTaskQueueTestConfig;
-import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig;
-import com.nimbits.client.enums.AuthLevel;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.accesskey.AccessKey;
-import com.nimbits.client.model.accesskey.AccessKeyFactory;
-import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.service.datapoints.PointService;
-import com.nimbits.client.service.settings.SettingsService;
-import com.nimbits.server.api.impl.ValueServletImpl;
-import com.nimbits.server.entity.EntityServiceFactory;
-import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.orm.UserEntity;
-import com.nimbits.server.point.PointServiceFactory;
-import com.nimbits.server.settings.SettingTransactions;
-import com.nimbits.server.settings.SettingTransactionsFactory;
-import com.nimbits.server.settings.SettingsServiceFactory;
-import com.nimbits.server.user.UserServiceFactory;
-import com.nimbits.server.user.UserTransactionFactory;
-import com.nimbits.server.user.UserTransactions;
-import org.junit.After;
-import org.junit.Before;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
+import com.google.appengine.tools.development.testing.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.accesskey.*;
+import com.nimbits.client.model.category.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.service.datapoints.*;
+import com.nimbits.client.service.settings.*;
+import com.nimbits.server.api.impl.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.gson.*;
+import com.nimbits.server.point.*;
+import com.nimbits.server.settings.*;
+import com.nimbits.server.user.*;
+import org.junit.*;
+import static org.junit.Assert.*;
+import org.springframework.mock.web.*;
 
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner
@@ -114,7 +94,7 @@ public class NimbitsServletTest {
         assertNotNull(r);
 
 
-        List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(emailAddress.getValue(), UserEntity.class.getName());
+        List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(emailAddress.getValue(), EntityType.user);
         assertFalse(result.isEmpty());
         user = (User) result.get(0);
 
@@ -124,7 +104,7 @@ public class NimbitsServletTest {
         EntityServiceFactory.getInstance().addUpdateEntity(ak);
 
 
-        Map<String, Entity> map = EntityServiceFactory.getInstance().getEntityMap(EntityType.accessKey, 1000) ;
+        Map<String, Entity> map = EntityServiceFactory.getInstance().getEntityMap(user, EntityType.accessKey, 1000) ;
 
         assertFalse(map.isEmpty());
         user.addAccessKey((AccessKey) map.values().iterator().next());

@@ -18,11 +18,12 @@ import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.file.*;
+import com.nimbits.client.model.file.File;
 import com.nimbits.server.api.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.feed.*;
 import com.nimbits.server.gson.*;
-import com.nimbits.server.orm.*;
 
 import javax.servlet.http.*;
 import java.io.*;
@@ -63,22 +64,28 @@ public class BlobServletImpl extends ApiServlet {
             final EntityName diagramName = CommonFactoryLocator.getInstance().createName(fileName, EntityType.file);
             PrintWriter out = res.getWriter();
 
-            Entity entity = null;
+            com.nimbits.client.model.file.File file = null;
             if (uploadType.equals(UploadType.newFile.name())) {
-                entity = EntityModelFactory.createEntity(diagramName, "", EntityType.file, ProtectionLevel.everyone,
-                       user.getKey(), user.getKey(),blobKey.getKeyString());
+                Entity entity = EntityModelFactory.createEntity(diagramName, "", EntityType.file, ProtectionLevel.everyone,
+                       user.getKey(), user.getKey());
+                file = FileFactory.createFile(entity);
+
 
             }
             else if (uploadType.equals(UploadType.updatedFile.name()) && entityId != null) {
 
-                entity = EntityServiceFactory.getInstance().getEntityByKey(user, entityId, EntityStore.class.getName()).get(0);
-                entity.setBlobKey(blobKey.getKeyString());
+                List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(user, entityId, EntityType.file);
+                if (! result.isEmpty()) {
+                    file = (File) result.get(0);
+                }
+
 
 
 
             }
-            if (entity != null) {
-                Entity response = EntityServiceFactory.getInstance().addUpdateEntity(user, entity);
+            if (file != null) {
+                file.setBlobKey(blobKey.getKeyString());
+                Entity response = EntityServiceFactory.getInstance().addUpdateEntity(user, file);
                 String json = GsonFactory.getInstance().toJson(response);
                 res.setContentType("text/plain");
                 res.setStatus(HttpServletResponse.SC_OK);

@@ -14,19 +14,14 @@
 package com.nimbits.client.service.calculation;
 
 import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.exception.*;
 import com.nimbits.client.model.calculation.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 
-import java.util.*;
-
 public interface CalculationServiceAsync {
 
     void solveEquation(final User u, final Calculation calculation, final AsyncCallback<Value> async);
-
-    void getCalculations(final Entity entity, final AsyncCallback<List<Calculation>> async) throws NimbitsException;
 
     void processCalculations(final User u, final Entity point, final Value value, final AsyncCallback<Void> async);
 

@@ -25,12 +25,11 @@ import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.service.recordedvalues.*;
 import com.nimbits.server.entity.*;
-import com.nimbits.server.orm.*;
 import com.nimbits.server.task.*;
 import com.nimbits.server.user.*;
 
 import java.util.*;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 
 public class RecordedValueServiceImpl extends RemoteServiceServlet implements
@@ -79,7 +78,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
 //        final Point px = PointServiceFactory.getInstance().getPointByKey(point.getKey());
         //   final Point px = (Point) EntityServiceFactory.getInstance().getEntityByKey(point.getKey(), PointEntity.class.getName());
-        return recordValue(u,point, value, false);
+        return recordValue(u,point, value);
     }
 
 
@@ -108,10 +107,10 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
                              final Value value) throws NimbitsException {
 
 
-        final List<Entity> e = EntityServiceFactory.getInstance().getEntityByName(u, pointName, PointEntity.class.getName());
-        //  final Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
+        final List<Entity> e = EntityServiceFactory.getInstance().getEntityByName(u, pointName,EntityType.point);
 
-        return ! e.isEmpty() ? recordValue(u, e.get(0), value, false) : null;
+
+        return e.isEmpty() ? null : recordValue(u, e.get(0), value);
 
     }
 
@@ -283,15 +282,14 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
     @Override
     public Value recordValue(final User u,
                              final Entity entity,
-                             final Value value,
-                             final boolean loopFlag) throws NimbitsException {
+                             final Value value) throws NimbitsException {
 
 
         //	RecordedValue prevValue = null;
 
-        final Point point  = entity instanceof PointModel
+        final Point point  = entity instanceof Point
                 ? (Point) entity
-                : (Point) EntityTransactionFactory.getInstance(u).getEntityByKey(entity.getKey(),PointEntity.class).get(0);
+                : (Point) EntityServiceFactory.getInstance().getEntityByKey(u, entity.getKey(),EntityType.point).get(0);
 
 
         if (ignoreByAuthLevel(u, entity)) {
@@ -309,7 +307,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
                 retObj = RecordedValueTransactionFactory.getInstance(point).recordValue(value);
                 final AlertType t = getAlertType(point, retObj);
                 final Value v = ValueModelFactory.createValueModel(retObj, t);
-                TaskFactory.getInstance().startRecordValueTask(u, point, v, loopFlag);
+                TaskFactory.getInstance().startRecordValueTask(u, point, v);
             }
 
 

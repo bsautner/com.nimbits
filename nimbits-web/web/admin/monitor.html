@@ -25,15 +25,12 @@
             var r1=Math.floor(Math.random()*11);
             var r2=Math.floor(Math.random()*11);
 
-
             $.post("http://app.nimbits.com/service/batch",
                     { email: "bsautner@gmail.com", p2: "batch monitor 2", v2: r2, p1: "batch monitor 1", v1: r1, key:"key" },
                     function(data){
 
                     }
             );
-
-
             c=c+1;
             t=setTimeout("timedCount()",1000);
         }

@@ -116,9 +116,8 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
             entity.setUUID(UUID.randomUUID().toString());
         }
 
-        final Entity e=  addUpdateEntity(u, entity);
-        CoreFactory.getInstance().reportUpdateToCore(e);
-        return e;
+        return addUpdateEntity(u, entity);
+
     }
 
     @Override
@@ -247,6 +246,8 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntityTr
 
     @Override
     public Entity addUpdateEntity(final User user, final Entity entity) throws NimbitsException {
+        CoreFactory.getInstance().reportUpdateToCore(entity);
+
         return EntityTransactionFactory.getInstance(user).addUpdateEntity(entity);
     }
 

@@ -23,11 +23,12 @@ public class CoreFactory {
     private CoreFactory() {
     }
 
-    // private Core instance;
+    private static class CoreHolder {
+        private static final Core instance = new CoreImpl();
+    }
 
     public static Core getInstance() {
-
-        return new CoreImpl();
+        return CoreHolder.instance;
 
     }
 

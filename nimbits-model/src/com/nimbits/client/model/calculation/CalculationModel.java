@@ -20,7 +20,7 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
     private String x;
     private String y;
     private String z;
-    private boolean enabled;
+
 
 
     @SuppressWarnings("unused")
@@ -28,7 +28,7 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
         super();
     }
 
-    public CalculationModel(Calculation calculation) throws NimbitsException {
+    public CalculationModel(final Calculation calculation) throws NimbitsException {
         super(calculation);
 
         this.formula = calculation.getFormula();
@@ -40,14 +40,19 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
 
 
 
-    public CalculationModel(Entity entity, String trigger, boolean enabled, String f, String target, String x, String y, String z) throws NimbitsException {
+    public CalculationModel(final Entity entity,
+                            final String trigger,
+                            final boolean enabled,
+                            final String f,
+                            final String target,
+                            final String x,
+                            final String y,
+                            final String z) throws NimbitsException {
         super(entity, trigger, target, enabled);
-
         this.formula = f;
         this.x = x;
         this.y = y;
         this.z = z;
-
     }
 
     @Override

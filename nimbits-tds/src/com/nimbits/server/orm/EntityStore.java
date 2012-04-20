@@ -296,6 +296,7 @@ public class EntityStore implements Entity {
     }
 
 
+    @Override
     public void validate() throws NimbitsException {
 
        if (Utils.isEmptyString(owner) || Utils.isEmptyString(this.name) || Utils.isEmptyString(this.parent)) {
@@ -304,7 +305,12 @@ public class EntityStore implements Entity {
     }
     @Override
     public void setDateCreated(Date dateCreated) {
-        this.dateCreated = dateCreated;
+        this.dateCreated = new Date(dateCreated.getTime());
+    }
+
+    @Override
+    public void setKey(String key) throws NimbitsException {
+       throw new NimbitsException("Not Implemented");
     }
 
     @Override

@@ -14,27 +14,21 @@
 package com.nimbits.server.point;
 
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ExportType;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointModelFactory;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.service.datapoints.PointService;
-import com.nimbits.server.blob.BlobStoreFactory;
-import com.nimbits.server.entity.EntityServiceFactory;
-import com.nimbits.server.entity.EntityTransactionFactory;
-import com.nimbits.server.export.ExportHelperFactory;
-import com.nimbits.server.orm.PointEntity;
+import com.google.gwt.user.server.rpc.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.value.*;
+import com.nimbits.client.service.datapoints.*;
+import com.nimbits.server.entity.*;
+import com.nimbits.server.io.blob.*;
+import com.nimbits.server.io.export.*;
+import com.nimbits.server.orm.*;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class PointServiceImpl extends RemoteServiceServlet implements
         PointService {
@@ -56,11 +50,6 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
     }
 
-    @Override
-    public Point addPoint(final EntityName name) throws NimbitsException {
-        final Entity e = EntityModelFactory.createEntity(name, EntityType.point);
-        return (Point) EntityServiceFactory.getInstance().addUpdateEntity(e);
-    }
 
     @Override
     public String exportData(final Map<EntityName, Entity> points, final ExportType exportType, final Map<EntityName, List<Value>> values) throws NimbitsException {

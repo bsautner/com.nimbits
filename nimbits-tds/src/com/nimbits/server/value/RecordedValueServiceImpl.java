@@ -203,7 +203,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
 
     //determines if a new value should be ignored
-    protected boolean ignoreByCompression(final Point point, final Value v) throws NimbitsException {
+    protected boolean ignoreByFilter(final Point point, final Value v) throws NimbitsException {
 
 
         final Value pv = getPrevValue(point, v.getTimestamp());
@@ -289,7 +289,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
 
         final Point point  = entity instanceof Point
                 ? (Point) entity
-                : (Point) EntityServiceFactory.getInstance().getEntityByKey(u, entity.getKey(),EntityType.point).get(0);
+                : (Point) EntityServiceFactory.getInstance().getEntityByKey(u, entity.getKey(), EntityType.point).get(0);
 
 
         if (ignoreByAuthLevel(u, entity)) {
@@ -299,7 +299,7 @@ public class RecordedValueServiceImpl extends RemoteServiceServlet implements
             final boolean ignored = false;
             final boolean ignoredByDate = ignoreDataByExpirationDate(point, value, ignored);
 
-            final boolean ignoredByCompression = ignoreByCompression(point, value);
+            final boolean ignoredByCompression = ignoreByFilter(point, value);
 
             Value retObj = null;
             if (!ignoredByDate && !ignoredByCompression) {

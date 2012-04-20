@@ -19,10 +19,10 @@ import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.server.*;
-import com.nimbits.server.common.*;
+import com.nimbits.server.admin.common.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.http.*;
-import com.nimbits.server.settings.*;
+import com.nimbits.server.admin.settings.*;
 
 import javax.servlet.http.*;
 import java.io.*;

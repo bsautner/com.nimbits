@@ -21,7 +21,7 @@ import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.timespan.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.model.valueblobstore.*;
-import com.nimbits.server.logging.*;
+import com.nimbits.server.admin.logging.*;
 import com.nimbits.server.task.*;
 import com.nimbits.server.value.*;
 
@@ -100,7 +100,7 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
                         buffer.put(currentValueCacheKey, retObj);
                     }
                 } else {
-                    retObj = timestamp.getTime() > value.getTimestamp().getTime() ? value : RecordedValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
+                    retObj = timestamp.getTime() >= value.getTimestamp().getTime() ? value : RecordedValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
                 }
             } else {
                 LogHelper.log(this.getClass(), "Accessing data store for current value");

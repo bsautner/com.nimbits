@@ -45,39 +45,37 @@ public class RecordedValueServiceImplTest extends NimbitsServletTest {
 
 
         Value value = ValueModelFactory.createValueModel(D);
-        Thread.sleep(10);
         Value value2 = ValueModelFactory.createValueModel(D);
-
         Value value3 = ValueModelFactory.createValueModel(D1);
 
         RecordedValueServiceFactory.getInstance().recordValue(user, point, value);
-        Thread.sleep(1000);
+
         RecordedValueServiceImpl impl = new RecordedValueServiceImpl();
-        assertTrue(impl.ignoreByCompression(point, value2));
-        assertFalse(impl.ignoreByCompression(point, value3));
+        assertTrue(impl.ignoreByFilter(point, value2));
+        assertFalse(impl.ignoreByFilter(point, value3));
 
         point.setFilterValue(10);
         point.setFilterType(FilterType.ceiling);
 
-        assertFalse(impl.ignoreByCompression(point, ValueModelFactory.createValueModel(D1)));
-        assertTrue(impl.ignoreByCompression(point, ValueModelFactory.createValueModel(D2)));
+        assertFalse(impl.ignoreByFilter(point, ValueModelFactory.createValueModel(D1)));
+        assertTrue(impl.ignoreByFilter(point, ValueModelFactory.createValueModel(D2)));
 
         point.setFilterType(FilterType.floor);
-        assertTrue(impl.ignoreByCompression(point, ValueModelFactory.createValueModel(D1)));
-        assertFalse(impl.ignoreByCompression(point, ValueModelFactory.createValueModel(D2)));
+        assertTrue(impl.ignoreByFilter(point, ValueModelFactory.createValueModel(D1)));
+        assertFalse(impl.ignoreByFilter(point, ValueModelFactory.createValueModel(D2)));
 
         point.setFilterType(FilterType.none);
-        assertFalse(impl.ignoreByCompression(point, ValueModelFactory.createValueModel(D2)));
+        assertFalse(impl.ignoreByFilter(point, ValueModelFactory.createValueModel(D2)));
 
         point.setFilterType(FilterType.percentageHysteresis);
         EntityServiceFactory.getInstance().addUpdateEntity(point);
       //  pointService.updatePoint(point);
         RecordedValueServiceFactory.getInstance().recordValue(user, point, ValueModelFactory.createValueModel(100));
         Thread.sleep(10);
-        assertTrue(impl.ignoreByCompression(point, ValueModelFactory.createValueModel(105)));
-        assertTrue(impl.ignoreByCompression(point, ValueModelFactory.createValueModel(95)));
-        assertFalse(impl.ignoreByCompression(point, ValueModelFactory.createValueModel(111)));
-        assertFalse(impl.ignoreByCompression(point, ValueModelFactory.createValueModel(80)));
+        assertTrue(impl.ignoreByFilter(point, ValueModelFactory.createValueModel(105)));
+        assertTrue(impl.ignoreByFilter(point, ValueModelFactory.createValueModel(95)));
+        assertFalse(impl.ignoreByFilter(point, ValueModelFactory.createValueModel(111)));
+        assertFalse(impl.ignoreByFilter(point, ValueModelFactory.createValueModel(80)));
 
     }
 

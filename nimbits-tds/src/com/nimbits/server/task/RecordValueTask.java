@@ -24,7 +24,7 @@ import com.nimbits.server.calculation.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.intelligence.*;
-import com.nimbits.server.logging.*;
+import com.nimbits.server.admin.logging.*;
 import com.nimbits.server.subscription.*;
 import com.nimbits.server.summary.*;
 

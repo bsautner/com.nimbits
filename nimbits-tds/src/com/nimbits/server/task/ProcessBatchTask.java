@@ -24,7 +24,7 @@ import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.gson.*;
-import com.nimbits.server.logging.*;
+import com.nimbits.server.admin.logging.*;
 import com.nimbits.server.value.*;
 
 import javax.jdo.*;

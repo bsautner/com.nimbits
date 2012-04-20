@@ -19,12 +19,12 @@ import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.file.*;
+import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.service.entity.*;
-import com.nimbits.server.blob.*;
 import com.nimbits.server.core.*;
 import com.nimbits.server.feed.*;
-import com.nimbits.server.orm.*;
+import com.nimbits.server.io.blob.*;
 import com.nimbits.server.point.*;
 import com.nimbits.server.user.*;
 
@@ -150,13 +150,16 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
 
     @Override
     public Entity copyEntity(final Entity originalEntity, final EntityName newName) throws NimbitsException {
-        final Entity newEntity = new EntityStore(originalEntity);
 
-        switch (newEntity.getEntityType()) {
+        switch (originalEntity.getEntityType()) {
 
             case user:
                 return null;
             case point:
+                Point p = PointModelFactory.createPointModel((Point)originalEntity);
+                p.setName(newName);
+                p.setKey(null);
+
                 return PointServiceFactory.getInstance().copyPoint(getUser(), originalEntity, newName);
             case category:
                 return null;

@@ -28,10 +28,10 @@ import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.service.user.UserService;
-import com.nimbits.server.email.*;
+import com.nimbits.server.communication.email.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.feed.*;
-import com.nimbits.server.logging.*;
+import com.nimbits.server.admin.logging.*;
 
 import javax.servlet.http.*;
 import java.util.*;
@@ -194,7 +194,9 @@ public class UserServiceImpl extends RemoteServiceServlet implements
                 "New Nimbits user registered successfully";
         FeedServiceFactory.getInstance().postToFeed(u, message, FeedType.info);
     }
-    protected static AccessKey authenticatedKey(final Entity user) throws NimbitsException {
+
+    @Override
+    public AccessKey authenticatedKey(final Entity user) throws NimbitsException {
 
         final EntityName name = CommonFactoryLocator.getInstance().createName("AUTHENTICATED_KEY", EntityType.accessKey);
         final Entity en = EntityModelFactory.createEntity(name, "",EntityType.accessKey, ProtectionLevel.onlyMe, user.getKey(), user.getKey());

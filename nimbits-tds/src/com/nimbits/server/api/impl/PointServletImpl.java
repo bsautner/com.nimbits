@@ -28,7 +28,7 @@ import com.nimbits.server.api.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.feed.*;
 import com.nimbits.server.gson.*;
-import com.nimbits.server.logging.*;
+import com.nimbits.server.admin.logging.*;
 import com.nimbits.server.time.*;
 import com.nimbits.server.value.*;
 

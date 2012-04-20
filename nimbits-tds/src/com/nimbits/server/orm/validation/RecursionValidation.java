@@ -10,6 +10,7 @@ import com.nimbits.server.orm.*;
 import com.nimbits.shared.*;
 
 import java.util.*;
+import java.util.logging.*;
 
 /**
  * Created by Benjamin Sautner
@@ -20,6 +21,7 @@ import java.util.*;
 public class RecursionValidation {
     private static final int MAX_RECURSION = 10;
     private static final int INT = 1024;
+    private static final Logger log = Logger.getLogger(RecursionValidation.class.getName());
 
     private RecursionValidation() {
     }
@@ -61,8 +63,12 @@ public class RecursionValidation {
 
                     Iterable<Entity> entities = new ArrayList<Entity>(all.values());
                     for (Entity e : entities) {
+
                         Trigger c = (Trigger)e;
+                        log.info(c.getTrigger() + ">>>" + c.getTarget());
+                        if (! Utils.isEmptyString(c.getTrigger()) && ! Utils.isEmptyString(c.getTarget())) {
                         map.put(c.getTrigger(), c.getTarget());
+                        }
                     }
                 }
             }
@@ -75,22 +81,20 @@ public class RecursionValidation {
 
     private static void testRecursion(Map<String, String> map,  Trigger trigger) throws NimbitsException {
 
-
-
-
-
-
         if (map.containsKey(trigger.getTarget())) {  //then target is a calc
             String currentTrigger = trigger.getTrigger();
             int count = 0;
             while (true) {
                 String currentTarget = map.get(currentTrigger);
                 if (map.containsKey(currentTarget)) {
+                    log.info(count + " " + currentTarget + ">>>>" + map.get(currentTarget));
                     count++;
                     if (count > MAX_RECURSION) {
+                        log.warning("trigger failed validation with recursion test");
                         throw new NimbitsException("The target for this calc is a trigger for another calc. That's ok, but the" +
                                 "target for that calc is also the trigger for another, and so on for over " + MAX_RECURSION + " steps. We " +
                                 "stopped checking after that, but it looks like this is an infinite loop.");
+
                     }
                 }
                 else {

@@ -71,4 +71,6 @@ public interface Entity  extends Serializable, Comparable<Entity> {
     void validate() throws NimbitsException;
 
     void setDateCreated(Date dateCreated);
+
+    void setKey(String key) throws NimbitsException;
 }

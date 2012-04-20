@@ -17,10 +17,16 @@ public class JsonHelper {
     public static boolean isJson(final String sample) {
         try {
             new JsonParser().parse(sample);
-            return true;
+            return hasBrackets(sample);
         } catch (JsonParseException ex) {
             return false;
         }
+    }
+
+    private static boolean hasBrackets(String sample) {
+        return !sample.isEmpty()
+                && sample.charAt(0) == '{' && !sample.isEmpty()
+                && sample.charAt(sample.length() - 1) == '}';
     }
 
 

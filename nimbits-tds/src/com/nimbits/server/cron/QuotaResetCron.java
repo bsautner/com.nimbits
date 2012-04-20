@@ -18,8 +18,7 @@ import com.nimbits.client.constants.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.email.*;
-import com.nimbits.server.email.*;
-import com.nimbits.server.quota.*;
+import com.nimbits.server.communication.email.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -54,7 +53,7 @@ public class QuotaResetCron  extends HttpServlet {
     }
 
     protected static void processGet(ServletResponse resp) throws NimbitsException, IOException {
-      //  final Map<String, com.nimbits.client.model.entity.Entity> users = EntityTransactionFactory.getInstance(UserServiceFactory.getServerInstance().getAdmin()).getSystemWideEntityMap(EntityType.user);
+        //  final Map<String, com.nimbits.client.model.entity.Entity> users = EntityTransactionFactory.getInstance(UserServiceFactory.getServerInstance().getAdmin()).getSystemWideEntityMap(EntityType.user);
 
         StringBuilder sb = new StringBuilder(INT);
 
@@ -63,24 +62,24 @@ public class QuotaResetCron  extends HttpServlet {
 
         final Query q = new Query("UserEntity").setKeysOnly();
 
-        sb.append("<html><body><table>");
+        sb.append("<html><body>Quota Report<table>");
         for (final Entity e : store.prepare(q).asList(FetchOptions.Builder.withLimit(LIMIT))) {
             EmailAddress em = CommonFactoryLocator.getInstance().createEmailAddress(e.getKey().getName());
 
-            Quota quota = QuotaFactory.getInstance(em);
-            int c = quota.getCount();
-            if (c > 1) {
-                sb.append("<tr><td>").append(em .getValue()).append("</td><td>").append(c).append("</td></tr>");
-            }
-            quota.resetCounter();
-
-            }
-            sb.append("</table></body></html>");
-            resp.getWriter().print(sb.toString());
-            EmailAddress me = CommonFactoryLocator.getInstance().createEmailAddress("bsautner@gmail.com");
-            EmailServiceFactory.getInstance().sendEmail(me, me, sb.toString(),  "Quota Report");
+//            Quota quota = QuotaFactory.getInstance(em);
+//            int c = quota.getCount();
+//            if (c > 1) {
+//                sb.append("<tr><td>").append(em .getValue()).append("</td><td>").append(c).append("</td></tr>");
+//            }
+//            quota.resetCounter();
 
         }
+        sb.append("</table></body></html>");
+        resp.getWriter().print(sb.toString());
+        EmailAddress me = CommonFactoryLocator.getInstance().createEmailAddress("bsautner@gmail.com");
+        EmailServiceFactory.getInstance().sendEmail(me, me, sb.toString(),  "Quota Report");
+        resp.getWriter().println(sb.toString());
+    }
 
 
 

@@ -24,7 +24,7 @@ import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.service.summary.*;
 import com.nimbits.server.entity.*;
-import com.nimbits.server.logging.*;
+import com.nimbits.server.admin.logging.*;
 import com.nimbits.server.value.*;
 import org.apache.commons.math3.stat.descriptive.*;
 

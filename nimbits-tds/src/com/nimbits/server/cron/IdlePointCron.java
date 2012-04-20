@@ -21,7 +21,7 @@ import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.server.entity.*;
-import com.nimbits.server.logging.*;
+import com.nimbits.server.admin.logging.*;
 import com.nimbits.server.subscription.*;
 import com.nimbits.server.value.*;
 import org.apache.commons.lang3.exception.*;

@@ -29,7 +29,7 @@ import com.nimbits.server.api.impl.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.point.*;
-import com.nimbits.server.settings.*;
+import com.nimbits.server.admin.settings.*;
 import com.nimbits.server.user.*;
 import org.junit.*;
 import static org.junit.Assert.*;

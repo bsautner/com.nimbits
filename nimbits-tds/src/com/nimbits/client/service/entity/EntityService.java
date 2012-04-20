@@ -65,4 +65,6 @@ public interface EntityService extends RemoteService {
     List<Entity> getSubscriptionsToEntity(final User user, final Entity subscribedEntity) throws NimbitsException;
 
     Map<String, Entity> getSystemWideEntityMap(final EntityType type) throws NimbitsException;
+
+
 }

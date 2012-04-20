@@ -24,7 +24,7 @@ import com.nimbits.client.model.timespan.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.model.valueblobstore.*;
 import com.nimbits.server.gson.*;
-import com.nimbits.server.logging.*;
+import com.nimbits.server.admin.logging.*;
 import com.nimbits.server.orm.*;
 import com.nimbits.server.time.*;
 import com.nimbits.server.value.*;
@@ -292,36 +292,6 @@ public class ValueDAOImpl implements RecordedValueTransactions {
     public Value recordValue(final Value v) throws NimbitsException {
         throw new NimbitsException("Not Implimented");
     }
-
-
-//    private static List<Value> readValuesFromFile(final String path) throws NimbitsException {
-//        final FileService fileService = FileServiceFactory.getFileService();
-//        final AppEngineFile file = new AppEngineFile(path);
-//        final FileReadChannel readChannel;
-//        try {
-//            readChannel = fileService.openReadChannel(file, false);
-//
-//            final BufferedReader reader =
-//                    new BufferedReader(Channels.newReader(readChannel, "UTF8"));
-//            final StringBuilder sb = new StringBuilder(1024);
-//            String line;
-//
-//            while ((line = reader.readLine()) != null) {
-//                sb.append(line);
-//            }
-//
-//            final List<Value> models =  GsonFactory.getInstance().fromJson(sb.toString(), GsonFactory.valueListType);
-//            Collections.sort(models);
-//            return models;
-//        } catch (ApiProxy.ApiDeadlineExceededException ex) {
-//            throw new NimbitsException(ex);
-//
-//
-//        } catch (IOException e) {
-//            throw new NimbitsException(e);
-//        }
-//
-//    }
 
     protected static List<Value> readValuesFromFile(final BlobKey blobKey, final long length) throws NimbitsException {
 

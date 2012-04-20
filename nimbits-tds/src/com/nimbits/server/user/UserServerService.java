@@ -14,7 +14,9 @@
 package com.nimbits.server.user;
 
 import com.nimbits.client.exception.*;
+import com.nimbits.client.model.accesskey.*;
 import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
 
 import javax.servlet.http.*;
@@ -35,5 +37,5 @@ public interface UserServerService {
     User createUserRecord(EmailAddress internetAddress) throws NimbitsException;
 
 
-
+    AccessKey authenticatedKey(Entity user) throws NimbitsException;
 }

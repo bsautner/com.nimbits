@@ -15,7 +15,7 @@ package com.nimbits.server.transactions.memcache.settings;
 
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.server.settings.*;
+import com.nimbits.server.admin.settings.*;
 import net.sf.jsr107cache.*;
 
 import java.util.*;

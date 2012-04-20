@@ -78,6 +78,11 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
         }
     }
 
+@Override
+    public void setKey(String key) {
+        this.key = key;
+    }
+
     @Override
     public List<Point> getChildren() {
         return children;

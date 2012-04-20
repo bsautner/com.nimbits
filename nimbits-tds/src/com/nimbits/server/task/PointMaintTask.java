@@ -22,7 +22,7 @@ import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.valueblobstore.*;
 import com.nimbits.server.gson.*;
-import com.nimbits.server.logging.*;
+import com.nimbits.server.admin.logging.*;
 import com.nimbits.server.user.*;
 import com.nimbits.server.value.*;
 

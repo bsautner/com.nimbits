@@ -24,7 +24,7 @@ import com.nimbits.client.model.user.*;
 import com.nimbits.server.admin.legacy.orm.*;
 import com.nimbits.server.entity.*;
 import com.nimbits.server.orm.*;
-import com.nimbits.server.settings.*;
+import com.nimbits.server.admin.settings.*;
 import com.nimbits.server.transactions.dao.entity.*;
 import com.nimbits.server.user.*;
 
@@ -57,14 +57,12 @@ public class RecoveryServlet extends HttpServlet {
                     c.validate();
                     out.println("<BR><P>" + c.getFormula() + " " + c.getOwner() + " is OK!" + "</P>");
                 }
-                else {
-                    out.println("<BR><P>Failed to validate: " + c.getFormula() + " " + c.getOwner() + " was disabled" + "</P>");
-                }
+
             }
             catch (NimbitsException ex) {
-//               Transaction tx = pm.currentTransaction();
-//                c.setEnabled(false);
-//                tx.commit();
+                Transaction tx = pm.currentTransaction();
+                c.setEnabled(false);
+                tx.commit();
 
                 out.println("<BR><P>Failed to validate: " + c.getFormula() + " " + c.getOwner() + " "
                         + c.getTrigger() + ">>" + c.getTarget()

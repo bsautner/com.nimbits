@@ -19,7 +19,7 @@ import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.xmpp.*;
 import com.nimbits.server.orm.*;
-import com.nimbits.server.xmpp.*;
+import com.nimbits.server.communication.xmpp.*;
 
 import javax.jdo.*;
 import java.util.*;

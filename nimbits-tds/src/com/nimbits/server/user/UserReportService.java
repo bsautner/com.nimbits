@@ -18,7 +18,7 @@ import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.user.User;
 import com.nimbits.server.counter.CounterFactory;
-import com.nimbits.server.logging.LogHelper;
+import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.transactions.dao.counter.ShardedCounter;
 
 import javax.servlet.http.HttpServlet;

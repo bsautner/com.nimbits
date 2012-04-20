@@ -71,12 +71,12 @@
 
     <servlet>
         <servlet-name>IMService</servlet-name>
-        <servlet-class>com.nimbits.server.xmpp.XmppServiceImpl</servlet-class>
+        <servlet-class>com.nimbits.server.communication.xmpp.XmppServiceImpl</servlet-class>
     </servlet>
 
     <servlet>
         <servlet-name>xmppreceiver</servlet-name>
-        <servlet-class>com.nimbits.server.xmpp.XMPPReceiverServlet</servlet-class>
+        <servlet-class>com.nimbits.server.communication.xmpp.XMPPReceiverServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -148,7 +148,7 @@
 
     <servlet>
         <servlet-name>settingsService</servlet-name>
-        <servlet-class>com.nimbits.server.settings.SettingServiceImpl</servlet-class>
+        <servlet-class>com.nimbits.server.admin.settings.SettingServiceImpl</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>settingsService</servlet-name>
@@ -159,7 +159,7 @@
 
     <servlet>
         <servlet-name>blobService</servlet-name>
-        <servlet-class>com.nimbits.server.blob.BlobServiceImpl</servlet-class>
+        <servlet-class>com.nimbits.server.io.blob.BlobServiceImpl</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>blobService</servlet-name>
@@ -293,7 +293,7 @@
 
     <servlet>
         <servlet-name>IncomingMailTask</servlet-name>
-        <servlet-class>com.nimbits.server.email.IncomingMailTask</servlet-class>
+        <servlet-class>com.nimbits.server.communication.email.IncomingMailTask</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>IncomingMailTask</servlet-name>
@@ -350,7 +350,7 @@
 
     <servlet>
         <servlet-name>storageServlet</servlet-name>
-        <servlet-class>com.nimbits.server.storage.StorageServlet</servlet-class>
+        <servlet-class>com.nimbits.server.io.storage.StorageServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>storageServlet</servlet-name>
@@ -414,11 +414,11 @@
 
     <servlet>
         <servlet-name>com.nimbits.nimbits FacebookService</servlet-name>
-        <servlet-class>com.nimbits.server.facebook.FacebookImpl</servlet-class>
+        <servlet-class>com.nimbits.server.external.facebook.FacebookImpl</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>com.nimbits.nimbits TwitterService</servlet-name>
-        <servlet-class>com.nimbits.server.twitter.TwitterImpl</servlet-class>
+        <servlet-class>com.nimbits.server.external.twitter.TwitterImpl</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>batchServlet</servlet-name>
@@ -465,7 +465,7 @@
 
     <servlet>
         <servlet-name>com.nimbits.nimbits OAuth2Servlet</servlet-name>
-        <servlet-class>com.nimbits.server.google.OAuth2Servlet</servlet-class>
+        <servlet-class>com.nimbits.server.external.google.OAuth2Servlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>com.nimbits.nimbits IntelligenceService</servlet-name>

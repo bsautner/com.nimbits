@@ -32,6 +32,7 @@ import javax.servlet.http.*;
 import java.io.*;
 import java.net.*;
 import java.util.logging.*;
+import java.util.regex.*;
 
 
 public class FacebookImpl extends RemoteServiceServlet implements FacebookService, RequestCallback
@@ -41,7 +42,9 @@ public class FacebookImpl extends RemoteServiceServlet implements FacebookServic
     private static final long serialVersionUID = 1L;
 
     private static final Logger log = Logger.getLogger(FacebookImpl.class.getName());
+    private static final Pattern COMPILE = Pattern.compile("=");
 
+    @Override
     public EmailAddress facebookLogin(final String code) throws UnsupportedEncodingException, NimbitsException {
 
         final User u = UserServiceFactory.getInstance().getAppUserUsingGoogleAuth();
@@ -77,15 +80,15 @@ public class FacebookImpl extends RemoteServiceServlet implements FacebookServic
 
     }
 
-    private String getToken(final String code, final String ClientID, final String redirectURL, final String secret) {
+    private static String getToken(final String code, final String ClientID, final String redirectURL, final String secret) {
 
         String retStr = null;
         try {
             final String encodedCode = URLEncoder.encode(code, Const.CONST_ENCODING);
             final String u1 = "https://graph.facebook.com/oauth/access_token";
-            final String params = "client_id=" + ClientID + "&" +
-                    "redirect_uri=" + redirectURL + "&" +
-                    "client_secret=" + secret + "&" +
+            final String params = "client_id=" + ClientID + '&' +
+                    "redirect_uri=" + redirectURL + '&' +
+                    "client_secret=" + secret + '&' +
                     "type=user_agent&" +
                     "code=" + encodedCode;
 
@@ -99,8 +102,8 @@ public class FacebookImpl extends RemoteServiceServlet implements FacebookServic
 
     }
 
-    private String urlEncodeToken(final String unencodedToken) throws UnsupportedEncodingException {
-        final String[] s = unencodedToken.split("=");
+    private static String urlEncodeToken(final CharSequence unencodedToken) throws UnsupportedEncodingException {
+        final String[] s = COMPILE.split(unencodedToken);
 
         return "access_token=" + URLEncoder.encode(s[1], Const.CONST_ENCODING);
 
@@ -108,6 +111,7 @@ public class FacebookImpl extends RemoteServiceServlet implements FacebookServic
     }
 
 
+    @Override
     public String updateStatus(final String token,
                                final String message,
                                final String unEncodedPicture,
@@ -126,21 +130,13 @@ public class FacebookImpl extends RemoteServiceServlet implements FacebookServic
         //String token = getToken(code);
         String retStr = "";
 
-        String eMessage;
-        String ePicture;
-        String eLink;
-        String eName;
-        String eCaptions;
-        String eDescription;
-
         try {
 
-            eMessage = URLEncoder.encode(message, Const.CONST_ENCODING);
+            String eMessage = URLEncoder.encode(message, Const.CONST_ENCODING);
             String shortPic = GoogleURLShortener.shortenURL(unEncodedPicture);
-            ePicture = URLEncoder.encode(shortPic, Const.CONST_ENCODING);
+            String ePicture = URLEncoder.encode(shortPic, Const.CONST_ENCODING);
 
 
-            String feedURL = "https://graph.facebook.com/me/feed";
             //  URL url = new URL(feedURL);
             //  HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             // connection.setDoOutput(true);
@@ -150,27 +146,27 @@ public class FacebookImpl extends RemoteServiceServlet implements FacebookServic
             String params = urlEncodeToken(token);
             params += "&message=" + eMessage;
             params += "&picture=" + ePicture;
-            String captions2;
 
-            captions2 = (captions == null) ? "" : captions;
+            String captions2 = captions == null ? "" : captions;
 
 
             if (!link.isEmpty()) {
-                eLink = URLEncoder.encode(link, Const.CONST_ENCODING);
+                String eLink = URLEncoder.encode(link, Const.CONST_ENCODING);
                 params += "&link=" + eLink;
             }
             if (!name.isEmpty()) {
-                eName = URLEncoder.encode(name, Const.CONST_ENCODING);
+                String eName = URLEncoder.encode(name, Const.CONST_ENCODING);
                 params += "&name=" + eName;
             }
             if (!captions2.isEmpty()) {
-                eCaptions = URLEncoder.encode(captions2, Const.CONST_ENCODING);
+                String eCaptions = URLEncoder.encode(captions2, Const.CONST_ENCODING);
                 params += "&caption=" + eCaptions;
             }
             if (!description.isEmpty()) {
-                eDescription = URLEncoder.encode(description, Const.CONST_ENCODING);
+                String eDescription = URLEncoder.encode(description, Const.CONST_ENCODING);
                 params += "&description=" + eDescription;
             }
+            String feedURL = "https://graph.facebook.com/me/feed";
             log.info(feedURL);
             log.info(params);
             HttpCommonFactory.getInstance().doPost(feedURL, params);

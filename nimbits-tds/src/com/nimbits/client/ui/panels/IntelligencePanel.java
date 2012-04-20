@@ -34,6 +34,7 @@ import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.intelligence.*;
+import com.nimbits.client.model.trigger.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.service.entity.*;
 import com.nimbits.client.ui.controls.*;
@@ -106,7 +107,7 @@ public class IntelligencePanel extends NavigationEventProvider {
         String target = null;
 
         if (entity.getEntityType().equals(EntityType.intelligence)) {
-            Intelligence intelligence = (Intelligence) entity;
+            Trigger intelligence = (Trigger) entity;
             nameField.setValue(entity.getName().getValue());
             target =  intelligence.getTarget();
         }

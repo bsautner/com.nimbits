@@ -48,7 +48,7 @@
 
     <servlet>
         <servlet-name>summaryService</servlet-name>
-        <servlet-class>com.nimbits.server.summary.SummaryServiceImpl</servlet-class>
+        <servlet-class>com.nimbits.server.transactions.service.summary.SummaryServiceImpl</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -58,12 +58,12 @@
 
     <servlet>
         <servlet-name>pointService</servlet-name>
-        <servlet-class>com.nimbits.server.point.PointServiceImpl</servlet-class>
+        <servlet-class>com.nimbits.server.transactions.service.point.PointServiceImpl</servlet-class>
     </servlet>
 
     <servlet>
         <servlet-name>userService</servlet-name>
-        <servlet-class>com.nimbits.server.user.UserServiceImpl</servlet-class>
+        <servlet-class>com.nimbits.server.transactions.service.user.UserServiceImpl</servlet-class>
     </servlet>
 
     <servlet>
@@ -85,7 +85,7 @@
 
     <servlet>
         <servlet-name>dataService</servlet-name>
-        <servlet-class>com.nimbits.server.value.RecordedValueServiceImpl</servlet-class>
+        <servlet-class>com.nimbits.server.transactions.service.value.ValueServiceImpl</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>dataService</servlet-name>
@@ -94,7 +94,7 @@
 
     <servlet>
         <servlet-name>calcService</servlet-name>
-        <servlet-class>com.nimbits.server.calculation.CalculationServiceImpl</servlet-class>
+        <servlet-class>com.nimbits.server.transactions.service.calculation.CalculationServiceImpl</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>calcService</servlet-name>
@@ -103,7 +103,7 @@
 
     <servlet>
         <servlet-name>entityService</servlet-name>
-        <servlet-class>com.nimbits.server.entity.EntityServiceImpl</servlet-class>
+        <servlet-class>com.nimbits.server.transactions.service.entity.EntityServiceImpl</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>entityService</servlet-name>
@@ -113,7 +113,7 @@
 
     <servlet>
         <servlet-name>feedService</servlet-name>
-        <servlet-class>com.nimbits.server.feed.FeedImpl</servlet-class>
+        <servlet-class>com.nimbits.server.transactions.service.feed.FeedImpl</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>feedService</servlet-name>
@@ -123,7 +123,7 @@
 
     <servlet>
         <servlet-name>subscribeService</servlet-name>
-        <servlet-class>com.nimbits.server.subscription.SubscriptionServiceImpl</servlet-class>
+        <servlet-class>com.nimbits.server.transactions.service.subscription.SubscriptionServiceImpl</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>subscribeService</servlet-name>
@@ -201,7 +201,7 @@
 
     <servlet>
         <servlet-name>PointCron</servlet-name>
-        <servlet-class>com.nimbits.server.cron.PointCron</servlet-class>
+        <servlet-class>com.nimbits.server.process.cron.PointCron</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>PointCron</servlet-name>
@@ -209,7 +209,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>QuotaResetCron</servlet-name>
-        <servlet-class>com.nimbits.server.cron.QuotaResetCron</servlet-class>
+        <servlet-class>com.nimbits.server.process.cron.QuotaResetCron</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>QuotaResetCron</servlet-name>
@@ -217,7 +217,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>SessionMaint</servlet-name>
-        <servlet-class>com.nimbits.server.cron.SessionMaint</servlet-class>
+        <servlet-class>com.nimbits.server.process.cron.SessionMaint</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>SessionMaint</servlet-name>
@@ -226,7 +226,7 @@
 
     <servlet>
         <servlet-name>SystemMaint</servlet-name>
-        <servlet-class>com.nimbits.server.cron.SystemMaint</servlet-class>
+        <servlet-class>com.nimbits.server.process.cron.SystemMaint</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>SystemMaint</servlet-name>
@@ -234,7 +234,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>com.nimbits.server.cron.IdlePointCron</servlet-name>
-        <servlet-class>com.nimbits.server.cron.IdlePointCron</servlet-class>
+        <servlet-class>com.nimbits.server.process.cron.IdlePointCron</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>com.nimbits.server.cron.IdlePointCron</servlet-name>
@@ -248,7 +248,7 @@
 
     <servlet>
         <servlet-name>RecordValueTask</servlet-name>
-        <servlet-class>com.nimbits.server.task.RecordValueTask</servlet-class>
+        <servlet-class>com.nimbits.server.process.task.RecordValueTask</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>RecordValueTask</servlet-name>
@@ -257,7 +257,7 @@
 
     <servlet>
         <servlet-name>UpgradeTask</servlet-name>
-        <servlet-class>com.nimbits.server.task.UpgradeTask</servlet-class>
+        <servlet-class>com.nimbits.server.process.task.UpgradeTask</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>UpgradeTask</servlet-name>
@@ -265,7 +265,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>MoveCachedValuesToStoreTask</servlet-name>
-        <servlet-class>com.nimbits.server.task.MoveCachedValuesToStoreTask</servlet-class>
+        <servlet-class>com.nimbits.server.process.task.MoveCachedValuesToStoreTask</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>MoveCachedValuesToStoreTask</servlet-name>
@@ -273,7 +273,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>MoveRecordedValuesToStoreCron</servlet-name>
-        <servlet-class>com.nimbits.server.cron.MoveRecordedValuesToStoreCron</servlet-class>
+        <servlet-class>com.nimbits.server.process.cron.MoveRecordedValuesToStoreCron</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>MoveRecordedValuesToStoreCron</servlet-name>
@@ -287,7 +287,7 @@
 
     <servlet>
         <servlet-name>ProcessBatchTask</servlet-name>
-        <servlet-class>com.nimbits.server.task.ProcessBatchTask</servlet-class>
+        <servlet-class>com.nimbits.server.process.task.ProcessBatchTask</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ProcessBatchTask</servlet-name>
@@ -305,7 +305,7 @@
 
     <servlet>
         <servlet-name>PointMaintTask</servlet-name>
-        <servlet-class>com.nimbits.server.task.PointMaintTask</servlet-class>
+        <servlet-class>com.nimbits.server.process.task.PointMaintTask</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>PointMaintTask</servlet-name>
@@ -314,7 +314,7 @@
 
     <servlet>
         <servlet-name>DeleteRecordedValuesTask</servlet-name>
-        <servlet-class>com.nimbits.server.task.DeleteRecordedValuesTask</servlet-class>
+        <servlet-class>com.nimbits.server.process.task.DeleteRecordedValuesTask</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>DeleteRecordedValuesTask</servlet-name>
@@ -493,7 +493,7 @@
 
     <servlet>
         <servlet-name>com.nimbits.nimbits UserReportService</servlet-name>
-        <servlet-class>com.nimbits.server.user.UserReportService</servlet-class>
+        <servlet-class>com.nimbits.server.report.UserReportService</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>com.nimbits.nimbits UserReportService</servlet-name>
@@ -507,7 +507,7 @@
     </servlet>
     <servlet>
         <servlet-name>com.nimbits.nimbits IntelligenceService</servlet-name>
-        <servlet-class>com.nimbits.server.intelligence.IntelligenceServiceImpl</servlet-class>
+        <servlet-class>com.nimbits.server.transactions.service.intelligence.IntelligenceServiceImpl</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>com.nimbits.nimbits OAuth2Servlet</servlet-name>

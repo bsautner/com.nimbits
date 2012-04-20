@@ -21,17 +21,20 @@ package com.nimbits.server.http;
  *
  */
 public class HttpCommonFactory {
-    private static HttpCommon instance;
 
-    protected HttpCommonFactory() {
+    private HttpCommonFactory() {
         // Exists only to defeat instantiation.
     }
 
-    public static HttpCommon getInstance() {
-        if (instance == null) {
-            instance = new HttpCommonImpl();
+    private static class HttpCommonHolder {
+        static final HttpCommon instance = new HttpCommonImpl();
+
+        private HttpCommonHolder() {
         }
-        return instance;
+    }
+
+    public static HttpCommon getInstance() {
+        return HttpCommonHolder.instance;
 
 
     }

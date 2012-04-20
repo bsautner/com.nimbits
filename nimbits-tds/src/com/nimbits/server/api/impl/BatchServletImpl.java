@@ -16,8 +16,8 @@ package com.nimbits.server.api.impl;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.server.api.*;
-import com.nimbits.server.feed.*;
-import com.nimbits.server.task.*;
+import com.nimbits.server.transactions.service.feed.*;
+import com.nimbits.server.process.task.*;
 
 import javax.servlet.http.*;
 import java.io.*;

@@ -21,12 +21,12 @@ import com.nimbits.client.exception.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.service.facebook.*;
-import com.nimbits.server.entity.*;
+import com.nimbits.server.transactions.service.entity.*;
 import com.nimbits.server.external.google.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.http.*;
 import com.nimbits.server.admin.settings.*;
-import com.nimbits.server.user.*;
+import com.nimbits.server.transactions.service.user.*;
 
 import javax.servlet.http.*;
 import java.io.*;

@@ -21,8 +21,8 @@ import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.server.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.user.*;
+import com.nimbits.server.transactions.service.entity.*;
+import com.nimbits.server.transactions.service.user.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 

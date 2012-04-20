@@ -113,7 +113,7 @@ public class CalculationPanel extends NavigationEventProvider {
             targetKey = ((Trigger) entity).getTarget();
             enabled.setValue(((Trigger) entity).isEnabled());
             formula.setValue(((Calculation)entity).getFormula());
-            pn.setHtml("<p><b>Trigger Point Name: </b>" +  entity.getKey() + "</p>");
+            pn.setHtml("<p><b>Trigger Point Name: </b>" + ((Trigger) entity).getTrigger() + "</p>");
 
         } else {
             nameField.setValue(entity.getName().getValue() + " Calc");

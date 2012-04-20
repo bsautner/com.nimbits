@@ -22,11 +22,11 @@ import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.server.api.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.feed.*;
+import com.nimbits.server.transactions.service.entity.*;
+import com.nimbits.server.transactions.service.feed.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.admin.logging.*;
-import com.nimbits.server.value.*;
+import com.nimbits.server.transactions.service.value.*;
 
 import javax.servlet.http.*;
 import java.io.*;
@@ -87,7 +87,7 @@ public class ValueServletImpl extends ApiServlet {
                             vx.getNote(), vx.getData(), AlertType.OK);
                 }
 
-                final Value result = RecordedValueServiceFactory.getInstance().recordValue(user, point, v);
+                final Value result = ValueServiceFactory.getInstance().recordValue(user, point, v);
                 final PrintWriter out = resp.getWriter();
                 final String j = GsonFactory.getInstance().toJson(result);
                 out.print(j);
@@ -171,9 +171,9 @@ public class ValueServletImpl extends ApiServlet {
                         nv.getTimestamp(), nv.getData());
 
 
-                value = RecordedValueServiceFactory.getInstance().recordValue(u, p, newValue);
+                value = ValueServiceFactory.getInstance().recordValue(u, p, newValue);
             } else {
-                value = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
+                value = ValueServiceFactory.getInstance().getCurrentValue(p);
             }
             return value != null ? format.equals(Parameters.json.getText()) ? GsonFactory.getInstance().toJson(value) : String.valueOf(value.getDoubleValue()) : "";
 

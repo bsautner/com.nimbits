@@ -18,7 +18,7 @@ import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
-import com.nimbits.server.entity.*;
+import com.nimbits.server.transactions.service.entity.*;
 
 import java.util.*;
 

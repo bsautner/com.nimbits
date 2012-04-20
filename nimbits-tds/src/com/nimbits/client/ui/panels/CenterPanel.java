@@ -28,7 +28,7 @@ import com.nimbits.client.exception.*;
 import com.nimbits.client.model.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.value.*;
-import com.nimbits.client.service.subscription.*;
+import com.nimbits.client.service.entity.*;
 import com.nimbits.client.service.twitter.*;
 import com.nimbits.client.service.xmpp.*;
 import com.nimbits.client.ui.controls.*;
@@ -45,6 +45,9 @@ import java.util.*;
 public class CenterPanel extends NavigationEventProvider {
     private static final String DEFAULT_CHART_NAME = "Chart";
     private static final int HEIGHT = 450;
+    private static final double HEIGHT1 = .5;
+    private static final int INT = 50;
+    private static final double DOUBLE = .9;
     // private final Map<String, Entity> entities = new HashMap<String, Entity>();
     // private final Map<String, AnnotatedTimeLinePanel> lines = new HashMap<String, AnnotatedTimeLinePanel>();
 
@@ -78,15 +81,7 @@ public class CenterPanel extends NavigationEventProvider {
         final NavigationPanel navTree = new NavigationPanel(loginInfo.getUser(), settings);
 
 
-        navTree.addEntityClickedListeners(new EntityClickedListener() {
-
-            @Override
-            public void onEntityClicked(final TreeModel c)  {
-                addEntity(c);
-
-            }
-
-        });
+        navTree.addEntityClickedListeners(new AddEntityEntityClickedListener());
 
         navTree.addEntityDeletedListeners(new EntityDeletedListener() {
 
@@ -98,20 +93,7 @@ public class CenterPanel extends NavigationEventProvider {
 
         });
 
-        navTree.addValueEnteredListeners(new ValueEnteredListener() {
-            @Override
-            public void onValueEntered(TreeModel model, Value value) {
-                AnnotatedTimeLinePanel p;
-              for (int i = 0; i < chartContainer.getItemCount(); i++) {
-                  p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
-                  try {
-                      p.addValue(model, value);
-                  } catch (NimbitsException e) {
-                      FeedbackHelper.showError(e);
-                  }
-              }
-            }
-        });
+        navTree.addValueEnteredListeners(new ValueEnteredListener());
         return navTree;
 
     }
@@ -119,8 +101,8 @@ public class CenterPanel extends NavigationEventProvider {
     private void loadLayout() throws NimbitsException {
 
         final ContentPanel panel = new ContentPanel( );
-        chartHeight  = Double.valueOf(Window.getClientHeight() * .9 / 2).intValue();
-        int navHeight  = Double.valueOf(Window.getClientHeight() / 2).intValue()-50;
+        chartHeight  = Double.valueOf(Window.getClientHeight() * DOUBLE / 2).intValue();
+        int navHeight  = Double.valueOf(Window.getClientHeight() / 2).intValue()- INT;
         MainMenuBar toolBar = initToolbar(loginInfo, settings);
         panel.setTopComponent(toolBar);
         panel.setLayout(new RowLayout(Style.Orientation.VERTICAL));
@@ -133,7 +115,7 @@ public class CenterPanel extends NavigationEventProvider {
         navigationPanel = createNavigationPanel();
         navigationPanel.setLayout(new FillLayout());
         navigationPanel.setHeight(navHeight);
-        panel.add(navigationPanel, new RowData(1, .5, new Margins(0)));
+        panel.add(navigationPanel, new RowData(1, HEIGHT1, new Margins(0)));
 
 
         HBoxLayout layout = new HBoxLayout();
@@ -178,35 +160,7 @@ public class CenterPanel extends NavigationEventProvider {
                 }
             }
         } );
-        toolBar.addActionListeners(new MainMenuBar.ActionListener() {
-            @Override
-            public void onAction(Action action) throws NimbitsException {
-                switch (action) {
-                    case expand:
-                        navigationPanel.toggleExpansion();
-                        break;
-                    case logout:
-                        final String logoutUrl = loginInfo != null ? loginInfo.getLogoutUrl() : Path.PATH_NIMBITS_HOME;
-                        Window.Location.replace(logoutUrl);
-                        break;
-                    case xmpp:
-                        sendXMPPInvite();
-                        break;
-                    case facebook:
-                        Window.Location.replace(Path.PATH_FACEBOOK_APP);
-                        break;
-                    case twitter:
-                        twitterAuthorise();
-                        break;
-                    case addChart:
-                        addChart();
-                        break;
-                    case save:
-                        navigationPanel.saveAll();
-                        break;
-                }
-            }
-        });
+        toolBar.addActionListeners(new ActionListener(loginInfo));
         return toolBar;
     }
 
@@ -217,34 +171,18 @@ public class CenterPanel extends NavigationEventProvider {
         line.addListener(Events.OnClick, new Listener<BaseEvent>() {
             @Override
             public void handleEvent(BaseEvent baseEvent) {
-                AnnotatedTimeLinePanel p;
                 for (int i = 0; i < chartContainer.getItemCount(); i ++) {
-                    p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
+                    AnnotatedTimeLinePanel p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
                     line.setSelected(p.getName().equals(line.getName()));
                 }
             }
         });
-        line.addChartRemovedClickedListeners(new AnnotatedTimeLinePanel.ChartRemovedListener() {
-            @Override
-            public void onChartRemovedClicked() {
-                for (int i = 0; i < chartContainer.getItemCount(); i ++) {
-                    AnnotatedTimeLinePanel p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
-                    if (p.getName().equals(line.getName())) {
-                        chartContainer.remove(p);
-                        break;
-                    }
-                }
-//                for (int i = 0; i < chartContainer.getItemCount(); i ++) {
-//                    AnnotatedTimeLinePanel p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
-//                }
-                chartContainer.layout(true);
-            }
-        });
+        line.addChartRemovedClickedListeners(new MyChartRemovedListener(line));
         chartContainer.add(line, flex);
         layout(true);
     }
 
-    private void sendXMPPInvite() {
+    private static void sendXMPPInvite() {
         XMPPServiceAsync IMService = GWT.create(XMPPService.class);
         IMService.sendInvite(new XMPPInviteAsyncCallback());
     }
@@ -282,8 +220,8 @@ public class CenterPanel extends NavigationEventProvider {
 
 
     private void displaySubscription(final Entity entity) {
-        SubscriptionServiceAsync service = GWT.create(SubscriptionService.class);
-        service.getSubscribedEntity(entity, new GetSubscribedEntityAsyncCallback());
+        EntityServiceAsync service = GWT.create(EntityService.class);
+        service.getEntityByKey(entity.getKey(),EntityType.subscription, new GetSubscribedEntityAsyncCallback());
     }
    //chart
     private void chartEntity(final TreeModel model) {
@@ -296,6 +234,9 @@ public class CenterPanel extends NavigationEventProvider {
     }
 
     private static class TwitterAuthoriseAsyncCallback implements AsyncCallback<String> {
+
+        TwitterAuthoriseAsyncCallback() {
+        }
 
         @Override
         public void onFailure(Throwable caught) {
@@ -312,6 +253,9 @@ public class CenterPanel extends NavigationEventProvider {
 
     private static class XMPPInviteAsyncCallback implements AsyncCallback<Void> {
 
+        XMPPInviteAsyncCallback() {
+        }
+
         @Override
         public void onFailure(Throwable caught) {
 
@@ -327,7 +271,7 @@ public class CenterPanel extends NavigationEventProvider {
     }
 
 
-    private class GetSubscribedEntityAsyncCallback implements AsyncCallback<Entity> {
+    private class GetSubscribedEntityAsyncCallback implements AsyncCallback<List<Entity>> {
 
         @Override
         public void onFailure(Throwable caught) {
@@ -335,11 +279,100 @@ public class CenterPanel extends NavigationEventProvider {
         }
 
         @Override
-        public void onSuccess(Entity result) {
+        public void onSuccess(List<Entity> result) {
             try {
-                addEntity( new GxtModel(result));
+                if (!result.isEmpty()) {
+                    addEntity( new GxtModel(result.get(0)));
+                }
+
             } catch (NimbitsException e) {
                 FeedbackHelper.showError(e);
+            }
+        }
+    }
+
+    private class AddEntityEntityClickedListener implements EntityClickedListener {
+
+        AddEntityEntityClickedListener() {
+        }
+
+        @Override
+        public void onEntityClicked(final TreeModel c)  {
+            addEntity(c);
+
+        }
+
+    }
+
+    private class ValueEnteredListener implements NavigationEventProvider.ValueEnteredListener {
+        @Override
+        public void onValueEntered(TreeModel model, Value value) {
+            for (int i = 0; i < chartContainer.getItemCount(); i++) {
+                AnnotatedTimeLinePanel p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
+                try {
+                  p.addValue(model, value);
+              } catch (NimbitsException e) {
+                  FeedbackHelper.showError(e);
+              }
+          }
+        }
+    }
+
+    private class MyChartRemovedListener implements AnnotatedTimeLinePanel.ChartRemovedListener {
+        private final AnnotatedTimeLinePanel line;
+
+        public MyChartRemovedListener(AnnotatedTimeLinePanel line) {
+            this.line = line;
+        }
+
+        @Override
+        public void onChartRemovedClicked() {
+            for (int i = 0; i < chartContainer.getItemCount(); i ++) {
+                AnnotatedTimeLinePanel p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
+                if (p.getName().equals(line.getName())) {
+                    chartContainer.remove(p);
+                    break;
+                }
+            }
+//                for (int i = 0; i < chartContainer.getItemCount(); i ++) {
+//                    AnnotatedTimeLinePanel p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
+//                }
+            chartContainer.layout(true);
+        }
+    }
+
+    private class ActionListener implements MainMenuBar.ActionListener {
+        private final LoginInfo loginInfo;
+
+        public ActionListener(LoginInfo loginInfo) {
+            this.loginInfo = loginInfo;
+        }
+
+        @Override
+        public void onAction(Action action) throws NimbitsException {
+            switch (action) {
+                case expand:
+                    navigationPanel.toggleExpansion();
+                    break;
+                case logout:
+                    final String logoutUrl = loginInfo != null ? loginInfo.getLogoutUrl() : Path.PATH_NIMBITS_HOME;
+                    Window.Location.replace(logoutUrl);
+                    break;
+                case xmpp:
+                    sendXMPPInvite();
+                    break;
+                case facebook:
+                    Window.Location.replace(Path.PATH_FACEBOOK_APP);
+                    break;
+                case twitter:
+                    twitterAuthorise();
+                    break;
+                case addChart:
+                    addChart();
+                    break;
+                case save:
+                    navigationPanel.saveAll();
+                    break;
             }
         }
     }

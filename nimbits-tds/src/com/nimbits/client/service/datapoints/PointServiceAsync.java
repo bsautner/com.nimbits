@@ -16,10 +16,7 @@ package com.nimbits.client.service.datapoints;
 
 import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 
 import java.util.*;
@@ -27,6 +24,6 @@ import java.util.*;
 public interface PointServiceAsync {
 
     void exportData(final Map<EntityName, Entity> points, ExportType exportType, final Map<EntityName, List<Value>> values, AsyncCallback<String> async);
-    void copyPoint(User u, Entity originalEntity, EntityName newName, AsyncCallback<Entity> async);
+   // void copyPoint(User u, Entity originalEntity, EntityName newName, AsyncCallback<Entity> async);
 
 }

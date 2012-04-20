@@ -16,9 +16,9 @@ package com.nimbits.server.api.impl;
 import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
+import com.nimbits.server.admin.logging.*;
 import com.nimbits.server.api.*;
-import com.nimbits.server.feed.*;
-import com.nimbits.server.task.*;
+import com.nimbits.server.process.task.*;
 
 import javax.activation.*;
 import javax.mail.*;
@@ -56,13 +56,9 @@ public class MailHandlerServletImpl extends ApiServlet {
 
             }
         } catch (MessagingException e) {
-            if (user != null) {
-                FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(e));
-            }
+            LogHelper.logException(this.getClass(), e);
         } catch (NimbitsException e) {
-            if (user != null) {
-                FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(e));
-            }
+            LogHelper.logException(this.getClass(), e);
         }
     }
 

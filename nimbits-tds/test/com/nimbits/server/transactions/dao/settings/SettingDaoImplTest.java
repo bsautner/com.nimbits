@@ -16,7 +16,7 @@ package com.nimbits.server.transactions.dao.settings;
 import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.server.NimbitsServletTest;
-import com.nimbits.server.cron.SystemMaint;
+import com.nimbits.server.process.cron.SystemMaint;
 import org.junit.Test;
 
 import java.io.IOException;

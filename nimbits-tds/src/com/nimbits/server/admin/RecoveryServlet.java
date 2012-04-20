@@ -22,11 +22,11 @@ import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.server.admin.legacy.orm.*;
-import com.nimbits.server.entity.*;
+import com.nimbits.server.transactions.service.entity.*;
 import com.nimbits.server.orm.*;
 import com.nimbits.server.admin.settings.*;
 import com.nimbits.server.transactions.dao.entity.*;
-import com.nimbits.server.user.*;
+import com.nimbits.server.transactions.service.user.*;
 
 import javax.jdo.*;
 import javax.servlet.*;
@@ -61,6 +61,7 @@ public class RecoveryServlet extends HttpServlet {
             }
             catch (NimbitsException ex) {
                 Transaction tx = pm.currentTransaction();
+                tx.begin();
                 c.setEnabled(false);
                 tx.commit();
 

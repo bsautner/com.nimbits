@@ -30,7 +30,7 @@ import com.nimbits.client.model.subscription.*;
 import com.nimbits.client.model.summary.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.xmpp.*;
-import com.nimbits.server.entity.*;
+import com.nimbits.server.transactions.service.entity.*;
 import com.nimbits.server.admin.logging.*;
 import com.nimbits.server.orm.*;
 import com.nimbits.shared.*;

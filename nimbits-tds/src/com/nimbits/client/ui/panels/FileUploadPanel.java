@@ -14,32 +14,25 @@
 package com.nimbits.client.ui.panels;
 
 import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.widget.LayoutContainer;
-import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.form.FileUploadField;
-import com.extjs.gxt.ui.client.widget.form.FormPanel;
-import com.extjs.gxt.ui.client.widget.form.FormPanel.Encoding;
-import com.extjs.gxt.ui.client.widget.form.FormPanel.Method;
-import com.extjs.gxt.ui.client.widget.form.HiddenField;
-import com.extjs.gxt.ui.client.widget.form.TextArea;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.client.constants.Path;
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.enums.UploadType;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.LoginInfo;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.service.blob.BlobService;
-import com.nimbits.client.service.blob.BlobServiceAsync;
-import com.nimbits.client.service.user.UserService;
-import com.nimbits.client.service.user.UserServiceAsync;
-import com.nimbits.client.ui.helper.FeedbackHelper;
+import com.extjs.gxt.ui.client.widget.*;
+import com.extjs.gxt.ui.client.widget.button.*;
+import com.extjs.gxt.ui.client.widget.form.*;
+import com.extjs.gxt.ui.client.widget.form.FormPanel.*;
+import com.google.gwt.core.client.*;
+import com.google.gwt.user.client.*;
+import com.google.gwt.user.client.rpc.*;
+import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.service.blob.*;
+import com.nimbits.client.service.user.*;
+import com.nimbits.client.ui.controls.*;
+import com.nimbits.client.ui.helper.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by bsautner
@@ -48,21 +41,20 @@ import java.util.List;
  * Time: 3:28 PM
  */
 public class FileUploadPanel extends LayoutContainer {
-    private final UploadType uploadType;
-    private final List<FileAddedListener> FileAddedListeners = new ArrayList<FileAddedListener>();
+    private static final int WIDTH = 350;
+    private final Collection<FileAddedListener> FileAddedListeners = new ArrayList<FileAddedListener>(1);
     private EmailAddress email;
     private Entity entity;
 
-    public FileUploadPanel(UploadType uploadType) {
-        this.uploadType = uploadType;
-    }
 
-    public FileUploadPanel(UploadType uploadType, Entity entity) {
-        this.uploadType = uploadType;
-        //this.diagram = diagram;
+    public FileUploadPanel(Entity entity) {
+
         this.entity = entity;
     }
+    public FileUploadPanel() {
 
+
+    }
 
     public interface FileAddedListener {
         void onFileAdded() throws NimbitsException;
@@ -83,49 +75,28 @@ public class FileUploadPanel extends LayoutContainer {
     protected void onRender(Element parent, int index) {
         super.onRender(parent, index);
         setStyleAttribute("margin", "10px");
-        final FormPanel panel = new FormPanel();
-        panel.setEncoding(FormPanel.Encoding.MULTIPART);
-        panel.addListener(Events.Submit, new Listener<FormEvent>() {
-        @Override
-            public void handleEvent(FormEvent formEvent) {
-            try {
-                notifyFileAddedListener();
-            } catch (NimbitsException e) {
-                FeedbackHelper.showError(e);
-            }
+        final EntityPanel panel = new EntityPanel(entity);
 
-        }
-        });
-        panel.setHeaderVisible(false);
-        panel.setFrame(false);
+
+        panel.addListener(Events.Submit, new SubmitFormEventListener());
+
         BlobServiceAsync service = GWT.create(BlobService.class);
         //  diagramService.getBlobStoreUrl("http://" + Window.Location.getHost() +  "/service/diagram", new AsyncCallback<String>() {
-        service.getBlobStoreUrl(Path.PATH_BLOB_SERVICE, new AsyncCallback<String>() {
-            @Override
-            public void onFailure(Throwable throwable) {
-                GWT.log(throwable.getMessage());
-            }
-
-            @Override
-            public void onSuccess(String s) {
-                panel.setAction(s);
-            }
-        });
+        service.getBlobStoreUrl(Path.PATH_BLOB_SERVICE, new GetBlobStoreURLAsyncCallback(panel));
 
         panel.setEncoding(Encoding.MULTIPART);
         panel.setMethod(Method.POST);
-        panel.setWidth(350);
+        panel.setWidth(WIDTH);
 
-        final TextArea name = new TextArea();
+
         final FileUploadField file = new FileUploadField();
 
         file.setAllowBlank(false);
         file.setName("myFile");
         file.setFieldLabel("File");
         panel.add(file);
-        name.setFieldLabel("Description");
-        name.setName(Parameters.description.getText());
-        panel.add(name);
+
+
 
         final HiddenField<String> emailAddressHiddenField=new HiddenField<String>();
         emailAddressHiddenField.setName(Parameters.emailHiddenField.getText());
@@ -136,70 +107,130 @@ public class FileUploadPanel extends LayoutContainer {
         panel.add(fileNameHiddenField);
         UserServiceAsync loginService = GWT.create(UserService.class);
         loginService.login(GWT.getHostPageBaseURL(),
-                new AsyncCallback<LoginInfo>() {
-                    @Override
-                    public void onFailure(Throwable error) {
+                new LoginInfoAsyncCallback(emailAddressHiddenField));
 
-                    }
-
-                    @Override
-                    public void onSuccess(LoginInfo result) {
-                        try {
-                            email = result.getEmailAddress();
-                        } catch (NimbitsException e) {
-                            FeedbackHelper.showError(e);
-
-                               }
-                        emailAddressHiddenField.setValue(email.getValue());
-                    }
-
-                });
-
-        final HiddenField<UploadType> uploadTypeHiddenField = new HiddenField<UploadType>();
+        final HiddenField<EntityType> uploadTypeHiddenField = new HiddenField<EntityType>();
         uploadTypeHiddenField.setName(Parameters.uploadTypeHiddenField.getText());
-        uploadTypeHiddenField.setValue(uploadType);
+
+
+
+
         panel.add(uploadTypeHiddenField);
-        if (uploadType == UploadType.updatedFile && entity != null) {
+
+        if (entity != null && entity.getEntityType().equals(EntityType.file)) {
             final HiddenField<String> diagramId = new HiddenField<String>();
             diagramId.setName(Parameters.fileId.getText());
             diagramId.setValue(entity.getKey());
             panel.add(diagramId);
-            try {
-                name.setValue(entity.getName().getValue());
-            } catch (NimbitsException e) {
-                FeedbackHelper.showError(e);
-            }
-            name.setReadOnly(true);
-            name.setVisible(false);
+            uploadTypeHiddenField.setValue(entity.getEntityType());
         }
 
 
         final Button btn = new Button("Reset");
-        btn.addSelectionListener(new SelectionListener<ButtonEvent>() {
-            @Override
-            public void componentSelected(ButtonEvent ce) {
-                panel.reset();
-            }
-        });
+        btn.addSelectionListener(new ResetButtonEventSelectionListener(panel));
         panel.addButton(btn);
 
         final Button submitBtn = new Button("Submit");
-        submitBtn.addSelectionListener(new SelectionListener<ButtonEvent>() {
-            @Override
-            public void componentSelected(ButtonEvent ce) {
-                if (!panel.isValid()) {
-                    return;
-                }
-                fileNameHiddenField.setValue(file.getValue());
-                panel.submit();
-
-
-
-            }
-        });
+        submitBtn.addSelectionListener(new SubmitButtonEventSelectionListener(panel, fileNameHiddenField, file));
         panel.addButton(submitBtn);
 
         add(panel);
     }
 
+    private static class SubmitButtonEventSelectionListener extends SelectionListener<ButtonEvent> {
+        private final EntityPanel panel;
+        private final HiddenField<String> fileNameHiddenField;
+        private final FileUploadField file;
+
+        SubmitButtonEventSelectionListener(EntityPanel panel, HiddenField<String> fileNameHiddenField, FileUploadField file) {
+            this.panel = panel;
+            this.fileNameHiddenField = fileNameHiddenField;
+            this.file = file;
+
+        }
+
+        @Override
+        public void componentSelected(ButtonEvent ce) {
+            if (!panel.isValid()) {
+                return;
+            }
+
+            fileNameHiddenField.setValue(file.getValue());
+            panel.submit();
+
+
+
+        }
+    }
+
+    private static class GetBlobStoreURLAsyncCallback implements AsyncCallback<String> {
+        private final FormPanel panel;
+
+        GetBlobStoreURLAsyncCallback(FormPanel panel) {
+            this.panel = panel;
+        }
+
+        @Override
+        public void onFailure(Throwable throwable) {
+            GWT.log(throwable.getMessage());
+        }
+
+        @Override
+        public void onSuccess(String s) {
+            panel.setAction(s);
+        }
+    }
+
+    private static class ResetButtonEventSelectionListener extends SelectionListener<ButtonEvent> {
+        private final FormPanel panel;
+
+        private ResetButtonEventSelectionListener(FormPanel panel) {
+            this.panel = panel;
+        }
+
+        @Override
+        public void componentSelected(ButtonEvent ce) {
+            panel.reset();
+        }
+    }
+
+    private class LoginInfoAsyncCallback implements AsyncCallback<LoginInfo> {
+        private final HiddenField<String> emailAddressHiddenField;
+
+        LoginInfoAsyncCallback(HiddenField<String> emailAddressHiddenField) {
+            this.emailAddressHiddenField = emailAddressHiddenField;
+        }
+
+        @Override
+        public void onFailure(Throwable error) {
+
+        }
+
+        @Override
+        public void onSuccess(LoginInfo result) {
+            try {
+                email = result.getEmailAddress();
+            } catch (NimbitsException e) {
+                FeedbackHelper.showError(e);
+
+                   }
+            emailAddressHiddenField.setValue(email.getValue());
+        }
+
+    }
+
+    private class SubmitFormEventListener implements Listener<FormEvent> {
+        SubmitFormEventListener() {
+        }
+
+        @Override
+            public void handleEvent(FormEvent formEvent) {
+            try {
+                notifyFileAddedListener();
+            } catch (NimbitsException e) {
+                FeedbackHelper.showError(e);
+            }
+
+        }
+    }
 }

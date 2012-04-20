@@ -14,7 +14,7 @@
 package com.nimbits.server.communication.email;
 
 import com.nimbits.client.constants.*;
-import com.nimbits.server.task.*;
+import com.nimbits.server.process.task.*;
 
 import javax.activation.*;
 import javax.mail.*;

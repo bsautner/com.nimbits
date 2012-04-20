@@ -21,8 +21,8 @@ import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.file.*;
 import com.nimbits.client.model.file.File;
 import com.nimbits.server.api.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.feed.*;
+import com.nimbits.server.transactions.service.entity.*;
+import com.nimbits.server.transactions.service.feed.*;
 import com.nimbits.server.gson.*;
 
 import javax.servlet.http.*;
@@ -46,33 +46,32 @@ public class BlobServletImpl extends ApiServlet {
             doInit(req, res, ExportType.plain);
 
 
-        final Map<String,List<BlobKey>> blobs = blobstoreService.getUploads(req);
-        final BlobKey blobKey = blobs.get(Parameters.myFile.getText()).get(0);
+            final Map<String,List<BlobKey>> blobs = blobstoreService.getUploads(req);
+            final BlobKey blobKey = blobs.get(Parameters.myFile.getText()).get(0);
 //        String diagramDescParam = req.getParameter(Const.PARAM_DESCRIPTION);
-        final String entityId = req.getParameter(Parameters.fileId.getText());
-        final String uploadType = req.getParameter(Parameters.uploadTypeHiddenField.getText());
-        final String email = req.getParameter(Parameters.emailHiddenField.getText());
-        final HttpSession session = req.getSession();
+            final String entityId = req.getParameter(Parameters.fileId.getText());
+            final String uploadType = req.getParameter(Parameters.uploadTypeHiddenField.getText());
+            final String email = req.getParameter(Parameters.emailHiddenField.getText());
+            final HttpSession session = req.getSession();
 
-        String diagramNameParam = req.getParameter(Parameters.fileName.getText());
-        final int lastIndex = diagramNameParam.lastIndexOf('\\');
-        final String fileName = diagramNameParam.substring(lastIndex + 1);
-        session.setAttribute(Parameters.email.getText(), CommonFactoryLocator.getInstance().createEmailAddress(email));
-
-
+            String diagramNameParam = req.getParameter(Parameters.fileName.getText());
+            String protectionLevelParam = req.getParameter(Parameters.protection.getText());
+            final int lastIndex = diagramNameParam.lastIndexOf('\\');
+            final String fileName = diagramNameParam.substring(lastIndex + 1);
+            session.setAttribute(Parameters.email.getText(), CommonFactoryLocator.getInstance().createEmailAddress(email));
 
             final EntityName diagramName = CommonFactoryLocator.getInstance().createName(fileName, EntityType.file);
             PrintWriter out = res.getWriter();
 
             com.nimbits.client.model.file.File file = null;
-            if (uploadType.equals(UploadType.newFile.name())) {
+            if (! uploadType.equals(EntityType.file.name())) {
                 Entity entity = EntityModelFactory.createEntity(diagramName, "", EntityType.file, ProtectionLevel.everyone,
-                       user.getKey(), user.getKey());
+                        user.getKey(), user.getKey());
                 file = FileFactory.createFile(entity);
 
 
             }
-            else if (uploadType.equals(UploadType.updatedFile.name()) && entityId != null) {
+            else if (entityId != null) {
 
                 List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(user, entityId, EntityType.file);
                 if (! result.isEmpty()) {
@@ -91,13 +90,13 @@ public class BlobServletImpl extends ApiServlet {
                 res.setStatus(HttpServletResponse.SC_OK);
                 out.print(json);
                 out.flush();
-               // out.close();
+                // out.close();
             }
 
         } catch (NimbitsException e) {
-           if (user != null) {
-               FeedServiceFactory.getInstance().postToFeed(user, e);
-           }
+            if (user != null) {
+                FeedServiceFactory.getInstance().postToFeed(user, e);
+            }
         }
 
 

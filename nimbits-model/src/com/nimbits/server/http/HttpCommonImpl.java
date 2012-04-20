@@ -35,9 +35,11 @@ import java.net.URL;
 public class HttpCommonImpl implements HttpCommon {
 
 
+    private static final int DEFAULT_BUILDER_SIZE = 1024;
+
     @Override
     public String doPost(final String postUrl, final String params, final String authCookie) throws NimbitsException {
-        String retVal = "";
+       // String retVal = "";
         // String postParams = params;
         try {
             final URL url = new URL(postUrl);
@@ -54,20 +56,22 @@ public class HttpCommonImpl implements HttpCommon {
             final OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
             writer.write(params);
             writer.close();
+            StringBuilder sv = new StringBuilder(DEFAULT_BUILDER_SIZE);
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    retVal += line;
+                    sv.append(line);
                 }
                 reader.close();
             }
+            return sv.toString();
         } catch (MalformedURLException e) {
             throw new NimbitsException(e);
         } catch (IOException e) {
             throw new NimbitsException(e);
         }
-        return retVal;
+
 
     }
 
@@ -89,6 +93,7 @@ public class HttpCommonImpl implements HttpCommon {
         }
     }
 
+    @Override
     public byte[] doGetBytes(final String postUrl, final String params, final String authCookie) throws IOException {
 
         int c;
@@ -118,7 +123,7 @@ public class HttpCommonImpl implements HttpCommon {
         final URL url;
         try {
             url = new URL(postUrl + "?" + params);
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder(DEFAULT_BUILDER_SIZE);
             final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
             connection.setRequestMethod(Const.METHOD_POST);
@@ -149,14 +154,15 @@ public class HttpCommonImpl implements HttpCommon {
         }
     }
 
+    @Override
     public String doGet(final String postUrl, final String params, final String authCookie) throws NimbitsException {
-        final StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder(DEFAULT_BUILDER_SIZE);
         HttpURLConnection connection = null;
 
         try {
              System.setProperty("http.keepAlive", "false");
             // final String paramsWithAuth = params + getAuthParams();
-            final URL url = new URL(postUrl + "?" + params);
+            final URL url = new URL(postUrl + '?' + params);
             //  InetAddress address = InetAddress.getByName(postUrl);
             connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
@@ -183,7 +189,7 @@ public class HttpCommonImpl implements HttpCommon {
         } catch (IOException e) {
             if (connection != null) {
                 try {
-                    throw new NimbitsException(e.getMessage() + " " + connection.getResponseCode());
+                    throw new NimbitsException(e.getMessage() + ' ' + connection.getResponseCode());
                 } catch (IOException e1) {
                     throw new NimbitsException(e);
                 }

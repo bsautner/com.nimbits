@@ -23,11 +23,11 @@ import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
-import com.nimbits.server.entity.*;
+import com.nimbits.server.transactions.service.entity.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.json.*;
-import com.nimbits.server.user.*;
-import com.nimbits.server.value.*;
+import com.nimbits.server.transactions.service.user.*;
+import com.nimbits.server.transactions.service.value.*;
 
 import javax.servlet.http.*;
 import java.io.*;
@@ -121,7 +121,7 @@ public class XMPPReceiverServlet extends HttpServlet {
 
                 if (point != null) {
 
-                    final Value v = RecordedValueServiceFactory.getInstance().recordValue(u, point, p.getValue());
+                    final Value v = ValueServiceFactory.getInstance().recordValue(u, point, p.getValue());
                     point.setValue(v);
                     String result = gson.toJson(point);
                     XmppServiceFactory.getInstance().sendMessage(result, u.getEmail());
@@ -169,7 +169,7 @@ public class XMPPReceiverServlet extends HttpServlet {
 
                 if (u != null) {
                     Value value = ValueModelFactory.createValueModel(0.0, 0.0, v, new Date(), "");
-                    RecordedValueServiceFactory.getInstance().recordValue(u, pointName, value);
+                    ValueServiceFactory.getInstance().recordValue(u, pointName, value);
                 }
             } catch (NumberFormatException ignored) {
 
@@ -188,7 +188,7 @@ public class XMPPReceiverServlet extends HttpServlet {
             // Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
             Entity point = EntityServiceFactory.getInstance().getEntityByKey(e.getKey(), EntityType.point).get(0);
 
-            final Value v = RecordedValueServiceFactory.getInstance().getPrevValue(point, new Date());
+            final Value v = ValueServiceFactory.getInstance().getPrevValue(point, new Date());
             if (v != null) {
                 String t = "";
                 if (v.getNote() != null && !v.getNote().isEmpty()) {

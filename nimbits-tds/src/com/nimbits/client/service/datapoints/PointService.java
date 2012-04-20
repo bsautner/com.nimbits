@@ -18,7 +18,6 @@ import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 
 import java.util.*;
@@ -28,7 +27,7 @@ public interface PointService extends RemoteService {
 
     String exportData(final Map<EntityName, Entity> points, final ExportType exportType, final Map<EntityName, List<Value>> values) throws NimbitsException;
 
-    Entity copyPoint(final User u, final Entity originalEntity, final EntityName newName) throws NimbitsException;
+   // Entity copyPoint(final User u, final Entity originalEntity, final EntityName newName) throws NimbitsException;
 
 
 }

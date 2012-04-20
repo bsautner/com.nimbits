@@ -84,7 +84,7 @@ public enum Parameters {
      listen(ParamConstants.PARAM_LISTEN),
      appid(ParamConstants.PARAM_APP_ID),
      record(ParamConstants.ACTION_RECORD),
-     server(ParamConstants.PARAM_SERVER);
+     server(ParamConstants.PARAM_SERVER), protection(ParamConstants.PARAM_PROTECTION);
 
     private static final Map<String, Parameters> lookup = new HashMap<String, Parameters>(100);
 
@@ -188,6 +188,7 @@ public enum Parameters {
        public static final String PARAM_APP_ID = "appid";
        public static final String ACTION_RECORD = "record";
        public static final String PARAM_SERVER = "server";
+        public static final String PARAM_PROTECTION = "protection";
 
         private ParamConstants() {
         }

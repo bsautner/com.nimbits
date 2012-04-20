@@ -17,14 +17,12 @@ import com.extjs.gxt.ui.client.event.*;
 import com.extjs.gxt.ui.client.widget.*;
 import com.extjs.gxt.ui.client.widget.VerticalPanel;
 import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.form.FormPanel;
 import com.extjs.gxt.ui.client.widget.layout.*;
 import com.extjs.gxt.ui.client.widget.toolbar.*;
 import com.google.gwt.core.client.*;
 import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.google.gwt.user.client.ui.*;
-import com.nimbits.client.enums.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.service.blob.*;
 import com.nimbits.client.service.entity.*;
@@ -40,24 +38,17 @@ import com.nimbits.client.ui.icons.*;
  */
 public class FilePropertyPanel extends NavigationEventProvider {
 
-    //private final Diagram diagram;
+    EntityPanel simple;
     private final Entity entity;
-
-
-    private final ProtectionLevelOptions protectionLevelOptions;
-
-
+    private VerticalPanel vp;
+    private FormData formData;
 
     public FilePropertyPanel(final Entity entity) {
         this.entity = entity;
-        this.protectionLevelOptions = new ProtectionLevelOptions(entity);
-      //  this.diagram = d;
-      //  this.readOnly = entity.isReadOnly();
+
     }
 
-    private VerticalPanel vp;
 
-    private FormData formData;
 
     @Override
     protected void onRender(final Element parent, final int index) {
@@ -73,16 +64,13 @@ public class FilePropertyPanel extends NavigationEventProvider {
     }
 
     private void createForm() {
-        FormPanel simple = new FormPanel();
+        simple = new EntityPanel(entity);
 
         simple.setHeaderVisible(false);
         simple.setFrame(false);
         simple.setWidth(480);
 
 
-
-
-        simple.add(protectionLevelOptions, formData);
 
 
         String url = "http://" + com.google.gwt.user.client.Window.Location.getHostName() + "?uuid=" + entity.getKey();
@@ -141,7 +129,7 @@ public class FilePropertyPanel extends NavigationEventProvider {
                 final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
                 w.setAutoWidth(true);
                 w.setHeading("Upload a file");
-                final FileUploadPanel p = new FileUploadPanel(UploadType.updatedFile, entity);
+                final FileUploadPanel p = new FileUploadPanel(entity);
                 p.addFileAddedListeners(new FileUploadPanel.FileAddedListener() {
                     @Override
                     public void onFileAdded() {
@@ -162,7 +150,7 @@ public class FilePropertyPanel extends NavigationEventProvider {
     private void saveFile() {
 
         final EntityServiceAsync serviceAsync = GWT.create(BlobService.class);
-        entity.setProtectionLevel(protectionLevelOptions.getProtectionLevel());
+        entity.setProtectionLevel(simple.getProtectionLevel());
 
         serviceAsync.addUpdateEntity(entity, new AsyncCallback<Entity>() {
 
@@ -173,7 +161,7 @@ public class FilePropertyPanel extends NavigationEventProvider {
 
             @Override
             public void onSuccess(Entity entity) {
-                MessageBox.info("Diagram Settings", "Diagram Updated", null);
+                MessageBox.info("File Settings", "File Updated", null);
 
             }
         });

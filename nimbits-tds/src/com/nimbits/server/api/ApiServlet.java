@@ -18,8 +18,8 @@ import com.nimbits.client.enums.ExportType;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.user.User;
-import com.nimbits.server.quota.QuotaFactory;
-import com.nimbits.server.user.UserServiceFactory;
+import com.nimbits.server.admin.quota.QuotaFactory;
+import com.nimbits.server.transactions.service.user.UserServiceFactory;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

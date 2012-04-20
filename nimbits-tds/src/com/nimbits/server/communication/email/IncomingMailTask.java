@@ -20,10 +20,11 @@ import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.feed.*;
+import com.nimbits.server.transactions.service.entity.*;
+import com.nimbits.server.transactions.service.feed.*;
 import com.nimbits.server.admin.logging.*;
-import com.nimbits.server.value.*;
+import com.nimbits.server.transactions.service.user.*;
+import com.nimbits.server.transactions.service.value.*;
 
 import javax.servlet.http.*;
 import java.util.*;
@@ -67,6 +68,7 @@ public class IncomingMailTask extends HttpServlet {
 
             } else {
                 final User u = (User) result.get(0);
+                u.addAccessKey(UserServiceFactory.getServerInstance().authenticatedKey(u));
                 if (Data.length > 0) {
                     for (String s : Data) {
                         processLine(u, s);
@@ -122,7 +124,7 @@ public class IncomingMailTask extends HttpServlet {
             String note = k.length == 4 ? k[3].trim() : "";
             final Value value = ValueModelFactory.createValueModel(0.0, 0.0, v, new Date(timestamp), note);
             try {
-                RecordedValueServiceFactory.getInstance().recordValue(u, point, value);
+                ValueServiceFactory.getInstance().recordValue(u, point, value);
             } catch (NimbitsException e) {
                 log.severe(e.getMessage());
                 if (u != null) {

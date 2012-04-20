@@ -31,6 +31,7 @@ import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.summary.*;
+import com.nimbits.client.model.trigger.*;
 import com.nimbits.client.service.entity.*;
 import com.nimbits.client.ui.controls.*;
 import com.nimbits.client.ui.helper.*;
@@ -281,7 +282,7 @@ public class SummaryPanel extends NavigationEventProvider {
             if (entity.getEntityType().equals(EntityType.summary)) {
 
                 try {
-                   Summary summary = (Summary)entity;
+                   Trigger summary = (Trigger) entity;
                     update = SummaryModelFactory.createSummary(entity,
                             summary.getTrigger(), summary.getTarget(), true, summaryType,
                             spinnerField.getValue().intValue() * 1000, new Date());

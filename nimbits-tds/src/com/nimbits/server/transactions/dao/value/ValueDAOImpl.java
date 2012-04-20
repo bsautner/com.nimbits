@@ -27,7 +27,7 @@ import com.nimbits.server.gson.*;
 import com.nimbits.server.admin.logging.*;
 import com.nimbits.server.orm.*;
 import com.nimbits.server.time.*;
-import com.nimbits.server.value.*;
+import com.nimbits.server.transactions.service.value.*;
 
 import javax.jdo.*;
 import java.io.*;
@@ -41,7 +41,7 @@ import java.util.*;
  * Time: 11:05 AM
  */
 @SuppressWarnings("unchecked")
-public class ValueDAOImpl implements RecordedValueTransactions {
+public class ValueDAOImpl implements ValueTransactions {
     private final Entity entity;
 
     public ValueDAOImpl(final Entity aPoint) {

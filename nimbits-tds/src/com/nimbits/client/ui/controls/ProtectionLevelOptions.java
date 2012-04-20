@@ -48,7 +48,7 @@ public class ProtectionLevelOptions extends RadioGroup {
             radioProtectionPublic.setValue(true);
         }
         setFieldLabel("Who can view");
-
+        setName(Parameters.protection.getText());
         add(radioProtectionMe);
         add(radioProtectionConnections);
         add(radioProtectionPublic);

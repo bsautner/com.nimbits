@@ -25,12 +25,12 @@ import com.nimbits.client.model.timespan.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.server.api.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.feed.*;
+import com.nimbits.server.transactions.service.entity.*;
+import com.nimbits.server.transactions.service.feed.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.admin.logging.*;
 import com.nimbits.server.time.*;
-import com.nimbits.server.value.*;
+import com.nimbits.server.transactions.service.value.*;
 
 import javax.servlet.http.*;
 import java.io.*;
@@ -163,7 +163,7 @@ public class PointServletImpl extends ApiServlet {
                             for (final Entity e : children) {
                                 final Point p = (Point) e;
                                 p.setValues(getRecordedValues(getParam(Parameters.count), startParam, endParam, offsetParam, p));
-                                p.setValue(RecordedValueServiceFactory.getInstance().getCurrentValue(p));
+                                p.setValue(ValueServiceFactory.getInstance().getCurrentValue(p));
                                 points.add(p);
 
                             }
@@ -272,7 +272,7 @@ public class PointServletImpl extends ApiServlet {
         final Point p = (Point) baseEntity;
         p.setValues(getRecordedValues(countParam, startParam, endParam, offsetParam, baseEntity));
 
-        final Value current = RecordedValueServiceFactory.getInstance().getCurrentValue(p);
+        final Value current = ValueServiceFactory.getInstance().getCurrentValue(p);
         p.setValue(current);
         final ExportType type = getOutputType(format);
         return type.equals(ExportType.json) ? gson.toJson(p) : "";
@@ -297,13 +297,13 @@ public class PointServletImpl extends ApiServlet {
             if (count > 1000) {
                 count = 1000;
             }
-            return  RecordedValueServiceFactory.getInstance().getTopDataSeries(point, count);
+            return  ValueServiceFactory.getInstance().getTopDataSeries(point, count);
 
         } else if (!Utils.isEmptyString(start) && !Utils.isEmptyString(end) && !Utils.isEmptyString(end)) {
             final int offset = Integer.valueOf(offsetParam);
             final Timespan ts = TimespanServiceFactory.getInstance().createTimespan(start, end, offset);
 
-            return RecordedValueServiceFactory.getInstance().getDataSegment(point, ts);
+            return ValueServiceFactory.getInstance().getDataSegment(point, ts);
 
         } else {
             return new ArrayList<Value>(0);

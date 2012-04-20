@@ -19,7 +19,7 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueModelFactory;
 import com.nimbits.server.NimbitsServletTest;
-import com.nimbits.server.cron.SystemMaint;
+import com.nimbits.server.process.cron.SystemMaint;
 import com.nimbits.server.admin.settings.SettingsServiceFactory;
 import org.junit.Test;
 

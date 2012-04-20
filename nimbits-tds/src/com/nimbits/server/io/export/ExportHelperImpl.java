@@ -17,7 +17,7 @@ import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.value.*;
-import com.nimbits.server.intelligence.*;
+import com.nimbits.server.transactions.service.intelligence.*;
 
 import java.util.*;
 

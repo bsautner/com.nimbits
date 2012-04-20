@@ -21,11 +21,11 @@ import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.timespan.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.server.api.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.feed.*;
+import com.nimbits.server.transactions.service.entity.*;
+import com.nimbits.server.transactions.service.feed.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.time.*;
-import com.nimbits.server.value.*;
+import com.nimbits.server.transactions.service.value.*;
 
 import javax.servlet.http.*;
 import java.io.*;
@@ -93,11 +93,11 @@ public class SeriesServletImpl extends ApiServlet {
 
                         int seg = Integer.valueOf(segStr);
 
-                        values = RecordedValueServiceFactory.getInstance().getDataSegment(point, timespan, seg, seg + 1000);
+                        values = ValueServiceFactory.getInstance().getDataSegment(point, timespan, seg, seg + 1000);
 
                     } else {
 
-                        values = RecordedValueServiceFactory.getInstance().getTopDataSeries(point, count);
+                        values = ValueServiceFactory.getInstance().getTopDataSeries(point, count);
 
                     }
 

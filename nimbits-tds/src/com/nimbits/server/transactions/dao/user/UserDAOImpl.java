@@ -20,9 +20,9 @@ import com.nimbits.client.exception.*;
 import com.nimbits.client.model.connection.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.user.*;
-import com.nimbits.server.entity.*;
+import com.nimbits.server.transactions.service.entity.*;
 import com.nimbits.server.orm.*;
-import com.nimbits.server.user.*;
+import com.nimbits.server.transactions.service.user.*;
 
 import javax.jdo.*;
 import java.util.*;

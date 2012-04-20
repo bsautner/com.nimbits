@@ -19,7 +19,7 @@ import com.nimbits.client.model.connection.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.server.transactions.memcache.*;
-import com.nimbits.server.user.*;
+import com.nimbits.server.transactions.service.user.*;
 
 import java.util.*;
 

@@ -23,28 +23,15 @@ import java.util.*;
 
 public abstract class NavigationEventProvider extends LayoutContainer {
 
-    private final List<EntityDeletedListener> entityDeletedListeners = new ArrayList<EntityDeletedListener>();
-    private final List<ReloadListener> reloadListeners = new ArrayList<ReloadListener>();
-    private final List<EntityClickedListener> entityClickedListeners = new ArrayList<EntityClickedListener>();
-    private final List<UrlClickedListener> urlClickedListeners = new ArrayList<UrlClickedListener>();
-    private final List<ValueEnteredListener> valueEnteredListeners = new ArrayList<ValueEnteredListener>();
+    private final Collection<EntityDeletedListener> entityDeletedListeners = new ArrayList<EntityDeletedListener>(1);
 
-    private final List<EntityAddedListener> entityAddedListeners = new ArrayList<EntityAddedListener>();
+    private final Collection<EntityClickedListener> entityClickedListeners = new ArrayList<EntityClickedListener>(1);
 
+    private final Collection<ValueEnteredListener> valueEnteredListeners = new ArrayList<ValueEnteredListener>(1);
 
-    public interface ReloadListener {
-        void onReload();
-    }
+    private final Collection<EntityAddedListener> entityAddedListeners = new ArrayList<EntityAddedListener>(1);
 
 
-    public void notifyReloadListener()  {
-        for (ReloadListener l : reloadListeners) {
-            l.onReload();
-        }
-    }
-    public void addReloadListener(final ReloadListener listener) {
-        reloadListeners.add(listener);
-    }
     public interface EntityAddedListener {
         void onEntityAdded(final Entity entity) throws NimbitsException;
     }
@@ -75,8 +62,6 @@ public abstract class NavigationEventProvider extends LayoutContainer {
         void onEntityDeleted(final Entity entity) ;
 
     }
-
-
 
     // Value entered Handlers
     public interface ValueEnteredListener {
@@ -110,28 +95,6 @@ public abstract class NavigationEventProvider extends LayoutContainer {
             clickedListener.onEntityClicked(entity);
         }
     }
-
-
-    // Diagram Click Handlers
-    public interface UrlClickedListener {
-        void onUrlClicked(final String url, final String target);
-
-    }
-
-    public void addUrlClickedListeners(final UrlClickedListener listener) {
-        urlClickedListeners.add(listener);
-    }
-
-    void notifyUrlClickedListener(final String url, final String target) {
-        for (UrlClickedListener urlClickedListener : urlClickedListeners) {
-            urlClickedListener.onUrlClicked(url, target);
-        }
-    }
-
-
-
-
-
 
 
 

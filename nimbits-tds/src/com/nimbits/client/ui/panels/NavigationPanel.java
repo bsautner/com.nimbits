@@ -527,8 +527,7 @@ public class NavigationPanel extends NavigationEventProvider {
 
 
                     final String valueAndNote = model.get(Parameters.value.getText());
-                    //final String data = model.get(Const.PARAM_DATA);
-                    String uuid = model.getId();
+
                     if (timestamp == null) {
                         timestamp = new Date();
                     }

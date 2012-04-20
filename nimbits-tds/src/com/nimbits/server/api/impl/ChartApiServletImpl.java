@@ -23,10 +23,10 @@ import com.nimbits.client.model.timespan.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.server.api.*;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.feed.*;
+import com.nimbits.server.transactions.service.entity.*;
+import com.nimbits.server.transactions.service.feed.*;
 import com.nimbits.server.time.*;
-import com.nimbits.server.value.*;
+import com.nimbits.server.transactions.service.value.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -130,8 +130,8 @@ public class ChartApiServletImpl extends ApiServlet {
 
                         List<Value> values = timespan != null ?
 
-                                RecordedValueServiceFactory.getInstance().getDataSegment(p, timespan) :
-                                RecordedValueServiceFactory.getInstance().getTopDataSeries(p, valueCount);
+                                ValueServiceFactory.getInstance().getDataSegment(p, timespan) :
+                                ValueServiceFactory.getInstance().getTopDataSeries(p, valueCount);
 
 
                         for (final Value v : values) {

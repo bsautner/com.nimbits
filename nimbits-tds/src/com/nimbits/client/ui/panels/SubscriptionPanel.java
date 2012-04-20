@@ -399,8 +399,7 @@ public class SubscriptionPanel extends NavigationEventProvider {
 
                 }
                 else {
-                    String parent;
-                    parent = entity.isReadOnly() ? "" : entity.getKey();
+                    String parent = entity.isReadOnly() ? "" : entity.getKey();
 
                     Entity newEntity = EntityModelFactory.createEntity(name, "", EntityType.subscription
                             , ProtectionLevel.onlyMe, parent, entity.getOwner());

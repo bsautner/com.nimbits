@@ -23,8 +23,8 @@ import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.xmpp.*;
 import com.nimbits.client.service.xmpp.XMPPService;
-import com.nimbits.server.entity.*;
-import com.nimbits.server.user.*;
+import com.nimbits.server.transactions.service.entity.*;
+import com.nimbits.server.transactions.service.user.*;
 
 import java.util.*;
 

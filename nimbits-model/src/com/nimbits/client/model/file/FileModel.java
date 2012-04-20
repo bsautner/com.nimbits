@@ -13,9 +13,8 @@
 
 package com.nimbits.client.model.file;
 
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModel;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.entity.*;
 
 import java.io.*;
 
@@ -31,11 +30,14 @@ public class FileModel extends EntityModel implements Serializable, File {
     protected FileModel() {
     }
 
+    public FileModel(File entity) throws NimbitsException {
+        super(entity);
+        blobKey = entity.getBlobKey();
+    }
     public FileModel(Entity entity) throws NimbitsException {
         super(entity);
-        blobKey = ((File)entity).getBlobKey();
-    }
 
+    }
     @Override
     public String getBlobKey() {
         return blobKey;

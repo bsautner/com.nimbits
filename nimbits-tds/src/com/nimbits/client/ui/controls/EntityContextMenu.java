@@ -594,20 +594,24 @@ public class EntityContextMenu extends Menu {
                         showSummaryPanel(entity);
                         break;
                     case file:
-                        final FilePropertyPanel dp = new FilePropertyPanel(entity);
-                        final Window w = new Window();
-                        w.setWidth(WIDTH);
-                        w.setHeight(HEIGHT);
-
-                        w.setHeading(entity.getName().getValue() + ' ' + Words.WORD_PROPERTIES);
-
-                        w.add(dp);
-                        w.show();
+                        showFilePanel(entity);
                         break;
                 }
             } catch (NimbitsException e) {
                 FeedbackHelper.showError(e);
             }
+        }
+
+        private void showFilePanel(Entity entity) throws NimbitsException {
+            final FilePropertyPanel dp = new FilePropertyPanel(entity);
+            final Window w = new Window();
+            w.setWidth(WIDTH);
+            w.setHeight(HEIGHT);
+
+            w.setHeading(entity.getName().getValue() + ' ' + Words.WORD_PROPERTIES);
+
+            w.add(dp);
+            w.show();
         }
 
         private void createPointPropertyWindow(final Entity entity) throws NimbitsException {

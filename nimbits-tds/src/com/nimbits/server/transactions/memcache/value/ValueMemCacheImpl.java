@@ -22,8 +22,8 @@ import com.nimbits.client.model.timespan.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.model.valueblobstore.*;
 import com.nimbits.server.admin.logging.*;
-import com.nimbits.server.task.*;
-import com.nimbits.server.value.*;
+import com.nimbits.server.process.task.*;
+import com.nimbits.server.transactions.service.value.*;
 
 import java.util.*;
 
@@ -34,7 +34,7 @@ import java.util.*;
  * Time: 12:40 PM
  */
 @SuppressWarnings("unchecked")
-public class ValueMemCacheImpl implements RecordedValueTransactions {
+public class ValueMemCacheImpl implements ValueTransactions {
 
     private final MemcacheService buffer;
     private final MemcacheService cacheShared;
@@ -95,17 +95,17 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
                 final Value value = (Value) buffer.get(currentValueCacheKey);
                 if (value == null) {
                     buffer.delete(currentValueCacheKey);
-                    retObj = RecordedValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
+                    retObj = ValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
                     if (retObj != null) {
                         buffer.put(currentValueCacheKey, retObj);
                     }
                 } else {
-                    retObj = timestamp.getTime() >= value.getTimestamp().getTime() ? value : RecordedValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
+                    retObj = timestamp.getTime() >= value.getTimestamp().getTime() ? value : ValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
                 }
             } else {
                 LogHelper.log(this.getClass(), "Accessing data store for current value");
 
-                retObj = RecordedValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
+                retObj = ValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
 
                 if (retObj != null) {
                     LogHelper.log(this.getClass(), "Found value in store" + retObj.getValueWithNote());
@@ -119,7 +119,7 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
             }
         } catch (ClassCastException e) { //old cache data causing a provblem when upgrading.
             buffer.delete(currentValueCacheKey);
-            retObj = RecordedValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
+            retObj = ValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
             if (retObj != null) {
                 buffer.put(currentValueCacheKey, retObj);
             }
@@ -175,7 +175,7 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
     @Override
     public List<Value> getTopDataSeries(final int maxValues) throws NimbitsException {
         final List<Value> cached = getBuffer();
-        final List<Value> stored = RecordedValueTransactionFactory.getDaoInstance(point).getTopDataSeries(maxValues);
+        final List<Value> stored = ValueTransactionFactory.getDaoInstance(point).getTopDataSeries(maxValues);
         return mergeAndSort(cached, stored, maxValues);
     }
 
@@ -188,7 +188,7 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
         if (cached != null && cached.size() > maxValues) {
             return cached;
         } else {
-            final List<Value> stored = RecordedValueTransactionFactory.getDaoInstance(point).getTopDataSeries(maxValues, endDate);
+            final List<Value> stored = ValueTransactionFactory.getDaoInstance(point).getTopDataSeries(maxValues, endDate);
             return stored.isEmpty() ? cached : mergeAndSort(stored, cached, endDate);
         }
 
@@ -196,19 +196,19 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
 
     @Override
     public List<Value> getDataSegment(final Timespan timespan) throws NimbitsException {
-        final List<Value> stored = RecordedValueTransactionFactory.getDaoInstance(point).getDataSegment(timespan);
+        final List<Value> stored = ValueTransactionFactory.getDaoInstance(point).getDataSegment(timespan);
         final List<Value> cached = getBuffer();
         return mergeAndSort(stored, cached, timespan);
     }
 
     @Override
     public List<Value> getDataSegment(final Timespan timespan, final int start, final int end) throws NimbitsException {
-        return RecordedValueTransactionFactory.getDaoInstance(point).getDataSegment(timespan, start, end);
+        return ValueTransactionFactory.getDaoInstance(point).getDataSegment(timespan, start, end);
     }
 
     @Override
     public void recordValues(final List<Value> values) throws NimbitsException {
-        RecordedValueTransactionFactory.getDaoInstance(point).recordValues(values);
+        ValueTransactionFactory.getDaoInstance(point).recordValues(values);
     }
 
     @Override
@@ -283,7 +283,7 @@ public class ValueMemCacheImpl implements RecordedValueTransactions {
                     for (final Map.Entry<Long, Object> longObjectEntry : valueMap.entrySet()) {
                         values.add((Value) longObjectEntry.getValue());
                     }
-                    RecordedValueTransactionFactory.getDaoInstance(point).recordValues(values);
+                    ValueTransactionFactory.getDaoInstance(point).recordValues(values);
                 }
              }
         } catch (Exception e) {

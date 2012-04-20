@@ -16,7 +16,7 @@ package com.nimbits.server.api.impl;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.server.gson.*;
-import com.nimbits.server.user.*;
+import com.nimbits.server.transactions.service.user.*;
 
 import javax.servlet.http.*;
 import java.io.*;

@@ -1,24 +1,18 @@
 package com.nimbits.server.api.impl;
 
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ExportType;
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.CategoryModel;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointModel;
-import com.nimbits.server.NimbitsServletTest;
-import com.nimbits.server.gson.GsonFactory;
-import org.junit.Assert;
-import org.junit.Test;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.category.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.*;
+import com.nimbits.server.*;
+import com.nimbits.server.gson.*;
+import com.nimbits.server.transactions.service.entity.*;
+import org.junit.*;
+import static org.junit.Assert.*;
 
-import java.util.List;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner
@@ -43,6 +37,53 @@ public class PointServletTest extends NimbitsServletTest {
         String r = i.processGet(req, resp);
         Category c = GsonFactory.getInstance().fromJson(r, CategoryModel.class);
         Assert.assertFalse(c.getChildren().isEmpty());
+
+
+
+    }
+
+    @Test
+    public void testGetNotLoggedIn() throws NimbitsException {
+
+        point.setProtectionLevel(ProtectionLevel.everyone);
+        EntityServiceFactory.getInstance().addUpdateEntity(point);
+        List<Entity> rl = EntityServiceFactory.getInstance().getEntityByKey(point.getKey(), EntityType.point);
+        assertFalse(rl.isEmpty());
+        Point rp = (Point)rl.get(0);
+
+        assertEquals(rp.getProtectionLevel(), ProtectionLevel.everyone);
+
+        req.removeAllParameters();
+        req.addParameter(Parameters.uuid.getText(), point.getKey());
+
+        helper.setEnvIsLoggedIn(false);
+
+        String r = i.processGet(req, resp);
+        Point ret = GsonFactory.getInstance().fromJson(r, PointModel.class);
+        assertNotNull(ret);
+
+
+
+    }
+    @Test
+    public void testGetNotLoggedInAccessProtected() throws NimbitsException {
+
+        point.setProtectionLevel(ProtectionLevel.onlyMe);
+        EntityServiceFactory.getInstance().addUpdateEntity(point);
+        List<Entity> rl = EntityServiceFactory.getInstance().getEntityByKey(point.getKey(), EntityType.point);
+        assertFalse(rl.isEmpty());
+        Point rp = (Point)rl.get(0);
+
+        assertEquals(rp.getProtectionLevel(), ProtectionLevel.onlyMe);
+
+        req.removeAllParameters();
+        req.addParameter(Parameters.uuid.getText(), point.getKey());
+
+        helper.setEnvIsLoggedIn(false);
+
+        String r = i.processGet(req, resp);
+        Point ret = GsonFactory.getInstance().fromJson(r, PointModel.class);
+        assertNull(ret);
 
 
 

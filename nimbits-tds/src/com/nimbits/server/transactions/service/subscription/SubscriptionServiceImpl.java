@@ -179,7 +179,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
     private static void postToFB(final Entity p, final Entity entity, final User u, final Value v) throws NimbitsException {
 
-        String m = "Data Point #" + entity.getName().getValue() + " = " + v.getDoubleValue();
+        String m = entity.getName().getValue() + " = " + v.getDoubleValue();
         if (v.getNote() != null) {
             m += ' ' + v.getNote();
         }
@@ -209,7 +209,8 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
             picture.append("http://app.nimbits.com/resources/images/logo.png");
         }
 
-        final String link = "http://app.nimbits.com?uuid=" + p.getKey();
+        final String link = "http://app.nimbits.com?uuid=" + p.getUUID() + "&email=" + p.getOwner();
+
         final String d = Utils.isEmptyString(entity.getDescription()) ? "" : entity.getDescription();
         FacebookFactory.getInstance().updateStatus(u.getFacebookToken(), m, picture.toString(), link, "Subscribe to this data feed.",
                 "nimbits.com", d);

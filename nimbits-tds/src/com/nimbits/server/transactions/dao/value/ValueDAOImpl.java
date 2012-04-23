@@ -94,6 +94,22 @@ public class ValueDAOImpl implements ValueTransactions {
             pm.close();
         }
     }
+    @Override
+    public List<ValueBlobStore> getBlobStoreByBlobKey(BlobKey key) throws NimbitsException {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+
+        try {
+
+            final List<ValueBlobStore> retObj = new ArrayList<ValueBlobStore>(1);
+
+            final Query q = pm.newQuery(ValueBlobStoreEntity.class);
+            q.setFilter("blobkey == k");
+            final List<ValueBlobStore> result = (List<ValueBlobStore>) q.execute(key);
+            return ValueBlobStoreFactory.createValueBlobStores(result);
+        } finally {
+            pm.close();
+        }
+    }
 
     @Override
     public List<Value> getDataSegment(final Timespan timespan) throws NimbitsException {
@@ -138,7 +154,7 @@ public class ValueDAOImpl implements ValueTransactions {
             q.setRange(0, 1000);
             q.setOrdering("timestamp descending");
 
-            final List<ValueBlobStore> result = (List<ValueBlobStore>) q.execute(entity.getKey());
+            final Collection<ValueBlobStore> result = (Collection<ValueBlobStore>) q.execute(entity.getKey());
 
             return ValueBlobStoreFactory.createValueBlobStores(result);
         } finally {
@@ -178,7 +194,7 @@ public class ValueDAOImpl implements ValueTransactions {
 
 
     @Override
-    public void recordValues(final List<Value> values) throws NimbitsException {
+    public List<ValueBlobStore> recordValues(final List<Value> values) throws NimbitsException {
 
 
         if (!values.isEmpty()) {
@@ -212,13 +228,14 @@ public class ValueDAOImpl implements ValueTransactions {
                 }
 
             }
-
+            List<ValueBlobStore> retObj = new ArrayList<ValueBlobStore>(map.size());
             for (final Map.Entry<Long, List<Value>> longListEntry : map.entrySet()) {
                 if (!longListEntry.getValue().isEmpty()) {
                     final String json = GsonFactory.getInstance().toJson(longListEntry.getValue());
 
                     try {
-                        createBlobStoreEntity(maxMap, minMap, longListEntry.getKey(), json);
+                        ValueBlobStore b = createBlobStoreEntity(maxMap, minMap, longListEntry.getKey(), json);
+                        retObj.add(b);
                     } catch (IOException e) {
                         throw new NimbitsException(e);
                     }
@@ -226,10 +243,12 @@ public class ValueDAOImpl implements ValueTransactions {
 
                 }
             }
+            return retObj;
 
 
 
         }
+        return new ArrayList<ValueBlobStore>(0);
 
 
     }
@@ -242,7 +261,7 @@ public class ValueDAOImpl implements ValueTransactions {
 
     }
 
-    private void createBlobStoreEntity(final Map<Long, Long> maxMap, final Map<Long, Long> minMap, final Long l, final String json) throws IOException, NimbitsException {
+    private ValueBlobStore createBlobStoreEntity(final Map<Long, Long> maxMap, final Map<Long, Long> minMap, final Long l, final String json) throws IOException, NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final FileService fileService = FileServiceFactory.getFileService();
         final AppEngineFile file = fileService.createNewBlobFile(Const.CONTENT_TYPE_PLAIN);
@@ -262,12 +281,9 @@ public class ValueDAOImpl implements ValueTransactions {
 
             pm.makePersistent(currentStoreEntity);
             pm.flush();
+            return ValueBlobStoreFactory.createValueBlobStore(currentStoreEntity);
         }
-        catch (Exception ex) {
-
-            throw new NimbitsException(ex);
-
-        } finally {
+        finally {
             out.close();
             pm.close();
         }
@@ -297,10 +313,13 @@ public class ValueDAOImpl implements ValueTransactions {
 
         try {
             BlobstoreService blobStoreService = BlobstoreServiceFactory.getBlobstoreService();
+
             String segment = new String(blobStoreService.fetchData(blobKey, 0, length));
             final List<Value> models =  GsonFactory.getInstance().fromJson(segment, GsonFactory.valueListType);
             Collections.sort(models);
             return models;
+        } catch (IllegalArgumentException ex) {
+            return new ArrayList<Value>(0);
         } catch (ApiProxy.ApiDeadlineExceededException ex) {
             throw new NimbitsException(ex);
 

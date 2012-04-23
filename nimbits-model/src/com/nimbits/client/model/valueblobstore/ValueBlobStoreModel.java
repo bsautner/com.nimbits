@@ -50,31 +50,38 @@ public class ValueBlobStoreModel implements ValueBlobStore {
         this.length = store.getLength();
     }
 
+    @Override
     public String getEntity() {
         return entity;
     }
 
+    @Override
     public Date getTimestamp() {
         return timestamp;
     }
 
 
+    @Override
     public String getPath() {
         return path;
     }
 
+    @Override
     public Date getMaxTimestamp() {
         return new Date(maxTimestamp);
     }
 
+    @Override
     public void setMaxTimestamp(Date maxTimestamp) {
         this.maxTimestamp = maxTimestamp.getTime();
     }
 
+    @Override
     public Date getMinTimestamp() {
         return new Date(minTimestamp);
     }
 
+    @Override
     public void setMinTimestamp(Date minTimestamp) {
         this.minTimestamp = minTimestamp.getTime();
     }
@@ -84,6 +91,7 @@ public class ValueBlobStoreModel implements ValueBlobStore {
         return key;
     }
 
+    @Override
     public long getLength() {
         return length;
     }

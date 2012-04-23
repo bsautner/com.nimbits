@@ -67,9 +67,6 @@ public class UserEntity extends EntityStore implements User {
      */
     private static final long serialVersionUID = 1L;
 
-
-
-
     @Override
     public Date getLastLoggedIn() {
         return (Date) this.lastLoggedIn.clone();

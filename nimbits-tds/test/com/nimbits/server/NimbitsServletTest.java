@@ -26,6 +26,7 @@ import com.nimbits.client.model.user.*;
 import com.nimbits.client.service.datapoints.*;
 import com.nimbits.client.service.settings.*;
 import com.nimbits.server.api.impl.*;
+import com.nimbits.server.transactions.dao.value.*;
 import com.nimbits.server.transactions.service.entity.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.transactions.service.point.*;
@@ -48,6 +49,7 @@ public class NimbitsServletTest {
     public final LocalServiceTestHelper helper = new LocalServiceTestHelper(
             new LocalDatastoreServiceTestConfig(),
             new LocalTaskQueueTestConfig(),
+            new LocalBlobstoreServiceTestConfig(),
             new LocalUserServiceTestConfig()).setEnvIsLoggedIn(true).setEnvEmail(email).setEnvAuthDomain("example.com");
 
 
@@ -73,7 +75,7 @@ public class NimbitsServletTest {
     public Entity pointEntity;
     public Entity pointChildEntity;
     public Category group;
-
+    public ValueDAOImpl valueDao;
 
     @Before
     public void setUp() throws NimbitsException {
@@ -117,7 +119,7 @@ public class NimbitsServletTest {
         pointEntity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone,  group.getKey(), user.getKey(), UUID.randomUUID().toString());
         point = (Point) EntityServiceFactory.getInstance().addUpdateEntity(user, pointEntity);
         // point = pointService.addPoint(user, pointEntity);
-
+        valueDao = new ValueDAOImpl(point);
         pointChildEntity = EntityModelFactory.createEntity(pointChildName, "", EntityType.point, ProtectionLevel.everyone, point.getKey(), user.getKey(), UUID.randomUUID().toString());
         pointChild = (Point) EntityServiceFactory.getInstance().addUpdateEntity(user, pointChildEntity);
         // pointChild =  pointService.addPoint(user, pointChildEntity);

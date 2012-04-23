@@ -13,8 +13,12 @@
 
 package com.nimbits.server.io.blob;
 
+import com.google.appengine.api.blobstore.*;
 import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
+
+import java.io.*;
 
 /**
  * Created by Benjamin Sautner
@@ -24,7 +28,7 @@ import com.nimbits.client.model.entity.*;
  *
  */
 public interface BlobStore {
-    String createFile(EntityName name, final String data, final ExportType exportType) ;
+    String createFile(EntityName name, final String data, final ExportType exportType) throws IOException;
 
-    void deleteOrphans();
+    BlobKey deleteOrphans(BlobKey afterBlobKey) throws NimbitsException;
 }

@@ -24,6 +24,7 @@ import com.nimbits.client.service.datapoints.*;
 import com.nimbits.server.io.blob.*;
 import com.nimbits.server.io.export.*;
 
+import java.io.*;
 import java.util.*;
 
 public class PointServiceImpl extends RemoteServiceServlet implements
@@ -48,7 +49,7 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
 
     @Override
-    public String exportData(final Map<EntityName, Entity> points, final ExportType exportType, final Map<EntityName, List<Value>> values) throws NimbitsException {
+    public String exportData(final Map<EntityName, Entity> points, final ExportType exportType, final Map<EntityName, List<Value>> values) throws NimbitsException, IOException {
 
         final String data;
 

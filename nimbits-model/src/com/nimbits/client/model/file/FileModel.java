@@ -34,10 +34,13 @@ public class FileModel extends EntityModel implements Serializable, File {
         super(entity);
         blobKey = entity.getBlobKey();
     }
-    public FileModel(Entity entity) throws NimbitsException {
-        super(entity);
 
+
+    public FileModel(Entity e, String blobKey) throws NimbitsException {
+        super(e);
+        this.blobKey= blobKey;
     }
+
     @Override
     public String getBlobKey() {
         return blobKey;

@@ -256,6 +256,18 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>DeleteOrphansTask</servlet-name>
+        <servlet-class>com.nimbits.server.process.task.DeleteOrphanedBlobTask</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DeleteOrphansTask</servlet-name>
+        <url-pattern>/task/orphans</url-pattern>
+    </servlet-mapping>
+
+
+
+
+    <servlet>
         <servlet-name>UpgradeTask</servlet-name>
         <servlet-class>com.nimbits.server.process.task.UpgradeTask</servlet-class>
     </servlet>

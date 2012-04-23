@@ -58,6 +58,24 @@ public class EntityServiceTest extends NimbitsServletTest {
 
     }
 
+    @Test
+    public void findEntityByKeyTest() throws NimbitsException {
+        helper.setEnvIsLoggedIn(false);
+        List<Entity> r = EntityServiceFactory.getInstance().findEntityByKey(point.getKey());
+        assertFalse(r.isEmpty());
+        assertTrue(r.get(0).isReadOnly());
+        List<Entity> r2 = EntityServiceFactory.getInstance().findEntityByKey(point.getUUID());
+        assertFalse(r2.isEmpty());
+        assertTrue(r2.get(0).isReadOnly());
+        List<Entity> r3 = EntityServiceFactory.getInstance().findEntityByKey(group.getUUID());
+        assertFalse(r3.isEmpty());
+        assertTrue(r3.get(0).isReadOnly());
+        List<Entity> r4 = EntityServiceFactory.getInstance().findEntityByKey(group.getKey());
+        assertFalse(r4.isEmpty());
+        assertTrue(r4.get(0).isReadOnly());
+
+    }
+
     @Test(expected=NimbitsException.class)
     public void duplicateNameTest() throws NimbitsException {
 

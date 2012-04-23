@@ -14,6 +14,7 @@
 package com.nimbits.server.transactions.dao.entity;
 
 
+import com.google.appengine.api.blobstore.*;
 import com.nimbits.*;
 import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
@@ -92,6 +93,27 @@ public class EntityDaoImpl implements  EntityTransactions {
 
 
     }
+    @Override
+    public List<Entity> getEntityByBlobKey(final BlobKey key) throws NimbitsException {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+
+        try {
+
+            final Query q = pm
+                    .newQuery(FileEntity.class);
+            q.setFilter("blobKey == k");
+            q.declareParameters("Long k");
+
+            final Collection<Entity> result = (Collection<Entity>) q.execute(key);
+            return  createModels(result);
+        } finally {
+            pm.close();
+        }
+
+
+
+    }
+
 
     @Override
     public List<Entity> getEntityByTrigger(final Entity entity, final Class<?> cls) throws NimbitsException {

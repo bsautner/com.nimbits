@@ -67,7 +67,7 @@ public class BlobServletImpl extends ApiServlet {
             if (! uploadType.equals(EntityType.file.name())) {
                 Entity entity = EntityModelFactory.createEntity(diagramName, "", EntityType.file, ProtectionLevel.everyone,
                         user.getKey(), user.getKey());
-                file = FileFactory.createFile(entity);
+                file = FileFactory.createFile(entity, blobKey.getKeyString());
 
 
             }

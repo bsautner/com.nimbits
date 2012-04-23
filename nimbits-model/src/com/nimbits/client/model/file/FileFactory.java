@@ -31,8 +31,8 @@ public class FileFactory {
 
         return new FileModel(e);
     }
-    public static File createFile(Entity e) throws NimbitsException {
+    public static File createFile(Entity e, String blobKey) throws NimbitsException {
 
-        return new FileModel(e);
+        return new FileModel(e, blobKey);
     }
 }

@@ -13,6 +13,7 @@
 
 package com.nimbits.server.process.task;
 
+import com.google.appengine.api.blobstore.*;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
@@ -53,6 +54,7 @@ public class TaskImpl implements Task {
     private static final String QUEUE_DELETE_DATA = "deletedata";
     private static final String DEFAULT = "default";
 
+    private static final String PATH_DELETE_ORPHANS_TASK = "/task/orphans";
     private static final String PATH_SUMMARY_TASK = "/task/summary";
     private static final String PATH_POINT_MAINT_TASK = "/task/pointmaint";
     private static final String PATH_UPGRADE_TASK = "/task/upgrade";
@@ -98,6 +100,22 @@ public class TaskImpl implements Task {
 
 
     }
+
+    @Override
+    public void startDeleteOrphanedBlobTask(BlobKey key) {
+
+
+
+        final Queue queue =  QueueFactory.getQueue( DEFAULT  );
+
+        queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_ORPHANS_TASK)
+                .param(Parameters.key.getText(),  key.getKeyString())
+        );
+    }
+
+
+
+
     @Override
     public void startSummaryTask(final Entity entity) {
         final Queue queue =  QueueFactory.getQueue(overrideQueue ? DEFAULT : QUEUE_DELETE_SUMMARY);
@@ -186,12 +204,12 @@ public class TaskImpl implements Task {
     public void startPointMaintTask(final Entity e) {
 
         try {
-        final String json = gson.toJson(e);
+            final String json = gson.toJson(e);
 
-        final Queue queue =  QueueFactory.getQueue(overrideQueue ? DEFAULT : TASK_POINT_MAINT);
+            final Queue queue =  QueueFactory.getQueue(overrideQueue ? DEFAULT : TASK_POINT_MAINT);
 
-        queue.add(TaskOptions.Builder.withUrl(PATH_POINT_MAINT_TASK)
-                .param(Parameters.json.getText(), json));
+            queue.add(TaskOptions.Builder.withUrl(PATH_POINT_MAINT_TASK)
+                    .param(Parameters.json.getText(), json));
         } catch (IllegalStateException ex) {
             overrideQueue = true;
             startPointMaintTask(e);
@@ -216,19 +234,19 @@ public class TaskImpl implements Task {
     public void startUpgradeTask(final Action action,final  Entity entity, final int s ) {
 
         try {
-        final Queue queue =  QueueFactory.getQueue(DEFAULT);
-        String json = "";
+            final Queue queue =  QueueFactory.getQueue(DEFAULT);
+            String json = "";
 
-        if (entity != null) {
-            json = GsonFactory.getInstance().toJson(entity);
-        }
+            if (entity != null) {
+                json = GsonFactory.getInstance().toJson(entity);
+            }
 
 
-        queue.add(TaskOptions.Builder.withUrl(PATH_UPGRADE_TASK)
-                .param(Parameters.json.getText(), json)
-                 .param("s", String.valueOf(s))
-                 .param("e", String.valueOf(s))
-                .param(Parameters.action.getText(), action.getCode()));
+            queue.add(TaskOptions.Builder.withUrl(PATH_UPGRADE_TASK)
+                    .param(Parameters.json.getText(), json)
+                    .param("s", String.valueOf(s))
+                    .param("e", String.valueOf(s))
+                    .param(Parameters.action.getText(), action.getCode()));
         }
         catch (IllegalStateException ex) {
             overrideQueue = true;

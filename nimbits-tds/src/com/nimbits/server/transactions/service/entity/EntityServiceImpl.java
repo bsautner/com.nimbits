@@ -133,6 +133,22 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
     }
 
     @Override
+    public List<Entity> findEntityByKey(final String key) throws NimbitsException {
+
+
+        for (final EntityType t : EntityType.values()) {
+            final List<Entity> r = getEntityByKey(key, t);
+            if (! r.isEmpty()) {
+                return r;
+
+            }
+        }
+        return new ArrayList<Entity>(0);
+
+
+    }
+
+    @Override
     public Map<String, Entity> getEntityMap(final EntityType type, final int limit) throws NimbitsException {
         return EntityTransactionFactory.getInstance(getUser()).getEntityMap(type, limit);
     }

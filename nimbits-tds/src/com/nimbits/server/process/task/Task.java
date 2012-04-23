@@ -13,6 +13,7 @@
 
 package com.nimbits.server.process.task;
 
+import com.google.appengine.api.blobstore.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
@@ -45,4 +46,6 @@ public interface Task {
     void startUpgradeTask(Action action, Entity entity, int s);
 
     void startSummaryTask(Entity entity);
+
+    void startDeleteOrphanedBlobTask(BlobKey key);
 }

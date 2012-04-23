@@ -13,6 +13,7 @@
 
 package com.nimbits.server.transactions.service.value;
 
+import com.google.appengine.api.blobstore.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.timespan.*;
 import com.nimbits.client.model.value.*;
@@ -41,7 +42,7 @@ public interface ValueTransactions {
 
     List<Value> getBuffer() throws NimbitsException;
 
-    void recordValues(final List<Value> values) throws NimbitsException;
+    List<ValueBlobStore> recordValues(final List<Value> values) throws NimbitsException;
 
     void moveValuesFromCacheToStore() throws NimbitsException;
 
@@ -50,4 +51,6 @@ public interface ValueTransactions {
     List<ValueBlobStore> getAllStores() throws NimbitsException;
 
     void consolidateDate(Date timestamp) throws NimbitsException;
+
+    List<ValueBlobStore> getBlobStoreByBlobKey(BlobKey key) throws NimbitsException;
 }

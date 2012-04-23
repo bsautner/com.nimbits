@@ -78,18 +78,6 @@ public class EntityStore implements Entity {
 
     }
 
-//    public EntityStore(Key key, String name, String uuid, String description, Integer entityType, Integer protectionLevel, String parent, String owner, int alertType) {
-//        this.key = key;
-//        this.name = name;
-//        this.uuid = uuid;
-//        this.description = description;
-//        this.entityType = entityType;
-//        this.protectionLevel = protectionLevel;
-//        this.parent = parent;
-//        this.owner = owner;
-//        this.alertType = alertType;
-//        this.dateCreated = new Date();
-//    }
 
     public EntityStore(final Entity entity) throws NimbitsException {
 
@@ -246,18 +234,6 @@ public class EntityStore implements Entity {
     public void setReadOnly(final boolean readOnly) {
         this.readOnly = readOnly;
     }
-
-//    @Override
-//    public String getUUID() {
-//        return this.entity.toString();
-//
-//    }
-//
-//    @Override
-//    public void setUUID(String newUUID) {
-//        this.entity = newUUID;
-//    }
-
 
 
     @Override

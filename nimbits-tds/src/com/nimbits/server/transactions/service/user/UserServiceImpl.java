@@ -62,18 +62,23 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         String emailParam = null;
         HttpSession session = null;
         final com.google.appengine.api.users.UserService googleUserService = UserServiceFactory.getUserService();
-        String secret = null;
+        String accessKey = null;
+        User user = null;
+        String uuid = null;
         if (req != null) {
-            emailParam = req.getParameter(Parameters.email.getText());
-            secret = req.getParameter(Parameters.secret.getText());
-            if (Utils.isEmptyString(secret)) {
-                secret = req.getParameter(Parameters.key.getText());
-            }
 
+
+
+            uuid =  req.getParameter(Parameters.uuid.getText());
+
+
+            emailParam = req.getParameter(Parameters.email.getText());
+            accessKey = req.getParameter(Parameters.secret.getText());
+            if (Utils.isEmptyString(accessKey)) {
+                accessKey = req.getParameter(Parameters.key.getText());
+            }
             session = req.getSession();
         }
-
-
         EmailAddress email = Utils.isEmptyString(emailParam) ? null : CommonFactoryLocator.getInstance().createEmailAddress(emailParam);
 
         if (email == null && session != null && session.getAttribute(Parameters.email.getText()) != null) {
@@ -85,12 +90,36 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         }
 
 
-        User user = null;
-        if (email != null) {
+        if (email == null && Utils.isEmptyString(uuid)) {
+            throw new NimbitsException("There was no account connected to this request and no key or uuid, nothing to do.");
+        }
 
+        boolean anonRequest = false;
+
+        Entity anonEntity = null;
+        if (! Utils.isEmptyString(uuid) && email==null) { //a request with just a uuid must be public
+            List<Entity> anon = EntityServiceFactory.getInstance().findEntityByKey(uuid);
+            anonRequest = true;
+            if (! anon.isEmpty()) {
+
+                anonEntity = anon.get(0);
+                if (anonEntity.getProtectionLevel().equals(ProtectionLevel.everyone)) {
+
+                    email = CommonFactoryLocator.getInstance().createEmailAddress(anon.get(0).getOwner());
+                }
+                else {
+                    throw new NimbitsException("The object you requested was found, but its protection level was set to high to access. Try " +
+                            "adding an email address and access key to your request.");
+                }
+
+            }
+        }
+
+        if (email != null) {
             final List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(
                     com.nimbits.server.transactions.service.user.UserServiceFactory.getServerInstance().getAdmin(), //avoid infinite recursion
-                    email.getValue(),EntityType.user);
+                    email.getValue(), EntityType.user);
+
 
 
             if (result.isEmpty()) {
@@ -109,21 +138,20 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
             } else {
                 user = (User) result.get(0);
-              //
+                //
+                if (! anonRequest) {
+                    if (!Utils.isEmptyString(accessKey)) {
+                        //all we have is an email of an existing user, let's see what they can do.
+                        final Map<String, Entity> keys = EntityServiceFactory.getInstance().getEntityMap(user, EntityType.accessKey, 1000);
+                        for (final Entity k : keys.values()) {
+                            if (((AccessKey)k).getCode().equals(accessKey)) {
+                                user.addAccessKey((AccessKey) k);
+                            }
+                        }
 
 
-                if (!Utils.isEmptyString(secret)) {
-                  //all we have is an email of an existing user, let's see what they can do.
-                  final Map<String, Entity> keys = EntityServiceFactory.getInstance().getEntityMap(user, EntityType.accessKey, 1000);
-                  for (final Entity k : keys.values()) {
-                      if (((AccessKey)k).getCode().equals(secret)) {
-                          user.addAccessKey((AccessKey) k);
-                      }
-                  }
-
-
+                    }
                 }
-
                 if (user.isRestricted()) {
 
                     if (googleUserService.getCurrentUser() != null
@@ -133,11 +161,10 @@ public class UserServiceImpl extends RemoteServiceServlet implements
                     }
                 }
             }
-        } else {
-            throw new NimbitsException("There was no account connected to this request which requires authentication");
         }
-
-
+        else {
+            throw new NimbitsException("There was no account connected to this request");
+        }
 
         return user;
 
@@ -206,7 +233,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
                 name.getValue(), name.getValue(), name.getValue());
 
         final com.nimbits.client.model.user.User newUser = UserModelFactory.createUserModel(entity);
-      // newUser.setSecret(UUID.randomUUID().toString());
+        // newUser.setSecret(UUID.randomUUID().toString());
         return (User) EntityServiceFactory.getInstance().addUpdateEntity(newUser);
     }
 

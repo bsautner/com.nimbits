@@ -24,6 +24,6 @@ import java.util.*;
 public interface PointServiceAsync {
 
     void exportData(final Map<EntityName, Entity> points, ExportType exportType, final Map<EntityName, List<Value>> values, AsyncCallback<String> async);
-   // void copyPoint(User u, Entity originalEntity, EntityName newName, AsyncCallback<Entity> async);
+
 
 }

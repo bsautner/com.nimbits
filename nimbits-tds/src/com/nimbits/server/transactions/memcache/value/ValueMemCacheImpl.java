@@ -13,6 +13,7 @@
 
 package com.nimbits.server.transactions.memcache.value;
 
+import com.google.appengine.api.blobstore.*;
 import com.google.appengine.api.memcache.*;
 import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
@@ -207,8 +208,8 @@ public class ValueMemCacheImpl implements ValueTransactions {
     }
 
     @Override
-    public void recordValues(final List<Value> values) throws NimbitsException {
-        ValueTransactionFactory.getDaoInstance(point).recordValues(values);
+    public List<ValueBlobStore> recordValues(final List<Value> values) throws NimbitsException {
+        return ValueTransactionFactory.getDaoInstance(point).recordValues(values);
     }
 
     @Override
@@ -240,6 +241,11 @@ public class ValueMemCacheImpl implements ValueTransactions {
     @Override
     public void consolidateDate(final Date timestamp) throws NimbitsException {
         throw new NimbitsException("Not Implemented");
+    }
+
+    @Override
+    public List<ValueBlobStore> getBlobStoreByBlobKey(BlobKey key) throws NimbitsException {
+        return ValueTransactionFactory.getDaoInstance(point).getBlobStoreByBlobKey(key);
     }
 
     @Override

@@ -13,8 +13,7 @@
 
 package com.nimbits.client.model.valueblobstore;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by bsautner
@@ -24,11 +23,14 @@ import java.util.List;
  */
 public class ValueBlobStoreFactory {
 
+    private ValueBlobStoreFactory() {
+    }
+
     public static ValueBlobStore createValueBlobStore(final ValueBlobStore store) {
         return new ValueBlobStoreModel(store);
 
     }
-    public static  List<ValueBlobStore> createValueBlobStores(final List<ValueBlobStore> store) {
+    public static  List<ValueBlobStore> createValueBlobStores(final Collection<ValueBlobStore> store) {
       final List<ValueBlobStore> retObj = new ArrayList<ValueBlobStore>(store.size());
 
       for (final ValueBlobStore v : store) {

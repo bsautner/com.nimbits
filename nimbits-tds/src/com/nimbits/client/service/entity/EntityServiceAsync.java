@@ -15,6 +15,7 @@ package com.nimbits.client.service.entity;
 
 import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
 
@@ -57,4 +58,6 @@ public interface EntityServiceAsync {
     void getSubscriptionsToEntity(User user, Entity subscribedEntity, AsyncCallback<List<Entity>> async);
 
     void getSystemWideEntityMap(EntityType type, AsyncCallback<Map<String, Entity>> async);
+
+    void findEntityByKey(final String key, AsyncCallback<List<Entity>> async) throws NimbitsException;
 }

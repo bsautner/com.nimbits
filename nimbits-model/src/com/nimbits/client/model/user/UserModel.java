@@ -45,12 +45,14 @@ public class UserModel extends EntityModel implements Serializable, User {
 
     private long facebookID;
 
-
     private List<AccessKey> accessKeys;
 
     private boolean loggedIn = false;
+
     private String loginUrl;
+
     private String logoutUrl;
+
     private boolean userAdmin;
 
     /**
@@ -61,8 +63,6 @@ public class UserModel extends EntityModel implements Serializable, User {
     @SuppressWarnings("unused")
     public UserModel() {
         super();
-
-
     }
 
     public UserModel(final User u) throws NimbitsException {

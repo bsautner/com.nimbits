@@ -13,6 +13,7 @@
 
 package com.nimbits.server.transactions.memcache.entity;
 
+import com.google.appengine.api.blobstore.*;
 import com.google.appengine.api.memcache.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
@@ -71,6 +72,11 @@ public class EntityCacheImpl implements EntityTransactions {
     @Override
     public List<Entity> getSubscriptionsToEntity(Entity subscribedEntity) throws NimbitsException {
         return EntityTransactionFactory.getDaoInstance(user).getSubscriptionsToEntity(subscribedEntity);
+    }
+
+    @Override
+    public List<Entity> getEntityByBlobKey(BlobKey key) throws NimbitsException {
+        return EntityTransactionFactory.getDaoInstance(user).getEntityByBlobKey(key);
     }
 
     private void addEntityToCache(final Entity entity) throws NimbitsException {

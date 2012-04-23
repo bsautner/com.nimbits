@@ -18,16 +18,17 @@ import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Entity;
 import static com.google.appengine.api.datastore.FetchOptions.Builder.*;
 import com.google.appengine.api.files.*;
-import com.google.appengine.tools.development.testing.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.valueblobstore.*;
+import com.nimbits.server.*;
 import com.nimbits.server.time.*;
-import org.junit.*;
 import static org.junit.Assert.*;
+import org.junit.*;
 
 import java.io.*;
 import java.nio.*;
@@ -40,26 +41,10 @@ import java.util.*;
  * Date: 3/22/12
  * Time: 12:00 PM
  */
-public class ValueDaoImplTest {
-    private Point point;
-    ValueDAOImpl dao;
-    @Before
-    public void setUp() throws NimbitsException {
-        EntityName name = CommonFactoryLocator.getInstance().createName("e", EntityType.point);
+public class ValueDaoImplTest extends NimbitsServletTest {
 
-        com.nimbits.client.model.entity.Entity entity = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.everyone, "", "");
-        helper.setUp();
 
-        point = PointModelFactory.createPointModel(entity);
-        dao = new ValueDAOImpl(point);
-    }
 
-    @After
-    public void tearDown() {
-        helper.tearDown();
-    }
-    private final LocalServiceTestHelper helper =
-            new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
 
     double total = 0.0;
     private  List<Value> loadSomeData() {
@@ -83,15 +68,15 @@ public class ValueDaoImplTest {
             values.add(ValueModelFactory.createValueModel(1));
             values.add(ValueModelFactory.createValueModel(1));
             values.add(ValueModelFactory.createValueModel(1));
-            dao.recordValues(values);
-            assertEquals(i, dao.getAllStores().size());
+            valueDao.recordValues(values);
+            assertEquals(i, valueDao.getAllStores().size());
         }
 
 
-        dao.consolidateDate(zero);
-        assertEquals(1, dao.getAllStores().size());
+        valueDao.consolidateDate(zero);
+        assertEquals(1, valueDao.getAllStores().size());
 
-        List<Value> result = dao.getTopDataSeries(100);
+        List<Value> result = valueDao.getTopDataSeries(100);
         double total = 0.0;
         for (Value v : result) {
             total += v.getDoubleValue();
@@ -99,9 +84,65 @@ public class ValueDaoImplTest {
         }
         assertEquals(30.0, total, 0.0);
 
+    }
+
+    @Test
+    public void testMissingBlobRecovery() throws NimbitsException, FileNotFoundException {
+        Date zero = TimespanServiceFactory.getInstance().zeroOutDate(new Date());
+        String key = null;
+        final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+        for (int i = 1; i < 11; i++) {
+            List<Value> values = new ArrayList<Value>(3);
+            values.add(ValueModelFactory.createValueModel(1));
+            values.add(ValueModelFactory.createValueModel(1));
+            values.add(ValueModelFactory.createValueModel(1));
+            List<ValueBlobStore> d = valueDao.recordValues(values);
+            assertFalse(d.isEmpty());
+            assertEquals(i, valueDao.getAllStores().size());
+            key = d.get(0).getBlobKey();
+        }
+
+        blobstoreService.delete(new BlobKey(key));
+
+        valueDao.consolidateDate(zero);
+        assertEquals(1, valueDao.getAllStores().size());
+
+        List<Value> result = valueDao.getTopDataSeries(100);
+        double total = 0.0;
+        for (Value v : result) {
+            total += v.getDoubleValue();
+
+        }
+        assertEquals(27.0, total, 0.0);
+
+    }
+
+    @Test
+    public void testGetBlobStoreByBlobKey() throws NimbitsException {
+        Date zero = TimespanServiceFactory.getInstance().zeroOutDate(new Date());
+        final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+
+        List<Value> values = new ArrayList<Value>(3);
+        values.add(ValueModelFactory.createValueModel(1));
+        values.add(ValueModelFactory.createValueModel(2));
+        values.add(ValueModelFactory.createValueModel(3));
+        List<ValueBlobStore> d = valueDao.recordValues(values);
+        assertFalse(d.isEmpty());
+
+        String key = d.get(0).getBlobKey();
+
+        List<ValueBlobStore> v =   valueDao.getBlobStoreByBlobKey(new BlobKey(key));
+        assertFalse(v.isEmpty());
+
+
+        EntityName name = CommonFactoryLocator.getInstance().createName("f", EntityType.file);
+        com.nimbits.client.model.entity.Entity e = EntityModelFactory.createEntity(name, "", EntityType.file,
+                ProtectionLevel.everyone,user.getKey(), user.getKey() );
+
 
 
     }
+
 
     @Test
     public void testBlobStore() throws IOException {
@@ -176,8 +217,8 @@ public class ValueDaoImplTest {
 
 
         try {
-            dao.recordValues(values);
-            List<Value> result = dao.getTopDataSeries(10);
+            valueDao.recordValues(values);
+            List<Value> result = valueDao.getTopDataSeries(10);
             assertEquals(10, result.size());
         } catch (NimbitsException e) {
             e.printStackTrace();

@@ -31,11 +31,11 @@ import com.nimbits.server.transactions.service.value.*;
 import javax.servlet.http.*;
 import java.io.*;
 import java.util.*;
-
+import java.util.logging.Logger;
 
 
 public class ValueServletImpl extends ApiServlet {
-
+    final private Logger log = Logger.getLogger(ValueServletImpl.class.getName());
 
 
     @Override
@@ -44,9 +44,9 @@ public class ValueServletImpl extends ApiServlet {
         try {
             processPost(req, resp);
         } catch (NimbitsException e) {
-            if (! e.getMessage().equals(UserMessages.ERROR_POINT_NOT_FOUND)) {
-            LogHelper.logException(this.getClass(), e);
-            }
+            log.warning(e.getMessage());
+
+
         }
 
     }
@@ -56,7 +56,7 @@ public class ValueServletImpl extends ApiServlet {
         try {
             processGet(req, resp);
         } catch (NimbitsException e) {
-             LogHelper.logException(this.getClass(), e);
+            log.warning(e.getMessage());
         }
 
     }

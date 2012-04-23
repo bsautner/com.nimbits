@@ -46,6 +46,19 @@ public class UserEntity extends EntityStore implements User {
     @Persistent
     private String twitterTokenSecret;
 
+    @NotPersistent
+    private boolean loggedIn = false;
+
+    @NotPersistent
+    private String loginUrl;
+
+    @NotPersistent
+    private String logoutUrl;
+
+    @NotPersistent
+    private boolean userAdmin;
+
+
     // A user that can only work with public data
     @NotPersistent
     private List<AccessKey> accessKeys;
@@ -59,7 +72,7 @@ public class UserEntity extends EntityStore implements User {
 
     @Override
     public Date getLastLoggedIn() {
-        return this.lastLoggedIn;// == null ? new Date(this.dateCreated.getTime()) : new Date(this.lastLoggedIn.getTime());
+        return (Date) this.lastLoggedIn.clone();
     }
 
     @Override
@@ -114,7 +127,7 @@ public class UserEntity extends EntityStore implements User {
     }
 
     @Override
-    public void addAccessKey(AccessKey key) {
+    public void addAccessKey(final AccessKey key) {
         if (accessKeys == null) {
             accessKeys = new ArrayList<AccessKey>(1);
         }
@@ -127,7 +140,7 @@ public class UserEntity extends EntityStore implements User {
         if (accessKeys == null) {
             return true;
         }
-        for (AccessKey key : accessKeys) {
+        for (final AccessKey key : accessKeys) {
             if (key.getAuthLevel().compareTo(AuthLevel.restricted) > 0)
             {
                 return false;
@@ -147,9 +160,9 @@ public class UserEntity extends EntityStore implements User {
     }
 
     @Override
-    public void update(Entity update) throws NimbitsException {
+    public void update(final Entity update) throws NimbitsException {
         super.update(update);
-        User u = (User)update;
+        final User u = (User)update;
         this.lastLoggedIn = u.getLastLoggedIn();
         this.facebookID = u.getFacebookID();
         this.facebookToken = u.getFacebookToken();
@@ -161,5 +174,38 @@ public class UserEntity extends EntityStore implements User {
     public void validate() throws NimbitsException {
         super.validate();
 
+    }
+
+    @Override
+    public boolean isLoggedIn() {
+        return loggedIn;
+    }
+    @Override
+    public void setLoggedIn(final boolean loggedIn) {
+        this.loggedIn = loggedIn;
+    }
+    @Override
+    public String getLoginUrl() {
+        return loginUrl;
+    }
+    @Override
+    public void setLoginUrl(final String loginUrl) {
+        this.loginUrl = loginUrl;
+    }
+    @Override
+    public String getLogoutUrl() {
+        return logoutUrl;
+    }
+    @Override
+    public void setLogoutUrl(final String logoutUrl) {
+        this.logoutUrl = logoutUrl;
+    }
+    @Override
+    public boolean isUserAdmin() {
+        return userAdmin;
+    }
+    @Override
+    public void setUserAdmin(final boolean userAdmin) {
+        this.userAdmin = userAdmin;
     }
 }

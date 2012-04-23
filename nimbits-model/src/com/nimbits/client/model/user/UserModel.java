@@ -48,6 +48,11 @@ public class UserModel extends EntityModel implements Serializable, User {
 
     private List<AccessKey> accessKeys;
 
+    private boolean loggedIn = false;
+    private String loginUrl;
+    private String logoutUrl;
+    private boolean userAdmin;
+
     /**
      *
      */
@@ -87,11 +92,11 @@ public class UserModel extends EntityModel implements Serializable, User {
 
     @Override
     public Date getLastLoggedIn() {
-        return this.lastLoggedIn;
+        return (Date) this.lastLoggedIn.clone();
     }
 
     @Override
-    public void setLastLoggedIn(Date lastLoggedIn) {
+    public void setLastLoggedIn(final Date lastLoggedIn) {
         this.lastLoggedIn = new Date(lastLoggedIn.getTime());
     }
 
@@ -132,7 +137,7 @@ public class UserModel extends EntityModel implements Serializable, User {
     }
 
     @Override
-    public void setFacebookID(long facebookID) {
+    public void setFacebookID(final long facebookID) {
         this.facebookID = facebookID;
     }
 
@@ -141,7 +146,7 @@ public class UserModel extends EntityModel implements Serializable, User {
         if (accessKeys == null) {
             return true;
         }
-        for (AccessKey key : accessKeys) {
+        for (final AccessKey key : accessKeys) {
             if (key.getAuthLevel().compareTo(AuthLevel.restricted) > 0)
             {
                 return false;
@@ -157,15 +162,44 @@ public class UserModel extends EntityModel implements Serializable, User {
     }
 
     @Override
-    public void addAccessKey(AccessKey key) {
+    public void addAccessKey(final AccessKey key) {
         if (accessKeys == null) {
             accessKeys = new ArrayList<AccessKey>(1);
         }
         accessKeys.add(key);
     }
-
-
-
+    @Override
+    public boolean isLoggedIn() {
+        return loggedIn;
+    }
+    @Override
+    public void setLoggedIn(final boolean loggedIn) {
+        this.loggedIn = loggedIn;
+    }
+    @Override
+    public String getLoginUrl() {
+        return loginUrl;
+    }
+    @Override
+    public void setLoginUrl(final String loginUrl) {
+        this.loginUrl = loginUrl;
+    }
+    @Override
+    public String getLogoutUrl() {
+        return logoutUrl;
+    }
+    @Override
+    public void setLogoutUrl(final String logoutUrl) {
+        this.logoutUrl = logoutUrl;
+    }
+    @Override
+    public boolean isUserAdmin() {
+        return userAdmin;
+    }
+    @Override
+    public void setUserAdmin(final boolean userAdmin) {
+        this.userAdmin = userAdmin;
+    }
 
     @Override
     public EmailAddress getEmail() throws NimbitsException {

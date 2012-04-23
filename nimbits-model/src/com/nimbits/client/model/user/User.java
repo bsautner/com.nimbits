@@ -58,4 +58,20 @@ public interface User extends Entity, Serializable {
     void addAccessKey(AccessKey key);
 
     List<AccessKey> getAccessKeys();
+
+    boolean isLoggedIn();
+
+    void setLoggedIn(boolean loggedIn);
+
+    String getLoginUrl();
+
+    void setLoginUrl(String loginUrl);
+
+    String getLogoutUrl();
+
+    void setLogoutUrl(String logoutUrl);
+
+    boolean isUserAdmin();
+
+    void setUserAdmin(boolean userAdmin);
 }

@@ -13,33 +13,52 @@
 
 package com.nimbits.client.ui.controls;
 
-import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.widget.*;
+import com.extjs.gxt.ui.client.event.BaseEvent;
+import com.extjs.gxt.ui.client.event.Events;
+import com.extjs.gxt.ui.client.event.Listener;
+import com.extjs.gxt.ui.client.event.MessageBoxEvent;
+import com.extjs.gxt.ui.client.widget.Info;
+import com.extjs.gxt.ui.client.widget.MessageBox;
+import com.extjs.gxt.ui.client.widget.Window;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.CheckBox;
-import com.extjs.gxt.ui.client.widget.menu.*;
+import com.extjs.gxt.ui.client.widget.menu.Menu;
 import com.extjs.gxt.ui.client.widget.menu.MenuItem;
-import com.extjs.gxt.ui.client.widget.toolbar.*;
-import com.google.gwt.core.client.*;
-import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
-import com.nimbits.client.common.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.connection.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.service.entity.*;
-import com.nimbits.client.service.user.*;
-import com.nimbits.client.ui.helper.*;
-import com.nimbits.client.ui.icons.*;
-import com.nimbits.client.ui.panels.*;
+import com.extjs.gxt.ui.client.widget.menu.SeparatorMenuItem;
+import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.constants.UserMessages;
+import com.nimbits.client.enums.Action;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.FilterType;
+import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.GxtModel;
+import com.nimbits.client.model.TreeModel;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.connection.ConnectionRequest;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModelFactory;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.service.entity.EntityService;
+import com.nimbits.client.service.entity.EntityServiceAsync;
+import com.nimbits.client.service.user.UserService;
+import com.nimbits.client.service.user.UserServiceAsync;
+import com.nimbits.client.ui.helper.FeedbackHelper;
+import com.nimbits.client.ui.icons.Icons;
+import com.nimbits.client.ui.panels.FileUploadPanel;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Benjamin Sautner
@@ -51,7 +70,7 @@ public class MainMenuBar extends ToolBar {
     private static final int MAX_HEIGHT = 200;
     private UserServiceAsync service;
     private int connectionCount = 0;
-    private  LoginInfo loginInfo;
+    private  User user;
     private Map<SettingType, String> settings;
 
     private final Listener<MessageBoxEvent> createNewFolderListener = new NewFolderMessageBoxEventListener();
@@ -59,8 +78,8 @@ public class MainMenuBar extends ToolBar {
     private final Listener<BaseEvent> uploadFileListener = new UploadFileBaseEventListener();
     private Collection<EntityModifiedListener> entityModifiedListeners = new ArrayList<EntityModifiedListener>(1);
 
-    public MainMenuBar(LoginInfo loginInfo, Map<SettingType, String> settings) throws NimbitsException {
-        this.loginInfo = loginInfo;
+    public MainMenuBar(User user, Map<SettingType, String> settings) throws NimbitsException {
+        this.user = user;
         this.settings = settings;
 
         service = GWT.create(UserService.class);
@@ -70,7 +89,7 @@ public class MainMenuBar extends ToolBar {
         addActionMenu();
         addOptionsMenu();
 
-        if (loginInfo.isUserAdmin()) {
+        if (user.isUserAdmin()) {
             addAdminMenu();
         }
         addHelpMenu();
@@ -161,7 +180,7 @@ public class MainMenuBar extends ToolBar {
 
 
 
-        if (settings.containsKey(SettingType.twitterClientId) && !Utils.isEmptyString(settings.get(SettingType.twitterClientId)) && loginInfo != null)
+        if (settings.containsKey(SettingType.twitterClientId) && !Utils.isEmptyString(settings.get(SettingType.twitterClientId)) && user != null)
         {
             menu.add(actionMenuItem("Enable Facebook",
                     AbstractImagePrototype.create(Icons.INSTANCE.connection()),
@@ -254,7 +273,7 @@ public class MainMenuBar extends ToolBar {
         final Button connectionRequest = new Button("Connection Requests(" + connectionCount + ')');
 
         connectionRequest.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.add16()));
-        service.getPendingConnectionRequests(loginInfo.getEmailAddress(), new GetPendingRequestListAsyncCallback(connectionRequest));
+        service.getPendingConnectionRequests(user.getEmail(), new GetPendingRequestListAsyncCallback(connectionRequest));
         return connectionRequest;
     }
     public interface EntityModifiedListener {

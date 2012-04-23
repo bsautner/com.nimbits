@@ -13,15 +13,15 @@
 
 package com.nimbits.client.service.user;
 
-import com.google.gwt.user.client.rpc.*;
+import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.nimbits.client.enums.AuthLevel;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.LoginInfo;
-import com.nimbits.client.model.connection.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.user.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.connection.ConnectionRequest;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.user.User;
 
-import java.util.*;
+import java.util.List;
 
 @RemoteServiceRelativePath("user")
 public interface UserService extends RemoteService {
@@ -34,5 +34,5 @@ public interface UserService extends RemoteService {
    // String getSecret() throws NimbitsException;
     User getUserByKey(String key, AuthLevel authLevel) throws NimbitsException;
     List<User> getConnectionRequests(List<String> connections) throws NimbitsException;
-    LoginInfo login(String requestUri) throws NimbitsException;
+    User login(String requestUri) throws NimbitsException;
 }

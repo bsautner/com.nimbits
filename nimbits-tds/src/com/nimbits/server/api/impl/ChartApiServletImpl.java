@@ -13,28 +13,42 @@
 
 package com.nimbits.server.api.impl;
 
-import com.nimbits.client.common.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.timespan.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.server.api.*;
-import com.nimbits.server.transactions.service.entity.*;
-import com.nimbits.server.transactions.service.feed.*;
-import com.nimbits.server.time.*;
-import com.nimbits.server.transactions.service.value.*;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.constants.Path;
+import com.nimbits.client.constants.Words;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ExportType;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.timespan.Timespan;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.server.admin.logging.LogHelper;
+import com.nimbits.server.api.ApiServlet;
+import com.nimbits.server.time.TimespanServiceFactory;
+import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import com.nimbits.server.transactions.service.value.ValueServiceFactory;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import java.util.logging.*;
-import java.util.regex.*;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 public class ChartApiServletImpl extends ApiServlet {
     private static final Logger log = Logger.getLogger(ChartApiServletImpl.class.getName());
@@ -52,7 +66,7 @@ public class ChartApiServletImpl extends ApiServlet {
         processGet(req, resp);
     }
 
-    protected static void processGet(HttpServletRequest req, HttpServletResponse resp) {
+    protected static void processGet(final HttpServletRequest req, final HttpServletResponse resp) {
         final String formatParam = req.getParameter(Parameters.format.getText());
 
 
@@ -72,7 +86,7 @@ public class ChartApiServletImpl extends ApiServlet {
             }
             else {
                 final List<EntityName> pointList = createPointList(getParam(Parameters.points), getParam(Parameters.point));
-                int count = Utils.isEmptyString(getParam(Parameters.count)) ? 10 : Integer.valueOf(getParam(Parameters.count));
+                final int count = Utils.isEmptyString(getParam(Parameters.count)) ? 10 : Integer.valueOf(getParam(Parameters.count));
 
                 if (type == ExportType.png) {
                     final String params = generateImageChartParams(req, timespan, count, doScale, user, pointList);
@@ -82,19 +96,15 @@ public class ChartApiServletImpl extends ApiServlet {
 
             }
         } catch (IOException e) {
-            if (user != null) {
-                FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(e));
-            }
+            LogHelper.logException(ChartApiServletImpl.class, e);
 
         } catch (NimbitsException e) {
-            if (user != null) {
-                FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(e));
-            }
+            log.warning(e.getMessage());
 
         }
     }
 
-    private static ExportType getContentType(String formatParam) {
+    private static ExportType getContentType(final String formatParam) {
 
         return Utils.isEmptyString(formatParam)
                 ? ExportType.png : formatParam.equals("image")
@@ -111,7 +121,7 @@ public class ChartApiServletImpl extends ApiServlet {
                                                    final User u,
                                                    final Iterable<EntityName> pointList) throws NimbitsException {
 
-        StringBuilder params = new StringBuilder(INT);
+        final StringBuilder params = new StringBuilder(INT);
         params.append(req.getQueryString());
         params.append(chartDateCode);
 
@@ -119,16 +129,16 @@ public class ChartApiServletImpl extends ApiServlet {
             for (final EntityName pointName : pointList) {
 
 
-                List<Entity> list = EntityServiceFactory.getInstance().getEntityByName(u, pointName, EntityType.point);
+                final List<Entity> list = EntityServiceFactory.getInstance().getEntityByName(u, pointName, EntityType.point);
                 if (list.isEmpty()) {
                     log.info("Couldn't find a point in the chart request.");
                 } else {
-                    Entity p = list.get(0);
+                    final Entity p = list.get(0);
 
                     if (p.getProtectionLevel().equals(ProtectionLevel.everyone) || !u.isRestricted()) {
 
 
-                        List<Value> values = timespan != null ?
+                        final List<Value> values = timespan != null ?
 
                                 ValueServiceFactory.getInstance().getDataSegment(p, timespan) :
                                 ValueServiceFactory.getInstance().getTopDataSeries(p, valueCount);
@@ -175,7 +185,7 @@ public class ChartApiServletImpl extends ApiServlet {
         log.info(params);
         final OutputStream out = resp.getOutputStream();
         resp.setContentLength(length);
-        byte[] buffer = new byte[length];
+        final byte[] buffer = new byte[length];
         int i;
         while ((i = is.read(buffer)) >= 0) {
             out.write(buffer, 0, i);
@@ -191,14 +201,14 @@ public class ChartApiServletImpl extends ApiServlet {
         } else if (!Utils.isEmptyString(pointsListParam)) {
             final String[] p1 = COMPILE.split(pointsListParam);
             final List<String> pointsParams = Arrays.asList(p1);
-            for (String pn : pointsParams) {
+            for (final String pn : pointsParams) {
                 pointList.add(CommonFactoryLocator.getInstance().createName(pn, EntityType.point));
             }
         }
         return pointList;
     }
 
-    private static Timespan getTimestamp(ServletRequest req) throws NimbitsException {
+    private static Timespan getTimestamp(final ServletRequest req) throws NimbitsException {
         String startDate = req.getParameter(Parameters.sd.getText());
         String endDate = req.getParameter(Parameters.ed.getText());
         //support for legacy st param

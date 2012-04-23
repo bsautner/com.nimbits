@@ -38,9 +38,6 @@ public class DataPoint {
 
 
     @Persistent(defaultFetchGroup = "true")
-    private DataPointIntelligenceEntity dataPointIntelligenceEntity;
-
-    @Persistent(defaultFetchGroup = "true")
     private CalculationEntity calculationEntity;
 
 
@@ -152,14 +149,6 @@ public class DataPoint {
     public List<Value> values;
     @NotPersistent
     public Value value;
-
-
-    public DataPointIntelligenceEntity getIntelligence() {
-
-        return dataPointIntelligenceEntity;
-
-    }
-
 
 
 
@@ -607,10 +596,6 @@ public class DataPoint {
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
-    }
-
-    public DataPointIntelligenceEntity getDataPointIntelligenceEntity() {
-        return dataPointIntelligenceEntity;
     }
 
     public CalculationEntity getCalculationEntity() {

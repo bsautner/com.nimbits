@@ -13,32 +13,46 @@
 
 package com.nimbits.client;
 
-import com.extjs.gxt.ui.client.*;
-import com.extjs.gxt.ui.client.Style.*;
-import com.extjs.gxt.ui.client.util.*;
-import com.extjs.gxt.ui.client.widget.*;
-import com.extjs.gxt.ui.client.widget.layout.*;
-import com.google.gwt.core.client.*;
-import com.google.gwt.user.client.*;
+import com.extjs.gxt.ui.client.Style;
+import com.extjs.gxt.ui.client.Style.LayoutRegion;
+import com.extjs.gxt.ui.client.util.Margins;
+import com.extjs.gxt.ui.client.widget.ContentPanel;
+import com.extjs.gxt.ui.client.widget.Viewport;
+import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
+import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
+import com.extjs.gxt.ui.client.widget.layout.FillLayout;
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.Window.*;
-import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
-import com.nimbits.client.common.*;
-import com.nimbits.client.constants.*;
+import com.google.gwt.user.client.Window.Location;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.constants.UserMessages;
+import com.nimbits.client.constants.Words;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.file.*;
-import com.nimbits.client.service.entity.*;
-import com.nimbits.client.service.settings.*;
-import com.nimbits.client.service.twitter.*;
-import com.nimbits.client.service.user.*;
-import com.nimbits.client.ui.helper.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.GxtModel;
+import com.nimbits.client.model.TreeModel;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.file.File;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.service.entity.EntityService;
+import com.nimbits.client.service.entity.EntityServiceAsync;
+import com.nimbits.client.service.settings.SettingsService;
+import com.nimbits.client.service.settings.SettingsServiceAsync;
+import com.nimbits.client.service.twitter.TwitterService;
+import com.nimbits.client.service.twitter.TwitterServiceAsync;
+import com.nimbits.client.service.user.UserService;
+import com.nimbits.client.service.user.UserServiceAsync;
+import com.nimbits.client.ui.helper.EntityOpenHelper;
+import com.nimbits.client.ui.helper.FeedbackHelper;
 import com.nimbits.client.ui.panels.*;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>
@@ -48,7 +62,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
     private static final int HEIGHT = 600;
     private static final int WIDTH = 600;
     private static final int FEED_WIDTH = 250;
-    private LoginInfo loginInfo = null;
+    private User loginInfo = null;
     private Viewport viewport;
     private final static String heading = Const.CONST_SERVER_NAME + ' ' + SettingType.serverVersion.getDefaultValue();
     private CenterPanel centerPanel;
@@ -413,7 +427,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         }
     }
 
-    private class LoginInfoAsyncCallback implements AsyncCallback<LoginInfo> {
+    private class LoginInfoAsyncCallback implements AsyncCallback<User> {
         private final Action action;
         private final Map<SettingType, String> settings;
         private final String uuid;
@@ -431,7 +445,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         }
 
         @Override
-        public void onSuccess(final LoginInfo result) {
+        public void onSuccess(final User result) {
             loginInfo = result;
             try {
             if (loginInfo.isLoggedIn()) {
@@ -458,9 +472,9 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
         private void doTwitterRedirectForAuthorisation() throws NimbitsException {
             final TwitterServiceAsync twitterService = GWT.create(TwitterService.class);
-            twitterService.twitterAuthorise(loginInfo.getEmailAddress(), new TwitterAuthoriseAsyncCallback());
+            twitterService.twitterAuthorise(loginInfo.getEmail(), new TwitterAuthoriseAsyncCallback());
         }
-        private void loadPortalView(final LoginInfo loginInfo,
+        private void loadPortalView(final User loginInfo,
                                     final Action action,
                                     final Map<SettingType, String> settings,
                                     final String uuid)  {
@@ -495,7 +509,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
             viewport.add(center, centerData);
             if (! action.equals(Action.android)) {
-                final FeedPanel feedPanel = new FeedPanel(loginInfo.getUser());
+                final FeedPanel feedPanel = new FeedPanel(loginInfo);
                 centerPanel.addEntityClickedListeners(new FeedClickedListener(feedPanel));
                 east.add(feedPanel);
                 viewport.add(east, eastData);

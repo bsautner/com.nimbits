@@ -35,6 +35,7 @@ import com.nimbits.server.transactions.service.value.*;
 import javax.servlet.http.*;
 import java.io.*;
 import java.util.*;
+import java.util.logging.Logger;
 
 
 public class PointServletImpl extends ApiServlet {
@@ -44,7 +45,7 @@ public class PointServletImpl extends ApiServlet {
     private static final int INT = 1024;
     private static final int EXPIRE = 90;
     private static final double FILTER_VALUE = 0.1;
-
+    final Logger log = Logger.getLogger(PointServletImpl.class.getName());
 
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
@@ -120,8 +121,8 @@ public class PointServletImpl extends ApiServlet {
             final PrintWriter out = resp.getWriter();
 
             out.print(processGet(req, resp));
-        } catch (IOException ignored) {
-
+        } catch (IOException e) {
+            LogHelper.logException(this.getClass(), e);
         }
     }
 
@@ -185,7 +186,7 @@ public class PointServletImpl extends ApiServlet {
 
 
         } catch (NimbitsException e) {
-            LogHelper.logException(this.getClass(), e);
+          log.warning(e.getMessage());
 
         }
         return sb.toString();

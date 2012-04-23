@@ -14,27 +14,38 @@
 package com.nimbits.server.transactions.service.user;
 
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.gwt.user.server.rpc.*;
-import com.nimbits.client.common.*;
-import com.nimbits.client.constants.*;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.constants.UserMessages;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
-import com.nimbits.client.model.accesskey.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.connection.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.entity.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.accesskey.AccessKey;
+import com.nimbits.client.model.accesskey.AccessKeyFactory;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.CommonIdentifier;
+import com.nimbits.client.model.connection.Connection;
+import com.nimbits.client.model.connection.ConnectionFactory;
+import com.nimbits.client.model.connection.ConnectionRequest;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.user.UserModel;
+import com.nimbits.client.model.user.UserModelFactory;
 import com.nimbits.client.service.user.UserService;
-import com.nimbits.server.communication.email.*;
-import com.nimbits.server.transactions.service.entity.*;
-import com.nimbits.server.transactions.service.feed.*;
-import com.nimbits.server.admin.logging.*;
+import com.nimbits.server.admin.logging.LogHelper;
+import com.nimbits.server.communication.email.EmailServiceFactory;
+import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import com.nimbits.server.transactions.service.feed.FeedServiceFactory;
 
-import javax.servlet.http.*;
-import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 
 public class UserServiceImpl extends RemoteServiceServlet implements
@@ -133,45 +144,51 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public LoginInfo login(final String requestUri) throws NimbitsException {
+    public User login(final String requestUri) throws NimbitsException {
         final com.google.appengine.api.users.UserService userService = UserServiceFactory.getUserService();
         final com.google.appengine.api.users.User user = userService.getCurrentUser();
-        final LoginInfo loginInfo = new LoginInfo(); //TODO replace with factory
+        final User retObj;
 
         if (user != null) {
             final EmailAddress internetAddress = CommonFactoryLocator.getInstance().createEmailAddress(user.getEmail());
 
-            loginInfo.setLoggedIn(true);
-            loginInfo.setEmailAddress(internetAddress);
-            loginInfo.setUserAdmin(userService.isUserAdmin());
 
-            loginInfo.setLogoutUrl(userService.createLogoutURL(requestUri));
             final List<Entity> list =   EntityServiceFactory.getInstance()
                     .getEntityByKey(
                             com.nimbits.server.transactions.service.user.UserServiceFactory.getServerInstance().getAnonUser(), internetAddress.getValue(),EntityType.user);
-            final com.nimbits.client.model.user.User  u;
+
 
             if (list.isEmpty()) {
                 LogHelper.log(this.getClass(), "Created a new user");
-                u = com.nimbits.server.transactions.service.user.UserServiceFactory.getServerInstance().createUserRecord(internetAddress);
+                retObj = com.nimbits.server.transactions.service.user.UserServiceFactory.getServerInstance().createUserRecord(internetAddress);
                 // sendUserCreatedFeed(u);
                 // sendWelcomeFeed(u);
             }
             else {
-                u = (com.nimbits.client.model.user.User) list.get(0);
+                retObj = (com.nimbits.client.model.user.User) list.get(0);
             }
-            u.setLastLoggedIn(new Date());
-            EntityServiceFactory.getInstance().addUpdateEntity(u, u);
-            u.addAccessKey(authenticatedKey(u));
-            loginInfo.setUser(u);
+
+            retObj.setLoggedIn(true);
+
+            retObj.setUserAdmin(userService.isUserAdmin());
+
+            retObj.setLogoutUrl(userService.createLogoutURL(requestUri));
+
+            retObj.setLastLoggedIn(new Date());
+            EntityServiceFactory.getInstance().addUpdateEntity(retObj, retObj);
+            retObj.addAccessKey(authenticatedKey(retObj));
+
 
             // A user has logged in through google auth - this creates the user
 
         } else {
-            loginInfo.setLoggedIn(false);
-            loginInfo.setLoginUrl(userService.createLoginURL(requestUri));
+            final EntityName name = CommonFactoryLocator.getInstance().createName("anon@nimbits.com", EntityType.user);
+            final Entity e = EntityModelFactory.createEntity(name, "", EntityType.user, ProtectionLevel.onlyMe, "", "");
+            retObj = UserModelFactory.createUserModel(e);
+            retObj.setLoggedIn(false);
+            retObj.setLoginUrl(userService.createLoginURL(requestUri));
         }
-        return loginInfo;
+        return retObj;
     }
 
     @Override

@@ -58,16 +58,16 @@ public class BlobStoreImpl implements BlobStore {
     @Override
     public BlobKey deleteOrphans(final BlobKey afterBlobKey) throws NimbitsException {
 
-         BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-              Iterator<BlobInfo> iterator = afterBlobKey.getKeyString().equals("begin")
+         final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+              final Iterator<BlobInfo> iterator = afterBlobKey==null
                 ? new BlobInfoFactory().queryBlobInfos()
                 : new BlobInfoFactory().queryBlobInfosAfter(afterBlobKey);
 
         if (iterator.hasNext()){
-            BlobInfo i = iterator.next();
-            List<Entity> e = EntityTransactionFactory.getDaoInstance(UserServiceFactory.getServerInstance().getAdmin())
+            final BlobInfo i = iterator.next();
+            final List<Entity> e = EntityTransactionFactory.getDaoInstance(UserServiceFactory.getServerInstance().getAdmin())
                     .getEntityByBlobKey(i.getBlobKey());
-            List<ValueBlobStore> e2 = ValueTransactionFactory.getDaoInstance(null).getBlobStoreByBlobKey(i.getBlobKey());
+            final List<ValueBlobStore> e2 = ValueTransactionFactory.getDaoInstance(UserServiceFactory.getServerInstance().getAdmin()).getBlobStoreByBlobKey(i.getBlobKey());
 
             if (e.isEmpty() && e2.isEmpty()) {
                 //blobstoreService.delete(i.getBlobKey());

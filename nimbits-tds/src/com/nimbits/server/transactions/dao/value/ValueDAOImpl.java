@@ -33,6 +33,7 @@ import javax.jdo.*;
 import java.io.*;
 import java.nio.channels.*;
 import java.util.*;
+import java.util.logging.*;
 
 /**
  * Created by Benjamin Sautner
@@ -43,9 +44,24 @@ import java.util.*;
 @SuppressWarnings("unchecked")
 public class ValueDAOImpl implements ValueTransactions {
     private final Entity entity;
-
+    private final Logger log = Logger.getLogger(ValueDAOImpl.class.getName());
     public ValueDAOImpl(final Entity aPoint) {
         this.entity = aPoint;
+    }
+
+    public static  List<ValueBlobStore> createValueBlobStores(final Collection<ValueBlobStore> store) {
+      final List<ValueBlobStore> retObj = new ArrayList<ValueBlobStore>(store.size());
+
+      for (final ValueBlobStore v : store) {
+        retObj.add(createValueBlobStore(v));
+      }
+        return retObj;
+
+    }
+
+    public static ValueBlobStore createValueBlobStore(final ValueBlobStore store) {
+        return new ValueBlobStoreModel(store);
+
     }
 
     @Override
@@ -99,13 +115,16 @@ public class ValueDAOImpl implements ValueTransactions {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         try {
-
-            final List<ValueBlobStore> retObj = new ArrayList<ValueBlobStore>(1);
-
+            log.info("blobstore query " + key.getKeyString());
             final Query q = pm.newQuery(ValueBlobStoreEntity.class);
-            q.setFilter("blobkey == k");
-            final List<ValueBlobStore> result = (List<ValueBlobStore>) q.execute(key);
-            return ValueBlobStoreFactory.createValueBlobStores(result);
+            q.setFilter("blobkey == b");
+            q.declareImports("import com.google.appengine.api.blobstore.BlobKey");
+            q.declareParameters("BlobKey b");
+            q.setRange(0, 1);
+
+            final Collection<ValueBlobStore> result = (Collection<ValueBlobStore>) q.execute(key);
+            log.info(result.size() + " results");
+            return createValueBlobStores(result);
         } finally {
             pm.close();
         }
@@ -156,7 +175,7 @@ public class ValueDAOImpl implements ValueTransactions {
 
             final Collection<ValueBlobStore> result = (Collection<ValueBlobStore>) q.execute(entity.getKey());
 
-            return ValueBlobStoreFactory.createValueBlobStores(result);
+            return createValueBlobStores(result);
         } finally {
             pm.close();
         }
@@ -281,7 +300,7 @@ public class ValueDAOImpl implements ValueTransactions {
 
             pm.makePersistent(currentStoreEntity);
             pm.flush();
-            return ValueBlobStoreFactory.createValueBlobStore(currentStoreEntity);
+            return createValueBlobStore(currentStoreEntity);
         }
         finally {
             out.close();

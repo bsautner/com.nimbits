@@ -104,18 +104,14 @@ public class TaskImpl implements Task {
     @Override
     public void startDeleteOrphanedBlobTask(BlobKey key) {
 
-
-
         final Queue queue =  QueueFactory.getQueue( DEFAULT  );
-        if (key != null) {
-            queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_ORPHANS_TASK)
-                    .param(Parameters.key.getText(),  key.getKeyString())
-            );
-        }
-        else {
-            queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_ORPHANS_TASK));
-        }
+
+        queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_ORPHANS_TASK)
+                .param(Parameters.key.getText(),  key.getKeyString())
+        );
     }
+
+
 
 
 

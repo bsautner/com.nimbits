@@ -48,9 +48,11 @@ public interface EntityService extends RemoteService {
 
     List<Entity> getChildren(final Entity parentEntity, final EntityType type) throws NimbitsException;
 
-    List<Entity> getEntityByKey(final String key, final EntityType type) throws NimbitsException;
+
 
     List<Entity> findEntityByKey(final String key) throws NimbitsException;
+
+    List<Entity> getEntityByKey(final String key, final EntityType type) throws NimbitsException;
 
     List<Entity> getEntityByKey(final User u, final String key, final EntityType type) throws NimbitsException;
 

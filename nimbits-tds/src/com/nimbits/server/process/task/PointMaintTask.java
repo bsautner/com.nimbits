@@ -65,17 +65,13 @@ public class PointMaintTask extends HttpServlet {
                     e,
                     true, e.getExpire());
         }
-        consolidateBlobs(u, e);
+        consolidateBlobs(e);
 
     }
 
 
 
-    public static void consolidateBlobs(final User u, final Entity e) throws NimbitsException {
-        // n = UserTransactionFactory.getInstance().(p.getUserFK());
-        // final Point p = PointServiceFactory.getInstance().getPointByKey(e.getKey());
-
-
+    public static void consolidateBlobs(final Entity e) throws NimbitsException {
         final List<ValueBlobStore> stores = ValueTransactionFactory.getDaoInstance(e).getAllStores();
         if (! stores.isEmpty()) {
             log.info("Consolidating " + stores.size() + " blob stores");
@@ -84,10 +80,10 @@ public class PointMaintTask extends HttpServlet {
                 //consolidate blobs that have more than one date.
                 if (dates.contains(store.getTimestamp().getTime())) {
                     ValueTransactionFactory.getDaoInstance(e).consolidateDate(store.getTimestamp());
-                    log.info("Consolidating " + store.getTimestamp());
+                    log.info("Consolidating " + store.getTimestamp() + " " + store.getBlobKey());
                 }
                 else {
-                    log.info("Adding first time " + store.getTimestamp());
+                    log.info("Adding first time " + store.getTimestamp() + store.getBlobKey());
                     dates.add(store.getTimestamp().getTime());
                 }
             }

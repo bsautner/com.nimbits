@@ -14,44 +14,33 @@
 package com.nimbits.server.transactions.service.user;
 
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.nimbits.client.common.Utils;
-import com.nimbits.client.constants.Const;
-import com.nimbits.client.constants.UserMessages;
+import com.google.gwt.user.server.rpc.*;
+import com.nimbits.client.common.*;
+import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.accesskey.AccessKey;
-import com.nimbits.client.model.accesskey.AccessKeyFactory;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.common.CommonIdentifier;
-import com.nimbits.client.model.connection.Connection;
-import com.nimbits.client.model.connection.ConnectionFactory;
-import com.nimbits.client.model.connection.ConnectionRequest;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.exception.*;
+import com.nimbits.client.model.accesskey.*;
+import com.nimbits.client.model.common.*;
+import com.nimbits.client.model.connection.*;
+import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.user.UserModel;
-import com.nimbits.client.model.user.UserModelFactory;
+import com.nimbits.client.model.user.*;
 import com.nimbits.client.service.user.UserService;
-import com.nimbits.server.admin.logging.LogHelper;
-import com.nimbits.server.communication.email.EmailServiceFactory;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
-import com.nimbits.server.transactions.service.feed.FeedServiceFactory;
+import com.nimbits.server.admin.logging.*;
+import com.nimbits.server.communication.email.*;
+import com.nimbits.server.transactions.service.entity.*;
+import com.nimbits.server.transactions.service.feed.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import javax.servlet.http.*;
+import java.util.*;
+import java.util.logging.*;
 
 
 public class UserServiceImpl extends RemoteServiceServlet implements
         UserService, UserServerService {
     private static final long serialVersionUID = 1L;
-    //private static final Logger log = Logger.getLogger(UserServiceImpl.class.getName());
+     private static final Logger log = Logger.getLogger(UserServiceImpl.class.getName());
 
 
 
@@ -63,10 +52,16 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         HttpSession session = null;
         final com.google.appengine.api.users.UserService googleUserService = UserServiceFactory.getUserService();
         String accessKey = null;
-        User user = null;
         String uuid = null;
-        if (req != null) {
 
+
+
+        if (req != null) {
+            Enumeration i = req.getHeaderNames();
+
+            while (i.hasMoreElements()) {
+                log.info(req.getHeader((String) i.nextElement()));
+            }
 
 
             uuid =  req.getParameter(Parameters.uuid.getText());
@@ -96,13 +91,12 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
         boolean anonRequest = false;
 
-        Entity anonEntity = null;
         if (! Utils.isEmptyString(uuid) && email==null) { //a request with just a uuid must be public
             List<Entity> anon = EntityServiceFactory.getInstance().findEntityByKey(uuid);
             anonRequest = true;
             if (! anon.isEmpty()) {
 
-                anonEntity = anon.get(0);
+                Entity anonEntity = anon.get(0);
                 if (anonEntity.getProtectionLevel().equals(ProtectionLevel.everyone)) {
 
                     email = CommonFactoryLocator.getInstance().createEmailAddress(anon.get(0).getOwner());
@@ -115,6 +109,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
             }
         }
 
+        User user = null;
         if (email != null) {
             final List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(
                     com.nimbits.server.transactions.service.user.UserServiceFactory.getServerInstance().getAdmin(), //avoid infinite recursion

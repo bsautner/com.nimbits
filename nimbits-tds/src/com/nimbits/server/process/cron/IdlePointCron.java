@@ -23,6 +23,7 @@ import com.nimbits.client.model.value.*;
 import com.nimbits.server.transactions.service.entity.*;
 import com.nimbits.server.admin.logging.*;
 import com.nimbits.server.transactions.service.subscription.*;
+import com.nimbits.server.transactions.service.user.*;
 import com.nimbits.server.transactions.service.value.*;
 import org.apache.commons.lang3.exception.*;
 
@@ -70,7 +71,8 @@ public class IdlePointCron extends HttpServlet {
         final Calendar c = Calendar.getInstance();
         c.add(Calendar.SECOND, p.getIdleSeconds() * -1);
 
-        List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(p.getOwner(), EntityType.user);
+        List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(UserServiceFactory.getServerInstance().getAdmin(),
+                p.getOwner(), EntityType.user);
         if (! result.isEmpty()) {
             final User u = (User) result.get(0);
             final Value v = ValueServiceFactory.getInstance().getCurrentValue(p);

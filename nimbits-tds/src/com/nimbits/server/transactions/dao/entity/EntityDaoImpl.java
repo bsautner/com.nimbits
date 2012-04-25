@@ -101,9 +101,10 @@ public class EntityDaoImpl implements  EntityTransactions {
 
             final Query q = pm
                     .newQuery(FileEntity.class);
-            q.setFilter("blobKey == k");
-            q.declareParameters("Long k");
-
+            q.declareImports("import com.google.appengine.api.blobstore.BlobKey");
+            q.setFilter("blobKey == b");
+            q.declareParameters("BlobKey b");
+            q.setRange(0, 1);
             final Collection<Entity> result = (Collection<Entity>) q.execute(key);
             return  createModels(result);
         } finally {

@@ -59,7 +59,7 @@ public class BlobStoreImpl implements BlobStore {
     public BlobKey deleteOrphans(final BlobKey afterBlobKey) throws NimbitsException {
 
          BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-              Iterator<BlobInfo> iterator = afterBlobKey.getKeyString().equals("begin")
+              Iterator<BlobInfo> iterator = afterBlobKey == null
                 ? new BlobInfoFactory().queryBlobInfos()
                 : new BlobInfoFactory().queryBlobInfosAfter(afterBlobKey);
 

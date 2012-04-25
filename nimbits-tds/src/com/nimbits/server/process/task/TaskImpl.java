@@ -107,10 +107,14 @@ public class TaskImpl implements Task {
 
 
         final Queue queue =  QueueFactory.getQueue( DEFAULT  );
-
-        queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_ORPHANS_TASK)
-                .param(Parameters.key.getText(),  key.getKeyString())
-        );
+        if (key != null) {
+            queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_ORPHANS_TASK)
+                    .param(Parameters.key.getText(),  key.getKeyString())
+            );
+        }
+        else {
+            queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_ORPHANS_TASK));
+        }
     }
 
 

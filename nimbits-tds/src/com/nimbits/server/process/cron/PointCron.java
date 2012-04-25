@@ -27,8 +27,7 @@ import java.io.*;
 import java.util.*;
 import java.util.logging.*;
 
-public class
-        PointCron extends HttpServlet {
+public class PointCron extends HttpServlet {
     /**
      *
      */

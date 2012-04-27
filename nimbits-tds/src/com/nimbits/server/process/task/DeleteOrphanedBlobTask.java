@@ -6,6 +6,7 @@ import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.valueblobstore.*;
 import com.nimbits.server.admin.logging.*;
+import com.nimbits.server.admin.system.*;
 import com.nimbits.server.transactions.service.entity.*;
 import com.nimbits.server.transactions.service.user.*;
 import com.nimbits.server.transactions.service.value.*;
@@ -64,6 +65,7 @@ public class DeleteOrphanedBlobTask  extends HttpServlet {
                 BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
                 blobstoreService.delete(blobKey);
                 log.warning("Deleted orphaned blob: " + blobKey.getKeyString());
+                SystemServiceFactory.getInstance().updateSystemPoint("Orphan Blobs Deleted", 1, true);
             }
             Iterator<BlobInfo> iterator = new BlobInfoFactory().queryBlobInfosAfter(blobKey);
 

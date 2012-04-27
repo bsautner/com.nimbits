@@ -53,16 +53,12 @@ public class QuotaResetCron  extends HttpServlet {
     }
 
     protected static void processGet(ServletResponse resp) throws NimbitsException, IOException {
-        //  final Map<String, com.nimbits.client.model.entity.Entity> users = EntityTransactionFactory.getInstance(UserServiceFactory.getServerInstance().getAdmin()).getSystemWideEntityMap(EntityType.user);
-
-        StringBuilder sb = new StringBuilder(INT);
 
 
         final DatastoreService store = DatastoreServiceFactory.getDatastoreService();
 
         final Query q = new Query("UserEntity").setKeysOnly();
 
-        sb.append("<html><body>Quota Report<table>");
         int count = 0;
         for (final Entity e : store.prepare(q).asList(FetchOptions.Builder.withLimit(LIMIT))) {
             EmailAddress em = CommonFactoryLocator.getInstance().createEmailAddress(e.getKey().getName());
@@ -76,9 +72,8 @@ public class QuotaResetCron  extends HttpServlet {
 //            //quota.resetCounter();
 
         }
-        sb.append("</table></body></html>");
+
         SystemServiceFactory.getInstance().updateSystemPoint("UserCount", count, false);
-        resp.getWriter().print(sb.toString());
 
     }
 

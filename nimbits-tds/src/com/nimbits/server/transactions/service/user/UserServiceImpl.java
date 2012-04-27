@@ -40,7 +40,7 @@ import java.util.logging.*;
 public class UserServiceImpl extends RemoteServiceServlet implements
         UserService, UserServerService {
     private static final long serialVersionUID = 1L;
-     private static final Logger log = Logger.getLogger(UserServiceImpl.class.getName());
+    private static final Logger log = Logger.getLogger(UserServiceImpl.class.getName());
 
 
 
@@ -240,7 +240,9 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         u.setName(CommonFactoryLocator.getInstance().createName(adminStr, EntityType.user));
 
         u.addAccessKey(createAccessKey(u, AuthLevel.admin));
-
+        u.setKey(adminStr);
+        u.setParent(adminStr);
+        u.setUserAdmin(true);
         return u;
     }
 

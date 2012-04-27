@@ -21,6 +21,7 @@ import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.valueblobstore.*;
 import com.nimbits.server.admin.logging.*;
+import com.nimbits.server.admin.system.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.transactions.service.user.*;
 import com.nimbits.server.transactions.service.value.*;
@@ -85,6 +86,7 @@ public class PointMaintTask extends HttpServlet {
                     dates.add(store.getTimestamp().getTime());
                 }
             }
+            SystemServiceFactory.getInstance().updateSystemPoint("Fragmented Dates Merges By Point Maint", dupDates.size(), false);
             for (Long l : dupDates) {
                ValueTransactionFactory.getDaoInstance(e).consolidateDate(new Date(l));
 

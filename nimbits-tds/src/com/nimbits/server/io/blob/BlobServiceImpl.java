@@ -27,26 +27,31 @@ import com.nimbits.client.service.blob.*;
  */
 public class BlobServiceImpl  extends RemoteServiceServlet implements
         RequestCallback, BlobService{
-    private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 
+
+    private final BlobstoreService blobstoreService;
+
+    public BlobServiceImpl() {
+        blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+    }
 
     @Override
-    public String getBlobStoreUrl(String url) {
+    public String getBlobStoreUrl(final String url) {
         return blobstoreService.createUploadUrl(url);
     }
 
     @Override
-    public void deleteBlob(File entity) {
+    public void deleteBlob(final File entity) {
         blobstoreService.delete(new BlobKey(entity.getBlobKey()));
     }
 
     @Override
-    public void onResponseReceived(Request request, Response response) {
+    public void onResponseReceived(final Request request, final Response response) {
 
     }
 
     @Override
-    public void onError(Request request, Throwable throwable) {
+    public void onError(final Request request,final Throwable throwable) {
 
     }
 }

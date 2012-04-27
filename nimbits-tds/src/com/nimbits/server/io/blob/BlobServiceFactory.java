@@ -26,9 +26,16 @@ public class BlobServiceFactory {
     private BlobServiceFactory() {
     }
 
+    private static class BlobServiceHolder {
+        static final BlobService instance = new BlobServiceImpl();
+
+        private BlobServiceHolder() {
+        }
+    }
+
     public static BlobService getInstance() {
 
-        return new BlobServiceImpl();
+        return BlobServiceHolder.instance;
 
     }
 }

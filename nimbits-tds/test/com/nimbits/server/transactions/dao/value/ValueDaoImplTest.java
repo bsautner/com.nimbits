@@ -61,10 +61,9 @@ public class ValueDaoImplTest extends NimbitsServletTest {
 
     @Test
     public void testConsolidateDate() throws NimbitsException {
-        List<Value> values;
         Date zero = TimespanServiceFactory.getInstance().zeroOutDate(new Date());
         for (int i = 1; i < 11; i++) {
-            values= new ArrayList<Value>();
+            List<Value> values = new ArrayList<Value>(3);
             values.add(ValueModelFactory.createValueModel(1));
             values.add(ValueModelFactory.createValueModel(1));
             values.add(ValueModelFactory.createValueModel(1));

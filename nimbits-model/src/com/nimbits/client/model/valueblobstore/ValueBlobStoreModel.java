@@ -13,6 +13,8 @@
 
 package com.nimbits.client.model.valueblobstore;
 
+import com.nimbits.client.exception.*;
+
 import java.util.Date;
 
 /**
@@ -94,5 +96,10 @@ public class ValueBlobStoreModel implements ValueBlobStore {
     @Override
     public long getLength() {
         return length;
+    }
+
+    @Override
+    public void validate() throws NimbitsException {
+        throw new NimbitsException("not implemtenets") ;
     }
 }

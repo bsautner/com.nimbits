@@ -56,7 +56,7 @@ public class TaskImpl implements Task {
 
     private static final String PATH_DELETE_ORPHANS_TASK = "/task/orphans";
     private static final String PATH_SUMMARY_TASK = "/task/summary";
-    private static final String PATH_POINT_MAINT_TASK = "/task/pointmaint";
+    private static final String PATH_POINT_MAINT_TASK = "/task/point";
     private static final String PATH_UPGRADE_TASK = "/task/upgrade";
     private static final String PATH_MOVE_TASK = "/task/move";
     private static final String PATH_TASK_RECORD_VALUE = "/task/recordvaluetask";
@@ -203,17 +203,12 @@ public class TaskImpl implements Task {
     @Override
     public void startPointMaintTask(final Entity e) {
 
-        try {
             final String json = gson.toJson(e);
 
-            final Queue queue =  QueueFactory.getQueue(overrideQueue ? DEFAULT : TASK_POINT_MAINT);
+            final Queue queue =  QueueFactory.getQueue( DEFAULT);
 
             queue.add(TaskOptions.Builder.withUrl(PATH_POINT_MAINT_TASK)
                     .param(Parameters.json.getText(), json));
-        } catch (IllegalStateException ex) {
-            overrideQueue = true;
-            startPointMaintTask(e);
-        }
 
     }
 

@@ -62,7 +62,7 @@ public class ProcessBatchTask extends HttpServlet {
         } catch (IOException e) {
             LogHelper.logException(ProcessBatchTask.class, e);
         } catch (NimbitsException e) {
-           log.info(e.getMessage());
+            log.info(e.getMessage());
         }
 
     }
@@ -81,7 +81,7 @@ public class ProcessBatchTask extends HttpServlet {
 
         final User u = gson.fromJson(userJson, UserModel.class);
 
-        getLog().info(userJson);
+        log.info(userJson);
 
 
 
@@ -104,17 +104,19 @@ public class ProcessBatchTask extends HttpServlet {
             for (final long l : timestamps) {
                 BatchValue b = timestampValueMap.get(l);
                 Point point = null;
-                if (points.containsKey(b.getPointName())) {
-                    point = points.get(b.getPointName());
+                if (b != null) {
+                    if (points.containsKey(b.getPointName())) {
+                        point = points.get(b.getPointName());
 
-                } else {
-                    LogHelper.log(this.getClass(), b.getPointName().getValue());
-                    LogHelper.log(this.getClass(), u.getEmail().getValue());
-                    final List<Entity> pointTmp =   EntityServiceFactory.getInstance().getEntityByName(u, b.getPointName(),EntityType.point) ;
+                    } else {
+                        LogHelper.log(this.getClass(), b.getPointName().getValue());
+                        LogHelper.log(this.getClass(), u.getEmail().getValue());
+                        final List<Entity> pointTmp =   EntityServiceFactory.getInstance().getEntityByName(u, b.getPointName(),EntityType.point) ;
 
-                    if (! pointTmp.isEmpty()) {
-                        point = (Point) pointTmp.get(0);
-                        points.put(b.getPointName(), point);
+                        if (! pointTmp.isEmpty()) {
+                            point = (Point) pointTmp.get(0);
+                            points.put(b.getPointName(), point);
+                        }
                     }
                 }
                 if (point != null) {
@@ -125,7 +127,7 @@ public class ProcessBatchTask extends HttpServlet {
 
                     } catch (NimbitsException ex) {
 
-                       log.info(ex.getMessage());
+                        log.info(ex.getMessage());
 
                     } catch (JDOException e) {
                         LogHelper.logException(ProcessBatchTask.class, e);
@@ -198,9 +200,7 @@ public class ProcessBatchTask extends HttpServlet {
         timestamps.add(timestamp.getTime());
     }
 
-    private Logger getLog() {
-        return log;
-    }
+
 
     private static class BatchValue {
         private final String note;

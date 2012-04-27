@@ -22,6 +22,7 @@ import java.util.Date;
 
 public class ValueModel implements Serializable, Comparable<Value>, Value {
 
+    private static final int INT = 64;
     /**
      *
      */
@@ -35,6 +36,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
     String dx;
     int st;
 
+    @SuppressWarnings("unused")
     protected ValueModel() {
 
     }
@@ -120,12 +122,12 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
 
     @Override
     public String getValueWithNote() {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(INT);
         if ( this.d != Const.CONST_IGNORED_NUMBER_VALUE) {
             sb.append(this.d);
         }
-        if (this.n != null && this.n.length() > 0) {
-            sb.append(" ");
+        if (this.n != null && !this.n.isEmpty()) {
+            sb.append(' ');
             sb.append(this.n);
         }
         return sb.toString().trim();
@@ -143,7 +145,35 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
     }
 
     @Override
-    public int compareTo(Value value) {
-       return Long.valueOf(t).compareTo(value.getTimestamp().getTime());
+    public int compareTo(Value that) {
+        return this.t < that.getTimestamp().getTime()
+                ? 1
+                : this.t > that.getTimestamp().getTime()
+                ? -1
+                : 0;
+
+
+
     }
+
+    @SuppressWarnings({"InstanceofInterfaces", "CastToConcreteClass", "NonFinalFieldReferenceInEquals"})
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ValueModel)) return false;
+
+        ValueModel that = (ValueModel) o;
+
+        if (Double.compare(that.d, d) != 0) return false;
+        if (Double.compare(that.lg, lg) != 0) return false;
+        if (Double.compare(that.lt, lt) != 0) return false;
+        if (st != that.st) return false;
+        if (t != that.t) return false;
+        if (dx != null ? !dx.equals(that.dx) : that.dx != null) return false;
+        if (n != null ? !n.equals(that.n) : that.n != null) return false;
+
+        return true;
+    }
+
+
 }

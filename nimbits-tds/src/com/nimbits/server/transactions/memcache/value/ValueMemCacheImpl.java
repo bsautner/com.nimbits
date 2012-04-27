@@ -118,6 +118,12 @@ public class ValueMemCacheImpl implements ValueTransactions {
 
 
             }
+        } catch (InvalidValueException e) {
+            buffer.delete(currentValueCacheKey);
+            retObj = ValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
+            if (retObj != null) {
+                buffer.put(currentValueCacheKey, retObj);
+            }
         } catch (ClassCastException e) { //old cache data causing a provblem when upgrading.
             buffer.delete(currentValueCacheKey);
             retObj = ValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
@@ -235,17 +241,23 @@ public class ValueMemCacheImpl implements ValueTransactions {
 
     @Override
     public List<ValueBlobStore> getAllStores() throws NimbitsException {
-        throw new NimbitsException("Not Implemented");
+      return ValueTransactionFactory.getDaoInstance(point).getAllStores();
     }
 
     @Override
     public void consolidateDate(final Date timestamp) throws NimbitsException {
-        throw new NimbitsException("Not Implemented");
+          ValueTransactionFactory.getDaoInstance(point).consolidateDate(timestamp);
     }
 
     @Override
     public List<ValueBlobStore> getBlobStoreByBlobKey(BlobKey key) throws NimbitsException {
         return ValueTransactionFactory.getDaoInstance(point).getBlobStoreByBlobKey(key);
+    }
+
+    @Override
+    public ValueBlobStore mergeTimespan(Timespan timespan) throws NimbitsException {
+        return ValueTransactionFactory.getDaoInstance(point).mergeTimespan(timespan);
+
     }
 
     @Override
@@ -375,7 +387,11 @@ public class ValueMemCacheImpl implements ValueTransactions {
         @Override
         public int compare(final Object a, final Object b) {
 
-            return ((Value) base.get(a)).getTimestamp().getTime() < ((Value) base.get(b)).getTimestamp().getTime() ? 1 : ((Value) base.get(a)).getTimestamp().getTime() == ((Value) base.get(b)).getTimestamp().getTime() ? 0 : -1;
+            return ((Value) base.get(a)).getTimestamp().getTime() < ((Value) base.get(b)).getTimestamp().getTime()
+                    ? 1
+                    : ((Value) base.get(a)).getTimestamp().getTime() == ((Value) base.get(b)).getTimestamp().getTime()
+                    ? 0
+                    : -1;
         }
     }
 

@@ -28,5 +28,4 @@ import java.io.*;
 public interface BlobStore {
     String createFile(EntityName name, final String data, final ExportType exportType) throws IOException;
 
-
 }

@@ -18,7 +18,7 @@ import com.nimbits.client.constants.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.email.*;
-import com.nimbits.server.admin.quota.*;
+import com.nimbits.server.admin.system.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -63,18 +63,21 @@ public class QuotaResetCron  extends HttpServlet {
         final Query q = new Query("UserEntity").setKeysOnly();
 
         sb.append("<html><body>Quota Report<table>");
+        int count = 0;
         for (final Entity e : store.prepare(q).asList(FetchOptions.Builder.withLimit(LIMIT))) {
             EmailAddress em = CommonFactoryLocator.getInstance().createEmailAddress(e.getKey().getName());
+            count++;
 
-            Quota quota = QuotaFactory.getInstance(em);
-            int c = quota.getCount();
-            if (c > 1) {
-                sb.append("<tr><td>").append(em .getValue()).append("</td><td>").append(c).append("</td></tr>");
-            }
-            quota.resetCounter();
+//            Quota quota = QuotaFactory.getInstance(em);
+//            int c = quota.getCount();
+//            if (c > 1) {
+//                sb.append("<tr><td>").append(em .getValue()).append("</td><td>").append(c).append("</td></tr>");
+//            }
+//            //quota.resetCounter();
 
         }
         sb.append("</table></body></html>");
+        SystemServiceFactory.getInstance().updateSystemPoint("UserCount", count, false);
         resp.getWriter().print(sb.toString());
 
     }

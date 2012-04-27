@@ -67,13 +67,12 @@ public class ValueServletImpl extends ApiServlet {
         if (user != null && ! user.isRestricted()) {
 
             final EntityName pointName = CommonFactoryLocator.getInstance().createName(getParam(Parameters.point), EntityType.point);
-            final Entity point = EntityServiceFactory.getInstance().getEntityByName(user, pointName, EntityType.point).get(0);
+            final List<Entity> points = EntityServiceFactory.getInstance().getEntityByName(user, pointName, EntityType.point);
 
-            if (point != null) {
-
-
+            if (points.isEmpty()) {
+                FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(UserMessages.ERROR_POINT_NOT_FOUND));
+            } else {
                 final Value v;
-
                 if (Utils.isEmptyString(getParam(Parameters.json))) {
                     final double latitude = getDoubleFromParam(getParam(Parameters.lat));
                     final double longitude = getDoubleFromParam(getParam(Parameters.lng));
@@ -86,15 +85,12 @@ public class ValueServletImpl extends ApiServlet {
                     v = ValueModelFactory.createValueModel(vx.getLatitude(), vx.getLongitude(), vx.getDoubleValue(), vx.getTimestamp(),
                             vx.getNote(), vx.getData(), AlertType.OK);
                 }
-
+                final Entity point = points.get(0);
                 final Value result = ValueServiceFactory.getInstance().recordValue(user, point, v);
                 final PrintWriter out = resp.getWriter();
                 final String j = GsonFactory.getInstance().toJson(result);
                 out.print(j);
 
-            }
-            else {
-                FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(UserMessages.ERROR_POINT_NOT_FOUND));
             }
 
         }

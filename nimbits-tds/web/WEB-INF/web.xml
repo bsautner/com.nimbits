@@ -215,6 +215,10 @@
         <servlet-name>QuotaResetCron</servlet-name>
         <url-pattern>/cron/quota</url-pattern>
     </servlet-mapping>
+
+
+
+
     <servlet>
         <servlet-name>SessionMaint</servlet-name>
         <servlet-class>com.nimbits.server.process.cron.SessionMaint</servlet-class>
@@ -275,6 +279,16 @@
 
 
     <servlet>
+        <servlet-name>DeleteOrphansService</servlet-name>
+        <servlet-class>com.nimbits.server.process.cron.DeleteOrphanBlobCron</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DeleteOrphansService</servlet-name>
+        <url-pattern>/service/orphans</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
         <servlet-name>UpgradeTask</servlet-name>
         <servlet-class>com.nimbits.server.process.task.UpgradeTask</servlet-class>
     </servlet>
@@ -328,7 +342,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>PointMaintTask</servlet-name>
-        <url-pattern>/task/pointmaint</url-pattern>
+        <url-pattern>/task/point</url-pattern>
     </servlet-mapping>
 
     <servlet>

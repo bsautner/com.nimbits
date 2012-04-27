@@ -31,12 +31,7 @@
         <name>move</name>
         <rate>30/s</rate>
     </queue>
-    <queue>
-        <name>pointmaint</name>
-        <rate>10/s</rate>
-    </queue>
-
-    <queue>
+     <queue>
         <name>incommingmail</name>
         <rate>5/s</rate>
     </queue>

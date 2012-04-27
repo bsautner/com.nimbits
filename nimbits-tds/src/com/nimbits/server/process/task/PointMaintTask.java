@@ -14,15 +14,14 @@
 package com.nimbits.server.process.task;
 
 import com.google.gson.*;
-import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.valueblobstore.*;
-import com.nimbits.server.gson.*;
 import com.nimbits.server.admin.logging.*;
+import com.nimbits.server.gson.*;
 import com.nimbits.server.transactions.service.user.*;
 import com.nimbits.server.transactions.service.value.*;
 
@@ -41,10 +40,8 @@ public class PointMaintTask extends HttpServlet {
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
 
-
-
         try {
-            processPost(req, resp);
+            processPost(req);
 
         } catch (Exception ex) {
             LogHelper.logException(this.getClass(), ex);
@@ -53,9 +50,8 @@ public class PointMaintTask extends HttpServlet {
     }
 
 
-    protected static void processPost(final ServletRequest req, final ServletResponse resp) throws NimbitsException {
+    protected static void processPost(final ServletRequest req) throws NimbitsException {
         final Gson gson = GsonFactory.getInstance();
-        resp.setContentType(Const.CONTENT_TYPE_HTML);
 
         final String j = req.getParameter(Parameters.json.getText());
         final Point e = gson.fromJson(j, PointModel.class);
@@ -71,25 +67,28 @@ public class PointMaintTask extends HttpServlet {
 
 
 
-    public static void consolidateBlobs(final Entity e) throws NimbitsException {
+    protected  static void consolidateBlobs(final Entity e) throws NimbitsException {
         final List<ValueBlobStore> stores = ValueTransactionFactory.getDaoInstance(e).getAllStores();
         if (! stores.isEmpty()) {
             log.info("Consolidating " + stores.size() + " blob stores");
             final Collection<Long> dates = new ArrayList<Long>(stores.size());
+            final Collection<Long> dupDates = new ArrayList<Long>(stores.size());
             for (final ValueBlobStore store : stores) {
                 //consolidate blobs that have more than one date.
-                if (dates.contains(store.getTimestamp().getTime())) {
-                    ValueTransactionFactory.getDaoInstance(e).consolidateDate(store.getTimestamp());
-                    log.info("Consolidating " + store.getTimestamp() + " " + store.getBlobKey());
+
+                if ( dates.contains(store.getTimestamp().getTime()) && ! dupDates.contains(store.getTimestamp().getTime())) {
+
+                    dupDates.add(store.getTimestamp().getTime());
                 }
                 else {
-                    log.info("Adding first time " + store.getTimestamp() + store.getBlobKey());
+
                     dates.add(store.getTimestamp().getTime());
                 }
             }
+            for (Long l : dupDates) {
+               ValueTransactionFactory.getDaoInstance(e).consolidateDate(new Date(l));
 
-
-
+            }
         }
     }
 

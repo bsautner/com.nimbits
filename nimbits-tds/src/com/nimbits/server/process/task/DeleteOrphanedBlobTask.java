@@ -41,23 +41,42 @@ public class DeleteOrphanedBlobTask  extends HttpServlet {
 
     public static void processRequest(ServletRequest req) throws NimbitsException {
 
-        BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-        String key = req.getParameter(Parameters.key.getText());
-        if (!Utils.isEmptyString(key)) {
-            log.info("checking orphans: " + key);
-            final List<Entity> e = EntityTransactionFactory.getDaoInstance(UserServiceFactory.getServerInstance().getAdmin())
-                    .getEntityByBlobKey(new BlobKey(key));
-            log.info("checked for files " + key);
-            final List<ValueBlobStore> e2 = ValueTransactionFactory.getDaoInstance(null).
-                    getBlobStoreByBlobKey(new BlobKey(key));
-            log.info("checked for stores " + key);
-            log.info(e.isEmpty() + " " + e2.isEmpty());
-            if (e.isEmpty() && e2.isEmpty()) {
-                //  blobstoreService.delete(new BlobKey(key));
-                log.warning("Deleted orphaned blob: " + key);
-            }
 
+        String key = req.getParameter(Parameters.key.getText());
+        BlobKey blobKey = new BlobKey(key);
+        if (!Utils.isEmptyString(key)) {
+        checkFile(blobKey, false);
         }
 
     }
-}
+
+    public static void checkFile(BlobKey blobKey, boolean recursive) throws NimbitsException {
+
+
+
+            final List<Entity> e = EntityTransactionFactory.getDaoInstance(UserServiceFactory.getServerInstance().getAdmin())
+                    .getEntityByBlobKey(blobKey);
+
+            final List<ValueBlobStore> e2 = ValueTransactionFactory.getDaoInstance(null).
+                    getBlobStoreByBlobKey(blobKey);
+
+            if (e.isEmpty() && e2.isEmpty()) {
+                BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+                blobstoreService.delete(blobKey);
+                log.warning("Deleted orphaned blob: " + blobKey.getKeyString());
+            }
+            Iterator<BlobInfo> iterator = new BlobInfoFactory().queryBlobInfosAfter(blobKey);
+
+            if  (iterator.hasNext()){
+                final BlobInfo i = iterator.next();
+                if (recursive){
+                    checkFile(i.getBlobKey(), recursive);
+                }
+                else {
+                    TaskFactory.getInstance().startDeleteOrphanedBlobTask(i.getBlobKey());
+                }
+
+            }
+        }
+    }
+

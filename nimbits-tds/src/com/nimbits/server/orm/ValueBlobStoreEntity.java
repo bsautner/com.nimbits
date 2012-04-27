@@ -15,6 +15,7 @@ package com.nimbits.server.orm;
 
 import com.google.appengine.api.blobstore.*;
 import com.nimbits.client.constants.*;
+import com.nimbits.client.exception.*;
 import com.nimbits.client.model.valueblobstore.*;
 
 import javax.jdo.annotations.*;
@@ -115,5 +116,24 @@ public class ValueBlobStoreEntity  implements ValueBlobStore {
     @Override
     public long getLength() {
         return length != null ? length : Const.CONST_DEFAULT_BLOB_LENGTH;
+    }
+
+    @Override
+    public void validate() throws NimbitsException {
+        if (this.length == null || this.length == 0) {
+            throw new NimbitsException("Store must not have a length of zero or null");
+        }
+
+        if (maxTimestamp < this.timestamp) {
+            throw new NimbitsException("max timestamp was less than the base timestamp");
+        }
+        if (minTimestamp < this.timestamp) {
+            throw new NimbitsException("min timestamp was less than the base timestamp");
+        }
+        if (this.maxTimestamp == 0 || this.minTimestamp == 0) {
+            throw new NimbitsException("Min and Max timestamps should not be zero");
+        }
+
+
     }
 }

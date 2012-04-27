@@ -21,10 +21,9 @@ import com.nimbits.client.model.entity.*;
 
 import java.io.*;
 import java.nio.channels.*;
-import java.util.logging.*;
 
 public class BlobStoreImpl implements BlobStore {
-    private final Logger log = Logger.getLogger(BlobStoreImpl.class.getName());
+  //  private final Logger log = Logger.getLogger(BlobStoreImpl.class.getName());
     @Override
     public String createFile(EntityName name, final String data,final ExportType exportType) throws IOException {
         // Get a file service

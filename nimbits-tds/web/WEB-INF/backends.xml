@@ -16,6 +16,9 @@
     <backend name="maint">
         <class>B2</class>
         <instances>1</instances>
+        <options>
+            <dynamic>true</dynamic>
+            <public>true</public>
+        </options>
     </backend>
-
 </backends>

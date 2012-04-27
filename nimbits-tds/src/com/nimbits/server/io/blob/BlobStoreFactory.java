@@ -15,16 +15,19 @@ package com.nimbits.server.io.blob;
 
 
 public class BlobStoreFactory {
-    private static BlobStore instance;
 
     private BlobStoreFactory() {
     }
 
-    public static BlobStore getInstance() {
-        if (instance == null) {
-            instance = new BlobStoreImpl();
+    private static class BlobStoreHolder {
+        static final BlobStore instance = new BlobStoreImpl();
+
+        private BlobStoreHolder() {
         }
-        return instance;
+    }
+
+    public static BlobStore getInstance() {
+        return BlobStoreHolder.instance;
     }
 
 

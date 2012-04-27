@@ -43,6 +43,7 @@ import java.util.logging.*;
  */
 @SuppressWarnings("unchecked")
 public class ValueDAOImpl implements ValueTransactions {
+    private static final int INT = 1024;
     private final Entity entity;
     private final Logger log = Logger.getLogger(ValueDAOImpl.class.getName());
     public ValueDAOImpl(final Entity aPoint) {
@@ -50,11 +51,12 @@ public class ValueDAOImpl implements ValueTransactions {
     }
 
     public static  List<ValueBlobStore> createValueBlobStores(final Collection<ValueBlobStore> store) {
-      final List<ValueBlobStore> retObj = new ArrayList<ValueBlobStore>(store.size());
-
-      for (final ValueBlobStore v : store) {
-        retObj.add(createValueBlobStore(v));
-      }
+        final List<ValueBlobStore> retObj = new ArrayList<ValueBlobStore>(store.size());
+        for (final ValueBlobStore v : store) {
+            if ( v.getLength() > 0) {
+                retObj.add(createValueBlobStore(v));
+            }
+        }
         return retObj;
 
     }
@@ -100,8 +102,9 @@ public class ValueDAOImpl implements ValueTransactions {
                     if (vx.getTimestamp().getTime() <= endDate.getTime()) {
                         retObj.add(vx);
                     }
+
                     if (retObj.size() >= maxValues) {
-                        return retObj;
+                        break;
                     }
                 }
             }
@@ -115,7 +118,7 @@ public class ValueDAOImpl implements ValueTransactions {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         try {
-            log.info("blobstore query " + key.getKeyString());
+
             final Query q = pm.newQuery(ValueBlobStoreEntity.class);
             q.setFilter("blobkey == b");
             q.declareImports("import com.google.appengine.api.blobstore.BlobKey");
@@ -185,45 +188,123 @@ public class ValueDAOImpl implements ValueTransactions {
     @Override
     public void consolidateDate(final Date timestamp) throws NimbitsException {
 
-        final PersistenceManagerFactory persistenceManagerFactory = PMF.get();
-        final PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
+
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+
         final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
         try {
             final Query q = pm.newQuery(ValueBlobStoreEntity.class);
             q.setFilter("timestamp == t && entity == k");
             q.declareParameters("String k, Long t");
             final Collection<ValueBlobStore> result = (Collection<ValueBlobStore>) q.execute(entity.getKey(), timestamp.getTime());
-            final List<Value> values = new ArrayList<Value>(Const.CONST_DEFAULT_LIST_SIZE);
-            for (final ValueBlobStore store : result) {
-                values.addAll(readValuesFromFile(new BlobKey(store.getBlobKey()), store.getLength()));
-                BlobKey key = new BlobKey(store.getBlobKey());
-                try {
-                    blobstoreService.delete(key);
-                } catch (BlobstoreFailureException e) {
-                    LogHelper.logException(ValueDAOImpl.class, e);
-                }
-            }
-            pm.deletePersistentAll(result);
-            recordValues(values);
+            mergeResults(pm, blobstoreService, result);
 
         } finally {
             pm.close();
         }
     }
 
+    private void mergeResults(final PersistenceManager pm, final BlobstoreService blobstoreService, final Collection<ValueBlobStore> result) throws NimbitsException {
+        final List<Value> values = new ArrayList<Value>(Const.CONST_DEFAULT_LIST_SIZE);
+        for (final ValueBlobStore store : result) {
+            values.addAll(readValuesFromFile(new BlobKey(store.getBlobKey()), store.getLength()));
+            BlobKey key = new BlobKey(store.getBlobKey());
+            try {
+                blobstoreService.delete(key);
+            } catch (BlobstoreFailureException e) {
+                LogHelper.logException(ValueDAOImpl.class, e);
+            }
+        }
+        pm.deletePersistentAll(result);
+        recordValues(values);
+    }
+
+    @SuppressWarnings("IOResourceOpenedButNotSafelyClosed")
+    @Override
+    public ValueBlobStore mergeTimespan(final Timespan timespan) throws NimbitsException {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+        final FileService fileService = FileServiceFactory.getFileService();
+
+
+        PrintWriter out = null;
+        try {
+            final AppEngineFile file = fileService.createNewBlobFile(Const.CONTENT_TYPE_PLAIN);
+            final String path = file.getFullPath();
+            final FileWriteChannel writeChannel = fileService.openWriteChannel(file, true);
+            out = new PrintWriter(Channels.newWriter(writeChannel, "UTF8"));
+
+            final Query q = pm.newQuery(ValueBlobStoreEntity.class);
+
+            q.setFilter("entity == k && minTimestamp <= et && minTimestamp >= st ");
+            q.declareParameters("String k, Long et, Long st");
+            q.setOrdering("minTimestamp desc");
+
+            final List<ValueBlobStore> result = (List<ValueBlobStore>) q.execute(
+                    entity.getKey(),
+                    timespan.getEnd().getTime(),
+                    timespan.getStart().getTime());
+
+
+            Collection<Value> combined = new ArrayList<Value>(INT);
+            Date timestamp = null;
+            for (ValueBlobStore store : result) {
+                if (timestamp == null|| timestamp.getTime() > store.getTimestamp().getTime()) {
+                    timestamp = store.getTimestamp();
+
+                }
+                List<Value> read = readValuesFromFile(new BlobKey(store.getBlobKey()), store.getLength());
+                combined.addAll(read);
+                blobstoreService.delete(new BlobKey(store.getBlobKey()));
+            }
+            pm.deletePersistentAll(result);
+
+
+            long max = 0;
+            long min = 0;
+            for (Value v : combined) {
+                if (v.getTimestamp().getTime() > max) {
+                    max = v.getTimestamp().getTime();
+                }
+                if (v.getTimestamp().getTime() < min || min == 0) {
+                    min = v.getTimestamp().getTime();
+                }
+            }
+
+            String json = GsonFactory.getInstance().toJson(combined);
+            out.println(json);
+            out.close();
+            writeChannel.closeFinally();
+            final BlobKey key = fileService.getBlobKey(file);
+
+            ValueBlobStore currentStoreEntity = new ValueBlobStoreEntity(entity.getKey(), timestamp, new Date(max), new Date(min), path, key, json.length());
+            currentStoreEntity.validate();
+            pm.makePersistent(currentStoreEntity);
+            pm.flush();
+            return createValueBlobStore(currentStoreEntity);
+
+        } catch (IOException e) {
+            throw new NimbitsException(e);
+        } finally {
+           if (out!= null) {
+               out.close();
+           }
+            pm.close();
+        }
+
+    }
 
     @Override
     public List<ValueBlobStore> recordValues(final List<Value> values) throws NimbitsException {
-
-
         if (!values.isEmpty()) {
 
             final Map<Long, List<Value>> map = new HashMap<Long, List<Value>>(Const.CONST_MAX_CACHED_VALUE_SIZE);
             final Map<Long, Long> maxMap = new HashMap<Long, Long>(Const.CONST_MAX_CACHED_VALUE_SIZE);
             final Map<Long, Long> minMap = new HashMap<Long, Long>(Const.CONST_MAX_CACHED_VALUE_SIZE);
+
             for (final Value value : values) {
                 if (valueHealthy(value)) {
-                    Date zero = TimespanServiceFactory.getInstance().zeroOutDate(value.getTimestamp());
+                    final Date zero = TimespanServiceFactory.getInstance().zeroOutDate(value.getTimestamp());
                     if (map.containsKey(zero.getTime())) {
                         map.get(zero.getTime()).add(value);
                         if (maxMap.get(zero.getTime()) < value.getTimestamp().getTime()) {
@@ -236,18 +317,16 @@ public class ValueDAOImpl implements ValueTransactions {
                         }
                     }
                     else {
-                        List<Value> list = new ArrayList<Value>(Const.CONST_MAX_CACHED_VALUE_SIZE);
+                        final List<Value> list = new ArrayList<Value>(Const.CONST_MAX_CACHED_VALUE_SIZE);
                         list.add(value);
                         map.put(zero.getTime(),list);
                         maxMap.put(zero.getTime(), value.getTimestamp().getTime());
                         minMap.put(zero.getTime(), value.getTimestamp().getTime());
                     }
-
-
                 }
-
             }
-            List<ValueBlobStore> retObj = new ArrayList<ValueBlobStore>(map.size());
+
+            final List<ValueBlobStore> retObj = new ArrayList<ValueBlobStore>(map.size());
             for (final Map.Entry<Long, List<Value>> longListEntry : map.entrySet()) {
                 if (!longListEntry.getValue().isEmpty()) {
                     final String json = GsonFactory.getInstance().toJson(longListEntry.getValue());
@@ -258,18 +337,11 @@ public class ValueDAOImpl implements ValueTransactions {
                     } catch (IOException e) {
                         throw new NimbitsException(e);
                     }
-
-
                 }
             }
             return retObj;
-
-
-
         }
         return new ArrayList<ValueBlobStore>(0);
-
-
     }
 
     private static boolean valueHealthy(final Value value) {
@@ -297,7 +369,7 @@ public class ValueDAOImpl implements ValueTransactions {
             final Date earliestForDay = new Date(minMap.get(l));
             final ValueBlobStore currentStoreEntity = new
                     ValueBlobStoreEntity(entity.getKey(), new Date(l), mostRecentTimeForDay, earliestForDay, path, key, json.length());
-
+            currentStoreEntity.validate();
             pm.makePersistent(currentStoreEntity);
             pm.flush();
             return createValueBlobStore(currentStoreEntity);

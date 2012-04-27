@@ -13,6 +13,8 @@
 
 package com.nimbits.client.model.valueblobstore;
 
+import com.nimbits.client.exception.*;
+
 import java.util.Date;
 
 /**
@@ -39,4 +41,6 @@ public interface ValueBlobStore {
     String getBlobKey();
 
     long getLength();
+
+    void validate() throws NimbitsException;
 }

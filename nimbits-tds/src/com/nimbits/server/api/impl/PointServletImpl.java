@@ -186,7 +186,7 @@ public class PointServletImpl extends ApiServlet {
 
 
         } catch (NimbitsException e) {
-          log.warning(e.getMessage());
+            log.warning(e.getMessage());
 
         }
         return sb.toString();
@@ -326,14 +326,18 @@ public class PointServletImpl extends ApiServlet {
 
             if (!Utils.isEmptyString(pointNameParam)) {
                 final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
-                final Entity e = EntityServiceFactory.getInstance().getEntityByName(user, pointName,EntityType.point).get(0);
-                return e != null ? gson.toJson(e) : "Error calling " +
-                        "Point Service. " + pointNameParam + " not found";
+                final List<Entity> result = EntityServiceFactory.getInstance().getEntityByName(user, pointName,EntityType.point);
+                return result.isEmpty() ? "Error calling " + "Point Service. " + pointNameParam + " not found" : GsonFactory.getInstance().toJson(result.get(0));
+
             } else if (!Utils.isEmptyString(categoryNameParam)) {
                 final EntityName categoryName = CommonFactoryLocator.getInstance().createName(categoryNameParam, EntityType.category);
-                final Entity c = EntityServiceFactory.getInstance().getEntityByName(user, categoryName,EntityType.category).get(0);
-                final List<Entity> children = EntityServiceFactory.getInstance().getEntityChildren(user, c, EntityType.point);
-                return  gson.toJson(children, GsonFactory.pointListType);
+                final List<Entity> result = EntityServiceFactory.getInstance().getEntityByName(user, categoryName,EntityType.category) ;
+                if (result.isEmpty()) {
+                    return "Error calling " + "Point Service. " + categoryNameParam + " not found";
+                } else {
+                    final List<Entity> children = EntityServiceFactory.getInstance().getEntityChildren(user, result.get(0), EntityType.point);
+                    return gson.toJson(children, GsonFactory.pointListType);
+                }
 
             }
             else {

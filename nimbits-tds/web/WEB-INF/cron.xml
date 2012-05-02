@@ -13,12 +13,7 @@
   -->
 
 <cronentries>
-    <cron>
-        <url>/cron/orphans</url>
-        <description>Delete Orphand Blobs</description>
-        <schedule>every day 15:55</schedule>
-        <timezone>America/New_York</timezone>
-    </cron>
+
 
     <cron>
         <url>/cron/point</url>

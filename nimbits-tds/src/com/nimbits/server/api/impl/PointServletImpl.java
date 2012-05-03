@@ -32,6 +32,7 @@ import com.nimbits.server.admin.logging.*;
 import com.nimbits.server.time.*;
 import com.nimbits.server.transactions.service.value.*;
 
+import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.*;
 import java.util.*;
@@ -67,9 +68,8 @@ public class PointServletImpl extends ApiServlet {
                 final Action action = Utils.isEmptyString(actionParam) ? Action.create : Action.get(actionParam);
 
 
-
-
                 switch (action) {
+
                     case delete:
                         deletePoint(user, pointNameParam);
                         return;
@@ -114,10 +114,33 @@ public class PointServletImpl extends ApiServlet {
 
     }
 
+    private static void validateExistence(final ServletResponse resp, final User user, final EntityName name) throws NimbitsException {
+
+        List<Entity> result =  EntityServiceFactory.getInstance().getEntityByName(user, name, EntityType.point);
+        try {
+        if (result.isEmpty()) {
+            resp.getWriter().print("false");
+        }
+        else {
+
+                resp.getWriter().print("true");
+
+        }
+        } catch (IOException e) {
+          LogHelper.logException(PointServletImpl.class, e);
+        }
+
+    }
+
     @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp) {
 
         try {
+
+
+
+
+
             final PrintWriter out = resp.getWriter();
 
             out.print(processGet(req, resp));
@@ -134,7 +157,8 @@ public class PointServletImpl extends ApiServlet {
 
             doInit(req, resp, ExportType.plain);
 
-
+            final String actionParam = req.getParameter(Parameters.action.getText());
+            final Action action = Utils.isEmptyString(actionParam) ? Action.read : Action.get(actionParam);
             final String startParam = req.getParameter(Parameters.sd.getText());
             final String endParam = req.getParameter(Parameters.ed.getText());
             final String offsetParam = req.getParameter(Parameters.offset.getText());
@@ -143,46 +167,21 @@ public class PointServletImpl extends ApiServlet {
             final String pointNameParam = Utils.isEmptyString(getParam(Parameters.name)) ?
                     getParam(Parameters.point) : getParam(Parameters.name);
 
+            switch (action) {
+               case read:
+                   processGetRead(sb, startParam, endParam, offsetParam, pointNameParam);
+                   break;
+                case validateExists:
+                    EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
+                    validateExistence(resp, user, pointName);
 
-            if (containsParam(Parameters.uuid)) {
-
-                Entity entity =   EntityServiceFactory.getInstance().getEntityByKey(getParam(Parameters.uuid), EntityType.point).get(0);
-                if (entity == null) {
-                    entity=  EntityServiceFactory.getInstance().getEntityByKey(user, getParam(Parameters.uuid), EntityType.category).get(0);
-                }
-                if (entity != null) {
-                    if (entity.getEntityType().equals(EntityType.point)) {
-                        sb.append(outputPoint(getParam(Parameters.count), getParam(Parameters.format), startParam, endParam, offsetParam, entity));
-                    }
-                    else {
-                        if (okToReport(user, entity)) {
-
-                            final List<Entity> children = EntityServiceFactory.getInstance().getEntityChildren(user, entity, EntityType.point);
-                            final List<Point> points = new ArrayList<Point>(children.size());
-
-
-                            for (final Entity e : children) {
-                                final Point p = (Point) e;
-                                p.setValues(getRecordedValues(getParam(Parameters.count), startParam, endParam, offsetParam, p));
-                                p.setValue(ValueServiceFactory.getInstance().getCurrentValue(p));
-                                points.add(p);
-
-                            }
-                            entity.setChildren(points);
-
-                            final String json = GsonFactory.getInstance().toJson(entity);
-                            sb.append(json);
-
-                        }
-                    }
-
-
-                }
-
-
-            } else {
-                sb.append(getPointObjects(getParam(Parameters.category), pointNameParam));
             }
+
+
+
+
+
+
 
 
         } catch (NimbitsException e) {
@@ -190,6 +189,48 @@ public class PointServletImpl extends ApiServlet {
 
         }
         return sb.toString();
+    }
+
+    private static void processGetRead(StringBuilder sb, String startParam, String endParam, String offsetParam, String pointNameParam) throws NimbitsException {
+        if (containsParam(Parameters.uuid)) {
+
+            Entity entity =   EntityServiceFactory.getInstance().getEntityByKey(getParam(Parameters.uuid), EntityType.point).get(0);
+            if (entity == null) {
+                entity=  EntityServiceFactory.getInstance().getEntityByKey(user, getParam(Parameters.uuid), EntityType.category).get(0);
+            }
+            if (entity != null) {
+                if (entity.getEntityType().equals(EntityType.point)) {
+                    sb.append(outputPoint(getParam(Parameters.count), getParam(Parameters.format), startParam, endParam, offsetParam, entity));
+                }
+                else {
+                    if (okToReport(user, entity)) {
+
+                        final List<Entity> children = EntityServiceFactory.getInstance().getEntityChildren(user, entity, EntityType.point);
+                        final List<Point> points = new ArrayList<Point>(children.size());
+
+
+                        for (final Entity e : children) {
+                            final Point p = (Point) e;
+                            p.setValues(getRecordedValues(getParam(Parameters.count), startParam, endParam, offsetParam, p));
+                            p.setValue(ValueServiceFactory.getInstance().getCurrentValue(p));
+                            points.add(p);
+
+                        }
+                        entity.setChildren(points);
+
+                        final String json = GsonFactory.getInstance().toJson(entity);
+                        sb.append(json);
+
+                    }
+                }
+
+
+            }
+
+
+        } else {
+            sb.append(getPointObjects(getParam(Parameters.category), pointNameParam));
+        }
     }
 
     private static Entity getCategoryWithParam(final EntityName categoryName, final User u) throws NimbitsException {

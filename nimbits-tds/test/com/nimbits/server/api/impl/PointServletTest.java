@@ -12,6 +12,7 @@ import com.nimbits.server.transactions.service.entity.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 
+import java.io.*;
 import java.util.*;
 
 /**
@@ -40,6 +41,25 @@ public class PointServletTest extends NimbitsServletTest {
 
 
 
+    }
+
+    @Test
+    public void testPointExists() throws UnsupportedEncodingException {
+        req.removeAllParameters();
+        req.addParameter("point", pointName.getValue());
+        req.addParameter("action", Action.validateExists.getCode());
+        i.doGet(req, resp);
+        String r = resp.getContentAsString();
+        assertTrue(Boolean.valueOf(r));
+    }
+    @Test
+    public void testPointDoesNotExist() throws UnsupportedEncodingException {
+        req.removeAllParameters();
+        req.addParameter("point","IDONTEXIST1223");
+        req.addParameter("action", Action.validateExists.getCode());
+        i.doGet(req, resp);
+        String r = resp.getContentAsString();
+        assertFalse(Boolean.valueOf(r));
     }
 
     @Test

@@ -70,15 +70,16 @@ public class ValueServletImpl extends ApiServlet {
             final List<Entity> points = EntityServiceFactory.getInstance().getEntityByName(user, pointName, EntityType.point);
 
             if (points.isEmpty()) {
-                FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(UserMessages.ERROR_POINT_NOT_FOUND));
+              //  FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(UserMessages.ERROR_POINT_NOT_FOUND));
             } else {
                 final Value v;
                 if (Utils.isEmptyString(getParam(Parameters.json))) {
                     final double latitude = getDoubleFromParam(getParam(Parameters.lat));
                     final double longitude = getDoubleFromParam(getParam(Parameters.lng));
                     final double value = getDoubleFromParam(getParam(Parameters.value));
+                    final String data = getParam(Parameters.data) == null ? "" : getParam(Parameters.data);
                     final Date timestamp = getParam(Parameters.timestamp) != null ? new Date(Long.parseLong(getParam(Parameters.timestamp))) : new Date();
-                    v = ValueModelFactory.createValueModel(latitude, longitude, value, timestamp, getParam(Parameters.json));
+                    v = ValueModelFactory.createValueModel(latitude, longitude, value, timestamp, getParam(Parameters.note),data, AlertType.OK);
                 } else {
                     final Value vx = GsonFactory.getInstance().fromJson(getParam(Parameters.json), ValueModel.class);
 
@@ -113,7 +114,7 @@ public class ValueServletImpl extends ApiServlet {
                     getParam(Parameters.lng),
                     getParam(Parameters.json));
         }
-        out.println(processRequest(getParam(Parameters.point), getParam(Parameters.uuid), format, nv, user));
+        out.print(processRequest(getParam(Parameters.point), getParam(Parameters.uuid), format, nv, user));
         out.close();
 
 
@@ -171,7 +172,13 @@ public class ValueServletImpl extends ApiServlet {
             } else {
                 value = ValueServiceFactory.getInstance().getCurrentValue(p);
             }
-            return value != null ? format.equals(Parameters.json.getText()) ? GsonFactory.getInstance().toJson(value) : String.valueOf(value.getDoubleValue()) : "";
+            String r =  value != null ? format.equals(Parameters.json.getText()) ? GsonFactory.getInstance().toJson(value) : String.valueOf(value.getDoubleValue()) : "";
+
+            if (containsParam(Parameters.client) && getParam(Parameters.client).equals(ClientType.arduino.getCode())) {
+                 r = "<" + r + ">";
+            }
+
+            return r;
 
         }
 

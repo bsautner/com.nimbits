@@ -13,6 +13,10 @@
 
 package com.nimbits.client.enums;
 
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by bsautner
  * User: benjamin
@@ -21,6 +25,26 @@ package com.nimbits.client.enums;
  */
 public enum ClientType {
 
-    android, other
+    android("android"), arduino("arduino"), other("other");
+    private static final Map<String, ClientType> lookup = new HashMap<String, ClientType>(3);
 
-}
+    static {
+        for (final ClientType s : EnumSet.allOf(ClientType.class))
+            lookup.put(s.code, s);
+    }
+
+    private final String code;
+
+    private ClientType(final String code) {
+        this.code = code;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public static ClientType get(final String code) {
+        return lookup.get(code);
+    }
+
+    }

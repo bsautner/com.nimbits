@@ -27,7 +27,36 @@ public class PointServletTest extends NimbitsServletTest {
     public void createPointTest() throws NimbitsException {
         EntityName name = CommonFactoryLocator.getInstance().createName("test", EntityType.point);
 
-         Point p = PointServletImpl.createPoint(user, name, null);
+         Point p = PointServletImpl.createPoint(user, name, null, null, "description sample");
+    }
+
+
+    @Test
+    public void testPostParent() throws NimbitsException {
+
+        req.removeAllParameters();
+        req.addParameter("action", "create");
+        req.addParameter("point", "parentPoint");
+        i.doPost(req, resp);
+        EntityName name = CommonFactoryLocator.getInstance().createName("parentPoint", EntityType.point);
+
+        List<Entity> result = EntityServiceFactory.getInstance().getEntityByName(user, name, EntityType.point);
+        assertFalse(result.isEmpty());
+
+        req.removeAllParameters();
+        req.addParameter("action", "create");
+        req.addParameter("point", "child");
+        req.addParameter("parent", "parentPoint");
+        i.doPost(req, resp);
+        EntityName name2 = CommonFactoryLocator.getInstance().createName("child", EntityType.point);
+        List<Entity> result2 = EntityServiceFactory.getInstance().getEntityByName(user, name2, EntityType.point);
+        assertFalse(result2.isEmpty());
+
+        List<Entity> c = EntityServiceFactory.getInstance().getChildren(result.get(0), EntityType.point);
+        assertFalse(c.isEmpty());
+        assertEquals(result2.get(0), c.get(0));
+
+
     }
 
     @Test
@@ -39,6 +68,24 @@ public class PointServletTest extends NimbitsServletTest {
         Category c = GsonFactory.getInstance().fromJson(r, CategoryModel.class);
         Assert.assertFalse(c.getChildren().isEmpty());
 
+
+
+    }
+
+
+    @Test
+    public void testCreatePointWithPost() throws UnsupportedEncodingException {
+        req.removeAllParameters();
+        req.addParameter("point", "Created");
+        req.addParameter("action", Action.create.name());
+        i.doPost(req, resp);
+
+        req.removeAllParameters();
+        req.addParameter("point", "Created");
+        req.addParameter("format", "json");
+        i.doGet(req, resp);
+        String r = resp.getContentAsString();
+        assertNotNull(r);
 
 
     }

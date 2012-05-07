@@ -14,6 +14,7 @@
 package com.nimbits.server.api;
 
 import com.nimbits.client.common.Utils;
+import com.nimbits.client.enums.ClientType;
 import com.nimbits.client.enums.ExportType;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.exception.NimbitsException;
@@ -71,7 +72,10 @@ public class ApiServlet extends HttpServlet {
                 Parameters.count,
                 Parameters.autoscale,
                 Parameters.category,
-                Parameters.key
+                Parameters.key,
+                Parameters.client,
+                Parameters.parent,
+                Parameters.description
 
         };
 
@@ -87,6 +91,21 @@ public class ApiServlet extends HttpServlet {
         addResponseHeaders(resp, type);
 
 
+    }
+
+    public static ClientType getClientType() {
+        ClientType type;
+        if (containsParam(Parameters.client)) {
+            type = ClientType.get(getParam(Parameters.client));
+            if (type == null) {
+                type = ClientType.other;
+            }
+
+        }
+        else {
+            type = ClientType.other;
+        }
+        return type;
     }
 
     public static void addResponseHeaders(final HttpServletResponse resp, final ExportType type) {

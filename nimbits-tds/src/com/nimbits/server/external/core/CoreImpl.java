@@ -24,7 +24,7 @@ import com.nimbits.client.model.server.*;
 import com.nimbits.server.admin.common.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.http.*;
-import com.nimbits.server.admin.settings.*;
+import com.nimbits.server.settings.*;
 
 import java.util.logging.*;
 

@@ -29,7 +29,7 @@ import com.nimbits.client.service.intelligence.*;
 import com.nimbits.server.transactions.service.entity.*;
 import com.nimbits.server.transactions.service.feed.*;
 import com.nimbits.server.http.*;
-import com.nimbits.server.admin.settings.*;
+import com.nimbits.server.settings.*;
 import com.nimbits.server.transactions.service.user.*;
 import com.nimbits.server.transactions.service.value.*;
 import org.w3c.dom.*;

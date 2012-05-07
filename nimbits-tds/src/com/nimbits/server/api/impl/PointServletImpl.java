@@ -46,7 +46,7 @@ public class PointServletImpl extends ApiServlet {
     private static final int INT = 1024;
     private static final int EXPIRE = 90;
     private static final double FILTER_VALUE = 0.1;
-    final Logger log = Logger.getLogger(PointServletImpl.class.getName());
+    final static Logger log = Logger.getLogger(PointServletImpl.class.getName());
 
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
@@ -59,10 +59,10 @@ public class PointServletImpl extends ApiServlet {
 
             if (user != null &&  ! user.isRestricted()) {
 
-                final String pointNameParam = Utils.isEmptyString(getParam(Parameters.name)) ?
+                String pointNameParam = Utils.isEmptyString(getParam(Parameters.name)) ?
                         getParam(Parameters.point) : getParam(Parameters.name);
 
-
+                pointNameParam = pointNameParam.trim();
 
                 final String actionParam = req.getParameter(Parameters.action.getText());
                 final Action action = Utils.isEmptyString(actionParam) ? Action.create : Action.get(actionParam);
@@ -77,20 +77,36 @@ public class PointServletImpl extends ApiServlet {
                         updatePoint(user, getParam(Parameters.json));
                         return;
                     case create:
-                        EntityName categoryName = null;
-
+                        EntityName parentName = null;
+                        EntityType parentType;
+                        log.info("creating point");
                         if (containsParam(Parameters.category)) {
-                            categoryName= CommonFactoryLocator.getInstance().createName(getParam(Parameters.category), EntityType.category);
+                            parentName= CommonFactoryLocator.getInstance().createName(getParam(Parameters.category), EntityType.category);
+                            parentType = EntityType.category;
                         }
+                        else if (containsParam(Parameters.parent)) {
+                            parentName = CommonFactoryLocator.getInstance().createName(getParam(Parameters.parent), EntityType.point);
+                            parentType = EntityType.point;
+
+                        }
+                        else {
+                            parentType = EntityType.user;
+                        }
+                        log.info(parentType.name());
+                        if (parentName != null) {
+                            log.info(parentName.getValue());
+                        }
+
                         if (!Utils.isEmptyString(pointNameParam) && Utils.isEmptyString(getParam(Parameters.json))) {
                             final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
-                            final Point point = createPoint(user, pointName, categoryName);
+                            String description = getParam(Parameters.description);
+                            final Point point = createPoint(user, pointName, parentName, parentType, description);
                             final String retJson = gson.toJson(point);
                             out.println(retJson);
 
                         } else if (!Utils.isEmptyString(pointNameParam) && !Utils.isEmptyString(getParam(Parameters.json))) {
                             //  final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
-                            final Point point = createPointWithJson(user, categoryName, getParam(Parameters.json));
+                            final Point point = createPointWithJson(user, parentName, parentType,getParam(Parameters.json));
                             final String retJson = gson.toJson(point);
                             out.println(retJson);
                         }
@@ -114,21 +130,19 @@ public class PointServletImpl extends ApiServlet {
 
     }
 
-    private static void validateExistence(final ServletResponse resp, final User user, final EntityName name) throws NimbitsException {
+    private static void validateExistence( final User user, final EntityName name, StringBuilder sb) throws NimbitsException {
 
         List<Entity> result =  EntityServiceFactory.getInstance().getEntityByName(user, name, EntityType.point);
-        try {
-        if (result.isEmpty()) {
-            resp.getWriter().print("false");
-        }
-        else {
 
-                resp.getWriter().print("true");
+            if (result.isEmpty()) {
+                sb.append("false");
+            }
+            else {
 
-        }
-        } catch (IOException e) {
-          LogHelper.logException(PointServletImpl.class, e);
-        }
+                sb.append("true");
+
+            }
+
 
     }
 
@@ -136,10 +150,6 @@ public class PointServletImpl extends ApiServlet {
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp) {
 
         try {
-
-
-
-
 
             final PrintWriter out = resp.getWriter();
 
@@ -163,21 +173,64 @@ public class PointServletImpl extends ApiServlet {
             final String endParam = req.getParameter(Parameters.ed.getText());
             final String offsetParam = req.getParameter(Parameters.offset.getText());
 
+            final String format;
 
             final String pointNameParam = Utils.isEmptyString(getParam(Parameters.name)) ?
                     getParam(Parameters.point) : getParam(Parameters.name);
+            if (getClientType().equals(ClientType.arduino)) {
+                sb.append('<');
+            }
 
+            log.info(pointNameParam);
+            log.info(action.getCode());
             switch (action) {
-               case read:
-                   processGetRead(sb, startParam, endParam, offsetParam, pointNameParam);
-                   break;
+                case read:
+                    processGetRead(sb, startParam, endParam, offsetParam, pointNameParam);
+                    break;
                 case validateExists:
                     EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
-                    validateExistence(resp, user, pointName);
+                    validateExistence(user, pointName, sb);
+                    break;
+                case list:
+                    log.info("listing...");
+                    EntityName parentName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
+                    List<Entity> result = EntityServiceFactory.getInstance().getEntityByName(user, parentName, EntityType.point);
+                    if (! result.isEmpty())  {
+                        List<Entity> children = EntityServiceFactory.getInstance().getChildren(result.get(0), EntityType.point);
+                        if (children.isEmpty()) {
+                            log.info(parentName.getValue() + " had no children");
+                        }
+                        for (Entity e : children) {
+                            if (okToReport(user, e)) {
+                                Value value = ValueServiceFactory.getInstance().getCurrentValue(e);
+                                if (value == null) { //todo implement null pattern in value service
+                                    value = ValueModelFactory.createValueModel(0.0);
+                                }
+                                sb.append(e.getName().getValue())
+                                        .append("(")
+                                        .append(value.getTimestamp().getTime() / 1000)
+                                        .append(":")
+                                        .append(value.getDoubleValue()).append("),");
+                            }
+                        }
+                        if (sb.toString().endsWith(",")) {
+                            sb.deleteCharAt(sb.length()-1);
+                        }
+
+                    }
+                    else {
+                        log.info("couldn't find " + parentName.getValue());
+                    }
+                    log.info(sb.toString());
+                    break;
+
+
 
             }
 
-
+            if (getClientType().equals(ClientType.arduino)) {
+                sb.append('>');
+            }
 
 
 
@@ -233,31 +286,40 @@ public class PointServletImpl extends ApiServlet {
         }
     }
 
-    private static Entity getCategoryWithParam(final EntityName categoryName, final User u) throws NimbitsException {
+    private static Entity getParentWithParam(final EntityName name, final EntityType parentType, final User u) throws NimbitsException {
 
-        // Category c = CategoryServiceFactory.getInstance().getCategory(u, categoryName);
+       List<Entity> results = EntityServiceFactory.getInstance().getEntityByName(u, name, parentType);
 
-        Entity c = EntityServiceFactory.getInstance().getEntityByName(u, categoryName,EntityType.category).get(0);
+        if (! results.isEmpty()) {
+            return (results.get(0));
 
-        if (c == null) {
-            c = EntityServiceFactory.getInstance().getEntityByName(u,  CommonFactoryLocator.getInstance().createName(u.getEmail().getValue(), EntityType.user), EntityType.user).get(0);
+        }
+        else {
+           List<Entity> user =  EntityServiceFactory.getInstance().getEntityByName(u, CommonFactoryLocator.getInstance().createName(u.getEmail().getValue(), EntityType.user), EntityType.user);
+            if (user.isEmpty()) {
+                throw new NimbitsException("Error getting parent, this entity has no parent, not even a user!");
+
+            }
+            else {
+                return user.get(0);
+            }
         }
 
-
-        return c;
     }
 
-    protected static Point createPoint(final User u, final EntityName pointName, final EntityName categoryName) throws NimbitsException {
+    protected static Point createPoint(final User u, final EntityName pointName, final EntityName parentName, final EntityType parentType, String description) throws NimbitsException {
         final String parent;
-        if (categoryName != null) {
-            final Entity category = getCategoryWithParam(categoryName, u);
+        if (parentName != null) {
+            final Entity category = getParentWithParam(parentName, parentType, u);
             parent = category.getKey();
+            log.info("parent: " + parent);
         }
         else {
             parent = u.getKey();
+            log.info("parent was null");
         }
 
-        final Entity entity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone,
+        final Entity entity = EntityModelFactory.createEntity(pointName, description, EntityType.point, ProtectionLevel.everyone,
                 parent, u.getKey(), UUID.randomUUID().toString());
         Point point = PointModelFactory.createPointModel(entity,0.0, EXPIRE, "", 0.0,
                 false, false, false, 0, false, FilterType.fixedHysteresis, FILTER_VALUE);
@@ -267,12 +329,12 @@ public class PointServletImpl extends ApiServlet {
         return (Point) EntityServiceFactory.getInstance().addUpdateEntity(point);
     }
 
-    private static Point createPointWithJson(final User u, final EntityName categoryName, final String json) throws NimbitsException {
+    private static Point createPointWithJson(final User u, final EntityName parentName, final EntityType parentType,  final String json) throws NimbitsException {
 
 
         final String parent;
-        if (categoryName != null) {
-            final Entity category = getCategoryWithParam(categoryName, u);
+        if (parentName != null) {
+            final Entity category = getParentWithParam(parentName, parentType, u);
             parent = category != null ? category.getKey() : u.getKey();
 
         }

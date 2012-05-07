@@ -22,7 +22,8 @@ import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.server.admin.common.*;
 import com.nimbits.server.admin.logging.*;
-import com.nimbits.server.admin.settings.*;
+import com.nimbits.server.settings.*;
+import com.nimbits.server.settings.SettingServiceImpl;
 
 import javax.mail.*;
 import javax.mail.internet.*;

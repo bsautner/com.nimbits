@@ -29,6 +29,6 @@ public class JsDebugRun {
 		System.arraycopy(args, 0, allArgs, 0, args.length);
 		System.arraycopy(jsargs, 0, allArgs, args.length ,jsargs.length);
 
-		org.mozilla.javascript.tools.debugger.Main.main(allArgs);
+	//	org.mozilla.javascript.tools.debugger.Main.main(allArgs);
     }
 }

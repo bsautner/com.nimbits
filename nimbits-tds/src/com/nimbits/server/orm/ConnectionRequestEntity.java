@@ -24,7 +24,7 @@ import javax.jdo.annotations.*;
 import java.util.*;
 
 
-@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
+@PersistenceCapable
 public class ConnectionRequestEntity implements ConnectionRequest {
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)

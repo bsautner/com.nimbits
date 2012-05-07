@@ -25,7 +25,7 @@ import com.nimbits.server.transactions.service.entity.*;
 import com.nimbits.server.external.google.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.http.*;
-import com.nimbits.server.admin.settings.*;
+import com.nimbits.server.settings.*;
 import com.nimbits.server.transactions.service.user.*;
 
 import javax.servlet.http.*;

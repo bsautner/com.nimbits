@@ -55,7 +55,8 @@ public enum Action {
     value(ActionConstants.ACTION_VALUE),
     onOff(ActionConstants.ACTION_ONOFF),
     download(ActionConstants.ACTION_DOWNLOAD),
-    validateExists(ActionConstants.VALIDATE_EXISTS);
+    validateExists(ActionConstants.VALIDATE_EXISTS),
+    list(ActionConstants.LIST);
 
     private static final Map<String, Action> lookup = new HashMap<String, Action>(Action.values().length);
 
@@ -117,6 +118,7 @@ public enum Action {
         protected static final String ACTION_SAVE = "save";
         protected static final String CURRENT_VALUE = "currentvalue";
         public static final String VALIDATE_EXISTS = "exists";
+        public static final String LIST = "list";
 
         private ActionConstants() {
         }

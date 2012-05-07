@@ -18,7 +18,7 @@ import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.setting.Setting;
 import com.nimbits.server.orm.ServerSetting;
-import com.nimbits.server.admin.settings.SettingTransactions;
+import com.nimbits.server.settings.SettingTransactions;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;

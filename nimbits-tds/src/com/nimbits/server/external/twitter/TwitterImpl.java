@@ -26,7 +26,7 @@ import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.twitter.*;
 import com.nimbits.server.transactions.service.entity.*;
-import com.nimbits.server.admin.settings.*;
+import com.nimbits.server.settings.*;
 import twitter4j.*;
 import twitter4j.auth.*;
 import twitter4j.conf.*;

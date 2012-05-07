@@ -36,7 +36,7 @@ public class RecordValueTaskTest extends NimbitsServletTest {
     public void testPostWithCalcs() throws NimbitsException {
         RecordValueTask task = new RecordValueTask();
         addAuth();
-        Entity e = EntityModelFactory.createEntity(CommonFactoryLocator.getInstance().createName("calc1"),
+        Entity e = EntityModelFactory.createEntity(CommonFactoryLocator.getInstance().createName("calc1", EntityType.point),
                 "", EntityType.calculation, ProtectionLevel.onlyMe, point.getKey(), user.getKey());
 
         Calculation c = CalculationModelFactory.createCalculation(e, point.getKey(), true, "x+1", pointChild.getKey(), point.getKey(),

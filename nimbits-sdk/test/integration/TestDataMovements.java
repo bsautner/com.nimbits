@@ -1,6 +1,5 @@
 package integration;
 
-import org.junit.*;
 
 /**
  * Created by Benjamin Sautner

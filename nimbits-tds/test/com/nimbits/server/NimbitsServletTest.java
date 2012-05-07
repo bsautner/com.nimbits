@@ -26,11 +26,13 @@ import com.nimbits.client.model.user.*;
 import com.nimbits.client.service.datapoints.*;
 import com.nimbits.client.service.settings.*;
 import com.nimbits.server.api.impl.*;
+import com.nimbits.server.settings.SettingTransactions;
+import com.nimbits.server.settings.SettingTransactionsFactory;
+import com.nimbits.server.settings.SettingsServiceFactory;
 import com.nimbits.server.transactions.dao.value.*;
 import com.nimbits.server.transactions.service.entity.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.transactions.service.point.*;
-import com.nimbits.server.admin.settings.*;
 import com.nimbits.server.transactions.service.user.*;
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -79,6 +81,8 @@ public class NimbitsServletTest {
 
     @Before
     public void setUp() throws NimbitsException {
+        req = new MockHttpServletRequest();
+        resp = new MockHttpServletResponse();
 
         helper.setUp();
 
@@ -86,11 +90,11 @@ public class NimbitsServletTest {
         settingsService = SettingsServiceFactory.getInstance();
         emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
         valueServlet= new ValueServletImpl();
-        req = new MockHttpServletRequest();
+
         pointName = CommonFactoryLocator.getInstance().createName("point", EntityType.point);
         pointChildName = CommonFactoryLocator.getInstance().createName("pointChild", EntityType.point);
         groupName = CommonFactoryLocator.getInstance().createName("group1", EntityType.point);
-        resp = new MockHttpServletResponse();
+
         userTransactionsDao = UserTransactionFactory.getDAOInstance();
         User r = UserServiceFactory.getServerInstance().createUserRecord(emailAddress);
         assertNotNull(r);

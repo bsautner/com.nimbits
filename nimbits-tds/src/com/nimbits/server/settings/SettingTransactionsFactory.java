@@ -11,11 +11,12 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server.admin.settings;
+package com.nimbits.server.settings;
 
 
-import com.nimbits.server.transactions.dao.settings.*;
-import com.nimbits.server.transactions.memcache.settings.*;
+import com.nimbits.server.settings.SettingTransactions;
+import com.nimbits.server.transactions.dao.settings.SettingsDAOImpl;
+import com.nimbits.server.transactions.memcache.settings.SettingMemCacheImpl;
 
 public class SettingTransactionsFactory {
     private SettingTransactionsFactory() {

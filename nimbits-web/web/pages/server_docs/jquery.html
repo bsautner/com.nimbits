@@ -12,7 +12,7 @@
   -->
 
 <script type="text/javascript" src="/include/rawfile.js">  </script>
-<h4 style="margin: 10px">JQuery</h4>
+<h4 style="margin-top: 10px; margin-bottom: 10px">JQuery</h4>
 
  <p>
      It's easy to use <a href="http://jquery.com/">JQuery</a> to post and get data in and out of a nimbits data point using javascript. This code snippet uses an email address,
@@ -23,7 +23,7 @@
 
 
  </p>
-
+<h4>POST Data to the Batch service</h4>
         <pre class="prettyprint">
             &lt;html&gt;
             &lt;head&gt;
@@ -72,3 +72,21 @@
 
 
         </pre>
+
+        <h4></h4>
+        <p></p>
+
+<h4>Create a Data Point</h4>
+<pre class="prettyprint">
+function createPoint() {
+
+
+$.post("http://app.nimbits.com/service/point",
+{ email: "test@example.com", action: "create", point: "hello post3", key:"a global secret key" },
+function(data){
+alert(data);
+}
+);
+
+}
+  </pre>

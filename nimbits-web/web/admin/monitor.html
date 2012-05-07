@@ -32,7 +32,9 @@
                     }
             );
             c=c+1;
+
             t=setTimeout("timedCount()",1000);
+
         }
 
         function doTimer()
@@ -43,13 +45,36 @@
                 timedCount();
             }
         }
+
+        function createPoint() {
+
+
+//            $.post("http://app.nimbits.com/service/point",
+//                    { email: "bsautner@gmail.com", action: "create", point: "hello post6", key:"69ce042a-8e9e-478d-a07b-0523ee3c63af" },
+//                    function(data){
+//                        alert(data);
+//                    }
+//            );
+
+
+            $.post("http://app.nimbits.com/service/point",
+                    { email: "bsautner@gmail.com", action: "create", parent: "hello post6", point: "hello post child", key:"69ce042a-8e9e-478d-a07b-0523ee3c63af" },
+                    function(data){
+                        alert(data);
+                    }
+            );
+
+          }
+
     </script>
 </head>
 
 <body>
 <form>
-    <input type="button" value="Start" onClick="doTimer()">
+    <input type="button" value="Start" onClick="doTimer();">
      <span>batch service</span>
+    <input type="button" value="Test Post" onClick="createPoint();">
+
 </form>
 
 </body>

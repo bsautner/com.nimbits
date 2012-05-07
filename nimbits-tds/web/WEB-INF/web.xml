@@ -130,18 +130,10 @@
         <url-pattern>/nimbits/subscribe</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>channelService</servlet-name>
-        <servlet-class>com.nimbits.server.channel.ChannelApiServiceImpl</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>channelService</servlet-name>
-        <url-pattern>/nimbits/channel</url-pattern>
-    </servlet-mapping>
 
     <servlet>
         <servlet-name>settingsService</servlet-name>
-        <servlet-class>com.nimbits.server.admin.settings.SettingServiceImpl</servlet-class>
+        <servlet-class>com.nimbits.server.settings.SettingServiceImpl</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>settingsService</servlet-name>
@@ -418,7 +410,7 @@
 
     <servlet>
         <servlet-name>timeServlet</servlet-name>
-        <servlet-class>com.nimbits.server.time.TimeServlet</servlet-class>
+        <servlet-class>com.nimbits.server.api.impl.TimeServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>timeServlet</servlet-name>

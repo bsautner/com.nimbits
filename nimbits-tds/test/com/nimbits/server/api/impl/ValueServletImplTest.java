@@ -14,13 +14,15 @@
 package com.nimbits.server.api.impl;
 
 import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.ClientType;
+import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueModelFactory;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.process.cron.SystemMaint;
-import com.nimbits.server.admin.settings.SettingsServiceFactory;
+import com.nimbits.server.settings.SettingsServiceFactory;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -37,7 +39,6 @@ public class ValueServletImplTest extends NimbitsServletTest {
 
 
 
-
     @Test
     public void doGetTest() {
 
@@ -51,6 +52,21 @@ public class ValueServletImplTest extends NimbitsServletTest {
     }
 
 
+    @Test
+    public void arduinoTest() throws IOException {
+
+
+            req.addParameter(Parameters.client.getText(), ClientType.arduino.getCode());
+            valueServlet.doGet(req, resp);
+            String s = resp.getContentAsString();
+
+
+            assertNotNull(s);
+        assertTrue(s.startsWith("<"));
+        assertTrue(s.endsWith(">"));
+
+
+    }
     @Test
     (expected=NimbitsException.class)
     public void testQuotaException() throws IOException, NimbitsException {

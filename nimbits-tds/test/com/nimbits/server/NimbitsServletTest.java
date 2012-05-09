@@ -47,7 +47,7 @@ import java.util.*;
  * Time: 9:27 AM
  */
 public class NimbitsServletTest {
-    public static final String email = "test@example.com";
+    public static final String email = "support@nimbits.com";
     public final LocalServiceTestHelper helper = new LocalServiceTestHelper(
             new LocalDatastoreServiceTestConfig(),
             new LocalTaskQueueTestConfig(),
@@ -83,6 +83,8 @@ public class NimbitsServletTest {
     public void setUp() throws NimbitsException {
         req = new MockHttpServletRequest();
         resp = new MockHttpServletResponse();
+
+        SettingsServiceFactory.getInstance().addSetting(SettingType.admin, email);
 
         helper.setUp();
 

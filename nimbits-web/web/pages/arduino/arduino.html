@@ -1,0 +1,18 @@
+<h4 style="margin-top: 10px; margin-bottom: 10px">Arduino</h4>
+<script type="text/javascript" src="/include/rawfile.js">  </script>
+
+
+
+<p>Nimbits has an arduino library you can download and include in your Arduino sketches. It uses the
+Ethernet.h and DNS libraries to relay your data to Google's infrastructure and into your Nimbits data channel.
+Meaning, there is no need for a serial connected pc, just an arduino ethernet shield with internet access.
+The Nimbits.h library will use DHCP to allocate an IP Address for your device, and provided google.com is
+up and available, your project will be connected to your data points in Nimbits.<p>
+
+
+<ul>
+    <li>float getValue(String pointName): returns the current float value of a point</li>
+    <li>long getTime(): returns the current time, in seconds unix time, on the server (UTC). This can save you
+    from having to import other time related libraries, since you're already using http</li>
+
+</ul>

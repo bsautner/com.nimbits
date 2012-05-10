@@ -52,7 +52,7 @@ public class NimbitsServletTest {
             new LocalDatastoreServiceTestConfig(),
             new LocalTaskQueueTestConfig(),
             new LocalBlobstoreServiceTestConfig(),
-            new LocalUserServiceTestConfig()).setEnvIsLoggedIn(true).setEnvEmail(email).setEnvAuthDomain("example.com");
+            new LocalUserServiceTestConfig()).setEnvIsLoggedIn(true).setEnvEmail(email).setEnvAuthDomain("nimbits.com");
 
 
 
@@ -84,10 +84,10 @@ public class NimbitsServletTest {
         req = new MockHttpServletRequest();
         resp = new MockHttpServletResponse();
 
-        SettingsServiceFactory.getInstance().addSetting(SettingType.admin, email);
+
 
         helper.setUp();
-
+        SettingsServiceFactory.getInstance().addSetting(SettingType.admin, email);
         pointService = PointServiceFactory.getInstance();
         settingsService = SettingsServiceFactory.getInstance();
         emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);

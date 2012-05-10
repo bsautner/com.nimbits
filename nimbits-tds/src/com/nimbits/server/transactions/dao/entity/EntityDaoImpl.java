@@ -221,18 +221,29 @@ public class EntityDaoImpl implements  EntityTransactions {
 
             final Entity retObj;
             if (Utils.isEmptyString(entity.getKey())) {
+                log.info("entity has no key - creating it");
                 retObj =  addEntity(entity, pm);
             } else {
 
-                final Transaction tx = pm.currentTransaction();
+
                 final Class cls = Class.forName(entity.getEntityType().getClassName());
                 final Entity result = (Entity) pm.getObjectById(cls, entity.getKey());
 
                 if (result != null) {
+                    final Transaction tx = pm.currentTransaction();
                     tx.begin();
+                    log.info("beginning transaction");
+                   try {
                     result.update(entity);
-
+                   }
+                   catch(NimbitsException ex) {
+                       LogHelper.logException(this.getClass(), ex);
+                       tx.rollback();
+                       throw ex;
+                   }
+                    log.info("done update");
                     tx.commit();
+                    log.info("done transaction");
                     final List<Entity> model = createModel(result);
                     if (model.isEmpty()) {
                         throw new NimbitsException("error creating model");
@@ -248,8 +259,10 @@ public class EntityDaoImpl implements  EntityTransactions {
             }
             return retObj;
         } catch (JDOObjectNotFoundException e) {
+           log.info("entity not found, creating it");
             return addEntity(entity, pm);
         } catch (ConcurrentModificationException e) {
+            LogHelper.logException(this.getClass(), e);
             throw new NimbitsException(e);
         } catch (ClassNotFoundException e) {
             LogHelper.logException(this.getClass(), e);

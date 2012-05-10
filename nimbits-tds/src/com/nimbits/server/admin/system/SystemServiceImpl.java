@@ -32,8 +32,9 @@ public class SystemServiceImpl implements SystemService{
                 name, EntityType.point);
         Point p;
         if (e.isEmpty()) {
-            Entity ep = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.onlyMe, admin.getKey(),
-                    admin.getKey(), UUID.randomUUID().toString());
+            String ownerKey = admin.getKey();
+            Entity ep = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.onlyMe, ownerKey,
+                    ownerKey, UUID.randomUUID().toString());
             Point pm = PointModelFactory.createPointModel(ep, 0.0, EXPIRE, "", 0.0, false, false, false, 0, false, FilterType.none, 0.0);
             p = (Point) EntityServiceFactory.getInstance().addUpdateEntity(admin, pm);
         }
@@ -44,7 +45,8 @@ public class SystemServiceImpl implements SystemService{
         Value vx;
         if (incrementAsCounter) {
            Value c = ValueServiceFactory.getInstance().getCurrentValue(p);
-           vx = ValueModelFactory.createValueModel(c.getDoubleValue() + value);
+           double cd = c!= null? c.getDoubleValue() : 0.0;
+           vx = ValueModelFactory.createValueModel(cd+ value);
         }
         else {
             vx = ValueModelFactory.createValueModel(value);

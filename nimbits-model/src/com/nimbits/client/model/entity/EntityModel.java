@@ -30,7 +30,6 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
     private int entityType;
     private int protectionLevel;
     private int alertType;
-    private String entity;
     private String parent;
     private String owner;
     private boolean readOnly = false;
@@ -68,7 +67,6 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
             this.name = anEntity.getName().getValue();
             this.description = anEntity.getDescription();
             this.entityType = anEntity.getEntityType().getCode();
-            this.entity =anEntity.getKey();
             this.parent = anEntity.getParent();
             this.owner = anEntity.getOwner();
             this.protectionLevel = anEntity.getProtectionLevel().getCode();
@@ -79,7 +77,7 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
     }
 
 @Override
-    public void setKey(String key) {
+    public void setKey(final String key) {
         this.key = key;
     }
 
@@ -145,7 +143,7 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
 
     @Override
     public String getKey() {
-        return this.entity;
+        return this.key;
     }
 
     @Override
@@ -284,7 +282,6 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
         if (protectionLevel != that.protectionLevel) return false;
         if (readOnly != that.readOnly) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
-        if (entity != null ? !entity.equals(that.entity) : that.entity != null) return false;
         if (key != null ? !key.equals(that.key) : that.key != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (owner != null ? !owner.equals(that.owner) : that.owner != null) return false;
@@ -302,7 +299,6 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
         result = 31 * result + entityType;
         result = 31 * result + protectionLevel;
         result = 31 * result + alertType;
-        result = 31 * result + (entity != null ? entity.hashCode() : 0);
         result = 31 * result + (parent != null ? parent.hashCode() : 0);
         result = 31 * result + (owner != null ? owner.hashCode() : 0);
         result = 31 * result + (readOnly ? 1 : 0);
@@ -315,7 +311,6 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
                 ", readOnly=" + readOnly +
                 ", owner='" + owner + '\'' +
                 ", parent='" + parent + '\'' +
-                ", entity='" + entity + '\'' +
                 ", alertType=" + alertType +
                 ", protectionLevel=" + protectionLevel +
                 ", entityType=" + entityType +

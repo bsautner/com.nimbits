@@ -70,7 +70,8 @@ public class RecordValueTask extends HttpServlet {
             final Point point = entity instanceof Point
                     ? (Point) entity
                     : (Point) EntityServiceFactory.getInstance().getEntityByKey(u, entity.getKey(), EntityType.point).get(0);
-
+                point.setIdleAlarmSent(false);
+                EntityServiceFactory.getInstance().addUpdateEntity(u,  point);
                 CalculationServiceFactory.getInstance().processCalculations(u, point, value);
                 IntelligenceServiceFactory.getInstance().processIntelligence(u, point);
                 SubscriptionServiceFactory.getInstance().processSubscriptions(u,  point, value);

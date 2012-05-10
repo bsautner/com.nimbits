@@ -23,9 +23,11 @@ import com.nimbits.client.model.value.ValueModelFactory;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.process.cron.SystemMaint;
 import com.nimbits.server.settings.SettingsServiceFactory;
+import com.nimbits.server.transactions.service.value.ValueServiceFactory;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Date;
 
 import static org.junit.Assert.*;
 
@@ -37,6 +39,24 @@ import static org.junit.Assert.*;
  */
 public class ValueServletImplTest extends NimbitsServletTest {
 
+    @Test
+    public void testPostData() throws NimbitsException, InterruptedException, IOException {
+
+        req.removeAllParameters();
+        req.addParameter("point", pointName.getValue());
+        req.addParameter("data", "Medication");
+        req.addParameter("timestamp", "1336579929000");
+        req.addParameter("value", "5");
+        ValueServletImpl i = new ValueServletImpl();
+        i.doPost(req, resp);
+
+        Value v = ValueServiceFactory.getInstance().getCurrentValue(point);
+        assertNotNull(v);
+        assertEquals(5.0, v.getDoubleValue(), 0.001);
+        assertEquals("Medication", v.getData());
+        assertEquals(v.getTimestamp().getTime(), new Date(1336579929000L).getTime());
+
+    }
 
 
     @Test

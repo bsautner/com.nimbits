@@ -13,6 +13,7 @@
 
 package com.nimbits.server.process.cron;
 
+import com.google.gwt.ajaxloader.client.ExceptionHelper;
 import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
@@ -101,8 +102,13 @@ public class SystemMaint extends HttpServlet {
             }
         } catch (NimbitsException e) {
             if (setting.isCreate()) {
-                SettingsServiceFactory.getInstance().addSetting(setting, setting.getDefaultValue());
-                out.println("<p>Added setting: " + setting.getName() + " new value : " +  setting.getDefaultValue() + "</p>");
+                try {
+                    SettingsServiceFactory.getInstance().addSetting(setting, setting.getDefaultValue());
+                    out.println("<p>Added setting: " + setting.getName() + " new value : " +  setting.getDefaultValue() + "</p>");
+                } catch (NimbitsException e1) {
+                    out.println(e.getMessage());
+                }
+
             }
         }
 

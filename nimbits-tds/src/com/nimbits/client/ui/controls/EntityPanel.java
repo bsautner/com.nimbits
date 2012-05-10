@@ -11,12 +11,12 @@ import com.nimbits.client.model.entity.*;
  * Time: 1:10 PM
  */
 public class EntityPanel extends FormPanel {
-    private final Entity entity;
+
     private final ProtectionLevelOptions protectionOptions;
 
 
     public EntityPanel(Entity entity) {
-        this.entity = entity;
+
         setEncoding(FormPanel.Encoding.MULTIPART);
         setHeaderVisible(false);
         setFrame(false);

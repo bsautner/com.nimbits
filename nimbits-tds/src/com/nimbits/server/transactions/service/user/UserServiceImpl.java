@@ -29,6 +29,7 @@ import com.nimbits.client.model.user.*;
 import com.nimbits.client.service.user.UserService;
 import com.nimbits.server.admin.logging.*;
 import com.nimbits.server.communication.email.*;
+import com.nimbits.server.settings.SettingsServiceFactory;
 import com.nimbits.server.transactions.service.entity.*;
 import com.nimbits.server.transactions.service.feed.*;
 
@@ -234,16 +235,20 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public User getAdmin() throws NimbitsException {
-        String adminStr = "support@nimbits.com"; //SettingsServiceFactory.getInstance().getSetting(SettingType.admin);
+        final String adminStr = SettingsServiceFactory.getInstance().getSetting(SettingType.admin);
+        if (Utils.isEmptyString(adminStr)) {
+           throw new NimbitsException("Server is missing admin setting!");
+        }
+        else {
+            final User u = new UserModel();
+            u.setName(CommonFactoryLocator.getInstance().createName(adminStr, EntityType.user));
+            u.setKey(adminStr);
+            u.addAccessKey(createAccessKey(u, AuthLevel.admin));
+            u.setParent(adminStr);
+            u.setUserAdmin(true);
 
-        User u = new UserModel();
-        u.setName(CommonFactoryLocator.getInstance().createName(adminStr, EntityType.user));
-
-        u.addAccessKey(createAccessKey(u, AuthLevel.admin));
-        u.setKey(adminStr);
-        u.setParent(adminStr);
-        u.setUserAdmin(true);
-        return u;
+            return u;
+        }
     }
 
     private static AccessKey createAccessKey(final Entity u, final AuthLevel authLevel) throws NimbitsException {

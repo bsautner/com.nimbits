@@ -67,11 +67,11 @@ public class IdlePointCron extends HttpServlet {
         return points.size();
     }
 
-    private static void checkIdle(final Point p) throws NimbitsException {
+    protected static boolean checkIdle(final Point p) throws NimbitsException {
         final Calendar c = Calendar.getInstance();
         c.add(Calendar.SECOND, p.getIdleSeconds() * -1);
-
-        List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(UserServiceFactory.getServerInstance().getAdmin(),
+        boolean retVal = false;
+        final List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(UserServiceFactory.getServerInstance().getAdmin(),
                 p.getOwner(), EntityType.user);
         if (! result.isEmpty()) {
             final User u = (User) result.get(0);
@@ -84,8 +84,10 @@ public class IdlePointCron extends HttpServlet {
                 // PointServiceFactory.getInstance().updatePoint(u, p);
                 final Value va = ValueModelFactory.createValueModel(v, AlertType.IdleAlert);
                 SubscriptionServiceFactory.getInstance().processSubscriptions(u, p,va);
+                retVal = true;
             }
         }
+        return retVal;
     }
 
 

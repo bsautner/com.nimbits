@@ -18,6 +18,8 @@ import com.nimbits.client.constants.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.email.*;
+import com.nimbits.server.admin.quota.Quota;
+import com.nimbits.server.admin.quota.QuotaFactory;
 import com.nimbits.server.admin.system.*;
 
 import javax.servlet.*;
@@ -64,12 +66,10 @@ public class QuotaResetCron  extends HttpServlet {
             EmailAddress em = CommonFactoryLocator.getInstance().createEmailAddress(e.getKey().getName());
             count++;
 
-//            Quota quota = QuotaFactory.getInstance(em);
-//            int c = quota.getCount();
-//            if (c > 1) {
-//                sb.append("<tr><td>").append(em .getValue()).append("</td><td>").append(c).append("</td></tr>");
-//            }
-//            //quota.resetCounter();
+            Quota quota = QuotaFactory.getInstance(em);
+            int c = quota.getCount();
+
+            quota.resetCounter();
 
         }
 

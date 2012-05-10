@@ -275,8 +275,9 @@ public class EntityStore implements Entity {
     @Override
     public void validate() throws NimbitsException {
 
-       if (Utils.isEmptyString(owner) || Utils.isEmptyString(this.name) || Utils.isEmptyString(this.parent)) {
-          throw new NimbitsException("Entity was missing required data, validation failed");
+       if (Utils.isEmptyString(this.owner) || Utils.isEmptyString(this.name) || Utils.isEmptyString(this.parent)) {
+          throw new NimbitsException("Entity was missing required data, validation failed"
+          + "owner=" + owner + "name=" + this.name + "parent:" + this.parent);
        }
     }
     @Override

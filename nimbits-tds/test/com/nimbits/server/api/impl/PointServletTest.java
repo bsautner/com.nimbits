@@ -29,6 +29,16 @@ public class PointServletTest extends NimbitsServletTest {
 
          Point p = PointServletImpl.createPoint(user, name, null, null, "description sample");
     }
+    @Test
+    public void createPointDescTest() throws NimbitsException {
+        EntityName name = CommonFactoryLocator.getInstance().createName("test", EntityType.point);
+
+        Point p = PointServletImpl.createPoint(user, name, null, null, "description sample");
+
+        Entity r = EntityServiceFactory.getInstance().getEntityByName(user, name, EntityType.point).get(0);
+        assertEquals(name.getValue(), r.getName().getValue());
+        assertEquals("description sample", r.getDescription());
+    }
 
 
     @Test

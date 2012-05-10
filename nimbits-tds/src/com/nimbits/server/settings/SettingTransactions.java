@@ -15,11 +15,11 @@ import java.util.Map;
 public interface SettingTransactions {
     String getSetting(SettingType setting) throws NimbitsException;
 
-    void updateSetting(SettingType name, String newValue);
+    void updateSetting(SettingType name, String newValue) throws NimbitsException;
 
     String reloadCache() throws NimbitsException;
 
     Map<SettingType, String> getSettings() throws NimbitsException;
 
-    void addSetting(SettingType name, String value);
+    void addSetting(SettingType name, String value) throws NimbitsException;
 }

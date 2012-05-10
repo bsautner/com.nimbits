@@ -103,25 +103,37 @@ public class SettingMemCacheImpl implements SettingTransactions {
     }
 
     @Override
-    public void addSetting(final SettingType setting, final String value) {
+    public void addSetting(final SettingType setting, final String value) throws NimbitsException {
         SettingTransactionsFactory.getDaoInstance().addSetting(setting, value);
+        try {
+            cache = CacheManager.getInstance().getCacheFactory().createCache(Collections.emptyMap());
+
         if (cache.containsKey(MemCacheKey.allSettings)) {
             cache.remove(MemCacheKey.allSettings);
         }
         if (cache.containsKey(SettingCacheKey(setting))) {
             cache.remove(SettingCacheKey(setting));
+        }
+        } catch (CacheException e) {
+           throw new NimbitsException(e);
         }
 
     }
 
     @Override
-    public void updateSetting(final SettingType setting, final String newValue) {
+    public void updateSetting(final SettingType setting, final String newValue) throws NimbitsException {
         SettingTransactionsFactory.getDaoInstance().updateSetting(setting, newValue);
+        try {
+            cache = CacheManager.getInstance().getCacheFactory().createCache(Collections.emptyMap());
+
         if (cache.containsKey(MemCacheKey.allSettings)) {
             cache.remove(MemCacheKey.allSettings);
         }
         if (cache.containsKey(SettingCacheKey(setting))) {
             cache.remove(SettingCacheKey(setting));
+        }
+        } catch (CacheException e) {
+           throw new NimbitsException(e);
         }
     }
 

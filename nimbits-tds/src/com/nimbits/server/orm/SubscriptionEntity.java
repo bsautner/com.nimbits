@@ -71,12 +71,6 @@ public class SubscriptionEntity extends EntityStore implements Serializable, Sub
     }
 
 
-
-    @Override
-    public String getKey() {
-        return key.getName();
-    }
-
     @Override
     public double getMaxRepeat() {
         return this.maxRepeat;

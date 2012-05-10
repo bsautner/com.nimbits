@@ -71,6 +71,7 @@ public class PointMaintTask extends HttpServlet {
     protected  static void consolidateBlobs(final Entity e) throws NimbitsException {
         final List<ValueBlobStore> stores = ValueTransactionFactory.getDaoInstance(e).getAllStores();
         if (! stores.isEmpty()) {
+
             log.info("Consolidating " + stores.size() + " blob stores");
             final Collection<Long> dates = new ArrayList<Long>(stores.size());
             final Collection<Long> dupDates = new ArrayList<Long>(stores.size());

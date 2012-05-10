@@ -41,12 +41,12 @@ public class PointCron extends HttpServlet {
 
 
             try {
-                User admin =UserServiceFactory.getServerInstance().getAdmin();
+                final User admin =UserServiceFactory.getServerInstance().getAdmin();
 
                 final Map<String,Entity> e =
                         EntityTransactionFactory.getDaoInstance(admin)
                                 .getSystemWideEntityMap(EntityType.point);
-                resp.getWriter().println("PointMaint processing " + e.values().size() + " points<BR>");
+
                 for (final Entity en : e.values()) {
                     TaskFactory.getInstance().startPointMaintTask(en);
                 }

@@ -15,11 +15,14 @@ package com.nimbits.server.transactions.service.entity;
 
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
+import com.nimbits.client.helper.EntityHelper;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.server.*;
 import static org.junit.Assert.*;
+
+import com.nimbits.server.transactions.service.point.PointServiceFactory;
 import org.junit.*;
 
 import java.util.*;
@@ -32,6 +35,16 @@ import java.util.*;
  */
 @SuppressWarnings("FeatureEnvy")
 public class EntityServiceTest extends NimbitsServletTest {
+
+
+    @Test
+    public void addUpdateEntity() throws NimbitsException {
+        Point p = EntityHelper.createPointWithName(UUID.randomUUID().toString());
+        Point r = (Point) EntityServiceFactory.getInstance().addUpdateEntity(p);
+        assertNotNull(p);
+        assertNotNull(r);
+
+    }
 
 
     @Test
@@ -81,11 +94,11 @@ public class EntityServiceTest extends NimbitsServletTest {
 
         EntityName name = CommonFactoryLocator.getInstance().createName("TWICE", EntityType.point);
         Entity model = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.everyone,
-               user.getKey(), user.getKey());
+                user.getKey(), user.getKey());
 
-      //  Entity e = EntityServiceFactory.getInstance().addUpdateEntity(model);
+        //  Entity e = EntityServiceFactory.getInstance().addUpdateEntity(model);
         Entity model2 = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.everyone,
-              user.getKey(), user.getKey());
+                user.getKey(), user.getKey());
         ///Entity e2 = EntityServiceFactory.getInstance().addUpdateEntity(model2);
         Point p1 = PointModelFactory.createPointModel( model);
         EntityServiceFactory.getInstance().addUpdateEntity(p1);
@@ -101,7 +114,7 @@ public class EntityServiceTest extends NimbitsServletTest {
                     user.getKey(), user.getKey());
             Entity e = EntityServiceFactory.getInstance().addUpdateEntity(model);
             Entity model2 = EntityModelFactory.createEntity(name, "", EntityType.category, ProtectionLevel.everyone,
-                 user.getKey(), user.getKey());
+                    user.getKey(), user.getKey());
 
             Entity e2 = EntityServiceFactory.getInstance().addUpdateEntity(model2);
         } catch (NimbitsException e1) {
@@ -125,7 +138,7 @@ public class EntityServiceTest extends NimbitsServletTest {
 
     @Test
     public void getEntityByNameTest() throws NimbitsException {
-        Point  r = (Point) EntityServiceFactory.getInstance().getEntityByName(user, pointName, EntityType.point).get(0);;
+        Point  r = (Point) EntityServiceFactory.getInstance().getEntityByName(user, pointName, EntityType.point).get(0);
         assertNotNull(r);
 
     }

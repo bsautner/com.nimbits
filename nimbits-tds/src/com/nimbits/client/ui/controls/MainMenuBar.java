@@ -36,6 +36,7 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.helper.EntityHelper;
 import com.nimbits.client.model.GxtModel;
 import com.nimbits.client.model.TreeModel;
 import com.nimbits.client.model.common.CommonFactoryLocator;
@@ -201,7 +202,7 @@ public class MainMenuBar extends ToolBar {
     }
 
     private MenuItem newDataPoint() {
-        MenuItem item = new MenuItem("Data Point");
+        final MenuItem item = new MenuItem("Data Point");
 
         item.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.addNew()));
         item.setToolTip(UserMessages.MESSAGE_NEW_POINT);
@@ -423,7 +424,7 @@ public class MainMenuBar extends ToolBar {
         }
 
         @Override
-        public void handleEvent(BaseEvent be) {
+        public void handleEvent(final BaseEvent be) {
             final MessageBox box = MessageBox.prompt(
                     UserMessages.MESSAGE_NEW_POINT,
                     UserMessages.MESSAGE_NEW_POINT_PROMPT);
@@ -626,7 +627,7 @@ public class MainMenuBar extends ToolBar {
     }
 
     private class NewPointMessageBoxEventListener implements Listener<MessageBoxEvent> {
-        private static final int EXPIRE = 90;
+
         private String newEntityName;
 
         NewPointMessageBoxEventListener() {
@@ -642,10 +643,8 @@ public class MainMenuBar extends ToolBar {
                 EntityServiceAsync service = GWT.create(EntityService.class);
 
                 try {
-                    EntityName name = CommonFactoryLocator.getInstance().createName(newEntityName, EntityType.point);
-                    Entity entity = EntityModelFactory.createEntity(name, EntityType.point);
-                    Point p = PointModelFactory.createPointModel(entity,0.0, EXPIRE, "", 0.0, false, false, false, 0, false,FilterType.fixedHysteresis, 0.1 );
-                    //     Entity entity = EntityModelFactory.createEntity(name, EntityType.point);
+                    Point p = EntityHelper.createPointWithName(newEntityName);
+
                     service.addUpdateEntity(p, new NewPointEntityAsyncCallback(box));
                 } catch (NimbitsException caught) {
                     FeedbackHelper.showError(caught);
@@ -654,6 +653,7 @@ public class MainMenuBar extends ToolBar {
 
             }
         }
+
 
         private class NewPointEntityAsyncCallback implements AsyncCallback<Entity> {
             private final MessageBox box;

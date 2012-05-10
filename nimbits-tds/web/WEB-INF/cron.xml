@@ -38,7 +38,7 @@
     <cron>
         <url>/cron/SessionMaint</url>
         <description>Check Delete Expired Sessions</description>
-        <schedule>every 4 hours</schedule>
+        <schedule>every 1 hours</schedule>
         <timezone>America/New_York</timezone>
     </cron>
 

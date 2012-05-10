@@ -39,7 +39,6 @@ public class GxtModel extends BaseTreeModel implements TreeModel {
     private EntityType entityType;
     private boolean isReadOnly;
     private boolean isDirty;
-    private Value value;
     private Entity baseEntity;
 
 
@@ -134,7 +133,7 @@ public class GxtModel extends BaseTreeModel implements TreeModel {
             sb.append(value.getNote());
         }
         set(Parameters.value.getText(), sb.toString().trim());
-        this.value = value;
+
     }
 
     @Override

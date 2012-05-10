@@ -284,7 +284,7 @@ public class PointEntity extends EntityStore implements Point {
     public void validate() throws NimbitsException {
         super.validate();
 
-        if (this.lowAlarm > this.highAlarm) {
+        if (this.lowAlarm > this.highAlarm && (lowAlarmOn && highAlarmOn)) {
             throw new NimbitsException("Low Alarm setting is less than the high alarm setting");
         }
         if (this.expire < 0) {

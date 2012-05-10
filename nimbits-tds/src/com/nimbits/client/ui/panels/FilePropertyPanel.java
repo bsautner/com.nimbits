@@ -41,7 +41,6 @@ public class FilePropertyPanel extends NavigationEventProvider {
     EntityPanel simple;
     private final Entity entity;
     private VerticalPanel vp;
-    private FormData formData;
 
     public FilePropertyPanel(final Entity entity) {
         this.entity = entity;
@@ -53,7 +52,7 @@ public class FilePropertyPanel extends NavigationEventProvider {
     @Override
     protected void onRender(final Element parent, final int index) {
         super.onRender(parent, index);
-        formData = new FormData("-20");
+        FormData formData = new FormData("-20");
         vp = new VerticalPanel();
         ToolBar mainToolBar = mainToolBar();
         vp.add(mainToolBar);

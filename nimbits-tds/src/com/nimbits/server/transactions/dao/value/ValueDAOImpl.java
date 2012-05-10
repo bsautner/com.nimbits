@@ -208,12 +208,12 @@ public class ValueDAOImpl implements ValueTransactions {
         final List<Value> values = new ArrayList<Value>(Const.CONST_DEFAULT_LIST_SIZE);
         for (final ValueBlobStore store : result) {
             values.addAll(readValuesFromFile(new BlobKey(store.getBlobKey()), store.getLength()));
-            BlobKey key = new BlobKey(store.getBlobKey());
-            try {
-                blobstoreService.delete(key);
-            } catch (BlobstoreFailureException e) {
-                LogHelper.logException(ValueDAOImpl.class, e);
-            }
+           // BlobKey key = new BlobKey(store.getBlobKey());
+//            try {
+//                blobstoreService.delete(key);
+//            } catch (BlobstoreFailureException e) {
+//                LogHelper.logException(ValueDAOImpl.class, e);
+//            }  //TODO kick off task to delete blob - otherwsie they will get swept up as orphans
         }
         pm.deletePersistentAll(result);
         recordValues(values);

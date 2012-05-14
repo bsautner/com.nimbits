@@ -7,6 +7,7 @@ import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.file.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.model.valueblobstore.*;
 import com.nimbits.server.*;
 import com.nimbits.server.io.blob.*;
@@ -37,8 +38,8 @@ public class DeleteOrphanBlobCronTest extends NimbitsServletTest {
     @Test
     public void testCron() throws IOException, NimbitsException, InterruptedException {
         List<Value> values = new ArrayList<Value>(2);
-        values.add(ValueModelFactory.createValueModel(D));
-        values.add(ValueModelFactory.createValueModel(D1));
+        values.add(ValueFactory.createValueModel(D));
+        values.add(ValueFactory.createValueModel(D1));
 
         Iterator<BlobInfo> iterator = new BlobInfoFactory().queryBlobInfos();
         assertFalse(iterator.hasNext());

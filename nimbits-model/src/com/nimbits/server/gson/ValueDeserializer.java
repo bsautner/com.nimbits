@@ -15,7 +15,7 @@ package com.nimbits.server.gson;
 
 import com.google.gson.*;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModel;
+import com.nimbits.client.model.value.impl.ValueModel;
 
 import java.lang.reflect.Type;
 

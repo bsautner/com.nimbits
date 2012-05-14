@@ -23,7 +23,7 @@ import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.summary.Summary;
 import com.nimbits.client.model.summary.SummaryModelFactory;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
 import com.nimbits.server.transactions.service.value.ValueServiceFactory;
@@ -67,7 +67,7 @@ public class SummaryServiceTest extends NimbitsServletTest {
         Random rand = new Random();
         for (int i = 0; i < c; i++){
             double dx = rand.nextDouble() * 100;
-            Value value = ValueModelFactory.createValueModel(dx);
+            Value value = ValueFactory.createValueModel(dx);
             Value vr = ValueServiceFactory.getInstance().recordValue(user, point, value);
             Assert.assertNotNull(vr);
             Thread.sleep(INT);

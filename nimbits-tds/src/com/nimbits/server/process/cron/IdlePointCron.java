@@ -20,6 +20,7 @@ import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.transactions.service.entity.*;
 import com.nimbits.server.admin.logging.*;
 import com.nimbits.server.transactions.service.subscription.*;
@@ -82,7 +83,7 @@ public class IdlePointCron extends HttpServlet {
                 p.setIdleAlarmSent(true);
                 EntityServiceFactory.getInstance().addUpdateEntity(u, p);
                 // PointServiceFactory.getInstance().updatePoint(u, p);
-                final Value va = ValueModelFactory.createValueModel(v, AlertType.IdleAlert);
+                final Value va = ValueFactory.createValueModel(v, AlertType.IdleAlert);
                 SubscriptionServiceFactory.getInstance().processSubscriptions(u, p,va);
                 retVal = true;
             }

@@ -196,9 +196,11 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
             } else {
 
                 picture.append("http://chart.apis.google.com/chart?chd=t:");
-                for (final Value vx : values) {
+                for (int x = values.size(); x >= 0; x--) {
+                    Value vx = values.get(x);
                     picture.append(vx.getDoubleValue()).append(',');
                 }
+
                 picture.deleteCharAt(picture.length() - 1);
                 picture.append("&chs=100x100&cht=ls&chco=3072F3&chds=0,105&chdlp=b&chls=2,4,1&chma=5,5,5,25&chds=a");
             }

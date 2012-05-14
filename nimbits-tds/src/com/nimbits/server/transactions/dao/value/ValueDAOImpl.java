@@ -208,7 +208,7 @@ public class ValueDAOImpl implements ValueTransactions {
         final List<Value> values = new ArrayList<Value>(Const.CONST_DEFAULT_LIST_SIZE);
         for (final ValueBlobStore store : result) {
             values.addAll(readValuesFromFile(new BlobKey(store.getBlobKey()), store.getLength()));
-           // BlobKey key = new BlobKey(store.getBlobKey());
+            // BlobKey key = new BlobKey(store.getBlobKey());
 //            try {
 //                blobstoreService.delete(key);
 //            } catch (BlobstoreFailureException e) {
@@ -286,9 +286,9 @@ public class ValueDAOImpl implements ValueTransactions {
         } catch (IOException e) {
             throw new NimbitsException(e);
         } finally {
-           if (out!= null) {
-               out.close();
-           }
+            if (out!= null) {
+                out.close();
+            }
             pm.close();
         }
 
@@ -298,9 +298,9 @@ public class ValueDAOImpl implements ValueTransactions {
     public List<ValueBlobStore> recordValues(final List<Value> values) throws NimbitsException {
         if (!values.isEmpty()) {
 
-            final Map<Long, List<Value>> map = new HashMap<Long, List<Value>>(Const.CONST_MAX_CACHED_VALUE_SIZE);
-            final Map<Long, Long> maxMap = new HashMap<Long, Long>(Const.CONST_MAX_CACHED_VALUE_SIZE);
-            final Map<Long, Long> minMap = new HashMap<Long, Long>(Const.CONST_MAX_CACHED_VALUE_SIZE);
+            final Map<Long, List<Value>> map = new HashMap<Long, List<Value>>(values.size());
+            final Map<Long, Long> maxMap = new HashMap<Long, Long>(values.size());
+            final Map<Long, Long> minMap = new HashMap<Long, Long>(values.size());
 
             for (final Value value : values) {
                 if (valueHealthy(value)) {
@@ -332,7 +332,7 @@ public class ValueDAOImpl implements ValueTransactions {
                     final String json = GsonFactory.getInstance().toJson(longListEntry.getValue());
 
                     try {
-                        ValueBlobStore b = createBlobStoreEntity(maxMap, minMap, longListEntry.getKey(), json);
+                        ValueBlobStore b = createBlobStoreEntity(maxMap, minMap, longListEntry.getKey(), json, 0);
                         retObj.add(b);
                     } catch (IOException e) {
                         throw new NimbitsException(e);
@@ -352,7 +352,7 @@ public class ValueDAOImpl implements ValueTransactions {
 
     }
 
-    private ValueBlobStore createBlobStoreEntity(final Map<Long, Long> maxMap, final Map<Long, Long> minMap, final Long l, final String json) throws IOException, NimbitsException {
+    private ValueBlobStore createBlobStoreEntity(final Map<Long, Long> maxMap, final Map<Long, Long> minMap, final Long l, final String json, final int retryCount) throws IOException, NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final FileService fileService = FileServiceFactory.getFileService();
         final AppEngineFile file = fileService.createNewBlobFile(Const.CONTENT_TYPE_PLAIN);
@@ -373,7 +373,20 @@ public class ValueDAOImpl implements ValueTransactions {
             pm.makePersistent(currentStoreEntity);
             pm.flush();
             return createValueBlobStore(currentStoreEntity);
+        } catch (ApiProxy.ApiDeadlineExceededException ex)  {
+            if (retryCount < 10) {
+                log.info("data store unavailable - trying again.  Retry count: " + retryCount);
+                return  createBlobStoreEntity(maxMap, minMap, l, json, retryCount + 1);
+            }
+            else {
+
+                log.severe(ex.getMessage() + " need to start a new task");
+                throw (ex);
+            }
+
+
         }
+
         finally {
             out.close();
             pm.close();

@@ -20,6 +20,7 @@ import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.transactions.service.entity.*;
 import com.nimbits.server.transactions.service.feed.*;
 import com.nimbits.server.admin.logging.*;
@@ -122,7 +123,7 @@ public class IncomingMailTask extends HttpServlet {
                 timestamp = new Date().getTime();
             }
             String note = k.length == 4 ? k[3].trim() : "";
-            final Value value = ValueModelFactory.createValueModel(0.0, 0.0, v, new Date(timestamp), note);
+            final Value value = ValueFactory.createValueModel(0.0, 0.0, v, new Date(timestamp), note, ValueFactory.createValueData(""), AlertType.OK);
             try {
                 ValueServiceFactory.getInstance().recordValue(u, point, value);
             } catch (NimbitsException e) {

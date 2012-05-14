@@ -20,6 +20,7 @@ import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.*;
 import com.nimbits.server.transactions.service.entity.*;
 import com.nimbits.server.transactions.service.value.*;
@@ -88,11 +89,11 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         EntityServiceFactory.getInstance().addUpdateEntity(trigger);
         //PointServiceFactory.getInstance().updatePoint(trigger);
 
-        ValueServiceFactory.getInstance().recordValue(user,yName, ValueModelFactory.createValueModel(ry));
+        ValueServiceFactory.getInstance().recordValue(user,yName, ValueFactory.createValueModel(ry));
 
-        ValueServiceFactory.getInstance().recordValue(user, zName, ValueModelFactory.createValueModel(rz));
+        ValueServiceFactory.getInstance().recordValue(user, zName, ValueFactory.createValueModel(rz));
         Thread.sleep(200);
-        final Value vt = ValueServiceFactory.getInstance().recordValue(user, triggerName,  ValueModelFactory.createValueModel(r2));
+        final Value vt = ValueServiceFactory.getInstance().recordValue(user, triggerName,  ValueFactory.createValueModel(r2));
 
         org.junit.Assert.assertEquals(vt.getDoubleValue(), r2, DELTA);
 

@@ -18,6 +18,7 @@ import com.google.gson.JsonSyntaxException;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.constants.Path;
 import com.nimbits.client.enums.Action;
+import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.exception.NimbitsException;
@@ -30,8 +31,8 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModel;
-import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.client.model.value.impl.ValueFactory;
+import com.nimbits.client.model.value.impl.ValueModel;
 import com.nimbits.exceptions.GoogleAuthenticationException;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.http.HttpCommonFactory;
@@ -221,16 +222,16 @@ public class NimbitsClientImpl implements NimbitsClient {
         final String json = doGGet(u, params);
         System.out.println(json);
         final double d = Double.valueOf(json);
-        return ValueModelFactory.createValueModel(d);
+        return ValueFactory.createValueModel(d);
 
         //return gson.fromJson(json, ValueModel.class);
 
     }
 
     @Override
-    public Value recordValue(final String name, final double value, final Date timestamp) {
+    public Value recordValue(final String name, final double value, final Date timestamp) throws NimbitsException {
 
-        return recordValue(CommonFactoryLocator.getInstance().createName(name), value, timestamp);
+        return recordValue(CommonFactoryLocator.getInstance().createName(name, EntityType.point), value, timestamp);
     }
 
     public String recordBatch(String params) {
@@ -321,8 +322,8 @@ public class NimbitsClientImpl implements NimbitsClient {
 
     }
     @Override
-    public Point addPoint(String pointName) {
-        EntityName name = CommonFactoryLocator.getInstance().createName(pointName);
+    public Point addPoint(String pointName) throws NimbitsException {
+        EntityName name = CommonFactoryLocator.getInstance().createName(pointName, EntityType.point);
         return addPoint(name);
     }
 
@@ -341,11 +342,15 @@ public class NimbitsClientImpl implements NimbitsClient {
             String json = doGGet(u, params);
             retObj = gson.fromJson(json, PointModel.class);
 
-        } catch (UnsupportedEncodingException ignored) {
+        } catch (UnsupportedEncodingException e) {
+            return null;
 
-        } catch (IOException ignored) {
-
+        } catch (IOException e) {
+            return null;
+        } catch (JsonSyntaxException e) {
+            return null;
         }
+
         return retObj;
 
 
@@ -430,7 +435,7 @@ public class NimbitsClientImpl implements NimbitsClient {
     public Object getCurrentDataObject(final EntityName name, Class<?> cls) {
         Value value = getCurrentRecordedValue(name);
         if (value.getData() != null) {
-            return gson.fromJson(value.getData(), cls);
+            return gson.fromJson(value.getData().getContent(), cls);
         } else {
             return null;
         }
@@ -438,7 +443,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
     @Override
     public Value recordDataObject(EntityName name, Object object, Class<?> cls) throws NimbitsException {
-        Value value = ValueModelFactory.createValueModel(0.0, 0.0, 0.0, new Date(), gson.toJson(object));
+        Value value = ValueFactory.createValueModel(0.0, 0.0, 0.0, new Date(), "", ValueFactory.createValueData(gson.toJson(object)), AlertType.OK);
         try {
             return recordValue(name, value);
         } catch (IOException e) {
@@ -450,7 +455,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
     @Override
     public Value recordDataObject(EntityName name, Object object, Class<?> cls, double latitude, double longitude, double value) throws NimbitsException {
-        Value vx = ValueModelFactory.createValueModel(latitude, longitude, value, new Date(), gson.toJson(object));
+        Value vx = ValueFactory.createValueModel(latitude, longitude, value, new Date(),  "", ValueFactory.createValueData(gson.toJson(object)), AlertType.OK);
         try {
             return recordValue(name, vx);
         } catch (IOException e) {
@@ -486,7 +491,7 @@ public class NimbitsClientImpl implements NimbitsClient {
     }
 
     public List<Value> getSeries(final String name, final int count) throws NimbitsException {
-        EntityName name1 = CommonFactoryLocator.getInstance().createName(name);
+        EntityName name1 = CommonFactoryLocator.getInstance().createName(name, EntityType.point);
         return getSeries(name1, count);
 
     }

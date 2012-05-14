@@ -43,9 +43,7 @@ public interface Task {
 
     void startMoveCachedValuesToStoreTask(final Entity point);
 
-    void startUpgradeTask(Action action, Entity entity, int s);
+    void startUpgradeTask(final Action action, final Entity entity, int s);
 
-    void startSummaryTask(Entity entity);
-
-    void startDeleteOrphanedBlobTask(BlobKey key);
+    void startDeleteOrphanedBlobTask(final BlobKey key);
 }

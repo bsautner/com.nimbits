@@ -4,6 +4,7 @@ package integration;/*
  * This source code is distributed under GPL v3 without any warranty.
  */
 
+import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.EntityName;
@@ -35,8 +36,8 @@ public class SeriesTest {
         Random rx = new Random();
         Point p = PointModelFactory.createPointModel(null);
 
-       EntityName name = (CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString()));
-        EntityName categoryName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
+       EntityName name = (CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString(), EntityType.point));
+        EntityName categoryName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString(), EntityType.point);
        // Category c = ClientHelper.client().addCategory(categoryName);
         Point rp = ClientHelper.client().addPoint(name, p);
        // assertNotNull(c);
@@ -66,7 +67,7 @@ public class SeriesTest {
         s.set(2009, 0, 1);
         Point p = PointModelFactory.createPointModel(null);
 
-       EntityName name = (CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString()));
+       EntityName name = (CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString(), EntityType.point));
        // EntityName categoryName = CommonFactoryLocator.getInstance().createName(Const.CONST_HIDDEN_CATEGORY);
         ClientHelper.client().addPoint(name.getValue());
         try {

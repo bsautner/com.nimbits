@@ -25,6 +25,7 @@ import com.nimbits.client.model.intelligence.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.service.intelligence.*;
 import com.nimbits.server.transactions.service.entity.*;
 import com.nimbits.server.transactions.service.feed.*;
@@ -258,7 +259,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
                         if (a.equals(Parameters.value.getText())) {
                             retStr = retStr.replace(r, String.valueOf(inputValue.getDoubleValue()));
                         } else if (a.equals(Parameters.data.getText())) {
-                            retStr = retStr.replace(r, String.valueOf(inputValue.getData()));
+                            retStr = retStr.replace(r, String.valueOf(inputValue.getData().getContent()));
 
                         } else if (a.equals(Parameters.note.getText())) {
                             retStr = retStr.replace(r, String.valueOf(inputValue.getNote()));
@@ -311,7 +312,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
             }
 
 
-        return ValueModelFactory.createValueModel(0.0, 0.0, v, new Date(), data);
+        return ValueFactory.createValueModel(0.0, 0.0, v, new Date(),"",  ValueFactory.createValueData(data), AlertType.OK);
 
 
     }

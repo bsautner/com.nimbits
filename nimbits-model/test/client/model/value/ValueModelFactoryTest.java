@@ -1,7 +1,9 @@
 package client.model.value;
 
 import com.nimbits.client.constants.*;
+import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.gson.*;
 import org.junit.*;
 import static org.junit.Assert.assertEquals;
@@ -19,7 +21,7 @@ public class ValueModelFactoryTest {
 
     @Test
     public void testHandlingInfinity() {
-        Value v = ValueModelFactory.createValueModel(0.0, 0.0, 0.0, new Date(), "");
+        Value v = ValueFactory.createValueModel(0.0, 0.0, 0.0, new Date(), "", ValueFactory.createValueData(""), AlertType.OK);
         // 0000&p2=IN2&v2=0000&p3=IN3&v3=0000&p4=IN4&v4=0088&p5=IN5&v5=0328&p6=IN6&v6=0070&p7=INP1&v7=000&p8=INP2&v8=0&p9=Temp&v9=23.3&p10=Bat&v10=0.3&p11=Frq&v11=00.0&p12=Phi&v12=00.0" "AppEngine-Google; (+http://code.google.com/appengine)" "app.nimbits.com" ms=191 cpu_ms=287 api_cpu_ms=217 cpm_usd=0.008349 queue_name=recordvaluequeue task_name=10957361277155433609 instance=00c61b117cb1364c5c6603c8348714ca19165c
         String j = GsonFactory.getInstance().toJson(v);
         System.out.println(j);
@@ -32,14 +34,14 @@ public class ValueModelFactoryTest {
     @Test
     public void testStringToValue1() {
         String sample = "3.12 hello world";
-        Value value = ValueModelFactory.createValueModel(sample, new Date());
+        Value value = ValueFactory.createValueModel(sample, new Date());
         assertEquals(3.12,value.getDoubleValue(), 0.0);
         assertEquals("hello world",value.getNote());
     }
     @Test
     public void testStringToValue2() {
         String sample = "3.12";
-        Value value = ValueModelFactory.createValueModel(sample, new Date());
+        Value value = ValueFactory.createValueModel(sample, new Date());
         assertEquals(3.12,value.getDoubleValue(), 0.0);
         assertEquals("",value.getNote());
 
@@ -48,21 +50,21 @@ public class ValueModelFactoryTest {
     @Test
     public void testStringToValue3() {
         String sample = "hello world";
-        Value value = ValueModelFactory.createValueModel(sample, new Date());
+        Value value = ValueFactory.createValueModel(sample, new Date());
         assertEquals(Const.CONST_IGNORED_NUMBER_VALUE,value.getDoubleValue(), 0.0);
         assertEquals("hello world",value.getNote());
     }
     @Test
     public void testStringToValue4() {
         String sample = "helloWorld";
-        Value value = ValueModelFactory.createValueModel(sample, new Date());
+        Value value = ValueFactory.createValueModel(sample, new Date());
         assertEquals(Const.CONST_IGNORED_NUMBER_VALUE,value.getDoubleValue(), 0.0);
         assertEquals("helloWorld",value.getNote());
     }
     @Test
     public void testStringToValue6() {
         String sample = ".12 ";
-        Value value = ValueModelFactory.createValueModel(sample, new Date());
+        Value value = ValueFactory.createValueModel(sample, new Date());
         assertEquals(0.12,value.getDoubleValue(), 0.0);
         assertEquals("",value.getNote());
 
@@ -70,7 +72,7 @@ public class ValueModelFactoryTest {
     @Test
     public void testStringToValue8() {
         String sample = "-.12 ";
-        Value value = ValueModelFactory.createValueModel(sample, new Date());
+        Value value = ValueFactory.createValueModel(sample, new Date());
         assertEquals(-0.12,value.getDoubleValue(), 0.0);
         assertEquals("",value.getNote());
 
@@ -78,7 +80,7 @@ public class ValueModelFactoryTest {
     @Test
     public void testStringToValue7() {
         String sample = "0";
-        Value value = ValueModelFactory.createValueModel(sample, new Date());
+        Value value = ValueFactory.createValueModel(sample, new Date());
         assertEquals(0,value.getDoubleValue(), 0.0);
         assertEquals("",value.getNote());
 

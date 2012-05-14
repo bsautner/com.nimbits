@@ -34,9 +34,6 @@ public interface Value extends Serializable, Comparable<Value> {
 
     double getLongitude();
 
-    @Deprecated
-    double getValue();
-
     double getDoubleValue();
 
     String getValueWithNote();
@@ -45,7 +42,7 @@ public interface Value extends Serializable, Comparable<Value> {
 
     AlertType getAlertState();
 
-    String getData();
+    ValueData getData();
 
 
 }

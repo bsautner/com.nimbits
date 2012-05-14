@@ -20,6 +20,7 @@ import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.value.impl.ValueModel;
 import com.nimbits.server.transactions.service.calculation.*;
 import com.nimbits.server.transactions.service.entity.*;
 import com.nimbits.server.gson.*;

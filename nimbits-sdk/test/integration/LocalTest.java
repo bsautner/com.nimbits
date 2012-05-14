@@ -12,6 +12,7 @@ package integration;/*
  */
 
 import com.nimbits.client.NimbitsClient;
+import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.EntityName;
@@ -36,27 +37,4 @@ public class LocalTest {
 
 
 
-
-    @Test
-    public void loadLineTest() throws IOException, NimbitsException {
-        NimbitsClient c = ClientHelper.client();
-
-        long now = new Date().getTime();
-        long then = now - 1000 * 100;
-        double d = 0;
-
-        EntityName pointName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
-        EntityName categoryName = CommonFactoryLocator.getInstance().createName(null);
-        c.addPoint(pointName);
-
-        while (then < now) {
-            then += 1000;
-            d += 1;
-
-            Value v = c.recordValue(pointName, d, new Date(then));
-            assertNotNull(v);
-        }
-
-
-    }
 }

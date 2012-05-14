@@ -34,10 +34,6 @@ public class ValueTransactionFactory {
 
     }
 
-//    public static RecordedValueTransactions getLegacyInstance(final DataPoint point) {
-//
-//        return null;//new RecordedValueDAOImpl(point);
-//
-//    }
+
 
 }

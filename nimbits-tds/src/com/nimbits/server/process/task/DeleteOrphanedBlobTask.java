@@ -43,42 +43,41 @@ public class DeleteOrphanedBlobTask  extends HttpServlet {
     public static void processRequest(ServletRequest req) throws NimbitsException {
 
 
-        String key = req.getParameter(Parameters.key.getText());
-        BlobKey blobKey = new BlobKey(key);
+        final String key = req.getParameter(Parameters.key.getText());
+        final BlobKey blobKey = new BlobKey(key);
         if (!Utils.isEmptyString(key)) {
-        checkFile(blobKey, false);
+            checkFile(blobKey, false);
         }
 
     }
 
-    public static void checkFile(BlobKey blobKey, boolean recursive) throws NimbitsException {
+    public static void checkFile(final BlobKey blobKey, final boolean recursive) throws NimbitsException {
 
 
 
-            final List<Entity> e = EntityTransactionFactory.getDaoInstance(UserServiceFactory.getServerInstance().getAdmin())
-                    .getEntityByBlobKey(blobKey);
+        final List<Entity> e = EntityTransactionFactory.getDaoInstance(UserServiceFactory.getServerInstance().getAdmin())
+                .getEntityByBlobKey(blobKey);
 
-            final List<ValueBlobStore> e2 = ValueTransactionFactory.getDaoInstance(null).
-                    getBlobStoreByBlobKey(blobKey);
+        final List<ValueBlobStore> e2 = ValueTransactionFactory.getDaoInstance(null).
+                getBlobStoreByBlobKey(blobKey);
 
-            if (e.isEmpty() && e2.isEmpty()) {
-                BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-                blobstoreService.delete(blobKey);
-                log.warning("Deleted orphaned blob: " + blobKey.getKeyString());
-                SystemServiceFactory.getInstance().updateSystemPoint("Orphan Blobs Deleted", 1, true);
+        if (e.isEmpty() && e2.isEmpty()) {
+            BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+            blobstoreService.delete(blobKey);
+           SystemServiceFactory.getInstance().updateSystemPoint("Orphan Blobs Deleted", 1, true);
+        }
+        Iterator<BlobInfo> iterator = new BlobInfoFactory().queryBlobInfosAfter(blobKey);
+
+        if  (iterator.hasNext()){
+            final BlobInfo i = iterator.next();
+            if (recursive){
+                checkFile(i.getBlobKey(), recursive);
             }
-            Iterator<BlobInfo> iterator = new BlobInfoFactory().queryBlobInfosAfter(blobKey);
-
-            if  (iterator.hasNext()){
-                final BlobInfo i = iterator.next();
-                if (recursive){
-                    checkFile(i.getBlobKey(), recursive);
-                }
-                else {
-                    TaskFactory.getInstance().startDeleteOrphanedBlobTask(i.getBlobKey());
-                }
-
+            else {
+                TaskFactory.getInstance().startDeleteOrphanedBlobTask(i.getBlobKey());
             }
+
         }
     }
+}
 

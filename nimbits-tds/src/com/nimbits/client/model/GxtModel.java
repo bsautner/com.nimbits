@@ -133,7 +133,7 @@ public class GxtModel extends BaseTreeModel implements TreeModel {
             sb.append(value.getNote());
         }
         set(Parameters.value.getText(), sb.toString().trim());
-
+        set(Parameters.data.getText(), value.getData().getContent());
     }
 
     @Override

@@ -16,7 +16,7 @@ package com.nimbits.server.transactions.service.value;
 import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
 import org.junit.Test;
@@ -44,9 +44,9 @@ public class RecordedValueServiceImplTest extends NimbitsServletTest {
         EntityServiceFactory.getInstance().addUpdateEntity(point);
 
 
-        Value value = ValueModelFactory.createValueModel(D);
-        Value value2 = ValueModelFactory.createValueModel(D);
-        Value value3 = ValueModelFactory.createValueModel(D1);
+        Value value = ValueFactory.createValueModel(D);
+        Value value2 = ValueFactory.createValueModel(D);
+        Value value3 = ValueFactory.createValueModel(D1);
 
         ValueServiceFactory.getInstance().recordValue(user, point, value);
 
@@ -57,25 +57,25 @@ public class RecordedValueServiceImplTest extends NimbitsServletTest {
         point.setFilterValue(10);
         point.setFilterType(FilterType.ceiling);
 
-        assertFalse(impl.ignoreByFilter(point, ValueModelFactory.createValueModel(D1)));
-        assertTrue(impl.ignoreByFilter(point, ValueModelFactory.createValueModel(D2)));
+        assertFalse(impl.ignoreByFilter(point, ValueFactory.createValueModel(D1)));
+        assertTrue(impl.ignoreByFilter(point, ValueFactory.createValueModel(D2)));
 
         point.setFilterType(FilterType.floor);
-        assertTrue(impl.ignoreByFilter(point, ValueModelFactory.createValueModel(D1)));
-        assertFalse(impl.ignoreByFilter(point, ValueModelFactory.createValueModel(D2)));
+        assertTrue(impl.ignoreByFilter(point, ValueFactory.createValueModel(D1)));
+        assertFalse(impl.ignoreByFilter(point, ValueFactory.createValueModel(D2)));
 
         point.setFilterType(FilterType.none);
-        assertFalse(impl.ignoreByFilter(point, ValueModelFactory.createValueModel(D2)));
+        assertFalse(impl.ignoreByFilter(point, ValueFactory.createValueModel(D2)));
 
         point.setFilterType(FilterType.percentageHysteresis);
         EntityServiceFactory.getInstance().addUpdateEntity(point);
       //  pointService.updatePoint(point);
-        ValueServiceFactory.getInstance().recordValue(user, point, ValueModelFactory.createValueModel(100));
+        ValueServiceFactory.getInstance().recordValue(user, point, ValueFactory.createValueModel(100));
         Thread.sleep(10);
-        assertTrue(impl.ignoreByFilter(point, ValueModelFactory.createValueModel(105)));
-        assertTrue(impl.ignoreByFilter(point, ValueModelFactory.createValueModel(95)));
-        assertFalse(impl.ignoreByFilter(point, ValueModelFactory.createValueModel(111)));
-        assertFalse(impl.ignoreByFilter(point, ValueModelFactory.createValueModel(80)));
+        assertTrue(impl.ignoreByFilter(point, ValueFactory.createValueModel(105)));
+        assertTrue(impl.ignoreByFilter(point, ValueFactory.createValueModel(95)));
+        assertFalse(impl.ignoreByFilter(point, ValueFactory.createValueModel(111)));
+        assertFalse(impl.ignoreByFilter(point, ValueFactory.createValueModel(80)));
 
     }
 

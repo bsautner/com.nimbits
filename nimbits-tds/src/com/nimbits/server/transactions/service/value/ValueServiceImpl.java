@@ -23,6 +23,7 @@ import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.timespan.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.service.recordedvalues.*;
 import com.nimbits.server.transactions.service.entity.*;
 import com.nimbits.server.process.task.*;
@@ -147,7 +148,7 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
             final Value v = getPrevValue(p, new Date());
             if (v != null) {
                 final AlertType alertType = getAlertType((Point) p, v);
-                return ValueModelFactory.createValueModel(v, alertType);
+                return ValueFactory.createValueModel(v, alertType);
 
             }
             else {
@@ -306,7 +307,7 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
 
                 retObj = ValueTransactionFactory.getInstance(point).recordValue(value);
                 final AlertType t = getAlertType(point, retObj);
-                final Value v = ValueModelFactory.createValueModel(retObj, t);
+                final Value v = ValueFactory.createValueModel(retObj, t);
                 TaskFactory.getInstance().startRecordValueTask(u, point, v);
             }
 

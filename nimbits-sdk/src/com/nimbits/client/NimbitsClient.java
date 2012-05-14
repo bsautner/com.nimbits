@@ -52,7 +52,7 @@ public interface NimbitsClient {
 
     Value recordValueWithGet(final EntityName pointName, final double value, final Date timestamp) throws IOException, NimbitsException;
 
-    Value recordValue(final String pointName, final double value, final Date timestamp);
+    Value recordValue(final String pointName, final double value, final Date timestamp) throws NimbitsException;
 
     String recordBatch(final String params);
 
@@ -80,7 +80,7 @@ public interface NimbitsClient {
 
     Point addPoint(final EntityName pointName);
 
-    Point addPoint(final String pointName);
+    Point addPoint(final String pointName) throws NimbitsException;
 
     List<Entity> getCategories(final boolean includePoints, final boolean includeDiagrams) throws NimbitsException;
 

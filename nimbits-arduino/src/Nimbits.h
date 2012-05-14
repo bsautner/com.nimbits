@@ -22,7 +22,7 @@ class Nimbits {
     String _ownerEmail;
     String _accessKey;
     void writeHostToClient(EthernetClient client);
-    void writeAuthParams(EthernetClient client);
+    void writeAuthParamsToClient(EthernetClient client);
     String getResponse(EthernetClient client);
     String writeAuthParams(String content);
 };

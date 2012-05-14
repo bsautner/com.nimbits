@@ -19,6 +19,7 @@ import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.timespan.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.model.valueblobstore.*;
 import com.nimbits.server.*;
 import com.nimbits.server.gson.*;
@@ -82,7 +83,7 @@ public class PointMaintTaskTest extends NimbitsServletTest {
       for (int i = 0; i < runs; i++) {
           List<Value> values = new ArrayList<Value>(1);
           double v = r.nextDouble() * 100;
-          Value mt = ValueModelFactory.createValueModel(v);
+          Value mt = ValueFactory.createValueModel(v);
           values.add(mt);
           assertFalse(lt == mt.getTimestamp().getTime());
 
@@ -142,7 +143,7 @@ public class PointMaintTaskTest extends NimbitsServletTest {
         for (int i = 0; i < runs; i++) {
             List<Value> values = new ArrayList<Value>(1);
             double v = r.nextDouble() * 100;
-            Value mt = ValueModelFactory.createValueModel(v, c.getTime());
+            Value mt = ValueFactory.createValueModel(v, c.getTime());
             values.add(mt);
             assertFalse(lt == mt.getTimestamp().getTime());
 
@@ -158,7 +159,7 @@ public class PointMaintTaskTest extends NimbitsServletTest {
             List<Value> values = new ArrayList<Value>(1);
             double v = r.nextDouble() * 100;
             c.add(Calendar.SECOND, 1);
-            Value mt = ValueModelFactory.createValueModel(v, c.getTime());
+            Value mt = ValueFactory.createValueModel(v, c.getTime());
             values.add(mt);
             assertFalse(lt == mt.getTimestamp().getTime());
 

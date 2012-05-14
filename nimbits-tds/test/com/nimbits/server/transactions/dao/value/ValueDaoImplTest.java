@@ -24,6 +24,7 @@ import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.model.valueblobstore.*;
 import com.nimbits.server.*;
 import com.nimbits.server.time.*;
@@ -52,7 +53,7 @@ public class ValueDaoImplTest extends NimbitsServletTest {
         Random r = new Random();
 
         for (int i = 0; i < 10; i++) {
-            Value v = ValueModelFactory.createValueModel(r.nextDouble());
+            Value v = ValueFactory.createValueModel(r.nextDouble());
             total += v.getDoubleValue();
             values.add(v);
         }
@@ -64,9 +65,9 @@ public class ValueDaoImplTest extends NimbitsServletTest {
         Date zero = TimespanServiceFactory.getInstance().zeroOutDate(new Date());
         for (int i = 1; i < 11; i++) {
             List<Value> values = new ArrayList<Value>(3);
-            values.add(ValueModelFactory.createValueModel(1));
-            values.add(ValueModelFactory.createValueModel(1));
-            values.add(ValueModelFactory.createValueModel(1));
+            values.add(ValueFactory.createValueModel(1));
+            values.add(ValueFactory.createValueModel(1));
+            values.add(ValueFactory.createValueModel(1));
             valueDao.recordValues(values);
             assertEquals(i, valueDao.getAllStores().size());
         }
@@ -92,9 +93,9 @@ public class ValueDaoImplTest extends NimbitsServletTest {
         final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
         for (int i = 1; i < 11; i++) {
             List<Value> values = new ArrayList<Value>(3);
-            values.add(ValueModelFactory.createValueModel(1));
-            values.add(ValueModelFactory.createValueModel(1));
-            values.add(ValueModelFactory.createValueModel(1));
+            values.add(ValueFactory.createValueModel(1));
+            values.add(ValueFactory.createValueModel(1));
+            values.add(ValueFactory.createValueModel(1));
             List<ValueBlobStore> d = valueDao.recordValues(values);
             assertFalse(d.isEmpty());
             assertEquals(i, valueDao.getAllStores().size());
@@ -122,9 +123,9 @@ public class ValueDaoImplTest extends NimbitsServletTest {
         final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 
         List<Value> values = new ArrayList<Value>(3);
-        values.add(ValueModelFactory.createValueModel(1));
-        values.add(ValueModelFactory.createValueModel(2));
-        values.add(ValueModelFactory.createValueModel(3));
+        values.add(ValueFactory.createValueModel(1));
+        values.add(ValueFactory.createValueModel(2));
+        values.add(ValueFactory.createValueModel(3));
         List<ValueBlobStore> d = valueDao.recordValues(values);
         assertFalse(d.isEmpty());
 
@@ -313,7 +314,7 @@ public class ValueDaoImplTest extends NimbitsServletTest {
             final Calendar c1 = Calendar.getInstance();
             c1.add(Calendar.DATE, -1 * i);
             final Double d1 = (double) i;
-            final Value v1 = ValueModelFactory.createValueModel(d1, c1.getTime());
+            final Value v1 = ValueFactory.createValueModel(d1, c1.getTime());
             values.add(v1);
         }
         return values;

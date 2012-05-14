@@ -1089,7 +1089,7 @@ jQuery.fn.extend({
 		parts[1] = parts[1] ? "." + parts[1] : "";
 
 		if ( value === undefined ) {
-			var data = this.triggerHandler("getData" + parts[1] + "!", [parts[0]]);
+			var data = this.triggerHandler("getContent" + parts[1] + "!", [parts[0]]);
 
 			if ( data === undefined && this.length ) {
 				data = jQuery.data( this[0], key );

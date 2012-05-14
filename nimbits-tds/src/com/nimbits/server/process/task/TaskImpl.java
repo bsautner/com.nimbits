@@ -47,7 +47,7 @@ public class TaskImpl implements Task {
     private static final String TASK_MOVE = "move";
     private static final String IN_CONTENT = "inContent";
 
-    private static final String QUEUE_DELETE_SUMMARY = "summary";
+    private static final String QUEUE_BLOB = "orphans";
     private static final String QUEUE_INCOMING_MAIL = "incommingmail";
     private static final String QUEUE_RECORD_VALUE = "recordvaluequeue";
     private static final String QUEUE_PROCESS_BATCH = "processbatchqueue";
@@ -55,7 +55,6 @@ public class TaskImpl implements Task {
     private static final String DEFAULT = "default";
 
     private static final String PATH_DELETE_ORPHANS_TASK = "/task/orphans";
-    private static final String PATH_SUMMARY_TASK = "/task/summary";
     private static final String PATH_POINT_MAINT_TASK = "/task/point";
     private static final String PATH_UPGRADE_TASK = "/task/upgrade";
     private static final String PATH_MOVE_TASK = "/task/move";
@@ -112,18 +111,6 @@ public class TaskImpl implements Task {
     }
 
 
-
-
-
-
-    @Override
-    public void startSummaryTask(final Entity entity) {
-        final Queue queue =  QueueFactory.getQueue(overrideQueue ? DEFAULT : QUEUE_DELETE_SUMMARY);
-        final String json = GsonFactory.getInstance().toJson(entity);
-        queue.add(TaskOptions.Builder.withUrl(PATH_SUMMARY_TASK)
-                .param(Parameters.json.getText(), json)
-        );
-    }
 
 
     @Override

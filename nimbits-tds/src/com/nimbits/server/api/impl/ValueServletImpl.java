@@ -21,9 +21,10 @@ import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.value.impl.ValueFactory;
+import com.nimbits.client.model.value.impl.ValueModel;
 import com.nimbits.server.api.*;
 import com.nimbits.server.transactions.service.entity.*;
-import com.nimbits.server.transactions.service.feed.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.admin.logging.*;
 import com.nimbits.server.transactions.service.value.*;
@@ -74,16 +75,11 @@ public class ValueServletImpl extends ApiServlet {
             } else {
                 final Value v;
                 if (Utils.isEmptyString(getParam(Parameters.json))) {
-                    final double latitude = getDoubleFromParam(getParam(Parameters.lat));
-                    final double longitude = getDoubleFromParam(getParam(Parameters.lng));
-                    final double value = getDoubleFromParam(getParam(Parameters.value));
-                    final String data = getParam(Parameters.data) == null ? "" : getParam(Parameters.data);
-                    final Date timestamp = getParam(Parameters.timestamp) != null ? new Date(Long.parseLong(getParam(Parameters.timestamp))) : new Date();
-                    v = ValueModelFactory.createValueModel(latitude, longitude, value, timestamp, getParam(Parameters.note),data, AlertType.OK);
+                    v = createValueFromRequest();
                 } else {
                     final Value vx = GsonFactory.getInstance().fromJson(getParam(Parameters.json), ValueModel.class);
 
-                    v = ValueModelFactory.createValueModel(vx.getLatitude(), vx.getLongitude(), vx.getDoubleValue(), vx.getTimestamp(),
+                    v = ValueFactory.createValueModel(vx.getLatitude(), vx.getLongitude(), vx.getDoubleValue(), vx.getTimestamp(),
                             vx.getNote(), vx.getData(), AlertType.OK);
                 }
                 final Entity point = points.get(0);
@@ -107,17 +103,26 @@ public class ValueServletImpl extends ApiServlet {
         if (format.equals(Parameters.json.getText()) && !Utils.isEmptyString(getParam(Parameters.json))) {
             nv = GsonFactory.getInstance().fromJson(getParam(Parameters.json), ValueModel.class);
         } else if (format.equals(Words.WORD_DOUBLE) && !Utils.isEmptyString(getParam(Parameters.value))) {
-            nv = ValueModelFactory.createValueModel(
-                    getParam(Parameters.value),
-                    getParam(Parameters.note),
-                    getParam(Parameters.lat),
-                    getParam(Parameters.lng),
-                    getParam(Parameters.json));
+
+            nv = createValueFromRequest();
+
         }
         out.print(processRequest(getParam(Parameters.point), getParam(Parameters.uuid), format, nv, user));
         out.close();
 
 
+    }
+
+    private static Value createValueFromRequest() {
+        Value nv;
+        final double latitude = getDoubleFromParam(getParam(Parameters.lat));
+        final double longitude = getDoubleFromParam(getParam(Parameters.lng));
+        final double value = getDoubleFromParam(getParam(Parameters.value));
+        final String data =  getParam(Parameters.data);
+        final ValueData vd = ValueFactory.createValueData(data);
+        final Date timestamp = getParam(Parameters.timestamp) != null ? new Date(Long.parseLong(getParam(Parameters.timestamp))) : new Date();
+        nv  = ValueFactory.createValueModel(latitude, longitude, value, timestamp, getParam(Parameters.note), vd, AlertType.OK);
+        return nv;
     }
 
     private static double getDoubleFromParam(final String valueStr) {
@@ -163,9 +168,9 @@ public class ValueServletImpl extends ApiServlet {
             if (nv != null && u != null && !u.isRestricted()) {
                 // record the value, but not if this is a public
                 // request
-                final Value newValue = ValueModelFactory.createValueModel(
+                final Value newValue = ValueFactory.createValueModel(
                         nv.getLatitude(), nv.getLongitude(), nv.getDoubleValue(),
-                        nv.getTimestamp(), nv.getData());
+                        nv.getTimestamp(),nv.getNote(),  nv.getData(), AlertType.OK);
 
 
                 value = ValueServiceFactory.getInstance().recordValue(u, p, newValue);
@@ -175,7 +180,7 @@ public class ValueServletImpl extends ApiServlet {
             String r =  value != null ? format.equals(Parameters.json.getText()) ? GsonFactory.getInstance().toJson(value) : String.valueOf(value.getDoubleValue()) : "";
 
             if (containsParam(Parameters.client) && getParam(Parameters.client).equals(ClientType.arduino.getCode())) {
-                 r = "<" + r + ">";
+                 r = Const.CONST_ARDUINO_DATA_SEPARATOR + r + Const.CONST_ARDUINO_DATA_SEPARATOR;
             }
 
             return r;

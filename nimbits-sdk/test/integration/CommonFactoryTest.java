@@ -11,6 +11,7 @@ package integration;/*
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
+import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
@@ -35,7 +36,7 @@ public class CommonFactoryTest {
         Assert.assertEquals("test", emailAddress.getValue());
         Assert.assertNotSame("TEST", emailAddress.getValue());
 
-        EntityName pointName = CommonFactoryLocator.getInstance().createName("TEST");
+        EntityName pointName = CommonFactoryLocator.getInstance().createName("TEST", EntityType.point);
 
         Assert.assertEquals("TEST", pointName.getValue());
         Assert.assertNotSame("test", pointName.getValue());

@@ -70,6 +70,7 @@ public class EntityContextMenu extends Menu {
     private MenuItem summaryContext;
     private MenuItem intelligenceContext;
     private MenuItem keyContext;
+    private MenuItem downloadContext;
     private Map<SettingType, String> settings;
     private final User user;
 
@@ -107,7 +108,7 @@ public class EntityContextMenu extends Menu {
         xmppContext = xmppResourceContext();
         summaryContext = summaryContext();
         keyContext = keyContext();
-
+        downloadContext = downloadContext();
         add(propertyContext);
         add(copyContext);
         add(deleteContext);
@@ -117,6 +118,7 @@ public class EntityContextMenu extends Menu {
         add(calcContext);
         add(summaryContext);
         add(xmppContext);
+     //   add(downloadContext);
         if (settings.containsKey(SettingType.wolframKey) && ! Utils.isEmptyString(settings.get(SettingType.wolframKey))) {
             add(intelligenceContext);
         }
@@ -191,6 +193,14 @@ public class EntityContextMenu extends Menu {
         retObj.setText("New Read/Write Key");
         retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.key()));
         retObj.addSelectionListener(new KeyMenuEventSelectionListener());
+        return retObj;
+
+    }
+    private MenuItem downloadContext() {
+        final MenuItem retObj = new MenuItem();
+        retObj.setText("Download Raw Data");
+        retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.filter()));
+        retObj.addSelectionListener(new DownloadEventSelectionListener());
         return retObj;
 
     }
@@ -814,6 +824,23 @@ public class EntityContextMenu extends Menu {
                     entity.getEntityType().equals(EntityType.point) || entity.getEntityType().equals(EntityType.user)) {
                 showKeyPanel(entity);
             }
+
+        }
+    }
+    private class DownloadEventSelectionListener extends SelectionListener<MenuEvent> {
+        DownloadEventSelectionListener() {
+        }
+
+        @Override
+        public void componentSelected(final MenuEvent ce) {
+//            final ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
+//            currentModel = (TreeModel) selectedModel;
+//            final Entity entity =  currentModel.getBaseEntity();
+//
+//            if (entity.getEntityType().equals(EntityType.accessKey)  ||
+//                    entity.getEntityType().equals(EntityType.point) || entity.getEntityType().equals(EntityType.user)) {
+//                showKeyPanel(entity);
+//            }
 
         }
     }

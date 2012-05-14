@@ -4,6 +4,7 @@ package integration;/*
  * This source code is distributed under GPL v3 without any warranty.
  */
 
+import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.EntityName;
@@ -43,7 +44,7 @@ public class DataLoadingTest {
 
     @Test
     public void TestRecordValueWithGet() throws InterruptedException, IOException, NimbitsException {
-        EntityName pointName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString());
+        EntityName pointName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString(), EntityType.point);
 
         ClientHelper.client().addPoint( pointName);
 

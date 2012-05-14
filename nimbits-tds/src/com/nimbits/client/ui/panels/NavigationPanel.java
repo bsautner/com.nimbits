@@ -33,6 +33,7 @@ import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.service.entity.*;
 import com.nimbits.client.service.recordedvalues.*;
 import com.nimbits.client.ui.controls.*;
@@ -78,7 +79,7 @@ public class NavigationPanel extends NavigationEventProvider {
 
     private void updateModel(final Value value, final TreeModel model) {
         model.set(Parameters.value.getText(), value.getValueWithNote());
-        model.set(Parameters.data.getText(), value.getData());
+        model.set(Parameters.data.getText(), value.getData().getContent());
         model.set(Parameters.timestamp.getText(), value.getTimestamp());
         model.set(Parameters.note.getText(), value.getNote());
         model.setAlertType(value.getAlertState());
@@ -140,7 +141,7 @@ public class NavigationPanel extends NavigationEventProvider {
             final String v = model.get(Parameters.value.getText());
 //            final String note = model.get(Const.Params.PARAM_NOTE);
 //            final String data = model.get(Const.PARAM_DATA);
-            final Value value = ValueModelFactory.createValueModel(v, timestamp);
+            final Value value = ValueFactory.createValueModel(v, timestamp);
 
             service.recordValue(model.getBaseEntity(), value, new SaveValueAsyncCallback(model));
             model.setDirty(false);
@@ -432,7 +433,7 @@ public class NavigationPanel extends NavigationEventProvider {
                         Point p = (Point) stringPointMap.get(model.getKey());
                         if (p.getValue() == null) {
                             model.setAlertType(AlertType.OK);
-                            model.setValue(ValueModelFactory.createValueModel(0.0));
+                            model.setValue(ValueFactory.createValueModel(0.0));
                         }
                         else {
                             model.setAlertType(p.getValue().getAlertState());
@@ -532,7 +533,7 @@ public class NavigationPanel extends NavigationEventProvider {
                         timestamp = new Date();
                     }
 
-                    final Value value = ValueModelFactory.createValueModel(valueAndNote, timestamp);
+                    final Value value = ValueFactory.createValueModel(valueAndNote, timestamp);
 
                     RecordedValueServiceAsync service = GWT.create(RecordedValueService.class);
                     service.recordValue(entity, value, new RecordValueCallback(be, model));

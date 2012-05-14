@@ -2,7 +2,7 @@ package com.nimbits.server.transactions.memcache.value;
 
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.transactions.service.value.ValueTransactionFactory;
 import org.junit.Test;
@@ -26,7 +26,7 @@ public class ValueMemCacheImplTest extends NimbitsServletTest {
     @Test
     public void testGetPrevValue() throws NimbitsException, InterruptedException {
         ValueMemCacheImpl impl = new ValueMemCacheImpl(point);
-        Value v = ValueModelFactory.createValueModel(D);
+        Value v = ValueFactory.createValueModel(D);
         ValueTransactionFactory.getInstance(point).recordValue(v);
         Thread.sleep(1000);
         Value vr = ValueTransactionFactory.getInstance(point).getRecordedValuePrecedingTimestamp(new Date());

@@ -10,7 +10,7 @@ import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
 import com.nimbits.server.gson.GsonFactory;
@@ -42,7 +42,7 @@ public class RecordValueTaskTest extends NimbitsServletTest {
         Calculation c = CalculationModelFactory.createCalculation(e, point.getKey(), true, "x+1", pointChild.getKey(), point.getKey(),
                 null, null);
         EntityServiceFactory.getInstance().addUpdateEntity(c);
-        Value v = ValueModelFactory.createValueModel(1.12);
+        Value v = ValueFactory.createValueModel(1.12);
         ValueServiceFactory.getInstance().recordValue(point,v);
         Value vr = ValueServiceFactory.getInstance().getCurrentValue(point);
         assertEquals(v.getDoubleValue(), vr.getDoubleValue(), 0.001);

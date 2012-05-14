@@ -22,6 +22,7 @@ import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.trigger.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.service.calculation.*;
 import com.nimbits.server.transactions.service.entity.*;
 import com.nimbits.server.admin.logging.*;
@@ -128,6 +129,6 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
         }
 
 
-        return ValueModelFactory.createValueModel(retVal, "CV");
+        return ValueFactory.createValueModel(retVal, "CV");
     }
 }

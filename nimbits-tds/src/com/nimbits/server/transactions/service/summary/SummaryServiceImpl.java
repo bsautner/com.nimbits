@@ -22,6 +22,7 @@ import com.nimbits.client.model.summary.*;
 import com.nimbits.client.model.timespan.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.service.summary.*;
 import com.nimbits.server.transactions.service.entity.*;
 import com.nimbits.server.admin.logging.*;
@@ -69,7 +70,7 @@ public class SummaryServiceImpl  extends RemoteServiceServlet implements Summary
                             if (! targetResults.isEmpty()) {
                                 final Entity target = targetResults.get(0);
                                 final double result = getValue(summary.getSummaryType(), doubles);
-                                final Value value = ValueModelFactory.createValueModel(result);
+                                final Value value = ValueFactory.createValueModel(result);
 
                                 ValueServiceFactory.getInstance().recordValue(user, target, value);
                                 summary.setLastProcessed(new Date());
@@ -79,6 +80,8 @@ public class SummaryServiceImpl  extends RemoteServiceServlet implements Summary
                         }
                     }
                 } catch (NimbitsException e) {
+                    summary.setEnabled(false);
+                    EntityServiceFactory.getInstance().addUpdateEntity(user, summary);
                     LogHelper.logException(this.getClass(), e);
 
 

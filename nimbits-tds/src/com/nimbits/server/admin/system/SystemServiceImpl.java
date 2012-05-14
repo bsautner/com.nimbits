@@ -7,6 +7,7 @@ import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.transactions.service.entity.*;
 import com.nimbits.server.transactions.service.user.*;
 import com.nimbits.server.transactions.service.value.*;
@@ -46,10 +47,10 @@ public class SystemServiceImpl implements SystemService{
         if (incrementAsCounter) {
            Value c = ValueServiceFactory.getInstance().getCurrentValue(p);
            double cd = c!= null? c.getDoubleValue() : 0.0;
-           vx = ValueModelFactory.createValueModel(cd+ value);
+           vx = ValueFactory.createValueModel(cd + value);
         }
         else {
-            vx = ValueModelFactory.createValueModel(value);
+            vx = ValueFactory.createValueModel(value);
         }
         ValueServiceFactory.getInstance().recordValue(admin, p, vx);
 

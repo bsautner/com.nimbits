@@ -22,7 +22,7 @@ import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.console.KeyFile;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.user.GoogleUser;
@@ -172,7 +172,7 @@ public class MainClass {
         final double lat = argsMap.containsKey(Parameters.lat.getText()) ? Double.valueOf(argsMap.get(Parameters.lat.getText())) : 0.0;
         final double lng = argsMap.containsKey(Parameters.lng.getText()) ? Double.valueOf(argsMap.get(Parameters.lng.getText())) : 0.0;
 
-        return ValueModelFactory.createValueModel(lat, lng, d, new Date(), note, "", AlertType.OK);
+        return ValueFactory.createValueModel(lat, lng, d, new Date(), note, ValueFactory.createValueData(""), AlertType.OK);
 
     }
 

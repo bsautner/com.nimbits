@@ -4,12 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.nimbits.client.enums.Action;
+import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModel;
-import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.client.model.value.impl.ValueFactory;
+import com.nimbits.client.model.value.impl.ValueModel;
 import com.nimbits.server.gson.GsonFactory;
 import org.jivesoftware.smack.XMPPException;
 import org.junit.Test;
@@ -34,7 +35,7 @@ public class TestXMPP {
 //        NimbitsClient client = ClientHelper.client();
 //        XMPPClient x = XMPPClientFactory.getInstance(client, "nimbits-qa");
 //        assertTrue(x.connect());
-//        Value v = ValueModelFactory.createValueModel(1.23);
+//        Value v = ValueFactory.createValueModel(1.23);
 //        EntityName pointName = CommonFactoryLocator.getInstance().createName("foo");
 //        x.sendValue(pointName, v);
 //
@@ -76,7 +77,7 @@ public class TestXMPP {
 //        String data = gson.toJson(robot);
 //
 //
-//        Value v = ValueModelFactory.createValueModel(0.0,
+//        Value v = ValueFactory.createValueModel(0.0,
 //                0.0,
 //                1.34,
 //                new Date(),
@@ -103,8 +104,8 @@ public class TestXMPP {
 //                } catch (Exception e) {
 //                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
 //                }
-//                System.out.println(point.getValue().getData());
-//                Robot robot = gson.fromJson(v.getData(), Robot.class);
+//                System.out.println(point.getValue().getContent());
+//                Robot robot = gson.fromJson(v.getContent(), Robot.class);
 //                assertEquals(robot.getEmotion(), Robot.Emotion.happy);
 //
 //                done[0] = true;
@@ -125,9 +126,9 @@ public class TestXMPP {
 
 
     @Test
-    public void testGson() {
-        Value v = ValueModelFactory.createValueModel(1.23);
-        EntityName pointName = CommonFactoryLocator.getInstance().createName("foo");
+    public void testGson() throws NimbitsException {
+        Value v = ValueFactory.createValueModel(1.23);
+        EntityName pointName = CommonFactoryLocator.getInstance().createName("foo", EntityType.point);
         Collection collection = new ArrayList();
         collection.add(Action.record);
         collection.add("foo");

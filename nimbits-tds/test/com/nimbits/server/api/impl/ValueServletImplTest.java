@@ -19,7 +19,7 @@ import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueModelFactory;
+import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.process.cron.SystemMaint;
 import com.nimbits.server.settings.SettingsServiceFactory;
@@ -53,7 +53,7 @@ public class ValueServletImplTest extends NimbitsServletTest {
         Value v = ValueServiceFactory.getInstance().getCurrentValue(point);
         assertNotNull(v);
         assertEquals(5.0, v.getDoubleValue(), 0.001);
-        assertEquals("Medication", v.getData());
+        assertEquals("Medication", v.getData().getContent());
         assertEquals(v.getTimestamp().getTime(), new Date(1336579929000L).getTime());
 
     }
@@ -82,8 +82,8 @@ public class ValueServletImplTest extends NimbitsServletTest {
 
 
             assertNotNull(s);
-        assertTrue(s.startsWith("<"));
-        assertTrue(s.endsWith(">"));
+        assertTrue(s.startsWith(Const.CONST_ARDUINO_DATA_SEPARATOR));
+        assertTrue(s.endsWith(Const.CONST_ARDUINO_DATA_SEPARATOR));
 
 
     }
@@ -123,7 +123,7 @@ public class ValueServletImplTest extends NimbitsServletTest {
 
     @Test
     public void processRequestTest() throws NimbitsException {
-        Value v = ValueModelFactory.createValueModel(1.2);
+        Value v = ValueFactory.createValueModel(1.2);
 
         String j = ValueServletImpl.processRequest(pointName.getValue(), null, "double", v, user);
 

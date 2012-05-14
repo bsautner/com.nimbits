@@ -24,6 +24,7 @@ import com.nimbits.client.model.feed.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.service.feed.*;
 import com.nimbits.server.admin.common.*;
 import com.nimbits.server.admin.logging.*;
@@ -63,9 +64,9 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
     public void postToFeed(final User user, final Entity entity, final Point originalPoint, final Value value, final FeedType type) throws NimbitsException {
         final Point point = getFeedPoint(user);
         if (point != null) {
-            final FeedValue feedValue = new FeedValueModel(valueToHtml(entity, originalPoint, value), value.getData(), type);
+            final FeedValue feedValue = new FeedValueModel(valueToHtml(entity, originalPoint, value), value.getData().getContent(), type);
             final String json = GsonFactory.getSimpleInstance().toJson(feedValue);
-            final Value v = ValueModelFactory.createValueModel(value, json);
+            final Value v = ValueFactory.createValueModel(value, json);
             ValueServiceFactory.getInstance().recordValue(user, point, v);
         }
     }
@@ -99,9 +100,9 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
 
             final FeedValue feedValue = new FeedValueModel(finalMessage, "", type);
             final String json = GsonFactory.getSimpleInstance().toJson(feedValue);
-            final Value value = ValueModelFactory.createValueModel(0.0, 0.0, Const.CONST_IGNORED_NUMBER_VALUE,
-                    new Date(), json);
-            final Value v = ValueModelFactory.createValueModel(value, json);
+            final Value value = ValueFactory.createValueModel(0.0, 0.0, Const.CONST_IGNORED_NUMBER_VALUE,
+                    new Date(),"", ValueFactory.createValueData(json), AlertType.OK);
+            final Value v = ValueFactory.createValueModel(value, json);
 
             ValueServiceFactory.getInstance().recordValue(user, point, v);
 
@@ -248,10 +249,10 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
 //                final List<FeedValue> retObj = new ArrayList<FeedValue>(values.size());
 //
 //                for (final Value v : values) {
-//                    if (! Utils.isEmptyString(v.getData())) {
+//                    if (! Utils.isEmptyString(v.getContent())) {
 //                        try {
 //                            retObj.add(
-//                                    GsonFactory.getInstance().fromJson(v.getData(),
+//                                    GsonFactory.getInstance().fromJson(v.getContent(),
 //                                            FeedValueModel.class)
 //                            );
 //                        } catch (JsonSyntaxException ignored) {

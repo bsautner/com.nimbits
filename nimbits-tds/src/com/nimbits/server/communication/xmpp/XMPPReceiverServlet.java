@@ -23,6 +23,7 @@ import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.transactions.service.entity.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.json.*;
@@ -168,7 +169,7 @@ public class XMPPReceiverServlet extends HttpServlet {
 
 
                 if (u != null) {
-                    Value value = ValueModelFactory.createValueModel(0.0, 0.0, v, new Date(), "");
+                    Value value = ValueFactory.createValueModel(0.0, 0.0, v, new Date(), "", ValueFactory.createValueData(""), AlertType.OK);
                     ValueServiceFactory.getInstance().recordValue(u, pointName, value);
                 }
             } catch (NumberFormatException ignored) {

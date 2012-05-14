@@ -49,14 +49,6 @@
         function createPoint() {
 
 
-//            $.post("http://app.nimbits.com/service/point",
-//                    { email: "bsautner@gmail.com", action: "create", point: "hello post6", key:"69ce042a-8e9e-478d-a07b-0523ee3c63af" },
-//                    function(data){
-//                        alert(data);
-//                    }
-//            );
-
-
             $.post("http://app.nimbits.com/service/point",
                     { email: "bsautner@gmail.com", action: "create", parent: "hello post6", point: "hello post child", key:"69ce042a-8e9e-478d-a07b-0523ee3c63af" },
                     function(data){
@@ -65,7 +57,17 @@
             );
 
           }
+        function recordValue() {
 
+
+            $.post("http://app.nimbits.com/service/currentvalue",
+                    { email: "bsautner@gmail.com", key:"69ce042a-8e9e-478d-a07b-0523ee3c63af", point: "TempF", value: "88", data: "WTF"},
+                    function(data){
+                        alert(data);
+                    }
+            );
+
+        }
     </script>
 </head>
 
@@ -74,7 +76,7 @@
     <input type="button" value="Start" onClick="doTimer();">
      <span>batch service</span>
     <input type="button" value="Test Post" onClick="createPoint();">
-
+    <input type="button" value="Test record" onClick="recordValue();">
 </form>
 
 </body>

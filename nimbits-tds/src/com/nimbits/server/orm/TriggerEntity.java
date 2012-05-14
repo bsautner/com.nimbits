@@ -75,7 +75,9 @@ public class TriggerEntity extends EntityStore implements Trigger {
     @Override
     public void validate() throws NimbitsException {
         super.validate();
+        if (enabled) {
         RecursionValidation.validate(this);
+        }
     }
 
     @Override

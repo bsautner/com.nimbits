@@ -158,7 +158,7 @@ public class DataPointIntegrationTest extends TestCase {
     public void testCompression() throws NimbitsException {
         Point p = PointModelFactory.createPointModel(null);
 
-       EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString()));
+       EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString(), EntityType.point));
         p.setFilterValue(2.0);
         Point result = ClientHelper.client().addPoint(name, p);
         assertNotNull(result);
@@ -174,7 +174,7 @@ public class DataPointIntegrationTest extends TestCase {
     public void testChangeCompression() throws NimbitsException {
         Point p = PointModelFactory.createPointModel(null);
 
-       EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString()));
+       EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString(), EntityType.point));
         p.setFilterValue(0.0);
         ClientHelper.client().addPoint(name, p);
 
@@ -206,7 +206,7 @@ public class DataPointIntegrationTest extends TestCase {
     public void TestZeroCompressionWithBatch() throws NimbitsException {
         Point p = PointModelFactory.createPointModel(null);
 
-       EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString()));
+       EntityName name = (CommonFactoryLocator.getInstance().createName("test" + UUID.randomUUID().toString(), EntityType.point));
         p.setFilterValue(0.0);
         ClientHelper.client().addPoint(name, p);
         System.out.println("Starting batch compression integration test compression = " + p.getFilterValue());

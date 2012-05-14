@@ -14,6 +14,7 @@
 package com.nimbits.server.api.impl;
 
 import com.nimbits.client.common.*;
+import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.server.admin.logging.LogHelper;
@@ -65,7 +66,7 @@ public class TimeServlet extends ApiServlet {
 
             if (clientType.equals(ClientType.arduino)) {
 
-                out.print("<");
+                out.print(Const.CONST_ARDUINO_DATA_SEPARATOR);
             }
             switch (type) {
 
@@ -85,7 +86,7 @@ public class TimeServlet extends ApiServlet {
 
         if (clientType.equals(ClientType.arduino)) {
 
-            out.print(">");
+            out.print(Const.CONST_ARDUINO_DATA_SEPARATOR);
         }
 
     }

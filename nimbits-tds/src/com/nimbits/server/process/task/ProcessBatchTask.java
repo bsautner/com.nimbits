@@ -22,6 +22,7 @@ import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.transactions.service.entity.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.admin.logging.*;
@@ -121,7 +122,7 @@ public class ProcessBatchTask extends HttpServlet {
                 }
                 if (point != null) {
                     try {
-                        final Value v = ValueModelFactory.createValueModel(0.0, 0.0, b.getValue(), b.getTimestamp(), b.getNote());
+                        final Value v = ValueFactory.createValueModel(0.0, 0.0, b.getValue(), b.getTimestamp(), b.getNote(), ValueFactory.createValueData(""), AlertType.OK);
 
                         ValueServiceFactory.getInstance().recordValue(b.getU(), point, v);
 

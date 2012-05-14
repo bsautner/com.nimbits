@@ -63,7 +63,7 @@ long Nimbits::getTime() {
 
                       if (client.connect(GOOGLE, PORT)) {
                         client.print("GET /service/time?");
-                        writeAuthParams(client);
+                        writeAuthParamsToClient(client);
                         writeHostToClient(client);
 
                          String response = getResponse(client);
@@ -76,14 +76,14 @@ long Nimbits::getTime() {
                       }
  }
 
- float Nimbits::getValue(String pointName) {
+float Nimbits::getValue(String pointName) {
 
 
                   EthernetClient client;
 
                   if (client.connect(GOOGLE, PORT)) {
                     client.print("GET /service/currentvalue?");
-                    writeAuthParams(client);
+                    writeAuthParamsToClient(client);
                     client.print("&point=");
                     client.print(pointName);
                     writeHostToClient(client);
@@ -105,9 +105,9 @@ String Nimbits::getResponse(EthernetClient client) {
    while(client.connected() && !client.available()) delay(1);
                        while (client.available()) {
                          c = client.read();
-                         if (c == '<') inData = true;
-                         else if (inData && c != '<' && c != '>') result += c;
-                         else if (inData && c == '>') client.stop();
+                         if (c == '|') inData = true;
+                         else if (inData && c != '|') result += c;
+                         else if (inData && c == '|') client.stop();
                        }
 
    return result;
@@ -123,7 +123,7 @@ void  Nimbits::writeHostToClient(EthernetClient client) {
                          client.println();
 }
 
-void Nimbits::writeAuthParams(EthernetClient client) {
+void Nimbits::writeAuthParamsToClient(EthernetClient client) {
      client.print("email=");
      client.print(_ownerEmail);
      if (_accessKey.length() > 0) {

@@ -24,6 +24,7 @@ import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.timespan.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.api.*;
 import com.nimbits.server.transactions.service.entity.*;
 import com.nimbits.server.transactions.service.feed.*;
@@ -32,7 +33,6 @@ import com.nimbits.server.admin.logging.*;
 import com.nimbits.server.time.*;
 import com.nimbits.server.transactions.service.value.*;
 
-import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.*;
 import java.util.*;
@@ -178,7 +178,7 @@ public class PointServletImpl extends ApiServlet {
             final String pointNameParam = Utils.isEmptyString(getParam(Parameters.name)) ?
                     getParam(Parameters.point) : getParam(Parameters.name);
             if (getClientType().equals(ClientType.arduino)) {
-                sb.append('<');
+                sb.append(Const.CONST_ARDUINO_DATA_SEPARATOR);
             }
 
             log.info(pointNameParam);
@@ -202,15 +202,16 @@ public class PointServletImpl extends ApiServlet {
                         }
                         for (Entity e : children) {
                             if (okToReport(user, e)) {
-                                Value value = ValueServiceFactory.getInstance().getCurrentValue(e);
-                                if (value == null) { //todo implement null pattern in value service
-                                    value = ValueModelFactory.createValueModel(0.0);
-                                }
+                                //Value value = ValueServiceFactory.getInstance().getCurrentValue(e);
+                                //if (value == null) { //todo implement null pattern in value service
+                                //    value = ValueFactory.createValueModel(0.0);
+                               // }
                                 sb.append(e.getName().getValue())
-                                        .append("(")
-                                        .append(value.getTimestamp().getTime() / 1000)
-                                        .append(":")
-                                        .append(value.getDoubleValue()).append("),");
+                                       // .append("(")
+                                       // .append(value.getTimestamp().getTime() / 1000)
+                                       // .append(":")
+                                       // .append(value.getDoubleValue())
+                                       .append(",");
                             }
                         }
                         if (sb.toString().endsWith(",")) {
@@ -229,7 +230,7 @@ public class PointServletImpl extends ApiServlet {
             }
 
             if (getClientType().equals(ClientType.arduino)) {
-                sb.append('>');
+                sb.append(Const.CONST_ARDUINO_DATA_SEPARATOR);
             }
 
 

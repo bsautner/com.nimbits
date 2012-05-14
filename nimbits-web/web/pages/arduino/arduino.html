@@ -4,15 +4,59 @@
 
 
 <p>Nimbits has an arduino library you can download and include in your Arduino sketches. It uses the
-Ethernet.h and DNS libraries to relay your data to Google's infrastructure and into your Nimbits data channel.
-Meaning, there is no need for a serial connected pc, just an arduino ethernet shield with internet access.
-The Nimbits.h library will use DHCP to allocate an IP Address for your device, and provided google.com is
-up and available, your project will be connected to your data points in Nimbits.<p>
+    Ethernet.h and DNS/DHCP libraries to relay your data to Google's infrastructure and into your Nimbits data point channels.
+    Meaning, there is no need for a serial connected pc, just an arduino ethernet shield with internet access.
+    The Nimbits.h library will use DHCP to allocate an IP Address for your device
+    your project will be connected to your data points in Nimbits.<p>
 
+<h4>Getting Started</h4>
+<h5>Hardware</h5>
+<p>
+    All you need to get started is an Arduino Board and an Ethernet Shield. Attach the two together and plug it into your network.  </p>
+        <ul>
+<li><A href="http://astore.amazon.com/nimbdatahist-20/detail/B006H06TVG" target="_blank"> Arduino Uno R3</A></li>
+<li><A href="http://astore.amazon.com/nimbdatahist-20/detail/B006UT97FE" target="_blank">Arduino Ethernet Shield R3</a></li>
+        </ul>
+
+<h5>Software</h5>
+<p>Next, <a href="http://arduino.cc/en/Main/Software">download the Arduino IDE from arduino.com</a></p>
+
+<h5>Nimbits Library</h5>
+
+<p>In your downloaded arduino IDE directory, create a folder called Nimbits in the libraries folder. Then download
+Nimbits.cpp and Nimbits.h and place them in your folder</p>
+
+<ul>
+    <li><a href="https://raw.github.com/bsautner/com.nimbits/master/nimbits-arduino/src/Nimbits.cpp">Nimbits.cpp</a></li>
+    <li><a href="https://raw.github.com/bsautner/com.nimbits/master/nimbits-arduino/src/Nimbits.h">Nimbits.h</a></li>
+
+</ul>
+
+<p>
+    Open your Arduino IDE and create a new Sketch. Import the Nimbits Library into your project. You can then create a Nimbits client object. In the example
+    below we have the device connecting to nimbits1 which is the public nimbits cloud. If you are running your own instance of nimbits, replace Nimbits1 with your
+    app id. Then, provide the email address for your account and the access key. If your arduino only needs to read data you can use a read only key. Use a read/write
+    key with user-wide scope to create and delete points. <a href="#" onclick="getContent('pages/web_service_primer.html')">Read more about access keys here</a>.
+
+</p>
+        <pre class="prettyprint">
+        #include &lt;Nimbits.h&gt;
+
+        Nimbits nimbits("nimbits1", "example@gmail.com","myaccesskey");
+
+        //create a point using our write auth key with global scope
+        nimbits.createPoint("HelloArduino");
+
+        //get the current number valuer
+        float value = nimbits.getValue("HelloArduino");
+
+        //get the current time from the server
+        time_t time = nimbits.getTime();
+        </pre>
 
 <ul>
     <li>float getValue(String pointName): returns the current float value of a point</li>
     <li>long getTime(): returns the current time, in seconds unix time, on the server (UTC). This can save you
-    from having to import other time related libraries, since you're already using http</li>
+        from having to import other time related libraries, since you're already using http</li>
 
 </ul>

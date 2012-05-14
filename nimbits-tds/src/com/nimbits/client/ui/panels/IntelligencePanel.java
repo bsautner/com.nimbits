@@ -290,7 +290,7 @@ public class IntelligencePanel extends NavigationEventProvider {
         public void onSuccess(Value result) {
             final MessageBox box = MessageBox.alert("Result",
                     "Value: " + result.getDoubleValue() + "<br>" +
-                            "Data: " + result.getData(), null);
+                            "Data: " + result.getData().getContent(), null);
             box.show();
         }
     }

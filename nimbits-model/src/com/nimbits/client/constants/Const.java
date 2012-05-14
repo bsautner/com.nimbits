@@ -66,6 +66,7 @@ public class Const {
     public static final long CONST_DEFAULT_BLOB_LENGTH = 100000;
     public static final int CONST_DEFAULT_LIST_SIZE = 1024;
     public static final String CONST_ANON_EMAIL = "uncle_nobody@nimbits.com";
+    public static String CONST_ARDUINO_DATA_SEPARATOR = "|";
 
 
 // --------------------------- CONSTRUCTORS ---------------------------

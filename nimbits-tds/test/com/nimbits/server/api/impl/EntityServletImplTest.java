@@ -1,5 +1,6 @@
 package com.nimbits.server.api.impl;
 
+import com.google.gwt.benchmarks.client.Setup;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.enums.SubscriptionNotifyMethod;
@@ -13,9 +14,13 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.subscription.SubscriptionFactory;
+import com.nimbits.client.model.subscription.SubscriptionModel;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.gson.GsonFactory;
+import org.junit.Before;
 import org.junit.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
@@ -25,15 +30,23 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
- * Created with IntelliJ IDEA.
  * User: benjamin
  * Date: 5/16/12
  * Time: 1:16 PM
- * To change this template use File | Settings | File Templates.
+ * Copyright 2012 Tonic Solutions LLC - All Rights Reserved
  */
 public class EntityServletImplTest extends NimbitsServletTest {
     EntityServletImpl impl = new EntityServletImpl();
+    public MockHttpServletRequest req1;
+    public MockHttpServletResponse resp1;
 
+    @Before
+    public void setup() {
+
+
+            req1 = new MockHttpServletRequest();
+            resp1 = new MockHttpServletResponse();
+    }
     @Test
     public void testPost() throws IOException, ServletException, NimbitsException {
         req.removeAllParameters();
@@ -50,33 +63,85 @@ public class EntityServletImplTest extends NimbitsServletTest {
 
     }
 
-        @Test
-        public void testSubscribe() throws IOException, ServletException, NimbitsException {
-            req.removeAllParameters();
+    @Test
+    public void testSubscribe() throws IOException, ServletException, NimbitsException {
 
+        req.removeAllParameters();
+        req.addParameter("id", point.getKey());
 
-            req.addParameter("id", point.getKey());
-
-
-            EntityName name = CommonFactoryLocator.getInstance().createName("sub1", EntityType.subscription);
+        EntityName name = CommonFactoryLocator.getInstance().createName("sub1", EntityType.subscription);
         Entity se = EntityModelFactory.createEntity(name, "", EntityType.subscription, ProtectionLevel.onlyConnection,
                 point.getKey(), user.getKey());
+
         Subscription s = SubscriptionFactory.createSubscription(
                 se,
                 point.getKey(),
                 SubscriptionType.high,
                 SubscriptionNotifyMethod.email, 5.0, new Date(), false, true);
 
-         String jp = GsonFactory.getInstance().toJson(s);
-         System.out.println(jp);
+        String jp = GsonFactory.getInstance().toJson(s);
+        System.out.println(jp);
 
         req.removeAllParameters();
 
-        req.addParameter("id", point.getKey());
-       impl.doPost(req, resp);
+        req.addParameter("json", jp);
+        req.addParameter("action", "create");
+        impl.doPost(req, resp);
+        String r = resp.getContentAsString();
+        System.out.println(r);
+
+        Subscription sr = GsonFactory.getInstance().fromJson(r, SubscriptionModel.class);
+        assertNotNull(sr.getKey());
+        assertEquals(s.getName(), sr.getName());
+
+
+
     }
 
+    @Test
+    public void testUpdate() throws IOException, ServletException, NimbitsException {
+
+        req.removeAllParameters();
+        req.addParameter("id", point.getKey());
+        impl.doGet(req, resp);
+
+        String j = resp.getContentAsString();
+        Point p = GsonFactory.getInstance().fromJson(j, PointModel.class);
+        assertNotNull(p);
+        p.setDescription("foo");
+        String u = GsonFactory.getInstance().toJson(p, PointModel.class);
+        req.removeAllParameters();
+        req.addParameter("json", u);
+        req.addParameter("action", "update");
+        impl.doPost(req, resp);
 
 
+        req1.removeAllParameters();
+        req1.addParameter("id", p.getKey());
+        impl.doGet(req1, resp1);
+        String x = resp1.getContentAsString();
+        Point xpr = GsonFactory.getInstance().fromJson(x, PointModel.class);
+        assertNotNull(xpr);
+        assertEquals("foo", xpr.getDescription());
+ }
+    @Test
+    public void testUpdate2() throws IOException, ServletException, NimbitsException {
+
+
+
+        point.setDescription("foo");
+        String u = GsonFactory.getInstance().toJson(point, PointModel.class);
+        req.removeAllParameters();
+        req.addParameter("json", u);
+        req.addParameter("action", "update");
+        impl.doPost(req, resp);
+        String x = resp.getContentAsString();
+        Point xp = GsonFactory.getInstance().fromJson(x, PointModel.class);
+        assertNotNull(xp);
+        assertEquals("foo", xp.getDescription());
+
+
+
+    }
 
 }

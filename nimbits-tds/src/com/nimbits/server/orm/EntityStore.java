@@ -177,7 +177,7 @@ public class EntityStore implements Entity {
     @Override
     public String getKey() {
 
-        return  this.key.getName();
+        return  this.key  == null ? null : this.key.getName();
     }
 
 //    @Override

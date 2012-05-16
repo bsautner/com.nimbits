@@ -38,10 +38,12 @@ public class RecursionValidation {
         List<Entity> userList = EntityServiceFactory.getInstance().getEntityByKey(entity.getOwner(),EntityType.user);
 
         if (userList.isEmpty()){
-            throw new NimbitsException("Could not locate the owner of this calc with the key provided!");
+            throw new NimbitsException("Could not locate the owner of this trigger with the key provided!");
         }
         else {
+            if (entity.isEnabled())  {
             validateAgainstExisting(userList, entity);
+            }
         }
 
 
@@ -91,9 +93,9 @@ public class RecursionValidation {
                     count++;
                     if (count > MAX_RECURSION) {
                         log.warning("trigger failed validation with recursion test");
-                        throw new NimbitsException("The target for this calc is a trigger for another calc. That's ok, but the" +
+                        throw new NimbitsException("The target for this trigger is a trigger for another entity. That's ok, but the" +
                                 "target for that calc is also the trigger for another, and so on for over " + MAX_RECURSION + " steps. We " +
-                                "stopped checking after that, but it looks like this is an infinite loop.");
+                                "stopped checking after that, but it looks like this is an infinite loop." + " enabled=" + trigger.isEnabled());
 
                     }
                 }

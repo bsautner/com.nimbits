@@ -75,7 +75,9 @@ public class ApiServlet extends HttpServlet {
                 Parameters.key,
                 Parameters.client,
                 Parameters.parent,
-                Parameters.description
+                Parameters.description,
+                Parameters.action,
+                Parameters.id
 
         };
 

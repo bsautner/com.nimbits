@@ -163,7 +163,7 @@ public class CalcEntity extends TriggerEntity implements Calculation {
             throw new NimbitsException("Error in calc. Please use a lower case z instead of Z");
         }
 
-        RecursionValidation.validate(this);
+      //  RecursionValidation.validate(this);
 
     }
 

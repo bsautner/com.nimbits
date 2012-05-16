@@ -235,9 +235,9 @@ public class EntityDaoImpl implements  EntityTransactions {
                     log.info("beginning transaction");
                    try {
                     result.update(entity);
+                    result.validate();
                    }
                    catch(NimbitsException ex) {
-                       LogHelper.logException(this.getClass(), ex);
                        tx.rollback();
                        throw ex;
                    }

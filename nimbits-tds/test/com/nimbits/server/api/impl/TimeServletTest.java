@@ -15,6 +15,7 @@ package com.nimbits.server.api.impl;
 
 import com.google.appengine.tools.development.testing.*;
 import com.google.gwt.benchmarks.client.Setup;
+import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.ClientType;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.server.NimbitsServletTest;
@@ -78,8 +79,8 @@ public class TimeServletTest  {
         String r = resp.getContentAsString();
         assertNotNull(r);
 
-        assertTrue(r.endsWith(">"));
-        assertTrue(r.startsWith("<"));
+        assertTrue(r.endsWith(Const.CONST_ARDUINO_DATA_SEPARATOR));
+        assertTrue(r.startsWith(Const.CONST_ARDUINO_DATA_SEPARATOR));
 
 
     }

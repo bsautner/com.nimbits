@@ -434,6 +434,7 @@ public class NavigationPanel extends NavigationEventProvider {
                         if (p.getValue() == null) {
                             model.setAlertType(AlertType.OK);
                             model.setValue(ValueFactory.createValueModel(0.0));
+
                         }
                         else {
                             model.setAlertType(p.getValue().getAlertState());

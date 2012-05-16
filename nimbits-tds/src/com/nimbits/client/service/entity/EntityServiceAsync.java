@@ -60,4 +60,6 @@ public interface EntityServiceAsync {
     void getSystemWideEntityMap(EntityType type, AsyncCallback<Map<String, Entity>> async);
 
     void findEntityByKey(final String key, AsyncCallback<List<Entity>> async) throws NimbitsException;
+
+    void findEntityByKey(User user, String param, AsyncCallback< List<Entity>> async) throws NimbitsException;
 }

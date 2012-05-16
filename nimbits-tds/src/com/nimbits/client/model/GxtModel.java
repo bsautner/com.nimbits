@@ -134,6 +134,7 @@ public class GxtModel extends BaseTreeModel implements TreeModel {
         }
         set(Parameters.value.getText(), sb.toString().trim());
         set(Parameters.data.getText(), value.getData().getContent());
+        set(Parameters.timestamp.getText(), value.getTimestamp());
     }
 
     @Override

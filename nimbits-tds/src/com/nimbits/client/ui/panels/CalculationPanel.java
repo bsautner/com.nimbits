@@ -213,9 +213,10 @@ public class CalculationPanel extends NavigationEventProvider {
             c.setEnabled(enabled.getValue());
             c.setFormula(formula.getValue());
             c.setX(x);
+
             c.setY(y);
             c.setZ(z);
-
+            c.setTarget(target);
 
 
         }

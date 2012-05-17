@@ -119,7 +119,6 @@
         <url-pattern>/service/entity</url-pattern>
     </servlet-mapping>
 
-
     <servlet>
         <servlet-name>feedService</servlet-name>
         <servlet-class>com.nimbits.server.transactions.service.feed.FeedImpl</servlet-class>

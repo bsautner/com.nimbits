@@ -1,0 +1,142 @@
+<h4 style="margin-top: 10px; margin-bottom: 10px">Entity Service</h4>
+
+
+<p>
+    <a href="#" onclick="getContent('pages/web_service_primer.html')">Please read the web service primer</A> to
+    understand how to provide proper authentication parameters.
+    For simplicity, authentication parameters are now shown here.
+
+</p>
+<h5>Nimbits Entities</h5>
+<p>
+    When you log into the nimbits portal, you will see your various objects organised in
+    a tree grid. Objects in nimbits are called Entities and consist of things like Data Points,
+    Folders, Access Keys, Subscriptions and so on. All of these entities can be organised any
+    way you like in your tree structure.
+
+</p>
+
+<h5>Trigger Entities</h5>
+<p>
+   Trigger entities are those that react to a Data Point recording a new value. When the point
+   receives a new value, that is not filtered out from filter settings, triggers for that point are
+   processed. You can have many triggers for a point, and they can cascade other triggers up to 10 times.
+</p>
+
+<p>Generally, triggers have targets that are other data points the results of that trigger are stored in.</p>
+
+<p>Trigger Types:</p>
+   <UL>
+       <li>Calculations: A mathematical formula is triggered that can use the new incoming data as values in the equation.  </li>
+       <li>Summaries: Statistics can be generated, with the result being stored in another point.  </li>
+       <li>Subscriptions: Alerts are processed sending email, xmpp messages, tweets and so on based on subscription settings and the point's alert settings.</li>
+       <li>Intelligence: Queries to the Wolfram Alpha computational knowledge engine are generated, with the result being stored in a target point.</li>
+   </UL>
+
+<h5>The Entity Service</h5>
+<p>
+You can create, update, and delete any kind of entity in Nimbits by posting JSON data to the entity service with an action. You can get the JSON data of any entity
+by using a GET request and specifying the identity id of the entity.
+
+</p>
+
+<h5>Identity ID</h5>
+<p>A quick note on identity keys. Most entities in Nimbits have a UUID for an identity which is unique to that entity. However data points have an identity that
+is the owners email address / the point name i.e test@example.com/pointname  this makes it easy to infer the id without having to download data first.
+
+</p>
+<p>
+Further, your user account represents a top level user entity with an ID of your email address.
+
+</p>
+<img style="border: 1px; border-top-style: solid; margin-right: 5px; margin-top: 5px; float: right" src="/images/screens/getjson.png">
+
+<p> Here is the JSON of a typical Nimbits Data Point. A good way to get a sample of JSON for an entity you want to create is to create one any sort of object
+in the nimbits portal and right click on it. Select "Get JSON" to open the entity service which will give you the JSON data of the object and its identity.
+You can edit this JSON in your code, and post back to the service to delete or update the object.</p>
+
+<h5>Reading with a GET</h5>
+
+<p>From a browser window or as a GET request in your code, simply call the entity service with the ID of the object you want to read.
+   This example reads a data point called pointName - note how the id is simply formatted: email/pointName:</p>
+
+<pre>
+
+    http://app.nimbits.com/service/entity?id=test@example.com/pointName
+
+
+</pre>
+
+<pre class="prettyprint">
+    {
+    "highAlarm":90.0,"expire":30,"unit":"F","lowAlarm":60.0,"highAlarmOn":false,"lowAlarmOn":false,"idleAlarmOn":true,"idleSeconds":300,
+    "filterType":0,"filterValue":0.5,"values":null,"value":null,"name":"TempF","key":"bsautner@gmail.com/TempF",
+    "description":"This is a sample point I use a lot for nimbits demos",
+    "entityType":1,"protectionLevel":2,
+    "parent":"bsautner@gmail.com","owner":"bsautner@gmail.com",
+    "uuid":"96c55c29-d60f-42a1-82a9-98d8a76960bd"
+    }
+
+</pre>
+ <p>
+   A lot of the values from the sample above are self explanatory. Some definitions follow:
+ </p>
+  <ul>
+     <li>entityType: Specify the type of entity you are creating. They are defined <a href="https://github.com/bsautner/com.nimbits/blob/master/nimbits-model/src/com/nimbits/client/enums/EntityType.java">here</a>. For example, Point = 1, Subscription = 5</li>
+     <li>protectionLevel: Who can see this object. Defined <a href="https://github.com/bsautner/com.nimbits/blob/master/nimbits-model/src/com/nimbits/client/enums/ProtectionLevel.java">here.</a> i.e everyone=2, only you = 0</li>
+     <li>filterType: How data is filtered. Defined <a href="https://github.com/bsautner/com.nimbits/blob/master/nimbits-model/src/com/nimbits/client/enums/FilterType.java">here.</a><a href="#" onclick="getContent('pages/server_docs/filters.html')"> Read more about filters here.</a></li>
+     <li>parent: Where this object will appear in the tree, the top level would be your email address, otherwise provide the ID of an existing entity. Anything can be a parent.</li>
+     <li>owner: your email address.</li>
+  </ul>
+
+
+<h5>Creating Entities</h5>
+
+ <p>POST to the entity service with an <a href="#" onclick="getContent('pages/web_service_primer.html')">authentication access key</a> that has global user scope and write
+ access. Provide action=create parameter and json={} with the JSON of the entity you'd like to create.</p>
+
+<h6>POST Sample: Create a subscription to a points idle settings</h6>
+  <ul>
+      <li>notifyMethod: Alerts should go to email, xmpp etc. <a href="https://github.com/bsautner/com.nimbits/blob/master/nimbits-model/src/com/nimbits/client/enums/SubscriptionNotifyMethod.java">Defined here.</a></li>
+      <li>subscriptionType: What event you are subscribing to - high alerts, idle alerts, etc. <a href="https://github.com/bsautner/com.nimbits/blob/master/nimbits-model/src/com/nimbits/client/enums/SubscriptionType.java">Defined here.</a></li>
+      <li>notifyFormatJson: Send the alert message in JSON format.</li>
+  </ul>
+
+
+<pre>
+
+    http://app.nimbits.com/service/entity?action=create&
+    json={"subscribedEntity":"bsautner@gmail.com/TempF","notifyMethod":0,"subscriptionType":4,"maxRepeat":5.0,"notifyFormatJson":false,"enabled":true,"name":"my idle alert","description":"","entityType":5,"protectionLevel":0,"parent":"test@example.com","owner":"test@example.com"}
+
+
+</pre>
+<p>POST to the entity service with an <a href="#" onclick="getContent('pages/web_service_primer.html')">authentication access key</a> that has global user scope and write
+    access. Provide action=create parameter and json={} with the JSON of the entity you'd like to create.</p>
+
+<h6>POST Sample: Change a Points Description</h6>
+
+       <p>Simply download the JSON of a point as above, change the text of the description or any other value you wish to update
+       and POST to:</p>
+<pre>
+
+    http://app.nimbits.com/service/entity?action=update&json={...}
+
+
+</pre>
+
+
+<h6>Update with jquery</h6>
+ <p>Here is an example of posting to the entity sevice with an updated JSON object for a data point. This will update the point with the new values.</p>
+ <pre class="prettyprint">
+ function updateEntity() {
+            $.post("http://app.nimbits.com/service/entity",
+                    { email: "test@example.com", key:"write access key",
+                      action:"update",
+                        json: "{\"highAlarm\":0.0,\"expire\":365,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":false,\"idleAlarmOn\":false,\"idleSeconds\":0,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.0,\"values\":null,\"value\":null,\"name\":\"TempC\",\"key\":\"bsautner@gmail.com/TempC\",\"description\":updated!,\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"test@example.com\",\"owner\":\"test@example.com\",\"readOnly\":false,\"uuid\":\"2\",\"dateCreated\":\"2012-05-11T23:18:05 +0000\",\"children\":null}"},
+                    function(data){
+                        alert(data);
+                    }
+            );
+
+        }
+ </pre>

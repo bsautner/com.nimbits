@@ -55,6 +55,7 @@ public class SubscriptionEntity extends EntityStore implements Serializable, Sub
 
     @SuppressWarnings("unused")
     protected SubscriptionEntity() {
+
     }
 
 

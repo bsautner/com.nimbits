@@ -68,6 +68,19 @@
             );
 
         }
+        function updateEntity() {
+
+
+            $.post("http://app.nimbits.com/service/entity",
+                    { email: "bsautner@gmail.com", key:"69ce042a-8e9e-478d-a07b-0523ee3c63af",
+                      action:"update",
+                        json: "{\"highAlarm\":0.0,\"expire\":365,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":false,\"idleAlarmOn\":false,\"idleSeconds\":0,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.0,\"values\":null,\"value\":null,\"name\":\"TempC\",\"key\":\"bsautner@gmail.com/TempC\",\"description\":updated!,\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"68f03378-fec7-48d8-b7dd-89ad9a4bd8f0\",\"owner\":\"bsautner@gmail.com\",\"readOnly\":false,\"uuid\":\"3e1fc1ec-a8b7-4f10-adc5-f41e84547602\",\"dateCreated\":\"2012-05-11T23:18:05 +0000\",\"children\":null}"},
+                    function(data){
+                        alert(data);
+                    }
+            );
+
+        }
     </script>
 </head>
 
@@ -77,6 +90,7 @@
      <span>batch service</span>
     <input type="button" value="Test Post" onClick="createPoint();">
     <input type="button" value="Test record" onClick="recordValue();">
+    <input type="button" value="Test Update" onClick="updateEntity();">
 </form>
 
 </body>

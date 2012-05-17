@@ -110,6 +110,15 @@
         <url-pattern>/nimbits/entity</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>entityAPI</servlet-name>
+        <servlet-class>com.nimbits.server.api.impl.EntityServletImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>entityAPI</servlet-name>
+        <url-pattern>/service/entity</url-pattern>
+    </servlet-mapping>
+
 
     <servlet>
         <servlet-name>feedService</servlet-name>

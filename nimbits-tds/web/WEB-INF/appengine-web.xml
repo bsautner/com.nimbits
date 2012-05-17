@@ -17,7 +17,7 @@
     <!--<async-session-persistence enabled="true"/>-->
     <threadsafe>true</threadsafe>
     <application>nimbits1</application>
-    <version>371</version>
+    <version>376</version>
     <sessions-enabled>true</sessions-enabled>
     <inbound-services>
         <service>mail</service>

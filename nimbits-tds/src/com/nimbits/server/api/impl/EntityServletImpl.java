@@ -39,7 +39,7 @@ public class EntityServletImpl extends ApiServlet {
 
 
             case user:
-              return UserModel.class;
+                return UserModel.class;
             case point:
                 return PointModel.class;
             case category:
@@ -80,41 +80,41 @@ public class EntityServletImpl extends ApiServlet {
             doInit(req, resp, ExportType.unknown);
             if (user != null && ! user.isRestricted()) {
 
-                   if (containsParam(Parameters.action)) {
-                       Action action = Action.get(getParam(Parameters.action));
-                       if (action != null) {
+                if (containsParam(Parameters.action)) {
+                    Action action = Action.get(getParam(Parameters.action));
+                    if (action != null) {
 
-                           String json = getParam(Parameters.json);
-                           String json2 = getParam(Parameters.json);
-                           if (!Utils.isEmptyString(json)) {
+                        String json = getParam(Parameters.json);
+                        String json2 = getParam(Parameters.json);
+                        if (!Utils.isEmptyString(json)) {
 
-                               Entity entity = GsonFactory.getInstance().fromJson(json, EntityModel.class);
-                               Class cls =  getClass(entity.getEntityType());
-                               Object up = GsonFactory.getInstance().fromJson(json2,cls);
-                               Entity r = null;
-                               switch (action) {
-                                   case create:
-                                      r =  EntityServiceFactory.getInstance().addUpdateEntity(user, (Entity) up);
-                                       break;
-                                   case delete:
-                                       EntityServiceFactory.getInstance().deleteEntity(user, (Entity) up) ;
-                                       break;
-                                   case update:
-                                      r =  EntityServiceFactory.getInstance().addUpdateEntity(user, (Entity) up);
-                                       break;
-                                   default:
-                                       break;
+                            Entity entity = GsonFactory.getInstance().fromJson(json, EntityModel.class);
+                            Class cls =  getClass(entity.getEntityType());
+                            Object up = GsonFactory.getInstance().fromJson(json2,cls);
+                            Entity r = null;
+                            switch (action) {
+                                case create:
+                                    r =  EntityServiceFactory.getInstance().addUpdateEntity(user, (Entity) up);
+                                    break;
+                                case delete:
+                                    EntityServiceFactory.getInstance().deleteEntity(user, (Entity) up) ;
+                                    break;
+                                case update:
+                                    r =  EntityServiceFactory.getInstance().addUpdateEntity(user, (Entity) up);
+                                    break;
+                                default:
+                                    break;
 
-                               }
-                               if (r != null) {
-                                   String j = GsonFactory.getInstance().toJson(r);
-                                   out.print(j);
-                               }
+                            }
+                            if (r != null) {
+                                String j = GsonFactory.getInstance().toJson(r);
+                                out.print(j);
+                            }
 
-                           }
+                        }
 
-                       }
-                   }
+                    }
+                }
                 out.close();
 
 
@@ -137,14 +137,23 @@ public class EntityServletImpl extends ApiServlet {
             if (user != null && containsParam(Parameters.id)) {
                 List<Entity> e = EntityServiceFactory.getInstance().findEntityByKey(user, getParam(Parameters.id));
 
-                if (! e.isEmpty()) {
-                    Entity r = e.get(0);
-                    String json = GsonFactory.getInstance().toJson(r, r.getClass());
-                    out.print(json);
+                if (! e.isEmpty() ) {
+                    if (okToRead(user, e.get(0))) {
+                        Entity r = e.get(0);
+                        String json = GsonFactory.getInstance().toJson(r, r.getClass());
+                        out.print(json);
+                    }
+                    else {
+                        out.println("Could not display entity, access denied.");
+                    }
+                }
+                else {
+                    out.println("Could not find entity with the id provided.");
                 }
             }
 
-             out.close();
+
+            out.close();
 
         } catch (NimbitsException e) {
             LogHelper.logException(this.getClass(), e);

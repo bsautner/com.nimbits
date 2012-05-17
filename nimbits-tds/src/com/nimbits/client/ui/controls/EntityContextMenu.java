@@ -70,6 +70,7 @@ public class EntityContextMenu extends Menu {
     private MenuItem summaryContext;
     private MenuItem intelligenceContext;
     private MenuItem keyContext;
+    private MenuItem jsonContext;
     private MenuItem downloadContext;
     private Map<SettingType, String> settings;
     private final User user;
@@ -98,6 +99,7 @@ public class EntityContextMenu extends Menu {
         this.user = user;
         entityModifiedListeners = new ArrayList<EntityModifiedListener>(1);
         this.tree = tree;
+
         this.settings = settings;
         deleteContext = deleteContext();
         subscribeContext = subscribeContext();
@@ -109,6 +111,7 @@ public class EntityContextMenu extends Menu {
         summaryContext = summaryContext();
         keyContext = keyContext();
         downloadContext = downloadContext();
+        jsonContext = jsonContext();
         add(propertyContext);
         add(copyContext);
         add(deleteContext);
@@ -117,7 +120,9 @@ public class EntityContextMenu extends Menu {
         add(keyContext);
         add(calcContext);
         add(summaryContext);
+        add(jsonContext);
         add(xmppContext);
+
      //   add(downloadContext);
         if (settings.containsKey(SettingType.wolframKey) && ! Utils.isEmptyString(settings.get(SettingType.wolframKey))) {
             add(intelligenceContext);
@@ -142,7 +147,7 @@ public class EntityContextMenu extends Menu {
         intelligenceContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.intelligence));
         xmppContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.resource));
         summaryContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.summary));
-
+        jsonContext.setEnabled(! currentModel.getEntityType().equals(EntityType.user));
         keyContext.setEnabled(currentModel.getEntityType().equals(EntityType.user) || currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.accessKey));
 
         propertyContext().setEnabled(!currentModel.isReadOnly());
@@ -285,6 +290,15 @@ public class EntityContextMenu extends Menu {
         retObj.setText("Report");
         retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.form()));
         retObj.addSelectionListener(new ReportMenuEventSelectionListener());
+
+        return retObj;
+    }
+
+    private MenuItem jsonContext() {
+        final MenuItem retObj = new MenuItem();
+        retObj.setText("Get JSON");
+        retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.json()));
+        retObj.addSelectionListener(new JsonMenuEventSelectionListener());
 
         return retObj;
     }
@@ -531,7 +545,34 @@ public class EntityContextMenu extends Menu {
             com.google.gwt.user.client.Window.open(u, title, PARAM_DEFAULT_WINDOW_OPTIONS);
         }
     }
+    private class JsonMenuEventSelectionListener extends SelectionListener<MenuEvent> {
+        JsonMenuEventSelectionListener() {
+        }
 
+        @Override
+        public void componentSelected(final MenuEvent ce) {
+            final ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
+            final TreeModel model = (TreeModel) selectedModel;
+                final Entity p =  model.getBaseEntity();
+                try {
+
+                    openUrl(p.getKey(), p.getName().getValue());
+                } catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
+                }
+
+
+
+
+        }
+
+        private void openUrl(final String id, final String title) {
+            String u = com.google.gwt.user.client.Window.Location.getHref()
+                    + "service/entity?id=" + id;
+            u = u.replace("/#?", "?");
+            com.google.gwt.user.client.Window.open(u, title, PARAM_DEFAULT_WINDOW_OPTIONS);
+        }
+    }
     private class SubscribeMenuEventSelectionListener extends SelectionListener<MenuEvent> {
         SubscribeMenuEventSelectionListener() {
         }

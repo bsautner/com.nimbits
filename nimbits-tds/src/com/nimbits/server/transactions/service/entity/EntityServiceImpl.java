@@ -71,13 +71,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
         if  (entity.getEntityType().equals(EntityType.file)) {
             BlobServiceFactory.getInstance().deleteBlob((File) entity);
         }
-
-
-
         return deleted;
-
-
-
     }
 
     @Override
@@ -124,7 +118,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
 
 
     @Override
-    public List<Entity>  getEntityByKey(final String key, final EntityType type) throws NimbitsException {
+    public List<Entity> getEntityByKey(final String key, final EntityType type) throws NimbitsException {
         try {
             return EntityTransactionFactory.getInstance(getUser()).getEntityByKey(key, Class.forName(type.getClassName()));
         } catch (ClassNotFoundException e) {

@@ -17,7 +17,9 @@ import com.nimbits.client.common.Utils;
 import com.nimbits.client.enums.ClientType;
 import com.nimbits.client.enums.ExportType;
 import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
 import com.nimbits.server.admin.quota.QuotaFactory;
 import com.nimbits.server.transactions.service.user.UserServiceFactory;
@@ -42,7 +44,14 @@ public class ApiServlet extends HttpServlet {
     final static Logger log = Logger.getLogger(ApiServlet.class.getName());
 
 
+    protected static boolean okToReport(final User u, final Entity c) {
 
+        return c.getProtectionLevel().equals(ProtectionLevel.everyone) || !(u == null || ! u.isRestricted());
+    }
+    protected static boolean okToRead(final User u, final Entity c) {
+
+        return (u != null && c.isOwner(u));
+    }
     public static void doInit(final HttpServletRequest req, final HttpServletResponse resp, final ExportType type) throws NimbitsException {
 
         user = UserServiceFactory.getServerInstance().getHttpRequestUser(req);

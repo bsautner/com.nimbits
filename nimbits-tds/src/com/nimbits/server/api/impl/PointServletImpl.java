@@ -419,9 +419,6 @@ public class PointServletImpl extends ApiServlet {
 
 
 
-    private static boolean okToReport(final User u, final Entity c) {
-        return c.getProtectionLevel().equals(ProtectionLevel.everyone) || !(u == null || ! u.isRestricted());
-    }
 
     protected  static String getPointObjects(final String categoryNameParam, final String pointNameParam ) throws NimbitsException {
 

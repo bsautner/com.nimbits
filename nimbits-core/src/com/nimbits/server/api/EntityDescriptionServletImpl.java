@@ -13,19 +13,26 @@
 
 package com.nimbits.server.api;
 
-import com.nimbits.client.enums.*;
+import com.nimbits.client.enums.Action;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
+
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityDescription;
 import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.server.Server;
-import com.nimbits.client.model.server.ServerModel;
-import com.nimbits.server.dao.pointDescription.EntityJPATransactionFactory;
-import com.nimbits.server.dao.server.ServerTransactionFactory;
+import com.nimbits.client.model.instance.Instance;
+import com.nimbits.client.model.instance.InstanceModel;
+
+import com.nimbits.server.com.nimbits.server.transactions.dao.entity.EntityJPATransactions;
+import com.nimbits.server.com.nimbits.server.transactions.dao.instance.InstanceTransactions;
+import com.nimbits.server.com.nimbits.server.transactions.dao.search.SearchLogTransactions;
 import com.nimbits.server.gson.GsonFactory;
+
 import org.apache.commons.lang3.StringUtils;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,6 +46,19 @@ import java.io.PrintWriter;
  * Time: 1:47 PM
  */
 public class EntityDescriptionServletImpl extends HttpServlet {
+
+    private InstanceTransactions instanceTransactions;
+    private EntityJPATransactions entityTransactions;
+
+    @Resource(name="instanceDao")
+    public void setInstanceTransactions(InstanceTransactions transactions) {
+        this.instanceTransactions = transactions;
+    }
+
+    @Resource(name="entityDao")
+    public void setEntityTransactions(EntityJPATransactions transactions) {
+        this.entityTransactions = transactions;
+    }
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -65,18 +85,18 @@ public class EntityDescriptionServletImpl extends HttpServlet {
         out.println("Getting Post Data");
         out.println(action);
         if (StringUtils.isNotEmpty(json) && StringUtils.isNotEmpty(action)) {
-            final Server server = GsonFactory.getInstance().fromJson(serverJson, ServerModel.class);
-            final Server currentServer = ServerTransactionFactory.getInstance().readServer(server.getBaseUrl());
+            final Instance server = GsonFactory.getInstance().fromJson(serverJson, InstanceModel.class);
+            final Instance currentServer = instanceTransactions.readInstance(server.getBaseUrl());
 
-            final EntityDescription entityDescription;
+            final Entity entityDescription;
 
                 final Entity entity = GsonFactory.getInstance().fromJson(json, EntityModel.class);
                 final String desc = StringUtils.isEmpty(entity.getDescription()) ? entity.getName().getValue() : entity.getDescription();
                entity.setDescription(desc);
                entityDescription =
-                        EntityModelFactory.createEntityDescription(
-                                currentServer, entity
-                        );
+                        EntityModelFactory.createEntity(
+                                 entity
+                        ); //TODO - needs the server info
 
 
 
@@ -87,20 +107,20 @@ public class EntityDescriptionServletImpl extends HttpServlet {
 
                     if (  entity.getProtectionLevel().equals(ProtectionLevel.everyone) && sharedType(entity.getEntityType())) {
 
-                        final EntityDescription retObj = EntityJPATransactionFactory.getInstance().addUpdateEntityDescription(entityDescription);
+                        final Entity retObj = entityTransactions.addUpdateEntity(entityDescription);
 
                         out.println("Reponse:");
                         String r = GsonFactory.getInstance().toJson(retObj);
                         out.println(r);
                     } else {
                         out.println("deleting : " + entityDescription.getKey());
-                        EntityJPATransactionFactory.getInstance().deleteEntityDescriptionByUUID(entityDescription.getKey());
+                        entityTransactions.deleteEntityByUUID(entityDescription.getKey());
                     }
 
 
                 }
             } else if (action.equals(Action.delete.name()) && entityDescription != null) {
-                EntityJPATransactionFactory.getInstance().deleteEntityDescriptionByUUID(entityDescription.getKey());
+                entityTransactions.deleteEntityByUUID(entityDescription.getKey());
 
 
             }

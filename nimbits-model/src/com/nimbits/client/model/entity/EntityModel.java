@@ -8,6 +8,7 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.accesskey.*;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.common.CommonIdentifier;
+import com.nimbits.client.model.instance.Instance;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 
@@ -79,6 +80,11 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
 @Override
     public void setKey(final String key) {
         this.key = key;
+    }
+
+    @Override
+    public Instance getInstance() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override

@@ -16,12 +16,16 @@ package com.nimbits.server.api;
 import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.EntityDescription;
-import com.nimbits.server.dao.pointDescription.EntityJPATransactionFactory;
-import com.nimbits.server.dao.search.*;
+
+
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.server.com.nimbits.server.transactions.dao.entity.EntityJPATransactions;
+import com.nimbits.server.com.nimbits.server.transactions.dao.instance.InstanceTransactions;
+import com.nimbits.server.com.nimbits.server.transactions.dao.search.SearchLogTransactions;
 import com.nimbits.server.gson.GsonFactory;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,6 +40,22 @@ import java.util.List;
  * Time: 5:07 PM
  */
 public class EntityDescriptionSearchServletImpl extends HttpServlet {
+
+    private SearchLogTransactions transactions;
+    private EntityJPATransactions entityTransactions;
+
+    @Resource(name="searchDao")
+    public void setInstanceTransactions(SearchLogTransactions transactions) {
+        this.transactions = transactions;
+    }
+
+    @Resource(name="entityDao")
+    public void setEntityTransactions(EntityJPATransactions transactions) {
+        this.entityTransactions = transactions;
+    }
+
+
+
     //todo make safer
     private String safeSearchText(final String search) {
         if (search.length() > 0
@@ -71,11 +91,11 @@ public class EntityDescriptionSearchServletImpl extends HttpServlet {
 
         final String safeSearch = safeSearchText(dangerousSearchText);
         try {
-            SearchLogTransactionFactory.getInstance().addUpdateSearchLog(dangerousSearchText);
+            transactions.addUpdateSearchLog(dangerousSearchText);
         } catch (NimbitsException ignored) {
 
         }
-        final List<EntityDescription> result = EntityJPATransactionFactory.getInstance().searchEntityDescription(safeSearch);
+        final List<Entity> result = entityTransactions.searchEntity(safeSearch);
         final PrintWriter out = resp.getWriter();
         String r;
         if (format.equals(ExportType.json)) {
@@ -83,7 +103,7 @@ public class EntityDescriptionSearchServletImpl extends HttpServlet {
         } else {
             StringBuilder sb = new StringBuilder();
 
-            for (EntityDescription d : result) {
+            for (Entity d : result) {
                 String img;
 
                 if (d.getEntityType().equals(EntityType.category)) {
@@ -95,10 +115,10 @@ public class EntityDescriptionSearchServletImpl extends HttpServlet {
 
                 try {
                     sb.append("<div class=\"row\">")
-                            .append("<h5>").append("<a href=\"").append(d.getServer().getBaseUrl()).append("/report.html?uuid=").append(d.getKey())
+                            .append("<h5>").append("<a href=\"").append(d.getInstance().getBaseUrl()).append("/report.html?uuid=").append(d.getKey())
                             .append("\" target=\"_blank\">").append(d.getName()).append("</a></h5>")
                             .append(img)
-                            .append("<p>").append(d.getDesc()).append("</p>")
+                            .append("<p>").append(d.getDescription()).append("</p>")
                             .append("</div>");
                 } catch (NimbitsException e) {
 

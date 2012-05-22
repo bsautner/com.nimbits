@@ -17,10 +17,13 @@ package com.nimbits.server.api;
 
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.server.*;
+import com.nimbits.client.model.instance.*;
 
-import com.nimbits.server.dao.server.*;
+import com.nimbits.server.com.nimbits.server.transactions.dao.entity.EntityJPATransactions;
+import com.nimbits.server.com.nimbits.server.transactions.dao.instance.InstanceTransactions;
 import com.nimbits.server.gson.*;
+
+import javax.annotation.Resource;
 import javax.servlet.http.*;
 import java.io.*;
 
@@ -31,6 +34,21 @@ import java.io.*;
  * Time: 4:26 PM
  */
 public class ServersServletImpl  extends HttpServlet {
+
+
+    private InstanceTransactions instanceTransactions;
+    private EntityJPATransactions entityTransactions;
+
+    @Resource(name="instanceDao")
+    public void setInstanceTransactions(InstanceTransactions transactions) {
+        this.instanceTransactions = transactions;
+    }
+
+    @Resource(name="entityDao")
+    public void setEntityTransactions(EntityJPATransactions transactions) {
+        this.entityTransactions = transactions;
+    }
+
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse  response) throws IOException {
         PrintWriter out = response.getWriter();
@@ -42,10 +60,10 @@ public class ServersServletImpl  extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse  response) throws IOException {
         String json = request.getParameter(Parameters.json.getText());
         PrintWriter out = response.getWriter();
-        Server server = GsonFactory.getInstance().fromJson(json, ServerModel.class);
-        Server retObj = null;
+        Instance server = GsonFactory.getInstance().fromJson(json, InstanceModel.class);
+        Instance retObj = null;
         try {
-            retObj = ServerTransactionFactory.getInstance().addUpdateServer(server);
+            retObj = instanceTransactions.addUpdateInstance(server);
         } catch (NimbitsException e) {
             out.println(retObj);
         }

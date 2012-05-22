@@ -4,7 +4,7 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.server.Server;
+import com.nimbits.client.model.instance.Instance;
 import com.nimbits.client.model.user.User;
 
 import java.util.ArrayList;
@@ -68,25 +68,6 @@ public class EntityModelFactory {
     }
 
 
-    public static EntityDescription createEntityDescription(final Server server, final Entity entity) throws NimbitsException {
-        return new EntityDescriptionModel(server, entity);
-    }
-
-    public static List<EntityDescription> createPointDescriptions(final Collection<EntityDescription> entityDescriptions) throws NimbitsException {
-        final List<EntityDescription> retObj = new ArrayList<EntityDescription>(entityDescriptions.size());
-        for (final EntityDescription entityDescription : entityDescriptions) {
-            retObj.add(createPointDescription(entityDescription));
-        }
-        return retObj;
-
-    }
-
-    public static EntityDescription createPointDescription(final EntityDescription entityDesc) throws NimbitsException {
-
-        return new EntityDescriptionModel(entityDesc);
-
-
-    }
 
 
 

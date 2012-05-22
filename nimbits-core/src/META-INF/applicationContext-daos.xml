@@ -4,5 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 
-    <bean id="serverDao" class="com.nimbits.server.dao.server.ServerDaoImpl"> </bean>
+    <bean id="instanceDao" class="com.nimbits.server.com.nimbits.server.transactions.dao.instance.InstanceDaoImpl"> </bean>
+    <bean id="searchDao" class="com.nimbits.server.com.nimbits.server.transactions.dao.search.SearchLogDaoImpl"> </bean>
+    <bean id="entityDao" class="com.nimbits.server.com.nimbits.server.transactions.dao.entity.EntityDaoImpl"> </bean>
 </beans>

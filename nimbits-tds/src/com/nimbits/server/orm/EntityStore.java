@@ -21,6 +21,7 @@ import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.instance.Instance;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 
@@ -288,6 +289,11 @@ public class EntityStore implements Entity {
     @Override
     public void setKey(String key) throws NimbitsException {
        throw new NimbitsException("Not Implemented");
+    }
+
+    @Override
+    public Instance getInstance() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override

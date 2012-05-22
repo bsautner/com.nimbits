@@ -20,7 +20,7 @@ import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.email.*;
 import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.server.*;
+import com.nimbits.client.model.instance.*;
 import com.nimbits.server.admin.common.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.http.*;
@@ -66,7 +66,7 @@ public class CoreImpl implements Core {
             if (!Utils.isEmptyString(serverUrl) &&  SettingsServiceFactory.getInstance().getBooleanSetting(SettingType.serverIsDiscoverable)) {
                 final String email = SettingTransactionsFactory.getInstance().getSetting(SettingType.admin);
                 final EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
-                final Server server = ServerModelFactory.createServer(serverUrl, emailAddress, SettingType.serverVersion.getDefaultValue());
+                final Server server = InstanceModelFactory.createServer(serverUrl, emailAddress, SettingType.serverVersion.getDefaultValue());
                 final String serverJson = GsonFactory.getInstance().toJson(server);
                 final String json = GsonFactory.getInstance().toJson(entity);
                 final String params = Parameters.server.getText() + '=' + serverJson

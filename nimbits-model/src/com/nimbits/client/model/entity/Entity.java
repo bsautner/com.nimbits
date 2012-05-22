@@ -4,6 +4,7 @@ import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.instance.Instance;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.User;
 
@@ -73,4 +74,6 @@ public interface Entity  extends Serializable, Comparable<Entity> {
     void setDateCreated(Date dateCreated);
 
     void setKey(String key) throws NimbitsException;
+
+    Instance getInstance();
 }

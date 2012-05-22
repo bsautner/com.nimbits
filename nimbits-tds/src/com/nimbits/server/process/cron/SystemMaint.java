@@ -13,13 +13,12 @@
 
 package com.nimbits.server.process.cron;
 
-import com.google.gwt.ajaxloader.client.ExceptionHelper;
 import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.server.*;
+import com.nimbits.client.model.instance.*;
 import com.nimbits.server.admin.common.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.http.*;
@@ -73,7 +72,7 @@ public class SystemMaint extends HttpServlet {
                     " has a value of \"1\" your public points and this server will be discoverable on nimbits.com.<br /> This is what was sent to nimbits.com:</span>");
             final String email = SettingTransactionsFactory.getInstance().getSetting(SettingType.admin);
             final EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
-            final Server server = ServerModelFactory.createServer(ServerInfoImpl.getFullServerURL(req), emailAddress, SettingType.serverVersion.getDefaultValue());
+            final Server server = InstanceModelFactory.createServer(ServerInfoImpl.getFullServerURL(req), emailAddress, SettingType.serverVersion.getDefaultValue());
             final String json = GsonFactory.getInstance().toJson(server);
             final String params = Parameters.json.getText() + "=" + json;
             out.println("<p>");

@@ -15,6 +15,7 @@ package com.nimbits.client.model.valueblobstore;
 
 import com.nimbits.client.exception.*;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -23,7 +24,8 @@ import java.util.Date;
  * Date: 3/23/12
  * Time: 10:47 AM
  */
-public interface ValueBlobStore {
+public interface ValueBlobStore extends Serializable, Comparable<ValueBlobStore> {
+
     String getEntity();
 
     Date getTimestamp();

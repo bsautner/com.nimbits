@@ -55,4 +55,6 @@ public interface ValueTransactions {
     List<ValueBlobStore> getBlobStoreByBlobKey(BlobKey key) throws NimbitsException;
 
     ValueBlobStore mergeTimespan(Timespan timespan) throws NimbitsException ;
+
+
 }

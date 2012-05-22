@@ -22,6 +22,9 @@ public interface Icons extends ClientBundle {
 
     static final Icons INSTANCE = GWT.create(Icons.class);
 
+    @Source("download.png")
+    ImageResource download();
+
     @Source("json.png")
     ImageResource json();
 

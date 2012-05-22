@@ -136,4 +136,9 @@ public class ValueBlobStoreEntity  implements ValueBlobStore {
 
 
     }
+
+    @Override
+    public int compareTo(ValueBlobStore that) {
+        return new Date(this.timestamp).compareTo(that.getTimestamp());
+    }
 }

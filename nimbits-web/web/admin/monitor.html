@@ -57,6 +57,17 @@
             );
 
           }
+        function deletePoint() {
+
+
+            $.post("http://app.nimbits.com/service/point",
+                    { email: "bsautner@gmail.com", action: "delete",point: "re", key:"69ce042a-8e9e-478d-a07b-0523ee3c63af" },
+                    function(data){
+                        alert(data);
+                    }
+            );
+
+        }
         function recordValue() {
 
 
@@ -91,6 +102,7 @@
     <input type="button" value="Test Post" onClick="createPoint();">
     <input type="button" value="Test record" onClick="recordValue();">
     <input type="button" value="Test Update" onClick="updateEntity();">
+    <input type="button" value="Test Delete" onClick="deletePoint();">
 </form>
 
 </body>

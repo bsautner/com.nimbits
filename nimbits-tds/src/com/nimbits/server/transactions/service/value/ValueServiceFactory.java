@@ -13,7 +13,7 @@
 
 package com.nimbits.server.transactions.service.value;
 
-import com.nimbits.client.service.recordedvalues.*;
+import com.nimbits.client.service.value.*;
 
 public class ValueServiceFactory {
 
@@ -23,14 +23,14 @@ public class ValueServiceFactory {
     }
 
     private static class RecordedValueServiceHolder {
-        static final RecordedValueService instance = new ValueServiceImpl();
+        static final ValueService INSTANCE = new ValueServiceImpl();
 
         private RecordedValueServiceHolder() {
         }
     }
 
-    public static RecordedValueService getInstance() {
-        return RecordedValueServiceHolder.instance;
+    public static ValueService getInstance() {
+        return RecordedValueServiceHolder.INSTANCE;
 
 
     }

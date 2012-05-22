@@ -24,7 +24,8 @@ import com.nimbits.client.model.timespan.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.model.value.impl.ValueFactory;
-import com.nimbits.client.service.recordedvalues.*;
+import com.nimbits.client.model.valueblobstore.ValueBlobStore;
+import com.nimbits.client.service.value.*;
 import com.nimbits.server.transactions.service.entity.*;
 import com.nimbits.server.process.task.*;
 import com.nimbits.server.transactions.service.user.*;
@@ -34,7 +35,7 @@ import java.util.logging.*;
 
 
 public class ValueServiceImpl extends RemoteServiceServlet implements
-        RecordedValueService, RequestCallback {
+        ValueService, RequestCallback {
 
     static final Logger log = Logger.getLogger(ValueServiceImpl.class.getName());
     private static final long serialVersionUID = 1L;
@@ -137,6 +138,11 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
         }
         return retObj;
 
+    }
+
+    @Override
+    public List<ValueBlobStore> getAllStores(Entity entity) throws NimbitsException {
+      return  ValueTransactionFactory.getInstance(entity).getAllStores();
     }
 
     @Override

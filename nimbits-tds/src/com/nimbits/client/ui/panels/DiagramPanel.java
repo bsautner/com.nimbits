@@ -31,7 +31,7 @@ import com.nimbits.client.model.file.*;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.service.entity.*;
-import com.nimbits.client.service.recordedvalues.*;
+import com.nimbits.client.service.value.*;
 import com.nimbits.client.ui.helper.*;
 import org.vectomatic.dom.svg.*;
 import org.vectomatic.dom.svg.ui.*;
@@ -54,7 +54,7 @@ public class DiagramPanel extends LayoutContainer {
     private Map<EntityName, Point> pointMap = new HashMap<EntityName, Point>(10);
     private Map<EntityName, Entity> diagrams = new HashMap<EntityName, Entity>(10);
 
-    private final RecordedValueServiceAsync recordedValueService = GWT.create(RecordedValueService.class);
+    private final ValueServiceAsync recordedValueService = GWT.create(ValueService.class);
     //private final Set<EntityName> pointsInDiagram = new HashSet<EntityName>();
     private final Set<EntityName> diagramsInDiagram = new HashSet<EntityName>(10);
     private final Map<String, String> originalFill = new HashMap<String, String>(10);

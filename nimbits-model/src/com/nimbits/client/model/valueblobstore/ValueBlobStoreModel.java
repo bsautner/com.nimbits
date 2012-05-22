@@ -15,6 +15,7 @@ package com.nimbits.client.model.valueblobstore;
 
 import com.nimbits.client.exception.*;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -23,7 +24,7 @@ import java.util.Date;
  * Date: 3/23/12
  * Time: 10:47 AM
  */
-public class ValueBlobStoreModel implements ValueBlobStore {
+public class ValueBlobStoreModel implements Serializable, Comparable<ValueBlobStore>, ValueBlobStore {
 
 
     private String entity;
@@ -101,5 +102,11 @@ public class ValueBlobStoreModel implements ValueBlobStore {
     @Override
     public void validate() throws NimbitsException {
         throw new NimbitsException("not implemtenets") ;
+    }
+
+    @Override
+    public int compareTo(ValueBlobStore that) {
+        return this.timestamp.compareTo(that.getTimestamp());
+
     }
 }

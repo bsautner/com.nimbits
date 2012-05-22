@@ -35,7 +35,7 @@ import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.service.entity.*;
-import com.nimbits.client.service.recordedvalues.*;
+import com.nimbits.client.service.value.*;
 import com.nimbits.client.ui.controls.*;
 import com.nimbits.client.ui.helper.*;
 
@@ -132,7 +132,7 @@ public class NavigationPanel extends NavigationEventProvider {
     public void saveAll() {
 
         //  final List<GxtModel> models = grid.getSelectionModel().getSelectedItems();
-        RecordedValueServiceAsync service = GWT.create(RecordedValueService.class);
+        ValueServiceAsync service = GWT.create(ValueService.class);
 
         for (final ModelData x :  tree.getTreeStore().findModels(Parameters.dirty.getText(), "yes")) {
             final TreeModel model = (TreeModel)x;
@@ -536,7 +536,7 @@ public class NavigationPanel extends NavigationEventProvider {
 
                     final Value value = ValueFactory.createValueModel(valueAndNote, timestamp);
 
-                    RecordedValueServiceAsync service = GWT.create(RecordedValueService.class);
+                    ValueServiceAsync service = GWT.create(ValueService.class);
                     service.recordValue(entity, value, new RecordValueCallback(be, model));
 
                 }
@@ -561,7 +561,7 @@ public class NavigationPanel extends NavigationEventProvider {
 
         }
         private void reloadCurrentValues(final Map<String, Point> entityMap) {
-            final RecordedValueServiceAsync service = GWT.create(RecordedValueService.class);
+            final ValueServiceAsync service = GWT.create(ValueService.class);
             service.getCurrentValues(entityMap, new ReloadAsyncCallback());
         }
 

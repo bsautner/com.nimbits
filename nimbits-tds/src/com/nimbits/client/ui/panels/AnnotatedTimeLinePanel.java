@@ -44,7 +44,7 @@ import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.timespan.*;
 import com.nimbits.client.model.value.*;
-import com.nimbits.client.service.recordedvalues.*;
+import com.nimbits.client.service.value.*;
 import com.nimbits.client.ui.helper.*;
 import com.nimbits.client.ui.icons.*;
 
@@ -352,7 +352,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
     }
 
     private void loadValuesThatExist(final TreeModel model) {
-        final RecordedValueServiceAsync dataService = GWT.create(RecordedValueService.class);
+        final ValueServiceAsync dataService = GWT.create(ValueService.class);
 
         dataService.getTopDataSeries(model.getBaseEntity(), 100, new Date(), new TopSeriesListAsyncCallback(model));
     }
@@ -364,7 +364,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
     }
 
     private void loadDataSegment(final TreeModel p, final int start, final int end) {
-        final RecordedValueServiceAsync dataService = GWT.create(RecordedValueService.class);
+        final ValueServiceAsync dataService = GWT.create(ValueService.class);
         final MessageBox box = MessageBox.wait("Progress",
                 "Loading " + p.getName().getValue() + " archived values " + start + " to " + end, "Loading...");
         box.show();
@@ -373,7 +373,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
     }
 
     private void loadMemCache(final TreeModel model) {
-        final RecordedValueServiceAsync dataService = GWT.create(RecordedValueService.class);
+        final ValueServiceAsync dataService = GWT.create(ValueService.class);
         final MessageBox box = MessageBox.wait("Progress",
                 "Loading Buffered Data", "Loading...");
         box.show();

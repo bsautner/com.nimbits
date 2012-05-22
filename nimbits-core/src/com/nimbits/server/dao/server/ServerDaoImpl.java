@@ -19,10 +19,12 @@ import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.server.ServerModelFactory;
 import com.nimbits.server.EMF;
 import com.nimbits.server.jpa.JpaServer;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 import java.util.Date;
 import java.util.List;
 
@@ -34,7 +36,11 @@ import java.util.List;
  */
 public class ServerDaoImpl implements ServerTransactions {
 
-    final String findSQL = "Select e from JpaServer e where e.baseUrl = ?1";
+  final String findSQL = "Select e from JpaServer e where e.baseUrl = ?1";
+
+   @PersistenceContext
+   private EntityManager em;
+
 
     @Override
     public Server addUpdateServer(final Server server) throws NimbitsException {
@@ -50,17 +56,17 @@ public class ServerDaoImpl implements ServerTransactions {
     }
 
     public Server addServer(Server server) throws NimbitsException {
-        EntityManager em = EMF.getInstance();
 
+      // EntityManager em = EMF.getInstance();
 
         try {
             Server jpaServer = new JpaServer(server);
 
-            EntityTransaction tx = em.getTransaction();
-            tx.begin();
+           // EntityTransaction tx = em.getTransaction();
+           // tx.begin();
             em.persist(jpaServer);
             em.flush();
-            tx.commit();
+           // tx.commit();
 
             return ServerModelFactory.createServer(jpaServer);
         } finally {
@@ -69,7 +75,7 @@ public class ServerDaoImpl implements ServerTransactions {
     }
 
     public Server updateServer(Server server) throws NimbitsException {
-        EntityManager em = EMF.getInstance();
+       // EntityManager em = EMF.getInstance();
         Server retObj;
         try {
             retObj = null;
@@ -79,16 +85,16 @@ public class ServerDaoImpl implements ServerTransactions {
 
 
             if (response != null) {
-                EntityTransaction tx = em.getTransaction();
-                tx.begin();
+                //EntityTransaction tx = em.getTransaction();
+                //tx.begin();
 
                 response.setBaseUrl(server.getBaseUrl());
                 response.setOwnerEmail(server.getOwnerEmail());
                 response.setServerVersion(server.getServerVersion());
                 response.setTs(new Date());
 
-                em.flush();
-                tx.commit();
+               // em.flush();
+                //tx.commit();
                 retObj = ServerModelFactory.createServer(response);
 
             } else {
@@ -106,12 +112,12 @@ public class ServerDaoImpl implements ServerTransactions {
 
     @Override
     public void deleteServer(Server server) {
-        EntityManager em = EMF.getInstance();
+        //EntityManager em = EMF.getInstance();
 
         try {
 
             int id = server.getIdServer();
-            EntityTransaction tx = em.getTransaction();
+           // EntityTransaction tx = em.getTransaction();
             Server s = em.find(JpaServer.class, id);
 
             List<EntityDescription> entityDescriptions
@@ -119,14 +125,14 @@ public class ServerDaoImpl implements ServerTransactions {
                     "where e.fkServer = ?1").setParameter(1, id).getResultList();
 
 
-            tx.begin();
+         //   tx.begin();
             em.remove(s);
             for (EntityDescription entityDescription : entityDescriptions) {
                 em.remove(entityDescription);
             }
 
-            em.flush();
-            tx.commit();
+           // em.flush();
+          //  tx.commit();
 
         } finally {
             em.close();
@@ -135,7 +141,7 @@ public class ServerDaoImpl implements ServerTransactions {
 
     @Override
     public Server readServer(final String hostUrl) throws NimbitsException {
-        EntityManager em = EMF.getInstance();
+       //EntityManager em = EMF.getInstance();
         Server retObj;
         try {
             retObj = null;
@@ -151,7 +157,7 @@ public class ServerDaoImpl implements ServerTransactions {
         } catch (NoResultException ex) {
             retObj = null;
         } finally {
-            em.close();
+           em.close();
         }
         return retObj;
 

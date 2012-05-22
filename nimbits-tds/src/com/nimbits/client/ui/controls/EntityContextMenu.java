@@ -72,6 +72,7 @@ public class EntityContextMenu extends Menu {
     private MenuItem keyContext;
     private MenuItem jsonContext;
     private MenuItem downloadContext;
+    private MenuItem propertyContext;
     private Map<SettingType, String> settings;
     private final User user;
 
@@ -95,7 +96,7 @@ public class EntityContextMenu extends Menu {
 
     public EntityContextMenu(final User user, final EntityTree<ModelData> tree, final Map<SettingType, String> settings) {
         super();
-        final MenuItem propertyContext = propertyContext();
+        propertyContext = propertyContext();
         this.user = user;
         entityModifiedListeners = new ArrayList<EntityModifiedListener>(1);
         this.tree = tree;
@@ -123,7 +124,7 @@ public class EntityContextMenu extends Menu {
         add(jsonContext);
         add(xmppContext);
 
-     //   add(downloadContext);
+        add(downloadContext);
         if (settings.containsKey(SettingType.wolframKey) && ! Utils.isEmptyString(settings.get(SettingType.wolframKey))) {
             add(intelligenceContext);
         }
@@ -150,7 +151,8 @@ public class EntityContextMenu extends Menu {
         jsonContext.setEnabled(! currentModel.getEntityType().equals(EntityType.user));
         keyContext.setEnabled(currentModel.getEntityType().equals(EntityType.user) || currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.accessKey));
 
-        propertyContext().setEnabled(!currentModel.isReadOnly());
+        propertyContext.setEnabled(!currentModel.isReadOnly());
+        downloadContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) ||currentModel.getEntityType().equals(EntityType.category));
 
 
     }
@@ -204,7 +206,7 @@ public class EntityContextMenu extends Menu {
     private MenuItem downloadContext() {
         final MenuItem retObj = new MenuItem();
         retObj.setText("Download Raw Data");
-        retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.filter()));
+        retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.download()));
         retObj.addSelectionListener(new DownloadEventSelectionListener());
         return retObj;
 
@@ -256,6 +258,17 @@ public class EntityContextMenu extends Menu {
         w.setHeading("Read/Write Key");
         w.add(dp);
         dp.addEntityAddedListener(new EntityAddedListener(w));
+
+        w.show();
+    }
+    public void showDownloadPanel(final Entity entity) {
+        DownloadPanel dp = new DownloadPanel(entity);
+        final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
+        w.setWidth(WIDTH);
+        w.setHeight(HEIGHT);
+        w.setHeading("Data in the raw");
+        w.add(dp);
+
 
         w.show();
     }
@@ -874,14 +887,14 @@ public class EntityContextMenu extends Menu {
 
         @Override
         public void componentSelected(final MenuEvent ce) {
-//            final ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
-//            currentModel = (TreeModel) selectedModel;
-//            final Entity entity =  currentModel.getBaseEntity();
-//
-//            if (entity.getEntityType().equals(EntityType.accessKey)  ||
-//                    entity.getEntityType().equals(EntityType.point) || entity.getEntityType().equals(EntityType.user)) {
-//                showKeyPanel(entity);
-//            }
+            final ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
+            currentModel = (TreeModel) selectedModel;
+            final Entity entity =  currentModel.getBaseEntity();
+
+            if (entity.getEntityType().equals(EntityType.accessKey)  ||
+                    entity.getEntityType().equals(EntityType.point)) {
+                   showDownloadPanel(entity);
+            }
 
         }
     }

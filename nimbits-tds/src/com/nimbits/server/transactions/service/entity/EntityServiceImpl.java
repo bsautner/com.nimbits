@@ -64,9 +64,9 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
         for (final Entity e : deleted) {
             EntityTransactionFactory.getInstance(user).removeEntityFromCache(e);
             CoreFactory.getInstance().reportDeleteToCore(entity);
-            FeedServiceFactory.getInstance().postToFeed(user,entity.getEntityType().name() +
-                    ' ' + entity.getName().toString() + " deleted ", FeedType.info);
-        }
+            //FeedServiceFactory.getInstance().postToFeed(user,entity.getEntityType().name() +
+             //       ' ' + entity.getName().toString() + " deleted ", FeedType.info);
+        }  //
 
         if  (entity.getEntityType().equals(EntityType.file)) {
             BlobServiceFactory.getInstance().deleteBlob((File) entity);

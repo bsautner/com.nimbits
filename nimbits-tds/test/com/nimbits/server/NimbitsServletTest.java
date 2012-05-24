@@ -123,11 +123,13 @@ public class NimbitsServletTest {
         group = (Category) EntityServiceFactory.getInstance().addUpdateEntity(c);
 
         pointEntity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone,  group.getKey(), user.getKey(), UUID.randomUUID().toString());
-        point = (Point) EntityServiceFactory.getInstance().addUpdateEntity(user, pointEntity);
+        Point newPoint = PointModelFactory.createPointModel(pointEntity);
+        point = (Point) EntityServiceFactory.getInstance().addUpdateEntity(user, newPoint);
         // point = pointService.addPoint(user, pointEntity);
         valueDao = new ValueDAOImpl(point);
         pointChildEntity = EntityModelFactory.createEntity(pointChildName, "", EntityType.point, ProtectionLevel.everyone, point.getKey(), user.getKey(), UUID.randomUUID().toString());
-        pointChild = (Point) EntityServiceFactory.getInstance().addUpdateEntity(user, pointChildEntity);
+        Point newChild = PointModelFactory.createPointModel(pointChildEntity);
+        pointChild = (Point) EntityServiceFactory.getInstance().addUpdateEntity(user, newChild);
         // pointChild =  pointService.addPoint(user, pointChildEntity);
         assertNotNull(pointChild);
 

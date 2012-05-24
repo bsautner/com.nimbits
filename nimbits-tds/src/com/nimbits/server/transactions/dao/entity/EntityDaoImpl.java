@@ -285,7 +285,6 @@ public class EntityDaoImpl implements  EntityTransactions {
         }
         final Entity commit = downcastEntity(entity);
 
-
         if (Utils.isEmptyString(commit.getUUID())) {
             commit.setUUID(UUID.randomUUID().toString());
         }
@@ -718,7 +717,7 @@ public class EntityDaoImpl implements  EntityTransactions {
                 commit = new UserEntity(entity);
                 break;
             case point:
-                commit = new PointEntity(entity);
+                commit = new PointEntity((Point)entity);
                 break;
             case category:
                 commit = new CategoryEntity(entity);
@@ -739,7 +738,7 @@ public class EntityDaoImpl implements  EntityTransactions {
                 commit = new IntelligenceEntity((Intelligence) entity);
                 break;
             case feed:
-                commit = new PointEntity(entity);
+                commit = new PointEntity((Point)entity);
                 break;
             case resource:
                 commit = new XmppResourceEntity((XmppResource) entity);
@@ -756,6 +755,7 @@ public class EntityDaoImpl implements  EntityTransactions {
             default:
                 commit = new CategoryEntity(entity);
         }
+
         return commit;
     }
 }

@@ -66,7 +66,7 @@ public class CoreImpl implements Core {
             if (!Utils.isEmptyString(serverUrl) &&  SettingsServiceFactory.getInstance().getBooleanSetting(SettingType.serverIsDiscoverable)) {
                 final String email = SettingTransactionsFactory.getInstance().getSetting(SettingType.admin);
                 final EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
-                final Server server = InstanceModelFactory.createServer(serverUrl, emailAddress, SettingType.serverVersion.getDefaultValue());
+                final Instance server = InstanceModelFactory.createInstance(serverUrl, emailAddress, SettingType.serverVersion.getDefaultValue());
                 final String serverJson = GsonFactory.getInstance().toJson(server);
                 final String json = GsonFactory.getInstance().toJson(entity);
                 final String params = Parameters.server.getText() + '=' + serverJson

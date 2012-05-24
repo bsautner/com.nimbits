@@ -41,7 +41,7 @@ public class ApiServlet extends HttpServlet {
 
     protected static User user;
     private static Map<Parameters, String> paramMap;
-    final static Logger log = Logger.getLogger(ApiServlet.class.getName());
+    protected final static Logger log = Logger.getLogger(ApiServlet.class.getName());
 
 
     protected static boolean okToReport(final User u, final Entity c) {

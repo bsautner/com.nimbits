@@ -99,7 +99,7 @@ public class EntityDescriptionSearchServletImpl extends HttpServlet {
         final PrintWriter out = resp.getWriter();
         String r;
         if (format.equals(ExportType.json)) {
-            r = GsonFactory.getInstance().toJson(result, GsonFactory.pointDescriptionListType);
+            r = GsonFactory.getInstance().toJson(result, GsonFactory.pointListType);
         } else {
             StringBuilder sb = new StringBuilder();
 

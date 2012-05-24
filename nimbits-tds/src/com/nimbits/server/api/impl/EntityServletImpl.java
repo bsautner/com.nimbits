@@ -87,14 +87,17 @@ public class EntityServletImpl extends ApiServlet {
                         String json = getParam(Parameters.json);
                         String json2 = getParam(Parameters.json);
                         if (!Utils.isEmptyString(json)) {
-
+                             log.info(json);
                             Entity entity = GsonFactory.getInstance().fromJson(json, EntityModel.class);
                             Class cls =  getClass(entity.getEntityType());
+                           log.info(cls.getName());
+
                             Object up = GsonFactory.getInstance().fromJson(json2,cls);
                             Entity r = null;
                             switch (action) {
                                 case create:
                                     r =  EntityServiceFactory.getInstance().addUpdateEntity(user, (Entity) up);
+                                    log.info("created " + r.getKey());
                                     break;
                                 case delete:
                                     EntityServiceFactory.getInstance().deleteEntity(user, (Entity) up) ;

@@ -8,7 +8,7 @@ import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.accesskey.AccessKeyModel;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityDescriptionModel;
+import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.UserModel;
@@ -34,7 +34,7 @@ public class GsonFactory {
     }.getType();
     public final static Type valueListType = new TypeToken<List<ValueModel>>() {
     }.getType();
-    public final static Type pointDescriptionListType = new TypeToken<List<EntityDescriptionModel>>() {
+    public final static Type entityListType = new TypeToken<List<EntityModel>>() {
     }.getType();
 
     private GsonFactory() {

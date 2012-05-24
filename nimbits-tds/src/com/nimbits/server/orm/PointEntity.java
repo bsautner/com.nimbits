@@ -100,10 +100,10 @@ public class PointEntity extends EntityStore implements Point {
     protected PointEntity() {
     }
 
-    public PointEntity(final Entity entity) throws NimbitsException {
-        super(PointEntity.class, entity);
-
-    }
+//    public PointEntity(final Entity entity) throws NimbitsException {
+//        super(PointEntity.class, entity);
+//
+//    }
 
     public PointEntity(Entity entity, Double highAlarm, int expire, String unit, Double filterValue, Integer filterType, Double lowAlarm, Boolean highAlarmOn, Boolean lowAlarmOn, Boolean idleAlarmOn, Integer idleSeconds, Boolean idleAlarmSent, List<Value> values, Value value) throws NimbitsException {
         super(entity);

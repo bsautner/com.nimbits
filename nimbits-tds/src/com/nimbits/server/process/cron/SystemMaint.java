@@ -72,7 +72,7 @@ public class SystemMaint extends HttpServlet {
                     " has a value of \"1\" your public points and this server will be discoverable on nimbits.com.<br /> This is what was sent to nimbits.com:</span>");
             final String email = SettingTransactionsFactory.getInstance().getSetting(SettingType.admin);
             final EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
-            final Server server = InstanceModelFactory.createServer(ServerInfoImpl.getFullServerURL(req), emailAddress, SettingType.serverVersion.getDefaultValue());
+            final Instance server = InstanceModelFactory.createInstance(ServerInfoImpl.getFullServerURL(req), emailAddress, SettingType.serverVersion.getDefaultValue());
             final String json = GsonFactory.getInstance().toJson(server);
             final String params = Parameters.json.getText() + "=" + json;
             out.println("<p>");

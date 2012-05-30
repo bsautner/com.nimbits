@@ -1,37 +1,40 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-
-<web-app xmlns="http://java.sun.com/xml/ns/javaee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<?xml version="1.0" encoding="utf-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
-		  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-         version="2.5">
+http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 
     <servlet>
-        <servlet-name>ServersServlet</servlet-name>
-        <servlet-class>com.nimbits.server.api.ServersServletImpl</servlet-class>
+        <servlet-name>mvc-dispatcher</servlet-name>
+        <servlet-class>
+            org.springframework.web.servlet.DispatcherServlet
+        </servlet-class>
+        <load-on-startup>1</load-on-startup>
     </servlet>
+
     <servlet-mapping>
-        <servlet-name>ServersServlet</servlet-name>
-        <url-pattern>/servers</url-pattern>
+        <servlet-name>mvc-dispatcher</servlet-name>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>DescServlet</servlet-name>
-        <servlet-class>com.nimbits.server.api.EntityDescriptionServletImpl</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>DescServlet</servlet-name>
-        <url-pattern>/entity</url-pattern>
-    </servlet-mapping>
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            classpath:/WEB-INF/mvc-dispatcher-servlet.xml,
+            classpath:/META-INF/applicationContext-daos.xml,
+            classpath:/META-INF/applicationContext.xml,
+            classpath:/META-INF/applicationContext-factories.xml
+        </param-value>
+    </context-param>
 
-    <servlet>
-        <servlet-name>SearchServlet</servlet-name>
-        <servlet-class>com.nimbits.server.api.EntityDescriptionSearchServletImpl</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>SearchServlet</servlet-name>
-        <url-pattern>/search</url-pattern>
-    </servlet-mapping>
+    <listener>
+        <listener-class>
+            org.springframework.web.context.ContextLoaderListener
+        </listener-class>
+    </listener>
 
+    <welcome-file-list>
+        <welcome-file>version.jsp</welcome-file>
+    </welcome-file-list>
 </web-app>

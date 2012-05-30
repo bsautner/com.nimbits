@@ -16,7 +16,7 @@ class Nimbits {
     float getValue(String pointName);
     long getTime();
     void createPoint(String pointName);
-
+    String recordValue(String pointName, float value);
   private:
     String _instance;
     String _ownerEmail;

@@ -7,6 +7,7 @@
 #include <Ethernet.h>
 #include <EthernetClient.h>
 #include <SPI.h>
+#include <stdlib.h>
 
 #include "Nimbits.h"
 
@@ -57,6 +58,50 @@ void Nimbits::createPoint(String pointName) {
 
 
 }
+
+
+String Nimbits::recordValue(String point, float value) {
+     EthernetClient client;
+                       if (client.connect(GOOGLE, PORT)) {
+                         client.println("POST /service/currentvalue HTTP/1.1");
+                         String content;
+                       //  writeAuthParams(content);
+                          content += "email=";
+                          content += _ownerEmail;
+                          if (_accessKey.length() > 0) {
+                                 content += ("&key=");
+                                 content += (_accessKey);
+                          }
+
+                           char buffer[10];
+
+                           dtostrf(value,5,5,buffer);
+                           String str = buffer;
+
+
+                          content += ("&value=");
+                          content += (str);
+                          content += ("&point=");
+                          content += (point);
+                          client.println("Host:nimbits1.appspot.com");
+                          client.println("Connection:close");
+                          client.println("Cache-Control:max-age=0");
+                          client.print("Content-Type: application/x-www-form-urlencoded\n");
+                          client.print("Content-Length: ");
+                          client.print(content.length());
+                          client.print("\n\n");
+                          client.print(content);
+                           while(client.connected() && !client.available()) delay(1); //waits for data
+                           client.stop();
+                           client.flush();
+                              return content;
+                       }
+
+
+
+
+}
+
 
 long Nimbits::getTime() {
     EthernetClient client;

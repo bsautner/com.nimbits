@@ -13,6 +13,7 @@
 
 package com.nimbits.server.external.core;
 
+import com.nimbits.client.enums.Action;
 import com.nimbits.client.model.entity.*;
 
 /**
@@ -23,7 +24,8 @@ import com.nimbits.client.model.entity.*;
  */
 public interface Core {
 
-    void reportDeleteToCore(final Entity entity);
-    void reportUpdateToCore(final Entity entity);
 
+    void reportToCore(final Entity entity, final Action action, final String hostURL);
+
+    void reportInstanceToCore(String instanceURL);
 }

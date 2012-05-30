@@ -709,7 +709,7 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     @SuppressWarnings({"OverlyCoupledMethod", "OverlyLongMethod", "OverlyComplexMethod"})
     private static Entity downcastEntity(final Entity entity) throws NimbitsException {
-        final Entity commit;
+        Entity commit;
         switch (entity.getEntityType()) {
 
 
@@ -717,7 +717,13 @@ public class EntityDaoImpl implements  EntityTransactions {
                 commit = new UserEntity(entity);
                 break;
             case point:
-                commit = new PointEntity((Point)entity);
+
+                try {
+                   commit = new PointEntity((Point)entity);
+                } catch (ClassCastException e) {
+                   Point c = PointModelFactory.createPointModel(entity);
+                   commit = new PointEntity(c);
+                }
                 break;
             case category:
                 commit = new CategoryEntity(entity);

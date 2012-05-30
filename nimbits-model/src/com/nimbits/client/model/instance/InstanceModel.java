@@ -1,11 +1,13 @@
 package com.nimbits.client.model.instance;
 
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.email.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModel;
 
-import java.io.*;
-import java.util.*;
+import java.io.Serializable;
+import java.util.Date;
 
 
 /**
@@ -14,7 +16,7 @@ import java.util.*;
  * Date: 12/14/11
  * Time: 12:48 PM
  */
-public class InstanceModel implements Serializable, Instance {
+public class InstanceModel extends EntityModel implements Serializable, Instance {
 
     private int id;
 
@@ -26,14 +28,15 @@ public class InstanceModel implements Serializable, Instance {
 
     private Date ts;
 
-    public InstanceModel(final String baseUrl, final EmailAddress ownerEmail, final String serverVersion) {
+    public InstanceModel(final Entity baseEntity, final String baseUrl, final EmailAddress ownerEmail, final String serverVersion) throws NimbitsException {
+        super(baseEntity);
         this.baseUrl = baseUrl;
         this.ownerEmail = ownerEmail.getValue();
         this.version = serverVersion;
     }
 
     public InstanceModel(final Instance server) throws NimbitsException {
-
+        super(server);
         this.id = server.getId();
         this.baseUrl = server.getBaseUrl();
         this.ownerEmail = server.getOwnerEmail().getValue();

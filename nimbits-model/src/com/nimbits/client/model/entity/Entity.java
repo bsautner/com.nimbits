@@ -4,13 +4,12 @@ import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.instance.Instance;
-import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 
-
 import java.io.Serializable;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Benjamin Sautner
@@ -75,5 +74,5 @@ public interface Entity  extends Serializable, Comparable<Entity> {
 
     void setKey(String key) throws NimbitsException;
 
-    Instance getInstance();
+    String getInstanceUrl();
 }

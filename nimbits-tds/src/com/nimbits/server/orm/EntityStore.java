@@ -14,19 +14,23 @@
 package com.nimbits.server.orm;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.*;
-import com.nimbits.client.common.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
+import com.google.appengine.api.datastore.KeyFactory;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.enums.AlertType;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.instance.Instance;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
 
 import javax.jdo.annotations.*;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by bsautner
@@ -292,8 +296,8 @@ public class EntityStore implements Entity {
     }
 
     @Override
-    public Instance getInstance() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public String getInstanceUrl() {
+        return null;
     }
 
     @Override

@@ -50,6 +50,9 @@ Nimbits.cpp and Nimbits.h and place them in your folder</p>
         //get the current number valuer
         float value = nimbits.getValue("HelloArduino");
 
+        float newValue = 42.0;
+        nimbits.recordValue("HelloArduino", newValue);
+
         //get the current time from the server
         time_t time = nimbits.getTime();
         </pre>
@@ -58,5 +61,67 @@ Nimbits.cpp and Nimbits.h and place them in your folder</p>
     <li>float getValue(String pointName): returns the current float value of a point</li>
     <li>long getTime(): returns the current time, in seconds unix time, on the server (UTC). This can save you
         from having to import other time related libraries, since you're already using http</li>
-
+    <li>void recordValue(String pointName, float newValue</li> record a new float value to a point name.
 </ul>
+
+<h5>Complete sample</h5>
+
+<pre class="prettyprint">
+    #include &lt;Nimbits.h&gt;
+
+    #include &lt;SPI.h&gt;
+    #include &lt;Ethernet.h&gt;
+    #include &lt;Time.h&gt;
+    #include &lt;stdlib.h&gt;
+
+    const String CLIENT_TYPE_PARAM="&client=arduino";
+    const char *G = "google.com";
+    const String APP_SPOT_DOMAIN = ".appspot.com";
+    const int WAIT_TIME = 1000;
+    String _instance= "nimbits1";
+
+    //look on the back of your ethernet shield, it may have a sticker with a mac address.
+    byte mac[] = {0x90, 0xA2, 0xDA, 0x00, 0x11, 0x15};
+
+
+    EthernetClient client;
+    Nimbits nimbits("nimbits1", "test@example.com","areadwritekey");
+
+    void setup() {
+    Serial.begin(9600);
+    Serial.println("Welcome to Nimbits!");
+    if (Ethernet.begin(mac) == 0) {
+    Serial.println("Failed to configure Ethernet using DHCP");
+    while(true);
+    }
+    // give the Ethernet shield a second to initialize:
+    delay(1000);
+
+    //get the current value of a point
+    float value = nimbits.getValue("TempF");
+    Serial.println(value);
+    float newValue = 64.0;
+    delay(1000);
+
+    String ret = nimbits.recordValue("TempF", newValue);
+    Serial.println(ret);
+    delay(1000);
+    float value1 = nimbits.getValue("TempF");
+    delay(1000);
+    Serial.println(value1);
+    //get the current time from the server
+    time_t time = nimbits.getTime();
+    Serial.println("The date on the cloud is:");
+    Serial.print(month(time));
+    Serial.print('/');
+    Serial.print(day(time));
+    Serial.print('/');
+    Serial.print(year(time));
+
+
+    }
+
+    void loop() {
+
+    }
+    </pre>

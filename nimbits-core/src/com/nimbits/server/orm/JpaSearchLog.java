@@ -1,8 +1,6 @@
 package com.nimbits.server.orm;
 
-import javax.persistence.Basic;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
@@ -14,17 +12,33 @@ import java.sql.Timestamp;
 @javax.persistence.Table(name = "SEARCH_LOG", schema = "", catalog = "nimbits_schema")
 @Entity
 public class JpaSearchLog {
+
+    @Column(name = "ID_SEARCH_LOG", nullable = false, insertable = true, updatable = true, length = 10, precision = 0)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idSearchLog;
+
+    @javax.persistence.Column(name = "SEARCH_TEXT")
+    @Basic
+    private String searchText;
+
+    @javax.persistence.Column(name = "SEARCH_COUNT")
+    @Basic
+    private int searchCount;
+
+    @javax.persistence.Column(name = "TS")
+    @Basic
+    private Timestamp ts;
 
     public JpaSearchLog() {
     }
 
     public JpaSearchLog(String searchText) {
         this.searchText = searchText;
+        this.searchCount = 1;
     }
 
-    @javax.persistence.Column(name = "ID_SEARCH_LOG")
-    @Id
+
     public int getIdSearchLog() {
         return idSearchLog;
     }
@@ -33,10 +47,8 @@ public class JpaSearchLog {
         this.idSearchLog = idSearchLog;
     }
 
-    private String searchText;
 
-    @javax.persistence.Column(name = "SEARCH_TEXT")
-    @Basic
+
     public String getSearchText() {
         return searchText;
     }
@@ -45,10 +57,8 @@ public class JpaSearchLog {
         this.searchText = searchText;
     }
 
-    private int searchCount;
 
-    @javax.persistence.Column(name = "SEARCH_COUNT")
-    @Basic
+
     public int getSearchCount() {
         return searchCount;
     }
@@ -57,10 +67,6 @@ public class JpaSearchLog {
         this.searchCount = searchCount;
     }
 
-    private Timestamp ts;
-
-    @javax.persistence.Column(name = "TS")
-    @Basic
     public Timestamp getTs() {
         return ts;
     }

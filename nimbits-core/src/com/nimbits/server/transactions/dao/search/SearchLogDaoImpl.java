@@ -11,17 +11,17 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server.com.nimbits.server.transactions.dao.search;
+package com.nimbits.server.transactions.dao.search;
 
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.server.EMF;
 import com.nimbits.server.orm.JpaSearchLog;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Benjamin Sautner
@@ -29,14 +29,18 @@ import java.util.Date;
  * Date: 1/17/12
  * Time: 2:14 PM
  */
+@Repository("searchDao")
 public class SearchLogDaoImpl implements SearchLogTransactions {
+
+    @PersistenceContext
+    EntityManager em;
 
     final String findSQL = "Select e from JpaSearchLog e where e.searchText = ?1";
 
     @Override
     public void addUpdateSearchLog(final String searchText) throws NimbitsException {
 
-        if (readSearchLog(searchText) == null) {
+        if (readSearchLog(searchText).isEmpty()) {
              addSearchLog(searchText);
         } else {
             updateSearchLog(searchText);
@@ -47,19 +51,11 @@ public class SearchLogDaoImpl implements SearchLogTransactions {
 
     @Override
     public JpaSearchLog addSearchLog(final String searchText) {
-        EntityManager em = EMF.getInstance();
 
 
         try {
             JpaSearchLog j = new JpaSearchLog(searchText);
-
-            EntityTransaction tx = em.getTransaction();
-            tx.begin();
             em.persist(j);
-            em.flush();
-            tx.commit();
-
-
 
             return j;
         } finally {
@@ -68,62 +64,71 @@ public class SearchLogDaoImpl implements SearchLogTransactions {
     }
 
     @Override
-    public JpaSearchLog updateSearchLog(final String searchText) throws NimbitsException {
-        EntityManager em = EMF.getInstance();
-        JpaSearchLog retObj;
+    public void deleteSearchLog(String searchText) {
         try {
-            retObj = null;
-            JpaSearchLog response = (JpaSearchLog) em.createQuery(findSQL)
-                    .setParameter(1, searchText)
-                    .getSingleResult();
+
+            List<JpaSearchLog> response =  em.createQuery(findSQL)
+                    .setParameter(1, searchText).getResultList();
 
 
-            if (response != null) {
-                EntityTransaction tx = em.getTransaction();
-                tx.begin();
-                response.setSearchCount(response.getSearchCount() + 1);
-                response.setTs((Timestamp) new Date());
+            if (! response.isEmpty()) {
 
-                em.flush();
-                tx.commit();
-              return (response);
+                for (JpaSearchLog r : response) {
+                    em.remove(r);
+
+                }
+
+            }
+
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public JpaSearchLog updateSearchLog(final String searchText) throws NimbitsException {
+
+
+        try {
+
+            List<JpaSearchLog> response =  em.createQuery(findSQL)
+                    .setParameter(1, searchText).getResultList();
+
+
+            if (! response.isEmpty()) {
+                JpaSearchLog l = response.get(0);
+                l.setSearchCount(l.getSearchCount() + 1);
+                l.setTs(new Timestamp(new Date().getTime()));
+
+
+              return (l);
 
             } else {
                 throw new NimbitsException("Could not update search log");
             }
 
-        } catch (NoResultException ex) {
-            retObj = null;
         } finally {
             em.close();
         }
-        return retObj;
+
     }
 
 
 
 
     @Override
-    public JpaSearchLog readSearchLog(final String searchText) {
-        EntityManager em = EMF.getInstance();
-        JpaSearchLog retObj;
+    public List<JpaSearchLog> readSearchLog(final String searchText) {
+
+
         try {
-            retObj = null;
-            JpaSearchLog response = (JpaSearchLog) em.createQuery(findSQL)
-                    .setParameter(1, searchText)
-                    .getSingleResult();
 
-            if (response != null) {
-               return response;
+            return  em.createQuery(findSQL).setParameter(1, searchText).getResultList();
 
-            }
-
-        } catch (NoResultException ex) {
-            retObj = null;
-        } finally {
+        }  finally {
             em.close();
         }
-        return retObj;
+
 
 
     }

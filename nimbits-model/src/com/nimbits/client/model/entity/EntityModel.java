@@ -5,15 +5,15 @@ import com.nimbits.client.enums.AuthLevel;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.accesskey.*;
+import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.common.CommonIdentifier;
-import com.nimbits.client.model.instance.Instance;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Benjamin Sautner
@@ -83,8 +83,8 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
     }
 
     @Override
-    public Instance getInstance() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public String getInstanceUrl() {
+        return null;
     }
 
     @Override

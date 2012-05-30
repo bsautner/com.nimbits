@@ -1,6 +1,6 @@
-package com.nimbits.server.com.nimbits.server.transactions.dao.entity;
+package com.nimbits.server.transactions.dao.entity;
 
-import com.nimbits.client.exception.*;
+import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 
 import java.util.List;
@@ -12,9 +12,9 @@ import java.util.List;
  * Time: 1:04 PM
  */
 public interface EntityJPATransactions {
-    Entity addEntity(final Entity entityDescription) throws NimbitsException;
+    Entity addEntity(final Entity entity, final String instanceUrl) throws NimbitsException;
 
-    Entity addUpdateEntity(final Entity entityDescription) throws NimbitsException;
+    Entity addUpdateEntity(final Entity entity,final String instanceUrl) throws NimbitsException;
 
     List<Entity> searchEntity(final String searchText);
 

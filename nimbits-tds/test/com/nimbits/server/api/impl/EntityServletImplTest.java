@@ -77,6 +77,75 @@ public class EntityServletImplTest extends NimbitsServletTest {
         assertEquals(190, px.getExpire());
 
     }
+
+
+    @Test
+    public void testUpdatePoint() throws IOException, ServletException, NimbitsException {
+        req.removeAllParameters();
+
+
+        //  req.addParameter("id", point.getKey());
+        req.addParameter("json", "{\"highAlarm\":0.0,\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"bsautner@gmail.com\",\"owner\":\"bsautner@gmail.com\"}");
+        req.addParameter("action", "create");
+        impl.doPost(req, resp);
+        String g1= resp.getContentAsString();
+        assertNotNull(g1);
+        Point px = GsonFactory.getInstance().fromJson(g1, PointModel.class);
+        assertEquals(190, px.getExpire());
+        req.removeAllParameters();
+        req.addParameter("json", "{\"key\":\"" + px.getKey() + "\",\"highAlarm\":0.0,\"expire\":55,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"bsautner@gmail.com\",\"owner\":\"bsautner@gmail.com\"}");
+        req.addParameter("action", "update");
+        impl.doPost(req, resp1);
+
+        String g2= resp1.getContentAsString();
+        assertNotNull(g2);
+        Point p2 = GsonFactory.getInstance().fromJson(g2, PointModel.class);
+        assertEquals(55, p2.getExpire());
+
+    }
+
+    @Test  //nimbits does not like incomplete json
+    public void testUpdatePointWithFragment() throws IOException, ServletException, NimbitsException {
+        req.removeAllParameters();
+
+
+        //  req.addParameter("id", point.getKey());
+        req.addParameter("json", "{\"highAlarm\":0.0,\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":600,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"bsautner@gmail.com\",\"owner\":\"bsautner@gmail.com\"}");
+        req.addParameter("action", "create");
+        impl.doPost(req, resp);
+        String g1= resp.getContentAsString();
+        assertNotNull(g1);
+        Point px = GsonFactory.getInstance().fromJson(g1, PointModel.class);
+        assertEquals(190, px.getExpire());
+        req.removeAllParameters();
+        req.addParameter("json", "{\"key\":\"" + px.getKey() + "\",\"entityType\":1,\"expire\":55,\"name\":\"jquery test\",\"parent\":\"bsautner@gmail.com\",\"owner\":\"bsautner@gmail.com\"}");
+        req.addParameter("action", "update");
+        impl.doPost(req, resp1);
+
+        String g2= resp1.getContentAsString();
+        assertNotNull(g2);
+        Point p2 = GsonFactory.getInstance().fromJson(g2, PointModel.class);
+        assertEquals(55, p2.getExpire());
+        assertEquals(0, p2.getIdleSeconds());
+    }
+
+
+    @Test
+    public void testPostCreateSubscription() throws IOException, ServletException, NimbitsException {
+        req.removeAllParameters();
+
+
+        //  req.addParameter("id", point.getKey());
+        req.addParameter("json", "{\"subscribedEntity\":\"bsautner@gmail.com/TempF\",\"notifyMethod\":0,\"subscriptionType\":4,\"maxRepeat\":15.0,\"lastSent\":\"2012-05-20T23:59:37 +0000\",\"notifyFormatJson\":false,\"enabled\":true,\"name\":\"TempF idle alert\",\"key\":\"b9ba6396-b3c8-4455-8744-334f3a2633b0\",\"description\":\"\",\"entityType\":5,\"protectionLevel\":0,\"alertType\":1,\"parent\":\"bsautner@gmail.com/TempF\",\"owner\":\"bsautner@gmail.com\"}");
+        req.addParameter("action", "create");
+        impl.doPost(req, resp);
+        String g1= resp.getContentAsString();
+        assertNotNull(g1);
+        Subscription px = GsonFactory.getInstance().fromJson(g1, SubscriptionModel.class);
+        assertEquals(px.getSubscriptionType(), SubscriptionType.idle);
+
+    }
+
     @Test
     public void testSubscribe() throws IOException, ServletException, NimbitsException {
 

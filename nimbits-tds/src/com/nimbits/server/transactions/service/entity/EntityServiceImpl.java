@@ -13,19 +13,23 @@
 
 package com.nimbits.server.transactions.service.entity;
 
-import com.google.gwt.user.server.rpc.*;
-import com.nimbits.client.common.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.file.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.service.entity.*;
-import com.nimbits.server.external.core.*;
-import com.nimbits.server.transactions.service.feed.*;
-import com.nimbits.server.io.blob.*;
-import com.nimbits.server.transactions.service.user.*;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.enums.Action;
+import com.nimbits.client.enums.AuthLevel;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.file.File;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModelFactory;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.service.entity.EntityService;
+import com.nimbits.server.admin.common.ServerInfoImpl;
+import com.nimbits.server.external.core.CoreFactory;
+import com.nimbits.server.io.blob.BlobServiceFactory;
+import com.nimbits.server.transactions.service.user.UserServiceFactory;
 
 import java.util.*;
 
@@ -63,7 +67,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
         }
         for (final Entity e : deleted) {
             EntityTransactionFactory.getInstance(user).removeEntityFromCache(e);
-            CoreFactory.getInstance().reportDeleteToCore(entity);
+            CoreFactory.getInstance().reportToCore(e, Action.delete, ServerInfoImpl.getFullServerURL(getThreadLocalRequest()));
             //FeedServiceFactory.getInstance().postToFeed(user,entity.getEntityType().name() +
              //       ' ' + entity.getName().toString() + " deleted ", FeedType.info);
         }  //
@@ -239,7 +243,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
 
     @Override
     public Entity addUpdateEntity(final User user, final Entity entity) throws NimbitsException {
-        CoreFactory.getInstance().reportUpdateToCore(entity);
+        CoreFactory.getInstance().reportToCore(entity, Action.update, ServerInfoImpl.getFullServerURL(getThreadLocalRequest()));
 
         return EntityTransactionFactory.getInstance(user).addUpdateEntity(entity);
     }

@@ -11,18 +11,16 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server.com.nimbits.server.transactions.dao.entity;
+package com.nimbits.server.transactions.dao.entity;
 
-import com.nimbits.client.exception.*;
+import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
-
 import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.server.EMF;
 import com.nimbits.server.orm.JpaEntity;
-
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,17 +30,25 @@ import java.util.List;
  * Date: 12/14/11
  * Time: 12:59 PM
  */
+@Repository("entityDao")
 public class EntityDaoImpl implements EntityJPATransactions {
+
+    @PersistenceContext
+    EntityManager em;
+
+
+
     final String uuidSQL = "select e from JpaEntity e where e.uuid= ?1";
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Entity> searchEntity(final String searchText) {
-        String sql = "select * from ENTITY_DESCRIPTIONS " +
+        String sql = "select * from ENTITY " +
                 "    where " +
                 "        MATCH (entity_name, entity_desc) " +
                 "  AGAINST (?1 WITH QUERY EXPANSION)";
 
-        EntityManager em = EMF.getInstance();
+
 
         try {
 
@@ -64,20 +70,15 @@ public class EntityDaoImpl implements EntityJPATransactions {
     }
 
     @Override
-    public Entity addEntity(final Entity p) throws NimbitsException {
-        EntityManager em = EMF.getInstance();
+    public Entity addEntity(final Entity p, final String instanceUrl) throws NimbitsException {
+
 
         try {
-            JpaEntity j = new JpaEntity(p);
+            JpaEntity j = new JpaEntity(p, instanceUrl);
 
-            EntityTransaction tx = em.getTransaction();
-
-            tx.begin();
             em.persist(j);
-            em.flush();
-            tx.commit();
 
-            return EntityModelFactory.createEntity((Entity) j);
+            return EntityModelFactory.createEntity(j);
         } finally {
             em.close();
         }
@@ -86,9 +87,9 @@ public class EntityDaoImpl implements EntityJPATransactions {
     }
 
     @Override
-    public Entity addUpdateEntity(Entity entityDescription) throws NimbitsException {
+    public Entity addUpdateEntity(final Entity entityDescription, final String instanceUrl) throws NimbitsException {
 
-        final EntityManager em = EMF.getInstance();
+
         final Entity retObj;
 
         final List result = em.createQuery(uuidSQL)
@@ -97,18 +98,17 @@ public class EntityDaoImpl implements EntityJPATransactions {
 
         if (result != null && result.size() > 0) {
             final JpaEntity r = (JpaEntity) result.get(0);
-            final EntityTransaction tx = em.getTransaction();
-            tx.begin();
-            r.setEntityDesc(entityDescription.getDescription());
-            r.setEntityName(entityDescription.getName().getValue());
-            r.setEntityType(entityDescription.getEntityType().getCode());
-            em.flush();
-            tx.commit();
 
-            retObj = EntityModelFactory.createEntity((Entity) r);
+            r.setDescription(entityDescription.getDescription());
+
+            r.setName(entityDescription.getName());
+            r.setEntityType(entityDescription.getEntityType() );
+
+
+            retObj = EntityModelFactory.createEntity( r);
 
         } else {
-            retObj = addEntity(entityDescription);
+            retObj = addEntity(entityDescription,  instanceUrl);
         }
 
         return retObj;
@@ -117,7 +117,7 @@ public class EntityDaoImpl implements EntityJPATransactions {
     @Override
     public Entity getEntityByUUID(final String uuid) throws NimbitsException {
 
-        final EntityManager em = EMF.getInstance();
+
         final Entity retObj;
         try {
             final List result = em.createQuery(uuidSQL)
@@ -134,19 +134,17 @@ public class EntityDaoImpl implements EntityJPATransactions {
     }
 
     @Override
-    public void deleteEntityByUUID(String uuid) {
-        EntityManager em = EMF.getInstance();
+    public void deleteEntityByUUID(final String uuid) {
+
         try {
             List result = em.createQuery(uuidSQL)
                     .setParameter(1, uuid)
                     .getResultList();
 
             if (result.size() > 0) {
-                final EntityTransaction tx = em.getTransaction();
-                tx.begin();
+
                 em.remove(result.get(0));
-                em.flush();
-                tx.commit();
+
 
             }
         } finally {

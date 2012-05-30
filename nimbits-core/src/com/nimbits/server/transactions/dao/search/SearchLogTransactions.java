@@ -11,29 +11,27 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server;
+package com.nimbits.server.transactions.dao.search;
 
-import javax.persistence.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.server.orm.JpaSearchLog;
+
+import java.util.List;
 
 /**
  * Created by Benjamin Sautner
  * User: BSautner
- * Date: 12/14/11
- * Time: 1:00 PM
+ * Date: 1/17/12
+ * Time: 2:22 PM
  */
-public class EMF {
+public interface SearchLogTransactions {
+    void addUpdateSearchLog(String searchText) throws NimbitsException;
 
-    private static EntityManager entityManager;
+    JpaSearchLog addSearchLog(String searchText);
 
-    public static EntityManager getInstance() {
-     //if (entityManager == null) {
-            EntityManagerFactory emf = Persistence.createEntityManagerFactory("persistenceUnit");
-            entityManager= emf.createEntityManager();
-      //  }
-        return  entityManager;
+    void deleteSearchLog(String searchText);
 
+    JpaSearchLog updateSearchLog(String searchText) throws NimbitsException;
 
-    }
-
-
+    List<JpaSearchLog> readSearchLog(String searchText);
 }

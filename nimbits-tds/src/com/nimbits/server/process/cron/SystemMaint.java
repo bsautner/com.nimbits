@@ -13,20 +13,19 @@
 
 package com.nimbits.server.process.cron;
 
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.instance.*;
-import com.nimbits.server.admin.common.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.http.*;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.server.admin.common.ServerInfoImpl;
+import com.nimbits.server.external.core.CoreFactory;
 import com.nimbits.server.settings.SettingTransactionsFactory;
 import com.nimbits.server.settings.SettingsServiceFactory;
 
-import javax.servlet.http.*;
-import java.io.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class SystemMaint extends HttpServlet {
     /**
@@ -52,7 +51,8 @@ public class SystemMaint extends HttpServlet {
             for (SettingType setting : SettingType.values()) {
                 processSetting(setting);
             }
-            reportToCore(req);
+            CoreFactory.getInstance().reportInstanceToCore(ServerInfoImpl.getFullServerURL(req));
+
         } catch (NimbitsException e) {
             out.println(e.getMessage());
         }
@@ -66,25 +66,6 @@ public class SystemMaint extends HttpServlet {
 
 
 
-    private void reportToCore(final HttpServletRequest req) throws NimbitsException {
-        if (SettingTransactionsFactory.getInstance().getSetting(SettingType.serverIsDiscoverable).equals("1")) {
-            out.println("<span class=\"label success\">Because Setting: " + SettingType.serverIsDiscoverable.getDefaultValue() + "" +
-                    " has a value of \"1\" your public points and this server will be discoverable on nimbits.com.<br /> This is what was sent to nimbits.com:</span>");
-            final String email = SettingTransactionsFactory.getInstance().getSetting(SettingType.admin);
-            final EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
-            final Instance server = InstanceModelFactory.createInstance(ServerInfoImpl.getFullServerURL(req), emailAddress, SettingType.serverVersion.getDefaultValue());
-            final String json = GsonFactory.getInstance().toJson(server);
-            final String params = Parameters.json.getText() + "=" + json;
-            out.println("<p>");
-            out.println(HttpCommonFactory.getInstance().doPost(Path.PATH_NIMBITS_CORE_SERVERS_URL, params));
-            out.println("</p>");
-        } else {
-            out.println("<span class=\"label success\">Because Setting: " + SettingType.serverIsDiscoverable.getDefaultValue() + "" +
-                    " does not have value of \"1\" your public points and this server will NOT be discoverable on nimbits.com. " +
-                    " Please consider changing this value to 1 so others can find your points and share data with you.</span>");
-
-        }
-    }
 
     private void processSetting(final SettingType setting) {
 

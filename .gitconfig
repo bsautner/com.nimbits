@@ -1,0 +1,5 @@
+[user]
+	name = Benjamin Sautner
+	email = bsautner@gmail.com
+[core]
+	excludesfile = /home/benjamin/.gitignore_global

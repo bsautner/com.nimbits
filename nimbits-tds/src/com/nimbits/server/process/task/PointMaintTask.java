@@ -13,7 +13,6 @@
 
 package com.nimbits.server.process.task;
 
-import com.google.gson.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
@@ -52,10 +51,10 @@ public class PointMaintTask extends HttpServlet {
 
 
     protected static void processPost(final ServletRequest req) throws NimbitsException {
-        final Gson gson = GsonFactory.getInstance();
+
 
         final String j = req.getParameter(Parameters.json.getText());
-        final Point e = gson.fromJson(j, PointModel.class);
+        final Point e = GsonFactory.getInstance().fromJson(j, PointModel.class);
         final User u = UserServiceFactory.getInstance().getUserByKey(e.getOwner(), AuthLevel.admin);
         if (e.getExpire() > 0) {
             TaskFactory.getInstance().startDeleteDataTask(

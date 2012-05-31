@@ -17,7 +17,6 @@ import com.google.appengine.api.blobstore.*;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
-import com.google.gson.Gson;
 import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.exception.NimbitsException;
@@ -42,12 +41,10 @@ import java.util.logging.Logger;
  * Time: 2:12 PM
  */
 public class TaskImpl implements Task {
-    private final Gson gson = GsonFactory.getInstance();
-    private static final String TASK_POINT_MAINT = "pointmaint";
+
     private static final String TASK_MOVE = "move";
     private static final String IN_CONTENT = "inContent";
 
-    private static final String QUEUE_BLOB = "orphans";
     private static final String QUEUE_INCOMING_MAIL = "incommingmail";
     private static final String QUEUE_RECORD_VALUE = "recordvaluequeue";
     private static final String QUEUE_PROCESS_BATCH = "processbatchqueue";
@@ -122,7 +119,7 @@ public class TaskImpl implements Task {
 
             overrideQueue = false;
 
-            final String userJson = gson.toJson(user);
+            final String userJson = GsonFactory.getInstance().toJson(user);
 
             log.info(userJson);
 
@@ -156,9 +153,9 @@ public class TaskImpl implements Task {
             }
             final Queue queue =  QueueFactory.getQueue(overrideQueue ? DEFAULT : overrideQueue ? DEFAULT : QUEUE_RECORD_VALUE);
             overrideQueue = false;
-            final String userJson = gson.toJson(u);
-            final String pointJson = gson.toJson(point);
-            final String valueJson = gson.toJson(value);
+            final String userJson = GsonFactory.getInstance().toJson(u);
+            final String pointJson = GsonFactory.getInstance().toJson(point);
+            final String valueJson = GsonFactory.getInstance().toJson(value);
 
             queue.add(TaskOptions.Builder
                     .withUrl(PATH_TASK_RECORD_VALUE).taskName(UUID.randomUUID().toString())
@@ -190,7 +187,7 @@ public class TaskImpl implements Task {
     @Override
     public void startPointMaintTask(final Entity e) {
 
-            final String json = gson.toJson(e);
+            final String json = GsonFactory.getInstance().toJson(e);
 
             final Queue queue =  QueueFactory.getQueue( DEFAULT);
 
@@ -239,7 +236,7 @@ public class TaskImpl implements Task {
 
     @Override
     public void startMoveCachedValuesToStoreTask(final Entity point) {
-        final String json = gson.toJson(point);
+        final String json = GsonFactory.getInstance().toJson(point);
 
         final Queue queue =  QueueFactory.getQueue(overrideQueue ? DEFAULT : TASK_MOVE);
 

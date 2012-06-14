@@ -99,13 +99,10 @@ public class ServiceController {
 
     @RequestMapping(value="service/entity", method= RequestMethod.POST)
     public void processRequest(
-            @RequestParam("json") String json,
-            @RequestParam("actionParam") String actionParam,
-            @RequestParam("url") String instanceURL,
-            @RequestParam("format") String format
-
-
-    ) throws IOException, NimbitsException {
+            @RequestParam("entity") String json,
+            @RequestParam("action") String actionParam,
+            @RequestParam("instance") String instanceURL
+     ) throws IOException, NimbitsException {
 
 
         if (StringUtils.isNotEmpty(json) && StringUtils.isNotEmpty(actionParam) && StringUtils.isNotEmpty(instanceURL)) {

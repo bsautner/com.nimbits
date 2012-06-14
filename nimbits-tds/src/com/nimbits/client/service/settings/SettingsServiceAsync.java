@@ -30,4 +30,6 @@ public interface SettingsServiceAsync {
     void updateSetting(final SettingType setting, final String newValue, AsyncCallback<Void> async) throws NimbitsException;
 
     void addSetting(final SettingType setting, final String defaultValue, AsyncCallback<Void> async) throws NimbitsException;
+
+    void addSetting(final SettingType setting, final boolean defaultValue, AsyncCallback<Void> async);
 }

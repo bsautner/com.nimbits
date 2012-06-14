@@ -67,7 +67,10 @@ public class Const {
     public static final int CONST_DEFAULT_LIST_SIZE = 1024;
     public static final String CONST_ANON_EMAIL = "uncle_nobody@nimbits.com";
     public static String CONST_ARDUINO_DATA_SEPARATOR = "|";
-
+    public static final int HTTP_STATUS_INTERNAL_SERVER_ERROR = 500;
+    public static final int HTTP_STATUS_OK = 200;
+    public static final int HTTP_STATUS_BAD_REQUEST = 400;
+    public static final String HTTP_HEADER_RESPONSE = "response";
 
 // --------------------------- CONSTRUCTORS ---------------------------
 

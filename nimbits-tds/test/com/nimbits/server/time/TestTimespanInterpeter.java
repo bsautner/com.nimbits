@@ -40,18 +40,10 @@ public class TestTimespanInterpeter  {
     public void testAbsolute() throws NimbitsException {
         String s1 = "20100410000000";
         String s2 = "20110410000000";
-        Timespan ts = null;
-
-            ts = TimespanServiceFactory.getInstance().createTimespan(s1, s2);
-
-
-        if (ts != null) {
-            Assert.assertEquals(ts.getStart().getTime(), 1270872000000L);
-
-        Assert.assertEquals(ts.getEnd().getTime(), 1302408000000L);
-             }
+        Timespan ts = TimespanServiceFactory.getInstance().createTimespan(s1, s2);
         Assert.assertNotNull(ts);
-
+        Assert.assertEquals(ts.getStart().getTime(), 1270872000000L);
+        Assert.assertEquals(ts.getEnd().getTime(), 1302408000000L);
     }
 
     @Test
@@ -60,7 +52,7 @@ public class TestTimespanInterpeter  {
         String s2 = "1302408000";
         Timespan ts = null;
 
-            ts = TimespanServiceFactory.getInstance().createTimespan(s1, s2);
+        ts = TimespanServiceFactory.getInstance().createTimespan(s1, s2);
 
 
         Assert.assertEquals(ts.getStart().getTime(), 1270872000000L);

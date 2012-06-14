@@ -93,7 +93,7 @@ public class EntityDaoImplTest {
 
         Entity x =  entityTransactions.addUpdateEntity(e, "http://localhost");
 
-        assertEquals("updated", e.getDescription());
+        assertEquals("updated", x.getDescription());
 
 
 
@@ -116,30 +116,7 @@ public class EntityDaoImplTest {
 
     }
 
-//    @Test
-//    @Rollback(false)
-//    public void testNoDuplicateUUID() throws Exception {
-//        String uuid = UUID.randomUUID().toString();
-//        EntityName name = CommonFactoryLocator.getInstance().createName("name", EntityType.point);
-//        Entity e = EntityModelFactory.createEntity(name, "description",
-//                EntityType.point, ProtectionLevel.onlyMe, "b@b.com", "b@b.com", uuid);
-//        assertNotNull(e);
-//        Entity r = entityTransactions.addEntity(e);
-//        assertNotNull(r);
-//
-//        EntityName name2 = CommonFactoryLocator.getInstance().createName("name", EntityType.point);
-//        Entity e2 = EntityModelFactory.createEntity(name2, "description",
-//                EntityType.point, ProtectionLevel.onlyMe, "b@b.com", "b@b.com", uuid);
-//        assertNotNull(e2);
-//        Entity r2 = null;
-//        try {
-//            r2 = entityTransactions.addEntity(e2);
-//        } catch (NimbitsException e1) {
-//            e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//        }
-//        assertNull(r2);
-//        entityTransactions.deleteEntityByUUID(uuid);
-//    }
+
 
 
 

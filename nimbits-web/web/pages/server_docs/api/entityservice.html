@@ -1,3 +1,4 @@
+<script type="text/javascript" src="/include/rawfile.js">  </script>
 <h4 style="margin-top: 10px; margin-bottom: 10px">Entity Service</h4>
 
 
@@ -7,13 +8,23 @@
     For simplicity, authentication parameters are now shown here.
 
 </p>
+
+<p>
+    This document covers how to CRUD (create, read, update and delete) anything and everything inside a nimbits server
+    using http get and post commanded with JSON data and an action. A good way to get started, is to log into nimbits and
+    create a data point, folder, calculation or any other "entity" and right click on it. Select "View JSON" and Nimbits will
+    show you the JSON structure of your entity. You can submit that JSON object with changes to the entity service with an action=update
+    parameter to change its settings, or use it as a template for a new entity submitted with the action=create parameter.
+</p>
+
+<img style="border: 1px; border-top-style: solid; margin-right: 5px; margin-top: 5px; float: right" src="/images/screens/getjson.png">
+
 <h5>Nimbits Entities</h5>
 <p>
     When you log into the nimbits portal, you will see your various objects organised in
     a tree grid. Objects in nimbits are called Entities and consist of things like Data Points,
     Folders, Access Keys, Subscriptions and so on. All of these entities can be organised any
     way you like in your tree structure.
-
 </p>
 
 <h5>Trigger Entities</h5>
@@ -22,9 +33,7 @@
    receives a new value, that is not filtered out from filter settings, triggers for that point are
    processed. You can have many triggers for a point, and they can cascade other triggers up to 10 times.
 </p>
-
 <p>Generally, triggers have targets that are other data points the results of that trigger are stored in.</p>
-
 <p>Trigger Types:</p>
    <UL>
        <li>Calculations: A mathematical formula is triggered that can use the new incoming data as values in the equation.  </li>
@@ -32,12 +41,10 @@
        <li>Subscriptions: Alerts are processed sending email, xmpp messages, tweets and so on based on subscription settings and the point's alert settings.</li>
        <li>Intelligence: Queries to the Wolfram Alpha computational knowledge engine are generated, with the result being stored in a target point.</li>
    </UL>
-
 <h5>The Entity Service</h5>
 <p>
 You can create, update, and delete any kind of entity in Nimbits by posting JSON data to the entity service with an action. You can get the JSON data of any entity
 by using a GET request and specifying the identity id of the entity.
-
 </p>
 
 <h5>Identity ID</h5>
@@ -49,7 +56,6 @@ is the owners email address / the point name i.e test@example.com/pointname  thi
 Further, your user account represents a top level user entity with an ID of your email address.
 
 </p>
-<img style="border: 1px; border-top-style: solid; margin-right: 5px; margin-top: 5px; float: right" src="/images/screens/getjson.png">
 
 <p> Here is the JSON of a typical Nimbits Data Point. A good way to get a sample of JSON for an entity you want to create is to create one any sort of object
 in the nimbits portal and right click on it. Select "Get JSON" to open the entity service which will give you the JSON data of the object and its identity.

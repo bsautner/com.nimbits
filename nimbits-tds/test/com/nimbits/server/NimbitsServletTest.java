@@ -15,30 +15,42 @@ package com.nimbits.server;
 
 import com.google.appengine.tools.development.testing.*;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.accesskey.*;
-import com.nimbits.client.model.category.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.service.datapoints.*;
-import com.nimbits.client.service.settings.*;
-import com.nimbits.server.api.impl.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.accesskey.AccessKey;
+import com.nimbits.client.model.accesskey.AccessKeyFactory;
+import com.nimbits.client.model.category.Category;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModelFactory;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.service.datapoints.PointService;
+import com.nimbits.client.service.settings.SettingsService;
+import com.nimbits.server.api.impl.ValueServletImpl;
+import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.settings.SettingTransactions;
 import com.nimbits.server.settings.SettingTransactionsFactory;
 import com.nimbits.server.settings.SettingsServiceFactory;
-import com.nimbits.server.transactions.dao.value.*;
-import com.nimbits.server.transactions.service.entity.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.transactions.service.point.*;
-import com.nimbits.server.transactions.service.user.*;
-import org.junit.*;
-import static org.junit.Assert.*;
-import org.springframework.mock.web.*;
+import com.nimbits.server.transactions.dao.value.ValueDAOImpl;
+import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import com.nimbits.server.transactions.service.point.PointServiceFactory;
+import com.nimbits.server.transactions.service.user.UserServiceFactory;
+import com.nimbits.server.transactions.service.user.UserTransactionFactory;
+import com.nimbits.server.transactions.service.user.UserTransactions;
+import org.junit.After;
+import org.junit.Before;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by Benjamin Sautner
@@ -88,6 +100,7 @@ public class NimbitsServletTest {
 
         helper.setUp();
         SettingsServiceFactory.getInstance().addSetting(SettingType.admin, email);
+        SettingsServiceFactory.getInstance().addSetting(SettingType.serverIsDiscoverable,true);
         pointService = PointServiceFactory.getInstance();
         settingsService = SettingsServiceFactory.getInstance();
         emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);

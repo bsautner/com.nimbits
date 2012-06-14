@@ -47,6 +47,11 @@ public class SettingServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
+    public void addSetting(SettingType setting, boolean defaultValue) throws NimbitsException {
+        addSetting(setting, defaultValue ? Const.TRUE : Const.FALSE);
+    }
+
+    @Override
     public String getSetting(final SettingType paramName) throws NimbitsException {
         return SettingTransactionsFactory.getInstance().getSetting(paramName);
     }

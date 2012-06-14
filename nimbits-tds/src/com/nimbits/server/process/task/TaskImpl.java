@@ -50,7 +50,7 @@ public class TaskImpl implements Task {
     private static final String QUEUE_PROCESS_BATCH = "processbatchqueue";
     private static final String QUEUE_DELETE_DATA = "deletedata";
     private static final String DEFAULT = "default";
-
+    private static final String PATH_CORE_TASK = "/task/core";
     private static final String PATH_DELETE_ORPHANS_TASK = "/task/orphans";
     private static final String PATH_POINT_MAINT_TASK = "/task/point";
     private static final String PATH_UPGRADE_TASK = "/task/upgrade";
@@ -98,7 +98,7 @@ public class TaskImpl implements Task {
     }
 
     @Override
-    public void startDeleteOrphanedBlobTask(BlobKey key) {
+    public void startDeleteOrphanedBlobTask(final BlobKey key) {
 
         final Queue queue =  QueueFactory.getQueue( DEFAULT  );
 
@@ -107,7 +107,17 @@ public class TaskImpl implements Task {
         );
     }
 
+    @Override
+    public void startCoreTask(final Entity entity, final Action action, final String instanceURL) {
+        final Queue queue =  QueueFactory.getQueue( DEFAULT  );
+        final String json = GsonFactory.getInstance().toJson(entity);
 
+        queue.add(TaskOptions.Builder.withUrl(PATH_CORE_TASK)
+                .param(Parameters.entity.getText(), json)
+                .param(Parameters.action.getText(), action.getCode())
+                .param(Parameters.path.getText(), instanceURL)
+        );
+    }
 
 
     @Override

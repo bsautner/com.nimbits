@@ -32,4 +32,6 @@ public interface SettingsService extends RemoteService {
     void updateSetting(final SettingType setting, final String newValue) throws NimbitsException;
 
     void addSetting(final SettingType setting,final  String defaultValue) throws NimbitsException;
+
+    void addSetting(final SettingType setting,final  boolean defaultValue) throws NimbitsException;
 }

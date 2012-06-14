@@ -269,6 +269,16 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>CoreTask</servlet-name>
+        <servlet-class>com.nimbits.server.process.task.CoreTask</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CoreTask</servlet-name>
+        <url-pattern>/task/core</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
         <servlet-name>DeleteOrphansCron</servlet-name>
         <servlet-class>com.nimbits.server.process.cron.DeleteOrphanBlobCron</servlet-class>
     </servlet>

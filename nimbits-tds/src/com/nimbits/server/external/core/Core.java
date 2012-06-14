@@ -27,5 +27,5 @@ public interface Core {
 
     void reportToCore(final Entity entity, final Action action, final String hostURL);
 
-    void reportInstanceToCore(String instanceURL);
+  //  void reportInstanceToCore(String instanceURL);
 }

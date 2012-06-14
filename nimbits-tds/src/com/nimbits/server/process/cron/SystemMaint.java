@@ -16,8 +16,6 @@ package com.nimbits.server.process.cron;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.server.admin.common.ServerInfoImpl;
-import com.nimbits.server.external.core.CoreFactory;
 import com.nimbits.server.settings.SettingTransactionsFactory;
 import com.nimbits.server.settings.SettingsServiceFactory;
 
@@ -51,7 +49,7 @@ public class SystemMaint extends HttpServlet {
             for (SettingType setting : SettingType.values()) {
                 processSetting(setting);
             }
-            CoreFactory.getInstance().reportInstanceToCore(ServerInfoImpl.getFullServerURL(req));
+            //CoreFactory.getInstance().reportInstanceToCore(ServerInfoImpl.getFullServerURL(req));
 
         } catch (NimbitsException e) {
             out.println(e.getMessage());

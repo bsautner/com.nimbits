@@ -124,7 +124,7 @@ public class EntityContextMenu extends Menu {
         add(jsonContext);
         add(xmppContext);
 
-        add(downloadContext);
+        //add(downloadContext);
         if (settings.containsKey(SettingType.wolframKey) && ! Utils.isEmptyString(settings.get(SettingType.wolframKey))) {
             add(intelligenceContext);
         }

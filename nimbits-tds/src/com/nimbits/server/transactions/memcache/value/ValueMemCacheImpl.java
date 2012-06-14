@@ -45,7 +45,11 @@ public class ValueMemCacheImpl implements ValueTransactions {
 
     public ValueMemCacheImpl(final Entity point) {
         this.point = point;
-         final String safe = point.getKey().replace('@', '-').replace('/', '-').replace(' ', '_');
+         final String safe = point.getKey()
+                 .replace('@', '-')
+                 .replace('/', '-')
+                 .replace(' ', '_')
+                 .replace('#', '_');
         final String bufferNamespace = MemCacheKey.valueCache + safe;
 
         currentValueCacheKey = MemCacheKey.currentValueCache + safe;

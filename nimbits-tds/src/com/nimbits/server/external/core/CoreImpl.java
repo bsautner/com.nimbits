@@ -26,7 +26,6 @@ import com.nimbits.client.model.instance.Instance;
 import com.nimbits.client.model.instance.InstanceModelFactory;
 import com.nimbits.server.admin.common.ServerInfoImpl;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.http.HttpCommonFactory;
 import com.nimbits.server.settings.SettingTransactionsFactory;
 import com.nimbits.server.settings.SettingsServiceFactory;
 
@@ -55,8 +54,8 @@ public class CoreImpl implements Core {
                         + '&' + Parameters.action.getText() + '=' + Action.update.name();
 
                 log.info(Path.PATH_NIMBITS_CORE_ENTITY_DESC_URL + '?' + params);
-                final String response = HttpCommonFactory.getInstance().doPost(Path.PATH_NIMBITS_CORE_ENTITY_DESC_URL, params);
-                log.info("response from core: " + response);
+              //  final String response = HttpCommonFactory.getInstance().doPost(Path.PATH_NIMBITS_CORE_ENTITY_DESC_URL, params);
+               // log.info("response from core: " + response);
 
             }
 
@@ -86,8 +85,8 @@ public class CoreImpl implements Core {
                         + '&' + Parameters.url.getText() + '=' + instanceURL;
 
                 log.info(Path.PATH_NIMBITS_CORE_ENTITY_DESC_URL + '?' + params);
-                final String response = HttpCommonFactory.getInstance().doPost(Path.PATH_NIMBITS_CORE_ENTITY_DESC_URL, params);
-                log.info("response from core: " + response);
+               // final String response = HttpCommonFactory.getInstance().doPost(Path.PATH_NIMBITS_CORE_ENTITY_DESC_URL, params);
+               // log.info("response from core: " + response);
 
             }
 

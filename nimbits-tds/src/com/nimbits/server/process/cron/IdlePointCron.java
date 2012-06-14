@@ -13,6 +13,7 @@
 
 package com.nimbits.server.process.cron;
 
+
 import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
@@ -26,7 +27,7 @@ import com.nimbits.server.admin.logging.*;
 import com.nimbits.server.transactions.service.subscription.*;
 import com.nimbits.server.transactions.service.user.*;
 import com.nimbits.server.transactions.service.value.*;
-import org.apache.commons.lang3.exception.*;
+
 
 import javax.servlet.http.*;
 import java.io.*;
@@ -61,8 +62,8 @@ public class IdlePointCron extends HttpServlet {
             try {
                 checkIdle((Point) p);
             } catch (NimbitsException e) {
-                log.severe(e.getMessage());
-                log.severe(ExceptionUtils.getStackTrace(e));
+
+                LogHelper.logException(IdlePointCron.class, e);
             }
         }
         return points.size();

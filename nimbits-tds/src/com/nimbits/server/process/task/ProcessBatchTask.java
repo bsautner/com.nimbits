@@ -13,7 +13,7 @@
 
 package com.nimbits.server.process.task;
 
-import com.google.gson.*;
+
 import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
@@ -70,7 +70,7 @@ public class ProcessBatchTask extends HttpServlet {
 
     protected void processBatch(final ServletRequest req, final ServletResponse resp) throws IOException, NimbitsException {
 
-        final Gson gson = GsonFactory.getInstance();
+
         final String userJson = req.getParameter(Parameters.pointUser.getText());
         final Enumeration<String> el = req.getParameterNames();
 
@@ -80,7 +80,7 @@ public class ProcessBatchTask extends HttpServlet {
             log.info(s + '=' + req.getParameter(s));
         }
 
-        final User u = gson.fromJson(userJson, UserModel.class);
+        final User u = GsonFactory.getInstance().fromJson(userJson, UserModel.class);
 
         log.info(userJson);
 

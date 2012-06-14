@@ -13,7 +13,7 @@
 
 package com.nimbits.server.process.task;
 
-import com.google.gson.*;
+
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
@@ -47,13 +47,13 @@ public class RecordValueTask extends HttpServlet {
     }
 
     protected void processRequest(ServletRequest req) {
-        final Gson gson = GsonFactory.getInstance();
+
         final String userJson = req.getParameter(Parameters.pointUser.getText());
         final String pointJson = req.getParameter(Parameters.pointJson.getText());
         final String valueJson = req.getParameter(Parameters.valueJson.getText());
 
-        final Entity entity = gson.fromJson(pointJson, EntityModel.class);
-        final Value value = gson.fromJson(valueJson, ValueModel.class);
+        final Entity entity = GsonFactory.getInstance().fromJson(pointJson, EntityModel.class);
+        final Value value = GsonFactory.getInstance().fromJson(valueJson, ValueModel.class);
 
 
 
@@ -64,7 +64,7 @@ public class RecordValueTask extends HttpServlet {
         log.info(valueJson);
 
 
-        final User u = gson.fromJson(userJson, UserModel.class);
+        final User u = GsonFactory.getInstance().fromJson(userJson, UserModel.class);
 
         try {
 

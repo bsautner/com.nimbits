@@ -312,7 +312,8 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
             timespan = TimespanServiceClientImpl.createTimespan(startDateSelector.getValue().toString(), endDateSelector.getValue().toString());
 
             if (line != null && timespan != null) {
-                line.setVisibleChartRange(timespan.getStart(), timespan.getEnd());
+
+                //line.setVisibleChartRange(timespan.getStart(), timespan.getEnd());
                 dataTable = DataTable.create();
                 dataTable.addColumn(ColumnType.DATETIME, "Date");
 
@@ -401,8 +402,8 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
         final Options options = Options.create();
         options.setDisplayAnnotations(true);
         options.setWindowMode(WindowMode.OPAQUE);
-        options.setAllowRedraw(true);
-        options.setDisplayRangeSelector(true);
+       //options.
+       //TODO options.setDisplayRangeSelector(true);
 
         //options.setDisplayAnnotationsFilter(arg0)
         return options;
@@ -504,13 +505,13 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
                 Options options = Options.create();
                 options.setDisplayAnnotations(true);
                 options.setWindowMode(WindowMode.OPAQUE);
-                options.setAllowRedraw(true);
-                options.setDisplayRangeSelector(true);
+               // options.setAllowRedraw(true);
+               // options.setDisplayRangeSelector(true);
 
                 int mn = min.getValue().intValue();
                 int mx = max.getValue().intValue();
 
-                options.setMax(mx);
+               // options.set
                 options.setMin(mn);
 
 

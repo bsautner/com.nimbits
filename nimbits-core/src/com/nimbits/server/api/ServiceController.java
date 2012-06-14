@@ -39,8 +39,6 @@ public class ServiceController {
     @Resource(name="entityDao")
     private EntityJPATransactions entityDao;
 
-
-
     @RequestMapping(value="service/search", method= RequestMethod.GET)
     public String search(
             @RequestParam("search") String dangerousSearchText,

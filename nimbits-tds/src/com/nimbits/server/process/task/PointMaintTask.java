@@ -19,8 +19,10 @@ import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.valueblobstore.*;
+import com.nimbits.server.admin.common.ServerInfoImpl;
 import com.nimbits.server.admin.logging.*;
 import com.nimbits.server.admin.system.*;
+import com.nimbits.server.external.core.CoreFactory;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.transactions.service.user.*;
 import com.nimbits.server.transactions.service.value.*;
@@ -62,7 +64,7 @@ public class PointMaintTask extends HttpServlet {
                     true, e.getExpire());
         }
         consolidateBlobs(e);
-
+        CoreFactory.getInstance().reportToCore(e, Action.update, ServerInfoImpl.getFullServerURL(req));
     }
 
 

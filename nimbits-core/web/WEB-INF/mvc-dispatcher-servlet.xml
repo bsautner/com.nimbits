@@ -13,8 +13,7 @@
 
 
     <context:component-scan base-package="com.nimbits.server.api">
-        <context:exclude-filter type="regex"
-                                expression="com.nimbits.server.api.ServiceController.*" />
+        <context:exclude-filter type="regex" expression="com.nimbits.server.api.ServiceController.*" />
     </context:component-scan>
 
     <mvc:annotation-driven />

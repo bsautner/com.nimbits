@@ -2,31 +2,27 @@ package com.nimbits.server.orm;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Date;
 
-/**
- * User: benjamin
- * Date: 5/22/12
- * Time: 2:50 PM
- * Copyright 2012 Tonic Solutions LLC - All Rights Reserved
- */
+
 @javax.persistence.Table(name = "SEARCH_LOG", schema = "", catalog = "nimbits_schema")
 @Entity
 public class JpaSearchLog {
 
-    @Column(name = "ID_SEARCH_LOG", nullable = false, insertable = true, updatable = true, length = 10, precision = 0)
+    @javax.persistence.Column(name = "ID_SEARCH_LOG", nullable = false, insertable = true, updatable = true, length = 10, precision = 0)
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private int idSearchLog;
 
-    @javax.persistence.Column(name = "SEARCH_TEXT")
+    @javax.persistence.Column(name = "SEARCH_TEXT", nullable = false, insertable = true, updatable = true, length = 200, precision = 0)
     @Basic
     private String searchText;
 
-    @javax.persistence.Column(name = "SEARCH_COUNT")
+    @javax.persistence.Column(name = "SEARCH_COUNT", nullable = false, insertable = true, updatable = true, length = 10, precision = 0)
     @Basic
     private int searchCount;
 
-    @javax.persistence.Column(name = "TS")
+    @javax.persistence.Column(name = "TS", nullable = false, insertable = true, updatable = true, length = 19, precision = 0)
     @Basic
     private Timestamp ts;
 
@@ -36,6 +32,8 @@ public class JpaSearchLog {
     public JpaSearchLog(String searchText) {
         this.searchText = searchText;
         this.searchCount = 1;
+        this.ts = new Timestamp(new Date().getTime());
+
     }
 
 
@@ -46,8 +44,6 @@ public class JpaSearchLog {
     public void setIdSearchLog(int idSearchLog) {
         this.idSearchLog = idSearchLog;
     }
-
-
 
     public String getSearchText() {
         return searchText;

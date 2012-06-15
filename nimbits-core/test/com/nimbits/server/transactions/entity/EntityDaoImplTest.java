@@ -65,7 +65,8 @@ public class EntityDaoImplTest {
 
 
 
-        entityTransactions.addEntity(e2, "http://localhost");
+        Entity r =  entityTransactions.addEntity(e2, "http://localhost");
+
 
     }
 
@@ -75,6 +76,7 @@ public class EntityDaoImplTest {
         Entity e = EntityModelFactory.createEntity(name, "description",
                 EntityType.point, ProtectionLevel.onlyMe, "b@b.com", "b@b.com", UUID.randomUUID().toString());
         assertNotNull(e);
+
 
     }
 
@@ -86,16 +88,9 @@ public class EntityDaoImplTest {
                 EntityType.point, ProtectionLevel.onlyMe, "b@b.com", "b@b.com", UUID.randomUUID().toString());
         assertNotNull(e);
         entityTransactions.addEntity(e, "http://localhost");
-
-
-
         e.setDescription("updated");
-
         Entity x =  entityTransactions.addUpdateEntity(e, "http://localhost");
-
         assertEquals("updated", x.getDescription());
-
-
 
     }
 

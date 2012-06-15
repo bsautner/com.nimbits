@@ -25,6 +25,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
             classpath:/META-INF/applicationContext-daos.xml,
             classpath:/META-INF/applicationContext.xml,
             classpath:/META-INF/applicationContext-factories.xml
+            classpath:/META-INF/applicationContext-service.xml
         </param-value>
     </context-param>
 

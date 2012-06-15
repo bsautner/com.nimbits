@@ -79,6 +79,9 @@ public class EntityDaoImpl implements EntityJPATransactions {
             em.persist(j);
 
             return EntityModelFactory.createEntity(j);
+        } catch (Exception ex) {
+
+           throw new NimbitsException(ex);
         } finally {
             em.close();
         }

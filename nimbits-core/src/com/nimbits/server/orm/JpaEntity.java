@@ -7,13 +7,12 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 
-import javax.persistence.Basic;
+import javax.persistence.*;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -24,44 +23,99 @@ import java.util.List;
  * Time: 2:50 PM
  * Copyright 2012 Tonic Solutions LLC - All Rights Reserved
  */
- @javax.persistence.Table(name = "ENTITY", schema = "", catalog = "nimbits_schema")
+@Table(name = "ENTITY", schema = "", catalog = "nimbits_schema")
 @Entity
 public class JpaEntity implements com.nimbits.client.model.entity.Entity {
 
-    @javax.persistence.Column(name = "ENTITY_NAME")
-    @Basic
-    private String entityName;
-
-    @javax.persistence.Column(name = "INSTANCE_URL")
-    private String instanceUrl;
-
-    @javax.persistence.Column(name = "ID_ENTITY")
+    @Column(name = "ID_ENTITY", unique = true,nullable = false, length = 10, precision = 9)
     @Id
+    @SequenceGenerator(name="ENTITY_ENTITYID_GENERATOR", sequenceName="SEQ_GEN_TABLE", allocationSize = 1)
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="ENTITY_ENTITYID_GENERATOR")
     private int idEntity;
 
-    @javax.persistence.Column(name = "UUID")
-    @Basic
-    private String uuid;
-
-    @javax.persistence.Column(name = "TS")
-    @Basic
-    private Timestamp ts;
-
-    @javax.persistence.Column(name = "ENTITY_DESC")
-    @Basic
-    private String entityDesc;
-
-    @javax.persistence.Column(name = "ENTITY_TYPE")
+    @Column(name = "ENTITY_TYPE")
     @Basic
     private int entityType;
 
-    @javax.persistence.Column(name = "ACTIVE")
+    @Column(name = "ENTITY_NAME")
+    @Basic
+    private String entityName;
+
+    @Column(name = "ENTITY_NAME", nullable = false, insertable = true, updatable = true, length = 200, precision = 0)
+    @Basic
+    public String getEntityName() {
+        return entityName;
+    }
+
+    public void setEntityName(String entityName) {
+        this.entityName = entityName;
+    }
+
+    @Column(name = "INSTANCE_URL")
+    private String instanceUrl;
+
+
+    @Column(name = "UUID")
+    @Basic
+    private String uuid;
+
+    @Column(name = "UUID", nullable = false, insertable = true, updatable = true, length = 100, precision = 0)
+    @Basic
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    @Column(name = "TS")
+    @Basic
+    private Timestamp ts;
+
+    @Column(name = "TS", nullable = false, insertable = true, updatable = true, length = 19, precision = 0)
+    @Basic
+    public Timestamp getTs() {
+        return ts;
+    }
+
+    public void setTs(Timestamp ts) {
+        this.ts = ts;
+    }
+
+    @Column(name = "ENTITY_DESC")
+    @Basic
+    private String entityDesc;
+
+    @Column(name = "ENTITY_DESC", nullable = true, insertable = true, updatable = true, length = 65535, precision = 0)
+    @Basic
+    public String getEntityDesc() {
+        return entityDesc;
+    }
+    public int getIdEntity() {
+        return idEntity;
+    }
+    public void setEntityDesc(String entityDesc) {
+        this.entityDesc = entityDesc;
+    }
+
+
+
+    @Column(name = "ACTIVE")
     @Basic
     private boolean active;
 
+    @Column(name = "ACTIVE", nullable = true, insertable = true, updatable = true, length = 0, precision = 0)
+    @Basic
+    public boolean isActive() {
+        return active;
+    }
 
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 
-    public JpaEntity() {
+    protected JpaEntity() {
     }
 
     public JpaEntity(com.nimbits.client.model.entity.Entity p, String instanceUrl) throws NimbitsException {
@@ -105,9 +159,14 @@ public class JpaEntity implements com.nimbits.client.model.entity.Entity {
        this.entityDesc = description;
     }
 
+
     @Override
     public EntityType getEntityType() {
         return EntityType.get(this.entityType);
+    }
+
+    public void setEntityType(int entityType) {
+        this.entityType = entityType;
     }
 
     @Override
@@ -215,13 +274,53 @@ public class JpaEntity implements com.nimbits.client.model.entity.Entity {
 
     }
 
+    @Column(name = "INSTANCE_URL", nullable = false, insertable = true, updatable = true, length = 200, precision = 0)
+    @Basic
     @Override
     public String getInstanceUrl() {
         return instanceUrl;
+    }
+    public void setIdEntity(int idEntity) {
+        this.idEntity = idEntity;
+    }
+
+    public void setInstanceUrl(String instanceUrl) {
+        this.instanceUrl = instanceUrl;
     }
 
     @Override
     public int compareTo(com.nimbits.client.model.entity.Entity entity) {
         return 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        JpaEntity jpaEntity = (JpaEntity) o;
+
+        if (active != jpaEntity.active) return false;
+        if (idEntity != jpaEntity.idEntity) return false;
+        if (entityDesc != null ? !entityDesc.equals(jpaEntity.entityDesc) : jpaEntity.entityDesc != null) return false;
+        if (entityName != null ? !entityName.equals(jpaEntity.entityName) : jpaEntity.entityName != null) return false;
+        if (instanceUrl != null ? !instanceUrl.equals(jpaEntity.instanceUrl) : jpaEntity.instanceUrl != null)
+            return false;
+        if (ts != null ? !ts.equals(jpaEntity.ts) : jpaEntity.ts != null) return false;
+        if (uuid != null ? !uuid.equals(jpaEntity.uuid) : jpaEntity.uuid != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = idEntity;
+        result = 31 * result + (uuid != null ? uuid.hashCode() : 0);
+        result = 31 * result + (entityName != null ? entityName.hashCode() : 0);
+        result = 31 * result + (entityDesc != null ? entityDesc.hashCode() : 0);
+        result = 31 * result + (instanceUrl != null ? instanceUrl.hashCode() : 0);
+        result = 31 * result + (ts != null ? ts.hashCode() : 0);
+        result = 31 * result + (active ? 1 : 0);
+        return result;
     }
 }

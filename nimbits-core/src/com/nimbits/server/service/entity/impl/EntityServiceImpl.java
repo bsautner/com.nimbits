@@ -28,7 +28,6 @@ public class EntityServiceImpl implements EntityService {
             Action action = Action.get(actionText);
             if (action != null && action.equals(Action.update)) {
                 entityDao.addUpdateEntity(entity, instanceURL);
-
             }
             else if (action != null && action.equals(Action.delete)) {
                 entityDao.deleteEntityByUUID(entity.getUUID());

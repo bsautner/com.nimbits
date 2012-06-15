@@ -49,19 +49,18 @@ public class SearchServiceImpl implements SearchService {
 //                        } else {
 //                            img = "<img align=left src=\"http://www.nimbits.com/images/ball.png\" width=30 height=30>";
 //                        }
-                        sb.append("<div class=\"row\"> <div class=\"span4\"></div> <div class=\"span8\">")
-                                .append("<h5>")
+                        sb.append("<div class=\"row\" style=\"margin-left: 20px\">")
                                 .append("<a href=\"")
                                 .append(d.getInstanceUrl())
                                 .append("/report.html?uuid=")
                                 .append(d.getKey())
-                                .append("\" target=\"_blank\">")
+                                .append("\" target=\"_blank\" style=\"font-size: 16px; font-weight:bold \" >")
                                 .append(d.getName())
-                                .append("</a></h5>")
+                                .append("</a>")
                                 .append("<p>")
                                 .append(d.getDescription())
                                 .append("</p>")
-                                .append("</div></div>");
+                                .append("</div>");
                         sb.append("<div class=\"row\"></div>");
                     }
                 }

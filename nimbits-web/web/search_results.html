@@ -48,7 +48,7 @@
             var q = getParameterByName('q');
 
 
-            var g = 'http://www.nimbits.com:8080/core/search?format=html&search=' + q;
+            var g = 'http://nimbits.com:8080/core/service/search?format=html&search=' + q;
 
             invocation.open('GET', g, true);
             invocation.onreadystatechange = pointHandler;
@@ -146,7 +146,7 @@
 
 <div class="container">
 
-    <p id="status">Loading....</p>
+    <p id="status">Searching for data points....</p>
     <div id="results"></div>
 
 </div>

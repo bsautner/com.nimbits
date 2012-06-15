@@ -1,7 +1,6 @@
 package com.nimbits.server.service.search.impl;
 
 import com.nimbits.client.common.Utils;
-import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ExportType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
@@ -43,19 +42,26 @@ public class SearchServiceImpl implements SearchService {
                 else  {
                     for (Entity d : result) {
                         String img;
-
-                        if (d.getEntityType().equals(EntityType.category)) {
-                            img = "<img src=\"http://www.nimbits.com/images/folder.png\" width=30 height=30>";
-
-                        } else {
-                            img = "<img align=left src=\"http://www.nimbits.com/images/ball.png\" width=30 height=30>";
-                        }
-                        sb.append("<div class=\"row\">")
-                                .append("<h5>").append("<a href=\"").append(d.getInstanceUrl()).append("/report.html?uuid=").append(d.getKey())
-                                .append("\" target=\"_blank\">").append(d.getName()).append("</a></h5>")
-                                .append(img)
-                                .append("<p>").append(d.getDescription()).append("</p>")
-                                .append("</div>");
+//
+//                        if (d.getEntityType().equals(EntityType.category)) {
+//                            img = "<img src=\"http://www.nimbits.com/images/folder.png\" width=30 height=30>";
+//
+//                        } else {
+//                            img = "<img align=left src=\"http://www.nimbits.com/images/ball.png\" width=30 height=30>";
+//                        }
+                        sb.append("<div class=\"row\"> <div class=\"span4\"></div> <div class=\"span8\">")
+                                .append("<h5>")
+                                .append("<a href=\"")
+                                .append(d.getInstanceUrl())
+                                .append("/report.html?uuid=")
+                                .append(d.getKey())
+                                .append("\" target=\"_blank\">")
+                                .append(d.getName())
+                                .append("</a></h5>")
+                                .append("<p>")
+                                .append(d.getDescription())
+                                .append("</p>")
+                                .append("</div></div>");
                         sb.append("<div class=\"row\"></div>");
                     }
                 }

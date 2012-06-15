@@ -9,7 +9,7 @@ import java.util.Date;
 @Entity
 public class JpaSearchLog {
 
-    @javax.persistence.Column(name = "ID_SEARCH_LOG", nullable = false, insertable = true, updatable = true, length = 10, precision = 0)
+    @javax.persistence.Column(name = "ID_SEARCH_LOG", nullable = false, length = 10, precision = 0)
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
     private int idSearchLog;

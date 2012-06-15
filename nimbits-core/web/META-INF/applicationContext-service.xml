@@ -4,6 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="searchService" class="com.nimbits.server.service.search.impl.SearchServiceImpl"> </bean>
+    <bean id="entityService" class="com.nimbits.server.service.entity.impl.EntityServiceImpl"> </bean>
 
 
 </beans>

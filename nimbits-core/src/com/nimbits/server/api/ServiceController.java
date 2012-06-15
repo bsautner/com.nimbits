@@ -5,6 +5,7 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.service.entity.EntityService;
 import com.nimbits.server.service.search.SearchService;
 import com.nimbits.server.transactions.dao.entity.EntityJPATransactions;
 import org.apache.commons.lang3.StringUtils;
@@ -29,8 +30,8 @@ import java.io.IOException;
 @Controller
 public class ServiceController {
 
-    @Resource(name="entityDao")
-    private EntityJPATransactions entityDao;
+    @Resource(name="entityService")
+    private EntityService entityService;
 
     @Resource(name="searchService")
     private SearchService searchService;
@@ -54,21 +55,7 @@ public class ServiceController {
             @RequestParam("instance") String instanceURL
      ) throws IOException, NimbitsException {
 
-
-        if (StringUtils.isNotEmpty(json) && StringUtils.isNotEmpty(actionParam) && StringUtils.isNotEmpty(instanceURL)) {
-
-            Entity entity = GsonFactory.getInstance().fromJson(json, EntityModel.class);
-            Action action = Action.get(actionParam);
-            if (action.equals(Action.update)) {
-                entityDao.addUpdateEntity(entity, instanceURL);
-
-            }
-            else if (action.equals(Action.delete)) {
-                entityDao.deleteEntityByUUID(entity.getUUID());
-            }
-
-
-        }
+        entityService.processEntity(json, actionParam,  instanceURL);
 
     }
 

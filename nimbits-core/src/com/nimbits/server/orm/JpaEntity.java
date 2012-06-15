@@ -23,26 +23,44 @@ import java.util.List;
  * Time: 2:50 PM
  * Copyright 2012 Tonic Solutions LLC - All Rights Reserved
  */
+@SuppressWarnings("unused")
 @Table(name = "ENTITY", schema = "", catalog = "nimbits_schema")
 @Entity
 public class JpaEntity implements com.nimbits.client.model.entity.Entity {
 
-    @Column(name = "ID_ENTITY", unique = true,nullable = false, length = 10, precision = 9)
+    @Column(name = "ID_ENTITY", unique = true,nullable = false, length = 10, precision = 0)
     @Id
-    @SequenceGenerator(name="ENTITY_ENTITYID_GENERATOR", sequenceName="SEQ_GEN_TABLE", allocationSize = 1)
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="ENTITY_ENTITYID_GENERATOR")
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private int idEntity;
 
     @Column(name = "ENTITY_TYPE")
     @Basic
     private int entityType;
 
-    @Column(name = "ENTITY_NAME")
+    @Column(name = "ENTITY_NAME", nullable = false, insertable = true, updatable = true, length = 200, precision = 0)
     @Basic
     private String entityName;
 
-    @Column(name = "ENTITY_NAME", nullable = false, insertable = true, updatable = true, length = 200, precision = 0)
+    @Column(name = "INSTANCE_URL", nullable = false, insertable = true, updatable = true, length = 200, precision = 0)
     @Basic
+    private String instanceUrl;
+
+    @Column(name = "UUID", nullable = false, insertable = true, updatable = true, length = 100, precision = 0)
+    @Basic
+    private String uuid;
+
+    @Column(name = "TS", nullable = false, insertable = true, updatable = true, length = 19, precision = 0)
+    @Basic
+    private Timestamp ts;
+
+    @Column(name = "ENTITY_DESC", nullable = true, insertable = true, updatable = true, length = 65535, precision = 0)
+    @Basic
+    private String entityDesc;
+
+    @Column(name = "ACTIVE", nullable = true, insertable = true, updatable = true, length = 0, precision = 0)
+    @Basic
+    private boolean active;
+
     public String getEntityName() {
         return entityName;
     }
@@ -51,16 +69,6 @@ public class JpaEntity implements com.nimbits.client.model.entity.Entity {
         this.entityName = entityName;
     }
 
-    @Column(name = "INSTANCE_URL")
-    private String instanceUrl;
-
-
-    @Column(name = "UUID")
-    @Basic
-    private String uuid;
-
-    @Column(name = "UUID", nullable = false, insertable = true, updatable = true, length = 100, precision = 0)
-    @Basic
     public String getUuid() {
         return uuid;
     }
@@ -69,12 +77,7 @@ public class JpaEntity implements com.nimbits.client.model.entity.Entity {
         this.uuid = uuid;
     }
 
-    @Column(name = "TS")
-    @Basic
-    private Timestamp ts;
 
-    @Column(name = "TS", nullable = false, insertable = true, updatable = true, length = 19, precision = 0)
-    @Basic
     public Timestamp getTs() {
         return ts;
     }
@@ -83,12 +86,6 @@ public class JpaEntity implements com.nimbits.client.model.entity.Entity {
         this.ts = ts;
     }
 
-    @Column(name = "ENTITY_DESC")
-    @Basic
-    private String entityDesc;
-
-    @Column(name = "ENTITY_DESC", nullable = true, insertable = true, updatable = true, length = 65535, precision = 0)
-    @Basic
     public String getEntityDesc() {
         return entityDesc;
     }
@@ -99,14 +96,6 @@ public class JpaEntity implements com.nimbits.client.model.entity.Entity {
         this.entityDesc = entityDesc;
     }
 
-
-
-    @Column(name = "ACTIVE")
-    @Basic
-    private boolean active;
-
-    @Column(name = "ACTIVE", nullable = true, insertable = true, updatable = true, length = 0, precision = 0)
-    @Basic
     public boolean isActive() {
         return active;
     }
@@ -274,9 +263,7 @@ public class JpaEntity implements com.nimbits.client.model.entity.Entity {
 
     }
 
-    @Column(name = "INSTANCE_URL", nullable = false, insertable = true, updatable = true, length = 200, precision = 0)
-    @Basic
-    @Override
+
     public String getInstanceUrl() {
         return instanceUrl;
     }

@@ -22,7 +22,7 @@ import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.email.impl.EmailAddressImpl;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.entity.EntityNameImpl;
-import sun.org.mozilla.javascript.internal.regexp.*;
+
 
 
 /**

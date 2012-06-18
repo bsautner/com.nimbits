@@ -12,16 +12,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.logging.Logger;
 
 @Transactional
 @Service("entityService")
 public class EntityServiceImpl implements EntityService {
+    private static final Logger log = Logger.getLogger(EntityServiceImpl.class.getName());
 
     @Resource(name="entityDao")
     private EntityJPATransactions entityDao;
 
     @Override
     public void processEntity(final String entityJson, final String actionText, final String instanceURL) throws NimbitsException {
+
+        log.info("processing entity");
+        log.info(entityJson);
+        log.info(actionText);
+        log.info(instanceURL);
+
         if (StringUtils.isNotEmpty(entityJson) && StringUtils.isNotEmpty(actionText) && StringUtils.isNotEmpty(instanceURL)) {
 
             Entity entity = GsonFactory.getInstance().fromJson(entityJson, EntityModel.class);

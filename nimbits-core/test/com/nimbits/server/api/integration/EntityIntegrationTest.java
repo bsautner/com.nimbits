@@ -19,7 +19,9 @@ import java.util.UUID;
 public class EntityIntegrationTest {
 
 
-    private final static String TEST_PATH = "http://localhost:8080/service/entity";
+  //  private final static String TEST_PATH = "http://localhost:8080/service/entity";
+
+    private final static String TEST_PATH = "http://nimbits.com:8080/core/service/entity";
     @Test
     public void testPost() throws NimbitsException {
         EntityName name = CommonFactoryLocator.getInstance().createName("foo", EntityType.point);

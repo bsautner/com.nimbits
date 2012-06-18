@@ -27,8 +27,8 @@ import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.server.admin.common.ServerInfoImpl;
-import com.nimbits.server.external.core.CoreFactory;
 import com.nimbits.server.io.blob.BlobServiceFactory;
+import com.nimbits.server.process.task.TaskFactory;
 import com.nimbits.server.transactions.service.user.UserServiceFactory;
 
 import java.util.*;
@@ -67,10 +67,9 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
         }
         for (final Entity e : deleted) {
             EntityTransactionFactory.getInstance(user).removeEntityFromCache(e);
-            CoreFactory.getInstance().reportToCore(e, Action.delete, ServerInfoImpl.getFullServerURL(getThreadLocalRequest()));
-            //FeedServiceFactory.getInstance().postToFeed(user,entity.getEntityType().name() +
-             //       ' ' + entity.getName().toString() + " deleted ", FeedType.info);
-        }  //
+            TaskFactory.getInstance().startCoreTask(entity, Action.delete, ServerInfoImpl.getFullServerURL(getThreadLocalRequest()));
+
+        }
 
         if  (entity.getEntityType().equals(EntityType.file)) {
             BlobServiceFactory.getInstance().deleteBlob((File) entity);
@@ -95,7 +94,6 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
     @Override
     public Entity addUpdateEntity(final Entity entity) throws NimbitsException {
         final User u = entity.getEntityType().equals(EntityType.user) ? (User) entity : getUser();
-
         if (Utils.isEmptyString(entity.getOwner())) {
             entity.setOwner(u.getKey());
         }
@@ -105,7 +103,6 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
         if (Utils.isEmptyString(entity.getUUID())) {
             entity.setUUID(UUID.randomUUID().toString());
         }
-
         return addUpdateEntity(u, entity);
 
     }
@@ -243,7 +240,8 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
 
     @Override
     public Entity addUpdateEntity(final User user, final Entity entity) throws NimbitsException {
-        CoreFactory.getInstance().reportToCore(entity, Action.update, ServerInfoImpl.getFullServerURL(getThreadLocalRequest()));
+
+       TaskFactory.getInstance().startCoreTask(entity, Action.update, ServerInfoImpl.getFullServerURL(getThreadLocalRequest()));
 
         return EntityTransactionFactory.getInstance(user).addUpdateEntity(entity);
     }

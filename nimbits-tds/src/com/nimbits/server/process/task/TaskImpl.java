@@ -108,15 +108,17 @@ public class TaskImpl implements Task {
     }
 
     @Override
-    public void startCoreTask(final Entity entity, final Action action, final String instanceURL) {
-        final Queue queue =  QueueFactory.getQueue( DEFAULT  );
-        final String json = GsonFactory.getInstance().toJson(entity);
+    public void startCoreTask(final Entity entity, final Action action, final String instance) {
 
-        queue.add(TaskOptions.Builder.withUrl(PATH_CORE_TASK)
-                .param(Parameters.entity.getText(), json)
-                .param(Parameters.action.getText(), action.getCode())
-                .param(Parameters.path.getText(), instanceURL)
-        );
+        if (entity.getEntityType().isSendUpdatesToCore()) {
+            final Queue queue =  QueueFactory.getQueue( DEFAULT  );
+            final String json = GsonFactory.getInstance().toJson(entity);
+            queue.add(TaskOptions.Builder.withUrl(PATH_CORE_TASK)
+                    .param(Parameters.entity.getText(), json)
+                    .param(Parameters.action.getText(), action.getCode())
+                    .param(Parameters.instance.getText(), instance)
+            );
+        }
     }
 
 
@@ -197,12 +199,12 @@ public class TaskImpl implements Task {
     @Override
     public void startPointMaintTask(final Entity e) {
 
-            final String json = GsonFactory.getInstance().toJson(e);
+        final String json = GsonFactory.getInstance().toJson(e);
 
-            final Queue queue =  QueueFactory.getQueue( DEFAULT);
+        final Queue queue =  QueueFactory.getQueue( DEFAULT);
 
-            queue.add(TaskOptions.Builder.withUrl(PATH_POINT_MAINT_TASK)
-                    .param(Parameters.json.getText(), json));
+        queue.add(TaskOptions.Builder.withUrl(PATH_POINT_MAINT_TASK)
+                .param(Parameters.json.getText(), json));
 
     }
 

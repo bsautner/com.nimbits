@@ -18,7 +18,7 @@
     <threadsafe>true</threadsafe>
     <application>nimbits1</application>
 
-    <version>379</version>
+    <version>380</version>
 
     <sessions-enabled>true</sessions-enabled>
     <inbound-services>

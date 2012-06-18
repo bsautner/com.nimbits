@@ -24,9 +24,9 @@ public class CoreTask extends HttpServlet {
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
         log.info("Starting core task");
-        String entity = req.getParameter(Parameters.entity.name());
-        String action = req.getParameter(Parameters.action.name());
-        String instance = req.getParameter(Parameters.instance.name());
+        final String entity = req.getParameter(Parameters.entity.name());
+        final String action = req.getParameter(Parameters.action.name());
+        final String instance = req.getParameter(Parameters.instance.name());
         try {
             if (!Utils.isEmptyString(entity) && !Utils.isEmptyString(instance) && ! Utils.isEmptyString(action) && SettingsServiceFactory.getInstance().getBooleanSetting(SettingType.serverIsDiscoverable)) {
 

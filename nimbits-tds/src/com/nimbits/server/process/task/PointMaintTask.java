@@ -22,7 +22,6 @@ import com.nimbits.client.model.valueblobstore.*;
 import com.nimbits.server.admin.common.ServerInfoImpl;
 import com.nimbits.server.admin.logging.*;
 import com.nimbits.server.admin.system.*;
-import com.nimbits.server.external.core.CoreFactory;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.transactions.service.user.*;
 import com.nimbits.server.transactions.service.value.*;
@@ -56,15 +55,16 @@ public class PointMaintTask extends HttpServlet {
 
 
         final String j = req.getParameter(Parameters.json.getText());
-        final Point e = GsonFactory.getInstance().fromJson(j, PointModel.class);
-        final User u = UserServiceFactory.getInstance().getUserByKey(e.getOwner(), AuthLevel.admin);
-        if (e.getExpire() > 0) {
+        final Point entity = GsonFactory.getInstance().fromJson(j, PointModel.class);
+        final User u = UserServiceFactory.getInstance().getUserByKey(entity.getOwner(), AuthLevel.admin);
+        if (entity.getExpire() > 0) {
             TaskFactory.getInstance().startDeleteDataTask(
-                    e,
-                    true, e.getExpire());
+                    entity,
+                    true, entity.getExpire());
         }
-        consolidateBlobs(e);
-        CoreFactory.getInstance().reportToCore(e, Action.update, ServerInfoImpl.getFullServerURL(req));
+        consolidateBlobs(entity);
+        TaskFactory.getInstance().startCoreTask(entity, Action.update, ServerInfoImpl.getFullServerURL(req));
+
     }
 
 

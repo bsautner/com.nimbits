@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.aopalliance.aop.Advice;
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 /**
  * User: benjamin
@@ -29,6 +30,7 @@ import java.io.IOException;
 
 @Controller
 public class ServiceController {
+    private static final Logger log = Logger.getLogger(ServiceController.class.getName());
 
     @Resource(name="entityService")
     private EntityService entityService;
@@ -53,9 +55,13 @@ public class ServiceController {
             @RequestParam("entity") String json,
             @RequestParam("action") String actionParam,
             @RequestParam("instance") String instanceURL
-     ) throws IOException, NimbitsException {
+     ){
 
-        entityService.processEntity(json, actionParam,  instanceURL);
+        try {
+            entityService.processEntity(json, actionParam,  instanceURL);
+        } catch (NimbitsException e) {
+            log.severe(e.getMessage());
+        }
 
     }
 

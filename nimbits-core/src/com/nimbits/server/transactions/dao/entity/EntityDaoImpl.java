@@ -23,6 +23,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by Benjamin Sautner
@@ -32,7 +33,7 @@ import java.util.List;
  */
 @Repository("entityDao")
 public class EntityDaoImpl implements EntityJPATransactions {
-
+    private static final Logger log = Logger.getLogger(EntityDaoImpl.class.getName());
     @PersistenceContext
     EntityManager em;
 
@@ -72,7 +73,7 @@ public class EntityDaoImpl implements EntityJPATransactions {
     @Override
     public Entity addEntity(final Entity p, final String instanceUrl) throws NimbitsException {
 
-
+       log.info("Adding Entity");
         try {
             JpaEntity j = new JpaEntity(p, instanceUrl);
 
@@ -91,7 +92,7 @@ public class EntityDaoImpl implements EntityJPATransactions {
 
     @Override
     public Entity addUpdateEntity(final Entity entityDescription, final String instanceUrl) throws NimbitsException {
-
+        log.info("Add Update Entity");
 
         final Entity retObj;
 

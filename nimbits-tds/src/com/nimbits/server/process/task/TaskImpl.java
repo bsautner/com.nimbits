@@ -112,6 +112,8 @@ public class TaskImpl implements Task {
 
         if (entity.getEntityType().isSendUpdatesToCore()) {
             final Queue queue =  QueueFactory.getQueue( DEFAULT  );
+            entity.setDateCreated(null);
+
             final String json = GsonFactory.getInstance().toJson(entity);
             queue.add(TaskOptions.Builder.withUrl(PATH_CORE_TASK)
                     .param(Parameters.entity.getText(), json)

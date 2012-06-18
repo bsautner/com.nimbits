@@ -36,9 +36,9 @@ public class CoreTask extends HttpServlet {
                             + '&' + Parameters.instance.getText() + '=' + instance;
 
                     log.info(Path.PATH_NIMBITS_CORE_ENTITY_DESC_URL + '?' + params);
-                    final String response = HttpCommonFactory.getInstance().doPost(Path.PATH_NIMBITS_CORE_ENTITY_DESC_URL, params);
-                    log.info("response from core: " + response);
-                    resp.addHeader(Const.HTTP_HEADER_RESPONSE, response);
+                    HttpCommonFactory.getInstance().doPost(Path.PATH_NIMBITS_CORE_ENTITY_DESC_URL, params);
+
+                   // resp.addHeader(Const.HTTP_HEADER_RESPONSE, response);
                 }
             }
             else {

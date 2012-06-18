@@ -31,17 +31,34 @@ public class EntityServiceImpl implements EntityService {
         log.info(instanceURL);
 
         if (StringUtils.isNotEmpty(entityJson) && StringUtils.isNotEmpty(actionText) && StringUtils.isNotEmpty(instanceURL)) {
+            log.info("doing update");
+            Entity entity = null;
+            try {
+                entity = GsonFactory.getInstance().fromJson(entityJson, EntityModel.class);
+            }
+            catch (com.google.gson.JsonSyntaxException ex) {
+                log.severe(ex.getMessage());
+            }
 
-            Entity entity = GsonFactory.getInstance().fromJson(entityJson, EntityModel.class);
+            log.info("Created entity" + (entity ==null));
             Action action = Action.get(actionText);
-            if (action != null && action.equals(Action.update)) {
-                entityDao.addUpdateEntity(entity, instanceURL);
+            log.info("Created action" + (action ==null));
+            if (entity != null)  {
+                if ((action != null) && action.equals(Action.update)) {
+                    log.info("calling addUpdateEntity");
+                    entityDao.addUpdateEntity(entity, instanceURL);
+                }
+                else if (action != null && action.equals(Action.delete)) {
+                    log.info("calling deleteEntityByUUID");
+                    entityDao.deleteEntityByUUID(entity.getUUID());
+                }
+                else {
+                    log.severe("error in post");
+                }
             }
-            else if (action != null && action.equals(Action.delete)) {
-                entityDao.deleteEntityByUUID(entity.getUUID());
+            else  {
+                log.severe("Entity was null");
             }
-
-
         }
 
     }

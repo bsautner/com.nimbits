@@ -17,6 +17,7 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.server.orm.JpaEntity;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -73,17 +74,28 @@ public class EntityDaoImpl implements EntityJPATransactions {
     @Override
     public Entity addEntity(final Entity p, final String instanceUrl) throws NimbitsException {
 
-       log.info("Adding Entity");
+        log.info("Adding Entity");
         try {
             JpaEntity j = new JpaEntity(p, instanceUrl);
-
+            log.info("created entity");
             em.persist(j);
-
+            log.info("persisted");
             return EntityModelFactory.createEntity(j);
-        } catch (Exception ex) {
+        }
+        catch (Exception e) {
+            log.severe("Exception occurred while persisting entity");
 
-           throw new NimbitsException(ex);
-        } finally {
+            if (e != null) {
+                log.severe(e.getMessage());
+                log.severe(ExceptionUtils.getStackTrace(e));
+                throw  new NimbitsException(e);
+            }
+            else {
+                throw new NimbitsException("Exception occurred, but exception was null. Super.");
+            }
+
+        }
+        finally {
             em.close();
         }
 

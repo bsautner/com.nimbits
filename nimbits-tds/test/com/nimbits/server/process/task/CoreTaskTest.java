@@ -10,13 +10,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-/**
- * Created with IntelliJ IDEA.
- * User: bsautner
- * Date: 6/14/12
- * Time: 1:14 PM
- * To change this template use File | Settings | File Templates.
- */
+
 public class CoreTaskTest extends NimbitsServletTest {
 
     @Test

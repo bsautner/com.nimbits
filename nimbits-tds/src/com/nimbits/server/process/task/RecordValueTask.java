@@ -71,12 +71,15 @@ public class RecordValueTask extends HttpServlet {
             final Point point = entity instanceof Point
                     ? (Point) entity
                     : (Point) EntityServiceFactory.getInstance().getEntityByKey(u, entity.getKey(), EntityType.point).get(0);
+
+            if (point.isIdleAlarmOn() && point.getIdleAlarmSent()) {
                 point.setIdleAlarmSent(false);
                 EntityServiceFactory.getInstance().addUpdateEntity(u,  point);
-                CalculationServiceFactory.getInstance().processCalculations(u, point, value);
-                IntelligenceServiceFactory.getInstance().processIntelligence(u, point);
-                SubscriptionServiceFactory.getInstance().processSubscriptions(u,  point, value);
-                SummaryServiceFactory.getInstance().processSummaries(u, point);
+            }
+            CalculationServiceFactory.getInstance().processCalculations(u, point, value);
+            IntelligenceServiceFactory.getInstance().processIntelligence(u, point);
+            SubscriptionServiceFactory.getInstance().processSubscriptions(u,  point, value);
+            SummaryServiceFactory.getInstance().processSummaries(u, point);
 
         } catch (NimbitsException e) {
             LogHelper.logException(this.getClass(), e);

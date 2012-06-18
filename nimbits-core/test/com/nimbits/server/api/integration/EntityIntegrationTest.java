@@ -48,7 +48,7 @@ public class EntityIntegrationTest {
     @Test
     public void gsonTest() {
 
-        String json = "{\"highAlarm\":0.0,\"expire\":90,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":false,\"idleAlarmOn\":false,\"idleSeconds\":3600,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"values\":null,\"value\":null,\"name\":\"LivingRoomHumidity\",\"key\":\"gigamegawatts@gmail.com/LivingRoomHumidity\",\"description\":\"\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"gigamegawatts@gmail.com\",\"owner\":\"gigamegawatts@gmail.com\",\"readOnly\":false,\"uuid\":\"33837ce1-da40-42b5-bf65-6e1b0db5205e\",\"dateCreated\":\"2012-05-10T15:03:33  0000\",\"children\":null}";
+        String json = "{\"highAlarm\":0.0,\"expire\":90,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":false,\"idleAlarmOn\":false,\"idleSeconds\":0,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"values\":null,\"value\":null,\"name\":\"temperature8\",\"key\":\"sorpa.lab@gmail.com/temperature8\",\"description\":\"\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"2ac5f806-a162-4767-9f06-9843dbbdf355\",\"owner\":\"sorpa.lab@gmail.com\",\"readOnly\":false,\"uuid\":\"95deb2e6-550f-4a07-ae25-bf1aa0f3653d\",\"dateCreated\":null,\"children\":null}";
         Entity entity = GsonFactory.getInstance().fromJson(json, EntityModel.class);
 
     }

@@ -9,6 +9,7 @@ import com.nimbits.server.service.entity.EntityService;
 import com.nimbits.server.service.search.SearchService;
 import com.nimbits.server.transactions.dao.entity.EntityJPATransactions;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,6 +62,7 @@ public class ServiceController {
             entityService.processEntity(json, actionParam,  instanceURL);
         } catch (NimbitsException e) {
             log.severe(e.getMessage());
+            log.severe(ExceptionUtils.getStackTrace(e));
         }
 
     }

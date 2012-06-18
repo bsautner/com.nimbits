@@ -1,4 +1,8 @@
-drop table if exists nimbits_schema.SERVERS;
+CREATE TABLE SEQUENCE (
+SEQ_COUNT INT NOT NULL,
+SEQ_NAME varchar(200) not null
+);
+INSERT INTO SEQUENCE VALUES (0, "SEQ_GEN_TABLE");
 
 
 

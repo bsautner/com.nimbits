@@ -112,7 +112,7 @@ public class JpaEntity implements com.nimbits.client.model.entity.Entity {
         this.entityDesc = p.getDescription();
         this.active = true;
         this.entityType = p.getEntityType().getCode();
-        this.ts = new Timestamp(p.getDateCreated().getTime());
+        this.ts = new Timestamp(new Date().getTime());
         this.uuid = p.getUUID();
         this.instanceUrl = instanceUrl;
     }
@@ -263,7 +263,7 @@ public class JpaEntity implements com.nimbits.client.model.entity.Entity {
 
     }
 
-
+   @Override
     public String getInstanceUrl() {
         return instanceUrl;
     }

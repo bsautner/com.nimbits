@@ -45,8 +45,8 @@ create unique index ID_ENTITY_UNIQUE on nimbits_schema.ENTITY (ID_ENTITY);
 create unique index UUID_UNIQUE on nimbits_schema.ENTITY (UUID);
 --create fulltext index entity_ft_idx on nimbits_schema.ENTITY (ENTITY_NAME, ENTITY_DESC);
 
-insert into ENTITY values (0, 231232, "ben", "test", 1, "http://test", null, 1);
-insert into ENTITY values (0, 23123121, "test1", "test", 1, "http://test", null, 1);
-insert into ENTITY values (0, 23121322, "test2", "description", 1, "http://test", null, 1);
-insert into ENTITY values (0, 23112323, "test3", "description", 1, "http://test", null, 1);
-insert into ENTITY values (0, 23112324, "test3", "description", 1, "http://test", null, 1);
+-- insert into ENTITY values (0, 231232, "ben", "test", 1, "http://test", null, 1);
+-- insert into ENTITY values (0, 23123121, "test1", "test", 1, "http://test", null, 1);
+-- insert into ENTITY values (0, 23121322, "test2", "description", 1, "http://test", null, 1);
+-- insert into ENTITY values (0, 23112323, "test3", "description", 1, "http://test", null, 1);
+-- insert into ENTITY values (0, 23112324, "test3", "description", 1, "http://test", null, 1);

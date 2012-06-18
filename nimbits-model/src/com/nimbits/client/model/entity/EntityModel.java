@@ -39,6 +39,7 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
     private Date dateCreated;
     private static final long serialVersionUID =3455345353L;
     private List<Point> children;
+    private String instanceUrl;
 
     public EntityModel(final CommonIdentifier name,
                        final String description,
@@ -58,6 +59,7 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
         this.uuid = uuid;
         this.dateCreated = new Date();
 
+
     }
     public EntityModel() {
     }
@@ -73,6 +75,7 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
             this.protectionLevel = anEntity.getProtectionLevel().getCode();
             this.alertType = anEntity.getAlertType().getCode();
             this.uuid = anEntity.getUUID();
+            this.instanceUrl = anEntity.getInstanceUrl();
 
         }
     }
@@ -84,7 +87,7 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
 
     @Override
     public String getInstanceUrl() {
-        return null;
+        return instanceUrl;
     }
 
     @Override
@@ -246,7 +249,12 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
 
     @Override
     public void setDateCreated(Date dateCreated) {
+        if (dateCreated != null) {
         this.dateCreated = new Date(dateCreated.getTime());
+        }
+        else {
+            this.dateCreated = null;
+        }
     }
 
     @Override

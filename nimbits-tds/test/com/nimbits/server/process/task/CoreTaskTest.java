@@ -33,6 +33,7 @@ public class CoreTaskTest extends NimbitsServletTest {
       assertEquals(Const.HTTP_STATUS_OK, status );
       String response = resp.getHeader(Const.HTTP_HEADER_RESPONSE);
       System.out.println("RESPONSE: " + response);
+
     }
 
     @Test

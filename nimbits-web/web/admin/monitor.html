@@ -98,9 +98,25 @@
             $.post("http://app.nimbits.com/service/entity",
                     { email: "bsautner@gmail.com", key:"69ce042a-8e9e-478d-a07b-0523ee3c63af",
                         action:"create",
-                        json: "{\"highAlarm\":0.0,\"expire\":90,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":true,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery000test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"bsautner@gmail.com\",\"owner\":\"bsautner@gmail.com\"}"},
+                        json: "{\"highAlarm\":0.0,\"expire\":90,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":true,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery99907t\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"bsautner@gmail.com\",\"owner\":\"bsautner@gmail.com\"}"},
                     function(data){
 
+                        alert(data);
+                    }
+
+            );
+
+        }
+
+        function createPointEntityServiceMin() {
+
+
+            $.post("http://app.nimbits.com/service/entity",
+                    { email: "bsautner@gmail.com", key:"key1",
+                        action:"create",
+                        json: "{\"filterType\":4,\"name\":\"bug265464\",\"entityType\":1,\"protectionLevel\":2,\"parent\":\"bsautner@gmail.com\",\"owner\":\"bsautner@gmail.com\"}"},
+                    function(data){
+                        alert(data);
 
                     }
 
@@ -133,7 +149,7 @@
     <input type="button" value="Test Delete" onClick="deletePoint();">
     <input type="button" value="Test Create Point Entity Service" onClick="createPointEntityService();">
     <input type="button" value="Test Instance To Core" onClick="postCoreInstance();">
-
+    <input type="button" value="Test create with min json" onClick="createPointEntityServiceMin();">
 </form>
 
 </body>

@@ -1,6 +1,5 @@
 package com.nimbits.server.api.impl;
 
-import com.google.gwt.benchmarks.client.Setup;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.enums.SubscriptionNotifyMethod;
@@ -77,7 +76,19 @@ public class EntityServletImplTest extends NimbitsServletTest {
         assertEquals(190, px.getExpire());
 
     }
+    @Test
+    public void testMin() throws IOException, ServletException {
+        req.removeAllParameters();
+        String json = "{\"filterType\":4,\"name\":\"bug2\",\"entityType\":1,\"protectionLevel\":2,\"parent\":\"bsautner@gmail.com\",\"owner\":\"bsautner@gmail.com\"}";
+        req.addParameter("json",json);
+        req.addParameter("action", "create");
+        impl.doPost(req, resp);
+        String g1= resp.getContentAsString();
+        assertNotNull(g1);
+        Point px = GsonFactory.getInstance().fromJson(g1, PointModel.class);
 
+
+    }
 
     @Test
     public void testUpdatePoint() throws IOException, ServletException, NimbitsException {

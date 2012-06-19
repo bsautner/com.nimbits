@@ -17,6 +17,7 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.server.orm.JpaEntity;
+import com.nimbits.server.orm.JpaInstance;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Repository;
 
@@ -41,6 +42,7 @@ public class EntityDaoImpl implements EntityJPATransactions {
 
 
     final String uuidSQL = "select e from JpaEntity e where e.uuid= ?1";
+    final String instanceSQL = "select e from JpaInstance e where e.instanceUrl=?1";
 
     @Override
     @SuppressWarnings("unchecked")
@@ -71,12 +73,37 @@ public class EntityDaoImpl implements EntityJPATransactions {
 
     }
 
+    private List<JpaInstance> getInstance(String url) {
+        try {
+
+          return em.createQuery(
+                  instanceSQL, JpaInstance.class)
+                  .setParameter(1, url)
+                  .getResultList();
+
+        }
+        finally {
+            em.close();
+        }
+
+    }
+
     @Override
     public Entity addEntity(final Entity p, final String instanceUrl) throws NimbitsException {
 
         log.info("Adding Entity");
         try {
-            JpaEntity j = new JpaEntity(p, instanceUrl);
+            List<JpaInstance> instances = getInstance(instanceUrl);
+            JpaInstance instance;
+            if (instances.isEmpty()) {
+               instance = new JpaInstance();
+                instance.setInstanceUrl(instanceUrl);
+            }
+            else {
+                instance = instances.get(0);
+            }
+
+            JpaEntity j = new JpaEntity(p, instance);
             log.info("created entity");
             em.persist(j);
             log.info("persisted");

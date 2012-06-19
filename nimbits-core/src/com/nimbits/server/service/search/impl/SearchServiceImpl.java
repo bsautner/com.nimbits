@@ -51,7 +51,7 @@ public class SearchServiceImpl implements SearchService {
 //                        }
                         sb.append("<div class=\"row\" style=\"margin-left: 20px\">")
                                 .append("<a href=\"")
-                                .append(d.getInstanceUrl())
+                                .append(d.getInstanceUrl().endsWith("/") ? d.getInstanceUrl() : d.getInstanceUrl() + "/")
                                 .append("report.html?uuid=")
                                 .append(d.getUUID())
                                 .append("\" target=\"_blank\" style=\"font-size: 16px; font-weight:bold \" >")

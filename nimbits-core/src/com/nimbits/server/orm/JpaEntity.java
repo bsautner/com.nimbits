@@ -8,6 +8,7 @@ import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.instance.Instance;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 
@@ -33,6 +34,11 @@ public class JpaEntity implements com.nimbits.client.model.entity.Entity {
     @GeneratedValue(strategy = GenerationType.TABLE)
     private int idEntity;
 
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "FK_INSTANCE", nullable = false, insertable = true, updatable = true)
+    JpaInstance instance;
+
+
     @Column(name = "ENTITY_TYPE")
     @Basic
     private int entityType;
@@ -41,9 +47,8 @@ public class JpaEntity implements com.nimbits.client.model.entity.Entity {
     @Basic
     private String entityName;
 
-    @Column(name = "INSTANCE_URL", nullable = false, insertable = true, updatable = true, length = 200, precision = 0)
-    @Basic
-    private String instanceUrl;
+
+
 
     @Column(name = "UUID", nullable = false, insertable = true, updatable = true, length = 100, precision = 0)
     @Basic
@@ -107,14 +112,14 @@ public class JpaEntity implements com.nimbits.client.model.entity.Entity {
     protected JpaEntity() {
     }
 
-    public JpaEntity(com.nimbits.client.model.entity.Entity p, String instanceUrl) throws NimbitsException {
+    public JpaEntity(com.nimbits.client.model.entity.Entity p, JpaInstance instance) throws NimbitsException {
         this.entityName = p.getName().getValue();
         this.entityDesc = p.getDescription();
         this.active = true;
         this.entityType = p.getEntityType().getCode();
         this.ts = new Timestamp(new Date().getTime());
         this.uuid = p.getUUID();
-        this.instanceUrl = instanceUrl;
+        this.instance = instance;
     }
 
 
@@ -265,14 +270,14 @@ public class JpaEntity implements com.nimbits.client.model.entity.Entity {
 
    @Override
     public String getInstanceUrl() {
-        return instanceUrl;
+        return this.instance.getInstanceUrl();
     }
     public void setIdEntity(int idEntity) {
         this.idEntity = idEntity;
     }
 
     public void setInstanceUrl(String instanceUrl) {
-        this.instanceUrl = instanceUrl;
+        this.instance.setInstanceUrl(instanceUrl);
     }
 
     @Override
@@ -291,8 +296,7 @@ public class JpaEntity implements com.nimbits.client.model.entity.Entity {
         if (idEntity != jpaEntity.idEntity) return false;
         if (entityDesc != null ? !entityDesc.equals(jpaEntity.entityDesc) : jpaEntity.entityDesc != null) return false;
         if (entityName != null ? !entityName.equals(jpaEntity.entityName) : jpaEntity.entityName != null) return false;
-        if (instanceUrl != null ? !instanceUrl.equals(jpaEntity.instanceUrl) : jpaEntity.instanceUrl != null)
-            return false;
+
         if (ts != null ? !ts.equals(jpaEntity.ts) : jpaEntity.ts != null) return false;
         if (uuid != null ? !uuid.equals(jpaEntity.uuid) : jpaEntity.uuid != null) return false;
 
@@ -305,7 +309,6 @@ public class JpaEntity implements com.nimbits.client.model.entity.Entity {
         result = 31 * result + (uuid != null ? uuid.hashCode() : 0);
         result = 31 * result + (entityName != null ? entityName.hashCode() : 0);
         result = 31 * result + (entityDesc != null ? entityDesc.hashCode() : 0);
-        result = 31 * result + (instanceUrl != null ? instanceUrl.hashCode() : 0);
         result = 31 * result + (ts != null ? ts.hashCode() : 0);
         result = 31 * result + (active ? 1 : 0);
         return result;

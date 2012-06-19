@@ -5,6 +5,7 @@
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <class>com.nimbits.server.orm.JpaEntity</class>
         <class>com.nimbits.server.orm.JpaSearchLog</class>
+        <class>com.nimbits.server.orm.JpaInstance</class>
         <properties>
             <property name="eclipselink.jdbc.url" value="jdbc:mysql://localhost:3307/nimbits_schema"/>
             <property name="eclipselink.jdbc.driver" value="com.mysql.jdbc.Driver"/>

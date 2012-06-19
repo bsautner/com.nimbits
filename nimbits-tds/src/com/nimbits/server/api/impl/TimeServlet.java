@@ -25,6 +25,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.*;
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * Created by Benjamin Sautner
@@ -36,9 +37,14 @@ public class TimeServlet extends ApiServlet {
 
 
     private static final long serialVersionUID = 6160961337851138572L;
+    final static Logger log = Logger.getLogger(TimeServlet.class.getName());
 
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
+
+
+            String gps = req.getHeader("X-AppEngine-CityLatLong");
+            log.info(gps);
 
             final PrintWriter out = resp.getWriter();
             DateFormatType type;

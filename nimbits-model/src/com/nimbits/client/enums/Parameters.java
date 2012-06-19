@@ -86,7 +86,9 @@ public enum Parameters {
     record(ParamConstants.ACTION_RECORD),
     server(ParamConstants.PARAM_SERVER),
     protection(ParamConstants.PARAM_PROTECTION),
-    parent(ParamConstants.PARAM_PARENT), instance(ParamConstants.PARAM_INSTANCE);
+    parent(ParamConstants.PARAM_PARENT),
+    instance(ParamConstants.PARAM_INSTANCE),
+    location(ParamConstants.PARAM_LOCATION);
 
     private static final Map<String, Parameters> lookup = new HashMap<String, Parameters>(100);
 
@@ -96,6 +98,7 @@ public enum Parameters {
     }
 
     private final String text;
+
 
     private Parameters(String text) {
         this.text = text;
@@ -193,6 +196,7 @@ public enum Parameters {
         public static final String PARAM_PROTECTION = "protection";
         public static final String PARAM_PARENT = "parent";
         public static final String PARAM_INSTANCE = "instance";
+        public static final String PARAM_LOCATION = "location";
 
         private ParamConstants() {
         }

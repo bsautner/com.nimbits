@@ -122,7 +122,21 @@ public class TaskImpl implements Task {
             );
         }
     }
+    @Override
+    public void startCoreLocationTask(final Entity entity, final String location) {
 
+        if (entity.getEntityType().isSendUpdatesToCore()) {
+            final Queue queue =  QueueFactory.getQueue( DEFAULT  );
+            entity.setDateCreated(null);
+
+            final String json = GsonFactory.getInstance().toJson(entity);
+            queue.add(TaskOptions.Builder.withUrl(PATH_CORE_TASK)
+                    .param(Parameters.entity.getText(), json)
+                    .param(Parameters.location.getText(), location)
+
+            );
+        }
+    }
 
     @Override
     public void startProcessBatchTask(final User user, final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException {

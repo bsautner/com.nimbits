@@ -22,6 +22,7 @@ public class Path {
 
     public static final String PATH_FACEBOOK_APP = "http://apps.facebook.com/Nimbits";
     public static final String PATH_NIMBITS_CORE_ENTITY_DESC_URL = "http://nimbits.com:8080/core/service/entity";
+    public static final String PATH_NIMBITS_CORE_ENTITY_LOCATION_URL = "http://nimbits.com:8080/core/service/location";
     public static final String PATH_FACEBOOK_ME = "https://graph.facebook.com/me";
     public static final String PATH_LOGO_IMG = "http://app.nimbits.com/resources/images/logo.png";
     public static final String PATH_WOLFRAM_ALPHA = "http://api.wolframalpha.com/v2/query";

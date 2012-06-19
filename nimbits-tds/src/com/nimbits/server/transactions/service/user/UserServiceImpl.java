@@ -58,16 +58,12 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
 
         if (req != null) {
-            Enumeration i = req.getHeaderNames();
-
-            while (i.hasMoreElements()) {
-                log.info(req.getHeader((String) i.nextElement()));
-            }
-
-
+//            Enumeration i = req.getHeaderNames();
+//
+//            while (i.hasMoreElements()) {
+//                log.info(i + " " + req.getHeader((String) i.nextElement()));
+//            }
             uuid =  req.getParameter(Parameters.uuid.getText());
-
-
             emailParam = req.getParameter(Parameters.email.getText());
             accessKey = req.getParameter(Parameters.secret.getText());
             if (Utils.isEmptyString(accessKey)) {

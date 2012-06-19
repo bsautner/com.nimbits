@@ -27,6 +27,7 @@ public class CoreTask extends HttpServlet {
         final String entity = req.getParameter(Parameters.entity.name());
         final String action = req.getParameter(Parameters.action.name());
         final String instance = req.getParameter(Parameters.instance.name());
+        final String location = req.getParameter(Parameters.location.name());
         try {
             if (!Utils.isEmptyString(entity) && !Utils.isEmptyString(instance) && ! Utils.isEmptyString(action) && SettingsServiceFactory.getInstance().getBooleanSetting(SettingType.serverIsDiscoverable)) {
 
@@ -41,6 +42,14 @@ public class CoreTask extends HttpServlet {
                    // resp.addHeader(Const.HTTP_HEADER_RESPONSE, response);
                 }
             }
+            else if (!Utils.isEmptyString(entity) && !Utils.isEmptyString(location)) {
+                log.info("Reporting location");
+                final String params =  Parameters.entity.getText() + '=' + entity
+                        + '&' + Parameters.location.getText() + '=' + location;
+                HttpCommonFactory.getInstance().doPost(Path.PATH_NIMBITS_CORE_ENTITY_LOCATION_URL, params);
+
+            }
+                //40.127883,-75.431853
             else {
                 resp.setStatus(Const.HTTP_STATUS_BAD_REQUEST);
             }

@@ -2,6 +2,7 @@ package com.nimbits.server.transactions.dao.entity;
 
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
+import com.nimbits.server.orm.JpaEntity;
 
 import java.util.List;
 
@@ -22,5 +23,9 @@ public interface EntityJPATransactions {
 
     void deleteEntityByUUID(final String uuid);
 
+    void updateLocation(final Entity entity,final String location);
 
+    String getLocation(Entity entity);
+
+    List<JpaEntity> getAllEntities();
 }

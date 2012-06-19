@@ -62,4 +62,35 @@ public class EntityServiceImpl implements EntityService {
         }
 
     }
+
+    @Override
+    public void processLocation(String entityJson, String location) throws NimbitsException {
+        log.info("processing location");
+        log.info(entityJson);
+        log.info(location);
+
+
+        if (StringUtils.isNotEmpty(entityJson) && StringUtils.isNotEmpty(location)) {
+            log.info("doing update");
+            Entity entity = null;
+            try {
+                entity = GsonFactory.getInstance().fromJson(entityJson, EntityModel.class);
+            }
+            catch (com.google.gson.JsonSyntaxException ex) {
+                log.severe(ex.getMessage());
+            }
+
+
+
+            if (entity != null)  {
+
+                entityDao.updateLocation(entity, location);
+
+            }
+            else  {
+                log.severe("Entity was null");
+            }
+        }
+
+    }
 }

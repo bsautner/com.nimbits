@@ -38,7 +38,6 @@ public class JpaEntity implements com.nimbits.client.model.entity.Entity {
     @JoinColumn(name = "FK_INSTANCE", nullable = false, insertable = true, updatable = true)
     JpaInstance instance;
 
-
     @Column(name = "ENTITY_TYPE")
     @Basic
     private int entityType;

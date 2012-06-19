@@ -67,7 +67,21 @@ public class ServiceController {
 
     }
 
+    @RequestMapping(value="service/location", method= RequestMethod.POST)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+    public void receiveLocation(
+            @RequestParam("entity") String json,
+            @RequestParam("location") String location
+    ){
 
+        try {
+            entityService.processLocation(json, location);
+        } catch (NimbitsException e) {
+            log.severe(e.getMessage());
+            log.severe(ExceptionUtils.getStackTrace(e));
+        }
+
+    }
 
 
 

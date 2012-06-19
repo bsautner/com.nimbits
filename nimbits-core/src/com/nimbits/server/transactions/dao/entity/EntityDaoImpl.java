@@ -76,15 +76,45 @@ public class EntityDaoImpl implements EntityJPATransactions {
     private List<JpaInstance> getInstance(String url) {
         try {
 
-          return em.createQuery(
-                  instanceSQL, JpaInstance.class)
-                  .setParameter(1, url)
-                  .getResultList();
+            return em.createQuery(
+                    instanceSQL, JpaInstance.class)
+                    .setParameter(1, url)
+                    .getResultList();
 
         }
         finally {
             em.close();
         }
+
+    }
+
+
+    @Override
+    public List<JpaEntity> getAllEntities() {
+
+        return em.createQuery("select e from JpaEntity e", JpaEntity.class).getResultList();
+
+    }
+
+    @Override
+    public void updateLocation(final Entity entity, final String location) {
+        final String sql = "update ENTITY set LOCATION = " +
+                "(GeomFromText('POINT(" + location + ")')) " +
+                "where UUID='" + entity.getUUID() + "'";
+
+        try {
+            em.createNativeQuery(sql).executeUpdate();
+        }
+        finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public String getLocation(Entity entity) {
+        String sql = "SELECT AsText(LOCATION) FROM ENTITY where UUID=?1";
+        return  (String) em.createNativeQuery(sql)
+                .setParameter(1, entity.getUUID()).getSingleResult();
 
     }
 
@@ -96,7 +126,7 @@ public class EntityDaoImpl implements EntityJPATransactions {
             List<JpaInstance> instances = getInstance(instanceUrl);
             JpaInstance instance;
             if (instances.isEmpty()) {
-               instance = new JpaInstance();
+                instance = new JpaInstance();
                 instance.setInstanceUrl(instanceUrl);
             }
             else {

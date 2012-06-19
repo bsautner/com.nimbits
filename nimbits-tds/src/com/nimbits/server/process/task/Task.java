@@ -48,4 +48,6 @@ public interface Task {
     void startDeleteOrphanedBlobTask(final BlobKey key);
 
     void startCoreTask(Entity entity, Action action, String instanceURL);
+
+    void startCoreLocationTask(Entity entity, String location);
 }

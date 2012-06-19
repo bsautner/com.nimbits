@@ -24,6 +24,7 @@ import com.nimbits.client.model.value.*;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.model.value.impl.ValueModel;
 import com.nimbits.server.api.*;
+import com.nimbits.server.api.helper.LocationReportingHelperFactory;
 import com.nimbits.server.transactions.service.entity.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.admin.logging.*;
@@ -36,7 +37,7 @@ import java.util.logging.Logger;
 
 
 public class ValueServletImpl extends ApiServlet {
-    final private Logger log = Logger.getLogger(ValueServletImpl.class.getName());
+    final private static Logger log = Logger.getLogger(ValueServletImpl.class.getName());
 
 
     @Override
@@ -84,6 +85,8 @@ public class ValueServletImpl extends ApiServlet {
                 }
                 final Entity point = points.get(0);
                 final Value result = ValueServiceFactory.getInstance().recordValue(user, point, v);
+                reportLocation(req, point);
+
                 final PrintWriter out = resp.getWriter();
                 final String j = GsonFactory.getInstance().toJson(result);
                 out.print(j);
@@ -92,6 +95,12 @@ public class ValueServletImpl extends ApiServlet {
 
         }
 
+    }
+
+    private static void reportLocation(HttpServletRequest req, Entity point) {
+        final String gps = req.getHeader("X-AppEngine-CityLatLong");
+        log.info("Reporting location: " + gps);
+        LocationReportingHelperFactory.getInstance().reportLocation(point, gps);
     }
 
     public static void processGet(final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException, IOException {

@@ -73,7 +73,7 @@ public class ServiceController {
             @RequestParam("entity") String json,
             @RequestParam("location") String location
     ){
-
+        log.info("call to service location" + json + " " + location);
         try {
             entityService.processLocation(json, location);
         } catch (NimbitsException e) {

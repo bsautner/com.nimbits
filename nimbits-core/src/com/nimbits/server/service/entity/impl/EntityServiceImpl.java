@@ -83,7 +83,7 @@ public class EntityServiceImpl implements EntityService {
 
 
             if (entity != null)  {
-
+                log.info("doing update with good entity and location" + location + " " + entity.getUUID());
                 entityDao.updateLocation(entity, location);
 
             }

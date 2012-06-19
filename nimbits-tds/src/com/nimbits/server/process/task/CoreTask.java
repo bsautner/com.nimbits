@@ -46,6 +46,7 @@ public class CoreTask extends HttpServlet {
                 log.info("Reporting location");
                 final String params =  Parameters.entity.getText() + '=' + entity
                         + '&' + Parameters.location.getText() + '=' + location;
+                log.info(params);
                 HttpCommonFactory.getInstance().doPost(Path.PATH_NIMBITS_CORE_ENTITY_LOCATION_URL, params);
 
             }

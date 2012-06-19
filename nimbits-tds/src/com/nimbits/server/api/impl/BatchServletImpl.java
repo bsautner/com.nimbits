@@ -33,6 +33,7 @@ public class BatchServletImpl extends ApiServlet {
         try {
             doInit(req, resp, ExportType.plain);
 
+
             TaskFactory.getInstance().startProcessBatchTask(user, req, resp);
         } catch (NimbitsException e) {
             if (user != null) {

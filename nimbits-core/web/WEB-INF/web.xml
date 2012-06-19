@@ -18,6 +18,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>mvc-dispatcher</servlet-name>
+        <url-pattern>/core</url-pattern>
+    </servlet-mapping>
+
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>

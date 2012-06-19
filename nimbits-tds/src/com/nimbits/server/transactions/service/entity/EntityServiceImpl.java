@@ -243,7 +243,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
 
        TaskFactory.getInstance().startCoreTask(entity, Action.update, ServerInfoImpl.getFullServerURL(getThreadLocalRequest()));
 
-        return EntityTransactionFactory.getInstance(user).addUpdateEntity(entity);
+       return EntityTransactionFactory.getInstance(user).addUpdateEntity(entity);
     }
 
     @Override

@@ -98,11 +98,13 @@ public class EntityDaoImpl implements EntityJPATransactions {
 
     @Override
     public void updateLocation(final Entity entity, final String location) {
+
         final String sql = "update ENTITY set LOCATION = " +
-                "(GeomFromText('POINT(" + location + ")')) " +
+                "(GeomFromText('POINT(" +  location.replace(",", " ") + ")')) " +
                 "where UUID='" + entity.getUUID() + "'";
 
         try {
+            log.info(sql);
             em.createNativeQuery(sql).executeUpdate();
         }
         finally {

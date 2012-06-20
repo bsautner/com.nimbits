@@ -1,6 +1,7 @@
 package com.nimbits.server.service.entity.impl;
 
 import com.nimbits.client.enums.Action;
+import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.logging.Logger;
 
 @Transactional
@@ -42,6 +44,9 @@ public class EntityServiceImpl implements EntityService {
 
             log.info("Created entity" + (entity ==null));
             Action action = Action.get(actionText);
+            if (! entity.getProtectionLevel().equals(ProtectionLevel.everyone)) {
+                action = Action.delete;
+            }
             log.info("Created action" + (action ==null));
             if (entity != null)  {
                 if ((action != null) && action.equals(Action.update)) {
@@ -93,4 +98,11 @@ public class EntityServiceImpl implements EntityService {
         }
 
     }
+
+    @Override
+    public List<String[]> getLocations() {
+        return entityDao.getLocations();
+    }
+
+
 }

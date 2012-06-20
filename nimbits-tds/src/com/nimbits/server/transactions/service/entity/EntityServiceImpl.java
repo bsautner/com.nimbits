@@ -27,6 +27,7 @@ import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.server.admin.common.ServerInfoImpl;
+import com.nimbits.server.api.helper.LocationReportingHelperFactory;
 import com.nimbits.server.io.blob.BlobServiceFactory;
 import com.nimbits.server.process.task.TaskFactory;
 import com.nimbits.server.transactions.service.user.UserServiceFactory;
@@ -242,7 +243,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
     public Entity addUpdateEntity(final User user, final Entity entity) throws NimbitsException {
 
        TaskFactory.getInstance().startCoreTask(entity, Action.update, ServerInfoImpl.getFullServerURL(getThreadLocalRequest()));
-
+       LocationReportingHelperFactory.getInstance().reportLocation(this.getThreadLocalRequest(), entity);
        return EntityTransactionFactory.getInstance(user).addUpdateEntity(entity);
     }
 

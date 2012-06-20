@@ -43,7 +43,20 @@ public class EntityDaoImpl implements EntityJPATransactions {
 
     final String uuidSQL = "select e from JpaEntity e where e.uuid= ?1";
     final String instanceSQL = "select e from JpaInstance e where e.instanceUrl=?1";
-
+    final String locationSQL = "select\n" +
+            "\t`ENTITY`.`UUID`,\n" +
+            "\t`ENTITY`.`ENTITY_NAME`,\n" +
+            "\t`ENTITY`.`ENTITY_DESC`,\n" +
+            "\t`ENTITY`.`ENTITY_TYPE`,\n" +
+            "\tAsText(LOCATION),\n" +
+            "\t`INSTANCE`.`INSTANCE_URL`,\n" +
+            "\t`ENTITY`.`LOCATION` \n" +
+            "from\n" +
+            "\t`ENTITY` `ENTITY` \n" +
+            "\t\tinner join `INSTANCE` `INSTANCE` \n" +
+            "\t\ton `ENTITY`.`FK_INSTANCE` = `INSTANCE`.`ID_INSTANCE` \n" +
+            "where\n" +
+            "\t(`ENTITY`.`LOCATION` is not null)";
     @Override
     @SuppressWarnings("unchecked")
     public List<Entity> searchEntity(final String searchText) {
@@ -61,11 +74,17 @@ public class EntityDaoImpl implements EntityJPATransactions {
                     .getResultList();
             List<Entity> models = new ArrayList<Entity>(result.size());
             for (Entity r : result) {
+                try {
                 models.add(EntityModelFactory.createEntity(r));
+                }
+                catch (NullPointerException npr) {
+                    log.severe(npr.getMessage());
+                }
             }
             return models;
         } catch (Exception ex) {
-            return null;
+            log.severe(ex.getMessage());
+            return new ArrayList<Entity>(0);
         } finally {
             em.close();
         }
@@ -117,6 +136,25 @@ public class EntityDaoImpl implements EntityJPATransactions {
         String sql = "SELECT AsText(LOCATION) FROM ENTITY where UUID=?1";
         return  (String) em.createNativeQuery(sql)
                 .setParameter(1, entity.getUUID()).getSingleResult();
+
+    }
+
+    @Override
+    public List<String[]> getLocations() {
+
+        List<Object[]> result = em.createNativeQuery(locationSQL).getResultList();
+        List<String[]> retObj = new ArrayList<String[]>(3);
+        for (Object[] r : result) {
+            String[] s = new String[r.length];
+            for (int i = 0; i < r.length; i++) {
+                s[i] = String.valueOf(r[i]);
+            }
+
+
+            retObj.add(s);
+        }
+        return retObj;
+
 
     }
 

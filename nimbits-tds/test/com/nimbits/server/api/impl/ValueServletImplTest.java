@@ -125,10 +125,10 @@ public class ValueServletImplTest extends NimbitsServletTest {
     public void processRequestTest() throws NimbitsException {
         Value v = ValueFactory.createValueModel(1.2);
 
-        String j = ValueServletImpl.processRequest(pointName.getValue(), null, "double", v, user);
+        String j = ValueServletImpl.processRequest(req, pointName.getValue(), null, "double", v, user);
 
         assertEquals(1.2,Double.valueOf(j), 0.001);
-        String c = ValueServletImpl.processRequest(pointName.getValue(), null, "double", null, user);
+        String c = ValueServletImpl.processRequest(req, pointName.getValue(), null, "double", null, user);
         assertEquals(1.2,Double.valueOf(c), 0.001);
 
 

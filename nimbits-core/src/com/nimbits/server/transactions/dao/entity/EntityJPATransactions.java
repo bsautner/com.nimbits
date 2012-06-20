@@ -28,4 +28,6 @@ public interface EntityJPATransactions {
     String getLocation(Entity entity);
 
     List<JpaEntity> getAllEntities();
+
+    List<String[]> getLocations();
 }

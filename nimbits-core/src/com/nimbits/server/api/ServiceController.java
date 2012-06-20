@@ -1,14 +1,8 @@
 package com.nimbits.server.api;
 
-import com.nimbits.client.enums.Action;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModel;
-import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.service.entity.EntityService;
 import com.nimbits.server.service.search.SearchService;
-import com.nimbits.server.transactions.dao.entity.EntityJPATransactions;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Propagation;
@@ -17,9 +11,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.aopalliance.aop.Advice;
+
 import javax.annotation.Resource;
-import java.io.IOException;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -83,7 +77,49 @@ public class ServiceController {
 
     }
 
+    @RequestMapping(value="service/location.html", method= RequestMethod.GET)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+    public void getEntities(ModelMap model){
 
+            List<String[]> list = entityService.getLocations();
+            StringBuilder sb = new StringBuilder();
+
+            sb.append(" var neighborhoods = [\n");
+
+              for (String[] s : list) {
+                  String fixed = s[4].toString().replace("POINT", "").replace(" ", ", ");
+
+                 sb.append("new google.maps.LatLng").append(fixed).append(",\n");
+              }
+
+                sb.append("        ];");
+                sb.append("\n");
+
+
+        sb.append(" var uuids = [\n");
+
+        for (String[] s : list) {
+
+             sb.append("'" + s[5] + "?uuid=" + s[0] + "'").append(",\n");
+        }
+
+        sb.append("];");
+        sb.append("\n");
+
+        sb.append(" var desc = [\n");
+
+        for (String[] s : list) {
+
+            sb.append("'" + s[1] + " " + s[2] + "'").append(",\n");
+        }
+
+        sb.append("];");
+        sb.append("\n");
+
+            model.addAttribute("TEXT",sb.toString());
+
+
+    }
 
 
 }

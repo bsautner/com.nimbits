@@ -20,7 +20,7 @@ public enum MemCacheKey {
     userNamespace(4, SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_USER_NAMESPACE),
     defaultNamespace(5, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_DEFAULT_NAMESPACE),
     entityMap(6, SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_ENTITY_MAP),
-    userPointNamespace(7, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_USER_POINT_NAMESPACE);
+    userPointNamespace(7, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_USER_POINT_NAMESPACE), location(8, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_LOCATION);
 
     private static final Map<Integer, MemCacheKey> lookup = new HashMap<Integer, MemCacheKey>(8);
 
@@ -60,6 +60,7 @@ public enum MemCacheKey {
         static final String KEY_ACTIVE_POINTS = "KEY_ACTIVE_POINTS";
         static final String KEY_VALUE = "KEY_VALUE";
         static final String KEY_CURRENT_VALUE = "KEY_CURRENT_VALUE";
+         public static final String KEY_LOCATION = "KEY_GPS_LOCATION";
 
          private KeyConstants() {
          }

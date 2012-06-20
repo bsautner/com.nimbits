@@ -13,26 +13,32 @@
 
 package com.nimbits.server.api.impl;
 
-import com.nimbits.client.common.*;
-import com.nimbits.client.constants.*;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.constants.UserMessages;
+import com.nimbits.client.constants.Words;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.ValueData;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.model.value.impl.ValueModel;
-import com.nimbits.server.api.*;
-import com.nimbits.server.api.helper.LocationReportingHelperFactory;
-import com.nimbits.server.transactions.service.entity.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.admin.logging.*;
-import com.nimbits.server.transactions.service.value.*;
+import com.nimbits.server.admin.logging.LogHelper;
+import com.nimbits.server.api.ApiServlet;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import com.nimbits.server.transactions.service.value.ValueServiceFactory;
 
-import javax.servlet.http.*;
-import java.io.*;
-import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Date;
+import java.util.List;
 import java.util.logging.Logger;
 
 
@@ -72,7 +78,7 @@ public class ValueServletImpl extends ApiServlet {
             final List<Entity> points = EntityServiceFactory.getInstance().getEntityByName(user, pointName, EntityType.point);
 
             if (points.isEmpty()) {
-              //  FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(UserMessages.ERROR_POINT_NOT_FOUND));
+                //  FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(UserMessages.ERROR_POINT_NOT_FOUND));
             } else {
                 final Value v;
                 if (Utils.isEmptyString(getParam(Parameters.json))) {
@@ -97,11 +103,7 @@ public class ValueServletImpl extends ApiServlet {
 
     }
 
-    private static void reportLocation(HttpServletRequest req, Entity point) {
-        final String gps = req.getHeader("X-AppEngine-CityLatLong");
-        log.info("Reporting location: " + gps);
-        LocationReportingHelperFactory.getInstance().reportLocation(point, gps);
-    }
+
 
     public static void processGet(final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException, IOException {
         doInit(req, resp, ExportType.plain);
@@ -116,7 +118,7 @@ public class ValueServletImpl extends ApiServlet {
             nv = createValueFromRequest();
 
         }
-        out.print(processRequest(getParam(Parameters.point), getParam(Parameters.uuid), format, nv, user));
+        out.print(processRequest(req, getParam(Parameters.point), getParam(Parameters.uuid), format, nv, user));
         out.close();
 
 
@@ -145,6 +147,7 @@ public class ValueServletImpl extends ApiServlet {
     }
 
     protected static String processRequest(
+            final HttpServletRequest req,
             final String pointNameParam,
             final String uuid,
             final String format,
@@ -183,13 +186,19 @@ public class ValueServletImpl extends ApiServlet {
 
 
                 value = ValueServiceFactory.getInstance().recordValue(u, p, newValue);
+                if (nv.getLatitude() == 0.0 && nv.getLongitude() == 0.0) {
+                    reportLocation(req, p);
+                }
+                else {
+                    reportLocation(p, nv.getLatitude(), nv.getLongitude());
+                }
             } else {
                 value = ValueServiceFactory.getInstance().getCurrentValue(p);
             }
             String r =  value != null ? format.equals(Parameters.json.getText()) ? GsonFactory.getInstance().toJson(value) : String.valueOf(value.getDoubleValue()) : "";
 
             if (containsParam(Parameters.client) && getParam(Parameters.client).equals(ClientType.arduino.getCode())) {
-                 r = Const.CONST_ARDUINO_DATA_SEPARATOR + r + Const.CONST_ARDUINO_DATA_SEPARATOR;
+                r = Const.CONST_ARDUINO_DATA_SEPARATOR + r + Const.CONST_ARDUINO_DATA_SEPARATOR;
             }
 
             return r;

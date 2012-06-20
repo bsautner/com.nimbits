@@ -41,8 +41,6 @@ public class EntityServletImplTest extends NimbitsServletTest {
 
     @Before
     public void setup() {
-
-
             req1 = new MockHttpServletRequest();
             resp1 = new MockHttpServletResponse();
     }
@@ -76,6 +74,31 @@ public class EntityServletImplTest extends NimbitsServletTest {
         assertEquals(190, px.getExpire());
 
     }
+    @Test
+    public void testPostDeletePoint() throws IOException, ServletException, NimbitsException {
+        req.removeAllParameters();
+
+
+        //  req.addParameter("id", point.getKey());
+        req.addParameter("json", "{\"highAlarm\":0.0,\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"bsautner@gmail.com\",\"owner\":\"bsautner@gmail.com\"}");
+        req.addParameter("action", "create");
+        impl.doPost(req, resp);
+        String g1= resp.getContentAsString();
+        assertNotNull(g1);
+        Point px = GsonFactory.getInstance().fromJson(g1, PointModel.class);
+        assertEquals(190, px.getExpire());
+        assertNotNull(px.getKey());
+        String j2 = GsonFactory.getInstance().toJson(px);
+
+        req.removeAllParameters();
+        req.addParameter("json", j2);
+        req.addParameter("action", "delete");
+        impl.doPost(req, resp);
+
+
+    }
+
+
     @Test
     public void testMin() throws IOException, ServletException {
         req.removeAllParameters();

@@ -23,10 +23,12 @@ import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.model.value.impl.ValueFactory;
+import com.nimbits.server.api.helper.LocationReportingHelperFactory;
 import com.nimbits.server.transactions.service.entity.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.admin.logging.*;
 import com.nimbits.server.transactions.service.value.*;
+import com.nimbits.shared.Utils;
 
 import javax.jdo.*;
 import javax.servlet.*;
@@ -49,10 +51,11 @@ public class ProcessBatchTask extends HttpServlet {
     private static final String T = "t";
     private static final String N = "n";
     private static final long serialVersionUID = 1L;
-    private final Logger log = Logger.getLogger(ProcessBatchTask.class.getName());
+    private static final Logger log = Logger.getLogger(ProcessBatchTask.class.getName());
 
     private Map<Long, BatchValue> timestampValueMap;
     private List<Long> timestamps;
+
 
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
@@ -68,7 +71,7 @@ public class ProcessBatchTask extends HttpServlet {
 
     }
 
-    protected void processBatch(final ServletRequest req, final ServletResponse resp) throws IOException, NimbitsException {
+    protected void processBatch(final HttpServletRequest req, final ServletResponse resp) throws IOException, NimbitsException {
 
 
         final String userJson = req.getParameter(Parameters.pointUser.getText());
@@ -81,13 +84,7 @@ public class ProcessBatchTask extends HttpServlet {
         }
 
         final User u = GsonFactory.getInstance().fromJson(userJson, UserModel.class);
-
         log.info(userJson);
-
-
-
-
-
         timestampValueMap = new HashMap<Long, BatchValue>(Const.CONST_MAX_BATCH_COUNT);
         timestamps = new ArrayList<Long>(Const.CONST_MAX_BATCH_COUNT);
 
@@ -125,7 +122,7 @@ public class ProcessBatchTask extends HttpServlet {
                         final Value v = ValueFactory.createValueModel(0.0, 0.0, b.getValue(), b.getTimestamp(), b.getNote(), ValueFactory.createValueData(""), AlertType.OK);
 
                         ValueServiceFactory.getInstance().recordValue(b.getU(), point, v);
-
+                        reportLocation(req, point);
                     } catch (NimbitsException ex) {
 
                         log.info(ex.getMessage());
@@ -141,7 +138,13 @@ public class ProcessBatchTask extends HttpServlet {
         resp.flushBuffer();
         resp.setContentLength(0);
     }
-
+    protected static void reportLocation(HttpServletRequest req, Entity entity) {
+        final String gps = req.getHeader("X-AppEngine-CityLatLong");
+        if (!Utils.isEmptyString(gps)) {
+            log.info("Reporting location: " + gps);
+            LocationReportingHelperFactory.getInstance().reportLocation(entity, gps);
+        }
+    }
     private void processQueryString(final Enumeration<String> enumeration,
                                     final Map m,
                                     final User u) throws NimbitsException {

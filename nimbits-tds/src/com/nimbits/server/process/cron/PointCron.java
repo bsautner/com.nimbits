@@ -40,6 +40,7 @@ public class PointCron extends HttpServlet {
 
 
 
+
             try {
                 final User admin =UserServiceFactory.getServerInstance().getAdmin();
 

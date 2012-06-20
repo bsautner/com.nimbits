@@ -22,6 +22,7 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
 import com.nimbits.server.admin.quota.QuotaFactory;
+import com.nimbits.server.api.helper.LocationReportingHelperFactory;
 import com.nimbits.server.transactions.service.user.UserServiceFactory;
 
 import javax.servlet.http.HttpServlet;
@@ -52,6 +53,16 @@ public class ApiServlet extends HttpServlet {
 
         return (u != null && c.isOwner(u));
     }
+
+    protected static void reportLocation(HttpServletRequest req, Entity entity) {
+       LocationReportingHelperFactory.getInstance().reportLocation(req, entity);
+    }
+    protected static void reportLocation(Entity entity, double lat, double lng) {
+        final String gps = lat + "," + lng;
+        log.info("Reporting location: " + gps);
+        LocationReportingHelperFactory.getInstance().reportLocation(entity, gps);
+    }
+
     public static void doInit(final HttpServletRequest req, final HttpServletResponse resp, final ExportType type) throws NimbitsException {
 
         user = UserServiceFactory.getServerInstance().getHttpRequestUser(req);

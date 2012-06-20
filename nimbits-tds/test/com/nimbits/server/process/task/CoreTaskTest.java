@@ -21,12 +21,29 @@ public class CoreTaskTest extends NimbitsServletTest {
       assertNotNull(json);
       req.addParameter(Parameters.entity.name(), json);
       req.addParameter(Parameters.action.name(), Action.update.getCode());
-
+        req.addParameter(Parameters.instance.name(), "http://localhost");
       task.doPost(req, resp);
       int status = resp.getStatus();
       assertEquals(Const.HTTP_STATUS_OK, status );
       String response = resp.getHeader(Const.HTTP_HEADER_RESPONSE);
       System.out.println("RESPONSE: " + response);
+
+    }
+
+    @Test
+    public void testLocationPost() {
+        CoreTask task = new CoreTask();
+        req.removeAllParameters();
+        String json = GsonFactory.getInstance().toJson(point);
+        assertNotNull(json);
+        req.addParameter(Parameters.entity.name(), json);
+
+        req.addParameter(Parameters.location.name(), "0,0");
+        task.doPost(req, resp);
+        int status = resp.getStatus();
+        assertEquals(Const.HTTP_STATUS_OK, status );
+        String response = resp.getHeader(Const.HTTP_HEADER_RESPONSE);
+        System.out.println("RESPONSE: " + response);
 
     }
 

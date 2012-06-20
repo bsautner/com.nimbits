@@ -13,25 +13,31 @@
 
 package com.nimbits.server.transactions.service.value;
 
-import com.google.gwt.http.client.*;
-import com.google.gwt.user.server.rpc.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.accesskey.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.timespan.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.enums.AlertType;
+import com.nimbits.client.enums.AuthLevel;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.accesskey.AccessKey;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.timespan.Timespan;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
-import com.nimbits.client.service.value.*;
-import com.nimbits.server.transactions.service.entity.*;
-import com.nimbits.server.process.task.*;
-import com.nimbits.server.transactions.service.user.*;
+import com.nimbits.client.service.value.ValueService;
+import com.nimbits.server.api.helper.LocationReportingHelperFactory;
+import com.nimbits.server.process.task.TaskFactory;
+import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import com.nimbits.server.transactions.service.user.UserServiceFactory;
 
 import java.util.*;
-import java.util.logging.*;
+import java.util.logging.Logger;
 
 
 public class ValueServiceImpl extends RemoteServiceServlet implements
@@ -77,7 +83,7 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
 
         final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
                 this.getThreadLocalRequest());
-
+        LocationReportingHelperFactory.getInstance().reportLocation(this.getThreadLocalRequest(), point);
 //        final Point px = PointServiceFactory.getInstance().getPointByKey(point.getKey());
         //   final Point px = (Point) EntityServiceFactory.getInstance().getEntityByKey(point.getKey(), PointEntity.class.getName());
         return recordValue(u,point, value);

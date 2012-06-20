@@ -20,9 +20,7 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * User: benjamin
@@ -44,6 +42,13 @@ public class EntityDaoImplTest {
     @Resource(name="entityDao")
     public void setInstanceTransactions(EntityJPATransactions transactions) {
         this.entityTransactions = transactions;
+    }
+
+    @Test
+    public void getLocations() {
+        List<String[]> list = entityTransactions.getLocations();
+        assertFalse(list.isEmpty());
+
     }
 
 

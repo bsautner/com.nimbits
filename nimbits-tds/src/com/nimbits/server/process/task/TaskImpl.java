@@ -60,12 +60,12 @@ public class TaskImpl implements Task {
     private static final String PATH_INCOMING_MAIL_QUEUE = "/task/incommingmail";
     private static final String PATH_DELETE_DATA_TASK = "/task/DeleteRecordedValuesTask";
     private static final Logger log = Logger.getLogger(TaskImpl.class.getName());
-    private boolean overrideQueue;
+
 
 
     public TaskImpl() {
 
-        overrideQueue = false;
+
 
 
     }
@@ -76,8 +76,8 @@ public class TaskImpl implements Task {
                                     final int exp) {
 
 
-        try {
-            final Queue queue =  QueueFactory.getQueue(overrideQueue ? DEFAULT : QUEUE_DELETE_DATA);
+
+            final Queue queue =  QueueFactory.getQueue(DEFAULT);
             if (onlyExpired) {
                 queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_DATA_TASK)
                         .param(Parameters.json.getText(),  GsonFactory.getInstance().toJson(point))
@@ -89,10 +89,7 @@ public class TaskImpl implements Task {
                         .param(Parameters.json.getText(),  GsonFactory.getInstance().toJson(point))
                 );
             }
-        } catch (Exception e) {
-            overrideQueue = true;
-            startDeleteDataTask(point, onlyExpired, exp);
-        }
+
 
 
     }
@@ -142,10 +139,9 @@ public class TaskImpl implements Task {
     public void startProcessBatchTask(final User user, final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException {
 
 
-        try {
-            final Queue queue =  QueueFactory.getQueue(overrideQueue ? DEFAULT : QUEUE_PROCESS_BATCH);
+            final Queue queue =  QueueFactory.getQueue(DEFAULT);
 
-            overrideQueue = false;
+
 
             final String userJson = GsonFactory.getInstance().toJson(user);
 
@@ -165,22 +161,18 @@ public class TaskImpl implements Task {
             options.param(Parameters.pointUser.getText(), userJson);
 
             queue.add(options);
-        } catch (Exception e) {
-            overrideQueue = true;
-            startProcessBatchTask(user, req, resp);
-        }
+
 
 
     }
 
     @Override
     public void startRecordValueTask(final User u, final Entity point, final Value value) {
-        try {
+
             if (Double.valueOf(value.getDoubleValue()).isInfinite()) {
                 return;
             }
-            final Queue queue =  QueueFactory.getQueue(overrideQueue ? DEFAULT : overrideQueue ? DEFAULT : QUEUE_RECORD_VALUE);
-            overrideQueue = false;
+            final Queue queue =  QueueFactory.getQueue(DEFAULT);
             final String userJson = GsonFactory.getInstance().toJson(u);
             final String pointJson = GsonFactory.getInstance().toJson(point);
             final String valueJson = GsonFactory.getInstance().toJson(value);
@@ -194,17 +186,14 @@ public class TaskImpl implements Task {
 
 
 
-        } catch (IllegalStateException ex) {
-            overrideQueue = true;
-            startRecordValueTask(u, point, value);
-        }
+
 
     }
 
     @Override
     public void startIncomingMailTask(final String fromAddress, final String inContent) {
 
-        final Queue queue =  QueueFactory.getQueue(overrideQueue ? DEFAULT : QUEUE_INCOMING_MAIL);
+        final Queue queue =  QueueFactory.getQueue(DEFAULT);
         queue.add(TaskOptions.Builder.withUrl(PATH_INCOMING_MAIL_QUEUE)
                 .param(Parameters.fromAddress.getText(), fromAddress)
                 .param(IN_CONTENT, inContent));
@@ -237,36 +226,12 @@ public class TaskImpl implements Task {
 //
 //    }
 
-    @Override
-    public void startUpgradeTask(final Action action,final  Entity entity, final int s ) {
-
-        try {
-            final Queue queue =  QueueFactory.getQueue(DEFAULT);
-            String json = "";
-
-            if (entity != null) {
-                json = GsonFactory.getInstance().toJson(entity);
-            }
-
-
-            queue.add(TaskOptions.Builder.withUrl(PATH_UPGRADE_TASK)
-                    .param(Parameters.json.getText(), json)
-                    .param("s", String.valueOf(s))
-                    .param("e", String.valueOf(s))
-                    .param(Parameters.action.getText(), action.getCode()));
-        }
-        catch (IllegalStateException ex) {
-            overrideQueue = true;
-            startUpgradeTask(action, entity, s  );
-        }
-
-    }
 
     @Override
     public void startMoveCachedValuesToStoreTask(final Entity point) {
         final String json = GsonFactory.getInstance().toJson(point);
 
-        final Queue queue =  QueueFactory.getQueue(overrideQueue ? DEFAULT : TASK_MOVE);
+        final Queue queue =  QueueFactory.getQueue(DEFAULT);
 
         queue.add(TaskOptions.Builder.withUrl(PATH_MOVE_TASK)
                 .param(Parameters.point.getText(), json));

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Google Maps JavaScript API v3 Example: Map Simple</title>
+
+    <meta charset="UTF-8">
+    <style type="text/css">
+        html, body, #map_canvas {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+    </style>
+    <script type="text/javascript"  src="http://maps.googleapis.com/maps/api/js?key=AIzaSyB6gLOFuTMJU2cERQk-NTLkBLXi8gXIpzo&sensor=false"></script>
+    <script type="text/javascript">
+        var map;
+        function initialize() {
+            var myOptions = {
+                zoom: 2,
+                center: new google.maps.LatLng(-34.397, 150.644),
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            map = new google.maps.Map(document.getElementById('map_canvas'),
+                    myOptions);
+        }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+</head>
+<body>
+<div id="map_canvas"></div>
+</body>
+</html>

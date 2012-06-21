@@ -39,18 +39,15 @@ public class CoreTask extends HttpServlet {
                     log.info(Path.PATH_NIMBITS_CORE_ENTITY_DESC_URL + '?' + params);
                     HttpCommonFactory.getInstance().doPost(Path.PATH_NIMBITS_CORE_ENTITY_DESC_URL, params);
 
-                   // resp.addHeader(Const.HTTP_HEADER_RESPONSE, response);
+                    reportLocation(entity, location);
+                    // resp.addHeader(Const.HTTP_HEADER_RESPONSE, response);
                 }
             }
             else if (!Utils.isEmptyString(entity) && !Utils.isEmptyString(location)) {
-                log.info("Reporting location");
-                final String params =  Parameters.entity.getText() + '=' + entity
-                        + '&' + Parameters.location.getText() + '=' + location;
-                log.info(params);
-                HttpCommonFactory.getInstance().doPost(Path.PATH_NIMBITS_CORE_ENTITY_LOCATION_URL, params);
+                reportLocation(entity, location);
 
             }
-                //40.127883,-75.431853
+            //40.127883,-75.431853
             else {
                 resp.setStatus(Const.HTTP_STATUS_BAD_REQUEST);
             }
@@ -59,6 +56,16 @@ public class CoreTask extends HttpServlet {
             LogHelper.logException(this.getClass(), ex);
             resp.setStatus(Const.HTTP_STATUS_INTERNAL_SERVER_ERROR);
 
+        }
+    }
+
+    private void reportLocation(final String entity, final String location) {
+        if (! Utils.isEmptyString(location) && ! Utils.isEmptyString(entity)) {
+            log.info("Reporting location");
+            final String params =  Parameters.entity.getText() + '=' + entity
+                    + '&' + Parameters.location.getText() + '=' + location;
+            log.info(params);
+            HttpCommonFactory.getInstance().doPost(Path.PATH_NIMBITS_CORE_ENTITY_LOCATION_URL, params);
         }
     }
 

@@ -68,7 +68,8 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
         }
         for (final Entity e : deleted) {
             EntityTransactionFactory.getInstance(user).removeEntityFromCache(e);
-            TaskFactory.getInstance().startCoreTask(entity, Action.delete, ServerInfoImpl.getFullServerURL(getThreadLocalRequest()));
+            TaskFactory.getInstance()
+                    .startCoreTask(getThreadLocalRequest(), entity, Action.delete, ServerInfoImpl.getFullServerURL(getThreadLocalRequest()));
 
         }
 
@@ -242,7 +243,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
     @Override
     public Entity addUpdateEntity(final User user, final Entity entity) throws NimbitsException {
 
-       TaskFactory.getInstance().startCoreTask(entity, Action.update, ServerInfoImpl.getFullServerURL(getThreadLocalRequest()));
+       TaskFactory.getInstance().startCoreTask(this.getThreadLocalRequest(), entity, Action.update, ServerInfoImpl.getFullServerURL(getThreadLocalRequest()));
        LocationReportingHelperFactory.getInstance().reportLocation(this.getThreadLocalRequest(), entity);
        return EntityTransactionFactory.getInstance(user).addUpdateEntity(entity);
     }

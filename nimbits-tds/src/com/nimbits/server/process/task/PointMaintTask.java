@@ -51,7 +51,7 @@ public class PointMaintTask extends HttpServlet {
     }
 
 
-    protected static void processPost(final ServletRequest req) throws NimbitsException {
+    protected static void processPost(final HttpServletRequest req) throws NimbitsException {
 
 
         final String j = req.getParameter(Parameters.json.getText());
@@ -63,7 +63,7 @@ public class PointMaintTask extends HttpServlet {
                     true, entity.getExpire());
         }
         consolidateBlobs(entity);
-        TaskFactory.getInstance().startCoreTask(entity, Action.update, ServerInfoImpl.getFullServerURL(req));
+        TaskFactory.getInstance().startCoreTask(req, entity, Action.update, ServerInfoImpl.getFullServerURL(req));
 
     }
 

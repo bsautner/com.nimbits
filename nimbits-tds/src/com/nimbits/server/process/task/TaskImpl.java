@@ -105,17 +105,23 @@ public class TaskImpl implements Task {
     }
 
     @Override
-    public void startCoreTask(final Entity entity, final Action action, final String instance) {
+    public void startCoreTask(final HttpServletRequest req, final Entity entity, final Action action, final String instance) {
 
         if (entity.getEntityType().isSendUpdatesToCore()) {
             final Queue queue =  QueueFactory.getQueue( DEFAULT  );
             entity.setDateCreated(null);
+            String location = "";
+
+            if (req != null) {
+                location = req.getHeader("X-AppEngine-CityLatLong");
+            }
 
             final String json = GsonFactory.getInstance().toJson(entity);
             queue.add(TaskOptions.Builder.withUrl(PATH_CORE_TASK)
                     .param(Parameters.entity.getText(), json)
                     .param(Parameters.action.getText(), action.getCode())
                     .param(Parameters.instance.getText(), instance)
+                    .param(Parameters.location.getText(), location)
             );
         }
     }

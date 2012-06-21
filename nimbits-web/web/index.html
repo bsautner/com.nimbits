@@ -127,11 +127,28 @@
                         <li><a href="#" onclick="getContent('pages/download.html')">Learn</a></li>
                     </ul>
                 </div>
+                <form action="search_results.html" id="cse-search-box" class="navbar-form pull-right">
+                    <div>
+                        <input type="hidden" name="cx" value="partner-pub-6491049122047226:5289700289"/>
+                        <input type="hidden" name="cof" value="FORID:10"/>
+                        <input type="hidden" name="ie" value="UTF-8"/>
+                        <input type="text" rel="popover" name="q" size="75" id="searchBox" class="search-query"
+                               title="Find Data" data-content="Search for publicly shared data points and files hosted
+                               on the public cloud, or hundreds of discoverable nimbits servers around the planet. You
+                               can subscribe to alerts and changes, add links to your account and download diagrams, schematics,
+                                3D printer templates and anything else being shared on the cloud." value="find public points and files" onclick="document.getElementById('searchBox').value=''"/>
+                        <input class="btn-toolbar" type="submit" name="sa" value="Search"/>
 
-
-
-
-
+                    </div>
+                </form>
+                <script type="text/javascript">
+                    var googleSearchIframeName = "cse-search-results";
+                    var googleSearchFormName = "cse-search-box";
+                    var googleSearchFrameWidth = 800;
+                    var googleSearchDomain = "www.google.com";
+                    var googleSearchPath = "/cse";
+                </script>
+                <script type="text/javascript" src="http://www.google.com/afsonline/show_afs_search.js"></script>
 
 
             </div>
@@ -172,31 +189,6 @@
 
 
             </div>
-            <div class="row">
-                <div class="span5" style="text-align: left">
-                <form action="search_results.html" id="cse-search-box">
-                    <div>
-                        <input type="hidden" name="cx" value="partner-pub-6491049122047226:5289700289"/>
-                        <input type="hidden" name="cof" value="FORID:10"/>
-                        <input type="hidden" name="ie" value="UTF-8"/>
-                        <input type="text" rel="popover" name="q" size="75" id="searchBox" class="search-query"
-                               title="Find Data" data-content="Search for publicly shared data points and files hosted
-                               on the public cloud, or hundreds of discoverable nimbits servers around the planet. You
-                               can subscribe to alerts and changes, add links to your account and download diagrams, schematics,
-                                3D printer templates and anything else being shared on the cloud." value="find public points and files" onclick="document.getElementById('searchBox').value=''"/>
-                        <input class="btn btn-primary" type="submit" name="sa" value="Search"/>
-
-                    </div>
-                </form>
-                </div>
-                <script type="text/javascript">
-                    var googleSearchIframeName = "cse-search-results";
-                    var googleSearchFormName = "cse-search-box";
-                    var googleSearchFrameWidth = 800;
-                    var googleSearchDomain = "www.google.com";
-                    var googleSearchPath = "/cse";
-                </script>
-                <script type="text/javascript" src="http://www.google.com/afsonline/show_afs_search.js"></script>
 
 
 
@@ -204,7 +196,9 @@
             <div class="row">
 
                  <div class="span5">
-                     <h6>Popular Data Feeds</h6>
+                     <span class="help-block">
+                      <span class="label label-info">Popular Data Feeds</span> Share, connect and subscribe to feeds
+                      </span>
                      <iframe src="http://nimbits.com:8080/core/service/location.html" style="width: 500px;height: 400px;border: 0;"></iframe> </div>
                  <div class="span7">
 

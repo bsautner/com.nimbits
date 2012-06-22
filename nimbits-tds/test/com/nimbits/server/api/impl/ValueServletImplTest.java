@@ -28,6 +28,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -50,11 +51,12 @@ public class ValueServletImplTest extends NimbitsServletTest {
         ValueServletImpl i = new ValueServletImpl();
         i.doPost(req, resp);
 
-        Value v = ValueServiceFactory.getInstance().getCurrentValue(point);
+        List<Value> v = ValueServiceFactory.getInstance().getCurrentValue(point);
         assertNotNull(v);
-        assertEquals(5.0, v.getDoubleValue(), 0.001);
-        assertEquals("Medication", v.getData().getContent());
-        assertEquals(v.getTimestamp().getTime(), new Date(1336579929000L).getTime());
+        assertFalse(v.isEmpty());
+        assertEquals(5.0, v.get(0).getDoubleValue(), 0.001);
+        assertEquals("Medication",  v.get(0).getData().getContent());
+        assertEquals( v.get(0).getTimestamp().getTime(), new Date(1336579929000L).getTime());
 
     }
 

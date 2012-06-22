@@ -176,7 +176,7 @@ public class ValueServletImpl extends ApiServlet {
             if ((u == null || u.isRestricted()) && !p.getProtectionLevel().equals(ProtectionLevel.everyone)) {
                 throw new NimbitsException(UserMessages.RESPONSE_PROTECTED_POINT);
             }
-            final Value value;
+            Value value = null;
             if (nv != null && u != null && !u.isRestricted()) {
                 // record the value, but not if this is a public
                 // request
@@ -193,7 +193,10 @@ public class ValueServletImpl extends ApiServlet {
                     reportLocation(p, nv.getLatitude(), nv.getLongitude());
                 }
             } else {
-                value = ValueServiceFactory.getInstance().getCurrentValue(p);
+                List<Value> values = ValueServiceFactory.getInstance().getCurrentValue(p);
+                if (! values.isEmpty()) {
+                    value = values.get(0);
+                }
             }
             String r =  value != null ? format.equals(Parameters.json.getText()) ? GsonFactory.getInstance().toJson(value) : String.valueOf(value.getDoubleValue()) : "";
 

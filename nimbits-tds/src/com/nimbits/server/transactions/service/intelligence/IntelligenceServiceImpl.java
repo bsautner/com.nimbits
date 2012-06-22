@@ -193,7 +193,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
         for (final Entity entity :  list) {
             Intelligence i = (Intelligence) entity;
             try {
-               // Point target = PointServiceFactory.getInstance().getPointByKey(i.getTarget());
+                // Point target = PointServiceFactory.getInstance().getPointByKey(i.getTarget());
                 final Entity target = EntityServiceFactory.getInstance().getEntityByKey(i.getTarget(), EntityType.point).get(0);
 
                 if (target!= null) {
@@ -220,7 +220,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
         String processedInput = addDataToInput(getUser(), update.getInput());
         final Point target = (Point) EntityServiceFactory.getInstance().getEntityByKey(update.getTarget(), EntityType.point).get(0);
 
-      //  Point target = PointServiceFactory.getInstance().getPointByKey(update.getTarget());
+        //  Point target = PointServiceFactory.getInstance().getPointByKey(update.getTarget());
         return processInput(update, target, processedInput);
 
     }
@@ -248,22 +248,25 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
 
 
-                   // Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName,EntityType.point);
+                    // Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName,EntityType.point);
                     Entity inputPoint =  EntityServiceFactory.getInstance().getEntityByName(u, pointName, EntityType.point).get(0);
 
                     // inputPoint= PointServiceFactory.getInstance().getPointByKey(e.getKey());
-                   // inputPoint = (Point) EntityServiceFactory.getInstance().getEntityByKey(e.getKey(), PointEntity.class.getName());
+                    // inputPoint = (Point) EntityServiceFactory.getInstance().getEntityByKey(e.getKey(), PointEntity.class.getName());
 
                     if (inputPoint != null) {
-                        Value inputValue = ValueServiceFactory.getInstance().getCurrentValue(inputPoint);
-                        if (a.equals(Parameters.value.getText())) {
-                            retStr = retStr.replace(r, String.valueOf(inputValue.getDoubleValue()));
-                        } else if (a.equals(Parameters.data.getText())) {
-                            retStr = retStr.replace(r, String.valueOf(inputValue.getData().getContent()));
+                        List<Value> inputValues = ValueServiceFactory.getInstance().getCurrentValue(inputPoint);
+                        if (! inputValues.isEmpty()) {
+                            Value inputValue = inputValues.get(0);
+                            if (a.equals(Parameters.value.getText())) {
+                                retStr = retStr.replace(r, String.valueOf(inputValue.getDoubleValue()));
+                            } else if (a.equals(Parameters.data.getText())) {
+                                retStr = retStr.replace(r, String.valueOf(inputValue.getData().getContent()));
 
-                        } else if (a.equals(Parameters.note.getText())) {
-                            retStr = retStr.replace(r, String.valueOf(inputValue.getNote()));
+                            } else if (a.equals(Parameters.note.getText())) {
+                                retStr = retStr.replace(r, String.valueOf(inputValue.getNote()));
 
+                            }
                         }
                     }
 
@@ -303,13 +306,13 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
         String data = "";
         Double v = 0.0;
 
-            try {
-                v = Double.valueOf(result);
-            } catch (NumberFormatException e) {
-                v =0.0;
-                data = result;
+        try {
+            v = Double.valueOf(result);
+        } catch (NumberFormatException e) {
+            v =0.0;
+            data = result;
 
-            }
+        }
 
 
         return ValueFactory.createValueModel(0.0, 0.0, v, new Date(),"",  ValueFactory.createValueData(data), AlertType.OK);

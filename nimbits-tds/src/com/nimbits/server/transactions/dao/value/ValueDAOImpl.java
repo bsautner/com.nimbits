@@ -20,6 +20,7 @@ import com.nimbits.*;
 import com.nimbits.client.constants.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.timespan.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.model.valueblobstore.*;
@@ -292,6 +293,48 @@ public class ValueDAOImpl implements ValueTransactions {
             pm.close();
         }
 
+    }
+
+    @Override
+    public void purgeValues() throws NimbitsException {
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final Query q = pm.newQuery(ValueBlobStoreEntity.class);
+
+        q.setFilter("entity == k");
+        q.declareParameters("String k");
+
+        final List<ValueBlobStore> result = (List<ValueBlobStore>) q.execute(
+                entity.getKey());
+        try{
+            pm.deletePersistentAll(result);
+        }
+        finally {
+            pm.close();
+        }
+    }
+
+    @Override
+    public void deleteExpiredData() {
+
+
+        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final Query q = pm.newQuery(ValueBlobStoreEntity.class);
+        int exp = ((Point)entity).getExpire();
+        if (exp > 0) {
+            Calendar c = Calendar.getInstance();
+            c.add(Calendar.DATE, exp * -1);
+            q.setFilter("entity == k && maxTimestamp <= et");
+            q.declareParameters("String k, Long et");
+            try {
+            final List<ValueBlobStore> result = (List<ValueBlobStore>) q.execute(
+                    entity.getKey(), c.getTime());
+            pm.deletePersistentAll(result);
+            }
+            finally {
+                pm.close();
+            }
+
+        }
     }
 
     @Override

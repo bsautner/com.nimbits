@@ -34,12 +34,12 @@ public class ProcessBatchTaskTest extends NimbitsServletTest {
         req.addParameter("p2", pointChildName.getValue());
         req.addParameter("v2", String.valueOf(v2));
         servlet.doPost(req, resp);
-        Value rv1 = ValueServiceFactory.getInstance().getCurrentValue(point);
-        Value rv2 = ValueServiceFactory.getInstance().getCurrentValue(pointChild);
+        List<Value> rv1 = ValueServiceFactory.getInstance().getCurrentValue(point);
+        List<Value> rv2 = ValueServiceFactory.getInstance().getCurrentValue(pointChild);
         assertNotNull(rv1);
-        assertEquals(rv1.getDoubleValue(), v1, DELTA);
+        assertEquals(rv1.get(0).getDoubleValue(), v1, DELTA);
         assertNotNull(rv2);
-        assertEquals(rv2.getDoubleValue(), v2, DELTA);
+        assertEquals(rv2.get(0).getDoubleValue(), v2, DELTA);
     }
 
     private void addAuth() {
@@ -64,10 +64,10 @@ public class ProcessBatchTaskTest extends NimbitsServletTest {
 
         servlet.doPost(req, resp);
 
-        Value rv1 = ValueServiceFactory.getInstance().getCurrentValue(point);
+        List<Value> rv1 = ValueServiceFactory.getInstance().getCurrentValue(point);
 
         assertNotNull(rv1);
-        assertEquals(rv1.getDoubleValue(), v1, DELTA);
+        assertEquals(rv1.get(0).getDoubleValue(), v1, DELTA);
 
 
     }
@@ -173,13 +173,13 @@ public class ProcessBatchTaskTest extends NimbitsServletTest {
 
         servlet.doPost(req, resp);
 
-        Value rv1 = ValueServiceFactory.getInstance().getCurrentValue(point);
-        Value rv2 = ValueServiceFactory.getInstance().getCurrentValue(pointChild);
+        List<Value> rv1 = ValueServiceFactory.getInstance().getCurrentValue(point);
+        List<Value> rv2 = ValueServiceFactory.getInstance().getCurrentValue(pointChild);
         assertNotNull(rv1);
-        assertEquals(rv1.getDoubleValue(), v1, DELTA);
+        assertEquals(rv1.get(0).getDoubleValue(), v1, DELTA);
 
         assertNotNull(rv2);
-        assertEquals(rv2.getDoubleValue(), v2, DELTA);
+        assertEquals(rv2.get(0).getDoubleValue(), v2, DELTA);
     }
 
     @Test

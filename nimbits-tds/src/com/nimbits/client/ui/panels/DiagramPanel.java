@@ -374,7 +374,7 @@ public class DiagramPanel extends LayoutContainer {
             Entity entity = pointEntityMap.get(pointName);
             if (entity != null) {
                 if (!Utils.isEmptyString(pointNameParam) && pointEntityMap.containsKey(pointName)) {
-                    recordedValueService.getCurrentValue(entity, new AsyncCallback<Value>() {
+                    recordedValueService.getCurrentValue(entity, new AsyncCallback<List<Value>>() {
 
                         @Override
                         public void onFailure(Throwable throwable) {
@@ -382,7 +382,7 @@ public class DiagramPanel extends LayoutContainer {
                         }
 
                         @Override
-                        public void onSuccess(Value result) {
+                        public void onSuccess(List<Value> result) {
                             try {
                                 applyValueToTextNode(result, pointName, actions, o);
                             } catch (NimbitsException e) {
@@ -396,7 +396,7 @@ public class DiagramPanel extends LayoutContainer {
         }
     }
 
-    private void applyValueToTextNode(final Value result, final EntityName pointName, final String[] actions, final OMSVGTextElement o) throws NimbitsException {
+    private void applyValueToTextNode(final List<Value> result, final EntityName pointName, final String[] actions, final OMSVGTextElement o) throws NimbitsException {
         if (pointEntityMap != null && pointEntityMap.containsKey(pointName)) {
 
             final Entity entity = pointEntityMap.get(pointName);
@@ -405,6 +405,7 @@ public class DiagramPanel extends LayoutContainer {
                 if (pointMap.containsKey(entity.getName())) {
 
                     processTextNodeActions(pointMap.get(entity.getName()), result, actions, o);
+
                 }
                 EntityServiceAsync service = GWT.create(EntityService.class);
                 service.getEntityByKey(entity.getKey(), EntityType.point,  new AsyncCallback<List<Entity>>() {
@@ -433,7 +434,10 @@ public class DiagramPanel extends LayoutContainer {
             }
         }
     }
-    private void processTextNodeActions(final Point p, final Value result, final String[] actions, final OMSVGTextElement o) {
+    private void processTextNodeActions(final Point p, final List<Value> results, final String[] actions, final OMSVGTextElement o) {
+
+        if (! results.isEmpty()) {
+            Value result = results.get(0);
         for (final String action : actions) {
             if (action.equals(Action.value.getCode())) {
                 o.getElement().setInnerText(String.valueOf(Utils.roundDouble(result.getDoubleValue())));
@@ -470,6 +474,7 @@ public class DiagramPanel extends LayoutContainer {
             }
 
         }
+    }
     }
     //PATH
 
@@ -569,7 +574,7 @@ public class DiagramPanel extends LayoutContainer {
             final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
             if (!Utils.isEmptyString(pointNameParam) && pointEntityMap.containsKey(pointName)) {
 
-                recordedValueService.getCurrentValue(diagram, new AsyncCallback<Value>() {
+                recordedValueService.getCurrentValue(diagram, new AsyncCallback<List<Value>>() {
 
                     @Override
                     public void onFailure(Throwable throwable) {
@@ -577,7 +582,7 @@ public class DiagramPanel extends LayoutContainer {
                     }
 
                     @Override
-                    public void onSuccess(Value result) {
+                    public void onSuccess(List<Value> result) {
                         applyValueToPathNode(result, pointName, actions, o);
                     }
                 });
@@ -586,12 +591,12 @@ public class DiagramPanel extends LayoutContainer {
         }
     }
 
-    private void applyValueToPathNode(final Value result, final EntityName pointName, final String[] actions, final OMSVGPathElement o) {
+    private void applyValueToPathNode(final List<Value> results, final EntityName pointName, final String[] actions, final OMSVGPathElement o) {
 
         if (pointEntityMap != null) {
             final Entity entity = pointEntityMap.get(pointName);
-
-            if (result != null) {
+            if (! results.isEmpty()) {
+            final Value result = results.get(0);
 
                 EntityServiceAsync service = GWT.create(EntityService.class);
                 service.getEntityByKey(entity.getKey(), EntityType.point , new AsyncCallback<List<Entity>>() {
@@ -753,7 +758,7 @@ public class DiagramPanel extends LayoutContainer {
             final String[] actions = action.split(",");
             final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
             if (!Utils.isEmptyString(pointNameParam) && pointEntityMap.containsKey(pointName)) {
-                recordedValueService.getCurrentValue(diagram, new AsyncCallback<Value>() {
+                recordedValueService.getCurrentValue(diagram, new AsyncCallback<List<Value>>() {
 
                     @Override
                     public void onFailure(Throwable throwable) {
@@ -761,7 +766,7 @@ public class DiagramPanel extends LayoutContainer {
                     }
 
                     @Override
-                    public void onSuccess(Value result) {
+                    public void onSuccess(List<Value> result) {
                         applyValueToRectNode(result, pointName, actions, o);
                     }
                 });
@@ -770,10 +775,11 @@ public class DiagramPanel extends LayoutContainer {
         }
     }
 
-    private void applyValueToRectNode(final Value result, EntityName pointName, final String[] actions, final OMSVGRectElement o) {
+    private void applyValueToRectNode(final List<Value> results, EntityName pointName, final String[] actions, final OMSVGRectElement o) {
 
 
-        if (result != null && pointEntityMap.containsKey(pointName)) {
+        if (! results.isEmpty() && pointEntityMap.containsKey(pointName)) {
+            final Value result = results.get(0);
             final Entity entity = pointEntityMap.get(pointName);
 
             EntityServiceAsync service = GWT.create(EntityService.class);

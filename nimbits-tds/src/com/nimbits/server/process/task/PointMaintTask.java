@@ -56,14 +56,14 @@ public class PointMaintTask extends HttpServlet {
 
         final String j = req.getParameter(Parameters.json.getText());
         final Point entity = GsonFactory.getInstance().fromJson(j, PointModel.class);
-        final User u = UserServiceFactory.getInstance().getUserByKey(entity.getOwner(), AuthLevel.admin);
+      //  final User u = UserServiceFactory.getInstance().getUserByKey(entity.getOwner(), AuthLevel.admin);
         if (entity.getExpire() > 0) {
             TaskFactory.getInstance().startDeleteDataTask(
                     entity,
                     true, entity.getExpire());
         }
         consolidateBlobs(entity);
-        TaskFactory.getInstance().startCoreTask(req, entity, Action.update, ServerInfoImpl.getFullServerURL(req));
+        TaskFactory.getInstance().startCoreTask(null, entity, Action.update, ServerInfoImpl.getFullServerURL(req));
 
     }
 

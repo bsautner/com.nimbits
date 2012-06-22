@@ -137,6 +137,7 @@ public class NimbitsServletTest {
 
         pointEntity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone,  group.getKey(), user.getKey(), UUID.randomUUID().toString());
         Point newPoint = PointModelFactory.createPointModel(pointEntity);
+        newPoint.setExpire(5);
         point = (Point) EntityServiceFactory.getInstance().addUpdateEntity(user, newPoint);
         // point = pointService.addPoint(user, pointEntity);
         valueDao = new ValueDAOImpl(point);

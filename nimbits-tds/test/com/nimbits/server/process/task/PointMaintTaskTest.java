@@ -223,9 +223,9 @@ public class PointMaintTaskTest extends NimbitsServletTest {
                   ss+= p.getDoubleValue();
         }
         assertEquals(sum, ss,DELTA);
-        Value current = ValueServiceFactory.getInstance().getCurrentValue(point);
-        assertEquals(c.getTime().getTime(), current.getTimestamp().getTime());
-        assertEquals(mostRecent, current.getDoubleValue(), DELTA);
+        List<Value> current = ValueServiceFactory.getInstance().getCurrentValue(point);
+        assertEquals(c.getTime().getTime(), current.get(0).getTimestamp().getTime());
+        assertEquals(mostRecent, current.get(0).getDoubleValue(), DELTA);
     }
 
 }

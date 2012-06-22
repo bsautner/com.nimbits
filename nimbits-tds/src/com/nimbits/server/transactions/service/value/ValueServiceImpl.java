@@ -134,13 +134,15 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
 
     }
     @Override
-    public Map<String, Entity> getCurrentValues(Map<String, Point> entities) throws NimbitsException {
+    public Map<String, Entity> getCurrentValues(final Map<String, Point> entities) throws NimbitsException {
         Map<String, Entity> retObj = new HashMap<String, Entity>(entities.size());
-        for (Point p : entities.values()) {
+        for (final Point p : entities.values()) {
 
-            Value v = ValueServiceFactory.getInstance().getCurrentValue(p);
-            p.setValue(v);
-            retObj.put(p.getKey(), p);
+            List<Value> v = ValueServiceFactory.getInstance().getCurrentValue(p);
+            if (! v.isEmpty()) {
+                p.setValue(v.get(0));
+                retObj.put(p.getKey(), p);
+            }
         }
         return retObj;
 
@@ -148,29 +150,39 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public List<ValueBlobStore> getAllStores(Entity entity) throws NimbitsException {
-      return  ValueTransactionFactory.getInstance(entity).getAllStores();
+        return  ValueTransactionFactory.getInstance(entity).getAllStores();
     }
 
     @Override
-    public Value getCurrentValue(final Entity p) throws NimbitsException {
+    public void purgeValues(Entity entity) throws NimbitsException {
+        ValueTransactionFactory.getInstance(entity).purgeValues();
+
+    }
+
+    @Override
+    public void deleteExpiredData(Point point) {
+        ValueTransactionFactory.getInstance(point).deleteExpiredData();
+    }
+
+    @Override
+    public List<Value> getCurrentValue(final Entity p) throws NimbitsException {
 
 
         if (p != null) {
-
+            List<Value> retObj = new ArrayList<Value>(1);
             final Value v = getPrevValue(p, new Date());
             if (v != null) {
                 final AlertType alertType = getAlertType((Point) p, v);
-                return ValueFactory.createValueModel(v, alertType);
+                retObj.add(ValueFactory.createValueModel(v, alertType));
 
             }
-            else {
-                return null;
-            }
-
+            return retObj;
         }
         else {
-            return null;
+            return Collections.emptyList();
         }
+
+
 
 
     }

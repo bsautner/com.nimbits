@@ -53,16 +53,18 @@ public class NavigationPanel extends NavigationEventProvider {
     private final User user;
     private boolean saveWithCurrentTime = true;
     private final static int valueColumnIndex = 1;
-
+    private final ValueServiceAsync valueService;
+    private final EntityServiceAsync entityService;
     public NavigationPanel(final User user,
                            final Map<SettingType, String> settings) {
 
         this.settings = settings;
         this.user = user;
+        this.tree = new EntityTree<ModelData>();
+        this.valueService = GWT.create(ValueService.class);
+        this.entityService = GWT.create(EntityService.class);
         setBorders(false);
         setScrollMode(Scroll.AUTO);
-        tree = new EntityTree<ModelData>();
-
         getUserEntities(false);
 
     }
@@ -122,17 +124,13 @@ public class NavigationPanel extends NavigationEventProvider {
 
     //service calls
     public void getUserEntities(final boolean refresh)  {
-
-
-        final EntityServiceAsync service = GWT.create(EntityService.class);
-        service.getEntities(new GetUserListAsyncCallback(refresh));
-
+        entityService.getEntities(new GetUserListAsyncCallback(refresh));
     }
 
     public void saveAll() {
 
         //  final List<GxtModel> models = grid.getSelectionModel().getSelectedItems();
-        ValueServiceAsync service = GWT.create(ValueService.class);
+
 
         for (final ModelData x :  tree.getTreeStore().findModels(Parameters.dirty.getText(), "yes")) {
             final TreeModel model = (TreeModel)x;
@@ -143,7 +141,7 @@ public class NavigationPanel extends NavigationEventProvider {
 //            final String data = model.get(Const.PARAM_DATA);
             final Value value = ValueFactory.createValueModel(v, timestamp);
 
-            service.recordValue(model.getBaseEntity(), value, new SaveValueAsyncCallback(model));
+            valueService.recordValue(model.getBaseEntity(), value, new SaveValueAsyncCallback(model));
             model.setDirty(false);
         }
         tree.getTreeStore().commitChanges();
@@ -500,10 +498,10 @@ public class NavigationPanel extends NavigationEventProvider {
 
             if ( target.getOwner().equals(draggedEntity.getOwner())) {
 
-                EntityServiceAsync service = GWT.create(EntityService.class);
+
                 draggedEntity.setParent(target.getKey());
 
-                service.addUpdateEntity(draggedEntity, new MoveEntityAsyncCallback());
+                entityService.addUpdateEntity(draggedEntity, new MoveEntityAsyncCallback());
             }
         }
 
@@ -535,9 +533,7 @@ public class NavigationPanel extends NavigationEventProvider {
                     }
 
                     final Value value = ValueFactory.createValueModel(valueAndNote, timestamp);
-
-                    ValueServiceAsync service = GWT.create(ValueService.class);
-                    service.recordValue(entity, value, new RecordValueCallback(be, model));
+                    valueService.recordValue(entity, value, new RecordValueCallback(be, model));
 
                 }
             }
@@ -561,8 +557,7 @@ public class NavigationPanel extends NavigationEventProvider {
 
         }
         private void reloadCurrentValues(final Map<String, Point> entityMap) {
-            final ValueServiceAsync service = GWT.create(ValueService.class);
-            service.getCurrentValues(entityMap, new ReloadAsyncCallback());
+           valueService.getCurrentValues(entityMap, new ReloadAsyncCallback());
         }
 
         private Map<String, Point> getVisiblePoints() {

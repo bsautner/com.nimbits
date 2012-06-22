@@ -45,8 +45,8 @@ public class SystemServiceImpl implements SystemService{
         }
         Value vx;
         if (incrementAsCounter) {
-           Value c = ValueServiceFactory.getInstance().getCurrentValue(p);
-           double cd = c!= null? c.getDoubleValue() : 0.0;
+           List<Value> c = ValueServiceFactory.getInstance().getCurrentValue(p);
+           double cd = ! c.isEmpty() ? c.get(0).getDoubleValue() : 0.0;
            vx = ValueFactory.createValueModel(cd + value);
         }
         else {

@@ -31,6 +31,7 @@ import com.nimbits.server.api.helper.LocationReportingHelperFactory;
 import com.nimbits.server.io.blob.BlobServiceFactory;
 import com.nimbits.server.process.task.TaskFactory;
 import com.nimbits.server.transactions.service.user.UserServiceFactory;
+import com.nimbits.server.transactions.service.value.ValueServiceFactory;
 
 import java.util.*;
 
@@ -75,6 +76,10 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
 
         if  (entity.getEntityType().equals(EntityType.file)) {
             BlobServiceFactory.getInstance().deleteBlob((File) entity);
+        }
+        else if (entity.getEntityType().equals(EntityType.point)) {
+            ValueServiceFactory.getInstance().purgeValues(entity);
+
         }
         return deleted;
     }

@@ -87,8 +87,9 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
 
             if (p != null) {
                 log.info("calc has an x car and i found " + p.getName());
-                final Value val = ValueServiceFactory.getInstance().getCurrentValue(p);
-                final double d = val == null ? 0.0 : val.getDoubleValue();
+                final List<Value> val = ValueServiceFactory.getInstance().getCurrentValue(p);
+
+                final double d = val.isEmpty() ? 0.0 : val.get(0).getDoubleValue();
 
                 m.addVariable("x", d);
             }
@@ -101,8 +102,8 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
 
             // Point p = PointServiceFactory.getInstance().getPointByKey(calculation.getY());
             if (p != null) {
-                final Value val = ValueServiceFactory.getInstance().getCurrentValue(p);
-                final double d = val == null ? 0.0 : val.getDoubleValue();
+                final List<Value> val = ValueServiceFactory.getInstance().getCurrentValue(p);
+                final double d = val.isEmpty() ? 0.0 : val.get(0).getDoubleValue();
                 m.addVariable("y", d);
             }
 
@@ -112,8 +113,8 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
 
             //  Point p = PointServiceFactory.getInstance().getPointByKey(calculation.getZ());
             if (p != null) {
-                final Value val = ValueServiceFactory.getInstance().getCurrentValue(p);
-                final double d = val == null ? 0.0 : val.getDoubleValue();
+                final List<Value> val = ValueServiceFactory.getInstance().getCurrentValue(p);
+                final double d = val.isEmpty() ? 0.0 : val.get(0).getDoubleValue();
                 m.addVariable("z", d);
             }
         }

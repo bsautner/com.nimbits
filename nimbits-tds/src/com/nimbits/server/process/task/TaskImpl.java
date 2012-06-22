@@ -25,6 +25,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.shared.Utils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -71,7 +72,7 @@ public class TaskImpl implements Task {
     }
 
     @Override
-    public void startDeleteDataTask(final Point point,
+    public void startDeleteDataTask(final Entity point,
                                     final boolean onlyExpired,
                                     final int exp) {
 
@@ -111,20 +112,31 @@ public class TaskImpl implements Task {
             final Queue queue =  QueueFactory.getQueue( DEFAULT  );
             entity.setDateCreated(null);
             String location = "";
-
+            final String json = GsonFactory.getInstance().toJson(entity);
             if (req != null) {
                 location = req.getHeader("X-AppEngine-CityLatLong");
             }
+            if (! Utils.isEmptyString(location)) {
 
-            final String json = GsonFactory.getInstance().toJson(entity);
-            queue.add(TaskOptions.Builder.withUrl(PATH_CORE_TASK)
-                    .param(Parameters.entity.getText(), json)
-                    .param(Parameters.action.getText(), action.getCode())
-                    .param(Parameters.instance.getText(), instance)
-                    .param(Parameters.location.getText(), location)
-            );
+                queue.add(TaskOptions.Builder.withUrl(PATH_CORE_TASK)
+                        .param(Parameters.entity.getText(), json)
+                        .param(Parameters.action.getText(), action.getCode())
+                        .param(Parameters.instance.getText(), instance)
+                        .param(Parameters.location.getText(), location)
+                );
+            }
+            else {
+                queue.add(TaskOptions.Builder.withUrl(PATH_CORE_TASK)
+                        .param(Parameters.entity.getText(), json)
+                        .param(Parameters.action.getText(), action.getCode())
+                        .param(Parameters.instance.getText(), instance)
+
+                );
+            }
+
         }
     }
+
     @Override
     public void startCoreLocationTask(final Entity entity, final String location) {
 

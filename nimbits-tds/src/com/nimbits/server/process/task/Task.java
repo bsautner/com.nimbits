@@ -31,7 +31,7 @@ import javax.servlet.http.*;
  */
 public interface Task {
 
-    void startDeleteDataTask(final Point point, final boolean onlyExpired, final int exp);
+    void startDeleteDataTask(final Entity point, final boolean onlyExpired, final int exp);
 
     void startProcessBatchTask(User user, final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException;
 

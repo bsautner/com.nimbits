@@ -77,14 +77,14 @@ public class IdlePointCron extends HttpServlet {
                 p.getOwner(), EntityType.user);
         if (! result.isEmpty()) {
             final User u = (User) result.get(0);
-            final Value v = ValueServiceFactory.getInstance().getCurrentValue(p);
-            if (p.getIdleSeconds() > 0 && v != null &&
-                    v.getTimestamp().getTime() <= c.getTimeInMillis() &&
+            final List<Value> v = ValueServiceFactory.getInstance().getCurrentValue(p);
+            if (p.getIdleSeconds() > 0 && ! v.isEmpty() &&
+                    v.get(0).getTimestamp().getTime() <= c.getTimeInMillis() &&
                     !p.getIdleAlarmSent()) {
                 p.setIdleAlarmSent(true);
                 EntityServiceFactory.getInstance().addUpdateEntity(u, p);
                 // PointServiceFactory.getInstance().updatePoint(u, p);
-                final Value va = ValueFactory.createValueModel(v, AlertType.IdleAlert);
+                final Value va = ValueFactory.createValueModel(v.get(0), AlertType.IdleAlert);
                 SubscriptionServiceFactory.getInstance().processSubscriptions(u, p,va);
                 retVal = true;
             }

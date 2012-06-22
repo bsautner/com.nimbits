@@ -50,6 +50,17 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
     private static final int INT = 120;
     private static final int INT1 = 512;
 
+
+    public boolean okToProcess(Subscription subscription) {
+       boolean retVal;
+
+        retVal = (subscription.getLastSent().getTime() +  subscription.getMaxRepeat() * SECONDS  * 1000 < new Date().getTime());
+
+        return retVal;
+
+    }
+
+
     @Override
     public void processSubscriptions(final User user, final Point point, final Value v) throws NimbitsException {
 
@@ -60,7 +71,8 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
         for (final Entity entity : subscriptions) {
 
             Subscription subscription = (Subscription) entity;
-            if  (subscription.getLastSent().getTime() + subscription.getMaxRepeat() * SECONDS * 1000 < new Date().getTime()) {
+
+            if  (okToProcess(subscription)) {
 
 
                 log.info("Processing Subscription " + subscription.getKey());
@@ -112,6 +124,12 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
                     }
 
                 }
+
+            }
+            else {
+                log.info("Not running subscription because " +
+                        subscription.getLastSent().getTime() + subscription.getMaxRepeat() * SECONDS * 1000
+                + " <  " + new Date().getTime());
 
             }
 

@@ -31,4 +31,10 @@ public class ServiceControllerTest extends TestCase {
        String r = s.moveLocation("(75.0000,-45.3333");
        assertNotNull(r);
     }
+
+    public void testFixString() {
+        ServiceController s = new ServiceController();
+        String fixed = s.fixString("i lika do da ' chacha");
+        assertNotNull(fixed);
+    }
 }

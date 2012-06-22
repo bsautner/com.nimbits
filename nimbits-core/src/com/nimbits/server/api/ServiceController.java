@@ -125,12 +125,18 @@ public class ServiceController {
         sb.append(" var desc = [\n");
 
         for (String[] s : list) {
-
-            sb.append("'").append(s[1]).append(" ").append(s[2]).append("'").append(",\n");
+            String fixed = fixString(s[1] + " " + s[2]);
+            sb.append("'").append(fixed).append("'").append(",\n");
         }
         sb.append("];");
         sb.append("\n");
         model.addAttribute("TEXT",sb.toString());
+    }
+
+    public String fixString(String s) {
+        return s.replace("'", "\\\'")
+                .replace("\"", "\\\"");
+
     }
 
     public String moveLocation(final String sample) {

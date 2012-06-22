@@ -46,7 +46,7 @@ import java.util.*;
 public class SubscriptionPanel extends NavigationEventProvider {
 
     private static final int REPEAT_DEFAULT = 30;
-    private static final double MIN_VALUE = 5d;
+    private static final double INCREMENT = 1;
     private static final int WIDTH = 350;
     private static final double MAX_VALUE = 1000d;
     private FormData formdata;
@@ -168,11 +168,11 @@ public class SubscriptionPanel extends NavigationEventProvider {
         final CheckBox enabled = new CheckBox();
 
         final SpinnerField spinnerField = new SpinnerField();
-        spinnerField.setIncrement(MIN_VALUE);
+        spinnerField.setIncrement(INCREMENT);
         spinnerField.getPropertyEditor().setType(Double.class);
         spinnerField.getPropertyEditor().setFormat(NumberFormat.getFormat("00"));
         spinnerField.setFieldLabel("Repeat limit (Minutes)");
-        spinnerField.setMinValue(MIN_VALUE);
+        //spinnerField.setMinValue(MIN_VALUE);
         spinnerField.setMaxValue(MAX_VALUE);
         // int alertSelected = (subscription == null) ? SubscriptionNotifyMethod.none.getCode() : subscription.getAlertNotifyMethod().getCode();
         SubscriptionType type;

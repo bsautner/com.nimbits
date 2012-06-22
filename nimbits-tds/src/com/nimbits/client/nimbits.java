@@ -66,9 +66,19 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
     private Viewport viewport;
     private final static String heading = Const.CONST_SERVER_NAME + ' ' + SettingType.serverVersion.getDefaultValue();
     private CenterPanel centerPanel;
-
+    private SettingsServiceAsync settingService;
+    private EntityServiceAsync entityService;
+    private UserServiceAsync userService;
+    private TwitterServiceAsync twitterService;
     @Override
     public void onModuleLoad() {
+
+        settingService = GWT.create(SettingsService.class);
+        entityService = GWT.create(EntityService.class);
+        userService = GWT.create(UserService.class);
+        twitterService = GWT.create(TwitterService.class);
+
+
         final String clientTypeParam = Location.getParameter(Parameters.client.getText());
         String uuid = Location.getParameter(Parameters.uuid.getText());
         final String actionParam = Location.getParameter(Parameters.action.getText());
@@ -139,27 +149,21 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
                                       final String code,
                                       final String oauth_token,
                                       final Action action){
-        final SettingsServiceAsync settingService = GWT.create(SettingsService.class);
+
         settingService.getSettings(new GetSettingMapAsyncCallback(action, uuid, code, oauth_token));
     }
 
     private void decidedWhatViewToLoadSecondStep(final Action action, final Map<SettingType, String> settings, final String uuid)   {
-        final UserServiceAsync service = GWT
-                .create(UserService.class);
-        service.login(GWT.getHostPageBaseURL(),
+
+        userService.login(GWT.getHostPageBaseURL(),
                 new LoginInfoAsyncCallback(action, settings, uuid));
     }
 
-    public void showSubscriptionPanel(final String uuid, final Map<SettingType, String> settings) {
+    public void showSubscriptionPanel(final User user, final String uuid, final Map<SettingType, String> settings) {
 
-        final EntityServiceAsync service = GWT.create(EntityService.class);
 
-        service.getEntityByKey(uuid, EntityType.point , new SubscriptionPanelAsyncCallback(settings));
+        entityService.getEntityByKey(uuid, EntityType.point , new SubscriptionPanelAsyncCallback(user, settings));
     }
-
-
-
-
 
     private void loadLogin() {
 
@@ -200,14 +204,14 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         }
     }
 
-
     private class SubscriptionPanelAsyncCallback implements AsyncCallback<List<Entity>> {
 
 
         private final Map<SettingType, String> settings;
-
-        SubscriptionPanelAsyncCallback(final Map<SettingType, String> settings) {
+        private final User user;
+        SubscriptionPanelAsyncCallback(User user, final Map<SettingType, String> settings) {
             this.settings = settings;
+            this.user = user;
         }
 
         @Override
@@ -217,7 +221,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
         @Override
         public void onSuccess(final List<Entity> result) {
-            final SubscriptionPanel dp = new SubscriptionPanel(result.get(0), settings);
+            final SubscriptionPanel dp = new SubscriptionPanel(user, result.get(0), settings);
 
             final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
             w.setWidth(WIDTH);
@@ -244,7 +248,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
                 Cookies.removeCookie(Action.subscribe.name());
                 final TreeModel mx = new GxtModel(result.get(0));
                 centerPanel.addEntity(mx);
-                //  mainPanel.addEntity(result);
+                centerPanel.addEntityToTree(mx);
 
 
             }
@@ -410,7 +414,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
             viewport.setBorders(false);
         }
         private void finishTwitterAuthentication(final Map<SettingType, String> settings, final String oauth_token, final Action action) {
-            final TwitterServiceAsync twitterService = GWT.create(TwitterService.class);
+
             twitterService.updateUserToken(oauth_token,
                     new FinishTwitterAsyncCallback(action, settings));
 
@@ -418,9 +422,8 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         private void loadEntityDisplay(final String uuid) {
 
 
-            final EntityServiceAsync service = GWT.create(EntityService.class);
 
-            service.getEntityByKey(uuid,EntityType.point , new GetEntityListAsyncCallback(uuid));
+            entityService.getEntityByKey(uuid,EntityType.point , new GetEntityListAsyncCallback(uuid));
 
 
 
@@ -471,7 +474,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         }
 
         private void doTwitterRedirectForAuthorisation() throws NimbitsException {
-            final TwitterServiceAsync twitterService = GWT.create(TwitterService.class);
+
             twitterService.twitterAuthorise(loginInfo.getEmail(), new TwitterAuthoriseAsyncCallback());
         }
         private void loadPortalView(final User loginInfo,
@@ -518,7 +521,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
             if (action.equals(Action.subscribe)) {
                 Cookies.removeCookie(Action.subscribe.name());
-                showSubscriptionPanel(uuid, settings);
+                showSubscriptionPanel(loginInfo, uuid, settings);
             }
             viewport.setHeight("100%");
             RootPanel.get("main").add(viewport);

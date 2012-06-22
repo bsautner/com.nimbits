@@ -25,7 +25,6 @@ import com.nimbits.client.model.timespan.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.model.valueblobstore.*;
 import com.nimbits.server.gson.*;
-import com.nimbits.server.admin.logging.*;
 import com.nimbits.server.orm.*;
 import com.nimbits.server.time.*;
 import com.nimbits.server.transactions.service.value.*;
@@ -191,31 +190,23 @@ public class ValueDAOImpl implements ValueTransactions {
 
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-
-        final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
         try {
             final Query q = pm.newQuery(ValueBlobStoreEntity.class);
             q.setFilter("timestamp == t && entity == k");
             q.declareParameters("String k, Long t");
             final Collection<ValueBlobStore> result = (Collection<ValueBlobStore>) q.execute(entity.getKey(), timestamp.getTime());
-            mergeResults(pm, blobstoreService, result);
+            mergeResults(pm, result);
 
         } finally {
             pm.close();
         }
     }
 
-    private void mergeResults(final PersistenceManager pm, final BlobstoreService blobstoreService, final Collection<ValueBlobStore> result) throws NimbitsException {
+    private void mergeResults(final PersistenceManager pm, final Collection<ValueBlobStore> result) throws NimbitsException {
         final List<Value> values = new ArrayList<Value>(Const.CONST_DEFAULT_LIST_SIZE);
         for (final ValueBlobStore store : result) {
             values.addAll(readValuesFromFile(new BlobKey(store.getBlobKey()), store.getLength()));
-            // BlobKey key = new BlobKey(store.getBlobKey());
-//            try {
-//                blobstoreService.delete(key);
-//            } catch (BlobstoreFailureException e) {
-//                LogHelper.logException(ValueDAOImpl.class, e);
-//            }  //TODO kick off task to delete blob - otherwsie they will get swept up as orphans
-        }
+         }
         pm.deletePersistentAll(result);
         recordValues(values);
     }
@@ -318,16 +309,19 @@ public class ValueDAOImpl implements ValueTransactions {
 
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
-        final Query q = pm.newQuery(ValueBlobStoreEntity.class);
+
         int exp = ((Point)entity).getExpire();
         if (exp > 0) {
             Calendar c = Calendar.getInstance();
             c.add(Calendar.DATE, exp * -1);
+            try {
+            final Query q = pm.newQuery(ValueBlobStoreEntity.class);
             q.setFilter("entity == k && maxTimestamp <= et");
             q.declareParameters("String k, Long et");
-            try {
+
             final List<ValueBlobStore> result = (List<ValueBlobStore>) q.execute(
-                    entity.getKey(), c.getTime());
+                    entity.getKey(), c.getTime().getTime());
+
             pm.deletePersistentAll(result);
             }
             finally {
@@ -347,8 +341,10 @@ public class ValueDAOImpl implements ValueTransactions {
 
             for (final Value value : values) {
                 if (valueHealthy(value)) {
+                    //zero out the date of the current value we're working with
                     final Date zero = TimespanServiceFactory.getInstance().zeroOutDate(value.getTimestamp());
                     if (map.containsKey(zero.getTime())) {
+                        //a new value for an existing day
                         map.get(zero.getTime()).add(value);
                         if (maxMap.get(zero.getTime()) < value.getTimestamp().getTime()) {
                             maxMap.remove(zero.getTime());
@@ -360,6 +356,7 @@ public class ValueDAOImpl implements ValueTransactions {
                         }
                     }
                     else {
+                        //create a new list for a new day
                         final List<Value> list = new ArrayList<Value>(Const.CONST_MAX_CACHED_VALUE_SIZE);
                         list.add(value);
                         map.put(zero.getTime(),list);

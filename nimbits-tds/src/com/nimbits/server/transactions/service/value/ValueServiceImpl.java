@@ -135,14 +135,15 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
     }
     @Override
     public Map<String, Entity> getCurrentValues(final Map<String, Point> entities) throws NimbitsException {
-        Map<String, Entity> retObj = new HashMap<String, Entity>(entities.size());
+        final Map<String, Entity> retObj = new HashMap<String, Entity>(entities.size());
         for (final Point p : entities.values()) {
 
-            List<Value> v = ValueServiceFactory.getInstance().getCurrentValue(p);
+            final List<Value> v = ValueServiceFactory.getInstance().getCurrentValue(p);
             if (! v.isEmpty()) {
                 p.setValue(v.get(0));
-                retObj.put(p.getKey(), p);
+
             }
+            retObj.put(p.getKey(), p);
         }
         return retObj;
 

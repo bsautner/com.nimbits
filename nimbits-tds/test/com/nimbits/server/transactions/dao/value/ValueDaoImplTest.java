@@ -250,15 +250,13 @@ public class ValueDaoImplTest extends NimbitsServletTest {
             final Value v1 = ValueFactory.createValueModel(d1, c1.getTime());
             values2.add(v1);
         }
-        valueDao.recordValues(values2);
 
+        valueDao.recordValues(values2);
         valueDao.deleteExpiredData();
+
 
         List<Value> result = valueDao.getTopDataSeries(10);
             assertEquals(5, result.size());
-
-
-
     }
     @Test
     public void testGetRecordedValuePrecedingTimestamp() {

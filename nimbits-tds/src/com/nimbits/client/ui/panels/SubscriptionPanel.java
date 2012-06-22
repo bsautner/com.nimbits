@@ -31,6 +31,7 @@ import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.subscription.*;
+import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.entity.*;
 import com.nimbits.client.ui.helper.*;
 
@@ -53,9 +54,13 @@ public class SubscriptionPanel extends NavigationEventProvider {
     private final Entity entity;
     private final Map<SettingType, String> settings;
 
-    public SubscriptionPanel(Entity entity, Map<SettingType, String> settings) {
+    private User user;
+    public SubscriptionPanel(User user, Entity entity, Map<SettingType, String> settings) {
         this.entity = entity;
         this.settings = settings;
+        this.user = user;
+
+
     }
 
     @Override
@@ -127,9 +132,6 @@ public class SubscriptionPanel extends NavigationEventProvider {
             ops.add(new DeliveryMethodOption(SubscriptionNotifyMethod.facebook));
         }
 
-
-
-
         ops.add(new DeliveryMethodOption(SubscriptionNotifyMethod.instantMessage));
 
         ListStore<DeliveryMethodOption> store = new ListStore<DeliveryMethodOption>();
@@ -198,15 +200,6 @@ public class SubscriptionPanel extends NavigationEventProvider {
 
         final ComboBox<SubscriptionTypeOption> typeCombo = subscriptionTypeOptionComboBox("When this happens", type);
         final ComboBox<DeliveryMethodOption> methodCombo = deliveryMethodComboBox("Relay Data To", method);
-
-
-
-
-
-
-
-
-
 
 
         enabled.setBoxLabel("Enabled");
@@ -373,55 +366,59 @@ public class SubscriptionPanel extends NavigationEventProvider {
         @Override
         public void componentSelected(ButtonEvent buttonEvent) {
 
-            final MessageBox box = MessageBox.wait("Progress",
-                    "Subscribing to your point", "loading...");
-            box.show();
+                    final MessageBox box = MessageBox.wait("Progress",
+                            "Subscribing to your point", "loading...");
+                    box.show();
 
-            SubscriptionNotifyMethod subscriptionNotifyMethod = methodCombo.getValue().getMethod();
-            SubscriptionType subscriptionType =  typeCombo.getValue().getMethod();
-            try {
-                EntityName name = CommonFactoryLocator.getInstance().createName(subscriptionName.getValue(), EntityType.subscription);
-
-
-                final Subscription update;
-
-                if (entity.getEntityType().equals(EntityType.subscription)) {
-
-                    update = (Subscription) entity;
-                    update.setName(name);
-                    update.setEnabled(enabled.getValue());
-                    update.setSubscriptionType(subscriptionType);
-                    update.setNotifyMethod(subscriptionNotifyMethod);
-                    update.setNotifyFormatJson(machine.getValue());
-                    update.setMaxRepeat(spinnerField.getValue().doubleValue());
-                    update.setLastSent(new Date());
+                    SubscriptionNotifyMethod subscriptionNotifyMethod = methodCombo.getValue().getMethod();
+                    SubscriptionType subscriptionType =  typeCombo.getValue().getMethod();
+                    try {
+                        EntityName name = CommonFactoryLocator.getInstance().createName(subscriptionName.getValue(), EntityType.subscription);
 
 
+                        final Subscription update;
+
+                        if (entity.getEntityType().equals(EntityType.subscription)) {
+
+                            update = (Subscription) entity;
+                            update.setName(name);
+                            update.setEnabled(enabled.getValue());
+                            update.setSubscriptionType(subscriptionType);
+                            update.setNotifyMethod(subscriptionNotifyMethod);
+                            update.setNotifyFormatJson(machine.getValue());
+                            update.setMaxRepeat(spinnerField.getValue().doubleValue());
+                            update.setLastSent(new Date());
+
+
+                        }
+                        else {
+
+
+                            String parent = user.getKey().equals(entity.getOwner()) ? entity.getKey() :  "";
+
+                            Entity newEntity = EntityModelFactory.createEntity(name, "", EntityType.subscription
+                                    , ProtectionLevel.onlyMe, parent, "");
+                            update = SubscriptionFactory.createSubscription(
+                                    newEntity,
+                                    entity.getKey(),
+                                    subscriptionType,
+                                    subscriptionNotifyMethod,
+                                    spinnerField.getValue().doubleValue(),
+                                    new Date(0),
+                                    machine.getValue(),
+                                    enabled.getValue());
+                        }
+
+                        EntityServiceAsync service = GWT.create(EntityService.class);
+                        service.addUpdateEntity(update, new UpdateEntityAsyncCallback(box));
+
+
+
+                    } catch (NimbitsException e) {
+                        FeedbackHelper.showError(e);
+                    }
                 }
-                else {
-                    String parent = entity.isReadOnly() ? "" : entity.getKey();
-
-                    Entity newEntity = EntityModelFactory.createEntity(name, "", EntityType.subscription
-                            , ProtectionLevel.onlyMe, parent, entity.getOwner());
-                    update = SubscriptionFactory.createSubscription(
-                            newEntity,
-                            entity.getKey(),
-                            subscriptionType,
-                            subscriptionNotifyMethod,
-                            spinnerField.getValue().doubleValue(),
-                            new Date(0),
-                            machine.getValue(),
-                            enabled.getValue());
-                }
-
-                EntityServiceAsync service = GWT.create(EntityService.class);
-                service.addUpdateEntity(update, new UpdateEntityAsyncCallback(box));
 
 
-
-            } catch (NimbitsException e) {
-                FeedbackHelper.showError(e);
-            }
-        }
     }
 }

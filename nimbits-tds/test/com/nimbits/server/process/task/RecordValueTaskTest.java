@@ -50,7 +50,7 @@ public class RecordValueTaskTest extends NimbitsServletTest {
         List<Value> vr = ValueServiceFactory.getInstance().getCurrentValue(point);
         assertFalse(vr.isEmpty());
         assertEquals(v.getDoubleValue(), vr.get(0).getDoubleValue(), 0.001);
-        String vj = GsonFactory.getInstance().toJson(vr);
+        String vj = GsonFactory.getInstance().toJson(vr.get(0));
         req.addParameter(Parameters.valueJson.getText(), vj);
 
         task.doPost(req, resp);

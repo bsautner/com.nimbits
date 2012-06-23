@@ -77,10 +77,10 @@ public class SummaryServiceTest extends NimbitsServletTest {
 
         SummaryServiceFactory.getInstance().processSummaries(user,  point);
 
-        Value result = ValueServiceFactory.getInstance().getCurrentValue(pointChild);
+        List<Value> result = ValueServiceFactory.getInstance().getCurrentValue(pointChild);
         Thread.sleep(100);
         Assert.assertNotNull(result);
-        Assert.assertEquals(com, result.getDoubleValue(), DELTA);
+        Assert.assertEquals(com, result.get(0).getDoubleValue(), DELTA);
 
 
 

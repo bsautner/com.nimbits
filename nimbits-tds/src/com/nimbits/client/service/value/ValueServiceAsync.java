@@ -41,7 +41,7 @@ public interface ValueServiceAsync {
 
     void getTopDataSeries(final Entity entity, int maxValues, final Date endDate, final AsyncCallback<List<Value>> async);
 
-    void getCurrentValue(Entity entity, final AsyncCallback<Value> async);
+    void getCurrentValue(Entity entity, final AsyncCallback<List<Value>> async);
 
     void recordValue(final User u, final Entity target, final Value value, AsyncCallback<Value> async);
 
@@ -63,4 +63,8 @@ public interface ValueServiceAsync {
     void getCurrentValues(Map<String, Point> entities, AsyncCallback<Map<String, Entity>> async);
 
     void getAllStores(Entity entity, AsyncCallback<List<ValueBlobStore>> async);
+
+    void purgeValues(Entity entity, AsyncCallback<Void> async) throws NimbitsException;
+
+    void deleteExpiredData(Point point, AsyncCallback<Void> async);
 }

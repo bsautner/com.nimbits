@@ -57,4 +57,7 @@ public interface ValueTransactions {
     ValueBlobStore mergeTimespan(Timespan timespan) throws NimbitsException ;
 
 
+    void purgeValues() throws NimbitsException;
+
+    void deleteExpiredData();
 }

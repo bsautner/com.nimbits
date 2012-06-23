@@ -135,17 +135,7 @@ public class EntityDaoImplTest {
 
 
     }
-    @Test
-    public void getEntitiesGPS() {
-        List<JpaEntity> list = entityTransactions.getAllEntities();
-        assertNotNull(list);
-        for (JpaEntity entity : list) {
-            String x = entityTransactions.getLocation(entity);
-            System.out.println(x);
-        }
 
-
-    }
     @Test
 
     public void testGetEntityByUUID() throws Exception {

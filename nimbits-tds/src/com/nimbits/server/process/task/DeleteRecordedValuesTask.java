@@ -15,8 +15,14 @@ package com.nimbits.server.process.task;
 
 import com.google.gwt.core.client.*;
 import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.point.*;
+import com.nimbits.client.model.user.User;
 import com.nimbits.server.gson.*;
+import com.nimbits.server.transactions.service.entity.EntityTransactionFactory;
+import com.nimbits.server.transactions.service.user.UserServiceFactory;
+import com.nimbits.server.transactions.service.user.UserTransactionFactory;
+import com.nimbits.server.transactions.service.value.ValueServiceFactory;
 
 import javax.servlet.http.*;
 
@@ -31,47 +37,22 @@ public class DeleteRecordedValuesTask extends HttpServlet {
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
 
         final String pointJson = req.getParameter(Parameters.json.getText());
-        final String exp = req.getParameter(Parameters.exp.getText());
         Point point = GsonFactory.getInstance().fromJson(pointJson, PointModel.class);
 
-          int expDays = 0;
+
         try {
 
-            if (exp != null) {
-                expDays = Integer.parseInt(exp);
-                deleteData(point, true, expDays);
-            } else {
-                deleteData(point, false, expDays);
+                deleteData(point);
 
-            }
         } catch (NumberFormatException e) {
             GWT.log(e.getMessage());
         }
     }
 
      //TODO - delete blobs
-    private void deleteData(final Point point, final boolean expOnly, final int expDays) {
-//        long count = 0;
-//        final Set<Key> keys = new HashSet<Key>();
-//        final Calendar d = Calendar.getInstance();
-//        d.add(Calendar.DATE, (expDays * -1));
-//        final DatastoreService store = DatastoreServiceFactory.getDatastoreService();
-////        Point p = PointServiceFactory.getInstance().getPointByUUID(uuid);
-//
-//        final Query q = new Query("RecordedValue").setKeysOnly();
-//
-//        q.addFilter("pointFK", Query.FilterOperator.EQUAL, point.getId());
-//        if (expOnly) {
-//            q.addFilter(Parameters.timestamp.getText(), Query.FilterOperator.LESS_THAN, d.getTime());
-//        }
-//        for (final Entity e : store.prepare(q).asList(FetchOptions.Builder.withLimit(5000))) {
-//            count++;
-//            keys.add(e.getKey());
-//        }
-//        if (count > 0) {
-//            store.delete(keys);
-//            TaskFactory.getInstance().startDeleteDataTask(point, expOnly, expDays);
-//        }
+    private void deleteData(final Point point)  {
+        ValueServiceFactory.getInstance().deleteExpiredData(point);
+
 
     }
 

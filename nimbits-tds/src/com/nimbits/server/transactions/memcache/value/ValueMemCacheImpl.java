@@ -89,6 +89,29 @@ public class ValueMemCacheImpl implements ValueTransactions {
             cacheShared.put(MemCacheKey.activePoints, points);
         }
     }
+    protected void removePointFromActiveList() {
+        Map<String, Entity> points;
+        if (cacheShared.contains(MemCacheKey.activePoints)) {
+            try {
+                points = (Map<String, Entity>) cacheShared.get(MemCacheKey.activePoints);
+
+                if (points != null && ! points.containsKey(point.getKey())) {
+                    points.remove(point.getKey());
+                    cacheShared.delete(MemCacheKey.activePoints);
+                    cacheShared.put(MemCacheKey.activePoints, points);
+
+                }
+            } catch (InvalidValueException e) {
+                cacheShared.clearAll();
+                points = new HashMap<String, Entity>(1);
+                points.put(point.getKey(), point);
+                cacheShared.delete(MemCacheKey.activePoints);
+                cacheShared.put(MemCacheKey.activePoints, points);
+            }
+
+        }
+
+    }
 
 
     @Override
@@ -183,6 +206,7 @@ public class ValueMemCacheImpl implements ValueTransactions {
 
     }
 
+
     @Override
     public List<Value> getTopDataSeries(final int maxValues) throws NimbitsException {
         final List<Value> cached = getBuffer();
@@ -262,6 +286,20 @@ public class ValueMemCacheImpl implements ValueTransactions {
     public ValueBlobStore mergeTimespan(Timespan timespan) throws NimbitsException {
         return ValueTransactionFactory.getDaoInstance(point).mergeTimespan(timespan);
 
+    }
+
+    @Override
+    public void purgeValues() throws NimbitsException {
+        if (buffer.contains(valueListCacheKey)) {
+            buffer.delete(valueListCacheKey);
+        }
+        removePointFromActiveList();
+        ValueTransactionFactory.getDaoInstance(point).purgeValues();
+    }
+
+    @Override
+    public void deleteExpiredData() {
+        ValueTransactionFactory.getDaoInstance(point).deleteExpiredData();
     }
 
 

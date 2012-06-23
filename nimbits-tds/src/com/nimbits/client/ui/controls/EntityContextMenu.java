@@ -323,7 +323,7 @@ public class EntityContextMenu extends Menu {
     private final Listener<MessageBoxEvent> xmppResourceListener = new XMPPMessageBoxEventListener();
 
     public void showSubscriptionPanel(final Entity entity) {
-        final SubscriptionPanel dp = new SubscriptionPanel(entity, settings);
+        final SubscriptionPanel dp = new SubscriptionPanel(user, entity, settings);
 
         final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
         w.setWidth(WIDTH);

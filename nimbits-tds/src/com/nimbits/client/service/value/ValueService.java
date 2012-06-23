@@ -32,7 +32,7 @@ public interface ValueService extends RemoteService {
 
     List<Value> getCache(final Entity entity) throws NimbitsException;
 
-    Value getCurrentValue(final Entity entity) throws NimbitsException;
+    List<Value> getCurrentValue(final Entity entity) throws NimbitsException;
 
     List<Value> getPieceOfDataSegment(final Entity entity, final Timespan timespan, final int start, final int end) throws NimbitsException;
 
@@ -62,4 +62,8 @@ public interface ValueService extends RemoteService {
     Map<String, Entity> getCurrentValues(Map<String, Point> entities) throws NimbitsException;
 
     List<ValueBlobStore> getAllStores(Entity entity) throws NimbitsException;
+
+    void purgeValues(Entity entity) throws NimbitsException;
+
+    void deleteExpiredData(Point point);
 }

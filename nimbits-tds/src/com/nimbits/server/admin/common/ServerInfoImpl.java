@@ -15,6 +15,7 @@ package com.nimbits.server.admin.common;
 
 
 import javax.servlet.*;
+import java.util.zip.Deflater;
 
 /**
  * Created by bsautner
@@ -29,6 +30,8 @@ public class ServerInfoImpl {
     }
 
     public static String getFullServerURL(final ServletRequest req) {
+        Deflater compressor = new Deflater();
+        compressor.setLevel(Deflater.BEST_COMPRESSION);
      try {
          return req == null ? getUrl() : req.getScheme() + "://" + req.getServerName() + ':' + req.getServerPort();
 
@@ -36,6 +39,7 @@ public class ServerInfoImpl {
      catch (NullPointerException ex) {
         return TEST_URL;
      }
+
 
     }
     private  static String getUrl() {

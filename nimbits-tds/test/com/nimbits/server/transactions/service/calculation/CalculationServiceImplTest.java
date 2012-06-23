@@ -97,18 +97,18 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
 
         org.junit.Assert.assertEquals(vt.getDoubleValue(), r2, DELTA);
 
-        final Value vy = ValueServiceFactory.getInstance().getCurrentValue(y);// ClientHelper.client().getCurrentRecordedValue(yName);
-        org.junit.Assert.assertEquals(vy.getDoubleValue(), ry, DELTA);
+        final  List<Value> vy = ValueServiceFactory.getInstance().getCurrentValue(y);// ClientHelper.client().getCurrentRecordedValue(yName);
+        org.junit.Assert.assertEquals(vy.get(0).getDoubleValue(), ry, DELTA);
 
-        final Value vz = ValueServiceFactory.getInstance().getCurrentValue(z);
-        org.junit.Assert.assertEquals(vz.getDoubleValue(), rz, DELTA);
+        final  List<Value> vz = ValueServiceFactory.getInstance().getCurrentValue(z);
+        org.junit.Assert.assertEquals(vz.get(0).getDoubleValue(), rz, DELTA);
 
         Thread.sleep(1000);
         CalculationServiceFactory.getInstance().processCalculations(user, trigger, vt);
         Thread.sleep(1000);
-        final Value endResult = ValueServiceFactory.getInstance().getCurrentValue(target);
+        final  List<Value> endResult = ValueServiceFactory.getInstance().getCurrentValue(target);
         org.junit.Assert.assertNotNull(endResult);
-        org.junit.Assert.assertEquals(r1 + r2 + ry + rz, endResult.getDoubleValue(), DELTA);
+        org.junit.Assert.assertEquals(r1 + r2 + ry + rz, endResult.get(0).getDoubleValue(), DELTA);
 
     }
 

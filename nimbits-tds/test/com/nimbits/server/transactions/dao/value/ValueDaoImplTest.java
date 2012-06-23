@@ -227,7 +227,37 @@ public class ValueDaoImplTest extends NimbitsServletTest {
 
 
     }
+    @Test
+    public void testExpireData() throws NimbitsException {
+        final List<Value> values = new ArrayList<Value>(90);
+        for (int i = 10; i < 100; i++) {
+            final Calendar c1 = Calendar.getInstance();
+            c1.add(Calendar.DATE, -1 * i);
+            final Double d1 = (double) i;
+            final Value v1 = ValueFactory.createValueModel(d1, c1.getTime());
+            values.add(v1);
+        }
+        valueDao.recordValues(values);
 
+        List<Value> result1 = valueDao.getTopDataSeries(90);
+        assertEquals(90, result1.size());
+
+        final List<Value> values2 = new ArrayList<Value>(5);
+        for (int i = 0; i < 5; i++) {
+            final Calendar c1 = Calendar.getInstance();
+            c1.add(Calendar.DATE, -1 * i);
+            final Double d1 = (double) i;
+            final Value v1 = ValueFactory.createValueModel(d1, c1.getTime());
+            values2.add(v1);
+        }
+
+        valueDao.recordValues(values2);
+        valueDao.deleteExpiredData();
+
+
+        List<Value> result = valueDao.getTopDataSeries(10);
+            assertEquals(5, result.size());
+    }
     @Test
     public void testGetRecordedValuePrecedingTimestamp() {
         final List<Value> values = loadSomeDataOverDays();

@@ -80,13 +80,13 @@ public class FacebookImpl extends RemoteServiceServlet implements FacebookServic
 
     }
 
-    private static String getToken(final String code, final String ClientID, final String redirectURL, final String secret) {
+    private static String getToken(final String code, final String clientID, final String redirectURL, final String secret) {
 
         String retStr = null;
         try {
             final String encodedCode = URLEncoder.encode(code, Const.CONST_ENCODING);
             final String u1 = "https://graph.facebook.com/oauth/access_token";
-            final String params = "client_id=" + ClientID + '&' +
+            final String params = "client_id=" + clientID + '&' +
                     "redirect_uri=" + redirectURL + '&' +
                     "client_secret=" + secret + '&' +
                     "type=user_agent&" +

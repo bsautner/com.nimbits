@@ -34,7 +34,7 @@ public class JpaEntity implements com.nimbits.client.model.entity.Entity {
     @GeneratedValue(strategy = GenerationType.TABLE)
     private int idEntity;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "FK_INSTANCE", nullable = false, insertable = true, updatable = true)
     JpaInstance instance;
 

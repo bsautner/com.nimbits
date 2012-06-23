@@ -49,7 +49,7 @@
             for (var i = 0; i < neighborhoods.length; i++) {
                 setTimeout(function() {
                     addMarker(uuids[iterator], desc[iterator]);
-                }, i * 200);
+                }, i * 100);
             }
         }
 

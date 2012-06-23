@@ -134,14 +134,14 @@ public class PointServletImpl extends ApiServlet {
 
         List<Entity> result =  EntityServiceFactory.getInstance().getEntityByName(user, name, EntityType.point);
 
-            if (result.isEmpty()) {
-                sb.append("false");
-            }
-            else {
+        if (result.isEmpty()) {
+            sb.append("false");
+        }
+        else {
 
-                sb.append("true");
+            sb.append("true");
 
-            }
+        }
 
 
     }
@@ -205,13 +205,13 @@ public class PointServletImpl extends ApiServlet {
                                 //Value value = ValueServiceFactory.getInstance().getCurrentValue(e);
                                 //if (value == null) { //todo implement null pattern in value service
                                 //    value = ValueFactory.createValueModel(0.0);
-                               // }
+                                // }
                                 sb.append(e.getName().getValue())
-                                       // .append("(")
-                                       // .append(value.getTimestamp().getTime() / 1000)
-                                       // .append(":")
-                                       // .append(value.getDoubleValue())
-                                       .append(",");
+                                        // .append("(")
+                                        // .append(value.getTimestamp().getTime() / 1000)
+                                        // .append(":")
+                                        // .append(value.getDoubleValue())
+                                        .append(",");
                             }
                         }
                         if (sb.toString().endsWith(",")) {
@@ -266,7 +266,10 @@ public class PointServletImpl extends ApiServlet {
                         for (final Entity e : children) {
                             final Point p = (Point) e;
                             p.setValues(getRecordedValues(getParam(Parameters.count), startParam, endParam, offsetParam, p));
-                            p.setValue(ValueServiceFactory.getInstance().getCurrentValue(p));
+                            List<Value> values = ValueServiceFactory.getInstance().getCurrentValue(p);
+                            if (! values.isEmpty()) {
+                                p.setValue(values.get(0));
+                            }
                             points.add(p);
 
                         }
@@ -289,14 +292,14 @@ public class PointServletImpl extends ApiServlet {
 
     private static Entity getParentWithParam(final EntityName name, final EntityType parentType, final User u) throws NimbitsException {
 
-       List<Entity> results = EntityServiceFactory.getInstance().getEntityByName(u, name, parentType);
+        List<Entity> results = EntityServiceFactory.getInstance().getEntityByName(u, name, parentType);
 
         if (! results.isEmpty()) {
             return (results.get(0));
 
         }
         else {
-           List<Entity> user =  EntityServiceFactory.getInstance().getEntityByName(u, CommonFactoryLocator.getInstance().createName(u.getEmail().getValue(), EntityType.user), EntityType.user);
+            List<Entity> user =  EntityServiceFactory.getInstance().getEntityByName(u, CommonFactoryLocator.getInstance().createName(u.getEmail().getValue(), EntityType.user), EntityType.user);
             if (user.isEmpty()) {
                 throw new NimbitsException("Error getting parent, this entity has no parent, not even a user!");
 
@@ -377,8 +380,10 @@ public class PointServletImpl extends ApiServlet {
         final Point p = (Point) baseEntity;
         p.setValues(getRecordedValues(countParam, startParam, endParam, offsetParam, baseEntity));
 
-        final Value current = ValueServiceFactory.getInstance().getCurrentValue(p);
-        p.setValue(current);
+        final List<Value> current = ValueServiceFactory.getInstance().getCurrentValue(p);
+        if (! current.isEmpty()) {
+            p.setValue(current.get(0));
+        }
         final ExportType type = getOutputType(format);
         return type.equals(ExportType.json) ? gson.toJson(p) : "";
 

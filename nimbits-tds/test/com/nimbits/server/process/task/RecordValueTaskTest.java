@@ -17,7 +17,10 @@ import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.transactions.service.value.ValueServiceFactory;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 /**
  * Created by Benjamin Sautner
@@ -44,15 +47,16 @@ public class RecordValueTaskTest extends NimbitsServletTest {
         EntityServiceFactory.getInstance().addUpdateEntity(c);
         Value v = ValueFactory.createValueModel(1.12);
         ValueServiceFactory.getInstance().recordValue(point,v);
-        Value vr = ValueServiceFactory.getInstance().getCurrentValue(point);
-        assertEquals(v.getDoubleValue(), vr.getDoubleValue(), 0.001);
-        String vj = GsonFactory.getInstance().toJson(vr);
+        List<Value> vr = ValueServiceFactory.getInstance().getCurrentValue(point);
+        assertFalse(vr.isEmpty());
+        assertEquals(v.getDoubleValue(), vr.get(0).getDoubleValue(), 0.001);
+        String vj = GsonFactory.getInstance().toJson(vr.get(0));
         req.addParameter(Parameters.valueJson.getText(), vj);
 
         task.doPost(req, resp);
 
-        Value vx = ValueServiceFactory.getInstance().getCurrentValue(pointChild);
-        assertEquals(vx.getDoubleValue(), v.getDoubleValue() + 1, 0.001);
+        List<Value> vx = ValueServiceFactory.getInstance().getCurrentValue(pointChild);
+        assertEquals(vx.get(0).getDoubleValue(), v.getDoubleValue() + 1, 0.001);
 
 
 

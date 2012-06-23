@@ -31,6 +31,7 @@ import com.nimbits.server.api.helper.LocationReportingHelperFactory;
 import com.nimbits.server.io.blob.BlobServiceFactory;
 import com.nimbits.server.process.task.TaskFactory;
 import com.nimbits.server.transactions.service.user.UserServiceFactory;
+import com.nimbits.server.transactions.service.value.ValueServiceFactory;
 
 import java.util.*;
 
@@ -68,12 +69,17 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
         }
         for (final Entity e : deleted) {
             EntityTransactionFactory.getInstance(user).removeEntityFromCache(e);
-            TaskFactory.getInstance().startCoreTask(entity, Action.delete, ServerInfoImpl.getFullServerURL(getThreadLocalRequest()));
+            TaskFactory.getInstance()
+                    .startCoreTask(getThreadLocalRequest(), entity, Action.delete, ServerInfoImpl.getFullServerURL(getThreadLocalRequest()));
 
         }
 
         if  (entity.getEntityType().equals(EntityType.file)) {
             BlobServiceFactory.getInstance().deleteBlob((File) entity);
+        }
+        else if (entity.getEntityType().equals(EntityType.point)) {
+            ValueServiceFactory.getInstance().purgeValues(entity);
+
         }
         return deleted;
     }
@@ -242,7 +248,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
     @Override
     public Entity addUpdateEntity(final User user, final Entity entity) throws NimbitsException {
 
-       TaskFactory.getInstance().startCoreTask(entity, Action.update, ServerInfoImpl.getFullServerURL(getThreadLocalRequest()));
+       TaskFactory.getInstance().startCoreTask(this.getThreadLocalRequest(), entity, Action.update, ServerInfoImpl.getFullServerURL(getThreadLocalRequest()));
        LocationReportingHelperFactory.getInstance().reportLocation(this.getThreadLocalRequest(), entity);
        return EntityTransactionFactory.getInstance(user).addUpdateEntity(entity);
     }

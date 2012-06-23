@@ -34,6 +34,7 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.GxtModel;
 import com.nimbits.client.model.TreeModel;
 import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.service.entity.EntityService;
@@ -61,9 +62,6 @@ public class CenterPanel extends NavigationEventProvider {
     private static final double HEIGHT1 = .5;
     private static final int INT = 50;
     private static final double DOUBLE = .9;
-    // private final Map<String, Entity> entities = new HashMap<String, Entity>();
-    // private final Map<String, AnnotatedTimeLinePanel> lines = new HashMap<String, AnnotatedTimeLinePanel>();
-
     private NavigationPanel navigationPanel;
     private Map<SettingType, String> settings;
     private LayoutContainer chartContainer;
@@ -90,7 +88,7 @@ public class CenterPanel extends NavigationEventProvider {
 
     }
 
-    NavigationPanel createNavigationPanel() {
+    private NavigationPanel createNavigationPanel() {
         final NavigationPanel navTree = new NavigationPanel(user, settings);
 
 
@@ -157,6 +155,10 @@ public class CenterPanel extends NavigationEventProvider {
         //chartPanel.layout();
         layout(true);
 
+    }
+
+    public void addEntityToTree(TreeModel model) throws NimbitsException {
+        navigationPanel.addUpdateTreeModel(model, false);
     }
 
     private MainMenuBar initToolbar(final User loginInfo, Map<SettingType, String> settings) throws NimbitsException {

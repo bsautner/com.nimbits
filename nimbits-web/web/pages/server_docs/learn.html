@@ -1,0 +1,130 @@
+<h4 style="margin-top: 10px; margin-bottom: 10px" xmlns="http://www.w3.org/1999/html"
+    xmlns="http://www.w3.org/1999/html">Getting Started</h4>
+<script type="text/javascript" src="/include/rawfile.js">  </script>
+
+
+
+<p>OK! Let's get started. Here is Step 1 for getting connected to the cloud.</p>
+
+<p>
+  Nimbits is a big system, with a lot of moving parts. There is a lot of power inside its cloud. We recomend getting started the
+    same way you'd eat an elephant: One bite at a time.
+
+
+</p>
+
+<h5>Test drive the public cloud</h5>
+<p>
+  Here is the link to the administrative console for Nimbits server: <a href="http://app.nimbits.com">http://app.nimbits.com</a>
+</p>
+ <p>It's worth mentioning that we target Google Chrome as the supported browser for Nimbits, but it also works on most standards
+ based browsers such as FireFox. If you're using Internet Explorer, you may be prompted to install <a href="http://www.google.com/chromeframe">Google Chrome Frame</a>
+ which is an add-on that will make Nimbits run faster in IE.</p>
+<p>
+  The admin console lets you manage your account, upload and download data manually and create "things".  When you log in, you'll
+  be prompted to log in with a Google Account, since that's what we use for this instance's security. This can be a gmail account,
+  but it can also be any email, even your company's email i.e boss@bigcompany.com. Follow the steps for registering your email address
+  with Google or <a href="https://accounts.google.com/SignUp?continue=https%3A%2F%2Faccounts.google.com%2FManageAccount">
+  sign up for a google account</a>, and you'll be good to go.
+</p>
+
+<h5>Create a Data Point</h5>
+
+<p>A Point represents a thing. You're child's weight, the core temperature of a nuclear power plant, the temperature of an aquarium,
+nitrogen content on a sensor on your Mars rover. Whatever you have to record.</p>
+
+<img src="/images/screens/file_menu.png" alt="cloud"/>
+<p>
+<span class="label label-success">Everything in Nimbits can be automated using code and our REST API</span>
+<h5>Entities and Organization</h5>
+</p>
+
+<p>
+   When you log into Nimbits you'll see your account name, which is the top of a tree where you can organise your stuff. When you
+    add a data point, it will appear under your account name. </p>
+<p>As you add more stuff, you can drag and drop them around your tree to organize
+    them how you like. You can have many child points under a parent one, or folders, files and so on.</p>
+
+
+
+
+<h5>Basic Point Settings</h5>
+<img src="/images/screens/general_properties.png" style="float: right;" alt="cloud"/>
+<p>
+    Right click on your new Point and select Edit. Here you can set your point's settings.
+
+</p>
+<ul>
+    <li><a href="#" onclick="getContent('pages/server_docs/filters.html')"><span class="label">Compression Filters:</span></a>
+    Filters give you a way to tell Nimbits to reject data that should not be recorded. Noisy, repetitive data can be screened out. </li>
+    <li><span class="label">Expire:</span> Tell Nimbits to automatically delete data that is older than you want to keep</li>
+    <li><span class="label">Unit of Measure:</span> Whatever label you want to apply, such a Watts for an electrical reading.</li>
+    <li><span class="label">Who can view:</span> determines if anyone can read your data point and find it in the search engine, people who connected account with,
+    or only you.</li>
+    <li><span class="label">Descriptions:</span> It's important to set a description if you want your point to be easier to find in the search engine.</li>
+
+</ul>
+
+
+<h5>Alerts</h5>
+
+    <p>Alerts tell Nimbits that the state of a points will go into a <span class="label label-important">High</span>
+        or <span class="label label-info">Low</span> Alert State when a value comes in above or below a setting.
+    Also, a point can go into a <span class="label label-warning">Idle</span> alert state if a point does not receive a new value for a set amount of time.</p>
+
+<span class="label label-success">You can subscribe to points belonging to other users, getting notified of their alerts.</span>
+
+<h5>Subscriptions and Notifications</h5>
+
+   <p>You can subscribe to a point and ask Nimbits to Notify you when events occur. You can configure many subscriptions, getting alerted
+       in different ways based on the settings. Right click on your new Data Point and select <span class="label label-success">Subscribe</span>.
+   </p>
+<img src="/images/screens/subscribe.png"  alt="cloud"/>
+
+ <p>
+     When you create a subscription, it will appear as a new icon under your data point in the tree. You can organize your subscriptions
+     any way you like. Their location in the tree has nothing to do with their settings or what point you're subscribing to. I like to keep all
+     of my subscriptions in a folder.  In the image below, you can see how I have two subscriptions to my Aquariums temperature probe, one to alert
+     me if the temp goes too high, another to let me know if a value hasn't been recorded in a while, so maybe my probe is off.
+
+ </p>
+<img src="/images/screens/subscriptions.png"  style="float: right;"  alt="cloud"/>
+<p>A point can be in one of four states</p>
+<ul>
+    <li><span class="label">Normal</span> All is well.</li>
+    <li><span class="label">High:</span> The last recorded number value was higher or equal to the high alert setting.</li>
+    <li><span class="label">Low:</span> The last recorded number value was lower or equal to the high alert setting.</li>
+    <li><span class="label">Idle:</span> The point has not received a new value in a set number of time, based on the idle
+        setting.
+    </li>
+</ul>
+
+<p>When a point goes into an Alert State, it will attempt to notify you in ways set in the point's properties.
+    <BR/>
+    The following alert methods are available</p>
+<ul>
+    <li><span class="label">Email</span></li>
+    <li><span class="label">Instant Message XMPP</span></li>
+    <li><span class="label">Facebook</span></li>
+    <li><span class="label">Twitter</span></li>
+    <li><span class="label">Your Data Feed Point</span></li>
+    <li>When using the portal or android app, point icons change color based on the alert state.</li>
+</ul>
+
+<span class="label label-success">You can choose to have the content of an alert sent in JSON format, so other programs can pick it up.</span>
+
+        <p>
+            Now that you have a point created, you can being recording data. Think of a point as a bucket filled with timestamped value objects.
+            You can store much more than a series of numbers in a point. Each recorded value can contain:    </p>
+
+<ul>
+    <li><span class="label">A Number:</span> e.g. a temperature, or any decimal value.</li>
+    <li><span class="label">A Timestamp:</span> Stored in UTC time</li>
+    <li><span class="label">GPS Coords</span></li>
+    <li><span class="label">Text String:</span> Notes, used in annotations etc.</li>
+    <li><span class="label">Data:</span> Any string data, such as XML or JSON</li>
+
+</ul>
+
+
+  <p style="margin-bottom: 100px"></p>

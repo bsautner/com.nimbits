@@ -28,6 +28,7 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.service.user.UserService;
 import com.nimbits.server.admin.logging.*;
+import com.nimbits.server.admin.quota.QuotaFactory;
 import com.nimbits.server.communication.email.*;
 import com.nimbits.server.settings.SettingsServiceFactory;
 import com.nimbits.server.transactions.service.entity.*;
@@ -208,6 +209,13 @@ public class UserServiceImpl extends RemoteServiceServlet implements
             retObj.setLoginUrl(userService.createLoginURL(requestUri));
         }
         return retObj;
+    }
+
+    @Override
+    public Integer getQuota() throws NimbitsException {
+         User user= getHttpRequestUser(this.getThreadLocalRequest());
+         return QuotaFactory.getInstance(user.getEmail()).getCount();
+
     }
 
     @Override

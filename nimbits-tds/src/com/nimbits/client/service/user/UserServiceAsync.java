@@ -38,4 +38,6 @@ public interface UserServiceAsync {
     void getConnectionRequests(final List<String> connections, final AsyncCallback<List<User>> async) throws NimbitsException;
 
     void login(String requestUri, AsyncCallback<User> async);
+
+    void getQuota(AsyncCallback<Integer> async);
 }

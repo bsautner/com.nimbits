@@ -24,6 +24,10 @@
         <property name="minTimestamp" direction="desc"/>
     </datastore-index>
 
+    <datastore-index kind="ValueBlobStoreEntity" ancestor="false" source="manual">
+        <property name="entity" direction="asc"/>
+        <property name="maxTimestamp" direction="asc"/>
+    </datastore-index>
 
 
 </datastore-indexes>

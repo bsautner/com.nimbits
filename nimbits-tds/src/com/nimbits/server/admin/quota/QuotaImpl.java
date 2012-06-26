@@ -13,13 +13,11 @@
 
 package com.nimbits.server.admin.quota;
 
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.server.admin.counter.*;
-import com.nimbits.server.settings.SettingsServiceFactory;
-import com.nimbits.server.transactions.dao.counter.*;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import com.nimbits.client.enums.MemCacheKey;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.email.EmailAddress;
 
 /**
  * Created by Benjamin Sautner
@@ -28,47 +26,55 @@ import com.nimbits.server.transactions.dao.counter.*;
  * Time: 3:27 PM
  */
 public class QuotaImpl implements Quota {
- //   private final User user;
-    ShardedCounter counter;
-    public QuotaImpl(final CommonIdentifier email) { //use email since sometimes we only have the key
-       // this.user = user;
-        counter = getOrCreateCounter(email);
+
+    private final MemcacheService cache;
+    private final String key;
+
+
+
+
+    public QuotaImpl(final EmailAddress email) { //use email since sometimes we only have the key
+
+        cache =MemcacheServiceFactory.getMemcacheService();
+        key = email.getValue() + MemCacheKey.quota;
+
 
     }
 
     @Override
     public void incrementCounter() throws NimbitsException {
 
-        counter.increment();
-        if (counter.getCount() > Const.MAX_DAILY_QUOTA) {
-            if (SettingsServiceFactory.getInstance().getBooleanSetting(SettingType.quotaEnabled)) {
-                throw new NimbitsException(UserMessages.ERROR_QUOTA_EXCEEDED);
-                //todo here is where we charge em;
-            }
+        if (cache.contains(key))  {
+            int v = (Integer) cache.get(key);
+            v +=1;
+            cache.put(key, v);
+
 
         }
+        else {
+            cache.put(key, 1);
+        }
+
+
     }
 
     @Override
     public void resetCounter() throws NimbitsException {
-      final int count = counter.getCount();
-      counter.increment(count * -1);
+        cache.delete(key);
     }
 
     @Override
     public int getCount() throws NimbitsException {
-        return counter.getCount();
-    }
+        if (cache.contains(key))  {
+            return (Integer)cache.get(key);
 
-
-    private static ShardedCounter getOrCreateCounter(final CommonIdentifier email) {
-
-        ShardedCounter counter = CounterFactory.getCounter(email.getValue());
-        if (counter == null) {
-            counter = CounterFactory.createCounter(email.getValue());
-            counter.addShard();
 
         }
-        return counter;
+        else {
+            return 0;
+        }
     }
+
+
+
 }

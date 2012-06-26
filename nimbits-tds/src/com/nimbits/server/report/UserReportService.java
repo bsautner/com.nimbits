@@ -17,10 +17,9 @@ import com.nimbits.client.common.Utils;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.user.User;
-import com.nimbits.server.admin.counter.CounterFactory;
 import com.nimbits.server.admin.logging.LogHelper;
-import com.nimbits.server.transactions.dao.counter.ShardedCounter;
-import com.nimbits.server.transactions.service.user.*;
+import com.nimbits.server.admin.quota.QuotaFactory;
+import com.nimbits.server.transactions.service.user.UserTransactionFactory;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -81,10 +80,8 @@ public class UserReportService extends HttpServlet {
                 out.println("<TD>" + u.getLastLoggedIn() + "</TD>");
                 out.println("<TD>" + u.getDateCreated() + "</TD>");
 
-                ShardedCounter counter = CounterFactory.getCounter(u.getEmail().getValue());
-                if (counter != null) {
-                    out.println("<TD>" + CounterFactory.getCounter(counter.getCount()+ "</TD>"));
-                }
+               out.println("<TD>" + QuotaFactory.getInstance(u.getEmail()).getCount() + "</TD>");
+
 
 
                 out.println("</TR>");

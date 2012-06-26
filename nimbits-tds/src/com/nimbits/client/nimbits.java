@@ -497,6 +497,22 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
             center.setHeading(Const.CONST_SERVER_NAME + ' ' + SettingType.serverVersion.getDefaultValue());
             center.setScrollMode(Style.Scroll.AUTOX);
 
+            UserServiceAsync service = GWT.create(UserService.class);
+            service.getQuota(new AsyncCallback<Integer>() {
+                @Override
+                public void onFailure(Throwable caught) {
+                    FeedbackHelper.showError(caught);
+                }
+
+                @Override
+                public void onSuccess(Integer result) {
+                    if (result > 0) {
+                   center.setHeading(Const.CONST_SERVER_NAME + ' ' + SettingType.serverVersion.getDefaultValue() + " API Calls: " + result );
+                    }
+                }
+            });
+
+
             final ContentPanel east = new ContentPanel();
             east.setHeading(Const.TEXT_DATA_FEED);
             final BorderLayoutData centerData = new BorderLayoutData(LayoutRegion.CENTER);

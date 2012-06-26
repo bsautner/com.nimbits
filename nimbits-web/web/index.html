@@ -126,7 +126,16 @@
                         <li><a href="#" onclick="getContent('pages/download.html')">Download</a></li>
                         <li><a href="#" onclick="getContent('pages/server_docs/learn.html')">Learn</a></li>
                         <li><a href="#" onclick="getContent('pages/server_docs/help.html')">Support</a></li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Buy<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#navs" onclick="getContent('pages/order_new_instance.html')">Get a new private Nimbits cloud</a></li>
+                                <li><a href="#navs" onclick="getContent('pages/order_upgrade_instance.html')">Request an upgrade to an existing Nimbits cloud</a></li>
+                            </ul>
+                        </li>
+
                     </ul>
+
                 </div>
                 <form action="search_results.html" id="cse-search-box" class="navbar-form pull-right">
                     <div>
@@ -157,7 +166,7 @@
     </div>
 
 
-    <div class="row-fluid">
+
 
         <div  id="content" class="span10" style="margin-top: 10px;">
 
@@ -175,34 +184,34 @@
                     It is a free, social and open source platform for the Internet of Things.
                 </h4>
                 <BR>
-                <p style="font-size: 14px">
-                    Nimbits Server is a free and open source <em><a
+                <p style="font-size: 12px">
+                    Nimbits Server is an <em><a
                         href="http://en.wikipedia.org/wiki/Operational_historian">Operational Process Data
                     Historian</a></em> you can use to create and share
                     <a href="#" onclick="getContent('/pages/server_docs/learn.html')">data
                         points</a>
                     on a public or private cloud and record your changing numeric, text, GPS, json or xml values
                     into them. You can use Nimbits to store and share files, sensor logs, and process diagrams and receive
-                    <a href="#" onclick="getContent('/pages/server_docs/learn.html')">alerts</a>, perform <a href="#" onclick="getContent('/pages/calculations.html')">calculations</a>, generate statistics and more. With our open source SDK and <a href="#" onclick="getContent('/pages/web_service_primer.html')">REST Web Service</a>
-                    API, you can use nimbits as a backend for your software and micro-controller projects.
+                    <a href="#" onclick="getContent('/pages/server_docs/learn.html')">alerts</a>, perform <a href="#" onclick="getContent('/pages/calculations.html')">calculations</a>, generate statistics and more.
+
                 </p>
 
 
 
             </div>
 
-
-
             <div class="row">
 
                 <div class="span5">
 
                      <span class="help-block">
-                      <span class="label label-info">Popular Data Feeds</span> <a href="#" onclick="getContent('pages/server_docs/learn.html')">Share, connect and subscribe to feeds</a>
+                      <span class="label label-info">Popular Data Feeds</span> <a href="#" onclick="getContent('pages/server_docs/learn.html')">
+                         Share, connect and subscribe to feeds</a>
                       </span>
-                    <iframe src="http://nimbits.com:8080/core/service/location.html" style="width: 440px;height: 400px;">
+                    <iframe src="http://nimbits.com:8080/core/service/location.html" style="width: 400px;height: 325px;">
 
-                    </iframe> </div>
+                    </iframe>
+                </div>
 
 
                 <div class="span5">
@@ -247,39 +256,41 @@
                     <div class="row" style="height: 25px"></div>
 
 
-                        <div class="row">
-                            <div class="span5">
-                                Embed live charts of data in your websites with <a href="#" onclick="getContent('/pages/javascript_chart.html')">JavaScript</a>
-                                and <a href="#" onclick="getContent('/pages/chart_service.html')">Chart APIs</a>
-                            </div>
+                    <div class="row">
+                        <div class="span5">
+                            Embed live charts of data in your websites with <a href="#" onclick="getContent('/pages/javascript_chart.html')">JavaScript</a>
+                            and <a href="#" onclick="getContent('/pages/chart_service.html')">Chart APIs</a>
                         </div>
-                        <div class="row">
-                            <div class="span5"><div id="graphdiv4"></div></div>
-                            <script type="text/javascript">
-                                g4 = new Dygraph(
-                                        document.getElementById("graphdiv4"),
-                                        "twonormals.csv",
-                                        {
-                                            //  rollPeriod: 7,
-                                            showRoller: false,
-                                            errorBars: true,
-                                            drawXAxis: false,
-                                            drawYAxis: false,
-                                            valueRange: [50,125],
-                                            height:200
-                                            //width:150
+                    </div>
+                    <div class="row">
+                        <div class="span5"><div id="graphdiv4"></div></div>
+                        <script type="text/javascript">
+                            g4 = new Dygraph(
+                                    document.getElementById("graphdiv4"),
+                                    "twonormals.csv",
+                                    {
+                                        //  rollPeriod: 7,
+                                        showRoller: false,
+                                        errorBars: true,
+                                        drawXAxis: false,
+                                        drawYAxis: false,
+                                        valueRange: [50,125],
+                                        height:140
+                                        //width:150
 
-                                        }
-                                );
-                            </script>
-                        </div>
+                                    }
+                            );
+                        </script>
+                    </div>
 
 
                 </div>
 
             </div>
+
+
         </div>
-    </div>
+
 </div>
 
 
@@ -318,6 +329,17 @@
 <!--<script src="./assets/bootstrap/js/bootstrap-carousel.js"></script>-->
 <script src="./assets/bootstrap/js/bootstrap-tooltip.js"></script>
 <script src="./assets/bootstrap/js/bootstrap-popover.js"></script>
+<script src="./assets/bootstrap/js/bootstrap-modal.js"></script>
+<script src="./assets/bootstrap/js/bootstrap-dropdown.js"></script>
+<script src="./assets/bootstrap/js/bootstrap-scrollspy.js"></script>
+<script src="./assets/bootstrap/js/bootstrap-tab.js"></script>
+<script src="./assets/bootstrap/js/bootstrap-tooltip.js"></script>
+<script src="./assets/bootstrap/js/bootstrap-popover.js"></script>
+<script src="./assets/bootstrap/js/bootstrap-button.js"></script>
+<script src="./assets/bootstrap/js/bootstrap-collapse.js"></script>
+<script src="./assets/bootstrap/js/bootstrap-carousel.js"></script>
+<script src="./assets/bootstrap/js/bootstrap-typeahead.js"></script>
+
 
 
 </body>

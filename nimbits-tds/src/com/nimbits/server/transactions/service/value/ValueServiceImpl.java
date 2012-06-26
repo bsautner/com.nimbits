@@ -313,10 +313,24 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
 
         //	RecordedValue prevValue = null;
 
-        final Point point  = entity instanceof Point
-                ? (Point) entity
-                : (Point) EntityServiceFactory.getInstance().getEntityByKey(u, entity.getKey(), EntityType.point).get(0);
+        final Point point;
 
+        if (! entity.getEntityType().recordsData()) {
+            throw new NimbitsException("You can only record data to a Point. Entity Type was: " + entity.getEntityType().getClassName());
+        }
+
+        if (entity instanceof Point)  {
+            point = (Point) entity;
+        }
+        else {
+            List<Entity> points  =  EntityServiceFactory.getInstance().getEntityByKey(u, entity.getKey(), entity.getEntityType());
+            if (! points.isEmpty()) {
+                point = (Point) points.get(0);
+            }
+            else {
+                throw new NimbitsException("Point Not Found");
+            }
+        }
 
         if (ignoreByAuthLevel(u, entity)) {
             throw new NimbitsException("Could not record value do to permissions levels being to low for a write operation");

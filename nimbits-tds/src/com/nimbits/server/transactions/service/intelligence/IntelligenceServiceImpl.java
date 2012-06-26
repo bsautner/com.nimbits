@@ -204,8 +204,6 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
                 }
             } catch (NimbitsException e) {
                 i.setEnabled(false);
-                FeedServiceFactory.getInstance().postToFeed(u, new NimbitsException("An error occured when processing an intelligence" +
-                        " expression - intelligence on data point has been disabled  " + e.getMessage()));
                 EntityServiceFactory.getInstance().addUpdateEntity(i);
 
 

@@ -64,36 +64,27 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
     @Override
     public void processSubscriptions(final User user, final Point point, final Value v) throws NimbitsException {
 
-
         final List<Entity> subscriptions= EntityServiceFactory.getInstance().getSubscriptionsToEntity(user, point);
         log.info("processing " + subscriptions.size() + " subscriptions");
-
         for (final Entity entity : subscriptions) {
 
             Subscription subscription = (Subscription) entity;
 
             if  (okToProcess(subscription)) {
 
-
                 log.info("Processing Subscription " + subscription.getKey());
                 subscription.setLastSent(new Date());
                 EntityServiceFactory.getInstance().addUpdateEntity(user, subscription);
 
-                final List<Entity> subscriptionEntity = EntityServiceFactory.getInstance().getEntityByKey(user, subscription.getKey(),EntityType.subscription);
+                final List<Entity> subscriptionEntity =
+                        EntityServiceFactory.getInstance().getEntityByKey(user, subscription.getKey(),EntityType.subscription);
 
-                if (subscriptionEntity.isEmpty()) {
-
-
-                } else {
-
-                   // final List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(UserServiceFactory.getServerInstance().getAdmin(), point.getKey(), ).get(0);
+                if (! subscriptionEntity.isEmpty())  {
 
                     final User subscriber = UserServiceFactory.getInstance().getUserByKey(subscriptionEntity.get(0).getOwner(), AuthLevel.readWriteAll);
                     final AlertType alert = v.getAlertState();
 
                     switch (subscription.getSubscriptionType()) {
-
-
                         case none:
                             break;
                         case anyAlert:
@@ -141,7 +132,13 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
     }
 
 
-    private static void sendNotification(final User user, final Entity entity, final Subscription subscription, final Point point, final Value value) throws NimbitsException {
+    private static void sendNotification(
+            final User user,
+            final Entity entity,
+            final Subscription subscription,
+            final Point point,
+            final Value value) throws NimbitsException {
+
         switch (subscription.getNotifyMethod()) {
             case none:
                 break;

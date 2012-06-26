@@ -51,13 +51,8 @@ public class RecordValueTask extends HttpServlet {
         final String userJson = req.getParameter(Parameters.pointUser.getText());
         final String pointJson = req.getParameter(Parameters.pointJson.getText());
         final String valueJson = req.getParameter(Parameters.valueJson.getText());
-
         final Entity entity = GsonFactory.getInstance().fromJson(pointJson, EntityModel.class);
         final Value value = GsonFactory.getInstance().fromJson(valueJson, ValueModel.class);
-
-
-
-
 
         log.info(userJson);
         log.info(pointJson);

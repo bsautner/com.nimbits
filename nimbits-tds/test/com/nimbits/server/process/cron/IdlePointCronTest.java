@@ -40,11 +40,9 @@ public class IdlePointCronTest extends NimbitsServletTest {
         point.setIdleSeconds(1);
         point.setIdleAlarmOn(true);
         try {
-            EntityServiceFactory.getInstance().addUpdateEntity(user, point);
-           // PointServiceFactory.getInstance().updatePoint(user, point);
-
+           EntityServiceFactory.getInstance().addUpdateEntity(user, point);
            final int c =  IdlePointCron.processGet();
-            assertEquals(1, c);
+           assertEquals(1, c);
         } catch (NimbitsException e) {
             fail();
         }

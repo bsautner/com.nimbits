@@ -30,6 +30,8 @@ import java.util.*;
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 public class ValueBlobStoreEntity  implements ValueBlobStore {
 
+
+
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private com.google.appengine.api.datastore.Key key;

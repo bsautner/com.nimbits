@@ -22,7 +22,6 @@ import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.transactions.service.entity.*;
-import com.nimbits.server.transactions.service.feed.*;
 import com.nimbits.server.admin.logging.*;
 import com.nimbits.server.transactions.service.user.*;
 import com.nimbits.server.transactions.service.value.*;
@@ -128,9 +127,7 @@ public class IncomingMailTask extends HttpServlet {
                 ValueServiceFactory.getInstance().recordValue(u, point, value);
             } catch (NimbitsException e) {
                 log.severe(e.getMessage());
-                if (u != null) {
-                    FeedServiceFactory.getInstance().postToFeed(u, e);
-                }
+
             }
         }
 

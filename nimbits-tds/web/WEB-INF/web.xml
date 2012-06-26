@@ -297,16 +297,7 @@
         <url-pattern>/service/orphans</url-pattern>
     </servlet-mapping>
 
-
-    <servlet>
-        <servlet-name>UpgradeTask</servlet-name>
-        <servlet-class>com.nimbits.server.process.task.UpgradeTask</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>UpgradeTask</servlet-name>
-        <url-pattern>/task/upgrade</url-pattern>
-    </servlet-mapping>
-    <servlet>
+     <servlet>
         <servlet-name>MoveCachedValuesToStoreTask</servlet-name>
         <servlet-class>com.nimbits.server.process.task.MoveCachedValuesToStoreTask</servlet-class>
     </servlet>

@@ -400,6 +400,7 @@ public class ValueDAOImpl implements ValueTransactions {
         final FileWriteChannel writeChannel = fileService.openWriteChannel(file, true);
         PrintWriter out = new PrintWriter(Channels.newWriter(writeChannel, "UTF8"));
         try {
+           // char[] uc = json.toCharArray();
 
             out.println(json);
             out.close();
@@ -408,7 +409,14 @@ public class ValueDAOImpl implements ValueTransactions {
             final Date mostRecentTimeForDay = new Date(maxMap.get(l));
             final Date earliestForDay = new Date(minMap.get(l));
             final ValueBlobStore currentStoreEntity = new
-                    ValueBlobStoreEntity(entity.getKey(), new Date(l), mostRecentTimeForDay, earliestForDay, path, key, json.length());
+                    ValueBlobStoreEntity(entity.getKey(),
+                    new Date(l),
+                    mostRecentTimeForDay,
+                    earliestForDay,
+                    path,
+                    key,
+                    json.length()
+                    );
             currentStoreEntity.validate();
             pm.makePersistent(currentStoreEntity);
             pm.flush();

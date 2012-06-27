@@ -50,6 +50,8 @@ public class TaskImpl implements Task {
     private static final String QUEUE_RECORD_VALUE = "recordvaluequeue";
     private static final String QUEUE_PROCESS_BATCH = "processbatchqueue";
     private static final String QUEUE_DELETE_DATA = "deletedata";
+    private static final String QUEUE_DELETE_ORPHANS = "orphans";
+
     private static final String DEFAULT = "default";
     private static final String PATH_CORE_TASK = "/task/core";
     private static final String PATH_DELETE_ORPHANS_TASK = "/task/orphans";

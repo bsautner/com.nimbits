@@ -1,5 +1,8 @@
 package com.nimbits.server.transactions.memcache.value;
 
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import com.nimbits.client.enums.MemCacheKey;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
@@ -22,6 +25,19 @@ public class ValueMemCacheImplTest extends NimbitsServletTest {
 
     private static final double D = 1.23;
     private static final double DELTA = 0.001;
+    private MemcacheService buffer;
+    @Test
+    public void testSafeNamespace1() {
+        String sample = "valueCachenoguchi@-~!@##$%^^&*()_--.tatsu-gmail.com-テスト2";
+        ValueMemCacheImpl impl = new ValueMemCacheImpl(user);
+        String safe = impl.makeSafeNamespace(sample);
+
+        final String bufferNamespace = MemCacheKey.valueCache + safe;
+
+        String currentValueCacheKey = MemCacheKey.currentValueCache + safe;
+         buffer = MemcacheServiceFactory.getMemcacheService(bufferNamespace);
+
+    }
 
     @Test
     public void testGetPrevValue() throws NimbitsException, InterruptedException {

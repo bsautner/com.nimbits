@@ -45,4 +45,6 @@ public interface ValueBlobStore extends Serializable, Comparable<ValueBlobStore>
     long getLength();
 
     void validate() throws NimbitsException;
+
+    Boolean getCompressed();
 }

@@ -45,16 +45,23 @@ public class ValueMemCacheImpl implements ValueTransactions {
 
     public ValueMemCacheImpl(final Entity point) {
         this.point = point;
-         final String safe = point.getKey()
-                 .replace('@', '-')
-                 .replace('/', '-')
-                 .replace(' ', '_')
-                 .replace('#', '_');
+        final String safe = makeSafeNamespace(point.getKey());
         final String bufferNamespace = MemCacheKey.valueCache + safe;
 
         currentValueCacheKey = MemCacheKey.currentValueCache + safe;
         buffer = MemcacheServiceFactory.getMemcacheService(bufferNamespace);
         cacheShared = MemcacheServiceFactory.getMemcacheService();
+    }
+
+    public String makeSafeNamespace(String key) {
+
+        final StringBuilder sb = new StringBuilder(key.length());
+        for (char c : key.toCharArray()) {
+            if (String.valueOf(c).matches("[0-9A-Za-z._-]{0,100}")) {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
     }
 
     protected void addPointToActiveList() {
@@ -269,12 +276,12 @@ public class ValueMemCacheImpl implements ValueTransactions {
 
     @Override
     public List<ValueBlobStore> getAllStores() throws NimbitsException {
-      return ValueTransactionFactory.getDaoInstance(point).getAllStores();
+        return ValueTransactionFactory.getDaoInstance(point).getAllStores();
     }
 
     @Override
     public void consolidateDate(final Date timestamp) throws NimbitsException {
-          ValueTransactionFactory.getDaoInstance(point).consolidateDate(timestamp);
+        ValueTransactionFactory.getDaoInstance(point).consolidateDate(timestamp);
     }
 
     @Override
@@ -310,19 +317,19 @@ public class ValueMemCacheImpl implements ValueTransactions {
         if (buffer.contains(valueListCacheKey)) {
             final Collection<Long> x = (Collection<Long>) buffer.get(valueListCacheKey);
             final Map<Long, Object> valueMap = buffer.getAll(x);
-                final ValueComparator bvc = new ValueComparator(valueMap);
-                final Map<Long, Object> sorted_map = new TreeMap(bvc);
-                sorted_map.putAll(valueMap);
-                final List<Value> retObj  = new ArrayList<Value>( sorted_map.keySet().size());
-                for (final Map.Entry<Long, Object> longObjectEntry : sorted_map.entrySet()) {
-                    retObj.add((Value) longObjectEntry.getValue());
-                }
-                return retObj;
+            final ValueComparator bvc = new ValueComparator(valueMap);
+            final Map<Long, Object> sorted_map = new TreeMap(bvc);
+            sorted_map.putAll(valueMap);
+            final List<Value> retObj  = new ArrayList<Value>( sorted_map.keySet().size());
+            for (final Map.Entry<Long, Object> longObjectEntry : sorted_map.entrySet()) {
+                retObj.add((Value) longObjectEntry.getValue());
             }
-            else
-            {
-                return new ArrayList<Value>(0); //return an empty list to avoid a npe
-            }
+            return retObj;
+        }
+        else
+        {
+            return new ArrayList<Value>(0); //return an empty list to avoid a npe
+        }
 
 
 
@@ -340,13 +347,13 @@ public class ValueMemCacheImpl implements ValueTransactions {
                     final Map<Long, Object> valueMap = buffer.getAll(x);
                     buffer.deleteAll(x);
                     final List<Value> values = new ArrayList<Value>(valueMap.keySet().size());
-                  //  int count = values.size();
+                    //  int count = values.size();
                     for (final Map.Entry<Long, Object> longObjectEntry : valueMap.entrySet()) {
                         values.add((Value) longObjectEntry.getValue());
                     }
                     ValueTransactionFactory.getDaoInstance(point).recordValues(values);
                 }
-             }
+            }
         } catch (Exception e) {
             buffer.delete(valueListCacheKey);
         }

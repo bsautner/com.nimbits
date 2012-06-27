@@ -17,13 +17,10 @@
     <!--<async-session-persistence enabled="true"/>-->
     <threadsafe>true</threadsafe>
     <application>nimbits1</application>
-
-    <version>391</version>
-
+    <version>395</version>
     <sessions-enabled>true</sessions-enabled>
     <inbound-services>
         <service>mail</service>
         <service>xmpp_message</service>
     </inbound-services>
-
 </appengine-web-app>

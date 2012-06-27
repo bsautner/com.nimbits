@@ -27,14 +27,21 @@ import com.nimbits.client.model.value.*;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.model.valueblobstore.*;
 import com.nimbits.server.*;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.io.blob.BlobStoreImpl;
 import com.nimbits.server.time.*;
 import static org.junit.Assert.*;
+
+import com.nimbits.server.zip.impl.CompressionImpl;
+import org.apache.commons.io.IOUtils;
 import org.junit.*;
 
 import java.io.*;
 import java.nio.*;
 import java.nio.channels.*;
 import java.util.*;
+import java.util.zip.DataFormatException;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * Created by Benjamin Sautner
@@ -59,6 +66,9 @@ public class ValueDaoImplTest extends NimbitsServletTest {
         }
         return values;
     }
+
+
+
 
     @Test
     public void testConsolidateDate() throws NimbitsException {
@@ -202,13 +212,15 @@ public class ValueDaoImplTest extends NimbitsServletTest {
         assertEquals(line, "The woods are lovely dark and deep." );
     }
     @Test
-    public void testReadJson() {
-
-
+    public void testBlobStoreWithCompression() throws IOException, DataFormatException {
+        String sample =  "hello compression";
+        BlobKey dataBlobKey =
+                BlobStoreImpl.putInBlobStore("MULTIPART_FORM_DATA",
+                        CompressionImpl.compress(sample.getBytes()));
+        System.out.println(dataBlobKey);
 
 
     }
-
 
 
     @Test
@@ -432,5 +444,8 @@ public class ValueDaoImplTest extends NimbitsServletTest {
         Date zero = TimespanServiceFactory.getInstance().zeroOutDate(now.getTime());
         assertEquals(midnightAm.getTime(), zero);
     }
+
+
+
 
 }

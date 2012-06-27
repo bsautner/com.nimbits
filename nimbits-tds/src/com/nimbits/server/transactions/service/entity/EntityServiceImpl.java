@@ -210,6 +210,11 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
     }
 
     @Override
+    public List<Entity> getChildren(final User user, final Entity parentEntity, final EntityType type) throws NimbitsException {
+        return EntityTransactionFactory.getInstance(user).getChildren(parentEntity, type);
+    }
+
+    @Override
     public List<Entity>  getEntityByName(final User user, final EntityName name, final EntityType type) throws NimbitsException {
         try {
             return EntityTransactionFactory.getInstance(user).getEntityByName(name, Class.forName(type.getClassName()));

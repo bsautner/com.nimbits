@@ -115,14 +115,16 @@ public class PointServletImpl extends ApiServlet {
 
                 }
             } else {
-
+                resp.setStatus(Const.HTTP_STATUS_UNAUTHORISED);
                 out.println(UserMessages.RESPONSE_PERMISSION_DENIED);
             }
         } catch (IOException e) {
+            resp.setStatus(Const.HTTP_STATUS_INTERNAL_SERVER_ERROR);
             if (user != null) {
                 FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(e));
             }
         } catch (NimbitsException e) {
+            resp.setStatus(Const.HTTP_STATUS_INTERNAL_SERVER_ERROR);
             if (user != null) {
                 FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(e));
             }
@@ -196,22 +198,15 @@ public class PointServletImpl extends ApiServlet {
                     EntityName parentName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
                     List<Entity> result = EntityServiceFactory.getInstance().getEntityByName(user, parentName, EntityType.point);
                     if (! result.isEmpty())  {
-                        List<Entity> children = EntityServiceFactory.getInstance().getChildren(result.get(0), EntityType.point);
+                        List<Entity> children = EntityServiceFactory.getInstance().getChildren(user, result.get(0), EntityType.point);
                         if (children.isEmpty()) {
                             log.info(parentName.getValue() + " had no children");
                         }
                         for (Entity e : children) {
                             if (okToReport(user, e)) {
-                                //Value value = ValueServiceFactory.getInstance().getCurrentValue(e);
-                                //if (value == null) { //todo implement null pattern in value service
-                                //    value = ValueFactory.createValueModel(0.0);
-                                // }
+
                                 sb.append(e.getName().getValue())
-                                        // .append("(")
-                                        // .append(value.getTimestamp().getTime() / 1000)
-                                        // .append(":")
-                                        // .append(value.getDoubleValue())
-                                        .append(",");
+                                     .append(",");
                             }
                         }
                         if (sb.toString().endsWith(",")) {
@@ -224,24 +219,17 @@ public class PointServletImpl extends ApiServlet {
                     }
                     log.info(sb.toString());
                     break;
-
-
-
             }
-
             if (getClientType().equals(ClientType.arduino)) {
                 sb.append(Const.CONST_ARDUINO_DATA_SEPARATOR);
             }
 
-
-
-
-
-
         } catch (NimbitsException e) {
+            resp.setStatus(Const.HTTP_STATUS_INTERNAL_SERVER_ERROR);
             log.warning(e.getMessage());
 
         }
+        resp.setStatus(Const.HTTP_STATUS_OK);
         return sb.toString();
     }
 

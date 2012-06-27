@@ -43,8 +43,7 @@ public class TimeServlet extends ApiServlet {
     protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
 
 
-            String gps = req.getHeader("X-AppEngine-CityLatLong");
-            log.info(gps);
+
 
             final PrintWriter out = resp.getWriter();
             DateFormatType type;

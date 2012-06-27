@@ -47,7 +47,7 @@ public class ApiServlet extends HttpServlet {
 
     protected static boolean okToReport(final User u, final Entity c) {
 
-        return c.getProtectionLevel().equals(ProtectionLevel.everyone) || !(u == null || ! u.isRestricted());
+        return c.getProtectionLevel().equals(ProtectionLevel.everyone) ||  (u != null && ! u.isRestricted());
     }
     protected static boolean okToRead(final User u, final Entity c) {
 

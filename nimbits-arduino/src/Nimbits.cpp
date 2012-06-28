@@ -59,7 +59,6 @@ void Nimbits::createPoint(String pointName) {
 
 }
 
-
 String Nimbits::recordValue(String point, float value) {
      EthernetClient client;
                        if (client.connect(GOOGLE, PORT)) {
@@ -101,7 +100,6 @@ String Nimbits::recordValue(String point, float value) {
 
 
 }
-
 
 long Nimbits::getTime() {
     EthernetClient client;

@@ -49,7 +49,10 @@ public class ValueMemCacheImpl implements ValueTransactions {
                  .replace('@', '-')
                  .replace('/', '-')
                  .replace(' ', '_')
-                 .replace('#', '_');
+                 .replace('#', '_')
+                 .replace(":" ,"_")
+                 .replace("(", "_")
+                 .replace(")", "_");
         final String bufferNamespace = MemCacheKey.valueCache + safe;
 
         currentValueCacheKey = MemCacheKey.currentValueCache + safe;

@@ -7,13 +7,11 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.instance.Instance;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -271,6 +269,8 @@ public class JpaEntity implements com.nimbits.client.model.entity.Entity {
     public String getInstanceUrl() {
         return this.instance.getInstanceUrl();
     }
+
+
     public void setIdEntity(int idEntity) {
         this.idEntity = idEntity;
     }

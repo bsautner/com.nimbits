@@ -1,6 +1,7 @@
 package com.nimbits.server.api;
 
 import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.server.service.email.EmailService;
 import com.nimbits.server.service.entity.EntityService;
 import com.nimbits.server.service.search.SearchService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -36,6 +37,9 @@ public class ServiceController {
     @Resource(name="searchService")
     private SearchService searchService;
 
+    @Resource(name="emailService")
+    private EmailService emailService;
+
     @RequestMapping(value="service/search", method= RequestMethod.GET)
     public String search(
             @RequestParam("search") String dangerousSearchText,
@@ -61,6 +65,22 @@ public class ServiceController {
             log.severe(e.getMessage());
             log.severe(ExceptionUtils.getStackTrace(e));
         }
+
+    }
+
+    @RequestMapping(value="service/dev", method=RequestMethod.GET)
+
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+    public void processDevRequest( @RequestParam("contact") String contact,
+                                   @RequestParam("name") String name,
+                                   @RequestParam("request") String request
+            , ModelMap model)
+    {
+
+        emailService.send(contact + " " + name + " " + request);
+
+        model.addAttribute("TEXT",contact);
+
 
     }
 

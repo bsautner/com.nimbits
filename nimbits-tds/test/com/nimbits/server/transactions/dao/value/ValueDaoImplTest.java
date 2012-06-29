@@ -13,28 +13,41 @@
 
 package com.nimbits.server.transactions.dao.value;
 
-import com.google.appengine.api.blobstore.*;
-import com.google.appengine.api.datastore.*;
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.BlobstoreService;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
-import static com.google.appengine.api.datastore.FetchOptions.Builder.*;
+import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.files.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.value.*;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModelFactory;
+import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
-import com.nimbits.client.model.valueblobstore.*;
-import com.nimbits.server.*;
-import com.nimbits.server.time.*;
-import static org.junit.Assert.*;
-import org.junit.*;
+import com.nimbits.client.model.valueblobstore.ValueBlobStore;
+import com.nimbits.server.NimbitsServletTest;
+import com.nimbits.server.time.TimespanServiceFactory;
+import org.junit.Ignore;
+import org.junit.Test;
 
-import java.io.*;
-import java.nio.*;
-import java.nio.channels.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
 import java.util.*;
+import java.util.zip.DataFormatException;
+
+import static com.google.appengine.api.datastore.FetchOptions.Builder.withLimit;
+import static org.junit.Assert.*;
 
 /**
  * Created by Benjamin Sautner
@@ -59,6 +72,9 @@ public class ValueDaoImplTest extends NimbitsServletTest {
         }
         return values;
     }
+
+
+
 
     @Test
     public void testConsolidateDate() throws NimbitsException {
@@ -202,13 +218,15 @@ public class ValueDaoImplTest extends NimbitsServletTest {
         assertEquals(line, "The woods are lovely dark and deep." );
     }
     @Test
-    public void testReadJson() {
-
-
+    public void testBlobStoreWithCompression() throws IOException, DataFormatException {
+//        String sample =  "hello compression";
+//        BlobKey dataBlobKey =
+//                BlobStoreImpl.putInBlobStore("MULTIPART_FORM_DATA",
+//                        CompressionImpl.compress(sample.getBytes()));
+//        System.out.println(dataBlobKey);
 
 
     }
-
 
 
     @Test
@@ -432,5 +450,8 @@ public class ValueDaoImplTest extends NimbitsServletTest {
         Date zero = TimespanServiceFactory.getInstance().zeroOutDate(now.getTime());
         assertEquals(midnightAm.getTime(), zero);
     }
+
+
+
 
 }

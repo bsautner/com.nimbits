@@ -26,8 +26,10 @@ import com.nimbits.client.model.value.*;
 import com.nimbits.client.model.valueblobstore.*;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.orm.*;
+import com.nimbits.server.process.task.TaskFactory;
 import com.nimbits.server.time.*;
 import com.nimbits.server.transactions.service.value.*;
+
 
 import javax.jdo.*;
 import java.io.*;
@@ -194,7 +196,7 @@ public class ValueDAOImpl implements ValueTransactions {
             final Query q = pm.newQuery(ValueBlobStoreEntity.class);
             q.setFilter("timestamp == t && entity == k");
             q.declareParameters("String k, Long t");
-            final Collection<ValueBlobStore> result = (Collection<ValueBlobStore>) q.execute(entity.getKey(), timestamp.getTime());
+            final List<ValueBlobStore> result = (List<ValueBlobStore>) q.execute(entity.getKey(), timestamp.getTime());
             mergeResults(pm, result);
 
         } finally {
@@ -202,11 +204,12 @@ public class ValueDAOImpl implements ValueTransactions {
         }
     }
 
-    private void mergeResults(final PersistenceManager pm, final Collection<ValueBlobStore> result) throws NimbitsException {
+    private void mergeResults(final PersistenceManager pm, final List<ValueBlobStore> result) throws NimbitsException {
         final List<Value> values = new ArrayList<Value>(Const.CONST_DEFAULT_LIST_SIZE);
         for (final ValueBlobStore store : result) {
             values.addAll(readValuesFromFile(new BlobKey(store.getBlobKey()), store.getLength()));
-         }
+        }
+        startBlobDeleteTask(result);
         pm.deletePersistentAll(result);
         recordValues(values);
     }
@@ -249,6 +252,8 @@ public class ValueDAOImpl implements ValueTransactions {
                 combined.addAll(read);
                 blobstoreService.delete(new BlobKey(store.getBlobKey()));
             }
+            startBlobDeleteTask(result);
+
             pm.deletePersistentAll(result);
 
 
@@ -264,12 +269,20 @@ public class ValueDAOImpl implements ValueTransactions {
             }
 
             String json = GsonFactory.getInstance().toJson(combined);
-            out.println(json);
+           // byte[] compressed = CompressionImpl.compressBytes(json);
+           out.print(json);
             out.close();
             writeChannel.closeFinally();
             final BlobKey key = fileService.getBlobKey(file);
 
-            ValueBlobStore currentStoreEntity = new ValueBlobStoreEntity(entity.getKey(), timestamp, new Date(max), new Date(min), path, key, json.length());
+            ValueBlobStore currentStoreEntity = new ValueBlobStoreEntity(
+                    entity.getKey(),
+                    timestamp,
+                    new Date(max),
+                    new Date(min),
+                    path, key,
+                    json.length(), false);
+
             currentStoreEntity.validate();
             pm.makePersistent(currentStoreEntity);
             pm.flush();
@@ -297,6 +310,7 @@ public class ValueDAOImpl implements ValueTransactions {
         final List<ValueBlobStore> result = (List<ValueBlobStore>) q.execute(
                 entity.getKey());
         try{
+            startBlobDeleteTask(result);
             pm.deletePersistentAll(result);
         }
         finally {
@@ -315,19 +329,26 @@ public class ValueDAOImpl implements ValueTransactions {
             Calendar c = Calendar.getInstance();
             c.add(Calendar.DATE, exp * -1);
             try {
-            final Query q = pm.newQuery(ValueBlobStoreEntity.class);
-            q.setFilter("entity == k && maxTimestamp <= et");
-            q.declareParameters("String k, Long et");
+                final Query q = pm.newQuery(ValueBlobStoreEntity.class);
+                q.setFilter("entity == k && maxTimestamp <= et");
+                q.declareParameters("String k, Long et");
 
-            final List<ValueBlobStore> result = (List<ValueBlobStore>) q.execute(
-                    entity.getKey(), c.getTime().getTime());
-
-            pm.deletePersistentAll(result);
+                final List<ValueBlobStore> result = (List<ValueBlobStore>) q.execute(
+                        entity.getKey(), c.getTime().getTime());
+                startBlobDeleteTask(result);
+                pm.deletePersistentAll(result);
             }
             finally {
                 pm.close();
             }
 
+        }
+    }
+
+    private void startBlobDeleteTask(List<ValueBlobStore> result) {
+        log.info("Deleting " + result.size() + "blobs");
+        for (ValueBlobStore st : result) {
+            TaskFactory.getInstance().startDeleteOrphanedBlobTask(new BlobKey(st.getBlobKey()));
         }
     }
 
@@ -400,7 +421,7 @@ public class ValueDAOImpl implements ValueTransactions {
         final FileWriteChannel writeChannel = fileService.openWriteChannel(file, true);
         PrintWriter out = new PrintWriter(Channels.newWriter(writeChannel, "UTF8"));
         try {
-           // char[] uc = json.toCharArray();
+            // char[] uc = json.toCharArray();
 
             out.println(json);
             out.close();
@@ -415,8 +436,9 @@ public class ValueDAOImpl implements ValueTransactions {
                     earliestForDay,
                     path,
                     key,
-                    json.length()
-                    );
+                    json.length(),
+                    false
+            );
             currentStoreEntity.validate();
             pm.makePersistent(currentStoreEntity);
             pm.flush();

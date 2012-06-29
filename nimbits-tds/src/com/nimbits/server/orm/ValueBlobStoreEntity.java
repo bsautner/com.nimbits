@@ -57,21 +57,26 @@ public class ValueBlobStoreEntity  implements ValueBlobStore {
     @Persistent
     private BlobKey blobkey;
 
+    @Persistent
+    private Boolean compressed;
+
+
     public ValueBlobStoreEntity(final String entity,
                                 final Date timestamp,
                                 final Date maxTimestamp,
                                 final Date minTimestamp,
                                 final String path,
                                 final BlobKey blobkey,
-                                final long length) {
+                                final long length,
+                                final boolean compressed) {
         this.entity = entity;
         this.timestamp = timestamp.getTime();
-
         this.path = path;
         this.maxTimestamp = maxTimestamp.getTime();
         this.minTimestamp = minTimestamp.getTime();
         this.blobkey = blobkey;
         this.length = length;
+        this.compressed = compressed;
     }
 
 
@@ -118,6 +123,11 @@ public class ValueBlobStoreEntity  implements ValueBlobStore {
     @Override
     public long getLength() {
         return length != null ? length : Const.CONST_DEFAULT_BLOB_LENGTH;
+    }
+
+    @Override
+    public Boolean getCompressed() {
+        return compressed == null ? false : compressed;
     }
 
     @Override

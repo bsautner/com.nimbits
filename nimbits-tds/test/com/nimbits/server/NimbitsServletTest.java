@@ -64,7 +64,8 @@ public class NimbitsServletTest {
             new LocalDatastoreServiceTestConfig(),
             new LocalTaskQueueTestConfig(),
             new LocalBlobstoreServiceTestConfig(),
-            new LocalUserServiceTestConfig()).setEnvIsLoggedIn(true).setEnvEmail(email).setEnvAuthDomain("nimbits.com");
+            new LocalUserServiceTestConfig())
+            .setEnvIsLoggedIn(true).setEnvEmail(email).setEnvAuthDomain("nimbits.com");
 
 
 
@@ -148,7 +149,6 @@ public class NimbitsServletTest {
         assertNotNull(pointChild);
 
         req.addParameter(Parameters.email.getText(), email);
-
         req.addParameter(Parameters.point.getText(), pointName.getValue());
         req.addParameter(Parameters.value.getText(), "1.234");
         String userJson = GsonFactory.getInstance().toJson(user);

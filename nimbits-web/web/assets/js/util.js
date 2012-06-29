@@ -11,6 +11,23 @@ _gaq.push(['_trackPageview']);
     s.parentNode.insertBefore(ga, s);
 })();
 
+function sendSupportRequest() {
+   var contact = document.getElementById("contact").value;
+   var name = document.getElementById("name").value;
+   var request = document.getElementById("request").value;
+
+    $.get("http://localhost:8080/service/dev",
+        { contact: contact, name:name, request: request },
+        function(data){
+
+          document.getElementById("devSuccess").style.display = "block";
+        }
+
+    );
+
+
+
+}
 
 function loadPage(page) {
     var objFrame = document.getElementById("mainframe");

@@ -53,8 +53,6 @@ public class DeleteOrphanedBlobTask  extends HttpServlet {
 
     public static void checkFile(final BlobKey blobKey, final boolean recursive) throws NimbitsException {
 
-
-
         final List<Entity> e = EntityTransactionFactory.getDaoInstance(UserServiceFactory.getServerInstance().getAdmin())
                 .getEntityByBlobKey(blobKey);
 
@@ -64,7 +62,7 @@ public class DeleteOrphanedBlobTask  extends HttpServlet {
         if (e.isEmpty() && e2.isEmpty()) {
             BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
             blobstoreService.delete(blobKey);
-           SystemServiceFactory.getInstance().updateSystemPoint("Orphan Blobs Deleted", 1, true);
+            SystemServiceFactory.getInstance().updateSystemPoint("Orphan Blobs Deleted", 1, true);
         }
         Iterator<BlobInfo> iterator = new BlobInfoFactory().queryBlobInfosAfter(blobKey);
 

@@ -41,6 +41,7 @@ public class ValueBlobStoreModel implements Serializable, Comparable<ValueBlobSt
 
     private String key;
 
+    private boolean compressed;
 
 
     public ValueBlobStoreModel(ValueBlobStore store) {
@@ -51,6 +52,7 @@ public class ValueBlobStoreModel implements Serializable, Comparable<ValueBlobSt
         this.minTimestamp = store.getMinTimestamp().getTime();
         this.key = store.getBlobKey();
         this.length = store.getLength();
+        this.compressed = store.getCompressed();
     }
 
     @Override
@@ -102,6 +104,11 @@ public class ValueBlobStoreModel implements Serializable, Comparable<ValueBlobSt
     @Override
     public void validate() throws NimbitsException {
         throw new NimbitsException("not implemtenets") ;
+    }
+
+    @Override
+    public Boolean getCompressed() {
+        return this.compressed;
     }
 
     @Override

@@ -71,7 +71,7 @@ public class EntityContextMenu extends Menu {
     private MenuItem intelligenceContext;
     private MenuItem keyContext;
     private MenuItem jsonContext;
-    private MenuItem downloadContext;
+   // private MenuItem downloadContext;
     private MenuItem propertyContext;
     private Map<SettingType, String> settings;
     private final User user;
@@ -111,7 +111,7 @@ public class EntityContextMenu extends Menu {
         xmppContext = xmppResourceContext();
         summaryContext = summaryContext();
         keyContext = keyContext();
-        downloadContext = downloadContext();
+        //downloadContext = downloadContext();
         jsonContext = jsonContext();
         add(propertyContext);
         add(copyContext);
@@ -123,8 +123,9 @@ public class EntityContextMenu extends Menu {
         add(summaryContext);
         add(jsonContext);
         add(xmppContext);
+     //   add(downloadContext);
 
-        //add(downloadContext);
+
         if (settings.containsKey(SettingType.wolframKey) && ! Utils.isEmptyString(settings.get(SettingType.wolframKey))) {
             add(intelligenceContext);
         }
@@ -152,7 +153,7 @@ public class EntityContextMenu extends Menu {
         keyContext.setEnabled(currentModel.getEntityType().equals(EntityType.user) || currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.accessKey));
 
         propertyContext.setEnabled(!currentModel.isReadOnly());
-        downloadContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) ||currentModel.getEntityType().equals(EntityType.category));
+        //downloadContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) ||currentModel.getEntityType().equals(EntityType.category));
 
 
     }

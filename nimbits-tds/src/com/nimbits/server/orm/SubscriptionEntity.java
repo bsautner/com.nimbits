@@ -84,7 +84,7 @@ public class SubscriptionEntity extends EntityStore implements Serializable, Sub
 
     @Override
     public Date getLastSent() {
-        return lastSent;
+        return lastSent == null ? new Date(0) : lastSent;
     }
 
     @Override

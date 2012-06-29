@@ -5,6 +5,8 @@
 
     <bean id="searchService" class="com.nimbits.server.service.search.impl.SearchServiceImpl"> </bean>
     <bean id="entityService" class="com.nimbits.server.service.entity.impl.EntityServiceImpl"> </bean>
+    <bean id="emailService" class="com.nimbits.server.service.email.impl.EmailServiceImpl"> </bean>
+
 
 
 </beans>

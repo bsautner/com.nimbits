@@ -6,5 +6,6 @@
 
     <bean id="searchDao" class="com.nimbits.server.transactions.dao.search.SearchLogDaoImpl"> </bean>
     <bean id="entityDao" class="com.nimbits.server.transactions.dao.entity.EntityDaoImpl"> </bean>
+    <bean id="formDao" class="com.nimbits.server.transactions.dao.form.impl.FormRequestDaoImpl"> </bean>
 
 </beans>

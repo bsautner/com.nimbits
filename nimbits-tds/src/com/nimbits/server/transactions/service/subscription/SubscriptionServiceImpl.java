@@ -24,6 +24,7 @@ import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.model.xmpp.*;
 import com.nimbits.client.service.subscription.*;
+import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.communication.email.*;
 import com.nimbits.server.transactions.service.entity.*;
 import com.nimbits.server.external.facebook.*;
@@ -52,10 +53,14 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
 
     public boolean okToProcess(Subscription subscription) {
-       boolean retVal;
 
-        retVal = (subscription.getLastSent().getTime() +  subscription.getMaxRepeat() * SECONDS  * 1000 < new Date().getTime());
-
+        boolean retVal;
+        try {
+            retVal = (subscription.getLastSent().getTime() +  subscription.getMaxRepeat() * SECONDS  * 1000 < new Date().getTime());
+        } catch (Exception ex) {
+            LogHelper.logException(this.getClass(), ex);
+            retVal = true;
+        }
         return retVal;
 
     }
@@ -120,7 +125,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
             else {
                 log.info("Not running subscription because " +
                         subscription.getLastSent().getTime() + subscription.getMaxRepeat() * SECONDS * 1000
-                + " <  " + new Date().getTime());
+                        + " <  " + new Date().getTime());
 
             }
 

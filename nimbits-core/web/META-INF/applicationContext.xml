@@ -24,4 +24,13 @@
         <!--<property name="eclipselink.jdbc.password" value="Port1234!"/>-->
     </bean>
 
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="mail.nimbits.com"/>
+    </bean>
+    <bean id="templateMessage" class="org.springframework.mail.SimpleMailMessage">
+        <property name="from" value="support@nimbits.com"/>
+        <property name="subject" value="Your order"/>
+    </bean>
+
+
 </beans>

@@ -81,7 +81,57 @@ public class PointServletTest extends NimbitsServletTest {
 
 
     }
+    @Test
+    public void testGetList() throws NimbitsException {
+        pointChild.setProtectionLevel(ProtectionLevel.onlyMe);
+        Point p = (Point) EntityServiceFactory.getInstance().addUpdateEntity(pointChild);
+        assertEquals(p.getProtectionLevel(), ProtectionLevel.onlyMe);
+        helper.setEnvIsLoggedIn(false);
+        req.removeAllParameters();
+        req.addParameter(Parameters.action.name(), Action.list.getCode());
+        req.addParameter(Parameters.email.getText(), user.getKey());
+        req.addParameter(Parameters.key.getText(), "AUTH");
+        req.addParameter(Parameters.point.getText(), point.getName().getValue());
+        String r = i.processGet(req, resp);
+        assertNotNull(r);
+        assertTrue(r.length() > 0);
 
+
+     }
+    @Test
+    public void testGetListFail() throws NimbitsException {
+        pointChild.setProtectionLevel(ProtectionLevel.onlyMe);
+        Point p = (Point) EntityServiceFactory.getInstance().addUpdateEntity(pointChild);
+        assertEquals(p.getProtectionLevel(), ProtectionLevel.onlyMe);
+        helper.setEnvIsLoggedIn(false);
+        req.removeAllParameters();
+        req.addParameter(Parameters.action.name(), Action.list.getCode());
+        req.addParameter(Parameters.email.getText(), user.getKey());
+        req.addParameter(Parameters.key.getText(), "AUTHX");
+        req.addParameter(Parameters.point.getText(), point.getName().getValue());
+        String r = i.processGet(req, resp);
+        assertNotNull(r);
+        assertTrue(r.length() == 0);
+
+
+    }
+    @Test
+    public void testGetListSharedNoKey() throws NimbitsException {
+        pointChild.setProtectionLevel(ProtectionLevel.everyone);
+        Point p = (Point) EntityServiceFactory.getInstance().addUpdateEntity(pointChild);
+        assertEquals(p.getProtectionLevel(), ProtectionLevel.everyone);
+        helper.setEnvIsLoggedIn(false);
+        req.removeAllParameters();
+        req.addParameter(Parameters.action.name(), Action.list.getCode());
+        req.addParameter(Parameters.email.getText(), user.getKey());
+       // req.addParameter(Parameters.key.getText(), "AUTHX");
+        req.addParameter(Parameters.point.getText(), point.getName().getValue());
+        String r = i.processGet(req, resp);
+        assertNotNull(r);
+        assertTrue(r.length() > 0);
+
+
+    }
 
     @Test
     public void testCreatePointWithPost() throws UnsupportedEncodingException {
@@ -132,6 +182,7 @@ public class PointServletTest extends NimbitsServletTest {
 
         req.removeAllParameters();
         req.addParameter(Parameters.uuid.getText(), point.getKey());
+        req.addParameter(Parameters.email.getText(), user.getKey());
 
         helper.setEnvIsLoggedIn(false);
 

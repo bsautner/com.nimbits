@@ -147,7 +147,7 @@ public class UserModel extends EntityModel implements Serializable, User {
             return true;
         }
         for (final AccessKey key : accessKeys) {
-            if (key.getAuthLevel().compareTo(AuthLevel.restricted) > 0)
+            if (key.getAuthLevel().getCode() > (AuthLevel.restricted.getCode()))
             {
                 return false;
             }

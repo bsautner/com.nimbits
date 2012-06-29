@@ -20,6 +20,7 @@ import com.nimbits.client.enums.*;
 import com.nimbits.client.model.entity.*;
 
 import java.io.*;
+import java.nio.ByteBuffer;
 import java.nio.channels.*;
 
 public class BlobStoreImpl implements BlobStore {
@@ -46,7 +47,42 @@ public class BlobStoreImpl implements BlobStore {
         }
     }
 
+    public static BlobKey putInBlobStore(String contentType, byte[] filebytes) throws IOException {
 
+        // Get a file service
+        FileService fileService = FileServiceFactory.getFileService();
+
+
+        AppEngineFile file = fileService.createNewBlobFile(contentType);
+
+        // Open a channel to write to it
+        boolean lock = true;
+        FileWriteChannel writeChannel = fileService.openWriteChannel(file, lock);
+
+        // This time we write to the channel using standard Java
+        BufferedInputStream in = new BufferedInputStream(new ByteArrayInputStream(filebytes));
+        byte[] buffer;
+        int defaultBufferSize = 524288;
+        if(filebytes.length > defaultBufferSize){
+            buffer = new byte[defaultBufferSize]; // 0.5 MB buffers
+        }
+        else{
+            buffer = new byte[filebytes.length]; // buffer the size of the data
+        }
+
+        int read;
+        while( (read = in.read(buffer)) > 0 ){ //-1 means EndOfStream
+            System.out.println(read);
+            if(read < defaultBufferSize){
+                buffer = new byte[read];
+            }
+            ByteBuffer bb = ByteBuffer.wrap(buffer);
+            writeChannel.write(bb);
+        }
+        writeChannel.closeFinally();
+
+        return fileService.getBlobKey(file);
+    }
 
 
 }

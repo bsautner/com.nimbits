@@ -75,4 +75,6 @@ public interface Entity  extends Serializable, Comparable<Entity> {
     void setKey(String key) throws NimbitsException;
 
     String getInstanceUrl();
+
+
 }

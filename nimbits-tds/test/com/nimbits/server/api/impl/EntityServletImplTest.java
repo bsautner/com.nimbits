@@ -2,8 +2,8 @@ package com.nimbits.server.api.impl;
 
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.enums.SubscriptionNotifyMethod;
-import com.nimbits.client.enums.SubscriptionType;
+import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
+import com.nimbits.client.enums.subscription.SubscriptionType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;

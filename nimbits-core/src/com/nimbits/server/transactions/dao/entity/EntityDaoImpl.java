@@ -36,10 +36,9 @@ import java.util.logging.Logger;
 @Repository("entityDao")
 public class EntityDaoImpl implements EntityJPATransactions {
     private static final Logger log = Logger.getLogger(EntityDaoImpl.class.getName());
+
     @PersistenceContext
     EntityManager em;
-
-
 
     final String uuidSQL = "select e from JpaEntity e where e.uuid= ?1";
     final String instanceSQL = "select e from JpaInstance e where e.instanceUrl=?1";
@@ -106,7 +105,6 @@ public class EntityDaoImpl implements EntityJPATransactions {
         }
 
     }
-
 
     @Override
     public List<JpaEntity> getAllEntities() {

@@ -21,17 +21,22 @@
     <div class="span10">
         <form class="well">
             <label>Name</label>
-            <input type="text" class="span3" id="contact" placeholder="Your Name">
+            <input type="text" class="span3" id="name" placeholder="Your Name">
             <label>Company</label>
             <input type="text" class="span3" id="company" placeholder="Your Company">
-            <label>Contact Email or Phone</label>
-            <input type="text" class="span3" id="name" placeholder="Your Contact Info">
+            <label>Contact Email</label>
+            <input type="text" class="span3" id="email" placeholder="Your Email">
             <span class="help-block">Please describe your request</span>
             <textarea class="input-xlarge" id="request" rows="5"></textarea>
 
             <button type="button" class="btn" onclick="sendSupportRequest();">Submit</button>
             <div class="alert alert-success" id="devSuccess" style="display: none">
                 <p>Thanks! We will contact you shortly after we review your request.</p>
+            </div>
+
+            <div class="alert alert-error" id="devError" style="display: none">
+                <p>Woops! Looks like there was an error processing your request.</p>
+                <p id="errorMsg"> </p>
             </div>
         </form>
 

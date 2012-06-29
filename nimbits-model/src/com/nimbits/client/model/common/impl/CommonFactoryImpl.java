@@ -36,6 +36,7 @@ public class CommonFactoryImpl implements CommonFactory {
 
     @Override
     public EmailAddress createEmailAddress(final String value) throws NimbitsException {
+       emailTest(value) ;
         if (value == null) {
             throw new NimbitsException("Email can not be null");
         }
@@ -43,6 +44,17 @@ public class CommonFactoryImpl implements CommonFactory {
 
     }
 
+    protected static void emailTest(String value) throws NimbitsException{
+        if (Utils.isEmptyString(value)) {
+            throw new NimbitsException("Email was empty");
+        }
+        if (! value.contains("@")) {
+            throw new NimbitsException("Email seems invalid");
+        }
+        if (! value.contains(".")) {
+            throw new NimbitsException("Email seems invalid");
+        }
+    }
 
 
     @Override

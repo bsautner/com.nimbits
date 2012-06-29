@@ -18,10 +18,6 @@
         <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
         <property name="username" value="root"/>
         <property name="password" value="Port1234!"/>
-        <!--<property name="eclipselink.jdbc.url" value="jdbc:mysql://localhost:3307/nimbits_schema"/>-->
-        <!--<property name="eclipselink.jdbc.driver" value="com.mysql.jdbc.Driver"/>-->
-        <!--<property name="eclipselink.jdbc.user" value="root"/>-->
-        <!--<property name="eclipselink.jdbc.password" value="Port1234!"/>-->
     </bean>
 
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">

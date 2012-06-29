@@ -117,16 +117,6 @@ public class EntityDaoImplTest {
         // entityTransactions.getEntityByUUID()
     }
 
-    @Test
-    public void updateGPSTest() throws NimbitsException {
-        Entity x = entityTransactions.getEntityByUUID("3a202d8f-21e1-4070-8725-786026187da3");
-
-        entityTransactions.updateLocation(x, "40.01999,-75.147171");
-
-
-
-
-    }
 
     @Test
     public void getAllEntities() {

@@ -1,6 +1,7 @@
 package com.nimbits.client.model.subscription;
 
-import com.nimbits.client.enums.*;
+import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
+import com.nimbits.client.enums.subscription.SubscriptionType;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 

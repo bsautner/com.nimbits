@@ -12,15 +12,23 @@ _gaq.push(['_trackPageview']);
 })();
 
 function sendSupportRequest() {
-   var contact = document.getElementById("contact").value;
-   var name = document.getElementById("name").value;
-   var request = document.getElementById("request").value;
+    var contact = document.getElementById("email").value;
+    var name = document.getElementById("name").value;
+    var request = document.getElementById("request").value;
+    var company = document.getElementById("company").value;
 
     $.get("http://localhost:8080/service/dev",
-        { contact: contact, name:name, request: request },
+        { email: contact, name:name, company: company, request: request },
         function(data){
-
-          document.getElementById("devSuccess").style.display = "block";
+            if (data != null && data.indexOf("OK") > -1) {
+                document.getElementById("devSuccess").style.display = "block";
+                document.getElementById("devError").style.display = "none";
+            }
+            else {
+                document.getElementById("devError").style.display = "block";
+                document.getElementById("devSuccess").style.display = "none";
+                document.getElementById("errorMsg").innerText = data;
+            }
         }
 
     );
@@ -120,19 +128,19 @@ function getHTTPObject() {
     return xhr;
 }
 function getContent(page) {
-   try {
-       _gaq.push(['_trackEvent', page, 'load'])
-       request = getHTTPObject();
-       request.onreadystatechange = sendData;
-       request.open("POST", page, true);
+    try {
+        _gaq.push(['_trackEvent', page, 'load'])
+        request = getHTTPObject();
+        request.onreadystatechange = sendData;
+        request.open("POST", page, true);
         request.send(null);
-       document.getElementById("link").href = page;
+        document.getElementById("link").href = page;
 
 
-   }
-   catch (ex) {
-       alert(ex);
-   }
+    }
+    catch (ex) {
+        alert(ex);
+    }
 
 
 }

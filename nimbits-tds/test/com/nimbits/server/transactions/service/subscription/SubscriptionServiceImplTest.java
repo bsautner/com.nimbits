@@ -1,8 +1,8 @@
 package com.nimbits.server.transactions.service.subscription;
 
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.SubscriptionNotifyMethod;
-import com.nimbits.client.enums.SubscriptionType;
+import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
+import com.nimbits.client.enums.subscription.SubscriptionType;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
@@ -10,11 +10,9 @@ import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.subscription.SubscriptionFactory;
 import com.nimbits.server.NimbitsServletTest;
-import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

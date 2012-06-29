@@ -1,6 +1,10 @@
 package com.nimbits.server.api;
 
+import com.nimbits.client.enums.client.CommunicationType;
 import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.server.service.client.ClientService;
 import com.nimbits.server.service.email.EmailService;
 import com.nimbits.server.service.entity.EntityService;
 import com.nimbits.server.service.search.SearchService;
@@ -40,6 +44,9 @@ public class ServiceController {
     @Resource(name="emailService")
     private EmailService emailService;
 
+    @Resource(name="clientService")
+    private ClientService clientService;
+
     @RequestMapping(value="service/search", method= RequestMethod.GET)
     public String search(
             @RequestParam("search") String dangerousSearchText,
@@ -71,15 +78,22 @@ public class ServiceController {
     @RequestMapping(value="service/dev", method=RequestMethod.GET)
 
     @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-    public void processDevRequest( @RequestParam("contact") String contact,
+    public void processDevRequest( @RequestParam("email") String email,
                                    @RequestParam("name") String name,
-                                   @RequestParam("request") String request
-            , ModelMap model)
+                                   @RequestParam("company") String company,
+                                   @RequestParam("request") String request,
+                                   ModelMap model)
     {
 
-        emailService.send(contact + " " + name + " " + request);
+        try {
+            EmailAddress em = CommonFactoryLocator.getInstance().createEmailAddress(email);
+            clientService.addClientCommunication(em, "", company, name, request, CommunicationType.devRequest);
 
-        model.addAttribute("TEXT",contact);
+            model.addAttribute("TEXT","OK");
+        } catch (NimbitsException e) {
+            model.addAttribute("TEXT",e.getMessage());
+        }
+
 
 
     }

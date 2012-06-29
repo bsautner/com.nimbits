@@ -27,6 +27,8 @@ import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.*;
 import com.nimbits.client.common.*;
 import com.nimbits.client.enums.*;
+import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
+import com.nimbits.client.enums.subscription.SubscriptionType;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.common.*;
 import com.nimbits.client.model.entity.*;

@@ -1,6 +1,7 @@
 package com.nimbits.server.mail.impl;
 
 import com.nimbits.server.service.email.EmailService;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.mail.MailSender;
@@ -39,6 +40,7 @@ public class MailImpl {
     private EmailService service;
 
     @Test
+    @Ignore
     public void sendTest() {
 
         service.sendTest();

@@ -13,7 +13,7 @@
 
 package com.nimbits.server.process.task;
 
-import com.google.appengine.api.blobstore.*;
+import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
@@ -21,7 +21,6 @@ import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.gson.GsonFactory;
@@ -100,11 +99,11 @@ public class TaskImpl implements Task {
     @Override
     public void startDeleteOrphanedBlobTask(final BlobKey key) {
 
-        final Queue queue =  QueueFactory.getQueue( DEFAULT  );
-
-        queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_ORPHANS_TASK)
-                .param(Parameters.key.getText(),  key.getKeyString())
-        );
+//        final Queue queue =  QueueFactory.getQueue( DEFAULT  );
+//
+//        queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_ORPHANS_TASK)
+//                .param(Parameters.key.getText(),  key.getKeyString())
+//        );
     }
 
     @Override

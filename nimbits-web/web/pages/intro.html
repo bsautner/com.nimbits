@@ -3,19 +3,18 @@
 <h5>Introduction</h5>
 <p>
     My name is <a href="https://plus.google.com/111446851286084485669">Benjamin Sautner</a>,
-    and i'm the president and founder of Nimbits. I started the Nimbits project in 2001 while I was working in the process
+    and I am the president and founder of Nimbits. I started the Nimbits project in 2001 while I was working in the process
     control and automation industry in Philadelphia, Pennsylvania. My job was to work with huge, multimillion dollar data
     acquisition and automation systems that were used to run city sized chemical plants around the country. I spent a lot
-    of time working with plant workers who were never happy with the interfaces provided and could never get to the data they
-    needed to run the plant. I also worked with executives who were never able to get clear, top level summary data they needed
+    of time working with plant workers who were never happy with the vendor's software interfaces and could never get to the data they
+    needed to run the plant. I also worked with executives who were never able to get clear, top level summary of the data they needed
     to make decisions.  Lastly, I worked with the various IT infrastructure workers and CIOs who were spending countless millions
-    on disaster recovery and scalability issues. As an expert in SOA, my work involved wrapping these systems in web services
-    to make it easier to add value added software in front of them making them easier to work with these systems.
+    on disaster recovery and scalability issues.
 </p>
 <p>
     I started the nimbits projects after attending a data acquisition conference and being blown away by a vendor who showed how he
     hooked his house up to the same sort of software we used to run the chemical plants. I asked him how I could do this to my house
-    and the answer was that I would need to invest over $10,000 USD to just get started; Licences, Hardware, etc.  So, I set out to
+    and the answer was that I would need to invest over $10,000 USD just get started.  So, I set out to
     write my own data acquisition system that did everything these expensive systems did and met the following requirements:
 
 </p>
@@ -25,107 +24,26 @@
     <li>No initial hardware investment.  </li>
     <li>Out of the box, built in disaster recovery.  </li>
     <li>Easily scalable, from zero to sixty.</li>
-    <li>Open Source, extensible and customizable. (I learned early you can't please everyone all of the time).</li>
+    <li>Open Source, extensible and customizable.</li>
     <li>Transparent, with no lock in.</li>
     <li>Social, community driven data feeds.</li>
     <li>Cool, with an easy to use interface with Mobility built in from the start.</li>
 
 </ul>
 
-<h5>Enter Google App Engine</h5>
 
 <p>
-    Several years into coding Nimbits in .Net, my hard drive crashed my backups turned out to be corrupted and I had to start over!
-    Around the same time, I decided to make the difficult transition from designing software on the Microsoft Platform to Java (and to
-    get the thing in source control).
-    I chose to do this because of my interest in open source, love of Linux and the exciting things going on at Google. I chose to write my next
-    attempt at nimbits on Google App Engine. Which means it runs on Google's infrastructure and used their services for email, XMPP, storage etc.
-</p>
+    Nimbits has been chugging along for over 4 years now and has evolved to handle more and more load as our user community has grown. Recent advances
+    in its architecture means it is able to handle any amount of data we throw at it. Thanks to our users ideas and suggestions, we've added amazingly cool new features like
+    integration into WolframAlpha, support for JQuery, and new web services that allow deep automation of the server.
 
-<p>
-    This means Nimbits isn't something you just install on a pc or server. It runs on a specific cloud architecture. You can
-    deploy it to your own instance on App Engine, Use the public cloud I host (app.nimbits.com), or use a product called appscale
-    to run the the code on a local virtual machine; appscale then lets you keep adding more VMs to your cluster when you need more
-    horsepower.
-</p>
-
-<h5>Getting Data In</h5>
-
-<p>
-    There are two types of things in nimbits: a Nimbits Value Object and a Binary file. A binary file is anything:
-    a PFG, Graphic, Torrent File, Schematic, Spectral Data...anything you care to store and share on the cloud. If you upload an SVG, Nimbits
-    considers it a process control graphic, and will display live data on it if you added some.  A Value Object can contain
-    a number value, a text annotation and / or machine readable data such as XML or JSON. A single temperature reading from
-    a thermometer may create a single value object with that one number in it. I may record that I just ate a yogurt that
-    had 130 calories, and create a single value object with the number 130, and the annotation "yogurt" which would show up
-    on a chart. Two devices may be relaying data to each other by reading and writing xml or json data into value objects.
-
-</p>
-<p>
-    Value objects are stored in Data Points. A data point represents your "Thing." So I may have a data point called "Aquarium Temperature"
-    which recorded minute by minute values of that changing temperature probe. A data point has properties that tell it how to behave
-    when a new value is recorded.
-</p>
-<ul>
-    <li>Compression filters tell it to ignore values that are not important. Such as small changes</li>
-    <li>Alert settings tell it if it should go into an alerted state such as a high or low value, or if the point is
-        idle - having not received a value in a set amount of time.</li>
-    <li>Protection levels set to see if it is public, and discoverable on nimbits.com for others to see, private, or something
-        only your connections can see.</li>
-</ul>
-<p>
-    With your data points properly configured, you can send in timestamped values which will be stored with the point.
 
 </p>
 
-<h5>Recorded Value Events</h5>
-
-<p>
-    When a new Value is recorded to a point, several events can occur. A single point can have many events attached to it.
-</p>
-
-<li>Calculations Triggered. A mathematical formula you create can automatically be processed, using current values as parameters
-    such as converting a fahrenheit reading to celsius, storing the result in another Point possibly triggering other events.
-</li>
-<li>Wolfram Alpha Queries. Wolfram alpha is a Computational Knowledge engine with vast amounts of expert data. A point can
-    be configured to query WA and store the results in another point, possibly triggering other events.</li>
-<li>Subscriptions Processed. Subscriptions to  high, low and idle alerts are processed (including those belonging to
-    other users who are subscribing to your point) alerts are sent to facebook, twitter, email, XMPP or your Nimbits Data Feed Channel
-    based on the settings of your subscription.</li>
+    <p>
+     Personally, I live and breath Nimbits, and pour over it's code every day. Nothing makes me happier than to see someone using it in a new way or logging
+     data i've never thought of. My dream is to make Nimbits the place for sharing data, and seeing our world in new ways. Enjoy!
 
 
-<h5>Data Aggregation</h5>
 
-<p>
-    You can create several summary processes that will be processed on an hourly basis. They can take an average, sum, standard
-    deviation and other statistics and store the result in another point possibly - you guessed it - triggering other events.
-</p>
-
-<h5>Getting Data Out</h5>
-
-<p>
-    With your data feeds churning away at incoming values you can log into the Nimits portal and see your data updates. Anyone
-    can search for feeds on nimbits.com and subscribe to changes, or view charts. You can also pull data down using several mechanisms
-    including:
-</p>
-<li>
-    Spreadsheets - Excel, Google Docs etc.
-
-</li>
-<li>Javascript, calling our Rest Services and easily using the data in a web page.</li>
-<li>Chart API - we integrate into the Google Chart API</li>
-<li>SDK - A software development kit that lets you develop software using Nimbits as a backend.</li>
-
-
-<h5>Connecting Devices</h5>
-
-<p>
-    Nimbits was build for connecting Micro-controllers and embedded systems to the cloud. We've working with:
-
-
-</p>
-<ul>Arduino</ul>
-<ul>Parallax Stamp and Javaline</ul>
-<ul>.net Gageteer</ul>
-<ul>BeagleBoard / BeagleBone</ul>
-<ul>And any embedded linux, android or .net device.</ul>
+    </p>

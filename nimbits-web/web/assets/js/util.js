@@ -17,7 +17,7 @@ function sendSupportRequest() {
     var request = document.getElementById("request").value;
     var company = document.getElementById("company").value;
 
-    $.get("http://localhost:8080/service/dev",
+    $.get("http://nimbits.com:8080/core/service/dev",
         { email: contact, name:name, company: company, request: request },
         function(data){
             if (data != null && data.indexOf("OK") > -1) {

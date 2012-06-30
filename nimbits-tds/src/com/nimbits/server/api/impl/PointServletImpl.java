@@ -13,29 +13,37 @@
 
 package com.nimbits.server.api.impl;
 
-import com.google.gson.*;
-import com.nimbits.client.common.*;
-import com.nimbits.client.constants.*;
+import com.google.gson.Gson;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.constants.UserMessages;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.timespan.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.client.model.value.impl.ValueFactory;
-import com.nimbits.server.api.*;
-import com.nimbits.server.transactions.service.entity.*;
-import com.nimbits.server.transactions.service.feed.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.admin.logging.*;
-import com.nimbits.server.time.*;
-import com.nimbits.server.transactions.service.value.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModel;
+import com.nimbits.client.model.point.PointModelFactory;
+import com.nimbits.client.model.timespan.Timespan;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.server.admin.logging.LogHelper;
+import com.nimbits.server.api.ApiServlet;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.time.TimespanServiceFactory;
+import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import com.nimbits.server.transactions.service.feed.FeedServiceFactory;
+import com.nimbits.server.transactions.service.value.ValueServiceFactory;
 
-import javax.servlet.http.*;
-import java.io.*;
-import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 
@@ -206,7 +214,7 @@ public class PointServletImpl extends ApiServlet {
                             if (okToReport(user, e)) {
 
                                 sb.append(e.getName().getValue())
-                                     .append(",");
+                                        .append(",");
                             }
                         }
                         if (sb.toString().endsWith(",")) {
@@ -444,4 +452,3 @@ public class PointServletImpl extends ApiServlet {
 
     }
 }
-

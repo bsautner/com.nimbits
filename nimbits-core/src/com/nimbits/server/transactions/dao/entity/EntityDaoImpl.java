@@ -62,7 +62,7 @@ public class EntityDaoImpl implements EntityJPATransactions {
         String sql = "select * from ENTITY " +
                 "    where " +
                 "        MATCH (entity_name, entity_desc) " +
-                "  AGAINST (?1 WITH QUERY EXPANSION)";
+                "  AGAINST (?1 WITH QUERY EXPANSION) LIMIT 15";
 
 
 

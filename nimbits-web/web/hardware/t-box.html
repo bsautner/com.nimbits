@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-
+    <script type="text/javascript" src="/assets/js/jquery/jquery-1.7.1.js"></script>
     <!-- Le styles -->
     <link href="http://www.nimbits.com/assets/bootstrap/css/bootstrap.css" rel="stylesheet">
     <style type="text/css">
@@ -16,34 +16,55 @@
             padding-bottom: 40px;
         }
     </style>
-
+    <script src="/assets/js/util.js"></script>
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-<script type="text/javascript" >
+    <script type="text/javascript" >
+        var local;
 
-    function submitData() {
-        var l = location.protocol + "//" + location.hostname;
-        var d = "?url="
-                + document.getElementById("url").value
-                + "&email="
-                + document.getElementById("email").value
-                + "&key="
-                + document.getElementById("key").value
-                + "&point="
-                + document.getElementById("point").value;
-        window.location = l+d;
+        function submitData() {
 
-    }
+            var d = "?data=|instance="
+                    + document.getElementById("url").value
+                    + ",email="
+                    + document.getElementById("email").value
+                    + ",key="
+                    + document.getElementById("key").value
+                    + ",point="
+                    + document.getElementById("point").value
+                    + "|";
 
+            window.location = "http://" + local + d;
+        }
 
-</script>
+        function loadForm() {
+            local = getParameterByName("local");
+            var url = getParameterByName("url");
+            var email = getParameterByName("email");
+            var key = getParameterByName("key");
+            var point = getParameterByName("point");
+
+            if (url != null && url.length > 0)
+            {
+                document.getElementById("url").value = url;
+
+            }
+            else {
+                document.getElementById("url").value = "nimbits1.appspot.com";
+            }
+            if (email != null) {document.getElementById("email").value = email;}
+            if (key != null) {document.getElementById("key").value = key;}
+            if (point != null) { document.getElementById("point").value = point; }
+
+        }
+    </script>
 
 </head>
 
-<body onload="load();">
+<body onload="loadForm();">
 
 
 

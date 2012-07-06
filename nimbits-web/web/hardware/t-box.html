@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +8,7 @@
     <meta name="author" content="">
     <script type="text/javascript" src="/assets/js/jquery/jquery-1.7.1.js"></script>
     <!-- Le styles -->
-    <link href="http://www.nimbits.com/assets/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="/assets/bootstrap/css/bootstrap.css" rel="stylesheet">
     <style type="text/css">
         body {
             padding-top: 60px;
@@ -26,38 +25,46 @@
         var local;
 
         function submitData() {
-
-            var d = "?data=|instance="
-                    + document.getElementById("url").value
-                    + ",email="
-                    + document.getElementById("email").value
-                    + ",key="
-                    + document.getElementById("key").value
-                    + ",point="
-                    + document.getElementById("point").value
-                    + "|";
+            var obj = {
+                email :document.getElementById("email").value,
+                instance: document.getElementById("url").value,
+                key:  document.getElementById("key").value,
+                tpoint:  document.getElementById("tpoint").value,
+                hpoint:  document.getElementById("hpoint").value
+            }
+            var j = JSON.stringify(obj);
+            var d = "?data=|" + j + "|";
 
             window.location = "http://" + local + d;
         }
 
         function loadForm() {
             local = getParameterByName("local");
-            var url = getParameterByName("url");
-            var email = getParameterByName("email");
-            var key = getParameterByName("key");
-            var point = getParameterByName("point");
+            document.getElementById("local").innerText =" " + local + " ";
+            var settings = getParameterByName("settings");
 
-            if (url != null && url.length > 0)
+            if (settings != null && settings.length > 10)
             {
-                document.getElementById("url").value = url;
+                //the arduino is losing out , for some reason...
+                settings = settings.split("\"\"").join("\",\"");
+
+
+                var obj = JSON.parse(settings);
+
+                if (obj.instance != undefined && obj.instance.length > 0)
+                {
+                    document.getElementById("url").value = obj.instance;
+
+                }
+                else {
+                    document.getElementById("url").value = "nimbits1.appspot.com";
+                }
+                if (obj.email != undefined) {document.getElementById("email").value = obj.email;}
+                if (obj.key != undefined) {document.getElementById("key").value = obj.key;}
+                if (obj.tpoint != undefined) { document.getElementById("tpoint").value = obj.tpoint; }
+                if (obj.hpoint != undefined) { document.getElementById("hpoint").value = obj.hpoint; }
 
             }
-            else {
-                document.getElementById("url").value = "nimbits1.appspot.com";
-            }
-            if (email != null) {document.getElementById("email").value = email;}
-            if (key != null) {document.getElementById("key").value = key;}
-            if (point != null) { document.getElementById("point").value = point; }
 
         }
     </script>
@@ -76,6 +83,7 @@
         <p>This device will log the temperature to your Nimbits Cloud.</p>
         <p><a href="http://www.nimbits.com" class="btn btn-primary btn-large">nimbits.com &raquo;</a></p>
     </div>
+    <p>Your device is on your local network using IP Address: <span class="btn-info" id="local"></span></p>
     <h5>Configuration</h5>
     <div class="row">
         <div class="span6">
@@ -85,7 +93,8 @@
                 <input type="text" id="url" class="span3" value="nimbits1.appspot.com">
                 <input type="text" id="email" class="span3" placeholder="Email Address">
                 <input type="text" id="key" class="span3" placeholder="Read Write Key">
-                <input type="text" id="point" class="span3" placeholder="Target Point Name">
+                <input type="text" id="tpoint" class="span3" placeholder="Temperature Point">
+                <input type="text" id="hpoint" class="span3" placeholder="Humidity Point">
 
                 <button type="button" style="float:right" class="btn btn-primary" onclick="submitData();">Save Changes</button>
             </form>
@@ -106,7 +115,7 @@
 <!-- Placed at the end of the document so the pages load faster -->
 
 
-<script src="http://www.nimbits.com/assets/bootstrap/js/bootstrap-button.js"></script>
+<script src="/assets/bootstrap/js/bootstrap-button.js"></script>
 
 
 </body>

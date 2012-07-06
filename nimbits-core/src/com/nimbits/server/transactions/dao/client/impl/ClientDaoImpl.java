@@ -1,15 +1,10 @@
 package com.nimbits.server.transactions.dao.client.impl;
 
 import com.nimbits.client.enums.client.CommunicationType;
-import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.server.orm.JpaClient;
 import com.nimbits.server.orm.JpaClientCommunication;
-import com.nimbits.server.orm.JpaEntity;
-import com.nimbits.server.orm.JpaInstance;
 import com.nimbits.server.transactions.dao.client.ClientDao;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -44,6 +39,9 @@ public class ClientDaoImpl implements ClientDao {
            }
            else {
                client = clients.get(0);
+               client.setContactPhone(contactPhone);
+               client.setCompanyName(companyName);
+               client.setClientName(clientName);
            }
 
            JpaClientCommunication j = new JpaClientCommunication(client, message, type);

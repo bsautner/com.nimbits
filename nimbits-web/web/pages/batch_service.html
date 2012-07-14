@@ -10,8 +10,8 @@
   ~
   ~ Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
   -->
-
-<h4 style="margin-top: 10px; margin-bottom: 10px">Current Value</h4>
+<h4 style="margin-top: 10px; margin-bottom: 10px">Batch Service</h4>
+<script type="text/javascript" src="/include/rawfile.js">  </script>
 <p>
     <a href="#" onclick="getContent('pages/web_service_primer.html')">Please read the web service primer</A> to
     understand how to provide proper authentication parameters.
@@ -19,20 +19,41 @@
 
 </p>
 
-<p><strong>com.nimbits.server.service.BatchService</strong></p>
-
 
 <p>A highly efficient service for loading many values at once in a single post.
-    Accepts up to 100 new values for points in one post.
+    Accepts up to 100 new values for points in one post. Simply provide a parameter with an incrementing number for each
+    new value to record. For example, p1=FirstPoint&v1=1.23&p2=SecondPoint$v2=3.14.
+
+
 </p>
+   <p>
+       This will save the value 1.23 into a point called FirstPoint, and 3.14 into SecondPoint. Both will get the current time
+       as a timestamp.
+
+   </p>
+
+    <p>
+        You can include a timestamp and nimbits will record your value with the stamp you provide. You can also give the same
+        point with many timestamped values, or mix and match. i.e  p1=FirstPoint&v1=1.23&t1=1297655407000&p2=FirstPoint=3.14&t2=1297655408000
+
+
+    </p>
+        <p>
+            This wil record the two values into FirstPoint with different timestamps.
+
+        </p>
+
 <ul>
-    <li>p1 - the name of the point</li>
+    <li>p(x) - the name of the point</li>
 
-    <li>v1 - the new value belonging to p1.</li>
+    <li>v(x)  - the new value belonging to p1.</li>
 
-    <li>t1 - optional - the timestamp as a long, <a href="http://en.wikipedia.org/wiki/Unix_time" target="_blank">
+    <li>t(x)  - optional - the timestamp as a long, <a href="http://en.wikipedia.org/wiki/Unix_time" target="_blank">
 
         unix epoch time</a> <strong>in milliseconds</strong>. Can also be in scientific notation i.e 1.3190148e+12</li>
+    <li>lt(x)  - optional - the latitude of the reading</li>
+    <li>ln(x)  - optional - the longitude of the reading</li>
+    <li>dx(x)  - optional - raw string data to be recorded (i.e json or xml) </li>
 
 </ul>
 
@@ -43,5 +64,3 @@
 
         /service/batch?p1=point1&v1=2.3&t1=1297655407000&p2=point2&v2=3.24....
 </pre>
-
-<script type="text/javascript" src="/include/rawfile.js">  </script>

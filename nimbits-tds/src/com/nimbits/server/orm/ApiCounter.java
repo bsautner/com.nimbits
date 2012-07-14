@@ -13,6 +13,9 @@
 
 package com.nimbits.server.orm;
 
+
+
+
 /**
  * Created by Benjamin Sautner
  * User: BSautner
@@ -42,6 +45,7 @@ public class ApiCounter {
         this.counterName = counterName;
         this.numShards = 0;
     }
+
 
     public ApiCounter(final String counterName, final Integer numShards) {
         this.counterName = counterName;

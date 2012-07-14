@@ -14,6 +14,7 @@
 package com.nimbits.server.process.task;
 
 
+
 import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
@@ -50,7 +51,10 @@ public class ProcessBatchTask extends HttpServlet {
     private static final String V = "v";
     private static final String T = "t";
     private static final String N = "n";
-    private static final long serialVersionUID = 1L;
+    private static final String LT = "lt";
+    private static final String LN = "ln";
+    private static final String DX = "dx";
+    private static final long serialVersionUID = 2L;
     private static final Logger log = Logger.getLogger(ProcessBatchTask.class.getName());
 
     private Map<Long, BatchValue> timestampValueMap;
@@ -164,28 +168,21 @@ public class ProcessBatchTask extends HttpServlet {
 
     private void getValuesFromParam(final Map m, final User u, final int x) throws NimbitsException {
 
-        final String[] values = (String[]) m.get(V + x);
-        final String valStr = values[0];
-        double value;
 
-
-        try {
-            value = Double.valueOf(valStr);
-        } catch (NumberFormatException e) {
-            value = 0.0;
-        }
-
-
+        final double value = getDoubleFromMap(m, V+x);
+        final double lat = getDoubleFromMap(m, LT + x);
+        final double lng = getDoubleFromMap(m, LN + x);
+        final String data = getStringFromMap(m, DX + x);
         final String[] points = (String[]) m.get(P + x);
         final EntityName pointName = CommonFactoryLocator.getInstance().createName(points[0], EntityType.point);
-        String note = "";
+        final String note =  getStringFromMap(m, N+x);
+        final Date timestamp = getDateFromMap(m, x);
+        final BatchValue b = new BatchValue(u, pointName, timestamp, value, note, lat, lng, data);
+        timestampValueMap.put(timestamp.getTime(), b);
+        timestamps.add(timestamp.getTime());
+    }
 
-        if (m.containsKey(N + x)) {
-            final String[] notes = (String[]) m.get(N + x);
-            note = notes[0];
-        }
-
-
+    private Date getDateFromMap(Map m, int x) {
         Date timestamp;
         if (m.containsKey(T + x)) {
             final String[] timestampArray = (String[]) m.get(T + x);
@@ -199,31 +196,79 @@ public class ProcessBatchTask extends HttpServlet {
         while (timestampValueMap.containsKey(timestamp.getTime())) {
             timestamp = new Date(timestamp.getTime() + 1);
         }
-        final BatchValue b = new BatchValue(u, pointName, timestamp, value, note);
-        timestampValueMap.put(timestamp.getTime(), b);
-        timestamps.add(timestamp.getTime());
+        return timestamp;
     }
 
+    private String getStringFromMap(Map map, String param) {
 
+        if (map.containsKey(param)) {
+            final String[] values = (String[]) map.get(param);
+            return values[0];
+
+        }
+        else {
+            return "";
+        }
+
+    }
+    private double getDoubleFromMap(Map map, String param) {
+
+        if (map.containsKey(param)) {
+            final String[] values = (String[]) map.get(param);
+            final String valStr = values[0];
+            try {
+                return  Double.valueOf(valStr);
+            } catch (NumberFormatException e) {
+                return 0.0;
+            }
+        }
+        else {
+            return 0.0;
+        }
+
+    }
 
     private static class BatchValue {
         private final String note;
         private final User u;
         private final EntityName pointName;
         private final Date timestamp;
-        private final Double value;
+        private final double value;
+        private final double lat;
+        private final double lng;
+        private final String data;
 
-        BatchValue(final User u, final EntityName pointName, final Date timestamp,
-                   final Double value, final String valNote) {
+        BatchValue(final User u,
+                   final EntityName pointName,
+                   final Date timestamp,
+                   final Double value,
+                   final String valNote,
+                   final double lat,
+                   final double lng,
+                   final String data) {
             super();
             this.u = u;
             this.pointName = pointName;
             this.timestamp = new Date(timestamp.getTime());
             this.value = value;
             this.note = valNote;
+            this.lat = lat;
+            this.lng = lng;
+            this.data = data;
 
         }
 
+        public String getData() {
+            return data;
+        }
+
+        public double getLat() {
+            return lat;
+        }
+
+        public double getLng() {
+            return lng;
+        }
 
         public String getNote() {
             return note;

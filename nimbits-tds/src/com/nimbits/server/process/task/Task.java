@@ -33,7 +33,7 @@ public interface Task {
 
     void startDeleteDataTask(final Entity point, final boolean onlyExpired, final int exp);
 
-    void startProcessBatchTask(User user, final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException;
+    void startProcessBatchTask(final User user, final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException;
 
     void startRecordValueTask(final User u, final Entity point, final Value value);
 
@@ -47,5 +47,5 @@ public interface Task {
 
     void startCoreTask(final HttpServletRequest req, final Entity entity, final Action action, final String instanceURL);
 
-    void startCoreLocationTask(Entity entity, String location);
+    void startCoreLocationTask(final Entity entity, final String location);
 }

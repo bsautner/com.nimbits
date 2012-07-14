@@ -31,7 +31,6 @@ import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
-import com.nimbits.server.transactions.service.feed.FeedServiceFactory;
 import com.nimbits.server.transactions.service.value.ValueServiceFactory;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,7 +52,9 @@ public class ValueServletImpl extends ApiServlet {
         try {
             processPost(req, resp);
         } catch (NimbitsException e) {
-            log.warning(e.getMessage());
+            final PrintWriter out = resp.getWriter();
+            out.print(e.getMessage());
+            out.close();
 
 
         }
@@ -65,7 +66,10 @@ public class ValueServletImpl extends ApiServlet {
         try {
             processGet(req, resp);
         } catch (NimbitsException e) {
-            log.warning(e.getMessage());
+            resp.setStatus(Const.HTTP_STATUS_BAD_REQUEST);
+            final PrintWriter out = resp.getWriter();
+            out.print(e.getMessage());
+            out.close();
         }
 
     }
@@ -79,7 +83,8 @@ public class ValueServletImpl extends ApiServlet {
             final List<Entity> points = EntityServiceFactory.getInstance().getEntityByName(user, pointName, EntityType.point);
 
             if (points.isEmpty()) {
-                FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(UserMessages.ERROR_POINT_NOT_FOUND));
+                throw new NimbitsException(new NimbitsException(UserMessages.ERROR_POINT_NOT_FOUND));
+
             } else {
                 final Value v;
                 if (Utils.isEmptyString(getParam(Parameters.json))) {

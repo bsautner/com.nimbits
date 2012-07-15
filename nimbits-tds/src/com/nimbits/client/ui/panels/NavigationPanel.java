@@ -67,6 +67,7 @@ public class NavigationPanel extends NavigationEventProvider {
         setScrollMode(Scroll.AUTO);
         getUserEntities(false);
 
+
     }
 
     public void toggleExpansion() {
@@ -202,35 +203,43 @@ public class NavigationPanel extends NavigationEventProvider {
 
             try {
             if (refresh) {
-                for (Entity e : result) {
-
-
-                        addUpdateTreeModel(new GxtModel(e), true);
-
-
+                for (final Entity e : result) {
+                      addUpdateTreeModel(new GxtModel(e), true);
                 }
             }
             else {
 
-                    createTree(result);
-
-                doLayout();
+                reloadTree(result);
             }
             } catch (NimbitsException e) {
                 FeedbackHelper.showError(e);
             }
 
         }
+
+        private void reloadTree(List<Entity> result) throws NimbitsException {
+            createTree(result);
+
+            doLayout();
+        }
+
         private void createTree(final List<Entity> result) throws NimbitsException {
             final TreeGridDropTarget target = new TreeGridDropTarget(tree);
+            if (tree.getTreeStore() != null) {
+                tree.getTreeStore().removeAll();
+            }
             target.setAllowSelfAsSource(true);
             target.setFeedback(Feedback.BOTH);
             tree.addListener(Events.AfterEdit, new GridEventListener());
             treePropertyBuilder();
-            treeStoreBuilder(result);
+            TreeModel top = treeStoreBuilder(result);
             treeDNDBuilder();
             removeAll();
+
             add(tree);
+            tree.setExpanded(top, true);
+
+
         }
         private void treeDNDBuilder() {
             TreeGridDragSource source = new TreeGridDragSource(tree);
@@ -457,9 +466,9 @@ public class NavigationPanel extends NavigationEventProvider {
         @Override
         public void dragStart(DNDEvent e) {
             super.dragStart(e);
+
             selectedModel = tree.getSelectionModel().getSelectedItem();
             TreeModel treeModel = (TreeModel)selectedModel;
-
             e.setCancelled(  treeModel.isReadOnly());
             e.getStatus().setStatus(  ! treeModel.isReadOnly());
 
@@ -470,27 +479,43 @@ public class NavigationPanel extends NavigationEventProvider {
             super.dragDrop(e);
             if (!e.getTarget().getInnerHTML().equals("&nbsp;")) {
                 if (selectedModel instanceof TreeModel) {
+
                     final TreeModel model = (TreeModel) selectedModel;
-                    selectedModel.set(Parameters.name.getText(), model.getName().getValue());
-                    final Entity draggedEntity =  model.getBaseEntity();
-                    final Entity target = getDropTarget(e.getTarget().getInnerText());
-                    e.setCancelled(  target.isReadOnly());
-                    e.getStatus().setStatus(  ! target.isReadOnly());
-
-
-                    if (! model.isReadOnly() && ! target.isReadOnly()){
-                        moveEntity(draggedEntity, target);
+                    //final TreeModel parent = (TreeModel) model.getParent();
+                    List<Entity> dropTargets = getDropTarget(e.getTarget().getInnerText());
+                    if (! dropTargets.isEmpty()) {
+                        selectedModel.set(Parameters.name.getText(), model.getName().getValue());
+                        final Entity draggedEntity =  model.getBaseEntity();
+                        final Entity target = dropTargets.get(0);
+                        e.setCancelled(  target.isReadOnly());
+                        e.getStatus().setStatus(  ! target.isReadOnly());
+                        if (! model.isReadOnly() && ! target.isReadOnly()){
+                            moveEntity(draggedEntity, target);
+                        }
                     }
+                    else {
+                       //fixes a bug where the dragged object vanishes - we can't seem to put it back right, we have to reload the tree
+                      //  e.setCancelled(true);
+                      //  e.getStatus().setStatus(false);
+                        getUserEntities(false);
+                    }
+
 
 
                 }
 
             }
         }
-        private Entity getDropTarget(String targetName) {
+        private List<Entity> getDropTarget(String targetName) {
 
             ModelData modelData = tree.getTreeStore().findModel(Parameters.name.getText(), targetName);
-            return ((TreeModel) modelData).getBaseEntity();
+            if (modelData != null) {
+                List<Entity> r = new ArrayList<Entity>(1);
+                r.add(((TreeModel) modelData).getBaseEntity());
+                return r;
+
+            }
+            return Collections.emptyList();
 
 
         }

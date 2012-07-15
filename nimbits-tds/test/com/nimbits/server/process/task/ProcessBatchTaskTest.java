@@ -1,9 +1,12 @@
 package com.nimbits.server.process.task;
 
+import client.model.value.ValueModelFactoryTest;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.value.impl.ValueFactory;
+import com.nimbits.client.model.value.impl.ValueModel;
 import com.nimbits.server.*;
 import com.nimbits.server.transactions.service.entity.*;
 import com.nimbits.server.gson.*;
@@ -40,6 +43,70 @@ public class ProcessBatchTaskTest extends NimbitsServletTest {
         assertEquals(rv1.get(0).getDoubleValue(), v1, DELTA);
         assertNotNull(rv2);
         assertEquals(rv2.get(0).getDoubleValue(), v2, DELTA);
+    }
+
+    @Test
+    public void processBatchTestGPS() throws NimbitsException {
+        addAuth();
+        double v1 = r.nextDouble();
+        double lt = 38.68551;
+        double ln = -104.238281;
+        req.addParameter("p1", pointName.getValue());
+        req.addParameter("v1", String.valueOf(v1));
+        req.addParameter("lt1",String.valueOf(lt));
+        req.addParameter("ln1",String.valueOf(ln));
+        double v2 = r.nextDouble();
+        req.addParameter("p2", pointChildName.getValue());
+        req.addParameter("v2", String.valueOf(v2));
+        req.addParameter("lt2",String.valueOf(lt));
+        req.addParameter("ln2",String.valueOf(ln));
+
+        servlet.doPost(req, resp);
+        List<Value> rv1 = ValueServiceFactory.getInstance().getCurrentValue(point);
+        List<Value> rv2 = ValueServiceFactory.getInstance().getCurrentValue(pointChild);
+        assertNotNull(rv1);
+        assertEquals(rv1.get(0).getDoubleValue(), v1, DELTA);
+        assertEquals(lt, rv1.get(0).getLatitude(), DELTA);
+        assertEquals(ln, rv1.get(0).getLongitude(), DELTA);
+        assertNotNull(rv2);
+        assertEquals(rv2.get(0).getDoubleValue(), v2, DELTA);
+    }
+
+    @Test
+    public void processJsonBatchPost() throws NimbitsException {
+        addAuth();
+        List<Value> values = new ArrayList<Value>(10);
+        Random r = new Random();
+        Calendar c = Calendar.getInstance();
+        int runs = 1000;
+
+        double total = 0.0;
+        for (int i = 0; i < runs; i++) {
+            double newValue = r.nextDouble();
+            Value v = ValueFactory.createValueModel(newValue, c.getTime());
+            total += newValue;
+            c.add(Calendar.MINUTE, -1);
+            values.add(v);
+
+
+
+
+
+
+        }
+        String json = GsonFactory.getInstance().toJson(values);
+        req.addParameter("p1", pointName.getValue());
+        req.addParameter("j1", json);
+        servlet.doPost(req, resp);
+        List<Value> v = ValueServiceFactory.getInstance().getTopDataSeries(point, runs);
+        assertEquals(runs, v.size());
+        double newTotal = 0.0;
+        for (Value vx : v) {
+            newTotal += vx.getDoubleValue();
+
+        }
+        assertEquals(total, newTotal, DELTA);
+
     }
 
     private void addAuth() {

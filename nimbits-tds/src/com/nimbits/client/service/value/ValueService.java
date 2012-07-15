@@ -66,4 +66,6 @@ public interface ValueService extends RemoteService {
     void purgeValues(Entity entity) throws NimbitsException;
 
     void deleteExpiredData(Point point);
+
+    void recordValues(final User user, final Point point, final List<Value> values) throws NimbitsException;
 }

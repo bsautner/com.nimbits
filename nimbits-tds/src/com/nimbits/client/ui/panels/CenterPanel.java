@@ -34,7 +34,6 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.GxtModel;
 import com.nimbits.client.model.TreeModel;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.service.entity.EntityService;
@@ -186,13 +185,19 @@ public class CenterPanel extends NavigationEventProvider {
         line.addListener(Events.OnClick, new Listener<BaseEvent>() {
             @Override
             public void handleEvent(BaseEvent baseEvent) {
-                for (int i = 0; i < chartContainer.getItemCount(); i ++) {
+                for (int i = 0; i < chartContainer.getItemCount(); i++) {
                     AnnotatedTimeLinePanel p = (AnnotatedTimeLinePanel) chartContainer.getItem(i);
                     line.setSelected(p.getName().equals(line.getName()));
                 }
             }
         });
         line.addChartRemovedClickedListeners(new MyChartRemovedListener(line));
+        line.addDropListeners(new AnnotatedTimeLinePanel.DropListener() {
+            @Override
+            public void onDrop() {
+                navigationPanel.getUserEntities(false);
+            }
+        });
         chartContainer.add(line, flex);
         layout(true);
     }

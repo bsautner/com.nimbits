@@ -63,8 +63,13 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
     private final Map<EntityName, List<Value>> valueMap;
     private final TextField endDateSelector;
     private final TextField startDateSelector;
+    private final List<DropListener> dropListeners;
     private final List<ChartRemovedListener> chartRemovedListeners;
+    
     private Timespan timespan;
+    
+    
+    
     private boolean headerVisible;
     private final String name;
     private boolean selected;
@@ -91,6 +96,22 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
         }
     }
 
+    // Drop Click Handlers
+    public interface DropListener {
+        void onDrop();
+    }
+
+    void addDropListeners(final DropListener listener) {
+        dropListeners.add(listener);
+    }
+
+    void notifyDropListener() {
+        for (final DropListener DropClickedListener : dropListeners) {
+            DropClickedListener.onDrop();
+        }
+    }
+
+
     public AnnotatedTimeLinePanel(final boolean showHeader, final String name) {
         this.headerVisible = showHeader;
         this.name = name;
@@ -99,6 +120,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
         endDateSelector = new TextField();
         startDateSelector = new TextField();
         chartRemovedListeners = new ArrayList<ChartRemovedListener>(1);
+        dropListeners = new ArrayList<DropListener>(1);
     }
 
     public String getName() {
@@ -396,6 +418,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
         for (final ModelData x : p.getChildren()) {
             handleDrop((TreeModel)x);
         }
+        notifyDropListener();
     }
 
     private static Options createOptions() {
@@ -704,6 +727,8 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
         @Override
         protected void onDragDrop(final DNDEvent event) {
             super.onDragDrop(event);
+            super.setOperation(DND.Operation.COPY);
+            event.setOperation(DND.Operation.COPY);
             List<TreeStoreModel> t = event.getData();
             for (final TreeStoreModel a : t) {
                 TreeModel p = (TreeModel) a.getModel();

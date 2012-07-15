@@ -67,4 +67,6 @@ public interface ValueServiceAsync {
     void purgeValues(Entity entity, AsyncCallback<Void> async) throws NimbitsException;
 
     void deleteExpiredData(Point point, AsyncCallback<Void> async);
+
+    void recordValues(final User user, final Point point, final List<Value> values, AsyncCallback<Void> async) throws NimbitsException;
 }

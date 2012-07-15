@@ -166,6 +166,13 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
+    public void recordValues(User user, Point point, List<Value> values) throws NimbitsException {
+        if (point.getOwner().equals(user.getKey())) {
+        ValueTransactionFactory.getInstance(point).recordValues(values);
+        }
+    }
+
+    @Override
     public List<Value> getCurrentValue(final Entity p) throws NimbitsException {
 
 

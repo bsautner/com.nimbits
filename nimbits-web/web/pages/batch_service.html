@@ -22,10 +22,11 @@
 
 <p>A highly efficient service for loading many values at once in a single post.
     Accepts up to 100 new values for points in one post. Simply provide a parameter with an incrementing number for each
-    new value to record. For example, p1=FirstPoint&v1=1.23&p2=SecondPoint$v2=3.14.
+    new value to record. For example, p1=FirstPoint&v1=1.23&p2=SecondPoint&v2=3.14.
 
 
 </p>
+
    <p>
        This will save the value 1.23 into a point called FirstPoint, and 3.14 into SecondPoint. Both will get the current time
        as a timestamp.
@@ -39,9 +40,13 @@
 
     </p>
         <p>
-            This wil record the two values into FirstPoint with different timestamps.
+            This will record the two values into FirstPoint with different timestamps.
 
         </p>
+
+        <p><span class="label-success">Heads up!</span>
+            There is a new option for loading the batch service using JSON data containing an array of
+            <a href="#" onclick="getContent('/pages/server_docs/value_objects.html')">Value Objects</a></p>
 
 <ul>
     <li>p(x) - the name of the point</li>
@@ -54,7 +59,15 @@
     <li>lt(x)  - optional - the latitude of the reading</li>
     <li>ln(x)  - optional - the longitude of the reading</li>
     <li>dx(x)  - optional - raw string data to be recorded (i.e json or xml) </li>
+    <li>j(x) - optional - an array of JSON formatted <a href="#" onclick="getContent('/pages/server_docs/value_objects.html')">Value Objects.</a>
+        <br>
+        <span class="label-success">Please Note:</span> using this option will override any other parameters set from the list above. This also
+        is a highly efficient way to slam new data into a point and therefore, compression filters, alerts and other point settings are not
+        processed when data is fed in. The system assumes you have already formatted / filtered your incoming data the way you want it. So, the new
+        data goes directly into the store. Read the <a href="#" onclick="getContent('/pages/server_docs/value_objects.html')">Value Objects</a> document for
+        samples of a value json structure
 
+    </li>
 </ul>
 
 <h4>Sample - records multiple values up to p100 and v100 </h4>
@@ -63,4 +76,19 @@
         /service/batch?p1=point1&v1=2.3&p2=point2&v2=3.24....
 
         /service/batch?p1=point1&v1=2.3&t1=1297655407000&p2=point2&v2=3.24....
+
+ </pre>
+
+
+
+<h4>JSON Bulk Sample </h4>
+
+<pre class="prettyprint">
+    /service/batch?p1=point1&j1=[
+    {"lt":0.0,"lg":0.0,"d":0.2,"t":1342373434789,"n":"","dx":""},
+    {"lt":0.0,"lg":0.0,"d":0.3,"t":1342373374789,"n":"","dx":""},
+    {"lt":0.0,"lg":0.0,"d":0.4,"t":1342373314789,"n":"","dx":""},
+    {"lt":0.0,"lg":0.0,"d":0.5,"t":1342373254789,"n":"","dx":""},
+    {"lt":0.0,"lg":0.0,"d":0.1,"t":1342373194789,"n":"","dx":""},
+    {"lt":0.0,"lg":0.0,"d":0.2,"t":1342373134789,"n":"","dx":""}]
 </pre>

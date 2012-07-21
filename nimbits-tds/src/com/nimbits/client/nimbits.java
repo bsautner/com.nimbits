@@ -23,6 +23,7 @@ import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
 import com.extjs.gxt.ui.client.widget.layout.FillLayout;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.*;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Location;
@@ -70,6 +71,10 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
     private EntityServiceAsync entityService;
     private UserServiceAsync userService;
     private TwitterServiceAsync twitterService;
+    private String domain;
+
+    private boolean isDomain;
+
     @Override
     public void onModuleLoad() {
 
@@ -86,6 +91,9 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         final String code = Location.getParameter(Parameters.code.getText());
         final String tw = Location.getParameter(Parameters.twitter.getText());
         final String oauth_token = Location.getParameter(Parameters.oauth_token.getText());
+        domain = Location.getParameter(Parameters.domain.getText());
+        isDomain = domain != null;
+
         //final String diagramUUID = Location.getParameter(Const.Params.PARAM_DIAGRAM);
 
 //        final String debug = Location.getParameter(Const.PARAM_DEBUG);
@@ -166,8 +174,26 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
     }
 
     private void loadLogin() {
+        if (isDomain ) {
+            RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, "/openid");
+            try {
+                Request response = builder.sendRequest(null, new RequestCallback() {
+                    public void onError(Request request, Throwable exception) {
+                        Window.alert(exception.getMessage());
+                    }
 
-        Window.Location.replace(loginInfo.getLoginUrl());
+                    public void onResponseReceived(Request request, Response response) {
+                        Window.alert(response.getText());
+                    }
+
+            } );
+            } catch (RequestException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+        }
+        else {
+            Window.Location.replace(loginInfo.getLoginUrl());
+        }
 
     }
 
@@ -273,32 +299,32 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
                 if (! r.isEmpty()) {
                     Entity entity = r.get(0);
 
-                switch (entity.getEntityType()) {
+                    switch (entity.getEntityType()) {
 
-                    case user:
-                        break;
-                    case point:
-                    case category:
-                        Location.replace("report.html?uuid=" + uuid);
-                        break;
-                    case file:
-                        if (EntityOpenHelper.isSVG(entity)) {
-                            loadDiagramView((File) entity);
-                        } else {
-                            EntityOpenHelper.showBlob((File) entity);
-                        }
-                        break;
-                    case subscription:
-                        break;
-                    case userConnection:
-                        break;
-                    case calculation:
-                        break;
-                    case intelligence:
-                        break;
-                    case feed:
-                        break;
-                }
+                        case user:
+                            break;
+                        case point:
+                        case category:
+                            Location.replace("report.html?uuid=" + uuid);
+                            break;
+                        case file:
+                            if (EntityOpenHelper.isSVG(entity)) {
+                                loadDiagramView((File) entity);
+                            } else {
+                                EntityOpenHelper.showBlob((File) entity);
+                            }
+                            break;
+                        case subscription:
+                            break;
+                        case userConnection:
+                            break;
+                        case calculation:
+                            break;
+                        case intelligence:
+                            break;
+                        case feed:
+                            break;
+                    }
                 }
             } catch (NimbitsException e) {
                 FeedbackHelper.showError(e);
@@ -451,23 +477,23 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         public void onSuccess(final User result) {
             loginInfo = result;
             try {
-            if (loginInfo.isLoggedIn()) {
-                switch (action) {
-                    case android:  case subscribe: case none:
-                        loadPortalView(loginInfo, action, settings, uuid);
-                        break;
-                    case twitter:
-                        doTwitterRedirectForAuthorisation();
-                        break;
-                    default:
-                        loadLogin();
+                if (loginInfo.isLoggedIn()) {
+                    switch (action) {
+                        case android:  case subscribe: case none:
+                            loadPortalView(loginInfo, action, settings, uuid);
+                            break;
+                        case twitter:
+                            doTwitterRedirectForAuthorisation();
+                            break;
+                        default:
+                            loadLogin();
+                    }
+                } else {
+                    if (action.equals(Action.subscribe)) {
+                        Cookies.setCookie(Action.subscribe.name(), uuid);
+                    }
+                    loadLogin();
                 }
-            } else {
-                if (action.equals(Action.subscribe)) {
-                    Cookies.setCookie(Action.subscribe.name(), uuid);
-                }
-                loadLogin();
-            }
             } catch (NimbitsException ex) {
                 FeedbackHelper.showError(ex);
             }
@@ -507,7 +533,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
                 @Override
                 public void onSuccess(Integer result) {
                     if (result > 0) {
-                   center.setHeading(Const.CONST_SERVER_NAME + ' ' + SettingType.serverVersion.getDefaultValue() + " API Calls: " + result );
+                        center.setHeading(Const.CONST_SERVER_NAME + ' ' + SettingType.serverVersion.getDefaultValue() + " API Calls: " + result );
                     }
                 }
             });

@@ -33,7 +33,9 @@
 <h5>Create a Data Point</h5>
 
 <p>A Point represents a thing. You're child's weight, the core temperature of a nuclear power plant, the temperature of an aquarium,
-nitrogen content on a sensor on your Mars rover. Whatever you have to record.</p>
+nitrogen content on a sensor on your Mars rover. Whatever you have to record. A point is a bucket for recording timestamped
+<a href="#" onclick="getContent('/pages/server_docs/value_objects.html')">Value Objects</a> which contain gps, numbers, xml, or json
+data.</p>
 
 <img src="/images/screens/file_menu.png" alt="cloud"/>
 <p>
@@ -116,7 +118,7 @@ nitrogen content on a sensor on your Mars rover. Whatever you have to record.</p
 <span class="label label-success">You can choose to have the content of an alert sent in JSON format, so other programs can pick it up.</span>
 
         <p>
-            Now that you have a point created, you can being recording data. Think of a point as a bucket filled with timestamped value objects.
+            Now that you have a point created, you can being recording data. Think of a point as a bucket filled with timestamped <a href="#" onclick="getContent('/pages/server_docs/value_objects.html')">Value Objects</a>.
             You can store much more than a series of numbers in a point. Each recorded value can contain:    </p>
 
 <ul>

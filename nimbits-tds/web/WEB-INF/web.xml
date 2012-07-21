@@ -18,6 +18,35 @@
 		  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
          version="2.5">
 
+
+    <servlet>
+        <servlet-name>OpenIdServlet</servlet-name>
+        <servlet-class>com.nimbits.server.external.google.OpenIdServlet</servlet-class>
+        <init-param>
+            <param-name>realm</param-name>
+            <param-value>@OPENID_REALM@</param-value>
+        </init-param>
+        <init-param>
+            <param-name>return_to_path</param-name>
+            <param-value>/openid</param-value>
+        </init-param>
+        <init-param>
+            <param-name>home_path</param-name>
+            <param-value>/</param-value>
+        </init-param>
+    </servlet>
+
+
+
+    <servlet-mapping>
+        <servlet-name>OpenIdServlet</servlet-name>
+        <url-pattern>/openid</url-pattern>
+    </servlet-mapping>
+
+
+
+
+
     <!--<filter>-->
         <!--<filter-name>appstats</filter-name>-->
         <!--<filter-class>com.google.appengine.tools.appstats.AppstatsFilter</filter-class>-->

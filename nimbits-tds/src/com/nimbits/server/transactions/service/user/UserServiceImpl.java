@@ -163,6 +163,9 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
     }
 
+
+
+
     @Override
     public User login(final String requestUri) throws NimbitsException {
         final com.google.appengine.api.users.UserService userService = UserServiceFactory.getUserService();
@@ -201,7 +204,9 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
             // A user has logged in through google auth - this creates the user
 
-        } else {
+        }
+
+        else {
             final EntityName name = CommonFactoryLocator.getInstance().createName("anon@nimbits.com", EntityType.user);
             final Entity e = EntityModelFactory.createEntity(name, "", EntityType.user, ProtectionLevel.onlyMe, "", "");
             retObj = UserModelFactory.createUserModel(e);
@@ -213,8 +218,8 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public Integer getQuota() throws NimbitsException {
-         User user= getHttpRequestUser(this.getThreadLocalRequest());
-         return QuotaFactory.getInstance(user.getEmail()).getCount();
+        User user= getHttpRequestUser(this.getThreadLocalRequest());
+        return QuotaFactory.getInstance(user.getEmail()).getCount();
 
     }
 
@@ -241,7 +246,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     public User getAdmin() throws NimbitsException {
         final String adminStr = SettingsServiceFactory.getInstance().getSetting(SettingType.admin);
         if (Utils.isEmptyString(adminStr)) {
-           throw new NimbitsException("Server is missing admin setting!");
+            throw new NimbitsException("Server is missing admin setting!");
         }
         else {
             final User u = new UserModel();

@@ -4,10 +4,10 @@
     <!-- Support info to show in the marketplace & control panel -->
     <Support>
         <!-- URL for application setup as an optional redirect during the install -->
-        <Link rel="setup" href="http://app.nimbits.com?domain=${DOMAIN_NAME}" />
+        <Link rel="setup" href="http://nimbits-domains.appspot.com?domain=${DOMAIN_NAME}" />
 
         <!-- URL for application configuration, accessed from the app settings page in the control panel -->
-        <Link rel="manage" href="http://app.nimbits.com?domain=${DOMAIN_NAME}" />
+        <Link rel="manage" href="http://nimbits-domains.appspot.com?domain=${DOMAIN_NAME}" />
 
         <!-- URL explaining how customers get support. -->
         <Link rel="support" href="http://www.nimbits.com" />
@@ -17,20 +17,19 @@
     </Support>
 
     <!-- Name and description pulled from message bundles -->
-    <Name>Nimbits.com</Name>
+    <Name>nimbits.com</Name>
     <Description>A process data historian for the cloud</Description>
 
     <!-- Show this link in Google's universal navigation for all users -->
     <Extension id="navLink" type="link">
         <Name>nimbits.com</Name>
-        <Url>http://app.nimbits.com?from=google&amp;domain=${DOMAIN_NAME}</Url>
+        <Url>http://nimbits-domains.appspot.com?from=google&amp;domain=${DOMAIN_NAME}</Url>
         <!-- This app also uses the Calendar API -->
         <!--<Scope ref="calendarFeed"/>-->
     </Extension>
 
-    <!-- Declare our OpenID realm so our app is white listed -->
     <Extension id="realm" type="openIdRealm">
-        <Url>http://www.nimbits.com</Url>
+        <Url>http://nimbits-domains.appspot.com</Url>
     </Extension>
 
     <!-- Need access to the Calendar feed -->

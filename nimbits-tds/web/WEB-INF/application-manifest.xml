@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<ApplicationManifest xmlns="http://schemas.google.com/ApplicationManifest/2009">
+  <Name>nimbits</Name>
+  <Description>Nimbits Process Data Historian</Description>
+
+  <!-- Administrators and users will be sent to this URL for application support -->
+  <Support>
+    <Link rel="support" href="http://www.nimbits.com" />
+  </Support>
+
+  <!-- Show this link in Google's universal navigation for all users -->
+  <Extension id="navLink" type="link">
+    <Name>nimbits</Name>
+    <Url>http://app2.nimbits.com/openid?hd=${DOMAIN_NAME}</Url>
+    <!--<Scope ref="calendarAPI"/>-->
+  </Extension>
+
+  <!-- Declare our OpenID realm so our app is white listed -->
+  <Extension id="realm" type="openIdRealm">
+    <Url>http://App2.nimbits.com/</Url>
+  </Extension>
+
+  <!--&lt;!&ndash; Need access to the Calendar API &ndash;&gt;-->
+  <!--<Scope id="calendarAPI">-->
+    <!--<Url>https://www.google.com/calendar/feeds/</Url>-->
+    <!--<Reason>This app displays the user's next upcoming Google Calendar meeting.</Reason>-->
+  <!--</Scope>-->
+  <!--<Edition id="free">-->
+    <!--<Name>nimbits</Name>-->
+    <!--<Extension ref="navLink"/>-->
+  <!--</Edition>-->
+</ApplicationManifest>

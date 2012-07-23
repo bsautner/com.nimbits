@@ -21,10 +21,10 @@
 
     <servlet>
         <servlet-name>OpenIdServlet</servlet-name>
-        <servlet-class>com.nimbits.server.external.google.OpenIdServlet</servlet-class>
+        <servlet-class>com.nimbits.server.api.openid.OpenIdServlet</servlet-class>
         <init-param>
             <param-name>realm</param-name>
-            <param-value>@OPENID_REALM@</param-value>
+            <param-value/>
         </init-param>
         <init-param>
             <param-name>return_to_path</param-name>
@@ -36,16 +36,44 @@
         </init-param>
     </servlet>
 
-
-
     <servlet-mapping>
         <servlet-name>OpenIdServlet</servlet-name>
         <url-pattern>/openid</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>SystemServiceServlet</servlet-name>
+        <servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
+        <init-param>
+            <param-name>services</param-name>
+            <param-value/>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SystemServiceServlet</servlet-name>
+        <url-pattern>/_ah/spi/*</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>CalendarServlet</servlet-name>
+        <servlet-class>com.nimbits.server.api.openid.CalendarServlet</servlet-class>
+        <init-param>
+            <param-name>consumer_key</param-name>
+            <param-value>934640769116.apps.googleusercontent.com</param-value>
+        </init-param>
+        <init-param>
+            <param-name>consumer_secret</param-name>
+            <param-value>7PGf5C-IsKQkCIbOAJAvoPwA</param-value>
+        </init-param>
+    </servlet>
 
 
 
+    <servlet-mapping>
+        <servlet-name>CalendarServlet</servlet-name>
+        <url-pattern>/meeting</url-pattern>
+    </servlet-mapping>
 
     <!--<filter>-->
         <!--<filter-name>appstats</filter-name>-->

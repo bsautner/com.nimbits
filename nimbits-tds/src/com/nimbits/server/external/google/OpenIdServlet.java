@@ -23,7 +23,8 @@ import com.google.step2.ConsumerHelper;
 import com.google.step2.Step2;
 import com.google.step2.discovery.IdpIdentifier;
 import com.google.step2.openid.ui.UiMessageRequest;
-import com.nimbits.server.external.google.openid.ConsumerFactory;
+
+import com.nimbits.server.api.openid.ConsumerFactory;
 import org.apache.commons.lang.StringUtils;
 import org.openid4java.OpenIDException;
 import org.openid4java.consumer.InMemoryConsumerAssociationStore;

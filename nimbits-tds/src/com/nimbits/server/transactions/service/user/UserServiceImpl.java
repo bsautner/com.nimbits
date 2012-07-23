@@ -29,6 +29,7 @@ import com.nimbits.client.model.user.*;
 import com.nimbits.client.service.user.UserService;
 import com.nimbits.server.admin.logging.*;
 import com.nimbits.server.admin.quota.QuotaFactory;
+import com.nimbits.server.api.openid.UserInfo;
 import com.nimbits.server.communication.email.*;
 import com.nimbits.server.settings.SettingsServiceFactory;
 import com.nimbits.server.transactions.service.entity.*;
@@ -55,23 +56,27 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         final com.google.appengine.api.users.UserService googleUserService = UserServiceFactory.getUserService();
         String accessKey = null;
         String uuid = null;
+        UserInfo domainUser = null;
 
+        session = req.getSession();
+        emailParam = req.getParameter(Parameters.email.getText());
+        if (session != null) {
+            domainUser = (UserInfo) req.getSession().getAttribute("user");
+            if (domainUser != null) {
 
+                emailParam = domainUser.getEmail();
 
-        if (req != null) {
-//            Enumeration i = req.getHeaderNames();
-//
-//            while (i.hasMoreElements()) {
-//                log.info(i + " " + req.getHeader((String) i.nextElement()));
-//            }
-            uuid =  req.getParameter(Parameters.uuid.getText());
-            emailParam = req.getParameter(Parameters.email.getText());
-            accessKey = req.getParameter(Parameters.secret.getText());
-            if (Utils.isEmptyString(accessKey)) {
-                accessKey = req.getParameter(Parameters.key.getText());
             }
-            session = req.getSession();
         }
+
+        uuid =  req.getParameter(Parameters.uuid.getText());
+
+        accessKey = req.getParameter(Parameters.secret.getText());
+        if (Utils.isEmptyString(accessKey)) {
+            accessKey = req.getParameter(Parameters.key.getText());
+        }
+
+
         EmailAddress email = Utils.isEmptyString(emailParam) ? null : CommonFactoryLocator.getInstance().createEmailAddress(emailParam);
 
         if (email == null && session != null && session.getAttribute(Parameters.email.getText()) != null) {
@@ -119,7 +124,12 @@ public class UserServiceImpl extends RemoteServiceServlet implements
                 if (googleUserService.getCurrentUser() != null && googleUserService.getCurrentUser().getEmail().equalsIgnoreCase(email.getValue())) {
                     user = createUserRecord(email);
                     user.addAccessKey(authenticatedKey(user));
-                } else if (googleUserService.getCurrentUser() != null && !googleUserService.getCurrentUser().getEmail().equalsIgnoreCase(email.getValue())) {
+                }
+                else if (domainUser != null) {
+                    user = createUserRecord(email);
+                    user.addAccessKey(authenticatedKey(user));
+                }
+                else if (googleUserService.getCurrentUser() != null && !googleUserService.getCurrentUser().getEmail().equalsIgnoreCase(email.getValue())) {
                     throw new NimbitsException("While the current user is authenticated, the email provided does not match " +
                             "the authenticated user, so the system is confused and cannot authenticate the request. " +
                             "Please report this error.");
@@ -153,6 +163,10 @@ public class UserServiceImpl extends RemoteServiceServlet implements
                         user.addAccessKey(authenticatedKey(user)); //they are logged in
                     }
                 }
+                if (domainUser != null) {
+                    user.addAccessKey(authenticatedKey(user)); //they are logged in from google apps
+                }
+
             }
         }
         else {
@@ -168,13 +182,27 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public User login(final String requestUri) throws NimbitsException {
-        final com.google.appengine.api.users.UserService userService = UserServiceFactory.getUserService();
-        final com.google.appengine.api.users.User user = userService.getCurrentUser();
+
         final User retObj;
+        EmailAddress internetAddress = null;
+        boolean isAdmin = false;
+        UserInfo domainUser = (UserInfo) this.getThreadLocalRequest().getSession().getAttribute("user");
+        final com.google.appengine.api.users.UserService userService = UserServiceFactory.getUserService();
 
-        if (user != null) {
-            final EmailAddress internetAddress = CommonFactoryLocator.getInstance().createEmailAddress(user.getEmail());
+        if (domainUser != null) {
+            log.info("domain user:" + domainUser.getEmail());
+            internetAddress = CommonFactoryLocator.getInstance().createEmailAddress(domainUser.getEmail());
+        }
+        else {
 
+            final com.google.appengine.api.users.User googleUser = userService.getCurrentUser();
+            if (googleUser != null)   {
+                isAdmin= userService.isUserAdmin();
+                internetAddress = CommonFactoryLocator.getInstance().createEmailAddress(googleUser.getEmail());
+            }
+        }
+
+        if (internetAddress != null) {
 
             final List<Entity> list =   EntityServiceFactory.getInstance()
                     .getEntityByKey(
@@ -193,7 +221,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
             retObj.setLoggedIn(true);
 
-            retObj.setUserAdmin(userService.isUserAdmin());
+            retObj.setUserAdmin(isAdmin);
 
             retObj.setLogoutUrl(userService.createLogoutURL(requestUri));
 
@@ -205,7 +233,6 @@ public class UserServiceImpl extends RemoteServiceServlet implements
             // A user has logged in through google auth - this creates the user
 
         }
-
         else {
             final EntityName name = CommonFactoryLocator.getInstance().createName("anon@nimbits.com", EntityType.user);
             final Entity e = EntityModelFactory.createEntity(name, "", EntityType.user, ProtectionLevel.onlyMe, "", "");

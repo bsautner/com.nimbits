@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Tonic Solutions LLC.
+ * Copyright (c) 2010 Nimbits Inc.
  *
  * http://www.nimbits.com
  *
@@ -97,13 +97,13 @@ public class TaskImpl implements Task {
     }
 
     @Override
-    public void startDeleteOrphanedBlobTask(final BlobKey key) {
+    public void startDeleteBlobTask(final BlobKey key) {
 
-//        final Queue queue =  QueueFactory.getQueue( DEFAULT  );
-//
-//        queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_ORPHANS_TASK)
-//                .param(Parameters.key.getText(),  key.getKeyString())
-//        );
+        final Queue queue =  QueueFactory.getQueue( DEFAULT  );
+
+        queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_ORPHANS_TASK)
+                .param(Parameters.key.getText(),  key.getKeyString())
+        );
     }
 
     @Override

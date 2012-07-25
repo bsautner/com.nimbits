@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Tonic Solutions LLC.
+ * Copyright (c) 2010 Nimbits Inc.
  *
  * http://www.nimbits.com
  *
@@ -43,7 +43,7 @@ public interface Task {
 
     void startMoveCachedValuesToStoreTask(final Entity point);
 
-    void startDeleteOrphanedBlobTask(final BlobKey key);
+    void startDeleteBlobTask(final BlobKey key);
 
     void startCoreTask(final HttpServletRequest req, final Entity entity, final Action action, final String instanceURL);
 

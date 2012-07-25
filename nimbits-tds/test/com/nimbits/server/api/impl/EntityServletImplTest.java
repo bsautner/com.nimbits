@@ -32,7 +32,7 @@ import static org.junit.Assert.assertNotNull;
  * User: benjamin
  * Date: 5/16/12
  * Time: 1:16 PM
- * Copyright 2012 Tonic Solutions LLC - All Rights Reserved
+ * Copyright 2012 Nimbits Inc - All Rights Reserved
  */
 public class EntityServletImplTest extends NimbitsServletTest {
     EntityServletImpl impl = new EntityServletImpl();

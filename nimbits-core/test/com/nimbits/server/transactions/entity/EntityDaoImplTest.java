@@ -26,7 +26,7 @@ import static org.junit.Assert.*;
  * User: benjamin
  * Date: 5/26/12
  * Time: 9:36 AM
- * Copyright 2012 Tonic Solutions LLC - All Rights Reserved
+ * Copyright 2012 Nimbits Inc - All Rights Reserved
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={

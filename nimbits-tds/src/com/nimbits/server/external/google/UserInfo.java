@@ -15,9 +15,6 @@
  *
  */
 package com.nimbits.server.external.google;
-
-import org.apache.commons.lang.StringUtils;
-
 import java.io.Serializable;
 
 /**

@@ -32,13 +32,24 @@
 <h5>Nimbits Library</h5>
 
 <p>In your downloaded arduino IDE directory, create a folder called Nimbits in the libraries folder. Then download
-Nimbits.cpp and Nimbits.h and place them in your folder</p>
+Nimbits.cpp and Nimbits.h and place them in your folder. </p>
 
 <ul>
-    <li><a href="https://raw.github.com/bsautner/com.nimbits/master/nimbits-arduino/src/Nimbits.cpp">Nimbits.cpp</a></li>
-    <li><a href="https://raw.github.com/bsautner/com.nimbits/master/nimbits-arduino/src/Nimbits.h">Nimbits.h</a></li>
+    <li><a href="https://raw.github.com/bsautner/com.nimbits/master/nimbits-hardware/nimbits-arduino/src/Nimbits.cpp">Nimbits.cpp</a></li>
+    <li><a href="https://raw.github.com/bsautner/com.nimbits/master/nimbits-hardware/nimbits-arduino/src/Nimbits.h">Nimbits.h</a></li>
 
 </ul>
+<h5>Configure</h5>
+<h6>Create a Key</h6>
+<p>Log into your nimbits account and  <a href="#" onclick="getContent('pages/web_service_primer.html')">create a new key</a> by right clicking in the tree. </p>
+ <p>Keys allows you to control read / write actions on your nimbits account without having to authenticate with oauth or openid. </p>
+
+<h6>Determine your instance</h6>
+ <p>We host a public nimbits instance on Google App Engine called nimbits1 and you can use that as your instance setting</p>
+<h6>Create your points with settings</h6>
+ <p>Create datapoints that your arduino will record data to.</p>
+
+
 
 <p>
     Open your Arduino IDE and create a new Sketch. Import the Nimbits Library into your project. You can then create a Nimbits client object. In the example
@@ -50,18 +61,10 @@ Nimbits.cpp and Nimbits.h and place them in your folder</p>
         <pre class="prettyprint">
         #include &lt;Nimbits.h&gt;
 
-        Nimbits nimbits("nimbits1", "example@gmail.com","myaccesskey");
-
-        //create a point using our write auth key with global scope
-        nimbits.createPoint("HelloArduino");
-
-        //get the current number valuer
-        float value = nimbits.getValue("HelloArduino");
-
-        float newValue = 42.0;
-        nimbits.recordValue("HelloArduino", newValue);
-
-        //get the current time from the server
+       Nimbits nimbits(instance, email, key);
+       float h = 73.5;
+       String response = nimbits.recordValue(hpoint, h);
+       //get the current time from the server
         time_t time = nimbits.getTime();
         </pre>
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) 2010 Tonic Solutions LLC.
+  ~ Copyright (c) 2010 Nimbits Inc.
   ~
   ~ http://www.nimbits.com
   ~
@@ -68,12 +68,33 @@
         </init-param>
     </servlet>
 
-
-
     <servlet-mapping>
         <servlet-name>CalendarServlet</servlet-name>
         <url-pattern>/meeting</url-pattern>
     </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>docServlet</servlet-name>
+        <url-pattern>/doc</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>docServlet</servlet-name>
+        <servlet-class>com.nimbits.server.api.openid.SpreadsheetServlet</servlet-class>
+        <init-param>
+            <param-name>consumer_key</param-name>
+            <param-value>1009209848329.apps.googleusercontent.com</param-value>
+        </init-param>
+        <init-param>
+            <param-name>consumer_secret</param-name>
+            <param-value>m4S1GkGguCvyFO70bxHuKNzH</param-value>
+        </init-param>
+    </servlet>
+
+
+
+
+
 
     <!--<filter>-->
         <!--<filter-name>appstats</filter-name>-->
@@ -318,7 +339,7 @@
 
     <servlet>
         <servlet-name>DeleteOrphansTask</servlet-name>
-        <servlet-class>com.nimbits.server.process.task.DeleteOrphanedBlobTask</servlet-class>
+        <servlet-class>com.nimbits.server.process.task.DeleteBlobTask</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>DeleteOrphansTask</servlet-name>

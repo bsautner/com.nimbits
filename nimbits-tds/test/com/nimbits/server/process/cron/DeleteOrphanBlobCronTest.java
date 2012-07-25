@@ -74,7 +74,7 @@ public class DeleteOrphanBlobCronTest extends NimbitsServletTest {
 
         Iterator<BlobInfo> iteratorD = new BlobInfoFactory().queryBlobInfos();
         BlobInfo first = iteratorD.next();
-        DeleteOrphanedBlobTask.checkFile(first.getBlobKey(), true);
+     //   DeleteBlobTask.checkFile(first.getBlobKey(), true);
 
 
         Iterator<BlobInfo> iterator3 = new BlobInfoFactory().queryBlobInfos();

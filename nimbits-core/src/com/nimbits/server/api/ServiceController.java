@@ -28,7 +28,7 @@ import java.util.logging.Logger;
  * User: benjamin
  * Date: 5/29/12
  * Time: 12:29 PM
- * Copyright 2012 Tonic Solutions LLC - All Rights Reserved
+ * Copyright 2012 Nimbits Inc - All Rights Reserved
  */
 
 @Controller

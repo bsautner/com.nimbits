@@ -47,9 +47,11 @@
 
         function drop() {
             for (var i = 0; i < neighborhoods.length; i++) {
-                setTimeout(function() {
-                    addMarker(uuids[iterator], desc[iterator]);
-                }, i * 100);
+                addMarker(uuids[iterator], desc[iterator]);
+
+//                setTimeout(function() {
+//                    addMarker(uuids[iterator], desc[iterator]);
+//                }, i * 100);
             }
         }
 

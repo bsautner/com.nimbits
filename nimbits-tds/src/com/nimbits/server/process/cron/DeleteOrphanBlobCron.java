@@ -27,13 +27,13 @@ public class DeleteOrphanBlobCron  extends HttpServlet {
     }
 
     protected  static void processRequest() throws IOException {
-        Iterator<BlobInfo> iterator = new BlobInfoFactory().queryBlobInfos();
-
-        if  (iterator.hasNext()){
-            final BlobInfo i = iterator.next();
-            TaskFactory.getInstance().startDeleteOrphanedBlobTask(i.getBlobKey());
-
-        }
+//        Iterator<BlobInfo> iterator = new BlobInfoFactory().queryBlobInfos();
+//
+//        if  (iterator.hasNext()){
+//            final BlobInfo i = iterator.next();
+//            TaskFactory.getInstance().startDeleteOrphanedBlobTask(i.getBlobKey());
+//
+//        }
 
 
     }

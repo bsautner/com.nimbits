@@ -16,7 +16,7 @@ import javax.annotation.Resource;
  * User: benjamin
  * Date: 6/28/12
  * Time: 11:50 AM
- * Copyright 2012 Tonic Solutions LLC - All Rights Reserved
+ * Copyright 2012 Nimbits Inc - All Rights Reserved
  */ @RunWith(SpringJUnit4ClassRunner.class)
     @ContextConfiguration(locations={
             "classpath:META-INF/applicationContext.xml",

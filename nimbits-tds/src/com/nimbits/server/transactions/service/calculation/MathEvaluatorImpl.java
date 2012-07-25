@@ -1,6 +1,6 @@
 
 /*
- * Copyright (c) 2010 Tonic Solutions LLC.
+ * Copyright (c) 2010 Nimbits Inc.
  *
  * http://www.nimbits.com
  *

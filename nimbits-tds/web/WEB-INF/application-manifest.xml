@@ -11,9 +11,11 @@
 
   <!-- Show this link in Google's universal navigation for all users -->
   <Extension id="navLink" type="link">
-    <Name>nimbits</Name>
+    <Name>Nimbits</Name>
     <Url>http://app2.nimbits.com/openid?hd=${DOMAIN_NAME}</Url>
-    <!--<Scope ref="calendarAPI"/>-->
+      <Scope ref="docsFeed"/>
+      <Scope ref="calendarAPI"/>
+      <Scope ref="spreadsheetsFeed"/>
   </Extension>
 
   <!-- Declare our OpenID realm so our app is white listed -->
@@ -21,11 +23,26 @@
     <Url>http://App2.nimbits.com/</Url>
   </Extension>
 
-  <!--&lt;!&ndash; Need access to the Calendar API &ndash;&gt;-->
-  <!--<Scope id="calendarAPI">-->
-    <!--<Url>https://www.google.com/calendar/feeds/</Url>-->
-    <!--<Reason>This app displays the user's next upcoming Google Calendar meeting.</Reason>-->
-  <!--</Scope>-->
+    <Scope id="docsFeed">
+
+        <Url>https://docs.google.com/feeds/</Url>
+
+        <Reason>Nimbits can create new spreadsheets and export documents</Reason>
+
+    </Scope>
+    <Scope id="spreadsheetsFeed">
+
+        <Url>https://spreadsheets.google.com/feeds/</Url>
+
+        <Reason>Nimbits can insert data into a google spreadsheet for export.</Reason>
+
+    </Scope>
+
+    <!--&lt;!&ndash; Need access to the Calendar API &ndash;&gt;-->
+  <Scope id="calendarAPI">
+    <Url>https://www.google.com/calendar/feeds/</Url>
+    <Reason>Nimbits can add reminders for idle points</Reason>
+  </Scope>
   <!--<Edition id="free">-->
     <!--<Name>nimbits</Name>-->
     <!--<Extension ref="navLink"/>-->

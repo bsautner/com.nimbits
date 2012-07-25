@@ -20,7 +20,7 @@ import java.util.List;
  * User: benjamin
  * Date: 5/22/12
  * Time: 2:50 PM
- * Copyright 2012 Tonic Solutions LLC - All Rights Reserved
+ * Copyright 2012 Nimbits Inc - All Rights Reserved
  */
 @SuppressWarnings("unused")
 @Table(name = "ENTITY", schema = "", catalog = "nimbits_schema")

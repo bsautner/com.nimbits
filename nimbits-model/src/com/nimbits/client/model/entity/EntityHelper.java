@@ -4,7 +4,7 @@ package com.nimbits.client.model.entity;
  * User: benjamin
  * Date: 6/28/12
  * Time: 9:22 AM
- * Copyright 2012 Tonic Solutions LLC - All Rights Reserved
+ * Copyright 2012 Nimbits Inc - All Rights Reserved
  */
 public class EntityHelper {
 

@@ -13,7 +13,7 @@ import javax.annotation.Resource;
  * User: benjamin
  * Date: 6/28/12
  * Time: 12:01 PM
- * Copyright 2012 Tonic Solutions LLC - All Rights Reserved
+ * Copyright 2012 Nimbits Inc - All Rights Reserved
  */
 @Transactional
 @Service("emailService")

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Tonic Solutions LLC.
+ * Copyright (c) 2010 Nimbits Inc.
  *
  * http://www.nimbits.com
  *
@@ -348,7 +348,7 @@ public class ValueDAOImpl implements ValueTransactions {
     private void startBlobDeleteTask(List<ValueBlobStore> result) {
         log.info("Deleting " + result.size() + "blobs");
         for (ValueBlobStore st : result) {
-            TaskFactory.getInstance().startDeleteOrphanedBlobTask(new BlobKey(st.getBlobKey()));
+            TaskFactory.getInstance().startDeleteBlobTask(new BlobKey(st.getBlobKey()));
         }
     }
 

@@ -59,7 +59,7 @@ public class BlobStoreTest extends NimbitsServletTest {
             final BlobInfo i = iterator.next();
            req.removeAllParameters();
             req.addParameter(Parameters.key.getText(), i.getBlobKey().getKeyString());
-          DeleteOrphanedBlobTask.processRequest(req);
+          DeleteBlobTask.processRequest(req);
         }
       //  int r2 = DeleteOrphanBlobCron.processRequest();
       //  assertEquals(1, r2);

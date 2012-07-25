@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2010 Tonic Solutions LLC.
+  ~ Copyright (c) 2010 Nimbits Inc.
   ~
   ~ http://www.nimbits.com
   ~
@@ -17,7 +17,7 @@
     <!--<async-session-persistence enabled="true"/>-->
     <threadsafe>true</threadsafe>
     <application>nimbits-hrd1</application>
-    <version>6</version>
+    <version>10</version>
     <sessions-enabled>true</sessions-enabled>
     <inbound-services>
         <service>mail</service>

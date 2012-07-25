@@ -1,5 +1,5 @@
 package integration;/*
- * Copyright (c) 2011. Tonic Solutions LLC. All Rights reserved.
+ * Copyright (c) 2011. Nimbits Inc. All Rights reserved.
  *
  * This source code is distributed under GPL v3 without any warranty.
  */

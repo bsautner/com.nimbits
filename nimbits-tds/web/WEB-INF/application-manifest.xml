@@ -16,6 +16,7 @@
       <Scope ref="docsFeed"/>
       <Scope ref="calendarAPI"/>
       <Scope ref="spreadsheetsFeed"/>
+      <Scope ref="contentFeed"/>
   </Extension>
 
   <!-- Declare our OpenID realm so our app is white listed -->
@@ -29,6 +30,11 @@
 
         <Reason>Nimbits can create new spreadsheets and export documents</Reason>
 
+    </Scope>
+
+    <Scope id="contentFeed">
+        <Url>https://docs.googleusercontent.com/</Url>
+        <Reason>Nimbits can list documents in your drive</Reason>
     </Scope>
     <Scope id="spreadsheetsFeed">
 

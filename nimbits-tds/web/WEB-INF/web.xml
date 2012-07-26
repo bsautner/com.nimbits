@@ -60,11 +60,11 @@
         <servlet-class>com.nimbits.server.api.openid.CalendarServlet</servlet-class>
         <init-param>
             <param-name>consumer_key</param-name>
-            <param-value>934640769116.apps.googleusercontent.com</param-value>
+            <param-value>1009209848329.apps.googleusercontent.com</param-value>
         </init-param>
         <init-param>
             <param-name>consumer_secret</param-name>
-            <param-value>7PGf5C-IsKQkCIbOAJAvoPwA</param-value>
+            <param-value>m4S1GkGguCvyFO70bxHuKNzH</param-value>
         </init-param>
     </servlet>
 

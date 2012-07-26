@@ -17,14 +17,14 @@
     <!--<async-session-persistence enabled="true"/>-->
     <threadsafe>true</threadsafe>
     <application>nimbits-hrd1</application>
-    <version>10</version>
+    <version>14</version>
     <sessions-enabled>true</sessions-enabled>
     <inbound-services>
         <service>mail</service>
         <service>xmpp_message</service>
     </inbound-services>
     <system-properties>
-        <property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>
+
         <property name="com.google.gdata.DisableCookieHandler" value="true"/>
     </system-properties>
 </appengine-web-app>

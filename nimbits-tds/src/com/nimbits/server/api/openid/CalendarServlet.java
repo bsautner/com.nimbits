@@ -11,6 +11,7 @@ import com.google.gdata.data.DateTime;
 import com.google.gdata.data.calendar.CalendarEventEntry;
 import com.google.gdata.data.calendar.CalendarEventFeed;
 import com.google.gdata.util.ServiceException;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.List;
 
@@ -42,6 +44,10 @@ public class CalendarServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
 
+        setup();
+    }
+
+    private void setup() {
         String consumerKey = getInitParameter("consumer_key");
         String consumerSecret = getInitParameter("consumer_secret");
 
@@ -71,6 +77,9 @@ public class CalendarServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+
+        setup();
+        PrintWriter o = resp.getWriter();
         UserInfo user = (UserInfo) req.getSession().getAttribute("user");
         if (user == null) {
             resp.sendRedirect("?errorString=Invalid user information.");
@@ -79,13 +88,15 @@ public class CalendarServlet extends HttpServlet {
         } else {
             try {
                 List<CalendarEventEntry> entry = nextEvent(user);
-                req.setAttribute("nextEvents", entry);
+
+                o.println(entry.size());
             } catch (Exception e) {
-                resp.sendRedirect("?errorString=Unable to fetch next calendar event: "
-                        + e.getMessage());
+                o.println(e.getMessage());
+                String s = ExceptionUtils.getStackTrace(e);
+                o.println(s);
+                e.printStackTrace();
             }
-            req.getRequestDispatcher("/WEB-INF/jsp/meeting.jsp").forward(req,
-                    resp);
+
         }
     }
 

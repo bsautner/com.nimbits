@@ -28,7 +28,7 @@ import java.util.*;
 public interface ValueService extends RemoteService {
 
 
-
+    void preloadTimespan(final Entity entity, final Timespan timespan) throws NimbitsException;
 
     List<Value> getCache(final Entity entity) throws NimbitsException;
 
@@ -59,13 +59,15 @@ public interface ValueService extends RemoteService {
     List<Value> getDataSegment(final Entity point,
                                final Timespan timespan) throws NimbitsException;
 
-    Map<String, Entity> getCurrentValues(Map<String, Point> entities) throws NimbitsException;
+    Map<String, Entity> getCurrentValues(final Map<String, Point> entities) throws NimbitsException;
 
-    List<ValueBlobStore> getAllStores(Entity entity) throws NimbitsException;
+    List<ValueBlobStore> getAllStores(final Entity entity) throws NimbitsException;
 
-    void purgeValues(Entity entity) throws NimbitsException;
+    void purgeValues(final Entity entity) throws NimbitsException;
 
-    void deleteExpiredData(Point point);
+    void deleteExpiredData(final Point point);
 
     void recordValues(final User user, final Point point, final List<Value> values) throws NimbitsException;
+
+    String startGoogleDocExport(final Entity entity, final int count, final Timespan ts) throws NimbitsException;
 }

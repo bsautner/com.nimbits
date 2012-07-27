@@ -58,14 +58,7 @@
     <servlet>
         <servlet-name>CalendarServlet</servlet-name>
         <servlet-class>com.nimbits.server.api.openid.CalendarServlet</servlet-class>
-        <init-param>
-            <param-name>consumer_key</param-name>
-            <param-value>1009209848329.apps.googleusercontent.com</param-value>
-        </init-param>
-        <init-param>
-            <param-name>consumer_secret</param-name>
-            <param-value>m4S1GkGguCvyFO70bxHuKNzH</param-value>
-        </init-param>
+
     </servlet>
 
     <servlet-mapping>
@@ -164,6 +157,14 @@
     <servlet>
         <servlet-name>dataService</servlet-name>
         <servlet-class>com.nimbits.server.transactions.service.value.ValueServiceImpl</servlet-class>
+        <init-param>
+            <param-name>consumer_key</param-name>
+            <param-value>1009209848329.apps.googleusercontent.com</param-value>
+        </init-param>
+        <init-param>
+            <param-name>consumer_secret</param-name>
+            <param-value>m4S1GkGguCvyFO70bxHuKNzH</param-value>
+        </init-param>
     </servlet>
     <servlet-mapping>
         <servlet-name>dataService</servlet-name>

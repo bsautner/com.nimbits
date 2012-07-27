@@ -60,4 +60,9 @@ public interface ValueTransactions {
     void purgeValues() throws NimbitsException;
 
     void deleteExpiredData();
+
+    void preloadTimespan(Timespan timespan) throws NimbitsException;
+
+    List<Value> getPieceOfPreload(int start, int end) throws NimbitsException;
+
 }

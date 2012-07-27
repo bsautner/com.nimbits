@@ -57,25 +57,26 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         String accessKey = null;
         String uuid = null;
         UserInfo domainUser = null;
+        if (req != null) {
+            session = req.getSession();
 
-        session = req.getSession();
-        emailParam = req.getParameter(Parameters.email.getText());
-        if (session != null) {
-            domainUser = (UserInfo) req.getSession().getAttribute("user");
-            if (domainUser != null) {
+            emailParam = req.getParameter(Parameters.email.getText());
+            if (session != null) {
+                domainUser = (UserInfo) req.getSession().getAttribute("user");
+                if (domainUser != null) {
 
-                emailParam = domainUser.getEmail();
+                    emailParam = domainUser.getEmail();
 
+                }
+            }
+
+            uuid =  req.getParameter(Parameters.uuid.getText());
+
+            accessKey = req.getParameter(Parameters.secret.getText());
+            if (Utils.isEmptyString(accessKey)) {
+                accessKey = req.getParameter(Parameters.key.getText());
             }
         }
-
-        uuid =  req.getParameter(Parameters.uuid.getText());
-
-        accessKey = req.getParameter(Parameters.secret.getText());
-        if (Utils.isEmptyString(accessKey)) {
-            accessKey = req.getParameter(Parameters.key.getText());
-        }
-
 
         EmailAddress email = Utils.isEmptyString(emailParam) ? null : CommonFactoryLocator.getInstance().createEmailAddress(emailParam);
 

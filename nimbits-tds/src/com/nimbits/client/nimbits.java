@@ -516,7 +516,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
             //feedPanel.setLayout(new FitLayout());
             //feedPanel.setHeight("100%");
 
-            centerPanel = new CenterPanel(loginInfo, settings, action);
+            centerPanel = new CenterPanel(loginInfo, settings, action, isDomain);
 
 
             final ContentPanel center = new ContentPanel();

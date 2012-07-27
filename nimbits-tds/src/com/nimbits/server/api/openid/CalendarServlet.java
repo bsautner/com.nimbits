@@ -56,7 +56,7 @@ public class CalendarServlet extends HttpServlet {
         oauthParameters.setOAuthConsumerSecret(consumerSecret);
 
         initError = "";
-        calendarService = new CalendarService("marketplace-nextmeeting");
+        calendarService = new CalendarService("nimbits-com");
         try {
             calendarService.setOAuthCredentials(oauthParameters,
                     new OAuthHmacSha1Signer());

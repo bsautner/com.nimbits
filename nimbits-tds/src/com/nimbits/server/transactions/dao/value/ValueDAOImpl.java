@@ -345,6 +345,16 @@ public class ValueDAOImpl implements ValueTransactions {
         }
     }
 
+    @Override
+    public void preloadTimespan(Timespan timespan) throws NimbitsException {
+        throw new NimbitsException("not implemented");
+    }
+
+    @Override
+    public List<Value> getPieceOfPreload(int start, int end) throws NimbitsException {
+        throw new NimbitsException("not implemented");
+    }
+
     private void startBlobDeleteTask(List<ValueBlobStore> result) {
         log.info("Deleting " + result.size() + "blobs");
         for (ValueBlobStore st : result) {

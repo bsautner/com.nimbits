@@ -55,8 +55,12 @@ public class NavigationPanel extends NavigationEventProvider {
     private final static int valueColumnIndex = 1;
     private final ValueServiceAsync valueService;
     private final EntityServiceAsync entityService;
+    private final boolean isDomain;
     public NavigationPanel(final User user,
-                           final Map<SettingType, String> settings) {
+                           final Map<SettingType, String> settings,
+                           final boolean isDomain) {
+
+        this.isDomain = isDomain;
 
         this.settings = settings;
         this.user = user;
@@ -289,7 +293,7 @@ public class NavigationPanel extends NavigationEventProvider {
             // return model;
         }
         private void treePropertyBuilder() {
-            context = new EntityContextMenu(user, tree, settings);
+            context = new EntityContextMenu(user, tree, settings, isDomain);
             context.addEntityModifiedListeners(new EntityModifiedListener());
             tree.setContextMenu(context);
             tree.setStateful(true);

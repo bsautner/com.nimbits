@@ -68,12 +68,12 @@ public class CenterPanel extends NavigationEventProvider {
     HBoxLayoutData flex = new HBoxLayoutData(new Margins(0, 5, 0, 0));
     Action action;
     private final User user;
-
-    public CenterPanel(User user,  Map<SettingType, String> settings, Action action) {
+    private final boolean isDomain;
+    public CenterPanel(final User user,  final Map<SettingType, String> settings, final Action action, final boolean isDomain) {
         this.user = user;
         this.settings = settings;
         this.action = action;
-
+        this.isDomain = isDomain;
     }
 
     @Override
@@ -88,7 +88,7 @@ public class CenterPanel extends NavigationEventProvider {
     }
 
     private NavigationPanel createNavigationPanel() {
-        final NavigationPanel navTree = new NavigationPanel(user, settings);
+        final NavigationPanel navTree = new NavigationPanel(user, settings, isDomain);
 
 
         navTree.addEntityClickedListeners(new AddEntityEntityClickedListener());

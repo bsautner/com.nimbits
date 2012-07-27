@@ -79,7 +79,7 @@ public class MainMenuBar extends ToolBar {
     private final Listener<BaseEvent> uploadFileListener = new UploadFileBaseEventListener();
     private Collection<EntityModifiedListener> entityModifiedListeners = new ArrayList<EntityModifiedListener>(1);
 
-    public MainMenuBar(User user, Map<SettingType, String> settings) throws NimbitsException {
+    public MainMenuBar(final User user, final Map<SettingType, String> settings) throws NimbitsException {
         this.user = user;
         this.settings = settings;
 

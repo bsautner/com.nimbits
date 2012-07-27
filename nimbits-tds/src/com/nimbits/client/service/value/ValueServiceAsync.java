@@ -68,5 +68,9 @@ public interface ValueServiceAsync {
 
     void deleteExpiredData(Point point, AsyncCallback<Void> async);
 
-    void recordValues(final User user, final Point point, final List<Value> values, AsyncCallback<Void> async) throws NimbitsException;
+    void recordValues(final User user, final Point point, final List<Value> values, AsyncCallback<Void> async);
+
+    void startGoogleDocExport(final Entity entity, int count, final Timespan ts, final AsyncCallback<String> async);
+
+    void preloadTimespan(final Entity entity, final Timespan timespan, AsyncCallback<Void> async);
 }

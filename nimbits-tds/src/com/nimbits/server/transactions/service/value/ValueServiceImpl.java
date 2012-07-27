@@ -13,6 +13,20 @@
 
 package com.nimbits.server.transactions.service.value;
 
+import com.google.gdata.client.Query;
+import com.google.gdata.client.authn.oauth.GoogleOAuthParameters;
+import com.google.gdata.client.authn.oauth.OAuthException;
+import com.google.gdata.client.authn.oauth.OAuthHmacSha1Signer;
+import com.google.gdata.client.docs.DocsService;
+import com.google.gdata.client.spreadsheet.SpreadsheetQuery;
+import com.google.gdata.client.spreadsheet.SpreadsheetService;
+import com.google.gdata.data.TextConstruct;
+import com.google.gdata.data.docs.SpreadsheetEntry;
+import com.google.gdata.data.spreadsheet.CellEntry;
+import com.google.gdata.data.spreadsheet.CellFeed;
+import com.google.gdata.data.spreadsheet.SpreadsheetFeed;
+import com.google.gdata.data.spreadsheet.WorksheetEntry;
+import com.google.gdata.util.ServiceException;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
@@ -31,11 +45,19 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 import com.nimbits.client.service.value.ValueService;
+import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.api.helper.LocationReportingHelperFactory;
+import com.nimbits.server.api.openid.UserInfo;
 import com.nimbits.server.process.task.TaskFactory;
 import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
 import com.nimbits.server.transactions.service.user.UserServiceFactory;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -59,6 +81,10 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
     }
 
 
+    @Override
+    public void preloadTimespan(Entity entity, Timespan timespan) throws NimbitsException {
+        ValueTransactionFactory.getInstance(entity).preloadTimespan(timespan);
+    }
 
     @Override
     public List<Value> getCache(final Entity entity) throws NimbitsException {
@@ -168,9 +194,157 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
     @Override
     public void recordValues(User user, Point point, List<Value> values) throws NimbitsException {
         if (point.getOwner().equals(user.getKey())) {
-        ValueTransactionFactory.getInstance(point).recordValues(values);
+            ValueTransactionFactory.getInstance(point).recordValues(values);
         }
     }
+
+    @Override
+    public String startGoogleDocExport(final Entity entity, final int count, final Timespan ts) throws NimbitsException {
+        final User user = UserServiceFactory.getServerInstance().getHttpRequestUser(
+                this.getThreadLocalRequest());
+
+        DocsService docsService;
+        SpreadsheetService spreadsheetService;// = new SpreadsheetsService("MySpreadsheetIntegration-v1");
+        String consumerKey = getInitParameter("consumer_key");
+        String consumerSecret = getInitParameter("consumer_secret");
+        GoogleOAuthParameters oauthParameters = new GoogleOAuthParameters();
+        oauthParameters.setOAuthConsumerKey(consumerKey);
+        oauthParameters.setOAuthConsumerSecret(consumerSecret);
+        docsService = new DocsService("nimbits-com");
+        spreadsheetService = new SpreadsheetService("nimbits-com");
+
+
+        try {
+            docsService.setOAuthCredentials(oauthParameters, new OAuthHmacSha1Signer());
+            spreadsheetService.setOAuthCredentials(oauthParameters, new OAuthHmacSha1Signer());
+
+
+
+
+            SpreadsheetEntry entry = new SpreadsheetEntry();
+            String title = entity.getName().getValue();
+            entry.setTitle(TextConstruct.plainText(title));
+            try {
+
+                if (count == -2) {
+                    SpreadsheetEntry newEntry = docsService.insert(
+                            new URL("https://docs.google.com/feeds/default/private/full?xoauth_requestor_id="
+                                    + user.getEmail()),
+                            entry);
+                    return "created";
+
+                }
+                else if (count == -1) {
+                    preloadTimespan(entity, ts);
+
+                    return "loaded";
+                }
+                else {
+                    SpreadsheetQuery query =
+                            new SpreadsheetQuery(new URL("https://spreadsheets.google.com/feeds/spreadsheets/private/full"));
+
+                    query.addCustomParameter(new Query.CustomParameter(
+                            "xoauth_requestor_id", user.getEmail().getValue()));
+
+                    query.setTitleQuery(title);
+                    SpreadsheetFeed feed =  spreadsheetService.query(query, SpreadsheetFeed.class);
+                    if (feed != null && ! feed.getEntries().isEmpty()) {
+                        List<Value> values = ValueTransactionFactory.getInstance(entity).getPieceOfPreload(count, count + 100);
+                        if (values.size() > 0) {
+
+                            com.google.gdata.data.spreadsheet.SpreadsheetEntry wsEntry = feed.getEntries().get(0);
+
+
+                            WorksheetEntry sheet = wsEntry.getWorksheets().get(0);
+
+                            URL cellFeedUrl= sheet.getCellFeedUrl ();
+
+                            CellFeed cellFeed= spreadsheetService.getFeed (cellFeedUrl,
+                                    CellFeed.class);
+                            CellEntry cellEntry;
+
+                            if (count == 0) {
+
+                                cellEntry= new CellEntry (1, 1, "Timestamp");
+                                cellFeed.insert (cellEntry);
+
+                                cellEntry= new CellEntry (1, 2, "Value");
+                                cellFeed.insert (cellEntry);
+
+                                cellEntry= new CellEntry (1, 3, "Latitude");
+                                cellFeed.insert (cellEntry);
+
+                                cellEntry= new CellEntry (1, 4, "Longitude");
+                                cellFeed.insert (cellEntry);
+
+                                cellEntry= new CellEntry (1, 5, "Annotation");
+                                cellFeed.insert (cellEntry);
+
+                                cellEntry= new CellEntry (1, 6, "Data");
+                                cellFeed.insert (cellEntry);
+
+                            }
+
+                            SimpleDateFormat dtf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss aaa");
+                            int row = count + 2;
+                            for (Value value : values) {
+                                cellEntry= new CellEntry (row, 1, dtf.format(value.getTimestamp()));
+                                cellFeed.insert (cellEntry);
+
+                                cellEntry= new CellEntry (row, 2, String.valueOf(value.getDoubleValue()));
+                                cellFeed.insert (cellEntry);
+
+
+                                cellEntry= new CellEntry (row, 3, String.valueOf(value.getLatitude()));
+                                cellFeed.insert (cellEntry);
+
+                                cellEntry= new CellEntry (row, 4,String.valueOf(value.getLongitude()));
+                                cellFeed.insert (cellEntry);
+
+                                cellEntry= new CellEntry (row, 5, value.getNote());
+                                cellFeed.insert (cellEntry);
+
+                                cellEntry= new CellEntry (row, 6, value.getData().getContent());
+                                cellFeed.insert (cellEntry);
+                                row++;
+
+                            }
+                            return "found";
+                        }
+                        else {
+                            return "done";
+                        }
+
+
+                    }
+                    else {
+                        return "error";
+                    }
+
+
+                }
+
+
+
+
+
+
+            } catch (ServiceException e) {
+                LogHelper.logException(this.getClass(), e);
+                throw new NimbitsException(e);
+            } catch (MalformedURLException e) {
+                throw new NimbitsException(e);
+            } catch (IOException e) {
+                throw new NimbitsException(e);
+            }
+        } catch (OAuthException e) {
+            throw new NimbitsException(e);
+        }
+
+    }
+
+
+
 
     @Override
     public List<Value> getCurrentValue(final Entity p) throws NimbitsException {

@@ -47,9 +47,11 @@ public class OpenIdServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
+
         returnToPath = getInitParameter("return_to_path", "/openid");
-        homePath = getInitParameter("home_path", "/");
+
         realm = getInitParameter("realm", null);
+        homePath = getInitParameter("home_path", "/?hd=com");
         ConsumerFactory factory = new ConsumerFactory(
                 new InMemoryConsumerAssociationStore());
         consumerHelper = factory.getConsumerHelper();
@@ -71,7 +73,7 @@ public class OpenIdServlet extends HttpServlet {
             try {
                 AuthRequest authRequest = startAuthentication(domain, req);
                 String url = authRequest.getDestinationUrl(true);
-                resp.sendRedirect(url);
+                resp.sendRedirect(url + "?hd=" + domain);
             } catch (OpenIDException e) {
                 resp.sendRedirect("?errorString=Error initializing OpenID request: "
                         + e.getMessage());
@@ -97,6 +99,7 @@ public class OpenIdServlet extends HttpServlet {
             UserInfo user = completeAuthentication(req);
             req.getSession().setAttribute("user", user);
             resp.sendRedirect(homePath);
+
         } catch (OpenIDException e) {
             resp.sendRedirect("?errorString=Error processing OpenID response: "
                     + e.getMessage());

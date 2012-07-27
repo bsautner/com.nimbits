@@ -71,11 +71,11 @@ public class EntityContextMenu extends Menu {
     private MenuItem intelligenceContext;
     private MenuItem keyContext;
     private MenuItem jsonContext;
-   // private MenuItem downloadContext;
+    private MenuItem exportContext;
     private MenuItem propertyContext;
     private Map<SettingType, String> settings;
     private final User user;
-
+    private final boolean isDomain;
     private List<EntityModifiedListener> entityModifiedListeners;
 
     public void addEntityModifiedListeners(final EntityModifiedListener listener) {
@@ -94,8 +94,9 @@ public class EntityContextMenu extends Menu {
     }
 
 
-    public EntityContextMenu(final User user, final EntityTree<ModelData> tree, final Map<SettingType, String> settings) {
+    public EntityContextMenu(final User user, final EntityTree<ModelData> tree, final Map<SettingType, String> settings, final boolean isDomain) {
         super();
+        this.isDomain = isDomain;
         propertyContext = propertyContext();
         this.user = user;
         entityModifiedListeners = new ArrayList<EntityModifiedListener>(1);
@@ -111,9 +112,10 @@ public class EntityContextMenu extends Menu {
         xmppContext = xmppResourceContext();
         summaryContext = summaryContext();
         keyContext = keyContext();
-        //downloadContext = downloadContext();
+        exportContext = exportContext();
         jsonContext = jsonContext();
         add(propertyContext);
+        add(exportContext);
         add(copyContext);
         add(deleteContext);
         add(subscribeContext);
@@ -151,7 +153,7 @@ public class EntityContextMenu extends Menu {
         summaryContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.summary));
         jsonContext.setEnabled(! currentModel.getEntityType().equals(EntityType.user));
         keyContext.setEnabled(currentModel.getEntityType().equals(EntityType.user) || currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.accessKey));
-
+        exportContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) && isDomain);
         propertyContext.setEnabled(!currentModel.isReadOnly());
         //downloadContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) ||currentModel.getEntityType().equals(EntityType.category));
 
@@ -204,9 +206,11 @@ public class EntityContextMenu extends Menu {
         return retObj;
 
     }
-    private MenuItem downloadContext() {
+    private MenuItem exportContext() {
         final MenuItem retObj = new MenuItem();
-        retObj.setText("Download Raw Data");
+
+        retObj.setText("Export to Google Docs");
+
         retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.download()));
         retObj.addSelectionListener(new DownloadEventSelectionListener());
         return retObj;
@@ -267,7 +271,7 @@ public class EntityContextMenu extends Menu {
         final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
         w.setWidth(WIDTH);
         w.setHeight(HEIGHT);
-        w.setHeading("Data in the raw");
+        w.setHeading("Export To Google Docs");
         w.add(dp);
 
 

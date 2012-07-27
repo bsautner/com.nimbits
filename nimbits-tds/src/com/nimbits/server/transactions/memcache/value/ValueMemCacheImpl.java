@@ -302,6 +302,43 @@ public class ValueMemCacheImpl implements ValueTransactions {
         ValueTransactionFactory.getDaoInstance(point).deleteExpiredData();
     }
 
+    @Override
+    public void preloadTimespan(Timespan timespan) throws NimbitsException {
+        List<Value> stored = getDataSegment(timespan);
+        String key = "PRELOAD_" + point.getUUID();
+
+        if (buffer.contains(key)) {
+            buffer.delete(key);
+        }
+        buffer.put(key, stored);
+
+    }
+
+    @Override
+    public List<Value> getPieceOfPreload(int start, int end) throws NimbitsException {
+        String key = "PRELOAD_" + point.getUUID();
+
+        LogHelper.log(this.getClass(), "Loading" + start + " " + end);
+
+        if (buffer.contains(key)) {
+            List<Value> stored = (List<Value>) buffer.get(key);
+            if (stored.size() > 0 && stored.size() >= start) {
+                int e = stored.size() >= end ? end : stored.size();
+                List<Value> results = new ArrayList<Value>(end - start);
+                results.addAll(stored.subList(start, e));
+                return results;
+             }
+            else {
+                return Collections.emptyList();
+            }
+
+        }
+        else {
+            throw new NimbitsException("values were not found in memory - please reload.");
+        }
+
+    }
+
 
     @Override
     public List<Value> getBuffer() {

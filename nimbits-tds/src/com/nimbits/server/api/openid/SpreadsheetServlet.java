@@ -20,14 +20,18 @@ import com.google.gdata.client.authn.oauth.GoogleOAuthParameters;
 import com.google.gdata.client.authn.oauth.OAuthException;
 import com.google.gdata.client.authn.oauth.OAuthHmacSha1Signer;
 import com.google.gdata.client.docs.DocsService;
-
+import com.google.gdata.client.spreadsheet.ListQuery;
+import com.google.gdata.client.spreadsheet.SpreadsheetService;
 import com.google.gdata.client.spreadsheet.SpreadsheetQuery;
+import com.google.gdata.data.Link;
 import com.google.gdata.data.TextConstruct;
+import com.google.gdata.data.batch.BatchStatus;
+import com.google.gdata.data.batch.BatchUtils;
 import com.google.gdata.data.docs.DocumentEntry;
 import com.google.gdata.data.docs.DocumentListEntry;
 import com.google.gdata.data.docs.DocumentListFeed;
 import com.google.gdata.data.docs.SpreadsheetEntry;
-import com.google.gdata.data.spreadsheet.SpreadsheetFeed;
+import com.google.gdata.data.spreadsheet.*;
 import com.google.gdata.util.ServiceException;
 import com.nimbits.server.admin.logging.LogHelper;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -41,7 +45,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Logger;
 
 
@@ -55,7 +62,7 @@ import java.util.logging.Logger;
 public class SpreadsheetServlet extends HttpServlet {
 
     DocsService docsService;
-
+    SpreadsheetService spreadsheetService;// = new SpreadsheetsService("MySpreadsheetIntegration-v1");
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -70,11 +77,12 @@ public class SpreadsheetServlet extends HttpServlet {
         oauthParameters.setOAuthConsumerKey(consumerKey);
         oauthParameters.setOAuthConsumerSecret(consumerSecret);
         docsService = new DocsService("nimbits-com");
+        spreadsheetService = new SpreadsheetService("nimbits-com");
 
 
         try {
             docsService.setOAuthCredentials(oauthParameters, new OAuthHmacSha1Signer());
-
+            spreadsheetService.setOAuthCredentials(oauthParameters, new OAuthHmacSha1Signer());
         } catch (OAuthException e) {
             LogHelper.logException(this.getClass(), e);
         }
@@ -90,16 +98,86 @@ public class SpreadsheetServlet extends HttpServlet {
         List<DocumentListEntry> docs;
         PrintWriter o = resp.getWriter();
         try {
-            docs = getDocs(user);
-            if (docs != null) {
-                for (DocumentListEntry er : docs) {
-                    o.println(er.getTitle().getPlainText());
+            //docs = getDocs(user);
+//            if (docs != null) {
+//                for (DocumentListEntry er : docs) {
+//                    o.println(er.getTitle().getPlainText());
+//                }
+//            }
+//            else {
+//                o.println("no results");
+//            }
+            SpreadsheetFeed feed = createDocument(user);
+
+
+
+
+            if (feed != null && feed.getEntries().size() > 0) {
+                o.println(feed.getEntries().size());
+                com.google.gdata.data.spreadsheet.SpreadsheetEntry entry = feed.getEntries().get(0);
+                o.println("Worksheets: " + entry.getWorksheets().size());
+                WorksheetEntry sheet = entry.getWorksheets().get(0);
+
+                o.println(sheet.getTitle().getPlainText());
+               // sheet.setTitle(TextConstruct.plainText("POINT1"));
+
+                URL cellFeedUrl= sheet.getCellFeedUrl ();
+
+                CellFeed cellFeed= spreadsheetService.getFeed (cellFeedUrl,
+                        CellFeed.class);
+
+
+
+                CellEntry cellEntry= new CellEntry (1, 1, "Timestamp");
+                cellFeed.insert (cellEntry);
+
+                cellEntry= new CellEntry (1, 2, "Value");
+                cellFeed.insert (cellEntry);
+
+                cellEntry= new CellEntry (1, 3, "Latitude");
+                cellFeed.insert (cellEntry);
+
+                cellEntry= new CellEntry (1, 4, "Longitude");
+                cellFeed.insert (cellEntry);
+
+                cellEntry= new CellEntry (1, 5, "Annotation");
+                cellFeed.insert (cellEntry);
+
+                cellEntry= new CellEntry (1, 6, "Data");
+                cellFeed.insert (cellEntry);
+                Random r = new Random();
+
+                SimpleDateFormat dtf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss aaa");
+                for (int i = 2; i < 10; i++) {
+                    cellEntry= new CellEntry (i, 1, dtf.format(new Date()));
+                    cellFeed.insert (cellEntry);
+
+                    cellEntry= new CellEntry (i, 2, String.valueOf(r.nextDouble()));
+                    cellFeed.insert (cellEntry);
+
+
+                    cellEntry= new CellEntry (i, 3, "40.283716");
+                    cellFeed.insert (cellEntry);
+
+                    cellEntry= new CellEntry (i, 4, "-75.901794");
+                    cellFeed.insert (cellEntry);
+
+                    cellEntry= new CellEntry (i, 5, "big bucks");
+                    cellFeed.insert (cellEntry);
+
+
                 }
+
+
+
+
+               // sheet.update();
+
+
             }
             else {
-                o.println("no results");
+                o.println("couldn't get it back");
             }
-            createDocument(user);
         } catch (ServiceException e) {
             o.println(e.getMessage());
             String s = ExceptionUtils.getStackTrace(e);
@@ -110,20 +188,38 @@ public class SpreadsheetServlet extends HttpServlet {
 
     }
 
-    public void createDocument(UserInfo user) throws IOException, ServiceException {
 
 
+    public SpreadsheetFeed createDocument(UserInfo user) throws IOException, ServiceException {
 
         SpreadsheetEntry entry = new SpreadsheetEntry();
-        entry.setTitle(TextConstruct.plainText("hello s1"));
-         entry.setContent(TextConstruct.plainText("{f:1, d:2}"));
-        //entry.setKind("spreadsheet");
+        String title = "WS " + new Date().getTime();
+        entry.setTitle(TextConstruct.plainText(title));
+
         SpreadsheetEntry newEntry = docsService.insert(
                 new URL("https://docs.google.com/feeds/default/private/full?xoauth_requestor_id="
                         + user.getEmail()),
                 entry);
 
 
+
+        SpreadsheetQuery query =
+                new SpreadsheetQuery(new URL("https://spreadsheets.google.com/feeds/spreadsheets/private/full"));
+
+        query.addCustomParameter(new Query.CustomParameter(
+                "xoauth_requestor_id", user.getEmail()));
+        query.setTitleQuery(title);
+        SpreadsheetFeed results =  spreadsheetService.query(query, SpreadsheetFeed.class);
+
+
+        if (!results.getEntries().isEmpty()) {
+
+
+
+            return results;
+        } else {
+            return null;
+        }
 
 
 

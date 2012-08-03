@@ -53,9 +53,9 @@ public class PowerLoaderTest {
 
         Random r = new Random();
 
-            for (int i = 0; i < 100000; i++ ) {
+            for (int i = 0; i < 1000; i++ ) {
                client.recordValue(pointName,i);
-              Thread.sleep(1000);
+              Thread.sleep(100);
                 System.out.println("Recorded value " + i);
 
             }

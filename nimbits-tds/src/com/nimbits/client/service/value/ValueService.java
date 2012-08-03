@@ -70,13 +70,5 @@ public interface ValueService extends RemoteService {
 
     void recordValues(final User user, final Point point, final List<Value> values) throws NimbitsException;
 
-    void startGoogleDocExport(final Entity entity, final int step ) throws NimbitsException;
 
-
-
-    void createGoogleDoc(Entity entity) throws  NimbitsException;
-
-    void setSpreadsheetSize(Entity entity, int count) throws NimbitsException;
-
-    void addSpreadsheetHeader(Entity entity) throws NimbitsException;
 }

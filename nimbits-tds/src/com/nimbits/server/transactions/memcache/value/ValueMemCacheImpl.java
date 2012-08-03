@@ -27,6 +27,7 @@ import com.nimbits.server.process.task.*;
 import com.nimbits.server.transactions.service.value.*;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * Created by bsautner
@@ -42,7 +43,7 @@ public class ValueMemCacheImpl implements ValueTransactions {
     private final Entity point;
     private final String currentValueCacheKey;
     private final static String valueListCacheKey = SettingType.serverVersion.getDefaultValue() + "VALUE_LIST_CACHE_KEY";
-
+    static final Logger log = Logger.getLogger(ValueMemCacheImpl.class.getName());
     public ValueMemCacheImpl(final Entity point) {
         this.point = point;
 
@@ -304,7 +305,7 @@ public class ValueMemCacheImpl implements ValueTransactions {
 
     protected static List<List<Value>> splitUpList(final List<Value> original) {
 
-        if (original.size() < Const.CONST_DEFAULT_LIST_SIZE) {
+        if (original.size() < Const.CONST_QUERY_CHUNK_SIZE) {
             List<List<Value>> retObj = new ArrayList<List<Value>>(1);
             retObj.add(original);
             return retObj;
@@ -342,14 +343,15 @@ public class ValueMemCacheImpl implements ValueTransactions {
     public int preloadTimespan(Timespan timespan) throws NimbitsException {
         List<Value> stored = getDataSegment(timespan);
         String key = MemCacheKey.preload.getText() + point.getUUID();
-        LogHelper.log(this.getClass(), "Storing " + stored.size());
+        log.info("Storing " + stored.size());
 
         List<List<Value>> split = splitUpList(stored);
-
+         log.info("split up into " + split.size() + " pieces");
         int section = 0;
         int count = 0;
         for (List<Value> small : split) {
             String n = key + section;
+            log.info("Stored key : " + n + "  " + small.size());
             count += small.size();
             if (buffer.contains(n)) {
                 buffer.delete(n);
@@ -364,21 +366,25 @@ public class ValueMemCacheImpl implements ValueTransactions {
     }
 
     @Override
-    public List<Value> getPreload(int count) throws NimbitsException {
-        int c = 0;
-        List<Value> values = new ArrayList<Value>(count);
+    public List<Value> getPreload(int section) throws NimbitsException {
+        // int c = 0;
+        // List<Value> values = new ArrayList<Value>(Const.CONST_QUERY_CHUNK_SIZE);
 
 
-        while (c < count) {
-            String key = MemCacheKey.preload.getText() + point.getUUID() + c;
-            if (buffer.contains(key)) {
-                values.addAll (((List<Value>) buffer.get(key)));
-                c += Const.CONST_QUERY_CHUNK_SIZE;
-            }
-            buffer.delete(key); //done with it
+        //  while (c < count) {
 
+        String key = MemCacheKey.preload.getText() + point.getUUID() + section;
+        log.info(key);
+
+        if (buffer.contains(key)) {
+            return  (((List<Value>) buffer.get(key)));
+            //  c += Const.CONST_QUERY_CHUNK_SIZE;
         }
-        return values;
+        else {
+            return Collections.emptyList();
+        }
+
+
 
     }
 

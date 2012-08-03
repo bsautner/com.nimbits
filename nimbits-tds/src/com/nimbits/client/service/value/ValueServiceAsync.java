@@ -71,13 +71,6 @@ public interface ValueServiceAsync {
 
     void recordValues(final User user, final Point point, final List<Value> values, AsyncCallback<Void> async);
 
-    void startGoogleDocExport(final Entity entity, int step, final AsyncCallback<Void> async);
-
     void preloadTimespan(final Entity entity, final Timespan timespan, AsyncCallback<Integer> async);
 
-    void createGoogleDoc(Entity entity, AsyncCallback<Void> async);
-
-    void setSpreadsheetSize(Entity entity, int count, AsyncCallback<Void> async);
-
-    void addSpreadsheetHeader(Entity entity, AsyncCallback<Void> async);
 }

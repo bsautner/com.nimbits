@@ -54,7 +54,7 @@ public class Const {
     public static final String CONTENT_TYPE_HTML = "text/html";
     public static final String CONTENT_TYPE_PLAIN = "text/plain";
     public static final String REGEX_SPECIAL_CHARS = "[!@#$%^&*()]";
-    public static final int CONST_QUERY_CHUNK_SIZE = 1000;
+    public static final int CONST_QUERY_CHUNK_SIZE = 50;
     public static final int CONST_MAX_CACHED_VALUE_SIZE = 500;
     public static final double CONST_IGNORED_NUMBER_VALUE = -9999999.9999999;
     public static final int DEFAULT_DATA_EXPIRE_DAYS = 90;

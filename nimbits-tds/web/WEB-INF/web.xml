@@ -128,9 +128,29 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>driveService</servlet-name>
+        <servlet-class>com.nimbits.server.external.google.drive.DriveServiceImpl</servlet-class>
+        <init-param>
+            <param-name>consumer_key</param-name>
+            <param-value>1009209848329.apps.googleusercontent.com</param-value>
+        </init-param>
+        <init-param>
+            <param-name>consumer_secret</param-name>
+            <param-value>m4S1GkGguCvyFO70bxHuKNzH</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>driveService</servlet-name>
+        <url-pattern>/nimbits/drive</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>pointService</servlet-name>
         <servlet-class>com.nimbits.server.transactions.service.point.PointServiceImpl</servlet-class>
     </servlet>
+
+
 
     <servlet>
         <servlet-name>userService</servlet-name>
@@ -157,14 +177,7 @@
     <servlet>
         <servlet-name>dataService</servlet-name>
         <servlet-class>com.nimbits.server.transactions.service.value.ValueServiceImpl</servlet-class>
-        <init-param>
-            <param-name>consumer_key</param-name>
-            <param-value>1009209848329.apps.googleusercontent.com</param-value>
-        </init-param>
-        <init-param>
-            <param-name>consumer_secret</param-name>
-            <param-value>m4S1GkGguCvyFO70bxHuKNzH</param-value>
-        </init-param>
+
     </servlet>
     <servlet-mapping>
         <servlet-name>dataService</servlet-name>

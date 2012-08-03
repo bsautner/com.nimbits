@@ -15,6 +15,7 @@ package com.nimbits.client.ui.panels;
 
 import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
+import com.extjs.gxt.ui.client.widget.Html;
 import com.extjs.gxt.ui.client.widget.LayoutContainer;
 import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.VerticalPanel;
@@ -34,6 +35,9 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.timespan.TimespanModelFactory;
 import com.nimbits.client.model.timespan.TimespanServiceClientImpl;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.service.docs.DriveService;
+import com.nimbits.client.service.docs.DriveServiceAsync;
 import com.nimbits.client.service.value.ValueService;
 import com.nimbits.client.service.value.ValueServiceAsync;
 import com.nimbits.client.ui.helper.FeedbackHelper;
@@ -49,15 +53,20 @@ import static com.google.gwt.user.client.Window.alert;
  * Time: 3:29 PM
  */
 public class DownloadPanel extends LayoutContainer {
-    private TextField endDateSelector;
-    private  TextField startDateSelector;
+    private TextField<String> endDateSelector;
+    private TextField<String> startDateSelector;
+    private TextField<String> fileNameField;
+    private Html link;
+
     private static final int WIDTH = 350;
 
-    private VerticalPanel vp;
     private  Timespan timespan;
-    private final Entity entity;
-    MessageBox box;
 
+    private FormData formdata;
+    private VerticalPanel vp;
+    private Entity entity;
+    // private Calculation calculation;
+    private User user;
 
     public DownloadPanel(final Entity entity) {
         this.entity = entity;
@@ -70,13 +79,19 @@ public class DownloadPanel extends LayoutContainer {
     protected void onRender(final Element parent, final int index) {
         super.onRender(parent, index);
         setLayout(new FillLayout());
-
+        formdata = new FormData("-20");
         vp = new VerticalPanel();
-        vp.setBorders(false);
+        vp.setSpacing(10);
 
-        //vp.setSpacing(10);
-        createForm();
+
+        try {
+            createForm();
+        } catch (NimbitsException e) {
+          FeedbackHelper.showError(e);
+        }
         add(vp);
+            doLayout();
+
 
 
 
@@ -85,16 +100,22 @@ public class DownloadPanel extends LayoutContainer {
 
 
 
-    private void createForm()   {
-        FormData formdata = new FormData("-20");
-        final FormPanel panel = new FormPanel();
-        panel.setLayout(new FitLayout());
-        panel.setFrame(false);
-        panel.setHeaderVisible(false);
-        panel.setBodyBorder(false);
+    private void createForm() throws NimbitsException {
 
-        endDateSelector = new TextField();
-        startDateSelector = new TextField();
+        final FormPanel simple = new FormPanel();
+        simple.setWidth(WIDTH);
+        simple.setFrame(true);
+        simple.setHeaderVisible(false);
+        simple.setBodyBorder(false);
+        simple.setFrame(false);
+
+        endDateSelector = new TextField<String>();
+        startDateSelector =new TextField<String>();
+        fileNameField = new TextField<String>();
+
+        fileNameField.setFieldLabel("File Name");
+        fileNameField.setValue(entity.getName().getValue() + " export");
+
         timespan = TimespanModelFactory.createTimespan(new Date(), new Date());
 
 
@@ -104,10 +125,11 @@ public class DownloadPanel extends LayoutContainer {
         endDateSelector.setValue(fmt.format(this.timespan.getEnd()));
         endDateSelector.setFieldLabel("End Date");
 
-
-        panel.add(startDateSelector, formdata);
-        panel.add(endDateSelector, formdata);
-
+        link = new Html("<a href>Link</a>");
+        simple.add(startDateSelector, formdata);
+        simple.add(endDateSelector, formdata);
+        simple.add(fileNameField, formdata);
+        simple.add(link, formdata);
 
 
 
@@ -122,17 +144,17 @@ public class DownloadPanel extends LayoutContainer {
             }
         });
 
+        submit.setWidth(200);
+        simple.addButton(submit);
 
-        panel.add(submit, formdata);
-
-        vp.add(panel);
+        vp.add(simple);
     }
 
     private void createDoc() {
         final MessageBox box = new MessageBox().wait("Exporting to Drive", "Please wait", "Creating Spreadsheet");
         box.show();
-        final ValueServiceAsync service = GWT.create(ValueService.class);
-        service.createGoogleDoc(entity, new AsyncCallback<Void>() {
+        final DriveServiceAsync service = GWT.create(DriveService.class);
+        service.createGoogleDoc(entity, fileNameField.getValue(), new AsyncCallback<String>() {
             @Override
             public void onFailure(Throwable caught) {
                 box.close();
@@ -141,8 +163,9 @@ public class DownloadPanel extends LayoutContainer {
             }
 
             @Override
-            public void onSuccess(Void result) {
+            public void onSuccess(String result) {
                box.close();
+                link.setHtml("<a href=\"" + result + "\">result</a>");
                preloadData();
             }
         });
@@ -152,8 +175,8 @@ public class DownloadPanel extends LayoutContainer {
     private void settingHeader(final int total) {
         final MessageBox box = new MessageBox().wait("Exporting to Drive", "Please wait", "Setting Headers");
         box.show();
-        final ValueServiceAsync service = GWT.create(ValueService.class);
-        service.addSpreadsheetHeader(entity, new AsyncCallback<Void>() {
+        final DriveServiceAsync service = GWT.create(DriveService.class);
+        service.addSpreadsheetHeader(entity, fileNameField.getValue(), new AsyncCallback<Void>() {
             @Override
             public void onFailure(Throwable caught) {
                 box.close();
@@ -164,7 +187,7 @@ public class DownloadPanel extends LayoutContainer {
             @Override
             public void onSuccess(Void result) {
                 box.close();
-                export(total);
+                export(total, 0);
             }
         });
 
@@ -173,6 +196,7 @@ public class DownloadPanel extends LayoutContainer {
 
     private void preloadData() {
         final MessageBox box = new MessageBox().wait("Exporting to Drive", "Please wait", "Preparing Data");
+
         box.show();
         try {
             timespan = TimespanServiceClientImpl.createTimespan(startDateSelector.getValue().toString(), endDateSelector.getValue().toString());
@@ -207,8 +231,8 @@ public class DownloadPanel extends LayoutContainer {
 
 
 
-            final ValueServiceAsync service = GWT.create(ValueService.class);
-            service.setSpreadsheetSize(entity, size, new AsyncCallback<Void>() {
+           final DriveServiceAsync service = GWT.create(DriveService.class);
+            service.setSpreadsheetSize(entity, size, fileNameField.getValue(), new AsyncCallback<Void>() {
 
                 @Override
                 public void onFailure(Throwable caught) {
@@ -229,10 +253,13 @@ public class DownloadPanel extends LayoutContainer {
 
     }
 
-    private void export(int total) {
-        final MessageBox box = new MessageBox().wait("Exporting to Drive", "Please wait", "Dumping " + total  + " values");
-        final ValueServiceAsync service = GWT.create(ValueService.class);
-        service.startGoogleDocExport(entity, total, new AsyncCallback<Void>() {
+    private void export(final int total, final int section) {
+
+        double progress = section / total;
+        final MessageBox box = new MessageBox().wait("Exporting to Drive", "Please wait", "exporting " + section + " of " + total);
+        box.show();
+        final DriveServiceAsync service = GWT.create(DriveService.class);
+        service.dumpValues(entity, section, new AsyncCallback<Integer>() {
 
             @Override
             public void onFailure(Throwable caught) {
@@ -241,8 +268,14 @@ public class DownloadPanel extends LayoutContainer {
             }
 
             @Override
-            public void onSuccess(Void result) {
+            public void onSuccess(Integer result) {
+
                 box.close();
+                if (result > 0) {
+                    int newSection= section + Const.CONST_QUERY_CHUNK_SIZE;
+                    export(total, newSection);
+
+                }
             }
         });
     }

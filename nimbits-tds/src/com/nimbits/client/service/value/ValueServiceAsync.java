@@ -22,6 +22,7 @@ import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 
+import java.net.MalformedURLException;
 import java.util.*;
 
 public interface ValueServiceAsync {
@@ -70,7 +71,13 @@ public interface ValueServiceAsync {
 
     void recordValues(final User user, final Point point, final List<Value> values, AsyncCallback<Void> async);
 
-    void startGoogleDocExport(final Entity entity, int count, final Timespan ts, final AsyncCallback<String> async);
+    void startGoogleDocExport(final Entity entity, int step, final AsyncCallback<Void> async);
 
-    void preloadTimespan(final Entity entity, final Timespan timespan, AsyncCallback<Void> async);
+    void preloadTimespan(final Entity entity, final Timespan timespan, AsyncCallback<Integer> async);
+
+    void createGoogleDoc(Entity entity, AsyncCallback<Void> async);
+
+    void setSpreadsheetSize(Entity entity, int count, AsyncCallback<Void> async);
+
+    void addSpreadsheetHeader(Entity entity, AsyncCallback<Void> async);
 }

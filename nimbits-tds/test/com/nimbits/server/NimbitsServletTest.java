@@ -59,7 +59,7 @@ import static org.junit.Assert.assertNotNull;
  * Time: 9:27 AM
  */
 public class NimbitsServletTest {
-    public static final String email = "support@nimbits.com";
+    public static final String email = "bsautner@nimbits.com";
     public final LocalServiceTestHelper helper = new LocalServiceTestHelper(
             new LocalDatastoreServiceTestConfig(),
             new LocalTaskQueueTestConfig(),

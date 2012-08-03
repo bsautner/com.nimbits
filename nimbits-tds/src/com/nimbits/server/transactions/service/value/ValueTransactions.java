@@ -61,8 +61,8 @@ public interface ValueTransactions {
 
     void deleteExpiredData();
 
-    void preloadTimespan(Timespan timespan) throws NimbitsException;
+    int preloadTimespan(Timespan timespan) throws NimbitsException;
 
-    List<Value> getPieceOfPreload(int start, int end) throws NimbitsException;
+    List<Value> getPreload(int count) throws NimbitsException;
 
 }

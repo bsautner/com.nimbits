@@ -24,7 +24,7 @@
         <property name="host" value="mail.nimbits.com"/>
     </bean>
     <bean id="templateMessage" class="org.springframework.mail.SimpleMailMessage">
-        <property name="from" value="support@nimbits.com"/>
+        <property name="from" value="bsautner@nimbits.com"/>
         <property name="subject" value="Your order"/>
     </bean>
 

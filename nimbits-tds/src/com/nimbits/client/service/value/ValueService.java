@@ -22,13 +22,14 @@ import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 
+import java.net.MalformedURLException;
 import java.util.*;
 
 @RemoteServiceRelativePath("data")
 public interface ValueService extends RemoteService {
 
 
-    void preloadTimespan(final Entity entity, final Timespan timespan) throws NimbitsException;
+    int preloadTimespan(final Entity entity, final Timespan timespan) throws NimbitsException;
 
     List<Value> getCache(final Entity entity) throws NimbitsException;
 
@@ -69,5 +70,13 @@ public interface ValueService extends RemoteService {
 
     void recordValues(final User user, final Point point, final List<Value> values) throws NimbitsException;
 
-    String startGoogleDocExport(final Entity entity, final int count, final Timespan ts) throws NimbitsException;
+    void startGoogleDocExport(final Entity entity, final int step ) throws NimbitsException;
+
+
+
+    void createGoogleDoc(Entity entity) throws  NimbitsException;
+
+    void setSpreadsheetSize(Entity entity, int count) throws NimbitsException;
+
+    void addSpreadsheetHeader(Entity entity) throws NimbitsException;
 }

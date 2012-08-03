@@ -98,35 +98,18 @@ public class SpreadsheetServlet extends HttpServlet {
         List<DocumentListEntry> docs;
         PrintWriter o = resp.getWriter();
         try {
-            //docs = getDocs(user);
-//            if (docs != null) {
-//                for (DocumentListEntry er : docs) {
-//                    o.println(er.getTitle().getPlainText());
-//                }
-//            }
-//            else {
-//                o.println("no results");
-//            }
             SpreadsheetFeed feed = createDocument(user);
-
-
-
 
             if (feed != null && feed.getEntries().size() > 0) {
                 o.println(feed.getEntries().size());
                 com.google.gdata.data.spreadsheet.SpreadsheetEntry entry = feed.getEntries().get(0);
                 o.println("Worksheets: " + entry.getWorksheets().size());
                 WorksheetEntry sheet = entry.getWorksheets().get(0);
-
                 o.println(sheet.getTitle().getPlainText());
                // sheet.setTitle(TextConstruct.plainText("POINT1"));
-
                 URL cellFeedUrl= sheet.getCellFeedUrl ();
-
                 CellFeed cellFeed= spreadsheetService.getFeed (cellFeedUrl,
                         CellFeed.class);
-
-
 
                 CellEntry cellEntry= new CellEntry (1, 1, "Timestamp");
                 cellFeed.insert (cellEntry);

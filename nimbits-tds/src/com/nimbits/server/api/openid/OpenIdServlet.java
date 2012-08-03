@@ -157,6 +157,7 @@ public class OpenIdServlet extends HttpServlet {
 
         AuthResponseHelper authResponse = consumerHelper.verify(receivingUrl,
                 openidResp, discovered);
+
         if (authResponse.getAuthResultType() == AuthResponseHelper.ResultType.AUTH_SUCCESS) {
             return onSuccess(authResponse, request);
         }
@@ -239,6 +240,7 @@ public class OpenIdServlet extends HttpServlet {
      * @return User representation
      */
     UserInfo onSuccess(AuthResponseHelper helper, HttpServletRequest request) {
+
         return new UserInfo(helper.getClaimedId().toString(),
                 helper.getAxFetchAttributeValue(Step2.AxSchema.EMAIL),
                 helper.getAxFetchAttributeValue(Step2.AxSchema.FIRST_NAME),

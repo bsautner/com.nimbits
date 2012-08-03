@@ -29,7 +29,7 @@ public class NimbitsClientImplTest {
     private EntityName pointName;
     @Before
     public void setUp() throws Exception {
-        String email =  "support@nimbits.com";
+        String email =  "bsautner@nimbits.com";
 
         String password = "214631eb-8f4d-433a-8841-416c7789c87a";
 

@@ -72,7 +72,7 @@
 
 
             $.post("http://app.nimbits.com/service/currentvalue",
-                    { email: "bsautner@gmail.com", key:"key1", point: "hello core 291", value: "78", data: "WT2"},
+                    { email: "bsautner@gmail.com", key:"key1", point: "foo", value: "78", data: "WT2"},
                     function(data){
                         alert(data);
                     }
@@ -127,7 +127,7 @@
 
 
             $.post("http://nimbits.net:8080",
-                    {json: "server={\"id\":0,\"baseUrl\":\"http://localhost:8081\",\"ownerEmail\":\"support@nimbits.com\",\"version\":\"3.2.0.8\",\"ts\":null,\"name\":\"http://localhost:8081\",\"key\":null,\"description\":\"\",\"entityType\":12,\"protectionLevel\":2,\"alertType\":3,\"parent\":\"http://localhost:8081\",\"owner\":\"support@nimbits.com\",\"readOnly\":false,\"uuid\":\"\",\"dateCreated\":\"2012-05-29T13:22:42 +0000\",\"children\":null}&entity={\"name\":\"http://localhost:8081\",\"key\":null,\"description\":\"\",\"entityType\":12,\"protectionLevel\":2,\"alertType\":3,\"parent\":\"http://localhost:8081\",\"owner\":\"support@nimbits.com\",\"readOnly\":false,\"uuid\":\"\",\"dateCreated\":\"2012-05-29T13:22:42 +0000\",\"children\":null}&action=update&url=http://localhost:8082"},
+                    {json: "server={\"id\":0,\"baseUrl\":\"http://localhost:8081\",\"ownerEmail\":\"bsautner@nimbits.com\",\"version\":\"3.2.0.8\",\"ts\":null,\"name\":\"http://localhost:8081\",\"key\":null,\"description\":\"\",\"entityType\":12,\"protectionLevel\":2,\"alertType\":3,\"parent\":\"http://localhost:8081\",\"owner\":\"support@nimbits.com\",\"readOnly\":false,\"uuid\":\"\",\"dateCreated\":\"2012-05-29T13:22:42 +0000\",\"children\":null}&entity={\"name\":\"http://localhost:8081\",\"key\":null,\"description\":\"\",\"entityType\":12,\"protectionLevel\":2,\"alertType\":3,\"parent\":\"http://localhost:8081\",\"owner\":\"support@nimbits.com\",\"readOnly\":false,\"uuid\":\"\",\"dateCreated\":\"2012-05-29T13:22:42 +0000\",\"children\":null}&action=update&url=http://localhost:8082"},
                     function(data){
                         alert(data);
 

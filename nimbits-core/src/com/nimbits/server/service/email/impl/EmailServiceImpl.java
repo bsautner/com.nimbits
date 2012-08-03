@@ -46,7 +46,7 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void send(String message) {
         SimpleMailMessage msg = new SimpleMailMessage(this.templateMessage);
-        msg.setTo("support@nimbits.com");
+        msg.setTo("bsautner@nimbits.com");
         msg.setText(message);
         try{
             this.mailSender.send(msg);

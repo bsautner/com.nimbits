@@ -302,40 +302,83 @@ public class ValueMemCacheImpl implements ValueTransactions {
         ValueTransactionFactory.getDaoInstance(point).deleteExpiredData();
     }
 
-    @Override
-    public void preloadTimespan(Timespan timespan) throws NimbitsException {
-        List<Value> stored = getDataSegment(timespan);
-        String key = "PRELOAD_" + point.getUUID();
+    protected static List<List<Value>> splitUpList(final List<Value> original) {
 
-        if (buffer.contains(key)) {
-            buffer.delete(key);
+        if (original.size() < Const.CONST_DEFAULT_LIST_SIZE) {
+            List<List<Value>> retObj = new ArrayList<List<Value>>(1);
+            retObj.add(original);
+            return retObj;
+
         }
-        buffer.put(key, stored);
+        else {
+            List<List<Value>> retObj = new ArrayList<List<Value>>(original.size() / Const.CONST_QUERY_CHUNK_SIZE);
+            int s = 0;
+            int e = Const.CONST_QUERY_CHUNK_SIZE;
+
+            while (s < original.size()) {
+                if (e > original.size()) {
+                    e = original.size();
+                }
+                List<Value> piece = new ArrayList<Value>(Const.CONST_QUERY_CHUNK_SIZE);
+                piece.addAll(original.subList(s, e));
+                retObj.add(piece);
+                s += Const.CONST_QUERY_CHUNK_SIZE;
+                e += Const.CONST_QUERY_CHUNK_SIZE;
+
+            }
+
+
+            return retObj;
+        }
+
+
+
+
+
 
     }
 
     @Override
-    public List<Value> getPieceOfPreload(int start, int end) throws NimbitsException {
-        String key = "PRELOAD_" + point.getUUID();
+    public int preloadTimespan(Timespan timespan) throws NimbitsException {
+        List<Value> stored = getDataSegment(timespan);
+        String key = MemCacheKey.preload.getText() + point.getUUID();
+        LogHelper.log(this.getClass(), "Storing " + stored.size());
 
-        LogHelper.log(this.getClass(), "Loading" + start + " " + end);
+        List<List<Value>> split = splitUpList(stored);
 
-        if (buffer.contains(key)) {
-            List<Value> stored = (List<Value>) buffer.get(key);
-            if (stored.size() > 0 && stored.size() >= start) {
-                int e = stored.size() >= end ? end : stored.size();
-                List<Value> results = new ArrayList<Value>(end - start);
-                results.addAll(stored.subList(start, e));
-                return results;
-             }
-            else {
-                return Collections.emptyList();
+        int section = 0;
+        int count = 0;
+        for (List<Value> small : split) {
+            String n = key + section;
+            count += small.size();
+            if (buffer.contains(n)) {
+                buffer.delete(n);
             }
+            buffer.put(n, small);
+            section += Const.CONST_QUERY_CHUNK_SIZE;
+        }
+        return count;
+
+
+
+    }
+
+    @Override
+    public List<Value> getPreload(int count) throws NimbitsException {
+        int c = 0;
+        List<Value> values = new ArrayList<Value>(count);
+
+
+        while (c < count) {
+            String key = MemCacheKey.preload.getText() + point.getUUID() + c;
+            if (buffer.contains(key)) {
+                values.addAll (((List<Value>) buffer.get(key)));
+                c += Const.CONST_QUERY_CHUNK_SIZE;
+            }
+            buffer.delete(key); //done with it
 
         }
-        else {
-            throw new NimbitsException("values were not found in memory - please reload.");
-        }
+        return values;
 
     }
 

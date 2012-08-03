@@ -346,12 +346,12 @@ public class ValueDAOImpl implements ValueTransactions {
     }
 
     @Override
-    public void preloadTimespan(Timespan timespan) throws NimbitsException {
+    public int preloadTimespan(Timespan timespan) throws NimbitsException {
         throw new NimbitsException("not implemented");
     }
 
     @Override
-    public List<Value> getPieceOfPreload(int start, int end) throws NimbitsException {
+    public List<Value> getPreload(int start) throws NimbitsException {
         throw new NimbitsException("not implemented");
     }
 

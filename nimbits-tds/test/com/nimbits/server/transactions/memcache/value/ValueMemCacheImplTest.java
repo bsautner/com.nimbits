@@ -2,6 +2,7 @@ package com.nimbits.server.transactions.memcache.value;
 
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.MemCacheKey;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.EntityHelper;
@@ -11,8 +12,10 @@ import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.transactions.service.value.ValueTransactionFactory;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import static org.junit.Assert.*;
 
@@ -27,6 +30,38 @@ public class ValueMemCacheImplTest extends NimbitsServletTest {
     private static final double D = 1.23;
     private static final double DELTA = 0.001;
     private MemcacheService buffer;
+
+
+    @Test
+    public void splitListTest() {
+
+        Random random = new Random();
+        int size = 1000007;
+
+        double sum = 0.0;
+
+        List<Value> list = new ArrayList<Value>(size);
+        for (int i = 0; i < size; i ++) {
+             double v = random.nextDouble();
+             sum += v;
+             list.add(ValueFactory.createValueModel(v));
+
+        }
+        assertEquals(list.size(), size);
+        List<List<Value>> split = new ValueMemCacheImpl(point).splitUpList(list);
+        int expectedSize = list.size() / Const.CONST_QUERY_CHUNK_SIZE;
+        if ( list.size()  % Const.CONST_QUERY_CHUNK_SIZE > 0) {
+            expectedSize++;
+        }
+
+        assertEquals(expectedSize, split.size());
+
+
+
+
+
+    }
+
     @Test
     public void testSafeNamespace1() {
         String sample = "valueCachenoguchi@-~!@##$%^^&*()_--.tatsu-gmail.com-テスト2";

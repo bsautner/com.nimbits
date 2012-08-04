@@ -161,7 +161,7 @@ public class ProcessBatchTask extends HttpServlet {
     //    protected static void reportLocation(HttpServletRequest req, Entity entity) {
 //        final String gps = req.getHeader("X-AppEngine-CityLatLong");
 //        if (!Utils.isEmptyString(gps)) {
-//            log.info("Reporting location: " + gps);
+//            log.info("Reporting Location: " + gps);
 //            LocationReportingHelperFactory.getInstance().reportLocation(entity, gps);
 //        }
 //    }

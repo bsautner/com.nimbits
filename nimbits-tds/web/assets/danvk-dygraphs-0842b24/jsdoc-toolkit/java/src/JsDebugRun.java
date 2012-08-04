@@ -16,7 +16,7 @@
  * .js file as an argument to the Rhino call. This little hack
  * allows the code in the .js file to have access to it's own
  * path via the Rhino arguments object. This is necessary to
- * allow the .js code to find resource files in a location
+ * allow the .js code to find resource files in a Location
  * relative to itself.
  *
  * USAGE: java -jar jsdebug.jar path/to/file.js

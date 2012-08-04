@@ -36,7 +36,7 @@ public class SystemServiceImpl implements SystemService{
             String ownerKey = admin.getKey();
             Entity ep = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.onlyMe, ownerKey,
                     ownerKey, UUID.randomUUID().toString());
-            Point pm = PointModelFactory.createPointModel(ep, 0.0, EXPIRE, "", 0.0, false, false, false, 0, false, FilterType.none, 0.0);
+            Point pm = PointModelFactory.createPointModel(ep, 0.0, EXPIRE, "", 0.0, false, false, false, 0, false, FilterType.none, 0.0, false);
             p = (Point) EntityServiceFactory.getInstance().addUpdateEntity(admin, pm);
         }
         else {

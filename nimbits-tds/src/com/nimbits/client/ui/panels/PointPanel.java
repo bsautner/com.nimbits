@@ -53,7 +53,7 @@ public class PointPanel extends LayoutContainer {
     private final NumberField high = new NumberField();
     private final NumberField idleMinutes = new NumberField();
     private final NumberField low = new NumberField();
-
+    private final CheckBox inferLocationCheckbox = new CheckBox();
     private final SeparatorToolItem separatorToolItem = new SeparatorToolItem();
     private final TextArea description = new TextArea();
     private final TextField<String> unit = new TextField<String>();
@@ -192,7 +192,7 @@ public class PointPanel extends LayoutContainer {
         point.setExpire(expires.getValue().intValue());
         point.setUnit(unit.getValue());
 
-
+        point.setInferLocation(this.inferLocationCheckbox.getValue());
         //Alerts
 
         point.setHighAlarm(high.getValue().doubleValue());
@@ -342,8 +342,12 @@ public class PointPanel extends LayoutContainer {
         simple.add(compression, formdata);
         simple.add(hysteresisType, formdata);
 
-
-
+        inferLocationCheckbox.setFieldLabel("");
+        //inferLocationCheckbox.setTitle();
+        inferLocationCheckbox.setBoxLabel("Infer GPS Location");
+        inferLocationCheckbox.setLabelSeparator("");
+        inferLocationCheckbox.setValue(point.inferLocation());
+        simple.add(inferLocationCheckbox);
         expires.setFieldLabel("Expires (days)");
         expires.setValue(point.getExpire());
         expires.setAllowBlank(false);

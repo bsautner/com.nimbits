@@ -15,7 +15,7 @@
 	@overview
 	@date $Date: 2010-06-13 22:02:44 +0100 (Sun, 13 Jun 2010) $
 	@version $Revision: 837 $
-	@location $HeadURL: https://jsdoc-toolkit.googlecode.com/svn/tags/jsdoc_toolkit-2.4.0/jsdoc-toolkit/app/lib/JSDOC.js $
+	@Location $HeadURL: https://jsdoc-toolkit.googlecode.com/svn/tags/jsdoc_toolkit-2.4.0/jsdoc-toolkit/app/lib/JSDOC.js $
 	@name JSDOC.js
  */
 

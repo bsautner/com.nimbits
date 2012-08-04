@@ -6,6 +6,7 @@ import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.nimbits.client.common.Utils;
 import com.nimbits.client.enums.MemCacheKey;
 import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.location.Location;
 import com.nimbits.server.process.task.TaskFactory;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +21,7 @@ public class LocationReportingHelperImpl implements LocationReportingHelper {
     }
 
     @Override
-    public void reportLocation(final Entity entity,final String location) {
+    public void reportLocation(final Entity entity,final Location location) {
         String key = entity.getUUID() + MemCacheKey.location;
 
         if ((! cache.contains(key)) || (cache.contains(key) && ! cache.get(key).equals(location)) ) {
@@ -29,22 +30,13 @@ public class LocationReportingHelperImpl implements LocationReportingHelper {
             cache.put(key, location);
         }
         else {
-            log.info("did not report location since it is already in the cache" + location);
+            log.info("did not report Location since it is already in the cache" + location);
         }
 
 
     }
 
-    @Override
-    public void reportLocation(HttpServletRequest req, Entity entity) {
-        if (req!= null) {
-            final String gps = req.getHeader("X-AppEngine-CityLatLong");
-            if (! Utils.isEmptyString(gps)) {
-                log.info("Reporting location: " + gps);
-                LocationReportingHelperFactory.getInstance().reportLocation(entity, gps);
-            }
-        }
-    }
+
 
 
 }

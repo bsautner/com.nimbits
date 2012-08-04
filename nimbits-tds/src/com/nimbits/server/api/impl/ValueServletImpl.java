@@ -22,6 +22,7 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueData;
@@ -87,17 +88,26 @@ public class ValueServletImpl extends ApiServlet {
 
             } else {
                 final Value v;
+                final Point point = (Point) points.get(0);
                 if (Utils.isEmptyString(getParam(Parameters.json))) {
                     v = createValueFromRequest();
                 } else {
                     final Value vx = GsonFactory.getInstance().fromJson(getParam(Parameters.json), ValueModel.class);
+                    double lt = vx.getLatitude();
+                    double lg = vx.getLongitude();
 
-                    v = ValueFactory.createValueModel(vx.getLatitude(), vx.getLongitude(), vx.getDoubleValue(), vx.getTimestamp(),
+                    if (point.inferLocation() && vx.getLocation().isEmpty()) {
+                        lt = location.getLat();
+                        lg = location.getLng();
+                    }
+                    v = ValueFactory.createValueModel(lt, lg, vx.getDoubleValue(), vx.getTimestamp(),
                             vx.getNote(), vx.getData(), AlertType.OK);
                 }
-                final Entity point = points.get(0);
+
+
                 final Value result = ValueServiceFactory.getInstance().recordValue(user, point, v);
-                reportLocation(req, point);
+
+                reportLocation(point, location);
 
                 final PrintWriter out = resp.getWriter();
                 final String j = GsonFactory.getInstance().toJson(result);
@@ -124,7 +134,7 @@ public class ValueServletImpl extends ApiServlet {
             nv = createValueFromRequest();
 
         }
-        out.print(processRequest(req, getParam(Parameters.point), getParam(Parameters.uuid), format, nv, user));
+        out.print(processRequest(getParam(Parameters.point), getParam(Parameters.uuid), format, nv, user));
         out.close();
 
 
@@ -153,7 +163,6 @@ public class ValueServletImpl extends ApiServlet {
     }
 
     protected static String processRequest(
-            final HttpServletRequest req,
             final String pointNameParam,
             final String uuid,
             final String format,
@@ -192,11 +201,11 @@ public class ValueServletImpl extends ApiServlet {
 
 
                 value = ValueServiceFactory.getInstance().recordValue(u, p, newValue);
-                if (nv.getLatitude() == 0.0 && nv.getLongitude() == 0.0) {
-                    reportLocation(req, p);
+                if (nv.getLocation().isEmpty()) {
+                    reportLocation(p, location);
                 }
                 else {
-                    reportLocation(p, nv.getLatitude(), nv.getLongitude());
+                    reportLocation(p,nv.getLocation());
                 }
             } else {
                 List<Value> values = ValueServiceFactory.getInstance().getCurrentValue(p);

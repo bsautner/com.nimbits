@@ -1461,7 +1461,7 @@ Dygraph.prototype.mouseMove_ = function(event) {
   var lasty = -1;
 
   // Loop through all the points and find the date nearest to our current
-  // location.
+  // Location.
   var minDist = 1e+100;
   var idx = -1;
   for (var i = 0; i < points.length; i++) {

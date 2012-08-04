@@ -207,7 +207,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
             sb.append("<a href=\"#\" onclick=\"window.open('report.html?uuid=")
                     .append(point.getKey())
                     .append("', 'Report',")
-                    .append("'height=800,width=800,toolbar=0,status=0,location=0' );\" >")
+                    .append("'height=800,width=800,toolbar=0,status=0,Location=0' );\" >")
                     .append("&nbsp;[more]</a>");
 
         }
@@ -294,7 +294,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
         final EntityName name = CommonFactoryLocator.getInstance().createName(Const.TEXT_DATA_FEED, EntityType.point);
         final Entity entity = EntityModelFactory.createEntity(name, "", EntityType.feed,
                 ProtectionLevel.onlyConnection, user.getKey(), user.getKey(), UUID.randomUUID().toString());
-        final Point point = PointModelFactory.createPointModel(entity, 0.0, 90, "", 0.0, false, false, false, 0, false, FilterType.fixedHysteresis, 0.1 );
+        final Point point = PointModelFactory.createPointModel(entity, 0.0, 90, "", 0.0, false, false, false, 0, false, FilterType.fixedHysteresis, 0.1, false );
         return (Point) EntityServiceFactory.getInstance().addUpdateEntity(point);
 
 

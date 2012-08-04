@@ -70,7 +70,7 @@ public class EntityServiceImpl implements EntityService {
 
     @Override
     public void processLocation(String entityJson, String location) throws NimbitsException {
-        log.info("processing location");
+        log.info("processing Location");
         log.info(entityJson);
         log.info(location);
 
@@ -88,7 +88,7 @@ public class EntityServiceImpl implements EntityService {
 
 
             if (entity != null)  {
-                log.info("doing update with good entity and location" + location + " " + entity.getUUID());
+                log.info("doing update with good entity and Location" + location + " " + entity.getUUID());
                 entityDao.updateLocation(entity, location);
 
             }

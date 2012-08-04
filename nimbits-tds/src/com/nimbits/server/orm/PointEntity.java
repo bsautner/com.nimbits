@@ -65,6 +65,9 @@ public class PointEntity extends EntityStore implements Point {
     @Persistent
     private Boolean idleAlarmSent;
 
+    @Persistent
+    private Boolean inferLocation;
+
 
     @Override
     public boolean isIdleAlarmOn() {
@@ -100,27 +103,7 @@ public class PointEntity extends EntityStore implements Point {
     protected PointEntity() {
     }
 
-//    public PointEntity(final Entity entity) throws NimbitsException {
-//        super(PointEntity.class, entity);
-//
-//    }
 
-    public PointEntity(Entity entity, Double highAlarm, int expire, String unit, Double filterValue, Integer filterType, Double lowAlarm, Boolean highAlarmOn, Boolean lowAlarmOn, Boolean idleAlarmOn, Integer idleSeconds, Boolean idleAlarmSent, List<Value> values, Value value) throws NimbitsException {
-        super(entity);
-        this.highAlarm = highAlarm;
-        this.expire = expire;
-        this.unit = unit;
-        this.filterValue = filterValue;
-        this.filterType = filterType;
-        this.lowAlarm = lowAlarm;
-        this.highAlarmOn = highAlarmOn;
-        this.lowAlarmOn = lowAlarmOn;
-        this.idleAlarmOn = idleAlarmOn;
-        this.idleSeconds = idleSeconds;
-        this.idleAlarmSent = idleAlarmSent;
-        this.values = values;
-        this.value = value;
-    }
 
 
 
@@ -140,6 +123,7 @@ public class PointEntity extends EntityStore implements Point {
         this.value = point.getValue();
         this.filterType = point.getFilterType().getCode();
         this.filterValue = point.getFilterValue();
+        this.inferLocation = point.inferLocation();
 
     }
 
@@ -261,6 +245,16 @@ public class PointEntity extends EntityStore implements Point {
         this.filterValue = value;
     }
 
+    @Override
+    public boolean inferLocation() {
+        return this.inferLocation == null ? false : inferLocation;
+    }
+
+    @Override
+    public void setInferLocation(boolean inferLocation) {
+      this.inferLocation = inferLocation;
+    }
+
 
     @Override
     public void update(final Entity update) throws NimbitsException {
@@ -277,6 +271,7 @@ public class PointEntity extends EntityStore implements Point {
         this.idleSeconds = p.getIdleSeconds();
         this.filterType = p.getFilterType().getCode();
         this.filterValue = p.getFilterValue();
+        this.inferLocation = p.inferLocation();
 
     }
 

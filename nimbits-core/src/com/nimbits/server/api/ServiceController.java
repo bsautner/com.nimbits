@@ -102,9 +102,9 @@ public class ServiceController {
     @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
     public void receiveLocation(
             @RequestParam("entity") String json,
-            @RequestParam("location") String location
+            @RequestParam("Location") String location
     ){
-        log.info("call to service location" + json + " " + location);
+        log.info("call to service Location" + json + " " + location);
         try {
             entityService.processLocation(json, location);
         } catch (NimbitsException e) {

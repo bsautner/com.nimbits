@@ -23,6 +23,6 @@ public class EntityHelper {
     public static Point createPointWithName(String nameStr) throws NimbitsException {
         EntityName name = CommonFactoryLocator.getInstance().createName(nameStr, EntityType.point);
         Entity entity = EntityModelFactory.createEntity(name, EntityType.point);
-        return PointModelFactory.createPointModel(entity, 0.0, EXPIRE, "", 0.0, false, false, false, 0, false, FilterType.fixedHysteresis, 0.1);
+        return PointModelFactory.createPointModel(entity, 0.0, EXPIRE, "", 0.0, false, false, false, 0, false, FilterType.fixedHysteresis, 0.1, false);
     }
 }

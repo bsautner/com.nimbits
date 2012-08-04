@@ -53,7 +53,7 @@ public class EntityContextMenu extends Menu {
     private EntityTree<ModelData> tree;
     private TreeModel currentModel;
     private static final String PARAM_DEFAULT_WINDOW_OPTIONS = "menubar=no," +
-            "location=false," +
+            "Location=false," +
             "resizable=yes," +
             "scrollbars=yes," +
             "width=980px," +

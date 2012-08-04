@@ -197,7 +197,7 @@ public enum Parameters {
         public static final String PARAM_PROTECTION = "protection";
         public static final String PARAM_PARENT = "parent";
         public static final String PARAM_INSTANCE = "instance";
-        public static final String PARAM_LOCATION = "location";
+        public static final String PARAM_LOCATION = "Location";
         public static final String PARAM_DOMAIN = "hd";
 
         private ParamConstants() {

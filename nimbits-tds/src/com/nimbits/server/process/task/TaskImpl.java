@@ -21,6 +21,7 @@ import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.location.Location;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.gson.GsonFactory;
@@ -139,7 +140,7 @@ public class TaskImpl implements Task {
     }
 
     @Override
-    public void startCoreLocationTask(final Entity entity, final String location) {
+    public void startCoreLocationTask(final Entity entity, final Location location) {
 
         if (entity.getEntityType().isSendUpdatesToCore()) {
             final Queue queue =  QueueFactory.getQueue( DEFAULT  );
@@ -148,7 +149,7 @@ public class TaskImpl implements Task {
             final String json = GsonFactory.getInstance().toJson(entity);
             queue.add(TaskOptions.Builder.withUrl(PATH_CORE_TASK)
                     .param(Parameters.entity.getText(), json)
-                    .param(Parameters.location.getText(), location)
+                    .param(Parameters.location.getText(), location.toString())
 
             );
         }

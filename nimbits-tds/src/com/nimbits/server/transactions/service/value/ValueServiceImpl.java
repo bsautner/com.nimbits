@@ -95,7 +95,7 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
 
         final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
                 this.getThreadLocalRequest());
-        LocationReportingHelperFactory.getInstance().reportLocation(this.getThreadLocalRequest(), point);
+        LocationReportingHelperFactory.getInstance().reportLocation(point, value.getLocation());
 //        final Point px = PointServiceFactory.getInstance().getPointByKey(point.getKey());
         //   final Point px = (Point) EntityServiceFactory.getInstance().getEntityByKey(point.getKey(), PointEntity.class.getName());
         return recordValue(u,point, value);

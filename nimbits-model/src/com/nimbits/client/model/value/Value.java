@@ -14,6 +14,7 @@
 package com.nimbits.client.model.value;
 
 import com.nimbits.client.enums.AlertType;
+import com.nimbits.client.model.location.Location;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -43,6 +44,8 @@ public interface Value extends Serializable, Comparable<Value> {
     AlertType getAlertState();
 
     ValueData getData();
+
+    Location getLocation();
 
 
 }

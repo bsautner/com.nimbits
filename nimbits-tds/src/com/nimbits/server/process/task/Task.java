@@ -17,6 +17,7 @@ import com.google.appengine.api.blobstore.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.location.Location;
 import com.nimbits.client.model.point.*;
 import com.nimbits.client.model.user.*;
 import com.nimbits.client.model.value.*;
@@ -47,5 +48,5 @@ public interface Task {
 
     void startCoreTask(final HttpServletRequest req, final Entity entity, final Action action, final String instanceURL);
 
-    void startCoreLocationTask(final Entity entity, final String location);
+    void startCoreLocationTask(final Entity entity, final Location location);
 }

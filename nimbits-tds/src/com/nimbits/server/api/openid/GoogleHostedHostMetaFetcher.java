@@ -24,7 +24,7 @@ import java.net.URISyntaxException;
 import java.net.URLEncoder;
 
 /**
- * Fetches host-meta files from a Google-hosted location.
+ * Fetches host-meta files from a Google-hosted Location.
  */
 public class GoogleHostedHostMetaFetcher extends UrlHostMetaFetcher {
 

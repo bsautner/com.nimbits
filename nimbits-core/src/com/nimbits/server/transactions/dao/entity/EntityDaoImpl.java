@@ -121,7 +121,7 @@ public class EntityDaoImpl implements EntityJPATransactions {
                 "where UUID='" + entity.getUUID() + "'";
 
         try {
-            log.info("updating location for " + entity.getName().getValue());
+            log.info("updating Location for " + entity.getName().getValue());
             log.info(sql);
             em.createNativeQuery(sql).executeUpdate();
         } catch (NimbitsException e) {

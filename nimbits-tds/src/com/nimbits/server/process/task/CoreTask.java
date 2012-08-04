@@ -61,7 +61,7 @@ public class CoreTask extends HttpServlet {
 
     private void reportLocation(final String entity, final String location) {
         if (! Utils.isEmptyString(location) && ! Utils.isEmptyString(entity)) {
-            log.info("Reporting location");
+            log.info("Reporting Location");
             final String params =  Parameters.entity.getText() + '=' + entity
                     + '&' + Parameters.location.getText() + '=' + location;
             log.info(params);

@@ -51,18 +51,23 @@ public class PointModel extends EntityModel implements Serializable, Point {
 
     private double filterValue;
 
+    private boolean inferLocation;
+
+
+
     public PointModel(final Entity entity,
-                      double highAlarm,
-                      int expire,
-                      String unit,
-                      double lowAlarm,
-                      boolean highAlarmOn,
-                      boolean lowAlarmOn,
-                      boolean idleAlarmOn,
-                      Integer idleSeconds,
-                      boolean idleAlarmSent,
-                      FilterType filterType,
-                      double filterValue) throws NimbitsException {
+                      final double highAlarm,
+                      final int expire,
+                      final String unit,
+                      final double lowAlarm,
+                      final boolean highAlarmOn,
+                      final boolean lowAlarmOn,
+                      final boolean idleAlarmOn,
+                      final Integer idleSeconds,
+                      final boolean idleAlarmSent,
+                      final FilterType filterType,
+                      final double filterValue,
+                      final boolean inferLocation) throws NimbitsException {
         super(entity);
         this.highAlarm = highAlarm;
         this.expire = expire;
@@ -75,6 +80,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
         this.idleAlarmSent = idleAlarmSent;
         this.filterType = filterType.getCode();
         this.filterValue = filterValue;
+        this.inferLocation = inferLocation;
     }
 
     // Constructors
@@ -246,7 +252,12 @@ public class PointModel extends EntityModel implements Serializable, Point {
     public void setIdleAlarmSent(final boolean idleAlarmSent) {
         this.idleAlarmSent = idleAlarmSent;
     }
-
-
-
+    @Override
+    public boolean inferLocation() {
+        return inferLocation;
+    }
+    @Override
+    public void setInferLocation(boolean inferLocation) {
+        this.inferLocation = inferLocation;
+    }
 }

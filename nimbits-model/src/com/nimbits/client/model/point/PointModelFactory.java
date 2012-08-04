@@ -41,13 +41,15 @@ public class PointModelFactory {
                                          Integer idleSeconds,
                                          boolean idleAlarmSent,
                                          FilterType filterType,
-                                         double filterValue) throws NimbitsException {
+                                         double filterValue,
+                                         boolean inferLocation
+                                        ) throws NimbitsException {
         return new PointModel(
                 entity,  highAlarm,
                 expire,  unit,  lowAlarm,
                 highAlarmOn,  lowAlarmOn,
                 idleAlarmOn,  idleSeconds,  idleAlarmSent,
-                filterType,  filterValue);
+                filterType,  filterValue, inferLocation);
     }
 
 
@@ -61,6 +63,6 @@ public class PointModelFactory {
     }
 
     public static Point createPointModel(Entity entity) throws NimbitsException {
-        return  PointModelFactory.createPointModel(entity,0.0, 90, "", 0.0, false, false, false, 0, false, FilterType.fixedHysteresis, 0.1 );
+        return  PointModelFactory.createPointModel(entity,0.0, 90, "", 0.0, false, false, false, 0, false, FilterType.fixedHysteresis, 0.1, false );
     }
 }

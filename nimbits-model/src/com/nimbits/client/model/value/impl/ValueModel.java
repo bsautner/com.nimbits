@@ -16,6 +16,8 @@ package com.nimbits.client.model.value.impl;
 
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.constants.Const;
+import com.nimbits.client.model.location.Location;
+import com.nimbits.client.model.location.LocationFactory;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueData;
 
@@ -47,6 +49,11 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
     @Override
     public ValueData getData() {
         return ValueFactory.createValueData(dx);
+    }
+
+    @Override
+    public Location getLocation() {
+      return   LocationFactory.createLocation(lt, lg);
     }
 
 

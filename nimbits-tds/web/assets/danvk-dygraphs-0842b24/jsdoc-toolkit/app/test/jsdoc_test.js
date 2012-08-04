@@ -108,9 +108,9 @@ Shape.prototype.border = function(){return border;};
 
 /**
  * Get the coordinates of this shape. It is assumed that we're always talking
- * about shapes in a 2D location here.
+ * about shapes in a 2D Location here.
  * @requires The {@link Shape} class
- * @returns A Coordinate object representing the location of this Shape
+ * @returns A Coordinate object representing the Location of this Shape
  * @type Coordinate[]
  */
 Shape.prototype.getCoords = function(){
@@ -359,7 +359,7 @@ Circle.createCircle = function(radius){
 
 /**
  * Create a new Coordinate instance based on x and y grid data.
- * @class Coordinate is a class that can encapsulate location information.
+ * @class Coordinate is a class that can encapsulate Location information.
  * @param {int} [x=0] The optional x portion of the Coordinate
  * @param {int} [y=0] The optinal y portion of the Coordinate
  */

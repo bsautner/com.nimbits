@@ -23,7 +23,7 @@ var jQuery = function( selector, context ) {
 	rootjQuery,
 
 	// A simple way to check for HTML strings or ID strings
-	// Prioritize #id over <tag> to avoid XSS via location.hash (#9521)
+	// Prioritize #id over <tag> to avoid XSS via Location.hash (#9521)
 	quickExpr = /^(?:[^#<]*(<[\w\W]+>)[^>]*$|#([\w\-]*)$)/,
 
 	// Check if a string has a non-whitespace character in it
@@ -6853,28 +6853,28 @@ var r20 = /%20/g,
 	 */
 	transports = {},
 
-	// Document location
+	// Document Location
 	ajaxLocation,
 
-	// Document location segments
+	// Document Location segments
 	ajaxLocParts,
 
 	// Avoid comment-prolog char sequence (#10098); must appease lint and evade compression
 	allTypes = ["*/"] + ["*"];
 
 // #8138, IE may throw an exception when accessing
-// a field from window.location if document.domain has been set
+// a field from window.Location if document.domain has been set
 try {
 	ajaxLocation = location.href;
 } catch( e ) {
 	// Use the href attribute of an A element
-	// since IE will modify it given document.location
+	// since IE will modify it given document.Location
 	ajaxLocation = document.createElement( "a" );
 	ajaxLocation.href = "";
 	ajaxLocation = ajaxLocation.href;
 }
 
-// Segment location into parts
+// Segment Location into parts
 ajaxLocParts = rurl.exec( ajaxLocation.toLowerCase() ) || [];
 
 // Base "constructor" for jQuery.ajaxPrefilter and jQuery.ajaxTransport

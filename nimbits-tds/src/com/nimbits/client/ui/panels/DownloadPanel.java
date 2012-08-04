@@ -255,7 +255,7 @@ public class DownloadPanel extends LayoutContainer {
 
     private void export(final int total, final int section) {
 
-        double progress = section / total;
+
         final MessageBox box = new MessageBox().wait("Exporting to Drive", "Please wait", "exporting " + section + " of " + total);
         box.show();
         final DriveServiceAsync service = GWT.create(DriveService.class);

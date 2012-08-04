@@ -20,6 +20,8 @@ import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.location.Location;
+import com.nimbits.client.model.location.LocationFactory;
 import com.nimbits.client.model.user.User;
 import com.nimbits.server.admin.quota.QuotaFactory;
 import com.nimbits.server.api.helper.LocationReportingHelperFactory;
@@ -29,6 +31,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -43,7 +46,7 @@ public class ApiServlet extends HttpServlet {
     protected static User user;
     private static Map<Parameters, String> paramMap;
     protected final static Logger log = Logger.getLogger(ApiServlet.class.getName());
-
+    protected static Location location;
 
     protected static boolean okToReport(final User u, final Entity c) {
 
@@ -54,18 +57,18 @@ public class ApiServlet extends HttpServlet {
         return (u != null && c.isOwner(u));
     }
 
-    protected static void reportLocation(HttpServletRequest req, Entity entity) {
-       LocationReportingHelperFactory.getInstance().reportLocation(req, entity);
-    }
-    protected static void reportLocation(Entity entity, double lat, double lng) {
-        final String gps = lat + "," + lng;
-        log.info("Reporting location: " + gps);
-        LocationReportingHelperFactory.getInstance().reportLocation(entity, gps);
+//    protected static void reportLocation(HttpServletRequest req, Entity entity) {
+//       LocationReportingHelperFactory.getInstance().reportLocation(req, entity);
+//    }
+    protected static void reportLocation(Entity entity, Location location) {
+
+        LocationReportingHelperFactory.getInstance().reportLocation(entity, location);
     }
 
     public static void doInit(final HttpServletRequest req, final HttpServletResponse resp, final ExportType type) throws NimbitsException {
 
         user = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
+        getGPS(req);
         if (user != null) {
             QuotaFactory.getInstance(user.getEmail()).incrementCounter();
             log.info(user.getKey());
@@ -136,6 +139,22 @@ public class ApiServlet extends HttpServlet {
         }
         resp.addHeader("Cache-Control", "no-cache");
         resp.addHeader("Access-Control-Allow-Origin", "*");
+    }
+
+    public static Location getGPS(final HttpServletRequest req) {
+        if (req != null) {
+        final String gps = req.getHeader("X-AppEngine-CityLatLong");
+        if (! Utils.isEmptyString(gps)) {
+            location = LocationFactory.createLocation(gps);
+        }
+        else {
+            location = LocationFactory.createLocation();
+        }
+        }
+        else {
+            location = LocationFactory.createLocation();
+        }
+        return location;
     }
 
     protected static String getParam(final Parameters param) {

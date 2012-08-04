@@ -82,4 +82,9 @@ public interface Point extends Entity, Serializable {
 
     void setFilterValue(double value);
 
+    boolean inferLocation();
+
+    void setInferLocation(boolean inferLocation);
+
+
 }

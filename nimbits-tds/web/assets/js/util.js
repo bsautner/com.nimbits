@@ -49,7 +49,7 @@ function popUp(url) {
     var params = 'width=' + width + ', height=' + height;
     params += ', top=' + top + ', left=' + left;
     params += ', directories=no';
-    params += ', location=yes';
+    params += ', Location=yes';
     params += ', menubar=yes';
     params += ', resizable=yes';
     params += ', scrollbars=yes';
@@ -69,7 +69,7 @@ function smallPopUp(url) {
     var params = 'width=' + width + ', height=' + height;
     params += ', top=' + top + ', left=' + left;
     params += ', directories=no';
-    params += ', location=no';
+    params += ', Location=no';
     params += ', menubar=no';
     params += ', resizable=no';
     params += ', scrollbars=no';

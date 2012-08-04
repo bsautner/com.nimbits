@@ -13,7 +13,7 @@
 
 package com.nimbits.server.admin.quota;
 
-import com.nimbits.client.model.email.*;
+import com.nimbits.client.model.email.EmailAddress;
 
 /**
  * Created by Benjamin Sautner

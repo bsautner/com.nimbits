@@ -1,17 +1,25 @@
 package com.nimbits.server.transactions.service.point;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.server.*;
-import com.nimbits.server.orm.*;
-import com.nimbits.server.transactions.service.entity.*;
-import static org.junit.Assert.*;
-import org.junit.*;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModel;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModelFactory;
+import com.nimbits.server.NimbitsServletTest;
+import com.nimbits.server.orm.PointEntity;
+import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import com.nimbits.server.transactions.service.entity.EntityTransactionFactory;
+import org.junit.Test;
 
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by Benjamin Sautner

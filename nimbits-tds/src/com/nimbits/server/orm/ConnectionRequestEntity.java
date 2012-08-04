@@ -14,14 +14,18 @@
 package com.nimbits.server.orm;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.connection.*;
-import com.nimbits.client.model.email.*;
+import com.google.appengine.api.datastore.KeyFactory;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.CommonIdentifier;
+import com.nimbits.client.model.connection.ConnectionRequest;
+import com.nimbits.client.model.email.EmailAddress;
 
-import javax.jdo.annotations.*;
-import java.util.*;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.PrimaryKey;
+import java.util.Date;
 
 
 @PersistenceCapable

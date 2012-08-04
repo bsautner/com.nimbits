@@ -13,7 +13,7 @@
 
 package com.nimbits.server.transactions.service.intelligence;
 
-import com.nimbits.client.service.intelligence.*;
+import com.nimbits.client.service.intelligence.IntelligenceService;
 
 /**
  * Created by bsautner

@@ -13,23 +13,29 @@
 
 package com.nimbits.server.communication.email;
 
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.server.admin.common.*;
-import com.nimbits.server.admin.logging.*;
-import com.nimbits.server.settings.*;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.constants.UserMessages;
+import com.nimbits.client.constants.Words;
+import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.server.admin.common.ServerInfoImpl;
+import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.settings.SettingServiceImpl;
 
-import javax.mail.*;
-import javax.mail.internet.*;
-import java.io.*;
-import java.util.*;
-import java.util.logging.*;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import java.io.UnsupportedEncodingException;
+import java.util.Properties;
+import java.util.logging.Logger;
 
 public class EmailServiceImpl implements EmailService {
 

@@ -13,15 +13,16 @@
 
 package com.nimbits.client.service.xmpp;
 
-import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.xmpp.*;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.xmpp.XmppResource;
 
-import java.util.*;
+import java.util.List;
 
 public interface XMPPServiceAsync {
     void sendInvite(AsyncCallback<Void> asyncCallback);

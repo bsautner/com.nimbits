@@ -13,11 +13,12 @@
 
 package com.nimbits.server.orm;
 
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.category.*;
-import com.nimbits.client.model.entity.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.category.Category;
+import com.nimbits.client.model.entity.Entity;
 
-import javax.jdo.annotations.*;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.PersistenceCapable;
 
 /**
  * Created by bsautner

@@ -13,13 +13,17 @@
 
 package com.nimbits.server.transactions.memcache.settings;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
+import com.nimbits.client.enums.MemCacheKey;
+import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.server.settings.SettingTransactions;
 import com.nimbits.server.settings.SettingTransactionsFactory;
-import net.sf.jsr107cache.*;
+import net.sf.jsr107cache.Cache;
+import net.sf.jsr107cache.CacheException;
+import net.sf.jsr107cache.CacheManager;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * Created by bsautner

@@ -13,30 +13,31 @@
 
 package com.nimbits.server.transactions.service.subscription;
 
-import com.google.gwt.user.server.rpc.*;
-import com.nimbits.client.common.*;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.common.Utils;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.subscription.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
-import com.nimbits.client.model.xmpp.*;
-import com.nimbits.client.service.subscription.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.subscription.Subscription;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.xmpp.XmppResource;
+import com.nimbits.client.service.subscription.SubscriptionService;
 import com.nimbits.server.admin.logging.LogHelper;
-import com.nimbits.server.communication.email.*;
-import com.nimbits.server.transactions.service.entity.*;
-import com.nimbits.server.external.facebook.*;
-import com.nimbits.server.transactions.service.feed.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.external.twitter.*;
-import com.nimbits.server.transactions.service.user.*;
-import com.nimbits.server.transactions.service.value.*;
-import com.nimbits.server.communication.xmpp.*;
+import com.nimbits.server.communication.email.EmailServiceFactory;
+import com.nimbits.server.communication.xmpp.XmppServiceFactory;
+import com.nimbits.server.external.facebook.FacebookFactory;
+import com.nimbits.server.external.twitter.TwitterServiceFactory;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import com.nimbits.server.transactions.service.feed.FeedServiceFactory;
+import com.nimbits.server.transactions.service.user.UserServiceFactory;
+import com.nimbits.server.transactions.service.value.ValueServiceFactory;
 
-import java.util.*;
-import java.util.logging.*;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by Benjamin Sautner

@@ -23,7 +23,6 @@ import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
 import com.extjs.gxt.ui.client.widget.form.TextField;
 import com.extjs.gxt.ui.client.widget.layout.FillLayout;
-import com.extjs.gxt.ui.client.widget.layout.FitLayout;
 import com.extjs.gxt.ui.client.widget.layout.FormData;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -43,8 +42,6 @@ import com.nimbits.client.service.value.ValueServiceAsync;
 import com.nimbits.client.ui.helper.FeedbackHelper;
 
 import java.util.Date;
-
-import static com.google.gwt.user.client.Window.alert;
 
 /**
  * Created by Benjamin Sautner
@@ -125,7 +122,7 @@ public class DownloadPanel extends LayoutContainer {
         endDateSelector.setValue(fmt.format(this.timespan.getEnd()));
         endDateSelector.setFieldLabel("End Date");
 
-        link = new Html("<a href>Link</a>");
+        link = new Html("<a href=\"https://drive.google.com\">Go to Drive</a>");
         simple.add(startDateSelector, formdata);
         simple.add(endDateSelector, formdata);
         simple.add(fileNameField, formdata);
@@ -165,7 +162,7 @@ public class DownloadPanel extends LayoutContainer {
             @Override
             public void onSuccess(String result) {
                box.close();
-                link.setHtml("<a href=\"" + result + "\">result</a>");
+              //  link.setHtml("<a href=\"" + result + "\">result</a>");
                preloadData();
             }
         });

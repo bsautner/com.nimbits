@@ -13,7 +13,7 @@
 
 package com.nimbits.server.transactions.service.subscription;
 
-import com.nimbits.client.service.subscription.*;
+import com.nimbits.client.service.subscription.SubscriptionService;
 
 /**
  * Created by Benjamin Sautner

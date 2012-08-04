@@ -13,18 +13,16 @@
 
 package com.nimbits.server.process.task;
 
-import com.google.gwt.core.client.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.User;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.transactions.service.entity.EntityTransactionFactory;
-import com.nimbits.server.transactions.service.user.UserServiceFactory;
-import com.nimbits.server.transactions.service.user.UserTransactionFactory;
+import com.google.gwt.core.client.GWT;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModel;
+import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.transactions.service.value.ValueServiceFactory;
 
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 public class DeleteRecordedValuesTask extends HttpServlet {

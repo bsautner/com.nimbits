@@ -14,7 +14,6 @@
 package com.nimbits.server.settings;
 
 
-import com.nimbits.server.settings.SettingTransactions;
 import com.nimbits.server.transactions.dao.settings.SettingsDAOImpl;
 import com.nimbits.server.transactions.memcache.settings.SettingMemCacheImpl;
 

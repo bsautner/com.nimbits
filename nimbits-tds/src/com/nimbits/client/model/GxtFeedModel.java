@@ -13,9 +13,9 @@
 
 package com.nimbits.client.model;
 
-import com.extjs.gxt.ui.client.data.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.feed.*;
+import com.extjs.gxt.ui.client.data.BaseTreeModel;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.model.feed.FeedValue;
 
 /**
  * Created by Benjamin Sautner

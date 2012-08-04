@@ -33,7 +33,7 @@ public enum SettingType {
     localDevAccount(SettingConstants.SETTING_LOCAL_DEV_ACCOUNT, Const.EMPTY, false, false),
     localDevPath(SettingConstants.SETTING_LOCAL_DEV_PATH, Const.EMPTY, false, false),
     localDevKey(SettingConstants.SETTING_LOCAL_DEV_KEY, Const.EMPTY, false, false),
-    ;
+    domainUser(SettingConstants.SETTING_IS_DOMAIN,Const.FALSE ,false ,false );
 
 
     private static final Map<String, SettingType> lookup = new HashMap<String, SettingType>(21);
@@ -107,6 +107,7 @@ public enum SettingType {
         static final String SETTING_TEST_PASSWORD = "testPassword";
         static final String SETTING_TEST_URL = "testURL";
         static final String SETTING_ENABLE_QUOTA = "SETTING_ENABLE_QUOTA";
+        public static final String SETTING_IS_DOMAIN = "IS_DOMAIN";
 
         private SettingConstants() {
         }

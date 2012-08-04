@@ -1,6 +1,7 @@
-import com.nimbits.server.orm.*;
-import static org.junit.Assert.*;
-import org.junit.*;
+import com.nimbits.server.orm.PointEntity;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by Benjamin Sautner

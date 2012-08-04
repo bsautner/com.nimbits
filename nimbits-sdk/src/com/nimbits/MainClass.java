@@ -21,6 +21,8 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.location.Location;
+import com.nimbits.client.model.location.LocationFactory;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.console.KeyFile;
@@ -155,7 +157,7 @@ public class MainClass {
                 out(true, String.valueOf(v.getDoubleValue()));
                 break;
             case readGps:
-                out(true, v.getLatitude() + "," + v.getLongitude());
+                out(true, v.getLocation().toString());
                 break;
             case readNote:
                 out(true, v.getNote());
@@ -171,8 +173,8 @@ public class MainClass {
         final String note = argsMap.containsKey(Parameters.note.getText()) ? argsMap.get(Parameters.note.getText()) : null;
         final double lat = argsMap.containsKey(Parameters.lat.getText()) ? Double.valueOf(argsMap.get(Parameters.lat.getText())) : 0.0;
         final double lng = argsMap.containsKey(Parameters.lng.getText()) ? Double.valueOf(argsMap.get(Parameters.lng.getText())) : 0.0;
-
-        return ValueFactory.createValueModel(lat, lng, d, new Date(), note, ValueFactory.createValueData(""), AlertType.OK);
+        Location location = LocationFactory.createLocation(lat, lng);
+        return ValueFactory.createValueModel(location, d, new Date(), note, ValueFactory.createValueData(""), AlertType.OK);
 
     }
 

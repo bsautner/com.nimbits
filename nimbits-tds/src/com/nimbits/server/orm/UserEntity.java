@@ -13,16 +13,20 @@
 
 package com.nimbits.server.orm;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.accesskey.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.user.*;
+import com.nimbits.client.enums.AuthLevel;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.accesskey.AccessKey;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.user.User;
 
-import javax.jdo.annotations.*;
-import java.util.*;
+import javax.jdo.annotations.NotPersistent;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 //import com.google.appengine.api.users.User;

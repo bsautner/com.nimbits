@@ -17,6 +17,8 @@ package com.nimbits.client.model.value.impl;
 import com.nimbits.client.constants.*;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.location.Location;
+import com.nimbits.client.model.location.LocationFactory;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueData;
 import com.nimbits.client.model.value.impl.ValueModel;
@@ -49,8 +51,7 @@ public class ValueFactory {
 
     public static ValueModel createValueModel(final Value v, final AlertType alertType) {
 
-        return new ValueModel(v.getLatitude(),
-                v.getLongitude(),
+        return new ValueModel(v.getLocation(),
                 v.getDoubleValue(),
                 v.getTimestamp(),
                 v.getNote(),
@@ -65,15 +66,14 @@ public class ValueFactory {
         return new ValueModel(v, value);
 
     }
-    public static ValueModel createValueModel(final double lat,
-                                              final double lng,
+    public static ValueModel createValueModel(final Location location,
                                               final double d,
                                               final Date timestamp,
                                               final String note,
                                               final ValueData data,
                                               final AlertType alert) {
 
-        return new ValueModel(lat, lng, d, timestamp, note, data, alert);
+        return new ValueModel(location, d, timestamp, note, data, alert);
 
     }
 
@@ -90,24 +90,24 @@ public class ValueFactory {
 
     public static ValueModel createValueModel(final double d) {
 
-        return new ValueModel(0.0, 0.0, d, new Date(), "",  createValueData(""), AlertType.OK);
+        return new ValueModel(LocationFactory.createLocation(), d, new Date(), "",  createValueData(""), AlertType.OK);
 
     }
 
     public static ValueModel createValueModel(final double d, final String note) {
 
-        return new ValueModel(0.0, 0.0, d, new Date(), note,  createValueData(""), AlertType.OK);
+        return new ValueModel(LocationFactory.createLocation(), d, new Date(), note,  createValueData(""), AlertType.OK);
 
     }
 
     public static ValueModel createValueModel(final double d, final Date timestamp) {
 
-        return new ValueModel(0.0, 0.0, d, timestamp,  "", createValueData(""), AlertType.OK);
+        return new ValueModel(LocationFactory.createLocation(), d, timestamp,  "", createValueData(""), AlertType.OK);
 
     }
     public static ValueModel createValueModel(final double d, final String note, final Date timestamp) {
 
-        return new ValueModel(0.0, 0.0, d, timestamp,note,  createValueData(""),AlertType.OK);
+        return new ValueModel(LocationFactory.createLocation(), d, timestamp,note,  createValueData(""),AlertType.OK);
 
     }
     public static ValueModel createValueModel(final String valueAndNote, final Date timestamp) {
@@ -144,54 +144,9 @@ public class ValueFactory {
         }
 
 
-        return new ValueModel(0.0, 0.0, d, timestamp, note,  createValueData(""), AlertType.OK);
+        return new ValueModel(LocationFactory.createLocation(), d, timestamp, note,  createValueData(""), AlertType.OK);
     }
-//    public static List<Value> createValueModels(final Iterable<Value> values) {
-//        final List<Value> retObj = new LinkedList<Value>();
-//        if (values != null) {
-//            for (final Value v : values) {
-//                retObj.add(createValueModel(v));
-//
-//            }
-//        }
-//        return retObj;
-//
-//    }
 
-
-//    public static Value createValueModel(final String valueStr,
-//                                         final String note,
-//                                         final String lat,
-//                                         final String lng,
-//                                         final ValueData dataStr) throws NimbitsException {
-//
-//
-//        double value = 0.0;
-//        String data = dataStr;
-//        try {
-//            value = Double.valueOf(valueStr);
-//
-//        } catch (NumberFormatException e) {
-//            data += valueStr;
-//        }
-//
-//
-//        final Date timestamp;
-//        final double latitude;
-//        final double longitude;
-//        try {
-//
-//            timestamp = new Date();
-//            latitude = lat != null ? Double.valueOf(lat) : 0;
-//            longitude = lng != null ? Double.valueOf(lng) : 0;
-//        } catch (NumberFormatException e) {
-//            throw new NimbitsException(e.getMessage());
-//        }
-//
-//
-//        return createValueModel(latitude, longitude, value, timestamp, note, data, AlertType.OK);
-//
-//    }
 
 
 }

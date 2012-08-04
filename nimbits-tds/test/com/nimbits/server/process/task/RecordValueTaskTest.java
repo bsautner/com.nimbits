@@ -12,8 +12,8 @@ import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.NimbitsServletTest;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
 import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
 import com.nimbits.server.transactions.service.value.ValueServiceFactory;
 import org.junit.Test;
 

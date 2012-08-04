@@ -24,9 +24,10 @@ package com.nimbits.server.time;/*
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.timespan.*;
-import org.junit.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.timespan.Timespan;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Created by bsautner

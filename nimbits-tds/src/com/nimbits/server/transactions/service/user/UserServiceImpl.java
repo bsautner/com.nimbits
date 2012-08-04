@@ -14,30 +14,42 @@
 package com.nimbits.server.transactions.service.user;
 
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.gwt.user.server.rpc.*;
-import com.nimbits.client.common.*;
-import com.nimbits.client.constants.*;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.constants.UserMessages;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.accesskey.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.connection.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.entity.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.accesskey.AccessKey;
+import com.nimbits.client.model.accesskey.AccessKeyFactory;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.CommonIdentifier;
+import com.nimbits.client.model.connection.Connection;
+import com.nimbits.client.model.connection.ConnectionFactory;
+import com.nimbits.client.model.connection.ConnectionRequest;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.user.UserModel;
+import com.nimbits.client.model.user.UserModelFactory;
 import com.nimbits.client.service.user.UserService;
-import com.nimbits.server.admin.logging.*;
+import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.admin.quota.QuotaFactory;
 import com.nimbits.server.api.openid.UserInfo;
-import com.nimbits.server.communication.email.*;
+import com.nimbits.server.communication.email.EmailServiceFactory;
 import com.nimbits.server.settings.SettingsServiceFactory;
-import com.nimbits.server.transactions.service.entity.*;
-import com.nimbits.server.transactions.service.feed.*;
+import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import com.nimbits.server.transactions.service.feed.FeedServiceFactory;
 
-import javax.servlet.http.*;
-import java.util.*;
-import java.util.logging.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.logging.Logger;
 
 
 public class UserServiceImpl extends RemoteServiceServlet implements

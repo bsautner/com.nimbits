@@ -14,31 +14,46 @@
 package com.nimbits.server.transactions.dao.entity;
 
 
-import com.google.appengine.api.blobstore.*;
-import com.nimbits.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.accesskey.*;
-import com.nimbits.client.model.calculation.*;
-import com.nimbits.client.model.category.*;
-import com.nimbits.client.model.connection.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.file.*;
-import com.nimbits.client.model.intelligence.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.subscription.*;
-import com.nimbits.client.model.summary.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.xmpp.*;
-import com.nimbits.server.transactions.service.entity.*;
-import com.nimbits.server.admin.logging.*;
+import com.google.appengine.api.blobstore.BlobKey;
+import com.nimbits.PMF;
+import com.nimbits.client.constants.UserMessages;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.accesskey.AccessKey;
+import com.nimbits.client.model.accesskey.AccessKeyFactory;
+import com.nimbits.client.model.calculation.Calculation;
+import com.nimbits.client.model.calculation.CalculationModelFactory;
+import com.nimbits.client.model.category.Category;
+import com.nimbits.client.model.category.CategoryFactory;
+import com.nimbits.client.model.connection.Connection;
+import com.nimbits.client.model.connection.ConnectionFactory;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.file.File;
+import com.nimbits.client.model.file.FileFactory;
+import com.nimbits.client.model.intelligence.Intelligence;
+import com.nimbits.client.model.intelligence.IntelligenceModelFactory;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModelFactory;
+import com.nimbits.client.model.subscription.Subscription;
+import com.nimbits.client.model.subscription.SubscriptionFactory;
+import com.nimbits.client.model.summary.Summary;
+import com.nimbits.client.model.summary.SummaryModelFactory;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.user.UserModelFactory;
+import com.nimbits.client.model.xmpp.XmppResource;
+import com.nimbits.client.model.xmpp.XmppResourceFactory;
+import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.orm.*;
-import com.nimbits.shared.*;
+import com.nimbits.server.transactions.service.entity.EntityTransactions;
+import com.nimbits.shared.Utils;
 
-import javax.jdo.*;
+import javax.jdo.JDOObjectNotFoundException;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
 import java.util.*;
-import java.util.logging.*;
+import java.util.logging.Logger;
 
 /**
  * Created by Benjamin Sautner

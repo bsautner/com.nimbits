@@ -13,7 +13,7 @@
 
 package com.nimbits.server.transactions.service.value;
 
-import com.nimbits.client.service.value.*;
+import com.nimbits.client.service.value.ValueService;
 
 public class ValueServiceFactory {
 

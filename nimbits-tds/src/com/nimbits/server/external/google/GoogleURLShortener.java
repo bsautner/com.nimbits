@@ -13,9 +13,9 @@
 
 package com.nimbits.server.external.google;
 
-import com.nimbits.client.constants.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.http.*;
+import com.nimbits.client.constants.Path;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.http.HttpCommonFactory;
 
 /**
  * Created by Benjamin Sautner

@@ -37,6 +37,7 @@ import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.constants.Const;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
@@ -136,8 +137,8 @@ public class DriveServiceImpl extends RemoteServiceServlet implements
                 com.google.gdata.data.spreadsheet.SpreadsheetEntry wsEntry = feed.getEntries().get(0);
                 WorksheetEntry sheet = wsEntry.getWorksheets().get(0);
 
-                sheet.setRowCount(count+2);
-                sheet.setColCount(6);
+                sheet.setRowCount(count+ 2 + Const.CONST_QUERY_CHUNK_SIZE);
+                sheet.setColCount(MAX_COLS);
                 sheet.update();
             }
 
@@ -293,7 +294,7 @@ public class DriveServiceImpl extends RemoteServiceServlet implements
             q.setMinimumRow(section + 2);
             q.setMaximumRow(section + 2 + values.size());
             q.setMinimumCol(1);
-            q.setMaximumCol(6);
+            q.setMaximumCol(MAX_COLS);
             q.setReturnEmpty(true);
             q.addCustomParameter(new Query.CustomParameter("xoauth_requestor_id", user.getEmail().getValue()));
             CellFeed cellFeed = spreadsheetService.query(q, CellFeed.class);
@@ -323,7 +324,7 @@ public class DriveServiceImpl extends RemoteServiceServlet implements
                 currentCellEntry++;
 
 
-                String lat =  String.valueOf(value1.getLatitude());
+                String lat =  String.valueOf(value1.getLocation().getLat());
                 entry = new CellEntry(cellFeed.getEntries().get(currentCellEntry));
                 entry.changeInputValueLocal(lat);
                 BatchUtils.setBatchId(entry, (new Integer(currentCellEntry)).toString());
@@ -332,7 +333,7 @@ public class DriveServiceImpl extends RemoteServiceServlet implements
                 currentCellEntry++;
 
 
-                String lng =  String.valueOf(value1.getLongitude());
+                String lng =  String.valueOf(value1.getLocation().getLng());
                 entry = new CellEntry(cellFeed.getEntries().get(currentCellEntry));
                 entry.changeInputValueLocal(lng);
                 BatchUtils.setBatchId(entry, (new Integer(currentCellEntry)).toString());

@@ -13,23 +13,26 @@
 
 package com.nimbits.server.transactions.service.summary;
 
-import com.google.gwt.user.server.rpc.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.summary.*;
-import com.nimbits.client.model.timespan.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.SummaryType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.summary.Summary;
+import com.nimbits.client.model.timespan.Timespan;
+import com.nimbits.client.model.timespan.TimespanModelFactory;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
-import com.nimbits.client.service.summary.*;
-import com.nimbits.server.transactions.service.entity.*;
-import com.nimbits.server.admin.logging.*;
-import com.nimbits.server.transactions.service.value.*;
-import org.apache.commons.math3.stat.descriptive.*;
+import com.nimbits.client.service.summary.SummaryService;
+import com.nimbits.server.admin.logging.LogHelper;
+import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import com.nimbits.server.transactions.service.value.ValueServiceFactory;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 
 /**

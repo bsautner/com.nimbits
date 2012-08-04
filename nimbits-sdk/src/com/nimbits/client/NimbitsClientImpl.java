@@ -27,6 +27,7 @@ import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.location.LocationFactory;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.User;
@@ -443,7 +444,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
     @Override
     public Value recordDataObject(EntityName name, Object object, Class<?> cls) throws NimbitsException {
-        Value value = ValueFactory.createValueModel(0.0, 0.0, 0.0, new Date(), "", ValueFactory.createValueData(gson.toJson(object)), AlertType.OK);
+        Value value = ValueFactory.createValueModel(LocationFactory.createLocation(), 0.0, new Date(), "", ValueFactory.createValueData(gson.toJson(object)), AlertType.OK);
         try {
             return recordValue(name, value);
         } catch (IOException e) {
@@ -455,7 +456,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
     @Override
     public Value recordDataObject(EntityName name, Object object, Class<?> cls, double latitude, double longitude, double value) throws NimbitsException {
-        Value vx = ValueFactory.createValueModel(latitude, longitude, value, new Date(),  "", ValueFactory.createValueData(gson.toJson(object)), AlertType.OK);
+        Value vx = ValueFactory.createValueModel(LocationFactory.createLocation(latitude, longitude), value, new Date(),  "", ValueFactory.createValueData(gson.toJson(object)), AlertType.OK);
         try {
             return recordValue(name, vx);
         } catch (IOException e) {

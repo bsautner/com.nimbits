@@ -14,23 +14,17 @@
  *******************************************************************************/
 package com.nimbits.server.api.openid.appengine;
 
-import com.google.appengine.api.urlfetch.FetchOptions;
-import com.google.appengine.api.urlfetch.HTTPHeader;
-import com.google.appengine.api.urlfetch.HTTPMethod;
-import com.google.appengine.api.urlfetch.HTTPRequest;
-import com.google.appengine.api.urlfetch.HTTPResponse;
-import com.google.appengine.api.urlfetch.ResponseTooLargeException;
-import com.google.appengine.api.urlfetch.URLFetchService;
+import com.google.appengine.api.urlfetch.*;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
-
 import org.apache.http.Header;
 import org.apache.http.message.BasicHeader;
 import org.openid4java.util.AbstractHttpFetcher;
 import org.openid4java.util.HttpRequestOptions;
 import org.openid4java.util.HttpResponse;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
@@ -39,8 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import javax.servlet.http.HttpServletResponse;
 
 public class Openid4javaFetcher extends AbstractHttpFetcher {
 

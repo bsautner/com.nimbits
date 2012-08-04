@@ -13,32 +13,43 @@
 
 package com.nimbits.client.ui.controls;
 
-import com.extjs.gxt.ui.client.data.*;
-import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.widget.*;
+import com.extjs.gxt.ui.client.data.ModelData;
+import com.extjs.gxt.ui.client.event.Listener;
+import com.extjs.gxt.ui.client.event.MenuEvent;
+import com.extjs.gxt.ui.client.event.MessageBoxEvent;
+import com.extjs.gxt.ui.client.event.SelectionListener;
+import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.Window;
-import com.extjs.gxt.ui.client.widget.menu.*;
+import com.extjs.gxt.ui.client.widget.menu.Menu;
 import com.extjs.gxt.ui.client.widget.menu.MenuItem;
-import com.google.gwt.core.client.*;
-import com.google.gwt.user.client.*;
-import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
-import com.nimbits.client.common.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.*;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.constants.UserMessages;
+import com.nimbits.client.constants.Words;
+import com.nimbits.client.enums.Action;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.GxtModel;
 import com.nimbits.client.model.TreeModel;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.service.entity.*;
-import com.nimbits.client.service.xmpp.*;
-import com.nimbits.client.ui.helper.*;
-import com.nimbits.client.ui.icons.*;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.service.entity.EntityService;
+import com.nimbits.client.service.entity.EntityServiceAsync;
+import com.nimbits.client.service.xmpp.XMPPService;
+import com.nimbits.client.service.xmpp.XMPPServiceAsync;
+import com.nimbits.client.ui.helper.FeedbackHelper;
+import com.nimbits.client.ui.icons.Icons;
 import com.nimbits.client.ui.panels.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Benjamin Sautner
@@ -209,7 +220,7 @@ public class EntityContextMenu extends Menu {
     private MenuItem exportContext() {
         final MenuItem retObj = new MenuItem();
 
-        retObj.setText("Export to Google Docs");
+        retObj.setText("Export to Google Drive&trade;");
 
         retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.download()));
         retObj.addSelectionListener(new DownloadEventSelectionListener());
@@ -270,8 +281,8 @@ public class EntityContextMenu extends Menu {
         DownloadPanel dp = new DownloadPanel(entity);
         final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
         w.setWidth(WIDTH);
-        w.setHeight(HEIGHT);
-        w.setHeading("Export To Google Docs");
+        w.setHeight(350);
+        w.setHeading("Export To Google Drive&trade;");
         w.add(dp);
 
 

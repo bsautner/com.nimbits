@@ -14,9 +14,6 @@
 package com.nimbits.client.service.docs;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 
 public interface DriveServiceAsync {

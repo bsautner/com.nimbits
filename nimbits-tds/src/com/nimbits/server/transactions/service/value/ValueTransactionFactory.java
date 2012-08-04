@@ -13,9 +13,9 @@
 
 package com.nimbits.server.transactions.service.value;
 
-import com.nimbits.client.model.entity.*;
-import com.nimbits.server.transactions.dao.value.*;
-import com.nimbits.server.transactions.memcache.value.*;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.server.transactions.dao.value.ValueDAOImpl;
+import com.nimbits.server.transactions.memcache.value.ValueMemCacheImpl;
 
 public class ValueTransactionFactory {
 

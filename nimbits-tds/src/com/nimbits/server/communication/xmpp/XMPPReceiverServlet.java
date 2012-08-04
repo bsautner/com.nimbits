@@ -13,28 +13,42 @@
 
 package com.nimbits.server.communication.xmpp;
 
-import com.google.appengine.api.xmpp.*;
-import com.google.gson.*;
-import com.nimbits.client.common.*;
+import com.google.appengine.api.xmpp.JID;
+import com.google.appengine.api.xmpp.Message;
+import com.google.appengine.api.xmpp.XMPPService;
+import com.google.appengine.api.xmpp.XMPPServiceFactory;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
+import com.nimbits.client.common.Utils;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.location.LocationFactory;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModel;
+import com.nimbits.client.model.point.PointModelFactory;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
-import com.nimbits.server.transactions.service.entity.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.json.*;
-import com.nimbits.server.transactions.service.user.*;
-import com.nimbits.server.transactions.service.value.*;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.json.JsonHelper;
+import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import com.nimbits.server.transactions.service.user.UserServiceFactory;
+import com.nimbits.server.transactions.service.value.ValueServiceFactory;
 
-import javax.servlet.http.*;
-import java.io.*;
-import java.util.*;
-import java.util.logging.*;
-import java.util.regex.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 
 @SuppressWarnings("serial")
@@ -169,7 +183,7 @@ public class XMPPReceiverServlet extends HttpServlet {
 
 
                 if (u != null) {
-                    Value value = ValueFactory.createValueModel(0.0, 0.0, v, new Date(), "", ValueFactory.createValueData(""), AlertType.OK);
+                    Value value = ValueFactory.createValueModel(LocationFactory.createLocation(), v, new Date(), "", ValueFactory.createValueData(""), AlertType.OK);
                     ValueServiceFactory.getInstance().recordValue(u, pointName, value);
                 }
             } catch (NumberFormatException ignored) {

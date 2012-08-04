@@ -13,15 +13,22 @@
 
 package com.nimbits.server.transactions.memcache.entity;
 
-import com.google.appengine.api.blobstore.*;
-import com.google.appengine.api.memcache.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.transactions.service.entity.*;
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.memcache.InvalidValueException;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.MemCacheKey;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.user.User;
+import com.nimbits.server.transactions.service.entity.EntityTransactionFactory;
+import com.nimbits.server.transactions.service.entity.EntityTransactions;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Benjamin Sautner

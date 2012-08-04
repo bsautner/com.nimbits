@@ -14,7 +14,7 @@
 package com.nimbits.server.admin.common;
 
 
-import javax.servlet.*;
+import javax.servlet.ServletRequest;
 import java.util.zip.Deflater;
 
 /**

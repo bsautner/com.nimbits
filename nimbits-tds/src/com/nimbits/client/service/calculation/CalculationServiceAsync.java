@@ -13,11 +13,11 @@
 
 package com.nimbits.client.service.calculation;
 
-import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.model.calculation.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.nimbits.client.model.calculation.Calculation;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
 
 public interface CalculationServiceAsync {
 

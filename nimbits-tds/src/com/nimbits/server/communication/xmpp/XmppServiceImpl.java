@@ -13,20 +13,28 @@
 
 package com.nimbits.server.communication.xmpp;
 
-import com.google.appengine.api.xmpp.*;
-import com.google.gwt.user.server.rpc.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.xmpp.*;
+import com.google.appengine.api.xmpp.JID;
+import com.google.appengine.api.xmpp.Message;
+import com.google.appengine.api.xmpp.MessageBuilder;
+import com.google.appengine.api.xmpp.XMPPServiceFactory;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.xmpp.XmppResource;
+import com.nimbits.client.model.xmpp.XmppResourceFactory;
 import com.nimbits.client.service.xmpp.XMPPService;
-import com.nimbits.server.transactions.service.entity.*;
-import com.nimbits.server.transactions.service.user.*;
+import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import com.nimbits.server.transactions.service.user.UserServiceFactory;
 
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 
 public class XmppServiceImpl extends RemoteServiceServlet implements XMPPService {
 

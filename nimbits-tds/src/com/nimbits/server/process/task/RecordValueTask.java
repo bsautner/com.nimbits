@@ -14,24 +14,29 @@
 package com.nimbits.server.process.task;
 
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModel;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.user.UserModel;
+import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueModel;
-import com.nimbits.server.transactions.service.calculation.*;
-import com.nimbits.server.transactions.service.entity.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.transactions.service.intelligence.*;
-import com.nimbits.server.admin.logging.*;
-import com.nimbits.server.transactions.service.subscription.*;
-import com.nimbits.server.transactions.service.summary.*;
+import com.nimbits.server.admin.logging.LogHelper;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.transactions.service.calculation.CalculationServiceFactory;
+import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import com.nimbits.server.transactions.service.intelligence.IntelligenceServiceFactory;
+import com.nimbits.server.transactions.service.subscription.SubscriptionServiceFactory;
+import com.nimbits.server.transactions.service.summary.SummaryServiceFactory;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.util.logging.*;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.logging.Logger;
 
 public class RecordValueTask extends HttpServlet {
 

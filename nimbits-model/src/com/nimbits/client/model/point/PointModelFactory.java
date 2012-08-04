@@ -10,7 +10,6 @@ import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 
-import java.util.*;
 
 /**
  * Created by bsautner
@@ -54,13 +53,6 @@ public class PointModelFactory {
 
 
 
-    public static List<Point> createPointModels(final Collection<Point> result) throws NimbitsException {
-        final List<Point> r = new ArrayList<Point>(result.size());
-        for (final Point p : result) {
-            r.add(createPointModel(p));
-        }
-        return r;
-    }
 
     public static Point createPointModel(Entity entity) throws NimbitsException {
         return  PointModelFactory.createPointModel(entity,0.0, 90, "", 0.0, false, false, false, 0, false, FilterType.fixedHysteresis, 0.1, false );

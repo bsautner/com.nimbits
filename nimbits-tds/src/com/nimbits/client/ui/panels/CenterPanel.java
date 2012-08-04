@@ -161,7 +161,7 @@ public class CenterPanel extends NavigationEventProvider {
     }
 
     private MainMenuBar initToolbar(final User loginInfo, Map<SettingType, String> settings) throws NimbitsException {
-        MainMenuBar toolBar = new MainMenuBar(loginInfo, settings);
+        MainMenuBar toolBar = new MainMenuBar(loginInfo, settings, isDomain);
         toolBar.addEntityModifiedListeners(new MainMenuBar.EntityModifiedListener() {
             @Override
             public void onEntityModified(TreeModel model, Action action) throws NimbitsException {

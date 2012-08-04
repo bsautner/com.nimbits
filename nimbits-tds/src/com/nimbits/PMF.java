@@ -13,7 +13,8 @@
 
 package com.nimbits;
 
-import javax.jdo.*;
+import javax.jdo.JDOHelper;
+import javax.jdo.PersistenceManagerFactory;
 
 public class PMF {
     private static final String PMF_TRANSACTIONS_OPTIONAL = "transactions-optional";

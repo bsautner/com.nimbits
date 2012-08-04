@@ -13,12 +13,12 @@
 
 package com.nimbits.server.communication.xmpp;
 
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.xmpp.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.xmpp.XmppResource;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * Created by Benjamin Sautner

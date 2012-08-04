@@ -1,14 +1,18 @@
 package com.nimbits.server.process.task;
 
-import com.google.appengine.api.blobstore.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.server.admin.logging.*;
-import com.nimbits.shared.*;
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.BlobstoreService;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.server.admin.logging.LogHelper;
+import com.nimbits.shared.Utils;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.util.logging.*;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.logging.Logger;
 
 /**
  * Created by Benjamin Sautner

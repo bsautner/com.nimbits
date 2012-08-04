@@ -13,35 +13,49 @@
 
 package com.nimbits.server.transactions.service.intelligence;
 
-import com.google.gwt.user.server.rpc.*;
-import com.nimbits.client.common.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.constants.Path;
+import com.nimbits.client.enums.AlertType;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.intelligence.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.intelligence.Intelligence;
+import com.nimbits.client.model.location.LocationFactory;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
-import com.nimbits.client.service.intelligence.*;
-import com.nimbits.server.transactions.service.entity.*;
-import com.nimbits.server.transactions.service.feed.*;
-import com.nimbits.server.http.*;
-import com.nimbits.server.settings.*;
-import com.nimbits.server.transactions.service.user.*;
-import com.nimbits.server.transactions.service.value.*;
-import org.w3c.dom.*;
-import org.xml.sax.*;
+import com.nimbits.client.service.intelligence.IntelligenceService;
+import com.nimbits.server.http.HttpCommonFactory;
+import com.nimbits.server.settings.SettingsServiceFactory;
+import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import com.nimbits.server.transactions.service.user.UserServiceFactory;
+import com.nimbits.server.transactions.service.value.ValueServiceFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
-import javax.xml.parsers.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import java.util.logging.*;
-import java.util.regex.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 /**
  * Created by Benjamin Sautner
@@ -313,7 +327,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
         }
 
 
-        return ValueFactory.createValueModel(0.0, 0.0, v, new Date(),"",  ValueFactory.createValueData(data), AlertType.OK);
+        return ValueFactory.createValueModel(LocationFactory.createLocation(), v, new Date(),"",  ValueFactory.createValueData(data), AlertType.OK);
 
 
     }

@@ -13,26 +13,32 @@
 
 package com.nimbits.server.external.facebook;
 
-import com.google.gwt.http.client.*;
-import com.google.gwt.user.server.rpc.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.service.facebook.*;
-import com.nimbits.server.transactions.service.entity.*;
-import com.nimbits.server.external.google.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.http.*;
-import com.nimbits.server.settings.*;
-import com.nimbits.server.transactions.service.user.*;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.constants.Path;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.service.facebook.FacebookService;
+import com.nimbits.server.external.google.GoogleURLShortener;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.http.HttpCommonFactory;
+import com.nimbits.server.settings.SettingTransactionsFactory;
+import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import com.nimbits.server.transactions.service.user.UserServiceFactory;
 
-import javax.servlet.http.*;
-import java.io.*;
-import java.net.*;
-import java.util.logging.*;
-import java.util.regex.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 
 public class FacebookImpl extends RemoteServiceServlet implements FacebookService, RequestCallback

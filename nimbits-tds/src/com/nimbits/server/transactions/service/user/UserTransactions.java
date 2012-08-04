@@ -13,12 +13,12 @@
 
 package com.nimbits.server.transactions.service.user;
 
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.connection.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.user.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.connection.ConnectionRequest;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.user.User;
 
-import java.util.*;
+import java.util.List;
 
 public interface UserTransactions {
 

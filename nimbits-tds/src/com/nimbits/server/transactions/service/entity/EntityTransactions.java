@@ -13,12 +13,14 @@
 
 package com.nimbits.server.transactions.service.entity;
 
-import com.google.appengine.api.blobstore.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
+import com.google.appengine.api.blobstore.BlobKey;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Benjamin Sautner

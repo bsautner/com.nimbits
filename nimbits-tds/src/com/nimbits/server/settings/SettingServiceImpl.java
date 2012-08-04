@@ -14,14 +14,15 @@
 package com.nimbits.server.settings;
 
 
-import com.google.gwt.user.server.rpc.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.service.settings.*;
-import com.nimbits.shared.*;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.service.settings.SettingsService;
+import com.nimbits.server.api.openid.UserInfo;
+import com.nimbits.shared.Utils;
 
-import java.util.*;
+import java.util.Map;
 
 public class SettingServiceImpl extends RemoteServiceServlet implements
         SettingsService {
@@ -33,7 +34,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public Map<SettingType, String> getSettings() throws NimbitsException {
-        return SettingTransactionsFactory.getInstance().getSettings();
+      return  SettingTransactionsFactory.getInstance().getSettings();
+
     }
 
     @Override

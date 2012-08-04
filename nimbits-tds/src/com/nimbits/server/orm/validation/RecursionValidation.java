@@ -1,16 +1,19 @@
 package com.nimbits.server.orm.validation;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.trigger.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.transactions.service.entity.*;
-import com.nimbits.server.orm.*;
-import com.nimbits.shared.*;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.trigger.Trigger;
+import com.nimbits.client.model.user.User;
+import com.nimbits.server.orm.TriggerEntity;
+import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import com.nimbits.shared.Utils;
 
-import java.util.*;
-import java.util.logging.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Created by Benjamin Sautner

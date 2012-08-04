@@ -13,20 +13,28 @@
 
 package com.nimbits.server.transactions.service.calculation;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.calculation.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.value.*;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.calculation.Calculation;
+import com.nimbits.client.model.calculation.CalculationModelFactory;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModel;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModelFactory;
+import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
-import com.nimbits.server.*;
-import com.nimbits.server.transactions.service.entity.*;
-import com.nimbits.server.transactions.service.value.*;
-import org.junit.*;
+import com.nimbits.server.NimbitsServletTest;
+import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import com.nimbits.server.transactions.service.value.ValueServiceFactory;
+import org.junit.Test;
 
-import java.util.*;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * Created by bsautner

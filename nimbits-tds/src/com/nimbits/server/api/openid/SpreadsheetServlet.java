@@ -20,18 +20,16 @@ import com.google.gdata.client.authn.oauth.GoogleOAuthParameters;
 import com.google.gdata.client.authn.oauth.OAuthException;
 import com.google.gdata.client.authn.oauth.OAuthHmacSha1Signer;
 import com.google.gdata.client.docs.DocsService;
-import com.google.gdata.client.spreadsheet.ListQuery;
-import com.google.gdata.client.spreadsheet.SpreadsheetService;
 import com.google.gdata.client.spreadsheet.SpreadsheetQuery;
-import com.google.gdata.data.Link;
+import com.google.gdata.client.spreadsheet.SpreadsheetService;
 import com.google.gdata.data.TextConstruct;
-import com.google.gdata.data.batch.BatchStatus;
-import com.google.gdata.data.batch.BatchUtils;
-import com.google.gdata.data.docs.DocumentEntry;
 import com.google.gdata.data.docs.DocumentListEntry;
 import com.google.gdata.data.docs.DocumentListFeed;
 import com.google.gdata.data.docs.SpreadsheetEntry;
-import com.google.gdata.data.spreadsheet.*;
+import com.google.gdata.data.spreadsheet.CellEntry;
+import com.google.gdata.data.spreadsheet.CellFeed;
+import com.google.gdata.data.spreadsheet.SpreadsheetFeed;
+import com.google.gdata.data.spreadsheet.WorksheetEntry;
 import com.google.gdata.util.ServiceException;
 import com.nimbits.server.admin.logging.LogHelper;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -43,13 +41,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Logger;
 
 
 /**

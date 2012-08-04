@@ -1,6 +1,6 @@
 package com.nimbits.server.admin.system;
 
-import com.nimbits.client.exception.*;
+import com.nimbits.client.exception.NimbitsException;
 
 /**
  * Created by Benjamin Sautner

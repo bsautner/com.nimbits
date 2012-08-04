@@ -13,7 +13,7 @@
 
 package com.nimbits.server.transactions.service.calculation;
 
-import com.nimbits.client.exception.*;
+import com.nimbits.client.exception.NimbitsException;
 
 /**
  * Created by bsautner

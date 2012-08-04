@@ -13,20 +13,24 @@
 
 package com.nimbits.server.transactions.dao.user;
 
-import com.google.appengine.tools.development.testing.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.*;
-import com.nimbits.server.transactions.service.entity.*;
-import com.nimbits.server.transactions.service.user.*;
-import org.junit.*;
-import static org.junit.Assert.*;
+import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
+import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.user.User;
+import com.nimbits.server.NimbitsServletTest;
+import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import com.nimbits.server.transactions.service.user.UserServiceFactory;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-import java.util.*;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 /**
  * Created by bsautner

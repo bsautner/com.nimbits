@@ -1,9 +1,9 @@
 package com.nimbits.server.orm;
 
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.trigger.*;
-import com.nimbits.server.orm.validation.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.trigger.Trigger;
+import com.nimbits.server.orm.validation.RecursionValidation;
 
 import javax.jdo.annotations.*;
 

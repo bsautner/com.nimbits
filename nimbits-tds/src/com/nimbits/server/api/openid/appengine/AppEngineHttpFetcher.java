@@ -14,12 +14,7 @@
  *******************************************************************************/
 package com.nimbits.server.api.openid.appengine;
 
-import com.google.appengine.api.urlfetch.HTTPHeader;
-import com.google.appengine.api.urlfetch.HTTPMethod;
-import com.google.appengine.api.urlfetch.HTTPRequest;
-import com.google.appengine.api.urlfetch.HTTPResponse;
-import com.google.appengine.api.urlfetch.URLFetchService;
-import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
+import com.google.appengine.api.urlfetch.*;
 import com.google.inject.Singleton;
 import com.google.step2.http.FetchException;
 import com.google.step2.http.FetchRequest;

@@ -89,19 +89,17 @@ public class PointModel extends EntityModel implements Serializable, Point {
         this.highAlarm = point.getHighAlarm();
         this.expire = point.getExpire();
         this.unit = point.getUnit();
-
         this.lowAlarm = point.getLowAlarm();
         this.highAlarmOn = point.isHighAlarmOn();
         this.lowAlarmOn = point.isLowAlarmOn();
         this.idleAlarmOn = point.isIdleAlarmOn();
         this.idleSeconds = point.getIdleSeconds();
         this.idleAlarmSent = point.getIdleAlarmSent();
-
         this.values = point.getValues();
         this.value = point.getValue();
         this.filterType = point.getFilterType().getCode();
         this.filterValue = point.getFilterValue();
-
+        this.inferLocation = point.inferLocation();
     }
 
     protected PointModel() {

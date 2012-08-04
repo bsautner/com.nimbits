@@ -1,20 +1,28 @@
 package com.nimbits.server.process.cron;
 
-import com.google.appengine.api.blobstore.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.file.*;
-import com.nimbits.server.*;
-import com.nimbits.server.io.blob.*;
-import com.nimbits.server.process.task.*;
-import com.nimbits.server.transactions.service.entity.*;
-import static org.junit.Assert.*;
-import org.junit.*;
+import com.google.appengine.api.blobstore.BlobInfo;
+import com.google.appengine.api.blobstore.BlobInfoFactory;
+import com.google.appengine.api.blobstore.BlobKey;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ExportType;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.file.FileFactory;
+import com.nimbits.server.NimbitsServletTest;
+import com.nimbits.server.io.blob.BlobStoreFactory;
+import com.nimbits.server.process.task.DeleteBlobTask;
+import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import org.junit.Test;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.Iterator;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by Benjamin Sautner

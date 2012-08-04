@@ -13,12 +13,14 @@
 
 package com.nimbits.client.ui.helper;
 
-import com.google.gwt.user.client.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.file.*;
+import com.google.gwt.user.client.Window;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.constants.Path;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.file.File;
 
 /**
  * Created by Benjamin Sautner

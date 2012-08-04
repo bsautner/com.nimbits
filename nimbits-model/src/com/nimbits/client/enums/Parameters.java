@@ -89,7 +89,7 @@ public enum Parameters {
     parent(ParamConstants.PARAM_PARENT),
     instance(ParamConstants.PARAM_INSTANCE),
     location(ParamConstants.PARAM_LOCATION),
-    domain(ParamConstants.PARAM_DOMAIN);
+    domain(ParamConstants.PARAM_DOMAIN), hd(ParamConstants.PARAM_DOMAIN);
 
     private static final Map<String, Parameters> lookup = new HashMap<String, Parameters>(100);
 

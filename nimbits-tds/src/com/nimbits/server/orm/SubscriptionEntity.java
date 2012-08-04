@@ -15,13 +15,14 @@ package com.nimbits.server.orm;
 
 import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
 import com.nimbits.client.enums.subscription.SubscriptionType;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.subscription.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.subscription.Subscription;
 
-import javax.jdo.annotations.*;
-import java.io.*;
-import java.util.*;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by Benjamin Sautner

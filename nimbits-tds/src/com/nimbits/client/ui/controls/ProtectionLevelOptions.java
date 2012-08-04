@@ -13,9 +13,11 @@
 
 package com.nimbits.client.ui.controls;
 
-import com.extjs.gxt.ui.client.widget.form.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.entity.*;
+import com.extjs.gxt.ui.client.widget.form.Radio;
+import com.extjs.gxt.ui.client.widget.form.RadioGroup;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.model.entity.Entity;
 
 /**
  * Created by bsautner

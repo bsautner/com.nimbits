@@ -33,7 +33,6 @@ import com.nimbits.client.common.Utils;
 import com.nimbits.client.constants.UserMessages;
 import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.helper.EntityHelper;
@@ -46,7 +45,6 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.entity.EntityServiceAsync;
@@ -79,10 +77,11 @@ public class MainMenuBar extends ToolBar {
     private final Listener<BaseEvent> uploadFileListener = new UploadFileBaseEventListener();
     private Collection<EntityModifiedListener> entityModifiedListeners = new ArrayList<EntityModifiedListener>(1);
 
-    public MainMenuBar(final User user, final Map<SettingType, String> settings) throws NimbitsException {
+
+
+    public MainMenuBar(final User user, final Map<SettingType, String> settings, boolean isDomain) throws NimbitsException {
         this.user = user;
         this.settings = settings;
-
         service = GWT.create(UserService.class);
 
         addFileMenu();
@@ -106,9 +105,11 @@ public class MainMenuBar extends ToolBar {
                 AbstractImagePrototype.create(Icons.INSTANCE.bug()),
                 "https://github.com/bsautner/com.nimbits/issues"));
 
+        if (! isDomain) {
         add(actionMenuItem("Logout",
                 AbstractImagePrototype.create(Icons.INSTANCE.deleteFriend()),
                 Action.logout));
+        }
 
     }
 

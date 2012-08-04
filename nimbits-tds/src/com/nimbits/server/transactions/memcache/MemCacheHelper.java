@@ -13,10 +13,11 @@
 
 package com.nimbits.server.transactions.memcache;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.user.*;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.user.User;
 
 /**
  * Created by Benjamin Sautner

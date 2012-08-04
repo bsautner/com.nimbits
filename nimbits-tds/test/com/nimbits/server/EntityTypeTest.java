@@ -1,12 +1,10 @@
 package com.nimbits.server;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.entity.*;
-import org.junit.*;
+import com.nimbits.client.enums.EntityType;
+import org.junit.Test;
+
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
-
-import java.security.*;
 
 /**
  * Created by Benjamin Sautner

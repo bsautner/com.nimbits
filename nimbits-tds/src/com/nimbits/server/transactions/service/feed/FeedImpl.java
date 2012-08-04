@@ -14,27 +14,32 @@
 package com.nimbits.server.transactions.service.feed;
 
 import com.google.gson.JsonSyntaxException;
-import com.google.gwt.user.server.rpc.*;
-import com.nimbits.client.common.*;
-import com.nimbits.client.constants.*;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.feed.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.feed.FeedValue;
+import com.nimbits.client.model.feed.FeedValueModel;
+import com.nimbits.client.model.location.LocationFactory;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModelFactory;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
-import com.nimbits.client.service.feed.*;
-import com.nimbits.server.admin.common.*;
-import com.nimbits.server.admin.logging.*;
-import com.nimbits.server.transactions.service.entity.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.transactions.service.user.*;
-import com.nimbits.server.transactions.service.value.*;
+import com.nimbits.client.service.feed.Feed;
+import com.nimbits.server.admin.common.ServerInfoImpl;
+import com.nimbits.server.admin.logging.LogHelper;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import com.nimbits.server.transactions.service.user.UserServiceFactory;
+import com.nimbits.server.transactions.service.value.ValueServiceFactory;
 
-import java.io.*;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -103,7 +108,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
 
             final FeedValue feedValue = new FeedValueModel(finalMessage, "", type);
             final String json = GsonFactory.getSimpleInstance().toJson(feedValue);
-            final Value value = ValueFactory.createValueModel(0.0, 0.0, Const.CONST_IGNORED_NUMBER_VALUE,
+            final Value value = ValueFactory.createValueModel(LocationFactory.createLocation(), Const.CONST_IGNORED_NUMBER_VALUE,
                     new Date(),"", ValueFactory.createValueData(json), AlertType.OK);
             final Value v = ValueFactory.createValueModel(value, json);
 

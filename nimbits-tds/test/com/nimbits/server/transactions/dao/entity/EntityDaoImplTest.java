@@ -23,9 +23,9 @@ import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.server.NimbitsServletTest;
+import com.nimbits.server.orm.PointEntity;
 import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
 import com.nimbits.server.transactions.service.entity.EntityTransactionFactory;
-import com.nimbits.server.orm.PointEntity;
 import org.junit.Test;
 
 import java.util.List;

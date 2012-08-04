@@ -13,9 +13,12 @@
 
 package com.nimbits.server.io.storage;
 
-import com.google.appengine.api.files.*;
+import com.google.appengine.api.files.AppEngineFile;
+import com.google.appengine.api.files.FileService;
+import com.google.appengine.api.files.FileServiceFactory;
+import com.google.appengine.api.files.GSFileOptions;
 
-import java.io.*;
+import java.io.IOException;
 
 /**
  * Created by Benjamin Sautner

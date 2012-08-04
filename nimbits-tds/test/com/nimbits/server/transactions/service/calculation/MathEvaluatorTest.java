@@ -13,9 +13,10 @@
 
 package com.nimbits.server.transactions.service.calculation;
 
-import com.nimbits.client.exception.*;
-import static org.junit.Assert.*;
-import org.junit.*;
+import com.nimbits.client.exception.NimbitsException;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by bsautner

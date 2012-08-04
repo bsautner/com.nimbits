@@ -22,6 +22,8 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.location.Location;
+import com.nimbits.client.model.location.LocationFactory;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
@@ -77,6 +79,7 @@ public class ValueServletImpl extends ApiServlet {
 
     protected static void processPost(final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException, IOException {
         doInit(req, resp, ExportType.plain);
+        log.info("recording post");
 
         if (user != null && ! user.isRestricted()) {
 
@@ -90,17 +93,16 @@ public class ValueServletImpl extends ApiServlet {
                 final Value v;
                 final Point point = (Point) points.get(0);
                 if (Utils.isEmptyString(getParam(Parameters.json))) {
-                    v = createValueFromRequest();
+                    v = createValueFromRequest(point.inferLocation());
                 } else {
                     final Value vx = GsonFactory.getInstance().fromJson(getParam(Parameters.json), ValueModel.class);
-                    double lt = vx.getLatitude();
-                    double lg = vx.getLongitude();
-
+                    Location l = vx.getLocation();
+                    log.info(point.getName().getValue() + " " + point.inferLocation());
                     if (point.inferLocation() && vx.getLocation().isEmpty()) {
-                        lt = location.getLat();
-                        lg = location.getLng();
+                       l = location;
                     }
-                    v = ValueFactory.createValueModel(lt, lg, vx.getDoubleValue(), vx.getTimestamp(),
+                    log.info(location.toString());
+                    v = ValueFactory.createValueModel(l, vx.getDoubleValue(), vx.getTimestamp(),
                             vx.getNote(), vx.getData(), AlertType.OK);
                 }
 
@@ -131,7 +133,7 @@ public class ValueServletImpl extends ApiServlet {
             nv = GsonFactory.getInstance().fromJson(getParam(Parameters.json), ValueModel.class);
         } else if (format.equals(Words.WORD_DOUBLE) && !Utils.isEmptyString(getParam(Parameters.value))) {
 
-            nv = createValueFromRequest();
+            nv = createValueFromRequest(false);
 
         }
         out.print(processRequest(getParam(Parameters.point), getParam(Parameters.uuid), format, nv, user));
@@ -140,7 +142,7 @@ public class ValueServletImpl extends ApiServlet {
 
     }
 
-    private static Value createValueFromRequest() {
+    private static Value createValueFromRequest(boolean inferLocation) {
         Value nv;
         final double latitude = getDoubleFromParam(getParam(Parameters.lat));
         final double longitude = getDoubleFromParam(getParam(Parameters.lng));
@@ -148,7 +150,13 @@ public class ValueServletImpl extends ApiServlet {
         final String data =  getParam(Parameters.data);
         final ValueData vd = ValueFactory.createValueData(data);
         final Date timestamp = getParam(Parameters.timestamp) != null ? new Date(Long.parseLong(getParam(Parameters.timestamp))) : new Date();
-        nv  = ValueFactory.createValueModel(latitude, longitude, value, timestamp, getParam(Parameters.note), vd, AlertType.OK);
+        Location location1 = LocationFactory.createLocation(latitude, longitude);
+        if (inferLocation && location1.isEmpty()) {
+            location1 = location;
+        }
+
+
+        nv  = ValueFactory.createValueModel(location1, value, timestamp, getParam(Parameters.note), vd, AlertType.OK);
         return nv;
     }
 
@@ -196,7 +204,7 @@ public class ValueServletImpl extends ApiServlet {
                 // record the value, but not if this is a public
                 // request
                 final Value newValue = ValueFactory.createValueModel(
-                        nv.getLatitude(), nv.getLongitude(), nv.getDoubleValue(),
+                        nv.getLocation(), nv.getDoubleValue(),
                         nv.getTimestamp(),nv.getNote(),  nv.getData(), AlertType.OK);
 
 

@@ -13,10 +13,11 @@
 
 package com.nimbits.client.model.connection;
 
-import com.nimbits.client.exception.*;
-import com.nimbits.server.orm.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.server.orm.ConnectionRequestEntity;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by bsautner

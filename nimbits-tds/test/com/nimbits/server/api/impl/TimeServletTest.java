@@ -13,12 +13,11 @@
 
 package com.nimbits.server.api.impl;
 
-import com.google.appengine.tools.development.testing.*;
-import com.google.gwt.benchmarks.client.Setup;
+import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.ClientType;
 import com.nimbits.client.enums.Parameters;
-import com.nimbits.server.NimbitsServletTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -26,12 +25,9 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Created with IntelliJ IDEA.

@@ -13,13 +13,15 @@
 
 package com.nimbits.server.orm;
 
-import com.google.appengine.api.blobstore.*;
-import com.nimbits.client.common.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.file.*;
+import com.google.appengine.api.blobstore.BlobKey;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.file.File;
 
-import javax.jdo.annotations.*;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
 
 /**
  * Created by bsautner

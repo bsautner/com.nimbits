@@ -71,7 +71,6 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
     private EntityServiceAsync entityService;
     private UserServiceAsync userService;
     private TwitterServiceAsync twitterService;
-    private String domain;
 
     private boolean isDomain;
 
@@ -91,8 +90,8 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         final String code = Location.getParameter(Parameters.code.getText());
         final String tw = Location.getParameter(Parameters.twitter.getText());
         final String oauth_token = Location.getParameter(Parameters.oauth_token.getText());
-        domain = Location.getParameter(Parameters.domain.getText());
-        isDomain = domain != null;
+        final String domainName = Location.getParameter(Parameters.hd.getText());
+        isDomain = domainName != null;
 
         //final String diagramUUID = Location.getParameter(Const.Params.PARAM_DIAGRAM);
 
@@ -173,7 +172,9 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         entityService.getEntityByKey(uuid, EntityType.point , new SubscriptionPanelAsyncCallback(user, settings));
     }
 
-    private void loadLogin() {
+    private void loadLogin(Map<SettingType, String> settings) {
+
+
         if (isDomain ) {
             RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, "/openid");
             try {
@@ -188,7 +189,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
             } );
             } catch (RequestException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+              FeedbackHelper.showError(e);
             }
         }
         else {
@@ -406,6 +407,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
         @Override
         public void onSuccess(final Map<SettingType, String> settings) {
+
             switch (action) {
                 case report:
                     loadEntityDisplay(uuid);
@@ -420,7 +422,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
                     decidedWhatViewToLoadSecondStep(action, settings, uuid);
                     break;
                 default:
-                    loadLogin();
+                    loadLogin(settings);
             }
         }
 
@@ -486,13 +488,13 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
                             doTwitterRedirectForAuthorisation();
                             break;
                         default:
-                            loadLogin();
+                            loadLogin(settings);
                     }
                 } else {
                     if (action.equals(Action.subscribe)) {
                         Cookies.setCookie(Action.subscribe.name(), uuid);
                     }
-                    loadLogin();
+                    loadLogin(settings);
                 }
             } catch (NimbitsException ex) {
                 FeedbackHelper.showError(ex);

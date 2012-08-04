@@ -13,13 +13,13 @@
 
 package com.nimbits.server.transactions.service.user;
 
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.accesskey.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.user.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.accesskey.AccessKey;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.user.User;
 
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by Benjamin Sautner

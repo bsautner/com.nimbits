@@ -13,24 +13,30 @@
 
 package com.nimbits.server.process.task;
 
-import com.google.appengine.api.blobstore.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.timespan.*;
-import com.nimbits.client.model.value.*;
+import com.google.appengine.api.blobstore.BlobInfo;
+import com.google.appengine.api.blobstore.BlobInfoFactory;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.timespan.Timespan;
+import com.nimbits.client.model.timespan.TimespanModelFactory;
+import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
-import com.nimbits.client.model.valueblobstore.*;
-import com.nimbits.server.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.transactions.service.entity.*;
-import com.nimbits.server.transactions.service.value.*;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
-import static org.junit.Assert.*;
-import org.junit.*;
+import com.nimbits.client.model.valueblobstore.ValueBlobStore;
+import com.nimbits.server.NimbitsServletTest;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.transactions.service.entity.EntityTransactionFactory;
+import com.nimbits.server.transactions.service.value.ValueServiceFactory;
+import com.nimbits.server.transactions.service.value.ValueTransactionFactory;
+import org.junit.Test;
 
 import java.util.*;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by bsautner

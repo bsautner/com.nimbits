@@ -1,11 +1,13 @@
 package com.nimbits.client.model;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.value.*;
+import com.nimbits.client.enums.AlertType;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.value.Value;
 
-import java.io.*;
+import java.io.Serializable;
 
 /**
  * Created by Benjamin Sautner

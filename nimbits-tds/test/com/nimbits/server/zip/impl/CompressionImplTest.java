@@ -2,17 +2,11 @@ package com.nimbits.server.zip.impl;
 
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
-import com.nimbits.server.gson.GsonFactory;
 import org.junit.Test;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.zip.GZIPOutputStream;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * Created with IntelliJ IDEA.

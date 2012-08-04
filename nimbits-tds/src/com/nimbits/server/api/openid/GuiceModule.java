@@ -3,22 +3,13 @@ package com.nimbits.server.api.openid;
 
 import com.google.appengine.api.urlfetch.URLFetchService;
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
-
-import com.google.inject.AbstractModule;
-import com.google.inject.CreationException;
-import com.google.inject.Provides;
-import com.google.inject.Scopes;
-import com.google.inject.Singleton;
+import com.google.inject.*;
 import com.google.step2.discovery.DefaultHostMetaFetcher;
 import com.google.step2.discovery.HostMetaFetcher;
 import com.google.step2.http.HttpFetcher;
 import com.google.step2.hybrid.HybridOauthMessage;
 import com.google.step2.openid.ax2.AxMessage2;
-import com.google.step2.xmlsimplesign.CertValidator;
-import com.google.step2.xmlsimplesign.CnConstraintCertValidator;
-import com.google.step2.xmlsimplesign.DefaultCertValidator;
-import com.google.step2.xmlsimplesign.DisjunctiveCertValidator;
-import com.google.step2.xmlsimplesign.TrustRootsProvider;
+import com.google.step2.xmlsimplesign.*;
 import com.nimbits.server.api.openid.appengine.AppEngineHttpFetcher;
 import com.nimbits.server.api.openid.appengine.AppEngineTrustsRootProvider;
 import com.nimbits.server.api.openid.appengine.Openid4javaFetcher;

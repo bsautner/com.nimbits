@@ -13,13 +13,14 @@
 
 package com.nimbits.server.orm;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.summary.*;
+import com.nimbits.client.enums.SummaryType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.summary.Summary;
 
-import javax.jdo.annotations.*;
-import java.util.*;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+import java.util.Date;
 
 /**
  * Created by Benjamin Sautner

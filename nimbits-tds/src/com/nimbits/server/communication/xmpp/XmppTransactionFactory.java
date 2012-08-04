@@ -13,7 +13,7 @@
 
 package com.nimbits.server.communication.xmpp;
 
-import com.nimbits.server.transactions.dao.xmpp.*;
+import com.nimbits.server.transactions.dao.xmpp.XmppDaoImpl;
 
 /**
  * Created by Benjamin Sautner

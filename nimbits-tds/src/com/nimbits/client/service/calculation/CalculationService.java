@@ -13,14 +13,13 @@
 
 package com.nimbits.client.service.calculation;
 
-import com.google.gwt.user.client.rpc.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.calculation.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
-
-import java.util.*;
+import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.calculation.Calculation;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
 
 /**
  * Created by bsautner

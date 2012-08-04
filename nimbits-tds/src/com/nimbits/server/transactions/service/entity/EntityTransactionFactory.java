@@ -13,11 +13,12 @@
 
 package com.nimbits.server.transactions.service.entity;
 
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.transactions.dao.entity.*;
-import com.nimbits.server.transactions.memcache.entity.*;
+import com.nimbits.client.model.user.User;
+import com.nimbits.server.transactions.dao.entity.EntityDaoImpl;
+import com.nimbits.server.transactions.memcache.entity.EntityCacheImpl;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Benjamin Sautner

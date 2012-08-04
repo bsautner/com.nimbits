@@ -13,23 +13,30 @@
 
 package com.nimbits.server.communication.email;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
+import com.nimbits.client.enums.AlertType;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.location.LocationFactory;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
-import com.nimbits.server.transactions.service.entity.*;
-import com.nimbits.server.admin.logging.*;
-import com.nimbits.server.transactions.service.user.*;
-import com.nimbits.server.transactions.service.value.*;
+import com.nimbits.server.admin.logging.LogHelper;
+import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import com.nimbits.server.transactions.service.user.UserServiceFactory;
+import com.nimbits.server.transactions.service.value.ValueServiceFactory;
 
-import javax.servlet.http.*;
-import java.util.*;
-import java.util.logging.*;
-import java.util.regex.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 public class IncomingMailTask extends HttpServlet {
 
@@ -122,7 +129,7 @@ public class IncomingMailTask extends HttpServlet {
                 timestamp = new Date().getTime();
             }
             String note = k.length == 4 ? k[3].trim() : "";
-            final Value value = ValueFactory.createValueModel(0.0, 0.0, v, new Date(timestamp), note, ValueFactory.createValueData(""), AlertType.OK);
+            final Value value = ValueFactory.createValueModel(LocationFactory.createLocation(), v, new Date(timestamp), note, ValueFactory.createValueData(""), AlertType.OK);
             try {
                 ValueServiceFactory.getInstance().recordValue(u, point, value);
             } catch (NimbitsException e) {

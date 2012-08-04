@@ -13,35 +13,45 @@
 
 package com.nimbits.client.ui.panels;
 
-import com.extjs.gxt.ui.client.*;
-import com.extjs.gxt.ui.client.data.*;
+import com.extjs.gxt.ui.client.Style;
+import com.extjs.gxt.ui.client.data.BaseModelData;
+import com.extjs.gxt.ui.client.data.BeanModel;
 import com.extjs.gxt.ui.client.event.*;
-import com.extjs.gxt.ui.client.store.*;
-import com.extjs.gxt.ui.client.util.*;
-import com.extjs.gxt.ui.client.widget.*;
+import com.extjs.gxt.ui.client.store.ListStore;
+import com.extjs.gxt.ui.client.util.Margins;
+import com.extjs.gxt.ui.client.widget.ContentPanel;
+import com.extjs.gxt.ui.client.widget.LayoutContainer;
+import com.extjs.gxt.ui.client.widget.ListView;
 import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.button.*;
-import com.extjs.gxt.ui.client.widget.form.*;
+import com.extjs.gxt.ui.client.widget.button.ButtonGroup;
+import com.extjs.gxt.ui.client.widget.form.ComboBox;
 import com.extjs.gxt.ui.client.widget.form.TextArea;
-import com.extjs.gxt.ui.client.widget.layout.*;
-import com.extjs.gxt.ui.client.widget.toolbar.*;
-import com.google.gwt.core.client.*;
-import com.google.gwt.user.client.*;
+import com.extjs.gxt.ui.client.widget.layout.FlowData;
+import com.extjs.gxt.ui.client.widget.layout.RowData;
+import com.extjs.gxt.ui.client.widget.layout.RowLayout;
+import com.extjs.gxt.ui.client.widget.toolbar.LabelToolItem;
+import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.rpc.*;
-import com.google.gwt.user.client.ui.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.*;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.FeedType;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.model.GxtFeedModel;
 import com.nimbits.client.model.TreeModel;
-import com.nimbits.client.model.feed.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.service.feed.*;
-import com.nimbits.client.ui.controls.*;
+import com.nimbits.client.model.feed.FeedValue;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.service.feed.Feed;
+import com.nimbits.client.service.feed.FeedAsync;
+import com.nimbits.client.ui.controls.EntityCombo;
 import com.nimbits.client.ui.helper.FeedbackHelper;
-import com.nimbits.client.ui.icons.*;
+import com.nimbits.client.ui.icons.Icons;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**

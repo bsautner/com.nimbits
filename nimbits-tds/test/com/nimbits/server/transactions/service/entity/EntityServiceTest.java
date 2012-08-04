@@ -13,19 +13,23 @@
 
 package com.nimbits.server.transactions.service.entity;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.helper.EntityHelper;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.server.*;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModelFactory;
+import com.nimbits.server.NimbitsServletTest;
+import org.junit.Test;
+
+import java.util.List;
+import java.util.UUID;
+
 import static org.junit.Assert.*;
-
-import com.nimbits.server.transactions.service.point.PointServiceFactory;
-import org.junit.*;
-
-import java.util.*;
 
 /**
  * Created by Benjamin Sautner

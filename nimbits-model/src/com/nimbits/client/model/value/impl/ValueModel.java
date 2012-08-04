@@ -59,8 +59,8 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
 
     public ValueModel(final Value v) {
 
-        this.lt = v.getLatitude();
-        this.lg = v.getLongitude();
+        this.lt = v.getLocation().getLat();
+        this.lg = v.getLocation().getLng();
         this.d = v.getDoubleValue();
         this.t = v.getTimestamp().getTime();
         this.n = v.getNote();
@@ -71,8 +71,8 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
 
     public ValueModel(final Value v, final String dataOverride) {
 
-        this.lt = v.getLatitude();
-        this.lg = v.getLongitude();
+        this.lt = v.getLocation().getLat();
+        this.lg = v.getLocation().getLng();
         this.d = v.getDoubleValue();
         this.t = v.getTimestamp().getTime();
         this.n = v.getNote();
@@ -81,16 +81,15 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
 
     }
 
-    public ValueModel(final double lat,
-                      final double lng,
+    public ValueModel(final Location location,
                       final double d,
                       final Date timestamp,
                       final String note,
                       final ValueData data,
                       final AlertType alert) {
 
-        this.lt = lat;
-        this.lg = lng;
+        this.lt =location.getLat();
+        this.lg =location.getLng();
         this.d = d;
         this.st = alert.getCode();
         this.t = timestamp.getTime();
@@ -105,19 +104,6 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
     public String getNote() {
         return n == null ? "" : n;
      }
-
-
-    @Override
-    public double getLatitude() {
-        return lt;
-    }
-
-
-    @Override
-    public double getLongitude() {
-        return lg;
-    }
-
 
     @Override
     public double getDoubleValue() {

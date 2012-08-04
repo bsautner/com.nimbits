@@ -32,18 +32,11 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 import com.nimbits.client.service.value.ValueService;
-import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.api.helper.LocationReportingHelperFactory;
-import com.nimbits.server.api.openid.UserInfo;
 import com.nimbits.server.process.task.TaskFactory;
 import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
 import com.nimbits.server.transactions.service.user.UserServiceFactory;
 
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -266,8 +259,7 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
                     return v.getDoubleValue() <= pv.getDoubleValue() + point.getFilterValue()
                             && v.getDoubleValue() >= pv.getDoubleValue() - point.getFilterValue()
                             && v.getNote().equals(pv.getNote())
-                            && v.getLatitude() == pv.getLatitude()
-                            && v.getLongitude() == pv.getLongitude()
+                            && v.getLocation().equals(pv.getLocation())
                             && v.getData().equals(pv.getData());
 
                 case percentageHysteresis:

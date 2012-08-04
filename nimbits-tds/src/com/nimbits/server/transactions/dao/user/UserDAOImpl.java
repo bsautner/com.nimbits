@@ -13,20 +13,25 @@
 
 package com.nimbits.server.transactions.dao.user;
 
-import com.nimbits.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.connection.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.transactions.service.entity.*;
-import com.nimbits.server.orm.*;
-import com.nimbits.server.transactions.service.user.*;
+import com.nimbits.PMF;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.connection.ConnectionRequest;
+import com.nimbits.client.model.connection.ConnectionRequestModelFactory;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.user.UserModelFactory;
+import com.nimbits.server.orm.ConnectionRequestEntity;
+import com.nimbits.server.orm.UserEntity;
+import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import com.nimbits.server.transactions.service.user.UserTransactions;
 
-import javax.jdo.*;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
 import java.util.*;
-import java.util.logging.*;
+import java.util.logging.Logger;
 
 @SuppressWarnings("unchecked")
 public class UserDAOImpl implements UserTransactions {

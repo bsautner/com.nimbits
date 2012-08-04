@@ -13,24 +13,28 @@
 
 package com.nimbits.server.process.task;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.valueblobstore.*;
+import com.nimbits.client.enums.Action;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModel;
+import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 import com.nimbits.server.admin.common.ServerInfoImpl;
-import com.nimbits.server.admin.logging.*;
-import com.nimbits.server.admin.system.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.transactions.service.user.*;
-import com.nimbits.server.transactions.service.value.*;
+import com.nimbits.server.admin.logging.LogHelper;
+import com.nimbits.server.admin.system.SystemServiceFactory;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.transactions.service.value.ValueTransactionFactory;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.io.*;
-import java.util.*;
-import java.util.logging.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Logger;
 
 public class PointMaintTask extends HttpServlet {
 

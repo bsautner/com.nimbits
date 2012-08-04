@@ -14,7 +14,7 @@
 package com.nimbits.server.transactions.service.user;
 
 
-import com.nimbits.client.service.user.*;
+import com.nimbits.client.service.user.UserService;
 
 public class UserServiceFactory {
 

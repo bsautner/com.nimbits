@@ -13,13 +13,13 @@
 
 package com.nimbits.server.orm;
 
-import com.google.appengine.api.blobstore.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.valueblobstore.*;
+import com.google.appengine.api.blobstore.BlobKey;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 
 import javax.jdo.annotations.*;
-import java.util.*;
+import java.util.Date;
 
 /**
  * Created by Benjamin Sautner

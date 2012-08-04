@@ -14,30 +14,37 @@
 package com.nimbits.server.process.task;
 
 
-
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.client.model.value.*;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.AlertType;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.location.Location;
+import com.nimbits.client.model.location.LocationFactory;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.user.UserModel;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.ValueData;
 import com.nimbits.client.model.value.impl.ValueFactory;
-import com.nimbits.server.api.helper.LocationReportingHelperFactory;
-import com.nimbits.server.transactions.service.entity.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.admin.logging.*;
-import com.nimbits.server.transactions.service.value.*;
+import com.nimbits.server.admin.logging.LogHelper;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import com.nimbits.server.transactions.service.value.ValueServiceFactory;
 import com.nimbits.shared.Utils;
 
-import javax.jdo.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.io.*;
-import java.math.*;
+import javax.jdo.JDOException;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.*;
-import java.util.logging.*;
+import java.util.logging.Logger;
 
 /**
  * Created by bsautner
@@ -86,73 +93,73 @@ public class ProcessBatchTask extends HttpServlet {
 
 
 
-            while (el.hasMoreElements()) {
+        while (el.hasMoreElements()) {
 
-                final String s = el.nextElement();
-                log.info(s + '=' + req.getParameter(s));
+            final String s = el.nextElement();
+            log.info(s + '=' + req.getParameter(s));
+        }
+
+        final User u = GsonFactory.getInstance().fromJson(userJson, UserModel.class);
+        log.info(userJson);
+        timestampValueMap = new HashMap<Long, BatchValue>(Const.CONST_MAX_BATCH_COUNT);
+        timestamps = new ArrayList<Long>(Const.CONST_MAX_BATCH_COUNT);
+
+        final Enumeration enumeration = req.getParameterNames();
+        final Map m = req.getParameterMap();
+
+        final Map<EntityName, Point> points = new HashMap<EntityName, Point>(Const.CONST_MAX_BATCH_COUNT);
+
+        if (u != null) {
+            while (enumeration.hasMoreElements()) {
+                processQueryString(enumeration, m, u);
             }
+            Collections.sort(timestamps);
 
-            final User u = GsonFactory.getInstance().fromJson(userJson, UserModel.class);
-            log.info(userJson);
-            timestampValueMap = new HashMap<Long, BatchValue>(Const.CONST_MAX_BATCH_COUNT);
-            timestamps = new ArrayList<Long>(Const.CONST_MAX_BATCH_COUNT);
+            for (final long l : timestamps) {
+                BatchValue b = timestampValueMap.get(l);
+                Point point = null;
+                if (b != null) {
+                    if (points.containsKey(b.getPointName())) {
+                        point = points.get(b.getPointName());
 
-            final Enumeration enumeration = req.getParameterNames();
-            final Map m = req.getParameterMap();
+                    } else {
 
-            final Map<EntityName, Point> points = new HashMap<EntityName, Point>(Const.CONST_MAX_BATCH_COUNT);
+                        final List<Entity> pointTmp =   EntityServiceFactory.getInstance().getEntityByName(u, b.getPointName(),EntityType.point) ;
 
-            if (u != null) {
-                while (enumeration.hasMoreElements()) {
-                    processQueryString(enumeration, m, u);
-                }
-                Collections.sort(timestamps);
-
-                for (final long l : timestamps) {
-                    BatchValue b = timestampValueMap.get(l);
-                    Point point = null;
-                    if (b != null) {
-                        if (points.containsKey(b.getPointName())) {
-                            point = points.get(b.getPointName());
-
-                        } else {
-
-                            final List<Entity> pointTmp =   EntityServiceFactory.getInstance().getEntityByName(u, b.getPointName(),EntityType.point) ;
-
-                            if (! pointTmp.isEmpty()) {
-                                point = (Point) pointTmp.get(0);
-                                points.put(b.getPointName(), point);
-                            }
-                        }
-                    }
-                    if (point != null) {
-                        try {
-
-
-
-
-                            if (b.getValues().isEmpty()) {
-                                final ValueData data = ValueFactory.createValueData(b.getData());
-                                final Value v = ValueFactory.createValueModel(b.getLat(), b.getLng(), b.getValue(), b.getTimestamp(), b.getNote(), data, AlertType.OK);
-                                ValueServiceFactory.getInstance().recordValue(b.getU(), point, v);
-                            }
-                            else {
-                                ValueServiceFactory.getInstance().recordValues(b.getU(), point, b.getValues());
-                            }
-
-                            //  reportLocation(req, point);
-                        } catch (NimbitsException ex) {
-
-                            log.info(ex.getMessage());
-
-                        } catch (JDOException e) {
-                            LogHelper.logException(ProcessBatchTask.class, e);
-
-
+                        if (! pointTmp.isEmpty()) {
+                            point = (Point) pointTmp.get(0);
+                            points.put(b.getPointName(), point);
                         }
                     }
                 }
+                if (point != null) {
+                    try {
+
+
+
+
+                        if (b.getValues().isEmpty()) {
+                            final ValueData data = ValueFactory.createValueData(b.getData());
+                            final Value v = ValueFactory.createValueModel(b.getLocation(), b.getValue(), b.getTimestamp(), b.getNote(), data, AlertType.OK);
+                            ValueServiceFactory.getInstance().recordValue(b.getU(), point, v);
+                        }
+                        else {
+                            ValueServiceFactory.getInstance().recordValues(b.getU(), point, b.getValues());
+                        }
+
+                        //  reportLocation(req, point);
+                    } catch (NimbitsException ex) {
+
+                        log.info(ex.getMessage());
+
+                    } catch (JDOException e) {
+                        LogHelper.logException(ProcessBatchTask.class, e);
+
+
+                    }
+                }
             }
+        }
 
         resp.flushBuffer();
         resp.setContentLength(0);
@@ -177,7 +184,7 @@ public class ProcessBatchTask extends HttpServlet {
 
             final int x = Integer.valueOf((String) parameterName.subSequence(1, parameterName.length()));
 
-                getValuesFromParam(m, u, x);
+            getValuesFromParam(m, u, x);
 
         }
     }
@@ -188,19 +195,20 @@ public class ProcessBatchTask extends HttpServlet {
         final double value = getDoubleFromMap(m, V+x);
         final double lat = getDoubleFromMap(m, LT + x);
         final double lng = getDoubleFromMap(m, LN + x);
+        Location location = LocationFactory.createLocation(lat, lng);
         final String data = getStringFromMap(m, DX + x);
         final String[] points = (String[]) m.get(P + x);
         final EntityName pointName = CommonFactoryLocator.getInstance().createName(points[0], EntityType.point);
         final String note =  getStringFromMap(m, N+x);
         final Date timestamp = getDateFromMap(m, x);
         final List<Value> values = geValuesFromMap(m, J + x);
-        final BatchValue b = new BatchValue(u, pointName, timestamp, value, note, lat, lng, data, values);
+        final BatchValue b = new BatchValue(u, pointName, timestamp, value, note, data, location, values);
         timestampValueMap.put(timestamp.getTime(), b);
         timestamps.add(timestamp.getTime());
     }
 
     private List<Value> geValuesFromMap(Map map, String param) {
-       String json = getStringFromMap(map, param);
+        String json = getStringFromMap(map, param);
         if (! Utils.isEmptyString(json)) {
             List<Value> result = GsonFactory.getInstance().fromJson(json, GsonFactory.valueListType);
             return result;
@@ -264,19 +272,17 @@ public class ProcessBatchTask extends HttpServlet {
         private final EntityName pointName;
         private final Date timestamp;
         private final double value;
-        private final double lat;
-        private final double lng;
         private final String data;
         private final List<Value> values;
+        private final Location location;
 
         BatchValue(final User u,
                    final EntityName pointName,
                    final Date timestamp,
                    final Double value,
                    final String valNote,
-                   final double lat,
-                   final double lng,
                    final String data,
+                   final Location location,
                    final List<Value> values) {
             super();
             this.u = u;
@@ -284,8 +290,7 @@ public class ProcessBatchTask extends HttpServlet {
             this.timestamp = new Date(timestamp.getTime());
             this.value = value;
             this.note = valNote;
-            this.lat = lat;
-            this.lng = lng;
+            this.location = location;
             this.data = data;
             this.values = values;
 
@@ -299,12 +304,8 @@ public class ProcessBatchTask extends HttpServlet {
             return data;
         }
 
-        public double getLat() {
-            return lat;
-        }
-
-        public double getLng() {
-            return lng;
+        public Location getLocation() {
+            return location;
         }
 
         public String getNote() {

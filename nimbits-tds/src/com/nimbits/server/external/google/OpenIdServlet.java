@@ -23,13 +23,11 @@ import com.google.step2.ConsumerHelper;
 import com.google.step2.Step2;
 import com.google.step2.discovery.IdpIdentifier;
 import com.google.step2.openid.ui.UiMessageRequest;
-
 import com.nimbits.server.api.openid.ConsumerFactory;
 import org.apache.commons.lang.StringUtils;
 import org.openid4java.OpenIDException;
 import org.openid4java.consumer.InMemoryConsumerAssociationStore;
 import org.openid4java.discovery.DiscoveryInformation;
-import org.openid4java.discovery.Identifier;
 import org.openid4java.message.AuthRequest;
 import org.openid4java.message.ParameterList;
 
@@ -40,9 +38,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 
 /**
  * Servlet for handling OpenID logins.  Uses the Step2 library from code.google.com and the

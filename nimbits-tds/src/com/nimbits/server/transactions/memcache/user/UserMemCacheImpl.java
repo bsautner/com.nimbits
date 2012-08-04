@@ -13,15 +13,19 @@
 
 package com.nimbits.server.transactions.memcache.user;
 
-import com.google.appengine.api.memcache.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.connection.*;
-import com.nimbits.client.model.email.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.transactions.memcache.*;
-import com.nimbits.server.transactions.service.user.*;
+import com.google.appengine.api.memcache.InvalidValueException;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.connection.ConnectionRequest;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.user.User;
+import com.nimbits.server.transactions.memcache.MemCacheHelper;
+import com.nimbits.server.transactions.service.user.UserTransactionFactory;
+import com.nimbits.server.transactions.service.user.UserTransactions;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by bsautner

@@ -13,11 +13,11 @@
 
 package com.nimbits.client.model.timespan;
 
-import com.extjs.gxt.ui.client.util.*;
-import com.google.gwt.i18n.client.*;
-import com.nimbits.client.exception.*;
+import com.extjs.gxt.ui.client.util.DateWrapper;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.nimbits.client.exception.NimbitsException;
 
-import java.util.*;
+import java.util.Date;
 
 
 /**

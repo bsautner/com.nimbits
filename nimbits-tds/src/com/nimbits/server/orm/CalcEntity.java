@@ -13,12 +13,12 @@
 
 package com.nimbits.server.orm;
 
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.calculation.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.server.orm.validation.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.calculation.Calculation;
+import com.nimbits.client.model.entity.Entity;
 
-import javax.jdo.annotations.*;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
 
 /**
  * Created by bsautner

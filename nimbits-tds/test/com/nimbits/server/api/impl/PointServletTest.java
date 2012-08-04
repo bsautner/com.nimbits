@@ -1,19 +1,24 @@
 package com.nimbits.server.api.impl;
 
 import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.category.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.server.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.transactions.service.entity.*;
-import org.junit.*;
-import static org.junit.Assert.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.category.Category;
+import com.nimbits.client.model.category.CategoryModel;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModel;
+import com.nimbits.server.NimbitsServletTest;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import org.junit.Assert;
+import org.junit.Test;
 
-import java.io.*;
-import java.util.*;
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 /**
  * Created by Benjamin Sautner

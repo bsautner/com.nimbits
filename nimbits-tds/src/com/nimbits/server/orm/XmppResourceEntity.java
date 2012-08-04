@@ -13,11 +13,12 @@
 
 package com.nimbits.server.orm;
 
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.xmpp.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.xmpp.XmppResource;
 
-import javax.jdo.annotations.*;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
 
 /**
  * Created by Benjamin Sautner

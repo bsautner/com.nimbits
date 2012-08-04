@@ -13,14 +13,18 @@
 
 package com.nimbits.server.api.impl;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.transactions.service.user.*;
+import com.nimbits.client.enums.Action;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.model.user.User;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.transactions.service.user.UserTransactionFactory;
 
-import javax.servlet.http.*;
-import java.io.*;
-import java.util.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
 
 public class UserServletImpl extends HttpServlet {
 

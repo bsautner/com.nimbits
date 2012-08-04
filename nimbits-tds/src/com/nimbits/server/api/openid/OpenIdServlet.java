@@ -98,7 +98,8 @@ public class OpenIdServlet extends HttpServlet {
         try {
             UserInfo user = completeAuthentication(req);
             req.getSession().setAttribute("user", user);
-            resp.sendRedirect(homePath);
+            String domain = req.getParameter("hd");
+            resp.sendRedirect(homePath + "?hd=domain");
 
         } catch (OpenIDException e) {
             resp.sendRedirect("?errorString=Error processing OpenID response: "

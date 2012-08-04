@@ -2,11 +2,11 @@
 
 <ApplicationManifest xmlns="http://schemas.google.com/ApplicationManifest/2009">
   <Name>nimbits</Name>
-  <Description>Nimbits Process Data Historian</Description>
+  <Description>Nimbits Cloud Logging</Description>
 
   <!-- Administrators and users will be sent to this URL for application support -->
   <Support>
-    <Link rel="support" href="http://www.nimbits.com" />
+    <Link rel="support" href="http://www.nimbits.com?content=domain" />
   </Support>
 
   <!-- Show this link in Google's universal navigation for all users -->
@@ -21,7 +21,7 @@
 
   <!-- Declare our OpenID realm so our app is white listed -->
   <Extension id="realm" type="openIdRealm">
-    <Url>http://App2.nimbits.com/</Url>
+    <Url>http://app2.nimbits.com</Url>
   </Extension>
 
     <Scope id="docsFeed">

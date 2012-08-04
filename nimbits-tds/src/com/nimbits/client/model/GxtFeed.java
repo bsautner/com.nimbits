@@ -1,6 +1,6 @@
 package com.nimbits.client.model;
 
-import java.io.*;
+import java.io.Serializable;
 
 /**
  * Created by Benjamin Sautner

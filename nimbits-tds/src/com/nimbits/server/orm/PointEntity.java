@@ -13,14 +13,16 @@
 
 package com.nimbits.server.orm;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
+import com.nimbits.client.enums.FilterType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.value.Value;
 
-import javax.jdo.annotations.*;
-import java.util.*;
+import javax.jdo.annotations.NotPersistent;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+import java.util.List;
 
 @PersistenceCapable
 public class PointEntity extends EntityStore implements Point {

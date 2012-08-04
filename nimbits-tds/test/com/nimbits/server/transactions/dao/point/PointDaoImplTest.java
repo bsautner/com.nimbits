@@ -13,17 +13,19 @@
 
 package com.nimbits.server.transactions.dao.point;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.server.*;
-import com.nimbits.server.transactions.service.entity.*;
-import com.nimbits.server.transactions.service.value.*;
-import static org.junit.Assert.*;
-import org.junit.*;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.server.NimbitsServletTest;
+import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import com.nimbits.server.transactions.service.value.ValueServiceFactory;
+import org.junit.Test;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by bsautner

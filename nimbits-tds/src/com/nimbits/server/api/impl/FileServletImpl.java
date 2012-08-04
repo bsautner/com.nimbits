@@ -13,11 +13,12 @@
 
 package com.nimbits.server.api.impl;
 
-import com.nimbits.server.api.*;
+import com.nimbits.server.api.ApiServlet;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.io.*;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * Created by Benjamin Sautner

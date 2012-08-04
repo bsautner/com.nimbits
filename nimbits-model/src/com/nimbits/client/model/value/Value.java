@@ -31,10 +31,6 @@ public interface Value extends Serializable, Comparable<Value> {
 
     String getNote();
 
-    double getLatitude();
-
-    double getLongitude();
-
     double getDoubleValue();
 
     String getValueWithNote();

@@ -1,20 +1,20 @@
 package com.nimbits.server.process.task;
 
-import client.model.value.ValueModelFactoryTest;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.point.*;
-import com.nimbits.client.model.value.*;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
-import com.nimbits.client.model.value.impl.ValueModel;
-import com.nimbits.server.*;
-import com.nimbits.server.transactions.service.entity.*;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.transactions.service.value.*;
-import static org.junit.Assert.*;
-import org.junit.*;
+import com.nimbits.server.NimbitsServletTest;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import com.nimbits.server.transactions.service.value.ValueServiceFactory;
+import org.junit.Test;
 
 import java.util.*;
+
+import static org.junit.Assert.*;
 
 /**
  * Created by Benjamin Sautner
@@ -66,8 +66,8 @@ public class ProcessBatchTaskTest extends NimbitsServletTest {
         List<Value> rv2 = ValueServiceFactory.getInstance().getCurrentValue(pointChild);
         assertNotNull(rv1);
         assertEquals(rv1.get(0).getDoubleValue(), v1, DELTA);
-        assertEquals(lt, rv1.get(0).getLatitude(), DELTA);
-        assertEquals(ln, rv1.get(0).getLongitude(), DELTA);
+        assertEquals(lt, rv1.get(0).getLocation().getLat(), DELTA);
+        assertEquals(ln, rv1.get(0).getLocation().getLng(), DELTA);
         assertNotNull(rv2);
         assertEquals(rv2.get(0).getDoubleValue(), v2, DELTA);
     }

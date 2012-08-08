@@ -69,8 +69,9 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
         } catch (ClassNotFoundException e) {
             throw  new NimbitsException(e);
         }
+        EntityTransactionFactory.getInstance(user).removeEntityFromCache(deleted);
         for (final Entity e : deleted) {
-            EntityTransactionFactory.getInstance(user).removeEntityFromCache(e);
+
             TaskFactory.getInstance()
                     .startCoreTask(getThreadLocalRequest(), entity, Action.delete, ServerInfoImpl.getFullServerURL(getThreadLocalRequest()));
 

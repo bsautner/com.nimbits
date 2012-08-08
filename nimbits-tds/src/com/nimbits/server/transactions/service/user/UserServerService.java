@@ -34,8 +34,7 @@ public interface UserServerService {
 
     User getAnonUser();
 
-    User createUserRecord(EmailAddress internetAddress) throws NimbitsException;
+    User createUserRecord(final EmailAddress internetAddress) throws NimbitsException;
 
-
-    AccessKey authenticatedKey(Entity user) throws NimbitsException;
+    AccessKey authenticatedKey(final Entity user) throws NimbitsException;
 }

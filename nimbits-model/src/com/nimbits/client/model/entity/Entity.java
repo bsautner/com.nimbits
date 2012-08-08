@@ -76,5 +76,7 @@ public interface Entity  extends Serializable, Comparable<Entity> {
 
     String getInstanceUrl();
 
+    boolean isCached();
 
+    void setIsCached(boolean isCached) throws NimbitsException;
 }

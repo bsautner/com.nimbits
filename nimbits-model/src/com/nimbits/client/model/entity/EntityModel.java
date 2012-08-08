@@ -40,6 +40,7 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
     private static final long serialVersionUID =3455345353L;
     private List<Point> children;
     private String instanceUrl;
+    private boolean isCached = false;
 
     public EntityModel(final CommonIdentifier name,
                        final String description,
@@ -88,6 +89,17 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
     @Override
     public String getInstanceUrl() {
         return instanceUrl;
+    }
+
+    @Override
+    public boolean isCached() {
+        return this.isCached;
+
+    }
+
+    @Override
+    public void setIsCached(boolean isCached) {
+        this.isCached = isCached;
     }
 
     @Override

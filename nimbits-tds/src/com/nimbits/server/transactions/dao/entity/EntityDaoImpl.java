@@ -104,10 +104,7 @@ public class EntityDaoImpl implements  EntityTransactions {
         } finally {
             pm.close();
         }
-
-
-
-    }
+     }
     @Override
     public List<Entity> getEntityByBlobKey(final BlobKey key) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -593,7 +590,17 @@ public class EntityDaoImpl implements  EntityTransactions {
     }
 
     @Override
-    public void removeEntityFromCache(final Entity entity) throws NimbitsException {
+    public void removeEntityFromCache(final List<Entity> entity) throws NimbitsException {
+        throw new NimbitsException(UserMessages.ERROR_NOT_IMPLEMENTED);
+    }
+
+    @Override
+    public void addEntityToCache(final List<Entity> entity) throws NimbitsException {
+        throw new NimbitsException(UserMessages.ERROR_NOT_IMPLEMENTED);
+    }
+
+    @Override
+    public List<Entity> getEntityFromCache(final String key) throws NimbitsException {
         throw new NimbitsException(UserMessages.ERROR_NOT_IMPLEMENTED);
     }
 

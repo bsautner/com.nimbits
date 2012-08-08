@@ -41,6 +41,7 @@ public class MoveRecordedValuesToStoreCron extends HttpServlet {
 
 
     @Override
+    @SuppressWarnings("unchecked")
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp)
             throws IOException {
 

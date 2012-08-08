@@ -22,13 +22,12 @@ import com.nimbits.client.enums.MemCacheKey;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.trigger.Trigger;
 import com.nimbits.client.model.user.User;
 import com.nimbits.server.transactions.service.entity.EntityTransactionFactory;
 import com.nimbits.server.transactions.service.entity.EntityTransactions;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Benjamin Sautner
@@ -37,22 +36,23 @@ import java.util.Map;
  * Time: 11:28 AM
  */
 @SuppressWarnings("unchecked")
-public class EntityCacheImpl implements EntityTransactions {
+public class EntityCacheImpl implements EntityTransactions, EntityCache {
     private final User user;
     private final MemcacheService cache;
     public EntityCacheImpl(final User u) {
         this.user = u;
 
-        cache = user != null && user.getKey() != null
-                ? MemcacheServiceFactory.getMemcacheService(MemCacheKey.userNamespace.name() + user.getKey().replace('@', '-'))
+        cache = (user != null && user.getKey() != null)
+                ? MemcacheServiceFactory.getMemcacheService(MemCacheKey.getKey(MemCacheKey.userNamespace, user.getKey()))
                 : MemcacheServiceFactory.getMemcacheService(MemCacheKey.defaultNamespace.name());
     }
 
     @Override
-    public void removeEntityFromCache(final Entity entity) throws NimbitsException {
-        if (cache.contains(entity.getKey())) {
-            cache.delete(entity.getKey());
+    public void removeEntityFromCache(final List<Entity> entities) throws NimbitsException {
+        for (Entity e : entities) {
+            cache.delete(e.getKey());
         }
+
 
     }
 
@@ -67,8 +67,23 @@ public class EntityCacheImpl implements EntityTransactions {
     }
 
     @Override
-    public List<Entity> getEntityByTrigger(Entity entity, Class<?> cls) throws NimbitsException {
-        return EntityTransactionFactory.getDaoInstance(user).getEntityByTrigger(entity, cls);
+    public List<Entity> getEntityByTrigger(final Entity entity, final Class<?> cls) throws NimbitsException {
+        final String triggerKey =MemCacheKey.getKey(MemCacheKey.triggers, entity.getKey() + cls.getName());
+       // final String triggerKey = MemCacheKey.getKey(MemCacheKey.triggers, trigger.getTrigger() + entity.getClass().getName());
+        if (cache.contains(triggerKey)) {
+            List<Entity> triggers =  (List<Entity>) cache.get(triggerKey);
+            for (Entity e : triggers) {
+                e.setIsCached(true);
+            }
+            return triggers;
+        }
+        else {
+            List<Entity> result= EntityTransactionFactory.getDaoInstance(user).getEntityByTrigger(entity, cls);
+            cache.put(triggerKey, result);
+            return result;
+        }
+
+
     }
 
     @Override
@@ -77,23 +92,39 @@ public class EntityCacheImpl implements EntityTransactions {
     }
 
     @Override
-    public List<Entity> getSubscriptionsToEntity(Entity subscribedEntity) throws NimbitsException {
+    public List<Entity> getSubscriptionsToEntity(final Entity subscribedEntity) throws NimbitsException {
         return EntityTransactionFactory.getDaoInstance(user).getSubscriptionsToEntity(subscribedEntity);
     }
 
     @Override
-    public List<Entity> getEntityByBlobKey(BlobKey key) throws NimbitsException {
+    public List<Entity> getEntityByBlobKey(final BlobKey key) throws NimbitsException {
         return EntityTransactionFactory.getDaoInstance(user).getEntityByBlobKey(key);
     }
 
-    private void addEntityToCache(final Entity entity) throws NimbitsException {
-        if (entity != null) {
-            removeEntityFromCache(entity);
-            cache.put(entity.getKey(), entity);
+    @Override
+    public void addEntityToCache(final  List<Entity> entities) throws NimbitsException {
+        removeEntityFromCache(entities);
+        for (Entity e : entities) {
+
+            cache.put(e.getKey(), e);
         }
+
     }
 
-
+    @Override
+    public List<Entity> getEntityFromCache(String key) throws NimbitsException {
+        if (cache.contains(key)) {
+            List<Entity> list = new ArrayList<Entity>(1);
+            Entity result = (Entity) cache.get(key);
+            result.setIsCached(true);
+            list.add(result);
+            return list;
+        }
+        else {
+            return Collections.emptyList();
+        }
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 
     @Override
     public Map<String, Entity> getEntityMap(final EntityType type, final int limit) throws NimbitsException {
@@ -113,44 +144,59 @@ public class EntityCacheImpl implements EntityTransactions {
     @Override
     public Entity addUpdateEntity(final Entity entity) throws NimbitsException {
         final Entity result =   EntityTransactionFactory.getDaoInstance(user).addUpdateEntity(entity);
-        addEntityToCache(result);
+        addEntityToCache(Arrays.asList(result));
+        cache.delete(MemCacheKey.userEntityTree);
+        removeTriggersFromCache(entity);
         return result;
+    }
+
+    private void removeTriggersFromCache(Entity entity) {
+        if (entity.getEntityType().isTrigger()) {
+            Trigger trigger = (Trigger)entity;
+            final String triggerKey = MemCacheKey.getKey(MemCacheKey.triggers, trigger.getTrigger() + entity.getEntityType().getClassName());
+            cache.delete(triggerKey);
+        }
     }
 
     @Override
     public List<Entity> getEntities() throws NimbitsException {
-        return  EntityTransactionFactory.getDaoInstance(user).getEntities();
+        List<Entity> results;
+        if (cache.contains(MemCacheKey.userEntityTree)) {
+            results= (List<Entity>) cache.get(MemCacheKey.userEntityTree);
+            for (Entity e: results) {
+                e.setIsCached(true);
+            }
+
+        }
+        else {
+            results = EntityTransactionFactory.getDaoInstance(user).getEntities();
+            cache.put(MemCacheKey.userEntityTree, results);
+
+        }
+        return results;
     }
 
     @Override
     public List<Entity> deleteEntity(final Entity entity, final Class<?> cls) throws NimbitsException {
-        removeEntityFromCache(entity);
+        removeEntityFromCache(Arrays.asList(entity));
+        removeTriggersFromCache(entity);
+        cache.delete(MemCacheKey.userEntityTree);
         return EntityTransactionFactory.getDaoInstance(user).deleteEntity(entity, cls);
     }
 
     @Override
     public List<Entity> getEntityByKey(final String key, final Class<?> cls) throws NimbitsException {
-        if (cache.contains(key)) {
-            try {
-                final Entity e =  (Entity) cache.get(key);
-                return e != null ? Arrays.asList(e) : getEntityFromStore(key, cls);
-            } catch (InvalidValueException e1) {
-                return getEntityFromStore(key, cls);
-            }
+
+        List<Entity> cached = getEntityFromCache(key);
+        if (! cached.isEmpty()) {
+            return cached;
         }
         else {
-            return getEntityFromStore(key, cls);
-
+            List<Entity> stored = EntityTransactionFactory.getDaoInstance(user).getEntityByKey(key, cls);
+            addEntityToCache(stored);
+            return stored;
         }
 
-    }
-
-    private  List<Entity> getEntityFromStore(final String key, final Class<?> cls) throws NimbitsException {
-        final List<Entity> result = EntityTransactionFactory.getDaoInstance(user).getEntityByKey(key, cls);
-        if (! result.isEmpty()) {
-            addEntityToCache(result.get(0));
-        }
-        return result;
     }
 
     @Override

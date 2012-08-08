@@ -301,6 +301,16 @@ public class EntityStore implements Entity {
     }
 
     @Override
+    public boolean isCached() {
+        return false;
+    }
+
+    @Override
+    public void setIsCached(boolean isCached) throws NimbitsException {
+        throw new NimbitsException("Not Implemented");
+    }
+
+    @Override
     public Date getDateCreated() {
         return dateCreated;
     }

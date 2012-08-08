@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <ApplicationManifest xmlns="http://schemas.google.com/ApplicationManifest/2009">
-  <Name>nimbits</Name>
-  <Description>Nimbits Cloud Logging</Description>
+  <Name>Nimbits</Name>
+  <Description>Nimbits Process Data Historian</Description>
 
   <!-- Administrators and users will be sent to this URL for application support -->
   <Support>

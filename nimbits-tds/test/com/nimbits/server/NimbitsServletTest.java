@@ -36,6 +36,8 @@ import com.nimbits.server.settings.SettingTransactionsFactory;
 import com.nimbits.server.settings.SettingsServiceFactory;
 import com.nimbits.server.transactions.dao.value.ValueDAOImpl;
 import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import com.nimbits.server.transactions.service.entity.EntityTransactionFactory;
+import com.nimbits.server.transactions.service.entity.EntityTransactions;
 import com.nimbits.server.transactions.service.point.PointServiceFactory;
 import com.nimbits.server.transactions.service.user.UserServiceFactory;
 import com.nimbits.server.transactions.service.user.UserTransactionFactory;
@@ -45,6 +47,7 @@ import org.junit.Before;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
+import javax.persistence.EntityTransaction;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -85,6 +88,10 @@ public class NimbitsServletTest {
     public SettingsService settingsService;
     public UserTransactions userTransactionsDao;
     public SettingTransactions settingsDAO;
+
+    public EntityTransactions entityTransactions;
+
+
     public Point point;
     public Point pointChild;
     public Entity pointEntity;
@@ -119,7 +126,7 @@ public class NimbitsServletTest {
         List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(emailAddress.getValue(), EntityType.user);
         assertFalse(result.isEmpty());
         user = (User) result.get(0);
-
+        entityTransactions = EntityTransactionFactory.getInstance(user);
 
         Entity accessKey = EntityModelFactory.createEntity(pointName, "", EntityType.accessKey, ProtectionLevel.onlyMe, user.getKey(), user.getKey());
         AccessKey ak = AccessKeyFactory.createAccessKey(accessKey, "AUTH", user.getKey(), AuthLevel.admin);

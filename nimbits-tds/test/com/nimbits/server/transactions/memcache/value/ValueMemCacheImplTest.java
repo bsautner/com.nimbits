@@ -5,7 +5,6 @@ import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.MemCacheKey;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.entity.EntityHelper;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.NimbitsServletTest;
@@ -66,7 +65,7 @@ public class ValueMemCacheImplTest extends NimbitsServletTest {
     public void testSafeNamespace1() {
         String sample = "valueCachenoguchi@-~!@##$%^^&*()_--.tatsu-gmail.com-テスト2";
         ValueMemCacheImpl impl = new ValueMemCacheImpl(user);
-        String safe = EntityHelper.getSafeNamespaceKey(sample);
+        String safe = MemCacheKey.getSafeNamespaceKey(sample);
 
         final String bufferNamespace = MemCacheKey.valueCache + safe;
 

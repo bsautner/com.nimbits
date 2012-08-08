@@ -98,8 +98,8 @@ public class MainMenuBar extends ToolBar {
         //  add(saveButton());
         add(addChartButton());
 
-        add(connectionButton());
-        add(pendingConnectionsButton());
+       // add(connectionButton());
+       // add(pendingConnectionsButton());
 
         add(urlMenuItem("Report Issue",
                 AbstractImagePrototype.create(Icons.INSTANCE.bug()),

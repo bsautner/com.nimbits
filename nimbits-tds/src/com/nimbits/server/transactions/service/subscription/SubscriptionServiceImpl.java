@@ -82,8 +82,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
                 subscription.setLastSent(new Date());
                 EntityServiceFactory.getInstance().addUpdateEntity(user, subscription);
 
-                final List<Entity> subscriptionEntity =
-                        EntityServiceFactory.getInstance().getEntityByKey(user, subscription.getKey(),EntityType.subscription);
+                final List<Entity> subscriptionEntity = EntityServiceFactory.getInstance().getEntityByKey(user, subscription.getKey(),EntityType.subscription);
 
                 if (! subscriptionEntity.isEmpty())  {
 

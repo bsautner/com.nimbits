@@ -1,5 +1,5 @@
 package integration;/*
- * Copyright (c) 2011. Tonic Solutions, LLC. All Rights Reservered. This Code is distributed under GPL V3 without any warrenty.
+ * Copyright (c) 2011. Nimbits Inc All Rights Reservered. This Code is distributed under GPL V3 without any warrenty.
  */
 
 import com.nimbits.client.constants.Const;

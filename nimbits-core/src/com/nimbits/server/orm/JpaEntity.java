@@ -270,6 +270,16 @@ public class JpaEntity implements com.nimbits.client.model.entity.Entity {
         return this.instance.getInstanceUrl();
     }
 
+    @Override
+    public boolean isCached() {
+        return false;
+    }
+
+    @Override
+    public void setIsCached(boolean isCached) throws NimbitsException {
+       throw new NimbitsException("Not Implemented");
+    }
+
 
     public void setIdEntity(int idEntity) {
         this.idEntity = idEntity;

@@ -1,8 +1,9 @@
 package com.nimbits.client.enums;
 
 
-
-import java.util.*;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Benjamin Sautner
@@ -23,20 +24,31 @@ public enum MemCacheKey {
     userPointNamespace(7, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_USER_POINT_NAMESPACE),
     location(8, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_LOCATION),
     quota(9, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_QUOTA),
-    preload(10, SettingType.serverVersion.getDefaultValue() + KeyConstants.PRE_LOAD);
+    preload(10, SettingType.serverVersion.getDefaultValue() + KeyConstants.PRE_LOAD),
+    allUsers(11, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_ALL_USERS),
+    users(12, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_USER),
+    triggers(13,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_TIGGERS),
+    bufferedValueList(14,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_BUFFERED_VALUE_LIST),
+    userEntityTree(15,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_BUFFERED_VALUE_LIST),
+    ;
 
-    private static final Map<Integer, MemCacheKey> lookup = new HashMap<Integer, MemCacheKey>(8);
-
+    private static final Map<Integer, MemCacheKey> lookup = new HashMap<Integer, MemCacheKey>(MemCacheKey.values().length);
+    private final int code;
+    private final String text;
+    private final static String LEGAL_CHARS = "[0-9A-Za-z._-]{0,100}";
+    private final static String SAFE_REPLACEMENT = "_";
     static {
         for (MemCacheKey s : EnumSet.allOf(MemCacheKey.class))
             lookup.put(s.code, s);
     }
 
-    private final int code;
-    private final String text;
+    public static String getKey(final MemCacheKey memCacheKey, final String uniqueIdentifier) {
+        return memCacheKey.getText() + getSafeNamespaceKey(uniqueIdentifier);
+
+    }
 
 
-    private MemCacheKey(int code, String text) {
+    private MemCacheKey(final int code, final String text) {
         this.code = code;
         this.text = text;
     }
@@ -53,8 +65,24 @@ public enum MemCacheKey {
         return text;
     }
 
+
+    public static String getSafeNamespaceKey(final String key) {
+
+        final StringBuilder sb = new StringBuilder(key.length());
+        for (char c : key.toCharArray()) {
+            if (String.valueOf(c).matches(LEGAL_CHARS)) {
+                sb.append(c);
+            }
+            else {
+                sb.append(SAFE_REPLACEMENT);
+            }
+        }
+        return sb.toString();
+    }
+
     private static class KeyConstants {
         static final String KEY_ALL_SETTINGS = "KEY_ALL_SETTINGS";
+        static final String KEY_ALL_USERS = "KEY_ALL_USERS";
         static final String KEY_SETTING = "KEY_SETTING";
         static final String KEY_USER_NAMESPACE = "KEY_USER_NAMESPACE";
         static final String KEY_DEFAULT_NAMESPACE = "KEY_DEFAULT_NAMESPACE";
@@ -62,11 +90,14 @@ public enum MemCacheKey {
         static final String KEY_USER_POINT_NAMESPACE = "KEY_USER_POINT_NAMESPACE";
         static final String KEY_ACTIVE_POINTS = "KEY_ACTIVE_POINTS";
         static final String KEY_VALUE = "KEY_VALUE";
+        static final String KEY_BUFFERED_VALUE_LIST = "KEY_BUFFERED_VALUE_LIST";
+        static final String KEY_TIGGERS = "KEY_TIGGERS";
         static final String KEY_CURRENT_VALUE = "KEY_CURRENT_VALUE";
         static final String PRE_LOAD = "PRE_LOAD";
         static final String KEY_LOCATION = "KEY_GPS_LOCATION";
         static final String KEY_QUOTA = "KEY_QUOTA";
-
+        static final String KEY_USER = "KEY_USER";
+        static final String KEY_USER_ENTITY_TREE = "KEY_USER_ENTITY_TREE";
         private KeyConstants() {
         }
     }

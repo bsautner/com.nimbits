@@ -14,7 +14,7 @@
 package com.nimbits.server.transactions.service.user;
 
 import com.nimbits.server.transactions.dao.user.UserDAOImpl;
-import com.nimbits.server.transactions.memcache.user.UserMemCacheImpl;
+
 
 public class UserTransactionFactory {
     private UserTransactionFactory() {
@@ -27,7 +27,7 @@ public class UserTransactionFactory {
 
     public static UserTransactions getInstance() {
 
-        return new UserMemCacheImpl();
+        return new UserDAOImpl();
     }
 
 }

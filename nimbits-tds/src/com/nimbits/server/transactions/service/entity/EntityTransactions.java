@@ -18,6 +18,7 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.server.transactions.memcache.entity.EntityCache;
 
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,7 @@ import java.util.Map;
  * Date: 2/28/12
  * Time: 11:46 AM
  */
-public interface EntityTransactions {
+public interface EntityTransactions extends EntityCache {
 
     Map<String, Entity> getEntityMap( final EntityType type, final int limit) throws NimbitsException;
 
@@ -46,17 +47,15 @@ public interface EntityTransactions {
 
     Map<String, Entity> getSystemWideEntityMap(final EntityType type) throws NimbitsException;
 
-    void removeEntityFromCache( final Entity entity) throws NimbitsException;
-
     List<Entity> getEntityByName( final EntityName name,  final Class<?> cls) throws NimbitsException;
 
-    List<Entity> getEntitiesBySource(Entity source, Class<?> cls) throws NimbitsException;
+    List<Entity> getEntitiesBySource(final Entity source, final Class<?> cls) throws NimbitsException;
 
-    List<Entity> getEntityByTrigger(Entity entity, Class<?> cls) throws NimbitsException;
+    List<Entity> getEntityByTrigger(final Entity entity, final Class<?> cls) throws NimbitsException;
 
     List<Entity> getIdleEntities() throws NimbitsException;
 
-    List<Entity> getSubscriptionsToEntity(Entity subscribedEntity) throws NimbitsException;
+    List<Entity> getSubscriptionsToEntity(final Entity subscribedEntity) throws NimbitsException;
 
-    List<Entity> getEntityByBlobKey(BlobKey key) throws NimbitsException;
+    List<Entity> getEntityByBlobKey(final BlobKey key) throws NimbitsException;
 }

@@ -19,10 +19,8 @@ import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.MemCacheKey;
-import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityHelper;
 import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
@@ -46,17 +44,21 @@ public class ValueMemCacheImpl implements ValueTransactions {
     private final MemcacheService buffer;
     private final MemcacheService cacheShared;
     private final Entity point;
+
     private final String currentValueCacheKey;
-    private final static String valueListCacheKey = SettingType.serverVersion.getDefaultValue() + "VALUE_LIST_CACHE_KEY";
+    private final String bufferedListCacheKey;
+
+
     static final Logger log = Logger.getLogger(ValueMemCacheImpl.class.getName());
+
+
+
     public ValueMemCacheImpl(final Entity point) {
         this.point = point;
 
-        final String safe = EntityHelper.getSafeNamespaceKey(point.getKey());
-
-        final String bufferNamespace = MemCacheKey.valueCache + safe;
-
-        currentValueCacheKey = MemCacheKey.currentValueCache + safe;
+        final String bufferNamespace =MemCacheKey.getKey(MemCacheKey.valueCache, point.getKey());
+        bufferedListCacheKey = MemCacheKey.getKey(MemCacheKey.bufferedValueList, point.getKey());
+        currentValueCacheKey = MemCacheKey.getKey(MemCacheKey.currentValueCache, point.getKey());
         buffer = MemcacheServiceFactory.getMemcacheService(bufferNamespace);
         cacheShared = MemcacheServiceFactory.getMemcacheService();
     }
@@ -178,15 +180,15 @@ public class ValueMemCacheImpl implements ValueTransactions {
         addPointToActiveList();
         try {
             final List<Long> stored;
-            if (buffer.contains(valueListCacheKey)) {
-                stored = (List<Long>) buffer.get(valueListCacheKey);
+            if (buffer.contains(bufferedListCacheKey)) {
+                stored = (List<Long>) buffer.get(bufferedListCacheKey);
                 stored.add(v.getTimestamp().getTime());
                 buffer.delete(stored);
-                buffer.put(valueListCacheKey, stored);
+                buffer.put(bufferedListCacheKey, stored);
             } else {
                 stored = new ArrayList<Long>(10);
                 stored.add(v.getTimestamp().getTime());
-                buffer.put(valueListCacheKey, stored);
+                buffer.put(bufferedListCacheKey, stored);
             }
             buffer.put(v.getTimestamp().getTime(), v);
             if (stored.size() > Const.CONST_MAX_CACHED_VALUE_SIZE) {
@@ -205,7 +207,7 @@ public class ValueMemCacheImpl implements ValueTransactions {
             }
         } catch (Exception e) {
             buffer.delete(currentValueCacheKey);
-            buffer.delete(valueListCacheKey);
+            buffer.delete(bufferedListCacheKey);
         }
 
         return v;
@@ -256,8 +258,8 @@ public class ValueMemCacheImpl implements ValueTransactions {
     public List<Value> getCache(final Timespan timespan) {
 
         List<Value> retObj = null;
-        if (buffer.contains(valueListCacheKey)) {
-            final Collection<Long> x = (Collection<Long>) buffer.get(valueListCacheKey);
+        if (buffer.contains(bufferedListCacheKey)) {
+            final Collection<Long> x = (Collection<Long>) buffer.get(bufferedListCacheKey);
             final Map<Long, Object> valueMap = buffer.getAll(x);
             final ValueComparator bvc = new ValueComparator(valueMap);
             final Map<Long, Object> sorted_map = new TreeMap(bvc);
@@ -296,8 +298,8 @@ public class ValueMemCacheImpl implements ValueTransactions {
 
     @Override
     public void purgeValues() throws NimbitsException {
-        if (buffer.contains(valueListCacheKey)) {
-            buffer.delete(valueListCacheKey);
+        if (buffer.contains(bufferedListCacheKey)) {
+            buffer.delete(bufferedListCacheKey);
         }
         removePointFromActiveList();
         ValueTransactionFactory.getDaoInstance(point).purgeValues();
@@ -351,7 +353,7 @@ public class ValueMemCacheImpl implements ValueTransactions {
         log.info("Storing " + stored.size());
 
         List<List<Value>> split = splitUpList(stored);
-         log.info("split up into " + split.size() + " pieces");
+        log.info("split up into " + split.size() + " pieces");
         int section = 0;
         int count = 0;
         for (List<Value> small : split) {
@@ -398,8 +400,8 @@ public class ValueMemCacheImpl implements ValueTransactions {
     public List<Value> getBuffer() {
 
 
-        if (buffer.contains(valueListCacheKey)) {
-            final Collection<Long> x = (Collection<Long>) buffer.get(valueListCacheKey);
+        if (buffer.contains(bufferedListCacheKey)) {
+            final Collection<Long> x = (Collection<Long>) buffer.get(bufferedListCacheKey);
             final Map<Long, Object> valueMap = buffer.getAll(x);
             final ValueComparator bvc = new ValueComparator(valueMap);
             final Map<Long, Object> sorted_map = new TreeMap(bvc);
@@ -424,10 +426,10 @@ public class ValueMemCacheImpl implements ValueTransactions {
 
 
         try {
-            if (buffer.contains(valueListCacheKey)) {
-                final Collection<Long> x = (Collection<Long>) buffer.get(valueListCacheKey);
+            if (buffer.contains(bufferedListCacheKey)) {
+                final Collection<Long> x = (Collection<Long>) buffer.get(bufferedListCacheKey);
                 if (x != null && !x.isEmpty()) {
-                    buffer.delete(valueListCacheKey);
+                    buffer.delete(bufferedListCacheKey);
                     final Map<Long, Object> valueMap = buffer.getAll(x);
                     buffer.deleteAll(x);
                     final List<Value> values = new ArrayList<Value>(valueMap.keySet().size());
@@ -439,7 +441,7 @@ public class ValueMemCacheImpl implements ValueTransactions {
                 }
             }
         } catch (Exception e) {
-            buffer.delete(valueListCacheKey);
+            buffer.delete(bufferedListCacheKey);
         }
 
 

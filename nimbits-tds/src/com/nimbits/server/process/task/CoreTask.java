@@ -24,39 +24,39 @@ public class CoreTask extends HttpServlet {
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
         log.info("Starting core task");
-        final String entity = req.getParameter(Parameters.entity.name());
-        final String action = req.getParameter(Parameters.action.name());
-        final String instance = req.getParameter(Parameters.instance.name());
-        final String location = req.getParameter(Parameters.location.name());
-        try {
-            if (!Utils.isEmptyString(entity) && !Utils.isEmptyString(instance) && ! Utils.isEmptyString(action) && SettingsServiceFactory.getInstance().getBooleanSetting(SettingType.serverIsDiscoverable)) {
-
-                if (!com.nimbits.client.common.Utils.isEmptyString(instance)) {
-                    final String params =  Parameters.entity.getText() + '=' + entity
-                            + '&' + Parameters.action.getText() + '=' + action
-                            + '&' + Parameters.instance.getText() + '=' + instance;
-
-                    log.info(Path.PATH_NIMBITS_CORE_ENTITY_DESC_URL + '?' + params);
-                    HttpCommonFactory.getInstance().doPost(Path.PATH_NIMBITS_CORE_ENTITY_DESC_URL, params);
-
-                    reportLocation(entity, location);
-                    // resp.addHeader(Const.HTTP_HEADER_RESPONSE, response);
-                }
-            }
-            else if (!Utils.isEmptyString(entity) && !Utils.isEmptyString(location)) {
-                reportLocation(entity, location);
-
-            }
-            //40.127883,-75.431853
-            else {
-                resp.setStatus(Const.HTTP_STATUS_BAD_REQUEST);
-            }
-        }
-        catch (NimbitsException ex) {
-            LogHelper.logException(this.getClass(), ex);
-            resp.setStatus(Const.HTTP_STATUS_INTERNAL_SERVER_ERROR);
-
-        }
+//        final String entity = req.getParameter(Parameters.entity.name());
+//        final String action = req.getParameter(Parameters.action.name());
+//        final String instance = req.getParameter(Parameters.instance.name());
+//        final String location = req.getParameter(Parameters.location.name());
+//        try {
+//            if (!Utils.isEmptyString(entity) && !Utils.isEmptyString(instance) && ! Utils.isEmptyString(action) && SettingsServiceFactory.getInstance().getBooleanSetting(SettingType.serverIsDiscoverable)) {
+//
+//                if (!com.nimbits.client.common.Utils.isEmptyString(instance)) {
+//                    final String params =  Parameters.entity.getText() + '=' + entity
+//                            + '&' + Parameters.action.getText() + '=' + action
+//                            + '&' + Parameters.instance.getText() + '=' + instance;
+//
+//                    log.info(Path.PATH_NIMBITS_CORE_ENTITY_DESC_URL + '?' + params);
+//                    HttpCommonFactory.getInstance().doPost(Path.PATH_NIMBITS_CORE_ENTITY_DESC_URL, params);
+//
+//                    reportLocation(entity, location);
+//                    // resp.addHeader(Const.HTTP_HEADER_RESPONSE, response);
+//                }
+//            }
+//            else if (!Utils.isEmptyString(entity) && !Utils.isEmptyString(location)) {
+//                reportLocation(entity, location);
+//
+//            }
+//            //40.127883,-75.431853
+//            else {
+//                resp.setStatus(Const.HTTP_STATUS_BAD_REQUEST);
+//            }
+//        }
+//        catch (NimbitsException ex) {
+//            LogHelper.logException(this.getClass(), ex);
+//            resp.setStatus(Const.HTTP_STATUS_INTERNAL_SERVER_ERROR);
+//
+//        }
     }
 
     private void reportLocation(final String entity, final String location) {

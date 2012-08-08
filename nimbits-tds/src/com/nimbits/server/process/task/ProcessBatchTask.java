@@ -116,6 +116,7 @@ public class ProcessBatchTask extends HttpServlet {
             Collections.sort(timestamps);
 
             for (final long l : timestamps) {
+
                 BatchValue b = timestampValueMap.get(l);
                 Point point = null;
                 if (b != null) {

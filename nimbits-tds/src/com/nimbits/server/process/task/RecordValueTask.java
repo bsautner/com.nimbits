@@ -36,12 +36,11 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.logging.Logger;
 
 public class RecordValueTask extends HttpServlet {
 
-    final Logger log = Logger.getLogger(RecordValueTask.class.getName());
-    private static final long serialVersionUID = 1L;
+
+    private static final long serialVersionUID = 2L;
 
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
@@ -58,12 +57,6 @@ public class RecordValueTask extends HttpServlet {
         final String valueJson = req.getParameter(Parameters.valueJson.getText());
         final Entity entity = GsonFactory.getInstance().fromJson(pointJson, EntityModel.class);
         final Value value = GsonFactory.getInstance().fromJson(valueJson, ValueModel.class);
-
-        log.info(userJson);
-        log.info(pointJson);
-        log.info(valueJson);
-
-
         final User u = GsonFactory.getInstance().fromJson(userJson, UserModel.class);
 
         try {
@@ -76,10 +69,15 @@ public class RecordValueTask extends HttpServlet {
                 point.setIdleAlarmSent(false);
                 EntityServiceFactory.getInstance().addUpdateEntity(u,  point);
             }
+
+            //triggers
             CalculationServiceFactory.getInstance().processCalculations(u, point, value);
             IntelligenceServiceFactory.getInstance().processIntelligence(u, point);
-            SubscriptionServiceFactory.getInstance().processSubscriptions(u,  point, value);
             SummaryServiceFactory.getInstance().processSummaries(u, point);
+
+
+
+            SubscriptionServiceFactory.getInstance().processSubscriptions(u,  point, value);
 
         } catch (NimbitsException e) {
             LogHelper.logException(this.getClass(), e);

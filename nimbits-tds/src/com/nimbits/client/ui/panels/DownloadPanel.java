@@ -196,7 +196,7 @@ public class DownloadPanel extends LayoutContainer {
 
         box.show();
         try {
-            timespan = TimespanServiceClientImpl.createTimespan(startDateSelector.getValue().toString(), endDateSelector.getValue().toString());
+            timespan = TimespanServiceClientImpl.createTimespan(startDateSelector.getValue(), endDateSelector.getValue());
 
 
         final ValueServiceAsync service = GWT.create(ValueService.class);

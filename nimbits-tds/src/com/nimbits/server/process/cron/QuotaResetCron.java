@@ -59,23 +59,23 @@ public class QuotaResetCron  extends HttpServlet {
     protected static void processGet(ServletResponse resp) throws NimbitsException, IOException {
 
 
-        final DatastoreService store = DatastoreServiceFactory.getDatastoreService();
+//        final DatastoreService store = DatastoreServiceFactory.getDatastoreService();
+//
+//        final Query q = new Query("UserEntity").setKeysOnly();
+//
+//        int count = 0;
+//        for (final Entity e : store.prepare(q).asList(FetchOptions.Builder.withLimit(LIMIT))) {
+//            EmailAddress em = CommonFactoryLocator.getInstance().createEmailAddress(e.getKey().getName());
+//            count++;
+//
+           Quota quota = QuotaFactory.getInstance();
+//            int c = quota.getCount();
+//
+            quota.resetCounters();
+//
+//        }
 
-        final Query q = new Query("UserEntity").setKeysOnly();
-
-        int count = 0;
-        for (final Entity e : store.prepare(q).asList(FetchOptions.Builder.withLimit(LIMIT))) {
-            EmailAddress em = CommonFactoryLocator.getInstance().createEmailAddress(e.getKey().getName());
-            count++;
-
-            Quota quota = QuotaFactory.getInstance(em);
-            int c = quota.getCount();
-
-            quota.resetCounter();
-
-        }
-
-        SystemServiceFactory.getInstance().updateSystemPoint("UserCount", count, false);
+        // SystemServiceFactory.getInstance().updateSystemPoint("UserCount", count, false);
 
     }
 

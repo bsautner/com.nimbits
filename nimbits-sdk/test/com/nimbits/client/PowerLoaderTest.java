@@ -51,9 +51,9 @@ public class PowerLoaderTest {
             pointName = CommonFactoryLocator.getInstance().createName(p, EntityType.point);
             client = NimbitsClientFactory.getInstance(g, url);
 
-        Random r = new Random();
+            Random r = new Random();
 
-            for (int i = 0; i < 1000; i++ ) {
+            for (int i = 0; i < 10000; i++ ) {
                client.recordValue(pointName,i);
               Thread.sleep(100);
                 System.out.println("Recorded value " + i);

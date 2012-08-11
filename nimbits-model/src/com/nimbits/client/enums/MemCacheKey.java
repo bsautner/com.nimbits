@@ -27,9 +27,10 @@ public enum MemCacheKey {
     preload(10, SettingType.serverVersion.getDefaultValue() + KeyConstants.PRE_LOAD),
     allUsers(11, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_ALL_USERS),
     users(12, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_USER),
-    triggers(13,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_TIGGERS),
+    triggers(13,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_TRIGGERS),
     bufferedValueList(14,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_BUFFERED_VALUE_LIST),
-    userEntityTree(15,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_BUFFERED_VALUE_LIST),
+    userEntityTree(15,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_USER_ENTITY_TREE),
+    quotaNamespace(16,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_QUOTA_NAMESPACE),
     ;
 
     private static final Map<Integer, MemCacheKey> lookup = new HashMap<Integer, MemCacheKey>(MemCacheKey.values().length);
@@ -91,13 +92,15 @@ public enum MemCacheKey {
         static final String KEY_ACTIVE_POINTS = "KEY_ACTIVE_POINTS";
         static final String KEY_VALUE = "KEY_VALUE";
         static final String KEY_BUFFERED_VALUE_LIST = "KEY_BUFFERED_VALUE_LIST";
-        static final String KEY_TIGGERS = "KEY_TIGGERS";
+        static final String KEY_TRIGGERS = "KEY_TRIGGERS";
         static final String KEY_CURRENT_VALUE = "KEY_CURRENT_VALUE";
         static final String PRE_LOAD = "PRE_LOAD";
         static final String KEY_LOCATION = "KEY_GPS_LOCATION";
         static final String KEY_QUOTA = "KEY_QUOTA";
         static final String KEY_USER = "KEY_USER";
         static final String KEY_USER_ENTITY_TREE = "KEY_USER_ENTITY_TREE";
+        static final String KEY_QUOTA_NAMESPACE = "KEY_QUOTA_NAMESPACE";
+
         private KeyConstants() {
         }
     }

@@ -4,9 +4,13 @@ import com.nimbits.client.enums.client.CommunicationType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.mqtt.Mqtt;
+import com.nimbits.client.model.mqtt.MqttModel;
+import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.service.client.ClientService;
 import com.nimbits.server.service.email.EmailService;
 import com.nimbits.server.service.entity.EntityService;
+import com.nimbits.server.service.mqtt.MqttService;
 import com.nimbits.server.service.search.SearchService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Controller;
@@ -47,6 +51,11 @@ public class ServiceController {
     @Resource(name="clientService")
     private ClientService clientService;
 
+    @Resource(name="mqttService")
+    private MqttService mqttService;
+
+
+
     @RequestMapping(value="service/search", method= RequestMethod.GET)
     public String search(
             @RequestParam("search") String dangerousSearchText,
@@ -74,6 +83,19 @@ public class ServiceController {
         }
 
     }
+
+    @RequestMapping(value="service/mqtt", method= RequestMethod.POST)
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
+    public void receiveMqttMessage(
+            @RequestParam("data") String data
+
+    ) throws NimbitsException {
+            log.severe(data);
+        Mqtt mqtt = GsonFactory.getInstance().fromJson(data, MqttModel.class);
+             mqttService.receiveMessage(mqtt);
+
+    }
+
 
     @RequestMapping(value="service/dev", method=RequestMethod.GET)
 

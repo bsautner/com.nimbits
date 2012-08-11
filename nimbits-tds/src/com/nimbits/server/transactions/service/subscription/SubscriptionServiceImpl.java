@@ -13,11 +13,16 @@
 
 package com.nimbits.server.transactions.service.subscription;
 
+import com.google.apphosting.api.ApiProxy;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.nimbits.client.common.Utils;
+import com.nimbits.client.constants.Path;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.mqtt.Mqtt;
+import com.nimbits.client.model.mqtt.MqttFactory;
+import com.nimbits.client.model.mqtt.MqttModel;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.user.User;
@@ -30,6 +35,7 @@ import com.nimbits.server.communication.xmpp.XmppServiceFactory;
 import com.nimbits.server.external.facebook.FacebookFactory;
 import com.nimbits.server.external.twitter.TwitterServiceFactory;
 import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.http.HttpCommonFactory;
 import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
 import com.nimbits.server.transactions.service.feed.FeedServiceFactory;
 import com.nimbits.server.transactions.service.user.UserServiceFactory;
@@ -159,10 +165,29 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
             case instantMessage:
                 doXMPP(user, subscription, entity, point, value);
                 break;
+            case mqtt:
+                doMQTT(user, subscription, entity, point, value);
+                break;
             case feed:
                 FeedServiceFactory.getInstance().postToFeed(user, entity, point, value, FeedType.data);
                 break;
         }
+    }
+
+    private static void doMQTT(User user, Subscription subscription, Entity entity, Point point, Value value) throws NimbitsException {
+
+        String valueJson = GsonFactory.getInstance().toJson(value);
+
+        ApiProxy.Environment env = ApiProxy.getCurrentEnvironment();
+        String host =  String.valueOf(env.getAttributes().get("com.google.appengine.runtime.default_version_hostname"));
+
+
+
+        log.info("MQTT appId: " + host);
+        Mqtt mqtt = MqttFactory.createMqtt(host, user.getEmail(), entity.getKey(), valueJson);
+        String mqttJson = GsonFactory.getInstance().toJson(mqtt);
+        String params = "data=" + mqttJson;
+        HttpCommonFactory.getInstance().doPost(Path.PATH_NIMBITS_CORE_MQTT_LOCATION_URL, params);
     }
 
     private static void doXMPP(final User u, final Subscription subscription, final Entity entity, final Point point, final Value v) throws NimbitsException {

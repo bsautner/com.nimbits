@@ -33,7 +33,9 @@ public class UserFactory {
         final EmailAddress emailAddress1 = CommonFactoryLocator.getInstance().createEmailAddress(emailAddress);
         return new NimbitsUser(emailAddress1, secretKey);
     }
-
+    public static NimbitsUser createNimbitsUser(final EmailAddress emailAddress, final String secretKey) throws NimbitsException {
+          return new NimbitsUser(emailAddress, secretKey);
+    }
     public static GoogleUser createGoogleUser(final EmailAddress emailAddress, final String googlePassword) {
         return new GoogleUser(emailAddress, googlePassword);
     }

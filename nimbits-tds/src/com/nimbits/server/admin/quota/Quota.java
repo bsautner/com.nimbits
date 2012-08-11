@@ -27,4 +27,5 @@ public interface Quota {
     void resetCounter() throws NimbitsException;
     int getCount() throws NimbitsException;
 
+    void resetCounters() throws NimbitsException;
 }

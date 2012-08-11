@@ -31,12 +31,18 @@ public class QuotaImpl implements Quota {
     private final String key;
 
 
+    public QuotaImpl() { //use email since sometimes we only have the key
 
+        cache =MemcacheServiceFactory.getMemcacheService(MemCacheKey.quotaNamespace.getText());
+        key = null;
+
+
+    }
 
     public QuotaImpl(final EmailAddress email) { //use email since sometimes we only have the key
 
-        cache =MemcacheServiceFactory.getMemcacheService();
-        key = email.getValue() + MemCacheKey.quota;
+        cache =MemcacheServiceFactory.getMemcacheService(MemCacheKey.quotaNamespace.getText());
+        key = MemCacheKey.getKey(MemCacheKey.quota, email.getValue());
 
 
     }
@@ -62,7 +68,10 @@ public class QuotaImpl implements Quota {
     public void resetCounter() throws NimbitsException {
         cache.delete(key);
     }
-
+    @Override
+    public void resetCounters() throws NimbitsException {
+        cache.clearAll();
+    }
     @Override
     public int getCount() throws NimbitsException {
         if (cache.contains(key))  {

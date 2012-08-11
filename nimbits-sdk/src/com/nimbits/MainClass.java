@@ -23,15 +23,18 @@ import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.location.Location;
 import com.nimbits.client.model.location.LocationFactory;
+import com.nimbits.client.model.mqtt.MqttHelper;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.console.KeyFile;
+import com.nimbits.mqtt.Listen;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.user.GoogleUser;
 import com.nimbits.user.NimbitsUser;
 import com.nimbits.xmpp.XMPPClient;
 import com.nimbits.xmpp.XMPPClientFactory;
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.jivesoftware.smack.XMPPException;
 
 import java.io.BufferedReader;
@@ -40,6 +43,7 @@ import java.io.InputStreamReader;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by bsautner
@@ -49,6 +53,21 @@ import java.util.Map;
  */
 public class MainClass {
     private static XMPPClient xClient;
+    private static NimbitsClient client;
+
+//    private NimbitsClient createClient(String email, String key, String host, String password) throws NimbitsException {
+//        final EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
+//        final NimbitsClient client = createClient(host, email, key, password);
+//        try {
+//            final boolean loggedIn = checkLoggedIn(client, false);
+//            if (!loggedIn) {
+//                throw new NimbitsException("Access Denied");
+//            }
+//        } catch (IOException e) {
+//            throw new NimbitsException(e);
+//        }
+//    }
+
 
     public static void main(final String[] args) throws IOException, XMPPException, NimbitsException {
         final HashMap<String, String> argsMap = new HashMap<String, String>();
@@ -72,34 +91,24 @@ public class MainClass {
         final String key = argsMap.containsKey(Parameters.key.getText()) ? argsMap.get(Parameters.key.getText()) : null;
         final String appId = argsMap.containsKey(Parameters.appid.getText()) ? argsMap.get(Parameters.appid.getText()) : null;
         final String password = argsMap.containsKey(Parameters.password.getText()) ? argsMap.get(Parameters.password.getText()) : null;
-        final EmailAddress email = CommonFactoryLocator.getInstance().createEmailAddress(emailParam);
-        final NimbitsClient client = createClient(host, email, key, password);
 
-        final boolean loggedIn = checkLoggedIn(client, verbose);
+        final String protocol = argsMap.containsKey(Parameters.protocol.getText()) ? argsMap.get(Parameters.protocol.getText()) :null;
 
-        if (!loggedIn) {
-            out(true, "Access Denied.");
-            return;
+        if (StringUtils.isEmpty(emailParam)) {
+            throw new NimbitsException("you must specify an account i.e. email=test@example.com");
         }
 
-        if (listen) {
-            if (StringUtils.isEmpty(appId)) {
-                out(true, "In order to connect to the xmpp listener, please supply your app engine app id (i.e -appid=Nimbits1)");
-            } else {
-                xClient = XMPPClientFactory.getInstance(client, appId);
+       if (StringUtils.isNotEmpty(host) && StringUtils.isNotEmpty(emailParam) & StringUtils.isNotEmpty(key)) {
+          createClient(host, emailParam, key, password);
+       }
+//
+//        if (!loggedIn) {
+//            out(true, "Access Denied.");
+//            return;
+//        }
 
-                try {
-                    boolean connected = xClient.connect();
-                    if (connected) {
-                        out(true, "Connected to " + appId + "over xmpp");
-                        interact();
-                    }
-                } catch (NimbitsException e) {
-                    out(true, e.getMessage());
-                }
-            }
-        } else {
-            if (argsMap.containsKey(Parameters.action.getText()) && loggedIn) {
+
+            if (argsMap.containsKey(Parameters.action.getText())) {
                 Action action = Action.valueOf(argsMap.get(Parameters.action.getText()));
 
                 switch (action) {
@@ -108,13 +117,18 @@ public class MainClass {
                     case readGps:
                     case readJson:
                     case readNote:
-                        readValue(client, argsMap, action);
+                        readValue(argsMap, action);
                         break;
                     case record:
                     case recordValue:
-                        recordValue(client, argsMap, verbose);
+                        recordValue(argsMap, verbose);
                         break;
-                    default:
+                    case listen:
+                        listen(appId, protocol, emailParam);
+                        break;
+
+
+                     default:
                         printUsage();
                 }
             } else if (argsMap.containsKey(Parameters.genkey.getText()) && argsMap.containsKey(Parameters.out.getText())) {
@@ -122,11 +136,43 @@ public class MainClass {
                 out(true, KeyFile.genKey(argsMap));
 
             }
-        }
+
 
 
         out(true, "exiting");
 
+
+    }
+
+    private static void listen(String appId, String protocol, String email ) throws NimbitsException {
+
+            if (StringUtils.isEmpty(appId) || StringUtils.isEmpty(protocol)) {
+                out(true, "In order to connect to the xmpp/mqtt listener, please supply your app engine app id (i.e -appid=Nimbits1 -protocol=mqtt)");
+            }
+
+            else  {
+                if (protocol != null && protocol.equals("xmpp")) {
+
+
+                    xClient = XMPPClientFactory.getInstance(client, appId);
+
+                    try {
+                        boolean connected = xClient.connect(appId);
+                        if (connected) {
+                            out(true, "Connected to " + appId + "over xmpp");
+                            interact();
+                        }
+                    } catch (NimbitsException e) {
+                        out(true, e.getMessage());
+                    }
+                }
+                else if (protocol != null && protocol.equals("mqtt")) {
+                        String topic = appId + "/#";
+
+                        Listen listener = new Listen(email);
+                        listener.subscribe(topic);
+                }
+            }
 
     }
 
@@ -147,7 +193,7 @@ public class MainClass {
 
     }
 
-    private static void readValue(final NimbitsClient client, final Map<String, String> argsMap, Action action) throws NimbitsException {
+    private static void readValue(final Map<String, String> argsMap, Action action) throws NimbitsException {
         final EntityName pointName = CommonFactoryLocator.getInstance().createName(argsMap.get(Parameters.point.getText()), EntityType.point);
         final Value v = client.getCurrentRecordedValue(pointName);
 
@@ -178,7 +224,7 @@ public class MainClass {
 
     }
 
-    private static void recordValue(final NimbitsClient client, final Map<String, String> argsMap, final boolean verbose) throws IOException, NimbitsException {
+    private static void recordValue(final Map<String, String> argsMap, final boolean verbose) throws IOException, NimbitsException {
         out(verbose, "Recording values");
 
         final Value v = buildValue(argsMap);
@@ -205,20 +251,21 @@ public class MainClass {
         return loggedIn;
     }
 
-    private static NimbitsClient createClient(final String host, final EmailAddress email, final String key, final String password) {
-        NimbitsClient client = null;
-        if (StringUtils.isNotEmpty(key) && (email) != null) {
-            NimbitsUser n = new NimbitsUser(email, key);
+    private static void createClient(final String host, final String email, final String key, final String password) throws NimbitsException {
+
+        EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
+        if (StringUtils.isNotEmpty(key) && (emailAddress) != null) {
+            NimbitsUser n = new NimbitsUser(emailAddress, key);
             client = NimbitsClientFactory.getInstance(n, host);
         } else if (StringUtils.isNotEmpty(password) && email != null) {
-            GoogleUser g = new GoogleUser(email, password);
+            GoogleUser g = new GoogleUser(emailAddress, password);
             try {
                 client = NimbitsClientFactory.getInstance(g, host);
             } catch (Exception e) {
                 out(true, e.getMessage());
             }
         }
-        return client;
+
     }
 
     private static void processArgs(final String[] args, final Map<String, String> argsMap) {

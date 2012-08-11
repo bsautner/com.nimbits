@@ -69,11 +69,19 @@ public class EntityCacheImpl implements EntityTransactions, EntityCache {
     @Override
     public List<Entity> getEntityByTrigger(final Entity entity, final Class<?> cls) throws NimbitsException {
         final String triggerKey =MemCacheKey.getKey(MemCacheKey.triggers, entity.getKey() + cls.getName());
-       // final String triggerKey = MemCacheKey.getKey(MemCacheKey.triggers, trigger.getTrigger() + entity.getClass().getName());
+        // final String triggerKey = MemCacheKey.getKey(MemCacheKey.triggers, trigger.getTrigger() + entity.getClass().getName());
         if (cache.contains(triggerKey)) {
             List<Entity> triggers =  (List<Entity>) cache.get(triggerKey);
-            for (Entity e : triggers) {
-                e.setIsCached(true);
+            if (triggers == null) {
+                cache.delete(triggerKey);
+                List<Entity> result= EntityTransactionFactory.getDaoInstance(user).getEntityByTrigger(entity, cls);
+                cache.put(triggerKey, result);
+                return result;
+            }
+            else {
+                for (Entity e : triggers) {
+                    e.setIsCached(true);
+                }
             }
             return triggers;
         }

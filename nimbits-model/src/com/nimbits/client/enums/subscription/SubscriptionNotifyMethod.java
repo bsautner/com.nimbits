@@ -27,7 +27,8 @@ public enum SubscriptionNotifyMethod {
     facebook(1, "Facebook", false),
     twitter(2, "Twitter", false),
     instantMessage(3, "Instant Message (XMPP)", true),
-    feed(4, "Nimbits Data Feed", false);
+    feed(4, "Nimbits Data Feed", false),
+    mqtt(5, "MQTT Broker Relay", true);
 
 
 

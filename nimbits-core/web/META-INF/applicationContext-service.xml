@@ -7,6 +7,7 @@
     <bean id="entityService" class="com.nimbits.server.service.entity.impl.EntityServiceImpl"> </bean>
     <bean id="emailService" class="com.nimbits.server.service.email.impl.EmailServiceImpl"> </bean>
     <bean id="clientService" class="com.nimbits.server.service.client.impl.ClientServiceImpl"> </bean>
+    <bean id="mqttService" class="com.nimbits.server.service.mqtt.impl.MqttServiceImpl"> </bean>
 
 
 

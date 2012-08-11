@@ -18,7 +18,7 @@ public enum EntityType implements Serializable {
     userConnection(6, false,false, true,true,false, 5, "com.nimbits.server.orm.ConnectionEntity"),
     calculation(7, true, true, false,true,false, 6, "com.nimbits.server.orm.CalcEntity"),
     intelligence(8, true, true, false,true,false, 7, "com.nimbits.server.orm.IntelligenceEntity"),
-    feed(9, true, false,true,false, true, 8, "com.nimbits.server.orm.PointEntity"),
+    feed(9, false, false,true,false, true, 8, "com.nimbits.server.orm.PointEntity"),
     resource(10, false,false, true,true, false, 10, "com.nimbits.server.orm.XmppResourceEntity"),
     summary(11, true, false, false, true,false, 11,"com.nimbits.server.orm.SummaryEntity"),
     instance(12, false,true, false, false,false, 12, "com.nimbits.server.orm.CategoryEntity"),

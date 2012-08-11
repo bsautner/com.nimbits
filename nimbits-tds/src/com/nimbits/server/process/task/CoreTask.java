@@ -49,7 +49,7 @@ public class CoreTask extends HttpServlet {
 //            }
 //            //40.127883,-75.431853
 //            else {
-//                resp.setStatus(Const.HTTP_STATUS_BAD_REQUEST);
+            //   resp.setStatus(Const.HTTP_STATUS_BAD_REQUEST);
 //            }
 //        }
 //        catch (NimbitsException ex) {

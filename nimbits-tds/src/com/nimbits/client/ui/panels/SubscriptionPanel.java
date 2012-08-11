@@ -77,7 +77,7 @@ public class SubscriptionPanel extends NavigationEventProvider {
     private final Map<SettingType, String> settings;
 
     private User user;
-    public SubscriptionPanel(User user, Entity entity, Map<SettingType, String> settings) {
+    public SubscriptionPanel(final User user,final Entity entity,final Map<SettingType, String> settings) {
         this.entity = entity;
         this.settings = settings;
         this.user = user;
@@ -138,14 +138,15 @@ public class SubscriptionPanel extends NavigationEventProvider {
     }
 
     private ComboBox<DeliveryMethodOption> deliveryMethodComboBox(final String title, final SubscriptionNotifyMethod selectedValue) {
-        ComboBox<DeliveryMethodOption> combo = new ComboBox<DeliveryMethodOption>();
+        final ComboBox<DeliveryMethodOption> combo = new ComboBox<DeliveryMethodOption>();
 
-        List<DeliveryMethodOption> ops = new ArrayList<DeliveryMethodOption>(SubscriptionNotifyMethod.values().length);
+        final List<DeliveryMethodOption> ops = new ArrayList<DeliveryMethodOption>(SubscriptionNotifyMethod.values().length);
 
-        DeliveryMethodOption none = new DeliveryMethodOption(SubscriptionNotifyMethod.none);
+        final DeliveryMethodOption none = new DeliveryMethodOption(SubscriptionNotifyMethod.none);
         ops.add(none);
         ops.add(new DeliveryMethodOption(SubscriptionNotifyMethod.email));
         ops.add(new DeliveryMethodOption(SubscriptionNotifyMethod.feed));
+        ops.add(new DeliveryMethodOption(SubscriptionNotifyMethod.mqtt));
 
         if (settings.containsKey(SettingType.twitterClientId) && !Utils.isEmptyString(settings.get(SettingType.twitterClientId))) {
             ops.add(new DeliveryMethodOption(SubscriptionNotifyMethod.twitter));

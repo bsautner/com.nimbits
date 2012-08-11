@@ -242,14 +242,20 @@ public class NimbitsClientImpl implements NimbitsClient {
     }
 
 
-    public Value recordValue(EntityName name, Value v) throws IOException {
+    public Value recordValue(EntityName name, Value v) throws NimbitsException {
         String u = host + Path.PATH_CURRENT_VALUE;
         String json = gson.toJson(v, ValueModel.class);
-        String params = Parameters.timestamp.getText() +
-                "=" + v.getTimestamp().getTime() +
-                "&" + Parameters.point.getText() + "=" +
-                URLEncoder.encode(name.getValue(), Const.CONST_ENCODING) +
-                "&" + Parameters.json.getText() + "=" + URLEncoder.encode(json, Const.CONST_ENCODING);
+
+        String params = null;
+        try {
+            params = Parameters.timestamp.getText() +
+                    "=" + v.getTimestamp().getTime() +
+                    "&" + Parameters.point.getText() + "=" +
+                    URLEncoder.encode(name.getValue(), Const.CONST_ENCODING) +
+                    "&" + Parameters.json.getText() + "=" + URLEncoder.encode(json, Const.CONST_ENCODING);
+        } catch (UnsupportedEncodingException e) {
+            throw new NimbitsException(e);
+        }
         String result = doGPost(u, params);
         return gson.fromJson(result, ValueModel.class);
 
@@ -445,11 +451,9 @@ public class NimbitsClientImpl implements NimbitsClient {
     @Override
     public Value recordDataObject(EntityName name, Object object, Class<?> cls) throws NimbitsException {
         Value value = ValueFactory.createValueModel(LocationFactory.createLocation(), 0.0, new Date(), "", ValueFactory.createValueData(gson.toJson(object)), AlertType.OK);
-        try {
+
             return recordValue(name, value);
-        } catch (IOException e) {
-            throw new NimbitsException(e.getMessage());
-        }
+
 
 
     }
@@ -457,11 +461,9 @@ public class NimbitsClientImpl implements NimbitsClient {
     @Override
     public Value recordDataObject(EntityName name, Object object, Class<?> cls, double latitude, double longitude, double value) throws NimbitsException {
         Value vx = ValueFactory.createValueModel(LocationFactory.createLocation(latitude, longitude), value, new Date(),  "", ValueFactory.createValueData(gson.toJson(object)), AlertType.OK);
-        try {
+
             return recordValue(name, vx);
-        } catch (IOException e) {
-            throw new NimbitsException(e.getMessage());
-        }
+
 
 
     }

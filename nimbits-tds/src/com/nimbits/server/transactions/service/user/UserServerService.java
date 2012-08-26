@@ -37,4 +37,6 @@ public interface UserServerService {
     User createUserRecord(final EmailAddress internetAddress) throws NimbitsException;
 
     AccessKey authenticatedKey(final Entity user) throws NimbitsException;
+
+
 }

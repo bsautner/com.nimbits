@@ -219,8 +219,11 @@ public class PointPanel extends LayoutContainer {
         service.addUpdateEntity(point, new AsyncCallback<Entity>() {
             @Override
             public void onFailure(final Throwable caught) {
-                MessageBox.alert("Alert", caught.getMessage(), null);
                 box.close();
+
+                FeedbackHelper.showError(caught);
+
+
             }
 
             @Override

@@ -42,9 +42,10 @@ public class EntityCacheImpl implements EntityTransactions, EntityCache {
     public EntityCacheImpl(final User u) {
         this.user = u;
 
-        cache = (user != null && user.getKey() != null)
-                ? MemcacheServiceFactory.getMemcacheService(MemCacheKey.getKey(MemCacheKey.userNamespace, user.getKey()))
-                : MemcacheServiceFactory.getMemcacheService(MemCacheKey.defaultNamespace.name());
+        cache = MemcacheServiceFactory.getMemcacheService(MemCacheKey.defaultNamespace.name());
+//        (user != null && user.getKey() != null)
+//                ? MemcacheServiceFactory.getMemcacheService(MemCacheKey.getKey(MemCacheKey.userNamespace, user.getKey()))
+//                : );
     }
 
     @Override
@@ -110,6 +111,22 @@ public class EntityCacheImpl implements EntityTransactions, EntityCache {
     }
 
     @Override
+    public void updateUser() throws NimbitsException {
+        if (cache.contains(user.getKey())) {
+            cache.delete(user.getKey());
+        }
+        if (user.getBilling().getLastSaved().getTime() - new Date().getTime() > MemCacheKey.getHoldTime() ) {
+            user.getBilling().setLastSaved(new Date());
+            addUpdateEntity(user, false);
+        }
+        else {
+
+            cache.put(user.getKey(), user);
+        }
+    }
+
+
+    @Override
     public void addEntityToCache(final  List<Entity> entities) throws NimbitsException {
         removeEntityFromCache(entities);
         for (Entity e : entities) {
@@ -150,14 +167,19 @@ public class EntityCacheImpl implements EntityTransactions, EntityCache {
     }
 
     @Override
-    public Entity addUpdateEntity(final Entity entity) throws NimbitsException {
+    public Entity addUpdateEntity(final Entity entity, final boolean clearRelatives) throws NimbitsException {
         final Entity result =   EntityTransactionFactory.getDaoInstance(user).addUpdateEntity(entity);
         addEntityToCache(Arrays.asList(result));
+        if (clearRelatives) {
         cache.delete(MemCacheKey.userEntityTree);
         removeTriggersFromCache(entity);
+        }
         return result;
     }
-
+    @Override
+    public Entity addUpdateEntity(final Entity entity) throws NimbitsException {
+       throw new NimbitsException("Not Implemented");
+    }
     private void removeTriggersFromCache(Entity entity) {
         if (entity.getEntityType().isTrigger()) {
             Trigger trigger = (Trigger)entity;
@@ -195,7 +217,7 @@ public class EntityCacheImpl implements EntityTransactions, EntityCache {
     @Override
     public List<Entity> getEntityByKey(final String key, final Class<?> cls) throws NimbitsException {
 
-        List<Entity> cached = getEntityFromCache(key);
+        final List<Entity> cached = getEntityFromCache(key);
         if (! cached.isEmpty()) {
             return cached;
         }

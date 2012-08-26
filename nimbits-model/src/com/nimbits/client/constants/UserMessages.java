@@ -25,8 +25,6 @@ public class UserMessages {
             "You can configure data points to send alerts and updates to your twitter feed " +
             "on the property menu";
     public static final String MESSAGE_UPLOAD_SVG = "Upload a process diagram in .svg format";
-    public static final String ERROR_QUOTA_EXCEEDED = "Daily Quota of " + Const.MAX_DAILY_QUOTA + " Exceeded. " +
-            " and there are no billable units in your account. Please visit nimbits.com to enable billing";
     public static final String ERROR_NOT_IMPLEMENTED = "Not Implemented";
     public static final String MESSAGE_CONNECTION_REQUEST = "Enter an email address to invite another Nimbits user to connect accounts with. After they approve your request " +
                        "you'll be able to see each others data that have a permission level set as viewable by the everyone or connections.";

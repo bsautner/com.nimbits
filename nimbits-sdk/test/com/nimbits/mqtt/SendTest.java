@@ -34,9 +34,21 @@ public class SendTest {
     public void testPublish() throws Exception {
 
         Random r = new Random();
-        Value v = ValueFactory.createValueModel(r.nextDouble());
-        EntityName name = CommonFactoryLocator.getInstance().createName("mqtt", EntityType.point);
-        EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress( "bsautner@gmail.com");
-        Send.publish("nimbits1",v,name,emailAddress, "mqttkey" );
+        String pointName = "demo";
+        String account = "tester@nimbits.com";
+        String key = "demokey";
+        String appid = "nimbits-hrd1";
+
+
+
+        EntityName name = CommonFactoryLocator.getInstance().createName(pointName, EntityType.point);
+        EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress( account);
+
+        for (int i = 0; i < 100; i++) {
+            Value v = ValueFactory.createValueModel(r.nextDouble());
+            Send.publish(appid,v,name,emailAddress, key);
+        }
+
+
     }
 }

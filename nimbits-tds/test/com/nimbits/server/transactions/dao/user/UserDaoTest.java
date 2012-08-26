@@ -54,7 +54,8 @@ public class UserDaoTest extends NimbitsServletTest {
         helper.tearDown();
 
     }
-        @Test
+
+    @Test
     public void createUserTest() throws NimbitsException {
         EmailAddress e = CommonFactoryLocator.getInstance().createEmailAddress("bob@example.com");
         User u =UserServiceFactory.getServerInstance().createUserRecord(e);
@@ -70,8 +71,45 @@ public class UserDaoTest extends NimbitsServletTest {
             assertNotNull(r);
             assertEquals(e.getValue(), r.getEmail().getValue());
             assertNotNull(r.getDateCreated());
+            assertNotNull(r.getBilling());
 
     }
 
+    @Test
+    public void updateUserTest() throws NimbitsException {
+        EmailAddress e = CommonFactoryLocator.getInstance().createEmailAddress("bob@example.com");
+        User u =UserServiceFactory.getServerInstance().createUserRecord(e);
+        assertNotNull(u);
+        assertEquals(e.getValue(), u.getEmail().getValue());
+        List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(u,e.getValue(), EntityType.user);
+        assertFalse(result.isEmpty());
 
+
+        User r = (User) result.get(0);
+
+
+        assertNotNull(r);
+        assertEquals(e.getValue(), r.getEmail().getValue());
+        assertNotNull(r.getDateCreated());
+        assertNotNull(r.getBilling());
+
+        r.getBilling().setAccountBalance(100.00);
+        EntityServiceFactory.getInstance().addUpdateEntity(r);
+
+
+        List<Entity> result2 = EntityServiceFactory.getInstance().getEntityByKey(u,e.getValue(), EntityType.user);
+        assertFalse(result2.isEmpty());
+
+
+        User r2 = (User) result2.get(0);
+
+
+        assertNotNull(r2);
+        assertEquals(e.getValue(), r2.getEmail().getValue());
+        assertNotNull(r2.getDateCreated());
+        assertNotNull(r2.getBilling());
+        assertEquals(r2.getBilling().getAccountBalance(), 100, 0.001);
+
+
+    }
 }

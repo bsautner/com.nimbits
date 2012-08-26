@@ -17,10 +17,13 @@ package com.nimbits.client.model.user;
 import com.nimbits.client.enums.AuthLevel;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.accesskey.AccessKey;
+import com.nimbits.client.model.billing.Billing;
+import com.nimbits.client.model.billing.BillingFactory;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
+
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -55,10 +58,13 @@ public class UserModel extends EntityModel implements Serializable, User {
 
     private boolean userAdmin;
 
+    private Billing billing;
+
+
     /**
      *
      */
-    private static final long serialVersionUID =1L;
+    private static final long serialVersionUID =2L;
 
     @SuppressWarnings("unused")
     public UserModel() {
@@ -75,6 +81,8 @@ public class UserModel extends EntityModel implements Serializable, User {
             this.twitterToken = u.getTwitterToken();
             this.twitterTokenSecret = u.getTwitterTokenSecret();
             this.facebookID = u.getFacebookID();
+            this.billing = u.getBilling();
+
         }
         else {
 
@@ -85,7 +93,7 @@ public class UserModel extends EntityModel implements Serializable, User {
         super(entity);
         this.lastLoggedIn =  new Date();
         this.emailAddress = entity.getName().getValue();
-
+        this.billing = BillingFactory.emptyBilling(this);
     }
 
 
@@ -202,9 +210,18 @@ public class UserModel extends EntityModel implements Serializable, User {
     }
 
     @Override
+    public Billing getBilling() {
+        return this.billing;
+    }
+
+    @Override
+    public void setBilling(Billing billing) {
+       this.billing = billing;
+    }
+
+    @Override
     public EmailAddress getEmail() throws NimbitsException {
         return CommonFactoryLocator.getInstance().createEmailAddress(emailAddress);
     }
-
 
 }

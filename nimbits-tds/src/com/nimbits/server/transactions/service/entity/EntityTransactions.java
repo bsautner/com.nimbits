@@ -18,6 +18,7 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.user.User;
 import com.nimbits.server.transactions.memcache.entity.EntityCache;
 
 import java.util.List;
@@ -36,6 +37,8 @@ public interface EntityTransactions extends EntityCache {
     Map<EntityName, Entity> getEntityNameMap( final EntityType type) throws NimbitsException;
 
     List<Entity> getChildren( final Entity parentEntity,  final EntityType type) throws NimbitsException;
+
+    Entity addUpdateEntity( final Entity entity, final boolean clearTree) throws NimbitsException;
 
     Entity addUpdateEntity( final Entity entity) throws NimbitsException;
 
@@ -58,4 +61,6 @@ public interface EntityTransactions extends EntityCache {
     List<Entity> getSubscriptionsToEntity(final Entity subscribedEntity) throws NimbitsException;
 
     List<Entity> getEntityByBlobKey(final BlobKey key) throws NimbitsException;
+
+    void updateUser() throws NimbitsException;
 }

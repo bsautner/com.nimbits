@@ -16,6 +16,7 @@ package com.nimbits.client.model.user;
 
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.accesskey.*;
+import com.nimbits.client.model.billing.Billing;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 
@@ -74,4 +75,11 @@ public interface User extends Entity, Serializable {
     boolean isUserAdmin();
 
     void setUserAdmin(boolean userAdmin);
+
+
+    Billing getBilling();
+
+    void setBilling(Billing billing);
+
+
 }

@@ -23,9 +23,12 @@ import com.nimbits.client.exception.NimbitsException;
  */
 public interface Quota {
 
-    void incrementCounter() throws NimbitsException;
+    double getCostPerApiCall();
+
+    int getMaxDailyQuota();
+
+    int incrementCounter() throws NimbitsException;
     void resetCounter() throws NimbitsException;
     int getCount() throws NimbitsException;
-
     void resetCounters() throws NimbitsException;
 }

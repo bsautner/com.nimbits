@@ -47,6 +47,7 @@ public class QuotaFactory {
 //
 //    }
 
+
     public static Quota getInstance(EmailAddress emailAddress) {
         return new QuotaImpl(emailAddress);
 

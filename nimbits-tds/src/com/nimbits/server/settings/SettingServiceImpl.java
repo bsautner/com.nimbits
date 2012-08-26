@@ -34,13 +34,13 @@ public class SettingServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public Map<SettingType, String> getSettings() throws NimbitsException {
-      return  SettingTransactionsFactory.getInstance().getSettings();
+        return  SettingTransactionsFactory.getInstance().getSettings();
 
     }
 
     @Override
     public void updateSetting(final SettingType setting,final  String newValue) throws NimbitsException {
-         SettingTransactionsFactory.getInstance().updateSetting(setting, newValue);
+        SettingTransactionsFactory.getInstance().updateSetting(setting, newValue);
     }
 
     @Override
@@ -59,13 +59,18 @@ public class SettingServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public boolean getBooleanSetting(final SettingType paramName) throws NimbitsException {
-        String s =  SettingTransactionsFactory.getInstance().getSetting(paramName);
-        if (Utils.isEmptyString(s)) {
-            s = paramName.getDefaultValue();
-        }
-        return s != null && s.equals(Const.TRUE);
+    public boolean getBooleanSetting(final SettingType paramName)   {
+        String s = null;
+        try {
+            s = SettingTransactionsFactory.getInstance().getSetting(paramName);
 
+            if (Utils.isEmptyString(s)) {
+                s = paramName.getDefaultValue();
+            }
+            return s != null && s.equals(Const.TRUE);
+        } catch (NimbitsException e) {
+            return false;
+        }
     }
 
 }

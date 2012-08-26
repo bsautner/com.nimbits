@@ -127,6 +127,9 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
         User user = null;
         if (email != null) {
+
+
+
             final List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(
                     com.nimbits.server.transactions.service.user.UserServiceFactory.getServerInstance().getAdmin(), //avoid infinite recursion
                     email.getValue(), EntityType.user);
@@ -189,7 +192,6 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         return user;
 
     }
-
 
 
 
@@ -270,6 +272,8 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         final Entity en = EntityModelFactory.createEntity(name, "",EntityType.accessKey, ProtectionLevel.onlyMe, user.getKey(), user.getKey());
         return AccessKeyFactory.createAccessKey(en, "AUTHENTICATED_KEY", user.getKey(), AuthLevel.admin);
     }
+
+
 
     @Override
     public com.nimbits.client.model.user.User createUserRecord(final EmailAddress internetAddress) throws NimbitsException {

@@ -14,17 +14,17 @@
 package com.nimbits.server.api;
 
 import com.nimbits.client.common.Utils;
-import com.nimbits.client.enums.ClientType;
-import com.nimbits.client.enums.ExportType;
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.location.Location;
 import com.nimbits.client.model.location.LocationFactory;
 import com.nimbits.client.model.user.User;
+import com.nimbits.server.admin.quota.Quota;
 import com.nimbits.server.admin.quota.QuotaFactory;
 import com.nimbits.server.api.helper.LocationReportingHelperFactory;
+import com.nimbits.server.settings.SettingsServiceFactory;
+import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
 import com.nimbits.server.transactions.service.user.UserServiceFactory;
 
 import javax.servlet.http.HttpServlet;
@@ -56,7 +56,7 @@ public class ApiServlet extends HttpServlet {
         return (u != null && c.isOwner(u));
     }
 
-//    protected static void reportLocation(HttpServletRequest req, Entity entity) {
+    //    protected static void reportLocation(HttpServletRequest req, Entity entity) {
 //       LocationReportingHelperFactory.getInstance().reportLocation(req, entity);
 //    }
     protected static void reportLocation(Entity entity, Location location) {
@@ -69,9 +69,44 @@ public class ApiServlet extends HttpServlet {
         user = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
         getGPS(req);
         if (user != null) {
-            QuotaFactory.getInstance(user.getEmail()).incrementCounter();
-            log.info(user.getKey());
-            log.info("keys: " + user.getAccessKeys().size());
+            Quota quota = QuotaFactory.getInstance(user.getEmail());
+            int count = quota.incrementCounter();
+            int max = quota.getMaxDailyQuota();
+
+
+                if (SettingsServiceFactory.getInstance().getBooleanSetting(SettingType.quotaEnabled)) {
+
+                    if (count > max) {
+
+                        if (user.getBilling().isBillingEnabled()) {
+                            if (user.getBilling().getBilledToday() >= user.getBilling().getMaxDailyAllowance()) {
+                                throw new NimbitsException("Maximum daily budget exceeded. Please increase your daily budget");
+                            }
+                            else {
+                                if (user.getBilling().getAccountBalance() > 0) {
+                                    user.getBilling().setAccountBalance(user.getBilling().getAccountBalance() - quota.getCostPerApiCall());
+                                    user.getBilling().setBilledToday(user.getBilling().getBilledToday() + quota.getCostPerApiCall());
+
+                                    EntityServiceFactory.getInstance().updateUser(user);
+                                }
+                                else {
+                                    throw new NimbitsException("Maximum daily budget exceeded. Please add funds to your account");
+
+                                }
+
+                            }
+                        }
+                        else {
+                            throw new NimbitsException("Maximum daily quota exceeded. Please enable billing");
+                        }
+
+
+                    }
+                }
+
+
+
+
         }
 
 
@@ -142,13 +177,13 @@ public class ApiServlet extends HttpServlet {
 
     public static Location getGPS(final HttpServletRequest req) {
         if (req != null) {
-        final String gps = req.getHeader("X-AppEngine-CityLatLong");
-        if (! Utils.isEmptyString(gps)) {
-            location = LocationFactory.createLocation(gps);
-        }
-        else {
-            location = LocationFactory.createLocation();
-        }
+            final String gps = req.getHeader("X-AppEngine-CityLatLong");
+            if (! Utils.isEmptyString(gps)) {
+                location = LocationFactory.createLocation(gps);
+            }
+            else {
+                location = LocationFactory.createLocation();
+            }
         }
         else {
             location = LocationFactory.createLocation();

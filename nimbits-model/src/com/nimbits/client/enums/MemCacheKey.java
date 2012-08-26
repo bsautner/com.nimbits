@@ -38,6 +38,8 @@ public enum MemCacheKey {
     private final String text;
     private final static String LEGAL_CHARS = "[0-9A-Za-z._-]{0,100}";
     private final static String SAFE_REPLACEMENT = "_";
+    private final static int HOLD_TIME = 10000;
+
     static {
         for (MemCacheKey s : EnumSet.allOf(MemCacheKey.class))
             lookup.put(s.code, s);
@@ -48,6 +50,9 @@ public enum MemCacheKey {
 
     }
 
+    public static int getHoldTime() {
+        return HOLD_TIME;
+    }
 
     private MemCacheKey(final int code, final String text) {
         this.code = code;

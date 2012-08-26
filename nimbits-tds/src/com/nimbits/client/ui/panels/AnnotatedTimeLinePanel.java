@@ -465,7 +465,6 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
     }
     private ToolBar toolbar() {
         final ToolBar toolBar = new ToolBar();
-        final Button export = exportButton();
         final Button resetChartButton = resetChartButton();
         final Button refresh = refreshButton();
 
@@ -504,7 +503,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
         toolBar.add(new SeparatorToolItem());
         toolBar.add(resetChartButton);
 
-        toolBar.add(export);
+
         return toolBar;
     }
 
@@ -604,27 +603,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
         return refresh;
     }
 
-    private Button exportButton() {
-        final Button export = new Button();
-        export.setText("Export and Report");
-        export.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.table()));
-        export.addListener(Events.OnClick, new Listener<BaseEvent>() {
-            @Override
-            public void handleEvent(final BaseEvent be) {
-                if (points.isEmpty()) {
-                    com.google.gwt.user.client.Window.alert("Please select a point, and load some data into the chart. Then you can use this button");
-                } else {
-                    Window w = new Window();
-                    w.setHeading("Export Options");
-                    w.setWidth(WIDTH);
-                    w.setHeight(HEIGHT);
-                    w.add(new ExportPanel(points, valueMap));
-                    w.show();
-                }
-            }
-        });
-        return export;
-    }
+
 
     private class TopSeriesListAsyncCallback implements AsyncCallback<List<Value>> {
         private final TreeModel model;

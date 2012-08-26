@@ -36,33 +36,31 @@ public class PowerLoaderTest {
     @Test
     public void loadData() throws NimbitsException, InterruptedException {
 
-         NimbitsClient client;
-         String p = "sample";
-         EntityName pointName;
+        NimbitsClient client;
 
-            String email =  "bsautner@nimbits.com";
+        EntityName pointName;
 
-            String password = "key";
+        String email =  "tester@nimbits.com";
+        String password = "key";
+        String url ="http://nimbits-hrd1.appspot.com";
+        String p = "app demo";
+        EmailAddress em = CommonFactoryLocator.getInstance().createEmailAddress(email);
+        NimbitsUser g = new NimbitsUser(em, password);
+        pointName = CommonFactoryLocator.getInstance().createName(p, EntityType.point);
+        client = NimbitsClientFactory.getInstance(g, url);
 
-            //  private final static String appscale =  "http://127.0.0.1:8888";
-            String url ="http://nimbits-hrd1.appspot.com";
-            EmailAddress em = CommonFactoryLocator.getInstance().createEmailAddress(email);
-            NimbitsUser g = new NimbitsUser(em, password);
-            pointName = CommonFactoryLocator.getInstance().createName(p, EntityType.point);
-            client = NimbitsClientFactory.getInstance(g, url);
+        Random r = new Random();
 
-            Random r = new Random();
-
-            for (int i = 0; i < 10000; i++ ) {
-               client.recordValue(pointName,i);
-              Thread.sleep(100);
-                System.out.println("Recorded value " + i);
-
-            }
-
-
+        for (int i = 0; i < 10; i++ ) {
+            client.recordValue(pointName,r.nextDouble() * 100);
+            Thread.sleep(10);
+            System.out.println("Recorded value " + i);
 
         }
+
+
+
+    }
 
 
 

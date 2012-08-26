@@ -218,6 +218,11 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
     }
 
     @Override
+    public void updateUser(User user) throws NimbitsException {
+        EntityTransactionFactory.getInstance(user).updateUser();
+    }
+
+    @Override
     public List<Entity>  getEntityByName(final User user, final EntityName name, final EntityType type) throws NimbitsException {
         try {
             return EntityTransactionFactory.getInstance(user).getEntityByName(name, Class.forName(type.getClassName()));
@@ -259,7 +264,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
        TaskFactory.getInstance().startCoreTask(this.getThreadLocalRequest(), entity, Action.update, ServerInfoImpl.getFullServerURL(getThreadLocalRequest()));
        Location location =   ApiServlet.getGPS(this.getThreadLocalRequest());
        LocationReportingHelperFactory.getInstance().reportLocation( entity, location);
-       return EntityTransactionFactory.getInstance(user).addUpdateEntity(entity);
+       return EntityTransactionFactory.getInstance(user).addUpdateEntity(entity, true);
 
     }
 

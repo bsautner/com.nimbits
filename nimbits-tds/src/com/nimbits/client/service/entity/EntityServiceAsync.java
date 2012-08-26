@@ -15,6 +15,7 @@ package com.nimbits.client.service.entity;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.user.User;
@@ -65,4 +66,6 @@ public interface EntityServiceAsync {
     void findEntityByKey(User user, String param, AsyncCallback< List<Entity>> async);
 
     void getChildren(User user, Entity parentEntity, EntityType type, AsyncCallback<List<Entity>> async);
+
+    void updateUser(User user, AsyncCallback<Void> async) throws NimbitsException;
 }

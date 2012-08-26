@@ -20,6 +20,7 @@ import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.billing.Billing;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.entity.Entity;
@@ -41,7 +42,7 @@ import java.util.UUID;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 @Inheritance(strategy = InheritanceStrategy.SUBCLASS_TABLE)
-public class EntityStore implements Entity {
+public abstract class EntityStore implements Entity {
 
     private static final long serialVersionUID = 5539781607214211456L;
     @PrimaryKey

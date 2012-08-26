@@ -96,7 +96,7 @@ public class EntityDaoImplTest extends NimbitsServletTest {
         rp.setHighAlarmOn(true);
         rp.setLowAlarmOn(true);
         rp.setIdleAlarmOn(true);
-        EntityTransactionFactory.getDaoInstance(user).addUpdateEntity(rp);
+        EntityTransactionFactory.getDaoInstance(user).addUpdateEntity(rp, true);
         Point xp = (Point) EntityTransactionFactory.getDaoInstance(user).getEntityByKey(rp.getKey(), PointEntity.class).get(0);
         assertTrue(xp.isHighAlarmOn());
         assertTrue(xp.isLowAlarmOn());
@@ -167,7 +167,7 @@ public class EntityDaoImplTest extends NimbitsServletTest {
 
 
         Entity e = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.onlyMe,user.getKey(), user.getKey());
-        EntityTransactionFactory.getDaoInstance(user).addUpdateEntity(e);
+        EntityTransactionFactory.getDaoInstance(user).addUpdateEntity(e, true);
 
 
     }

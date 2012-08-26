@@ -18,6 +18,7 @@ import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.io.blob.BlobStoreFactory;
 import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
 import com.nimbits.server.transactions.service.value.ValueTransactionFactory;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -43,6 +44,7 @@ public class DeleteOrphanBlobCronTest extends NimbitsServletTest {
     private static final double D1 = 1.23;
 
     @Test
+    @Ignore
     public void testCron() throws IOException, NimbitsException, InterruptedException {
         List<Value> values = new ArrayList<Value>(2);
         values.add(ValueFactory.createValueModel(D));

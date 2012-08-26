@@ -127,6 +127,12 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     }
 
+    @Override
+    public void updateUser() throws NimbitsException {
+        throw new NimbitsException("not implemeneted");
+
+    }
+
 
     @Override
     public List<Entity> getEntityByTrigger(final Entity entity, final Class<?> cls) throws NimbitsException {
@@ -222,6 +228,11 @@ public class EntityDaoImpl implements  EntityTransactions {
 
 
 
+    }
+
+    @Override
+    public Entity addUpdateEntity(Entity entity, boolean clearTree) throws NimbitsException {
+        throw new NimbitsException("Not Implemented");
     }
 
     @Override

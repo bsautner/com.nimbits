@@ -165,7 +165,7 @@ public class EntityCacheImplTest extends NimbitsServletTest {
 
         }
         point.setExpire(50);
-        entityTransactions.addUpdateEntity(point);
+        entityTransactions.addUpdateEntity(point, true);
 
         List<Entity> results3 = entityTransactions.getEntities();
         assertFalse(results3.isEmpty());

@@ -29,7 +29,12 @@ public class QuotaImpl implements Quota {
 
     private final MemcacheService cache;
     private final String key;
-
+    public static final int MAX_DAILY_QUOTA = 1000;
+    public static final double COST_PER_API_CALL = 0.00001;
+    @Override
+    public int getMaxDailyQuota() {
+        return MAX_DAILY_QUOTA;
+    }
 
     public QuotaImpl() { //use email since sometimes we only have the key
 
@@ -48,20 +53,25 @@ public class QuotaImpl implements Quota {
     }
 
     @Override
-    public void incrementCounter() throws NimbitsException {
+    public int incrementCounter() throws NimbitsException {
 
         if (cache.contains(key))  {
             int v = (Integer) cache.get(key);
             v +=1;
             cache.put(key, v);
-
+            return v;
 
         }
         else {
             cache.put(key, 1);
+            return 1;
         }
 
 
+    }
+    @Override
+    public double getCostPerApiCall() {
+        return COST_PER_API_CALL;
     }
 
     @Override

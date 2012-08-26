@@ -16,6 +16,8 @@ package com.nimbits.server.orm;
 import com.nimbits.client.enums.AuthLevel;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.accesskey.AccessKey;
+import com.nimbits.client.model.billing.Billing;
+import com.nimbits.client.model.billing.BillingFactory;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
@@ -24,6 +26,7 @@ import com.nimbits.client.model.user.User;
 import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -50,6 +53,10 @@ public class UserEntity extends EntityStore implements User {
     @Persistent
     private String twitterTokenSecret;
 
+    @Persistent
+    BillingEntity billing;
+
+
     @NotPersistent
     private boolean loggedIn = false;
 
@@ -61,6 +68,8 @@ public class UserEntity extends EntityStore implements User {
 
     @NotPersistent
     private boolean userAdmin;
+
+
 
 
     // A user that can only work with public data
@@ -169,11 +178,13 @@ public class UserEntity extends EntityStore implements User {
         this.facebookToken = u.getFacebookToken();
         this.twitterToken = u.getTwitterToken();
         this.twitterTokenSecret = u.getTwitterTokenSecret();
+        this.setBilling(u.getBilling());
+
     }
 
     @Override
     public void validate() throws NimbitsException {
-        super.validate();
+             super.validate();
 
     }
 
@@ -208,5 +219,18 @@ public class UserEntity extends EntityStore implements User {
     @Override
     public void setUserAdmin(final boolean userAdmin) {
         this.userAdmin = userAdmin;
+    }
+    @Override
+    public Billing getBilling() {
+        if (billing == null) {
+            return BillingFactory.emptyBilling(this);
+        }
+        else {
+            return BillingFactory.createBilling(this.billing);
+        }
+    }
+    @Override
+    public void setBilling(Billing billing) {
+        this.billing = new BillingEntity(this, billing);
     }
 }

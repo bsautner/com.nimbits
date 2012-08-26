@@ -53,6 +53,7 @@ import com.nimbits.client.service.user.UserServiceAsync;
 import com.nimbits.client.ui.helper.FeedbackHelper;
 import com.nimbits.client.ui.icons.Icons;
 import com.nimbits.client.ui.panels.FileUploadPanel;
+import com.nimbits.client.ui.panels.UserSettingPanel;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -85,6 +86,9 @@ public class MainMenuBar extends ToolBar {
         service = GWT.create(UserService.class);
 
         addFileMenu();
+        if (settings.containsKey(SettingType.billingEnabled)) {
+        addSettingsMenu();
+        }
         addNavigateMenu();
         addActionMenu();
         addOptionsMenu();
@@ -124,6 +128,17 @@ public class MainMenuBar extends ToolBar {
         fileButton.setMenu(fileMenu);
         add(fileButton);
     }
+
+    private void addSettingsMenu() {
+        Button button = new Button("Settings");
+        Menu menu = new Menu();
+        menu.add(billingSettings());
+
+        button.setMenu(menu);
+        add(button);
+    }
+
+
     private void addNavigateMenu() {
         Button button = new Button("Navigate");
         Menu menu = new Menu();
@@ -268,7 +283,17 @@ public class MainMenuBar extends ToolBar {
 
 
     }
+    private MenuItem billingSettings() {
+        MenuItem item = new MenuItem("Billing and Quotas");
 
+        item.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.edit()));
+
+        item.addListener(Events.OnClick, new EditUserBaseEventListener());
+
+        return item;
+
+
+    }
 
 
     private Button pendingConnectionsButton() throws NimbitsException {
@@ -502,7 +527,23 @@ public class MainMenuBar extends ToolBar {
             box.addCallback(createNewFolderListener);
         }
     }
+    private class EditUserBaseEventListener implements Listener<BaseEvent> {
+        EditUserBaseEventListener() {
+        }
 
+        @Override
+        public void handleEvent(BaseEvent be) {
+            final Window w = new Window();
+            w.setWidth(450);
+            w.setHeading("Billing Settings");
+            UserSettingPanel p = new UserSettingPanel(user, settings);
+
+            //p.addFileAddedListeners(new FileUploadListener(w));
+
+            w.add(p);
+            w.show();
+        }
+    }
     private class ApproveConnectionMessageBoxEventListener implements Listener<MessageBoxEvent> {
         private final ConnectionRequest r;
         private final Menu scrollMenu;

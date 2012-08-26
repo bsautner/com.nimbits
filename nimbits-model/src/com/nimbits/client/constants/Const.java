@@ -24,7 +24,6 @@ public class Const {
     public static final String TRUE = "1";
     public static final String FALSE = "0";
     public static final String EMPTY = "";
-    public static final int MAX_DAILY_QUOTA = 1440;
 
     public static final String CONTENT_TYPE_JSON = "application/json";
     public static final String CONST_SERVER_NAME = "Nimbits Server";

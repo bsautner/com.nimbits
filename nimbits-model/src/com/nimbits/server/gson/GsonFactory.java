@@ -6,11 +6,13 @@ import com.google.gson.reflect.TypeToken;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.accesskey.AccessKeyModel;
+import com.nimbits.client.model.billing.Billing;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
+import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueModel;
@@ -57,6 +59,10 @@ public class GsonFactory {
                 .registerTypeAdapter(Entity.class, new EntityDeserializer())
                 .registerTypeAdapter(Calculation.class, new CalculationSerializer())
                 .registerTypeAdapter(Calculation.class, new CalculationDeserializer())
+                .registerTypeAdapter(Billing.class, new BillingSerializer())
+                .registerTypeAdapter(Billing.class, new BillingDeserializer())
+                .registerTypeAdapter(User.class, new UserSerializer())
+                .registerTypeAdapter(User.class, new UserDeserializer())
                         // .registerTypeAdapter(Date.class, new DateDeserializer())
                         //  .registerTypeAdapter(Date.class, new DateSerializer())
                 .create();

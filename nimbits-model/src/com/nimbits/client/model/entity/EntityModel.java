@@ -346,4 +346,6 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
                 ", name='" + name + '\'' +
                 '}';
     }
+
+
 }

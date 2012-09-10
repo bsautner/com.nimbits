@@ -15,6 +15,7 @@ package com.nimbits.server.process.task;
 
 import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
@@ -92,7 +93,7 @@ public class PointMaintTask extends HttpServlet {
                     dates.add(store.getTimestamp().getTime());
                 }
             }
-            SystemServiceFactory.getInstance().updateSystemPoint("Fragmented Dates Merges By Point Maint", dupDates.size(), false);
+            SystemServiceFactory.getInstance().updateSystemPoint("Fragmented Dates Merges By Point Maint", dupDates.size(), false, PointType.backend);
             for (Long l : dupDates) {
                ValueTransactionFactory.getDaoInstance(e).consolidateDate(new Date(l));
 

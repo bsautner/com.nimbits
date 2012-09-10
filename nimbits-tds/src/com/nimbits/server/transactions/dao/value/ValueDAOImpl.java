@@ -53,6 +53,7 @@ import java.util.logging.Logger;
 @SuppressWarnings("unchecked")
 public class ValueDAOImpl implements ValueTransactions {
     private static final int INT = 1024;
+    public static final int MAX_VALUES = 1;
     private final Entity entity;
     private final Logger log = Logger.getLogger(ValueDAOImpl.class.getName());
     public ValueDAOImpl(final Entity aPoint) {
@@ -76,10 +77,10 @@ public class ValueDAOImpl implements ValueTransactions {
     }
 
     @Override
-    public Value getRecordedValuePrecedingTimestamp(final Date timestamp) throws NimbitsException {
+    public List<Value> getRecordedValuePrecedingTimestamp(final Date timestamp) throws NimbitsException {
 
-        final List<Value> values =  getTopDataSeries(1, timestamp);
-        return values.isEmpty() ? null : values.get(0);
+        return getTopDataSeries(MAX_VALUES, timestamp);
+
 
     }
 

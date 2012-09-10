@@ -14,7 +14,6 @@
 package com.nimbits.server.transactions.memcache.entity;
 
 import com.google.appengine.api.blobstore.BlobKey;
-import com.google.appengine.api.memcache.InvalidValueException;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.nimbits.client.enums.EntityType;
@@ -115,10 +114,7 @@ public class EntityCacheImpl implements EntityTransactions, EntityCache {
         if (cache.contains(user.getKey())) {
             cache.delete(user.getKey());
         }
-        if (user.getBilling().getLastSaved().getTime() - new Date().getTime() > MemCacheKey.getHoldTime() ) {
-            user.getBilling().setLastSaved(new Date());
-            addUpdateEntity(user, false);
-        }
+
         else {
 
             cache.put(user.getKey(), user);

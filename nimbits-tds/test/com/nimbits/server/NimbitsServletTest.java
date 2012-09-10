@@ -15,6 +15,7 @@ package com.nimbits.server;
 
 import com.google.appengine.tools.development.testing.*;
 import com.nimbits.client.enums.*;
+import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.accesskey.AccessKeyFactory;
@@ -28,9 +29,11 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.datapoints.PointService;
+import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.settings.SettingsService;
 import com.nimbits.server.api.impl.ValueServletImpl;
 import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.process.cron.SystemMaint;
 import com.nimbits.server.settings.SettingTransactions;
 import com.nimbits.server.settings.SettingTransactionsFactory;
 import com.nimbits.server.settings.SettingsServiceFactory;
@@ -47,7 +50,7 @@ import org.junit.Before;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import javax.persistence.EntityTransaction;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -62,7 +65,7 @@ import static org.junit.Assert.assertNotNull;
  * Time: 9:27 AM
  */
 public class NimbitsServletTest {
-    public static final String email = "bsautner@nimbits.com";
+    public static final String email = "nobody@example.com";
     public final LocalServiceTestHelper helper = new LocalServiceTestHelper(
             new LocalDatastoreServiceTestConfig(),
             new LocalTaskQueueTestConfig(),
@@ -89,8 +92,8 @@ public class NimbitsServletTest {
     public UserTransactions userTransactionsDao;
     public SettingTransactions settingsDAO;
 
+    public EntityService entityService;
     public EntityTransactions entityTransactions;
-
 
     public Point point;
     public Point pointChild;
@@ -107,6 +110,17 @@ public class NimbitsServletTest {
 
 
         helper.setUp();
+
+        SystemMaint systemMaint = new SystemMaint();
+
+        try {
+            systemMaint.doGet(req, resp);
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+
+
         SettingsServiceFactory.getInstance().addSetting(SettingType.admin, email);
         SettingsServiceFactory.getInstance().addSetting(SettingType.serverIsDiscoverable,true);
         pointService = PointServiceFactory.getInstance();
@@ -126,8 +140,8 @@ public class NimbitsServletTest {
         List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(emailAddress.getValue(), EntityType.user);
         assertFalse(result.isEmpty());
         user = (User) result.get(0);
+        entityService = EntityServiceFactory.getInstance();
         entityTransactions = EntityTransactionFactory.getInstance(user);
-
         Entity accessKey = EntityModelFactory.createEntity(pointName, "", EntityType.accessKey, ProtectionLevel.onlyMe, user.getKey(), user.getKey());
         AccessKey ak = AccessKeyFactory.createAccessKey(accessKey, "AUTH", user.getKey(), AuthLevel.admin);
         EntityServiceFactory.getInstance().addUpdateEntity(ak);
@@ -144,13 +158,41 @@ public class NimbitsServletTest {
         group = (Category) EntityServiceFactory.getInstance().addUpdateEntity(c);
 
         pointEntity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone,  group.getKey(), user.getKey(), UUID.randomUUID().toString());
-        Point newPoint = PointModelFactory.createPointModel(pointEntity);
+        Point newPoint   =  PointModelFactory.createPointModel(
+                pointEntity,
+                0.0,
+                90,
+                "",
+                0.0,
+                false,
+                false,
+                false,
+                0,
+                false,
+                FilterType.fixedHysteresis,
+                0.1,
+                false,
+                PointType.basic , 0, false, 0.0);
         newPoint.setExpire(5);
         point = (Point) EntityServiceFactory.getInstance().addUpdateEntity(user, newPoint);
         // point = pointService.addPoint(user, pointEntity);
         valueDao = new ValueDAOImpl(point);
         pointChildEntity = EntityModelFactory.createEntity(pointChildName, "", EntityType.point, ProtectionLevel.everyone, point.getKey(), user.getKey(), UUID.randomUUID().toString());
-        Point newChild = PointModelFactory.createPointModel(pointChildEntity);
+        Point newChild =  PointModelFactory.createPointModel(
+                pointChildEntity,
+                0.0,
+                90,
+                "",
+                0.0,
+                false,
+                false,
+                false,
+                0,
+                false,
+                FilterType.fixedHysteresis,
+                0.1,
+                false,
+                PointType.basic, 0, false, 0.0 );
         pointChild = (Point) EntityServiceFactory.getInstance().addUpdateEntity(user, newChild);
         // pointChild =  pointService.addPoint(user, pointChildEntity);
         assertNotNull(pointChild);
@@ -171,7 +213,14 @@ public class NimbitsServletTest {
 
     @After
     public void tearDown() {
+      if (helper != null) {
+          try {
         helper.tearDown();
+          }
+          catch (Exception ignored) {
+
+          }
+      }
 
     }
 }

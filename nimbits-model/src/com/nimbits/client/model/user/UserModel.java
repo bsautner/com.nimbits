@@ -58,7 +58,7 @@ public class UserModel extends EntityModel implements Serializable, User {
 
     private boolean userAdmin;
 
-    private Billing billing;
+    private boolean billingEnabled;
 
 
     /**
@@ -81,7 +81,7 @@ public class UserModel extends EntityModel implements Serializable, User {
             this.twitterToken = u.getTwitterToken();
             this.twitterTokenSecret = u.getTwitterTokenSecret();
             this.facebookID = u.getFacebookID();
-            this.billing = u.getBilling();
+            this.billingEnabled = u.isBillingEnabled();
 
         }
         else {
@@ -93,7 +93,7 @@ public class UserModel extends EntityModel implements Serializable, User {
         super(entity);
         this.lastLoggedIn =  new Date();
         this.emailAddress = entity.getName().getValue();
-        this.billing = BillingFactory.emptyBilling(this);
+        this.billingEnabled = false;
     }
 
 
@@ -210,18 +210,15 @@ public class UserModel extends EntityModel implements Serializable, User {
     }
 
     @Override
-    public Billing getBilling() {
-        return this.billing;
-    }
-
-    @Override
-    public void setBilling(Billing billing) {
-       this.billing = billing;
-    }
-
-    @Override
     public EmailAddress getEmail() throws NimbitsException {
         return CommonFactoryLocator.getInstance().createEmailAddress(emailAddress);
     }
-
+    @Override
+    public boolean isBillingEnabled() {
+        return billingEnabled;
+    }
+    @Override
+    public void setBillingEnabled(boolean billingEnabled) {
+        this.billingEnabled = billingEnabled;
+    }
 }

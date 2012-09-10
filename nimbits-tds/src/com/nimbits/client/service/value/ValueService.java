@@ -47,7 +47,7 @@ public interface ValueService extends RemoteService {
 
     Value recordValue(final Entity entity, final Value value) throws NimbitsException;
 
-    Value getPrevValue(final Entity p, final Date date) throws NimbitsException;
+    List<Value> getPrevValue(final Entity p, final Date date) throws NimbitsException;
 
     Date getLastRecordedDate(final List<Point> points) throws NimbitsException;
 

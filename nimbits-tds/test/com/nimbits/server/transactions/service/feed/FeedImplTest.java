@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2012 Nimbits Inc.
+ *
+ *    http://www.nimbits.com
+ *
+ *
+ * Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.gnu.org/licenses/gpl.html
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+ */
+
 package com.nimbits.server.transactions.service.feed;
 
 import com.nimbits.client.enums.FeedType;
@@ -29,9 +42,9 @@ public class FeedImplTest extends NimbitsServletTest {
         assertTrue(l.isEmpty());
     }
 
-    @Test
+    @Test(expected = NimbitsException.class)
     public void testCreateFeedPoint() throws NimbitsException {
-
+        //fails because feeds are created with the user now
         Point p1 =i.createFeedPoint(user);
         assertNotNull(p1);
         assertNotNull(p1.getKey());
@@ -52,12 +65,13 @@ public class FeedImplTest extends NimbitsServletTest {
 
     @Test
     public void getFeedPoint() throws NimbitsException {
-        Point p =  i.getFeedPoint(user);
+        List<Point> p =  i.getFeedPoint(user);
         assertNotNull(p);
+        assertFalse(p.isEmpty());
 
 
-        Point p3 =  i.getFeedPoint(user);
-        assertEquals(p.getKey(), p3.getKey()); //prove same feed
+        List<Point> p3 =  i.getFeedPoint(user);
+        assertEquals(p.get(0).getKey(), p3.get(0).getKey()); //prove same feed
 
     }
 }

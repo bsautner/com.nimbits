@@ -18,6 +18,11 @@
 		  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
          version="2.5">
 
+    <context-param>
+        <param-name>billingEnabled</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
 
     <servlet>
         <servlet-name>OpenIdServlet</servlet-name>
@@ -155,6 +160,7 @@
     <servlet>
         <servlet-name>userService</servlet-name>
         <servlet-class>com.nimbits.server.transactions.service.user.UserServiceImpl</servlet-class>
+
     </servlet>
 
     <servlet>
@@ -234,6 +240,7 @@
     <servlet>
         <servlet-name>settingsService</servlet-name>
         <servlet-class>com.nimbits.server.settings.SettingServiceImpl</servlet-class>
+
     </servlet>
     <servlet-mapping>
         <servlet-name>settingsService</servlet-name>

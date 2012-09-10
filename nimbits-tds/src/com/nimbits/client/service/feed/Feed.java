@@ -40,4 +40,6 @@ public interface Feed extends RemoteService{
     void postToFeed(final User user, final String html, final FeedType type) throws NimbitsException;
 
     void postToFeed(final User user, final Throwable ex);
+
+    Point createFeedPoint(User user) throws NimbitsException;
 }

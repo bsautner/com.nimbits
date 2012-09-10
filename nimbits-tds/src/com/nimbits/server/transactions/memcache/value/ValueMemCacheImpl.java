@@ -123,53 +123,62 @@ public class ValueMemCacheImpl implements ValueTransactions {
 
 
     @Override
-    public Value getRecordedValuePrecedingTimestamp(final Date timestamp) throws NimbitsException {
-        Value retObj;
+    public List<Value> getRecordedValuePrecedingTimestamp(final Date timestamp) throws NimbitsException {
+        final List<Value> result = new ArrayList<Value>(1);
 
         try {
             if (buffer.contains(currentValueCacheKey)) {
                 final Value value = (Value) buffer.get(currentValueCacheKey);
                 if (value == null) {
                     buffer.delete(currentValueCacheKey);
-                    retObj = ValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
-                    if (retObj != null) {
-                        buffer.put(currentValueCacheKey, retObj);
+                    List<Value> sample = ValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
+                    if (! sample.isEmpty()) {
+                        buffer.put(currentValueCacheKey, sample.get(0));
+                        result.addAll(sample);
                     }
+
                 } else {
-                    retObj = timestamp.getTime() >= value.getTimestamp().getTime() ? value : ValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
+                     if (timestamp.getTime() >= value.getTimestamp().getTime()) {
+                         result.add(value);
+                     }
+                    else {
+                         List<Value> values = ValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
+                         result.addAll(values);
+                     }
                 }
             } else {
                 LogHelper.log(this.getClass(), "Accessing data store for current value");
 
-                retObj = ValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
+                List<Value> sample = ValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
 
-                if (retObj != null) {
-                    LogHelper.log(this.getClass(), "Found value in store" + retObj.getValueWithNote());
-                    buffer.put(currentValueCacheKey, retObj);
+                if (! sample.isEmpty()) {
+
+                    buffer.put(currentValueCacheKey, sample.get(0));
+                    result.addAll(sample);
                 }
-                else {
-                    LogHelper.log(this.getClass(), "Nothing found in store");
-                }
+
 
 
             }
         } catch (InvalidValueException e) {
             buffer.delete(currentValueCacheKey);
-            retObj = ValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
-            if (retObj != null) {
-                buffer.put(currentValueCacheKey, retObj);
+            List<Value> sample = ValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
+            if (! sample.isEmpty()) {
+                buffer.put(currentValueCacheKey, sample.get(0));
+                result.addAll(sample);
             }
-        } catch (ClassCastException e) { //old cache data causing a provblem when upgrading.
+        } catch (ClassCastException e) { //old cache data causing a problem when upgrading.
             buffer.delete(currentValueCacheKey);
-            retObj = ValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
-            if (retObj != null) {
-                buffer.put(currentValueCacheKey, retObj);
+            List<Value> sample = ValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
+            if (! sample.isEmpty()) {
+                buffer.put(currentValueCacheKey, sample.get(0));
+                result.addAll(sample);
             }
 
         }
 
 
-        return retObj;
+        return result;
     }
 
     @Override

@@ -22,20 +22,24 @@ import com.nimbits.client.service.settings.SettingsService;
 import com.nimbits.server.api.openid.UserInfo;
 import com.nimbits.shared.Utils;
 
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import java.util.Map;
 
 public class SettingServiceImpl extends RemoteServiceServlet implements
         SettingsService {
 
+   // private boolean billingEnabled;
+    private static final long serialVersionUID = 2L;
 
-    private static final long serialVersionUID = 1L;
 
 
 
     @Override
     public Map<SettingType, String> getSettings() throws NimbitsException {
-        return  SettingTransactionsFactory.getInstance().getSettings();
-
+        return SettingTransactionsFactory.getInstance().getSettings();
     }
 
     @Override
@@ -60,7 +64,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public boolean getBooleanSetting(final SettingType paramName)   {
-        String s = null;
+        String s;
         try {
             s = SettingTransactionsFactory.getInstance().getSetting(paramName);
 
@@ -72,5 +76,6 @@ public class SettingServiceImpl extends RemoteServiceServlet implements
             return false;
         }
     }
+
 
 }

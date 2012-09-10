@@ -751,12 +751,8 @@ public class EntityDaoImpl implements  EntityTransactions {
                 break;
             case point:
 
-                try {
-                   commit = new PointEntity((Point)entity);
-                } catch (ClassCastException e) {
-                   Point c = PointModelFactory.createPointModel(entity);
-                   commit = new PointEntity(c);
-                }
+                commit = new PointEntity((Point)entity);
+
                 break;
             case category:
                 commit = new CategoryEntity(entity);

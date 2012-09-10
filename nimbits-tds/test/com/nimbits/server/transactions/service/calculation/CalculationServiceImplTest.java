@@ -14,7 +14,9 @@
 package com.nimbits.server.transactions.service.calculation;
 
 import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.calculation.CalculationModelFactory;
@@ -222,7 +224,21 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
                 user.getKey(),
                 user.getKey(),
                 UUID.randomUUID().toString());
-        Point p =  PointModelFactory.createPointModel(e);
+        Point p =    PointModelFactory.createPointModel(
+                e,
+                0.0,
+                90,
+                "",
+                0.0,
+                false,
+                false,
+                false,
+                0,
+                false,
+                FilterType.fixedHysteresis,
+                0.1,
+                false,
+                PointType.basic, 0, false, 0.0 );
         return (Point) EntityServiceFactory.getInstance().addUpdateEntity(user, p);
     }
 

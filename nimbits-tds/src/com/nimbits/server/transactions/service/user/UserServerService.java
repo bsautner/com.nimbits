@@ -20,6 +20,7 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 
 /**
  * Created by Benjamin Sautner
@@ -39,4 +40,5 @@ public interface UserServerService {
     AccessKey authenticatedKey(final Entity user) throws NimbitsException;
 
 
+    void fundAccount(User user, BigDecimal amount) throws NimbitsException;
 }

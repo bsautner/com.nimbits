@@ -15,6 +15,7 @@ package com.nimbits.client.model.point;
 
 
 import com.nimbits.client.enums.FilterType;
+import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.value.Value;
@@ -30,11 +31,15 @@ public class PointModel extends EntityModel implements Serializable, Point {
 
     private double highAlarm = 0.0;
 
+    private double lowAlarm = 0.0;
+
+    private double deltaAlarm = 0.0;
+
+    private int deltaSeconds = 0;
+
     private int expire = DEFAULT_EXPIRE;
 
     private String unit;
-
-    private double lowAlarm = 0.0;
 
     private boolean highAlarmOn;
 
@@ -42,7 +47,9 @@ public class PointModel extends EntityModel implements Serializable, Point {
 
     private boolean idleAlarmOn;
 
-    private Integer idleSeconds = 0;
+    private boolean deltaAlarmOn;
+
+    private int idleSeconds = 0;
 
     //reset on any data write
     private boolean idleAlarmSent;
@@ -53,6 +60,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
 
     private boolean inferLocation;
 
+    private int pointType;
 
 
     public PointModel(final Entity entity,
@@ -67,7 +75,11 @@ public class PointModel extends EntityModel implements Serializable, Point {
                       final boolean idleAlarmSent,
                       final FilterType filterType,
                       final double filterValue,
-                      final boolean inferLocation) throws NimbitsException {
+                      final boolean inferLocation,
+                      final PointType pointType,
+                      final double deltaAlarm,
+                      final boolean deltaAlarmOn,
+                      final int deltaSeconds) throws NimbitsException {
         super(entity);
         this.highAlarm = highAlarm;
         this.expire = expire;
@@ -81,6 +93,10 @@ public class PointModel extends EntityModel implements Serializable, Point {
         this.filterType = filterType.getCode();
         this.filterValue = filterValue;
         this.inferLocation = inferLocation;
+        this.pointType = pointType.getCode();
+        this.deltaAlarm = deltaAlarm;
+        this.deltaAlarmOn = deltaAlarmOn;
+        this.deltaSeconds = deltaSeconds;
     }
 
     // Constructors
@@ -100,6 +116,10 @@ public class PointModel extends EntityModel implements Serializable, Point {
         this.filterType = point.getFilterType().getCode();
         this.filterValue = point.getFilterValue();
         this.inferLocation = point.inferLocation();
+        this.pointType = point.getPointType().getCode();
+        this.deltaSeconds = point.getDeltaSeconds();
+        this.deltaAlarm = point.getDeltaAlarm();
+        this.deltaAlarmOn = point.isDeltaAlarmOn();
     }
 
     protected PointModel() {
@@ -257,5 +277,39 @@ public class PointModel extends EntityModel implements Serializable, Point {
     @Override
     public void setInferLocation(boolean inferLocation) {
         this.inferLocation = inferLocation;
+    }
+
+    @Override
+    public PointType getPointType() {
+        return PointType.get(this.pointType);
+    }
+
+    @Override
+    public void setPointType(PointType type) {
+       this.pointType = type.getCode();
+    }
+    @Override
+    public double getDeltaAlarm() {
+        return deltaAlarm;
+    }
+    @Override
+    public void setDeltaAlarm(double deltaAlarm) {
+        this.deltaAlarm = deltaAlarm;
+    }
+    @Override
+    public boolean isDeltaAlarmOn() {
+        return deltaAlarmOn;
+    }
+    @Override
+    public void setDeltaAlarmOn(boolean deltaAlarmOn) {
+        this.deltaAlarmOn = deltaAlarmOn;
+    }
+    @Override
+    public int getDeltaSeconds() {
+        return deltaSeconds;
+    }
+    @Override
+    public void setDeltaSeconds(int deltaSeconds) {
+        this.deltaSeconds = deltaSeconds;
     }
 }

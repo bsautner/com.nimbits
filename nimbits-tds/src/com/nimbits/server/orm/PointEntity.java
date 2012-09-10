@@ -14,6 +14,7 @@
 package com.nimbits.server.orm;
 
 import com.nimbits.client.enums.FilterType;
+import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
@@ -70,6 +71,19 @@ public class PointEntity extends EntityStore implements Point {
     @Persistent
     private Boolean inferLocation;
 
+    @Persistent
+    private Integer pointType;
+
+    @Persistent
+    private Integer deltaSeconds;
+
+    @Persistent
+    private Boolean deltaAlarmOn;
+
+    @Persistent
+    private Double deltaAlarm;
+
+
 
     @Override
     public boolean isIdleAlarmOn() {
@@ -102,6 +116,7 @@ public class PointEntity extends EntityStore implements Point {
     }
 
     // Constructors
+    @SuppressWarnings("unused")
     protected PointEntity() {
     }
 
@@ -126,6 +141,10 @@ public class PointEntity extends EntityStore implements Point {
         this.filterType = point.getFilterType().getCode();
         this.filterValue = point.getFilterValue();
         this.inferLocation = point.inferLocation();
+        this.pointType = point.getPointType().getCode();
+        this.deltaAlarm = point.getDeltaAlarm();
+        this.deltaSeconds = point.getDeltaSeconds();
+        this.deltaAlarmOn = point.isDeltaAlarmOn();
 
     }
 
@@ -257,6 +276,46 @@ public class PointEntity extends EntityStore implements Point {
       this.inferLocation = inferLocation;
     }
 
+    @Override
+    public PointType getPointType() {
+        return this.pointType == null ? PointType.basic : PointType.get(this.pointType);
+    }
+
+    @Override
+    public void setPointType(PointType type) {
+       this.pointType = type.getCode();
+    }
+
+    @Override
+    public double getDeltaAlarm() {
+        return this.deltaAlarm == null ? 0.0 : deltaAlarm;
+    }
+
+    @Override
+    public void setDeltaAlarm(double deltaAlarm) {
+       this.deltaAlarm = deltaAlarm;
+    }
+
+    @Override
+    public boolean isDeltaAlarmOn() {
+        return deltaAlarmOn ==  null ? false : deltaAlarmOn;
+    }
+
+    @Override
+    public void setDeltaAlarmOn(boolean deltaAlarmOn) {
+       this.deltaAlarmOn = deltaAlarmOn;
+    }
+
+    @Override
+    public int getDeltaSeconds() {
+        return this.deltaSeconds == null ? 0 : this.deltaSeconds;
+    }
+
+    @Override
+    public void setDeltaSeconds(int deltaSeconds) {
+       this.deltaSeconds = deltaSeconds;
+    }
+
 
     @Override
     public void update(final Entity update) throws NimbitsException {
@@ -274,7 +333,10 @@ public class PointEntity extends EntityStore implements Point {
         this.filterType = p.getFilterType().getCode();
         this.filterValue = p.getFilterValue();
         this.inferLocation = p.inferLocation();
-
+        this.pointType = p.getPointType().getCode();
+        this.deltaSeconds = p.getDeltaSeconds();
+        this.deltaAlarm = p.getDeltaAlarm();
+        this.deltaAlarmOn = p.isDeltaAlarmOn();
     }
 
     @Override
@@ -287,6 +349,11 @@ public class PointEntity extends EntityStore implements Point {
         if (this.expire < 0) {
             throw new NimbitsException("Expiration date for data must be a positive integer");
         }
+
+        if (this.deltaSeconds < 0 && this.deltaAlarmOn) {
+            throw new NimbitsException("delta alert time must be > 0");
+        }
+
 
     }
 }

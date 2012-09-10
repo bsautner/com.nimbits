@@ -34,7 +34,7 @@ public interface ValueServiceAsync {
 
 
 
-    void getPrevValue(final Entity p, final Date date, final AsyncCallback<Value> callback);
+    void getPrevValue(final Entity p, final Date date, final AsyncCallback<List<Value>> callback);
 
     void recordValue(final User u, final EntityName pointName, final Value value, final AsyncCallback<Value> callback);
 

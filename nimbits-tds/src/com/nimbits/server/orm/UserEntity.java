@@ -54,8 +54,7 @@ public class UserEntity extends EntityStore implements User {
     private String twitterTokenSecret;
 
     @Persistent
-    BillingEntity billing;
-
+    Boolean billingEnabled;
 
     @NotPersistent
     private boolean loggedIn = false;
@@ -68,8 +67,6 @@ public class UserEntity extends EntityStore implements User {
 
     @NotPersistent
     private boolean userAdmin;
-
-
 
 
     // A user that can only work with public data
@@ -178,7 +175,7 @@ public class UserEntity extends EntityStore implements User {
         this.facebookToken = u.getFacebookToken();
         this.twitterToken = u.getTwitterToken();
         this.twitterTokenSecret = u.getTwitterTokenSecret();
-        this.setBilling(u.getBilling());
+        this.billingEnabled = u.isBillingEnabled();
 
     }
 
@@ -220,17 +217,15 @@ public class UserEntity extends EntityStore implements User {
     public void setUserAdmin(final boolean userAdmin) {
         this.userAdmin = userAdmin;
     }
+
     @Override
-    public Billing getBilling() {
-        if (billing == null) {
-            return BillingFactory.emptyBilling(this);
-        }
-        else {
-            return BillingFactory.createBilling(this.billing);
-        }
+    public boolean isBillingEnabled() {
+        return this.billingEnabled == null ? false : this.billingEnabled;
     }
+
     @Override
-    public void setBilling(Billing billing) {
-        this.billing = new BillingEntity(this, billing);
+    public void setBillingEnabled(boolean billingEnabled) {
+       this.billingEnabled = billingEnabled;
     }
+
 }

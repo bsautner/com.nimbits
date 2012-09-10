@@ -1,9 +1,7 @@
 package com.nimbits.server.api.integration;
 
-import com.nimbits.client.enums.Action;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.enums.*;
+import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
@@ -59,7 +57,21 @@ public class EntityIntegrationTest {
 
         Entity e = EntityModelFactory.createEntity(name, "local unit test", EntityType.point, ProtectionLevel.everyone,
                 "test@example.com", "test@example.com", UUID.randomUUID().toString());
-        Point p = PointModelFactory.createPointModel(e);
+        Point p =  PointModelFactory.createPointModel(
+                e,
+                0.0,
+                90,
+                "",
+                0.0,
+                false,
+                false,
+                false,
+                0,
+                false,
+                FilterType.fixedHysteresis,
+                0.1,
+                false,
+                PointType.basic );
         p.setDescription("whole point unit test");
 
         String entity = GsonFactory.getInstance().toJson(p);

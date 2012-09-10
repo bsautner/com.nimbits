@@ -130,7 +130,7 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
 
 
     @Override
-    public Value getPrevValue(final Entity point,
+    public List<Value> getPrevValue(final Entity point,
                               final Date timestamp) throws NimbitsException {
 
 
@@ -184,11 +184,11 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
 
 
         if (p != null) {
-            List<Value> retObj = new ArrayList<Value>(1);
-            final Value v = getPrevValue(p, new Date());
-            if (v != null) {
-                final AlertType alertType = getAlertType((Point) p, v);
-                retObj.add(ValueFactory.createValueModel(v, alertType));
+            final List<Value> retObj = new ArrayList<Value>(1);
+            final List<Value> v = getPrevValue(p, new Date());
+            if (! v.isEmpty()) {
+                final AlertType alertType = getAlertType((Point) p, v.get(0));
+                retObj.add(ValueFactory.createValueModel(v.get(0), alertType));
 
             }
             return retObj;
@@ -247,12 +247,12 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
     protected boolean ignoreByFilter(final Point point, final Value v) throws NimbitsException {
 
 
-        final Value pv = getPrevValue(point, v.getTimestamp());
-        if (pv == null) {
+        final List<Value> sample = getPrevValue(point, v.getTimestamp());
+        if (sample.isEmpty()) {
             return false;
         }
         else {
-
+            Value pv = sample.get(0);
             switch (point.getFilterType()) {
 
                 case fixedHysteresis:

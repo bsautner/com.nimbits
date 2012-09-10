@@ -32,6 +32,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
@@ -61,17 +62,19 @@ public class PointPanel extends LayoutContainer {
     private final SeparatorToolItem separatorToolItem = new SeparatorToolItem();
     private final TextArea description = new TextArea();
     private final TextField<String> unit = new TextField<String>();
-    private final Entity entity;
+    private final Point entity;
     private final FormData formdata;
+    private boolean readOnlyForm;
 
     private ComboBox<TypeOption> hysteresisType;
 
 
     public PointPanel(final Entity entity)   {
-         this.entity = entity;
-         protectionLevelOptions = new ProtectionLevelOptions(entity);
-         formdata = new FormData("-20");
-         loadForm();
+        this.entity = (Point) entity;
+        readOnlyForm = this.entity.isReadOnly() || ! this.entity.getPointType().equals(PointType.basic);
+        protectionLevelOptions = new ProtectionLevelOptions(entity);
+        formdata = new FormData("-20");
+        loadForm();
 
 
     }
@@ -91,6 +94,7 @@ public class PointPanel extends LayoutContainer {
         store.add(ops);
 
         combo.setFieldLabel("Filter type");
+        combo.setReadOnly(readOnlyForm);
         combo.setDisplayField(Parameters.name.getText());
         combo.setValueField(Parameters.value.getText());
         combo.setTriggerAction(ComboBox.TriggerAction.ALL);
@@ -107,47 +111,47 @@ public class PointPanel extends LayoutContainer {
 
 
 
-              //  setSize("475", "475");
-                setLayout(new FillLayout(Orientation.VERTICAL));
-                //setLayout(new FitLayout());
+        //  setSize("475", "475");
+        setLayout(new FillLayout(Orientation.VERTICAL));
+        //setLayout(new FitLayout());
 
-                final com.google.gwt.user.client.ui.VerticalPanel verticalPanel = new com.google.gwt.user.client.ui.VerticalPanel();
+        final com.google.gwt.user.client.ui.VerticalPanel verticalPanel = new com.google.gwt.user.client.ui.VerticalPanel();
 
-                add(verticalPanel);
+        add(verticalPanel);
 
-                verticalPanel.setBorderWidth(0);
-                final ToolBar mainToolBar = mainToolBar();
-                verticalPanel.add(mainToolBar);
+        verticalPanel.setBorderWidth(0);
+        final ToolBar mainToolBar = mainToolBar();
+        verticalPanel.add(mainToolBar);
 
-                final TabPanel tabPanel = new TabPanel();
+        final TabPanel tabPanel = new TabPanel();
 
-                final TabItem tabAlerts = new TabItem("Alerts");
+        final TabItem tabAlerts = new TabItem("Alerts");
 
-                final TabItem tabGeneral = new TabItem("General");
-               // tabGeneral.setHeight("425");
-                tabPanel.setBodyBorder(false);
+        final TabItem tabGeneral = new TabItem("General");
+        // tabGeneral.setHeight("425");
+        tabPanel.setBodyBorder(false);
 
-                verticalPanel.add(tabPanel);
-                tabPanel.setSize("600", "600");
+        verticalPanel.add(tabPanel);
+        tabPanel.setSize("600", "600");
 
-                tabPanel.add(tabGeneral);
+        tabPanel.add(tabGeneral);
 
-                tabPanel.add(tabAlerts);
+        tabPanel.add(tabAlerts);
 
 
-                tabAlerts.add(alertForm());
-                tabGeneral.add(generalForm());
+        tabAlerts.add(alertForm());
+        tabGeneral.add(generalForm());
 
-                add(verticalPanel);
-                doLayout();
+        add(verticalPanel);
+        doLayout();
 
 
     }
 
     private ToolBar mainToolBar() {
         final ToolBar toolBar = new ToolBar();
-        toolBar.setHeight("");
-         final Button buttonSave = saveButtonInit();
+        //toolBar.setHeight("");
+        final Button buttonSave = saveButtonInit();
 
 
 
@@ -164,15 +168,15 @@ public class PointPanel extends LayoutContainer {
         final Button buttonSave = new Button("Save");
         buttonSave.setEnabled(!entity.isReadOnly());
         buttonSave.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.SaveAll()));
+        buttonSave.setEnabled(! this.readOnlyForm);
 
+        buttonSave.addSelectionListener(new SelectionListener<ButtonEvent>() {
+            public void componentSelected(ButtonEvent ce) {
 
-            buttonSave.addSelectionListener(new SelectionListener<ButtonEvent>() {
-                public void componentSelected(ButtonEvent ce) {
+                savePoint();
 
-                    savePoint();
-
-                }
-            });
+            }
+        });
 
         return buttonSave;
     }
@@ -183,61 +187,62 @@ public class PointPanel extends LayoutContainer {
                 "Saving your data, please wait...", "Saving...");
         box.show();
 
+        if (! readOnlyForm) {
+            //General
+            final Point point = (Point)entity;
 
-        //General
-        final Point point = (Point)entity;
 
+            point.setDescription(description.getValue());
+            point.setProtectionLevel(protectionLevelOptions.getProtectionLevel());
 
-        point.setDescription(description.getValue());
-        point.setProtectionLevel(protectionLevelOptions.getProtectionLevel());
+            point.setFilterValue(compression.getValue().doubleValue());
+            point.setFilterType(hysteresisType.getValue().type);
+            point.setExpire(expires.getValue().intValue());
+            point.setUnit(unit.getValue());
 
-        point.setFilterValue(compression.getValue().doubleValue());
-        point.setFilterType(hysteresisType.getValue().type);
-        point.setExpire(expires.getValue().intValue());
-        point.setUnit(unit.getValue());
+            point.setInferLocation(this.inferLocationCheckbox.getValue());
+            //Alerts
 
-        point.setInferLocation(this.inferLocationCheckbox.getValue());
-        //Alerts
+            point.setHighAlarm(high.getValue().doubleValue());
+            point.setLowAlarm(low.getValue().doubleValue());
+            point.setHighAlarmOn(he.getValue());
+            point.setLowAlarmOn(le.getValue());
 
-        point.setHighAlarm(high.getValue().doubleValue());
-        point.setLowAlarm(low.getValue().doubleValue());
-        point.setHighAlarmOn(he.getValue());
-        point.setLowAlarmOn(le.getValue());
-
-        //idlealarm
-        point.setIdleAlarmOn(idleOn.getValue());
-        point.setIdleSeconds(idleMinutes.getValue().intValue() * 60);
-        point.setIdleAlarmSent(false);
+            //idlealarm
+            point.setIdleAlarmOn(idleOn.getValue());
+            point.setIdleSeconds(idleMinutes.getValue().intValue() * 60);
+            point.setIdleAlarmSent(false);
 //
 
-       // point.setSendAlertsAsJson(sendAlertAsJson.getValue());
+            // point.setSendAlertsAsJson(sendAlertAsJson.getValue());
 
 
 
-        final EntityServiceAsync service = GWT.create(EntityService.class);
-       // PointServiceAsync service = GWT.create(PointService.class);
-        service.addUpdateEntity(point, new AsyncCallback<Entity>() {
-            @Override
-            public void onFailure(final Throwable caught) {
-                box.close();
+            final EntityServiceAsync service = GWT.create(EntityService.class);
+            // PointServiceAsync service = GWT.create(PointService.class);
+            service.addUpdateEntity(point, new AsyncCallback<Entity>() {
+                @Override
+                public void onFailure(final Throwable caught) {
+                    box.close();
 
-                FeedbackHelper.showError(caught);
+                    FeedbackHelper.showError(caught);
 
 
-            }
-
-            @Override
-            public void onSuccess(final Entity result) {
-
-                try {
-                    notifyPointUpdatedListener();
-                    MessageBox.alert("Success", "Point Updated", null);
-                } catch (NimbitsException e) {
-                    FeedbackHelper.showError(e);
                 }
-                box.close();
-            }
-        });
+
+                @Override
+                public void onSuccess(final Entity result) {
+
+                    try {
+                        notifyPointUpdatedListener();
+                        MessageBox.alert("Success", "Point Updated", null);
+                    } catch (NimbitsException e) {
+                        FeedbackHelper.showError(e);
+                    }
+                    box.close();
+                }
+            });
+        }
     }
 
     private void notifyPointUpdatedListener() throws NimbitsException {
@@ -269,12 +274,14 @@ public class PointPanel extends LayoutContainer {
         high.setFieldLabel("High Value");
         high.setValue(point.getHighAlarm());
         high.setAllowBlank(false);
+        high.setReadOnly(this.readOnlyForm);
         simple.add(high, formdata);
 
 
         he.setBoxLabel("High alert enabled");
         he.setLabelSeparator("");
         he.setValue(point.isHighAlarmOn());
+        he.setReadOnly(this.readOnlyForm);
         // he.setFieldLabel("Enabled");
         simple.add(he, formdata);
 
@@ -282,21 +289,23 @@ public class PointPanel extends LayoutContainer {
         low.setFieldLabel("Low Value");
         low.setAllowBlank(false);
         low.setValue(point.getLowAlarm());
+        low.setReadOnly(this.readOnlyForm);
         simple.add(low, formdata);
 
 
         le.setBoxLabel("Low alert enabled");
         le.setLabelSeparator("");
         le.setValue(point.isLowAlarmOn());
+        le.setReadOnly(this.readOnlyForm);
         simple.add(le, formdata);
 
         idleOn.setBoxLabel("Idle alert enabled");
         idleOn.setLabelSeparator("");
-
+        idleOn.setReadOnly(this.readOnlyForm);
         idleOn.setValue(point.isIdleAlarmOn());
         idleMinutes.setFieldLabel("Idle Minutes");
         idleMinutes.setValue(point.getIdleSeconds() / 60);
-
+        idleMinutes.setReadOnly(this.readOnlyForm);
 
         simple.add(idleMinutes, formdata);
         simple.add(idleOn, formdata);
@@ -332,7 +341,7 @@ public class PointPanel extends LayoutContainer {
     private FormPanel generalForm( ) {
 
         final FormPanel simple = form();
-
+        simple.setReadOnly(this.readOnlyForm);
         final VerticalPanel verticalPanel = new VerticalPanel();
         verticalPanel.setSpacing(10);
         //verticalPanel.setHeight(80);
@@ -342,10 +351,13 @@ public class PointPanel extends LayoutContainer {
         tdVerticalPanel.setMargin(5);
         final Point point = (Point)entity;
         compression.setFieldLabel("Compression Filter");
+        compression.setReadOnly(this.readOnlyForm);
         hysteresisType = hysteresisTypeCombo(point.getFilterType());
 
+        hysteresisType.setReadOnly(this.readOnlyForm);
         compression.setValue(point.getFilterValue());
         compression.setAllowBlank(false);
+        compression.setReadOnly(this.readOnlyForm);
         simple.add(compression, formdata);
         simple.add(hysteresisType, formdata);
 
@@ -354,16 +366,19 @@ public class PointPanel extends LayoutContainer {
         inferLocationCheckbox.setBoxLabel("Infer GPS Location");
         inferLocationCheckbox.setLabelSeparator("");
         inferLocationCheckbox.setValue(point.inferLocation());
+        inferLocationCheckbox.setReadOnly(this.readOnlyForm);
         simple.add(inferLocationCheckbox);
         expires.setFieldLabel("Expires (days)");
         expires.setValue(point.getExpire());
         expires.setAllowBlank(false);
+        expires.setReadOnly(this.readOnlyForm);
         simple.add(expires, formdata);
 
 
         unit.setFieldLabel("Unit of Measure");
         unit.setValue(point.getUnit());
         unit.setAllowBlank(true);
+        unit.setReadOnly(this.readOnlyForm);
         simple.add(unit, formdata);
 
 
@@ -373,6 +388,7 @@ public class PointPanel extends LayoutContainer {
         description.setPreventScrollbars(true);
         description.setValue(entity.getDescription());
         description.setFieldLabel("Description");
+        description.setReadOnly(this.readOnlyForm);
         simple.add(description, formdata);
         description.setSize("400", "100");
 

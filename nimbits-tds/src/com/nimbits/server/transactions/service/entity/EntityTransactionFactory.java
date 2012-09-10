@@ -36,8 +36,9 @@ public class EntityTransactionFactory {
 
 
     private static class MapHolder {
-        static final Map<String, EntityTransactions> daoMap = new HashMap<String, EntityTransactions>(100);
-        static final Map<String, EntityTransactions> cacheMap = new HashMap<String, EntityTransactions>(100);
+        public static final int INITIAL_CAPACITY = 100;
+        static final Map<String, EntityTransactions> daoMap = new HashMap<String, EntityTransactions>(INITIAL_CAPACITY);
+        static final Map<String, EntityTransactions> cacheMap = new HashMap<String, EntityTransactions>(INITIAL_CAPACITY);
         private MapHolder() {
         }
     }

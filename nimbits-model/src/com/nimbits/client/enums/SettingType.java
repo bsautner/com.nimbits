@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2012 Nimbits Inc.
+ *
+ *    http://www.nimbits.com
+ *
+ *
+ * Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.gnu.org/licenses/gpl.html
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+ */
+
 package com.nimbits.client.enums;
 
 import com.nimbits.client.constants.*;
@@ -15,7 +28,7 @@ public enum SettingType {
     lastChecked(SettingConstants.SETTING_LAST_CHECKED, new Date().toString(), true, true),
     serverVersion(SettingConstants.SETTING_VERSION, SettingConstants.CONST_SERVER_VERSION, true, true),
     serverIsDiscoverable(SettingConstants.SETTING_SERVER_IS_DISCOVERABLE,Const.TRUE, false, true),
-    billingEnabled(SettingConstants.SETTING_BILLING_ENABLED, Const.FALSE, false, true),
+    billingEnabled(SettingConstants.SETTING_BILLING_ENABLED, Const.TRUE, true,true),
     admin(SettingConstants.SETTING_ADMIN, Const.TEST_ACCOUNT, false, true),
     connectionsEnabled(SettingConstants.SETTING_ENABLE_CONNECTIONS, Const.TRUE, false, true),
     facebookRedirectURL(SettingConstants.SETTING_FACEBOOK_REDIRECT_URL, Path.PATH_FACEBOOK_REDIRECT, false, true),
@@ -82,7 +95,7 @@ public enum SettingType {
         return name;
     }
     private static class SettingConstants {
-        static final String CONST_SERVER_VERSION = "3.2.0.16";
+        static final String CONST_SERVER_VERSION = "3.2.1";
         static final String SETTING_LOCAL_DEV_ACCOUNT = "SETTING_LOCAL_DEV_ACCOUNT";
         static final String SETTING_LOCAL_DEV_KEY = "SETTING_LOCAL_DEV_KEY";
         static final String SETTING_LOCAL_DEV_PATH = "SETTING_LOCAL_DEV_PATH";
@@ -96,7 +109,7 @@ public enum SettingType {
         static final String SETTING_FACEBOOK_SECRET = "facebookSecret";
         static final String SETTING_FACEBOOK_REDIRECT_URL = "facebookRedirectUrl";
         static final String SETTING_SERVER_IS_DISCOVERABLE = "serverIsDiscoverable";
-        static final String SETTING_BILLING_ENABLED = "SETTING_BILLING_ENABLED";
+        static final String SETTING_BILLING_ENABLED = "billingEnabled";
         static final String SETTING_WOLFRAM = "wolframAlphaKey";
         static final String SETTING_TWITTER_CLIENT_ID = "twitterClientId";
         static final String SETTING_TWITTER_SECRET = "twitterSecret";

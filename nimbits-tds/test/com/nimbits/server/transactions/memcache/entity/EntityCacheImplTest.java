@@ -25,8 +25,11 @@ import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.orm.CalcEntity;
+import com.nimbits.server.transactions.service.entity.EntityTransactionFactory;
+import com.nimbits.server.transactions.service.entity.EntityTransactions;
 import org.junit.Test;
 
+import javax.persistence.EntityTransaction;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,15 +43,10 @@ import static org.junit.Assert.assertTrue;
  * Time: 10:21 AM
  */
 public class EntityCacheImplTest extends NimbitsServletTest {
-
-
-
-
-
-
-
+   
     @Test
     public void testRemoveEntityFromCache() throws Exception {
+      
         entityTransactions.addEntityToCache(Arrays.asList((Entity)point));
         List<Entity> e = entityTransactions.getEntityFromCache(point.getKey());
         assertFalse(e.isEmpty());
@@ -74,7 +72,7 @@ public class EntityCacheImplTest extends NimbitsServletTest {
         Entity entity = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe, point.getKey(), user.getKey());
 
         Calculation c = CalculationModelFactory.createCalculation(entity, point.getKey(), true, "1+1", pointChild.getKey(), "", "", "");
-        entityTransactions.addUpdateEntity(c);
+        entityService.addUpdateEntity(user, c);
         List<Entity> triggers = entityTransactions.getEntityByTrigger(point, CalcEntity.class);
         assertFalse(triggers.isEmpty());
 
@@ -82,7 +80,7 @@ public class EntityCacheImplTest extends NimbitsServletTest {
             assertFalse(e.isCached());
         }
 
-        List<Entity> triggers2 = entityTransactions.getEntityByTrigger(point, CalcEntity.class);
+        List<Entity> triggers2 = entityService.getEntityByTrigger(user, point, EntityType.calculation);
         assertFalse(triggers2.isEmpty());
 
         for (Entity e : triggers2) {
@@ -95,7 +93,7 @@ public class EntityCacheImplTest extends NimbitsServletTest {
         Entity entity2 = EntityModelFactory.createEntity(name2, "", EntityType.calculation, ProtectionLevel.onlyMe, point.getKey(), user.getKey());
 
         Calculation c2 = CalculationModelFactory.createCalculation(entity2, point.getKey(), true, "1+2", pointChild.getKey(), "", "", "");
-        entityTransactions.addUpdateEntity(c2);
+        entityService.addUpdateEntity(user, c2);
 
         List<Entity> triggers3 = entityTransactions.getEntityByTrigger(point, CalcEntity.class);
         assertFalse(triggers3.isEmpty());

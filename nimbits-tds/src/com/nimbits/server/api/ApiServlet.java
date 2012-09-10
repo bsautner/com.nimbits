@@ -16,22 +16,31 @@ package com.nimbits.server.api;
 import com.nimbits.client.common.Utils;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.location.Location;
 import com.nimbits.client.model.location.LocationFactory;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.timespan.Timespan;
+import com.nimbits.client.model.timespan.TimespanModelFactory;
 import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.admin.quota.Quota;
 import com.nimbits.server.admin.quota.QuotaFactory;
 import com.nimbits.server.api.helper.LocationReportingHelperFactory;
 import com.nimbits.server.settings.SettingsServiceFactory;
+import com.nimbits.server.time.TimespanServiceFactory;
 import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import com.nimbits.server.transactions.service.point.PointServiceFactory;
 import com.nimbits.server.transactions.service.user.UserServiceFactory;
+import com.nimbits.server.transactions.service.value.ValueServiceFactory;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -46,6 +55,8 @@ public class ApiServlet extends HttpServlet {
     private static Map<Parameters, String> paramMap;
     protected final static Logger log = Logger.getLogger(ApiServlet.class.getName());
     protected static Location location;
+    public static final String ACCOUNT_BALANCE = "Account Balance";
+    public static final String BUDGET_ERROR = "Maximum daily budget exceeded. Please increase your daily budget";
 
     protected static boolean okToReport(final User u, final Entity c) {
 
@@ -74,35 +85,77 @@ public class ApiServlet extends HttpServlet {
             int max = quota.getMaxDailyQuota();
 
 
-                if (SettingsServiceFactory.getInstance().getBooleanSetting(SettingType.quotaEnabled)) {
+            if (SettingsServiceFactory.getInstance().getBooleanSetting(SettingType.quotaEnabled)) {
 
-                    if (count > max) {
+                if (count > max) {
 
-                        if (user.getBilling().isBillingEnabled()) {
-                            if (user.getBilling().getBilledToday() >= user.getBilling().getMaxDailyAllowance()) {
-                                throw new NimbitsException("Maximum daily budget exceeded. Please increase your daily budget");
-                            }
-                            else {
-                                if (user.getBilling().getAccountBalance() > 0) {
-                                    user.getBilling().setAccountBalance(user.getBilling().getAccountBalance() - quota.getCostPerApiCall());
-                                    user.getBilling().setBilledToday(user.getBilling().getBilledToday() + quota.getCostPerApiCall());
+                    if (user.isBillingEnabled()) {
+                        EntityName name = CommonFactoryLocator.getInstance().createName(ACCOUNT_BALANCE, EntityType.point);
 
-                                    EntityServiceFactory.getInstance().updateUser(user);
-                                }
-                                else {
-                                    throw new NimbitsException("Maximum daily budget exceeded. Please add funds to your account");
-
-                                }
-
-                            }
+                        List<Entity> points =  EntityServiceFactory.getInstance().getEntityByName(user, name, EntityType.point);
+                        if (points.isEmpty()) {
+                            throw new NimbitsException(BUDGET_ERROR);
                         }
                         else {
-                            throw new NimbitsException("Maximum daily quota exceeded. Please enable billing");
+                            Point accountBalance = (Point) points.get(0);
+                            List<Value> currentBalanceList = ValueServiceFactory.getInstance().getCurrentValue(accountBalance);
+                            if (currentBalanceList.isEmpty()) {
+                                throw new NimbitsException(BUDGET_ERROR);
+                            }
+                            else {
+
+                                Date zeroedDate = TimespanServiceFactory.getInstance().zeroOutDate(new Date());
+
+
+                                List<Value> startOfDayValueList = ValueServiceFactory.getInstance().getPrevValue(accountBalance, zeroedDate);
+                                Value current = currentBalanceList.get(0);
+
+                                final double start;
+                                if (! startOfDayValueList.isEmpty()) {
+                                    start = startOfDayValueList.get(0).getDoubleValue();
+                                }
+                                else {
+                                    start = 0.0;
+                                }
+
+
+                                    double spent = start  - current.getDoubleValue();
+                                    if (spent > accountBalance.getDeltaAlarm()) {
+                                        throw new NimbitsException(BUDGET_ERROR);
+                                    }
+                                    else {
+                                        Double newValue = current.getDoubleValue() - quota.getCostPerApiCall();
+                                        if (newValue <= 0.0) {
+                                            throw new NimbitsException(BUDGET_ERROR);
+                                        }
+                                        else {
+                                            Value value = ValueFactory.createValueModel(newValue);
+                                            ValueServiceFactory.getInstance().recordValue(user, accountBalance,value );
+                                        }
+                                    }
+
+
+
+
+
+                            }
+
+
+
+
                         }
 
 
+
+//
                     }
+                    else {
+                        throw new NimbitsException(BUDGET_ERROR);
+                    }
+//
+
                 }
+            }
 
 
 
@@ -171,6 +224,7 @@ public class ApiServlet extends HttpServlet {
         if (! type.equals(ExportType.unknown)) {
             resp.setContentType(type.getCode());
         }
+        //    resp.setContentType("text/plain");
         resp.addHeader("Cache-Control", "no-cache");
         resp.addHeader("Access-Control-Allow-Origin", "*");
     }

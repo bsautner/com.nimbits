@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2012 Nimbits Inc.
+ *
+ *    http://www.nimbits.com
+ *
+ *
+ * Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.gnu.org/licenses/gpl.html
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+ */
+
 package com.nimbits.server.api.impl;
 
 import com.nimbits.client.enums.EntityType;
@@ -28,12 +41,6 @@ import java.util.Date;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-/**
- * User: benjamin
- * Date: 5/16/12
- * Time: 1:16 PM
- * Copyright 2012 Nimbits Inc - All Rights Reserved
- */
 public class EntityServletImplTest extends NimbitsServletTest {
     EntityServletImpl impl = new EntityServletImpl();
     public MockHttpServletRequest req1;

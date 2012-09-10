@@ -137,12 +137,12 @@ public class UserSettingPanel extends NavigationEventProvider {
         balance.setFieldLabel("Account Balance");
         balance.setReadOnly(true);
         balance.setAllowBlank(false);
-        balance.setValue(user.getBilling().getAccountBalance());
+       // balance.setValue(user.getBilling().getAccountBalance());
 
         balance.setFormat(NumberFormat.getFormat("##.##"));
 
         final CheckBox enabled = new CheckBox();
-        enabled.setValue(user.getBilling().isBillingEnabled());
+       // enabled.setValue(user.getBilling().isBillingEnabled());
 
 
 
@@ -169,7 +169,7 @@ public class UserSettingPanel extends NavigationEventProvider {
         enabled.setLabelSeparator("");
 
 
-        maxQuota.setValue(user.getBilling().getMaxDailyAllowance());
+      //  maxQuota.setValue(user.getBilling().getMaxDailyAllowance());
 
 
 
@@ -236,8 +236,8 @@ public class UserSettingPanel extends NavigationEventProvider {
             box.show();
 
 
-            user.getBilling().setBillingEnabled(enabled.getValue());
-            user.getBilling().setMaxDailyAllowance(maxQuota.getValue().doubleValue());
+          //  user.getBilling().setBillingEnabled(enabled.getValue());
+           // user.getBilling().setMaxDailyAllowance(maxQuota.getValue().doubleValue());
             EntityServiceAsync service = GWT.create(EntityService.class);
 
             service.addUpdateEntity(user, new AsyncCallback<Entity>() {

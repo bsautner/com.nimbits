@@ -36,4 +36,6 @@ public interface UserService extends RemoteService {
     List<User> getConnectionRequests(List<String> connections) throws NimbitsException;
     User login(String requestUri) throws NimbitsException;
     Integer getQuota() throws NimbitsException;
+
+
 }

@@ -44,7 +44,7 @@ public class Const {
     public static final int DEFAULT_HTTP_TIMEOUT = 15000;
     public static final String DEFAULT_XMPP_SERVER = "gmail.com";
     public static final String DEFAULT_APPSPOT = "appspot.com";
-    public static final String TEST_ACCOUNT = "bsautner@nimbits.com";
+    public static final String TEST_ACCOUNT = "nobody@example.com";
     public static final String DELIMITER_COMMA = ",";
     public static final String DELIMITER_BAR = "|";
     public static final String HTML_BOOTSTRAP = "<html><head>" +
@@ -71,7 +71,7 @@ public class Const {
     public static final int HTTP_STATUS_UNAUTHORISED = 401;
     public static final int HTTP_STATUS_BAD_REQUEST = 400;
     public static final String HTTP_HEADER_RESPONSE = "response";
-
+    public static final String ACCOUNT_BALANCE = "Account Balance";
 // --------------------------- CONSTRUCTORS ---------------------------
 
     private Const() {

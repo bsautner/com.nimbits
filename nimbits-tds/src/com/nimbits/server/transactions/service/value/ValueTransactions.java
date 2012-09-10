@@ -24,7 +24,7 @@ import java.util.List;
 
 public interface ValueTransactions {
 
-    Value getRecordedValuePrecedingTimestamp(final Date timestamp) throws NimbitsException;
+    List<Value> getRecordedValuePrecedingTimestamp(final Date timestamp) throws NimbitsException;
 
 
     Value recordValue(final Value v) throws NimbitsException;

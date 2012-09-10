@@ -88,7 +88,7 @@ public class MainMenuBar extends ToolBar {
         addFileMenu();
         if (settings.containsKey(SettingType.billingEnabled)) {
         addSettingsMenu();
-        }
+       }
         addNavigateMenu();
         addActionMenu();
         addOptionsMenu();

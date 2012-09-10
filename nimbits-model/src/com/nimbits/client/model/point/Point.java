@@ -14,6 +14,7 @@
 package com.nimbits.client.model.point;
 
 import com.nimbits.client.enums.FilterType;
+import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
 import com.nimbits.client.model.value.Value;
@@ -86,5 +87,19 @@ public interface Point extends Entity, Serializable {
 
     void setInferLocation(boolean inferLocation);
 
+    PointType getPointType();
 
+    void setPointType(PointType type);
+
+    double getDeltaAlarm();
+
+    void setDeltaAlarm(double deltaAlarm);
+
+    boolean isDeltaAlarmOn();
+
+    void setDeltaAlarmOn(boolean deltaAlarmOn);
+
+    int getDeltaSeconds();
+
+    void setDeltaSeconds(int deltaSeconds);
 }

@@ -77,9 +77,7 @@ public interface User extends Entity, Serializable {
     void setUserAdmin(boolean userAdmin);
 
 
-    Billing getBilling();
+    boolean isBillingEnabled();
 
-    void setBilling(Billing billing);
-
-
+    void setBillingEnabled(boolean billingEnabled);
 }

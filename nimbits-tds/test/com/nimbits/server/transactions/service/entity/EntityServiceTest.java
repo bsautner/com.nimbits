@@ -14,7 +14,9 @@
 package com.nimbits.server.transactions.service.entity;
 
 import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.helper.EntityHelper;
 import com.nimbits.client.model.common.CommonFactoryLocator;
@@ -78,6 +80,10 @@ public class EntityServiceTest extends NimbitsServletTest {
     @Test
     public void findEntityByKeyTest() throws NimbitsException {
         helper.setEnvIsLoggedIn(false);
+
+        user = null;
+        req.removeAllParameters();
+
         List<Entity> r = EntityServiceFactory.getInstance().findEntityByKey(point.getKey());
         assertFalse(r.isEmpty());
         assertTrue(r.get(0).isReadOnly());
@@ -104,9 +110,37 @@ public class EntityServiceTest extends NimbitsServletTest {
         Entity model2 = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.everyone,
                 user.getKey(), user.getKey());
         ///Entity e2 = EntityServiceFactory.getInstance().addUpdateEntity(model2);
-        Point p1 = PointModelFactory.createPointModel( model);
+        Point p1 =   PointModelFactory.createPointModel(
+                model,
+                0.0,
+                90,
+                "",
+                0.0,
+                false,
+                false,
+                false,
+                0,
+                false,
+                FilterType.fixedHysteresis,
+                0.1,
+                false,
+                PointType.basic, 0, false, 0.0 );
         EntityServiceFactory.getInstance().addUpdateEntity(p1);
-        Point p2 = PointModelFactory.createPointModel( model2);
+        Point p2 =   PointModelFactory.createPointModel(
+                model2,
+                0.0,
+                90,
+                "",
+                0.0,
+                false,
+                false,
+                false,
+                0,
+                false,
+                FilterType.fixedHysteresis,
+                0.1,
+                false,
+                PointType.basic , 0, false, 0.0);
         EntityServiceFactory.getInstance().addUpdateEntity(p2);
 
     }

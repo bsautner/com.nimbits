@@ -7,6 +7,7 @@
 package com.nimbits.client.model.point;
 
 import com.nimbits.client.enums.*;
+import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 
@@ -29,32 +30,31 @@ public class PointModelFactory {
         return new PointModel(point);
 
     }
-    public static Point createPointModel(Entity entity,
-                                         double highAlarm,
-                                         int expire,
-                                         String unit,
-                                         double lowAlarm,
-                                         boolean highAlarmOn,
-                                         boolean lowAlarmOn,
-                                         boolean idleAlarmOn,
-                                         Integer idleSeconds,
-                                         boolean idleAlarmSent,
-                                         FilterType filterType,
-                                         double filterValue,
-                                         boolean inferLocation
+    public static Point createPointModel(final Entity entity,
+                                         final double highAlarm,
+                                         final int expire,
+                                         final String unit,
+                                         final double lowAlarm,
+                                         final boolean highAlarmOn,
+                                         final boolean lowAlarmOn,
+                                         final boolean idleAlarmOn,
+                                         final Integer idleSeconds,
+                                         final boolean idleAlarmSent,
+                                         final FilterType filterType,
+                                         final double filterValue,
+                                         final boolean inferLocation,
+                                         final PointType pointType,
+                                         final Integer deltaAlarmSeconds,
+                                         final boolean deltaAlarmOn,
+                                         final double deltaAlarm
                                         ) throws NimbitsException {
         return new PointModel(
                 entity,  highAlarm,
                 expire,  unit,  lowAlarm,
                 highAlarmOn,  lowAlarmOn,
                 idleAlarmOn,  idleSeconds,  idleAlarmSent,
-                filterType,  filterValue, inferLocation);
+                filterType,  filterValue, inferLocation, pointType,deltaAlarm, deltaAlarmOn, deltaAlarmSeconds);
     }
 
 
-
-
-    public static Point createPointModel(Entity entity) throws NimbitsException {
-        return  PointModelFactory.createPointModel(entity,0.0, 90, "", 0.0, false, false, false, 0, false, FilterType.fixedHysteresis, 0.1, false );
-    }
 }

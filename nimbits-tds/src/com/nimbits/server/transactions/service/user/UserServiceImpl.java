@@ -19,6 +19,7 @@ import com.nimbits.client.common.Utils;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.constants.UserMessages;
 import com.nimbits.client.enums.*;
+import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.accesskey.AccessKeyFactory;
@@ -31,9 +32,13 @@ import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
 import com.nimbits.client.model.user.UserModelFactory;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.service.user.UserService;
 import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.admin.quota.QuotaFactory;
@@ -42,9 +47,11 @@ import com.nimbits.server.communication.email.EmailServiceFactory;
 import com.nimbits.server.settings.SettingsServiceFactory;
 import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
 import com.nimbits.server.transactions.service.feed.FeedServiceFactory;
+import com.nimbits.server.transactions.service.value.ValueServiceFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +64,9 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     private static final long serialVersionUID = 1L;
     private static final Logger log = Logger.getLogger(UserServiceImpl.class.getName());
 
+    public static final String DESCRIPTION = "Account balance - enable billing and find your account on nimbits.com to use services beyond the free quota";
+    public static final String UNIT = "USD";
+    public static final int EXPIRE = 5000;
 
 
     @Override
@@ -96,8 +106,14 @@ public class UserServiceImpl extends RemoteServiceServlet implements
             email = (EmailAddress) session.getAttribute(Parameters.email.getText());
         }
 
-        if (email == null && googleUserService.getCurrentUser() != null) {
-            email = CommonFactoryLocator.getInstance().createEmailAddress(googleUserService.getCurrentUser().getEmail());
+        try {
+            if (googleUserService != null) {
+                if (email == null && googleUserService.getCurrentUser() != null) {
+                    email = CommonFactoryLocator.getInstance().createEmailAddress(googleUserService.getCurrentUser().getEmail());
+                }
+            }
+        } catch (NullPointerException e) {
+            email = null;
         }
 
 
@@ -283,7 +299,47 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
         final com.nimbits.client.model.user.User newUser = UserModelFactory.createUserModel(entity);
         // newUser.setSecret(UUID.randomUUID().toString());
-        return (User) EntityServiceFactory.getInstance().addUpdateEntity(newUser);
+        User user =  (User) EntityServiceFactory.getInstance().addUpdateEntity(newUser);
+
+        if (SettingsServiceFactory.getInstance().getBooleanSetting(SettingType.billingEnabled)) {
+            createAccountBalancePoint(user);
+        }
+        FeedServiceFactory.getInstance().createFeedPoint(user);
+
+        return user;
+
+
+    }
+
+
+    protected Point createAccountBalancePoint(final User user) throws NimbitsException {
+
+        final EntityName name = CommonFactoryLocator.getInstance().createName(Const.ACCOUNT_BALANCE, EntityType.point);
+        final Entity entity = EntityModelFactory.createEntity(name, DESCRIPTION, EntityType.point,
+                ProtectionLevel.onlyMe, user.getKey(), user.getKey(), UUID.randomUUID().toString());
+        final Point point = PointModelFactory.createPointModel(
+                entity, 0.0, EXPIRE, UNIT, 0.0, false, true, false, 0, false, FilterType.floor, 0.0,
+                false, PointType.accountBalance, 86400, true, 0.0);
+        return (Point) EntityServiceFactory.getInstance().addUpdateEntity(point);
+
+
+
+    }
+    @Override
+    public void fundAccount(final User user, final BigDecimal amount) throws NimbitsException {
+
+        final EntityName name = CommonFactoryLocator.getInstance().createName(Const.ACCOUNT_BALANCE, EntityType.point);
+        final List<Entity> accountPointSample = EntityServiceFactory.getInstance().getEntityByName(user, name, EntityType.point);
+        final Point account;
+        if (accountPointSample.isEmpty()) {
+            account = createAccountBalancePoint(user);
+        }
+        else {
+            account = (Point) accountPointSample.get(0);
+        }
+        Value value = ValueFactory.createValueModel(amount.doubleValue() );
+        ValueServiceFactory.getInstance().recordValue(user,account, value);
+
     }
 
     @Override

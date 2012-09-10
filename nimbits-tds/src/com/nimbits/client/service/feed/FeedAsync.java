@@ -32,4 +32,6 @@ public interface FeedAsync {
     void postToFeed(final User user, final String html,  final FeedType type, final AsyncCallback<Void> async);
 
     void postToFeed(final User user, final Throwable ex, final AsyncCallback<Void> async);
+
+    void createFeedPoint(User user, AsyncCallback<Point> async);
 }

@@ -22,7 +22,9 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.files.*;
 import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.EntityModelFactory;
@@ -290,8 +292,8 @@ public class ValueDaoImplTest extends NimbitsServletTest {
                 final Calendar c1 = Calendar.getInstance();
                 c1.add(Calendar.DATE, -1 * i);
                 final Double d1 = (double) i;
-                final Value vx = dao.getRecordedValuePrecedingTimestamp(c1.getTime());
-                assertEquals(d1, vx.getDoubleValue(), 0.0);
+                final List<Value> vx = dao.getRecordedValuePrecedingTimestamp(c1.getTime());
+                assertEquals(d1, vx.get(0).getDoubleValue(), 0.0);
             }
         } catch (NimbitsException e) {
             fail();
@@ -313,9 +315,51 @@ public class ValueDaoImplTest extends NimbitsServletTest {
         com.nimbits.client.model.entity.Entity entity3 = EntityModelFactory.createEntity(name3, "", EntityType.point, ProtectionLevel.everyone, "", "");
 
 
-        final Point point1 = PointModelFactory.createPointModel(entity1);
-        final Point point2 = PointModelFactory.createPointModel(entity2);
-        final Point point3 = PointModelFactory.createPointModel(entity3);
+        final Point point1 =   PointModelFactory.createPointModel(
+                entity1,
+                0.0,
+                90,
+                "",
+                0.0,
+                false,
+                false,
+                false,
+                0,
+                false,
+                FilterType.fixedHysteresis,
+                0.1,
+                false,
+                PointType.basic, 0, false, 0.0 );
+        final Point point2 =   PointModelFactory.createPointModel(
+                entity2,
+                0.0,
+                90,
+                "",
+                0.0,
+                false,
+                false,
+                false,
+                0,
+                false,
+                FilterType.fixedHysteresis,
+                0.1,
+                false,
+                PointType.basic, 0, false, 0.0 );
+        final Point point3 =   PointModelFactory.createPointModel(
+                entity3,
+                0.0,
+                90,
+                "",
+                0.0,
+                false,
+                false,
+                false,
+                0,
+                false,
+                FilterType.fixedHysteresis,
+                0.1,
+                false,
+                PointType.basic, 0, false, 0.0 );
 
         final ValueDAOImpl dao1 = new ValueDAOImpl(point1);
         final ValueDAOImpl dao2 = new ValueDAOImpl(point2);
@@ -331,22 +375,22 @@ public class ValueDaoImplTest extends NimbitsServletTest {
                 final Calendar c1 = Calendar.getInstance();
                 c1.add(Calendar.DATE, -1 * i);
                 final Double d1 = (double) i;
-                final Value vx = dao1.getRecordedValuePrecedingTimestamp(c1.getTime());
-                assertEquals(d1, vx.getDoubleValue(), 0.0);
+                final List<Value> vx = dao1.getRecordedValuePrecedingTimestamp(c1.getTime());
+                assertEquals(d1, vx.get(0).getDoubleValue(), 0.0);
             }
             for (int i = 0; i < 100; i++) {
                 final Calendar c1 = Calendar.getInstance();
                 c1.add(Calendar.DATE, -1 * i);
                 final Double d1 = (double) i;
-                final Value vx = dao2.getRecordedValuePrecedingTimestamp(c1.getTime());
-                assertEquals(d1, vx.getDoubleValue(), 0.0);
+                final List<Value> vx = dao2.getRecordedValuePrecedingTimestamp(c1.getTime());
+                assertEquals(d1, vx.get(0).getDoubleValue(), 0.0);
             }
             for (int i = 0; i < 100; i++) {
                 final Calendar c1 = Calendar.getInstance();
                 c1.add(Calendar.DATE, -1 * i);
                 final Double d1 = (double) i;
-                final Value vx = dao3.getRecordedValuePrecedingTimestamp(c1.getTime());
-                assertEquals(d1, vx.getDoubleValue(), 0.0);
+                final List<Value> vx = dao3.getRecordedValuePrecedingTimestamp(c1.getTime());
+                assertEquals(d1, vx.get(0).getDoubleValue(), 0.0);
             }
         } catch (NimbitsException e) {
             fail();

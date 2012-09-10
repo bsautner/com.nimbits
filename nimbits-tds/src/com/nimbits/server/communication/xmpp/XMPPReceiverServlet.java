@@ -22,6 +22,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.nimbits.client.common.Utils;
 import com.nimbits.client.enums.*;
+import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
@@ -161,7 +162,7 @@ public class XMPPReceiverServlet extends HttpServlet {
         EntityName pointName = CommonFactoryLocator.getInstance().createName(body.substring(1).trim(), EntityType.point);
         Entity entity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone,
                 u.getKey(), u.getKey(), UUID.randomUUID().toString());
-        Point p = PointModelFactory.createPointModel(entity,0.0, 90, "", 0.0, false, false, false, 0, false, FilterType.fixedHysteresis, 0.1, false );
+        Point p = PointModelFactory.createPointModel(entity,0.0, 90, "", 0.0, false, false, false, 0, false, FilterType.fixedHysteresis, 0.1, false, PointType.basic, 0, false, 0.0 );
 
         EntityServiceFactory.getInstance().addUpdateEntity(u, p);
         //PointServiceFactory.getInstance().addPoint(u, entity);
@@ -203,8 +204,9 @@ public class XMPPReceiverServlet extends HttpServlet {
             // Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
             Entity point = EntityServiceFactory.getInstance().getEntityByKey(e.getKey(), EntityType.point).get(0);
 
-            final Value v = ValueServiceFactory.getInstance().getPrevValue(point, new Date());
-            if (v != null) {
+            final List<Value> sample = ValueServiceFactory.getInstance().getPrevValue(point, new Date());
+            if (! sample.isEmpty()) {
+                Value v = sample.get(0);
                 String t = "";
                 if (v.getNote() != null && !v.getNote().isEmpty()) {
                     t = v.getNote();

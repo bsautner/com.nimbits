@@ -18,6 +18,7 @@ import com.nimbits.client.common.Utils;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.constants.UserMessages;
 import com.nimbits.client.enums.*;
+import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
@@ -183,7 +184,7 @@ public class PointServletImpl extends ApiServlet {
             final String endParam = req.getParameter(Parameters.ed.getText());
             final String offsetParam = req.getParameter(Parameters.offset.getText());
 
-            final String format;
+            //final String format;
 
             final String pointNameParam = Utils.isEmptyString(getParam(Parameters.name)) ?
                     getParam(Parameters.point) : getParam(Parameters.name);
@@ -322,7 +323,7 @@ public class PointServletImpl extends ApiServlet {
         final Entity entity = EntityModelFactory.createEntity(pointName, description, EntityType.point, ProtectionLevel.everyone,
                 parent, u.getKey(), UUID.randomUUID().toString());
         Point point = PointModelFactory.createPointModel(entity,0.0, EXPIRE, "", 0.0,
-                false, false, false, 0, false, FilterType.fixedHysteresis, FILTER_VALUE, true);
+                false, false, false, 0, false, FilterType.fixedHysteresis, FILTER_VALUE, true, PointType.basic, 0, false, 0.0);
 
 
 

@@ -74,4 +74,5 @@ public interface ValueService extends RemoteService {
     void recordValues(final User user, final Point point, final List<Value> values) throws NimbitsException;
 
 
+    double calculateDelta(Point point) throws NimbitsException;
 }

@@ -103,51 +103,24 @@ public class ApiServlet extends HttpServlet {
                                 throw new NimbitsException(BUDGET_ERROR);
                             }
                             else {
-
-                                Date zeroedDate = TimespanServiceFactory.getInstance().zeroOutDate(new Date());
-
-
-                                List<Value> startOfDayValueList = ValueServiceFactory.getInstance().getPrevValue(accountBalance, zeroedDate);
                                 Value current = currentBalanceList.get(0);
-
-                                final double start;
-                                if (! startOfDayValueList.isEmpty()) {
-                                    start = startOfDayValueList.get(0).getDoubleValue();
+                                double spent = ValueServiceFactory.getInstance().calculateDelta(accountBalance);
+                                if (spent > accountBalance.getDeltaAlarm()) {
+                                    throw new NimbitsException(BUDGET_ERROR);
                                 }
                                 else {
-                                    start = 0.0;
-                                }
-
-
-                                    double spent = start  - current.getDoubleValue();
-                                    if (spent > accountBalance.getDeltaAlarm()) {
+                                    Double newValue = current.getDoubleValue() - quota.getCostPerApiCall();
+                                    if (newValue <= 0.0) {
                                         throw new NimbitsException(BUDGET_ERROR);
                                     }
                                     else {
-                                        Double newValue = current.getDoubleValue() - quota.getCostPerApiCall();
-                                        if (newValue <= 0.0) {
-                                            throw new NimbitsException(BUDGET_ERROR);
-                                        }
-                                        else {
-                                            Value value = ValueFactory.createValueModel(newValue);
-                                            ValueServiceFactory.getInstance().recordValue(user, accountBalance,value );
-                                        }
+                                        Value value = ValueFactory.createValueModel(newValue);
+                                        ValueServiceFactory.getInstance().recordValue(user, accountBalance,value );
                                     }
-
-
-
-
+                                }
 
                             }
-
-
-
-
                         }
-
-
-
-//
                     }
                     else {
                         throw new NimbitsException(BUDGET_ERROR);

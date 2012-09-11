@@ -71,7 +71,7 @@ public class EntityIntegrationTest {
                 FilterType.fixedHysteresis,
                 0.1,
                 false,
-                PointType.basic );
+                PointType.basic, 0, false, 0.0 );
         p.setDescription("whole point unit test");
 
         String entity = GsonFactory.getInstance().toJson(p);

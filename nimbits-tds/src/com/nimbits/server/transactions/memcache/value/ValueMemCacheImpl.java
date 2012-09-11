@@ -138,19 +138,25 @@ public class ValueMemCacheImpl implements ValueTransactions {
                     }
 
                 } else {
-                     if (timestamp.getTime() >= value.getTimestamp().getTime()) {
-                         result.add(value);
-                     }
+                    if (timestamp.getTime() >= value.getTimestamp().getTime()) {
+                        result.add(value);
+                    }
                     else {
-                         List<Value> values = ValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
-                         result.addAll(values);
-                     }
+                        List<Value> buffer = getBuffer();
+                        List<Value> values = ValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
+                        result.addAll(values);
+                        for (Value v : buffer) {
+                            if (v.getTimestamp().getTime() < timestamp.getTime()) {
+                                result.add(v);
+                            }
+                        }
+                    }
                 }
             } else {
                 LogHelper.log(this.getClass(), "Accessing data store for current value");
 
                 List<Value> sample = ValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
-
+                //TODO - keep a memchach list of known empty points to avoid repeated datastore calls here
                 if (! sample.isEmpty()) {
 
                     buffer.put(currentValueCacheKey, sample.get(0));
@@ -178,8 +184,38 @@ public class ValueMemCacheImpl implements ValueTransactions {
         }
 
 
-        return result;
+        return getClosestMatchToTimestamp(result, timestamp);
     }
+
+
+    protected static List<Value> getClosestMatchToTimestamp(final List<Value> values, final Date timestamp) {
+        List<Value> result = new ArrayList<Value>(1);
+        Value value;
+
+        long delta = 0;
+        if (! values.isEmpty()) {
+            value = values.get(0);
+            for (Value v : values) {
+                if (v.getTimestamp().getTime() == timestamp.getTime()) {
+                    result.add(v);
+                    return result; //perfect match
+                }
+                else if (v.getTimestamp().getTime() < timestamp.getTime()) {
+                    delta = v.getTimestamp().getTime()  - timestamp.getTime();
+                    if (delta  > (value.getTimestamp().getTime()  - timestamp.getTime())) {
+                        value = v;
+                    }
+                }
+
+
+            }
+            result.add(value);
+        }
+       return result;
+
+
+    }
+
 
     @Override
     public Value recordValue(final Value v)  {

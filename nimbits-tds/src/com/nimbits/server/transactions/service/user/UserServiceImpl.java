@@ -39,23 +39,23 @@ import com.nimbits.client.model.user.UserModel;
 import com.nimbits.client.model.user.UserModelFactory;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
+import com.nimbits.client.service.timespan.TimespanService;
 import com.nimbits.client.service.user.UserService;
 import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.admin.quota.QuotaFactory;
 import com.nimbits.server.api.openid.UserInfo;
 import com.nimbits.server.communication.email.EmailServiceFactory;
 import com.nimbits.server.settings.SettingsServiceFactory;
+import com.nimbits.server.time.TimespanServiceFactory;
 import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
 import com.nimbits.server.transactions.service.feed.FeedServiceFactory;
 import com.nimbits.server.transactions.service.value.ValueServiceFactory;
+import com.nimbits.server.transactions.service.value.ValueTransactionFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Logger;
 
 
@@ -337,8 +337,23 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         else {
             account = (Point) accountPointSample.get(0);
         }
-        Value value = ValueFactory.createValueModel(amount.doubleValue() );
-        ValueServiceFactory.getInstance().recordValue(user,account, value);
+        List<Value> currentValueSample = ValueServiceFactory.getInstance().getCurrentValue(account);
+        if (currentValueSample.isEmpty()) {
+
+            Calendar c = Calendar.getInstance();
+            c.add(Calendar.DATE, -2);
+            Value value = ValueFactory.createValueModel(amount.doubleValue(), c.getTime() );
+
+
+            ValueServiceFactory.getInstance().recordValue(user,account, value);
+        }
+        else {
+            Value currentValue = currentValueSample.get(0);
+            Value value = ValueFactory.createValueModel(currentValue.getDoubleValue() + amount.doubleValue() );
+            ValueServiceFactory.getInstance().recordValue(user,account, value);
+        }
+
+
 
     }
 

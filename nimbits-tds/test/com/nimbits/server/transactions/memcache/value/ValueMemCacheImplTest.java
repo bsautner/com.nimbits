@@ -24,10 +24,7 @@ import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.transactions.service.value.ValueTransactionFactory;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -42,6 +39,41 @@ public class ValueMemCacheImplTest extends NimbitsServletTest {
     private static final double D = 1.23;
     private static final double DELTA = 0.001;
     private MemcacheService buffer;
+
+    @Test
+    public void testGetClosest() {
+
+        List<Value> values = new ArrayList<Value>(100);
+        Random r = new Random();
+
+        Calendar c = Calendar.getInstance();
+        Date now = new Date();
+        int randomSpot = r.nextInt(99);
+        for (int x = 0; x < 100; x++) {
+            c.add(Calendar.MINUTE, r.nextInt(100) * -1);
+            Value value;
+            if (x != randomSpot) { //random spot put now
+            value = ValueFactory.createValueModel(r.nextDouble(), c.getTime());
+
+            }
+            else {
+             value = ValueFactory.createValueModel(r.nextDouble(),now);
+
+            }
+           values.add(value);
+        }
+
+
+        List<Value> result = ValueMemCacheImpl.getClosestMatchToTimestamp(values, now);
+        assertFalse(result.isEmpty());
+        assertEquals(result.get(0).getTimestamp(),now );
+
+        Value sample = values.get(r.nextInt(99));
+        List<Value> result2 = ValueMemCacheImpl.getClosestMatchToTimestamp(values, new Date(sample.getTimestamp().getTime() + 5000));
+        assertFalse(result2.isEmpty());
+        assertEquals(result2.get(0).getTimestamp(),sample.getTimestamp() );
+
+    }
 
 
     @Test

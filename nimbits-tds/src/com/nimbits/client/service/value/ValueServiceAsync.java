@@ -75,4 +75,5 @@ public interface ValueServiceAsync {
 
     void preloadTimespan(final Entity entity, final Timespan timespan, AsyncCallback<Integer> async);
 
+    void calculateDelta(Point point, AsyncCallback<Double> async);
 }

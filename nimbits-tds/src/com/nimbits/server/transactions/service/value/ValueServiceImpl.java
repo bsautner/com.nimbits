@@ -40,6 +40,8 @@ import com.nimbits.server.transactions.service.user.UserServiceFactory;
 import java.util.*;
 import java.util.logging.Logger;
 
+import static java.lang.Math.abs;
+
 
 public class ValueServiceImpl extends RemoteServiceServlet implements
         ValueService, RequestCallback {
@@ -131,13 +133,37 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public List<Value> getPrevValue(final Entity point,
-                              final Date timestamp) throws NimbitsException {
+                                    final Date timestamp) throws NimbitsException {
 
 
         return ValueTransactionFactory.getInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
 
 
     }
+
+    @Override
+    public double calculateDelta(final Point point) throws NimbitsException {
+        double retVal = 0.0;
+        if (point.isDeltaAlarmOn()) {
+            Calendar c = Calendar.getInstance();
+            c.add(Calendar.SECOND, (point.getDeltaSeconds() * -1));
+            List<Value> startSample = getPrevValue(point,c.getTime());
+            double startValue = 0.0;
+            if (! startSample.isEmpty()) {
+                Value start = startSample.get(0);
+                startValue = start.getDoubleValue();
+            }
+            List<Value> currentSample = getCurrentValue(point);
+            if (! currentSample.isEmpty()) {
+                Value current = currentSample.get(0);
+
+                retVal = abs(startValue - current.getDoubleValue());
+            }
+        }
+        return retVal;
+    }
+
+
     @Override
     public Map<String, Entity> getCurrentValues(final Map<String, Point> entities) throws NimbitsException {
         final Map<String, Entity> retObj = new HashMap<String, Entity>(entities.size());

@@ -13,15 +13,29 @@
 
 package com.nimbits.server.transactions.service.value;
 
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.FilterType;
+import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.NimbitsServletTest;
+import com.nimbits.server.settings.SettingsServiceFactory;
 import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import com.nimbits.server.transactions.service.user.UserServiceFactory;
+import junit.framework.Assert;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 /**
@@ -79,5 +93,53 @@ public class RecordedValueServiceImplTest extends NimbitsServletTest {
 
     }
 
+    @Test
+    public void testDelta() throws NimbitsException {
 
+        SettingsServiceFactory.getInstance().updateSetting(SettingType.quotaEnabled, Const.TRUE);
+
+        user.setBillingEnabled(true);
+
+//
+//        user.getBilling().setAccountBalance(0.05);
+//        user.getBilling().setBillingEnabled(true);
+//        user.getBilling().setMaxDailyAllowance(1.50);
+
+        double startingBalance = 5.00;
+
+        entityService.addUpdateEntity(user, user);
+        EntityName name = CommonFactoryLocator.getInstance().createName(Const.ACCOUNT_BALANCE, EntityType.point);
+        List<Entity> list = entityService.getEntityByName(user,name, EntityType.point );
+        assertFalse(list.isEmpty());
+        Point accountBalance = (Point) list.get(0);
+        accountBalance.setDeltaAlarm(0.01);
+        accountBalance.setDeltaAlarmOn(true);
+
+        entityService.addUpdateEntity(user, accountBalance);
+
+        UserServiceFactory.getServerInstance().fundAccount(user, BigDecimal.valueOf(startingBalance));
+
+        double b = ValueServiceFactory.getInstance().calculateDelta(accountBalance);
+        Assert.assertEquals(b, 0.0, 0.0001);
+        Value v = ValueFactory.createValueModel(startingBalance - 0.01);
+
+        ValueServiceFactory.getInstance().recordValue(user, accountBalance, v);
+
+        List<Value> vx = ValueServiceFactory.getInstance().getTopDataSeries(accountBalance, 10);
+
+
+        double b2 = ValueServiceFactory.getInstance().calculateDelta(accountBalance);
+        Assert.assertEquals(0.01, b2, 0.0001);
+//        for (int i = 0; i < 10; i++) {
+//            List<Value> sample = ValueServiceFactory.getInstance().getCurrentValue(accountBalance);
+//            assertFalse(sample.isEmpty());
+//            Value balance = sample.get(0);
+//            assertEquals(startingBalance, balance.getDoubleValue(), 0.0001);
+//
+//        }
+
+
+
+
+    }
 }

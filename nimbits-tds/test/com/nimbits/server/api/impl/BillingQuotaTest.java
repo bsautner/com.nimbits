@@ -50,30 +50,7 @@ import static org.junit.Assert.assertFalse;
 public class BillingQuotaTest  extends NimbitsServletTest {
 
 
-    @Test
-   public void chargeSomeMoneyTst() throws NimbitsException, IOException {
 
-
-
-//        SystemMaint systemMaint = new SystemMaint();
-//
-//        systemMaint.doGet(req, resp);
-//        SettingsServiceFactory.getInstance().updateSetting(SettingType.quotaEnabled, Const.TRUE);
-//
-//        user.getBilling().setAccountBalance(1.00);
-//        user.getBilling().setBillingEnabled(true);
-//        user.getBilling().setMaxDailyAllowance(.50);
-//        entityService.addUpdateEntity(user, user, true);
-//
-//        double calls = (0.01 /  QuotaFactory.getInstance(emailAddress).getCostPerApiCall());
-//        for (int i = 0; i < QuotaFactory.getInstance(emailAddress).getMaxDailyQuota()+calls; i++) {
-//            valueServlet.processGet(req, resp);
-//        }
-//        User u = (User) entityService.getEntityByKey(user.getKey(), UserEntity.class).get(0);
-//        System.out.println(u.getBilling().getAccountBalance());
-//        Assert.assertEquals(0.99, u.getBilling().getAccountBalance(), .001);
-
-    }
 
     @Test(expected = NimbitsException.class)
     public void outOfMoneyTest() throws NimbitsException, IOException {
@@ -84,12 +61,6 @@ public class BillingQuotaTest  extends NimbitsServletTest {
         SettingsServiceFactory.getInstance().updateSetting(SettingType.quotaEnabled, Const.TRUE);
 
         user.setBillingEnabled(true);
-
-//
-//        user.getBilling().setAccountBalance(0.05);
-//        user.getBilling().setBillingEnabled(true);
-//        user.getBilling().setMaxDailyAllowance(1.50);
-
 
 
         entityService.addUpdateEntity(user, user);
@@ -135,7 +106,7 @@ public class BillingQuotaTest  extends NimbitsServletTest {
         List<Entity> list = entityService.getEntityByName(user,name, EntityType.point );
         assertFalse(list.isEmpty());
         Point accountBalance = (Point) list.get(0);
-        accountBalance.setDeltaAlarm(0.02);
+        accountBalance.setDeltaAlarm(0.01);
         accountBalance.setDeltaAlarmOn(true);
 
         entityService.addUpdateEntity(user, accountBalance);
@@ -162,6 +133,51 @@ public class BillingQuotaTest  extends NimbitsServletTest {
 
 
     }
+
+    @Test
+    public void fundAccountTest() throws NimbitsException, IOException {
+
+        SettingsServiceFactory.getInstance().updateSetting(SettingType.quotaEnabled, Const.TRUE);
+
+        user.setBillingEnabled(true);
+
+//
+//        user.getBilling().setAccountBalance(0.05);
+//        user.getBilling().setBillingEnabled(true);
+//        user.getBilling().setMaxDailyAllowance(1.50);
+
+        double startingBalance = 5.00;
+
+        entityService.addUpdateEntity(user, user);
+        EntityName name = CommonFactoryLocator.getInstance().createName(Const.ACCOUNT_BALANCE, EntityType.point);
+        List<Entity> list = entityService.getEntityByName(user,name, EntityType.point );
+        assertFalse(list.isEmpty());
+        Point accountBalance = (Point) list.get(0);
+        accountBalance.setDeltaAlarm(0.01);
+        accountBalance.setDeltaAlarmOn(true);
+
+        entityService.addUpdateEntity(user, accountBalance);
+
+        UserServiceFactory.getServerInstance().fundAccount(user, BigDecimal.valueOf(startingBalance));
+
+
+
+        for (int i = 0; i < 10; i++) {
+            List<Value> sample = ValueServiceFactory.getInstance().getCurrentValue(accountBalance);
+            assertFalse(sample.isEmpty());
+            Value balance = sample.get(0);
+            assertEquals(startingBalance, balance.getDoubleValue(), 0.0001);
+
+        }
+
+
+
+
+
+    }
+
+
+
 
     @Test
     public void businessAsUsual() throws NimbitsException, IOException {

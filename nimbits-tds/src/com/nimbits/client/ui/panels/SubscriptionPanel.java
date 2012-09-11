@@ -187,7 +187,7 @@ public class SubscriptionPanel extends NavigationEventProvider {
 
         final CheckBox machine = new CheckBox();
         machine.setBoxLabel("Send message in JSON format");
-
+        machine.setFieldLabel("");
         final CheckBox enabled = new CheckBox();
 
         final SpinnerField spinnerField = new SpinnerField();
@@ -217,6 +217,7 @@ public class SubscriptionPanel extends NavigationEventProvider {
         else {
             type = SubscriptionType.none;
             method = SubscriptionNotifyMethod.none;
+            machine.setLabelSeparator("");
             subscriptionName.setValue(entity.getName().getValue() + " Subscription");
             spinnerField.setValue(REPEAT_DEFAULT);
         }

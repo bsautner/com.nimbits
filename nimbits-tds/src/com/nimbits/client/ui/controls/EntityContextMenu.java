@@ -79,6 +79,7 @@ public class EntityContextMenu extends Menu {
     private MenuItem calcContext;
     private MenuItem xmppContext;
     private MenuItem summaryContext;
+
     private MenuItem intelligenceContext;
     private MenuItem keyContext;
     private MenuItem jsonContext;
@@ -122,6 +123,7 @@ public class EntityContextMenu extends Menu {
         intelligenceContext = intelligenceContext();
         xmppContext = xmppResourceContext();
         summaryContext = summaryContext();
+
         keyContext = keyContext();
         exportContext = exportContext();
         jsonContext = jsonContext();
@@ -134,6 +136,7 @@ public class EntityContextMenu extends Menu {
         add(keyContext);
         add(calcContext);
         add(summaryContext);
+
         add(jsonContext);
         add(xmppContext);
      //   add(downloadContext);
@@ -162,6 +165,7 @@ public class EntityContextMenu extends Menu {
         intelligenceContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.intelligence));
         xmppContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.resource));
         summaryContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.summary));
+
         jsonContext.setEnabled(! currentModel.getEntityType().equals(EntityType.user));
         keyContext.setEnabled(currentModel.getEntityType().equals(EntityType.user) || currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.accessKey));
         exportContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) && isDomain);
@@ -204,11 +208,13 @@ public class EntityContextMenu extends Menu {
     private MenuItem summaryContext() {
         final MenuItem retObj = new MenuItem();
         retObj.setText("Summarize");
-        retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.summary()));
+        retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.expand()));
         retObj.addSelectionListener(new SummaryMenuEventSelectionListener());
         return retObj;
 
     }
+
+
     private MenuItem keyContext() {
         final MenuItem retObj = new MenuItem();
         retObj.setText("New Read/Write Key");
@@ -260,12 +266,15 @@ public class EntityContextMenu extends Menu {
         final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
         w.setWidth(WIDTH);
         w.setHeight(HEIGHT);
-        w.setHeading("Summary");
+        w.setHeading("Summary data relay");
         w.add(dp);
         dp.addEntityAddedListener(new SummaryEntityAddedListener(w));
 
         w.show();
     }
+
+
+
     public void showKeyPanel(final Entity entity) {
         AccessKeyPanel dp = new AccessKeyPanel(entity);
         final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
@@ -880,6 +889,9 @@ public class EntityContextMenu extends Menu {
 
         }
     }
+
+
+
     private class KeyMenuEventSelectionListener extends SelectionListener<MenuEvent> {
         KeyMenuEventSelectionListener() {
         }

@@ -23,6 +23,9 @@ public interface Icons extends ClientBundle {
 
     static final Icons INSTANCE = GWT.create(Icons.class);
 
+    @Source("delta.png")
+    ImageResource delta();
+
     @Source("History.png")
     ImageResource download();
 
@@ -37,7 +40,7 @@ public interface Icons extends ClientBundle {
     @Source("bug-blue.png")
     ImageResource bug();
 
-    @Source("sigma.gif")
+    @Source("expand.png")
     ImageResource summary();
 
     @Source("web.png")

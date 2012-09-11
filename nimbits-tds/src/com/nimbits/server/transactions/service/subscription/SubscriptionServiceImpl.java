@@ -123,6 +123,10 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
                             break;
                         case changed:
                             break;
+                        case deltaAlert:
+                            if (ValueServiceFactory.getInstance().calculateDelta(point) > point.getDeltaAlarm()) {
+                                sendNotification(subscriber, point, subscription, point, v);
+                            }
                     }
 
                 }

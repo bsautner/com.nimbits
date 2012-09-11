@@ -15,7 +15,8 @@ public enum SummaryType {
     sum(3, "Sum"),
     variance(4, "Variance"),
     max(6, "Max"),
-    min(7, "Min")
+    min(7, "Min"),
+    delta(8, "Delta")
 
 
     ;

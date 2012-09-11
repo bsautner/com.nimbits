@@ -144,10 +144,6 @@ public class SummaryPanel extends NavigationEventProvider {
         spinnerField.setMinValue(1d);
         spinnerField.setMaxValue(MAX_VALUE);
 
-
-
-
-
         try {
             SummaryType type;
             String target = null;
@@ -160,7 +156,7 @@ public class SummaryPanel extends NavigationEventProvider {
                 target = summary.getTarget();
             }
             else {
-                summaryName.setValue(entity.getName().getValue() + " Average");
+                summaryName.setValue(entity.getName().getValue() + " Summary");
                 type = SummaryType.average;
                 spinnerField.setValue(SECONDS_IN_HOUR);
 
@@ -192,7 +188,7 @@ public class SummaryPanel extends NavigationEventProvider {
 
 
             Html h = new Html("<p>The summation process runs once an hour and can compute a summary value (such as an average) " +
-                    "based on the interval you set here (i.e a setting of 8 will computer an 8 hour average every 8 hours) using the " +
+                    "based on the interval you set here (i.e a setting of 8 will compute an 8 hour average every 8 hours) using the " +
                     "data recorded to the selected data point, storing the result in the select pre-existing target point.</p>");
 
 
@@ -303,6 +299,7 @@ public class SummaryPanel extends NavigationEventProvider {
 
                 try {
                    Trigger summary = (Trigger) entity;
+                    entity.setName(name);
                     update = SummaryModelFactory.createSummary(entity,
                             summary.getTrigger(), summary.getTarget(), true, summaryType,
                             spinnerField.getValue().intValue() * 1000, new Date());

@@ -51,12 +51,19 @@ public class PointPanel extends LayoutContainer {
     private ProtectionLevelOptions protectionLevelOptions;
     private final CheckBox he = new CheckBox();
     private final CheckBox idleOn = new CheckBox();
+    private final CheckBox deltaOn = new CheckBox();
+
+
     private final CheckBox le = new CheckBox();
     private final Collection<PointUpdatedListener> pointUpdatedListeners = new ArrayList<PointUpdatedListener>(1);
     private final NumberField compression = new NumberField();
     private final NumberField expires = new NumberField();
     private final NumberField high = new NumberField();
-    private final NumberField idleMinutes = new NumberField();
+    private final NumberField idleSeconds = new NumberField();
+
+    private final NumberField deltaSeconds = new NumberField();
+    private final NumberField deltaAlert = new NumberField();
+
     private final NumberField low = new NumberField();
     private final CheckBox inferLocationCheckbox = new CheckBox();
     private final SeparatorToolItem separatorToolItem = new SeparatorToolItem();
@@ -210,10 +217,12 @@ public class PointPanel extends LayoutContainer {
 
             //idlealarm
             point.setIdleAlarmOn(idleOn.getValue());
-            point.setIdleSeconds(idleMinutes.getValue().intValue() * 60);
+            point.setIdleSeconds(idleSeconds.getValue().intValue());
             point.setIdleAlarmSent(false);
 //
-
+            point.setDeltaAlarm(deltaAlert.getValue().doubleValue());
+            point.setDeltaAlarmOn(deltaOn.getValue());
+            point.setDeltaSeconds(deltaSeconds.getValue().intValue());
             // point.setSendAlertsAsJson(sendAlertAsJson.getValue());
 
 
@@ -303,12 +312,36 @@ public class PointPanel extends LayoutContainer {
         idleOn.setLabelSeparator("");
         idleOn.setReadOnly(this.readOnlyForm);
         idleOn.setValue(point.isIdleAlarmOn());
-        idleMinutes.setFieldLabel("Idle Minutes");
-        idleMinutes.setValue(point.getIdleSeconds() / 60);
-        idleMinutes.setReadOnly(this.readOnlyForm);
 
-        simple.add(idleMinutes, formdata);
+        idleSeconds.setFieldLabel("Idle Seconds");
+        idleSeconds.setValue(point.getIdleSeconds());
+        idleSeconds.setReadOnly(this.readOnlyForm);
+
+        simple.add(idleSeconds, formdata);
         simple.add(idleOn, formdata);
+
+
+        deltaOn.setBoxLabel("Delta alert enabled");
+        deltaOn.setLabelSeparator("");
+        deltaOn.setReadOnly(this.readOnlyForm);
+        deltaOn.setValue(point.isDeltaAlarmOn());
+
+        deltaSeconds.setFieldLabel("Delta Seconds");
+        deltaSeconds.setValue(point.getDeltaSeconds());
+        deltaSeconds.setReadOnly(this.readOnlyForm);
+
+        deltaAlert.setFieldLabel("Delta Alert Value");
+        deltaAlert.setValue(point.getDeltaAlarm());
+        deltaAlert.setReadOnly(this.readOnlyForm);
+
+        simple.add(deltaAlert, formdata);
+        simple.add(deltaSeconds, formdata);
+        simple.add(deltaOn, formdata);
+
+
+
+
+
         if (point.isIdleAlarmOn()) {
             final Html h2 = new Html();
 
@@ -333,7 +366,7 @@ public class PointPanel extends LayoutContainer {
         simple.setFrame(false);
         simple.setBorders(false);
         simple.setBodyBorder(false);
-        simple.setSize("400", "400");
+        simple.setSize("400", "500");
         return simple;
     }
 

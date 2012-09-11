@@ -38,7 +38,6 @@ import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
 import com.nimbits.server.transactions.service.user.UserServiceFactory;
 
 import java.util.*;
-import java.util.logging.Logger;
 
 import static java.lang.Math.abs;
 
@@ -46,7 +45,7 @@ import static java.lang.Math.abs;
 public class ValueServiceImpl extends RemoteServiceServlet implements
         ValueService, RequestCallback {
 
-    static final Logger log = Logger.getLogger(ValueServiceImpl.class.getName());
+//    static final Logger log = Logger.getLogger(ValueServiceImpl.class.getName());
     private static final long serialVersionUID = 1L;
 
 
@@ -144,7 +143,7 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
     @Override
     public double calculateDelta(final Point point) throws NimbitsException {
         double retVal = 0.0;
-        if (point.isDeltaAlarmOn()) {
+
             Calendar c = Calendar.getInstance();
             c.add(Calendar.SECOND, (point.getDeltaSeconds() * -1));
             List<Value> startSample = getPrevValue(point,c.getTime());
@@ -159,7 +158,7 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
 
                 retVal = abs(startValue - current.getDoubleValue());
             }
-        }
+
         return retVal;
     }
 
@@ -320,10 +319,8 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
 
     }
 
-    private static boolean ignoreByAuthLevel(final User u, final Entity entity) throws NimbitsException {
-        for (AccessKey k : u.getAccessKeys()) {
-            log.info("key: " + k.getCode() + ' '  + k.getScope() + ' '  + entity.getKey());
-        }
+    private static boolean ignoreByAuthLevel(final User u, final Point point) throws NimbitsException {
+
         if (u.isRestricted()) {
             return true;
         }
@@ -333,13 +330,18 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
             if (key.getAuthLevel().equals(AuthLevel.admin)) {
                 return false;
             }
-            if (key.getScope().equals(entity.getKey()) || key.getScope().equals(entity.getOwner())) {
+            if (key.getScope().equals(point.getKey()) || key.getScope().equals(point.getOwner())) {
                 if (key.getAuthLevel().compareTo(AuthLevel.readWritePoint) >= 0) {
                     return false;
                 }
 
             }
         }
+
+        if (! u.isUserAdmin() && point.getPointType().isSystem())  {
+            return true;
+        }
+
 
         return true;
 
@@ -372,7 +374,7 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
             }
         }
 
-        if (ignoreByAuthLevel(u, entity)) {
+        if (ignoreByAuthLevel(u, point)) {
             throw new NimbitsException("Could not record value do to permissions levels being to low for a write operation");
         } else {
 

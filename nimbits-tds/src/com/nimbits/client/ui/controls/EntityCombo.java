@@ -23,6 +23,7 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.GxtModel;
 import com.nimbits.client.model.TreeModel;
 import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.point.Point;
 import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.entity.EntityServiceAsync;
 import com.nimbits.client.ui.helper.FeedbackHelper;
@@ -76,11 +77,16 @@ public class EntityCombo extends ComboBox<TreeModel> {
             for (final Entity e : result.values()) {
 
                 try {
-                    TreeModel model = new GxtModel(e);
-                    cbStore.add(model);
-                    if (model.getBaseEntity().getKey().equals(selectedUUID)) {
-                        setValue(model);
+                    if (((e.getEntityType().equals(EntityType.point) && ! ((Point)e).getPointType().isSystem()))
+                    || ! (e.getEntityType().equals(EntityType.point))) {
+                        TreeModel model = new GxtModel(e);
+                        cbStore.add(model);
+                        if (model.getBaseEntity().getKey().equals(selectedUUID)) {
+                            setValue(model);
+                        }
+
                     }
+
                 } catch (NimbitsException e1) {
                     FeedbackHelper.showError(e1);
                 }

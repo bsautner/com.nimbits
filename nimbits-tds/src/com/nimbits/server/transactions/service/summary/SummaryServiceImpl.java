@@ -61,27 +61,47 @@ public class SummaryServiceImpl  extends RemoteServiceServlet implements Summary
                     if (! results.isEmpty()) {
                         final Entity source = results.get(0);
                         final Timespan span = TimespanModelFactory.createTimespan(new Date(now.getTime() - summary.getSummaryIntervalMs()), now);
-                        final List<Value> values = ValueServiceFactory.getInstance().getDataSegment(source, span);
 
 
-                        if (!values.isEmpty()) {
-                            final double[] doubles = new double[values.size()];
-                            for (int i = 0; i< values.size(); i++) {
-                                doubles[i] = values.get(i).getDoubleValue();
-                            }
-                            final List<Entity> targetResults =  EntityServiceFactory.getInstance().getEntityByKey(summary.getTarget(), EntityType.point);
-                            if (! targetResults.isEmpty()) {
-                                final Entity target = targetResults.get(0);
+                        final Value value;
+                        if (summary.getSummaryType().equals(SummaryType.delta)) {
+                            Point pointSource = ((Point)source);
+                            pointSource.setDeltaSeconds(summary.getSummaryIntervalSeconds());
+                            double delta = ValueServiceFactory.getInstance().calculateDelta(pointSource);
+                            value = ValueFactory.createValueModel(delta);
+
+                        }
+                        else {
+                            final List<Value> values = ValueServiceFactory.getInstance().getDataSegment(source, span);
+                            if (!values.isEmpty()) {
+                                final double[] doubles = new double[values.size()];
+                                for (int i = 0; i< values.size(); i++) {
+                                    doubles[i] = values.get(i).getDoubleValue();
+                                }
+
                                 final double result = getValue(summary.getSummaryType(), doubles);
-                                final Value value = ValueFactory.createValueModel(result);
-
-                                ValueServiceFactory.getInstance().recordValue(user, target, value);
-                                summary.setLastProcessed(new Date());
-                                EntityServiceFactory.getInstance().addUpdateEntity(user, summary);
-
+                                value = ValueFactory.createValueModel(result);
+                            }
+                            else {
+                                return; //nothing to do
                             }
                         }
+
+
+                        final List<Entity> targetResults =  EntityServiceFactory.getInstance().getEntityByKey(summary.getTarget(), EntityType.point);
+                        if (! targetResults.isEmpty()) {
+                            final Entity target = targetResults.get(0);
+                            ValueServiceFactory.getInstance().recordValue(user, target, value);
+                            summary.setLastProcessed(new Date());
+                            EntityServiceFactory.getInstance().addUpdateEntity(user, summary);
+
+                        }
+
                     }
+
+
+
+
                 } catch (NimbitsException e) {
                     summary.setEnabled(false);
                     EntityServiceFactory.getInstance().addUpdateEntity(user, summary);

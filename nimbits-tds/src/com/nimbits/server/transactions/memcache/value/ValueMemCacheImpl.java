@@ -189,29 +189,21 @@ public class ValueMemCacheImpl implements ValueTransactions {
 
 
     protected static List<Value> getClosestMatchToTimestamp(final List<Value> values, final Date timestamp) {
-        List<Value> result = new ArrayList<Value>(1);
-        Value value;
 
-        long delta = 0;
-        if (! values.isEmpty()) {
-            value = values.get(0);
-            for (Value v : values) {
-                if (v.getTimestamp().getTime() == timestamp.getTime()) {
-                    result.add(v);
-                    return result; //perfect match
-                }
-                else if (v.getTimestamp().getTime() < timestamp.getTime()) {
-                    delta = v.getTimestamp().getTime()  - timestamp.getTime();
-                    if (delta  > (value.getTimestamp().getTime()  - timestamp.getTime())) {
-                        value = v;
-                    }
-                }
-
-
+        List<Value> shucked = new ArrayList<Value>(values.size());
+        for (Value v : values) {
+            if (v.getTimestamp().getTime() <= timestamp.getTime()) {
+                shucked.add(v);
             }
-            result.add(value);
         }
-       return result;
+
+
+       Collections.sort(shucked);
+
+       return shucked;
+
+
+
 
 
     }

@@ -18,9 +18,14 @@ import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.admin.quota.QuotaFactory;
+import com.nimbits.server.api.impl.ValueServletImpl;
 import com.nimbits.server.settings.SettingsServiceFactory;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
@@ -31,8 +36,13 @@ import static org.junit.Assert.assertEquals;
  * Date: 3/28/12
  * Time: 1:24 PM
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={
+        "classpath:META-INF/applicationContext.xml"
+})
 public class QuotaResetCronTest extends NimbitsServletTest {
-
+    @Resource(name = "valueApi")
+    ValueServletImpl valueServlet;
 
     @Test
     public void testQuotaReset() throws IOException, NimbitsException {

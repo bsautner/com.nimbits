@@ -54,7 +54,7 @@ import java.util.logging.Logger;
 public class SubscriptionServiceImpl extends RemoteServiceServlet implements
         SubscriptionService {
     private static final Logger log = Logger.getLogger(SubscriptionServiceImpl.class.getName());
-    private static final int SECONDS = 60;
+
     private static final int INT = 120;
     private static final int INT1 = 512;
 
@@ -63,7 +63,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
         boolean retVal;
         try {
-            retVal = (subscription.getLastSent().getTime() +  subscription.getMaxRepeat() * SECONDS  * 1000 < new Date().getTime());
+            retVal = (subscription.getLastSent().getTime() +  subscription.getMaxRepeat() *  1000 < new Date().getTime());
         } catch (Exception ex) {
             LogHelper.logException(this.getClass(), ex);
             retVal = true;
@@ -134,7 +134,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
             }
             else {
                 log.info("Not running subscription because " +
-                        subscription.getLastSent().getTime() + subscription.getMaxRepeat() * SECONDS * 1000
+                        subscription.getLastSent().getTime() + subscription.getMaxRepeat() *  1000
                         + " <  " + new Date().getTime());
 
             }

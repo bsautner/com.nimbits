@@ -69,9 +69,9 @@ public class ValueMemCacheImplTest extends NimbitsServletTest {
         assertEquals(result.get(0).getTimestamp(),now );
 
         Value sample = values.get(r.nextInt(99));
-        List<Value> result2 = ValueMemCacheImpl.getClosestMatchToTimestamp(values, new Date(sample.getTimestamp().getTime() + 5000));
+        List<Value> result2 = ValueMemCacheImpl.getClosestMatchToTimestamp(values, new Date(sample.getTimestamp().getTime() + 1000));
         assertFalse(result2.isEmpty());
-        assertEquals(result2.get(0).getTimestamp(),sample.getTimestamp() );
+        assertEquals(sample.getTimestamp() , result2.get(0).getTimestamp());
 
     }
 

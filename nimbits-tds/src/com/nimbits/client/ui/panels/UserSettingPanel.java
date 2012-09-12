@@ -47,11 +47,17 @@ import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.subscription.SubscriptionFactory;
 import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
 import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.entity.EntityServiceAsync;
+import com.nimbits.client.service.user.UserService;
+import com.nimbits.client.service.user.UserServiceAsync;
+import com.nimbits.client.service.value.ValueService;
+import com.nimbits.client.service.value.ValueServiceAsync;
 import com.nimbits.client.ui.helper.FeedbackHelper;
 
 import java.util.ArrayList;
@@ -137,12 +143,12 @@ public class UserSettingPanel extends NavigationEventProvider {
         balance.setFieldLabel("Account Balance");
         balance.setReadOnly(true);
         balance.setAllowBlank(false);
-       // balance.setValue(user.getBilling().getAccountBalance());
+
 
         balance.setFormat(NumberFormat.getFormat("##.##"));
 
         final CheckBox enabled = new CheckBox();
-       // enabled.setValue(user.getBilling().isBillingEnabled());
+        enabled.setValue(user.isBillingEnabled());
 
 
 
@@ -194,6 +200,32 @@ public class UserSettingPanel extends NavigationEventProvider {
         c.add(submit, layoutData);
         vp.add(simple);
         vp.add(c);
+
+
+       UserServiceAsync service = GWT.create(UserService.class);
+        service.getAccountBalance(new AsyncCallback<List<Point>>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                FeedbackHelper.showError(caught);
+            }
+
+            @Override
+            public void onSuccess(List<Point> result) {
+              if (! result.isEmpty()) {
+                  Point point = result.get(0);
+                  Value value = point.getValue();
+                  balance.setValue(value.getDoubleValue());
+                  maxQuota.setValue(point.getDeltaAlarm());
+
+
+              }
+            }
+        });
+//        EntityServiceAsync entityService = GWT.create(EntityService.class);
+//        Point point = entityService.getE
+//        service.getCurrentValue();
+
+
     }
 
 
@@ -235,24 +267,20 @@ public class UserSettingPanel extends NavigationEventProvider {
                     "Saving your settings, please wait...", "Saving...");
             box.show();
 
-
-          //  user.getBilling().setBillingEnabled(enabled.getValue());
-           // user.getBilling().setMaxDailyAllowance(maxQuota.getValue().doubleValue());
-            EntityServiceAsync service = GWT.create(EntityService.class);
-
-            service.addUpdateEntity(user, new AsyncCallback<Entity>() {
+           UserServiceAsync service = GWT.create(UserService.class);
+            service.updateBilling(user, this.enabled.getValue(), this.maxQuota.getValue().doubleValue(), new AsyncCallback<Void>() {
                 @Override
                 public void onFailure(Throwable caught) {
-                    box.close();
-                    FeedbackHelper.showError(caught);
+                  box.close();
+                  FeedbackHelper.showError(caught);
                 }
 
                 @Override
-                public void onSuccess(Entity result) {
-                    box.close();
-                    MessageBox.alert("Success", "Settings Updated", null);
+                public void onSuccess(Void result) {
+                  box.close();
                 }
             });
+
         }
     }
 }

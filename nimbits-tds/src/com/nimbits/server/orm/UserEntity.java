@@ -16,8 +16,6 @@ package com.nimbits.server.orm;
 import com.nimbits.client.enums.AuthLevel;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.accesskey.AccessKey;
-import com.nimbits.client.model.billing.Billing;
-import com.nimbits.client.model.billing.BillingFactory;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
@@ -26,7 +24,6 @@ import com.nimbits.client.model.user.User;
 import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -54,7 +51,7 @@ public class UserEntity extends EntityStore implements User {
     private String twitterTokenSecret;
 
     @Persistent
-    Boolean billingEnabled;
+    private Boolean billingEnabled;
 
     @NotPersistent
     private boolean loggedIn = false;

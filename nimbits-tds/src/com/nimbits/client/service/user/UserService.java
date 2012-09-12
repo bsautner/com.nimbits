@@ -19,7 +19,9 @@ import com.nimbits.client.enums.AuthLevel;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.connection.ConnectionRequest;
 import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
 
 import java.util.List;
 
@@ -32,10 +34,10 @@ public interface UserService extends RemoteService {
     void connectionRequestReply(final EmailAddress targetEmail, final EmailAddress RequestorEmail, final Long key, final boolean accepted) throws NimbitsException;
     User getAppUserUsingGoogleAuth() throws NimbitsException;
    // String getSecret() throws NimbitsException;
-    User getUserByKey(String key, AuthLevel authLevel) throws NimbitsException;
-    List<User> getConnectionRequests(List<String> connections) throws NimbitsException;
-    User login(String requestUri) throws NimbitsException;
+    User getUserByKey(final String key,final  AuthLevel authLevel) throws NimbitsException;
+    List<User> getConnectionRequests(final List<String> connections) throws NimbitsException;
+    User login(final String requestUri) throws NimbitsException;
     Integer getQuota() throws NimbitsException;
-
-
+    List<Point> getAccountBalance() throws NimbitsException;
+    void updateBilling(final User user,final boolean billingEnabled,final double maxQuota) throws NimbitsException;
 }

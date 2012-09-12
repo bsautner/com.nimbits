@@ -18,7 +18,9 @@ import com.nimbits.client.enums.AuthLevel;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.connection.ConnectionRequest;
 import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
 
 import java.util.List;
 
@@ -27,17 +29,21 @@ public interface UserServiceAsync {
 
     void sendConnectionRequest(final EmailAddress email, final AsyncCallback<Void> asyncCallback);
 
-    void getPendingConnectionRequests(final EmailAddress email, final AsyncCallback<List<ConnectionRequest>> asyncCallback) throws NimbitsException;
+    void getPendingConnectionRequests(final EmailAddress email, final AsyncCallback<List<ConnectionRequest>> asyncCallback);
 
     void connectionRequestReply(final EmailAddress targetEmail, final EmailAddress requestorEmail, final Long key, final boolean accepted, final AsyncCallback<Void> asyncCallback);
 
     void getAppUserUsingGoogleAuth(final AsyncCallback<User> async);
 
-    void getUserByKey(final String key, AuthLevel authLevel, final AsyncCallback<User> async) throws NimbitsException;
+    void getUserByKey(final String key, AuthLevel authLevel, final AsyncCallback<User> async);
 
-    void getConnectionRequests(final List<String> connections, final AsyncCallback<List<User>> async) throws NimbitsException;
+    void getConnectionRequests(final List<String> connections, final AsyncCallback<List<User>> async);
 
     void login(String requestUri, AsyncCallback<User> async);
 
     void getQuota(AsyncCallback<Integer> async);
+
+    void getAccountBalance(AsyncCallback<List<Point>> async);
+
+    void updateBilling(final User user, final boolean billingEnabled, final double maxQuota, AsyncCallback<Void> async);
 }

@@ -27,7 +27,11 @@ import com.nimbits.server.settings.SettingsServiceFactory;
 import com.nimbits.server.transactions.service.value.ValueServiceFactory;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -40,8 +44,13 @@ import static org.junit.Assert.*;
  * Date: 3/28/12
  * Time: 1:52 PM
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={
+        "classpath:META-INF/applicationContext.xml"
+})
 public class ValueServletImplTest extends NimbitsServletTest {
-
+    @Resource(name = "valueApi")
+    ValueServletImpl valueServlet;
     @Test
     @Ignore
     public void testPostData() throws NimbitsException, InterruptedException, IOException {
@@ -81,19 +90,19 @@ public class ValueServletImplTest extends NimbitsServletTest {
     public void arduinoTest() throws IOException {
 
 
-            req.addParameter(Parameters.client.getText(), ClientType.arduino.getCode());
-            valueServlet.doGet(req, resp);
-            String s = resp.getContentAsString();
+        req.addParameter(Parameters.client.getText(), ClientType.arduino.getCode());
+        valueServlet.doGet(req, resp);
+        String s = resp.getContentAsString();
 
 
-            assertNotNull(s);
+        assertNotNull(s);
         assertTrue(s.startsWith(Const.CONST_ARDUINO_DATA_SEPARATOR));
         assertTrue(s.endsWith(Const.CONST_ARDUINO_DATA_SEPARATOR));
 
 
     }
     @Test
-    (expected=NimbitsException.class)
+            (expected=NimbitsException.class)
     public void testQuotaException() throws IOException, NimbitsException {
 
         SystemMaint systemMaint = new SystemMaint();
@@ -126,14 +135,15 @@ public class ValueServletImplTest extends NimbitsServletTest {
 
     }
 
+
     @Test
     public void processRequestTest() throws NimbitsException {
         Value v = ValueFactory.createValueModel(1.2);
 
-        String j = ValueServletImpl.processRequest(pointName.getValue(), null, "double", v, user);
+        String j = valueServlet.processRequest(pointName.getValue(), null, "double", v, user);
 
         assertEquals(1.2,Double.valueOf(j), 0.001);
-        String c = ValueServletImpl.processRequest(pointName.getValue(), null, "double", null, user);
+        String c = valueServlet.processRequest(pointName.getValue(), null, "double", null, user);
         assertEquals(1.2,Double.valueOf(c), 0.001);
 
 

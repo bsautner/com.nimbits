@@ -33,7 +33,9 @@ import com.nimbits.client.common.Utils;
 import com.nimbits.client.constants.UserMessages;
 import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.helper.EntityHelper;
 import com.nimbits.client.model.GxtModel;
@@ -45,6 +47,7 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.entity.EntityServiceAsync;
@@ -685,7 +688,10 @@ public class MainMenuBar extends ToolBar {
                 EntityServiceAsync service = GWT.create(EntityService.class);
 
                 try {
-                    Point p = EntityHelper.createPointWithName(newEntityName);
+
+                    EntityName name = CommonFactoryLocator.getInstance().createName(newEntityName, EntityType.point);
+                    Entity entity = EntityModelFactory.createEntity(name, EntityType.point);
+                    Point p = PointModelFactory.createPointModel(entity, 0.0, 90, "", 0.0, false, false, false, 0, false, FilterType.fixedHysteresis, 0.1, false, PointType.basic, 0, false, 0.0);
 
                     service.addUpdateEntity(p, new NewPointEntityAsyncCallback(box));
                 } catch (NimbitsException caught) {

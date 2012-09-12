@@ -17,13 +17,10 @@ package com.nimbits.client.model.user;
 import com.nimbits.client.enums.AuthLevel;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.accesskey.AccessKey;
-import com.nimbits.client.model.billing.Billing;
-import com.nimbits.client.model.billing.BillingFactory;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
-
 
 import java.io.Serializable;
 import java.util.ArrayList;

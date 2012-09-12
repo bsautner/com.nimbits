@@ -19,6 +19,21 @@
          version="2.5">
 
     <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+         classpath:/META-INF/applicationContext.xml,
+         classpath:/META-INF/applicationContext-service.xml
+        </param-value>
+    </context-param>
+
+
+    <listener>
+        <listener-class>
+            org.springframework.web.context.ContextLoaderListener
+        </listener-class>
+    </listener>
+
+    <context-param>
         <param-name>billingEnabled</param-name>
         <param-value>true</param-value>
     </context-param>
@@ -454,14 +469,18 @@
         <url-pattern>/task/DeleteRecordedValuesTask</url-pattern>
     </servlet-mapping>
     <servlet>
-        <servlet-name>currentValueServlet</servlet-name>
-        <servlet-class>com.nimbits.server.api.impl.ValueServletImpl</servlet-class>
+        <servlet-name>valueApi</servlet-name>
+        <!--<servlet-class>com.nimbits.server.api.impl.ValueServletImpl</servlet-class>-->
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>currentValueServlet</servlet-name>
+        <servlet-name>valueApi</servlet-name>
         <url-pattern>/service/currentvalue</url-pattern>
     </servlet-mapping>
-
+    <servlet-mapping>
+        <servlet-name>valueApi</servlet-name>
+        <url-pattern>/service/value</url-pattern>
+    </servlet-mapping>
     <servlet>
         <servlet-name>feedServlet</servlet-name>
         <servlet-class>com.nimbits.server.api.impl.FeedServletImpl</servlet-class>
@@ -605,7 +624,15 @@
         <url-pattern>/admin/user</url-pattern>
     </servlet-mapping>
 
-
+    <servlet>
+        <servlet-name>quotaService</servlet-name>
+        <!--<servlet-class>com.nimbits.server.admin.quota.QuotaServletImpl</servlet-class>-->
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>quotaService</servlet-name>
+        <url-pattern>/admin/quota</url-pattern>
+    </servlet-mapping>
 
     <servlet>
         <servlet-name>com.nimbits.nimbits UserReportService</servlet-name>

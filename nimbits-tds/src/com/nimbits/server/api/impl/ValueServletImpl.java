@@ -19,6 +19,7 @@ import com.nimbits.client.constants.UserMessages;
 import com.nimbits.client.constants.Words;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactory;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
@@ -30,11 +31,12 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueData;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.model.value.impl.ValueModel;
-import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
-import com.nimbits.server.transactions.service.value.ValueServiceFactory;
+import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
+import com.nimbits.server.transactions.service.value.ValueServiceImpl;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,9 +46,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
-
+@Transactional
+@Component("valueApi")
 public class ValueServletImpl extends ApiServlet {
     final private static Logger log = Logger.getLogger(ValueServletImpl.class.getName());
+
+
+    private CommonFactory commonFactory;
+    private ValueServiceImpl valueService;
+    private EntityServiceImpl entityService;
 
 
     @Override
@@ -77,14 +85,14 @@ public class ValueServletImpl extends ApiServlet {
 
     }
 
-    protected static void processPost(final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException, IOException {
+    protected  void processPost(final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException, IOException {
         doInit(req, resp, ExportType.plain);
         log.info("recording post");
 
         if (user != null && ! user.isRestricted()) {
 
-            final EntityName pointName = CommonFactoryLocator.getInstance().createName(getParam(Parameters.point), EntityType.point);
-            final List<Entity> points = EntityServiceFactory.getInstance().getEntityByName(user, pointName, EntityType.point);
+            final EntityName pointName = commonFactory.createName(getParam(Parameters.point), EntityType.point);
+            final List<Entity> points = entityService.getEntityByName(user, pointName, EntityType.point);
 
             if (points.isEmpty()) {
                 throw new NimbitsException(new NimbitsException(UserMessages.ERROR_POINT_NOT_FOUND));
@@ -107,7 +115,7 @@ public class ValueServletImpl extends ApiServlet {
                 }
 
 
-                final Value result = ValueServiceFactory.getInstance().recordValue(user, point, v);
+                final Value result = valueService.recordValue(user, point, v);
 
                 reportLocation(point, location);
 
@@ -123,7 +131,7 @@ public class ValueServletImpl extends ApiServlet {
 
 
 
-    public static void processGet(final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException, IOException {
+    public void processGet(final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException, IOException {
         doInit(req, resp, ExportType.plain);
         final PrintWriter out = resp.getWriter();
         Value nv = null;
@@ -170,7 +178,7 @@ public class ValueServletImpl extends ApiServlet {
         return retVal;
     }
 
-    protected static String processRequest(
+    protected String processRequest(
             final String pointNameParam,
             final String uuid,
             final String format,
@@ -179,12 +187,12 @@ public class ValueServletImpl extends ApiServlet {
 
         final List<Entity> result;
         if (!Utils.isEmptyString(uuid)) {
-            result = EntityServiceFactory.getInstance().getEntityByKey(u, uuid, EntityType.point);
+            result = entityService.getEntityByKey(u, uuid, EntityType.point);
         }
         else if (!Utils.isEmptyString(pointNameParam)) {
-            final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
-            LogHelper.log(ValueServletImpl.class, "Getting point "  + pointNameParam);
-            result = EntityServiceFactory.getInstance().getEntityByName(u, pointName,EntityType.point);
+            final EntityName pointName = commonFactory.createName(pointNameParam, EntityType.point);
+
+            result = entityService.getEntityByName(u, pointName, EntityType.point);
         }
         else {
             throw new NimbitsException(UserMessages.ERROR_POINT_NOT_FOUND);
@@ -208,7 +216,7 @@ public class ValueServletImpl extends ApiServlet {
                         nv.getTimestamp(),nv.getNote(),  nv.getData(), AlertType.OK);
 
 
-                value = ValueServiceFactory.getInstance().recordValue(u, p, newValue);
+                value = valueService.recordValue(u, p, newValue);
                 if (nv.getLocation().isEmpty()) {
                     reportLocation(p, location);
                 }
@@ -216,7 +224,7 @@ public class ValueServletImpl extends ApiServlet {
                     reportLocation(p,nv.getLocation());
                 }
             } else {
-                List<Value> values = ValueServiceFactory.getInstance().getCurrentValue(p);
+                List<Value> values = valueService.getCurrentValue(p);
                 if (! values.isEmpty()) {
                     value = values.get(0);
                 }
@@ -234,4 +242,27 @@ public class ValueServletImpl extends ApiServlet {
     }
 
 
+    public void setCommonFactory(CommonFactory commonFactory) {
+        this.commonFactory = commonFactory;
+    }
+
+    public CommonFactory getCommonFactory() {
+        return commonFactory;
+    }
+
+    public void setValueService(ValueServiceImpl valueService) {
+        this.valueService = valueService;
+    }
+
+    public ValueServiceImpl getValueService() {
+        return valueService;
+    }
+
+    public void setEntityService(EntityServiceImpl entityService) {
+        this.entityService = entityService;
+    }
+
+    public EntityServiceImpl getEntityService() {
+        return entityService;
+    }
 }

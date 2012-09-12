@@ -85,7 +85,7 @@ public class NimbitsServletTest {
     public User user;
     public EmailAddress emailAddress;
 
-    public ValueServletImpl valueServlet;
+
 
     public PointService pointService;
     public SettingsService settingsService;
@@ -114,7 +114,8 @@ public class NimbitsServletTest {
         SystemMaint systemMaint = new SystemMaint();
 
         try {
-            systemMaint.doGet(req, resp);
+            systemMaint.doGet(null,null);
+
         } catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
@@ -126,7 +127,7 @@ public class NimbitsServletTest {
         pointService = PointServiceFactory.getInstance();
         settingsService = SettingsServiceFactory.getInstance();
         emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
-        valueServlet= new ValueServletImpl();
+
 
         pointName = CommonFactoryLocator.getInstance().createName("point", EntityType.point);
         pointChildName = CommonFactoryLocator.getInstance().createName("pointChild", EntityType.point);

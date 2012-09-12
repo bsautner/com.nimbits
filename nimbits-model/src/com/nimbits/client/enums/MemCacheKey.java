@@ -1,6 +1,7 @@
 package com.nimbits.client.enums;
 
 
+
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,8 +31,13 @@ public enum MemCacheKey {
     triggers(13,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_TRIGGERS),
     bufferedValueList(14,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_BUFFERED_VALUE_LIST),
     userEntityTree(15,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_USER_ENTITY_TREE),
-    quotaNamespace(16,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_QUOTA_NAMESPACE),
+    quotaNamespace(16, buildQuotaKey()),
     ;
+
+    private static String buildQuotaKey() {
+        //use day of month
+        return SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_QUOTA_NAMESPACE;
+    }
 
     private static final Map<Integer, MemCacheKey> lookup = new HashMap<Integer, MemCacheKey>(MemCacheKey.values().length);
     private final int code;

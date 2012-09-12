@@ -33,7 +33,11 @@ import com.nimbits.server.transactions.service.user.UserServiceFactory;
 import com.nimbits.server.transactions.service.value.ValueServiceFactory;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
@@ -47,9 +51,14 @@ import static org.junit.Assert.assertFalse;
  * Date: 8/14/12
  * Time: 10:56 AM
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={
+        "classpath:META-INF/applicationContext.xml"
+})
 public class BillingQuotaTest  extends NimbitsServletTest {
 
-
+    @Resource(name = "valueApi")
+    ValueServletImpl valueServlet;
 
 
     @Test(expected = NimbitsException.class)

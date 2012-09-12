@@ -39,30 +39,46 @@ public class SystemMaint extends HttpServlet {
             throws IOException {
 
         try {
-
-            resp.setContentType(Const.CONTENT_TYPE_HTML);
-            out = resp.getWriter();
-            out.println(Const.HTML_BOOTSTRAP);
-            out.println("<P>" + SettingTransactionsFactory.getInstance().reloadCache() + "</P>");
-            out.print("<p>This Servers URL: " + req.getLocalName() + "</p>");
-            out.println("<h5>Updating Values</h5>");
+            if (resp != null) {
+                resp.setContentType(Const.CONTENT_TYPE_HTML);
+                out = resp.getWriter();
+            }
+            println(Const.HTML_BOOTSTRAP);
+            println("<P>" + SettingTransactionsFactory.getInstance().reloadCache() + "</P>");
+            if (req != null) {
+                println("<p>This Servers URL: " + req.getLocalName() + "</p>");
+            }
+            println("<h5>Updating Values</h5>");
             for (SettingType setting : SettingType.values()) {
                 processSetting(setting);
             }
             //CoreFactory.getInstance().reportInstanceToCore(ServerInfoImpl.getFullServerURL(req));
 
         } catch (NimbitsException e) {
-            out.println(e.getMessage());
+            println(e.getMessage());
+            if (resp != null) {
+                resp.setStatus(Const.HTTP_STATUS_INTERNAL_SERVER_ERROR);
+            }
         }
 
-        out.println("<span class=\"label success\">A new Nimbits server has properly initialised!</span>");
-        out.println("<p>You now may want to <A href = \"https://appengine.google.com/\">log into the admin console on App Engine</a> and edit these values to meet your needs.</p>");
+        println("<span class=\"label success\">A new Nimbits server has properly initialised!</span>");
+        println("<p>You now may want to <A href = \"https://appengine.google.com/\">log into the admin console on App Engine</a> and edit these values to meet your needs.</p>");
 
-        out.println("</body></html>");
-        out.close();
+        println("</body></html>");
+        if (out != null) {
+            out.close();
+        }
+        if (resp != null) {
+            resp.setStatus(Const.HTTP_STATUS_OK);
+        }
+
     }
 
-
+    private void println(String message) {
+        if (out != null) {
+            out.println(message);
+        }
+    }
 
 
     private void processSetting(final SettingType setting) {
@@ -73,7 +89,7 @@ public class SystemMaint extends HttpServlet {
             if (setting.isUpdate()) {
                 SettingsServiceFactory.getInstance().updateSetting(setting,setting.getDefaultValue());
 
-                out.println("<p>" + setting.getName() + " updated to " + setting.getDefaultValue() +
+                println("<p>" + setting.getName() + " updated to " + setting.getDefaultValue() +
                         " (was " + currentValue + ")</p>");
 
 
@@ -82,9 +98,9 @@ public class SystemMaint extends HttpServlet {
             if (setting.isCreate()) {
                 try {
                     SettingsServiceFactory.getInstance().addSetting(setting, setting.getDefaultValue());
-                    out.println("<p>Added setting: " + setting.getName() + " new value : " +  setting.getDefaultValue() + "</p>");
+                    println("<p>Added setting: " + setting.getName() + " new value : " +  setting.getDefaultValue() + "</p>");
                 } catch (NimbitsException e1) {
-                    out.println(e.getMessage());
+                    println(e.getMessage());
                 }
 
             }

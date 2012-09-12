@@ -15,13 +15,13 @@ package com.nimbits.client.model.user;
 
 
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.accesskey.*;
-import com.nimbits.client.model.billing.Billing;
+import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 
 /**

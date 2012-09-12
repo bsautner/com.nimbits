@@ -37,18 +37,17 @@ import java.util.logging.Logger;
  */
 public class QuotaResetCron  extends HttpServlet {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
     private static final Logger log = Logger.getLogger(QuotaResetCron.class.getName());
-    private static final int LIMIT = 5000;
-    private static final int INT = 1024;
+
 
     @Override
     @SuppressWarnings(Const.WARNING_UNCHECKED)
-    public void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) {
 
         try {
-            processGet(resp);
+            Quota quota = QuotaFactory.getInstance();
+            quota.resetCounters();
         } catch (NimbitsException e) {
             log.severe(e.getMessage());
         }
@@ -56,28 +55,6 @@ public class QuotaResetCron  extends HttpServlet {
 
     }
 
-    protected static void processGet(ServletResponse resp) throws NimbitsException, IOException {
-
-
-//        final DatastoreService store = DatastoreServiceFactory.getDatastoreService();
-//
-//        final Query q = new Query("UserEntity").setKeysOnly();
-//
-//        int count = 0;
-//        for (final Entity e : store.prepare(q).asList(FetchOptions.Builder.withLimit(LIMIT))) {
-//            EmailAddress em = CommonFactoryLocator.getInstance().createEmailAddress(e.getKey().getName());
-//            count++;
-//
-           Quota quota = QuotaFactory.getInstance();
-//            int c = quota.getCount();
-//
-            quota.resetCounters();
-//
-//        }
-
-        // SystemServiceFactory.getInstance().updateSystemPoint("UserCount", count, false);
-
-    }
 
 
 

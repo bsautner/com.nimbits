@@ -59,8 +59,6 @@ public class GsonFactory {
                 .registerTypeAdapter(Entity.class, new EntityDeserializer())
                 .registerTypeAdapter(Calculation.class, new CalculationSerializer())
                 .registerTypeAdapter(Calculation.class, new CalculationDeserializer())
-                .registerTypeAdapter(Billing.class, new BillingSerializer())
-                .registerTypeAdapter(Billing.class, new BillingDeserializer())
                 .registerTypeAdapter(User.class, new UserSerializer())
                 .registerTypeAdapter(User.class, new UserDeserializer())
                         // .registerTypeAdapter(Date.class, new DateDeserializer())

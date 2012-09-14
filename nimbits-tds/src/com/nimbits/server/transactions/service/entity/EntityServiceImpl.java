@@ -73,7 +73,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
         for (final Entity e : deleted) {
 
             TaskFactory.getInstance()
-                    .startCoreTask(getThreadLocalRequest(), entity, Action.delete, ServerInfoImpl.getFullServerURL(getThreadLocalRequest()));
+                    .startCoreTask(getThreadLocalRequest(), e, Action.delete, ServerInfoImpl.getFullServerURL(getThreadLocalRequest()));
 
         }
 

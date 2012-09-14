@@ -17,6 +17,7 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.value.Value;
 
 public interface EmailService {
@@ -29,5 +30,5 @@ public interface EmailService {
                    final String message,
                    final String subject);
 
-    void sendAlert(final Entity entity, final Point point, final EmailAddress email, final Value value) throws NimbitsException;
+    void sendAlert(final Entity entity, final Point point, final EmailAddress email, final Value value, final Subscription subscription) throws NimbitsException;
 }

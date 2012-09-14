@@ -13,6 +13,7 @@
 
 package com.nimbits.server.api.impl;
 
+import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
@@ -72,7 +73,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
 
 
       //  req.addParameter("id", point.getKey());
-        req.addParameter("json", "{\"highAlarm\":0.0,\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"bsautner@gmail.com\",\"owner\":\"bsautner@gmail.com\"}");
+        req.addParameter("json", "{\"highAlarm\":0.0,\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"" + Const.TEST_ACCOUNT + "\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}");
         req.addParameter("action", "create");
         impl.doPost(req, resp);
         String g1= resp.getContentAsString();
@@ -87,7 +88,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
 
 
         //  req.addParameter("id", point.getKey());
-        req.addParameter("json", "{\"highAlarm\":0.0,\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"bsautner@gmail.com\",\"owner\":\"bsautner@gmail.com\"}");
+        req.addParameter("json", "{\"highAlarm\":0.0,\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"" + Const.TEST_ACCOUNT + "\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}");
         req.addParameter("action", "create");
         impl.doPost(req, resp);
         String g1= resp.getContentAsString();
@@ -109,7 +110,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
     @Test
     public void testMin() throws IOException, ServletException {
         req.removeAllParameters();
-        String json = "{\"filterType\":4,\"name\":\"bug2\",\"entityType\":1,\"protectionLevel\":2,\"parent\":\"bsautner@gmail.com\",\"owner\":\"bsautner@gmail.com\"}";
+        String json = "{\"filterType\":4,\"name\":\"bug2\",\"entityType\":1,\"protectionLevel\":2,\"parent\":\"" + Const.TEST_ACCOUNT + "\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}";
         req.addParameter("json",json);
         req.addParameter("action", "create");
         impl.doPost(req, resp);
@@ -126,7 +127,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
 
 
         //  req.addParameter("id", point.getKey());
-        req.addParameter("json", "{\"highAlarm\":0.0,\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"bsautner@gmail.com\",\"owner\":\"bsautner@gmail.com\"}");
+        req.addParameter("json", "{\"highAlarm\":0.0,\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"" + Const.TEST_ACCOUNT + "\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}");
         req.addParameter("action", "create");
         impl.doPost(req, resp);
         String g1= resp.getContentAsString();
@@ -134,7 +135,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
         Point px = GsonFactory.getInstance().fromJson(g1, PointModel.class);
         assertEquals(190, px.getExpire());
         req.removeAllParameters();
-        req.addParameter("json", "{\"key\":\"" + px.getKey() + "\",\"highAlarm\":0.0,\"expire\":55,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"bsautner@gmail.com\",\"owner\":\"bsautner@gmail.com\"}");
+        req.addParameter("json", "{\"key\":\"" + px.getKey() + "\",\"highAlarm\":0.0,\"expire\":55,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"" + Const.TEST_ACCOUNT + "\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}");
         req.addParameter("action", "update");
         impl.doPost(req, resp1);
 
@@ -151,7 +152,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
 
 
         //  req.addParameter("id", point.getKey());
-        req.addParameter("json", "{\"highAlarm\":0.0,\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":600,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"bsautner@gmail.com\",\"owner\":\"bsautner@gmail.com\"}");
+        req.addParameter("json", "{\"highAlarm\":0.0,\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":600,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"" + Const.TEST_ACCOUNT + "\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}");
         req.addParameter("action", "create");
         impl.doPost(req, resp);
         String g1= resp.getContentAsString();
@@ -159,7 +160,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
         Point px = GsonFactory.getInstance().fromJson(g1, PointModel.class);
         assertEquals(190, px.getExpire());
         req.removeAllParameters();
-        req.addParameter("json", "{\"key\":\"" + px.getKey() + "\",\"entityType\":1,\"expire\":55,\"name\":\"jquery test\",\"parent\":\"bsautner@gmail.com\",\"owner\":\"bsautner@gmail.com\"}");
+        req.addParameter("json", "{\"key\":\"" + px.getKey() + "\",\"entityType\":1,\"expire\":55,\"name\":\"jquery test\",\"parent\":\"" + Const.TEST_ACCOUNT + "\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}");
         req.addParameter("action", "update");
         impl.doPost(req, resp1);
 
@@ -177,7 +178,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
 
 
         //  req.addParameter("id", point.getKey());
-        req.addParameter("json", "{\"subscribedEntity\":\"bsautner@gmail.com/TempF\",\"notifyMethod\":0,\"subscriptionType\":4,\"maxRepeat\":15.0,\"lastSent\":\"2012-05-20T23:59:37 +0000\",\"notifyFormatJson\":false,\"enabled\":true,\"name\":\"TempF idle alert\",\"key\":\"b9ba6396-b3c8-4455-8744-334f3a2633b0\",\"description\":\"\",\"entityType\":5,\"protectionLevel\":0,\"alertType\":1,\"parent\":\"bsautner@gmail.com/TempF\",\"owner\":\"bsautner@gmail.com\"}");
+        req.addParameter("json", "{\"subscribedEntity\":\"" + Const.TEST_ACCOUNT + "/TempF\",\"notifyMethod\":0,\"subscriptionType\":4,\"maxRepeat\":15.0,\"lastSent\":\"2012-05-20T23:59:37 +0000\",\"notifyFormatJson\":false,\"enabled\":true,\"name\":\"TempF idle alert\",\"key\":\"b9ba6396-b3c8-4455-8744-334f3a2633b0\",\"description\":\"\",\"entityType\":5,\"protectionLevel\":0,\"alertType\":1,\"parent\":\"" + Const.TEST_ACCOUNT + "/TempF\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}");
         req.addParameter("action", "create");
         impl.doPost(req, resp);
         String g1= resp.getContentAsString();

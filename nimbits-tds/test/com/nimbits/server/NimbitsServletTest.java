@@ -14,6 +14,7 @@
 package com.nimbits.server;
 
 import com.google.appengine.tools.development.testing.*;
+import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
@@ -65,7 +66,7 @@ import static org.junit.Assert.assertNotNull;
  * Time: 9:27 AM
  */
 public class NimbitsServletTest {
-    public static final String email = "nobody@example.com";
+    public static final String email = Const.TEST_ACCOUNT;
     public final LocalServiceTestHelper helper = new LocalServiceTestHelper(
             new LocalDatastoreServiceTestConfig(),
             new LocalTaskQueueTestConfig(),

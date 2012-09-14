@@ -14,6 +14,7 @@
 package com.nimbits.server.api;
 
 import com.nimbits.client.common.Utils;
+import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
@@ -55,7 +56,7 @@ public class ApiServlet extends HttpServlet {
     private static Map<Parameters, String> paramMap;
     protected final static Logger log = Logger.getLogger(ApiServlet.class.getName());
     protected static Location location;
-    public static final String ACCOUNT_BALANCE = "Account Balance";
+
     public static final String BUDGET_ERROR = "Maximum daily budget exceeded. Please increase your daily budget";
 
     protected static boolean okToReport(final User u, final Entity c) {
@@ -83,15 +84,15 @@ public class ApiServlet extends HttpServlet {
             Quota quota = QuotaFactory.getInstance(user.getEmail());
             int count = quota.incrementCounter();
             int max = quota.getMaxDailyQuota();
+            log.info("quota call " + count + " of " + max);
 
-
-            if (SettingsServiceFactory.getInstance().getBooleanSetting(SettingType.quotaEnabled)) {
+            if (SettingsServiceFactory.getInstance().getBooleanSetting(SettingType.billingEnabled)) {
 
                 if (count > max) {
 
                     if (user.isBillingEnabled()) {
-                        EntityName name = CommonFactoryLocator.getInstance().createName(ACCOUNT_BALANCE, EntityType.point);
-
+                        EntityName name = CommonFactoryLocator.getInstance().createName(Const.ACCOUNT_BALANCE, EntityType.point);
+                        log.info("billing enabled");
                         List<Entity> points =  EntityServiceFactory.getInstance().getEntityByName(user, name, EntityType.point);
                         if (points.isEmpty()) {
                             throw new NimbitsException(BUDGET_ERROR);
@@ -133,6 +134,9 @@ public class ApiServlet extends HttpServlet {
 
 
 
+        }
+        else {
+            log.info("user was null");
         }
 
 

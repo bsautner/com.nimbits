@@ -20,7 +20,6 @@ import com.nimbits.client.constants.Const;
 import com.nimbits.client.constants.UserMessages;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.enums.point.PointType;
-import com.nimbits.client.enums.subscription.*;
 import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
 import com.nimbits.client.enums.subscription.SubscriptionType;
 import com.nimbits.client.exception.NimbitsException;
@@ -39,24 +38,20 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.subscription.SubscriptionFactory;
-import com.nimbits.client.model.subscription.SubscriptionModel;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
 import com.nimbits.client.model.user.UserModelFactory;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
-import com.nimbits.client.service.timespan.TimespanService;
 import com.nimbits.client.service.user.UserService;
 import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.admin.quota.QuotaFactory;
 import com.nimbits.server.api.openid.UserInfo;
 import com.nimbits.server.communication.email.EmailServiceFactory;
 import com.nimbits.server.settings.SettingsServiceFactory;
-import com.nimbits.server.time.TimespanServiceFactory;
 import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
 import com.nimbits.server.transactions.service.feed.FeedServiceFactory;
 import com.nimbits.server.transactions.service.value.ValueServiceFactory;
-import com.nimbits.server.transactions.service.value.ValueTransactionFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -70,13 +65,17 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     private static final long serialVersionUID = 1L;
     private static final Logger log = Logger.getLogger(UserServiceImpl.class.getName());
 
-    public static final String DESCRIPTION = "Account balance - enable billing and find your account on nimbits.com to use services beyond the free quota";
+    public static final String ACCOUNT_BALANCE_DESC = "Account balance - enable billing and find your account on nimbits.com to use services beyond the free quota";
     public static final String UNIT = "USD";
-    public static final int EXPIRE = 5000;
-    public static final String QUOTA_ALERT = "Quota Alert";
+    public static final int EXPIRE = 730;
+    public static final String QUOTA_EXCEEDED_NAME = "Quota Exceeded Notification";
+    public static final String ACCOUNT_FUNDED_NAME = "Account Balance Increase Notification";
     public static final int MAX_REPEAT = 86400;
-    public static final String ZERO_BALANCE_ALERT = "Zero Balance Alert";
-    //    final double defaultDelta = 0.0;
+    public static final String ZERO_BALANCE_ALERT_NAME = "Account Balance Zero Notification";
+    public static final String QUOTA_EXCEEDED_DESC = "This is an alert that notifies you when you've exceeded your set quota for the day.";
+    public static final String ZERO_BALANCE_DESC = "This is an alert that notifies you when your account balance is at zero";
+    public static final String ACCOUNT_FUNDED_DESC = "This is an alert that notifies you when your account is funded.";
+
 
     @Override
     public User getHttpRequestUser(final HttpServletRequest req) throws NimbitsException {
@@ -322,53 +321,66 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     @Override
     public void updateBilling(User user, boolean billingEnabled, double maxQuota) throws NimbitsException {
          user.setBillingEnabled(billingEnabled);
-         EntityServiceFactory.getInstance().addUpdateEntity(user);
+         EntityServiceFactory.getInstance().addUpdateEntity(user, user);
 
          Point accountBalance = getAccountBalancePoint(user);
          accountBalance.setDeltaAlarm(maxQuota);
          if (billingEnabled) {
              accountBalance.setDeltaAlarmOn(true);
              accountBalance.setDeltaAlarm(maxQuota);
+             accountBalance.setLowAlarmOn(true);
+
          }
-        EntityServiceFactory.getInstance().addUpdateEntity(accountBalance);
-        addUpdateDailyQuotaAlertSubscription(user, billingEnabled, accountBalance);
-        addUpdateZeroBalanceAlertSubscription(user, billingEnabled, accountBalance);
-
-    }
-
-    private void addUpdateDailyQuotaAlertSubscription(User user, boolean billingEnabled, Point accountBalance) throws NimbitsException {
-        EntityName quotaBalanceName = CommonFactoryLocator.getInstance().createName(QUOTA_ALERT, EntityType.subscription);
-
-        List<Entity> quotaAlertSubscriptionSample = EntityServiceFactory.getInstance().getEntityByName(user,
-                quotaBalanceName, EntityType.subscription);
-
-        Subscription quotaAlertSubscription;
-        if (quotaAlertSubscriptionSample.isEmpty()) {
-            createDailyQuotaSubscription(user, accountBalance);
-        }
         else {
-            quotaAlertSubscription = (Subscription) quotaAlertSubscriptionSample.get(0);
-            quotaAlertSubscription.setEnabled(billingEnabled);
-            EntityServiceFactory.getInstance().addUpdateEntity(quotaAlertSubscription);
-        }
+             accountBalance.setDeltaAlarmOn(false);
+             accountBalance.setLowAlarmOn(false);
+
+         }
+        EntityServiceFactory.getInstance().addUpdateEntity(user, accountBalance);
+        addUpdateAccountBalanceSubscriptions(user, accountBalance);
+
+
+
     }
 
-    private void addUpdateZeroBalanceAlertSubscription(User user, boolean billingEnabled, Point accountBalance) throws NimbitsException {
-        EntityName quotaBalanceName = CommonFactoryLocator.getInstance().createName(ZERO_BALANCE_ALERT, EntityType.subscription);
+    private void addUpdateBillingSubscription(final User user,
+                                              final boolean billingEnabled,
+                                              final Point accountBalance,
+                                              final String entityName,
+                                              final String desc,
+                                              final SubscriptionType type,
+                                              final int maxRepeat) throws NimbitsException {
+        EntityName name = CommonFactoryLocator.getInstance().createName(entityName, EntityType.subscription);
 
         List<Entity> sample = EntityServiceFactory.getInstance().getEntityByName(user,
-                quotaBalanceName, EntityType.subscription);
+                name, EntityType.subscription);
 
-        Subscription s;
+        Subscription subscription;
         if (sample.isEmpty()) {
-            createZeroBalanceSubscription(user, accountBalance);
+            createBillingSubscription(user, accountBalance, entityName, desc, type, maxRepeat);
         }
         else {
-            s = (Subscription) sample.get(0);
-            s.setEnabled(billingEnabled);
-            EntityServiceFactory.getInstance().addUpdateEntity(s);
+            subscription = (Subscription) sample.get(0);
+            subscription.setEnabled(billingEnabled);
+            EntityServiceFactory.getInstance().addUpdateEntity(user, subscription);
         }
     }
+    private Subscription createBillingSubscription(
+            final User user,
+            final Point accountBalancePoint,
+            final String name,
+            final String desc,
+            final SubscriptionType type,
+            final int maxRepeat) throws NimbitsException {
+        EntityName entityName = CommonFactoryLocator.getInstance().createName(name, EntityType.subscription);
+        Entity quotaEntity = EntityModelFactory.createEntity(entityName, desc, EntityType.subscription, ProtectionLevel.onlyMe,
+                accountBalancePoint.getKey(), user.getKey());
+        Subscription subscription = SubscriptionFactory.createSubscription(quotaEntity, accountBalancePoint.getKey(),
+                type, SubscriptionNotifyMethod.email, maxRepeat, new Date(), false,user.isBillingEnabled());
+        return (Subscription) EntityServiceFactory.getInstance().addUpdateEntity(user, subscription);
+    }
+
+
 
 
 
@@ -404,43 +416,26 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     protected Point createAccountBalancePoint(final User user) throws NimbitsException {
 
         final EntityName name = CommonFactoryLocator.getInstance().createName(Const.ACCOUNT_BALANCE, EntityType.point);
-        final Entity entity = EntityModelFactory.createEntity(name, DESCRIPTION, EntityType.point,
+        final Entity entity = EntityModelFactory.createEntity(name,  ACCOUNT_BALANCE_DESC, EntityType.point,
                 ProtectionLevel.onlyMe, user.getKey(), user.getKey(), UUID.randomUUID().toString());
 
 
         final Point point = PointModelFactory.createPointModel(
-                entity, 0.0, EXPIRE, UNIT, 0.0, false, true, false, 0, false, FilterType.floor, 0.0,
-                false, PointType.accountBalance, 86400, true, 0.0);
+                entity, 0.0, EXPIRE, UNIT, 0.0, false, false, false, 0, false, FilterType.floor, 0.0,
+                false, PointType.accountBalance, 86400, false, 0.0);
+        log.info("Creating account balance point");
+        final Point accountBalance =  (Point) EntityServiceFactory.getInstance().addUpdateEntity(user, point);
+        addUpdateAccountBalanceSubscriptions(user, accountBalance);
 
-        Point accountBalancePoint =  (Point) EntityServiceFactory.getInstance().addUpdateEntity(point);
-
-        createZeroBalanceSubscription(user, accountBalancePoint);
-
-        createDailyQuotaSubscription(user, accountBalancePoint);
-
-
-        return accountBalancePoint;
+        return accountBalance;
     }
 
-    private void createZeroBalanceSubscription(User user, Point accountBalancePoint) throws NimbitsException {
-        EntityName zeroBalanceName = CommonFactoryLocator.getInstance().createName(ZERO_BALANCE_ALERT, EntityType.subscription);
-        Entity zeroBalanceEntity = EntityModelFactory.createEntity(zeroBalanceName, "This is an alert that notifies you " +
-                "when your account balance is at zero", EntityType.subscription, ProtectionLevel.onlyMe,
-                accountBalancePoint.getKey(), user.getKey());
-        Subscription zeroBalanceSubscription = SubscriptionFactory.createSubscription(zeroBalanceEntity, accountBalancePoint.getKey(),
-                SubscriptionType.low, SubscriptionNotifyMethod.email,MAX_REPEAT , new Date(), false, true);
-        EntityServiceFactory.getInstance().addUpdateEntity(user, zeroBalanceSubscription);
+    private void addUpdateAccountBalanceSubscriptions(final User user, final Point accountBalance) throws NimbitsException {
+        addUpdateBillingSubscription(user, user.isBillingEnabled(), accountBalance, QUOTA_EXCEEDED_NAME, QUOTA_EXCEEDED_DESC, SubscriptionType.deltaAlert, MAX_REPEAT);
+        addUpdateBillingSubscription(user, user.isBillingEnabled(), accountBalance, ZERO_BALANCE_ALERT_NAME, ZERO_BALANCE_DESC, SubscriptionType.low, MAX_REPEAT);
+        addUpdateBillingSubscription(user, user.isBillingEnabled(), accountBalance, ACCOUNT_FUNDED_NAME, ACCOUNT_FUNDED_DESC, SubscriptionType.increase, 0);
     }
 
-    private Subscription createDailyQuotaSubscription(User user,  Point accountBalancePoint) throws NimbitsException {
-         EntityName quotaBalanceName = CommonFactoryLocator.getInstance().createName(QUOTA_ALERT, EntityType.subscription);
-        Entity quotaEntity = EntityModelFactory.createEntity(quotaBalanceName, "This is an alert that notifies you " +
-                " when you've exceeded your set quota for the day.", EntityType.subscription, ProtectionLevel.onlyMe,
-                accountBalancePoint.getKey(), user.getKey());
-        Subscription newQuotaSubscription = SubscriptionFactory.createSubscription(quotaEntity, accountBalancePoint.getKey(),
-                SubscriptionType.deltaAlert, SubscriptionNotifyMethod.email, MAX_REPEAT, new Date(), false, true);
-       return (Subscription) EntityServiceFactory.getInstance().addUpdateEntity(user, newQuotaSubscription);
-    }
 
     @Override
     public void fundAccount(final User user, final BigDecimal amount) throws NimbitsException {

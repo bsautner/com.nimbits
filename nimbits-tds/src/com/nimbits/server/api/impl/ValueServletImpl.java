@@ -38,6 +38,7 @@ import com.nimbits.server.transactions.service.value.ValueServiceImpl;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -48,7 +49,7 @@ import java.util.logging.Logger;
 
 @Transactional
 @Component("valueApi")
-public class ValueServletImpl extends ApiServlet {
+public class ValueServletImpl extends ApiServlet implements org.springframework.web.HttpRequestHandler {
     final private static Logger log = Logger.getLogger(ValueServletImpl.class.getName());
 
 
@@ -58,26 +59,12 @@ public class ValueServletImpl extends ApiServlet {
 
 
     @Override
-    public void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
-
-        try {
-            processPost(req, resp);
-        } catch (NimbitsException e) {
-            final PrintWriter out = resp.getWriter();
-            out.print(e.getMessage());
-            out.close();
-
-
-        }
-
-    }
-    @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
 
         try {
             processGet(req, resp);
         } catch (NimbitsException e) {
-            resp.setStatus(Const.HTTP_STATUS_BAD_REQUEST);
+            resp.setStatus(Const.HTTP_STATUS_INTERNAL_SERVER_ERROR);
             final PrintWriter out = resp.getWriter();
             out.print(e.getMessage());
             out.close();
@@ -105,11 +92,11 @@ public class ValueServletImpl extends ApiServlet {
                 } else {
                     final Value vx = GsonFactory.getInstance().fromJson(getParam(Parameters.json), ValueModel.class);
                     Location l = vx.getLocation();
-                    log.info(point.getName().getValue() + " " + point.inferLocation());
+//                    log.info(point.getName().getValue() + " " + point.inferLocation());
                     if (point.inferLocation() && vx.getLocation().isEmpty()) {
                        l = location;
                     }
-                    log.info(location.toString());
+//                    log.info(location.toString());
                     v = ValueFactory.createValueModel(l, vx.getDoubleValue(), vx.getTimestamp(),
                             vx.getNote(), vx.getData(), AlertType.OK);
                 }
@@ -124,7 +111,10 @@ public class ValueServletImpl extends ApiServlet {
                 out.print(j);
 
             }
-
+            resp.setStatus(Const.HTTP_STATUS_OK);
+        }
+        else {
+            resp.setStatus(Const.HTTP_STATUS_UNAUTHORISED);
         }
 
     }
@@ -146,7 +136,7 @@ public class ValueServletImpl extends ApiServlet {
         }
         out.print(processRequest(getParam(Parameters.point), getParam(Parameters.uuid), format, nv, user));
         out.close();
-
+        resp.setStatus(Const.HTTP_STATUS_OK);
 
     }
 
@@ -264,5 +254,18 @@ public class ValueServletImpl extends ApiServlet {
 
     public EntityServiceImpl getEntityService() {
         return entityService;
+    }
+
+    @Override
+    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            processPost(req, resp);
+        } catch (NimbitsException e) {
+            final PrintWriter out = resp.getWriter();
+            out.print(e.getMessage());
+            out.close();
+            resp.setStatus(Const.HTTP_STATUS_INTERNAL_SERVER_ERROR);
+
+        }
     }
 }

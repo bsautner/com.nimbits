@@ -6,7 +6,6 @@ import com.google.gson.reflect.TypeToken;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.accesskey.AccessKeyModel;
-import com.nimbits.client.model.billing.Billing;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;

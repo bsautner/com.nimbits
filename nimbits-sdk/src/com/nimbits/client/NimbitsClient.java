@@ -48,7 +48,7 @@ public interface NimbitsClient {
 
     String getChartURL(final String points, final int count, final String additionalParams);
 
-    Value recordValue(final EntityName pointName, final double value, final Date timestamp);
+    Value recordValue(final EntityName pointName, final double value, final Date timestamp) throws NimbitsException;
 
     Value recordValueWithGet(final EntityName pointName, final double value, final Date timestamp) throws IOException, NimbitsException;
 
@@ -60,7 +60,7 @@ public interface NimbitsClient {
 
     Value recordValue(final String pointName, final double v) throws NimbitsException;
 
-    Value recordValue(final EntityName pointName, double d);
+    Value recordValue(final EntityName pointName, double d) throws NimbitsException;
 
 //    Entity addCategory(final EntityName categoryName) throws UnsupportedEncodingException;
 //

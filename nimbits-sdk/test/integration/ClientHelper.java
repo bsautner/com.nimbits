@@ -47,12 +47,12 @@ class ClientHelper {
     public  static String url;
 
     public static NimbitsClient client() throws NimbitsException {
-       email =  "nimbitstest@nimbits.com";
+       email =  "test@example.com";
 
-        password = "";
+        password = "key";
 
         //  private final static String appscale =  "http://127.0.0.1:8888";
-       url ="http://nimbits1.appspot.com";
+       url ="http://localhost:8082";
 
 
 

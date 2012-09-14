@@ -21,6 +21,7 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.admin.common.ServerInfoImpl;
 import com.nimbits.server.admin.logging.LogHelper;
@@ -147,7 +148,7 @@ public class EmailServiceImpl implements EmailService {
     public void sendAlert(final Entity entity,
                           final Point point,
                           final EmailAddress emailAddress,
-                          final Value value) throws NimbitsException {
+                          final Value value, Subscription subscription) throws NimbitsException {
 
         final Properties props = new Properties();
         final Session session = Session.getDefaultInstance(props, null);
@@ -184,8 +185,8 @@ public class EmailServiceImpl implements EmailService {
 
         message.append("<p></p>").append("<p><a href =\"").append(ServerInfoImpl.getFullServerURL(null)).append("?uuid=").append(point.getUUID()).append("\">Go to Current Status Report</a></p>");
 
-
-
+        message.append("<P>Subscription Name: " + subscription.getName().getValue() + " </P>");
+        message.append("<P>Subscription Description: " + subscription.getDescription() + " </P>");
 
         try {
 

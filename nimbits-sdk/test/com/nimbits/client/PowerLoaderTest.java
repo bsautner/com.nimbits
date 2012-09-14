@@ -40,9 +40,9 @@ public class PowerLoaderTest {
 
         EntityName pointName;
 
-        String email =  "tester@nimbits.com";
+        String email =  "test@example.com";
         String password = "key";
-        String url ="http://nimbits-hrd1.appspot.com";
+        String url ="http://localhost:8082";
         String p = "app demo";
         EmailAddress em = CommonFactoryLocator.getInstance().createEmailAddress(email);
         NimbitsUser g = new NimbitsUser(em, password);

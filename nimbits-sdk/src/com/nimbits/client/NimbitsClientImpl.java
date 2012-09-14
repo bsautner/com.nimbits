@@ -183,7 +183,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
     public Value recordValue(final EntityName name,
                              final double value,
-                             final Date timestamp) {
+                             final Date timestamp) throws NimbitsException {
         final String u = host + Path.PATH_CURRENT_VALUE;
         String params;
         try {
@@ -196,11 +196,15 @@ public class NimbitsClientImpl implements NimbitsClient {
         if (StringUtils.isEmpty(json)) {
             json = doGPost(u, params); //retry
         }
-        return gson.fromJson(json, ValueModel.class);
+        try {
+            return gson.fromJson(json, ValueModel.class);
+        } catch (JsonSyntaxException e) {
+            throw new NimbitsException("expected a json value but got: " + json);
+        }
     }
 
     public Value recordValue(final EntityName name,
-                             final double value) {
+                             final double value) throws NimbitsException {
         return recordValue(name, value, new Date());
     }
 

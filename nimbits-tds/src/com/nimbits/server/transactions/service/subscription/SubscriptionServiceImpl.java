@@ -17,12 +17,13 @@ import com.google.apphosting.api.ApiProxy;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.nimbits.client.common.Utils;
 import com.nimbits.client.constants.Path;
+
 import com.nimbits.client.enums.*;
+import com.nimbits.client.enums.subscription.SubscriptionType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.mqtt.Mqtt;
 import com.nimbits.client.model.mqtt.MqttFactory;
-import com.nimbits.client.model.mqtt.MqttModel;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.user.User;
@@ -88,7 +89,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
                 subscription.setLastSent(new Date());
                 EntityServiceFactory.getInstance().addUpdateEntity(user, subscription);
 
-                final List<Entity> subscriptionEntity = EntityServiceFactory.getInstance().getEntityByKey(user, subscription.getKey(),EntityType.subscription);
+                final List<Entity> subscriptionEntity = EntityServiceFactory.getInstance().getEntityByKey(user, subscription.getKey(), EntityType.subscription);
 
                 if (! subscriptionEntity.isEmpty())  {
 
@@ -100,33 +101,41 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
                             break;
                         case anyAlert:
                             if (!alert.equals(AlertType.OK) && (point.isHighAlarmOn() || point.isLowAlarmOn())) {
-                                sendNotification(subscriber, point, subscription, point, v);
+                                sendNotification(subscriber,subscription, point, v);
                             }
                             break;
                         case high:
                             if (alert.equals(AlertType.HighAlert) && point.isHighAlarmOn()) {
-                                sendNotification(subscriber, point, subscription, point, v);
+                                sendNotification(subscriber,  subscription, point, v);
                             }
                             break;
                         case low:
                             if (alert.equals(AlertType.LowAlert) && point.isLowAlarmOn()) {
-                                sendNotification(subscriber, point, subscription, point, v);
+                                sendNotification(subscriber, subscription, point, v);
                             }
                             break;
                         case idle:
                             if (alert.equals(AlertType.IdleAlert) && point.isIdleAlarmOn()) {
-                                sendNotification(subscriber, point, subscription, point, v);
+                                sendNotification(subscriber,  subscription, point, v);
                             }
                             break;
                         case newValue:
-                            sendNotification(subscriber, point, subscription, point, v);
+                            sendNotification(subscriber,subscription, point, v);
                             break;
                         case changed:
                             break;
                         case deltaAlert:
                             if (ValueServiceFactory.getInstance().calculateDelta(point) > point.getDeltaAlarm()) {
-                                sendNotification(subscriber, point, subscription, point, v);
+                                sendNotification(subscriber,subscription, point, v);
                             }
+                            break;
+                        case increase: case decrease:
+                            processSubscriptionToIncreaseOrDecrease(point, v, subscription, subscriber);
+                            break;
+
+
+
+
                     }
 
                 }
@@ -146,10 +155,22 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
     }
 
+    private void processSubscriptionToIncreaseOrDecrease(Point point, Value v, Subscription subscription, User subscriber) throws NimbitsException {
+        List<Value> prevValue = ValueServiceFactory.getInstance().getPrevValue(point, new Date(v.getTimestamp().getTime() - 1000));
+        if (! prevValue.isEmpty()) {
+            if (subscription.getSubscriptionType().equals(SubscriptionType.decrease) && (prevValue.get(0).getDoubleValue() > v.getDoubleValue())) {
+                sendNotification(subscriber, subscription, point, v);
+
+            }
+            else if (subscription.getSubscriptionType().equals(SubscriptionType.increase) && (prevValue.get(0).getDoubleValue() < v.getDoubleValue())) {
+                sendNotification(subscriber, subscription, point, v);
+            }
+        }
+    }
+
 
     private static void sendNotification(
             final User user,
-            final Entity entity,
             final Subscription subscription,
             final Point point,
             final Value value) throws NimbitsException {
@@ -158,22 +179,22 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
             case none:
                 break;
             case email:
-                EmailServiceFactory.getInstance().sendAlert(entity, point, user.getEmail(), value);
+                EmailServiceFactory.getInstance().sendAlert(point, point, user.getEmail(), value, subscription);
                 break;
             case facebook:
-                postToFB(point,entity, user, value);
+                postToFB(point,point, user, value);
                 break;
             case twitter:
-                sendTweet(user, entity, value);
+                sendTweet(user, point, value);
                 break;
             case instantMessage:
-                doXMPP(user, subscription, entity, point, value);
+                doXMPP(user, subscription, point, point, value);
                 break;
             case mqtt:
-                doMQTT(user, subscription, entity, point, value);
+                doMQTT(user, subscription, point, point, value);
                 break;
             case feed:
-                FeedServiceFactory.getInstance().postToFeed(user, entity, point, value, FeedType.data);
+                FeedServiceFactory.getInstance().postToFeed(user, point, point, value, FeedType.data);
                 break;
         }
     }

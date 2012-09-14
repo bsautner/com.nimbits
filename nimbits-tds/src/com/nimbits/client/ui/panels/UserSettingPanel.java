@@ -148,7 +148,7 @@ public class UserSettingPanel extends NavigationEventProvider {
         balance.setFormat(NumberFormat.getFormat("##.##"));
 
         final CheckBox enabled = new CheckBox();
-        enabled.setValue(user.isBillingEnabled());
+
 
 
 
@@ -216,7 +216,7 @@ public class UserSettingPanel extends NavigationEventProvider {
                   Value value = point.getValue();
                   balance.setValue(value.getDoubleValue());
                   maxQuota.setValue(point.getDeltaAlarm());
-
+                  enabled.setValue(point.isDeltaAlarmOn());
 
               }
             }

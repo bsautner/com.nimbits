@@ -50,12 +50,12 @@ import java.util.logging.Logger;
 
 public class PointServletImpl extends ApiServlet {
 
-    private final static Gson gson = GsonFactory.getInstance();
+    private static final Gson gson = GsonFactory.getInstance();
     private static final long serialVersionUID = 1L;
     private static final int INT = 1024;
     private static final int EXPIRE = 90;
     private static final double FILTER_VALUE = 0.1;
-    final static Logger log = Logger.getLogger(PointServletImpl.class.getName());
+    private static final Logger log = Logger.getLogger(PointServletImpl.class.getName());
 
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
@@ -141,7 +141,21 @@ public class PointServletImpl extends ApiServlet {
 
     }
 
-    private static void validateExistence( final User user, final EntityName name, StringBuilder sb) throws NimbitsException {
+    @Override
+    public void doGet(final HttpServletRequest req, final HttpServletResponse resp) {
+
+        try {
+
+            final PrintWriter out = resp.getWriter();
+
+            out.print(processGet(req, resp));
+        } catch (IOException e) {
+            LogHelper.logException(this.getClass(), e);
+        }
+    }
+
+
+    private static void validateExistence(final User user, final EntityName name, final StringBuilder sb) throws NimbitsException {
 
         List<Entity> result =  EntityServiceFactory.getInstance().getEntityByName(user, name, EntityType.point);
 
@@ -157,20 +171,7 @@ public class PointServletImpl extends ApiServlet {
 
     }
 
-    @Override
-    public void doGet(final HttpServletRequest req, final HttpServletResponse resp) {
-
-        try {
-
-            final PrintWriter out = resp.getWriter();
-
-            out.print(processGet(req, resp));
-        } catch (IOException e) {
-            LogHelper.logException(this.getClass(), e);
-        }
-    }
-
-    protected String processGet(HttpServletRequest req, HttpServletResponse resp) {
+    protected String processGet(final HttpServletRequest req, final HttpServletResponse resp) {
 
         StringBuilder sb = new StringBuilder(INT);
         try {
@@ -242,7 +243,7 @@ public class PointServletImpl extends ApiServlet {
         return sb.toString();
     }
 
-    private static void processGetRead(StringBuilder sb, String startParam, String endParam, String offsetParam, String pointNameParam) throws NimbitsException {
+    private static void processGetRead(final StringBuilder sb, final String startParam, final String endParam, final String offsetParam, final String pointNameParam) throws NimbitsException {
         if (containsParam(Parameters.uuid)) {
 
             Entity entity =   EntityServiceFactory.getInstance().getEntityByKey(getParam(Parameters.uuid), EntityType.point).get(0);
@@ -368,8 +369,6 @@ public class PointServletImpl extends ApiServlet {
         }
     }
 
-
-
     private static String outputPoint(final String countParam, final String format, final String startParam,
                                       final String endParam, final String offsetParam, final Entity baseEntity) throws NimbitsException {
 
@@ -418,11 +417,7 @@ public class PointServletImpl extends ApiServlet {
 
     }
 
-
-
-
-
-    protected  static String getPointObjects(final String categoryNameParam, final String pointNameParam ) throws NimbitsException {
+    protected static String getPointObjects(final String categoryNameParam, final String pointNameParam ) throws NimbitsException {
 
         if (user != null) {
 

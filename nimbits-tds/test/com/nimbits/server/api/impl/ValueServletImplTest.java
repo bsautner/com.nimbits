@@ -32,6 +32,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -53,7 +54,7 @@ public class ValueServletImplTest extends NimbitsServletTest {
     ValueServletImpl valueServlet;
     @Test
     @Ignore
-    public void testPostData() throws NimbitsException, InterruptedException, IOException {
+    public void testPostData() throws NimbitsException, InterruptedException, IOException, ServletException {
 
         req.removeAllParameters();
         req.addParameter("point", pointName.getValue());
@@ -61,7 +62,7 @@ public class ValueServletImplTest extends NimbitsServletTest {
         req.addParameter("timestamp", "1336579929000");
         req.addParameter("value", "5");
         ValueServletImpl i = new ValueServletImpl();
-        i.doPost(req, resp);
+        i.handleRequest(req, resp);
 
         List<Value> v = ValueServiceFactory.getInstance().getCurrentValue(point);
         assertNotNull(v);

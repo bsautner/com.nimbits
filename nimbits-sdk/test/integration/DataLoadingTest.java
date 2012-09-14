@@ -91,7 +91,7 @@ public class DataLoadingTest {
             d = new Date().getTime() + (i * 1000 * 60);
             rv = roundDouble(r.nextDouble() * 100);
             total += rv;
-           v = ClientHelper.client().recordValue(pointName, rv, new Date(d));
+            v = ClientHelper.client().recordValue(pointName, rv, new Date(d));
             // System.out.println(i);
             assertNotNull(v);
             //System.out.println(v.getNumberValue());
@@ -108,5 +108,29 @@ public class DataLoadingTest {
 
     }
 
+    @Test
+    public void load2() throws IOException, NimbitsException {
+        final String pointName = ("large" + UUID.randomUUID().toString());
 
+        final Point p = ClientHelper.client().addPoint(pointName);
+        assertNotNull(p);
+        p.setFilterValue(-1);
+        ClientHelper.client().updatePoint(p);
+        final Random r = new Random();
+        double rv;
+        Value v;
+        for (int i = 0; i < 1000000; i++) {
+            rv = roundDouble(r.nextDouble() * 100);
+            try {
+                v = ClientHelper.client().recordValue(pointName, rv, new Date());
+                assertNotNull(v);
+            } catch (NimbitsException e) {
+                System.out.println(e.getMessage());
+            }
+
+        }
+
+        ClientHelper.client().deletePoint(pointName);
+
+    }
 }

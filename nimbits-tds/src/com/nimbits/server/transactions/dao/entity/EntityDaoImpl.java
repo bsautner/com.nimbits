@@ -104,7 +104,7 @@ public class EntityDaoImpl implements  EntityTransactions {
         } finally {
             pm.close();
         }
-     }
+    }
     @Override
     public List<Entity> getEntityByBlobKey(final BlobKey key) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -256,20 +256,23 @@ public class EntityDaoImpl implements  EntityTransactions {
                     final Transaction tx = pm.currentTransaction();
                     tx.begin();
                     log.info("beginning transaction");
-                   try {
-                    result.update(entity);
-                    result.validate();
-                   }
-                   catch(NimbitsException ex) {
-                       tx.rollback();
-                       throw ex;
-                   }
+                    try {
+                        result.update(entity);
+                        result.validate();
+                    }
+                    catch(NimbitsException ex) {
+                        tx.rollback();
+                        throw ex;
+                    }
                     log.info("done update");
                     tx.commit();
                     log.info("done transaction");
                     final List<Entity> model = createModel(result);
                     if (model.isEmpty()) {
+                        log.severe("error creating model");
+                        log.severe(entity.toString());
                         throw new NimbitsException("error creating model");
+
                     }
                     else {
                         retObj = model.get(0);
@@ -282,7 +285,7 @@ public class EntityDaoImpl implements  EntityTransactions {
             }
             return retObj;
         } catch (JDOObjectNotFoundException e) {
-           log.info("entity not found, creating it");
+            log.info("entity not found, creating it");
             return addEntity(entity, pm);
         } catch (ConcurrentModificationException e) {
             LogHelper.logException(this.getClass(), e);
@@ -404,23 +407,34 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     }
 
-    private static List<Entity> getEntityChildren(final PersistenceManager pm, final Entity entity) {
-
-        final Query q1 = pm.newQuery(PointEntity.class);
-        q1.setFilter("parent==b");
-        q1.declareParameters("String b");
+    private static List<Entity> getEntityChildren(final PersistenceManager pm, final Entity entity) throws NimbitsException {
         final List<Entity> retObj = new ArrayList<Entity>(INT);
 
 
+        for (EntityType type : EntityType.values()) {
+            final Query q1;
+            try {
+                q1 = pm.newQuery(Class.forName(type.getClassName()));
 
-        final Collection<Entity> result = (Collection<Entity>) q1.execute(entity.getKey());
-        if (!result.isEmpty()) {
-            retObj.addAll(result);
-            for (final Entity e : result) {
-                List<Entity> children = getEntityChildren(pm, e);
-                retObj.addAll(children);
+                q1.setFilter("parent==b");
+                q1.declareParameters("String b");
+                final Collection<Entity> result = (Collection<Entity>) q1.execute(entity.getKey());
+                if (!result.isEmpty()) {
+                    retObj.addAll(result);
+                    for (final Entity e : result) {
+                        List<Entity> children = getEntityChildren(pm, e);
+                        retObj.addAll(children);
+                    }
+                }
+            } catch (ClassNotFoundException e) {
+
+               throw new NimbitsException(e);
             }
+
+
+
         }
+
 
         return retObj;
 

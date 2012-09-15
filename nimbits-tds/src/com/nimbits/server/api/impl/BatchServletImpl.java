@@ -16,18 +16,22 @@ package com.nimbits.server.api.impl;
 import com.nimbits.client.enums.ExportType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.server.api.ApiServlet;
-import com.nimbits.server.process.task.TaskFactory;
-import com.nimbits.server.transactions.service.feed.FeedServiceFactory;
+import com.nimbits.server.process.task.Task;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Transactional
+@Service("batchApi")
+public class BatchServletImpl extends ApiServlet implements org.springframework.web.HttpRequestHandler {
 
-public class BatchServletImpl extends ApiServlet {
+    private Task taskFactory;
 
     @Override
-    public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
+    public void handleRequest(final HttpServletRequest req, final HttpServletResponse resp) {
 
 
 
@@ -35,18 +39,17 @@ public class BatchServletImpl extends ApiServlet {
             doInit(req, resp, ExportType.plain);
 
 
-            TaskFactory.getInstance().startProcessBatchTask(user, req, resp);
-        } catch (NimbitsException e) {
-            if (user != null) {
-                FeedServiceFactory.getInstance().postToFeed(user, e);
-            }
+            taskFactory.startProcessBatchTask(user, req, resp);
 
-        }
-        try {
             resp.flushBuffer();
             resp.setContentLength(0);
-        } catch (IOException ignored) {
-
+            resp.setStatus(HttpServletResponse.SC_OK);
+        } catch (IOException e) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            resp.addHeader("ERROR", e.getMessage());
+        } catch (NimbitsException e) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            resp.addHeader("ERROR", e.getMessage());
         }
 
     }
@@ -57,19 +60,26 @@ public class BatchServletImpl extends ApiServlet {
 
         try {
             doInit(req, resp, ExportType.plain);
-            TaskFactory.getInstance().startProcessBatchTask(user, req, resp);
-        } catch (NimbitsException e) {
-            if (user != null) {
-                FeedServiceFactory.getInstance().postToFeed(user, e);
-            }
-        }
-        try {
+            taskFactory.startProcessBatchTask(user, req, resp);
+
             resp.flushBuffer();
             resp.setContentLength(0);
-        } catch (IOException ignored) {
-
+            resp.setStatus(HttpServletResponse.SC_OK);
+        } catch (IOException e) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            resp.addHeader("ERROR", e.getMessage());
+        } catch (NimbitsException e) {
+           resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+           resp.addHeader("ERROR", e.getMessage());
         }
     }
 
 
+    public void setTaskFactory(Task taskFactory) {
+        this.taskFactory = taskFactory;
+    }
+    @SuppressWarnings("unused")
+    public Task getTaskFactory() {
+        return taskFactory;
+    }
 }

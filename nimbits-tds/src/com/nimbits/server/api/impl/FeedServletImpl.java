@@ -14,6 +14,8 @@
 package com.nimbits.server.api.impl;
 
 import com.nimbits.client.constants.Const;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -28,6 +30,8 @@ import java.io.PrintWriter;
  * Date: 4/18/12
  * Time: 12:43 PM
  */
+@Transactional
+@Service("feedApi")
 public class FeedServletImpl  extends HttpServlet {
 
     @Override

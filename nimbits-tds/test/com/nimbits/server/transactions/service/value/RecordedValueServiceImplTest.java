@@ -35,7 +35,6 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import static junit.framework.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 /**
@@ -96,7 +95,7 @@ public class RecordedValueServiceImplTest extends NimbitsServletTest {
     @Test
     public void testDelta() throws NimbitsException {
 
-        SettingsServiceFactory.getInstance().updateSetting(SettingType.quotaEnabled, Const.TRUE);
+        SettingsServiceFactory.getInstance().updateSetting(SettingType.billingEnabled, Const.TRUE);
 
         user.setBillingEnabled(true);
 

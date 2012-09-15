@@ -26,28 +26,6 @@ public class QuotaFactory {
     private QuotaFactory() {
     }
 
- //   private static final int MAX_EXPECTED_USERS = 64;
-
-//    private static class MapHolder {
-//        static final Map<EmailAddress, Quota> map = new HashMap<EmailAddress, Quota>(MAX_EXPECTED_USERS);
-//
-//        private MapHolder() {
-//        }
-//    }
-
-//    public static Quota getInstance(EmailAddress emailAddress) {
-//        if (MapHolder.map.containsKey(emailAddress)) {
-//              return MapHolder.map.get(emailAddress);
-//          }
-//        else {
-//              Quota quota = new QuotaImpl(emailAddress);
-//              MapHolder.map.put(emailAddress, quota);
-//              return quota;
-//          }
-//
-//    }
-
-
     public static Quota getInstance(EmailAddress emailAddress) {
         return new QuotaImpl(emailAddress);
 

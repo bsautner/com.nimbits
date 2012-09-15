@@ -15,7 +15,11 @@ package com.nimbits.server.api.impl;
 
 import com.nimbits.server.NimbitsServletTest;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.annotation.Resource;
 import java.util.Random;
 
 /**
@@ -24,20 +28,27 @@ import java.util.Random;
  * Date: 4/4/12
  * Time: 1:48 PM
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={
+        "classpath:META-INF/applicationContext.xml"
+})
 public class BatchServletTest  extends NimbitsServletTest {
+
+    @Resource(name = "batchApi")
+    BatchServletImpl servlet;
 
 
     @Test
     public void testGet() {
-       BatchServletImpl i = new BatchServletImpl();
-         Random r = new Random();
+
+        Random r = new Random();
         double v1 = r.nextDouble();
         req.addParameter("p1", pointName.getValue());
         req.addParameter("v1", String.valueOf(v1));
         double v2 = r.nextDouble();
         req.addParameter("p2", pointChildName.getValue());
         req.addParameter("v2", String.valueOf(v2));
-        i.doPost(req, resp);
+        servlet.handleRequest(req, resp);
 
 
 

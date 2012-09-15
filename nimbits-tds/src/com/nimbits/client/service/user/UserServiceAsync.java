@@ -15,12 +15,10 @@ package com.nimbits.client.service.user;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.nimbits.client.enums.AuthLevel;
-import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.connection.ConnectionRequest;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
 
 import java.util.List;
 

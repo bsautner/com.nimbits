@@ -74,17 +74,6 @@ public class ValueServletImplTest extends NimbitsServletTest {
     }
 
 
-    @Test
-    public void doGetTest() {
-
-
-        try {
-            valueServlet.doGet(req, resp);
-        } catch (IOException e) {
-            fail();
-        }
-
-    }
 
 
     @Test
@@ -109,7 +98,7 @@ public class ValueServletImplTest extends NimbitsServletTest {
         SystemMaint systemMaint = new SystemMaint();
 
         systemMaint.doGet(req, resp);
-        SettingsServiceFactory.getInstance().updateSetting(SettingType.quotaEnabled, Const.TRUE);
+        SettingsServiceFactory.getInstance().updateSetting(SettingType.billingEnabled, Const.TRUE);
 
 
         for (int i = 0; i < QuotaFactory.getInstance(emailAddress).getMaxDailyQuota()+10; i++) {
@@ -125,7 +114,7 @@ public class ValueServletImplTest extends NimbitsServletTest {
         SystemMaint systemMaint = new SystemMaint();
 
         systemMaint.doGet(req, resp);
-        SettingsServiceFactory.getInstance().updateSetting(SettingType.quotaEnabled, Const.FALSE);
+        SettingsServiceFactory.getInstance().updateSetting(SettingType.billingEnabled, Const.FALSE);
 
 
         for (int i = 0; i < QuotaFactory.getInstance(emailAddress).getMaxDailyQuota() +10; i++) {

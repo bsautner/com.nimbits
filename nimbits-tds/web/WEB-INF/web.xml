@@ -33,11 +33,21 @@
         </listener-class>
     </listener>
 
-    <context-param>
-        <param-name>billingEnabled</param-name>
-        <param-value>true</param-value>
-    </context-param>
+    <servlet>
 
+        <servlet-name>springGwtRemoteServiceServlet</servlet-name>
+
+        <servlet-class>org.spring4gwt.server.SpringGwtRemoteServiceServlet</servlet-class>
+
+    </servlet>
+    1
+    <servlet-mapping>
+
+        <servlet-name>springGwtRemoteServiceServlet</servlet-name>
+
+        <url-pattern>/nimbits/*</url-pattern>
+
+    </servlet-mapping>
 
     <servlet>
         <servlet-name>OpenIdServlet</servlet-name>
@@ -74,17 +84,6 @@
         <url-pattern>/_ah/spi/*</url-pattern>
     </servlet-mapping>
 
-
-    <servlet>
-        <servlet-name>CalendarServlet</servlet-name>
-        <servlet-class>com.nimbits.server.api.openid.CalendarServlet</servlet-class>
-
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>CalendarServlet</servlet-name>
-        <url-pattern>/meeting</url-pattern>
-    </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>docServlet</servlet-name>
@@ -225,7 +224,8 @@
 
     <servlet>
         <servlet-name>entityAPI</servlet-name>
-        <servlet-class>com.nimbits.server.api.impl.EntityServletImpl</servlet-class>
+        <!--<servlet-class>com.nimbits.server.api.impl.EntityServletImpl</servlet-class>-->
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>entityAPI</servlet-name>
@@ -254,7 +254,7 @@
 
     <servlet>
         <servlet-name>settingsService</servlet-name>
-        <servlet-class>com.nimbits.server.settings.SettingServiceImpl</servlet-class>
+        <servlet-class>com.nimbits.server.settings.SettingsServiceImpl</servlet-class>
 
     </servlet>
     <servlet-mapping>
@@ -351,11 +351,12 @@
         <url-pattern>/cron/SystemMaint</url-pattern>
     </servlet-mapping>
     <servlet>
-        <servlet-name>com.nimbits.server.cron.IdlePointCron</servlet-name>
-        <servlet-class>com.nimbits.server.process.cron.IdlePointCron</servlet-class>
+        <servlet-name>idleCron</servlet-name>
+        <!--<servlet-class>com.nimbits.server.process.cron.IdlePointCron</servlet-class>-->
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>com.nimbits.server.cron.IdlePointCron</servlet-name>
+        <servlet-name>idleCron</servlet-name>
         <url-pattern>/cron/idle</url-pattern>
     </servlet-mapping>
 
@@ -365,12 +366,13 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>RecordValueTask</servlet-name>
-        <servlet-class>com.nimbits.server.process.task.RecordValueTask</servlet-class>
+        <servlet-name>valueTask</servlet-name>
+        <!--<servlet-class>com.nimbits.server.process.task.ValueTask</servlet-class>-->
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>RecordValueTask</servlet-name>
-        <url-pattern>/task/recordvaluetask</url-pattern>
+        <servlet-name>valueTask</servlet-name>
+        <url-pattern>/task/valuetask</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -481,6 +483,19 @@
         <servlet-name>valueApi</servlet-name>
         <url-pattern>/service/value</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>seriesApi</servlet-name>
+        <!--<servlet-class>com.nimbits.server.api.impl.SeriesServletImpl</servlet-class>-->
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>seriesApi</servlet-name>
+        <url-pattern>/service/series</url-pattern>
+    </servlet-mapping>
+
+
     <servlet>
         <servlet-name>feedServlet</servlet-name>
         <servlet-class>com.nimbits.server.api.impl.FeedServletImpl</servlet-class>
@@ -506,23 +521,18 @@
 
 
     <servlet>
-        <servlet-name>pointServlet</servlet-name>
-        <servlet-class>com.nimbits.server.api.impl.PointServletImpl</servlet-class>
+        <servlet-name>pointApi</servlet-name>
+        <!--<servlet-class>com.nimbits.server.api.impl.PointServletImpl</servlet-class>-->
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+
     </servlet>
     <servlet-mapping>
-        <servlet-name>pointServlet</servlet-name>
+        <servlet-name>pointApi</servlet-name>
         <url-pattern>/service/point</url-pattern>
     </servlet-mapping>
 
 
-    <servlet>
-        <servlet-name>seriesServlet</servlet-name>
-        <servlet-class>com.nimbits.server.api.impl.SeriesServletImpl</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>seriesServlet</servlet-name>
-        <url-pattern>/service/series</url-pattern>
-    </servlet-mapping>
+
 
 
 
@@ -577,8 +587,10 @@
 
 
     <servlet>
-        <servlet-name>batchServlet</servlet-name>
-        <servlet-class>com.nimbits.server.api.impl.BatchServletImpl</servlet-class>
+        <servlet-name>batchApi</servlet-name>
+        <!--<servlet-class>com.nimbits.server.api.impl.BatchServletImpl</servlet-class>-->
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+
     </servlet>
 
 
@@ -592,7 +604,7 @@
         <servlet-class>com.nimbits.server.external.twitter.TwitterImpl</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>batchServlet</servlet-name>
+        <servlet-name>batchApi</servlet-name>
         <url-pattern>/service/batch</url-pattern>
     </servlet-mapping>
     <servlet>
@@ -614,15 +626,6 @@
         <url-pattern>/nimbits/timespan</url-pattern>
     </servlet-mapping>
 
-
-    <servlet>
-        <servlet-name>com.nimbits.nimbits UserWebService</servlet-name>
-        <servlet-class>com.nimbits.server.api.impl.UserServletImpl</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>com.nimbits.nimbits UserWebService</servlet-name>
-        <url-pattern>/admin/user</url-pattern>
-    </servlet-mapping>
 
     <servlet>
         <servlet-name>quotaService</servlet-name>

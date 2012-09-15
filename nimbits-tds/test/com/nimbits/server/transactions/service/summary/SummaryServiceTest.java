@@ -16,7 +16,7 @@ package com.nimbits.server.transactions.service.summary;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.SummaryType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
@@ -24,12 +24,17 @@ import com.nimbits.client.model.summary.Summary;
 import com.nimbits.client.model.summary.SummaryModelFactory;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
+import com.nimbits.client.service.entity.EntityService;
+import com.nimbits.client.service.summary.SummaryService;
+import com.nimbits.client.service.value.ValueService;
 import com.nimbits.server.NimbitsServletTest;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
-import com.nimbits.server.transactions.service.value.ValueServiceFactory;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -40,24 +45,39 @@ import java.util.Random;
  * Date: 3/16/12
  * Time: 12:53 PM
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={
+        "classpath:META-INF/applicationContext.xml"
+})
 public class SummaryServiceTest extends NimbitsServletTest {
     private static final int SUMMARY_INTERVAL_MS = 60000;
     private static final double DELTA = 0.001;
     private static final int INT = 50;
     double[] v ={1,2,3};
 
+    @Resource(name="summaryService")
+    SummaryService summaryService;  
+    
+    @Resource(name="commonFactory")
+    CommonFactory common;
+   
+    @Resource(name="entityService")
+    EntityService entityService;
 
+    @Resource(name="valueService")
+    ValueService valueService;
+    
     @Test
     public void testProcessGet() throws NimbitsException, InterruptedException {
 
-        EntityName n = CommonFactoryLocator.getInstance().createName("summary test", EntityType.summary);
+        EntityName n = common.createName("summary test", EntityType.summary);
         Entity e = EntityModelFactory.createEntity(n, EntityType.summary);
         Summary summary = SummaryModelFactory.createSummary(e,point.getKey(),
                 pointChild.getKey(),true, SummaryType.average, SUMMARY_INTERVAL_MS, new Date(0));
         point.setFilterValue(0.0);
-        EntityServiceFactory.getInstance().addUpdateEntity(point);
-        EntityServiceFactory.getInstance().addUpdateEntity(summary);
-        final List<Entity> r = EntityServiceFactory.getInstance().getEntityByTrigger(user, point, EntityType.summary);
+        entityService.addUpdateEntity(point);
+        entityService.addUpdateEntity(summary);
+        final List<Entity> r = entityService.getEntityByTrigger(user, point, EntityType.summary);
 
 
         Assert.assertFalse(r.isEmpty());
@@ -68,16 +88,16 @@ public class SummaryServiceTest extends NimbitsServletTest {
         for (int i = 0; i < c; i++){
             double dx = rand.nextDouble() * 100;
             Value value = ValueFactory.createValueModel(dx);
-            Value vr = ValueServiceFactory.getInstance().recordValue(user, point, value);
+            Value vr = valueService.recordValue(user, point, value);
             Assert.assertNotNull(vr);
             Thread.sleep(INT);
             d[i] = dx;
         }
-        double com = SummaryServiceFactory.getInstance().getValue(SummaryType.average, d);
+        double com = summaryService.getValue(SummaryType.average, d);
 
-        SummaryServiceFactory.getInstance().processSummaries(user,  point);
+        summaryService.processSummaries(user,  point);
 
-        List<Value> result = ValueServiceFactory.getInstance().getCurrentValue(pointChild);
+        List<Value> result = valueService.getCurrentValue(pointChild);
         Thread.sleep(100);
         Assert.assertNotNull(result);
         Assert.assertEquals(com, result.get(0).getDoubleValue(), DELTA);
@@ -93,40 +113,40 @@ public class SummaryServiceTest extends NimbitsServletTest {
     public void testAverage() {
 
 
-        Assert.assertEquals(2,  SummaryServiceFactory.getInstance().getValue(SummaryType.average, v), 0.0);
+        Assert.assertEquals(2,  summaryService.getValue(SummaryType.average, v), 0.0);
     }
 
     @Test
     public void testMax() {
 
-        Assert.assertEquals(3,  SummaryServiceFactory.getInstance().getValue(SummaryType.max, v), 0.0);
+        Assert.assertEquals(3,  summaryService.getValue(SummaryType.max, v), 0.0);
     }
 
     @Test
     public void testMin() {
 
-        Assert.assertEquals(1,  SummaryServiceFactory.getInstance().getValue(SummaryType.min, v), 0.0);
+        Assert.assertEquals(1,  summaryService.getValue(SummaryType.min, v), 0.0);
     }
 
     @Test
     public void testVariance() {
 
-        Assert.assertEquals(1,  SummaryServiceFactory.getInstance().getValue(SummaryType.variance, v), 0.0);
+        Assert.assertEquals(1,  summaryService.getValue(SummaryType.variance, v), 0.0);
     }
     @Test
     public void testStDev() {
 
-        Assert.assertEquals(1,  SummaryServiceFactory.getInstance().getValue(SummaryType.standardDeviation, v), 0.0);
+        Assert.assertEquals(1,  summaryService.getValue(SummaryType.standardDeviation, v), 0.0);
     }
     @Test
     public void testSum() {
 
-        Assert.assertEquals(6,  SummaryServiceFactory.getInstance().getValue(SummaryType.sum, v), 0.0);
+        Assert.assertEquals(6,  summaryService.getValue(SummaryType.sum, v), 0.0);
     }
 
     @Test
     public void testSkewness() {
 
-        Assert.assertEquals(0,  SummaryServiceFactory.getInstance().getValue(SummaryType.skewness, v), 0.0);
+        Assert.assertEquals(0,  summaryService.getValue(SummaryType.skewness, v), 0.0);
     }
 }

@@ -20,7 +20,6 @@ import com.nimbits.client.constants.Words;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactory;
-import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.location.Location;
@@ -35,7 +34,7 @@ import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
 import com.nimbits.server.transactions.service.value.ValueServiceImpl;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.ServletException;
@@ -48,7 +47,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @Transactional
-@Component("valueApi")
+@Service("valueApi")
 public class ValueServletImpl extends ApiServlet implements org.springframework.web.HttpRequestHandler {
     final private static Logger log = Logger.getLogger(ValueServletImpl.class.getName());
 
@@ -59,15 +58,17 @@ public class ValueServletImpl extends ApiServlet implements org.springframework.
 
 
     @Override
-    public void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
+    public void doGet(final HttpServletRequest req, final HttpServletResponse resp)  {
 
         try {
             processGet(req, resp);
         } catch (NimbitsException e) {
-            resp.setStatus(Const.HTTP_STATUS_INTERNAL_SERVER_ERROR);
-            final PrintWriter out = resp.getWriter();
-            out.print(e.getMessage());
-            out.close();
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            resp.addHeader("ERROR", e.getMessage());
+
+        } catch (IOException e) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            resp.addHeader("ERROR", e.getMessage());
         }
 
     }

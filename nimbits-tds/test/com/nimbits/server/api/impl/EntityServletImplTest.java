@@ -16,6 +16,7 @@ package com.nimbits.server.api.impl;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
 import com.nimbits.client.enums.subscription.SubscriptionType;
 import com.nimbits.client.exception.NimbitsException;
@@ -32,9 +33,13 @@ import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.gson.GsonFactory;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.Date;
@@ -42,8 +47,17 @@ import java.util.Date;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={
+        "classpath:META-INF/applicationContext.xml"
+})
 public class EntityServletImplTest extends NimbitsServletTest {
-    EntityServletImpl impl = new EntityServletImpl();
+
+    @Resource(name="entityApi")
+    EntityServletImpl impl;
+
+
     public MockHttpServletRequest req1;
     public MockHttpServletResponse resp1;
 
@@ -75,13 +89,27 @@ public class EntityServletImplTest extends NimbitsServletTest {
       //  req.addParameter("id", point.getKey());
         req.addParameter("json", "{\"highAlarm\":0.0,\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"" + Const.TEST_ACCOUNT + "\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}");
         req.addParameter("action", "create");
-        impl.doPost(req, resp);
+        impl.handleRequest(req, resp);
         String g1= resp.getContentAsString();
         assertNotNull(g1);
         Point px = GsonFactory.getInstance().fromJson(g1, PointModel.class);
         assertEquals(190, px.getExpire());
 
     }
+
+    @Test
+    public void testPostCreateIllegalSystemPoint() throws IOException, ServletException, NimbitsException {
+        req.removeAllParameters();
+
+
+        //  req.addParameter("id", point.getKey());
+        req.addParameter("json", "{\"highAlarm\":0.0,\"pointType\":" + PointType.accountBalance.getCode() +",\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":" + EntityType.point.getCode() + ",\"protectionLevel\":2,\"alertType\":0,\"parent\":\"" + Const.TEST_ACCOUNT + "\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}");
+        req.addParameter("action", "create");
+        impl.handleRequest(req, resp);
+        assertEquals(resp.getStatus(), Const.HTTP_STATUS_INTERNAL_SERVER_ERROR);
+
+    }
+
     @Test
     public void testPostDeletePoint() throws IOException, ServletException, NimbitsException {
         req.removeAllParameters();
@@ -90,7 +118,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
         //  req.addParameter("id", point.getKey());
         req.addParameter("json", "{\"highAlarm\":0.0,\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"" + Const.TEST_ACCOUNT + "\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}");
         req.addParameter("action", "create");
-        impl.doPost(req, resp);
+        impl.handleRequest(req, resp);
         String g1= resp.getContentAsString();
         assertNotNull(g1);
         Point px = GsonFactory.getInstance().fromJson(g1, PointModel.class);
@@ -101,7 +129,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
         req.removeAllParameters();
         req.addParameter("json", j2);
         req.addParameter("action", "delete");
-        impl.doPost(req, resp);
+        impl.handleRequest(req, resp);
 
 
     }
@@ -113,7 +141,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
         String json = "{\"filterType\":4,\"name\":\"bug2\",\"entityType\":1,\"protectionLevel\":2,\"parent\":\"" + Const.TEST_ACCOUNT + "\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}";
         req.addParameter("json",json);
         req.addParameter("action", "create");
-        impl.doPost(req, resp);
+        impl.handleRequest(req, resp);
         String g1= resp.getContentAsString();
         assertNotNull(g1);
         Point px = GsonFactory.getInstance().fromJson(g1, PointModel.class);
@@ -129,7 +157,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
         //  req.addParameter("id", point.getKey());
         req.addParameter("json", "{\"highAlarm\":0.0,\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"" + Const.TEST_ACCOUNT + "\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}");
         req.addParameter("action", "create");
-        impl.doPost(req, resp);
+        impl.handleRequest(req, resp);
         String g1= resp.getContentAsString();
         assertNotNull(g1);
         Point px = GsonFactory.getInstance().fromJson(g1, PointModel.class);
@@ -137,7 +165,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
         req.removeAllParameters();
         req.addParameter("json", "{\"key\":\"" + px.getKey() + "\",\"highAlarm\":0.0,\"expire\":55,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"" + Const.TEST_ACCOUNT + "\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}");
         req.addParameter("action", "update");
-        impl.doPost(req, resp1);
+        impl.handleRequest(req, resp1);
 
         String g2= resp1.getContentAsString();
         assertNotNull(g2);
@@ -154,7 +182,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
         //  req.addParameter("id", point.getKey());
         req.addParameter("json", "{\"highAlarm\":0.0,\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":600,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"" + Const.TEST_ACCOUNT + "\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}");
         req.addParameter("action", "create");
-        impl.doPost(req, resp);
+        impl.handleRequest(req, resp);
         String g1= resp.getContentAsString();
         assertNotNull(g1);
         Point px = GsonFactory.getInstance().fromJson(g1, PointModel.class);
@@ -162,7 +190,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
         req.removeAllParameters();
         req.addParameter("json", "{\"key\":\"" + px.getKey() + "\",\"entityType\":1,\"expire\":55,\"name\":\"jquery test\",\"parent\":\"" + Const.TEST_ACCOUNT + "\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}");
         req.addParameter("action", "update");
-        impl.doPost(req, resp1);
+        impl.handleRequest(req, resp1);
 
         String g2= resp1.getContentAsString();
         assertNotNull(g2);
@@ -180,7 +208,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
         //  req.addParameter("id", point.getKey());
         req.addParameter("json", "{\"subscribedEntity\":\"" + Const.TEST_ACCOUNT + "/TempF\",\"notifyMethod\":0,\"subscriptionType\":4,\"maxRepeat\":15.0,\"lastSent\":\"2012-05-20T23:59:37 +0000\",\"notifyFormatJson\":false,\"enabled\":true,\"name\":\"TempF idle alert\",\"key\":\"b9ba6396-b3c8-4455-8744-334f3a2633b0\",\"description\":\"\",\"entityType\":5,\"protectionLevel\":0,\"alertType\":1,\"parent\":\"" + Const.TEST_ACCOUNT + "/TempF\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}");
         req.addParameter("action", "create");
-        impl.doPost(req, resp);
+        impl.handleRequest(req, resp);
         String g1= resp.getContentAsString();
         assertNotNull(g1);
         Subscription px = GsonFactory.getInstance().fromJson(g1, SubscriptionModel.class);
@@ -211,7 +239,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
 
         req.addParameter("json", jp);
         req.addParameter("action", "create");
-        impl.doPost(req, resp);
+        impl.handleRequest(req, resp);
         String r = resp.getContentAsString();
         System.out.println(r);
 
@@ -238,7 +266,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
         req.removeAllParameters();
         req.addParameter("json", u);
         req.addParameter("action", "update");
-        impl.doPost(req, resp);
+        impl.handleRequest(req, resp);
 
 
         req1.removeAllParameters();
@@ -259,7 +287,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
         req.removeAllParameters();
         req.addParameter("json", u);
         req.addParameter("action", "update");
-        impl.doPost(req, resp);
+        impl.handleRequest(req, resp);
         String x = resp.getContentAsString();
         Point xp = GsonFactory.getInstance().fromJson(x, PointModel.class);
         assertNotNull(xp);

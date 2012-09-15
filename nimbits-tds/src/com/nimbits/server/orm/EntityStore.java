@@ -20,7 +20,6 @@ import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.billing.Billing;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.entity.Entity;

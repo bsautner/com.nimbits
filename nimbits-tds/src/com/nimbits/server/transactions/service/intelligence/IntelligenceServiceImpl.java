@@ -34,9 +34,13 @@ import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.service.intelligence.IntelligenceService;
 import com.nimbits.server.http.HttpCommonFactory;
 import com.nimbits.server.settings.SettingsServiceFactory;
+import com.nimbits.server.settings.SettingsServiceImpl;
 import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
 import com.nimbits.server.transactions.service.user.UserServiceFactory;
 import com.nimbits.server.transactions.service.value.ValueServiceFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -63,12 +67,16 @@ import java.util.regex.Pattern;
  * Date: 8/18/11
  * Time: 1:44 PM
  */
+@Service("intelligenceService")
+@Transactional
 public class IntelligenceServiceImpl extends RemoteServiceServlet implements IntelligenceService {
     private static final Logger log = Logger.getLogger(IntelligenceServiceImpl.class.getName());
     private static final int INT = 1014;
     private static final Pattern COMPILE = Pattern.compile("\\.");
     private static final Pattern PATTERN = Pattern.compile("\\.");
     private static final Pattern COMPILE1 = Pattern.compile("\\[");
+    private EntityServiceImpl entityService;
+    private SettingsServiceImpl settingsService;
 
     private User getUser() {
         try {
@@ -330,5 +338,21 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
         return ValueFactory.createValueModel(LocationFactory.createLocation(), v, new Date(),"",  ValueFactory.createValueData(data), AlertType.OK);
 
 
+    }
+
+    public void setEntityService(EntityServiceImpl entityService) {
+        this.entityService = entityService;
+    }
+
+    public EntityServiceImpl getEntityService() {
+        return entityService;
+    }
+
+    public void setSettingsService(SettingsServiceImpl settingsService) {
+        this.settingsService = settingsService;
+    }
+
+    public SettingsServiceImpl getSettingsService() {
+        return settingsService;
     }
 }

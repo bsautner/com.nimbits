@@ -32,14 +32,12 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.datapoints.PointService;
 import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.settings.SettingsService;
-import com.nimbits.server.api.impl.ValueServletImpl;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.process.cron.SystemMaint;
 import com.nimbits.server.settings.SettingTransactions;
 import com.nimbits.server.settings.SettingTransactionsFactory;
 import com.nimbits.server.settings.SettingsServiceFactory;
 import com.nimbits.server.transactions.dao.value.ValueDAOImpl;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
 import com.nimbits.server.transactions.service.entity.EntityTransactionFactory;
 import com.nimbits.server.transactions.service.entity.EntityTransactions;
 import com.nimbits.server.transactions.service.point.PointServiceFactory;
@@ -48,9 +46,14 @@ import com.nimbits.server.transactions.service.user.UserTransactionFactory;
 import com.nimbits.server.transactions.service.user.UserTransactions;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +61,7 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Benjamin Sautner
@@ -65,6 +69,10 @@ import static org.junit.Assert.assertNotNull;
  * Date: 3/29/12
  * Time: 9:27 AM
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={
+        "classpath:META-INF/applicationContext.xml"
+})
 public class NimbitsServletTest {
     public static final String email = Const.TEST_ACCOUNT;
     public final LocalServiceTestHelper helper = new LocalServiceTestHelper(
@@ -74,7 +82,8 @@ public class NimbitsServletTest {
             new LocalUserServiceTestConfig())
             .setEnvIsLoggedIn(true).setEnvEmail(email).setEnvAuthDomain("nimbits.com");
 
-
+    @Resource(name="entityService")
+    public EntityService entityService;
 
     public MockHttpServletRequest req;
     public MockHttpServletResponse resp;
@@ -93,7 +102,7 @@ public class NimbitsServletTest {
     public UserTransactions userTransactionsDao;
     public SettingTransactions settingsDAO;
 
-    public EntityService entityService;
+
     public EntityTransactions entityTransactions;
 
     public Point point;
@@ -139,17 +148,17 @@ public class NimbitsServletTest {
         assertNotNull(r);
 
 
-        List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(emailAddress.getValue(), EntityType.user);
+        List<Entity> result = entityService.getEntityByKey(emailAddress.getValue(), EntityType.user);
         assertFalse(result.isEmpty());
         user = (User) result.get(0);
-        entityService = EntityServiceFactory.getInstance();
+
         entityTransactions = EntityTransactionFactory.getInstance(user);
         Entity accessKey = EntityModelFactory.createEntity(pointName, "", EntityType.accessKey, ProtectionLevel.onlyMe, user.getKey(), user.getKey());
         AccessKey ak = AccessKeyFactory.createAccessKey(accessKey, "AUTH", user.getKey(), AuthLevel.admin);
-        EntityServiceFactory.getInstance().addUpdateEntity(ak);
+        entityService.addUpdateEntity(ak);
 
 
-        Map<String, Entity> map = EntityServiceFactory.getInstance().getEntityMap(user, EntityType.accessKey, 1000) ;
+        Map<String, Entity> map = entityService.getEntityMap(user, EntityType.accessKey, 1000) ;
 
         assertFalse(map.isEmpty());
         user.addAccessKey((AccessKey) map.values().iterator().next());
@@ -157,7 +166,7 @@ public class NimbitsServletTest {
         settingsDAO = SettingTransactionsFactory.getDaoInstance();
 
         Entity c = EntityModelFactory.createEntity(groupName, "", EntityType.category, ProtectionLevel.everyone, user.getKey(), user.getKey(), UUID.randomUUID().toString());
-        group = (Category) EntityServiceFactory.getInstance().addUpdateEntity(c);
+        group = (Category) entityService.addUpdateEntity(c);
 
         pointEntity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone,  group.getKey(), user.getKey(), UUID.randomUUID().toString());
         Point newPoint   =  PointModelFactory.createPointModel(
@@ -176,7 +185,7 @@ public class NimbitsServletTest {
                 false,
                 PointType.basic , 0, false, 0.0);
         newPoint.setExpire(5);
-        point = (Point) EntityServiceFactory.getInstance().addUpdateEntity(user, newPoint);
+        point = (Point) entityService.addUpdateEntity(user, newPoint);
         // point = pointService.addPoint(user, pointEntity);
         valueDao = new ValueDAOImpl(point);
         pointChildEntity = EntityModelFactory.createEntity(pointChildName, "", EntityType.point, ProtectionLevel.everyone, point.getKey(), user.getKey(), UUID.randomUUID().toString());
@@ -195,7 +204,7 @@ public class NimbitsServletTest {
                 0.1,
                 false,
                 PointType.basic, 0, false, 0.0 );
-        pointChild = (Point) EntityServiceFactory.getInstance().addUpdateEntity(user, newChild);
+        pointChild = (Point) entityService.addUpdateEntity(user, newChild);
         // pointChild =  pointService.addPoint(user, pointChildEntity);
         assertNotNull(pointChild);
 
@@ -224,5 +233,11 @@ public class NimbitsServletTest {
           }
       }
 
+    }
+
+
+    @Test
+    public void makeSpringHappy() {
+        assertTrue(true);
     }
 }

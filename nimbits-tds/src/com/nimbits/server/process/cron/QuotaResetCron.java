@@ -13,20 +13,14 @@
 
 package com.nimbits.server.process.cron;
 
-import com.google.appengine.api.datastore.*;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.server.admin.quota.Quota;
 import com.nimbits.server.admin.quota.QuotaFactory;
-import com.nimbits.server.admin.system.SystemServiceFactory;
 
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.logging.Logger;
 
 /**

@@ -17,12 +17,15 @@ import com.nimbits.client.constants.Words;
 import com.nimbits.client.enums.ExportType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.server.api.ApiServlet;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-
+@Transactional
+@Service("authApi")
 public class AuthTestServletImpl extends ApiServlet {
 
     private static final long serialVersionUID = 1L;
@@ -46,10 +49,12 @@ public class AuthTestServletImpl extends ApiServlet {
 
             }
         } catch (NimbitsException e) {
-
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            resp.addHeader("ERROR", e.getMessage());
             out.print(Words.WORD_FALSE);
         }
         out.close();
+        resp.setStatus(HttpServletResponse.SC_OK);
     }
 
 

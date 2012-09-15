@@ -31,6 +31,8 @@ import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
 import com.nimbits.server.transactions.service.feed.FeedServiceFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,6 +49,8 @@ import java.util.Map;
  * Date: 5/20/11
  * Time: 3:43 PM
  */
+@Transactional
+@Service("blobApi")
 public class BlobServletImpl extends ApiServlet {
     private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 

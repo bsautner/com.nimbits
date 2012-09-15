@@ -20,6 +20,8 @@ import com.nimbits.client.enums.DateFormatType;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.gson.GsonFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -35,6 +37,8 @@ import java.util.logging.Logger;
  * Date: 3/20/12
  * Time: 9:14 AM
  */
+@Transactional
+@Service("timeApi")
 public class TimeServlet extends ApiServlet {
 
 
@@ -95,6 +99,7 @@ public class TimeServlet extends ApiServlet {
 
             out.print(Const.CONST_ARDUINO_DATA_SEPARATOR);
         }
+        resp.setStatus(HttpServletResponse.SC_OK);
 
     }
 }

@@ -26,6 +26,7 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.file.FileModel;
 import com.nimbits.client.model.intelligence.IntelligenceModel;
+import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.subscription.SubscriptionModel;
 import com.nimbits.client.model.summary.SummaryModel;
@@ -34,8 +35,10 @@ import com.nimbits.client.model.xmpp.XmppResourceModel;
 import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
 import com.nimbits.shared.Utils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -44,8 +47,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
+@Transactional
+@Service("valueApi")
+public class EntityServletImpl extends ApiServlet implements org.springframework.web.HttpRequestHandler {
 
-public class EntityServletImpl extends ApiServlet {
+    private EntityServiceImpl entityService;
 
     private Class getClass(EntityType type) {
         switch (type) {
@@ -84,10 +90,66 @@ public class EntityServletImpl extends ApiServlet {
     }
 
 
+
+    private void validate(Entity e) throws NimbitsException {
+
+        if (e.getEntityType().equals(EntityType.point)) {
+            Point p = (Point)e;
+            if (p.getPointType().isSystem()) {
+                throw new NimbitsException("Cannot create or modify system points using the entity service!");
+            }
+        }
+
+
+    }
+
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            doInit(req, resp, ExportType.unknown);
+            final PrintWriter out = resp.getWriter();
 
 
+            if (user != null && containsParam(Parameters.id)) {
+                List<Entity> e = entityService.findEntityByKey(user, getParam(Parameters.id));
+
+                if (! e.isEmpty() ) {
+                    if (okToRead(user, e.get(0))) {
+                        Entity r = e.get(0);
+                        String json = GsonFactory.getInstance().toJson(r, r.getClass());
+                        out.print(json);
+                    }
+                    else {
+                        out.println("Could not display entity, access denied.");
+                        resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    }
+                }
+                else {
+                    out.println("Could not find entity with the id provided.");
+                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                }
+            }
+
+            resp.setStatus(HttpServletResponse.SC_OK);
+            out.close();
+
+        } catch (NimbitsException e) {
+            LogHelper.logException(this.getClass(), e);
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            resp.addHeader("ERROR", e.getMessage());
+        }
+    }
+
+    public void setEntityService(EntityServiceImpl entityService) {
+        this.entityService = entityService;
+    }
+
+    public EntityServiceImpl getEntityService() {
+        return entityService;
+    }
+
+    @Override
+    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             final PrintWriter out = resp.getWriter();
             doInit(req, resp, ExportType.unknown);
@@ -100,23 +162,26 @@ public class EntityServletImpl extends ApiServlet {
                         String json = getParam(Parameters.json);
                         String json2 = getParam(Parameters.json);
                         if (!Utils.isEmptyString(json)) {
-                             log.info(json);
+                            log.info(json);
                             Entity entity = GsonFactory.getInstance().fromJson(json, EntityModel.class);
                             Class cls =  getClass(entity.getEntityType());
-                           log.info(cls.getName());
+                            log.info(cls.getName());
 
-                            Object up = GsonFactory.getInstance().fromJson(json2,cls);
+                            Object up = GsonFactory.getInstance().fromJson(json2, cls);
                             Entity r = null;
+                            Entity e = (Entity)up;
+                            validate(e);
                             switch (action) {
                                 case create:
-                                    r =  EntityServiceFactory.getInstance().addUpdateEntity(user, (Entity) up);
+
+                                    r =  entityService.addUpdateEntity(user, e);
                                     log.info("created " + r.getKey());
                                     break;
                                 case delete:
-                                    EntityServiceFactory.getInstance().deleteEntity(user, (Entity) up) ;
+                                    entityService.deleteEntity(user, e) ;
                                     break;
                                 case update:
-                                    r =  EntityServiceFactory.getInstance().addUpdateEntity(user, (Entity) up);
+                                    r =  entityService.addUpdateEntity(user, e);
                                     break;
                                 default:
                                     break;
@@ -132,47 +197,15 @@ public class EntityServletImpl extends ApiServlet {
                     }
                 }
                 out.close();
-
+                resp.setStatus(HttpServletResponse.SC_OK);
 
 
             }
         } catch (NimbitsException e) {
             LogHelper.logException(this.getClass(), e);
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            resp.addHeader("ERROR", e.getMessage());
         }
 
-
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
-            doInit(req, resp, ExportType.unknown);
-            final PrintWriter out = resp.getWriter();
-
-
-            if (user != null && containsParam(Parameters.id)) {
-                List<Entity> e = EntityServiceFactory.getInstance().findEntityByKey(user, getParam(Parameters.id));
-
-                if (! e.isEmpty() ) {
-                    if (okToRead(user, e.get(0))) {
-                        Entity r = e.get(0);
-                        String json = GsonFactory.getInstance().toJson(r, r.getClass());
-                        out.print(json);
-                    }
-                    else {
-                        out.println("Could not display entity, access denied.");
-                    }
-                }
-                else {
-                    out.println("Could not find entity with the id provided.");
-                }
-            }
-
-
-            out.close();
-
-        } catch (NimbitsException e) {
-            LogHelper.logException(this.getClass(), e);
-        }
     }
 }

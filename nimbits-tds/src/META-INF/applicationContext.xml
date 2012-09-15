@@ -20,15 +20,80 @@
     <bean id="valueService" class="com.nimbits.server.transactions.service.value.ValueServiceImpl"/>
     <bean id="entityService" class="com.nimbits.server.transactions.service.entity.EntityServiceImpl"/>
     <bean id="userService" class="com.nimbits.server.transactions.service.user.UserServiceImpl" />
+    <bean id="settingsService" class="com.nimbits.server.settings.SettingsServiceImpl" />
+    <bean id="emailService" class="com.nimbits.server.communication.email.EmailServiceImpl" />
+    <bean id="calculationService" class="com.nimbits.server.transactions.service.calculation.CalculationServiceImpl">
+        <property name="entityService" ref="entityService" />
+        <property name="valueService" ref="valueService" />
+    </bean>
+    <bean id="intelligenceService" class="com.nimbits.server.transactions.service.intelligence.IntelligenceServiceImpl">
+        <property name="entityService" ref="entityService" />
+        <property name="settingsService" ref="settingsService" />
+    </bean>
 
+    <bean id="summaryService" class="com.nimbits.server.transactions.service.summary.SummaryServiceImpl">
+        <property name="entityService" ref="entityService" />
+        <property name="valueService" ref="valueService" />
+    </bean>
+
+    <bean id="subscriptionService" class="com.nimbits.server.transactions.service.subscription.SubscriptionServiceImpl">
+        <property name="entityService" ref="entityService" />
+        <property name="valueService" ref="valueService" />
+        <property name="userService" ref="userService" />
+        <property name="emailService" ref="emailService" />
+    </bean>
+
+
+    <bean id="timespanService" class="com.nimbits.server.time.TimespanServiceImpl" />
 
     <bean id="quotaService" class="com.nimbits.server.admin.quota.QuotaServletImpl">
         <property name="userService" ref="userService" />
     </bean>
 
+    <!--tasks-->
+    <bean id="taskFactory"  class="com.nimbits.server.process.task.TaskImpl"/>
+    <bean id="valueTask"  class="com.nimbits.server.process.task.ValueTask">
+        <property name="entityService" ref="entityService" />
+        <property name="calculationService" ref="calculationService" />
+        <property name="intelligenceService" ref="intelligenceService" />
+        <property name="summaryService" ref="summaryService" />
+        <property name="subscriptionService" ref="subscriptionService" />
+    </bean>
+
+    <!--end tasks-->
+
+    <!--APIS-->
+
     <bean id="valueApi" class="com.nimbits.server.api.impl.ValueServletImpl">
         <property name="commonFactory" ref="commonFactory" />
         <property name="valueService" ref="valueService" />
         <property name="entityService" ref="entityService" />
+    </bean>
+
+    <bean id="entityApi" class="com.nimbits.server.api.impl.EntityServletImpl">
+        <property name="entityService" ref="entityService" />
+    </bean>
+
+    <bean id="batchApi" class="com.nimbits.server.api.impl.BatchServletImpl">
+        <property name="taskFactory" ref="taskFactory" />
+    </bean>
+
+    <bean id="pointApi" class="com.nimbits.server.api.impl.PointServletImpl">
+        <property name="entityService" ref="entityService" />
+        <property name="commonFactory" ref="commonFactory" />
+    </bean>
+
+    <bean id="seriesApi" class="com.nimbits.server.api.impl.SeriesServletImpl">
+        <property name="timespanService" ref="timespanService" />
+        <property name="commonFactory" ref="commonFactory" />
+        <property name="entityService" ref="entityService" />
+        <property name="valueService" ref="valueService" />
+    </bean>
+
+    <!-- END APIS-->
+    <bean id="idleCron" class="com.nimbits.server.process.cron.IdlePointCron">
+        <property name="entityService" ref="entityService" />
+        <property name="valueService" ref="valueService" />
+        <property name="subscriptionService" ref="subscriptionService" />
     </bean>
 </beans>

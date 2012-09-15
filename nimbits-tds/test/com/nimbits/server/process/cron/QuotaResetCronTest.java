@@ -50,7 +50,7 @@ public class QuotaResetCronTest extends NimbitsServletTest {
         SystemMaint systemMaint = new SystemMaint();
 
         systemMaint.doGet(req, resp);
-        SettingsServiceFactory.getInstance().updateSetting(SettingType.quotaEnabled, Const.TRUE);
+        SettingsServiceFactory.getInstance().updateSetting(SettingType.billingEnabled, Const.TRUE);
 
 
         for (int i = 0; i < 10; i++) {

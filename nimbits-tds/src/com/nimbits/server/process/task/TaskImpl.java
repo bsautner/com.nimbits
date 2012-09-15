@@ -26,6 +26,7 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.shared.Utils;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,6 +42,7 @@ import java.util.logging.Logger;
  * Date: 10/7/11
  * Time: 2:12 PM
  */
+@Component("taskFactory")
 public class TaskImpl implements Task {
 
     private static final String TASK_MOVE = "move";
@@ -58,7 +60,7 @@ public class TaskImpl implements Task {
     private static final String PATH_POINT_MAINT_TASK = "/task/point";
     private static final String PATH_UPGRADE_TASK = "/task/upgrade";
     private static final String PATH_MOVE_TASK = "/task/move";
-    private static final String PATH_TASK_RECORD_VALUE = "/task/recordvaluetask";
+    private static final String PATH_TASK_RECORD_VALUE = "/task/valuetask";
     private static final String PATH_TASK_PROCESS_BATCH = "/task/processbatchtask";
     private static final String PATH_INCOMING_MAIL_QUEUE = "/task/incommingmail";
     private static final String PATH_DELETE_DATA_TASK = "/task/DeleteRecordedValuesTask";

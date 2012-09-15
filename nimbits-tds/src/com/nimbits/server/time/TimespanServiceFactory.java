@@ -21,6 +21,7 @@ import com.nimbits.client.service.timespan.TimespanService;
  * Date: 5/6/11
  * Time: 12:55 PM
  */
+
 public class TimespanServiceFactory {
     private static TimespanService instance;
 

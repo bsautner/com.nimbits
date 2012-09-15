@@ -14,35 +14,42 @@
 package com.nimbits.server.api.impl;
 
 import com.nimbits.client.common.Utils;
-import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ExportType;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.client.service.entity.EntityService;
+import com.nimbits.client.service.timespan.TimespanService;
+import com.nimbits.client.service.value.ValueService;
 import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.time.TimespanServiceFactory;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
-import com.nimbits.server.transactions.service.feed.FeedServiceFactory;
-import com.nimbits.server.transactions.service.value.ValueServiceFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-public class SeriesServletImpl extends ApiServlet {
+@Transactional
+@Service("seriesApi")
+public class SeriesServletImpl extends ApiServlet  implements org.springframework.web.HttpRequestHandler {
 
 
     private static final long serialVersionUID = 1L;
-
+    public static final int LIMIT = 1000;
+    private TimespanService timespanService;
+    private CommonFactory commonFactory;
+    private EntityService entityService;
+    private ValueService valueService;
 
 
     @Override
@@ -61,7 +68,7 @@ public class SeriesServletImpl extends ApiServlet {
 
             if (!Utils.isEmptyString(startDate) && !Utils.isEmptyString(endDate)) {
                 try {
-                    timespan = TimespanServiceFactory.getInstance().createTimespan(startDate, endDate);
+                    timespan = timespanService.createTimespan(startDate, endDate);
                 } catch (NimbitsException e) {
                     timespan = null;
                 }
@@ -70,8 +77,8 @@ public class SeriesServletImpl extends ApiServlet {
 
             int count = Utils.isEmptyString(getParam(Parameters.count)) ? 10 : Integer.valueOf(getParam(Parameters.count));
 
-            if (count > 1000) {
-                count = 1000;
+            if (count > LIMIT) {
+                count = LIMIT;
             }
             if (Utils.isEmptyString(segStr)) {
                 segStr = "0";
@@ -87,54 +94,87 @@ public class SeriesServletImpl extends ApiServlet {
             final PrintWriter out = resp.getWriter();
 
             if (Utils.isEmptyString(name)) {
-                resp.setStatus(Const.HTTP_STATUS_BAD_REQUEST);
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             } else {
 
 
-                final EntityName pointName = CommonFactoryLocator.getInstance().createName(name, EntityType.point);
-                List<Entity> points = EntityServiceFactory.getInstance().getEntityByName(user, pointName,EntityType.point);
+                final EntityName pointName = commonFactory.createName(name, EntityType.point);
+                List<Entity> points = entityService.getEntityByName(user, pointName, EntityType.point);
                 if (! points.isEmpty()) {
                      Point point = (Point) points.get(0);
 
                     // final Point point = (Point) EntityServiceFactory.getInstance().getEntityByKey(e.getKey(), PointEntity.class.getName());
                     if (point == null) {
 
-                        resp.setStatus(Const.HTTP_STATUS_BAD_REQUEST);
+                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     } else {
                         final List<Value> values;
                         if (!Utils.isEmptyString(segStr) && timespan != null) {
 
                             int seg = Integer.valueOf(segStr);
 
-                            values = ValueServiceFactory.getInstance().getDataSegment(point, timespan, seg, seg + 1000);
+                            values = valueService.getDataSegment(point, timespan, seg, seg + 1000);
 
                         } else {
 
-                            values = ValueServiceFactory.getInstance().getTopDataSeries(point, count);
+                            values = valueService.getTopDataSeries(point, count);
 
                         }
 
 
                         String result = GsonFactory.getInstance().toJson(values);
                         out.println(result);
-                        resp.setStatus(Const.HTTP_STATUS_OK);
+                        resp.setStatus(HttpServletResponse.SC_OK);
                         out.close();
                     }
                 }
                 else {
-                    resp.setStatus(Const.HTTP_STATUS_BAD_REQUEST);
+                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 }
             }
         } catch (IOException e) {
-            if (user != null) {
-                FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(e));
-            }
-
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            resp.addHeader("ERROR", e.getMessage());
         } catch (NimbitsException e) {
-            if (user != null) {
-                FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(e));
-            }
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            resp.addHeader("ERROR", e.getMessage());
         }
     }
 
+    public void setTimespanService(TimespanService timespanService) {
+        this.timespanService = timespanService;
+    }
+
+    public TimespanService getTimespanService() {
+        return timespanService;
+    }
+
+    public void setCommonFactory(CommonFactory  commonFactory) {
+        this.commonFactory = commonFactory;
+    }
+
+    public CommonFactory  getCommonFactory() {
+        return commonFactory;
+    }
+
+    public void setEntityService(EntityService entityService) {
+        this.entityService = entityService;
+    }
+
+    public EntityService  getEntityService() {
+        return entityService;
+    }
+
+    public void setValueService(ValueService valueService) {
+        this.valueService = valueService;
+    }
+
+    public ValueService  getValueService() {
+        return valueService;
+    }
+
+    @Override
+    public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+    }
 }

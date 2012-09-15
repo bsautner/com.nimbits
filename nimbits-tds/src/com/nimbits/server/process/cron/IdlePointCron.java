@@ -23,12 +23,15 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
+import com.nimbits.client.service.entity.EntityService;
+import com.nimbits.client.service.subscription.SubscriptionService;
+import com.nimbits.client.service.value.ValueService;
 import com.nimbits.server.admin.logging.LogHelper;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
-import com.nimbits.server.transactions.service.subscription.SubscriptionServiceFactory;
 import com.nimbits.server.transactions.service.user.UserServiceFactory;
-import com.nimbits.server.transactions.service.value.ValueServiceFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,12 +40,18 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class IdlePointCron extends HttpServlet {
+
+@Service("idleCron")
+@Transactional
+public class IdlePointCron extends HttpServlet implements org.springframework.web.HttpRequestHandler{
     /**
      *
      */
     private static final long serialVersionUID = 1L;
     private static final Logger log = Logger.getLogger(IdlePointCron.class.getName());
+    private EntityService entityService;
+    private ValueService valueService;
+    private SubscriptionService subscriptionService;
 
     @Override
     @SuppressWarnings(Const.WARNING_UNCHECKED)
@@ -52,14 +61,15 @@ public class IdlePointCron extends HttpServlet {
         // out = resp.getWriter();
         try {
             processGet();
+            resp.setStatus(HttpServletResponse.SC_OK);
         } catch (NimbitsException e) {
             LogHelper.logException(IdlePointCron.class, e);
         }
 
     }
 
-    protected static int processGet() throws NimbitsException {
-        final List<Entity> points =  EntityServiceFactory.getInstance().getIdleEntities();
+    protected int processGet() throws NimbitsException {
+        final List<Entity> points =  entityService.getIdleEntities();
         log.info("Processing " + points.size() + " potentially idle points");
         for (final Entity p : points) {
             try {
@@ -72,23 +82,23 @@ public class IdlePointCron extends HttpServlet {
         return points.size();
     }
 
-    protected static boolean checkIdle(final Point p) throws NimbitsException {
+    protected boolean checkIdle(final Point p) throws NimbitsException {
         final Calendar c = Calendar.getInstance();
         c.add(Calendar.SECOND, p.getIdleSeconds() * -1);
         boolean retVal = false;
-        final List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(UserServiceFactory.getServerInstance().getAdmin(),
+        final List<Entity> result = entityService.getEntityByKey(UserServiceFactory.getServerInstance().getAdmin(),
                 p.getOwner(), EntityType.user);
         if (! result.isEmpty()) {
             final User u = (User) result.get(0);
-            final List<Value> v = ValueServiceFactory.getInstance().getCurrentValue(p);
+            final List<Value> v = valueService.getCurrentValue(p);
             if (p.getIdleSeconds() > 0 && ! v.isEmpty() &&
                     v.get(0).getTimestamp().getTime() <= c.getTimeInMillis() &&
                     !p.getIdleAlarmSent()) {
                 p.setIdleAlarmSent(true);
-                EntityServiceFactory.getInstance().addUpdateEntity(u, p);
+                entityService.addUpdateEntity(u, p);
                 // PointServiceFactory.getInstance().updatePoint(u, p);
                 final Value va = ValueFactory.createValueModel(v.get(0), AlertType.IdleAlert);
-                SubscriptionServiceFactory.getInstance().processSubscriptions(u, p,va);
+               subscriptionService.processSubscriptions(u, p,va);
                 retVal = true;
             }
         }
@@ -96,4 +106,32 @@ public class IdlePointCron extends HttpServlet {
     }
 
 
+    @Override
+    public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void setEntityService(EntityService entityService) {
+        this.entityService = entityService;
+    }
+
+    public EntityService getEntityService() {
+        return entityService;
+    }
+
+    public void setValueService(ValueService valueService) {
+        this.valueService = valueService;
+    }
+
+    public ValueService getValueService() {
+        return valueService;
+    }
+
+    public void setSubscriptionService(SubscriptionService  subscriptionService) {
+        this.subscriptionService = subscriptionService;
+    }
+
+    public SubscriptionService getSubscriptionService() {
+        return subscriptionService;
+    }
 }

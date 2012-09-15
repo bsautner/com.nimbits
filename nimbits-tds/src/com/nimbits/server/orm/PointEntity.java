@@ -13,6 +13,7 @@
 
 package com.nimbits.server.orm;
 
+import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
@@ -352,6 +353,9 @@ public class PointEntity extends EntityStore implements Point {
 
         if (this.deltaSeconds < 0 && this.deltaAlarmOn) {
             throw new NimbitsException("delta alert time must be > 0");
+        }
+        if (getName().getValue().equals(Const.ACCOUNT_BALANCE) && ! pointType.equals(PointType.accountBalance.getCode())) {
+            throw new NimbitsException("The name " + Const.ACCOUNT_BALANCE + " is reserved for the system.");
         }
 
 

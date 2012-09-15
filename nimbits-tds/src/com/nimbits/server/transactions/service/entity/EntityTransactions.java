@@ -18,7 +18,6 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.user.User;
 import com.nimbits.server.transactions.memcache.entity.EntityCache;
 
 import java.util.List;

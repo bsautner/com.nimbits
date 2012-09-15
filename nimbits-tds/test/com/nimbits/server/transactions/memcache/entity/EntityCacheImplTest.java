@@ -16,20 +16,15 @@ package com.nimbits.server.transactions.memcache.entity;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.model.calculation.Calculation;
-import com.nimbits.client.model.calculation.CalculationModel;
 import com.nimbits.client.model.calculation.CalculationModelFactory;
-import com.nimbits.client.model.common.CommonFactory;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.orm.CalcEntity;
-import com.nimbits.server.transactions.service.entity.EntityTransactionFactory;
-import com.nimbits.server.transactions.service.entity.EntityTransactions;
 import org.junit.Test;
 
-import javax.persistence.EntityTransaction;
 import java.util.Arrays;
 import java.util.List;
 

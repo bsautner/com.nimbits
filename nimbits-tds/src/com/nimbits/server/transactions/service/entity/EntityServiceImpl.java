@@ -34,6 +34,8 @@ import com.nimbits.server.io.blob.BlobServiceFactory;
 import com.nimbits.server.process.task.TaskFactory;
 import com.nimbits.server.transactions.service.user.UserServiceFactory;
 import com.nimbits.server.transactions.service.value.ValueServiceFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -44,6 +46,8 @@ import java.util.*;
  * Time: 12:05 PM
  */
 @SuppressWarnings("unchecked")
+@Transactional
+@Service("entityService")
 public class EntityServiceImpl  extends RemoteServiceServlet implements EntityService {
 
     private static final long serialVersionUID = -6442025194172745189L;

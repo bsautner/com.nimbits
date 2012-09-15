@@ -20,6 +20,7 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.location.Location;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
  * Date: 10/7/11
  * Time: 2:09 PM
  */
+@Component("taskFactory")
 public interface Task {
 
     void startDeleteDataTask(final Entity point, final boolean onlyExpired, final int exp);

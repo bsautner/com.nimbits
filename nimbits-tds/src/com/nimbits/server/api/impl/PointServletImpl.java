@@ -20,6 +20,7 @@ import com.nimbits.client.constants.UserMessages;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactory;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
@@ -30,13 +31,15 @@ import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.time.TimespanServiceFactory;
 import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
-import com.nimbits.server.transactions.service.feed.FeedServiceFactory;
 import com.nimbits.server.transactions.service.value.ValueServiceFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,8 +50,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-
-public class PointServletImpl extends ApiServlet {
+@Transactional
+@Service("pointApi")
+@Deprecated
+public class PointServletImpl extends ApiServlet implements org.springframework.web.HttpRequestHandler {
 
     private static final Gson gson = GsonFactory.getInstance();
     private static final long serialVersionUID = 1L;
@@ -56,9 +61,11 @@ public class PointServletImpl extends ApiServlet {
     private static final int EXPIRE = 90;
     private static final double FILTER_VALUE = 0.1;
     private static final Logger log = Logger.getLogger(PointServletImpl.class.getName());
+    private EntityService entityService;
+    private CommonFactory  commonFactory;
 
     @Override
-    public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
+    public void handleRequest(final HttpServletRequest req, final HttpServletResponse resp) {
 
 
         try {
@@ -90,11 +97,11 @@ public class PointServletImpl extends ApiServlet {
                         EntityType parentType;
                         log.info("creating point");
                         if (containsParam(Parameters.category)) {
-                            parentName= CommonFactoryLocator.getInstance().createName(getParam(Parameters.category), EntityType.category);
+                            parentName= commonFactory.createName(getParam(Parameters.category), EntityType.category);
                             parentType = EntityType.category;
                         }
                         else if (containsParam(Parameters.parent)) {
-                            parentName = CommonFactoryLocator.getInstance().createName(getParam(Parameters.parent), EntityType.point);
+                            parentName = commonFactory.createName(getParam(Parameters.parent), EntityType.point);
                             parentType = EntityType.point;
 
                         }
@@ -107,15 +114,14 @@ public class PointServletImpl extends ApiServlet {
                         }
 
                         if (!Utils.isEmptyString(pointNameParam) && Utils.isEmptyString(getParam(Parameters.json))) {
-                            final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
+                            final EntityName pointName = commonFactory.createName(pointNameParam, EntityType.point);
                             String description = getParam(Parameters.description);
                             final Point point = createPoint(user, pointName, parentName, parentType, description);
                             final String retJson = gson.toJson(point);
                             out.println(retJson);
 
                         } else if (!Utils.isEmptyString(pointNameParam) && !Utils.isEmptyString(getParam(Parameters.json))) {
-                            //  final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
-                            final Point point = createPointWithJson(user, parentName, parentType,getParam(Parameters.json));
+                             final Point point = createPointWithJson(user, parentName, parentType,getParam(Parameters.json));
                             final String retJson = gson.toJson(point);
                             out.println(retJson);
                         }
@@ -129,14 +135,10 @@ public class PointServletImpl extends ApiServlet {
             }
         } catch (IOException e) {
             resp.setStatus(Const.HTTP_STATUS_INTERNAL_SERVER_ERROR);
-            if (user != null) {
-                FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(e));
-            }
+
         } catch (NimbitsException e) {
             resp.setStatus(Const.HTTP_STATUS_INTERNAL_SERVER_ERROR);
-            if (user != null) {
-                FeedServiceFactory.getInstance().postToFeed(user, new NimbitsException(e));
-            }
+
         }
 
     }
@@ -155,9 +157,9 @@ public class PointServletImpl extends ApiServlet {
     }
 
 
-    private static void validateExistence(final User user, final EntityName name, final StringBuilder sb) throws NimbitsException {
+    private void validateExistence(final User user, final EntityName name, final StringBuilder sb) throws NimbitsException {
 
-        List<Entity> result =  EntityServiceFactory.getInstance().getEntityByName(user, name, EntityType.point);
+        List<Entity> result =  entityService.getEntityByName(user, name, EntityType.point);
 
         if (result.isEmpty()) {
             sb.append("false");
@@ -446,5 +448,22 @@ public class PointServletImpl extends ApiServlet {
             return UserMessages.RESPONSE_PERMISSION_DENIED;
         }
 
+    }
+
+
+    public void setEntityService(EntityService entityService) {
+        this.entityService = entityService;
+    }
+
+    public EntityService getEntityService() {
+        return entityService;
+    }
+
+    public void setCommonFactory(CommonFactory commonFactory) {
+        this.commonFactory = commonFactory;
+    }
+
+    public CommonFactory getCommonFactory() {
+        return commonFactory;
     }
 }

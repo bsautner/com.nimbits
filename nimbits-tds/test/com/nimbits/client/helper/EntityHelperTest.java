@@ -13,14 +13,11 @@
 
 package com.nimbits.client.helper;
 
-import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 

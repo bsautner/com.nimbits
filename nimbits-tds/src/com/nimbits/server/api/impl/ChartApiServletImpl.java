@@ -33,6 +33,8 @@ import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.time.TimespanServiceFactory;
 import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
 import com.nimbits.server.transactions.service.value.ValueServiceFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -50,6 +52,9 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+@Deprecated
+@Transactional
+@Service("chartApi")
 public class ChartApiServletImpl extends ApiServlet {
     private static final Logger log = Logger.getLogger(ChartApiServletImpl.class.getName());
     /**
@@ -66,12 +71,12 @@ public class ChartApiServletImpl extends ApiServlet {
         processGet(req, resp);
     }
 
-    protected static void processGet(final HttpServletRequest req, final HttpServletResponse resp) {
+    protected void processGet(final HttpServletRequest req, final HttpServletResponse resp) {
         final String formatParam = req.getParameter(Parameters.format.getText());
 
 
         try {
-            doInit(req, resp, getContentType(formatParam));
+            super.doInit(req, resp, getContentType(formatParam));
             final Timespan timespan = getTimestamp(req);
 
 

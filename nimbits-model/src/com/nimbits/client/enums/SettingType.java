@@ -41,7 +41,6 @@ public enum SettingType {
     testAccount(SettingConstants.SETTING_TEST_ACCOUNT,Const.EMPTY,false, false),
     testPassword(SettingConstants.SETTING_TEST_PASSWORD,Const.EMPTY,false, false),
     testURL(SettingConstants.SETTING_TEST_URL,Const.EMPTY,false, false),
-    quotaEnabled(SettingConstants.SETTING_ENABLE_QUOTA, Const.FALSE, false, true),
     facebookClientId(SettingConstants.SETTING_FACEBOOK_CLIENT_ID, Const.EMPTY, false, true),
     localDevAccount(SettingConstants.SETTING_LOCAL_DEV_ACCOUNT, Const.EMPTY, false, false),
     localDevPath(SettingConstants.SETTING_LOCAL_DEV_PATH, Const.EMPTY, false, false),
@@ -119,8 +118,7 @@ public enum SettingType {
         static final String SETTING_TEST_ACCOUNT = "testAccount";
         static final String SETTING_TEST_PASSWORD = "testPassword";
         static final String SETTING_TEST_URL = "testURL";
-        static final String SETTING_ENABLE_QUOTA = "SETTING_ENABLE_QUOTA";
-        public static final String SETTING_IS_DOMAIN = "IS_DOMAIN";
+        static final String SETTING_IS_DOMAIN = "IS_DOMAIN";
 
         private SettingConstants() {
         }

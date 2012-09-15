@@ -21,7 +21,6 @@ import com.nimbits.client.model.connection.ConnectionRequest;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
 
 import java.util.List;
 

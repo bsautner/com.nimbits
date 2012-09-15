@@ -15,26 +15,17 @@ package com.nimbits.server.admin.quota;
 
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.AuthLevel;
-import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactory;
-import com.nimbits.client.model.common.CommonFactoryLocator;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
-import com.nimbits.server.transactions.service.user.UserServiceFactory;
 import com.nimbits.server.transactions.service.user.UserServiceImpl;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.math.BigDecimal;
 
 /**

@@ -37,7 +37,6 @@ import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.helper.EntityHelper;
 import com.nimbits.client.model.GxtModel;
 import com.nimbits.client.model.TreeModel;
 import com.nimbits.client.model.common.CommonFactoryLocator;

@@ -25,7 +25,9 @@ import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.admin.common.ServerInfoImpl;
 import com.nimbits.server.admin.logging.LogHelper;
-import com.nimbits.server.settings.SettingServiceImpl;
+import com.nimbits.server.settings.SettingsServiceImpl;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -38,6 +40,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+@Service("emailService")
+@Transactional
 public class EmailServiceImpl implements EmailService {
 
     private static final Logger log = Logger.getLogger(EmailServiceImpl.class.getName());
@@ -136,7 +140,7 @@ public class EmailServiceImpl implements EmailService {
     private static InternetAddress getFromEmail() throws UnsupportedEncodingException {
         final String fromEmail;
         try {
-            fromEmail = new SettingServiceImpl().getSetting(SettingType.admin);
+            fromEmail = new SettingsServiceImpl().getSetting(SettingType.admin);
             return new InternetAddress(fromEmail, Words.WORD_NIMBITS);
         } catch (NimbitsException e) {
           return  new InternetAddress(Const.TEST_ACCOUNT, Words.WORD_NIMBITS);

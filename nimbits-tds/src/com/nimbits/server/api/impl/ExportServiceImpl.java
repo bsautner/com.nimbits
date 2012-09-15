@@ -41,8 +41,10 @@ public class ExportServiceImpl extends ApiServlet {
             doInit(req, resp, ExportType.unknown);
             BlobKey blobKey = new BlobKey(req.getParameter(Parameters.blobkey.getText()));
             blobstoreService.serve(blobKey, resp);
-        } catch (NimbitsException ignored) {
-
+            resp.setStatus(HttpServletResponse.SC_OK);
+        } catch (NimbitsException e) {
+             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+             resp.addHeader("ERROR", e.getMessage());
         }
 
     }

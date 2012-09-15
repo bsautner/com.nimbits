@@ -17,7 +17,6 @@ import com.google.apphosting.api.ApiProxy;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.nimbits.client.common.Utils;
 import com.nimbits.client.constants.Path;
-
 import com.nimbits.client.enums.*;
 import com.nimbits.client.enums.subscription.SubscriptionType;
 import com.nimbits.client.exception.NimbitsException;
@@ -29,18 +28,20 @@ import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.xmpp.XmppResource;
+import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.subscription.SubscriptionService;
+import com.nimbits.client.service.user.UserService;
+import com.nimbits.client.service.value.ValueService;
 import com.nimbits.server.admin.logging.LogHelper;
-import com.nimbits.server.communication.email.EmailServiceFactory;
+import com.nimbits.server.communication.email.EmailService;
 import com.nimbits.server.communication.xmpp.XmppServiceFactory;
 import com.nimbits.server.external.facebook.FacebookFactory;
 import com.nimbits.server.external.twitter.TwitterServiceFactory;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.http.HttpCommonFactory;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
 import com.nimbits.server.transactions.service.feed.FeedServiceFactory;
-import com.nimbits.server.transactions.service.user.UserServiceFactory;
-import com.nimbits.server.transactions.service.value.ValueServiceFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -52,12 +53,18 @@ import java.util.logging.Logger;
  * Date: 2/15/12
  * Time: 3:51 PM
  */
+@Service("subscriptionService")
+@Transactional
 public class SubscriptionServiceImpl extends RemoteServiceServlet implements
         SubscriptionService {
     private static final Logger log = Logger.getLogger(SubscriptionServiceImpl.class.getName());
 
     private static final int INT = 120;
     private static final int INT1 = 512;
+    private UserService userService;
+    private ValueService valueService;
+    private EntityService entityService;
+    private EmailService emailService;
 
 
     public boolean okToProcess(Subscription subscription) {
@@ -77,7 +84,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
     @Override
     public void processSubscriptions(final User user, final Point point, final Value v) throws NimbitsException {
 
-        final List<Entity> subscriptions= EntityServiceFactory.getInstance().getSubscriptionsToEntity(user, point);
+        final List<Entity> subscriptions= entityService.getSubscriptionsToEntity(user, point);
         log.info("processing " + subscriptions.size() + " subscriptions");
         for (final Entity entity : subscriptions) {
 
@@ -87,13 +94,13 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
                 log.info("Processing Subscription " + subscription.getKey());
                 subscription.setLastSent(new Date());
-                EntityServiceFactory.getInstance().addUpdateEntity(user, subscription);
+                entityService.addUpdateEntity(user, subscription);
 
-                final List<Entity> subscriptionEntity = EntityServiceFactory.getInstance().getEntityByKey(user, subscription.getKey(), EntityType.subscription);
+                final List<Entity> subscriptionEntity = entityService.getEntityByKey(user, subscription.getKey(), EntityType.subscription);
 
                 if (! subscriptionEntity.isEmpty())  {
 
-                    final User subscriber = UserServiceFactory.getInstance().getUserByKey(subscriptionEntity.get(0).getOwner(), AuthLevel.readWriteAll);
+                    final User subscriber =userService.getUserByKey(subscriptionEntity.get(0).getOwner(), AuthLevel.readWriteAll);
                     final AlertType alert = v.getAlertState();
 
                     switch (subscription.getSubscriptionType()) {
@@ -125,7 +132,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
                         case changed:
                             break;
                         case deltaAlert:
-                            if (ValueServiceFactory.getInstance().calculateDelta(point) > point.getDeltaAlarm()) {
+                            if (valueService.calculateDelta(point) > point.getDeltaAlarm()) {
                                 sendNotification(subscriber,subscription, point, v);
                             }
                             break;
@@ -143,7 +150,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
             }
             else {
                 log.info("Not running subscription because " +
-                        subscription.getLastSent().getTime() + subscription.getMaxRepeat() *  1000
+                        subscription.getLastSent().getTime() + (subscription.getMaxRepeat() *  1000)
                         + " <  " + new Date().getTime());
 
             }
@@ -156,7 +163,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
     }
 
     private void processSubscriptionToIncreaseOrDecrease(Point point, Value v, Subscription subscription, User subscriber) throws NimbitsException {
-        List<Value> prevValue = ValueServiceFactory.getInstance().getPrevValue(point, new Date(v.getTimestamp().getTime() - 1000));
+        List<Value> prevValue = valueService.getPrevValue(point, new Date(v.getTimestamp().getTime() - 1000));
         if (! prevValue.isEmpty()) {
             if (subscription.getSubscriptionType().equals(SubscriptionType.decrease) && (prevValue.get(0).getDoubleValue() > v.getDoubleValue())) {
                 sendNotification(subscriber, subscription, point, v);
@@ -169,7 +176,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
     }
 
 
-    private static void sendNotification(
+    private void sendNotification(
             final User user,
             final Subscription subscription,
             final Point point,
@@ -179,7 +186,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
             case none:
                 break;
             case email:
-                EmailServiceFactory.getInstance().sendAlert(point, point, user.getEmail(), value, subscription);
+                emailService.sendAlert(point, point, user.getEmail(), value, subscription);
                 break;
             case facebook:
                 postToFB(point,point, user, value);
@@ -247,7 +254,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
         TwitterServiceFactory.getInstance().sendTweet(u, message.toString());
     }
 
-    private static void postToFB(final Entity p, final Entity entity, final User u, final Value v) throws NimbitsException {
+    private void postToFB(final Entity p, final Entity entity, final User u, final Value v) throws NimbitsException {
 
         String m = entity.getName().getValue() + " = " + v.getDoubleValue();
         if (v.getNote() != null) {
@@ -260,7 +267,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
         if (entity.getProtectionLevel().equals(ProtectionLevel.everyone)) {
 
-            final List<Value> values = ValueServiceFactory.getInstance().getTopDataSeries(p, 10);
+            final List<Value> values = valueService.getTopDataSeries(p, 10);
             if (values.isEmpty()) {
                 picture.append("http://app.nimbits.com/resources/images/logo.png");
             } else {
@@ -288,5 +295,37 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
                 "nimbits.com", d);
 
 
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setValueService(ValueService valueService) {
+        this.valueService = valueService;
+    }
+
+    public ValueService getValueService() {
+        return valueService;
+    }
+
+    public void setEntityService(EntityService entityService) {
+        this.entityService = entityService;
+    }
+
+    public EntityService getEntityService() {
+        return entityService;
+    }
+
+    public void setEmailService(EmailService emailService) {
+        this.emailService = emailService;
+    }
+
+    public EmailService getEmailService() {
+        return emailService;
     }
 }

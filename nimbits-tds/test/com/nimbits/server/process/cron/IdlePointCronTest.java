@@ -18,10 +18,15 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
+import com.nimbits.client.service.entity.EntityService;
+import com.nimbits.client.service.value.ValueService;
 import com.nimbits.server.NimbitsServletTest;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
-import com.nimbits.server.transactions.service.value.ValueServiceFactory;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import javax.annotation.Resource;
 
 import static org.junit.Assert.*;
 
@@ -31,8 +36,20 @@ import static org.junit.Assert.*;
  * Date: 4/5/12
  * Time: 7:39 AM
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={
+        "classpath:META-INF/applicationContext.xml"
+})
 public class IdlePointCronTest extends NimbitsServletTest {
 
+    @Resource(name = "entityService")
+    EntityService entityService;
+
+    @Resource(name = "valueService")
+    ValueService valueService;
+
+    @Resource(name="idleCron")
+    IdlePointCron idleCron;
 
     @Test
     public void processGetTest(){
@@ -40,8 +57,8 @@ public class IdlePointCronTest extends NimbitsServletTest {
         point.setIdleSeconds(1);
         point.setIdleAlarmOn(true);
         try {
-           EntityServiceFactory.getInstance().addUpdateEntity(user, point);
-           final int c =  IdlePointCron.processGet();
+          entityService.addUpdateEntity(user, point);
+           final int c =  idleCron.processGet();
            assertEquals(1, c);
         } catch (NimbitsException e) {
             fail();
@@ -57,24 +74,24 @@ public class IdlePointCronTest extends NimbitsServletTest {
 
         point.setIdleAlarmOn(true);
         point.setIdleSeconds(1);
-        EntityServiceFactory.getInstance().addUpdateEntity(user, point);
+        entityService.addUpdateEntity(user, point);
         Value vx = ValueFactory.createValueModel(1.2);
-        ValueServiceFactory.getInstance().recordValue(user, point, vx);
+        valueService.recordValue(user, point, vx);
         Thread.sleep(2000);
-        assertTrue(IdlePointCron.checkIdle(point));
-        Point up = (Point) EntityServiceFactory.getInstance().getEntityByKey(point.getKey(), EntityType.point).get(0);
+        assertTrue(idleCron.checkIdle(point));
+        Point up = (Point) entityService.getEntityByKey(point.getKey(), EntityType.point).get(0);
         assertTrue(up.getIdleAlarmSent());
         Value vx2 = ValueFactory.createValueModel(21.2);
-        ValueServiceFactory.getInstance().recordValue(user, up, vx2);
-        assertFalse(IdlePointCron.checkIdle(up));
+        valueService.recordValue(user, up, vx2);
+        assertFalse(idleCron.checkIdle(up));
         Thread.sleep(2000);
-        Point up2 = (Point) EntityServiceFactory.getInstance().getEntityByKey(point.getKey(), EntityType.point).get(0);
+        Point up2 = (Point) entityService.getEntityByKey(point.getKey(), EntityType.point).get(0);
 
         up2.setIdleAlarmSent(false); //should have been done by the record value task which unit tests don't start
 
-        EntityServiceFactory.getInstance().addUpdateEntity(user, up2);
+        entityService.addUpdateEntity(user, up2);
         assertFalse(up2.getIdleAlarmSent());
-        assertTrue(IdlePointCron.checkIdle(up2));
+        assertTrue(idleCron.checkIdle(up2));
     }
 
 

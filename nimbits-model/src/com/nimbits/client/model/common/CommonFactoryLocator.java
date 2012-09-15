@@ -23,12 +23,15 @@ import com.nimbits.client.model.common.impl.CommonFactoryImpl;
  */
 public class CommonFactoryLocator {
 
+
     private static CommonFactory instance;
 
     private CommonFactoryLocator() {
     }
 
     public static CommonFactory getInstance() {
+
+
         if (instance==null) {
             instance = new CommonFactoryImpl();
         }

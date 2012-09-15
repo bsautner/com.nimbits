@@ -44,7 +44,12 @@ public class GsonFactory {
 
 
     private static class GsonHolder {
-        static final Gson instance = new GsonBuilder()
+        static final Gson instance;
+
+        static {
+
+
+            instance = new GsonBuilder()
                 .setDateFormat(Const.GSON_DATE_FORMAT)
                 .serializeNulls()
                 .addSerializationExclusionStrategy(new NimbitsExclusionStrategy(null))
@@ -64,6 +69,7 @@ public class GsonFactory {
                         //  .registerTypeAdapter(Date.class, new DateSerializer())
                 .create();
 
+        }
         private GsonHolder() {
         }
     }

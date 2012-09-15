@@ -17,31 +17,31 @@ import com.nimbits.client.common.Utils;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.location.Location;
 import com.nimbits.client.model.location.LocationFactory;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.timespan.Timespan;
-import com.nimbits.client.model.timespan.TimespanModelFactory;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
+import com.nimbits.client.service.entity.EntityService;
+import com.nimbits.client.service.settings.SettingsService;
+import com.nimbits.client.service.value.ValueService;
 import com.nimbits.server.admin.quota.Quota;
 import com.nimbits.server.admin.quota.QuotaFactory;
 import com.nimbits.server.api.helper.LocationReportingHelperFactory;
-import com.nimbits.server.settings.SettingsServiceFactory;
-import com.nimbits.server.time.TimespanServiceFactory;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
-import com.nimbits.server.transactions.service.point.PointServiceFactory;
-import com.nimbits.server.transactions.service.user.UserServiceFactory;
-import com.nimbits.server.transactions.service.value.ValueServiceFactory;
+import com.nimbits.server.transactions.service.user.UserServerService;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -50,14 +50,29 @@ import java.util.logging.Logger;
  * Date: 3/20/12
  * Time: 12:58 PM
  */
+@Service("apiServlet")
 public class ApiServlet extends HttpServlet {
 
     protected static User user;
     private static Map<Parameters, String> paramMap;
     protected final static Logger log = Logger.getLogger(ApiServlet.class.getName());
     protected static Location location;
+    private static final String BUDGET_ERROR = "Maximum daily budget exceeded. Please increase your daily budget";
 
-    public static final String BUDGET_ERROR = "Maximum daily budget exceeded. Please increase your daily budget";
+    @Resource(name="entityService")
+    private EntityService entityService;
+
+    @Resource(name="valueService")
+    private ValueService valueService;
+
+    @Resource(name= "userService")
+    private UserServerService userService;
+
+    @Resource(name = "commonFactory")
+    private CommonFactory commonFactory;
+
+    @Resource(name = "settingsService")
+    private SettingsService settingsService;
 
     protected static boolean okToReport(final User u, final Entity c) {
 
@@ -76,9 +91,9 @@ public class ApiServlet extends HttpServlet {
         LocationReportingHelperFactory.getInstance().reportLocation(entity, location);
     }
 
-    public static void doInit(final HttpServletRequest req, final HttpServletResponse resp, final ExportType type) throws NimbitsException {
+    public void doInit(final HttpServletRequest req, final HttpServletResponse resp, final ExportType type) throws NimbitsException {
 
-        user = UserServiceFactory.getServerInstance().getHttpRequestUser(req);
+        user = userService.getHttpRequestUser(req);
         getGPS(req);
         if (user != null) {
             Quota quota = QuotaFactory.getInstance(user.getEmail());
@@ -86,26 +101,26 @@ public class ApiServlet extends HttpServlet {
             int max = quota.getMaxDailyQuota();
             log.info("quota call " + count + " of " + max);
 
-            if (SettingsServiceFactory.getInstance().getBooleanSetting(SettingType.billingEnabled)) {
+            if (settingsService.getBooleanSetting(SettingType.billingEnabled)) {
 
                 if (count > max) {
 
                     if (user.isBillingEnabled()) {
-                        EntityName name = CommonFactoryLocator.getInstance().createName(Const.ACCOUNT_BALANCE, EntityType.point);
+                        EntityName name = commonFactory.createName(Const.ACCOUNT_BALANCE, EntityType.point);
                         log.info("billing enabled");
-                        List<Entity> points =  EntityServiceFactory.getInstance().getEntityByName(user, name, EntityType.point);
+                        List<Entity> points =  entityService.getEntityByName(user, name, EntityType.point);
                         if (points.isEmpty()) {
                             throw new NimbitsException(BUDGET_ERROR);
                         }
                         else {
                             Point accountBalance = (Point) points.get(0);
-                            List<Value> currentBalanceList = ValueServiceFactory.getInstance().getCurrentValue(accountBalance);
+                            List<Value> currentBalanceList = valueService.getCurrentValue(accountBalance);
                             if (currentBalanceList.isEmpty()) {
                                 throw new NimbitsException(BUDGET_ERROR);
                             }
                             else {
                                 Value current = currentBalanceList.get(0);
-                                double spent = ValueServiceFactory.getInstance().calculateDelta(accountBalance);
+                                double spent =valueService.calculateDelta(accountBalance);
                                 if (spent > accountBalance.getDeltaAlarm()) {
                                     throw new NimbitsException(BUDGET_ERROR);
                                 }
@@ -116,7 +131,7 @@ public class ApiServlet extends HttpServlet {
                                     }
                                     else {
                                         Value value = ValueFactory.createValueModel(newValue);
-                                        ValueServiceFactory.getInstance().recordValue(user, accountBalance,value );
+                                        valueService.recordValue(user, accountBalance, value);
                                     }
                                 }
 

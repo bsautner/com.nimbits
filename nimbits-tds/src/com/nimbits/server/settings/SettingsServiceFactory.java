@@ -23,7 +23,7 @@ public class SettingsServiceFactory {
     }
 
     private static class SettingsServiceHolder {
-        static final SettingsService instance = new SettingServiceImpl();
+        static final SettingsService instance = new SettingsServiceImpl();
 
         private SettingsServiceHolder() {
         }

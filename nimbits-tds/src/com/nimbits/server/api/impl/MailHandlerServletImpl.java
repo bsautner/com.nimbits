@@ -19,6 +19,8 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.process.task.TaskFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -34,6 +36,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Properties;
 
+@Transactional
+@Service("mailApi")
 public class MailHandlerServletImpl extends ApiServlet {
     /**
      *

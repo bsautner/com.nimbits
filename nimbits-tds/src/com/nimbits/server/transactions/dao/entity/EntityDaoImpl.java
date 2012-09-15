@@ -66,6 +66,7 @@ import java.util.logging.Logger;
 public class EntityDaoImpl implements  EntityTransactions {
 
     private static final int INT = 1024;
+    public static final int LIMIT = 1000;
 
     private final User user;
     private final Logger log = Logger.getLogger(EntityDaoImpl.class.getName());
@@ -345,7 +346,7 @@ public class EntityDaoImpl implements  EntityTransactions {
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
-        final Map<String, Entity> connections = getEntityMap(EntityType.userConnection, 1000);
+        final Map<String, Entity> connections = getEntityMap(EntityType.userConnection, LIMIT);
         final Collection<String> ownerKeys = new ArrayList<String>(connections.size() + 1);
         for (Entity c : connections.values()) {
             ownerKeys.add(c.getName().getValue());
@@ -472,18 +473,12 @@ public class EntityDaoImpl implements  EntityTransactions {
     public List<Entity> deleteEntity(final Entity entity, final Class<?> cls) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
-
         try {
-
-
-
-
             final Entity c = (Entity) pm.getObjectById(cls, entity.getKey());
             if (c != null) {
                 final List<Entity> entities = getEntityChildren(pm,c);
                 entities.add(c);
                 final List<Entity> deleted = createModels(entities);
-
                 pm.deletePersistentAll(entities);
                 return deleted;
             }

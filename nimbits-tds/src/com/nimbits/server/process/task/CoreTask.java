@@ -22,20 +22,25 @@ import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.http.HttpCommonFactory;
 import com.nimbits.server.settings.SettingsServiceFactory;
 import com.nimbits.shared.Utils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.logging.Logger;
 
-public class CoreTask extends HttpServlet {
+
+@Service("coreTask")
+@Transactional
+public class CoreTask extends HttpServlet  implements org.springframework.web.HttpRequestHandler{
 
     private static final Logger log = Logger.getLogger(CoreTask.class.getName());
 
     private static final long serialVersionUID = 1L;
 
     @Override
-    public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
+    public void handleRequest(final HttpServletRequest req, final HttpServletResponse resp) {
         log.info("Starting core task");
         final String entity = req.getParameter(Parameters.entity.name());
         final String action = req.getParameter(Parameters.action.name());

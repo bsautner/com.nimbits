@@ -255,7 +255,7 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
     }
 
     @Override
-    public void validate() throws NimbitsException {
+    public void validate(User user) throws NimbitsException {
         throw new NimbitsException("not implemented");
     }
 

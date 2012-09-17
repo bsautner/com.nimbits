@@ -76,4 +76,14 @@ public interface ValueServiceAsync {
     void preloadTimespan(final Entity entity, final Timespan timespan, AsyncCallback<Integer> async);
 
     void calculateDelta(Point point, AsyncCallback<Double> async);
+
+    void moveValuesFromCacheToStore(Entity entity, AsyncCallback<Void> async);
+
+    void consolidateDate(Entity entity, Date date, AsyncCallback<Void> async);
+
+    void getPreload(Entity entity, int section, AsyncCallback<List<Value>> async);
+
+    void mergeTimespan(Point point, Timespan ts, AsyncCallback<Void> async);
+
+    void ignoreByFilter(Point point, Value value2, AsyncCallback<Boolean> async);
 }

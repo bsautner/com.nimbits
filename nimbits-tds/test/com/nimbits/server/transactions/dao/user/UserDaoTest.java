@@ -22,11 +22,14 @@ import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
 import com.nimbits.server.NimbitsServletTest;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
-import com.nimbits.server.transactions.service.user.UserServiceFactory;
+
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
 
@@ -38,6 +41,10 @@ import static org.junit.Assert.*;
  * Date: 4/7/12
  * Time: 4:52 PM
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={
+        "classpath:META-INF/applicationContext.xml"
+})
 public class UserDaoTest extends NimbitsServletTest {
     public final LocalServiceTestHelper helper = new LocalServiceTestHelper(
             new LocalDatastoreServiceTestConfig());
@@ -58,10 +65,10 @@ public class UserDaoTest extends NimbitsServletTest {
     @Test
     public void createUserTest() throws NimbitsException {
         EmailAddress e = CommonFactoryLocator.getInstance().createEmailAddress("bob@example.com");
-        User u =UserServiceFactory.getServerInstance().createUserRecord(e);
+        User u =userService.createUserRecord(e);
         assertNotNull(u);
         assertEquals(e.getValue(), u.getEmail().getValue());
-            List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(u,e.getValue(), EntityType.user);
+            List<Entity> result = entityService.getEntityByKey(u, e.getValue(), EntityType.user);
             assertFalse(result.isEmpty());
 
 

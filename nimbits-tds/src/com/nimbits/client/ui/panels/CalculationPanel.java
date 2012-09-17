@@ -130,16 +130,16 @@ public class CalculationPanel extends NavigationEventProvider {
 
 
 
-        final EntityCombo targetCombo = new EntityCombo(EntityType.point, targetKey, UserMessages.MESSAGE_SELECT_POINT);
+        final EntityCombo targetCombo = new EntityCombo(user, EntityType.point, targetKey, UserMessages.MESSAGE_SELECT_POINT);
         targetCombo.setFieldLabel("Target");
 
-        final EntityCombo xCombo = new EntityCombo(EntityType.point, xc, UserMessages.MESSAGE_SELECT_POINT);
+        final EntityCombo xCombo = new EntityCombo(user, EntityType.point, xc, UserMessages.MESSAGE_SELECT_POINT);
         xCombo.setFieldLabel("x var");
 
-        final EntityCombo yCombo = new EntityCombo(EntityType.point, yc, UserMessages.MESSAGE_SELECT_POINT);
+        final EntityCombo yCombo = new EntityCombo(user, EntityType.point, yc, UserMessages.MESSAGE_SELECT_POINT);
         yCombo.setFieldLabel("y var");
 
-        final EntityCombo zCombo = new EntityCombo(EntityType.point, zc, UserMessages.MESSAGE_SELECT_POINT);
+        final EntityCombo zCombo = new EntityCombo(user, EntityType.point, zc, UserMessages.MESSAGE_SELECT_POINT);
         zCombo.setFieldLabel("z var");
 
         enabled.setBoxLabel("Enabled");

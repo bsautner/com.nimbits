@@ -38,6 +38,9 @@ import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.time.TimespanServiceFactory;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -57,6 +60,10 @@ import static org.junit.Assert.*;
  * Date: 3/22/12
  * Time: 12:00 PM
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={
+        "classpath:META-INF/applicationContext.xml"
+})
 public class ValueDaoImplTest extends NimbitsServletTest {
 
 
@@ -86,15 +93,15 @@ public class ValueDaoImplTest extends NimbitsServletTest {
             values.add(ValueFactory.createValueModel(1));
             values.add(ValueFactory.createValueModel(1));
             values.add(ValueFactory.createValueModel(1));
-            valueDao.recordValues(values);
-            assertEquals(i, valueDao.getAllStores().size());
+            valueDao.recordValues(point, values);
+            assertEquals(i, valueDao.getAllStores(point).size());
         }
 
 
-        valueDao.consolidateDate(zero);
-        assertEquals(1, valueDao.getAllStores().size());
+        valueDao.consolidateDate(point, zero);
+        assertEquals(1, valueDao.getAllStores(point).size());
 
-        List<Value> result = valueDao.getTopDataSeries(100);
+        List<Value> result = valueDao.getTopDataSeries(point, 100);
         double total = 0.0;
         for (Value v : result) {
             total += v.getDoubleValue();
@@ -114,18 +121,18 @@ public class ValueDaoImplTest extends NimbitsServletTest {
             values.add(ValueFactory.createValueModel(1));
             values.add(ValueFactory.createValueModel(1));
             values.add(ValueFactory.createValueModel(1));
-            List<ValueBlobStore> d = valueDao.recordValues(values);
+            List<ValueBlobStore> d = valueDao.recordValues(point, values);
             assertFalse(d.isEmpty());
-            assertEquals(i, valueDao.getAllStores().size());
+            assertEquals(i, valueDao.getAllStores(point).size());
             key = d.get(0).getBlobKey();
         }
 
         blobstoreService.delete(new BlobKey(key));
 
-        valueDao.consolidateDate(zero);
-        assertEquals(1, valueDao.getAllStores().size());
+        valueDao.consolidateDate(point, zero);
+        assertEquals(1, valueDao.getAllStores(point).size());
 
-        List<Value> result = valueDao.getTopDataSeries(100);
+        List<Value> result = valueDao.getTopDataSeries(point, 100);
         double total = 0.0;
         for (Value v : result) {
             total += v.getDoubleValue();
@@ -144,7 +151,7 @@ public class ValueDaoImplTest extends NimbitsServletTest {
         values.add(ValueFactory.createValueModel(1));
         values.add(ValueFactory.createValueModel(2));
         values.add(ValueFactory.createValueModel(3));
-        List<ValueBlobStore> d = valueDao.recordValues(values);
+        List<ValueBlobStore> d = valueDao.recordValues(point, values);
         assertFalse(d.isEmpty());
 
         String key = d.get(0).getBlobKey();
@@ -237,8 +244,8 @@ public class ValueDaoImplTest extends NimbitsServletTest {
 
 
         try {
-            valueDao.recordValues(values);
-            List<Value> result = valueDao.getTopDataSeries(10);
+            valueDao.recordValues(point, values);
+            List<Value> result = valueDao.getTopDataSeries(point, 10);
             assertEquals(10, result.size());
         } catch (NimbitsException e) {
             e.printStackTrace();
@@ -257,9 +264,9 @@ public class ValueDaoImplTest extends NimbitsServletTest {
             final Value v1 = ValueFactory.createValueModel(d1, c1.getTime());
             values.add(v1);
         }
-        valueDao.recordValues(values);
+        valueDao.recordValues(point, values);
 
-        List<Value> result1 = valueDao.getTopDataSeries(90);
+        List<Value> result1 = valueDao.getTopDataSeries(point, 90);
         assertEquals(90, result1.size());
 
         final List<Value> values2 = new ArrayList<Value>(5);
@@ -271,11 +278,11 @@ public class ValueDaoImplTest extends NimbitsServletTest {
             values2.add(v1);
         }
 
-        valueDao.recordValues(values2);
-        valueDao.deleteExpiredData();
+        valueDao.recordValues(point, values2);
+        valueDao.deleteExpiredData(point);
 
 
-        List<Value> result = valueDao.getTopDataSeries(10);
+        List<Value> result = valueDao.getTopDataSeries(point, 10);
             assertEquals(5, result.size());
     }
     @Test
@@ -283,16 +290,16 @@ public class ValueDaoImplTest extends NimbitsServletTest {
         final List<Value> values = loadSomeDataOverDays();
 
 
-        final ValueDAOImpl dao = new ValueDAOImpl(point);
+
         try {
-            dao.recordValues(values);
-            List<Value> all = dao.getTopDataSeries(1000);
+            valueDao.recordValues(point, values);
+            List<Value> all = valueDao.getTopDataSeries(point, 1000);
             assertEquals(100, all.size());
             for (int i = 0; i < 100; i++) {
                 final Calendar c1 = Calendar.getInstance();
                 c1.add(Calendar.DATE, -1 * i);
                 final Double d1 = (double) i;
-                final List<Value> vx = dao.getRecordedValuePrecedingTimestamp(c1.getTime());
+                final List<Value> vx = valueDao.getRecordedValuePrecedingTimestamp(point, c1.getTime());
                 assertEquals(d1, vx.get(0).getDoubleValue(), 0.0);
             }
         } catch (NimbitsException e) {
@@ -361,35 +368,32 @@ public class ValueDaoImplTest extends NimbitsServletTest {
                 false,
                 PointType.basic, 0, false, 0.0 );
 
-        final ValueDAOImpl dao1 = new ValueDAOImpl(point1);
-        final ValueDAOImpl dao2 = new ValueDAOImpl(point2);
-        final ValueDAOImpl dao3 = new ValueDAOImpl(point3);
 
 
         try {
-            dao1.recordValues(values);
-            dao2.recordValues(values);
-            dao3.recordValues(values);
+            valueDao.recordValues(point1, values);
+            valueDao.recordValues(point2, values);
+            valueDao.recordValues(point3, values);
 
             for (int i = 0; i < 100; i++) {
                 final Calendar c1 = Calendar.getInstance();
                 c1.add(Calendar.DATE, -1 * i);
                 final Double d1 = (double) i;
-                final List<Value> vx = dao1.getRecordedValuePrecedingTimestamp(c1.getTime());
+                final List<Value> vx = valueDao.getRecordedValuePrecedingTimestamp(point1, c1.getTime());
                 assertEquals(d1, vx.get(0).getDoubleValue(), 0.0);
             }
             for (int i = 0; i < 100; i++) {
                 final Calendar c1 = Calendar.getInstance();
                 c1.add(Calendar.DATE, -1 * i);
                 final Double d1 = (double) i;
-                final List<Value> vx = dao2.getRecordedValuePrecedingTimestamp(c1.getTime());
+                final List<Value> vx = valueDao.getRecordedValuePrecedingTimestamp(point2, c1.getTime());
                 assertEquals(d1, vx.get(0).getDoubleValue(), 0.0);
             }
             for (int i = 0; i < 100; i++) {
                 final Calendar c1 = Calendar.getInstance();
                 c1.add(Calendar.DATE, -1 * i);
                 final Double d1 = (double) i;
-                final List<Value> vx = dao3.getRecordedValuePrecedingTimestamp(c1.getTime());
+                final List<Value> vx = valueDao.getRecordedValuePrecedingTimestamp(point3, c1.getTime());
                 assertEquals(d1, vx.get(0).getDoubleValue(), 0.0);
             }
         } catch (NimbitsException e) {
@@ -418,10 +422,10 @@ public class ValueDaoImplTest extends NimbitsServletTest {
 
         List<Value> values = loadSomeData();
 
-        ValueDAOImpl dao = new ValueDAOImpl(point);
+
         try {
-            dao.recordValues(values);
-            List<Value> result = dao.getTopDataSeries(100);
+            valueDao.recordValues(point, values);
+            List<Value> result = valueDao.getTopDataSeries(point, 100);
             assertNotNull(result);
             assertEquals(result.size(), 10);
             double ret = 0.0;
@@ -445,10 +449,10 @@ public class ValueDaoImplTest extends NimbitsServletTest {
         for (int i = 0; i < 1000; i++) {
             List<Value> values = loadSomeData();
 
-            ValueDAOImpl dao = new ValueDAOImpl(point);
+
             try {
-                dao.recordValues(values);
-                List<Value> result = dao.getTopDataSeries(100);
+                valueDao.recordValues(point, values);
+                List<Value> result = valueDao.getTopDataSeries(point, 100);
                 assertNotNull(result);
 
                 double ret = 0.0;

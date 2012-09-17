@@ -17,6 +17,9 @@ import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.server.NimbitsServletTest;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
 import java.util.Map;
@@ -24,12 +27,10 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 3/28/12
- * Time: 4:34 PM
- */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={
+        "classpath:META-INF/applicationContext.xml"
+})
 public class SystemMaintTest extends NimbitsServletTest {
 
 

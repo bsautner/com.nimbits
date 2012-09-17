@@ -15,6 +15,7 @@ package com.nimbits.server.transactions.memcache.entity;
 
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.user.User;
 
 import java.util.List;
 
@@ -26,9 +27,9 @@ import java.util.List;
  */
 public interface EntityCache {
 
-    void removeEntityFromCache( final List<Entity> entities) throws NimbitsException;
+    void removeEntityFromCache(final User user,  final List<Entity> entities) throws NimbitsException;
 
-    void addEntityToCache(List<Entity> entity) throws NimbitsException;
+    void addEntityToCache(final User user, List<Entity> entity) throws NimbitsException;
 
-    List<Entity> getEntityFromCache(String key) throws NimbitsException;
+    List<Entity> getEntityFromCache(final User user, String key) throws NimbitsException;
 }

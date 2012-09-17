@@ -278,7 +278,7 @@ public abstract class EntityStore implements Entity {
 
 
     @Override
-    public void validate() throws NimbitsException {
+    public void validate(User user) throws NimbitsException {
 
        if (Utils.isEmptyString(this.owner) || Utils.isEmptyString(this.name) || Utils.isEmptyString(this.parent)) {
           throw new NimbitsException("Entity was missing required data, validation failed"

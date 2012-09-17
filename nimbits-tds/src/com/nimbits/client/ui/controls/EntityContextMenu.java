@@ -243,7 +243,7 @@ public class EntityContextMenu extends Menu {
     }
 
     public void showIntelligencePanel(final Entity entity) throws NimbitsException {
-        IntelligencePanel dp = new IntelligencePanel(entity);
+        IntelligencePanel dp = new IntelligencePanel(user, entity);
 
         final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
         w.setWidth(WIDTH);
@@ -262,7 +262,7 @@ public class EntityContextMenu extends Menu {
     }
 
     public void showSummaryPanel(final Entity entity) {
-        SummaryPanel dp = new SummaryPanel(entity);
+        SummaryPanel dp = new SummaryPanel(user, entity);
         final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
         w.setWidth(WIDTH);
         w.setHeight(HEIGHT);

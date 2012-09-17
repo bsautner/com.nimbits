@@ -251,7 +251,7 @@ public class JpaEntity implements com.nimbits.client.model.entity.Entity {
     }
 
     @Override
-    public void validate() throws NimbitsException {
+    public void validate(final User user) throws NimbitsException {
 
     }
 

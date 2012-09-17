@@ -241,7 +241,7 @@ public class CenterPanel extends NavigationEventProvider {
 
     private void displaySubscription(final Entity entity) {
         EntityServiceAsync service = GWT.create(EntityService.class);
-        service.getEntityByKey(entity.getKey(),EntityType.subscription, new GetSubscribedEntityAsyncCallback());
+        service.getEntityByKey(user, entity.getKey(),EntityType.subscription, new GetSubscribedEntityAsyncCallback());
     }
    //chart
     private void chartEntity(final TreeModel model) {

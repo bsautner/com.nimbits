@@ -45,6 +45,7 @@ import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.intelligence.Intelligence;
 import com.nimbits.client.model.intelligence.IntelligenceModelFactory;
 import com.nimbits.client.model.trigger.Trigger;
+import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.entity.EntityServiceAsync;
@@ -66,12 +67,13 @@ public class IntelligencePanel extends NavigationEventProvider {
     private FormData formdata;
     private VerticalPanel vp;
     private final Entity entity;
+    private final User user;
 
 
 
-
-    public IntelligencePanel(final Entity entity) {
+    public IntelligencePanel(final User user, final Entity entity) {
         this.entity = entity;
+        this.user = user;
 
 
     }
@@ -130,7 +132,7 @@ public class IntelligencePanel extends NavigationEventProvider {
 
 
 
-        final EntityCombo intelTargetPoint = new EntityCombo(EntityType.point, target, UserMessages.MESSAGE_SELECT_POINT);
+        final EntityCombo intelTargetPoint = new EntityCombo(user, EntityType.point, target, UserMessages.MESSAGE_SELECT_POINT);
         intelTargetPoint.setFieldLabel("Target");
 
 

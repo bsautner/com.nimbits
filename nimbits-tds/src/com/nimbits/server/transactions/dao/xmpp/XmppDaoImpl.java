@@ -21,6 +21,7 @@ import com.nimbits.client.model.xmpp.XmppResource;
 import com.nimbits.client.model.xmpp.XmppResourceFactory;
 import com.nimbits.server.communication.xmpp.XmppTransaction;
 import com.nimbits.server.orm.XmppResourceEntity;
+import org.springframework.stereotype.Repository;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
@@ -35,6 +36,7 @@ import java.util.List;
  * Time: 1:13 PM
  */
 @SuppressWarnings("unchecked")
+@Repository("xmppDao")
 public class XmppDaoImpl implements XmppTransaction {
 
 

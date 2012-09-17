@@ -14,6 +14,9 @@
 package com.nimbits.server.external.google;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
 
@@ -26,6 +29,10 @@ import static junit.framework.Assert.assertTrue;
  * Date: 2/6/12
  * Time: 2:53 PM
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={
+        "classpath:META-INF/applicationContext.xml"
+})
 public class TestGoogleUrlShortener {
 
     @Test

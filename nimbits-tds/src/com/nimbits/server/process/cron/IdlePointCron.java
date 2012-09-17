@@ -27,7 +27,8 @@ import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.subscription.SubscriptionService;
 import com.nimbits.client.service.value.ValueService;
 import com.nimbits.server.admin.logging.LogHelper;
-import com.nimbits.server.transactions.service.user.UserServiceFactory;
+
+import com.nimbits.server.transactions.service.user.UserServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,6 +53,7 @@ public class IdlePointCron extends HttpServlet implements org.springframework.we
     private EntityService entityService;
     private ValueService valueService;
     private SubscriptionService subscriptionService;
+    private UserServiceImpl userService;
 
     @Override
     @SuppressWarnings(Const.WARNING_UNCHECKED)
@@ -86,7 +88,7 @@ public class IdlePointCron extends HttpServlet implements org.springframework.we
         final Calendar c = Calendar.getInstance();
         c.add(Calendar.SECOND, p.getIdleSeconds() * -1);
         boolean retVal = false;
-        final List<Entity> result = entityService.getEntityByKey(UserServiceFactory.getServerInstance().getAdmin(),
+        final List<Entity> result = entityService.getEntityByKey(userService.getAdmin(),
                 p.getOwner(), EntityType.user);
         if (! result.isEmpty()) {
             final User u = (User) result.get(0);
@@ -98,7 +100,7 @@ public class IdlePointCron extends HttpServlet implements org.springframework.we
                 entityService.addUpdateEntity(u, p);
                 // PointServiceFactory.getInstance().updatePoint(u, p);
                 final Value va = ValueFactory.createValueModel(v.get(0), AlertType.IdleAlert);
-               subscriptionService.processSubscriptions(u, p,va);
+               subscriptionService.processSubscriptions(u, p, va);
                 retVal = true;
             }
         }
@@ -133,5 +135,13 @@ public class IdlePointCron extends HttpServlet implements org.springframework.we
 
     public SubscriptionService getSubscriptionService() {
         return subscriptionService;
+    }
+
+    public void setUserService(UserServiceImpl userService) {
+        this.userService = userService;
+    }
+
+    public UserServiceImpl getUserService() {
+        return userService;
     }
 }

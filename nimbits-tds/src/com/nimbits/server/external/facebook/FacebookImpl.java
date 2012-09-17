@@ -29,8 +29,12 @@ import com.nimbits.server.external.google.GoogleURLShortener;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.http.HttpCommonFactory;
 import com.nimbits.server.settings.SettingTransactionsFactory;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
-import com.nimbits.server.transactions.service.user.UserServiceFactory;
+
+import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
+
+import com.nimbits.server.transactions.service.user.UserServiceImpl;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -40,7 +44,8 @@ import java.net.URLEncoder;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-
+@Service("facebookService")
+@Transactional
 public class FacebookImpl extends RemoteServiceServlet implements FacebookService, RequestCallback
 
 {
@@ -49,11 +54,13 @@ public class FacebookImpl extends RemoteServiceServlet implements FacebookServic
 
     private static final Logger log = Logger.getLogger(FacebookImpl.class.getName());
     private static final Pattern COMPILE = Pattern.compile("=");
+    private EntityServiceImpl entityService;
+    private UserServiceImpl userService;
 
     @Override
     public EmailAddress facebookLogin(final String code) throws UnsupportedEncodingException, NimbitsException {
 
-        final User u = UserServiceFactory.getInstance().getAppUserUsingGoogleAuth();
+        final User u =userService.getAppUserUsingGoogleAuth();
 
         final String facebookClientId = SettingTransactionsFactory.getInstance().getSetting(SettingType.facebookClientId);
         final String facebookSecret = SettingTransactionsFactory.getInstance().getSetting(SettingType.facebookSecret);
@@ -69,7 +76,7 @@ public class FacebookImpl extends RemoteServiceServlet implements FacebookServic
 
             u.setFacebookID(f.getId());
             u.setFacebookToken(token);
-            EntityServiceFactory.getInstance().addUpdateEntity(u, u);
+            entityService.addUpdateEntity(u, u);
 
 
 
@@ -204,6 +211,21 @@ public class FacebookImpl extends RemoteServiceServlet implements FacebookServic
 
     }
 
+    public void setEntityService(EntityServiceImpl entityService) {
+        this.entityService = entityService;
+    }
+
+    public EntityServiceImpl getEntityService() {
+        return entityService;
+    }
+
+    public void setUserService(UserServiceImpl userService) {
+        this.userService = userService;
+    }
+
+    public UserServiceImpl getUserService() {
+        return userService;
+    }
 }
 
 

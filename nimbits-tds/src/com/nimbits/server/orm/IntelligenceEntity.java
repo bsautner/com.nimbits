@@ -16,6 +16,7 @@ package com.nimbits.server.orm;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.intelligence.Intelligence;
+import com.nimbits.client.model.user.User;
 
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
@@ -92,14 +93,14 @@ public class IntelligenceEntity extends TriggerEntity implements Intelligence {
         this.input = c.getInput();
         this.nodeId = c.getNodeId();
         this.resultsInPlainText = c.getResultsInPlainText();
-        validate();
+
     }
 
     @Override
-    public void validate() throws NimbitsException {
+    public void validate(User user) throws NimbitsException {
 
 
-        super.validate();
+        super.validate(user);
 
 
     }

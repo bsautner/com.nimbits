@@ -23,8 +23,14 @@ import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.orm.CalcEntity;
+import com.nimbits.server.transactions.service.entity.EntityTransactions;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.annotation.Resource;
+import javax.persistence.EntityTransaction;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,16 +43,22 @@ import static org.junit.Assert.assertTrue;
  * Date: 8/8/12
  * Time: 10:21 AM
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={
+        "classpath:META-INF/applicationContext.xml"
+})
 public class EntityCacheImplTest extends NimbitsServletTest {
-   
+
+
+
     @Test
     public void testRemoveEntityFromCache() throws Exception {
       
-        entityTransactions.addEntityToCache(Arrays.asList((Entity)point));
-        List<Entity> e = entityTransactions.getEntityFromCache(point.getKey());
+        entityTransactions.addEntityToCache(user, Arrays.asList((Entity)point));
+        List<Entity> e = entityTransactions.getEntityFromCache(user, point.getKey());
         assertFalse(e.isEmpty());
-        entityTransactions.removeEntityFromCache(Arrays.asList((Entity)point));
-        List<Entity> e2 = entityTransactions.getEntityFromCache(point.getKey());
+        entityTransactions.removeEntityFromCache(user, Arrays.asList((Entity)point));
+        List<Entity> e2 = entityTransactions.getEntityFromCache(user, point.getKey());
         assertTrue(e2.isEmpty());
     }
 
@@ -68,7 +80,7 @@ public class EntityCacheImplTest extends NimbitsServletTest {
 
         Calculation c = CalculationModelFactory.createCalculation(entity, point.getKey(), true, "1+1", pointChild.getKey(), "", "", "");
         entityService.addUpdateEntity(user, c);
-        List<Entity> triggers = entityTransactions.getEntityByTrigger(point, CalcEntity.class);
+        List<Entity> triggers = entityTransactions.getEntityByTrigger(user, point, CalcEntity.class);
         assertFalse(triggers.isEmpty());
 
         for (Entity e : triggers) {
@@ -90,14 +102,14 @@ public class EntityCacheImplTest extends NimbitsServletTest {
         Calculation c2 = CalculationModelFactory.createCalculation(entity2, point.getKey(), true, "1+2", pointChild.getKey(), "", "", "");
         entityService.addUpdateEntity(user, c2);
 
-        List<Entity> triggers3 = entityTransactions.getEntityByTrigger(point, CalcEntity.class);
+        List<Entity> triggers3 = entityTransactions.getEntityByTrigger(user, point, CalcEntity.class);
         assertFalse(triggers3.isEmpty());
 
         for (Entity e : triggers3) {
             assertFalse(e.isCached());
         }
 
-        List<Entity> triggers4 = entityTransactions.getEntityByTrigger(point, CalcEntity.class);
+        List<Entity> triggers4 = entityTransactions.getEntityByTrigger(user, point, CalcEntity.class);
         assertFalse(triggers4.isEmpty());
 
         for (Entity e : triggers4) {
@@ -144,30 +156,30 @@ public class EntityCacheImplTest extends NimbitsServletTest {
 
     @Test
     public void testGetEntities() throws Exception {
-        List<Entity> results = entityTransactions.getEntities();
+        List<Entity> results = entityTransactions.getEntities(user);
         assertFalse(results.isEmpty());
         for (Entity e: results) {
             assertFalse(e.isCached());
 
         }
 
-        List<Entity> results2 = entityTransactions.getEntities();
+        List<Entity> results2 = entityTransactions.getEntities(user);
         assertFalse(results2.isEmpty());
         for (Entity e: results2) {
             assertTrue(e.isCached());
 
         }
         point.setExpire(50);
-        entityTransactions.addUpdateEntity(point, true);
+        entityTransactions.addUpdateEntity(user, point, true);
 
-        List<Entity> results3 = entityTransactions.getEntities();
+        List<Entity> results3 = entityTransactions.getEntities(user);
         assertFalse(results3.isEmpty());
         for (Entity e: results3) {
             assertFalse(e.isCached());
 
         }
 
-        List<Entity> results4 = entityTransactions.getEntities();
+        List<Entity> results4 = entityTransactions.getEntities(user);
         assertFalse(results4.isEmpty());
         for (Entity e: results4) {
             assertTrue(e.isCached());

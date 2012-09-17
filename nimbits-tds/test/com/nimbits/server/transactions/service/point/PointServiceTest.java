@@ -24,12 +24,11 @@ import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
+import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.server.NimbitsServletTest;
-import com.nimbits.server.orm.PointEntity;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
-import com.nimbits.server.transactions.service.entity.EntityTransactionFactory;
 import org.junit.Test;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.UUID;
 
@@ -43,6 +42,10 @@ import static org.junit.Assert.assertNotNull;
  * Time: 12:55 PM
  */
 public class PointServiceTest extends NimbitsServletTest {
+
+    @Resource(name="entityService")
+    EntityService entityService;
+
     private Point addPoint(EntityName name) throws NimbitsException {
         Entity e =  new EntityModel(name,
                 "",
@@ -66,7 +69,7 @@ public class PointServiceTest extends NimbitsServletTest {
                 0.1,
                 false,
                 PointType.basic, 0, false, 0.0 );
-        return (Point) EntityServiceFactory.getInstance().addUpdateEntity(user, p);
+        return (Point) entityService.addUpdateEntity(user, p);
     }
     @Test
     public void addPointTest() throws NimbitsException {
@@ -74,7 +77,7 @@ public class PointServiceTest extends NimbitsServletTest {
         EntityName name = CommonFactoryLocator.getInstance().createName("FOO", EntityType.point);
         Point p =  addPoint(name);
         assertNotNull(p);
-        List<Entity> x =  EntityTransactionFactory.getDaoInstance(user).getEntityByKey(p.getKey(), PointEntity.class);
+        List<Entity> x =  entityService.getEntityByKey(user, p.getKey(), EntityType.point);
         assertNotNull(x);
         assertFalse(x.isEmpty());
 

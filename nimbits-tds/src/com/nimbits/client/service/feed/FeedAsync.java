@@ -34,4 +34,6 @@ public interface FeedAsync {
     void postToFeed(final User user, final Throwable ex, final AsyncCallback<Void> async);
 
     void createFeedPoint(User user, AsyncCallback<Point> async);
+
+    void getFeedPoint(User user, AsyncCallback<List<Point>> async);
 }

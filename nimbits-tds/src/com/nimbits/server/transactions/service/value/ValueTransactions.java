@@ -15,6 +15,7 @@ package com.nimbits.server.transactions.service.value;
 
 import com.google.appengine.api.blobstore.BlobKey;
 import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
@@ -24,46 +25,50 @@ import java.util.List;
 
 public interface ValueTransactions {
 
-    List<Value> getRecordedValuePrecedingTimestamp(final Date timestamp) throws NimbitsException;
+    List<List<Value>> splitUpList(List<Value> original);
+
+    List<Value> getRecordedValuePrecedingTimestamp(final Entity entity,final Date timestamp) throws NimbitsException;
 
 
-    Value recordValue(final Value v) throws NimbitsException;
+    Value recordValue(final Entity entity, final Value v) throws NimbitsException;
 
     // this can throw an exception if the indexes are building on prod
-    List<Value> getTopDataSeries(final int maxValues) throws NimbitsException;
+    List<Value> getTopDataSeries(final Entity entity,final int maxValues) throws NimbitsException;
 
-    List<Value> getTopDataSeries(final int maxValues,
+    List<Value> getTopDataSeries(final Entity entity,
+                                 final int maxValues,
                                  final Date endDate) throws NimbitsException;
 
-    List<Value> getDataSegment(final Timespan timespan) throws NimbitsException;
+    List<Value> getDataSegment(final Entity entity,final Timespan timespan) throws NimbitsException;
 
-    List<Value> getDataSegment(final Timespan timespan,
+    List<Value> getDataSegment(final Entity entity, final Timespan timespan,
                                final int start,
                                final int end) throws NimbitsException;
 
-    List<Value> getBuffer() throws NimbitsException;
+    List<Value> getBuffer(final Entity entity) throws NimbitsException;
 
-    List<ValueBlobStore> recordValues(final List<Value> values) throws NimbitsException;
+    List<ValueBlobStore> recordValues(final Entity entity, final List<Value> values) throws NimbitsException;
 
-    void moveValuesFromCacheToStore() throws NimbitsException;
+    void moveValuesFromCacheToStore(final Entity entity) throws NimbitsException;
 
-    List<Value> getCache(final Timespan timespan) throws NimbitsException;
+    List<Value> getCache(final Entity entity, final Timespan timespan) throws NimbitsException;
 
-    List<ValueBlobStore> getAllStores() throws NimbitsException;
+    List<ValueBlobStore> getAllStores(final Entity entity) throws NimbitsException;
 
-    void consolidateDate(Date timestamp) throws NimbitsException;
+    void consolidateDate(final Entity entity, Date timestamp) throws NimbitsException;
 
     List<ValueBlobStore> getBlobStoreByBlobKey(BlobKey key) throws NimbitsException;
 
-    ValueBlobStore mergeTimespan(Timespan timespan) throws NimbitsException ;
+    ValueBlobStore mergeTimespan(final Entity entity,Timespan timespan) throws NimbitsException ;
 
 
-    void purgeValues() throws NimbitsException;
+    void purgeValues(final Entity entity) throws NimbitsException;
 
-    void deleteExpiredData();
+    void deleteExpiredData(final Entity entity);
 
-    int preloadTimespan(Timespan timespan) throws NimbitsException;
+    int preloadTimespan(final Entity entity,Timespan timespan) throws NimbitsException;
 
-    List<Value> getPreload(int count) throws NimbitsException;
+    List<Value> getPreload(final Entity entity, int count) throws NimbitsException;
+
 
 }

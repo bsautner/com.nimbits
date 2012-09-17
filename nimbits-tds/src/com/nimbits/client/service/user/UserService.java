@@ -24,7 +24,7 @@ import com.nimbits.client.model.user.User;
 
 import java.util.List;
 
-@RemoteServiceRelativePath("user")
+@RemoteServiceRelativePath("userService")
 public interface UserService extends RemoteService {
 
 
@@ -39,4 +39,6 @@ public interface UserService extends RemoteService {
     Integer getQuota() throws NimbitsException;
     List<Point> getAccountBalance() throws NimbitsException;
     void updateBilling(final User user,final boolean billingEnabled,final double maxQuota) throws NimbitsException;
+
+    List<User> getAllUsers(String s, int count);
 }

@@ -19,22 +19,30 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
 import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.process.task.TaskFactory;
-import com.nimbits.server.transactions.service.entity.EntityTransactionFactory;
-import com.nimbits.server.transactions.service.user.UserServiceFactory;
 
+import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
+import com.nimbits.server.transactions.service.user.UserServiceImpl;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Logger;
-
-public class PointCron extends HttpServlet {
+@Service("pointCron")
+@Transactional
+public class PointCron extends HttpServlet implements org.springframework.web.HttpRequestHandler {
     /**
      *
      */
     private static final long serialVersionUID = 1L;
     private static final Logger log = Logger.getLogger(PointCron.class.getName());
+    private UserServiceImpl userService;
+    private EntityServiceImpl entityService;
 
     @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp)
@@ -44,11 +52,10 @@ public class PointCron extends HttpServlet {
 
 
             try {
-                final User admin =UserServiceFactory.getServerInstance().getAdmin();
+                final User admin =userService.getAdmin();
 
                 final Map<String,Entity> e =
-                        EntityTransactionFactory.getDaoInstance(admin)
-                                .getSystemWideEntityMap(EntityType.point);
+                        entityService.getSystemWideEntityMap(admin, EntityType.point);
 
                 for (final Entity en : e.values()) {
                     TaskFactory.getInstance().startPointMaintTask(en);
@@ -61,4 +68,24 @@ public class PointCron extends HttpServlet {
         }
 
 
+    public void setUserService(UserServiceImpl userService) {
+        this.userService = userService;
+    }
+
+    public UserServiceImpl getUserService() {
+        return userService;
+    }
+
+    @Override
+    public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void setEntityService(EntityServiceImpl entityService) {
+        this.entityService = entityService;
+    }
+
+    public EntityServiceImpl getEntityService() {
+        return entityService;
+    }
 }

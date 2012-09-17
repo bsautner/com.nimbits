@@ -71,7 +71,7 @@ public class ApiServlet extends HttpServlet {
     @Resource(name = "commonFactory")
     private CommonFactory commonFactory;
 
-    @Resource(name = "settingsService")
+    @Resource(name = "settingService")
     private SettingsService settingsService;
 
     protected static boolean okToReport(final User u, final Entity c) {

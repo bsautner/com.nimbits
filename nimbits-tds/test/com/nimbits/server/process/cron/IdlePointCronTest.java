@@ -79,13 +79,13 @@ public class IdlePointCronTest extends NimbitsServletTest {
         valueService.recordValue(user, point, vx);
         Thread.sleep(2000);
         assertTrue(idleCron.checkIdle(point));
-        Point up = (Point) entityService.getEntityByKey(point.getKey(), EntityType.point).get(0);
+        Point up = (Point) entityService.getEntityByKey(user, point.getKey(), EntityType.point).get(0);
         assertTrue(up.getIdleAlarmSent());
         Value vx2 = ValueFactory.createValueModel(21.2);
         valueService.recordValue(user, up, vx2);
         assertFalse(idleCron.checkIdle(up));
         Thread.sleep(2000);
-        Point up2 = (Point) entityService.getEntityByKey(point.getKey(), EntityType.point).get(0);
+        Point up2 = (Point) entityService.getEntityByKey(user, point.getKey(), EntityType.point).get(0);
 
         up2.setIdleAlarmSent(false); //should have been done by the record value task which unit tests don't start
 

@@ -103,7 +103,7 @@ public class SeriesServletImpl extends ApiServlet  implements org.springframewor
                 if (! points.isEmpty()) {
                      Point point = (Point) points.get(0);
 
-                    // final Point point = (Point) EntityServiceFactory.getInstance().getEntityByKey(e.getKey(), PointEntity.class.getName());
+                    // final Point point = (Point) entityService.getEntityByKey(e.getKey(), PointEntity.class.getName());
                     if (point == null) {
 
                         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

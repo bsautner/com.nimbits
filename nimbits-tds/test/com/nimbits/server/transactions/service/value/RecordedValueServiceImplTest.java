@@ -24,13 +24,15 @@ import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
+import com.nimbits.client.service.value.ValueService;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.settings.SettingsServiceFactory;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
-import com.nimbits.server.transactions.service.user.UserServiceFactory;
+
+
 import junit.framework.Assert;
 import org.junit.Test;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -51,44 +53,48 @@ public class RecordedValueServiceImplTest extends NimbitsServletTest {
     private static final int D2 = 11;
     private static final double VALUE = 0.1;
 
+
+    @Resource(name = "valueService")
+    ValueService valueService;
+
     @Test
     public void ignoreByCompressionTest() throws NimbitsException, InterruptedException {
         point.setFilterValue(VALUE);
-        EntityServiceFactory.getInstance().addUpdateEntity(point);
+        entityService.addUpdateEntity(point);
 
 
         Value value = ValueFactory.createValueModel(D);
         Value value2 = ValueFactory.createValueModel(D);
         Value value3 = ValueFactory.createValueModel(D1);
 
-        ValueServiceFactory.getInstance().recordValue(user, point, value);
+        valueService.recordValue(user, point, value);
 
-        ValueServiceImpl impl = new ValueServiceImpl();
-        assertTrue(impl.ignoreByFilter(point, value2));
-        assertFalse(impl.ignoreByFilter(point, value3));
+
+        assertTrue(valueService.ignoreByFilter(point, value2));
+        assertFalse(valueService.ignoreByFilter(point, value3));
 
         point.setFilterValue(10);
         point.setFilterType(FilterType.ceiling);
 
-        assertFalse(impl.ignoreByFilter(point, ValueFactory.createValueModel(D1)));
-        assertTrue(impl.ignoreByFilter(point, ValueFactory.createValueModel(D2)));
+        assertFalse(valueService.ignoreByFilter(point, ValueFactory.createValueModel(D1)));
+        assertTrue(valueService.ignoreByFilter(point, ValueFactory.createValueModel(D2)));
 
         point.setFilterType(FilterType.floor);
-        assertTrue(impl.ignoreByFilter(point, ValueFactory.createValueModel(D1)));
-        assertFalse(impl.ignoreByFilter(point, ValueFactory.createValueModel(D2)));
+        assertTrue(valueService.ignoreByFilter(point, ValueFactory.createValueModel(D1)));
+        assertFalse(valueService.ignoreByFilter(point, ValueFactory.createValueModel(D2)));
 
         point.setFilterType(FilterType.none);
-        assertFalse(impl.ignoreByFilter(point, ValueFactory.createValueModel(D2)));
+        assertFalse(valueService.ignoreByFilter(point, ValueFactory.createValueModel(D2)));
 
         point.setFilterType(FilterType.percentageHysteresis);
-        EntityServiceFactory.getInstance().addUpdateEntity(point);
+        entityService.addUpdateEntity(point);
       //  pointService.updatePoint(point);
-        ValueServiceFactory.getInstance().recordValue(user, point, ValueFactory.createValueModel(100));
+        valueService.recordValue(user, point, ValueFactory.createValueModel(100));
         Thread.sleep(10);
-        assertTrue(impl.ignoreByFilter(point, ValueFactory.createValueModel(105)));
-        assertTrue(impl.ignoreByFilter(point, ValueFactory.createValueModel(95)));
-        assertFalse(impl.ignoreByFilter(point, ValueFactory.createValueModel(111)));
-        assertFalse(impl.ignoreByFilter(point, ValueFactory.createValueModel(80)));
+        assertTrue(valueService.ignoreByFilter(point, ValueFactory.createValueModel(105)));
+        assertTrue(valueService.ignoreByFilter(point, ValueFactory.createValueModel(95)));
+        assertFalse(valueService.ignoreByFilter(point, ValueFactory.createValueModel(111)));
+        assertFalse(valueService.ignoreByFilter(point, ValueFactory.createValueModel(80)));
 
     }
 
@@ -116,21 +122,21 @@ public class RecordedValueServiceImplTest extends NimbitsServletTest {
 
         entityService.addUpdateEntity(user, accountBalance);
 
-        UserServiceFactory.getServerInstance().fundAccount(user, BigDecimal.valueOf(startingBalance));
+        userService.fundAccount(user, BigDecimal.valueOf(startingBalance));
 
-        double b = ValueServiceFactory.getInstance().calculateDelta(accountBalance);
+        double b = valueService.calculateDelta(accountBalance);
         Assert.assertEquals(b, 0.0, 0.0001);
         Value v = ValueFactory.createValueModel(startingBalance - 0.01);
 
-        ValueServiceFactory.getInstance().recordValue(user, accountBalance, v);
+        valueService.recordValue(user, accountBalance, v);
 
-        List<Value> vx = ValueServiceFactory.getInstance().getTopDataSeries(accountBalance, 10);
+        List<Value> vx = valueService.getTopDataSeries(accountBalance, 10);
 
 
-        double b2 = ValueServiceFactory.getInstance().calculateDelta(accountBalance);
+        double b2 = valueService.calculateDelta(accountBalance);
         Assert.assertEquals(0.01, b2, 0.0001);
 //        for (int i = 0; i < 10; i++) {
-//            List<Value> sample = ValueServiceFactory.getInstance().getCurrentValue(accountBalance);
+//            List<Value> sample = valueService.getCurrentValue(accountBalance);
 //            assertFalse(sample.isEmpty());
 //            Value balance = sample.get(0);
 //            assertEquals(startingBalance, balance.getDoubleValue(), 0.0001);

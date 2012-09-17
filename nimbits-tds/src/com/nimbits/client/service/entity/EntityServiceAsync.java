@@ -25,17 +25,13 @@ import java.util.Map;
 
 @SuppressWarnings("unused")
 public interface EntityServiceAsync {
-    void getEntities(AsyncCallback<List<Entity>> async);
+    void getEntities(final User u, AsyncCallback<List<Entity>> async);
 
     void addUpdateEntity(final Entity entity, AsyncCallback<Entity> async);
-
-    void getEntityByKey(String uuid, final EntityType type, AsyncCallback<List<Entity> > async);
 
     void copyEntity(Entity originalEntity, EntityName newName, AsyncCallback<Entity> async);
 
     void getEntityNameMap(EntityType type, AsyncCallback<Map<EntityName, Entity>> async);
-
-    void getEntityMap(EntityType type, final int limit, AsyncCallback<Map<String, Entity>> async);
 
     void getChildren(Entity parentEntity, EntityType type, AsyncCallback<List<Entity>> async);
 
@@ -59,9 +55,7 @@ public interface EntityServiceAsync {
 
     void getSubscriptionsToEntity(User user, Entity subscribedEntity, AsyncCallback<List<Entity>> async);
 
-    void getSystemWideEntityMap(EntityType type, AsyncCallback<Map<String, Entity>> async);
-
-    void findEntityByKey(final String key, AsyncCallback<List<Entity>> async);
+    void getSystemWideEntityMap(final User u, EntityType type, AsyncCallback<Map<String, Entity>> async);
 
     void findEntityByKey(User user, String param, AsyncCallback< List<Entity>> async);
 

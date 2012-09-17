@@ -25,9 +25,10 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
+import com.nimbits.client.service.datapoints.PointService;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,21 +56,23 @@ public class PointServletTest extends NimbitsServletTest {
     @Resource(name="pointApi")
     PointServletImpl i;
 
+    @Resource(name="pointService")
+    PointService pointService;
 
 
     @Test
     public void createPointTest() throws NimbitsException {
         EntityName name = CommonFactoryLocator.getInstance().createName("test", EntityType.point);
 
-         Point p = PointServletImpl.createPoint(user, name, null, null, "description sample");
+         Point p = i.createPoint(user, name, null, null, "description sample");
     }
     @Test
     public void createPointDescTest() throws NimbitsException {
         EntityName name = CommonFactoryLocator.getInstance().createName("test", EntityType.point);
 
-        Point p = PointServletImpl.createPoint(user, name, null, null, "description sample");
+        Point p = i.createPoint(user, name, null, null, "description sample");
 
-        Entity r = EntityServiceFactory.getInstance().getEntityByName(user, name, EntityType.point).get(0);
+        Entity r = entityService.getEntityByName(user, name, EntityType.point).get(0);
         assertEquals(name.getValue(), r.getName().getValue());
         assertEquals("description sample", r.getDescription());
     }
@@ -84,7 +87,7 @@ public class PointServletTest extends NimbitsServletTest {
         i.handleRequest(req, resp);
         EntityName name = CommonFactoryLocator.getInstance().createName("parentPoint", EntityType.point);
 
-        List<Entity> result = EntityServiceFactory.getInstance().getEntityByName(user, name, EntityType.point);
+        List<Entity> result = entityService.getEntityByName(user, name, EntityType.point);
         assertFalse(result.isEmpty());
 
         req.removeAllParameters();
@@ -93,10 +96,10 @@ public class PointServletTest extends NimbitsServletTest {
         req.addParameter("parent", "parentPoint");
         i.handleRequest(req, resp);
         EntityName name2 = CommonFactoryLocator.getInstance().createName("child", EntityType.point);
-        List<Entity> result2 = EntityServiceFactory.getInstance().getEntityByName(user, name2, EntityType.point);
+        List<Entity> result2 = entityService.getEntityByName(user, name2, EntityType.point);
         assertFalse(result2.isEmpty());
 
-        List<Entity> c = EntityServiceFactory.getInstance().getChildren(result.get(0), EntityType.point);
+        List<Entity> c = entityService.getChildren(result.get(0), EntityType.point);
         assertFalse(c.isEmpty());
         assertEquals(result2.get(0), c.get(0));
 
@@ -118,7 +121,7 @@ public class PointServletTest extends NimbitsServletTest {
     @Test
     public void testGetList() throws NimbitsException {
         pointChild.setProtectionLevel(ProtectionLevel.onlyMe);
-        Point p = (Point) EntityServiceFactory.getInstance().addUpdateEntity(pointChild);
+        Point p = (Point) entityService.addUpdateEntity(pointChild);
         assertEquals(p.getProtectionLevel(), ProtectionLevel.onlyMe);
         helper.setEnvIsLoggedIn(false);
         req.removeAllParameters();
@@ -135,7 +138,7 @@ public class PointServletTest extends NimbitsServletTest {
     @Test
     public void testGetListFail() throws NimbitsException {
         pointChild.setProtectionLevel(ProtectionLevel.onlyMe);
-        Point p = (Point) EntityServiceFactory.getInstance().addUpdateEntity(pointChild);
+        Point p = (Point) entityService.addUpdateEntity(pointChild);
         assertEquals(p.getProtectionLevel(), ProtectionLevel.onlyMe);
         helper.setEnvIsLoggedIn(false);
         req.removeAllParameters();
@@ -152,7 +155,7 @@ public class PointServletTest extends NimbitsServletTest {
     @Test
     public void testGetListSharedNoKey() throws NimbitsException {
         pointChild.setProtectionLevel(ProtectionLevel.everyone);
-        Point p = (Point) EntityServiceFactory.getInstance().addUpdateEntity(pointChild);
+        Point p = (Point) entityService.addUpdateEntity(pointChild);
         assertEquals(p.getProtectionLevel(), ProtectionLevel.everyone);
         helper.setEnvIsLoggedIn(false);
         req.removeAllParameters();
@@ -207,8 +210,8 @@ public class PointServletTest extends NimbitsServletTest {
     public void testGetNotLoggedIn() throws NimbitsException {
 
         point.setProtectionLevel(ProtectionLevel.everyone);
-        EntityServiceFactory.getInstance().addUpdateEntity(point);
-        List<Entity> rl = EntityServiceFactory.getInstance().getEntityByKey(point.getKey(), EntityType.point);
+        entityService.addUpdateEntity(point);
+        List<Entity> rl = entityService.getEntityByKey(user, point.getKey(), EntityType.point);
         assertFalse(rl.isEmpty());
         Point rp = (Point)rl.get(0);
 
@@ -231,8 +234,8 @@ public class PointServletTest extends NimbitsServletTest {
     public void testGetNotLoggedInAccessProtected() throws NimbitsException {
 
         point.setProtectionLevel(ProtectionLevel.onlyMe);
-        EntityServiceFactory.getInstance().addUpdateEntity(point);
-        List<Entity> rl = EntityServiceFactory.getInstance().getEntityByKey(point.getKey(), EntityType.point);
+        entityService.addUpdateEntity(point);
+        List<Entity> rl = entityService.getEntityByKey(user, point.getKey(), EntityType.point);
         assertFalse(rl.isEmpty());
         Point rp = (Point)rl.get(0);
 

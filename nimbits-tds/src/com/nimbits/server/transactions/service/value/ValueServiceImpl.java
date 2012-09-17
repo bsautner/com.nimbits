@@ -34,43 +34,49 @@ import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 import com.nimbits.client.service.value.ValueService;
 import com.nimbits.server.api.helper.LocationReportingHelperFactory;
 import com.nimbits.server.process.task.TaskFactory;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
-import com.nimbits.server.transactions.service.user.UserServiceFactory;
+
+import com.nimbits.server.transactions.memcache.value.ValueMemCacheImpl;
+import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
+
+import com.nimbits.server.transactions.service.user.UserServiceImpl;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 import static java.lang.Math.abs;
 
-
+@Service("valueService")
+@Transactional
 public class ValueServiceImpl extends RemoteServiceServlet implements
         ValueService, RequestCallback {
 
 //    static final Logger log = Logger.getLogger(ValueServiceImpl.class.getName());
     private static final long serialVersionUID = 1L;
-
-
-
+    private EntityServiceImpl entityService;
+    private UserServiceImpl userService;
+    private ValueMemCacheImpl valueCache;
 
 
     @Override
     public List<Value> getTopDataSeries(final Entity entity,
                                         final int maxValues,
                                         final Date endDate) throws NimbitsException {
-//        final Point p = (Point) EntityServiceFactory.getInstance().getEntityByKey(entity.getKey(), PointEntity.class.getName());
-        return ValueTransactionFactory.getInstance(entity).getTopDataSeries(maxValues, endDate);
+//        final Point p = (Point) entityService.getEntityByKey(entity.getKey(), PointEntity.class.getName());
+        return valueCache.getTopDataSeries(entity, maxValues, endDate);
     }
 
 
     @Override
     public int preloadTimespan(Entity entity, Timespan timespan) throws NimbitsException {
-        return ValueTransactionFactory.getInstance(entity).preloadTimespan(timespan);
+        return valueCache.preloadTimespan(entity, timespan);
     }
 
     @Override
     public List<Value> getCache(final Entity entity) throws NimbitsException {
         //  final Point point = PointServiceFactory.getInstance().getPointByKey(entity.getKey());
-        //  final Point p = (Point) EntityServiceFactory.getInstance().getEntityByKey(entity.getKey(), PointEntity.class.getName());
-        return ValueTransactionFactory.getInstance(entity).getBuffer();
+        //  final Point p = (Point) entityService.getEntityByKey(entity.getKey(), PointEntity.class.getName());
+        return valueCache.getBuffer(entity);
     }
 
 
@@ -80,38 +86,38 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
                                              final Timespan timespan,
                                              final int start,
                                              final int end) throws NimbitsException {
-        return ValueTransactionFactory.getInstance(entity).getDataSegment(timespan, start, end);
+        return valueCache.getDataSegment(entity, timespan, start, end);
     }
 
     @Override
     public Value recordValue(final Entity point,
                              final Value value) throws NimbitsException {
 
-        final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
+        final User u = userService.getHttpRequestUser(
                 this.getThreadLocalRequest());
         LocationReportingHelperFactory.getInstance().reportLocation(point, value.getLocation());
 //        final Point px = PointServiceFactory.getInstance().getPointByKey(point.getKey());
-        //   final Point px = (Point) EntityServiceFactory.getInstance().getEntityByKey(point.getKey(), PointEntity.class.getName());
+        //   final Point px = (Point) entityService.getEntityByKey(point.getKey(), PointEntity.class.getName());
         return recordValue(u,point, value);
     }
 
 
     @Override
-    public List<Value> getTopDataSeries(final Entity point,
+    public List<Value> getTopDataSeries(final Entity entity,
                                         final int maxValues) throws NimbitsException {
 
-        return ValueTransactionFactory.getInstance(point).getTopDataSeries(maxValues);
+        return valueCache.getTopDataSeries(entity, maxValues);
 
     }
 
     @Override
-    public List<Value> getDataSegment(final Entity point, final Timespan timespan, final int start, final int end) throws NimbitsException {
-        return ValueTransactionFactory.getInstance(point).getDataSegment(timespan, start, end);
+    public List<Value> getDataSegment(final Entity entity, final Timespan timespan, final int start, final int end) throws NimbitsException {
+        return valueCache.getDataSegment(entity, timespan, start, end);
     }
 
     @Override
-    public List<Value> getDataSegment(final Entity point, final Timespan timespan) throws NimbitsException {
-        return ValueTransactionFactory.getInstance(point).getDataSegment(timespan);
+    public List<Value> getDataSegment(final Entity entity, final Timespan timespan) throws NimbitsException {
+        return valueCache.getDataSegment(entity, timespan);
     }
 
     //RPC
@@ -121,7 +127,7 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
                              final Value value) throws NimbitsException {
 
 
-        final List<Entity> e = EntityServiceFactory.getInstance().getEntityByName(u, pointName,EntityType.point);
+        final List<Entity> e = entityService.getEntityByName(u, pointName, EntityType.point);
 
 
         return e.isEmpty() ? null : recordValue(u, e.get(0), value);
@@ -131,11 +137,11 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
 
 
     @Override
-    public List<Value> getPrevValue(final Entity point,
+    public List<Value> getPrevValue(final Entity entity,
                                     final Date timestamp) throws NimbitsException {
 
 
-        return ValueTransactionFactory.getInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
+        return valueCache.getRecordedValuePrecedingTimestamp(entity, timestamp);
 
 
     }
@@ -162,13 +168,33 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
         return retVal;
     }
 
+    @Override
+    public void moveValuesFromCacheToStore(Entity entity) {
+        valueCache.moveValuesFromCacheToStore(entity);
+    }
+
+    @Override
+    public void consolidateDate(Entity entity, Date date) throws NimbitsException {
+        valueCache.consolidateDate(entity, date);
+    }
+
+    @Override
+    public List<Value> getPreload(Entity entity, int section) throws NimbitsException {
+        return valueCache.getPreload(entity, section);
+    }
+
+    @Override
+    public void mergeTimespan(Point point, Timespan ts) throws NimbitsException {
+        valueCache.mergeTimespan(point, ts);
+    }
+
 
     @Override
     public Map<String, Entity> getCurrentValues(final Map<String, Point> entities) throws NimbitsException {
         final Map<String, Entity> retObj = new HashMap<String, Entity>(entities.size());
         for (final Point p : entities.values()) {
 
-            final List<Value> v = ValueServiceFactory.getInstance().getCurrentValue(p);
+            final List<Value> v = getCurrentValue(p);
             if (! v.isEmpty()) {
                 p.setValue(v.get(0));
 
@@ -181,24 +207,24 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public List<ValueBlobStore> getAllStores(Entity entity) throws NimbitsException {
-        return  ValueTransactionFactory.getInstance(entity).getAllStores();
+        return  valueCache.getAllStores(entity);
     }
 
     @Override
     public void purgeValues(Entity entity) throws NimbitsException {
-        ValueTransactionFactory.getInstance(entity).purgeValues();
+        valueCache.purgeValues(entity);
 
     }
 
     @Override
-    public void deleteExpiredData(Point point) {
-        ValueTransactionFactory.getInstance(point).deleteExpiredData();
+    public void deleteExpiredData(Point entity) {
+        valueCache.deleteExpiredData(entity);
     }
 
     @Override
     public void recordValues(User user, Point point, List<Value> values) throws NimbitsException {
         if (point.getOwner().equals(user.getKey())) {
-            ValueTransactionFactory.getInstance(point).recordValues(values);
+            valueCache.recordValues(point, values);
         }
     }
 
@@ -269,7 +295,8 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
 
 
     //determines if a new value should be ignored
-    protected boolean ignoreByFilter(final Point point, final Value v) throws NimbitsException {
+    @Override
+    public boolean ignoreByFilter(final Point point, final Value v) throws NimbitsException {
 
 
         final List<Value> sample = getPrevValue(point, v.getTimestamp());
@@ -365,7 +392,7 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
             point = (Point) entity;
         }
         else {
-            List<Entity> points  =  EntityServiceFactory.getInstance().getEntityByKey(u, entity.getKey(), entity.getEntityType());
+            List<Entity> points  =  entityService.getEntityByKey(u, entity.getKey(), entity.getEntityType());
             if (! points.isEmpty()) {
                 point = (Point) points.get(0);
             }
@@ -386,7 +413,7 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
             Value retObj = null;
             if (!ignoredByDate && !ignoredByCompression) {
 
-                retObj = ValueTransactionFactory.getInstance(point).recordValue(value);
+                retObj = valueCache.recordValue(point, value);
                 final AlertType t = getAlertType(point, retObj);
                 final Value v = ValueFactory.createValueModel(retObj, t);
                 TaskFactory.getInstance().startRecordValueTask(u, point, v);
@@ -424,7 +451,7 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
         Date retVal = null;
 
         for (final Point p : points) {
-            final List<Value> r = ValueTransactionFactory.getInstance(p).getTopDataSeries(1);
+            final List<Value> r = valueCache.getTopDataSeries(p, 1);
 
             if (!r.isEmpty()) {
                 Value rx = r.get(0);
@@ -443,4 +470,27 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
         return retVal;
     }
 
+    public void setEntityService(EntityServiceImpl entityService) {
+        this.entityService = entityService;
+    }
+
+    public EntityServiceImpl getEntityService() {
+        return entityService;
+    }
+
+    public void setUserService(UserServiceImpl userService) {
+        this.userService = userService;
+    }
+
+    public UserServiceImpl getUserService() {
+        return userService;
+    }
+
+    public void setValueCache(ValueMemCacheImpl valueCache) {
+        this.valueCache = valueCache;
+    }
+
+    public ValueMemCacheImpl getValueCache() {
+        return valueCache;
+    }
 }

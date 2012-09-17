@@ -16,21 +16,21 @@ package com.nimbits.server.orm;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.server.NimbitsServletTest;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-/**
- * Created with IntelliJ IDEA.
- * User: benjamin
- * Date: 5/10/12
- * Time: 11:59 AM
- * To change this template use File | Settings | File Templates.
- */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={
+        "classpath:META-INF/applicationContext.xml"
+})
 public class PointEntityTest extends NimbitsServletTest {
 
     @Test
     public void testValidation() throws NimbitsException {
         PointEntity e = new PointEntity(point);
         e.setIdleAlarmOn(true);
-        e.validate();
+        e.validate(user);
 
     }
     @Test(expected=NimbitsException.class)
@@ -41,7 +41,7 @@ public class PointEntityTest extends NimbitsServletTest {
         e.setLowAlarmOn(true);
         e.setHighAlarm(0.0);
         e.setLowAlarm(100);
-        e.validate();
+        e.validate(user);
 
     }
     @Test
@@ -52,7 +52,7 @@ public class PointEntityTest extends NimbitsServletTest {
         e.setLowAlarmOn(true);
         e.setHighAlarm(0.0);
         e.setLowAlarm(100);
-        e.validate();
+        e.validate(user);
 
     }
 

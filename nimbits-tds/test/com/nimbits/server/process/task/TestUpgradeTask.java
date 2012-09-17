@@ -17,6 +17,9 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.server.NimbitsServletTest;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * Created by bsautner
@@ -24,6 +27,10 @@ import org.junit.Test;
  * Date: 3/31/12
  * Time: 8:47 AM
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={
+        "classpath:META-INF/applicationContext.xml"
+})
 public class TestUpgradeTask extends NimbitsServletTest {
 
     @Test
@@ -65,8 +72,8 @@ public class TestUpgradeTask extends NimbitsServletTest {
 //        UpgradeTask.doCategory2(req);
 //        UpgradeTask.doPoint2(req);
 //        for (User u : users) {
-//            Map<String, Entity> cmap = EntityServiceFactory.getInstance().getEntityMap(u, EntityType.category, 1000);
-//            Map<String, Entity> pmap = EntityServiceFactory.getInstance().getEntityMap(u, EntityType.point, 1000);
+//            Map<String, Entity> cmap = entityService.getEntityMap(u, EntityType.category, 1000);
+//            Map<String, Entity> pmap = entityService.getEntityMap(u, EntityType.point, 1000);
 //            if (u.getEmail().getValue().contains("test.com")) {
 //                assertEquals(2, cmap.size());
 //                assertEquals(4, pmap.size());
@@ -103,7 +110,7 @@ public class TestUpgradeTask extends NimbitsServletTest {
 //
 //        assertEquals(101, UpgradeTask.doStart());
 //        Thread.sleep(1000);
-//        final Entity userEntity = EntityServiceFactory.getInstance().getEntityByName(CommonFactoryLocator.getInstance().createName(("test@example.com"), EntityType.user));
+//        final Entity userEntity = entityService.getEntityByName(CommonFactoryLocator.getInstance().createName(("test@example.com"), EntityType.user));
 //        for (int x = 0; x < 10; x++) {
 //            PointCatagory c = new PointCatagory();
 //            c.name = UUID.randomUUID().toString();
@@ -132,7 +139,7 @@ public class TestUpgradeTask extends NimbitsServletTest {
 //        assertEquals(10, UpgradeTask.doUser(req));
 //
 //
-//        List<Entity> categories = EntityServiceFactory.getInstance().getChildren(userEntity, EntityType.category);
+//        List<Entity> categories = entityService.getChildren(userEntity, EntityType.category);
 //        for (Entity entity : categories){
 //
 //            String j = GsonFactory.getInstance().toJson(entity);

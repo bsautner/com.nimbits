@@ -18,6 +18,7 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.user.User;
 import com.nimbits.server.transactions.memcache.entity.EntityCache;
 
 import java.util.List;
@@ -31,35 +32,35 @@ import java.util.Map;
  */
 public interface EntityTransactions extends EntityCache {
 
-    Map<String, Entity> getEntityMap( final EntityType type, final int limit) throws NimbitsException;
+    Map<String, Entity> getEntityMap(final User user,  final EntityType type, final int limit) throws NimbitsException;
 
-    Map<EntityName, Entity> getEntityNameMap( final EntityType type) throws NimbitsException;
+    Map<EntityName, Entity> getEntityNameMap(User user, final EntityType type) throws NimbitsException;
 
-    List<Entity> getChildren( final Entity parentEntity,  final EntityType type) throws NimbitsException;
+    List<Entity> getChildren(final User user, Entity entity, final EntityType type) throws NimbitsException;
 
-    Entity addUpdateEntity( final Entity entity, final boolean clearTree) throws NimbitsException;
+    Entity addUpdateEntity( final User user, final Entity entity, final boolean clearTree) throws NimbitsException;
 
-    Entity addUpdateEntity( final Entity entity) throws NimbitsException;
+    Entity addUpdateEntity(final User user,  final Entity entity) throws NimbitsException;
 
-    List<Entity> getEntities() throws NimbitsException;
+    List<Entity> getEntities(final User user) throws NimbitsException;
 
-    List<Entity> deleteEntity( final Entity entity,final Class<?> cls) throws NimbitsException;
+    List<Entity> deleteEntity(final User user,  final Entity entity,final Class<?> cls) throws NimbitsException;
 
-    List<Entity> getEntityByKey( final String id,  final Class<?> cls) throws NimbitsException;
+    List<Entity> getEntityByKey(final User user,  final String id,  final Class<?> cls) throws NimbitsException;
 
-    Map<String, Entity> getSystemWideEntityMap(final EntityType type) throws NimbitsException;
+    Map<String, Entity> getSystemWideEntityMap(final User user, final EntityType type) throws NimbitsException;
 
-    List<Entity> getEntityByName( final EntityName name,  final Class<?> cls) throws NimbitsException;
+    List<Entity> getEntityByName( final User user, final EntityName name,  final Class<?> cls) throws NimbitsException;
 
-    List<Entity> getEntitiesBySource(final Entity source, final Class<?> cls) throws NimbitsException;
+    List<Entity> getEntitiesBySource(final User user, final Entity source, final Class<?> cls) throws NimbitsException;
 
-    List<Entity> getEntityByTrigger(final Entity entity, final Class<?> cls) throws NimbitsException;
+    List<Entity> getEntityByTrigger(final User user, final Entity entity, final Class<?> cls) throws NimbitsException;
 
-    List<Entity> getIdleEntities() throws NimbitsException;
+    List<Entity> getIdleEntities(User admin) throws NimbitsException;
 
-    List<Entity> getSubscriptionsToEntity(final Entity subscribedEntity) throws NimbitsException;
+    List<Entity> getSubscriptionsToEntity(final User user, final Entity subscribedEntity) throws NimbitsException;
 
-    List<Entity> getEntityByBlobKey(final BlobKey key) throws NimbitsException;
+    List<Entity> getEntityByBlobKey(final User user, final BlobKey key) throws NimbitsException;
 
-    void updateUser() throws NimbitsException;
+    void updateUser(final User user) throws NimbitsException;
 }

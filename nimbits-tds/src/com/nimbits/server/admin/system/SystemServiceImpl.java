@@ -27,9 +27,11 @@ import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
-import com.nimbits.server.transactions.service.user.UserServiceFactory;
-import com.nimbits.server.transactions.service.value.ValueServiceFactory;
+import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
+import com.nimbits.server.transactions.service.user.UserServiceImpl;
+import com.nimbits.server.transactions.service.value.ValueServiceImpl;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -40,10 +42,15 @@ import java.util.UUID;
  * Date: 4/27/12
  * Time: 4:32 PM
  */
+@Service("systemService")
+@Transactional
 public class SystemServiceImpl implements SystemService{
 
 
     private static final int EXPIRE = 365;
+    private EntityServiceImpl entityService;
+    private UserServiceImpl userService;
+    private ValueServiceImpl valueService;
 
     @Override
     public void updateSystemPoint(
@@ -53,8 +60,8 @@ public class SystemServiceImpl implements SystemService{
             final PointType type) throws NimbitsException {
 
         EntityName name = CommonFactoryLocator.getInstance().createName(pointName, EntityType.point);
-        User admin =UserServiceFactory.getServerInstance().getAdmin();
-        List<Entity> e = EntityServiceFactory.getInstance().getEntityByName(admin,
+        User admin =userService.getAdmin();
+        List<Entity> e = entityService.getEntityByName(admin,
                 name, EntityType.point);
         Point p;
         if (e.isEmpty()) {
@@ -63,7 +70,7 @@ public class SystemServiceImpl implements SystemService{
                     ownerKey, UUID.randomUUID().toString());
             Point pm = PointModelFactory.createPointModel(ep, 0.0, EXPIRE, "", 0.0, false, false, false, 0,
                     false, FilterType.none, 0.0, false, type, 0, false, 0.0);
-            p = (Point) EntityServiceFactory.getInstance().addUpdateEntity(admin, pm);
+            p = (Point)entityService.addUpdateEntity(admin, pm);
         }
         else {
             p = (Point) e.get(0);
@@ -71,14 +78,38 @@ public class SystemServiceImpl implements SystemService{
         }
         Value vx;
         if (incrementAsCounter) {
-           List<Value> c = ValueServiceFactory.getInstance().getCurrentValue(p);
+           List<Value> c = valueService.getCurrentValue(p);
            double cd = ! c.isEmpty() ? c.get(0).getDoubleValue() : 0.0;
            vx = ValueFactory.createValueModel(cd + value);
         }
         else {
             vx = ValueFactory.createValueModel(value);
         }
-        ValueServiceFactory.getInstance().recordValue(admin, p, vx);
+        valueService.recordValue(admin, p, vx);
 
+    }
+
+    public void setEntityService(EntityServiceImpl entityService) {
+        this.entityService = entityService;
+    }
+
+    public EntityServiceImpl getEntityService() {
+        return entityService;
+    }
+
+    public void setUserService(UserServiceImpl userService) {
+        this.userService = userService;
+    }
+
+    public UserServiceImpl getUserService() {
+        return userService;
+    }
+
+    public void setValueService(ValueServiceImpl valueService) {
+        this.valueService = valueService;
+    }
+
+    public ValueServiceImpl getValueService() {
+        return valueService;
     }
 }

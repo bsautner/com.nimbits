@@ -177,8 +177,8 @@ public class UserEntity extends EntityStore implements User {
     }
 
     @Override
-    public void validate() throws NimbitsException {
-             super.validate();
+    public void validate(User user) throws NimbitsException {
+             super.validate(user);
 
     }
 

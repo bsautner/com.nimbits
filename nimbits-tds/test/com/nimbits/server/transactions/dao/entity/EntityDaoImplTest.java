@@ -26,10 +26,13 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.orm.PointEntity;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
-import com.nimbits.server.transactions.service.entity.EntityTransactionFactory;
+import com.nimbits.server.transactions.service.entity.EntityTransactions;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 import static org.junit.Assert.assertNotNull;
@@ -41,8 +44,16 @@ import static org.junit.Assert.assertTrue;
  * Date: 4/1/12
  * Time: 3:21 PM
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={
+        "classpath:META-INF/applicationContext.xml"
+})
 public class EntityDaoImplTest extends NimbitsServletTest {
-
+    
+    @Resource(name="entityDao")
+    EntityTransactions entityDao;
+    
+    
     @Test
     public void addUpdateEntityTest() throws NimbitsException {
 
@@ -65,9 +76,9 @@ public class EntityDaoImplTest extends NimbitsServletTest {
                 0.1,
                 false,
                 PointType.basic, 0, false, 0.0 );
-        Entity result = EntityServiceFactory.getInstance().addUpdateEntity(user, add);
-        //Entity result = EntityTransactionFactory.getDaoInstance(user).addUpdateEntity(entity);
-        Entity r = EntityTransactionFactory.getDaoInstance(user).getEntityByKey(result.getKey(), PointEntity.class).get(0);
+        Entity result = entityService.addUpdateEntity(user, add);
+        //Entity result = entityDao.addUpdateEntity(entity);
+        Entity r = entityDao.getEntityByKey(user, result.getKey(), PointEntity.class).get(0);
         assertNotNull(r);
         assertNotNull(result);
         assertNotNull(result.getKey());
@@ -88,10 +99,10 @@ public class EntityDaoImplTest extends NimbitsServletTest {
                 0.1,
                 false,
                 PointType.basic, 0, false, 0.0 );
-        Point px = (Point) EntityServiceFactory.getInstance().addUpdateEntity(point1);
+        Point px = (Point) entityService.addUpdateEntity(point1);
 
         //Point rp = PointTransactionsFactory.getDaoInstance(user).getPointByKey(result.getKey());
-        Point rp = (Point) EntityTransactionFactory.getDaoInstance(user).getEntityByKey(result.getKey(), PointEntity.class).get(0);
+        Point rp = (Point) entityDao.getEntityByKey(user, result.getKey(), PointEntity.class).get(0);
 
         assertNotNull(px);
         assertNotNull(rp);
@@ -123,9 +134,9 @@ public class EntityDaoImplTest extends NimbitsServletTest {
                 0.1,
                 false,
                 PointType.basic, 0, false, 0.0 );
-        Entity result = EntityServiceFactory.getInstance().addUpdateEntity(user, add);
-        //Entity result = EntityTransactionFactory.getDaoInstance(user).addUpdateEntity(entity);
-        Entity r = EntityTransactionFactory.getDaoInstance(user).getEntityByKey(result.getKey(), PointEntity.class).get(0);
+        Entity result = entityService.addUpdateEntity(user, add);
+        //Entity result = entityDao.addUpdateEntity(entity);
+        Entity r = entityDao.getEntityByKey(user, result.getKey(), PointEntity.class).get(0);
         assertNotNull(r);
         assertNotNull(result);
         assertNotNull(result.getKey());
@@ -146,16 +157,16 @@ public class EntityDaoImplTest extends NimbitsServletTest {
                 0.1,
                 false,
                 PointType.basic , 0, false, 0.0);
-        Point px = (Point) EntityServiceFactory.getInstance().addUpdateEntity(point1);
+        Point px = (Point) entityService.addUpdateEntity(point1);
 
         //Point rp = PointTransactionsFactory.getDaoInstance(user).getPointByKey(result.getKey());
-        Point rp = (Point) EntityTransactionFactory.getDaoInstance(user).getEntityByKey(result.getKey(), PointEntity.class).get(0);
+        Point rp = (Point) entityDao.getEntityByKey(user, result.getKey(), PointEntity.class).get(0);
 
         rp.setHighAlarmOn(true);
         rp.setLowAlarmOn(true);
         rp.setIdleAlarmOn(true);
-        EntityTransactionFactory.getDaoInstance(user).addUpdateEntity(rp);
-        Point xp = (Point) EntityTransactionFactory.getDaoInstance(user).getEntityByKey(rp.getKey(), PointEntity.class).get(0);
+        entityDao.addUpdateEntity(user, rp);
+        Point xp = (Point) entityDao.getEntityByKey(user, rp.getKey(), PointEntity.class).get(0);
         assertTrue(xp.isHighAlarmOn());
         assertTrue(xp.isLowAlarmOn());
         assertTrue(xp.isIdleAlarmOn());
@@ -191,9 +202,9 @@ public class EntityDaoImplTest extends NimbitsServletTest {
                 false,
                 PointType.basic , 0, false, 0.0);
 
-        final Entity result = EntityServiceFactory.getInstance().addUpdateEntity(user, point1);
-        //Entity result = EntityTransactionFactory.getDaoInstance(user).addUpdateEntity(entity);
-        final Entity r = EntityTransactionFactory.getDaoInstance(user).getEntityByKey(result.getKey(), PointEntity.class).get(0);
+        final Entity result = entityService.addUpdateEntity(user, point1);
+        //Entity result = entityDao.addUpdateEntity(entity);
+        final Entity r = entityDao.getEntityByKey(user, result.getKey(), PointEntity.class).get(0);
         assertNotNull(r);
         assertNotNull(result);
         assertNotNull(result.getKey());
@@ -203,19 +214,19 @@ public class EntityDaoImplTest extends NimbitsServletTest {
         //final Point px = PointTransactionsFactory.getDaoInstance(user).addPoint(point);
 
         //Point rp = PointTransactionsFactory.getDaoInstance(user).getPointByKey(result.getKey());
-        final Point rp = (Point) EntityTransactionFactory.getDaoInstance(user).getEntityByKey(result.getKey(), PointEntity.class).get(0);
+        final Point rp = (Point) entityDao.getEntityByKey(user, result.getKey(), PointEntity.class).get(0);
 
         // assertNotNull(px);
         assertNotNull(rp);
-        EntityTransactionFactory.getDaoInstance(user).deleteEntity(r, PointEntity.class);
-        assertTrue(EntityTransactionFactory.getDaoInstance(user).getEntityByKey(result.getKey(),PointEntity.class).isEmpty());
+        entityDao.deleteEntity(user, r, PointEntity.class);
+        assertTrue(entityDao.getEntityByKey(user, result.getKey(),PointEntity.class).isEmpty());
 
     }
 
     @Test
     public void readOnlyTest() throws NimbitsException {
 
-        List<Entity> r = EntityTransactionFactory.getInstance(user).getEntities();
+        List<Entity> r = entityDao.getEntities(user);
         for (Entity e : r) {
              assertTrue(e.isReadOnly() != e.getOwner().equals(user.getKey()));
         }
@@ -224,7 +235,7 @@ public class EntityDaoImplTest extends NimbitsServletTest {
 
     @Test
     public void testEntitySecurity() throws NimbitsException {
-        List<Entity> r = EntityTransactionFactory.getInstance(user).getEntities();
+        List<Entity> r = entityDao.getEntities(user);
         for (Entity e : r) {
             if (user.getKey().equals(e.getOwner())) {
                 assertTrue(e.isOwner(user));
@@ -238,11 +249,11 @@ public class EntityDaoImplTest extends NimbitsServletTest {
     @Test(expected = NimbitsException.class)
     public void testValidation() throws NimbitsException {
 
-        final EntityName name = CommonFactoryLocator.getInstance().createName("should fail", EntityType.point);
+        final EntityName name = CommonFactoryLocator.getInstance().createName("should fail#$%#$%%#%#$^#$", EntityType.point);
 
 
         Entity e = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.onlyMe,user.getKey(), user.getKey());
-        EntityTransactionFactory.getDaoInstance(user).addUpdateEntity(e, true);
+        entityDao.addUpdateEntity(user, e, true);
 
 
     }

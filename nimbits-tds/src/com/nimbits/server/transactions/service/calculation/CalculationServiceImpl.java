@@ -27,7 +27,6 @@ import com.nimbits.client.service.calculation.CalculationService;
 import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.value.ValueService;
 import com.nimbits.server.admin.logging.LogHelper;
-import com.nimbits.server.transactions.service.value.ValueServiceFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -94,7 +93,7 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
 
             if (p != null) {
                 log.info("calc has an x car and i found " + p.getName());
-                final List<Value> val = ValueServiceFactory.getInstance().getCurrentValue(p);
+                final List<Value> val = valueService.getCurrentValue(p);
 
                 final double d = val.isEmpty() ? 0.0 : val.get(0).getDoubleValue();
 
@@ -108,7 +107,7 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
             final Entity p = entityService.getEntityByKey(user, calculation.getY(), EntityType.point).get(0);
 
             if (p != null) {
-                final List<Value> val = ValueServiceFactory.getInstance().getCurrentValue(p);
+                final List<Value> val = valueService.getCurrentValue(p);
                 final double d = val.isEmpty() ? 0.0 : val.get(0).getDoubleValue();
                 m.addVariable("y", d);
             }

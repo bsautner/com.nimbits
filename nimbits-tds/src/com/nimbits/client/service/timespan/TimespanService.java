@@ -26,7 +26,7 @@ import java.util.Date;
  * Date: 5/3/11
  * Time: 7:54 PM
  */
-@RemoteServiceRelativePath("timespan")
+@RemoteServiceRelativePath("timespanService")
 public interface TimespanService extends RemoteService {
     Date zeroOutDate(Date date);
     Timespan createTimespan(final String start, final String end) throws NimbitsException;

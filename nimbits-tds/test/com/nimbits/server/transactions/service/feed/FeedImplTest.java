@@ -16,16 +16,26 @@ package com.nimbits.server.transactions.service.feed;
 import com.nimbits.client.enums.FeedType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.point.Point;
+import com.nimbits.client.service.feed.Feed;
 import com.nimbits.server.NimbitsServletTest;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 import static org.junit.Assert.*;
-
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={
+        "classpath:META-INF/applicationContext.xml"
+})
 public class FeedImplTest extends NimbitsServletTest {
 
-    private FeedImpl i = new FeedImpl();
+  @Resource(name="feedService")
+    Feed i;
+
 
     @Test
     public void testPostToFeed() throws Exception {

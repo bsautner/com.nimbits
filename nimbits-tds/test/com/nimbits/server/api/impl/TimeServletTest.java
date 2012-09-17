@@ -20,8 +20,11 @@ import com.nimbits.client.enums.ClientType;
 import com.nimbits.client.enums.Parameters;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
@@ -36,6 +39,10 @@ import static org.junit.Assert.*;
  * Time: 10:00 AM
  * To change this template use File | Settings | File Templates.
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={
+        "classpath:META-INF/applicationContext.xml"
+})
 public class TimeServletTest  {
     public MockHttpServletRequest req;
     public MockHttpServletResponse resp;

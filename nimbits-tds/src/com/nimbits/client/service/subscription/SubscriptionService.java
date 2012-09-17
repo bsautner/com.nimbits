@@ -26,7 +26,7 @@ import com.nimbits.client.model.value.Value;
  * Date: 2/15/12
  * Time: 3:52 PM
  */
-@RemoteServiceRelativePath("subscribe")
+@RemoteServiceRelativePath("subscribeService")
 public interface SubscriptionService  extends RemoteService {
     void processSubscriptions(final User u, final Point point, final Value v) throws NimbitsException;
 

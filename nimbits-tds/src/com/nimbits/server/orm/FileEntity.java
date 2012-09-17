@@ -18,6 +18,7 @@ import com.nimbits.client.common.Utils;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.file.File;
+import com.nimbits.client.model.user.User;
 
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
@@ -66,8 +67,8 @@ public class FileEntity extends EntityStore implements File {
     }
 
     @Override
-    public void validate() throws NimbitsException {
-        super.validate();
+    public void validate(User user) throws NimbitsException {
+        super.validate(user);
         if (this.blobKey == null || Utils.isEmptyString(this.blobKey.getKeyString())) {
             throw new NimbitsException("Empty blobkey");
         }

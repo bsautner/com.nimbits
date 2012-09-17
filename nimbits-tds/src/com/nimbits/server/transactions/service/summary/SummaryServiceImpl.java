@@ -64,7 +64,7 @@ public class SummaryServiceImpl  extends RemoteServiceServlet implements Summary
 
                 try {
 
-                    final List<Entity> results =  entityService.getEntityByKey(summary.getTrigger(),EntityType.point);
+                    final List<Entity> results =  entityService.getEntityByKey(user, summary.getTrigger(),EntityType.point);
                     if (! results.isEmpty()) {
                         final Entity source = results.get(0);
                         final Timespan span = TimespanModelFactory.createTimespan(new Date(now.getTime() - summary.getSummaryIntervalMs()), now);
@@ -95,7 +95,7 @@ public class SummaryServiceImpl  extends RemoteServiceServlet implements Summary
                         }
 
 
-                        final List<Entity> targetResults =  entityService.getEntityByKey(summary.getTarget(), EntityType.point);
+                        final List<Entity> targetResults =  entityService.getEntityByKey(user, summary.getTarget(), EntityType.point);
                         if (! targetResults.isEmpty()) {
                             final Entity target = targetResults.get(0);
                             valueService.recordValue(user, target, value);

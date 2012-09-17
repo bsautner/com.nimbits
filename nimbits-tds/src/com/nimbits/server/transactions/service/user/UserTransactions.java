@@ -22,15 +22,7 @@ import java.util.List;
 
 public interface UserTransactions {
 
-
-
-    //User setFacebookToken(final EmailAddress emailAddress, final String token, final long facebookId) throws NimbitsException;
-
-   // User getNimbitsUser(final EmailAddress emailAddress) throws NimbitsException;
-
     List<User> getAllUsers(final String sortColumn, int count);
-
-    //User updateSecret(final EmailAddress emailAddress, final UUID uuid) throws NimbitsException;
 
     ConnectionRequest makeConnectionRequest(final User u, final EmailAddress emailAddress) throws NimbitsException;
 
@@ -38,14 +30,7 @@ public interface UserTransactions {
 
     void updateConnectionRequest(final Long key, final User requestor, final User acceptor, final boolean accepted) throws NimbitsException;
 
-    //User updateTwitter(final EmailAddress emailAddress, final AccessToken token) throws NimbitsException;
-
-   // User updateLastLoggedIn(final User user, final Date LastLoggedIn) throws NimbitsException;
-
-   // User getUserByKey(final String key) throws NimbitsException;
-
     List<User>  getConnectionRequests(final List<String> connections) throws NimbitsException;
 
 
-    //List<User> getUsers() throws NimbitsException;
 }

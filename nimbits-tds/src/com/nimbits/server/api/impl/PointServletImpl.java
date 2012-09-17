@@ -36,8 +36,7 @@ import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.time.TimespanServiceFactory;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
-import com.nimbits.server.transactions.service.value.ValueServiceFactory;
+import com.nimbits.server.transactions.service.value.ValueServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,6 +62,7 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
     private static final Logger log = Logger.getLogger(PointServletImpl.class.getName());
     private EntityService entityService;
     private CommonFactory  commonFactory;
+    private ValueServiceImpl valueService;
 
     @Override
     public void handleRequest(final HttpServletRequest req, final HttpServletResponse resp) {
@@ -208,9 +208,9 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
                 case list:
                     log.info("listing...");
                     EntityName parentName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
-                    List<Entity> result = EntityServiceFactory.getInstance().getEntityByName(user, parentName, EntityType.point);
+                    List<Entity> result = entityService.getEntityByName(user, parentName, EntityType.point);
                     if (! result.isEmpty())  {
-                        List<Entity> children = EntityServiceFactory.getInstance().getChildren(user, result.get(0), EntityType.point);
+                        List<Entity> children = entityService.getChildren(user, result.get(0), EntityType.point);
                         if (children.isEmpty()) {
                             log.info(parentName.getValue() + " had no children");
                         }
@@ -245,12 +245,12 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
         return sb.toString();
     }
 
-    private static void processGetRead(final StringBuilder sb, final String startParam, final String endParam, final String offsetParam, final String pointNameParam) throws NimbitsException {
+    private void processGetRead(final StringBuilder sb, final String startParam, final String endParam, final String offsetParam, final String pointNameParam) throws NimbitsException {
         if (containsParam(Parameters.uuid)) {
 
-            Entity entity =   EntityServiceFactory.getInstance().getEntityByKey(getParam(Parameters.uuid), EntityType.point).get(0);
+            Entity entity =   entityService.getEntityByKey(user, getParam(Parameters.uuid), EntityType.point).get(0);
             if (entity == null) {
-                entity=  EntityServiceFactory.getInstance().getEntityByKey(user, getParam(Parameters.uuid), EntityType.category).get(0);
+                entity=  entityService.getEntityByKey(user, getParam(Parameters.uuid), EntityType.category).get(0);
             }
             if (entity != null) {
                 if (entity.getEntityType().equals(EntityType.point)) {
@@ -259,14 +259,14 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
                 else {
                     if (okToReport(user, entity)) {
 
-                        final List<Entity> children = EntityServiceFactory.getInstance().getEntityChildren(user, entity, EntityType.point);
+                        final List<Entity> children = entityService.getEntityChildren(user, entity, EntityType.point);
                         final List<Point> points = new ArrayList<Point>(children.size());
 
 
                         for (final Entity e : children) {
                             final Point p = (Point) e;
                             p.setValues(getRecordedValues(getParam(Parameters.count), startParam, endParam, offsetParam, p));
-                            List<Value> values = ValueServiceFactory.getInstance().getCurrentValue(p);
+                            List<Value> values = valueService.getCurrentValue(p);
                             if (! values.isEmpty()) {
                                 p.setValue(values.get(0));
                             }
@@ -290,16 +290,16 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
         }
     }
 
-    private static Entity getParentWithParam(final EntityName name, final EntityType parentType, final User u) throws NimbitsException {
+    private Entity getParentWithParam(final EntityName name, final EntityType parentType, final User u) throws NimbitsException {
 
-        List<Entity> results = EntityServiceFactory.getInstance().getEntityByName(u, name, parentType);
+        List<Entity> results = entityService.getEntityByName(u, name, parentType);
 
         if (! results.isEmpty()) {
             return (results.get(0));
 
         }
         else {
-            List<Entity> user =  EntityServiceFactory.getInstance().getEntityByName(u, CommonFactoryLocator.getInstance().createName(u.getEmail().getValue(), EntityType.user), EntityType.user);
+            List<Entity> user =  entityService.getEntityByName(u, CommonFactoryLocator.getInstance().createName(u.getEmail().getValue(), EntityType.user), EntityType.user);
             if (user.isEmpty()) {
                 throw new NimbitsException("Error getting parent, this entity has no parent, not even a user!");
 
@@ -311,7 +311,7 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
 
     }
 
-    protected static Point createPoint(final User u, final EntityName pointName, final EntityName parentName, final EntityType parentType, String description) throws NimbitsException {
+    protected  Point createPoint(final User u, final EntityName pointName, final EntityName parentName, final EntityType parentType, String description) throws NimbitsException {
         final String parent;
         if (parentName != null) {
             final Entity category = getParentWithParam(parentName, parentType, u);
@@ -330,10 +330,10 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
 
 
 
-        return (Point) EntityServiceFactory.getInstance().addUpdateEntity(point);
+        return (Point) entityService.addUpdateEntity(point);
     }
 
-    private static Point createPointWithJson(final User u, final EntityName parentName, final EntityType parentType,  final String json) throws NimbitsException {
+    private Point createPointWithJson(final User u, final EntityName parentName, final EntityType parentType,  final String json) throws NimbitsException {
 
 
         final String parent;
@@ -351,34 +351,34 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
         point.setParent(parent);
 
 
-        return (Point) EntityServiceFactory.getInstance().addUpdateEntity(u, point);
+        return (Point) entityService.addUpdateEntity(u, point);
 
     }
 
-    private static Point updatePoint(final User u, final String json) throws NimbitsException {
+    private  Point updatePoint(final User u, final String json) throws NimbitsException {
         final Point point = gson.fromJson(json, PointModel.class);
-        return (Point) EntityServiceFactory.getInstance().addUpdateEntity(u, point);
+        return (Point) entityService.addUpdateEntity(u, point);
         //return PointServiceFactory.getInstance().updatePoint(u, point);
 
     }
 
-    private static void deletePoint(final User u, final String pointNameParam) throws NimbitsException {
+    private void deletePoint(final User u, final String pointNameParam) throws NimbitsException {
         final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
-        final List<Entity> entity = EntityServiceFactory.getInstance().getEntityByName(u, pointName,EntityType.point);
+        final List<Entity> entity = entityService.getEntityByName(u, pointName, EntityType.point);
         if (! entity.isEmpty()) {
-            EntityServiceFactory.getInstance().deleteEntity(u, entity.get(0));
+            entityService.deleteEntity(u, entity.get(0));
 
         }
     }
 
-    private static String outputPoint(final String countParam, final String format, final String startParam,
+    private  String outputPoint(final String countParam, final String format, final String startParam,
                                       final String endParam, final String offsetParam, final Entity baseEntity) throws NimbitsException {
 
 
         final Point p = (Point) baseEntity;
         p.setValues(getRecordedValues(countParam, startParam, endParam, offsetParam, baseEntity));
 
-        final List<Value> current = ValueServiceFactory.getInstance().getCurrentValue(p);
+        final List<Value> current = valueService.getCurrentValue(p);
         if (! current.isEmpty()) {
             p.setValue(current.get(0));
         }
@@ -393,7 +393,7 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
         return Utils.isEmptyString(format) ? ExportType.json : ExportType.valueOf(format);
     }
 
-    private static List<Value>  getRecordedValues(final String countParam, final String start, final String end, final String offsetParam, final Entity point) throws NimbitsException {
+    private  List<Value>  getRecordedValues(final String countParam, final String start, final String end, final String offsetParam, final Entity point) throws NimbitsException {
 
         if (!Utils.isEmptyString(countParam)) {
             int count;
@@ -405,13 +405,13 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
             if (count > 1000) {
                 count = 1000;
             }
-            return  ValueServiceFactory.getInstance().getTopDataSeries(point, count);
+            return  valueService.getTopDataSeries(point, count);
 
         } else if (!Utils.isEmptyString(start) && !Utils.isEmptyString(end) && !Utils.isEmptyString(end)) {
             final int offset = Integer.valueOf(offsetParam);
             final Timespan ts = TimespanServiceFactory.getInstance().createTimespan(start, end, offset);
 
-            return ValueServiceFactory.getInstance().getDataSegment(point, ts);
+            return valueService.getDataSegment(point, ts);
 
         } else {
             return new ArrayList<Value>(0);
@@ -419,23 +419,23 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
 
     }
 
-    protected static String getPointObjects(final String categoryNameParam, final String pointNameParam ) throws NimbitsException {
+    protected  String getPointObjects(final String categoryNameParam, final String pointNameParam ) throws NimbitsException {
 
         if (user != null) {
 
 
             if (!Utils.isEmptyString(pointNameParam)) {
                 final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
-                final List<Entity> result = EntityServiceFactory.getInstance().getEntityByName(user, pointName,EntityType.point);
+                final List<Entity> result = entityService.getEntityByName(user, pointName, EntityType.point);
                 return result.isEmpty() ? "Error calling " + "Point Service. " + pointNameParam + " not found" : GsonFactory.getInstance().toJson(result.get(0));
 
             } else if (!Utils.isEmptyString(categoryNameParam)) {
                 final EntityName categoryName = CommonFactoryLocator.getInstance().createName(categoryNameParam, EntityType.category);
-                final List<Entity> result = EntityServiceFactory.getInstance().getEntityByName(user, categoryName,EntityType.category) ;
+                final List<Entity> result = entityService.getEntityByName(user, categoryName, EntityType.category) ;
                 if (result.isEmpty()) {
                     return "Error calling " + "Point Service. " + categoryNameParam + " not found";
                 } else {
-                    final List<Entity> children = EntityServiceFactory.getInstance().getEntityChildren(user, result.get(0), EntityType.point);
+                    final List<Entity> children = entityService.getEntityChildren(user, result.get(0), EntityType.point);
                     return gson.toJson(children, GsonFactory.pointListType);
                 }
 
@@ -465,5 +465,13 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
 
     public CommonFactory getCommonFactory() {
         return commonFactory;
+    }
+
+    public void setValueService(ValueServiceImpl valueService) {
+        this.valueService = valueService;
+    }
+
+    public ValueServiceImpl getValueService() {
+        return valueService;
     }
 }

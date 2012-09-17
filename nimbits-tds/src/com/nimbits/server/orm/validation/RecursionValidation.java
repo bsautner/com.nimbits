@@ -19,8 +19,10 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.trigger.Trigger;
 import com.nimbits.client.model.user.User;
 import com.nimbits.server.orm.TriggerEntity;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+
+import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
 import com.nimbits.shared.Utils;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,15 +36,17 @@ import java.util.logging.Logger;
  * Date: 4/19/12
  * Time: 12:02 PM
  */
+@Component("recursionValidation")
 public class RecursionValidation {
     private static final int MAX_RECURSION = 10;
     private static final int INT = 1024;
     private static final Logger log = Logger.getLogger(RecursionValidation.class.getName());
+    private EntityServiceImpl entityService;
 
-    private RecursionValidation() {
+    public RecursionValidation() {
     }
 
-    public static void validate(Trigger entity) throws NimbitsException {
+    public void validate(final User user, final Trigger entity) throws NimbitsException {
 
         if (Utils.isEmptyString(entity.getTarget())) {
             throw new NimbitsException("Missing target");
@@ -51,7 +55,7 @@ public class RecursionValidation {
             throw new NimbitsException("Missing trigger");
         }
 
-        List<Entity> userList = EntityServiceFactory.getInstance().getEntityByKey(entity.getOwner(),EntityType.user);
+        List<Entity> userList = entityService.getEntityByKey(user,entity.getOwner(), EntityType.user);
 
         if (userList.isEmpty()){
             throw new NimbitsException("Could not locate the owner of this trigger with the key provided!");
@@ -64,7 +68,7 @@ public class RecursionValidation {
 
 
     }
-    private static void validateAgainstExisting(List<Entity> user, Trigger entity) throws NimbitsException {
+    private void validateAgainstExisting(List<Entity> user, Trigger entity) throws NimbitsException {
 
         Map<String, String> map = new HashMap<String, String>(INT);
         map.put(entity.getTrigger(), entity.getTarget());
@@ -74,7 +78,7 @@ public class RecursionValidation {
                 Class cls = Class.forName(type.getClassName());
 
                 if (cls.getSuperclass().equals(TriggerEntity.class)) {
-                    Map<String, Entity> all = EntityServiceFactory.getInstance().getEntityMap(
+                    Map<String, Entity> all = entityService.getEntityMap(
                             (User) user.get(0),
                             type,
                             1000);
@@ -122,6 +126,14 @@ public class RecursionValidation {
 
         }
 
+    }
+
+    public void setEntityService(EntityServiceImpl entityService) {
+        this.entityService = entityService;
+    }
+
+    public EntityServiceImpl getEntityService() {
+        return entityService;
     }
 }
 

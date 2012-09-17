@@ -73,7 +73,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
     private TwitterServiceAsync twitterService;
 
     private boolean isDomain;
-
+    private User user;
     @Override
     public void onModuleLoad() {
 
@@ -169,7 +169,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
     public void showSubscriptionPanel(final User user, final String uuid, final Map<SettingType, String> settings) {
 
 
-        entityService.getEntityByKey(uuid, EntityType.point , new SubscriptionPanelAsyncCallback(user, settings));
+        entityService.getEntityByKey(user, uuid, EntityType.point , new SubscriptionPanelAsyncCallback(user, settings));
     }
 
     private void loadLogin(Map<SettingType, String> settings) {
@@ -346,7 +346,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
             contentPanel.setFrame(false);
 
 
-            final DiagramPanel diagramPanel = new DiagramPanel(diagram, false);
+            final DiagramPanel diagramPanel = new DiagramPanel(user,  diagram, false);
 
             diagramPanel.setHeight("100%");
             contentPanel.add(diagramPanel);
@@ -443,7 +443,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         }
         private void finishTwitterAuthentication(final Map<SettingType, String> settings, final String oauth_token, final Action action) {
 
-            twitterService.updateUserToken(oauth_token,
+            twitterService.updateUserToken(user, oauth_token,
                     new FinishTwitterAsyncCallback(action, settings));
 
         }
@@ -451,7 +451,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
 
 
-            entityService.getEntityByKey(uuid,EntityType.point , new GetEntityListAsyncCallback(uuid));
+            entityService.getEntityByKey(user, uuid,EntityType.point , new GetEntityListAsyncCallback(uuid));
 
 
 

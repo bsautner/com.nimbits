@@ -49,9 +49,12 @@ import com.nimbits.server.admin.quota.QuotaFactory;
 import com.nimbits.server.api.openid.UserInfo;
 import com.nimbits.server.communication.email.EmailServiceFactory;
 import com.nimbits.server.settings.SettingsServiceFactory;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
-import com.nimbits.server.transactions.service.feed.FeedServiceFactory;
-import com.nimbits.server.transactions.service.value.ValueServiceFactory;
+import com.nimbits.server.transactions.dao.user.UserDAOImpl;
+import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
+import com.nimbits.server.transactions.service.feed.FeedImpl;
+import com.nimbits.server.transactions.service.value.ValueServiceImpl;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -59,7 +62,8 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.logging.Logger;
 
-
+@Service("userService")
+@Transactional
 public class UserServiceImpl extends RemoteServiceServlet implements
         UserService, UserServerService {
     private static final long serialVersionUID = 1L;
@@ -75,6 +79,11 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     public static final String QUOTA_EXCEEDED_DESC = "This is an alert that notifies you when you've exceeded your set quota for the day.";
     public static final String ZERO_BALANCE_DESC = "This is an alert that notifies you when your account balance is at zero";
     public static final String ACCOUNT_FUNDED_DESC = "This is an alert that notifies you when your account is funded.";
+
+    private EntityServiceImpl entityService;
+    private FeedImpl feedService;
+    private ValueServiceImpl valueService;
+    private UserDAOImpl userDao;
 
 
     @Override
@@ -132,7 +141,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         boolean anonRequest = false;
 
         if (! Utils.isEmptyString(uuid) && email==null) { //a request with just a uuid must be public
-            List<Entity> anon = EntityServiceFactory.getInstance().findEntityByKey(uuid);
+            List<Entity> anon = entityService.findEntityByKey(getAnonUser(),  uuid);
             anonRequest = true;
             if (! anon.isEmpty()) {
 
@@ -154,8 +163,8 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
 
 
-            final List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(
-                    com.nimbits.server.transactions.service.user.UserServiceFactory.getServerInstance().getAdmin(), //avoid infinite recursion
+            final List<Entity> result = entityService.getEntityByKey(
+                     getAdmin(), //avoid infinite recursion
                     email.getValue(), EntityType.user);
 
 
@@ -185,7 +194,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
                 if (! anonRequest) {
                     if (!Utils.isEmptyString(accessKey)) {
                         //all we have is an email of an existing user, let's see what they can do.
-                        final Map<String, Entity> keys = EntityServiceFactory.getInstance().getEntityMap(user, EntityType.accessKey, 1000);
+                        final Map<String, Entity> keys = entityService.getEntityMap(user, EntityType.accessKey, 1000);
                         for (final Entity k : keys.values()) {
                             if (((AccessKey)k).getCode().equals(accessKey)) {
                                 user.addAccessKey((AccessKey) k);
@@ -223,7 +232,10 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         final User retObj;
         EmailAddress internetAddress = null;
         boolean isAdmin = false;
-        UserInfo domainUser = (UserInfo) this.getThreadLocalRequest().getSession().getAttribute("user");
+        UserInfo domainUser=null;
+        if (this.getThreadLocalRequest() != null) {
+            domainUser = (UserInfo) this.getThreadLocalRequest().getSession().getAttribute("user");
+        }
         final com.google.appengine.api.users.UserService userService = UserServiceFactory.getUserService();
 
         if (domainUser != null) {
@@ -241,14 +253,14 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
         if (internetAddress != null) {
 
-            final List<Entity> list =   EntityServiceFactory.getInstance()
+            final List<Entity> list =   entityService
                     .getEntityByKey(
-                            com.nimbits.server.transactions.service.user.UserServiceFactory.getServerInstance().getAnonUser(), internetAddress.getValue(),EntityType.user);
+                             getAnonUser(), internetAddress.getValue(), EntityType.user);
 
 
             if (list.isEmpty()) {
                 LogHelper.log(this.getClass(), "Created a new user");
-                retObj = com.nimbits.server.transactions.service.user.UserServiceFactory.getServerInstance().createUserRecord(internetAddress);
+                retObj =  createUserRecord(internetAddress);
                 // sendUserCreatedFeed(u);
                 // sendWelcomeFeed(u);
             }
@@ -263,7 +275,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
             retObj.setLogoutUrl(userService.createLogoutURL(requestUri));
 
             retObj.setLastLoggedIn(new Date());
-            EntityServiceFactory.getInstance().addUpdateEntity(retObj, retObj);
+            entityService.addUpdateEntity(retObj, retObj);
             retObj.addAccessKey(authenticatedKey(retObj));
 
 
@@ -291,7 +303,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     public List<Point> getAccountBalance() throws NimbitsException {
         User user= getHttpRequestUser(this.getThreadLocalRequest());
         Point accountBalance = getAccountBalancePoint(user);
-        List<Value> valueSample =  ValueServiceFactory.getInstance().getCurrentValue(accountBalance);
+        List<Value> valueSample =  valueService.getCurrentValue(accountBalance);
         if (valueSample.isEmpty()) {
             accountBalance.setValue(ValueFactory.createValueModel(0.0));
         }
@@ -306,8 +318,8 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
     private Point getAccountBalancePoint(User user) throws NimbitsException {
         EntityName name = CommonFactoryLocator.getInstance().createName(Const.ACCOUNT_BALANCE, EntityType.point);
-        List<Entity> account = EntityServiceFactory.getInstance().getEntityByName(user,
-         name, EntityType.point);
+        List<Entity> account = entityService.getEntityByName(user,
+                name, EntityType.point);
         Point accountBalance;
         if (account.isEmpty()) {
             accountBalance =  createAccountBalancePoint(user);
@@ -321,7 +333,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     @Override
     public void updateBilling(User user, boolean billingEnabled, double maxQuota) throws NimbitsException {
          user.setBillingEnabled(billingEnabled);
-         EntityServiceFactory.getInstance().addUpdateEntity(user, user);
+         entityService.addUpdateEntity(user, user);
 
          Point accountBalance = getAccountBalancePoint(user);
          accountBalance.setDeltaAlarm(maxQuota);
@@ -336,11 +348,16 @@ public class UserServiceImpl extends RemoteServiceServlet implements
              accountBalance.setLowAlarmOn(false);
 
          }
-        EntityServiceFactory.getInstance().addUpdateEntity(user, accountBalance);
+        entityService.addUpdateEntity(user, accountBalance);
         addUpdateAccountBalanceSubscriptions(user, accountBalance);
 
 
 
+    }
+
+    @Override
+    public List<User> getAllUsers(String s, int count) {
+        return null;
     }
 
     private void addUpdateBillingSubscription(final User user,
@@ -352,7 +369,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
                                               final int maxRepeat) throws NimbitsException {
         EntityName name = CommonFactoryLocator.getInstance().createName(entityName, EntityType.subscription);
 
-        List<Entity> sample = EntityServiceFactory.getInstance().getEntityByName(user,
+        List<Entity> sample = entityService.getEntityByName(user,
                 name, EntityType.subscription);
 
         Subscription subscription;
@@ -362,7 +379,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         else {
             subscription = (Subscription) sample.get(0);
             subscription.setEnabled(billingEnabled);
-            EntityServiceFactory.getInstance().addUpdateEntity(user, subscription);
+            entityService.addUpdateEntity(user, subscription);
         }
     }
     private Subscription createBillingSubscription(
@@ -377,7 +394,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
                 accountBalancePoint.getKey(), user.getKey());
         Subscription subscription = SubscriptionFactory.createSubscription(quotaEntity, accountBalancePoint.getKey(),
                 type, SubscriptionNotifyMethod.email, maxRepeat, new Date(), false,user.isBillingEnabled());
-        return (Subscription) EntityServiceFactory.getInstance().addUpdateEntity(user, subscription);
+        return (Subscription) entityService.addUpdateEntity(user, subscription);
     }
 
 
@@ -400,12 +417,12 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
         final com.nimbits.client.model.user.User newUser = UserModelFactory.createUserModel(entity);
         // newUser.setSecret(UUID.randomUUID().toString());
-        User user =  (User) EntityServiceFactory.getInstance().addUpdateEntity(newUser);
+        User user =  (User) entityService.addUpdateEntity(newUser);
 
         if (SettingsServiceFactory.getInstance().getBooleanSetting(SettingType.billingEnabled)) {
             createAccountBalancePoint(user);
         }
-        FeedServiceFactory.getInstance().createFeedPoint(user);
+        feedService.createFeedPoint(user);
 
         return user;
 
@@ -424,7 +441,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
                 entity, 0.0, EXPIRE, UNIT, 0.0, false, false, false, 0, false, FilterType.floor, 0.0,
                 false, PointType.accountBalance, 86400, false, 0.0);
         log.info("Creating account balance point");
-        final Point accountBalance =  (Point) EntityServiceFactory.getInstance().addUpdateEntity(user, point);
+        final Point accountBalance =  (Point) entityService.addUpdateEntity(user, point);
         addUpdateAccountBalanceSubscriptions(user, accountBalance);
 
         return accountBalance;
@@ -441,7 +458,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     public void fundAccount(final User user, final BigDecimal amount) throws NimbitsException {
 
         final EntityName name = CommonFactoryLocator.getInstance().createName(Const.ACCOUNT_BALANCE, EntityType.point);
-        final List<Entity> accountPointSample = EntityServiceFactory.getInstance().getEntityByName(user, name, EntityType.point);
+        final List<Entity> accountPointSample = entityService.getEntityByName(user, name, EntityType.point);
         final Point account;
         if (accountPointSample.isEmpty()) {
             account = createAccountBalancePoint(user);
@@ -449,7 +466,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         else {
             account = (Point) accountPointSample.get(0);
         }
-        List<Value> currentValueSample = ValueServiceFactory.getInstance().getCurrentValue(account);
+        List<Value> currentValueSample = valueService.getCurrentValue(account);
         if (currentValueSample.isEmpty()) {
 
             Calendar c = Calendar.getInstance();
@@ -457,12 +474,12 @@ public class UserServiceImpl extends RemoteServiceServlet implements
             Value value = ValueFactory.createValueModel(amount.doubleValue(), c.getTime() );
 
 
-            ValueServiceFactory.getInstance().recordValue(user,account, value);
+            valueService.recordValue(user, account, value);
         }
         else {
             Value currentValue = currentValueSample.get(0);
             Value value = ValueFactory.createValueModel(currentValue.getDoubleValue() + amount.doubleValue() );
-            ValueServiceFactory.getInstance().recordValue(user,account, value);
+            valueService.recordValue(user, account, value);
         }
 
 
@@ -517,7 +534,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         User retObj = null;
         if (u.getCurrentUser() != null) {
             final EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(u.getCurrentUser().getEmail());
-            List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(emailAddress.getValue(), EntityType.user);
+            List<Entity> result = entityService.getEntityByKey(getAnonUser(), emailAddress.getValue(), EntityType.user);
             if (! result.isEmpty()) {
                 retObj = (User) result.get(0);
             }
@@ -529,7 +546,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public User getUserByKey(final String key, AuthLevel authLevel) throws NimbitsException {
-        List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(key, EntityType.user);
+        List<Entity> result = entityService.getEntityByKey(getAnonUser(), key, EntityType.user);
         if (result.isEmpty()) {
             throw new NimbitsException(UserMessages.ERROR_USER_NOT_FOUND);
         } else {
@@ -545,12 +562,12 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     @Override
     public void sendConnectionRequest(final EmailAddress email) throws NimbitsException {
         final User user = getAppUserUsingGoogleAuth();
-        final ConnectionRequest f = UserTransactionFactory.getInstance().makeConnectionRequest(user, email);
+        final ConnectionRequest f = userDao.makeConnectionRequest(user, email);
 
 
         if (f != null) {
             EmailServiceFactory.getInstance().sendEmail(email,  getConnectionInviteEmail(user.getEmail()));
-            FeedServiceFactory.getInstance().postToFeed(user, "A connection request has been emailed to " +
+            feedService.postToFeed(user, "A connection request has been emailed to " +
                     email.getValue() + ". If they approve, you will see any data object of theirs that have " +
                     "their permission set to be viewable by the public or connections", FeedType.info);
 
@@ -626,12 +643,12 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public List<ConnectionRequest> getPendingConnectionRequests(final EmailAddress email) throws NimbitsException {
-        return UserTransactionFactory.getInstance().getPendingConnectionRequests(email);
+        return userDao.getPendingConnectionRequests(email);
     }
 
     @Override
     public List<User> getConnectionRequests(final List<String> connections) throws NimbitsException {
-        return UserTransactionFactory.getInstance().getConnectionRequests(connections);
+        return userDao.getConnectionRequests(connections);
     }
 
     @Override
@@ -640,7 +657,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
                                        final Long key,
                                        final boolean accepted) throws NimbitsException {
         final User acceptor = getAppUserUsingGoogleAuth();
-        List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(requesterEmail.getValue(),EntityType.user);
+        List<Entity> result = entityService.getEntityByKey(getAnonUser(), requesterEmail.getValue(), EntityType.user);
 
         if (result.isEmpty()) {
             throw new NimbitsException(UserMessages.ERROR_USER_NOT_FOUND);
@@ -652,9 +669,9 @@ public class UserServiceImpl extends RemoteServiceServlet implements
             final Entity aConnection = EntityModelFactory.createEntity(r, "", EntityType.userConnection, ProtectionLevel.onlyMe, acceptor.getKey(), acceptor.getKey(), UUID.randomUUID().toString());
             Connection ac = ConnectionFactory.createCreateConnection(aConnection);
             Connection rc = ConnectionFactory.createCreateConnection(rConnection);
-            EntityServiceFactory.getInstance().addUpdateEntity(acceptor, ac);
-            EntityServiceFactory.getInstance().addUpdateEntity(requester,rc);
-            UserTransactionFactory.getInstance().updateConnectionRequest(key, requester, acceptor, accepted);
+            entityService.addUpdateEntity(acceptor, ac);
+            entityService.addUpdateEntity(requester, rc);
+            userDao.updateConnectionRequest(key, requester, acceptor, accepted);
 
         }
 
@@ -666,4 +683,35 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     }
 
 
+    public void setEntityService(EntityServiceImpl entityService) {
+        this.entityService = entityService;
+    }
+
+    public EntityServiceImpl getEntityService() {
+        return entityService;
+    }
+
+    public void setFeedService(FeedImpl feedService) {
+        this.feedService = feedService;
+    }
+
+    public FeedImpl getFeedService() {
+        return feedService;
+    }
+
+    public void setValueService(ValueServiceImpl valueService) {
+        this.valueService = valueService;
+    }
+
+    public ValueServiceImpl getValueService() {
+        return valueService;
+    }
+
+    public void setUserDao(UserDAOImpl userDao) {
+        this.userDao = userDao;
+    }
+
+    public UserDAOImpl getUserDao() {
+        return userDao;
+    }
 }

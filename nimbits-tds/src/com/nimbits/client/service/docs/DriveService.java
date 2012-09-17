@@ -25,7 +25,7 @@ import com.nimbits.client.model.entity.Entity;
  * Time: 3:21 PM
  */
 
-@RemoteServiceRelativePath("drive")
+@RemoteServiceRelativePath("driveService")
 public interface DriveService extends RemoteService {
     String createGoogleDoc(Entity entity, String title) throws NimbitsException;
 

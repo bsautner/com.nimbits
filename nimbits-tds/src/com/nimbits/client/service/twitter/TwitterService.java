@@ -19,12 +19,12 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.user.User;
 
-@RemoteServiceRelativePath("twitter")
+@RemoteServiceRelativePath("twitterService")
 public interface TwitterService extends RemoteService {
     // public void updateStatus( String code, String message);
     String twitterAuthorise(final EmailAddress email) throws NimbitsException;
 
-    void updateUserToken(final String oauth_token) throws NimbitsException;
+    void updateUserToken(final User user, final String oauth_token) throws NimbitsException;
 
     void sendTweet(final User user, final String message) ;
 }

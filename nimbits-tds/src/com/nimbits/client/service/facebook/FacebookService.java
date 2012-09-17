@@ -26,7 +26,7 @@ import java.io.UnsupportedEncodingException;
  * Date: 4/13/11
  * Time: 12:28 PM
  */
-@RemoteServiceRelativePath("facebook")
+@RemoteServiceRelativePath("facebookService")
 public interface FacebookService extends RemoteService {
     EmailAddress facebookLogin(final String code) throws UnsupportedEncodingException, NimbitsException;
 

@@ -27,7 +27,7 @@ import com.nimbits.client.model.value.Value;
  * Date: 2/18/12
  * Time: 12:20 PM
  */
-@RemoteServiceRelativePath("calculation")
+@RemoteServiceRelativePath("calculationService")
 public interface CalculationService  extends RemoteService {
 
 

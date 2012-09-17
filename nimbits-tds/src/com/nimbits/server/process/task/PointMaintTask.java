@@ -23,28 +23,33 @@ import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 import com.nimbits.server.admin.common.ServerInfoImpl;
 import com.nimbits.server.admin.logging.LogHelper;
-import com.nimbits.server.admin.system.SystemServiceFactory;
+import com.nimbits.server.admin.system.SystemServiceImpl;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.transactions.service.value.ValueTransactionFactory;
+import com.nimbits.server.transactions.service.value.ValueServiceImpl;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class PointMaintTask extends HttpServlet {
+@Service("pointTask")
+@Transactional
+public class PointMaintTask extends HttpServlet  implements org.springframework.web.HttpRequestHandler{
 
     private static final long serialVersionUID = 1L;
     private static final Logger log = Logger.getLogger(PointMaintTask.class.getName());
+    private SystemServiceImpl systemService;
+    private ValueServiceImpl valueService;
 
 
     @Override
-    public void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
+    public void handleRequest(final HttpServletRequest req, final HttpServletResponse resp) {
 
         try {
             processPost(req);
@@ -56,7 +61,7 @@ public class PointMaintTask extends HttpServlet {
     }
 
 
-    protected static void processPost(final HttpServletRequest req) throws NimbitsException {
+    protected void processPost(final HttpServletRequest req) throws NimbitsException {
 
 
         final String j = req.getParameter(Parameters.json.getText());
@@ -74,8 +79,8 @@ public class PointMaintTask extends HttpServlet {
 
 
 
-    protected  static void consolidateBlobs(final Entity e) throws NimbitsException {
-        final List<ValueBlobStore> stores = ValueTransactionFactory.getDaoInstance(e).getAllStores();
+    protected  void consolidateBlobs(final Entity entity) throws NimbitsException {
+        final List<ValueBlobStore> stores =valueService.getAllStores(entity);
         if (! stores.isEmpty()) {
 
             log.info("Consolidating " + stores.size() + " blob stores");
@@ -93,14 +98,29 @@ public class PointMaintTask extends HttpServlet {
                     dates.add(store.getTimestamp().getTime());
                 }
             }
-            SystemServiceFactory.getInstance().updateSystemPoint("Fragmented Dates Merges By Point Maint", dupDates.size(), false, PointType.backend);
+            systemService.updateSystemPoint("Fragmented Dates Merges By Point Maint", dupDates.size(), false, PointType.backend);
             for (Long l : dupDates) {
-               ValueTransactionFactory.getDaoInstance(e).consolidateDate(new Date(l));
+                valueService.consolidateDate(entity, new Date(l));
 
             }
         }
     }
 
 
+    public void setSystemService(SystemServiceImpl systemService) {
+        this.systemService = systemService;
+    }
+
+    public SystemServiceImpl getSystemService() {
+        return systemService;
+    }
+
+    public void setValueService(ValueServiceImpl valueService) {
+        this.valueService = valueService;
+    }
+
+    public ValueServiceImpl getValueService() {
+        return valueService;
+    }
 }
 

@@ -21,6 +21,7 @@ import com.nimbits.server.settings.SettingTransactionsFactory;
 import net.sf.jsr107cache.Cache;
 import net.sf.jsr107cache.CacheException;
 import net.sf.jsr107cache.CacheManager;
+import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.Map;
@@ -32,6 +33,7 @@ import java.util.Map;
  * Time: 10:44 AM
  */
 @SuppressWarnings("unchecked")
+@Component("settingsCache")
 public class SettingMemCacheImpl implements SettingTransactions {
     Cache cache;
 

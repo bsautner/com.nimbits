@@ -24,13 +24,17 @@ import com.nimbits.client.model.timespan.TimespanModelFactory;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
+import com.nimbits.client.service.entity.EntityService;
+import com.nimbits.client.service.value.ValueService;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.transactions.service.entity.EntityTransactionFactory;
-import com.nimbits.server.transactions.service.value.ValueServiceFactory;
-import com.nimbits.server.transactions.service.value.ValueTransactionFactory;
-import org.junit.Test;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import javax.annotation.Resource;
 import java.util.*;
 
 import static junit.framework.Assert.assertEquals;
@@ -38,28 +42,36 @@ import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 4/7/12
- * Time: 9:28 AM
- */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={
+        "classpath:META-INF/applicationContext.xml"
+})
 public class PointMaintTaskTest extends NimbitsServletTest {
 
+
+    @Resource(name="pointTask")
+    PointMaintTask pointTask;
+
+    @Resource(name="valueService")
+    ValueService valueService;
+
+
+    @Resource(name="entityService")
+    EntityService entityService;
 
     private static final double DELTA = .001;
 
     @Test
     public void testGet() throws NimbitsException {
 
-        final Map<String,Entity> e = EntityTransactionFactory.getDaoInstance(user).getSystemWideEntityMap(EntityType.point);
+        final Map<String,Entity> e = entityService.getSystemWideEntityMap(user, EntityType.point);
         assertTrue(!e.isEmpty());
 
         for (final Entity en : e.values()) {
             final String j = GsonFactory.getInstance().toJson(en);
             req.setParameter(Parameters.json.getText(), j);
             assertNotNull(req.getParameter(Parameters.json.getText()));
-            PointMaintTask.processPost(req);
+            pointTask.processPost(req);
 
         }
 
@@ -95,7 +107,7 @@ public class PointMaintTaskTest extends NimbitsServletTest {
 
           lt = mt.getTimestamp().getTime();
           Thread.sleep(25);
-          ValueTransactionFactory.getInstance(point).recordValues(values);
+          valueService.recordValues(user, point, values);
           sum += v;
       }
         Iterator<BlobInfo> iterator = new BlobInfoFactory().queryBlobInfos();
@@ -108,7 +120,7 @@ public class PointMaintTaskTest extends NimbitsServletTest {
         }
         assertEquals(runs, count);  //prove a file was stored for each record
 
-       PointMaintTask.consolidateBlobs(point);
+        pointTask.consolidateBlobs(point);
 
         Iterator<BlobInfo> iterator2 = new BlobInfoFactory().queryBlobInfos();
         assertTrue(iterator2.hasNext());
@@ -120,7 +132,7 @@ public class PointMaintTaskTest extends NimbitsServletTest {
         }
 //        assertEquals(1, count2);  //prove all data was consolidated into one file
 
-        List<Value> fResults = ValueTransactionFactory.getInstance(point).getTopDataSeries(runs);
+        List<Value> fResults = valueService.getTopDataSeries(point, runs);
         assertEquals(runs, fResults.size());
         double result = 0.0;
 
@@ -155,7 +167,7 @@ public class PointMaintTaskTest extends NimbitsServletTest {
 
             lt = mt.getTimestamp().getTime();
             c.add(Calendar.SECOND, 1);
-            ValueTransactionFactory.getInstance(point).recordValues(values);
+            valueService.recordValues(user, point, values);
             sum += v;
         }
 
@@ -171,7 +183,7 @@ public class PointMaintTaskTest extends NimbitsServletTest {
 
             lt = mt.getTimestamp().getTime();
 
-            ValueTransactionFactory.getInstance(point).recordValues(values);
+            valueService.recordValues(user, point, values);
             sum += v;
             mostRecent = v;
         }
@@ -187,7 +199,7 @@ public class PointMaintTaskTest extends NimbitsServletTest {
         }
         assertEquals(runs << 1, count);  //prove a file was stored for each record
 
-          PointMaintTask.consolidateBlobs(point);
+        pointTask.consolidateBlobs(point);
 
         Iterator<BlobInfo> iterator2 = new BlobInfoFactory().queryBlobInfos();
         assertTrue(iterator2.hasNext());
@@ -199,7 +211,7 @@ public class PointMaintTaskTest extends NimbitsServletTest {
         }
 //        assertEquals(2, count2);  //prove all data was consolidated into one file
         Timespan ts = TimespanModelFactory.createTimespan(sd, c.getTime());
-        List<Value> fResults = ValueTransactionFactory.getInstance(point).getDataSegment(ts);
+        List<Value> fResults = valueService.getDataSegment(point, ts);
         assertEquals(runs << 1, fResults.size());
         double result = 0.0;
 
@@ -208,11 +220,11 @@ public class PointMaintTaskTest extends NimbitsServletTest {
         }
         assertEquals(sum, result, DELTA);    //proves no data was lost
 
-        List<ValueBlobStore> stores = ValueTransactionFactory.getInstance(point).getAllStores();
+        List<ValueBlobStore> stores = valueService.getAllStores(point);
 
 
 
-        ValueTransactionFactory.getInstance(point).mergeTimespan(ts);
+        valueService.mergeTimespan(point, ts);
 
         Iterator<BlobInfo> iterator4 = new BlobInfoFactory().queryBlobInfos();
         assertTrue(iterator4.hasNext());
@@ -223,13 +235,13 @@ public class PointMaintTaskTest extends NimbitsServletTest {
 
         }
 //        assertEquals(1, count4);  //prove all data was consolidated into one file
-        List<Value> postResults = ValueTransactionFactory.getInstance(point).getDataSegment(ts);
+        List<Value> postResults = valueService.getDataSegment(point, ts);
         double ss = 0;
         for (Value p : postResults) {
                   ss+= p.getDoubleValue();
         }
         assertEquals(sum, ss,DELTA);
-        List<Value> current = ValueServiceFactory.getInstance().getCurrentValue(point);
+        List<Value> current =valueService.getCurrentValue(point);
         assertEquals(c.getTime().getTime(), current.get(0).getTimestamp().getTime());
         assertEquals(mostRecent, current.get(0).getDoubleValue(), DELTA);
     }

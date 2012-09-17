@@ -29,8 +29,7 @@ import com.nimbits.client.model.file.File;
 import com.nimbits.client.model.file.FileFactory;
 import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
-import com.nimbits.server.transactions.service.feed.FeedServiceFactory;
+import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,6 +52,7 @@ import java.util.Map;
 @Service("blobApi")
 public class BlobServletImpl extends ApiServlet {
     private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+    private EntityServiceImpl entityService;
 
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
@@ -88,7 +88,7 @@ public class BlobServletImpl extends ApiServlet {
             }
             else if (entityId != null) {
 
-                List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(user, entityId, EntityType.file);
+                List<Entity> result = entityService.getEntityByKey(user, entityId, EntityType.file);
                 if (! result.isEmpty()) {
                     file = (File) result.get(0);
                 }
@@ -99,7 +99,7 @@ public class BlobServletImpl extends ApiServlet {
             }
             if (file != null) {
                 file.setBlobKey(blobKey.getKeyString());
-                Entity response = EntityServiceFactory.getInstance().addUpdateEntity(user, file);
+                Entity response = entityService.addUpdateEntity(user, file);
                 String json = GsonFactory.getInstance().toJson(response);
                 res.setContentType("text/plain");
                 res.setStatus(HttpServletResponse.SC_OK);
@@ -110,7 +110,7 @@ public class BlobServletImpl extends ApiServlet {
 
         } catch (NimbitsException e) {
             if (user != null) {
-                FeedServiceFactory.getInstance().postToFeed(user, e);
+
             }
         }
 
@@ -123,4 +123,11 @@ public class BlobServletImpl extends ApiServlet {
         blobstoreService.serve(blobKey, res);
     }
 
+    public void setEntityService(EntityServiceImpl entityService) {
+        this.entityService = entityService;
+    }
+
+    public EntityServiceImpl getEntityService() {
+        return entityService;
+    }
 }

@@ -36,6 +36,7 @@ import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.file.File;
 import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.entity.EntityServiceAsync;
@@ -69,14 +70,15 @@ public class DiagramPanel extends LayoutContainer {
     //private final Set<EntityName> pointsInDiagram = new HashSet<EntityName>();
     private final Set<EntityName> diagramsInDiagram = new HashSet<EntityName>(10);
     private final Map<String, String> originalFill = new HashMap<String, String>(10);
-
+    final User user;
 
     private final Entity diagram;
 
 
 
-    public DiagramPanel(final File aDiagram, boolean showHeader) {
+    public DiagramPanel(final User user, final File aDiagram, boolean showHeader) {
         final FlowPanel imagePanel = new FlowPanel();
+        this.user = user;
         final String resourceUrl = Path.PATH_BLOB_SERVICE + '?' + Parameters.blobkey.getText() + '=' + aDiagram.getBlobKey();
         this.diagram = aDiagram;
         ContentPanel mainPanel = new ContentPanel();
@@ -419,7 +421,7 @@ public class DiagramPanel extends LayoutContainer {
 
                 }
                 EntityServiceAsync service = GWT.create(EntityService.class);
-                service.getEntityByKey(entity.getKey(), EntityType.point,  new AsyncCallback<List<Entity>>() {
+                service.getEntityByKey(user, entity.getKey(), EntityType.point,  new AsyncCallback<List<Entity>>() {
 
                     @Override
                     public void onFailure(Throwable caught) {
@@ -610,7 +612,7 @@ public class DiagramPanel extends LayoutContainer {
             final Value result = results.get(0);
 
                 EntityServiceAsync service = GWT.create(EntityService.class);
-                service.getEntityByKey(entity.getKey(), EntityType.point , new AsyncCallback<List<Entity>>() {
+                service.getEntityByKey(user, entity.getKey(), EntityType.point , new AsyncCallback<List<Entity>>() {
 
                     @Override
                     public void onFailure(Throwable caught) {
@@ -794,7 +796,7 @@ public class DiagramPanel extends LayoutContainer {
             final Entity entity = pointEntityMap.get(pointName);
 
             EntityServiceAsync service = GWT.create(EntityService.class);
-            service.getEntityByKey(entity.getKey(), EntityType.point, new AsyncCallback<List<Entity>>() {
+            service.getEntityByKey(user, entity.getKey(), EntityType.point, new AsyncCallback<List<Entity>>() {
                 @Override
                 public void onFailure(Throwable caught) {
                     //auto generated

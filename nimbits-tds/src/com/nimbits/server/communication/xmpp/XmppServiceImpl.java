@@ -30,20 +30,29 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.xmpp.XmppResource;
 import com.nimbits.client.model.xmpp.XmppResourceFactory;
 import com.nimbits.client.service.xmpp.XMPPService;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
-import com.nimbits.server.transactions.service.user.UserServiceFactory;
+
+import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
+
+import com.nimbits.server.transactions.service.user.UserServiceImpl;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
 
+@Service("xmppService")
+@Transactional
 public class XmppServiceImpl extends RemoteServiceServlet implements XMPPService {
 
    // private static final Logger log = Logger.getLogger(XmppServiceImpl.class.getName());
 
     private static final long serialVersionUID = 1L;
+    private EntityServiceImpl entityService;
+    private UserServiceImpl userService;
+
     private User getUser() {
         try {
-            return UserServiceFactory.getServerInstance().getHttpRequestUser(
+            return userService.getHttpRequestUser(
                     this.getThreadLocalRequest());
         } catch (NimbitsException e) {
             return null;
@@ -73,9 +82,9 @@ public class XmppServiceImpl extends RemoteServiceServlet implements XMPPService
     }
 
     @Override
-    public void sendMessage(final List<XmppResource> resources, final String message, final EmailAddress email) throws NimbitsException {
+    public void sendMessage(final User user, final List<XmppResource> resources, final String message, final EmailAddress email) throws NimbitsException {
         for (XmppResource resource : resources) {
-            List<Entity> entity = EntityServiceFactory.getInstance().getEntityByKey(resource.getKey(),EntityType.point);
+            List<Entity> entity = entityService.getEntityByKey(user, resource.getKey(), EntityType.point);
             if (! entity.isEmpty()) {
                 JID jid = new JID(email.getValue() + '/' + entity.get(0).getName().getValue());
                 send(message, jid);
@@ -103,7 +112,7 @@ public class XmppServiceImpl extends RemoteServiceServlet implements XMPPService
                     targetPointEntity.getKey(),getUser().getKey() , UUID.randomUUID().toString());
 
             XmppResource resource = XmppResourceFactory.createXmppResource(entity, targetPointEntity.getKey());
-           EntityServiceFactory.getInstance().addUpdateEntity(u, resource);
+           entityService.addUpdateEntity(u, resource);
             return resource;
         }
         else {
@@ -116,7 +125,7 @@ public class XmppServiceImpl extends RemoteServiceServlet implements XMPPService
     @Override
     public void sendInvite() throws NimbitsException {
 
-        final User u = UserServiceFactory.getServerInstance().getHttpRequestUser(
+        final User u = userService.getHttpRequestUser(
                 this.getThreadLocalRequest());
 
         final JID jid = new JID(u.getEmail().getValue());
@@ -126,4 +135,19 @@ public class XmppServiceImpl extends RemoteServiceServlet implements XMPPService
 
     }
 
+    public void setEntityService(EntityServiceImpl entityService) {
+        this.entityService = entityService;
+    }
+
+    public EntityServiceImpl getEntityService() {
+        return entityService;
+    }
+
+    public void setUserService(UserServiceImpl userService) {
+        this.userService = userService;
+    }
+
+    public UserServiceImpl getUserService() {
+        return userService;
+    }
 }

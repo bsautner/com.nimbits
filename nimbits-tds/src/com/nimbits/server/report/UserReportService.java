@@ -17,9 +17,10 @@ import com.nimbits.client.common.Utils;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.user.User;
+import com.nimbits.client.service.user.UserService;
 import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.admin.quota.QuotaFactory;
-import com.nimbits.server.transactions.service.user.UserTransactionFactory;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -34,9 +35,12 @@ import java.util.List;
  * Date: 8/17/11
  * Time: 4:21 PM
  */
+@Service("userReportService")
 public class UserReportService extends HttpServlet {
 
     private static final int INT = 60;
+
+    UserService userService;
 
     @Override
     public void doGet(final HttpServletRequest req,final HttpServletResponse resp) throws IOException {
@@ -53,7 +57,7 @@ public class UserReportService extends HttpServlet {
 
         if (Utils.isEmptyString(email)) {
 
-            final List<User> users = UserTransactionFactory.getInstance().getAllUsers("lastLoggedIn desc", count);
+            final List<User> users =userService.getAllUsers("lastLoggedIn desc", count);
 
 
             out.println("<p>Total number of users: " + users.size() + "</p>");

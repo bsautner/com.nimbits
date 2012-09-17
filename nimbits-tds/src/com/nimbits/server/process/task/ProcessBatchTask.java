@@ -32,9 +32,11 @@ import com.nimbits.client.model.value.ValueData;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
-import com.nimbits.server.transactions.service.value.ValueServiceFactory;
+import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
+import com.nimbits.server.transactions.service.value.ValueServiceImpl;
 import com.nimbits.shared.Utils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.jdo.JDOException;
 import javax.servlet.ServletResponse;
@@ -53,7 +55,9 @@ import java.util.logging.Logger;
  * Time: 1:39 PM
  */
 @SuppressWarnings("unchecked")
-public class ProcessBatchTask extends HttpServlet {
+@Service("batchTask")
+@Transactional
+public class ProcessBatchTask extends HttpServlet  implements org.springframework.web.HttpRequestHandler{
     private static final String P = "p";
     private static final String V = "v";
     private static final String T = "t";
@@ -67,10 +71,12 @@ public class ProcessBatchTask extends HttpServlet {
 
     private Map<Long, BatchValue> timestampValueMap;
     private List<Long> timestamps;
+    private EntityServiceImpl entityService;
+    private ValueServiceImpl valueService;
 
 
     @Override
-    public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
+    public void handleRequest(final HttpServletRequest req, final HttpServletResponse resp) {
 
 
         try {
@@ -125,7 +131,7 @@ public class ProcessBatchTask extends HttpServlet {
 
                     } else {
 
-                        final List<Entity> pointTmp =   EntityServiceFactory.getInstance().getEntityByName(u, b.getPointName(),EntityType.point) ;
+                        final List<Entity> pointTmp =   entityService.getEntityByName(u, b.getPointName(), EntityType.point) ;
 
                         if (! pointTmp.isEmpty()) {
                             point = (Point) pointTmp.get(0);
@@ -142,10 +148,10 @@ public class ProcessBatchTask extends HttpServlet {
                         if (b.getValues().isEmpty()) {
                             final ValueData data = ValueFactory.createValueData(b.getData());
                             final Value v = ValueFactory.createValueModel(b.getLocation(), b.getValue(), b.getTimestamp(), b.getNote(), data, AlertType.OK);
-                            ValueServiceFactory.getInstance().recordValue(b.getU(), point, v);
+                            valueService.recordValue(b.getU(), point, v);
                         }
                         else {
-                            ValueServiceFactory.getInstance().recordValues(b.getU(), point, b.getValues());
+                            valueService.recordValues(b.getU(), point, b.getValues());
                         }
 
                         //  reportLocation(req, point);
@@ -265,6 +271,22 @@ public class ProcessBatchTask extends HttpServlet {
             return 0.0;
         }
 
+    }
+
+    public void setEntityService(EntityServiceImpl entityService) {
+        this.entityService = entityService;
+    }
+
+    public EntityServiceImpl getEntityService() {
+        return entityService;
+    }
+
+    public void setValueService(ValueServiceImpl valueService) {
+        this.valueService = valueService;
+    }
+
+    public ValueServiceImpl getValueService() {
+        return valueService;
     }
 
     private static class BatchValue {

@@ -16,7 +16,7 @@ package com.nimbits.server.orm;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.trigger.Trigger;
-import com.nimbits.server.orm.validation.RecursionValidation;
+import com.nimbits.client.model.user.User;
 
 import javax.jdo.annotations.*;
 
@@ -86,11 +86,9 @@ public class TriggerEntity extends EntityStore implements Trigger {
     }
 
     @Override
-    public void validate() throws NimbitsException {
-        super.validate();
-        if (enabled) {
-        RecursionValidation.validate(this);
-        }
+    public void validate(User user) throws NimbitsException {
+        super.validate(user);
+
     }
 
     @Override

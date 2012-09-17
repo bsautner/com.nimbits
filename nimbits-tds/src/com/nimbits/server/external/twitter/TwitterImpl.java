@@ -30,7 +30,10 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.twitter.TwitterService;
 import com.nimbits.server.settings.SettingTransactionsFactory;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+
+import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -49,10 +52,13 @@ import java.util.logging.Logger;
  * Date: 4/16/11
  * Time: 5:09 PM
  */
+@Service("twitterService")
+@Transactional
 public class TwitterImpl extends RemoteServiceServlet implements
         TwitterService, RequestCallback {
     private static final long serialVersionUID = 1L;
     private static final Logger log = Logger.getLogger(TwitterImpl.class.getName());
+    private EntityServiceImpl entityService;
 
     @Override
     public void onResponseReceived(Request request, Response response) {
@@ -95,7 +101,7 @@ public class TwitterImpl extends RemoteServiceServlet implements
 
     @Override
     @SuppressWarnings(Const.WARNING_UNCHECKED)
-    public void updateUserToken(final String token) throws NimbitsException {
+    public void updateUserToken(final User user, final String token) throws NimbitsException {
         final String twitter_client_id = SettingTransactionsFactory.getInstance().getSetting(SettingType.twitterClientId);
         final String twitter_Secret = SettingTransactionsFactory.getInstance().getSetting(SettingType.twitterSecret);
 
@@ -112,12 +118,12 @@ public class TwitterImpl extends RemoteServiceServlet implements
 
         try {
             AccessToken accessToken = twitter.getOAuthAccessToken(requestToken);
-            List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(email.getValue(), EntityType.user);
+            List<Entity> result = entityService.getEntityByKey(user, email.getValue(), EntityType.user);
             if (! result.isEmpty()) {
                 User u = (User) result.get(0);
                 u.setTwitterToken(accessToken.getToken());
                 u.setTwitterTokenSecret(accessToken.getTokenSecret());
-                EntityServiceFactory.getInstance().addUpdateEntity(u, u);
+                entityService.addUpdateEntity(u, u);
             }
 
 
@@ -190,5 +196,12 @@ public class TwitterImpl extends RemoteServiceServlet implements
     }
 
 
+    public void setEntityService(EntityServiceImpl entityService) {
+        this.entityService = entityService;
+    }
+
+    public EntityServiceImpl getEntityService() {
+        return entityService;
+    }
 }
 

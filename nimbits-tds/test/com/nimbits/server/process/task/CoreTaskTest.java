@@ -19,11 +19,17 @@ import com.nimbits.client.enums.Parameters;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.gson.GsonFactory;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={
+        "classpath:META-INF/applicationContext.xml"
+})
 public class CoreTaskTest extends NimbitsServletTest {
 
     @Test
@@ -35,7 +41,7 @@ public class CoreTaskTest extends NimbitsServletTest {
       req.addParameter(Parameters.entity.name(), json);
       req.addParameter(Parameters.action.name(), Action.update.getCode());
         req.addParameter(Parameters.instance.name(), "http://localhost");
-      task.doPost(req, resp);
+      task.handleRequest(req, resp);
       int status = resp.getStatus();
       assertEquals(Const.HTTP_STATUS_OK, status );
       String response = resp.getHeader(Const.HTTP_HEADER_RESPONSE);
@@ -52,7 +58,7 @@ public class CoreTaskTest extends NimbitsServletTest {
         req.addParameter(Parameters.entity.name(), json);
 
         req.addParameter(Parameters.location.name(), "0,0");
-        task.doPost(req, resp);
+        task.handleRequest(req, resp);
         int status = resp.getStatus();
         assertEquals(Const.HTTP_STATUS_OK, status );
         String response = resp.getHeader(Const.HTTP_HEADER_RESPONSE);
@@ -67,7 +73,7 @@ public class CoreTaskTest extends NimbitsServletTest {
         String json = GsonFactory.getInstance().toJson(point);
         assertNotNull(json);
 
-        task.doPost(req, resp);
+        task.handleRequest(req, resp);
         int status = resp.getStatus();
         assertEquals(Const.HTTP_STATUS_BAD_REQUEST, status );
 

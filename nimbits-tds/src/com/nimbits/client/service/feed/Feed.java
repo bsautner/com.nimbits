@@ -31,7 +31,7 @@ import java.util.List;
  * Date: 2/24/12
  * Time: 2:03 PM
  */
-@RemoteServiceRelativePath("feed")
+@RemoteServiceRelativePath("feedService")
 public interface Feed extends RemoteService{
     void postToFeed(final User user, final Entity entity, final Point originalPoint, final Value value,final FeedType type) throws NimbitsException;
 
@@ -42,4 +42,6 @@ public interface Feed extends RemoteService{
     void postToFeed(final User user, final Throwable ex);
 
     Point createFeedPoint(User user) throws NimbitsException;
+
+    List<Point> getFeedPoint(User user) throws NimbitsException;
 }

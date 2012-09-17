@@ -21,8 +21,8 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
-         classpath:/META-INF/applicationContext.xml,
-         classpath:/META-INF/applicationContext-service.xml
+            classpath:/META-INF/applicationContext.xml,
+            classpath:/META-INF/applicationContext-service.xml
         </param-value>
     </context-param>
 
@@ -37,10 +37,10 @@
 
         <servlet-name>springGwtRemoteServiceServlet</servlet-name>
 
-        <servlet-class>org.spring4gwt.server.SpringGwtRemoteServiceServlet</servlet-class>
+        <servlet-class>com.nimbits.server.spring.SpringGwtRemoteServiceServlet</servlet-class>
 
     </servlet>
-    1
+
     <servlet-mapping>
 
         <servlet-name>springGwtRemoteServiceServlet</servlet-name>
@@ -109,12 +109,12 @@
 
 
     <!--<filter>-->
-        <!--<filter-name>appstats</filter-name>-->
-        <!--<filter-class>com.google.appengine.tools.appstats.AppstatsFilter</filter-class>-->
-        <!--<init-param>-->
-            <!--<param-name>logMessage</param-name>-->
-            <!--<param-value>Appstats available: /appstats/details?time={ID}</param-value>-->
-        <!--</init-param>-->
+    <!--<filter-name>appstats</filter-name>-->
+    <!--<filter-class>com.google.appengine.tools.appstats.AppstatsFilter</filter-class>-->
+    <!--<init-param>-->
+    <!--<param-name>logMessage</param-name>-->
+    <!--<param-value>Appstats available: /appstats/details?time={ID}</param-value>-->
+    <!--</init-param>-->
     <!--</filter>-->
     <!--<filter-mapping>-->
     <!--<filter-name>appstats</filter-name>-->
@@ -131,60 +131,12 @@
 
 
 
-    <servlet-mapping>
-        <servlet-name>summaryService</servlet-name>
-        <url-pattern>/nimbits/summary</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>summaryService</servlet-name>
-        <servlet-class>com.nimbits.server.transactions.service.summary.SummaryServiceImpl</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>pointService</servlet-name>
-        <url-pattern>/nimbits/point</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>driveService</servlet-name>
-        <servlet-class>com.nimbits.server.external.google.drive.DriveServiceImpl</servlet-class>
-        <init-param>
-            <param-name>consumer_key</param-name>
-            <param-value>1009209848329.apps.googleusercontent.com</param-value>
-        </init-param>
-        <init-param>
-            <param-name>consumer_secret</param-name>
-            <param-value>m4S1GkGguCvyFO70bxHuKNzH</param-value>
-        </init-param>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>driveService</servlet-name>
-        <url-pattern>/nimbits/drive</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>pointService</servlet-name>
-        <servlet-class>com.nimbits.server.transactions.service.point.PointServiceImpl</servlet-class>
-    </servlet>
 
 
-
-    <servlet>
-        <servlet-name>userService</servlet-name>
-        <servlet-class>com.nimbits.server.transactions.service.user.UserServiceImpl</servlet-class>
-
-    </servlet>
-
-    <servlet>
-        <servlet-name>IMService</servlet-name>
-        <servlet-class>com.nimbits.server.communication.xmpp.XmppServiceImpl</servlet-class>
-    </servlet>
 
     <servlet>
         <servlet-name>xmppreceiver</servlet-name>
-        <servlet-class>com.nimbits.server.communication.xmpp.XMPPReceiverServlet</servlet-class>
+        <servlet-class>com.nimbits.server.api.impl.XMPPReceiverServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -194,33 +146,7 @@
 
 
 
-    <servlet>
-        <servlet-name>dataService</servlet-name>
-        <servlet-class>com.nimbits.server.transactions.service.value.ValueServiceImpl</servlet-class>
 
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>dataService</servlet-name>
-        <url-pattern>/nimbits/data</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>calcService</servlet-name>
-        <servlet-class>com.nimbits.server.transactions.service.calculation.CalculationServiceImpl</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>calcService</servlet-name>
-        <url-pattern>/nimbits/calculation</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>entityService</servlet-name>
-        <servlet-class>com.nimbits.server.transactions.service.entity.EntityServiceImpl</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>entityService</servlet-name>
-        <url-pattern>/nimbits/entity</url-pattern>
-    </servlet-mapping>
 
     <servlet>
         <servlet-name>entityAPI</servlet-name>
@@ -232,46 +158,10 @@
         <url-pattern>/service/entity</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>feedService</servlet-name>
-        <servlet-class>com.nimbits.server.transactions.service.feed.FeedImpl</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>feedService</servlet-name>
-        <url-pattern>/nimbits/feed</url-pattern>
-    </servlet-mapping>
-
-
-    <servlet>
-        <servlet-name>subscribeService</servlet-name>
-        <servlet-class>com.nimbits.server.transactions.service.subscription.SubscriptionServiceImpl</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>subscribeService</servlet-name>
-        <url-pattern>/nimbits/subscribe</url-pattern>
-    </servlet-mapping>
-
-
-    <servlet>
-        <servlet-name>settingsService</servlet-name>
-        <servlet-class>com.nimbits.server.settings.SettingsServiceImpl</servlet-class>
-
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>settingsService</servlet-name>
-        <url-pattern>/nimbits/settings</url-pattern>
-    </servlet-mapping>
 
 
 
-    <servlet>
-        <servlet-name>blobService</servlet-name>
-        <servlet-class>com.nimbits.server.io.blob.BlobServiceImpl</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>blobService</servlet-name>
-        <url-pattern>/nimbits/blob</url-pattern>
-    </servlet-mapping>
+
     <servlet>
         <servlet-name>blobServlet</servlet-name>
         <servlet-class>com.nimbits.server.api.impl.BlobServletImpl</servlet-class>
@@ -281,17 +171,6 @@
         <url-pattern>/service/blob</url-pattern>
     </servlet-mapping>
 
-
-    <servlet-mapping>
-        <servlet-name>userService</servlet-name>
-        <url-pattern>/nimbits/user</url-pattern>
-    </servlet-mapping>
-
-
-    <servlet-mapping>
-        <servlet-name>IMService</servlet-name>
-        <url-pattern>/nimbits/xmpp</url-pattern>
-    </servlet-mapping>
 
 
     <servlet>
@@ -413,7 +292,7 @@
         <url-pattern>/service/orphans</url-pattern>
     </servlet-mapping>
 
-     <servlet>
+    <servlet>
         <servlet-name>MoveCachedValuesToStoreTask</servlet-name>
         <servlet-class>com.nimbits.server.process.task.MoveCachedValuesToStoreTask</servlet-class>
     </servlet>
@@ -446,7 +325,7 @@
 
     <servlet>
         <servlet-name>IncomingMailTask</servlet-name>
-        <servlet-class>com.nimbits.server.communication.email.IncomingMailTask</servlet-class>
+        <servlet-class>com.nimbits.server.process.task.IncomingMailTask</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>IncomingMailTask</servlet-name>
@@ -507,16 +386,16 @@
 
 
     <!--<servlet>-->
-        <!--<servlet-name>categoryServlet</servlet-name>-->
-        <!--<servlet-class>com.nimbits.server.pointcategory.CategoryWebService</servlet-class>-->
+    <!--<servlet-name>categoryServlet</servlet-name>-->
+    <!--<servlet-class>com.nimbits.server.pointcategory.CategoryWebService</servlet-class>-->
     <!--</servlet>-->
     <!--<servlet-mapping>-->
-        <!--<servlet-name>categoryServlet</servlet-name>-->
-        <!--<url-pattern>/service/catagory</url-pattern>-->
+    <!--<servlet-name>categoryServlet</servlet-name>-->
+    <!--<url-pattern>/service/catagory</url-pattern>-->
     <!--</servlet-mapping>-->
     <!--<servlet-mapping>-->
-        <!--<servlet-name>categoryServlet</servlet-name>-->
-        <!--<url-pattern>/service/category</url-pattern>-->
+    <!--<servlet-name>categoryServlet</servlet-name>-->
+    <!--<url-pattern>/service/category</url-pattern>-->
     <!--</servlet-mapping>-->
 
 
@@ -554,14 +433,7 @@
         <url-pattern>/service/time</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>exportServlet</servlet-name>
-        <servlet-class>com.nimbits.server.api.impl.ExportServiceImpl</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>exportServlet</servlet-name>
-        <url-pattern>/nimbits/export</url-pattern>
-    </servlet-mapping>
+
 
 
     <servlet>
@@ -594,36 +466,9 @@
     </servlet>
 
 
-
-    <servlet>
-        <servlet-name>com.nimbits.nimbits FacebookService</servlet-name>
-        <servlet-class>com.nimbits.server.external.facebook.FacebookImpl</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>com.nimbits.nimbits TwitterService</servlet-name>
-        <servlet-class>com.nimbits.server.external.twitter.TwitterImpl</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>batchApi</servlet-name>
         <url-pattern>/service/batch</url-pattern>
-    </servlet-mapping>
-    <servlet>
-        <servlet-name>com.nimbits.nimbits TimespanService</servlet-name>
-        <servlet-class>com.nimbits.server.time.TimespanServiceImpl</servlet-class>
-    </servlet>
-
-
-    <servlet-mapping>
-        <servlet-name>com.nimbits.nimbits FacebookService</servlet-name>
-        <url-pattern>/nimbits/facebook</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>com.nimbits.nimbits TwitterService</servlet-name>
-        <url-pattern>/nimbits/twitter</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>com.nimbits.nimbits TimespanService</servlet-name>
-        <url-pattern>/nimbits/timespan</url-pattern>
     </servlet-mapping>
 
 
@@ -651,17 +496,10 @@
         <servlet-name>com.nimbits.nimbits OAuth2Servlet</servlet-name>
         <servlet-class>com.nimbits.server.external.google.OAuth2Servlet</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>com.nimbits.nimbits IntelligenceService</servlet-name>
-        <servlet-class>com.nimbits.server.transactions.service.intelligence.IntelligenceServiceImpl</servlet-class>
-    </servlet>
+
     <servlet-mapping>
         <servlet-name>com.nimbits.nimbits OAuth2Servlet</servlet-name>
         <url-pattern>/OAuth2Servlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>com.nimbits.nimbits IntelligenceService</servlet-name>
-        <url-pattern>/nimbits/intel</url-pattern>
     </servlet-mapping>
 
 

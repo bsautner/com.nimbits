@@ -49,6 +49,7 @@ import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.summary.Summary;
 import com.nimbits.client.model.summary.SummaryModelFactory;
 import com.nimbits.client.model.trigger.Trigger;
+import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.entity.EntityServiceAsync;
 import com.nimbits.client.ui.controls.EntityCombo;
@@ -74,9 +75,11 @@ public class SummaryPanel extends NavigationEventProvider {
     private VerticalPanel vp;
 
     private final Entity entity;
+    private final User user;
 
-    public SummaryPanel(Entity entity) {
+    public SummaryPanel(User user, Entity entity) {
         this.entity = entity;
+        this.user = user;
     }
 
     @Override
@@ -177,7 +180,7 @@ public class SummaryPanel extends NavigationEventProvider {
 
 
 
-            final EntityCombo targetCombo = new EntityCombo(EntityType.point, target, UserMessages.MESSAGE_SELECT_POINT );
+            final EntityCombo targetCombo = new EntityCombo(user, EntityType.point, target, UserMessages.MESSAGE_SELECT_POINT );
             targetCombo.setFieldLabel("Target");
 
             Button submit = new Button("Submit");

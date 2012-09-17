@@ -18,6 +18,9 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.process.cron.SystemMaint;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
 import java.util.Map;
@@ -30,6 +33,10 @@ import static org.junit.Assert.assertTrue;
  * Date: 3/30/12
  * Time: 8:09 PM
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={
+        "classpath:META-INF/applicationContext.xml"
+})
 public class SettingDaoImplTest extends NimbitsServletTest {
 
     @Test

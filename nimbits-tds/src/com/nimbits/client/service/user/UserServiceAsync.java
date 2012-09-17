@@ -37,11 +37,13 @@ public interface UserServiceAsync {
 
     void getConnectionRequests(final List<String> connections, final AsyncCallback<List<User>> async);
 
-    void login(String requestUri, AsyncCallback<User> async);
+    void login(final String requestUri, final AsyncCallback<User> async);
 
-    void getQuota(AsyncCallback<Integer> async);
+    void getQuota(final AsyncCallback<Integer> async);
 
-    void getAccountBalance(AsyncCallback<List<Point>> async);
+    void getAccountBalance(final AsyncCallback<List<Point>> async);
 
-    void updateBilling(final User user, final boolean billingEnabled, final double maxQuota, AsyncCallback<Void> async);
+    void updateBilling(final User user, final boolean billingEnabled, final double maxQuota, final AsyncCallback<Void> async);
+
+    void getAllUsers(final String s, final int count, final AsyncCallback<List<User>> async);
 }

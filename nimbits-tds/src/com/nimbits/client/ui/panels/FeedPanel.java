@@ -189,7 +189,7 @@ public class FeedPanel  extends LayoutContainer {
         feedType = optionComboBox(FeedType.all);
         feedType.addSelectionChangedListener(new FeedTypeOptionSelectionChangedListener());
 
-        final EntityCombo entityCombo = new EntityCombo(EntityType.userConnection, "", "");
+        final EntityCombo entityCombo = new EntityCombo(user, EntityType.userConnection, "", "");
         entityCombo.addSelectionChangedListener(new ConnectionSelectionChangedListener());
 
 

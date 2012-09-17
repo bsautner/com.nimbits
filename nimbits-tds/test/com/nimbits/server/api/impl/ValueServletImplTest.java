@@ -20,11 +20,11 @@ import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
+import com.nimbits.client.service.value.ValueService;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.admin.quota.QuotaFactory;
 import com.nimbits.server.process.cron.SystemMaint;
 import com.nimbits.server.settings.SettingsServiceFactory;
-import com.nimbits.server.transactions.service.value.ValueServiceFactory;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,6 +52,9 @@ import static org.junit.Assert.*;
 public class ValueServletImplTest extends NimbitsServletTest {
     @Resource(name = "valueApi")
     ValueServletImpl valueServlet;
+
+    @Resource(name = "valueService")
+    ValueService valueService;
     @Test
     @Ignore
     public void testPostData() throws NimbitsException, InterruptedException, IOException, ServletException {
@@ -64,7 +67,7 @@ public class ValueServletImplTest extends NimbitsServletTest {
         ValueServletImpl i = new ValueServletImpl();
         i.handleRequest(req, resp);
 
-        List<Value> v = ValueServiceFactory.getInstance().getCurrentValue(point);
+        List<Value> v = valueService.getCurrentValue(point);
         assertNotNull(v);
         assertFalse(v.isEmpty());
         assertEquals(5.0, v.get(0).getDoubleValue(), 0.001);

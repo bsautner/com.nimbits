@@ -28,13 +28,14 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.timespan.Timespan;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 4/25/11
- * Time: 7:48 PM
- */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={
+        "classpath:META-INF/applicationContext.xml"
+})
 public class TestTimespanInterpeter  {
 
     @Test

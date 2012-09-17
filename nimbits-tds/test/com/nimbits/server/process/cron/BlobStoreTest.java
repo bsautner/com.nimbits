@@ -29,20 +29,21 @@ import com.nimbits.client.model.file.FileFactory;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.io.blob.BlobStoreFactory;
 import com.nimbits.server.process.task.DeleteBlobTask;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
 import java.util.Iterator;
 
 import static org.junit.Assert.assertNotNull;
 
-/**
- * Created by Benjamin Sautner
- * User: BSautner
- * Date: 4/23/12
- * Time: 12:24 PM
- */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={
+        "classpath:META-INF/applicationContext.xml"
+})
 public class BlobStoreTest extends NimbitsServletTest {
 
     @Test(expected = java.lang.IllegalArgumentException.class)
@@ -65,7 +66,7 @@ public class BlobStoreTest extends NimbitsServletTest {
         Entity e = EntityModelFactory.createEntity(name, "", EntityType.file, ProtectionLevel.everyone,
                 user.getKey(), user.getKey());
         com.nimbits.client.model.file.File f = FileFactory.createFile(e, key);
-        Entity result =  EntityServiceFactory.getInstance().addUpdateEntity(f);
+        Entity result =  entityService.addUpdateEntity(f);
         assertNotNull(result);
 
      //   int r = DeleteOrphanBlobCron.processRequest();

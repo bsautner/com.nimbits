@@ -15,21 +15,20 @@ package com.nimbits.server.transactions.service.point;
 
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ExportType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.service.datapoints.PointService;
-import com.nimbits.server.io.blob.BlobStoreFactory;
-import com.nimbits.server.io.export.ExportHelperFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-
+@Service("pointService")
+@Transactional
 public class PointServiceImpl extends RemoteServiceServlet implements
         PointService {
 
@@ -45,7 +44,7 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 //        final Point newPoint = PointModelFactory.createPointModel(storedPoint);
 //        newPoint.setName(newName);
 //
-//        return EntityServiceFactory.getInstance().addUpdateEntity(u, newPoint);
+//        return entityService.addUpdateEntity(u, newPoint);
 //      //  return addPoint(u, newPoint);
 //
 //    }
@@ -58,11 +57,11 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 
         switch (exportType) {
             case csvSeparateColumns:
-                data = ExportHelperFactory.getInstance().exportPointDataToCSVSeparateColumns(points, values);
-                final Entity entity = points.values().iterator().next();
-                final EntityName name;
-                name = entity != null ? entity.getName() : CommonFactoryLocator.getInstance().createName("nimbits_export", EntityType.file);
-                return BlobStoreFactory.getInstance().createFile(name, data, exportType);
+//                data = ExportHelperFactory.getInstance().exportPointDataToCSVSeparateColumns(points, values);
+//                final Entity entity = points.values().iterator().next();
+//                final EntityName name;
+//                name = entity != null ? entity.getName() : CommonFactoryLocator.getInstance().createName("nimbits_export", EntityType.file);
+//                return BlobStoreFactory.getInstance().createFile(name, data, exportType);
 
 //            case descriptiveStatistics:
 //                data = ExportHelperFactory.getInstance().exportPointDataToDescriptiveStatistics(points);

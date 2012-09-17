@@ -25,7 +25,7 @@ import com.nimbits.client.model.xmpp.XmppResource;
 
 import java.util.List;
 
-@RemoteServiceRelativePath("xmpp")
+@RemoteServiceRelativePath("xmppService")
 public interface XMPPService extends RemoteService {
     void sendInvite() throws NimbitsException;
 
@@ -35,7 +35,7 @@ public interface XMPPService extends RemoteService {
 
     Entity createXmppResource(final Entity targetPointEntity, final EntityName resourceName) throws NimbitsException;
 
-    void sendMessage(final List<XmppResource> resources, final String message, final EmailAddress email) throws NimbitsException;
+    void sendMessage(final User user, final List<XmppResource> resources, final String message, final EmailAddress email) throws NimbitsException;
 
     void deleteResource(final User u, final Entity entity);
 }

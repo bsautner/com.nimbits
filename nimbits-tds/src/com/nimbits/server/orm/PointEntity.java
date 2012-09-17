@@ -19,6 +19,7 @@ import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 
 import javax.jdo.annotations.NotPersistent;
@@ -341,8 +342,8 @@ public class PointEntity extends EntityStore implements Point {
     }
 
     @Override
-    public void validate() throws NimbitsException {
-        super.validate();
+    public void validate(User user) throws NimbitsException {
+        super.validate(user);
 
         if (this.lowAlarm > this.highAlarm && (lowAlarmOn && highAlarmOn)) {
             throw new NimbitsException("Low Alarm setting is less than the high alarm setting");

@@ -37,13 +37,10 @@ import com.nimbits.server.process.cron.SystemMaint;
 import com.nimbits.server.settings.SettingTransactions;
 import com.nimbits.server.settings.SettingTransactionsFactory;
 import com.nimbits.server.settings.SettingsServiceFactory;
-import com.nimbits.server.transactions.dao.value.ValueDAOImpl;
-import com.nimbits.server.transactions.service.entity.EntityTransactionFactory;
 import com.nimbits.server.transactions.service.entity.EntityTransactions;
-import com.nimbits.server.transactions.service.point.PointServiceFactory;
-import com.nimbits.server.transactions.service.user.UserServiceFactory;
-import com.nimbits.server.transactions.service.user.UserTransactionFactory;
+import com.nimbits.server.transactions.service.user.UserServerService;
 import com.nimbits.server.transactions.service.user.UserTransactions;
+import com.nimbits.server.transactions.service.value.ValueTransactions;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,9 +56,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Created by Benjamin Sautner
@@ -85,6 +80,13 @@ public class NimbitsServletTest {
     @Resource(name="entityService")
     public EntityService entityService;
 
+    @Resource(name="userService")
+    public UserServerService userService;
+
+    @Resource(name="entityCache")
+    public EntityTransactions entityTransactions;
+
+
     public MockHttpServletRequest req;
     public MockHttpServletResponse resp;
 
@@ -96,21 +98,27 @@ public class NimbitsServletTest {
     public EmailAddress emailAddress;
 
 
-
+    @Resource(name="pointService")
     public PointService pointService;
+
+    @Resource(name="settingService")
     public SettingsService settingsService;
+
+    @Resource(name="userDao")
     public UserTransactions userTransactionsDao;
+
+
     public SettingTransactions settingsDAO;
 
-
-    public EntityTransactions entityTransactions;
 
     public Point point;
     public Point pointChild;
     public Entity pointEntity;
     public Entity pointChildEntity;
     public Category group;
-    public ValueDAOImpl valueDao;
+
+    @Resource(name="valueDao")
+    public ValueTransactions valueDao;
 
     @Before
     public void setUp() throws NimbitsException {
@@ -134,7 +142,7 @@ public class NimbitsServletTest {
 
         SettingsServiceFactory.getInstance().addSetting(SettingType.admin, email);
         SettingsServiceFactory.getInstance().addSetting(SettingType.serverIsDiscoverable,true);
-        pointService = PointServiceFactory.getInstance();
+
         settingsService = SettingsServiceFactory.getInstance();
         emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
 
@@ -143,16 +151,16 @@ public class NimbitsServletTest {
         pointChildName = CommonFactoryLocator.getInstance().createName("pointChild", EntityType.point);
         groupName = CommonFactoryLocator.getInstance().createName("group1", EntityType.point);
 
-        userTransactionsDao = UserTransactionFactory.getDAOInstance();
-        User r = UserServiceFactory.getServerInstance().createUserRecord(emailAddress);
+
+        User r = userService.createUserRecord(emailAddress);
         assertNotNull(r);
 
 
-        List<Entity> result = entityService.getEntityByKey(emailAddress.getValue(), EntityType.user);
+        List<Entity> result = entityService.getEntityByKey(user, emailAddress.getValue(), EntityType.user);
         assertFalse(result.isEmpty());
         user = (User) result.get(0);
 
-        entityTransactions = EntityTransactionFactory.getInstance(user);
+
         Entity accessKey = EntityModelFactory.createEntity(pointName, "", EntityType.accessKey, ProtectionLevel.onlyMe, user.getKey(), user.getKey());
         AccessKey ak = AccessKeyFactory.createAccessKey(accessKey, "AUTH", user.getKey(), AuthLevel.admin);
         entityService.addUpdateEntity(ak);
@@ -187,7 +195,7 @@ public class NimbitsServletTest {
         newPoint.setExpire(5);
         point = (Point) entityService.addUpdateEntity(user, newPoint);
         // point = pointService.addPoint(user, pointEntity);
-        valueDao = new ValueDAOImpl(point);
+
         pointChildEntity = EntityModelFactory.createEntity(pointChildName, "", EntityType.point, ProtectionLevel.everyone, point.getKey(), user.getKey(), UUID.randomUUID().toString());
         Point newChild =  PointModelFactory.createPointModel(
                 pointChildEntity,

@@ -17,6 +17,7 @@ import com.google.appengine.api.files.AppEngineFile;
 import com.google.appengine.api.files.FileService;
 import com.google.appengine.api.files.FileServiceFactory;
 import com.google.appengine.api.files.GSFileOptions;
+import com.nimbits.server.transactions.service.user.UserServiceImpl;
 
 import java.io.IOException;
 
@@ -27,6 +28,8 @@ import java.io.IOException;
  * Time: 2:02 PM
  */
 public class StorageServiceImpl {
+
+    private UserServiceImpl userService;
 
     public void test() throws IOException {
         FileService fileService = FileServiceFactory.getFileService();
@@ -40,5 +43,11 @@ public class StorageServiceImpl {
     }
 
 
+    public void setUserService(UserServiceImpl userService) {
+        this.userService = userService;
+    }
 
+    public UserServiceImpl getUserService() {
+        return userService;
+    }
 }

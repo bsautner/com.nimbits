@@ -26,7 +26,7 @@ import com.nimbits.client.model.user.User;
  * Date: 3/16/12
  * Time: 10:05 AM
  */
-@RemoteServiceRelativePath("summary")
+@RemoteServiceRelativePath("summaryService")
 public interface SummaryService  extends RemoteService {
 
     double getValue(SummaryType type, double[] doubles);

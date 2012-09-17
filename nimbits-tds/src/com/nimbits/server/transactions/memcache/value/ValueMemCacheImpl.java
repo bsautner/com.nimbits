@@ -26,8 +26,10 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.process.task.TaskFactory;
-import com.nimbits.server.transactions.service.value.ValueTransactionFactory;
+import com.nimbits.server.transactions.dao.value.ValueDAOImpl;
+
 import com.nimbits.server.transactions.service.value.ValueTransactions;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -39,33 +41,36 @@ import java.util.logging.Logger;
  * Time: 12:40 PM
  */
 @SuppressWarnings("unchecked")
+@Component("valueCache")
 public class ValueMemCacheImpl implements ValueTransactions {
 
-    private final MemcacheService buffer;
-    private final MemcacheService cacheShared;
-    private final Entity point;
 
-    private final String currentValueCacheKey;
-    private final String bufferedListCacheKey;
+    private final MemcacheService cacheShared;
+
+
+
+
 
 
     static final Logger log = Logger.getLogger(ValueMemCacheImpl.class.getName());
+    private ValueDAOImpl valueDao;
 
 
+    public ValueMemCacheImpl() {
 
-    public ValueMemCacheImpl(final Entity point) {
-        this.point = point;
-
-        final String bufferNamespace =MemCacheKey.getKey(MemCacheKey.valueCache, point.getKey());
-        bufferedListCacheKey = MemCacheKey.getKey(MemCacheKey.bufferedValueList, point.getKey());
-        currentValueCacheKey = MemCacheKey.getKey(MemCacheKey.currentValueCache, point.getKey());
-        buffer = MemcacheServiceFactory.getMemcacheService(bufferNamespace);
         cacheShared = MemcacheServiceFactory.getMemcacheService();
     }
 
+    private MemcacheService getBufferService(final Entity entity) {
+
+        final String bufferNamespace =MemCacheKey.getKey(MemCacheKey.valueCache, entity.getKey());
 
 
-    protected void addPointToActiveList() {
+        return MemcacheServiceFactory.getMemcacheService(bufferNamespace);
+
+    }
+
+    protected void addPointToActiveList(final Entity point) {
         Map<String, Entity> points;
         if (cacheShared.contains(MemCacheKey.activePoints)) {
             try {
@@ -97,7 +102,7 @@ public class ValueMemCacheImpl implements ValueTransactions {
             cacheShared.put(MemCacheKey.activePoints, points);
         }
     }
-    protected void removePointFromActiveList() {
+    protected void removePointFromActiveList(final Entity point) {
         Map<String, Entity> points;
         if (cacheShared.contains(MemCacheKey.activePoints)) {
             try {
@@ -123,15 +128,17 @@ public class ValueMemCacheImpl implements ValueTransactions {
 
 
     @Override
-    public List<Value> getRecordedValuePrecedingTimestamp(final Date timestamp) throws NimbitsException {
+    public List<Value> getRecordedValuePrecedingTimestamp(final Entity entity, final Date timestamp) throws NimbitsException {
         final List<Value> result = new ArrayList<Value>(1);
 
+        String currentValueCacheKey = MemCacheKey.getKey(MemCacheKey.currentValueCache, entity.getKey());
+        MemcacheService buffer = getBufferService(entity);
         try {
             if (buffer.contains(currentValueCacheKey)) {
                 final Value value = (Value) buffer.get(currentValueCacheKey);
                 if (value == null) {
                     buffer.delete(currentValueCacheKey);
-                    List<Value> sample = ValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
+                    List<Value> sample = valueDao.getRecordedValuePrecedingTimestamp(entity, timestamp);
                     if (! sample.isEmpty()) {
                         buffer.put(currentValueCacheKey, sample.get(0));
                         result.addAll(sample);
@@ -142,10 +149,10 @@ public class ValueMemCacheImpl implements ValueTransactions {
                         result.add(value);
                     }
                     else {
-                        List<Value> buffer = getBuffer();
-                        List<Value> values = ValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
+                        List<Value> bufferValues = getBuffer(entity);
+                        List<Value> values = valueDao.getRecordedValuePrecedingTimestamp(entity, timestamp);
                         result.addAll(values);
-                        for (Value v : buffer) {
+                        for (Value v : bufferValues) {
                             if (v.getTimestamp().getTime() < timestamp.getTime()) {
                                 result.add(v);
                             }
@@ -155,7 +162,7 @@ public class ValueMemCacheImpl implements ValueTransactions {
             } else {
                 LogHelper.log(this.getClass(), "Accessing data store for current value");
 
-                List<Value> sample = ValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
+                List<Value> sample = valueDao.getRecordedValuePrecedingTimestamp(entity, timestamp);
                 //TODO - keep a memchach list of known empty points to avoid repeated datastore calls here
                 if (! sample.isEmpty()) {
 
@@ -168,14 +175,14 @@ public class ValueMemCacheImpl implements ValueTransactions {
             }
         } catch (InvalidValueException e) {
             buffer.delete(currentValueCacheKey);
-            List<Value> sample = ValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
+            List<Value> sample = valueDao.getRecordedValuePrecedingTimestamp(entity, timestamp);
             if (! sample.isEmpty()) {
                 buffer.put(currentValueCacheKey, sample.get(0));
                 result.addAll(sample);
             }
         } catch (ClassCastException e) { //old cache data causing a problem when upgrading.
             buffer.delete(currentValueCacheKey);
-            List<Value> sample = ValueTransactionFactory.getDaoInstance(point).getRecordedValuePrecedingTimestamp(timestamp);
+            List<Value> sample = valueDao.getRecordedValuePrecedingTimestamp(entity, timestamp);
             if (! sample.isEmpty()) {
                 buffer.put(currentValueCacheKey, sample.get(0));
                 result.addAll(sample);
@@ -210,11 +217,11 @@ public class ValueMemCacheImpl implements ValueTransactions {
 
 
     @Override
-    public Value recordValue(final Value v)  {
-
-
-
-        addPointToActiveList();
+    public Value recordValue(final Entity entity, final Value v)  {
+        String bufferedListCacheKey = MemCacheKey.getKey(MemCacheKey.bufferedValueList, entity.getKey());
+        String currentValueCacheKey = MemCacheKey.getKey(MemCacheKey.currentValueCache, entity.getKey());
+        MemcacheService buffer = getBufferService(entity);
+        addPointToActiveList(entity);
         try {
             final List<Long> stored;
             if (buffer.contains(bufferedListCacheKey)) {
@@ -229,7 +236,7 @@ public class ValueMemCacheImpl implements ValueTransactions {
             }
             buffer.put(v.getTimestamp().getTime(), v);
             if (stored.size() > Const.CONST_MAX_CACHED_VALUE_SIZE) {
-                TaskFactory.getInstance().startMoveCachedValuesToStoreTask(point);
+                TaskFactory.getInstance().startMoveCachedValuesToStoreTask(entity);
             }
 
             if (buffer.contains(currentValueCacheKey)) {
@@ -253,47 +260,48 @@ public class ValueMemCacheImpl implements ValueTransactions {
 
 
     @Override
-    public List<Value> getTopDataSeries(final int maxValues) throws NimbitsException {
-        final List<Value> cached = getBuffer();
-        final List<Value> stored = ValueTransactionFactory.getDaoInstance(point).getTopDataSeries(maxValues);
+    public List<Value> getTopDataSeries(final Entity entity,final int maxValues) throws NimbitsException {
+        final List<Value> cached = getBuffer(entity);
+        final List<Value> stored = valueDao.getTopDataSeries(entity, maxValues);
         return mergeAndSort(cached, stored, maxValues);
     }
 
 
-    //gets the most recent values for a point up to a max count. If  count is in the buffer, just return them otherwise
+    //gets the most recent values for a entity up to a max count. If  count is in the buffer, just return them otherwise
     //get more values from the store.
     @Override
-    public List<Value> getTopDataSeries(final int maxValues, final Date endDate) throws NimbitsException {
-        final List<Value> cached = getBuffer();
+    public List<Value> getTopDataSeries(final Entity entity, final int maxValues, final Date endDate) throws NimbitsException {
+        final List<Value> cached = getBuffer(entity);
         if (cached != null && cached.size() > maxValues) {
             return cached;
         } else {
-            final List<Value> stored = ValueTransactionFactory.getDaoInstance(point).getTopDataSeries(maxValues, endDate);
+            final List<Value> stored = valueDao.getTopDataSeries(entity, maxValues, endDate);
             return stored.isEmpty() ? cached : mergeAndSort(stored, cached, endDate);
         }
 
     }
 
     @Override
-    public List<Value> getDataSegment(final Timespan timespan) throws NimbitsException {
-        final List<Value> stored = ValueTransactionFactory.getDaoInstance(point).getDataSegment(timespan);
-        final List<Value> cached = getBuffer();
+    public List<Value> getDataSegment(final Entity entity,final Timespan timespan) throws NimbitsException {
+        final List<Value> stored = valueDao.getDataSegment(entity, timespan);
+        final List<Value> cached = getBuffer(entity);
         return mergeAndSort(stored, cached, timespan);
     }
 
     @Override
-    public List<Value> getDataSegment(final Timespan timespan, final int start, final int end) throws NimbitsException {
-        return ValueTransactionFactory.getDaoInstance(point).getDataSegment(timespan, start, end);
+    public List<Value> getDataSegment(final Entity entity,final Timespan timespan, final int start, final int end) throws NimbitsException {
+        return valueDao.getDataSegment(entity, timespan, start, end);
     }
 
     @Override
-    public List<ValueBlobStore> recordValues(final List<Value> values) throws NimbitsException {
-        return ValueTransactionFactory.getDaoInstance(point).recordValues(values);
+    public List<ValueBlobStore> recordValues(final Entity entity,final List<Value> values) throws NimbitsException {
+        return valueDao.recordValues(entity, values);
     }
 
     @Override
-    public List<Value> getCache(final Timespan timespan) {
-
+    public List<Value> getCache(final Entity entity, final Timespan timespan) {
+        String bufferedListCacheKey = MemCacheKey.getKey(MemCacheKey.bufferedValueList, entity.getKey());
+        MemcacheService buffer = getBufferService(entity);
         List<Value> retObj = null;
         if (buffer.contains(bufferedListCacheKey)) {
             final Collection<Long> x = (Collection<Long>) buffer.get(bufferedListCacheKey);
@@ -313,41 +321,43 @@ public class ValueMemCacheImpl implements ValueTransactions {
     }
 
     @Override
-    public List<ValueBlobStore> getAllStores() throws NimbitsException {
-        return ValueTransactionFactory.getDaoInstance(point).getAllStores();
+    public List<ValueBlobStore> getAllStores(final Entity entity) throws NimbitsException {
+        return valueDao.getAllStores(entity);
     }
 
     @Override
-    public void consolidateDate(final Date timestamp) throws NimbitsException {
-        ValueTransactionFactory.getDaoInstance(point).consolidateDate(timestamp);
+    public void consolidateDate(final Entity entity, final Date timestamp) throws NimbitsException {
+        valueDao.consolidateDate(entity, timestamp);
     }
 
     @Override
     public List<ValueBlobStore> getBlobStoreByBlobKey(BlobKey key) throws NimbitsException {
-        return ValueTransactionFactory.getDaoInstance(point).getBlobStoreByBlobKey(key);
+        return valueDao.getBlobStoreByBlobKey(key);
     }
 
     @Override
-    public ValueBlobStore mergeTimespan(Timespan timespan) throws NimbitsException {
-        return ValueTransactionFactory.getDaoInstance(point).mergeTimespan(timespan);
+    public ValueBlobStore mergeTimespan(final Entity entity, final Timespan timespan) throws NimbitsException {
+        return valueDao.mergeTimespan(entity, timespan);
 
     }
 
     @Override
-    public void purgeValues() throws NimbitsException {
+    public void purgeValues(final Entity entity) throws NimbitsException {
+        String bufferedListCacheKey = MemCacheKey.getKey(MemCacheKey.bufferedValueList, entity.getKey());
+        MemcacheService buffer = getBufferService(entity);
         if (buffer.contains(bufferedListCacheKey)) {
             buffer.delete(bufferedListCacheKey);
         }
-        removePointFromActiveList();
-        ValueTransactionFactory.getDaoInstance(point).purgeValues();
+        removePointFromActiveList(entity);
+        valueDao.purgeValues(entity);
     }
 
     @Override
-    public void deleteExpiredData() {
-        ValueTransactionFactory.getDaoInstance(point).deleteExpiredData();
+    public void deleteExpiredData(final Entity entity) {
+        valueDao.deleteExpiredData(entity);
     }
-
-    protected static List<List<Value>> splitUpList(final List<Value> original) {
+    @Override
+    public List<List<Value>> splitUpList(final List<Value> original) {
 
         if (original.size() < Const.CONST_QUERY_CHUNK_SIZE) {
             List<List<Value>> retObj = new ArrayList<List<Value>>(1);
@@ -384,11 +394,11 @@ public class ValueMemCacheImpl implements ValueTransactions {
     }
 
     @Override
-    public int preloadTimespan(Timespan timespan) throws NimbitsException {
-        List<Value> stored = getDataSegment(timespan);
-        String key = MemCacheKey.preload.getText() + point.getUUID();
+    public int preloadTimespan(final Entity entity, final Timespan timespan) throws NimbitsException {
+        List<Value> stored = getDataSegment(entity, timespan);
+        String key = MemCacheKey.preload.getText() + entity.getUUID();
         log.info("Storing " + stored.size());
-
+        MemcacheService buffer = getBufferService(entity);
         List<List<Value>> split = splitUpList(stored);
         log.info("split up into " + split.size() + " pieces");
         int section = 0;
@@ -410,14 +420,14 @@ public class ValueMemCacheImpl implements ValueTransactions {
     }
 
     @Override
-    public List<Value> getPreload(int section) throws NimbitsException {
+    public List<Value> getPreload(final Entity entity, final int section) throws NimbitsException {
         // int c = 0;
         // List<Value> values = new ArrayList<Value>(Const.CONST_QUERY_CHUNK_SIZE);
 
 
         //  while (c < count) {
-
-        String key = MemCacheKey.preload.getText() + point.getUUID() + section;
+        MemcacheService buffer = getBufferService(entity);
+        String key = MemCacheKey.preload.getText() + entity.getUUID() + section;
         log.info(key);
 
         if (buffer.contains(key)) {
@@ -433,10 +443,12 @@ public class ValueMemCacheImpl implements ValueTransactions {
     }
 
 
+
+
     @Override
-    public List<Value> getBuffer() {
-
-
+    public List<Value> getBuffer(final Entity entity) {
+        String bufferedListCacheKey = MemCacheKey.getKey(MemCacheKey.bufferedValueList, entity.getKey());
+        MemcacheService buffer = getBufferService(entity);
         if (buffer.contains(bufferedListCacheKey)) {
             final Collection<Long> x = (Collection<Long>) buffer.get(bufferedListCacheKey);
             final Map<Long, Object> valueMap = buffer.getAll(x);
@@ -459,9 +471,9 @@ public class ValueMemCacheImpl implements ValueTransactions {
     }
 
     @Override
-    public void moveValuesFromCacheToStore() {
-
-
+    public void moveValuesFromCacheToStore(final Entity entity) {
+        String bufferedListCacheKey = MemCacheKey.getKey(MemCacheKey.bufferedValueList, entity.getKey());
+        MemcacheService buffer = getBufferService(entity);
         try {
             if (buffer.contains(bufferedListCacheKey)) {
                 final Collection<Long> x = (Collection<Long>) buffer.get(bufferedListCacheKey);
@@ -474,7 +486,7 @@ public class ValueMemCacheImpl implements ValueTransactions {
                     for (final Map.Entry<Long, Object> longObjectEntry : valueMap.entrySet()) {
                         values.add((Value) longObjectEntry.getValue());
                     }
-                    ValueTransactionFactory.getDaoInstance(point).recordValues(values);
+                    valueDao.recordValues(entity, values);
                 }
             }
         } catch (Exception e) {
@@ -546,6 +558,14 @@ public class ValueMemCacheImpl implements ValueTransactions {
             }
         }
         return retObj;
+    }
+
+    public void setValueDao(ValueDAOImpl valueDao) {
+        this.valueDao = valueDao;
+    }
+
+    public ValueDAOImpl getValueDao() {
+        return valueDao;
     }
 
 

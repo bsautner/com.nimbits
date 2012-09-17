@@ -14,16 +14,16 @@
 package com.nimbits.server.process.task;
 
 import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.transactions.service.value.ValueTransactionFactory;
+import com.nimbits.server.transactions.service.value.ValueServiceImpl;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.logging.Logger;
 
 /**
@@ -32,24 +32,32 @@ import java.util.logging.Logger;
  * Date: 12/20/11
  * Time: 3:55 PM
  */
-public class MoveCachedValuesToStoreTask extends HttpServlet
+@Service("moveCachedValuesToStoreTask")
+@Transactional
+public class MoveCachedValuesToStoreTask extends HttpServlet   implements org.springframework.web.HttpRequestHandler
 
 {
 
     private static final long serialVersionUID = 1L;
     private static final Logger log = Logger.getLogger(MoveCachedValuesToStoreTask.class.getName());
+    private ValueServiceImpl valueService;
 
 
     @Override
-    public void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
+    public void handleRequest(final HttpServletRequest req, final HttpServletResponse resp) {
 
         final String pointJson = req.getParameter(Parameters.point.getText());
         final Entity point = GsonFactory.getInstance().fromJson(pointJson, EntityModel.class);
-        try {
-            ValueTransactionFactory.getInstance(point).moveValuesFromCacheToStore();
-        } catch (NimbitsException e) {
-            log.severe(e.getMessage());
-        }
+         valueService.moveValuesFromCacheToStore(point);
 
+
+    }
+
+    public void setValueService(ValueServiceImpl valueService) {
+        this.valueService = valueService;
+    }
+
+    public ValueServiceImpl getValueService() {
+        return valueService;
     }
 }

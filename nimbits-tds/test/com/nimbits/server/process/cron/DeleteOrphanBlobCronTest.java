@@ -29,10 +29,11 @@ import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.io.blob.BlobStoreFactory;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
-import com.nimbits.server.transactions.service.value.ValueTransactionFactory;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,12 +45,10 @@ import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 4/27/12
- * Time: 11:52 AM
- */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={
+        "classpath:META-INF/applicationContext.xml"
+})
 public class DeleteOrphanBlobCronTest extends NimbitsServletTest {
 
 
@@ -76,9 +75,9 @@ public class DeleteOrphanBlobCronTest extends NimbitsServletTest {
         Entity e = EntityModelFactory.createEntity(name, "", EntityType.file, ProtectionLevel.everyone,
                 user.getKey(), user.getKey());
         com.nimbits.client.model.file.File f = FileFactory.createFile(e, key);
-        Entity result =  EntityServiceFactory.getInstance().addUpdateEntity(f);
+        Entity result =  entityService.addUpdateEntity(f);
 
-        List<ValueBlobStore> results = ValueTransactionFactory.getInstance(point).recordValues(values);
+        List<ValueBlobStore> results = valueDao.recordValues(point, values);
         assertFalse(results.isEmpty());
         assertEquals(results.size(), 1);
         assertNotNull(result);

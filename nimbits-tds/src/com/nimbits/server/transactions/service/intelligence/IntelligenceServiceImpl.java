@@ -31,14 +31,13 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
+import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.intelligence.IntelligenceService;
+import com.nimbits.client.service.settings.SettingsService;
 import com.nimbits.server.http.HttpCommonFactory;
 import com.nimbits.server.settings.SettingsServiceFactory;
-import com.nimbits.server.settings.SettingsServiceImpl;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
-import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
-import com.nimbits.server.transactions.service.user.UserServiceFactory;
-import com.nimbits.server.transactions.service.value.ValueServiceFactory;
+import com.nimbits.server.transactions.service.user.UserServiceImpl;
+import com.nimbits.server.transactions.service.value.ValueServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
@@ -75,12 +74,14 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
     private static final Pattern COMPILE = Pattern.compile("\\.");
     private static final Pattern PATTERN = Pattern.compile("\\.");
     private static final Pattern COMPILE1 = Pattern.compile("\\[");
-    private EntityServiceImpl entityService;
-    private SettingsServiceImpl settingsService;
+    private EntityService entityService;
+    private SettingsService settingService;
+    private UserServiceImpl userService;
+    private ValueServiceImpl valueService;
 
     private User getUser() {
         try {
-            return UserServiceFactory.getServerInstance().getHttpRequestUser(
+            return userService.getHttpRequestUser(
                     this.getThreadLocalRequest());
         } catch (NimbitsException e) {
             return null;
@@ -210,23 +211,23 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
     @Override
     public void processIntelligence(final User u, final Entity point) throws NimbitsException {
-        final List<Entity> list = EntityServiceFactory.getInstance().getEntityByTrigger(u, point, EntityType.intelligence);
+        final List<Entity> list = entityService.getEntityByTrigger(u, point, EntityType.intelligence);
 
         for (final Entity entity :  list) {
             Intelligence i = (Intelligence) entity;
             try {
                 // Point target = PointServiceFactory.getInstance().getPointByKey(i.getTarget());
-                final Entity target = EntityServiceFactory.getInstance().getEntityByKey(i.getTarget(), EntityType.point).get(0);
+                final Entity target = entityService.getEntityByKey(u, i.getTarget(), EntityType.point).get(0);
 
                 if (target!= null) {
 
-                    final Value v = processInput(i);
-                    ValueServiceFactory.getInstance().recordValue(u, target, v);
+                    final Value v = processInput(u, i);
+                    valueService.recordValue(u, target, v);
 
                 }
             } catch (NimbitsException e) {
                 i.setEnabled(false);
-                EntityServiceFactory.getInstance().addUpdateEntity(i);
+                entityService.addUpdateEntity(i);
 
 
             }
@@ -236,9 +237,9 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
     }
 
     @Override
-    public Value processInput(final Intelligence update) throws NimbitsException {
+    public Value processInput(final User user, final Intelligence update) throws NimbitsException {
         String processedInput = addDataToInput(getUser(), update.getInput());
-        final Point target = (Point) EntityServiceFactory.getInstance().getEntityByKey(update.getTarget(), EntityType.point).get(0);
+        final Point target = (Point) entityService.getEntityByKey(user, update.getTarget(), EntityType.point).get(0);
 
         //  Point target = PointServiceFactory.getInstance().getPointByKey(update.getTarget());
         return processInput(update, target, processedInput);
@@ -248,7 +249,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
 
 
-    private static String addDataToInput(final User u, final String input) throws NimbitsException {
+    private String addDataToInput(final User u, final String input) throws NimbitsException {
 
         String retStr = input;
 
@@ -268,14 +269,14 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
 
 
-                    // Entity e = EntityServiceFactory.getInstance().getEntityByName(u, pointName,EntityType.point);
-                    Entity inputPoint =  EntityServiceFactory.getInstance().getEntityByName(u, pointName, EntityType.point).get(0);
+                    // Entity e = entityService.getEntityByName(u, pointName,EntityType.point);
+                    Entity inputPoint =  entityService.getEntityByName(u, pointName, EntityType.point).get(0);
 
                     // inputPoint= PointServiceFactory.getInstance().getPointByKey(e.getKey());
-                    // inputPoint = (Point) EntityServiceFactory.getInstance().getEntityByKey(e.getKey(), PointEntity.class.getName());
+                    // inputPoint = (Point) entityService.getEntityByKey(e.getKey(), PointEntity.class.getName());
 
                     if (inputPoint != null) {
-                        List<Value> inputValues = ValueServiceFactory.getInstance().getCurrentValue(inputPoint);
+                        List<Value> inputValues = valueService.getCurrentValue(inputPoint);
                         if (! inputValues.isEmpty()) {
                             Value inputValue = inputValues.get(0);
                             if (a.equals(Parameters.value.getText())) {
@@ -340,19 +341,35 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
     }
 
-    public void setEntityService(EntityServiceImpl entityService) {
+    public void setEntityService(EntityService entityService) {
         this.entityService = entityService;
     }
 
-    public EntityServiceImpl getEntityService() {
+    public EntityService getEntityService() {
         return entityService;
     }
 
-    public void setSettingsService(SettingsServiceImpl settingsService) {
-        this.settingsService = settingsService;
+    public void setSettingService(SettingsService settingsService) {
+        this.settingService = settingsService;
     }
 
-    public SettingsServiceImpl getSettingsService() {
-        return settingsService;
+    public SettingsService getSettingService() {
+        return settingService;
+    }
+
+    public void setUserService(UserServiceImpl userService) {
+        this.userService = userService;
+    }
+
+    public UserServiceImpl getUserService() {
+        return userService;
+    }
+
+    public void setValueService(ValueServiceImpl valueService) {
+        this.valueService = valueService;
+    }
+
+    public ValueServiceImpl getValueService() {
+        return valueService;
     }
 }

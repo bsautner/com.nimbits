@@ -16,6 +16,7 @@ package com.nimbits.server.orm;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.user.User;
 
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -130,8 +131,8 @@ public class CalcEntity extends TriggerEntity implements Calculation {
     }
 
     @Override
-    public void validate() throws NimbitsException {
-        super.validate();
+    public void validate(User user) throws NimbitsException {
+        super.validate(user);
         if (formula.isEmpty()) {
             throw new NimbitsException("Invalid Formula");
         }

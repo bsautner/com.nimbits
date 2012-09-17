@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-@RemoteServiceRelativePath("point")
+@RemoteServiceRelativePath("pointService")
 public interface PointService extends RemoteService {
 
     String exportData(final Map<EntityName, Entity> points, final ExportType exportType, final Map<EntityName, List<Value>> values) throws NimbitsException, IOException;

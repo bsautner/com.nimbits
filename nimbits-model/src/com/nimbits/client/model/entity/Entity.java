@@ -68,7 +68,7 @@ public interface Entity  extends Serializable, Comparable<Entity> {
 
     Date getDateCreated();
 
-    void validate() throws NimbitsException;
+    void validate(User user) throws NimbitsException;
 
     void setDateCreated(Date dateCreated);
 

@@ -36,9 +36,11 @@ import com.nimbits.client.service.feed.Feed;
 import com.nimbits.server.admin.common.ServerInfoImpl;
 import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
-import com.nimbits.server.transactions.service.user.UserServiceFactory;
-import com.nimbits.server.transactions.service.value.ValueServiceFactory;
+import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
+import com.nimbits.server.transactions.service.user.UserServiceImpl;
+import com.nimbits.server.transactions.service.value.ValueServiceImpl;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.UnsupportedEncodingException;
 import java.util.*;
@@ -51,6 +53,8 @@ import java.util.logging.Logger;
  * Date: 2/24/12
  * Time: 2:02 PM
  */
+@Service("feedService")
+@Transactional
 public class FeedImpl extends RemoteServiceServlet implements Feed {
 
     private static final int MAX_LENGTH = 1024;
@@ -58,14 +62,17 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
     private static final int LENGTH = 200;
     private static final int OFFSET = 500;
     private static final Logger log = Logger.getLogger(FeedImpl.class.getName());
+    private EntityServiceImpl entityService;
+    private UserServiceImpl userService;
+    private ValueServiceImpl valueService;
 
 
     private User getUser() {
         try {
-            return UserServiceFactory.getServerInstance().getHttpRequestUser(
+            return userService.getHttpRequestUser(
                     this.getThreadLocalRequest());
         } catch (NimbitsException e) {
-            return UserServiceFactory.getServerInstance().getAnonUser();
+            return userService.getAnonUser();
         }
     }
 
@@ -76,7 +83,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
             final FeedValue feedValue = new FeedValueModel(valueToHtml(entity, originalPoint, value), value.getData().getContent(), type);
             final String json = GsonFactory.getSimpleInstance().toJson(feedValue);
             final Value v = ValueFactory.createValueModel(value, json);
-            ValueServiceFactory.getInstance().recordValue(user, feedPoint.get(0), v);
+            valueService.recordValue(user, feedPoint.get(0), v);
         }
     }
 
@@ -113,7 +120,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
                     new Date(),"", ValueFactory.createValueData(json), AlertType.OK);
             final Value v = ValueFactory.createValueModel(value, json);
 
-            ValueServiceFactory.getInstance().recordValue(user, feedPoint.get(0), v);
+            valueService.recordValue(user, feedPoint.get(0), v);
 
         }
 
@@ -225,9 +232,11 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
         return sb.toString();
     }
 
-    protected List<Point> getFeedPoint(final User user) throws NimbitsException {
 
-        final Map<String, Entity> map =  EntityServiceFactory.getInstance().getEntityMap(user, EntityType.feed, 1);
+    @Override
+    public List<Point> getFeedPoint(final User user) throws NimbitsException {
+
+        final Map<String, Entity> map =  entityService.getEntityMap(user, EntityType.feed, 1);
 
       if (map.isEmpty()) {
          return Collections.emptyList();
@@ -258,7 +267,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
                 return Collections.emptyList();
             }
             else {
-                final List<Value> values = ValueServiceFactory.getInstance().getTopDataSeries(feedPoint.get(0), count, new Date());
+                final List<Value> values = valueService.getTopDataSeries(feedPoint.get(0), count, new Date());
                 final List<FeedValue> retObj = new ArrayList<FeedValue>(values.size());
 
                 for (final Value v : values) {
@@ -307,11 +316,34 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
         final Entity entity = EntityModelFactory.createEntity(name, "", EntityType.feed,
                 ProtectionLevel.onlyConnection, user.getKey(), user.getKey(), UUID.randomUUID().toString());
         final Point point = PointModelFactory.createPointModel(entity, 0.0, 90, "", 0.0, false, false, false, 0, false, FilterType.fixedHysteresis, 0.1, false, PointType.feed , 0, false, 0.0);
-        return (Point) EntityServiceFactory.getInstance().addUpdateEntity(point);
+        return (Point) entityService.addUpdateEntity(point);
 
 
 
     }
 
 
+    public void setEntityService(EntityServiceImpl entityService) {
+        this.entityService = entityService;
+    }
+
+    public EntityServiceImpl getEntityService() {
+        return entityService;
+    }
+
+    public void setUserService(UserServiceImpl userService) {
+        this.userService = userService;
+    }
+
+    public UserServiceImpl getUserService() {
+        return userService;
+    }
+
+    public void setValueService(ValueServiceImpl valueService) {
+        this.valueService = valueService;
+    }
+
+    public ValueServiceImpl getValueService() {
+        return valueService;
+    }
 }

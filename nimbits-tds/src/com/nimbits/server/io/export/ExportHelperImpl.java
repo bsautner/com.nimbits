@@ -18,7 +18,8 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.server.transactions.service.intelligence.IntelligenceServiceFactory;
+import com.nimbits.client.service.intelligence.IntelligenceService;
+
 
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,8 @@ import java.util.Map;
 public class ExportHelperImpl implements ExportHelper {
 
     private static final int INT = 1024;
+
+    IntelligenceService intelligenceService;
 
     @Override
     public String exportPointDataToCSVSeparateColumns(final Map<EntityName, Entity> points,
@@ -96,8 +99,8 @@ public class ExportHelperImpl implements ExportHelper {
     }
 
     private String buildHTML(final String request, final String header) throws NimbitsException {
-        final String raw = IntelligenceServiceFactory.getInstance().getRawResult(request, "", true);
-        final Map<String, String> html = IntelligenceServiceFactory.getInstance().getHTMLContent(raw);
+        final String raw = intelligenceService.getRawResult(request, "", true);
+        final Map<String, String> html = intelligenceService.getHTMLContent(raw);
         final StringBuilder hb = new StringBuilder();
         final String topHTML = addTopHTML(header);
         hb.append("<table border=\"0\">").append("<TR><TD width=\"50\"></TD><TD>");

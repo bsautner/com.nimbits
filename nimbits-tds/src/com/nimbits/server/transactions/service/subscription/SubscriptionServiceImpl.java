@@ -39,7 +39,8 @@ import com.nimbits.server.external.facebook.FacebookFactory;
 import com.nimbits.server.external.twitter.TwitterServiceFactory;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.http.HttpCommonFactory;
-import com.nimbits.server.transactions.service.feed.FeedServiceFactory;
+
+import com.nimbits.server.transactions.service.feed.FeedImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,6 +66,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
     private ValueService valueService;
     private EntityService entityService;
     private EmailService emailService;
+    private FeedImpl feedService;
 
 
     public boolean okToProcess(Subscription subscription) {
@@ -201,7 +203,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
                 doMQTT(user, subscription, point, point, value);
                 break;
             case feed:
-                FeedServiceFactory.getInstance().postToFeed(user, point, point, value, FeedType.data);
+                feedService.postToFeed(user, point, point, value, FeedType.data);
                 break;
         }
     }
@@ -238,7 +240,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
             XmppServiceFactory.getInstance().sendMessage(message, u.getEmail());
         } else {
             log.info("Sending XMPP with resources count: " + resources.size());
-            XmppServiceFactory.getInstance().sendMessage(resources, message, u.getEmail());
+            XmppServiceFactory.getInstance().sendMessage(u, resources, message, u.getEmail());
         }
 
     }
@@ -327,5 +329,13 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
     public EmailService getEmailService() {
         return emailService;
+    }
+
+    public void setFeedService(FeedImpl feedService) {
+        this.feedService = feedService;
+    }
+
+    public FeedImpl getFeedService() {
+        return feedService;
     }
 }

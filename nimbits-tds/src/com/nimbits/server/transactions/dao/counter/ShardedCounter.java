@@ -19,6 +19,7 @@ import com.nimbits.server.orm.ApiCounterShard;
 import net.sf.jsr107cache.Cache;
 import net.sf.jsr107cache.CacheException;
 import net.sf.jsr107cache.CacheManager;
+import org.springframework.stereotype.Repository;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
@@ -43,6 +44,7 @@ import java.util.logging.Logger;
  *
  */
 @SuppressWarnings("unchecked")
+@Repository("sharedCounter")
 public class ShardedCounter {
     private static final Logger log = Logger.getLogger(ShardedCounter.class.getName());
 

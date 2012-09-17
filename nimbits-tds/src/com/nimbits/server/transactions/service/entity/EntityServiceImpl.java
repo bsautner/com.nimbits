@@ -32,8 +32,9 @@ import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.api.helper.LocationReportingHelperFactory;
 import com.nimbits.server.io.blob.BlobServiceFactory;
 import com.nimbits.server.process.task.TaskFactory;
-import com.nimbits.server.transactions.service.user.UserServiceFactory;
-import com.nimbits.server.transactions.service.value.ValueServiceFactory;
+import com.nimbits.server.transactions.memcache.entity.EntityCacheImpl;
+import com.nimbits.server.transactions.service.user.UserServiceImpl;
+import com.nimbits.server.transactions.service.value.ValueServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,14 +52,17 @@ import java.util.*;
 public class EntityServiceImpl  extends RemoteServiceServlet implements EntityService {
 
     private static final long serialVersionUID = -6442025194172745189L;
+    private UserServiceImpl userService;
+    private ValueServiceImpl valueService;
+    private EntityCacheImpl entityCache;
 
     private User getUser()  {
 
         try {
-            return UserServiceFactory.getServerInstance().getHttpRequestUser(
+            return userService.getHttpRequestUser(
                     this.getThreadLocalRequest());
         } catch (NimbitsException e) {
-            return UserServiceFactory.getServerInstance().getAnonUser();
+            return userService.getAnonUser();
         }
 
     }
@@ -69,11 +73,11 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
     public List<Entity> deleteEntity(final User user, final Entity entity) throws NimbitsException {
         final List<Entity> deleted;
         try {
-            deleted = EntityTransactionFactory.getInstance(user).deleteEntity(entity, Class.forName(entity.getEntityType().getClassName()));
+            deleted = entityCache.deleteEntity(user, entity, Class.forName(entity.getEntityType().getClassName()));
         } catch (ClassNotFoundException e) {
             throw  new NimbitsException(e);
         }
-        EntityTransactionFactory.getInstance(user).removeEntityFromCache(deleted);
+        entityCache.removeEntityFromCache(user, deleted);
         for (final Entity e : deleted) {
 
             TaskFactory.getInstance()
@@ -85,7 +89,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
             BlobServiceFactory.getInstance().deleteBlob((File) entity);
         }
         else if (entity.getEntityType().equals(EntityType.point)) {
-            ValueServiceFactory.getInstance().purgeValues(entity);
+            valueService.purgeValues(entity);
 
         }
         return deleted;
@@ -93,13 +97,13 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
 
     @Override
     public List<Entity> getEntityChildren(final User user, final Entity entity,final  EntityType type) throws NimbitsException {
-        return EntityTransactionFactory.getInstance(user).getChildren(entity, type);
+        return entityCache.getChildren(user, entity, type);
     }
 
 
     @Override
-    public List<Entity> getEntities() throws NimbitsException {
-        final List<Entity> retVal =EntityTransactionFactory.getInstance(getUser()).getEntities();
+    public List<Entity> getEntities(final User user) throws NimbitsException {
+        final List<Entity> retVal =entityCache.getEntities(user);
         Collections.sort(retVal);
         return retVal;
     }
@@ -125,37 +129,12 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
     public List<Entity> deleteEntity(final Entity entity) throws NimbitsException {
         User u = getUser();
         if (u == null)  {
-            u = UserServiceFactory.getInstance().getUserByKey(entity.getOwner(), AuthLevel.admin);
+            u = userService.getUserByKey(entity.getOwner(), AuthLevel.admin);
         }
         return  deleteEntity(u, entity);
     }
 
 
-
-    @Override
-    public List<Entity> getEntityByKey(final String key, final EntityType type) throws NimbitsException {
-        try {
-            return EntityTransactionFactory.getInstance(getUser()).getEntityByKey(key, Class.forName(type.getClassName()));
-        } catch (ClassNotFoundException e) {
-            throw new NimbitsException(e);
-        }
-    }
-
-    @Override
-    public List<Entity> findEntityByKey(final String key) throws NimbitsException {
-
-
-        for (final EntityType t : EntityType.values()) {
-            final List<Entity> r = getEntityByKey(key, t);
-            if (! r.isEmpty()) {
-                return r;
-
-            }
-        }
-        return new ArrayList<Entity>(0);
-
-
-    }
     @Override
     public List<Entity> findEntityByKey(final User user, final String key) throws NimbitsException {
 
@@ -171,19 +150,16 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
 
 
     }
-    @Override
-    public Map<String, Entity> getEntityMap(final EntityType type, final int limit) throws NimbitsException {
-        return EntityTransactionFactory.getInstance(getUser()).getEntityMap(type, limit);
-    }
+
 
     @Override
     public Map<String, Entity> getEntityMap(final User user, final EntityType type, final int limit) throws NimbitsException {
-        return EntityTransactionFactory.getInstance(user).getEntityMap(type, limit);
+        return entityCache.getEntityMap(user, type, limit);
     }
 
     @Override
     public Map<EntityName, Entity> getEntityNameMap(final EntityType type) throws NimbitsException {
-        return EntityTransactionFactory.getInstance(getUser()).getEntityNameMap(type);
+        return entityCache.getEntityNameMap(getUser(), type);
     }
 
     @Override
@@ -213,23 +189,23 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
 
     @Override
     public List<Entity> getChildren(final Entity parentEntity, final EntityType type) throws NimbitsException {
-        return EntityTransactionFactory.getInstance(getUser()).getChildren(parentEntity, type);
+        return entityCache.getChildren(getUser(), parentEntity, type);
     }
 
     @Override
     public List<Entity> getChildren(final User user, final Entity parentEntity, final EntityType type) throws NimbitsException {
-        return EntityTransactionFactory.getInstance(user).getChildren(parentEntity, type);
+        return entityCache.getChildren(user, parentEntity, type);
     }
 
     @Override
     public void updateUser(User user) throws NimbitsException {
-        EntityTransactionFactory.getInstance(user).updateUser();
+        entityCache.updateUser(user);
     }
 
     @Override
     public List<Entity>  getEntityByName(final User user, final EntityName name, final EntityType type) throws NimbitsException {
         try {
-            return EntityTransactionFactory.getInstance(user).getEntityByName(name, Class.forName(type.getClassName()));
+            return entityCache.getEntityByName(user, name, Class.forName(type.getClassName()));
         } catch (ClassNotFoundException e) {
             throw new NimbitsException(e);
         }
@@ -239,7 +215,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
     public List<Entity> getEntityByTrigger(User user, Entity trigger, EntityType type) throws NimbitsException {
         try {
             final Class cls = Class.forName(type.getClassName());
-            return EntityTransactionFactory.getInstance(user).getEntityByTrigger(trigger, cls);
+            return entityCache.getEntityByTrigger(user, trigger, cls);
         } catch (ClassNotFoundException e) {
             throw new NimbitsException(e);
         }
@@ -247,18 +223,18 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
     }
 
     @Override
-    public Map<String, Entity> getSystemWideEntityMap(final EntityType type) throws NimbitsException {
-        return EntityTransactionFactory.getInstance(UserServiceFactory.getServerInstance().getAdmin()).getSystemWideEntityMap(type);
+    public Map<String, Entity> getSystemWideEntityMap(final User user, final EntityType type) throws NimbitsException {
+        return entityCache.getSystemWideEntityMap(user, type);
     }
 
     @Override
     public List<Entity> getIdleEntities() throws NimbitsException {
-        return EntityTransactionFactory.getInstance(UserServiceFactory.getServerInstance().getAdmin()).getIdleEntities();
+        return entityCache.getIdleEntities(userService.getAdmin());
     }
 
     @Override
     public List<Entity> getSubscriptionsToEntity(final User user, final Entity subscribedEntity) throws NimbitsException {
-        return EntityTransactionFactory.getInstance(user).getSubscriptionsToEntity(subscribedEntity);
+        return entityCache.getSubscriptionsToEntity(user, subscribedEntity);
 
     }
 
@@ -268,17 +244,40 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
        TaskFactory.getInstance().startCoreTask(this.getThreadLocalRequest(), entity, Action.update, ServerInfoImpl.getFullServerURL(getThreadLocalRequest()));
        Location location =   ApiServlet.getGPS(this.getThreadLocalRequest());
        LocationReportingHelperFactory.getInstance().reportLocation( entity, location);
-       return EntityTransactionFactory.getInstance(user).addUpdateEntity(entity, true);
+       return entityCache.addUpdateEntity(user, entity, true);
 
     }
 
     @Override
     public List<Entity>  getEntityByKey(final User user, final String entityId, final EntityType type) throws NimbitsException {
         try {
-            return EntityTransactionFactory.getInstance(user).getEntityByKey(entityId, Class.forName(type.getClassName()));
+            return entityCache.getEntityByKey(user, entityId, Class.forName(type.getClassName()));
         } catch (ClassNotFoundException e) {
             throw new NimbitsException(e);
         }
     }
 
+    public void setUserService(UserServiceImpl userService) {
+        this.userService = userService;
+    }
+
+    public UserServiceImpl getUserService() {
+        return userService;
+    }
+
+    public void setValueService(ValueServiceImpl valueService) {
+        this.valueService = valueService;
+    }
+
+    public ValueServiceImpl getValueService() {
+        return valueService;
+    }
+
+    public void setEntityCache(EntityCacheImpl entityCache) {
+        this.entityCache = entityCache;
+    }
+
+    public EntityCacheImpl getEntityCache() {
+        return entityCache;
+    }
 }

@@ -41,7 +41,7 @@ public interface IntelligenceServiceAsync {
 
     void addDataToInput(User user, Intelligence intelligence, AsyncCallback<String> async);
 
-    void processInput(Intelligence update, AsyncCallback<Value> async);
+    void processInput(final User user, Intelligence update, AsyncCallback<Value> async);
 
 
 }

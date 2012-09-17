@@ -28,7 +28,7 @@ public interface TwitterServiceAsync {
     // AsyncCallback<Void> asyncCallback);
     void twitterAuthorise(final EmailAddress email, final AsyncCallback<String> asyncCallback);
 
-    void updateUserToken(final String oauth_token,
+    void updateUserToken(final User user, final String oauth_token,
                          AsyncCallback<Void> asyncCallback);
 
     void sendTweet(final User user,  final String message, final AsyncCallback<Void> async);

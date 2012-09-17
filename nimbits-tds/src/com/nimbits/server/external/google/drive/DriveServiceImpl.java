@@ -44,8 +44,10 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.service.docs.DriveService;
 import com.nimbits.server.admin.logging.LogHelper;
-import com.nimbits.server.transactions.service.user.UserServiceFactory;
-import com.nimbits.server.transactions.service.value.ValueTransactionFactory;
+import com.nimbits.server.transactions.service.user.UserServiceImpl;
+import com.nimbits.server.transactions.service.value.ValueServiceImpl;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -62,17 +64,21 @@ import java.util.logging.Logger;
  * Date: 8/3/12
  * Time: 3:22 PM
  */
+@Service("driveService")
+@Transactional
 public class DriveServiceImpl extends RemoteServiceServlet implements
         DriveService, RequestCallback {
     private static final int MAX_COLS = 6;
     static final Logger log = Logger.getLogger(DriveServiceImpl.class.getName());
+    private UserServiceImpl userService;
+    private ValueServiceImpl valueService;
 
 
     @Override
     public String createGoogleDoc(final Entity entity, final String fileName) throws NimbitsException {
         DocsService docsService;
 
-        final User user = UserServiceFactory.getServerInstance().getHttpRequestUser(
+        final User user = userService.getHttpRequestUser(
                 this.getThreadLocalRequest());
 
         docsService = new DocsService("nimbits-com");
@@ -115,7 +121,7 @@ public class DriveServiceImpl extends RemoteServiceServlet implements
     @Override
     public void setSpreadsheetSize(final Entity entity, final int count, String title) throws NimbitsException {
 
-        final User user = UserServiceFactory.getServerInstance().getHttpRequestUser(
+        final User user = userService.getHttpRequestUser(
                 this.getThreadLocalRequest());
         SpreadsheetService spreadsheetService;
         String consumerKey = getInitParameter("consumer_key");
@@ -163,7 +169,7 @@ public class DriveServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public void addSpreadsheetHeader(final Entity entity, final String title) throws NimbitsException {
-        final User user = UserServiceFactory.getServerInstance().getHttpRequestUser(
+        final User user = userService.getHttpRequestUser(
                 this.getThreadLocalRequest());
 
 
@@ -243,6 +249,22 @@ public class DriveServiceImpl extends RemoteServiceServlet implements
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    public void setUserService(UserServiceImpl userService) {
+        this.userService = userService;
+    }
+
+    public UserServiceImpl getUserService() {
+        return userService;
+    }
+
+    public void setValueService(ValueServiceImpl valueService) {
+        this.valueService = valueService;
+    }
+
+    public ValueServiceImpl getValueService() {
+        return valueService;
+    }
+
     private static class CellAddress {
         public final int row;
         public final int col;
@@ -263,11 +285,11 @@ public class DriveServiceImpl extends RemoteServiceServlet implements
     @Override
     public int dumpValues(final Entity entity, int section) throws NimbitsException {
 
-        final User user = UserServiceFactory.getServerInstance().getHttpRequestUser(
+        final User user = userService.getHttpRequestUser(
                 this.getThreadLocalRequest());
 
         log.severe("getting preloaded section" + section);
-        List<Value> values = ValueTransactionFactory.getInstance(entity).getPreload(section);
+        List<Value> values =valueService.getPreload(entity, section);
 
 
         SpreadsheetService spreadsheetService;

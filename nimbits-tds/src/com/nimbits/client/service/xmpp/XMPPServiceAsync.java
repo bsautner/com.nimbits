@@ -33,7 +33,7 @@ public interface XMPPServiceAsync {
 
     void getPointXmppResources(final User user, final Point point, final AsyncCallback<List<XmppResource>> async) throws NimbitsException;
 
-    void sendMessage(final List<XmppResource> resources, final String message, final EmailAddress email, final AsyncCallback<Void> async) throws NimbitsException;
+    void sendMessage(final User user, final List<XmppResource> resources, final String message, final EmailAddress email, final AsyncCallback<Void> async) throws NimbitsException;
 
     void deleteResource(final User u, final Entity entity, final AsyncCallback<Void> async);
 }

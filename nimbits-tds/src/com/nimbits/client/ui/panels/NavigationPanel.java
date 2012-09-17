@@ -133,7 +133,7 @@ public class NavigationPanel extends NavigationEventProvider {
 
     //service calls
     public void getUserEntities(final boolean refresh)  {
-        entityService.getEntities(new GetUserListAsyncCallback(refresh));
+        entityService.getEntities(user, new GetUserListAsyncCallback(refresh));
     }
 
     public void saveAll() {

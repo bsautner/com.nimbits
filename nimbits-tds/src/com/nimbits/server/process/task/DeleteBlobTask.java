@@ -20,6 +20,8 @@ import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.shared.Utils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServlet;
@@ -33,14 +35,16 @@ import java.util.logging.Logger;
  * Date: 4/23/12
  * Time: 1:30 PM
  */
-public class DeleteBlobTask extends HttpServlet {
+@Service("deleteBlobTask")
+@Transactional
+public class DeleteBlobTask extends HttpServlet  implements org.springframework.web.HttpRequestHandler{
 
     private static final Logger log = Logger.getLogger(DeleteBlobTask.class.getName());
 
     private static final long serialVersionUID = 1L;
 
     @Override
-    public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
+    public void handleRequest(final HttpServletRequest req, final HttpServletResponse resp) {
 
         try {
             processRequest(req);

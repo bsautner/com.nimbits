@@ -28,7 +28,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-@RemoteServiceRelativePath("data")
+@RemoteServiceRelativePath("valueService")
 public interface ValueService extends RemoteService {
 
 
@@ -75,4 +75,16 @@ public interface ValueService extends RemoteService {
 
 
     double calculateDelta(Point point) throws NimbitsException;
+
+
+
+    void moveValuesFromCacheToStore(Entity entity);
+
+    void consolidateDate(Entity entity, Date date) throws NimbitsException;
+
+    List<Value> getPreload(Entity entity, int section) throws NimbitsException;
+
+    void mergeTimespan(Point point, Timespan ts) throws NimbitsException;
+
+    boolean ignoreByFilter(Point point, Value value2) throws NimbitsException;
 }

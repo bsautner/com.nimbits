@@ -64,7 +64,7 @@ public class BillingQuotaTest  extends NimbitsServletTest {
     @Resource(name="valueService")
     ValueService valueService;
 
-    @Resource(name="settingsService")
+    @Resource(name="settingService")
     SettingsService settingsService;
 
     @Resource(name="userService")
@@ -97,7 +97,7 @@ public class BillingQuotaTest  extends NimbitsServletTest {
         for (int i = 0; i < QuotaFactory.getInstance(emailAddress).getMaxDailyQuota()+calls; i++) {
             valueServlet.processGet(req, resp);
         }
-        User u = (User) entityService.getEntityByKey(user.getKey(), EntityType.user).get(0);
+        User u = (User) entityService.getEntityByKey(userService.getAnonUser(), user.getKey(), EntityType.user).get(0);
        // System.out.println(u.getBilling().getAccountBalance());
         List<Value> currentValueSample = valueService.getCurrentValue(accountBalance);
         assertFalse(currentValueSample.isEmpty());
@@ -238,7 +238,7 @@ public class BillingQuotaTest  extends NimbitsServletTest {
             valueServlet.processGet(req, resp);
         }
 
-        User u = (User) entityService.getEntityByKey(user.getKey(), EntityType.user).get(0);
+        User u = (User) entityService.getEntityByKey(user, user.getKey(), EntityType.user).get(0);
         // System.out.println(u.getBilling().getAccountBalance());
         List<Value> currentValueSample =valueService.getCurrentValue(accountBalance);
         assertFalse(currentValueSample.isEmpty());

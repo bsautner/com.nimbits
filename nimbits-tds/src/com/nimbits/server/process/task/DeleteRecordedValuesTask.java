@@ -18,21 +18,25 @@ import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.transactions.service.value.ValueServiceFactory;
+import com.nimbits.server.transactions.service.value.ValueServiceImpl;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-public class DeleteRecordedValuesTask extends HttpServlet {
+@Service("deleteValuesTask")
+@Transactional
+public class DeleteRecordedValuesTask extends HttpServlet  implements org.springframework.web.HttpRequestHandler{
 
 //    private static final Logger log = Logger.getLogger(UpdatePointStatsTask.class.getName());
 
     private static final long serialVersionUID = 1L;
+    private ValueServiceImpl valueService;
 
     @Override
-    public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
+    public void handleRequest(final HttpServletRequest req, final HttpServletResponse resp) {
 
         final String pointJson = req.getParameter(Parameters.json.getText());
         Point point = GsonFactory.getInstance().fromJson(pointJson, PointModel.class);
@@ -49,9 +53,16 @@ public class DeleteRecordedValuesTask extends HttpServlet {
 
      //TODO - delete blobs
     private void deleteData(final Point point)  {
-        ValueServiceFactory.getInstance().deleteExpiredData(point);
+        valueService.deleteExpiredData(point);
 
 
     }
 
+    public void setValueService(ValueServiceImpl valueService) {
+        this.valueService = valueService;
+    }
+
+    public ValueServiceImpl getValueService() {
+        return valueService;
+    }
 }

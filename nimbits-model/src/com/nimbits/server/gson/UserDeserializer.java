@@ -14,8 +14,6 @@
 package com.nimbits.server.gson;
 
 import com.google.gson.*;
-import com.nimbits.client.model.billing.Billing;
-import com.nimbits.client.model.billing.BillingModel;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
 

@@ -22,10 +22,13 @@ import com.nimbits.client.model.connection.ConnectionRequestModelFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModelFactory;
+import com.nimbits.client.service.user.UserService;
 import com.nimbits.server.orm.ConnectionRequestEntity;
 import com.nimbits.server.orm.UserEntity;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
+import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
+import com.nimbits.server.transactions.service.user.UserServiceImpl;
 import com.nimbits.server.transactions.service.user.UserTransactions;
+import org.springframework.stereotype.Repository;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
@@ -34,9 +37,13 @@ import java.util.*;
 import java.util.logging.Logger;
 
 @SuppressWarnings("unchecked")
+@Repository("userDao")
 public class UserDAOImpl implements UserTransactions {
     private static final Logger log = Logger.getLogger(UserDAOImpl.class.getName());
     private static final int MAX_REQUESTS = 25;
+    private EntityServiceImpl entityService;
+    private UserServiceImpl userService;
+
 
     @Override
     @SuppressWarnings(Const.WARNING_UNCHECKED)
@@ -129,7 +136,7 @@ public class UserDAOImpl implements UserTransactions {
             if (!result.isEmpty()) {
 
                 for (final ConnectionRequest c : result) {
-                    User u = (User) EntityServiceFactory.getInstance().getEntityByKey(c.getTargetEmail().getValue(), EntityType.user);
+                    User u = (User) entityService.getEntityByKey(userService.getAdmin(), c.getTargetEmail().getValue(), EntityType.user);
                     retObj.add( UserModelFactory.createUserModel(u));
 
                 }
@@ -144,4 +151,20 @@ public class UserDAOImpl implements UserTransactions {
     }
 
 
+    public void setEntityService(EntityServiceImpl entityService) {
+        this.entityService = entityService;
+    }
+
+    public EntityServiceImpl getEntityService() {
+        return entityService;
+    }
+
+
+    public void setUserService(UserServiceImpl userService) {
+        this.userService = userService;
+    }
+
+    public UserServiceImpl getUserService() {
+        return userService;
+    }
 }

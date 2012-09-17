@@ -30,10 +30,10 @@ import java.util.Map;
  * Date: 2/7/12
  * Time: 12:02 PM
  */
-@RemoteServiceRelativePath("entity")
+@RemoteServiceRelativePath("entityService")
 public interface EntityService extends RemoteService {
 
-    List<Entity> getEntities() throws NimbitsException;
+    List<Entity> getEntities(final User u) throws NimbitsException;
 
     Entity addUpdateEntity(final Entity entity) throws NimbitsException;
 
@@ -41,7 +41,7 @@ public interface EntityService extends RemoteService {
 
     List<Entity> deleteEntity(final Entity entity) throws NimbitsException;
 
-    Map<String, Entity> getEntityMap(final EntityType type, final int limit) throws NimbitsException;
+
 
     Map<String, Entity> getEntityMap(final User user, final EntityType type, final int limit) throws NimbitsException;
 
@@ -51,11 +51,7 @@ public interface EntityService extends RemoteService {
 
     List<Entity> getChildren(final Entity parentEntity, final EntityType type) throws NimbitsException;
 
-
-
-    List<Entity> findEntityByKey(final String key) throws NimbitsException;
-
-    List<Entity> getEntityByKey(final String key, final EntityType type) throws NimbitsException;
+    List<Entity> findEntityByKey(final User u, final String key) throws NimbitsException;
 
     List<Entity> getEntityByKey(final User u, final String key, final EntityType type) throws NimbitsException;
 
@@ -71,10 +67,8 @@ public interface EntityService extends RemoteService {
 
     List<Entity> getSubscriptionsToEntity(final User user, final Entity subscribedEntity) throws NimbitsException;
 
-    Map<String, Entity> getSystemWideEntityMap(final EntityType type) throws NimbitsException;
+    Map<String, Entity> getSystemWideEntityMap(final User u,final EntityType type) throws NimbitsException;
 
-
-    List<Entity> findEntityByKey(User user, String param) throws NimbitsException;
 
     List<Entity> getChildren(User user, Entity parentEntity, EntityType type) throws NimbitsException;
 

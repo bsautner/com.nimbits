@@ -31,8 +31,8 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.time.TimespanServiceFactory;
-import com.nimbits.server.transactions.service.entity.EntityServiceFactory;
-import com.nimbits.server.transactions.service.value.ValueServiceFactory;
+import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
+import com.nimbits.server.transactions.service.value.ValueServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,6 +65,8 @@ public class ChartApiServletImpl extends ApiServlet {
     private static final String chartDateCode = "&chd=t:";
     private static final int INT = 512;
     private static final Pattern COMPILE = Pattern.compile(",");
+    private EntityServiceImpl entityService;
+    private ValueServiceImpl valueService;
 
     @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
@@ -119,7 +121,7 @@ public class ChartApiServletImpl extends ApiServlet {
 
 
 
-    private static String generateImageChartParams(final HttpServletRequest req,
+    private String generateImageChartParams(final HttpServletRequest req,
                                                    final Timespan timespan,
                                                    final int valueCount,
                                                    final boolean doScale,
@@ -134,7 +136,7 @@ public class ChartApiServletImpl extends ApiServlet {
             for (final EntityName pointName : pointList) {
 
 
-                final List<Entity> list = EntityServiceFactory.getInstance().getEntityByName(u, pointName, EntityType.point);
+                final List<Entity> list = entityService.getEntityByName(u, pointName, EntityType.point);
                 if (list.isEmpty()) {
                     log.info("Couldn't find a point in the chart request.");
                 } else {
@@ -145,8 +147,8 @@ public class ChartApiServletImpl extends ApiServlet {
 
                         final List<Value> values = timespan != null ?
 
-                                ValueServiceFactory.getInstance().getDataSegment(p, timespan) :
-                                ValueServiceFactory.getInstance().getTopDataSeries(p, valueCount);
+                                valueService.getDataSegment(p, timespan) :
+                                valueService.getTopDataSeries(p, valueCount);
 
 
                         for (final Value v : values) {
@@ -234,4 +236,19 @@ public class ChartApiServletImpl extends ApiServlet {
         return timespan;
     }
 
+    public void setEntityService(EntityServiceImpl entityService) {
+        this.entityService = entityService;
+    }
+
+    public EntityServiceImpl getEntityService() {
+        return entityService;
+    }
+
+    public void setValueService(ValueServiceImpl valueService) {
+        this.valueService = valueService;
+    }
+
+    public ValueServiceImpl getValueService() {
+        return valueService;
+    }
 }

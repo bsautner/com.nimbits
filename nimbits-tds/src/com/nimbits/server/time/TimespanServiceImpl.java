@@ -20,6 +20,7 @@ import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.timespan.TimespanModelFactory;
 import com.nimbits.client.service.timespan.TimespanService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,6 +35,7 @@ import java.util.GregorianCalendar;
  * Time: 7:55 PM
  */
 @Service("timespanService")
+@Transactional
 public class TimespanServiceImpl extends RemoteServiceServlet implements TimespanService {
     private static final long serialVersionUID = 1L;
 

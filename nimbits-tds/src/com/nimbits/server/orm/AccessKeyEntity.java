@@ -17,6 +17,7 @@ import com.nimbits.client.enums.AuthLevel;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.user.User;
 import com.nimbits.shared.Utils;
 
 import javax.jdo.annotations.PersistenceCapable;
@@ -84,8 +85,8 @@ public class AccessKeyEntity extends EntityStore implements AccessKey {
     }
 
     @Override
-    public void validate() throws NimbitsException {
-        super.validate();
+    public void validate(User user) throws NimbitsException {
+        super.validate(user);
         if (Utils.isEmptyString(this.code)) {
             throw new NimbitsException("Access Key must not be empty, you can delete the key if you don't want it anymore.");
         }

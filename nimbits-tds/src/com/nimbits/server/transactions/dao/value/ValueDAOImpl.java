@@ -35,6 +35,7 @@ import com.nimbits.server.orm.ValueBlobStoreEntity;
 import com.nimbits.server.process.task.TaskFactory;
 import com.nimbits.server.time.TimespanServiceFactory;
 import com.nimbits.server.transactions.service.value.ValueTransactions;
+import org.springframework.stereotype.Repository;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
@@ -51,14 +52,12 @@ import java.util.logging.Logger;
  * Time: 11:05 AM
  */
 @SuppressWarnings("unchecked")
+@Repository("valueDao")
 public class ValueDAOImpl implements ValueTransactions {
     private static final int INT = 1024;
     public static final int MAX_VALUES = 1;
-    private final Entity entity;
+
     private final Logger log = Logger.getLogger(ValueDAOImpl.class.getName());
-    public ValueDAOImpl(final Entity aPoint) {
-        this.entity = aPoint;
-    }
 
     public static  List<ValueBlobStore> createValueBlobStores(final Collection<ValueBlobStore> store) {
         final List<ValueBlobStore> retObj = new ArrayList<ValueBlobStore>(store.size());
@@ -77,22 +76,27 @@ public class ValueDAOImpl implements ValueTransactions {
     }
 
     @Override
-    public List<Value> getRecordedValuePrecedingTimestamp(final Date timestamp) throws NimbitsException {
+    public List<List<Value>> splitUpList(List<Value> original) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 
-        return getTopDataSeries(MAX_VALUES, timestamp);
+    @Override
+    public List<Value> getRecordedValuePrecedingTimestamp(final Entity entity,final Date timestamp) throws NimbitsException {
+
+        return getTopDataSeries(entity, MAX_VALUES, timestamp);
 
 
     }
 
     @Override
-    public List<Value> getTopDataSeries(final int maxValues) throws NimbitsException {
-        return getTopDataSeries(maxValues, new Date());
+    public List<Value> getTopDataSeries(final Entity entity, final int maxValues) throws NimbitsException {
+        return getTopDataSeries(entity, maxValues, new Date());
 
     }
 
 
     @Override
-    public List<Value> getTopDataSeries(final int maxValues, final Date endDate) throws NimbitsException {
+    public List<Value> getTopDataSeries(final Entity entity, final int maxValues, final Date endDate) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         try {
@@ -144,13 +148,13 @@ public class ValueDAOImpl implements ValueTransactions {
     }
 
     @Override
-    public List<Value> getDataSegment(final Timespan timespan) throws NimbitsException {
-        return getDataSegment(timespan, 0, 1000);
+    public List<Value> getDataSegment(final Entity entity, final Timespan timespan) throws NimbitsException {
+        return getDataSegment(entity, timespan, 0, 1000);
     }
 
     @SuppressWarnings("ObjectAllocationInLoop")
     @Override
-    public List<Value> getDataSegment(final Timespan timespan, final int start, final int end) throws NimbitsException {
+    public List<Value> getDataSegment(final Entity entity, final Timespan timespan, final int start, final int end) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
             final List<Value> retObj = new ArrayList<Value>(end - start);
@@ -175,7 +179,7 @@ public class ValueDAOImpl implements ValueTransactions {
     }
 
     @Override
-    public List<ValueBlobStore> getAllStores() throws NimbitsException {
+    public List<ValueBlobStore> getAllStores(final Entity entity) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
 
         try {
@@ -196,7 +200,7 @@ public class ValueDAOImpl implements ValueTransactions {
 
     @SuppressWarnings("ObjectAllocationInLoop")
     @Override
-    public void consolidateDate(final Date timestamp) throws NimbitsException {
+    public void consolidateDate(final Entity entity, final Date timestamp) throws NimbitsException {
 
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -205,26 +209,26 @@ public class ValueDAOImpl implements ValueTransactions {
             q.setFilter("timestamp == t && entity == k");
             q.declareParameters("String k, Long t");
             final List<ValueBlobStore> result = (List<ValueBlobStore>) q.execute(entity.getKey(), timestamp.getTime());
-            mergeResults(pm, result);
+            mergeResults(pm, entity, result);
 
         } finally {
             pm.close();
         }
     }
 
-    private void mergeResults(final PersistenceManager pm, final List<ValueBlobStore> result) throws NimbitsException {
+    private void mergeResults(final PersistenceManager pm, final Entity entity, final List<ValueBlobStore> result) throws NimbitsException {
         final List<Value> values = new ArrayList<Value>(Const.CONST_DEFAULT_LIST_SIZE);
         for (final ValueBlobStore store : result) {
             values.addAll(readValuesFromFile(new BlobKey(store.getBlobKey()), store.getLength()));
         }
         startBlobDeleteTask(result);
         pm.deletePersistentAll(result);
-        recordValues(values);
+        recordValues(entity, values);
     }
 
     @SuppressWarnings("IOResourceOpenedButNotSafelyClosed")
     @Override
-    public ValueBlobStore mergeTimespan(final Timespan timespan) throws NimbitsException {
+    public ValueBlobStore mergeTimespan(final Entity entity, final Timespan timespan) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
         final FileService fileService = FileServiceFactory.getFileService();
@@ -308,7 +312,7 @@ public class ValueDAOImpl implements ValueTransactions {
     }
 
     @Override
-    public void purgeValues() throws NimbitsException {
+    public void purgeValues(final Entity entity) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final Query q = pm.newQuery(ValueBlobStoreEntity.class);
 
@@ -327,7 +331,7 @@ public class ValueDAOImpl implements ValueTransactions {
     }
 
     @Override
-    public void deleteExpiredData() {
+    public void deleteExpiredData(final Entity entity) {
 
 
         final PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -354,12 +358,12 @@ public class ValueDAOImpl implements ValueTransactions {
     }
 
     @Override
-    public int preloadTimespan(Timespan timespan) throws NimbitsException {
+    public int preloadTimespan(final Entity entity, Timespan timespan) throws NimbitsException {
         throw new NimbitsException("not implemented");
     }
 
     @Override
-    public List<Value> getPreload(int start) throws NimbitsException {
+    public List<Value> getPreload(final Entity entity,int start) throws NimbitsException {
         throw new NimbitsException("not implemented");
     }
 
@@ -371,7 +375,7 @@ public class ValueDAOImpl implements ValueTransactions {
     }
 
     @Override
-    public List<ValueBlobStore> recordValues(final List<Value> values) throws NimbitsException {
+    public List<ValueBlobStore> recordValues(final Entity entity, final List<Value> values) throws NimbitsException {
         if (!values.isEmpty()) {
 
             final Map<Long, List<Value>> map = new HashMap<Long, List<Value>>(values.size());
@@ -411,7 +415,7 @@ public class ValueDAOImpl implements ValueTransactions {
                     final String json = GsonFactory.getInstance().toJson(longListEntry.getValue());
 
                     try {
-                        ValueBlobStore b = createBlobStoreEntity(maxMap, minMap, longListEntry.getKey(), json, 0);
+                        ValueBlobStore b = createBlobStoreEntity(entity, maxMap, minMap, longListEntry.getKey(), json, 0);
                         retObj.add(b);
                     } catch (IOException e) {
                         throw new NimbitsException(e);
@@ -431,7 +435,7 @@ public class ValueDAOImpl implements ValueTransactions {
 
     }
 
-    private ValueBlobStore createBlobStoreEntity(final Map<Long, Long> maxMap, final Map<Long, Long> minMap, final Long l, final String json, final int retryCount) throws IOException, NimbitsException {
+    private ValueBlobStore createBlobStoreEntity(final Entity entity, final Map<Long, Long> maxMap, final Map<Long, Long> minMap, final Long l, final String json, final int retryCount) throws IOException, NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         final FileService fileService = FileServiceFactory.getFileService();
         final AppEngineFile file = fileService.createNewBlobFile(Const.CONTENT_TYPE_PLAIN);
@@ -464,7 +468,7 @@ public class ValueDAOImpl implements ValueTransactions {
         } catch (ApiProxy.ApiDeadlineExceededException ex)  {
             if (retryCount < 10) {
                 log.info("data store unavailable - trying again.  Retry count: " + retryCount);
-                return  createBlobStoreEntity(maxMap, minMap, l, json, retryCount + 1);
+                return  createBlobStoreEntity(entity, maxMap, minMap, l, json, retryCount + 1);
             }
             else {
 
@@ -482,22 +486,22 @@ public class ValueDAOImpl implements ValueTransactions {
     }
 
     @Override
-    public void moveValuesFromCacheToStore() throws NimbitsException {
+    public void moveValuesFromCacheToStore(final Entity entity) throws NimbitsException {
         throw new NimbitsException("Not Implemented");
     }
 
     @Override
-    public List<Value> getCache(final Timespan timespan) throws NimbitsException {
+    public List<Value> getCache(Entity entity, Timespan timespan) throws NimbitsException {
         throw new NimbitsException("Not Implemented");
     }
 
     @Override
-    public List<Value> getBuffer() throws NimbitsException {
+    public List<Value> getBuffer(final Entity entity) throws NimbitsException {
         throw new NimbitsException("Not Implimented");
     }
 
     @Override
-    public Value recordValue(final Value v) throws NimbitsException {
+    public Value recordValue(final Entity entity,final Value v) throws NimbitsException {
         throw new NimbitsException("Not Implimented");
     }
 

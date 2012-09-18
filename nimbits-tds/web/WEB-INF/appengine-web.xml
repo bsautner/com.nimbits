@@ -17,14 +17,13 @@
     <!--<async-session-persistence enabled="true"/>-->
     <threadsafe>true</threadsafe>
     <application>nimbits-hrd1</application>
-    <version>409</version>
+    <version>411</version>
     <sessions-enabled>true</sessions-enabled>
     <inbound-services>
         <service>mail</service>
         <service>xmpp_message</service>
     </inbound-services>
     <system-properties>
-
-        <property name="com.google.gdata.DisableCookieHandler" value="true"/>
+      <property name="com.google.gdata.DisableCookieHandler" value="true"/>
     </system-properties>
 </appengine-web-app>

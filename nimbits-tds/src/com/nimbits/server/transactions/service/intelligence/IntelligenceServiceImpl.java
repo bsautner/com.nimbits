@@ -35,7 +35,7 @@ import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.intelligence.IntelligenceService;
 import com.nimbits.client.service.settings.SettingsService;
 import com.nimbits.server.http.HttpCommonFactory;
-import com.nimbits.server.settings.SettingsServiceFactory;
+
 import com.nimbits.server.transactions.service.user.UserServiceImpl;
 import com.nimbits.server.transactions.service.value.ValueServiceImpl;
 import org.springframework.stereotype.Service;
@@ -75,7 +75,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
     private static final Pattern PATTERN = Pattern.compile("\\.");
     private static final Pattern COMPILE1 = Pattern.compile("\\[");
     private EntityService entityService;
-    private SettingsService settingService;
+    private SettingsService settingsService;
     private UserServiceImpl userService;
     private ValueServiceImpl valueService;
 
@@ -88,9 +88,9 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
         }
     }
 
-    private static String key() {
+    private String key() {
         try {
-            return SettingsServiceFactory.getInstance().getSetting(SettingType.wolframKey);
+            return settingsService.getSetting(SettingType.wolframKey);
         } catch (NimbitsException e) {
             log.severe(e.getMessage());
             return "";
@@ -159,7 +159,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
     }
 
 
-    public static double getFormulaResult(final String formula) throws NimbitsException {
+    public double getFormulaResult(final String formula) throws NimbitsException {
 
         // final String key = SettingTransactionsFactory.getInstance().getSetting(Const.PARAM_WOLFRAM_ALPHA_KEY);
 
@@ -349,12 +349,12 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
         return entityService;
     }
 
-    public void setSettingService(SettingsService settingsService) {
-        this.settingService = settingsService;
+    public void setSettingsService(SettingsService settingsService) {
+        this.settingsService = settingsService;
     }
 
-    public SettingsService getSettingService() {
-        return settingService;
+    public SettingsService getSettingsService() {
+        return settingsService;
     }
 
     public void setUserService(UserServiceImpl userService) {

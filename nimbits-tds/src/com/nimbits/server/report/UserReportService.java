@@ -19,7 +19,6 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.user.UserService;
 import com.nimbits.server.admin.logging.LogHelper;
-import com.nimbits.server.admin.quota.QuotaFactory;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServlet;
@@ -84,7 +83,7 @@ public class UserReportService extends HttpServlet {
                 out.println("<TD>" + u.getLastLoggedIn() + "</TD>");
                 out.println("<TD>" + u.getDateCreated() + "</TD>");
 
-               out.println("<TD>" + QuotaFactory.getInstance(u.getEmail()).getCount() + "</TD>");
+
 
 
 

@@ -16,8 +16,8 @@ package com.nimbits.server.transactions.memcache.settings;
 import com.nimbits.client.enums.MemCacheKey;
 import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.server.settings.SettingTransactions;
-import com.nimbits.server.settings.SettingTransactionsFactory;
+import com.nimbits.server.transactions.dao.settings.SettingsDAOImpl;
+import com.nimbits.server.transactions.service.settings.SettingTransactions;
 import net.sf.jsr107cache.Cache;
 import net.sf.jsr107cache.CacheException;
 import net.sf.jsr107cache.CacheManager;
@@ -36,6 +36,8 @@ import java.util.Map;
 @Component("settingsCache")
 public class SettingMemCacheImpl implements SettingTransactions {
     Cache cache;
+    private SettingsDAOImpl settingsDao;
+
 
     private String SettingCacheKey(final SettingType setting) {
         return MemCacheKey.setting + setting.getName();
@@ -49,7 +51,7 @@ public class SettingMemCacheImpl implements SettingTransactions {
 
         try {
             cache = CacheManager.getInstance().getCacheFactory().createCache(Collections.emptyMap());
-            final Map<SettingType, String> settings = SettingTransactionsFactory.getDaoInstance().getSettings();
+            final Map<SettingType, String> settings =settingsDao.getSettings();
             for (final SettingType setting : settings.keySet()) {
                 cache.remove(MemCacheKey.allSettings);
                 if (setting != null) {
@@ -79,7 +81,7 @@ public class SettingMemCacheImpl implements SettingTransactions {
                 return (String) cache.get(SettingCacheKey(setting));
 
             } else {
-                String storedVal = SettingTransactionsFactory.getDaoInstance().getSetting(setting);
+                String storedVal = settingsDao.getSetting(setting);
                 cache.put(SettingCacheKey(setting), storedVal);
                 return storedVal;
 
@@ -99,7 +101,7 @@ public class SettingMemCacheImpl implements SettingTransactions {
                 return (Map<SettingType, String>) cache.get(MemCacheKey.allSettings);
 
             } else {
-                final Map<SettingType, String> settings = SettingTransactionsFactory.getDaoInstance().getSettings();
+                final Map<SettingType, String> settings = settingsDao.getSettings();
                 cache.put(MemCacheKey.allSettings, settings);
                 return settings;
             }
@@ -110,7 +112,7 @@ public class SettingMemCacheImpl implements SettingTransactions {
 
     @Override
     public void addSetting(final SettingType setting, final String value) throws NimbitsException {
-        SettingTransactionsFactory.getDaoInstance().addSetting(setting, value);
+        settingsDao.addSetting(setting, value);
         try {
             cache = CacheManager.getInstance().getCacheFactory().createCache(Collections.emptyMap());
 
@@ -128,7 +130,7 @@ public class SettingMemCacheImpl implements SettingTransactions {
 
     @Override
     public void updateSetting(final SettingType setting, final String newValue) throws NimbitsException {
-        SettingTransactionsFactory.getDaoInstance().updateSetting(setting, newValue);
+        settingsDao.updateSetting(setting, newValue);
         try {
             cache = CacheManager.getInstance().getCacheFactory().createCache(Collections.emptyMap());
 
@@ -144,4 +146,11 @@ public class SettingMemCacheImpl implements SettingTransactions {
     }
 
 
+    public void setSettingsDao(SettingsDAOImpl settingsDao) {
+        this.settingsDao = settingsDao;
+    }
+
+    public SettingsDAOImpl getSettingsDao() {
+        return settingsDao;
+    }
 }

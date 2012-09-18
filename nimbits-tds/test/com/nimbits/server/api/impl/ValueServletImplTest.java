@@ -20,11 +20,10 @@ import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
+import com.nimbits.client.service.settings.SettingsService;
 import com.nimbits.client.service.value.ValueService;
 import com.nimbits.server.NimbitsServletTest;
-import com.nimbits.server.admin.quota.QuotaFactory;
-import com.nimbits.server.process.cron.SystemMaint;
-import com.nimbits.server.settings.SettingsServiceFactory;
+import com.nimbits.server.admin.quota.QuotaManager;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,7 +46,14 @@ import static org.junit.Assert.*;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={
-        "classpath:META-INF/applicationContext.xml"
+        "classpath:META-INF/applicationContext.xml",
+        "classpath:META-INF/applicationContext-api.xml",
+        "classpath:META-INF/applicationContext-cache.xml",
+        "classpath:META-INF/applicationContext-cron.xml",
+        "classpath:META-INF/applicationContext-dao.xml",
+        "classpath:META-INF/applicationContext-service.xml",
+        "classpath:META-INF/applicationContext-task.xml"
+
 })
 public class ValueServletImplTest extends NimbitsServletTest {
     @Resource(name = "valueApi")
@@ -55,6 +61,14 @@ public class ValueServletImplTest extends NimbitsServletTest {
 
     @Resource(name = "valueService")
     ValueService valueService;
+
+    @Resource(name = "settingsService")
+    SettingsService settingsService;
+
+
+    @Resource(name="quotaManager")
+    QuotaManager quotaManager;
+
     @Test
     @Ignore
     public void testPostData() throws NimbitsException, InterruptedException, IOException, ServletException {
@@ -98,13 +112,12 @@ public class ValueServletImplTest extends NimbitsServletTest {
             (expected=NimbitsException.class)
     public void testQuotaException() throws IOException, NimbitsException {
 
-        SystemMaint systemMaint = new SystemMaint();
 
-        systemMaint.doGet(req, resp);
-        SettingsServiceFactory.getInstance().updateSetting(SettingType.billingEnabled, Const.TRUE);
+        systemCron.doGet(req, resp);
+        settingsService.updateSetting(SettingType.billingEnabled, Const.TRUE);
 
 
-        for (int i = 0; i < QuotaFactory.getInstance(emailAddress).getMaxDailyQuota()+10; i++) {
+        for (int i = 0; i < quotaManager.getMaxDailyQuota()+10; i++) {
             valueServlet.processGet(req, resp);
         }
 
@@ -114,13 +127,12 @@ public class ValueServletImplTest extends NimbitsServletTest {
     @Test
     public void testNoQuotaExceptionOnServerWithQuotaDisabled() throws IOException, NimbitsException {
 
-        SystemMaint systemMaint = new SystemMaint();
 
-        systemMaint.doGet(req, resp);
-        SettingsServiceFactory.getInstance().updateSetting(SettingType.billingEnabled, Const.FALSE);
+        systemCron.doGet(req, resp);
+        settingsService.updateSetting(SettingType.billingEnabled, Const.FALSE);
 
 
-        for (int i = 0; i < QuotaFactory.getInstance(emailAddress).getMaxDailyQuota() +10; i++) {
+        for (int i = 0; i <quotaManager.getMaxDailyQuota() +10; i++) {
             valueServlet.processGet(req, resp);
         }
         assertTrue(true);

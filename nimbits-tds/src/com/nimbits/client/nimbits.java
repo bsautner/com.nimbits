@@ -67,7 +67,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
     private Viewport viewport;
     private final static String heading = Const.CONST_SERVER_NAME + ' ' + SettingType.serverVersion.getDefaultValue();
     private CenterPanel centerPanel;
-    private SettingsServiceAsync settingService;
+    private SettingsServiceAsync settingsService;
     private EntityServiceAsync entityService;
     private UserServiceAsync userService;
     private TwitterServiceAsync twitterService;
@@ -77,7 +77,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
     @Override
     public void onModuleLoad() {
 
-        settingService = GWT.create(SettingsService.class);
+        settingsService = GWT.create(SettingsService.class);
         entityService = GWT.create(EntityService.class);
         userService = GWT.create(UserService.class);
         twitterService = GWT.create(TwitterService.class);
@@ -157,7 +157,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
                                       final String oauth_token,
                                       final Action action){
 
-        settingService.getSettings(new GetSettingMapAsyncCallback(action, uuid, code, oauth_token));
+        settingsService.getSettings(new GetSettingMapAsyncCallback(action, uuid, code, oauth_token));
     }
 
     private void decidedWhatViewToLoadSecondStep(final Action action, final Map<SettingType, String> settings, final String uuid)   {

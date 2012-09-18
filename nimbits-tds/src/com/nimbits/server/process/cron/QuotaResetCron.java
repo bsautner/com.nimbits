@@ -15,12 +15,15 @@ package com.nimbits.server.process.cron;
 
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.server.admin.quota.Quota;
-import com.nimbits.server.admin.quota.QuotaFactory;
+import com.nimbits.server.admin.quota.QuotaManagerImpl;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.logging.Logger;
 
 /**
@@ -29,10 +32,13 @@ import java.util.logging.Logger;
  * Date: 3/28/12
  * Time: 1:04 PM
  */
-public class QuotaResetCron  extends HttpServlet {
+@Service("quotaCron")
+@Transactional
+public class QuotaResetCron  extends HttpServlet implements org.springframework.web.HttpRequestHandler{
 
     private static final long serialVersionUID = 2L;
     private static final Logger log = Logger.getLogger(QuotaResetCron.class.getName());
+    private QuotaManagerImpl quotaManager;
 
 
     @Override
@@ -40,16 +46,28 @@ public class QuotaResetCron  extends HttpServlet {
     public void doGet(HttpServletRequest req, HttpServletResponse resp) {
 
         try {
-            Quota quota = QuotaFactory.getInstance();
-            quota.resetCounters();
+
+            quotaManager.resetCounters();
+            resp.setStatus(HttpServletResponse.SC_OK);
         } catch (NimbitsException e) {
             log.severe(e.getMessage());
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
 
 
     }
 
 
+    @Override
+    public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+       response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+    }
 
+    public void setQuotaManager(QuotaManagerImpl quotaManager) {
+        this.quotaManager = quotaManager;
+    }
 
+    public QuotaManagerImpl getQuotaManager() {
+        return quotaManager;
+    }
 }

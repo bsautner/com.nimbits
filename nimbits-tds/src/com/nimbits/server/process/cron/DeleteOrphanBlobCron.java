@@ -13,6 +13,10 @@
 
 package com.nimbits.server.process.cron;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,7 +29,9 @@ import java.util.logging.Logger;
  * Date: 4/23/12
  * Time: 2:00 PM
  */
-public class DeleteOrphanBlobCron  extends HttpServlet {
+@Service("deleteOrphanCron")
+@Transactional
+public class DeleteOrphanBlobCron extends HttpServlet implements org.springframework.web.HttpRequestHandler{
 
     private static final long serialVersionUID = 1L;
     private static final Logger log = Logger.getLogger(PointCron.class.getName());
@@ -47,5 +53,10 @@ public class DeleteOrphanBlobCron  extends HttpServlet {
 //        }
 
 
+    }
+
+    @Override
+    public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
     }
 }

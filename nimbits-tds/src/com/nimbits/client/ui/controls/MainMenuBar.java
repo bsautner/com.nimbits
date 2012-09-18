@@ -173,7 +173,7 @@ public class MainMenuBar extends ToolBar {
         Menu menu = new Menu();
         menu.add(urlMenuItem("Run System Maintenance Service",
                 AbstractImagePrototype.create(Icons.INSTANCE.expand()),
-                "http://" + com.google.gwt.user.client.Window.Location.getHostName()+ "/cron/SystemMaint"));
+                "http://" + com.google.gwt.user.client.Window.Location.getHostName()+ "/cron/system"));
 
 
         button.setMenu(menu);

@@ -15,6 +15,8 @@ package com.nimbits.client.model.common;
 
 import com.nimbits.client.model.common.impl.CommonFactoryImpl;
 
+import javax.annotation.Resource;
+
 /**
  * Created by bsautner
  * User: benjamin
@@ -23,7 +25,7 @@ import com.nimbits.client.model.common.impl.CommonFactoryImpl;
  */
 public class CommonFactoryLocator {
 
-
+    @Resource(name="commonFactory")
     private static CommonFactory instance;
 
     private CommonFactoryLocator() {

@@ -2,6 +2,7 @@ package com.nimbits.server.api;
 
 import com.nimbits.client.enums.client.CommunicationType;
 import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.CommonFactory;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.mqtt.Mqtt;
@@ -53,6 +54,9 @@ public class ServiceController {
 
     @Resource(name="mqttService")
     private MqttService mqttService;
+
+    @Resource(name="commonFactory")
+    private CommonFactory commonFactory;
 
 
 

@@ -23,9 +23,9 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.client.service.settings.SettingsService;
 import com.nimbits.server.admin.common.ServerInfoImpl;
 import com.nimbits.server.admin.logging.LogHelper;
-import com.nimbits.server.settings.SettingsServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,6 +48,7 @@ public class EmailServiceImpl implements EmailService {
     private static final String DEFAULT_EMAIL_SUBJECT = "Nimbits Messaging";
     private static final int INT = 128;
     private static final int SECONDS_IN_MINUTE = 60;
+    private SettingsService  settingsService;
 
 
     private static void send(final Message msg) {
@@ -137,10 +138,10 @@ public class EmailServiceImpl implements EmailService {
             LogHelper.logException(EmailServiceImpl.class, e);
         }
     }
-    private static InternetAddress getFromEmail() throws UnsupportedEncodingException {
+    private InternetAddress getFromEmail() throws UnsupportedEncodingException {
         final String fromEmail;
         try {
-            fromEmail = new SettingsServiceImpl().getSetting(SettingType.admin);
+            fromEmail = settingsService.getSetting(SettingType.admin);
             return new InternetAddress(fromEmail, Words.WORD_NIMBITS);
         } catch (NimbitsException e) {
           return  new InternetAddress(Const.TEST_ACCOUNT, Words.WORD_NIMBITS);
@@ -215,5 +216,13 @@ public class EmailServiceImpl implements EmailService {
         } catch (UnsupportedEncodingException e) {
             LogHelper.logException(EmailServiceImpl.class, e);
         }
+    }
+
+    public void setSettingsService(SettingsService  settingsService) {
+        this.settingsService = settingsService;
+    }
+
+    public SettingsService getSettingsService() {
+        return settingsService;
     }
 }

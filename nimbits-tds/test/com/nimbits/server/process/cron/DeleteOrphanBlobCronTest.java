@@ -47,7 +47,14 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={
-        "classpath:META-INF/applicationContext.xml"
+        "classpath:META-INF/applicationContext.xml",
+        "classpath:META-INF/applicationContext-api.xml",
+        "classpath:META-INF/applicationContext-cache.xml",
+        "classpath:META-INF/applicationContext-cron.xml",
+        "classpath:META-INF/applicationContext-dao.xml",
+        "classpath:META-INF/applicationContext-service.xml",
+        "classpath:META-INF/applicationContext-task.xml"
+
 })
 public class DeleteOrphanBlobCronTest extends NimbitsServletTest {
 

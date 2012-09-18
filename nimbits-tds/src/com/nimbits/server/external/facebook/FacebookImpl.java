@@ -25,13 +25,11 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.facebook.FacebookService;
+import com.nimbits.client.service.settings.SettingsService;
 import com.nimbits.server.external.google.GoogleURLShortener;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.http.HttpCommonFactory;
-import com.nimbits.server.settings.SettingTransactionsFactory;
-
 import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
-
 import com.nimbits.server.transactions.service.user.UserServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,15 +54,16 @@ public class FacebookImpl extends RemoteServiceServlet implements FacebookServic
     private static final Pattern COMPILE = Pattern.compile("=");
     private EntityServiceImpl entityService;
     private UserServiceImpl userService;
+    private SettingsService settingsService;
 
     @Override
     public EmailAddress facebookLogin(final String code) throws UnsupportedEncodingException, NimbitsException {
 
         final User u =userService.getAppUserUsingGoogleAuth();
 
-        final String facebookClientId = SettingTransactionsFactory.getInstance().getSetting(SettingType.facebookClientId);
-        final String facebookSecret = SettingTransactionsFactory.getInstance().getSetting(SettingType.facebookSecret);
-        final String redirect_uri = SettingTransactionsFactory.getInstance().getSetting(SettingType.facebookRedirectURL);
+        final String facebookClientId = settingsService.getSetting(SettingType.facebookClientId);
+        final String facebookSecret = settingsService.getSetting(SettingType.facebookSecret);
+        final String redirect_uri = settingsService.getSetting(SettingType.facebookRedirectURL);
         final String token = getToken(code, facebookClientId, redirect_uri, facebookSecret);
         final String jsonEmail = HttpCommonFactory.getInstance().doGet(Path.PATH_FACEBOOK_ME, urlEncodeToken(token) + "&fields=email,name");
 
@@ -225,6 +224,14 @@ public class FacebookImpl extends RemoteServiceServlet implements FacebookServic
 
     public UserServiceImpl getUserService() {
         return userService;
+    }
+
+    public void setSettingsService(SettingsService settingsService) {
+        this.settingsService = settingsService;
+    }
+
+    public SettingsService getSettingsService() {
+        return settingsService;
     }
 }
 

@@ -26,7 +26,7 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.service.value.ValueService;
 import com.nimbits.server.NimbitsServletTest;
-import com.nimbits.server.settings.SettingsServiceFactory;
+
 
 
 import junit.framework.Assert;
@@ -101,7 +101,7 @@ public class RecordedValueServiceImplTest extends NimbitsServletTest {
     @Test
     public void testDelta() throws NimbitsException {
 
-        SettingsServiceFactory.getInstance().updateSetting(SettingType.billingEnabled, Const.TRUE);
+        settingsService.updateSetting(SettingType.billingEnabled, Const.TRUE);
 
         user.setBillingEnabled(true);
 

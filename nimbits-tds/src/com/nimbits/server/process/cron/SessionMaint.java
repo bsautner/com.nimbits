@@ -15,7 +15,10 @@ package com.nimbits.server.process.cron;
 
 import com.google.appengine.api.datastore.*;
 import com.nimbits.client.constants.Const;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,7 +33,9 @@ import java.util.logging.Logger;
  * Date: 12/19/11
  * Time: 7:38 PM
  */
-public class SessionMaint extends HttpServlet {
+@Service("sessionCron")
+@Transactional
+public class SessionMaint extends HttpServlet implements org.springframework.web.HttpRequestHandler{
     /**
      *
      */
@@ -60,4 +65,8 @@ public class SessionMaint extends HttpServlet {
 
     }
 
+    @Override
+    public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+    }
 }

@@ -34,6 +34,7 @@ public class MqttModel  implements Serializable, Mqtt {
     private final String host;
 
 
+
     public MqttModel(final String host, final EmailAddress email, final String uuid, final String message) {
         this.email = email.getValue();
         this.uuid = uuid;

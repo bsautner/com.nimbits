@@ -17,9 +17,8 @@ import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.server.NimbitsServletTest;
-import com.nimbits.server.admin.quota.QuotaFactory;
+import com.nimbits.server.admin.quota.QuotaManager;
 import com.nimbits.server.api.impl.ValueServletImpl;
-import com.nimbits.server.settings.SettingsServiceFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -38,29 +37,45 @@ import static org.junit.Assert.assertEquals;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={
-        "classpath:META-INF/applicationContext.xml"
+        "classpath:META-INF/applicationContext.xml",
+        "classpath:META-INF/applicationContext-api.xml",
+        "classpath:META-INF/applicationContext-cache.xml",
+        "classpath:META-INF/applicationContext-cron.xml",
+        "classpath:META-INF/applicationContext-dao.xml",
+        "classpath:META-INF/applicationContext-service.xml",
+        "classpath:META-INF/applicationContext-task.xml"
+
 })
 public class QuotaResetCronTest extends NimbitsServletTest {
     @Resource(name = "valueApi")
     ValueServletImpl valueServlet;
 
+    @Resource(name="systemCron")
+    SystemCron systemCron;
+
+    @Resource(name="quotaCron")
+    QuotaResetCron quotaResetCron;
+
+    @Resource(name="quotaManager")
+    QuotaManager quotaManager;
+
     @Test
     public void testQuotaReset() throws IOException, NimbitsException {
 
-        SystemMaint systemMaint = new SystemMaint();
 
-        systemMaint.doGet(req, resp);
-        SettingsServiceFactory.getInstance().updateSetting(SettingType.billingEnabled, Const.TRUE);
+
+        systemCron.doGet(req, resp);
+        settingsService.updateSetting(SettingType.billingEnabled, Const.TRUE);
 
 
         for (int i = 0; i < 10; i++) {
             valueServlet.processGet(req, resp);
         }
-        assertEquals(10, QuotaFactory.getInstance(user.getEmail()).getCount());
+        assertEquals(10,quotaManager.getCount(user.getEmail()));
 
-        QuotaResetCron cron = new QuotaResetCron();
-        cron.doGet(req,resp);
-        assertEquals(0, QuotaFactory.getInstance(user.getEmail()).getCount());
+
+        quotaResetCron.doGet(req,resp);
+        assertEquals(0, quotaManager.getCount(user.getEmail()));
 
 
     }

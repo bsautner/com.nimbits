@@ -19,7 +19,10 @@ import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.nimbits.client.enums.MemCacheKey;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.server.process.task.TaskFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,7 +35,9 @@ import java.util.Map;
  * Date: 12/20/11
  * Time: 5:24 PM
  */
-public class MoveRecordedValuesToStoreCron extends HttpServlet {
+@Service("moveCron")
+@Transactional
+public class MoveRecordedValuesToStoreCron extends HttpServlet implements org.springframework.web.HttpRequestHandler{
     /**
      *
      */
@@ -59,5 +64,10 @@ public class MoveRecordedValuesToStoreCron extends HttpServlet {
 
         }
 
+    }
+
+    @Override
+    public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
     }
 }

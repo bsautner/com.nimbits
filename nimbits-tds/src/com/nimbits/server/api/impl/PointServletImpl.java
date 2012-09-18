@@ -97,11 +97,11 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
                         EntityType parentType;
                         log.info("creating point");
                         if (containsParam(Parameters.category)) {
-                            parentName= commonFactory.createName(getParam(Parameters.category), EntityType.category);
+                            parentName= CommonFactoryLocator.getInstance().createName(getParam(Parameters.category), EntityType.category);
                             parentType = EntityType.category;
                         }
                         else if (containsParam(Parameters.parent)) {
-                            parentName = commonFactory.createName(getParam(Parameters.parent), EntityType.point);
+                            parentName = CommonFactoryLocator.getInstance().createName(getParam(Parameters.parent), EntityType.point);
                             parentType = EntityType.point;
 
                         }
@@ -114,7 +114,7 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
                         }
 
                         if (!Utils.isEmptyString(pointNameParam) && Utils.isEmptyString(getParam(Parameters.json))) {
-                            final EntityName pointName = commonFactory.createName(pointNameParam, EntityType.point);
+                            final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
                             String description = getParam(Parameters.description);
                             final Point point = createPoint(user, pointName, parentName, parentType, description);
                             final String retJson = gson.toJson(point);

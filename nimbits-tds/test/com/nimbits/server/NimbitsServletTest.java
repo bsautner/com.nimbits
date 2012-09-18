@@ -21,6 +21,7 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.accesskey.AccessKeyFactory;
 import com.nimbits.client.model.category.Category;
+import com.nimbits.client.model.common.CommonFactory;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
@@ -33,10 +34,7 @@ import com.nimbits.client.service.datapoints.PointService;
 import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.settings.SettingsService;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.process.cron.SystemMaint;
-import com.nimbits.server.settings.SettingTransactions;
-import com.nimbits.server.settings.SettingTransactionsFactory;
-import com.nimbits.server.settings.SettingsServiceFactory;
+import com.nimbits.server.process.cron.SystemCron;
 import com.nimbits.server.transactions.service.entity.EntityTransactions;
 import com.nimbits.server.transactions.service.user.UserServerService;
 import com.nimbits.server.transactions.service.user.UserTransactions;
@@ -66,7 +64,14 @@ import static org.junit.Assert.*;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={
-        "classpath:META-INF/applicationContext.xml"
+        "classpath:META-INF/applicationContext.xml",
+        "classpath:META-INF/applicationContext-api.xml",
+        "classpath:META-INF/applicationContext-cache.xml",
+        "classpath:META-INF/applicationContext-cron.xml",
+        "classpath:META-INF/applicationContext-dao.xml",
+        "classpath:META-INF/applicationContext-service.xml",
+        "classpath:META-INF/applicationContext-task.xml"
+
 })
 public class NimbitsServletTest {
     public static final String email = Const.TEST_ACCOUNT;
@@ -86,6 +91,13 @@ public class NimbitsServletTest {
     @Resource(name="entityCache")
     public EntityTransactions entityTransactions;
 
+    @Resource(name="systemCron")
+    public SystemCron systemCron;
+
+
+    @Resource(name="commonFactory")
+    public CommonFactory commonFactory;
+
 
     public MockHttpServletRequest req;
     public MockHttpServletResponse resp;
@@ -101,14 +113,12 @@ public class NimbitsServletTest {
     @Resource(name="pointService")
     public PointService pointService;
 
-    @Resource(name="settingService")
+    @Resource(name="settingsService")
     public SettingsService settingsService;
 
     @Resource(name="userDao")
     public UserTransactions userTransactionsDao;
 
-
-    public SettingTransactions settingsDAO;
 
 
     public Point point;
@@ -129,10 +139,9 @@ public class NimbitsServletTest {
 
         helper.setUp();
 
-        SystemMaint systemMaint = new SystemMaint();
 
         try {
-            systemMaint.doGet(null,null);
+            systemCron.doGet(null,null);
 
         } catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
@@ -140,11 +149,10 @@ public class NimbitsServletTest {
 
 
 
-        SettingsServiceFactory.getInstance().addSetting(SettingType.admin, email);
-        SettingsServiceFactory.getInstance().addSetting(SettingType.serverIsDiscoverable,true);
+        settingsService.addSetting(SettingType.admin, email);
+        settingsService.addSetting(SettingType.serverIsDiscoverable,true);
 
-        settingsService = SettingsServiceFactory.getInstance();
-        emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
+       emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
 
 
         pointName = CommonFactoryLocator.getInstance().createName("point", EntityType.point);
@@ -171,7 +179,6 @@ public class NimbitsServletTest {
         assertFalse(map.isEmpty());
         user.addAccessKey((AccessKey) map.values().iterator().next());
         assertNotNull(user);
-        settingsDAO = SettingTransactionsFactory.getDaoInstance();
 
         Entity c = EntityModelFactory.createEntity(groupName, "", EntityType.category, ProtectionLevel.everyone, user.getKey(), user.getKey(), UUID.randomUUID().toString());
         group = (Category) entityService.addUpdateEntity(c);

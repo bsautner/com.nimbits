@@ -15,7 +15,6 @@ package com.nimbits.client.service.settings;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.nimbits.client.enums.SettingType;
-import com.nimbits.client.exception.NimbitsException;
 
 import java.util.Map;
 
@@ -27,11 +26,11 @@ public interface SettingsServiceAsync {
 
     void getBooleanSetting(final SettingType paramName, AsyncCallback<Boolean> async);
 
-    void updateSetting(final SettingType setting, final String newValue, AsyncCallback<Void> async) throws NimbitsException;
+    void updateSetting(final SettingType setting, final String newValue, AsyncCallback<Void> async) ;
 
-    void addSetting(final SettingType setting, final String defaultValue, AsyncCallback<Void> async) throws NimbitsException;
+    void addSetting(final SettingType setting, final String defaultValue, AsyncCallback<Void> async) ;
 
     void addSetting(final SettingType setting, final boolean defaultValue, AsyncCallback<Void> async);
 
-
+    void reloadCache(AsyncCallback<String> async);
 }

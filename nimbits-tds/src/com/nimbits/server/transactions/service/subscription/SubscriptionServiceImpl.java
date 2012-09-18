@@ -34,12 +34,11 @@ import com.nimbits.client.service.user.UserService;
 import com.nimbits.client.service.value.ValueService;
 import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.communication.email.EmailService;
-import com.nimbits.server.communication.xmpp.XmppServiceFactory;
-import com.nimbits.server.external.facebook.FacebookFactory;
-import com.nimbits.server.external.twitter.TwitterServiceFactory;
+import com.nimbits.server.communication.xmpp.XmppServiceImpl;
+import com.nimbits.server.external.facebook.FacebookImpl;
+import com.nimbits.server.external.twitter.TwitterImpl;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.http.HttpCommonFactory;
-
 import com.nimbits.server.transactions.service.feed.FeedImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,6 +66,9 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
     private EntityService entityService;
     private EmailService emailService;
     private FeedImpl feedService;
+    private TwitterImpl twitterService;
+    private FacebookImpl facebookService;
+    private XmppServiceImpl xmppService;
 
 
     public boolean okToProcess(Subscription subscription) {
@@ -175,6 +177,9 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
                 sendNotification(subscriber, subscription, point, v);
             }
         }
+        else {
+            sendNotification(subscriber, subscription, point, v);
+        }
     }
 
 
@@ -224,7 +229,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
         HttpCommonFactory.getInstance().doPost(Path.PATH_NIMBITS_CORE_MQTT_LOCATION_URL, params);
     }
 
-    private static void doXMPP(final User u, final Subscription subscription, final Entity entity, final Point point, final Value v) throws NimbitsException {
+    private void doXMPP(final User u, final Subscription subscription, final Entity entity, final Point point, final Value v) throws NimbitsException {
         final String message;
 
         if (subscription.getNotifyFormatJson()) {
@@ -235,17 +240,17 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
                     + "] updated to new value: " + v.getDoubleValue();
         }
 
-        final List<XmppResource> resources =  XmppServiceFactory.getInstance().getPointXmppResources(u, point);
+        final List<XmppResource> resources =  xmppService.getPointXmppResources(u, point);
         if (resources.isEmpty()) {
-            XmppServiceFactory.getInstance().sendMessage(message, u.getEmail());
+            xmppService.sendMessage(message, u.getEmail());
         } else {
             log.info("Sending XMPP with resources count: " + resources.size());
-            XmppServiceFactory.getInstance().sendMessage(u, resources, message, u.getEmail());
+            xmppService.sendMessage(u, resources, message, u.getEmail());
         }
 
     }
 
-    private static void sendTweet(final User u, final Entity entity, final Value v) throws NimbitsException {
+    private void sendTweet(final User u, final Entity entity, final Value v) throws NimbitsException {
         final StringBuilder message = new StringBuilder(INT);
         message.append('#').append(entity.getName().getValue()).append(' ');
         message.append("Value=").append(v.getDoubleValue());
@@ -253,7 +258,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
             message.append(' ').append(v.getNote());
         }
         message.append(" via #Nimbits");
-        TwitterServiceFactory.getInstance().sendTweet(u, message.toString());
+       twitterService.sendTweet(u, message.toString());
     }
 
     private void postToFB(final Entity p, final Entity entity, final User u, final Value v) throws NimbitsException {
@@ -293,8 +298,8 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
         final String link = "http://app.nimbits.com?uuid=" + p.getUUID() + "&email=" + p.getOwner();
 
         final String d = Utils.isEmptyString(entity.getDescription()) ? "" : entity.getDescription();
-        FacebookFactory.getInstance().updateStatus(u.getFacebookToken(), m, picture.toString(), link, "Subscribe to this data feed.",
-                "nimbits.com", d);
+       facebookService.updateStatus(u.getFacebookToken(), m, picture.toString(), link, "Subscribe to this data feed.",
+               "nimbits.com", d);
 
 
     }
@@ -337,5 +342,29 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
     public FeedImpl getFeedService() {
         return feedService;
+    }
+
+    public void setTwitterService(TwitterImpl twitterService) {
+        this.twitterService = twitterService;
+    }
+
+    public TwitterImpl getTwitterService() {
+        return twitterService;
+    }
+
+    public void setFacebookService(FacebookImpl facebookService) {
+        this.facebookService = facebookService;
+    }
+
+    public FacebookImpl getFacebookService() {
+        return facebookService;
+    }
+
+    public void setXmppService(XmppServiceImpl xmppService) {
+        this.xmppService = xmppService;
+    }
+
+    public XmppServiceImpl getXmppService() {
+        return xmppService;
     }
 }

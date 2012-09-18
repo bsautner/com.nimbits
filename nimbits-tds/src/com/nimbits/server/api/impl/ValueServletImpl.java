@@ -181,7 +181,7 @@ public class ValueServletImpl extends ApiServlet implements org.springframework.
             result = entityService.getEntityByKey(u, uuid, EntityType.point);
         }
         else if (!Utils.isEmptyString(pointNameParam)) {
-            final EntityName pointName = commonFactory.createName(pointNameParam, EntityType.point);
+            final EntityName pointName =  commonFactory.createName(pointNameParam, EntityType.point);
 
             result = entityService.getEntityByName(u, pointName, EntityType.point);
         }

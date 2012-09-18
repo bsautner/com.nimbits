@@ -59,13 +59,6 @@
         <timezone>America/New_York</timezone>
     </cron>
 
-    <!--<cron>-->
-        <!--<url>/cron/SystemMaint</url>-->
-        <!--<description>Updates settings and syncs with nimbits.com if server setting serverIsDiscoverable is set to 1-->
-        <!--</description>-->
-        <!--<schedule>every day 01:00</schedule>-->
-        <!--<timezone>America/New_York</timezone>-->
-    <!--</cron>-->
 
 
 </cronentries>

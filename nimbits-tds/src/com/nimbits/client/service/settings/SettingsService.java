@@ -21,7 +21,7 @@ import com.nimbits.client.exception.NimbitsException;
 
 import java.util.Map;
 
-@RemoteServiceRelativePath("settingService")
+@RemoteServiceRelativePath("settingsService")
 public interface SettingsService extends RemoteService {
 
     String getSetting(final SettingType paramName) throws NimbitsException;
@@ -37,4 +37,5 @@ public interface SettingsService extends RemoteService {
     void addSetting(final SettingType setting,final  boolean defaultValue) throws NimbitsException;
 
 
+    String reloadCache() throws NimbitsException;
 }

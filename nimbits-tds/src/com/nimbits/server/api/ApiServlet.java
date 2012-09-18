@@ -18,6 +18,7 @@ import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactory;
+import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.location.Location;
@@ -29,8 +30,7 @@ import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.settings.SettingsService;
 import com.nimbits.client.service.value.ValueService;
-import com.nimbits.server.admin.quota.Quota;
-import com.nimbits.server.admin.quota.QuotaFactory;
+import com.nimbits.server.admin.quota.QuotaManager;
 import com.nimbits.server.api.helper.LocationReportingHelperFactory;
 import com.nimbits.server.transactions.service.user.UserServerService;
 import org.springframework.stereotype.Service;
@@ -71,8 +71,12 @@ public class ApiServlet extends HttpServlet {
     @Resource(name = "commonFactory")
     private CommonFactory commonFactory;
 
-    @Resource(name = "settingService")
+    @Resource(name = "settingsService")
     private SettingsService settingsService;
+
+    @Resource(name = "quotaManager")
+    private QuotaManager quotaManager;
+
 
     protected static boolean okToReport(final User u, final Entity c) {
 
@@ -96,9 +100,9 @@ public class ApiServlet extends HttpServlet {
         user = userService.getHttpRequestUser(req);
         getGPS(req);
         if (user != null) {
-            Quota quota = QuotaFactory.getInstance(user.getEmail());
-            int count = quota.incrementCounter();
-            int max = quota.getMaxDailyQuota();
+
+            int count = quotaManager.incrementCounter(user.getEmail());
+            int max = quotaManager.getMaxDailyQuota();
             log.info("quota call " + count + " of " + max);
 
             if (settingsService.getBooleanSetting(SettingType.billingEnabled)) {
@@ -106,7 +110,7 @@ public class ApiServlet extends HttpServlet {
                 if (count > max) {
 
                     if (user.isBillingEnabled()) {
-                        EntityName name = commonFactory.createName(Const.ACCOUNT_BALANCE, EntityType.point);
+                        EntityName name = CommonFactoryLocator.getInstance().createName(Const.ACCOUNT_BALANCE, EntityType.point);
                         log.info("billing enabled");
                         List<Entity> points =  entityService.getEntityByName(user, name, EntityType.point);
                         if (points.isEmpty()) {
@@ -125,7 +129,7 @@ public class ApiServlet extends HttpServlet {
                                     throw new NimbitsException(BUDGET_ERROR);
                                 }
                                 else {
-                                    Double newValue = current.getDoubleValue() - quota.getCostPerApiCall();
+                                    Double newValue = current.getDoubleValue() - quotaManager.getCostPerApiCall();
                                     if (newValue <= 0.0) {
                                         throw new NimbitsException(BUDGET_ERROR);
                                     }

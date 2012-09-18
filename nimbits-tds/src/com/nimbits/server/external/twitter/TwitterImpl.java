@@ -28,9 +28,8 @@ import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
+import com.nimbits.client.service.settings.SettingsService;
 import com.nimbits.client.service.twitter.TwitterService;
-import com.nimbits.server.settings.SettingTransactionsFactory;
-
 import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,6 +58,7 @@ public class TwitterImpl extends RemoteServiceServlet implements
     private static final long serialVersionUID = 1L;
     private static final Logger log = Logger.getLogger(TwitterImpl.class.getName());
     private EntityServiceImpl entityService;
+    private SettingsService settingsService;
 
     @Override
     public void onResponseReceived(Request request, Response response) {
@@ -73,8 +73,8 @@ public class TwitterImpl extends RemoteServiceServlet implements
 
     @Override
     public String twitterAuthorise(final EmailAddress email) throws NimbitsException {
-        final String twitter_client_id = SettingTransactionsFactory.getInstance().getSetting(SettingType.twitterClientId);
-        final String twitter_Secret = SettingTransactionsFactory.getInstance().getSetting(SettingType.twitterSecret);
+        final String twitter_client_id = settingsService.getSetting(SettingType.twitterClientId);
+        final String twitter_Secret = settingsService.getSetting(SettingType.twitterSecret);
         final Twitter twitter = new TwitterFactory().getInstance();
         log.info("Authorising Twitter");
         twitter.setOAuthConsumer(twitter_client_id, twitter_Secret);
@@ -102,8 +102,8 @@ public class TwitterImpl extends RemoteServiceServlet implements
     @Override
     @SuppressWarnings(Const.WARNING_UNCHECKED)
     public void updateUserToken(final User user, final String token) throws NimbitsException {
-        final String twitter_client_id = SettingTransactionsFactory.getInstance().getSetting(SettingType.twitterClientId);
-        final String twitter_Secret = SettingTransactionsFactory.getInstance().getSetting(SettingType.twitterSecret);
+        final String twitter_client_id = settingsService.getSetting(SettingType.twitterClientId);
+        final String twitter_Secret =settingsService.getSetting(SettingType.twitterSecret);
 
         final HttpServletRequest request = this.getThreadLocalRequest();
         final HttpSession session = request.getSession();
@@ -140,9 +140,9 @@ public class TwitterImpl extends RemoteServiceServlet implements
 
 
         try {
-            final String twitter_client_id = SettingTransactionsFactory.getInstance().getSetting(SettingType.twitterClientId);
+            final String twitter_client_id = settingsService.getSetting(SettingType.twitterClientId);
 
-            final String twitter_Secret = SettingTransactionsFactory.getInstance().getSetting(SettingType.twitterSecret);
+            final String twitter_Secret = settingsService.getSetting(SettingType.twitterSecret);
             if (u != null && ! Utils.isEmptyString(u.getTwitterToken()) && ! Utils.isEmptyString(u.getTwitterTokenSecret())) {
                 final AccessToken accessToken = new AccessToken(u.getTwitterToken(),
                         u.getTwitterTokenSecret());
@@ -166,14 +166,14 @@ public class TwitterImpl extends RemoteServiceServlet implements
         }
     }
 
-    static void sendTweet(final String message, final String token, final String secret) throws NimbitsException {
+    private void sendTweet(final String message, final String token, final String secret) throws NimbitsException {
 
         log.info("Sending tweet");
         log.info(token);
         log.info(secret);
 
-        final String twitter_client_id = SettingTransactionsFactory.getInstance().getSetting(SettingType.twitterClientId);
-        final String twitter_Secret = SettingTransactionsFactory.getInstance().getSetting(SettingType.twitterSecret);
+        final String twitter_client_id = settingsService.getSetting(SettingType.twitterClientId);
+        final String twitter_Secret = settingsService.getSetting(SettingType.twitterSecret);
 
 
         log.info(twitter_client_id);
@@ -202,6 +202,14 @@ public class TwitterImpl extends RemoteServiceServlet implements
 
     public EntityServiceImpl getEntityService() {
         return entityService;
+    }
+
+    public void setSettingsService(SettingsService settingsService) {
+        this.settingsService = settingsService;
+    }
+
+    public SettingsService getSettingsService() {
+        return settingsService;
     }
 }
 

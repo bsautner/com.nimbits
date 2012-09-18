@@ -15,5 +15,116 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="valueService" class="com.nimbits.server.transactions.service.value.ValueServiceImpl">
+        <property name="entityService" ref="entityService" />
+        <property name="userService" ref="userService" />
+        <property name="valueCache" ref="valueCache" />
+    </bean>
+
+
+    <bean id="entityService" class="com.nimbits.server.transactions.service.entity.EntityServiceImpl">
+        <property name="userService" ref="userService" />
+        <property name="valueService" ref="valueService" />
+        <property name="entityCache" ref="entityCache" />
+
+    </bean>
+    <bean id="userService" class="com.nimbits.server.transactions.service.user.UserServiceImpl">
+        <property name="entityService" ref="entityService" />
+        <property name="feedService" ref="feedService" />
+        <property name="valueService" ref="valueService" />
+        <property name="userCache" ref="userCache" />
+        <property name="settingsService" ref="settingsService" />
+        <property name="emailService" ref="emailService" />
+        <property name="quotaManager" ref="quotaManager" />
+    </bean>
+
+
+
+    <bean id="settingsService" class="com.nimbits.server.transactions.service.settings.SettingsServiceImpl">
+        <property name="settingsCache" ref="settingsCache" />
+    </bean>
+
+
+    <bean id="emailService" class="com.nimbits.server.communication.email.EmailServiceImpl">
+        <property name="settingsService" ref="settingsService" />
+    </bean>
+
+    <bean id="calculationService" class="com.nimbits.server.transactions.service.calculation.CalculationServiceImpl">
+        <property name="entityService" ref="entityService" />
+        <property name="valueService" ref="valueService" />
+    </bean>
+
+    <bean id="systemService" class="com.nimbits.server.admin.system.SystemServiceImpl">
+        <property name="entityService" ref="entityService" />
+        <property name="userService" ref="userService" />
+        <property name="valueService" ref="valueService" />
+    </bean>
+
+    <bean id="blobService" class="com.nimbits.server.io.blob.BlobServiceImpl">
+        <property name="entityService" ref="entityService" />
+    </bean>
+
+    <bean id="pointService" class="com.nimbits.server.transactions.service.point.PointServiceImpl" />
+    <bean id="driveService" class="com.nimbits.server.external.google.drive.DriveServiceImpl">
+        <property name="userService" ref="userService" />
+        <property name="valueService" ref="valueService" />
+    </bean>
+
+    <bean id="facebookService" class="com.nimbits.server.external.facebook.FacebookImpl">
+        <property name="entityService" ref="entityService" />
+        <property name="userService" ref="userService" />
+        <property name="settingsService" ref="settingsService" />
+    </bean>
+    <bean id="xmppService" class="com.nimbits.server.communication.xmpp.XmppServiceImpl">
+        <property name="entityService" ref="entityService" />
+        <property name="userService" ref="userService" />
+
+    </bean>
+    <bean id="intelService" class="com.nimbits.server.transactions.service.intelligence.IntelligenceServiceImpl">
+        <property name="entityService" ref="entityService" />
+        <property name="userService" ref="userService" />
+        <property name="valueService" ref="valueService" />
+    </bean>
+
+    <bean id="feedService" class="com.nimbits.server.transactions.service.feed.FeedImpl">
+        <property name="entityService" ref="entityService" />
+        <property name="userService" ref="userService" />
+        <property name="valueService" ref="valueService" />
+    </bean>
+
+    <bean id="subscribeService" class="com.nimbits.server.transactions.service.subscription.SubscriptionServiceImpl" >
+        <property name="feedService" ref="feedService" />
+        <property name="xmppService" ref="xmppService" />
+    </bean>
+
+    <bean id="twitterService" class="com.nimbits.server.external.twitter.TwitterImpl">
+        <property name="entityService" ref="entityService" />
+        <property name="settingsService" ref="settingsService" />
+    </bean>
+
+
+    <bean id="intelligenceService" class="com.nimbits.server.transactions.service.intelligence.IntelligenceServiceImpl">
+        <property name="entityService" ref="entityService" />
+        <property name="settingsService" ref="settingsService" />
+    </bean>
+
+    <bean id="summaryService" class="com.nimbits.server.transactions.service.summary.SummaryServiceImpl">
+        <property name="entityService" ref="entityService" />
+        <property name="valueService" ref="valueService" />
+    </bean>
+
+    <bean id="subscriptionService" class="com.nimbits.server.transactions.service.subscription.SubscriptionServiceImpl">
+        <property name="entityService" ref="entityService" />
+        <property name="valueService" ref="valueService" />
+        <property name="userService" ref="userService" />
+        <property name="emailService" ref="emailService" />
+        <property name="twitterService" ref="twitterService" />
+        <property name="facebookService" ref="facebookService" />
+    </bean>
+
+
+    <bean id="timespanService" class="com.nimbits.server.time.TimespanServiceImpl" />
+
+
 
 </beans>

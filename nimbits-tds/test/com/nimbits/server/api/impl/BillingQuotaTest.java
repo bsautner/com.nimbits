@@ -27,7 +27,7 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.service.settings.SettingsService;
 import com.nimbits.client.service.value.ValueService;
 import com.nimbits.server.NimbitsServletTest;
-import com.nimbits.server.admin.quota.QuotaFactory;
+import com.nimbits.server.admin.quota.QuotaManager;
 import com.nimbits.server.transactions.service.user.UserServerService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -51,7 +51,14 @@ import static org.junit.Assert.assertFalse;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={
-        "classpath:META-INF/applicationContext.xml"
+        "classpath:META-INF/applicationContext.xml",
+        "classpath:META-INF/applicationContext-api.xml",
+        "classpath:META-INF/applicationContext-cache.xml",
+        "classpath:META-INF/applicationContext-cron.xml",
+        "classpath:META-INF/applicationContext-dao.xml",
+        "classpath:META-INF/applicationContext-service.xml",
+        "classpath:META-INF/applicationContext-task.xml"
+
 })
 public class BillingQuotaTest  extends NimbitsServletTest {
 
@@ -64,11 +71,14 @@ public class BillingQuotaTest  extends NimbitsServletTest {
     @Resource(name="valueService")
     ValueService valueService;
 
-    @Resource(name="settingService")
+    @Resource(name="settingsService")
     SettingsService settingsService;
 
     @Resource(name="userService")
     UserServerService userService;
+
+    @Resource(name="quotaManager")
+    QuotaManager quotaManager;
 
 
     @Test(expected = NimbitsException.class)
@@ -93,8 +103,8 @@ public class BillingQuotaTest  extends NimbitsServletTest {
 
 
 
-        double calls = (0.06 /  QuotaFactory.getInstance(emailAddress).getCostPerApiCall());
-        for (int i = 0; i < QuotaFactory.getInstance(emailAddress).getMaxDailyQuota()+calls; i++) {
+        double calls = (0.06 /  quotaManager.getCostPerApiCall());
+        for (int i = 0; i < quotaManager.getMaxDailyQuota()+calls; i++) {
             valueServlet.processGet(req, resp);
         }
         User u = (User) entityService.getEntityByKey(userService.getAnonUser(), user.getKey(), EntityType.user).get(0);
@@ -121,7 +131,7 @@ public class BillingQuotaTest  extends NimbitsServletTest {
         double startingBalance = 5.00;
 
         entityService.addUpdateEntity(user, user);
-        EntityName name = commonFactory.createName(Const.ACCOUNT_BALANCE, EntityType.point);
+        EntityName name =commonFactory.createName(Const.ACCOUNT_BALANCE, EntityType.point);
         List<Entity> list = entityService.getEntityByName(user,name, EntityType.point );
         assertFalse(list.isEmpty());
         Point accountBalance = (Point) list.get(0);
@@ -141,8 +151,8 @@ public class BillingQuotaTest  extends NimbitsServletTest {
         double nickle = 0.05;   //try to write a nickles worth on a 2 cent budget
 
 
-        double calls = (nickle /  QuotaFactory.getInstance(emailAddress).getCostPerApiCall());
-        for (int i = 0; i < QuotaFactory.getInstance(emailAddress).getMaxDailyQuota()+calls; i++) {
+        double calls = (nickle /  quotaManager.getCostPerApiCall());
+        for (int i = 0; i < quotaManager.getMaxDailyQuota()+calls; i++) {
             valueServlet.processGet(req, resp);
         }
 
@@ -233,8 +243,8 @@ public class BillingQuotaTest  extends NimbitsServletTest {
         double penny = 0.01;
 
 
-        double calls = (penny /  QuotaFactory.getInstance(emailAddress).getCostPerApiCall());
-        for (int i = 0; i < QuotaFactory.getInstance(emailAddress).getMaxDailyQuota()+calls; i++) {
+        double calls = (penny /  quotaManager.getCostPerApiCall());
+        for (int i = 0; i < quotaManager.getMaxDailyQuota()+calls; i++) {
             valueServlet.processGet(req, resp);
         }
 

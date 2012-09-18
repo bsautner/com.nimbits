@@ -43,13 +43,13 @@ import com.nimbits.client.model.user.UserModel;
 import com.nimbits.client.model.user.UserModelFactory;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
+import com.nimbits.client.service.settings.SettingsService;
 import com.nimbits.client.service.user.UserService;
 import com.nimbits.server.admin.logging.LogHelper;
-import com.nimbits.server.admin.quota.QuotaFactory;
+import com.nimbits.server.admin.quota.QuotaManagerImpl;
 import com.nimbits.server.api.openid.UserInfo;
-import com.nimbits.server.communication.email.EmailServiceFactory;
-import com.nimbits.server.settings.SettingsServiceFactory;
-import com.nimbits.server.transactions.dao.user.UserDAOImpl;
+import com.nimbits.server.communication.email.EmailServiceImpl;
+import com.nimbits.server.transactions.memcache.user.UserCacheImpl;
 import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
 import com.nimbits.server.transactions.service.feed.FeedImpl;
 import com.nimbits.server.transactions.service.value.ValueServiceImpl;
@@ -83,7 +83,10 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     private EntityServiceImpl entityService;
     private FeedImpl feedService;
     private ValueServiceImpl valueService;
-    private UserDAOImpl userDao;
+    private SettingsService settingsService;
+    private EmailServiceImpl emailService;
+    private UserCacheImpl userCache;
+    private QuotaManagerImpl quotaManager;
 
 
     @Override
@@ -295,7 +298,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     @Override
     public Integer getQuota() throws NimbitsException {
         User user= getHttpRequestUser(this.getThreadLocalRequest());
-        return QuotaFactory.getInstance(user.getEmail()).getCount();
+        return quotaManager.getCount(user.getEmail());
 
     }
 
@@ -419,7 +422,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         // newUser.setSecret(UUID.randomUUID().toString());
         User user =  (User) entityService.addUpdateEntity(newUser);
 
-        if (SettingsServiceFactory.getInstance().getBooleanSetting(SettingType.billingEnabled)) {
+        if (settingsService.getBooleanSetting(SettingType.billingEnabled)) {
             createAccountBalancePoint(user);
         }
         feedService.createFeedPoint(user);
@@ -488,7 +491,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public User getAdmin() throws NimbitsException {
-        final String adminStr = SettingsServiceFactory.getInstance().getSetting(SettingType.admin);
+        final String adminStr = settingsService.getSetting(SettingType.admin);
         if (Utils.isEmptyString(adminStr)) {
             throw new NimbitsException("Server is missing admin setting!");
         }
@@ -562,11 +565,11 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     @Override
     public void sendConnectionRequest(final EmailAddress email) throws NimbitsException {
         final User user = getAppUserUsingGoogleAuth();
-        final ConnectionRequest f = userDao.makeConnectionRequest(user, email);
+        final ConnectionRequest f = userCache.makeConnectionRequest(user, email);
 
 
         if (f != null) {
-            EmailServiceFactory.getInstance().sendEmail(email,  getConnectionInviteEmail(user.getEmail()));
+            emailService.sendEmail(email, getConnectionInviteEmail(user.getEmail()));
             feedService.postToFeed(user, "A connection request has been emailed to " +
                     email.getValue() + ". If they approve, you will see any data object of theirs that have " +
                     "their permission set to be viewable by the public or connections", FeedType.info);
@@ -643,12 +646,12 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public List<ConnectionRequest> getPendingConnectionRequests(final EmailAddress email) throws NimbitsException {
-        return userDao.getPendingConnectionRequests(email);
+        return userCache.getPendingConnectionRequests(email);
     }
 
     @Override
     public List<User> getConnectionRequests(final List<String> connections) throws NimbitsException {
-        return userDao.getConnectionRequests(connections);
+        return userCache.getConnectionRequests(connections);
     }
 
     @Override
@@ -671,7 +674,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
             Connection rc = ConnectionFactory.createCreateConnection(rConnection);
             entityService.addUpdateEntity(acceptor, ac);
             entityService.addUpdateEntity(requester, rc);
-            userDao.updateConnectionRequest(key, requester, acceptor, accepted);
+            userCache.updateConnectionRequest(key, requester, acceptor, accepted);
 
         }
 
@@ -707,11 +710,37 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         return valueService;
     }
 
-    public void setUserDao(UserDAOImpl userDao) {
-        this.userDao = userDao;
+
+
+    public void setSettingsService(SettingsService settingsService) {
+        this.settingsService = settingsService;
     }
 
-    public UserDAOImpl getUserDao() {
-        return userDao;
+    public SettingsService getSettingsService() {
+        return settingsService;
+    }
+
+    public void setEmailService(EmailServiceImpl emailService) {
+        this.emailService = emailService;
+    }
+
+    public EmailServiceImpl getEmailService() {
+        return emailService;
+    }
+
+    public void setUserCache(UserCacheImpl userCache) {
+        this.userCache = userCache;
+    }
+
+    public UserCacheImpl getUserCache() {
+        return userCache;
+    }
+
+    public void setQuotaManager(QuotaManagerImpl quotaManager) {
+        this.quotaManager = quotaManager;
+    }
+
+    public QuotaManagerImpl getQuotaManager() {
+        return quotaManager;
     }
 }

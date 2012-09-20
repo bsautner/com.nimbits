@@ -20,7 +20,6 @@ import com.nimbits.client.constants.UserMessages;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactory;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
@@ -31,12 +30,10 @@ import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.time.TimespanServiceFactory;
-import com.nimbits.server.transactions.service.value.ValueServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,12 +57,24 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
     private static final int EXPIRE = 90;
     private static final double FILTER_VALUE = 0.1;
     private static final Logger log = Logger.getLogger(PointServletImpl.class.getName());
-    private EntityService entityService;
-    private CommonFactory  commonFactory;
-    private ValueServiceImpl valueService;
+
 
     @Override
-    public void handleRequest(final HttpServletRequest req, final HttpServletResponse resp) {
+    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) {
+
+        if (isPost(req)) {
+
+            doPost(req, resp);
+        }
+        else {
+            doGet(req, resp);
+        }
+
+    }
+
+
+    @Override
+    public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
 
 
         try {
@@ -450,28 +459,4 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
 
     }
 
-
-    public void setEntityService(EntityService entityService) {
-        this.entityService = entityService;
-    }
-
-    public EntityService getEntityService() {
-        return entityService;
-    }
-
-    public void setCommonFactory(CommonFactory commonFactory) {
-        this.commonFactory = commonFactory;
-    }
-
-    public CommonFactory getCommonFactory() {
-        return commonFactory;
-    }
-
-    public void setValueService(ValueServiceImpl valueService) {
-        this.valueService = valueService;
-    }
-
-    public ValueServiceImpl getValueService() {
-        return valueService;
-    }
 }

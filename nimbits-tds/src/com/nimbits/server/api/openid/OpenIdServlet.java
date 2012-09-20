@@ -14,8 +14,6 @@
 package com.nimbits.server.api.openid;
 
 
-
-
 import com.google.step2.AuthRequestHelper;
 import com.google.step2.AuthResponseHelper;
 import com.google.step2.ConsumerHelper;
@@ -28,6 +26,8 @@ import org.openid4java.consumer.InMemoryConsumerAssociationStore;
 import org.openid4java.discovery.DiscoveryInformation;
 import org.openid4java.message.AuthRequest;
 import org.openid4java.message.ParameterList;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -41,7 +41,9 @@ import java.io.IOException;
  * Servlet for handling OpenID logins.  Uses the Step2 library from code.google.com and the
  * underlying OpenID4Java library.
  */
-public class OpenIdServlet extends HttpServlet {
+@Service("openId")
+@Transactional
+public class OpenIdServlet extends HttpServlet implements org.springframework.web.HttpRequestHandler {
 
     protected ConsumerHelper consumerHelper;
     protected String realm;
@@ -60,11 +62,20 @@ public class OpenIdServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
+        init();
 
-        returnToPath = getInitParameter("return_to_path", "/openid");
+    }
 
-        realm = getInitParameter("realm", null);
-        homePath = getInitParameter("home_path", "/?hd=com");
+    @Override
+    public void init() throws ServletException {
+        super.init();
+
+
+
+        returnToPath ="/openid";
+
+        realm = null;
+        homePath =  "/?hd=com";
         ConsumerFactory factory = new ConsumerFactory(
                 new InMemoryConsumerAssociationStore());
         consumerHelper = factory.getConsumerHelper();
@@ -80,6 +91,12 @@ public class OpenIdServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+
+        if (consumerHelper==null) {
+            init();
+        }
+
+
         String domain = req.getParameter("hd");
         if (domain != null) {
             // User attempting to login with provided domain, build and OpenID request and redirect
@@ -88,12 +105,12 @@ public class OpenIdServlet extends HttpServlet {
                 String url = authRequest.getDestinationUrl(true);
                 resp.sendRedirect(url + "?hd=" + domain);
             } catch (OpenIDException e) {
-                resp.sendRedirect("?errorString=Error initializing OpenID request: "
+                resp.sendRedirect("?hd=domain&errorString=Error initializing OpenID request: "
                         + e.getMessage());
             }
         } else {
             // This is a response from the provider, go ahead and validate
-            doPost(req, resp);
+            handleRequest(req, resp);
         }
     }
 
@@ -105,20 +122,7 @@ public class OpenIdServlet extends HttpServlet {
      * @throws ServletException if unable to process request
      * @throws IOException if unable to process request
      */
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        try {
-            UserInfo user = completeAuthentication(req);
-            req.getSession().setAttribute("user", user);
-            String domain = req.getParameter("hd");
-            resp.sendRedirect(homePath + "?hd=domain");
 
-        } catch (OpenIDException e) {
-            resp.sendRedirect("?errorString=Error processing OpenID response: "
-                    + e.getMessage());
-        }
-    }
 
     /**
      * Builds an auth request for a given OpenID provider.
@@ -273,15 +277,22 @@ public class OpenIdServlet extends HttpServlet {
         return null;
     }
 
-    /**
-     * Small helper for fetching init params with default values
-     *
-     * @param key Parameter to fetch
-     * @param defaultValue Default value to use if not set in web.xml
-     * @return Parameter value or defaultValue
-     */
-    protected String getInitParameter(String key, String defaultValue) {
-        String value = getInitParameter(key);
-        return StringUtils.isBlank(value) ? defaultValue : value;
+
+    @Override
+    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+
+            if (consumerHelper==null) {
+                init();
+            }
+            UserInfo user = completeAuthentication(req);
+            req.getSession().setAttribute("user", user);
+            String domain = req.getParameter("hd");
+            resp.sendRedirect(homePath + "?hd=domain");
+
+        } catch (OpenIDException e) {
+            resp.sendRedirect("?hd=domain&errorString=Error processing OpenID response: "
+                    + e.getMessage());
+        }
     }
 }

@@ -99,11 +99,11 @@ public class ProcessBatchTask extends HttpServlet  implements org.springframewor
 
 
 
-        while (el.hasMoreElements()) {
-
-            final String s = el.nextElement();
-            log.info(s + '=' + req.getParameter(s));
-        }
+//        while (el.hasMoreElements()) {
+//
+//            final String s = el.nextElement();
+//            log.info(s + '=' + req.getParameter(s));
+//        }
 
         final User u = GsonFactory.getInstance().fromJson(userJson, UserModel.class);
         log.info(userJson);

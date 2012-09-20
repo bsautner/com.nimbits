@@ -53,8 +53,11 @@ public class ColumnConfigs {
         columnNote.setHeader(Words.WORD_ANNOTATION);
         columnNote.setWidth(400);
 
+
+
         final TextField<String> noteText = new TextField<String>();
         noteText.setAllowBlank(true);
+
         columnNote.setEditor(new CellEditor(noteText));
         columnNote.setAlignment(Style.HorizontalAlignment.LEFT);
         return (columnNote);

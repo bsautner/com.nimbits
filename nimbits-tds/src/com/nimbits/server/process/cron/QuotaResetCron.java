@@ -60,7 +60,7 @@ public class QuotaResetCron  extends HttpServlet implements org.springframework.
 
     @Override
     public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-       response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+        doGet(request, response);
     }
 
     public void setQuotaManager(QuotaManagerImpl quotaManager) {

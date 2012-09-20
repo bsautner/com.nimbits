@@ -19,7 +19,6 @@ import com.nimbits.client.constants.UserMessages;
 import com.nimbits.client.constants.Words;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.location.Location;
@@ -32,8 +31,6 @@ import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.model.value.impl.ValueModel;
 import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
-import com.nimbits.server.transactions.service.value.ValueServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,17 +48,67 @@ import java.util.logging.Logger;
 public class ValueServletImpl extends ApiServlet implements org.springframework.web.HttpRequestHandler {
     final private static Logger log = Logger.getLogger(ValueServletImpl.class.getName());
 
+    @Override
+    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-    private CommonFactory commonFactory;
-    private ValueServiceImpl valueService;
-    private EntityServiceImpl entityService;
+        if (isPost(req)) {
+
+            doPost(req, resp);
+        }
+        else {
+            doGet(req, resp);
+        }
+
+    }
 
 
     @Override
-    public void doGet(final HttpServletRequest req, final HttpServletResponse resp)  {
-
+    protected  void doPost(final HttpServletRequest req, final HttpServletResponse resp)   {
         try {
-            processGet(req, resp);
+            doInit(req, resp, ExportType.plain);
+
+            log.info("recording post");
+
+            if (user != null && ! user.isRestricted()) {
+
+                final EntityName pointName = commonFactory.createName(getParam(Parameters.point), EntityType.point);
+                final List<Entity> points =  entityService.getEntityByName(user, pointName, EntityType.point);
+
+                if (points.isEmpty()) {
+                    throw new NimbitsException(new NimbitsException(UserMessages.ERROR_POINT_NOT_FOUND));
+
+                } else {
+                    final Value v;
+                    final Point point = (Point) points.get(0);
+                    if (Utils.isEmptyString(getParam(Parameters.json))) {
+                        v = createValueFromRequest(point.inferLocation());
+                    } else {
+                        final Value vx = GsonFactory.getInstance().fromJson(getParam(Parameters.json), ValueModel.class);
+                        Location l = vx.getLocation();
+//                    log.info(point.getName().getValue() + " " + point.inferLocation());
+                        if (point.inferLocation() && vx.getLocation().isEmpty()) {
+                            l = location;
+                        }
+//                    log.info(location.toString());
+                        v = ValueFactory.createValueModel(l, vx.getDoubleValue(), vx.getTimestamp(),
+                                vx.getNote(), vx.getData(), AlertType.OK);
+                    }
+
+
+                    final Value result = valueService.recordValue(user, point, v);
+
+                    reportLocation(point, location);
+
+                    final PrintWriter out = resp.getWriter();
+                    final String j = GsonFactory.getInstance().toJson(result);
+                    out.print(j);
+
+                }
+                resp.setStatus(Const.HTTP_STATUS_OK);
+            }
+            else {
+                resp.setStatus(Const.HTTP_STATUS_UNAUTHORISED);
+            }
         } catch (NimbitsException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.addHeader("ERROR", e.getMessage());
@@ -70,75 +117,36 @@ public class ValueServletImpl extends ApiServlet implements org.springframework.
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.addHeader("ERROR", e.getMessage());
         }
-
     }
 
-    protected  void processPost(final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException, IOException {
-        doInit(req, resp, ExportType.plain);
-        log.info("recording post");
-
-        if (user != null && ! user.isRestricted()) {
-
-            final EntityName pointName = commonFactory.createName(getParam(Parameters.point), EntityType.point);
-            final List<Entity> points = entityService.getEntityByName(user, pointName, EntityType.point);
-
-            if (points.isEmpty()) {
-                throw new NimbitsException(new NimbitsException(UserMessages.ERROR_POINT_NOT_FOUND));
-
-            } else {
-                final Value v;
-                final Point point = (Point) points.get(0);
-                if (Utils.isEmptyString(getParam(Parameters.json))) {
-                    v = createValueFromRequest(point.inferLocation());
-                } else {
-                    final Value vx = GsonFactory.getInstance().fromJson(getParam(Parameters.json), ValueModel.class);
-                    Location l = vx.getLocation();
-//                    log.info(point.getName().getValue() + " " + point.inferLocation());
-                    if (point.inferLocation() && vx.getLocation().isEmpty()) {
-                       l = location;
-                    }
-//                    log.info(location.toString());
-                    v = ValueFactory.createValueModel(l, vx.getDoubleValue(), vx.getTimestamp(),
-                            vx.getNote(), vx.getData(), AlertType.OK);
-                }
 
 
-                final Value result = valueService.recordValue(user, point, v);
+    @Override
+    public void doGet(final HttpServletRequest req, final HttpServletResponse resp)   {
+        try {
+            doInit(req, resp, ExportType.plain);
+            final PrintWriter out = resp.getWriter();
+            Value nv = null;
+            final String format = getParam(Parameters.format)==null ? Words.WORD_DOUBLE : getParam(Parameters.format);
 
-                reportLocation(point, location);
+            if (format.equals(Parameters.json.getText()) && !Utils.isEmptyString(getParam(Parameters.json))) {
+                nv = GsonFactory.getInstance().fromJson(getParam(Parameters.json), ValueModel.class);
+            } else if (format.equals(Words.WORD_DOUBLE) && !Utils.isEmptyString(getParam(Parameters.value))) {
 
-                final PrintWriter out = resp.getWriter();
-                final String j = GsonFactory.getInstance().toJson(result);
-                out.print(j);
+                nv = createValueFromRequest(false);
 
             }
+            out.print(processRequest(getParam(Parameters.point), getParam(Parameters.uuid), format, nv, user));
+            out.close();
             resp.setStatus(Const.HTTP_STATUS_OK);
+        } catch (NimbitsException e) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            resp.addHeader("ERROR", e.getMessage());
+
+        } catch (IOException e) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            resp.addHeader("ERROR", e.getMessage());
         }
-        else {
-            resp.setStatus(Const.HTTP_STATUS_UNAUTHORISED);
-        }
-
-    }
-
-
-
-    public void processGet(final HttpServletRequest req, final HttpServletResponse resp) throws NimbitsException, IOException {
-        doInit(req, resp, ExportType.plain);
-        final PrintWriter out = resp.getWriter();
-        Value nv = null;
-        final String format = getParam(Parameters.format)==null ? Words.WORD_DOUBLE : getParam(Parameters.format);
-
-        if (format.equals(Parameters.json.getText()) && !Utils.isEmptyString(getParam(Parameters.json))) {
-            nv = GsonFactory.getInstance().fromJson(getParam(Parameters.json), ValueModel.class);
-        } else if (format.equals(Words.WORD_DOUBLE) && !Utils.isEmptyString(getParam(Parameters.value))) {
-
-            nv = createValueFromRequest(false);
-
-        }
-        out.print(processRequest(getParam(Parameters.point), getParam(Parameters.uuid), format, nv, user));
-        out.close();
-        resp.setStatus(Const.HTTP_STATUS_OK);
-
     }
 
     private static Value createValueFromRequest(boolean inferLocation) {
@@ -233,40 +241,5 @@ public class ValueServletImpl extends ApiServlet implements org.springframework.
     }
 
 
-    public void setCommonFactory(CommonFactory commonFactory) {
-        this.commonFactory = commonFactory;
-    }
 
-    public CommonFactory getCommonFactory() {
-        return commonFactory;
-    }
-
-    public void setValueService(ValueServiceImpl valueService) {
-        this.valueService = valueService;
-    }
-
-    public ValueServiceImpl getValueService() {
-        return valueService;
-    }
-
-    public void setEntityService(EntityServiceImpl entityService) {
-        this.entityService = entityService;
-    }
-
-    public EntityServiceImpl getEntityService() {
-        return entityService;
-    }
-
-    @Override
-    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
-            processPost(req, resp);
-        } catch (NimbitsException e) {
-            final PrintWriter out = resp.getWriter();
-            out.print(e.getMessage());
-            out.close();
-            resp.setStatus(Const.HTTP_STATUS_INTERNAL_SERVER_ERROR);
-
-        }
-    }
 }

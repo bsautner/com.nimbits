@@ -50,7 +50,7 @@ import static org.junit.Assert.*;
         "classpath:META-INF/applicationContext-task.xml"
 
 })
-public class TimeServletTest  {
+public class TimeServletImplTest {
     public MockHttpServletRequest req;
     public MockHttpServletResponse resp;
 
@@ -69,7 +69,7 @@ public class TimeServletTest  {
 
     @Test
     public void testGetTime() throws IOException, ServletException {
-        TimeServlet t = new TimeServlet();
+        TimeServletImpl t = new TimeServletImpl();
         t.doGet(req, resp);
 
         String r = resp.getContentAsString();
@@ -82,7 +82,7 @@ public class TimeServletTest  {
     }
     @Test
     public void testGetTimeArduino() throws IOException, ServletException {
-        TimeServlet t = new TimeServlet();
+        TimeServletImpl t = new TimeServletImpl();
         req.addParameter(Parameters.client.getText(), ClientType.arduino.getCode());
         t.doGet(req, resp);
 

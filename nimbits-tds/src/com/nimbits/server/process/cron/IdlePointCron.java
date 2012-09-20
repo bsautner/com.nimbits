@@ -110,7 +110,7 @@ public class IdlePointCron extends HttpServlet implements org.springframework.we
 
     @Override
     public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+        doGet(request, response);
     }
 
     public void setEntityService(EntityService entityService) {

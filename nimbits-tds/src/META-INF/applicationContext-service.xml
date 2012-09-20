@@ -65,9 +65,13 @@
     </bean>
 
     <bean id="pointService" class="com.nimbits.server.transactions.service.point.PointServiceImpl" />
+
+
+
     <bean id="driveService" class="com.nimbits.server.external.google.drive.DriveServiceImpl">
         <property name="userService" ref="userService" />
         <property name="valueService" ref="valueService" />
+
     </bean>
 
     <bean id="facebookService" class="com.nimbits.server.external.facebook.FacebookImpl">
@@ -125,6 +129,6 @@
 
     <bean id="timespanService" class="com.nimbits.server.time.TimespanServiceImpl" />
 
-
-
+    <bean id="openId" class="com.nimbits.server.api.openid.OpenIdServlet" />
+    <bean id="spreadsheetApi" class="com.nimbits.server.api.openid.SpreadsheetServlet" />
 </beans>

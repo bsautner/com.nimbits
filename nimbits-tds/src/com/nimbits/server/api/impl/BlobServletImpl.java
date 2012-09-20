@@ -29,10 +29,10 @@ import com.nimbits.client.model.file.File;
 import com.nimbits.client.model.file.FileFactory;
 import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -50,9 +50,9 @@ import java.util.Map;
  */
 @Transactional
 @Service("blobApi")
-public class BlobServletImpl extends ApiServlet {
+public class BlobServletImpl extends ApiServlet implements org.springframework.web.HttpRequestHandler {
     private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-    private EntityServiceImpl entityService;
+
 
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
@@ -123,11 +123,9 @@ public class BlobServletImpl extends ApiServlet {
         blobstoreService.serve(blobKey, res);
     }
 
-    public void setEntityService(EntityServiceImpl entityService) {
-        this.entityService = entityService;
-    }
 
-    public EntityServiceImpl getEntityService() {
-        return entityService;
+    @Override
+    public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doPost(request, response);
     }
 }

@@ -239,6 +239,7 @@ public class NavigationPanel extends NavigationEventProvider {
             target.setAllowSelfAsSource(true);
             target.setFeedback(Feedback.BOTH);
             tree.addListener(Events.AfterEdit, new GridEventListener());
+            tree.addListener(Events.BeforeEdit, new GridBeforeEditEventListener());
             treePropertyBuilder();
             TreeModel top = treeStoreBuilder(result);
             treeDNDBuilder();
@@ -514,7 +515,7 @@ public class NavigationPanel extends NavigationEventProvider {
 
             }
         }
-        private List<Entity> getDropTarget(String targetName) {
+        private List<Entity> getDropTarget(final String targetName) {
 
             ModelData modelData = tree.getTreeStore().findModel(Parameters.name.getText(), targetName);
             if (modelData != null) {
@@ -527,7 +528,7 @@ public class NavigationPanel extends NavigationEventProvider {
 
 
         }
-        private void moveEntity(Entity draggedEntity, Entity target) {
+        private void moveEntity(final Entity draggedEntity, final Entity target) {
 
             if ( target.getOwner().equals(draggedEntity.getOwner())) {
 
@@ -576,6 +577,21 @@ public class NavigationPanel extends NavigationEventProvider {
         }
     }
 
+    private class GridBeforeEditEventListener implements Listener<GridEvent> {
+
+        GridBeforeEditEventListener() {
+        }
+
+        @Override
+        public void handleEvent(final GridEvent be) {
+            final TreeModel model = (TreeModel) be.getModel();
+            if (! model.getEntityType().equals(EntityType.point) || model.isReadOnly()) {
+                be.setCancelled(true);
+            }
+
+        }
+    }
+
     private class RefreshTimer extends Timer {
         RefreshTimer() {
         }
@@ -613,7 +629,7 @@ public class NavigationPanel extends NavigationEventProvider {
             }
         }
 
-        private void putModelInMap(Map<String, Point> entityMap, TreeModel model) {
+        private void putModelInMap(final Map<String, Point> entityMap, final TreeModel model) {
             if (model != null
                     && model.getParent() != null
                     && !model.isDirty()

@@ -29,7 +29,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
-import java.util.logging.Logger;
 
 /**
  * Created by Benjamin Sautner
@@ -39,11 +38,10 @@ import java.util.logging.Logger;
  */
 @Transactional
 @Service("timeApi")
-public class TimeServlet extends ApiServlet {
+public class TimeServletImpl extends ApiServlet  implements org.springframework.web.HttpRequestHandler {
 
 
     private static final long serialVersionUID = 6160961337851138572L;
-    final static Logger log = Logger.getLogger(TimeServlet.class.getName());
 
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
@@ -101,5 +99,10 @@ public class TimeServlet extends ApiServlet {
         }
         resp.setStatus(HttpServletResponse.SC_OK);
 
+    }
+
+    @Override
+    public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doGet(request, response);
     }
 }

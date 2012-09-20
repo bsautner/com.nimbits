@@ -20,16 +20,28 @@ import com.nimbits.server.api.ApiServlet;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 @Transactional
 @Service("authApi")
-public class AuthTestServletImpl extends ApiServlet {
+public class AuthTestServletImpl extends ApiServlet  implements org.springframework.web.HttpRequestHandler {
 
     private static final long serialVersionUID = 1L;
+    @Override
+    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        if (isPost(req)) {
+
+            doPost(req, resp);
+        }
+        else {
+            doGet(req, resp);
+        }
+
+    }
     @Override
     public void doGet(final HttpServletRequest req,
                       final HttpServletResponse resp) throws IOException {

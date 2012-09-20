@@ -38,6 +38,7 @@ import com.nimbits.client.model.TreeModel;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.entity.EntityServiceAsync;
@@ -157,7 +158,7 @@ public class EntityContextMenu extends Menu {
         super.showAt(x, y);
         final ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
         currentModel = (TreeModel)selectedModel;
-        deleteContext.setEnabled(!currentModel.getEntityType().equals(EntityType.user) || ! currentModel.isReadOnly());
+        deleteContext.setEnabled(!currentModel.getEntityType().equals(EntityType.user) || ! currentModel.isReadOnly() || ! isSystem(currentModel));
         subscribeContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) ||currentModel.getEntityType().equals(EntityType.category));
         reportContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.category));
         copyContext.setEnabled(currentModel.getEntityType().equals(EntityType.point));
@@ -173,6 +174,16 @@ public class EntityContextMenu extends Menu {
         //downloadContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) ||currentModel.getEntityType().equals(EntityType.category));
 
 
+    }
+
+    private boolean isSystem(TreeModel currentModel) {
+        if (currentModel.getEntityType().equals(EntityType.point)) {
+            Point p = (Point) currentModel;
+            return p.getPointType().isSystem();
+        }
+        else {
+            return false;
+        }
     }
 
     private MenuItem deleteContext() {

@@ -33,6 +33,8 @@ import com.google.gdata.data.spreadsheet.WorksheetEntry;
 import com.google.gdata.util.ServiceException;
 import com.nimbits.server.admin.logging.LogHelper;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -48,17 +50,18 @@ import java.util.List;
 import java.util.Random;
 
 
-/**
- * Created with IntelliJ IDEA.
- * User: benjamin
- * Date: 7/25/12
- * Time: 10:10 AM
- * To change this template use File | Settings | File Templates.
- */
-public class SpreadsheetServlet extends HttpServlet {
+
+@Service("spreadsheetApi")
+@Transactional
+public class SpreadsheetServlet extends HttpServlet implements org.springframework.web.HttpRequestHandler {
+
 
     DocsService docsService;
-    SpreadsheetService spreadsheetService;// = new SpreadsheetsService("MySpreadsheetIntegration-v1");
+    SpreadsheetService spreadsheetService;
+
+
+
+
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -67,8 +70,8 @@ public class SpreadsheetServlet extends HttpServlet {
 
     public void setup() {
 
-        String consumerKey = getInitParameter("consumer_key");
-        String consumerSecret = getInitParameter("consumer_secret");
+        String consumerKey = "1009209848329.apps.googleusercontent.com"; //getInitParameter("consumer_key");
+        String consumerSecret = "m4S1GkGguCvyFO70bxHuKNzH";///getInitParameter("consumer_secret");
         GoogleOAuthParameters oauthParameters = new GoogleOAuthParameters();
         oauthParameters.setOAuthConsumerKey(consumerKey);
         oauthParameters.setOAuthConsumerSecret(consumerSecret);
@@ -102,7 +105,7 @@ public class SpreadsheetServlet extends HttpServlet {
                 o.println("Worksheets: " + entry.getWorksheets().size());
                 WorksheetEntry sheet = entry.getWorksheets().get(0);
                 o.println(sheet.getTitle().getPlainText());
-               // sheet.setTitle(TextConstruct.plainText("POINT1"));
+                // sheet.setTitle(TextConstruct.plainText("POINT1"));
                 URL cellFeedUrl= sheet.getCellFeedUrl ();
                 CellFeed cellFeed= spreadsheetService.getFeed (cellFeedUrl,
                         CellFeed.class);
@@ -150,7 +153,7 @@ public class SpreadsheetServlet extends HttpServlet {
 
 
 
-               // sheet.update();
+                // sheet.update();
 
 
             }
@@ -238,6 +241,10 @@ public class SpreadsheetServlet extends HttpServlet {
         }
     }
 
+    @Override
+    public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doGet(request, response);
+    }
 }
 
 

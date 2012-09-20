@@ -13,28 +13,20 @@
 
 package com.nimbits.server.process.cron;
 
-import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.server.NimbitsServletTest;
-import com.nimbits.server.admin.quota.QuotaManager;
-import com.nimbits.server.api.impl.ValueServletImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 3/28/12
- * Time: 1:24 PM
- */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={
         "classpath:META-INF/applicationContext.xml",
@@ -46,38 +38,30 @@ import static org.junit.Assert.assertEquals;
         "classpath:META-INF/applicationContext-task.xml"
 
 })
-public class QuotaResetCronTest extends NimbitsServletTest {
-    @Resource(name = "valueApi")
-    ValueServletImpl valueServlet;
+public class SystemCronTest extends NimbitsServletTest {
 
-    @Resource(name="systemCron")
-    SystemCron systemCron;
-
-    @Resource(name="quotaCron")
-    QuotaResetCron quotaResetCron;
-
-    @Resource(name="quotaManager")
-    QuotaManager quotaManager;
-
-    @Test
-    public void testQuotaReset() throws IOException, NimbitsException {
 
 
 
+    @Test
+    public void doGetTest() throws InterruptedException {
+
+        try {
         systemCron.doGet(req, resp);
-        settingsService.updateSetting(SettingType.billingEnabled, Const.TRUE);
+        Thread.sleep(2000);
+        Map<SettingType, String> settings = settingsService.getSettings();
 
-
-        for (int i = 0; i < 10; i++) {
-            valueServlet.doGet(req, resp);
+        for (SettingType setting : SettingType.values()) {
+            if (setting.isCreate()) {
+                assertEquals(setting.getDefaultValue(), settingsService.getSetting(setting));
+            }
         }
-        assertEquals(10,quotaManager.getCount(user.getEmail()));
-
-
-        quotaResetCron.doGet(req,resp);
-        assertEquals(0, quotaManager.getCount(user.getEmail()));
-
+        } catch (IOException e) {
+            fail();
+        } catch (NimbitsException e) {
+            e.printStackTrace();
+            fail();
+        }
 
     }
-
 }

@@ -35,7 +35,6 @@ import com.nimbits.client.model.xmpp.XmppResourceModel;
 import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
 import com.nimbits.shared.Utils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,7 +50,18 @@ import java.util.List;
 @Service("valueApi")
 public class EntityServletImpl extends ApiServlet implements org.springframework.web.HttpRequestHandler {
 
-    private EntityServiceImpl entityService;
+    @Override
+    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        if (isPost(req)) {
+
+            doPost(req, resp);
+        }
+        else {
+            doGet(req, resp);
+        }
+
+    }
 
     private Class getClass(EntityType type) {
         switch (type) {
@@ -140,16 +150,10 @@ public class EntityServletImpl extends ApiServlet implements org.springframework
         }
     }
 
-    public void setEntityService(EntityServiceImpl entityService) {
-        this.entityService = entityService;
-    }
 
-    public EntityServiceImpl getEntityService() {
-        return entityService;
-    }
 
     @Override
-    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             final PrintWriter out = resp.getWriter();
             doInit(req, resp, ExportType.unknown);

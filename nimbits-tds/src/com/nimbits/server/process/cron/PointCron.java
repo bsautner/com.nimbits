@@ -78,7 +78,7 @@ public class PointCron extends HttpServlet implements org.springframework.web.Ht
 
     @Override
     public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+        doGet(request, response);
     }
 
     public void setEntityService(EntityServiceImpl entityService) {

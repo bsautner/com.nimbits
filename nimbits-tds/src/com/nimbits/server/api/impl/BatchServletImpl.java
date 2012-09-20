@@ -29,9 +29,20 @@ import java.io.IOException;
 public class BatchServletImpl extends ApiServlet implements org.springframework.web.HttpRequestHandler {
 
     private Task taskFactory;
-
     @Override
-    public void handleRequest(final HttpServletRequest req, final HttpServletResponse resp) {
+    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) {
+
+        if (isPost(req)) {
+
+            doPost(req, resp);
+        }
+        else {
+            doGet(req, resp);
+        }
+
+    }
+    @Override
+    public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
 
 
 

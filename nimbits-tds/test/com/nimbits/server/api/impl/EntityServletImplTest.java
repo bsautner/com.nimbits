@@ -96,7 +96,8 @@ public class EntityServletImplTest extends NimbitsServletTest {
       //  req.addParameter("id", point.getKey());
         req.addParameter("json", "{\"highAlarm\":0.0,\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"" + Const.TEST_ACCOUNT + "\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}");
         req.addParameter("action", "create");
-        impl.handleRequest(req, resp);
+        req.setMethod("POST");
+        impl.doPost(req, resp);
         String g1= resp.getContentAsString();
         assertNotNull(g1);
         Point px = GsonFactory.getInstance().fromJson(g1, PointModel.class);
@@ -112,6 +113,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
         //  req.addParameter("id", point.getKey());
         req.addParameter("json", "{\"highAlarm\":0.0,\"pointType\":" + PointType.accountBalance.getCode() +",\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":" + EntityType.point.getCode() + ",\"protectionLevel\":2,\"alertType\":0,\"parent\":\"" + Const.TEST_ACCOUNT + "\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}");
         req.addParameter("action", "create");
+        req.setMethod("POST");
         impl.handleRequest(req, resp);
         assertEquals(resp.getStatus(), Const.HTTP_STATUS_INTERNAL_SERVER_ERROR);
 
@@ -125,6 +127,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
         //  req.addParameter("id", point.getKey());
         req.addParameter("json", "{\"highAlarm\":0.0,\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"" + Const.TEST_ACCOUNT + "\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}");
         req.addParameter("action", "create");
+        req.setMethod("POST");
         impl.handleRequest(req, resp);
         String g1= resp.getContentAsString();
         assertNotNull(g1);
@@ -164,6 +167,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
         //  req.addParameter("id", point.getKey());
         req.addParameter("json", "{\"highAlarm\":0.0,\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"" + Const.TEST_ACCOUNT + "\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}");
         req.addParameter("action", "create");
+        req.setMethod("POST");
         impl.handleRequest(req, resp);
         String g1= resp.getContentAsString();
         assertNotNull(g1);
@@ -189,6 +193,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
         //  req.addParameter("id", point.getKey());
         req.addParameter("json", "{\"highAlarm\":0.0,\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":600,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"" + Const.TEST_ACCOUNT + "\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}");
         req.addParameter("action", "create");
+        req.setMethod("POST");
         impl.handleRequest(req, resp);
         String g1= resp.getContentAsString();
         assertNotNull(g1);
@@ -215,6 +220,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
         //  req.addParameter("id", point.getKey());
         req.addParameter("json", "{\"subscribedEntity\":\"" + Const.TEST_ACCOUNT + "/TempF\",\"notifyMethod\":0,\"subscriptionType\":4,\"maxRepeat\":15.0,\"lastSent\":\"2012-05-20T23:59:37 +0000\",\"notifyFormatJson\":false,\"enabled\":true,\"name\":\"TempF idle alert\",\"key\":\"b9ba6396-b3c8-4455-8744-334f3a2633b0\",\"description\":\"\",\"entityType\":5,\"protectionLevel\":0,\"alertType\":1,\"parent\":\"" + Const.TEST_ACCOUNT + "/TempF\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}");
         req.addParameter("action", "create");
+        req.setMethod("POST");
         impl.handleRequest(req, resp);
         String g1= resp.getContentAsString();
         assertNotNull(g1);
@@ -246,6 +252,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
 
         req.addParameter("json", jp);
         req.addParameter("action", "create");
+        req.setMethod("POST");
         impl.handleRequest(req, resp);
         String r = resp.getContentAsString();
         System.out.println(r);
@@ -263,6 +270,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
 
         req.removeAllParameters();
         req.addParameter("id", point.getKey());
+
         impl.doGet(req, resp);
 
         String j = resp.getContentAsString();
@@ -273,6 +281,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
         req.removeAllParameters();
         req.addParameter("json", u);
         req.addParameter("action", "update");
+        req.setMethod("POST");
         impl.handleRequest(req, resp);
 
 
@@ -294,6 +303,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
         req.removeAllParameters();
         req.addParameter("json", u);
         req.addParameter("action", "update");
+        req.setMethod("POST");
         impl.handleRequest(req, resp);
         String x = resp.getContentAsString();
         Point xp = GsonFactory.getInstance().fromJson(x, PointModel.class);

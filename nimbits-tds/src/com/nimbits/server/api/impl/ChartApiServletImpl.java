@@ -31,11 +31,10 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.time.TimespanServiceFactory;
-import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
-import com.nimbits.server.transactions.service.value.ValueServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -55,7 +54,7 @@ import java.util.regex.Pattern;
 @Deprecated
 @Transactional
 @Service("chartApi")
-public class ChartApiServletImpl extends ApiServlet {
+public class ChartApiServletImpl extends ApiServlet implements org.springframework.web.HttpRequestHandler {
     private static final Logger log = Logger.getLogger(ChartApiServletImpl.class.getName());
     /**
      *
@@ -65,15 +64,22 @@ public class ChartApiServletImpl extends ApiServlet {
     private static final String chartDateCode = "&chd=t:";
     private static final int INT = 512;
     private static final Pattern COMPILE = Pattern.compile(",");
-    private EntityServiceImpl entityService;
-    private ValueServiceImpl valueService;
+
 
     @Override
-    public void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
-        processGet(req, resp);
-    }
+    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-    protected void processGet(final HttpServletRequest req, final HttpServletResponse resp) {
+        if (isPost(req)) {
+
+            doPost(req, resp);
+        }
+        else {
+            doGet(req, resp);
+        }
+
+    }
+    @Override
+    protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) {
         final String formatParam = req.getParameter(Parameters.format.getText());
 
 
@@ -236,19 +242,5 @@ public class ChartApiServletImpl extends ApiServlet {
         return timespan;
     }
 
-    public void setEntityService(EntityServiceImpl entityService) {
-        this.entityService = entityService;
-    }
 
-    public EntityServiceImpl getEntityService() {
-        return entityService;
-    }
-
-    public void setValueService(ValueServiceImpl valueService) {
-        this.valueService = valueService;
-    }
-
-    public ValueServiceImpl getValueService() {
-        return valueService;
-    }
 }

@@ -61,6 +61,8 @@ public class CalendarServlet extends HttpServlet {
     }
 
     private void setup() {
+
+
         String consumerKey = getInitParameter("consumer_key");
         String consumerSecret = getInitParameter("consumer_secret");
 

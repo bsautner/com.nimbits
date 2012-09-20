@@ -13,6 +13,7 @@
 
 package com.nimbits.server.transactions.service.user;
 
+import com.nimbits.client.enums.AuthLevel;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.email.EmailAddress;
@@ -41,4 +42,6 @@ public interface UserServerService {
 
 
     void fundAccount(User user, BigDecimal amount) throws NimbitsException;
+
+    User getUserByKey(final String key,final AuthLevel authLevel) throws NimbitsException ;
 }

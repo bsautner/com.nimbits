@@ -68,6 +68,6 @@ public class MoveRecordedValuesToStoreCron extends HttpServlet implements org.sp
 
     @Override
     public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+        doGet(request, response);
     }
 }

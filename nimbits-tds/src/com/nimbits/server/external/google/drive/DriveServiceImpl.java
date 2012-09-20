@@ -43,9 +43,9 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.service.docs.DriveService;
+import com.nimbits.client.service.value.ValueService;
 import com.nimbits.server.admin.logging.LogHelper;
-import com.nimbits.server.transactions.service.user.UserServiceImpl;
-import com.nimbits.server.transactions.service.value.ValueServiceImpl;
+import com.nimbits.server.transactions.service.user.UserServerService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -70,32 +70,42 @@ public class DriveServiceImpl extends RemoteServiceServlet implements
         DriveService, RequestCallback {
     private static final int MAX_COLS = 6;
     static final Logger log = Logger.getLogger(DriveServiceImpl.class.getName());
-    private UserServiceImpl userService;
-    private ValueServiceImpl valueService;
+    private UserServerService userService;
+    private ValueService valueService;
+    private DocsService docService;
+
+    private final static String consumerKey = "1009209848329.apps.googleusercontent.com";
+    private final static String consumerSecret = "m4S1GkGguCvyFO70bxHuKNzH";
+
+
+
 
 
     @Override
     public String createGoogleDoc(final Entity entity, final String fileName) throws NimbitsException {
-        DocsService docsService;
+
 
         final User user = userService.getHttpRequestUser(
                 this.getThreadLocalRequest());
 
-        docsService = new DocsService("nimbits-com");
-        String consumerKey = getInitParameter("consumer_key");
-        String consumerSecret = getInitParameter("consumer_secret");
+
+
+
+        docService = new DocsService("nimbits-com");
+        String consumerKey = "1009209848329.apps.googleusercontent.com";
+        String consumerSecret = "m4S1GkGguCvyFO70bxHuKNzH";
         GoogleOAuthParameters oauthParameters = new GoogleOAuthParameters();
         oauthParameters.setOAuthConsumerKey(consumerKey);
         oauthParameters.setOAuthConsumerSecret(consumerSecret);
 
 
         try {
-            docsService.setOAuthCredentials(oauthParameters, new OAuthHmacSha1Signer());
+            docService.setOAuthCredentials(oauthParameters, new OAuthHmacSha1Signer());
             SpreadsheetEntry entry = new SpreadsheetEntry();
 
             entry.setTitle(TextConstruct.plainText(fileName));
 
-            SpreadsheetEntry newEntry = docsService.insert(
+            SpreadsheetEntry newEntry = docService.insert(
                     new URL("https://docs.google.com/feeds/default/private/full?xoauth_requestor_id="
                             + user.getEmail()),
                     entry);
@@ -124,8 +134,7 @@ public class DriveServiceImpl extends RemoteServiceServlet implements
         final User user = userService.getHttpRequestUser(
                 this.getThreadLocalRequest());
         SpreadsheetService spreadsheetService;
-        String consumerKey = getInitParameter("consumer_key");
-        String consumerSecret = getInitParameter("consumer_secret");
+
         GoogleOAuthParameters oauthParameters = new GoogleOAuthParameters();
         oauthParameters.setOAuthConsumerKey(consumerKey);
         oauthParameters.setOAuthConsumerSecret(consumerSecret);
@@ -174,8 +183,7 @@ public class DriveServiceImpl extends RemoteServiceServlet implements
 
 
         SpreadsheetService spreadsheetService;
-        String consumerKey = getInitParameter("consumer_key");
-        String consumerSecret = getInitParameter("consumer_secret");
+
         GoogleOAuthParameters oauthParameters = new GoogleOAuthParameters();
         oauthParameters.setOAuthConsumerKey(consumerKey);
         oauthParameters.setOAuthConsumerSecret(consumerSecret);
@@ -249,20 +257,28 @@ public class DriveServiceImpl extends RemoteServiceServlet implements
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void setUserService(UserServiceImpl userService) {
+    public void setUserService(UserServerService userService) {
         this.userService = userService;
     }
 
-    public UserServiceImpl getUserService() {
+    public UserServerService getUserService() {
         return userService;
     }
 
-    public void setValueService(ValueServiceImpl valueService) {
+    public void setValueService(ValueService valueService) {
         this.valueService = valueService;
     }
 
-    public ValueServiceImpl getValueService() {
+    public ValueService getValueService() {
         return valueService;
+    }
+
+    public void setDocService(DocsService docService) {
+        this.docService = docService;
+    }
+
+    public DocsService getDocService() {
+        return docService;
     }
 
     private static class CellAddress {
@@ -293,8 +309,7 @@ public class DriveServiceImpl extends RemoteServiceServlet implements
 
 
         SpreadsheetService spreadsheetService;
-        String consumerKey = getInitParameter("consumer_key");
-        String consumerSecret = getInitParameter("consumer_secret");
+
         GoogleOAuthParameters oauthParameters = new GoogleOAuthParameters();
         oauthParameters.setOAuthConsumerKey(consumerKey);
         oauthParameters.setOAuthConsumerSecret(consumerSecret);

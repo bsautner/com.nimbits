@@ -91,6 +91,7 @@ public class PointServletTest extends NimbitsServletTest {
         req.removeAllParameters();
         req.addParameter("action", "create");
         req.addParameter("point", "parentPoint");
+        req.setMethod("POST");
         i.handleRequest(req, resp);
         EntityName name = CommonFactoryLocator.getInstance().createName("parentPoint", EntityType.point);
 

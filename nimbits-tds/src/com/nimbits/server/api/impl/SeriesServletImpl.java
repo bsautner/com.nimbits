@@ -18,15 +18,12 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ExportType;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.timespan.TimespanService;
-import com.nimbits.client.service.value.ValueService;
 import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.gson.GsonFactory;
 import org.springframework.stereotype.Service;
@@ -47,9 +44,6 @@ public class SeriesServletImpl extends ApiServlet  implements org.springframewor
     private static final long serialVersionUID = 1L;
     public static final int LIMIT = 1000;
     private TimespanService timespanService;
-    private CommonFactory commonFactory;
-    private EntityService entityService;
-    private ValueService valueService;
 
 
     @Override
@@ -149,32 +143,19 @@ public class SeriesServletImpl extends ApiServlet  implements org.springframewor
         return timespanService;
     }
 
-    public void setCommonFactory(CommonFactory  commonFactory) {
-        this.commonFactory = commonFactory;
-    }
 
-    public CommonFactory  getCommonFactory() {
-        return commonFactory;
-    }
 
-    public void setEntityService(EntityService entityService) {
-        this.entityService = entityService;
-    }
-
-    public EntityService  getEntityService() {
-        return entityService;
-    }
-
-    public void setValueService(ValueService valueService) {
-        this.valueService = valueService;
-    }
-
-    public ValueService  getValueService() {
-        return valueService;
-    }
 
     @Override
-    public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        if (isPost(req)) {
+
+            doPost(req, resp);
+        }
+        else {
+            doGet(req, resp);
+        }
 
     }
 }

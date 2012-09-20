@@ -24,6 +24,7 @@ import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 
@@ -46,10 +47,10 @@ public class GxtModel extends BaseTreeModel implements TreeModel {
     private Entity baseEntity;
 
 
-    public GxtModel(Entity entity) throws NimbitsException {
+    public GxtModel(final Entity entity) throws NimbitsException {
         setEntityValues(entity);
     }
-    public GxtModel(User user) throws NimbitsException {
+    public GxtModel(final User user) throws NimbitsException {
         this.key = user.getKey();
         this.name = CommonFactoryLocator.getInstance().createName(user.getEmail().getValue(), EntityType.user);
         this.alertType = AlertType.OK;
@@ -157,6 +158,14 @@ public class GxtModel extends BaseTreeModel implements TreeModel {
         this.alertType = entity.getAlertType();
         this.entityType = entity.getEntityType();
         this.isReadOnly = entity.isReadOnly();
+        if (entity.getEntityType().equals(EntityType.point)) {
+            Point p = (Point)entity;
+            if (p.getPointType().isSystem()) {
+                this.isReadOnly = true;
+            }
+        }
+
+
         this.baseEntity = entity;
         set(Parameters.id.getText(), this.key);
         set(Parameters.name.getText(), this.name.getValue());

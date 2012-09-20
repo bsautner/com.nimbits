@@ -32,6 +32,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -109,7 +110,6 @@ public class ValueServletImplTest extends NimbitsServletTest {
 
     }
     @Test
-            (expected=NimbitsException.class)
     public void testQuotaException() throws IOException, NimbitsException {
 
 
@@ -117,8 +117,16 @@ public class ValueServletImplTest extends NimbitsServletTest {
         settingsService.updateSetting(SettingType.billingEnabled, Const.TRUE);
 
 
-        for (int i = 0; i < quotaManager.getMaxDailyQuota()+10; i++) {
-            valueServlet.processGet(req, resp);
+        for (int i = 0; i < quotaManager.getFreeDailyQuota()+10; i++) {
+            req.setMethod("GET");
+            valueServlet.doGet(req, resp);
+            if (i < quotaManager.getFreeDailyQuota()) {
+              assertEquals(resp.getStatus(),  HttpServletResponse.SC_OK);
+
+            }
+            else {
+                assertEquals(resp.getStatus(),  HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
         }
 
 
@@ -132,8 +140,8 @@ public class ValueServletImplTest extends NimbitsServletTest {
         settingsService.updateSetting(SettingType.billingEnabled, Const.FALSE);
 
 
-        for (int i = 0; i <quotaManager.getMaxDailyQuota() +10; i++) {
-            valueServlet.processGet(req, resp);
+        for (int i = 0; i <quotaManager.getFreeDailyQuota() +10; i++) {
+            valueServlet.doGet(req, resp);
         }
         assertTrue(true);
 

@@ -17,7 +17,7 @@ import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.AuthLevel;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.user.User;
-import com.nimbits.server.transactions.service.user.UserServiceImpl;
+import com.nimbits.server.transactions.service.user.UserServerService;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,9 +40,9 @@ public class QuotaServletImpl extends HttpServlet implements org.springframework
 
 
 
-    private UserServiceImpl userService;
+    private UserServerService userService;
 
-    public void setUserService(UserServiceImpl userService) {
+    public void setUserService(UserServerService userService) {
         this.userService = userService;
     }
 

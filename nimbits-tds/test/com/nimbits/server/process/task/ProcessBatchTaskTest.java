@@ -21,7 +21,6 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.service.value.ValueService;
 import com.nimbits.server.NimbitsServletTest;
-import com.nimbits.server.api.impl.BatchServletImpl;
 import com.nimbits.server.gson.GsonFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,6 +28,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletException;
+import java.io.IOException;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -54,15 +55,15 @@ public class ProcessBatchTaskTest extends NimbitsServletTest {
     @Resource(name = "valueService")
     ValueService valueService;
 
-
-    @Resource(name = "batchApi")
-    BatchServletImpl servlet;
+//
+//    @Resource(name = "batchApi")
+//    BatchServletImpl servlet;
 
     @Resource(name="batchTask")
     ProcessBatchTask batchTask;
 
     @Test
-    public void processBatchTestNormal() throws NimbitsException, InterruptedException {
+    public void processBatchTestNormal() throws NimbitsException, InterruptedException, IOException, ServletException {
         addAuth();
         double v1 = r.nextDouble();
         req.addParameter("p1", pointName.getValue());
@@ -70,7 +71,7 @@ public class ProcessBatchTaskTest extends NimbitsServletTest {
         double v2 = r.nextDouble();
         req.addParameter("p2", pointChildName.getValue());
         req.addParameter("v2", String.valueOf(v2));
-        servlet.handleRequest(req, resp);
+        batchTask.handleRequest(req, resp);
         Thread.sleep(1000);
         List<Value> rv1 = valueService.getCurrentValue(point);
         List<Value> rv2 = valueService.getCurrentValue(pointChild);
@@ -96,7 +97,7 @@ public class ProcessBatchTaskTest extends NimbitsServletTest {
         req.addParameter("lt2",String.valueOf(lt));
         req.addParameter("ln2",String.valueOf(ln));
 
-        servlet.handleRequest(req, resp);
+        batchTask.handleRequest(req, resp);
         List<Value> rv1 = valueService.getCurrentValue(point);
         List<Value> rv2 = valueService.getCurrentValue(pointChild);
         assertNotNull(rv1);
@@ -132,7 +133,7 @@ public class ProcessBatchTaskTest extends NimbitsServletTest {
         String json = GsonFactory.getInstance().toJson(values);
         req.addParameter("p1", pointName.getValue());
         req.addParameter("j1", json);
-        servlet.handleRequest(req, resp);
+        batchTask.handleRequest(req, resp);
         List<Value> v = valueService.getTopDataSeries(point, runs);
         assertEquals(runs, v.size());
         double newTotal = 0.0;
@@ -164,7 +165,7 @@ public class ProcessBatchTaskTest extends NimbitsServletTest {
 
 
 
-        servlet.handleRequest(req, resp);
+        batchTask.handleRequest(req, resp);
 
         List<Value> rv1 = valueService.getCurrentValue(point);
 
@@ -195,7 +196,7 @@ public class ProcessBatchTaskTest extends NimbitsServletTest {
 
         }
         //  System.out.println(b.toString());
-        servlet.handleRequest(req, resp);
+        batchTask.handleRequest(req, resp);
 
         double retVal = 0.0;
 
@@ -238,7 +239,7 @@ public class ProcessBatchTaskTest extends NimbitsServletTest {
         req.addParameter("p41","I_DO_NOT_EXIST");
         req.addParameter("v41", "FOO");
         req.addParameter("t41", String.valueOf(new Date().getTime()));
-        servlet.handleRequest(req, resp);
+        batchTask.handleRequest(req, resp);
 
         double retVal = 0.0;
 
@@ -273,7 +274,7 @@ public class ProcessBatchTaskTest extends NimbitsServletTest {
 
 
 
-        servlet.handleRequest(req, resp);
+        batchTask.handleRequest(req, resp);
 
         List<Value> rv1 = valueService.getCurrentValue(point);
         List<Value> rv2 = valueService.getCurrentValue(pointChild);
@@ -287,7 +288,7 @@ public class ProcessBatchTaskTest extends NimbitsServletTest {
     @Test
     public void processBatchNoParamsValidUser() throws NimbitsException {
         addAuth();
-        servlet.handleRequest(req, resp);
+        batchTask.handleRequest(req, resp);
 
     }
 }

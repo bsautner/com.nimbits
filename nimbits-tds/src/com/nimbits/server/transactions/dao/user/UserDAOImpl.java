@@ -22,7 +22,6 @@ import com.nimbits.client.model.connection.ConnectionRequestModelFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModelFactory;
-import com.nimbits.client.service.user.UserService;
 import com.nimbits.server.orm.ConnectionRequestEntity;
 import com.nimbits.server.orm.UserEntity;
 import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
@@ -44,11 +43,16 @@ public class UserDAOImpl implements UserTransactions {
     private EntityServiceImpl entityService;
     private UserServiceImpl userService;
 
+//    @Autowired
+//    private PersistenceManagerFactory pmf;
+
+
+
 
     @Override
     @SuppressWarnings(Const.WARNING_UNCHECKED)
     public List<User> getAllUsers(final String ordering, final int count) {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+         final PersistenceManager pm = PMF.get().getPersistenceManager();
         List<User> retObj = null;
         try {
             final Query q = pm.newQuery(UserEntity.class);

@@ -57,25 +57,28 @@ public class ApiServlet extends HttpServlet {
     private static Map<Parameters, String> paramMap;
     protected final static Logger log = Logger.getLogger(ApiServlet.class.getName());
     protected static Location location;
-    private static final String BUDGET_ERROR = "Maximum daily budget exceeded. Please increase your daily budget";
+    private static final String BUDGET_ERROR_BUDGET_EXCEEDED = "Maximum daily budget exceeded. Please increase your daily budget";
+    private static final String BUDGET_ERROR_ZERO_BALANCE = "Your api call balance has been depleted, please fund your account";
+    private static final String BUDGET_ERROR_NOT_PAID = "You have exceeded the max free api call quota. Please enable billing and fund your account to record more data.";
+    public static final String MISSING_ACCOUNT_BALANCE_DATA_POINT = "MISSING ACCOUNT BALANCE DATA POINT";
 
     @Resource(name="entityService")
-    private EntityService entityService;
+    protected EntityService entityService;
 
     @Resource(name="valueService")
-    private ValueService valueService;
+    protected ValueService valueService;
 
     @Resource(name= "userService")
-    private UserServerService userService;
+    protected UserServerService userService;
 
     @Resource(name = "commonFactory")
-    private CommonFactory commonFactory;
+    protected CommonFactory commonFactory;
 
     @Resource(name = "settingsService")
-    private SettingsService settingsService;
+    protected SettingsService settingsService;
 
     @Resource(name = "quotaManager")
-    private QuotaManager quotaManager;
+    protected QuotaManager quotaManager;
 
 
     protected static boolean okToReport(final User u, final Entity c) {
@@ -86,6 +89,11 @@ public class ApiServlet extends HttpServlet {
 
         return (u != null && c.isOwner(u));
     }
+
+    protected boolean isPost(final HttpServletRequest req) {
+        return req.getMethod().equals("POST");
+    }
+
 
     //    protected static void reportLocation(HttpServletRequest req, Entity entity) {
 //       LocationReportingHelperFactory.getInstance().reportLocation(req, entity);
@@ -102,7 +110,7 @@ public class ApiServlet extends HttpServlet {
         if (user != null) {
 
             int count = quotaManager.incrementCounter(user.getEmail());
-            int max = quotaManager.getMaxDailyQuota();
+            int max = quotaManager.getFreeDailyQuota();
             log.info("quota call " + count + " of " + max);
 
             if (settingsService.getBooleanSetting(SettingType.billingEnabled)) {
@@ -114,24 +122,24 @@ public class ApiServlet extends HttpServlet {
                         log.info("billing enabled");
                         List<Entity> points =  entityService.getEntityByName(user, name, EntityType.point);
                         if (points.isEmpty()) {
-                            throw new NimbitsException(BUDGET_ERROR);
+                            throw new NimbitsException(MISSING_ACCOUNT_BALANCE_DATA_POINT);
                         }
                         else {
                             Point accountBalance = (Point) points.get(0);
                             List<Value> currentBalanceList = valueService.getCurrentValue(accountBalance);
                             if (currentBalanceList.isEmpty()) {
-                                throw new NimbitsException(BUDGET_ERROR);
+                                throw new NimbitsException(BUDGET_ERROR_ZERO_BALANCE);
                             }
                             else {
                                 Value current = currentBalanceList.get(0);
                                 double spent =valueService.calculateDelta(accountBalance);
                                 if (spent > accountBalance.getDeltaAlarm()) {
-                                    throw new NimbitsException(BUDGET_ERROR);
+                                    throw new NimbitsException(BUDGET_ERROR_BUDGET_EXCEEDED);
                                 }
                                 else {
                                     Double newValue = current.getDoubleValue() - quotaManager.getCostPerApiCall();
                                     if (newValue <= 0.0) {
-                                        throw new NimbitsException(BUDGET_ERROR);
+                                        throw new NimbitsException(BUDGET_ERROR_ZERO_BALANCE);
                                     }
                                     else {
                                         Value value = ValueFactory.createValueModel(newValue);
@@ -143,7 +151,7 @@ public class ApiServlet extends HttpServlet {
                         }
                     }
                     else {
-                        throw new NimbitsException(BUDGET_ERROR);
+                        throw new NimbitsException(BUDGET_ERROR_BUDGET_EXCEEDED);
                     }
 //
 
@@ -251,4 +259,27 @@ public class ApiServlet extends HttpServlet {
 
     }
 
+    public void setEntityService(EntityService entityService) {
+        this.entityService = entityService;
+    }
+
+    public void setValueService(ValueService valueService) {
+        this.valueService = valueService;
+    }
+
+    public void setUserService(UserServerService userService) {
+        this.userService = userService;
+    }
+
+    public void setCommonFactory(CommonFactory commonFactory) {
+        this.commonFactory = commonFactory;
+    }
+
+    public void setSettingsService(SettingsService settingsService) {
+        this.settingsService = settingsService;
+    }
+
+    public void setQuotaManager(QuotaManager quotaManager) {
+        this.quotaManager = quotaManager;
+    }
 }

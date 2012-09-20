@@ -62,9 +62,9 @@ public class OpenIdServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        returnToPath = getInitParameter("return_to_path", "/openid");
-        homePath = getInitParameter("home_path", "/");
-        realm = getInitParameter("realm", null);
+        returnToPath = "/openid";
+        homePath ="/";
+        realm = null;
         ConsumerFactory factory = new ConsumerFactory(new InMemoryConsumerAssociationStore());
         consumerHelper = factory.getConsumerHelper();
     }

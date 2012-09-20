@@ -67,6 +67,6 @@ public class SessionMaint extends HttpServlet implements org.springframework.web
 
     @Override
     public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+        doGet(request, response);
     }
 }

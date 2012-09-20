@@ -57,6 +57,6 @@ public class DeleteOrphanBlobCron extends HttpServlet implements org.springframe
 
     @Override
     public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+        doGet(request, response);
     }
 }

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2012 Nimbits Inc.
+  ~
+  ~    http://www.nimbits.com
+  ~
+  ~
+  ~ Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.gnu.org/licenses/gpl.html
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="idleCron" class="com.nimbits.server.process.cron.IdlePointCron">
+        <property name="entityService" ref="entityService" />
+        <property name="valueService" ref="valueService" />
+        <property name="subscriptionService" ref="subscriptionService" />
+        <property name="userService" ref="userService" />
+    </bean>
+
+    <bean id="pointCron" class="com.nimbits.server.process.cron.PointCron">
+        <property name="entityService" ref="entityService" />
+        <property name="userService" ref="userService" />
+    </bean>
+
+    <bean id="moveCron" class="com.nimbits.server.process.cron.MoveRecordedValuesToStoreCron">
+
+    </bean>
+
+    <bean id="quotaCron" class="com.nimbits.server.process.cron.QuotaResetCron">
+        <property name="quotaManager" ref="quotaManager" />
+    </bean>
+
+    <bean id="sessionCron" class="com.nimbits.server.process.cron.SessionMaint">
+
+    </bean>
+
+    <bean id="systemCron" class="com.nimbits.server.process.cron.SystemCron">
+            <property name="settingsService" ref="settingsService"/>
+    </bean>
+
+
+
+
+</beans>

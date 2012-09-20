@@ -36,12 +36,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created with IntelliJ IDEA.
@@ -81,18 +83,19 @@ public class BillingQuotaTest  extends NimbitsServletTest {
     QuotaManager quotaManager;
 
 
-    @Test(expected = NimbitsException.class)
+    @Test
     public void outOfMoneyTest() throws NimbitsException, IOException {
 
 
-
-
         settingsService.updateSetting(SettingType.billingEnabled, Const.TRUE);
-
         user.setBillingEnabled(true);
-
-
         entityService.addUpdateEntity(user, user);
+
+        List<Entity> sample = entityService.getEntityByKey(user, user.getKey(), EntityType.user);
+        assertFalse(sample.isEmpty());
+        User u = (User) sample.get(0);
+        assertTrue(u.isBillingEnabled());
+
         EntityName name = commonFactory.createName(Const.ACCOUNT_BALANCE, EntityType.point);
         List<Entity> list = entityService.getEntityByName(user,name, EntityType.point );
         assertFalse(list.isEmpty());
@@ -100,33 +103,36 @@ public class BillingQuotaTest  extends NimbitsServletTest {
         accountBalance.setDeltaAlarm(1.50);
         accountBalance.setDeltaAlarmOn(true);
         entityService.addUpdateEntity(user, accountBalance);
+        userService.fundAccount(user, BigDecimal.valueOf(0.01));
+        req.setMethod("GET");
+        double calls = (0.02 /  quotaManager.getCostPerApiCall());
+        double paid =   (0.01 /  quotaManager.getCostPerApiCall());
+        for (int i = 0; i < quotaManager.getFreeDailyQuota()+calls; i++) {
+            valueServlet.doGet(req, resp);
+            if (i < quotaManager.getFreeDailyQuota() + paid) {
+                System.out.println(resp.getHeader("ERROR"));
+                assertEquals(resp.getStatus(),  HttpServletResponse.SC_OK);
 
-
-
-        double calls = (0.06 /  quotaManager.getCostPerApiCall());
-        for (int i = 0; i < quotaManager.getMaxDailyQuota()+calls; i++) {
-            valueServlet.processGet(req, resp);
+            }
+            else {
+                assertEquals(resp.getStatus(),  HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
         }
-        User u = (User) entityService.getEntityByKey(userService.getAnonUser(), user.getKey(), EntityType.user).get(0);
+       // User u = (User) entityService.getEntityByKey(userService.getAnonUser(), user.getKey(), EntityType.user).get(0);
        // System.out.println(u.getBilling().getAccountBalance());
         List<Value> currentValueSample = valueService.getCurrentValue(accountBalance);
         assertFalse(currentValueSample.isEmpty());
         Value currentValue = currentValueSample.get(0);
-        Assert.assertEquals(0.99,currentValue.getDoubleValue(), .001);
+        Assert.assertEquals(0.0,currentValue.getDoubleValue(), .001);
 
     }
 
-    @Test(expected = NimbitsException.class)
+    @Test
     public void overDailyBudgetTest() throws NimbitsException, IOException {
 
         settingsService.updateSetting(SettingType.billingEnabled, Const.TRUE);
 
         user.setBillingEnabled(true);
-
-//
-//        user.getBilling().setAccountBalance(0.05);
-//        user.getBilling().setBillingEnabled(true);
-//        user.getBilling().setMaxDailyAllowance(1.50);
 
         double startingBalance = 5.00;
 
@@ -150,10 +156,18 @@ public class BillingQuotaTest  extends NimbitsServletTest {
         assertEquals(startingBalance, balance.getDoubleValue(), 0.0001);
         double nickle = 0.05;   //try to write a nickles worth on a 2 cent budget
 
-
+        req.setMethod("GET");
         double calls = (nickle /  quotaManager.getCostPerApiCall());
-        for (int i = 0; i < quotaManager.getMaxDailyQuota()+calls; i++) {
-            valueServlet.processGet(req, resp);
+        double quotaCalled = (accountBalance.getDeltaAlarm() / quotaManager.getCostPerApiCall());
+        for (int i = 0; i < quotaManager.getFreeDailyQuota()+calls; i++) {
+            valueServlet.doGet(req, resp);
+            if (i <= quotaManager.getFreeDailyQuota() + quotaCalled) {
+                assertEquals(resp.getStatus(),  HttpServletResponse.SC_OK);
+
+            }
+            else {
+                assertEquals(resp.getStatus(),  HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
         }
 
 
@@ -244,8 +258,8 @@ public class BillingQuotaTest  extends NimbitsServletTest {
 
 
         double calls = (penny /  quotaManager.getCostPerApiCall());
-        for (int i = 0; i < quotaManager.getMaxDailyQuota()+calls; i++) {
-            valueServlet.processGet(req, resp);
+        for (int i = 0; i < quotaManager.getFreeDailyQuota()+calls; i++) {
+            valueServlet.doGet(req, resp);
         }
 
         User u = (User) entityService.getEntityByKey(user, user.getKey(), EntityType.user).get(0);

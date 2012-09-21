@@ -61,6 +61,7 @@ public class GxtModel extends BaseTreeModel implements TreeModel {
         set(Parameters.name.getText(), this.name.getValue());
         set(Parameters.entityType.getText(),  this.entityType.getCode());
         set(Parameters.dirty.getText(), Parameters.no.getText());
+
     }
 
     @Override
@@ -170,5 +171,11 @@ public class GxtModel extends BaseTreeModel implements TreeModel {
         set(Parameters.id.getText(), this.key);
         set(Parameters.name.getText(), this.name.getValue());
         set(Parameters.entityType.getText(), entity.getEntityType().getCode());
+
+        if (entity.getEntityType().equals(EntityType.point)) {
+            set(Parameters.value.getText(), "<i>loading...</i>");
+        }
+
+
     }
 }

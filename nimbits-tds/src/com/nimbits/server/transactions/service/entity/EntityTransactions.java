@@ -63,4 +63,6 @@ public interface EntityTransactions extends EntityCache {
     List<Entity> getEntityByBlobKey(final User user, final BlobKey key) throws NimbitsException;
 
     void updateUser(final User user) throws NimbitsException;
+
+
 }

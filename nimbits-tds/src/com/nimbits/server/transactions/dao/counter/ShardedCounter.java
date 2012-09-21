@@ -1,235 +1,174 @@
-/*
- * Copyright (c) 2010 Nimbits Inc.
- *
- * http://www.nimbits.com
- *
- *
- * Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
- *
- * http://www.gnu.org/licenses/gpl.html
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
- */
 
 package com.nimbits.server.transactions.dao.counter;
 
-import com.nimbits.PMF;
-import com.nimbits.server.orm.ApiCounter;
-import com.nimbits.server.orm.ApiCounterShard;
-import net.sf.jsr107cache.Cache;
-import net.sf.jsr107cache.CacheException;
-import net.sf.jsr107cache.CacheManager;
-import org.springframework.stereotype.Repository;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Transaction;
+import com.google.appengine.api.memcache.Expiration;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheService.SetPolicy;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
 
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.Random;
-import java.util.logging.Logger;
 
-/**
- * A counter which can be incremented rapidly.
- *
- * Capable of incrementing the counter and increasing the number of shards.
- * When incrementing, a random shard is selected to prevent a single shard
- * from being written to too frequently. If increments are being made too
- * quickly, increase the number of shards to divide the load. Performs
- * datastore operations using JDO.
- *
- * Lookups are attempted using Memcache (Jcache). If the counter value is
- * not in the cache, the shards are read from the datastore and accumulated
- * to reconstruct the current count.
- *
- */
-@SuppressWarnings("unchecked")
-@Repository("sharedCounter")
+
 public class ShardedCounter {
-    private static final Logger log = Logger.getLogger(ShardedCounter.class.getName());
-
-    private String counterName;
-    private Cache cache;
-    private static final String COUNT = "count";
-    private static final String SHARDS = "shards";
 
 
-    public ShardedCounter(final String counterName) {
+    private static final class Counter {
+
+        private static final String KIND = "Counter";
+        private static final String SHARD_COUNT = "shard_count";
+    }
+
+    /**
+     * Convenience class which contains constants related to the counter shards.
+     * The shard number (as a String) is used as the entity key.
+     */
+    private static final class CounterShard {
+        /**
+         * Entity kind prefix, which is concatenated with the counter name to form
+         * the final entity kind, which represents counter shards.
+         */
+        private static final String KIND_PREFIX = "CounterShard_";
+
+        /**
+         * Property to store the current count within a counter shard.
+         */
+        private static final String COUNT = "count";
+    }
+
+    private static final DatastoreService ds = DatastoreServiceFactory
+            .getDatastoreService();
+
+    /**
+     * Default number of shards.
+     */
+    private static final int INITIAL_SHARDS = 5;
+
+    /**
+     * The name of this counter.
+     */
+    private final String counterName;
+
+    /**
+     * A random number generating, for distributing writes across shards.
+     */
+    private final Random generator = new Random();
+
+    /**
+     * The counter shard kind for this counter.
+     */
+    private String kind;
+
+    private final MemcacheService mc = MemcacheServiceFactory
+            .getMemcacheService();
+
+    /**
+     * Constructor which creates a sharded counter using the provided counter
+     * name.
+     *
+     * @param counterName name of the sharded counter
+     */
+    public ShardedCounter(String counterName) {
         this.counterName = counterName;
-       // cache = null;
-        try {
-            cache = CacheManager.getInstance().getCacheFactory().createCache(
-                    Collections.emptyMap());
-
-        } catch (CacheException e) {
-            log.severe(e.getMessage());
-        }
+        kind = CounterShard.KIND_PREFIX + counterName;
     }
 
-    private ApiCounter getThisCounter(final PersistenceManager pm) {
-        final Query thisCounterQuery = pm.newQuery(ApiCounter.class,
-                "counterName == nameParam");
-        thisCounterQuery.declareParameters("String nameParam");
-        final List<ApiCounter> counter =
-                (List<ApiCounter>) thisCounterQuery.execute(counterName);
-        ApiCounter current = null;
-        if (counter != null && !counter.isEmpty()) {
-            current = counter.get(0);
-        }
-        return current;
+    /**
+     * Increase the number of shards for a given sharded counter. Will never
+     * decrease the number of shards.
+     *
+     * @param count Number of new shards to build and store
+     */
+    public void addShards(int count) {
+        Key counterKey = KeyFactory.createKey(Counter.KIND, counterName);
+        incrementPropertyTx(counterKey, Counter.SHARD_COUNT, count, INITIAL_SHARDS
+                + count);
     }
 
-    public boolean isInDatastore() {
-        boolean counterStored = false;
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-        try {
-            if (getThisCounter(pm) != null) {
-                counterStored = true;
-            }
-        } finally {
-            pm.close();
-        }
-        return counterStored;
-    }
-
-    public int getCount() {
-        if (cache != null) {
-            final Integer cachedCount = (Integer) cache.get(COUNT + counterName);
-            if (cachedCount != null) {
-                return cachedCount;
-            }
+    /**
+     * Retrieve the value of this sharded counter.
+     *
+     * @return Summed total of all shards' counts
+     */
+    public long getCount() {
+        Long value = (Long) mc.get(kind);
+        if (value != null) {
+            return value;
         }
 
-        int sum = 0;
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
-
-        try {
-            final Query shardsQuery = pm.newQuery(ApiCounterShard.class);
-            shardsQuery.setFilter("counterName == nameParam");
-            shardsQuery.declareParameters("String nameParam");
-            final Collection<ApiCounterShard> shards =
-                    (Collection<ApiCounterShard>) shardsQuery.execute(counterName);
-            if (shards != null && !shards.isEmpty()) {
-                for (final ApiCounterShard current : shards) {
-                    sum += current.getCount();
-                }
-            }
-        } finally {
-            pm.close();
+        long sum = 0;
+        Query query = new Query(kind);
+        for (Entity shard : ds.prepare(query).asIterable()) {
+            sum += (Long) shard.getProperty(CounterShard.COUNT);
         }
-
-        if (cache != null) {
-            cache.put(COUNT + counterName, sum);
-        }
+        mc.put(kind, sum, Expiration.byDeltaSeconds(60),
+                SetPolicy.ADD_ONLY_IF_NOT_PRESENT);
 
         return sum;
     }
-//
-//    public int getNumShards() {
-//        if (cache != null) {
-//            final Integer cachedCount = (Integer) cache.get(SHARDS + counterName);
-//            if (cachedCount != null) {
-//                return cachedCount;
-//            }
-//        }
-//
-//        int numShards = 0;
-//        final PersistenceManager pm = PMF.get().getPersistenceManager();
-//        try {
-//            final ApiCounter current = getThisCounter(pm);
-//            if (current != null) {
-//                numShards = current.getShardCount();
-//            }
-//        } finally {
-//            pm.close();
-//        }
-//
-//        if (cache != null) {
-//            cache.put(SHARDS + counterName, numShards);
-//        }
-//
-//        return numShards;
-//    }
 
-    public int addShard() {
-        return addShards(1);
-    }
-
-    public int addShards(final int totalCount) {
-        int numShards = 0;
-        PersistenceManager pm = PMF.get().getPersistenceManager();
-        try {
-            final ApiCounter current = getThisCounter(pm);
-            if (current != null) {
-                numShards = current.getShardCount();
-                current.setShardCount(numShards + totalCount);
-                pm.makePersistent(current);
-            }
-        } finally {
-            pm.close();
-        }
-
-        PersistenceManager persistenceManager = PMF.get().getPersistenceManager();
-        try {
-            for (int i = 0; i < totalCount; i++) {
-
-                ApiCounterShard newShard = new ApiCounterShard(
-                        counterName, numShards);
-                persistenceManager.makePersistent(newShard);
-                numShards++;
-            }
-        } finally {
-            persistenceManager.close();
-        }
-
-        if (cache != null) {
-            cache.put(SHARDS + counterName, numShards);
-        }
-
-        return numShards;
-    }
-
+    /**
+     * Increment the value of this sharded counter.
+     */
     public void increment() {
-        increment(1);
+        // Find how many shards are in this counter.
+        int numShards = getShardCount();
+
+        // Choose the shard randomly from the available shards.
+        long shardNum = generator.nextInt(numShards);
+
+        Key shardKey = KeyFactory.createKey(kind, Long.toString(shardNum));
+        incrementPropertyTx(shardKey, CounterShard.COUNT, 1, 1);
+        mc.increment(kind, 1);
     }
 
-    public void increment(final int totalCount) {
-        if (cache != null) {
-            final Integer cachedCount = (Integer) cache.get(COUNT + counterName);
-            if (cachedCount != null) {
-                cache.put(COUNT + counterName,
-                        totalCount + cachedCount);
-            }
-        }
-
-        int shardCount = 0;
-        PersistenceManager pm = PMF.get().getPersistenceManager();
+    /**
+     * Get the number of shards in this counter.
+     *
+     * @return shard count
+     */
+    private int getShardCount() {
         try {
-            final ApiCounter current = getThisCounter(pm);
-            shardCount = current.getShardCount();
-        } finally {
-            pm.close();
+            Key counterKey = KeyFactory.createKey(Counter.KIND, counterName);
+            Entity counter = ds.get(counterKey);
+            Long shardCount = (Long) counter.getProperty(Counter.SHARD_COUNT);
+            return shardCount.intValue();
+        } catch (EntityNotFoundException ignore) {
+            return INITIAL_SHARDS;
         }
+    }
 
-        final Random generator = new Random();
-        final int shardNum = generator.nextInt(shardCount);
-
-        PersistenceManager persistenceManager = PMF.get().getPersistenceManager();
+    /**
+     * Increment datastore property value inside a transaction. If the entity with
+     * the provided key does not exist, instead create an entity with the supplied
+     * initial property value.
+     *
+     * @param key the entity key to update or create
+     * @param prop the property name to be incremented
+     * @param increment the amount by which to increment
+     * @param initialValue the value to use if the entity does not exist
+     */
+    private void incrementPropertyTx(Key key, String prop, long increment,
+                                     long initialValue) {
+        Transaction tx = ds.beginTransaction();
+        Entity thing;
+        long value;
         try {
-            final Query randomShardQuery = persistenceManager.newQuery(ApiCounterShard.class);
-            randomShardQuery.setFilter(
-                    "counterName == nameParam && shardNumber == numParam");
-            randomShardQuery.declareParameters("String nameParam, int numParam");
-            final List<ApiCounterShard> shards =
-                    (List<ApiCounterShard>) randomShardQuery.execute(
-                            counterName, shardNum);
-            if (shards != null && !shards.isEmpty()) {
-                final ApiCounterShard shard = shards.get(0);
-                shard.increment(totalCount);
-                persistenceManager.makePersistent(shard);
-            }
-        } finally {
-            persistenceManager.close();
+            thing = ds.get(tx, key);
+            value = (Long) thing.getProperty(prop) + increment;
+        } catch (EntityNotFoundException e) {
+            thing = new Entity(key);
+            value = initialValue;
         }
+        thing.setUnindexedProperty(prop, value);
+        ds.put(tx, thing);
+        tx.commit();
     }
 }

@@ -125,10 +125,11 @@ public class NavigationPanel extends NavigationEventProvider {
 
     @Override
     protected void onAttach() {
+        super.onAttach();
         updater = new RefreshTimer();
         updater.scheduleRepeating(Const.DEFAULT_TIMER_UPDATE_SPEED);
         updater.run();
-        super.onAttach();
+
     }
 
     //service calls
@@ -240,6 +241,7 @@ public class NavigationPanel extends NavigationEventProvider {
             target.setFeedback(Feedback.BOTH);
             tree.addListener(Events.AfterEdit, new GridEventListener());
             tree.addListener(Events.BeforeEdit, new GridBeforeEditEventListener());
+            tree.addListener(Events.Expand, new GridExpandListener());
             treePropertyBuilder();
             TreeModel top = treeStoreBuilder(result);
             treeDNDBuilder();
@@ -574,6 +576,17 @@ public class NavigationPanel extends NavigationEventProvider {
             else {
                 model.setDirty(true);
             }
+        }
+    }
+    private class GridExpandListener implements Listener<GridEvent> {
+
+        GridExpandListener() {
+        }
+
+        @Override
+        public void handleEvent(final GridEvent be) {
+           updater.run();
+
         }
     }
 

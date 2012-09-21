@@ -17,6 +17,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 
@@ -26,9 +27,10 @@ import com.nimbits.client.model.value.Value;
  * Date: 2/15/12
  * Time: 3:52 PM
  */
-@RemoteServiceRelativePath("subscribeService")
+@RemoteServiceRelativePath("subscriptionService")
 public interface SubscriptionService  extends RemoteService {
     void processSubscriptions(final User u, final Point point, final Value v) throws NimbitsException;
 
 
+    boolean okToProcess(Subscription subscription);
 }

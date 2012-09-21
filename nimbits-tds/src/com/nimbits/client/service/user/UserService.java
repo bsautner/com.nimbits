@@ -41,4 +41,6 @@ public interface UserService extends RemoteService {
     void updateBilling(final User user,final boolean billingEnabled,final double maxQuota) throws NimbitsException;
 
     List<User> getAllUsers(String s, int count);
+
+    double processCoupon(String value) throws NimbitsException;
 }

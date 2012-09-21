@@ -50,10 +50,7 @@ import com.nimbits.server.transactions.service.entity.EntityTransactions;
 import com.nimbits.shared.Utils;
 import org.springframework.stereotype.Repository;
 
-import javax.jdo.JDOObjectNotFoundException;
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
+import javax.jdo.*;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -71,9 +68,10 @@ public class EntityDaoImpl implements  EntityTransactions {
     private static final int INT = 1024;
     public static final int LIMIT = 1000;
 
-
+    
     private final Logger log = Logger.getLogger(EntityDaoImpl.class.getName());
     private RecursionValidation recursionValidation;
+
 
 
     @Override
@@ -234,7 +232,7 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     @Override
     public Entity addUpdateEntity(User user, Entity entity, boolean clearTree) throws NimbitsException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        throw new NimbitsException("Not Implemented");
     }
 
 
@@ -816,4 +814,6 @@ public class EntityDaoImpl implements  EntityTransactions {
     public RecursionValidation getRecursionValidation() {
         return recursionValidation;
     }
+
+
 }

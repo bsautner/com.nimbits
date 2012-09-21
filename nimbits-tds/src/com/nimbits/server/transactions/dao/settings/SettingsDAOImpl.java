@@ -34,6 +34,7 @@ import java.util.Map;
 public class SettingsDAOImpl implements SettingTransactions {
 
 
+
     @Override
     public String getSetting(final SettingType setting) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();

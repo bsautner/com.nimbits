@@ -22,26 +22,53 @@ import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.subscription.SubscriptionFactory;
+import com.nimbits.client.service.entity.EntityService;
+import com.nimbits.client.service.subscription.SubscriptionService;
 import com.nimbits.server.NimbitsServletTest;
+import com.nimbits.server.transactions.service.counter.CounterService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.Calendar;
+import javax.annotation.Resource;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={
+        "classpath:META-INF/applicationContext.xml",
+        "classpath:META-INF/applicationContext-api.xml",
+        "classpath:META-INF/applicationContext-cache.xml",
+        "classpath:META-INF/applicationContext-cron.xml",
+        "classpath:META-INF/applicationContext-dao.xml",
+        "classpath:META-INF/applicationContext-service.xml",
+        "classpath:META-INF/applicationContext-task.xml"
+
+})
 public class SubscriptionServiceImplTest extends NimbitsServletTest {
+
+    @Resource(name="subscriptionService")
+    SubscriptionService subscriptionService;
+
+    @Resource(name="entityService")
+    EntityService entityService;
+
+    @Resource(name="counterService")
+    CounterService counterService;
+
     @Test
     public void testOkToProcess() throws Exception {
 
-        Calendar lastSent = Calendar.getInstance();
-        lastSent.add(Calendar.DATE, -5);
+
         EntityName name = CommonFactoryLocator.getInstance().createName("sub1", EntityType.subscription);
         Entity entity = EntityModelFactory.createEntity(name, EntityType.subscription);
         Subscription s = SubscriptionFactory.createSubscription(entity, point.getKey(), SubscriptionType.newValue,
-                SubscriptionNotifyMethod.email, 5.0,lastSent.getTime(),false, true);
-        SubscriptionServiceImpl i = new SubscriptionServiceImpl();
-        assertTrue(i.okToProcess(s));
+                SubscriptionNotifyMethod.email, 2,false, true);
+        Subscription result = (Subscription) entityService.addUpdateEntity(s);
+        Thread.sleep(3000);
+        assertTrue(subscriptionService.okToProcess(result));
 
 
 
@@ -51,17 +78,28 @@ public class SubscriptionServiceImplTest extends NimbitsServletTest {
     @Test
     public void testOkToProcess2() throws Exception {
 
-        Calendar lastSent = Calendar.getInstance();
-        //lastSent.add(Calendar.DATE, -5);
+
         EntityName name = CommonFactoryLocator.getInstance().createName("sub1", EntityType.subscription);
         Entity entity = EntityModelFactory.createEntity(name, EntityType.subscription);
         Subscription s = SubscriptionFactory.createSubscription(entity, point.getKey(), SubscriptionType.newValue,
-                SubscriptionNotifyMethod.email, 15.0,lastSent.getTime(),false, true);
-        SubscriptionServiceImpl i = new SubscriptionServiceImpl();
-        assertFalse(i.okToProcess(s));
+                SubscriptionNotifyMethod.email, 100,false, true);
+        Subscription result = (Subscription) entityService.addUpdateEntity(s);
+        counterService.updateDateCounter(result.getKey());
+
+        assertFalse(subscriptionService.okToProcess(result));
 
 
 
 
     }
+
+    @Test
+    public void testLastSentCaching() {
+
+
+
+    }
+
+
+
 }

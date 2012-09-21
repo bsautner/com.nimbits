@@ -14,6 +14,8 @@
 package com.nimbits.client.ui.panels;
 
 import com.extjs.gxt.ui.client.event.ButtonEvent;
+import com.extjs.gxt.ui.client.event.Listener;
+import com.extjs.gxt.ui.client.event.MessageBoxEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.util.Margins;
 import com.extjs.gxt.ui.client.util.Padding;
@@ -33,6 +35,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.nimbits.client.common.Utils;
 import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.point.Point;
@@ -52,8 +55,8 @@ import java.util.Map;
  * Time: 3:29 PM
  */
 public class UserSettingPanel extends NavigationEventProvider {
-
-
+    private NumberField balance;
+    private CheckBox enabled;
     private static final int WIDTH = 350;
 
     private FormData formdata;
@@ -117,7 +120,7 @@ public class UserSettingPanel extends NavigationEventProvider {
 
         maxQuota.setFormat(NumberFormat.getFormat("##.00"));
 
-        final NumberField balance = new NumberField();
+        balance = new NumberField();
         balance.setFieldLabel("Account Balance");
         balance.setReadOnly(true);
         balance.setAllowBlank(false);
@@ -125,7 +128,7 @@ public class UserSettingPanel extends NavigationEventProvider {
 
         balance.setFormat(NumberFormat.getFormat("##.##"));
 
-        final CheckBox enabled = new CheckBox();
+        enabled = new CheckBox();
 
 
 
@@ -133,11 +136,17 @@ public class UserSettingPanel extends NavigationEventProvider {
         enabled.setBoxLabel("Enable Billing");
         enabled.setLabelSeparator("");
 
+
+        Button coupon = new Button("Use Coupon");
+
+
         Button submit = new Button("Submit");
         Button cancel = new Button("Cancel");
         cancel.addSelectionListener(new CancelButtonEventSelectionListener());
 
         submit.addSelectionListener(new SubmitButtonEventSelectionListener(enabled, maxQuota));
+
+        coupon.addSelectionListener(new CouponButtonEventSelectionListener());
 
 
         Html h = new Html("<h5>Billing and Quotas</h5>" +
@@ -174,6 +183,7 @@ public class UserSettingPanel extends NavigationEventProvider {
         cancel.setWidth(100);
         submit.setWidth(100);
         HBoxLayoutData layoutData = new HBoxLayoutData(new Margins(0, 5, 0, 0));
+        c.add(coupon, layoutData);
         c.add(cancel, layoutData);
         c.add(submit, layoutData);
         vp.add(simple);
@@ -228,6 +238,62 @@ public class UserSettingPanel extends NavigationEventProvider {
         }
     }
 
+    private class CouponButtonEventSelectionListener extends SelectionListener<ButtonEvent> {
+
+
+        CouponButtonEventSelectionListener() {
+        }
+
+        @Override
+        public void componentSelected(ButtonEvent buttonEvent) {
+            final MessageBox box = MessageBox.prompt(
+                    "Fund your account with a coupon code",
+                    "Please enter the coupon code");
+
+            box.addCallback(new NewCouponMessageBoxEventListener());
+        }
+    }
+    private class NewCouponMessageBoxEventListener implements Listener<MessageBoxEvent> {
+
+        private String value;
+
+        NewCouponMessageBoxEventListener() {
+        }
+
+        @Override
+        public void handleEvent(MessageBoxEvent be) {
+            value = be.getValue();
+            if (!Utils.isEmptyString(value)) {
+                final MessageBox box = MessageBox.wait("Progress",
+                        "Validating your code and funding your account", " Validating " + value) ;
+                box.show();
+                UserServiceAsync service = GWT.create(UserService.class);
+
+
+
+                    service.processCoupon(value, new AsyncCallback<Double>() {
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            box.close();
+                          FeedbackHelper.showError(caught);
+                        }
+
+                        @Override
+                        public void onSuccess(Double result) {
+                          box.close();
+                            final MessageBox s = MessageBox.info("Success",
+                                    "Your Coupon code was accepted. You can set a daily budget using the settings menu", null) ;
+                            s.show();
+                            enabled.setValue(true);
+                            balance.setValue(result);
+
+                        }
+                    });
+
+
+            }
+        }
+    }
 
     private class SubmitButtonEventSelectionListener extends SelectionListener<ButtonEvent> {
         CheckBox enabled;

@@ -42,7 +42,7 @@
         <property name="valueService" ref="valueService" />
     </bean>
 
-    <bean id="moveCachedValuesToStoreTask" class="com.nimbits.server.process.task.MoveCachedValuesToStoreTask">
+    <bean id="moveTask" class="com.nimbits.server.process.task.MoveTask">
         <property name="valueService" ref="valueService" />
     </bean>
     <bean id="pointTask" class="com.nimbits.server.process.task.PointMaintTask">

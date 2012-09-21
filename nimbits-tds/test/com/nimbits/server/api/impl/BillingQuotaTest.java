@@ -109,10 +109,10 @@ public class BillingQuotaTest  extends NimbitsServletTest {
         double paid =   (0.01 /  quotaManager.getCostPerApiCall());
         for (int i = 0; i < quotaManager.getFreeDailyQuota()+calls; i++) {
             valueServlet.doGet(req, resp);
-            if (i < quotaManager.getFreeDailyQuota() + paid) {
+            if (i <= quotaManager.getFreeDailyQuota() + paid) {
                 System.out.println(resp.getHeader("ERROR"));
                 assertEquals(resp.getStatus(),  HttpServletResponse.SC_OK);
-
+                System.out.println(i);
             }
             else {
                 assertEquals(resp.getStatus(),  HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

@@ -16,52 +16,26 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <!--<bean id="persistenceManagerFactory" class="org.springframework.orm.jdo.LocalPersistenceManagerFactoryBean">-->
-
-    <!--<property name="persistenceManagerFactoryName" value="transactions-optional" />-->
-
-    <!--</bean>-->
-
-    <!--<bean id="persistenceManagerFactoryProxy" class="org.springframework.orm.jdo.TransactionAwarePersistenceManagerFactoryProxy">-->
-    <!--<property name="targetPersistenceManagerFactory" ref="persistenceManagerFactory" />-->
-    <!--<property name="allowCreate" value="false" />-->
-    <!--</bean>-->
-
-
-    <!-- JDO Specific -->
-
-    <!--<bean id="persistenceManagerFactory"  class="org.springframework.orm.jdo.LocalPersistenceManagerFactoryBean">-->
-
-        <!--<property name="persistenceManagerFactoryName" value="transactions-optional" />-->
-
-    <!--</bean>-->
 
 
 
-    <!--<bean id="transactionManager" class="org.springframework.orm.jdo.JdoTransactionManager">-->
-
-        <!--<property name="persistenceManagerFactory" ref="persistenceManagerFactory" />-->
-
-    <!--</bean>-->
-
-    <!-- End JDO Specific -->
-
-
-    <bean id="userDao" class="com.nimbits.server.transactions.dao.user.UserDAOImpl">
+    <bean id="userDao" class="com.nimbits.server.transactions.dao.user.UserDAOImpl" scope="singleton">
         <property name="entityService" ref="entityService" />
         <property name="userService" ref="userService"/>
+
     </bean>
 
-    <bean id="entityDao" class="com.nimbits.server.transactions.dao.entity.EntityDaoImpl">
+    <bean id="entityDao" class="com.nimbits.server.transactions.dao.entity.EntityDaoImpl" scope="singleton">
         <property name="recursionValidation" ref="recursionValidation" />
-    </bean>
-
-    <bean id="valueDao" class="com.nimbits.server.transactions.dao.value.ValueDAOImpl">
 
     </bean>
 
+    <bean id="valueDao" class="com.nimbits.server.transactions.dao.value.ValueDAOImpl" scope="singleton">
 
-    <bean id="settingsDao" class="com.nimbits.server.transactions.dao.settings.SettingsDAOImpl">
+    </bean>
+
+
+    <bean id="settingsDao" class="com.nimbits.server.transactions.dao.settings.SettingsDAOImpl" scope="singleton">
 
     </bean>
 

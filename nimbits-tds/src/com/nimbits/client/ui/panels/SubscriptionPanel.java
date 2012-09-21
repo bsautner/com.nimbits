@@ -55,7 +55,6 @@ import com.nimbits.client.service.entity.EntityServiceAsync;
 import com.nimbits.client.ui.helper.FeedbackHelper;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -410,8 +409,8 @@ public class SubscriptionPanel extends NavigationEventProvider {
                             update.setSubscriptionType(subscriptionType);
                             update.setNotifyMethod(subscriptionNotifyMethod);
                             update.setNotifyFormatJson(machine.getValue());
-                            update.setMaxRepeat(spinnerField.getValue().doubleValue());
-                            update.setLastSent(new Date());
+                            update.setMaxRepeat(spinnerField.getValue().intValue());
+
 
 
                         }
@@ -427,8 +426,7 @@ public class SubscriptionPanel extends NavigationEventProvider {
                                     entity.getKey(),
                                     subscriptionType,
                                     subscriptionNotifyMethod,
-                                    spinnerField.getValue().doubleValue(),
-                                    new Date(0),
+                                    spinnerField.getValue().intValue(),
                                     machine.getValue(),
                                     enabled.getValue());
                         }

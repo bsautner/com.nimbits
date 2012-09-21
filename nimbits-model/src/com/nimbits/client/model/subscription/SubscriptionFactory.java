@@ -28,15 +28,14 @@ public class SubscriptionFactory {
             final String subscribedEntity,
             final SubscriptionType type,
             final SubscriptionNotifyMethod method,
-            final double maxRepeat,
-            final Date lastSent,
+            final int maxRepeatSeconds,
             final boolean formatJson,
             final boolean enabled) throws NimbitsException {
         return new SubscriptionModel(entity,
                 subscribedEntity,
                 type,
                 method,
-                maxRepeat, lastSent,
+                maxRepeatSeconds,
                 formatJson, enabled
         );
 

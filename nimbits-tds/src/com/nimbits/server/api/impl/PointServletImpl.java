@@ -86,61 +86,69 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
 
                 String pointNameParam = Utils.isEmptyString(getParam(Parameters.name)) ?
                         getParam(Parameters.point) : getParam(Parameters.name);
-
-                pointNameParam = pointNameParam.trim();
-
-                final String actionParam = req.getParameter(Parameters.action.getText());
-                final Action action = Utils.isEmptyString(actionParam) ? Action.create : Action.get(actionParam);
+                if (! Utils.isEmptyString(pointNameParam)) {
 
 
-                switch (action) {
 
-                    case delete:
-                        deletePoint(user, pointNameParam);
-                        return;
-                    case update:
-                        updatePoint(user, getParam(Parameters.json));
-                        return;
-                    case create:
-                        EntityName parentName = null;
-                        EntityType parentType;
-                        log.info("creating point");
-                        if (containsParam(Parameters.category)) {
-                            parentName= CommonFactoryLocator.getInstance().createName(getParam(Parameters.category), EntityType.category);
-                            parentType = EntityType.category;
-                        }
-                        else if (containsParam(Parameters.parent)) {
-                            parentName = CommonFactoryLocator.getInstance().createName(getParam(Parameters.parent), EntityType.point);
-                            parentType = EntityType.point;
+                    pointNameParam = pointNameParam.trim();
 
-                        }
-                        else {
-                            parentType = EntityType.user;
-                        }
-                        log.info(parentType.name());
-                        if (parentName != null) {
-                            log.info(parentName.getValue());
-                        }
+                    final String actionParam = req.getParameter(Parameters.action.getText());
+                    final Action action = Utils.isEmptyString(actionParam) ? Action.create : Action.get(actionParam);
 
-                        if (!Utils.isEmptyString(pointNameParam) && Utils.isEmptyString(getParam(Parameters.json))) {
-                            final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
-                            String description = getParam(Parameters.description);
-                            final Point point = createPoint(user, pointName, parentName, parentType, description);
-                            final String retJson = gson.toJson(point);
-                            out.println(retJson);
 
-                        } else if (!Utils.isEmptyString(pointNameParam) && !Utils.isEmptyString(getParam(Parameters.json))) {
-                             final Point point = createPointWithJson(user, parentName, parentType,getParam(Parameters.json));
-                            final String retJson = gson.toJson(point);
-                            out.println(retJson);
-                        }
-                        break;
-                    default:
+                    switch (action) {
+
+                        case delete:
+                            deletePoint(user, pointNameParam);
+                            return;
+                        case update:
+                            updatePoint(user, getParam(Parameters.json));
+                            return;
+                        case create:
+                            EntityName parentName = null;
+                            EntityType parentType;
+                            log.info("creating point");
+                            if (containsParam(Parameters.category)) {
+                                parentName= CommonFactoryLocator.getInstance().createName(getParam(Parameters.category), EntityType.category);
+                                parentType = EntityType.category;
+                            }
+                            else if (containsParam(Parameters.parent)) {
+                                parentName = CommonFactoryLocator.getInstance().createName(getParam(Parameters.parent), EntityType.point);
+                                parentType = EntityType.point;
+
+                            }
+                            else {
+                                parentType = EntityType.user;
+                            }
+                            log.info(parentType.name());
+                            if (parentName != null) {
+                                log.info(parentName.getValue());
+                            }
+
+                            if (!Utils.isEmptyString(pointNameParam) && Utils.isEmptyString(getParam(Parameters.json))) {
+                                final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
+                                String description = getParam(Parameters.description);
+                                final Point point = createPoint(user, pointName, parentName, parentType, description);
+                                final String retJson = gson.toJson(point);
+                                out.println(retJson);
+
+                            } else if (!Utils.isEmptyString(pointNameParam) && !Utils.isEmptyString(getParam(Parameters.json))) {
+                                final Point point = createPointWithJson(user, parentName, parentType,getParam(Parameters.json));
+                                final String retJson = gson.toJson(point);
+                                out.println(retJson);
+                            }
+                            break;
+                        default:
+
+                    }
+                } else {
+                    resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
                 }
-            } else {
-                resp.setStatus(Const.HTTP_STATUS_UNAUTHORISED);
-                out.println(UserMessages.RESPONSE_PERMISSION_DENIED);
+            }
+            else {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+
             }
         } catch (IOException e) {
             resp.setStatus(Const.HTTP_STATUS_INTERNAL_SERVER_ERROR);
@@ -381,7 +389,7 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
     }
 
     private  String outputPoint(final String countParam, final String format, final String startParam,
-                                      final String endParam, final String offsetParam, final Entity baseEntity) throws NimbitsException {
+                                final String endParam, final String offsetParam, final Entity baseEntity) throws NimbitsException {
 
 
         final Point p = (Point) baseEntity;

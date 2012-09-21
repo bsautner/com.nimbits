@@ -2,11 +2,11 @@ package com.nimbits.client.model.subscription;
 
 import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
 import com.nimbits.client.enums.subscription.SubscriptionType;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModel;
 
-import java.io.*;
-import java.util.*;
+import java.io.Serializable;
 
 /**
  * Created by Benjamin Sautner
@@ -20,8 +20,7 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
     private String subscribedEntity;
     private int notifyMethod;
     private int subscriptionType;
-    private double maxRepeat;
-    private Date lastSent;
+    private int maxRepeat;
     private boolean notifyFormatJson;
     private boolean enabled;
 
@@ -35,7 +34,6 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
         this.notifyMethod = subscription.getNotifyMethod().getCode();
         this.subscriptionType = subscription.getSubscriptionType().getCode();
         this.maxRepeat = subscription.getMaxRepeat();
-        this.lastSent = subscription.getLastSent();
         this.notifyFormatJson = subscription.getNotifyFormatJson();
         this.enabled = subscription.getEnabled();
 
@@ -46,8 +44,7 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
             String subscribedEntity,
                              SubscriptionType subscriptionType,
                              SubscriptionNotifyMethod subscriptionNotifyMethod,
-                             double maxRepeat,
-                             Date lastSent,
+                             int maxRepeat,
                              boolean formatJson,
                              boolean enabled) throws NimbitsException {
         super(entity);
@@ -55,7 +52,6 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
         this.subscriptionType = subscriptionType.getCode();
         this.notifyMethod = subscriptionNotifyMethod.getCode();
         this.maxRepeat = maxRepeat;
-        this.lastSent = new Date(lastSent.getTime());
         this.enabled = enabled;
         this.notifyFormatJson = formatJson;
     }
@@ -109,23 +105,13 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
     }
 
     @Override
-    public double getMaxRepeat() {
+    public int getMaxRepeat() {
         return maxRepeat;
     }
 
     @Override
-    public void setMaxRepeat(double maxRepeat) {
+    public void setMaxRepeat(int maxRepeat) {
         this.maxRepeat = maxRepeat;
-    }
-
-    @Override
-    public Date getLastSent() {
-        return lastSent;
-    }
-
-    @Override
-    public void setLastSent(Date lastSent) {
-        this.lastSent = new Date(lastSent.getTime());
     }
 
 

@@ -22,7 +22,6 @@ import com.nimbits.client.model.subscription.Subscription;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * Created by Benjamin Sautner
@@ -44,10 +43,7 @@ public class SubscriptionEntity extends EntityStore implements Serializable, Sub
     private Integer subscriptionType = SubscriptionType.none.getCode();
 
     @Persistent
-    private Double maxRepeat;
-
-    @Persistent
-    private Date lastSent;
+    private Double maxRepeat; //todo migrate to int
 
     @Persistent
     private Boolean notifyFormatJson;
@@ -66,8 +62,7 @@ public class SubscriptionEntity extends EntityStore implements Serializable, Sub
         super(subscription);
         this.notifyMethod = subscription.getNotifyMethod().getCode();
         this.subscriptionType = subscription.getSubscriptionType().getCode();
-        this.maxRepeat = subscription.getMaxRepeat();
-        this.lastSent = subscription.getLastSent();
+        this.maxRepeat = (double) subscription.getMaxRepeat();
         this.notifyFormatJson = subscription.getNotifyFormatJson();
         this.enabled = subscription.getEnabled();
         this.subscribedEntity = subscription.getSubscribedEntity();
@@ -75,24 +70,15 @@ public class SubscriptionEntity extends EntityStore implements Serializable, Sub
 
 
     @Override
-    public double getMaxRepeat() {
-        return this.maxRepeat;
+    public int getMaxRepeat() {
+        return this.maxRepeat == null ? 0 : (int)Math.round(maxRepeat);
     }
 
     @Override
-    public void setMaxRepeat(double maxRepeat) {
-        this.maxRepeat = maxRepeat;
+    public void setMaxRepeat(int maxRepeat) {
+        this.maxRepeat = (double) maxRepeat;
     }
 
-    @Override
-    public Date getLastSent() {
-        return lastSent == null ? new Date(0) : lastSent;
-    }
-
-    @Override
-    public void setLastSent(Date lastSent) {
-        this.lastSent = new Date(lastSent.getTime());
-    }
     @Override
     public String getSubscribedEntity() {
         return subscribedEntity;
@@ -141,8 +127,7 @@ public class SubscriptionEntity extends EntityStore implements Serializable, Sub
         Subscription s = (Subscription)update;
         notifyMethod = s.getNotifyMethod().getCode();
         subscriptionType = s.getSubscriptionType().getCode();
-        lastSent = s.getLastSent();
-        maxRepeat = s.getMaxRepeat();
+        maxRepeat = (double) s.getMaxRepeat();
         enabled = s.getEnabled();
         notifyFormatJson = s.getNotifyFormatJson();
     }

@@ -78,7 +78,8 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     public static final String ZERO_BALANCE_ALERT_NAME = "Account Balance Zero Notification";
     public static final String QUOTA_EXCEEDED_DESC = "This is an alert that notifies you when you've exceeded your set quota for the day.";
     public static final String ZERO_BALANCE_DESC = "This is an alert that notifies you when your account balance is at zero";
-    public static final String ACCOUNT_FUNDED_DESC = "This is an alert that notifies you when your account is funded.";
+    public static final String ACCOUNT_FUNDED_DESC = "This is an alert that notifies you when your account is funded. You still need to log into nimbits and select Billing Options" +
+            " from the Settings Menu. There, you can configure a daily budget and enable or disable billing";
 
     private EntityServiceImpl entityService;
     private FeedImpl feedService;
@@ -360,7 +361,35 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public List<User> getAllUsers(String s, int count) {
-        return null;
+        return userCache.getAllUsers(s, count);
+    }
+
+    @Override
+    public double processCoupon(String value) throws NimbitsException {
+        if (value.equals("OHS2012")) {
+            List<Point> sample = getAccountBalance();
+            double dollarValue = 5.00;
+
+            if (! sample.isEmpty()) {
+                Point p = sample.get(0);
+                if (p.getValue() != null && p.getValue().getDoubleValue() > 0.0) {
+                    throw new NimbitsException("Sorry, the coupon you entered can only be used to fund a new account once.");
+
+                }
+
+            }
+            User user = getHttpRequestUser(this.getThreadLocalRequest());
+            updateBilling(user, true, 0.00);
+            fundAccount(user, BigDecimal.valueOf(dollarValue));
+            return dollarValue;
+
+        }
+        else {
+            throw new NimbitsException("That wasn't a valid coupon code.");
+        }
+
+
+
     }
 
     private void addUpdateBillingSubscription(final User user,
@@ -396,7 +425,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         Entity quotaEntity = EntityModelFactory.createEntity(entityName, desc, EntityType.subscription, ProtectionLevel.onlyMe,
                 accountBalancePoint.getKey(), user.getKey());
         Subscription subscription = SubscriptionFactory.createSubscription(quotaEntity, accountBalancePoint.getKey(),
-                type, SubscriptionNotifyMethod.email, maxRepeat, new Date(), false,user.isBillingEnabled());
+                type, SubscriptionNotifyMethod.email, maxRepeat, false,user.isBillingEnabled());
         return (Subscription) entityService.addUpdateEntity(user, subscription);
     }
 

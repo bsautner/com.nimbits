@@ -42,7 +42,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import java.io.IOException;
-import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -243,7 +242,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
                 se,
                 point.getKey(),
                 SubscriptionType.high,
-                SubscriptionNotifyMethod.email, 5.0, new Date(), false, true);
+                SubscriptionNotifyMethod.email, 5, false, true);
 
         String jp = GsonFactory.getInstance().toJson(s);
         System.out.println(jp);

@@ -15,6 +15,7 @@ import java.util.Map;
 public enum MemCacheKey {
 
     activePoints(0, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_ACTIVE_POINTS),
+
     valueCache(1,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_VALUE),
     currentValueCache(1,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_CURRENT_VALUE),
     allSettings(2, SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_ALL_SETTINGS),
@@ -32,6 +33,8 @@ public enum MemCacheKey {
     bufferedValueList(14,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_BUFFERED_VALUE_LIST),
     userEntityTree(15,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_USER_ENTITY_TREE),
     quotaNamespace(16, buildQuotaKey()),
+    subscribedEntity(17, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_SUBSCRIBED_ENTITY),
+    entityNameCache(18, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_ENTITY_NAME),
     ;
 
     private static String buildQuotaKey() {
@@ -111,6 +114,8 @@ public enum MemCacheKey {
         static final String KEY_USER = "KEY_USER";
         static final String KEY_USER_ENTITY_TREE = "KEY_USER_ENTITY_TREE";
         static final String KEY_QUOTA_NAMESPACE = "KEY_QUOTA_NAMESPACE";
+        public static final String KEY_SUBSCRIBED_ENTITY = "KEY_SUBSCRIBED_ENTITY";
+        public static final String KEY_ENTITY_NAME = "KEY_ENTITY_NAME";
 
         private KeyConstants() {
         }

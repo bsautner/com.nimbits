@@ -174,7 +174,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
                 p.setName(newName);
                 p.setKey(null);
                 return addUpdateEntity(p);
-                //return PointServiceFactory.getInstance().copyPoint(getUser(), originalEntity, newName);
+            //return PointServiceFactory.getInstance().copyPoint(getUser(), originalEntity, newName);
 
             case category:
                 return null;
@@ -240,18 +240,28 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
 
     @Override
     public Entity addUpdateEntity(final User user, final Entity entity) throws NimbitsException {
+        if (entity.getEntityType().equals(EntityType.point)) {
+            TaskFactory.getInstance().startCoreTask(this.getThreadLocalRequest(), entity, Action.update, ServerInfoImpl.getFullServerURL(getThreadLocalRequest()));
+            Location location =   ApiServlet.getGPS(this.getThreadLocalRequest());
+            LocationReportingHelperFactory.getInstance().reportLocation( entity, location);
+        }
 
-       TaskFactory.getInstance().startCoreTask(this.getThreadLocalRequest(), entity, Action.update, ServerInfoImpl.getFullServerURL(getThreadLocalRequest()));
-       Location location =   ApiServlet.getGPS(this.getThreadLocalRequest());
-       LocationReportingHelperFactory.getInstance().reportLocation( entity, location);
-       return entityCache.addUpdateEntity(user, entity, true);
+
+        return entityCache.addUpdateEntity(user, entity, true);
 
     }
 
     @Override
     public List<Entity>  getEntityByKey(final User user, final String entityId, final EntityType type) throws NimbitsException {
         try {
-            return entityCache.getEntityByKey(user, entityId, Class.forName(type.getClassName()));
+            if (user != null) {
+                return entityCache.getEntityByKey(user, entityId, Class.forName(type.getClassName()));
+            }
+            else {
+
+                return entityCache.getEntityByKey(getUser(), entityId, Class.forName(type.getClassName()));
+            }
+
         } catch (ClassNotFoundException e) {
             throw new NimbitsException(e);
         }

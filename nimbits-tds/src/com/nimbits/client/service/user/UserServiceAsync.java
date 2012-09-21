@@ -46,4 +46,6 @@ public interface UserServiceAsync {
     void updateBilling(final User user, final boolean billingEnabled, final double maxQuota, final AsyncCallback<Void> async);
 
     void getAllUsers(final String s, final int count, final AsyncCallback<List<User>> async);
+
+    void processCoupon(String value, AsyncCallback<Double> async);
 }

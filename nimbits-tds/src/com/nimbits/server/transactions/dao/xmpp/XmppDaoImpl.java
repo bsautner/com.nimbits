@@ -40,6 +40,7 @@ import java.util.List;
 public class XmppDaoImpl implements XmppTransaction {
 
 
+    
     public XmppDaoImpl() {
 
     }
@@ -69,7 +70,7 @@ public class XmppDaoImpl implements XmppTransaction {
 
     @Override
     public void deleteResource(final Entity entity) {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm =PMF.get().getPersistenceManager();
 
 
         try {

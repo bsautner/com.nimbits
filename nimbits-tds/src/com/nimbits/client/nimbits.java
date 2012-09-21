@@ -25,6 +25,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.*;
 import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -71,9 +72,16 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
     private EntityServiceAsync entityService;
     private UserServiceAsync userService;
     private TwitterServiceAsync twitterService;
+    private ContentPanel center;
+    private Timer updater;
+
 
     private boolean isDomain;
     private User user;
+
+
+
+
     @Override
     public void onModuleLoad() {
 
@@ -81,6 +89,11 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         entityService = GWT.create(EntityService.class);
         userService = GWT.create(UserService.class);
         twitterService = GWT.create(TwitterService.class);
+
+
+        updater = new RefreshTimer();
+        updater.scheduleRepeating(Const.DEFAULT_TIMER_UPDATE_SPEED);
+        updater.run();
 
 
         final String clientTypeParam = Location.getParameter(Parameters.client.getText());
@@ -187,9 +200,9 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
                         Window.alert(response.getText());
                     }
 
-            } );
+                } );
             } catch (RequestException e) {
-              FeedbackHelper.showError(e);
+                FeedbackHelper.showError(e);
             }
         }
         else {
@@ -521,7 +534,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
             centerPanel = new CenterPanel(loginInfo, settings, action, isDomain);
 
 
-            final ContentPanel center = new ContentPanel();
+            center = new ContentPanel();
             center.setHeading(Const.CONST_SERVER_NAME + ' ' + SettingType.serverVersion.getDefaultValue());
             center.setScrollMode(Style.Scroll.AUTOX);
 
@@ -573,4 +586,42 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         }
 
     }
+
+    private class RefreshTimer extends Timer {
+
+
+        RefreshTimer() {
+        }
+
+        @Override
+        public void run() {
+
+            if (center != null) {
+
+                getApiCalls();
+            }
+
+
+        }
+        private void getApiCalls( ) {
+            UserServiceAsync service = GWT.create(UserService.class);
+            service.getQuota(new AsyncCallback<Integer>() {
+                @Override
+                public void onFailure(Throwable caught) {
+                    FeedbackHelper.showError(caught);
+                }
+
+                @Override
+                public void onSuccess(Integer result) {
+                   if (result > 0) {
+
+                        center.setHeading(Const.CONST_SERVER_NAME + ' ' + SettingType.serverVersion.getDefaultValue() + " API Calls: " + result );
+                   }
+                }
+            });
+        }
+
+
+    }
+
 }

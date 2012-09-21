@@ -2,11 +2,10 @@ package com.nimbits.client.model.subscription;
 
 import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
 import com.nimbits.client.enums.subscription.SubscriptionType;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
 
-import java.io.*;
-import java.util.*;
+import java.io.Serializable;
 
 /**
  * Created by Benjamin Sautner
@@ -16,13 +15,9 @@ import java.util.*;
  */
 public interface Subscription extends Entity, Serializable {
 
-    double getMaxRepeat();
+    int getMaxRepeat();
 
-    void setMaxRepeat(double maxRepeat);
-
-    Date getLastSent();
-
-    void setLastSent(Date lastSent);
+    void setMaxRepeat(int maxRepeat);
 
     String getSubscribedEntity();
 

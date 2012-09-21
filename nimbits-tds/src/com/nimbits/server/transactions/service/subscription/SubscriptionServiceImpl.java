@@ -39,6 +39,7 @@ import com.nimbits.server.external.facebook.FacebookImpl;
 import com.nimbits.server.external.twitter.TwitterImpl;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.http.HttpCommonFactory;
+import com.nimbits.server.transactions.service.counter.CounterService;
 import com.nimbits.server.transactions.service.feed.FeedImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,13 +70,14 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
     private TwitterImpl twitterService;
     private FacebookImpl facebookService;
     private XmppServiceImpl xmppService;
+    private CounterService counterService;
 
-
+    @Override
     public boolean okToProcess(Subscription subscription) {
 
         boolean retVal;
         try {
-            retVal = (subscription.getLastSent().getTime() +  subscription.getMaxRepeat() *  1000 < new Date().getTime());
+            retVal = (counterService.getDateCounter(subscription.getKey()).getTime() +  subscription.getMaxRepeat() *  1000 < new Date().getTime());
         } catch (Exception ex) {
             LogHelper.logException(this.getClass(), ex);
             retVal = true;
@@ -96,8 +98,9 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
             if  (okToProcess(subscription)) {
 
-                log.info("Processing Subscription " + subscription.getKey());
-                subscription.setLastSent(new Date());
+                log.info("Processing Subscription " + subscription.getName().getValue());
+                counterService.updateDateCounter(subscription.getKey());
+
                 entityService.addUpdateEntity(user, subscription);
 
                 final List<Entity> subscriptionEntity = entityService.getEntityByKey(user, subscription.getKey(), EntityType.subscription);
@@ -154,7 +157,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
             }
             else {
                 log.info("Not running subscription because " +
-                        subscription.getLastSent().getTime() + (subscription.getMaxRepeat() *  1000)
+                        counterService.getDateCounter(subscription.getKey()).getTime() + (subscription.getMaxRepeat() *  1000)
                         + " <  " + new Date().getTime());
 
             }
@@ -366,5 +369,13 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
     public XmppServiceImpl getXmppService() {
         return xmppService;
+    }
+
+    public void setCounterService(CounterService counterService) {
+        this.counterService = counterService;
+    }
+
+    public CounterService getCounterService() {
+        return counterService;
     }
 }

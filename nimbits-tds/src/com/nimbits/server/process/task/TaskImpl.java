@@ -205,11 +205,6 @@ public class TaskImpl implements Task {
                     .param(Parameters.pointJson.getText(), pointJson)
                     .param(Parameters.valueJson.getText(), valueJson));
 
-
-
-
-
-
     }
 
     @Override

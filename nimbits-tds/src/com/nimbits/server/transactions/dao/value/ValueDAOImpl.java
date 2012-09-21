@@ -59,6 +59,8 @@ public class ValueDAOImpl implements ValueTransactions {
 
     private final Logger log = Logger.getLogger(ValueDAOImpl.class.getName());
 
+
+
     public static  List<ValueBlobStore> createValueBlobStores(final Collection<ValueBlobStore> store) {
         final List<ValueBlobStore> retObj = new ArrayList<ValueBlobStore>(store.size());
         for (final ValueBlobStore v : store) {

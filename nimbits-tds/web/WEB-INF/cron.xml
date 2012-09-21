@@ -16,7 +16,7 @@
 
 
     <cron>
-        <url>/cron/point</url>
+        <url>/cron/pointCron</url>
         <description>Check points Delete Expired Data</description>
         <schedule>every day 02:00</schedule>
         <timezone>America/New_York</timezone>
@@ -31,21 +31,21 @@
 
 
     <cron>
-        <url>/cron/quota</url>
+        <url>/cron/quotaCron</url>
         <description>Resets Quotas for all users</description>
         <schedule>every day 00:00</schedule>
         <timezone>America/New_York</timezone>
     </cron>
 
     <cron>
-        <url>/cron/move</url>
+        <url>/cron/moveCron</url>
         <description>Moves recorded values from the memcache to the data store</description>
         <schedule>every 10 minutes</schedule>
         <timezone>America/New_York</timezone>
     </cron>
 
     <cron>
-        <url>/cron/SessionMaint</url>
+        <url>/cron/sessionCron</url>
         <description>Check Delete Expired Sessions</description>
         <schedule>every 1 hours</schedule>
         <timezone>America/New_York</timezone>
@@ -53,7 +53,7 @@
 
 
     <cron>
-        <url>/cron/idle</url>
+        <url>/cron/idleCron</url>
         <description>Checks Points that have an idle alarm on</description>
         <schedule>every 5 minutes</schedule>
         <timezone>America/New_York</timezone>

@@ -62,7 +62,7 @@ void Nimbits::createPoint(String pointName) {
 String Nimbits::recordValue(String point, float value) {
      EthernetClient client;
                        if (client.connect(GOOGLE, PORT)) {
-                         client.println("POST /service/currentvalue HTTP/1.1");
+                         client.println("POST /service/value HTTP/1.1");
                          String content;
                        //  writeAuthParams(content);
                           content += "email=";
@@ -125,7 +125,7 @@ float Nimbits::getValue(String pointName) {
                   EthernetClient client;
 
                   if (client.connect(GOOGLE, PORT)) {
-                    client.print("GET /service/currentvalue?");
+                    client.print("GET /service/value?");
                     writeAuthParamsToClient(client);
                     client.print("&point=");
                     client.print(pointName);

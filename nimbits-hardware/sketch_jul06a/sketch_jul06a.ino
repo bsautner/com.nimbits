@@ -25,7 +25,7 @@
 
      if (client.connect(serverName, 80)) {
      Serial.println("connected");
-     client.println("GET /service/currentvalue?point=TempF&email=bsautner@gmail.com HTTP/1.1");
+     client.println("GET /service/value?point=TempF&email=bsautner@gmail.com HTTP/1.1");
      client.println("Host:nimbits1.appspot.com");
      client.println();
      }

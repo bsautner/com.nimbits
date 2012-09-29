@@ -64,7 +64,7 @@ public class FacebookPanel extends LayoutContainer {
         if (facebookOauthCode == null) {
 
             l.setText("<P></P>" +
-                    "<P>Nimbits does not run inside of facebook... When you use the nimbits server on <a href = \"http://app.nimbits.com\" target=\"_blank\"> http://app.nimbits.com</A>, " +
+                    "<P>Nimbits does not run inside of facebook... When you use the nimbits server on <a href = \"http://cloud.nimbits.com\" target=\"_blank\"> http://app.nimbits.com</A>, " +
                     "you can configure data points to post to your facebook news feed whenever they are updated or if they go into" +
                     " an alarm state. </P> <BR><BR>" +
                     "<P>In order to have Nimbits post to your facebook News Feed" +

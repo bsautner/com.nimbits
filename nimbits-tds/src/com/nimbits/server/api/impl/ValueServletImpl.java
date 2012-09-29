@@ -44,7 +44,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @Transactional
-@Service("valueApi")
+@Service("value")
 public class ValueServletImpl extends ApiServlet implements org.springframework.web.HttpRequestHandler {
     final private static Logger log = Logger.getLogger(ValueServletImpl.class.getName());
 

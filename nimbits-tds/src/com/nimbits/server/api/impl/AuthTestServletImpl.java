@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 @Transactional
-@Service("authApi")
+@Service("auth")
 public class AuthTestServletImpl extends ApiServlet  implements org.springframework.web.HttpRequestHandler {
 
     private static final long serialVersionUID = 1L;

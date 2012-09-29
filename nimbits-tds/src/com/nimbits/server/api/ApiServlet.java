@@ -202,7 +202,11 @@ public class ApiServlet extends HttpServlet {
                                }
                                else if (newValue == currentBalance) {
                                    //weird
+                                   log.severe("weird equality issue");
                                    double fixedValue = round(newValue - quotaManager.getCostPerApiCall());
+                                   log.severe("fixed: " + fixedValue);
+                                   log.severe("newValue: " + newValue);
+                                   log.severe("currentBalance: " + currentBalance);
                                    Value value = ValueFactory.createValueModel(fixedValue);
                                    valueService.recordValue(user, accountBalance, value);
                                }
@@ -227,7 +231,7 @@ public class ApiServlet extends HttpServlet {
        return
                 BigDecimal.valueOf
                         (value)
-                        .setScale(4, RoundingMode.HALF_UP).doubleValue();
+                        .setScale(5, RoundingMode.HALF_UP).doubleValue();
 
     }
     public static ClientType getClientType() {

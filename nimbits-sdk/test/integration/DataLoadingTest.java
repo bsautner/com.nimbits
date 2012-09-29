@@ -109,7 +109,7 @@ public class DataLoadingTest {
     }
 
     @Test
-    public void load2() throws IOException, NimbitsException {
+    public void load2() throws IOException, NimbitsException, InterruptedException {
         final String pointName = ("large" + UUID.randomUUID().toString());
 
         final Point p = ClientHelper.client().addPoint(pointName);
@@ -124,6 +124,7 @@ public class DataLoadingTest {
             try {
                 v = ClientHelper.client().recordValue(pointName, rv, new Date());
                 assertNotNull(v);
+                Thread.sleep(1000);
             } catch (NimbitsException e) {
                 System.out.println(e.getMessage());
             }

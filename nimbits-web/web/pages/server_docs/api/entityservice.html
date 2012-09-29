@@ -5,7 +5,7 @@
 <p>
     <a href="#" onclick="getContent('pages/web_service_primer.html')">Please read the web service primer</A> to
     understand how to provide proper authentication parameters.
-    For simplicity, authentication parameters are now shown here.
+    For simplicity, authentication parameters are not shown here.
 
 </p>
 
@@ -68,7 +68,7 @@ You can edit this JSON in your code, and post back to the service to delete or u
 
 <pre>
 
-    http://app.nimbits.com/service/entity?id=test@example.com/pointName
+    http://app2.nimbits.com/service/entity?id=test@example.com/pointName
 
 
 </pre>
@@ -111,7 +111,7 @@ You can edit this JSON in your code, and post back to the service to delete or u
 
 <pre>
 
-    http://app.nimbits.com/service/entity?action=create&
+    http://app2.nimbits.com/service/entity?action=create&
     json={"subscribedEntity":"bsautner@gmail.com/TempF","notifyMethod":0,"subscriptionType":4,"maxRepeat":5.0,"notifyFormatJson":false,"enabled":true,"name":"my idle alert","description":"","entityType":5,"protectionLevel":0,"parent":"test@example.com","owner":"test@example.com"}
 
 
@@ -125,7 +125,7 @@ You can edit this JSON in your code, and post back to the service to delete or u
        and POST to:</p>
 <pre>
 
-    http://app.nimbits.com/service/entity?action=update&json={...}
+    http://app2.nimbits.com/service/entity?action=update&json={...}
 
 
 </pre>
@@ -135,7 +135,7 @@ You can edit this JSON in your code, and post back to the service to delete or u
  <p>Here is an example of posting to the entity sevice with an updated JSON object for a data point. This will update the point with the new values.</p>
  <pre class="prettyprint">
  function updateEntity() {
-            $.post("http://app.nimbits.com/service/entity",
+            $.post("http://app2.nimbits.com/service/entity",
                     { email: "test@example.com", key:"write access key",
                       action:"update",
                         json: "{\"highAlarm\":0.0,\"expire\":365,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":false,\"idleAlarmOn\":false,\"idleSeconds\":0,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.0,\"values\":null,\"value\":null,\"name\":\"TempC\",\"key\":\"bsautner@gmail.com/TempC\",\"description\":updated!,\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"test@example.com\",\"owner\":\"test@example.com\",\"readOnly\":false,\"uuid\":\"2\",\"dateCreated\":\"2012-05-11T23:18:05 +0000\",\"children\":null}"},

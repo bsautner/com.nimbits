@@ -73,7 +73,6 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
     private UserServiceAsync userService;
     private TwitterServiceAsync twitterService;
     private ContentPanel center;
-    private Timer updater;
 
 
     private boolean isDomain;
@@ -91,7 +90,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         twitterService = GWT.create(TwitterService.class);
 
 
-        updater = new RefreshTimer();
+        Timer updater = new RefreshTimer();
         updater.scheduleRepeating(Const.DEFAULT_TIMER_UPDATE_SPEED);
         updater.run();
 
@@ -193,11 +192,14 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
             try {
                 Request response = builder.sendRequest(null, new RequestCallback() {
                     public void onError(Request request, Throwable exception) {
-                        Window.alert(exception.getMessage());
+                       FeedbackHelper.showError(exception);
+
+
                     }
 
                     public void onResponseReceived(Request request, Response response) {
-                        Window.alert(response.getText());
+                        //FeedbackHelper.showError(new NimbitsException(response.getStatusText()));
+                        //Window.alert(response.getStatusText());
                     }
 
                 } );
@@ -491,6 +493,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         @Override
         public void onSuccess(final User result) {
             loginInfo = result;
+            user = result;
             try {
                 if (loginInfo.isLoggedIn()) {
                     switch (action) {

@@ -49,7 +49,7 @@ import java.util.Map;
  * Time: 3:43 PM
  */
 @Transactional
-@Service("blobApi")
+@Service("blob")
 public class BlobServletImpl extends ApiServlet implements org.springframework.web.HttpRequestHandler {
     private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 

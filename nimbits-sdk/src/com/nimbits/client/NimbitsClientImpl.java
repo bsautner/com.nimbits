@@ -26,6 +26,7 @@ import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.location.LocationFactory;
 import com.nimbits.client.model.point.Point;
@@ -109,11 +110,26 @@ public class NimbitsClientImpl implements NimbitsClient {
 
     public boolean isLoggedIn() throws NimbitsException {
 
-        return Boolean.parseBoolean(doGGet(host + Path.PATH_AUTHTEST_SERVICE, ""));
+        return Boolean.parseBoolean(doGGet(host + Path.PATH_AUTH_SERVICE, ""));
 
     }
 
+    @Override
+    public Entity addEntity(Entity entity) throws NimbitsException {
+        String u = host + Path.PATH_ENTITY_SERVICE;
+        String params = "action=" + Action.create.getCode() + "&json=" +
+                GsonFactory.getInstance().toJson(entity);
+        String result = doGPost(u, params);
+        if (! StringUtils.isEmpty(result)) {
+            return GsonFactory.getInstance().fromJson(result, EntityModel.class);
+        }
+        else {
+            throw new NimbitsException("Could not create Entity");
+        }
 
+    }
+
+    @Deprecated
     public List<User> getUsers() throws NimbitsException {
         String u = host + Path.PATH_USER_SERVICE;
         String params = "action=download";
@@ -123,7 +139,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
 
     }
-
+    @Deprecated
     public String getChart(final String points, final int count) throws NimbitsException {
         final String u = host + PATH_CHART_API;
         String params = null;
@@ -141,7 +157,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
         return result;
     }
-
+    @Deprecated
     public String getChartURL(final String points, final int count, final String additionalParams) {
         final String u = host + PATH_CHART_API;
         String params = null;
@@ -158,6 +174,7 @@ public class NimbitsClientImpl implements NimbitsClient {
         return u + "?" + params;
     }
 
+    @Deprecated
     public void deletePoint(final EntityName name) {
         final String u = host + Path.PATH_POINT_SERVICE;
         try {
@@ -168,7 +185,7 @@ public class NimbitsClientImpl implements NimbitsClient {
         }
 
     }
-
+    @Deprecated
     public void deletePoint(final String name) {
 
         final String u = host + Path.PATH_POINT_SERVICE;
@@ -644,7 +661,7 @@ public class NimbitsClientImpl implements NimbitsClient {
         final StringBuilder b = new StringBuilder();
         b.append("&" + Parameters.email.getText() + "=").append(G.getEmail().getValue());
         if (G.getSecret() != null) {
-            b.append("&" + Parameters.secret.getText() + "=").append(G.getSecret());
+            b.append("&" + Parameters.key.getText() + "=").append(G.getSecret());
         }
 
         return b.toString();

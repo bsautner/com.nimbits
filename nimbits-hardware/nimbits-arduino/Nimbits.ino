@@ -178,7 +178,7 @@ void setValue(char *pointName, char *value, char *data, char *timestamp) {
   }
 
   if (client.connect("google.com", 80)) {
-    client.println("POST /service/currentvalue HTTP/1.1");
+    client.println("POST /service/value HTTP/1.1");
     client.println("Host:nimbits1.appspot.com");
     client.println("Connection:close");
     client.println("Cache-Control:max-age=0");

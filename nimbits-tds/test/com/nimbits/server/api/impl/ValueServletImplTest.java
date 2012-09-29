@@ -57,7 +57,7 @@ import static org.junit.Assert.*;
 
 })
 public class ValueServletImplTest extends NimbitsServletTest {
-    @Resource(name = "valueApi")
+    @Resource(name = "value")
     ValueServletImpl valueServlet;
 
     @Resource(name = "valueService")

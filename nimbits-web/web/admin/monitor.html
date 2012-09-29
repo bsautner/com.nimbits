@@ -25,7 +25,7 @@
             var r1=Math.floor(Math.random()*11);
             var r2=Math.floor(Math.random()*11);
 
-            $.post("http://app.nimbits.com/service/batch",
+            $.post("http://app2.nimbits.com/service/batch",
                     { email: "bsautner@gmail.com", p2: "batch monitor 2", v2: r2, p1: "batch monitor 1", v1: r1, key:"key" },
                     function(data){
 
@@ -60,7 +60,7 @@
         function deletePoint() {
 
 
-            $.post("http://app.nimbits.com/service/point",
+            $.post("http://app2.nimbits.com/service/point",
                     { email: "bsautner@gmail.com", action: "delete",point: "re", key:"69ce042a-8e9e-478d-a07b-0523ee3c63af" },
                     function(data){
                         alert(data);
@@ -71,7 +71,7 @@
         function recordValue() {
 
 
-            $.post("http://app.nimbits.com/service/currentvalue",
+            $.post("http://app2.nimbits.com/service/currentvalue",
                     { email: "bsautner@gmail.com", key:"key1", point: "foo", value: "78", data: "WT2"},
                     function(data){
                         alert(data);

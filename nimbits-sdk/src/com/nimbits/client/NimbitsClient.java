@@ -26,7 +26,6 @@ import com.nimbits.user.NimbitsUser;
 import org.apache.http.cookie.Cookie;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
 
@@ -37,6 +36,9 @@ import java.util.List;
  * Time: 12:38 PM
  */
 public interface NimbitsClient {
+
+    Entity addEntity(Entity entity) throws NimbitsException;
+
 
     List<User> getUsers() throws NimbitsException;
 

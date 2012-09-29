@@ -53,7 +53,7 @@ import java.util.regex.Pattern;
 
 
 @SuppressWarnings("serial")
-@Service("xmppApi")
+@Service("xmpp")
 @Transactional
 public class XMPPReceiverServlet extends ApiServlet implements org.springframework.web.HttpRequestHandler {
 

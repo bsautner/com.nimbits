@@ -31,7 +31,7 @@ import java.io.PrintWriter;
  * Time: 12:43 PM
  */
 @Transactional
-@Service("feedApi")
+@Service("feed")
 public class FeedServletImpl  extends HttpServlet {
 
     @Override

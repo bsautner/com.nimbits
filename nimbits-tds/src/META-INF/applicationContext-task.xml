@@ -32,7 +32,7 @@
 
     </bean>
 
-    <bean id="deleteValuesTask" class="com.nimbits.server.process.task.DeleteRecordedValuesTask">
+    <bean id="deleteTask" class="com.nimbits.server.process.task.DeleteRecordedValuesTask">
         <property name="valueService" ref="valueService" />
     </bean>
 

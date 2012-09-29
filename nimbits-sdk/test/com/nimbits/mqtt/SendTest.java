@@ -37,7 +37,7 @@ public class SendTest {
         String pointName = "demo";
         String account = "tester@nimbits.com";
         String key = "demokey";
-        String appid = "nimbits-hrd1";
+        String appid = "nimbits-02";
 
 
 

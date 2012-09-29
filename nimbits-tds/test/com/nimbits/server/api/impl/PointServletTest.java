@@ -60,7 +60,7 @@ import static org.junit.Assert.*;
 })
 public class PointServletTest extends NimbitsServletTest {
 
-    @Resource(name="pointApi")
+    @Resource(name="point")
     PointServletImpl i;
 
     @Resource(name="pointService")

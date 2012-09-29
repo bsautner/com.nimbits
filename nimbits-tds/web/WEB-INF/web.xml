@@ -101,12 +101,12 @@
 
 
     <servlet>
-        <servlet-name>xmppApi</servlet-name>
+        <servlet-name>xmpp</servlet-name>
         <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>xmppApi</servlet-name>
+        <servlet-name>xmpp</servlet-name>
         <url-pattern>/_ah/xmpp/message/chat/</url-pattern>
     </servlet-mapping>
 
@@ -115,12 +115,12 @@
 
 
     <servlet>
-        <servlet-name>entityAPI</servlet-name>
+        <servlet-name>entity</servlet-name>
 
         <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>entityAPI</servlet-name>
+        <servlet-name>entity</servlet-name>
         <url-pattern>/service/entity</url-pattern>
     </servlet-mapping>
 
@@ -129,12 +129,12 @@
 
 
     <servlet>
-        <servlet-name>blobApi</servlet-name>
+        <servlet-name>blob</servlet-name>
 
         <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>blobApi</servlet-name>
+        <servlet-name>blob</servlet-name>
         <url-pattern>/service/blob</url-pattern>
     </servlet-mapping>
 
@@ -264,12 +264,12 @@
 
 
     <servlet>
-        <servlet-name>orphansService</servlet-name>
+        <servlet-name>orphans</servlet-name>
         <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>orphansService</servlet-name>
-        <url-pattern>/service/orphansService</url-pattern>
+        <servlet-name>orphans</servlet-name>
+        <url-pattern>/service/orphans</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -293,7 +293,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>batchTask</servlet-name>
-        <url-pattern>/task/processbatchtask</url-pattern>
+        <url-pattern>/task/batchTask</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -320,51 +320,51 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>deleteTask</servlet-name>
-        <url-pattern>/task/DeleteRecordedValuesTask</url-pattern>
+        <url-pattern>/task/deleteTask</url-pattern>
     </servlet-mapping>
     <servlet>
-        <servlet-name>valueApi</servlet-name>
+        <servlet-name>value</servlet-name>
         <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>valueApi</servlet-name>
+        <servlet-name>value</servlet-name>
         <url-pattern>/service/currentvalue</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>valueApi</servlet-name>
+        <servlet-name>value</servlet-name>
         <url-pattern>/service/value</url-pattern>
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>seriesApi</servlet-name>
+        <servlet-name>series</servlet-name>
 
         <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
 
     </servlet>
     <servlet-mapping>
-        <servlet-name>seriesApi</servlet-name>
+        <servlet-name>series</servlet-name>
         <url-pattern>/service/series</url-pattern>
     </servlet-mapping>
 
 
     <servlet>
-        <servlet-name>feedServlet</servlet-name>
+        <servlet-name>feed</servlet-name>
         <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>feedServlet</servlet-name>
+        <servlet-name>feed</servlet-name>
         <url-pattern>/service/feed</url-pattern>
     </servlet-mapping>
 
 
     <servlet>
-        <servlet-name>pointApi</servlet-name>
+        <servlet-name>point</servlet-name>
 
         <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
 
     </servlet>
     <servlet-mapping>
-        <servlet-name>pointApi</servlet-name>
+        <servlet-name>point</servlet-name>
         <url-pattern>/service/point</url-pattern>
     </servlet-mapping>
 
@@ -374,21 +374,21 @@
 
 
     <servlet>
-        <servlet-name>storageServlet</servlet-name>
+        <servlet-name>storage</servlet-name>
         <servlet-class>com.nimbits.server.io.storage.StorageServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>storageServlet</servlet-name>
+        <servlet-name>storage</servlet-name>
         <url-pattern>/service/storage</url-pattern>
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>timeServlet</servlet-name>
+        <servlet-name>time</servlet-name>
         <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
 
     </servlet>
     <servlet-mapping>
-        <servlet-name>timeServlet</servlet-name>
+        <servlet-name>time</servlet-name>
         <url-pattern>/service/time</url-pattern>
     </servlet-mapping>
 
@@ -396,31 +396,31 @@
 
 
     <servlet>
-        <servlet-name>chartApiServlet</servlet-name>
+        <servlet-name>chart</servlet-name>
         <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
 
     </servlet>
     <servlet-mapping>
-        <servlet-name>chartApiServlet</servlet-name>
-        <url-pattern>/service/chartapi</url-pattern>
+        <servlet-name>chart</servlet-name>
+        <url-pattern>/service/char</url-pattern>
     </servlet-mapping>
 
 
     <servlet>
-        <servlet-name>authTestServlet</servlet-name>
+        <servlet-name>auth</servlet-name>
         <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
 
     </servlet>
     <servlet-mapping>
-        <servlet-name>authTestServlet</servlet-name>
-        <url-pattern>/service/authtest</url-pattern>
+        <servlet-name>auth</servlet-name>
+        <url-pattern>/service/auth</url-pattern>
     </servlet-mapping>
 
 
 
 
     <servlet>
-        <servlet-name>batchApi</servlet-name>
+        <servlet-name>batch</servlet-name>
         <!--<servlet-class>com.nimbits.server.api.impl.BatchServletImpl</servlet-class>-->
         <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
 
@@ -428,7 +428,7 @@
 
 
     <servlet-mapping>
-        <servlet-name>batchApi</servlet-name>
+        <servlet-name>batch</servlet-name>
         <url-pattern>/service/batch</url-pattern>
     </servlet-mapping>
 

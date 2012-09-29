@@ -15,6 +15,8 @@ package com.nimbits.server.io.storage;
 
 import com.google.appengine.api.files.*;
 import com.google.appengine.api.files.GSFileOptions.GSFileOptionsBuilder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +34,9 @@ import java.util.Date;
  * Time: 2:19 PM
  */
 @SuppressWarnings("serial")
+
+@Service("storage")
+@Transactional
 public class StorageServlet  extends HttpServlet {
     public static final String BUCKETNAME = "nimbits_value_store";
     public static final String FILENAME = "testfile1";

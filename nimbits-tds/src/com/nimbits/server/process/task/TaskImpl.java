@@ -61,9 +61,9 @@ public class TaskImpl implements Task {
     private static final String PATH_UPGRADE_TASK = "/task/upgrade";
     private static final String PATH_MOVE_TASK = "/task/move";
     private static final String PATH_TASK_RECORD_VALUE = "/task/valuetask";
-    private static final String PATH_TASK_PROCESS_BATCH = "/task/processbatchtask";
+    private static final String PATH_TASK_PROCESS_BATCH = "/task/batchTask";
     private static final String PATH_INCOMING_MAIL_QUEUE = "/task/incommingmail";
-    private static final String PATH_DELETE_DATA_TASK = "/task/DeleteRecordedValuesTask";
+    private static final String PATH_DELETE_DATA_TASK = "/task/deleteTask";
     private static final Logger log = Logger.getLogger(TaskImpl.class.getName());
 
 

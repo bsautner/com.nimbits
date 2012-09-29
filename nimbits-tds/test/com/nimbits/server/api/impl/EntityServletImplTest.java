@@ -60,7 +60,7 @@ import static org.junit.Assert.assertNotNull;
 })
 public class EntityServletImplTest extends NimbitsServletTest {
 
-    @Resource(name="entityApi")
+    @Resource(name="entity")
     EntityServletImpl impl;
 
 

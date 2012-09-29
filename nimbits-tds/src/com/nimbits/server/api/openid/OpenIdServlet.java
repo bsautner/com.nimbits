@@ -81,58 +81,7 @@ public class OpenIdServlet extends HttpServlet implements org.springframework.we
         consumerHelper = factory.getConsumerHelper();
     }
 
-    /**
-     * Either initiates a login to a given provider or processes a response from an IDP.
-     * @param req
-     * @param resp
-     * @throws ServletException
-     * @throws IOException
-     */
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
 
-        if (consumerHelper==null) {
-            init();
-        }
-
-
-        String domain = req.getParameter("hd");
-        if (domain != null) {
-            // User attempting to login with provided domain, build and OpenID request and redirect
-            try {
-                AuthRequest authRequest = startAuthentication(domain, req);
-                String url = authRequest.getDestinationUrl(true);
-                resp.sendRedirect(url + "?hd=" + domain);
-            } catch (OpenIDException e) {
-                resp.sendRedirect("?hd=domain&errorString=Error initializing OpenID request: "
-                        + e.getMessage());
-            }
-        } else {
-            // This is a response from the provider, go ahead and validate
-            handleRequest(req, resp);
-        }
-    }
-
-    /**
-     * Handle the response from the OpenID Provider.
-     *
-     * @param req Current servlet request
-     * @param resp Current servlet response
-     * @throws ServletException if unable to process request
-     * @throws IOException if unable to process request
-     */
-
-
-    /**
-     * Builds an auth request for a given OpenID provider.
-     *
-     * @param op OpenID Provider URL.  In the context of Google Apps, this can be a naked domain
-     *           name such as "saasycompany.com".  The length of the domain can exceed 100 chars.
-     * @param request Current servlet request
-     * @return Auth request
-     * @throws org.openid4java.OpenIDException if unable to discover the OpenID endpoint
-     */
     AuthRequest startAuthentication(String op, HttpServletRequest request)
             throws OpenIDException {
         IdpIdentifier openId = new IdpIdentifier(op);
@@ -225,9 +174,7 @@ public class OpenIdServlet extends HttpServlet implements org.springframework.we
      * @return Return to URL
      */
     String returnTo(HttpServletRequest request) {
-        return new StringBuffer(baseUrl(request))
-                .append(request.getContextPath()).append(returnToPath)
-                .toString();
+        return baseUrl(request) + request.getContextPath() + returnToPath;
     }
 
     /**
@@ -276,23 +223,57 @@ public class OpenIdServlet extends HttpServlet implements org.springframework.we
     UserInfo onFail(AuthResponseHelper helper, HttpServletRequest request) {
         return null;
     }
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        if (consumerHelper==null) {
+            init();
+        }
+
+
+        String domain = req.getParameter("hd");
+        if (domain != null) {
+            // User attempting to login with provided domain, build and OpenID request and redirect
+            try {
+                AuthRequest authRequest = startAuthentication(domain, req);
+                String url = authRequest.getDestinationUrl(true);
+                resp.sendRedirect(url);
+            } catch (OpenIDException e) {
+                throw new ServletException("Error initializing OpenID request", e);
+            }
+        } else {
+            // This is a response from the provider, go ahead and validate
+            doPost(req, resp);
+        }
+    }
 
 
     @Override
-    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
         try {
-
-            if (consumerHelper==null) {
-                init();
-            }
             UserInfo user = completeAuthentication(req);
             req.getSession().setAttribute("user", user);
-            String domain = req.getParameter("hd");
-            resp.sendRedirect(homePath + "?hd=domain");
-
+            resp.sendRedirect(homePath);
         } catch (OpenIDException e) {
-            resp.sendRedirect("?hd=domain&errorString=Error processing OpenID response: "
-                    + e.getMessage());
+            throw new ServletException("Error processing OpenID response", e);
         }
     }
+
+    @Override
+    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        if (isPost(req)) {
+
+            doPost(req, resp);
+        }
+        else {
+            doGet(req, resp);
+        }
+
+    }
+    protected boolean isPost(final HttpServletRequest req) {
+        return req.getMethod().equals("POST");
+    }
+
 }

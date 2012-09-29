@@ -37,7 +37,7 @@ import java.io.PrintWriter;
 import java.util.List;
 
 @Transactional
-@Service("seriesApi")
+@Service("series")
 public class SeriesServletImpl extends ApiServlet  implements org.springframework.web.HttpRequestHandler {
 
 

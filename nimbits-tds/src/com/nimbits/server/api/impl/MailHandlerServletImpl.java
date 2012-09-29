@@ -37,7 +37,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 @Transactional
-@Service("mailApi")
+@Service("mail")
 public class MailHandlerServletImpl extends ApiServlet {
     /**
      *

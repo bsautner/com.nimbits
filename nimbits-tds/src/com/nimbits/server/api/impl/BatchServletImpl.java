@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Transactional
-@Service("batchApi")
+@Service("batch")
 public class BatchServletImpl extends ApiServlet implements org.springframework.web.HttpRequestHandler {
 
     private Task taskFactory;

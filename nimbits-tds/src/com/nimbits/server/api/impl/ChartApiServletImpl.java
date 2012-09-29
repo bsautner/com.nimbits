@@ -53,7 +53,7 @@ import java.util.regex.Pattern;
 
 @Deprecated
 @Transactional
-@Service("chartApi")
+@Service("chart")
 public class ChartApiServletImpl extends ApiServlet implements org.springframework.web.HttpRequestHandler {
     private static final Logger log = Logger.getLogger(ChartApiServletImpl.class.getName());
     /**

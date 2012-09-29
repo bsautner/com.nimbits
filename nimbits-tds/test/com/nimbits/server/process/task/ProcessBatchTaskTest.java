@@ -55,9 +55,6 @@ public class ProcessBatchTaskTest extends NimbitsServletTest {
     @Resource(name = "valueService")
     ValueService valueService;
 
-//
-//    @Resource(name = "batchApi")
-//    BatchServletImpl servlet;
 
     @Resource(name="batchTask")
     ProcessBatchTask batchTask;

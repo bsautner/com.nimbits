@@ -18,7 +18,7 @@
 
 
     <!--APIS-->
-    <bean id="blobApi" class="com.nimbits.server.api.impl.BlobServletImpl">
+    <bean id="blob" class="com.nimbits.server.api.impl.BlobServletImpl">
         <property name="entityService" ref="entityService" />
         <property name="userService" ref="userService" />
         <property name="settingsService" ref="settingsService" />
@@ -26,7 +26,7 @@
 
     </bean>
 
-    <bean id="xmppApi" class="com.nimbits.server.api.impl.XMPPReceiverServlet">
+    <bean id="xmpp" class="com.nimbits.server.api.impl.XMPPReceiverServlet">
         <property name="entityService" ref="entityService" />
         <property name="userService" ref="userService" />
         <property name="valueService" ref="valueService" />
@@ -38,7 +38,7 @@
     </bean>
 
 
-    <bean id="chartApi" class="com.nimbits.server.api.impl.ChartApiServletImpl">
+    <bean id="chart" class="com.nimbits.server.api.impl.ChartApiServletImpl">
         <property name="entityService" ref="entityService" />
         <property name="valueService" ref="valueService" />
         <property name="userService" ref="userService" />
@@ -47,7 +47,7 @@
 
 
     </bean>
-    <bean id="valueApi" class="com.nimbits.server.api.impl.ValueServletImpl">
+    <bean id="value" class="com.nimbits.server.api.impl.ValueServletImpl">
         <property name="commonFactory" ref="commonFactory" />
         <property name="valueService" ref="valueService" />
         <property name="entityService" ref="entityService" />
@@ -59,7 +59,7 @@
 
 
 
-    <bean id="entityApi" class="com.nimbits.server.api.impl.EntityServletImpl">
+    <bean id="entity" class="com.nimbits.server.api.impl.EntityServletImpl">
         <property name="entityService" ref="entityService" />
         <property name="userService" ref="userService" />
         <property name="settingsService" ref="settingsService" />
@@ -67,7 +67,7 @@
 
     </bean>
 
-    <bean id="batchApi" class="com.nimbits.server.api.impl.BatchServletImpl">
+    <bean id="batch" class="com.nimbits.server.api.impl.BatchServletImpl">
         <property name="taskFactory" ref="taskFactory" />
         <property name="entityService" ref="entityService" />
         <property name="userService" ref="userService" />
@@ -76,7 +76,7 @@
 
     </bean>
 
-    <bean id="pointApi" class="com.nimbits.server.api.impl.PointServletImpl">
+    <bean id="point" class="com.nimbits.server.api.impl.PointServletImpl">
         <property name="entityService" ref="entityService" />
         <property name="commonFactory" ref="commonFactory" />
         <property name="valueService" ref="valueService" />
@@ -86,7 +86,7 @@
 
     </bean>
 
-    <bean id="seriesApi" class="com.nimbits.server.api.impl.SeriesServletImpl">
+    <bean id="series" class="com.nimbits.server.api.impl.SeriesServletImpl">
         <property name="timespanService" ref="timespanService" />
         <property name="commonFactory" ref="commonFactory" />
         <property name="entityService" ref="entityService" />
@@ -96,10 +96,23 @@
 
         <property name="valueService" ref="valueService" />
     </bean>
-    <bean id="timeApi" class="com.nimbits.server.api.impl.TimeServletImpl">
 
+
+    <bean id="time" class="com.nimbits.server.api.impl.TimeServletImpl">
+        <property name="entityService" ref="entityService" />
+        <property name="userService" ref="userService" />
+        <property name="settingsService" ref="settingsService" />
+        <property name="quotaManager" ref="quotaManager" />
     </bean>
-    <bean id="quotaService" class="com.nimbits.server.admin.quota.QuotaServletImpl">
+
+    <bean id="auth" class="com.nimbits.server.api.impl.AuthTestServletImpl">
+        <property name="entityService" ref="entityService" />
+        <property name="userService" ref="userService" />
+        <property name="settingsService" ref="settingsService" />
+        <property name="quotaManager" ref="quotaManager" />
+    </bean>
+
+    <bean id="quota" class="com.nimbits.server.admin.quota.QuotaServletImpl">
         <property name="userService" ref="userService" />
     </bean>
 

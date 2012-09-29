@@ -33,7 +33,7 @@ public class Const {
     public static final String REGEX_NAMESPACE = "[0-9A-Za-z._-]{0,100}";
     public static final String CONST_AH = "ah";
     public static final String CONST_ENCODING = "UTF-8";
-    public static final int DEFAULT_TIMER_UPDATE_SPEED = 10000;
+    public static final int DEFAULT_TIMER_UPDATE_SPEED = 1000;
     public static final String METHOD_GET = "GET";
     public static final String METHOD_POST = "POST";
     public static final String FORMAT_DATE_TIME = "MM/dd/y HH:mm:ss";

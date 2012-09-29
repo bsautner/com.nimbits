@@ -37,7 +37,7 @@ import java.util.Date;
  * Time: 9:14 AM
  */
 @Transactional
-@Service("timeApi")
+@Service("time")
 public class TimeServletImpl extends ApiServlet  implements org.springframework.web.HttpRequestHandler {
 
 

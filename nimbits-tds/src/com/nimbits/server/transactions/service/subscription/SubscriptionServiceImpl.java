@@ -170,7 +170,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
     }
 
     private void processSubscriptionToIncreaseOrDecrease(Point point, Value v, Subscription subscription, User subscriber) throws NimbitsException {
-        List<Value> prevValue = valueService.getPrevValue(point, new Date(v.getTimestamp().getTime() - 1000));
+        List<Value> prevValue = valueService.getPrevValue(point, new Date(v.getTimestamp().getTime() - 60000));
         if (! prevValue.isEmpty()) {
             if (subscription.getSubscriptionType().equals(SubscriptionType.decrease) && (prevValue.get(0).getDoubleValue() > v.getDoubleValue())) {
                 sendNotification(subscriber, subscription, point, v);
@@ -279,7 +279,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
             final List<Value> values = valueService.getTopDataSeries(p, 10);
             if (values.isEmpty()) {
-                picture.append("http://app.nimbits.com/resources/images/logo.png");
+                picture.append("http://cloud.nimbits.com/resources/images/logo.png");
             } else {
 
                 picture.append("http://chart.apis.google.com/chart?chd=t:");
@@ -295,7 +295,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
 
         } else {
-            picture.append("http://app.nimbits.com/resources/images/logo.png");
+            picture.append("http://cloud.nimbits.com/resources/images/logo.png");
         }
 
         final String link = "http://app.nimbits.com?uuid=" + p.getUUID() + "&email=" + p.getOwner();

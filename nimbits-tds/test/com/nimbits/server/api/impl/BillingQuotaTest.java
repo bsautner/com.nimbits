@@ -64,7 +64,7 @@ import static org.junit.Assert.assertTrue;
 })
 public class BillingQuotaTest  extends NimbitsServletTest {
 
-    @Resource(name = "valueApi")
+    @Resource(name = "value")
     ValueServletImpl valueServlet;
 
     @Resource(name = "commonFactory")

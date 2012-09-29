@@ -54,6 +54,16 @@ public class EntityModelFactory {
         return new EntityModel(name, description, entityType, protectionLevel,  parentUUID,
                 ownerUUID, "");
     }
+    public static Entity createEntity(final String name,
+                                      final String description,
+                                      final EntityType entityType,
+                                      final ProtectionLevel protectionLevel,
+                                      final String parent,
+                                      final String owner) throws NimbitsException {
+        EntityName entityName = CommonFactoryLocator.getInstance().createName(name, entityType);
+        return new EntityModel(entityName, description, entityType, protectionLevel,  parent,
+                owner, "");
+    }
     public static Entity createEntity(final User user) throws NimbitsException {
         final EntityName name = CommonFactoryLocator.getInstance().createName(user.getEmail().getValue(), EntityType.user);
 

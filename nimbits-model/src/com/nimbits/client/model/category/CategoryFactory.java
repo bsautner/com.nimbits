@@ -30,5 +30,7 @@ public class CategoryFactory {
     public static Category createCategory(Category e) throws NimbitsException {
         return new CategoryModel(e);
     }
-
+    public static Category createCategory(Entity e) throws NimbitsException {
+        return new CategoryModel(e);
+    }
 }

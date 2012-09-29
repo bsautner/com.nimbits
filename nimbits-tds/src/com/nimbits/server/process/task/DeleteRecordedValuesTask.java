@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@Service("deleteValuesTask")
+@Service("deleteTask")
 @Transactional
 public class DeleteRecordedValuesTask extends HttpServlet  implements org.springframework.web.HttpRequestHandler{
 

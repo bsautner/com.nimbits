@@ -47,7 +47,7 @@ import static org.junit.Assert.assertEquals;
 
 })
 public class QuotaResetCronTest extends NimbitsServletTest {
-    @Resource(name = "valueApi")
+    @Resource(name = "value")
     ValueServletImpl valueServlet;
 
     @Resource(name="systemCron")

@@ -41,7 +41,7 @@ import java.util.Random;
 })
 public class BatchServletTest  extends NimbitsServletTest {
 
-    @Resource(name = "batchApi")
+    @Resource(name = "batch")
     BatchServletImpl servlet;
 
 

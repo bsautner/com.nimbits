@@ -57,7 +57,7 @@ public class EntityCacheImpl implements EntityTransactions,  EntityCache {
 
     @Override
     public List<Entity> getEntityByName(final User user, final EntityName name, final Class<?> cls) throws NimbitsException {
-      String key = MemCacheKey.entityNameCache.getText() + user.getKey() + name.getValue() + cls.getName();
+        String key = MemCacheKey.entityNameCache.getText() + user.getKey() + name.getValue() + cls.getName();
 
         if (cache.contains(key)) {
             List<Entity> result = new ArrayList<Entity>(1);
@@ -176,13 +176,19 @@ public class EntityCacheImpl implements EntityTransactions,  EntityCache {
     }
 
     @Override
-    public List<Entity> getEntityFromCache(final User user, String key) throws NimbitsException {
+    public List<Entity> getEntityFromCache(final User user, final String key) throws NimbitsException {
         if (cache.contains(key)) {
             List<Entity> list = new ArrayList<Entity>(1);
             Entity result = (Entity) cache.get(key);
-            result.setIsCached(true);
-            list.add(result);
-            return list;
+            if (result == null) {
+                cache.delete(key);
+                return Collections.emptyList();
+            }
+            else {
+                result.setIsCached(true);
+                list.add(result);
+                return list;
+            }
         }
         else {
             return Collections.emptyList();
@@ -211,8 +217,8 @@ public class EntityCacheImpl implements EntityTransactions,  EntityCache {
         final Entity result =   entityDao.addUpdateEntity(user, entity);
         addEntityToCache(user, Arrays.asList(result));
         if (clearRelatives) {
-        cache.delete(MemCacheKey.userEntityTree);
-        removeTriggersFromCache(entity);
+            cache.delete(MemCacheKey.userEntityTree);
+            removeTriggersFromCache(entity);
         }
 
         if (entity.getEntityType().equals(EntityType.subscription)) {
@@ -225,7 +231,7 @@ public class EntityCacheImpl implements EntityTransactions,  EntityCache {
     }
     @Override
     public Entity addUpdateEntity(final User user, final Entity entity) throws NimbitsException {
-       throw new NimbitsException("Not Implemented");
+        throw new NimbitsException("Not Implemented");
     }
     private void removeTriggersFromCache(Entity entity) {
         if (entity.getEntityType().isTrigger()) {

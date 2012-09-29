@@ -482,7 +482,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     private void addUpdateAccountBalanceSubscriptions(final User user, final Point accountBalance) throws NimbitsException {
         addUpdateBillingSubscription(user, user.isBillingEnabled(), accountBalance, QUOTA_EXCEEDED_NAME, QUOTA_EXCEEDED_DESC, SubscriptionType.deltaAlert, MAX_REPEAT);
         addUpdateBillingSubscription(user, user.isBillingEnabled(), accountBalance, ZERO_BALANCE_ALERT_NAME, ZERO_BALANCE_DESC, SubscriptionType.low, MAX_REPEAT);
-        addUpdateBillingSubscription(user, user.isBillingEnabled(), accountBalance, ACCOUNT_FUNDED_NAME, ACCOUNT_FUNDED_DESC, SubscriptionType.increase, 0);
+        addUpdateBillingSubscription(user, user.isBillingEnabled(), accountBalance, ACCOUNT_FUNDED_NAME, ACCOUNT_FUNDED_DESC, SubscriptionType.increase, 60);
     }
 
 

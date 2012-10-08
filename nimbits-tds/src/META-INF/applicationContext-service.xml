@@ -121,6 +121,7 @@
         <property name="twitterService" ref="twitterService" />
         <property name="facebookService" ref="facebookService" />
         <property name="counterService" ref="counterService" />
+        <property name="xmppService" ref="xmppService" />
     </bean>
 
     <bean id="counterService" class="com.nimbits.server.transactions.service.counter.CounterServiceImpl" />

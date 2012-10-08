@@ -35,6 +35,7 @@ public enum MemCacheKey {
     quotaNamespace(16, buildQuotaKey()),
     subscribedEntity(17, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_SUBSCRIBED_ENTITY),
     entityNameCache(18, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_ENTITY_NAME),
+    twitter(19, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_TWITTER)
     ;
 
     private static String buildQuotaKey() {
@@ -116,6 +117,7 @@ public enum MemCacheKey {
         static final String KEY_QUOTA_NAMESPACE = "KEY_QUOTA_NAMESPACE";
         public static final String KEY_SUBSCRIBED_ENTITY = "KEY_SUBSCRIBED_ENTITY";
         public static final String KEY_ENTITY_NAME = "KEY_ENTITY_NAME";
+        public static final String KEY_TWITTER = "KEY_TWITTER";
 
         private KeyConstants() {
         }

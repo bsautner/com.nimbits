@@ -43,16 +43,15 @@ import com.nimbits.client.model.user.UserModel;
 import com.nimbits.client.model.user.UserModelFactory;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
+import com.nimbits.client.service.entity.EntityService;
+import com.nimbits.client.service.feed.Feed;
 import com.nimbits.client.service.settings.SettingsService;
 import com.nimbits.client.service.user.UserService;
+import com.nimbits.client.service.value.ValueService;
 import com.nimbits.server.admin.logging.LogHelper;
-import com.nimbits.server.admin.quota.QuotaManagerImpl;
+import com.nimbits.server.admin.quota.QuotaManager;
 import com.nimbits.server.api.openid.UserInfo;
-import com.nimbits.server.communication.email.EmailServiceImpl;
-import com.nimbits.server.transactions.memcache.user.UserCacheImpl;
-import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
-import com.nimbits.server.transactions.service.feed.FeedImpl;
-import com.nimbits.server.transactions.service.value.ValueServiceImpl;
+import com.nimbits.server.communication.email.EmailService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,13 +80,13 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     public static final String ACCOUNT_FUNDED_DESC = "This is an alert that notifies you when your account is funded. You still need to log into nimbits and select Billing Options" +
             " from the Settings Menu. There, you can configure a daily budget and enable or disable billing";
 
-    private EntityServiceImpl entityService;
-    private FeedImpl feedService;
-    private ValueServiceImpl valueService;
+    private EntityService entityService;
+    private Feed feedService;
+    private ValueService valueService;
     private SettingsService settingsService;
-    private EmailServiceImpl emailService;
-    private UserCacheImpl userCache;
-    private QuotaManagerImpl quotaManager;
+    private EmailService emailService;
+    private UserTransactions userCache;
+    private QuotaManager quotaManager;
 
 
     @Override
@@ -625,7 +624,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
                 "<A HREF=\"https://www.google.com/accounts/NewAccount\">https://www.google.com/accounts/NewAccount</A></P>\n" +
                 "<P STYLE=\"margin-bottom: 0in\">\n" +
                 "</P>\n" +
-                "<BR><P STYLE=\"margin-bottom: 0in\"><A HREF=\"http://app.nimbits.com/\">Sign\n" +
+                "<BR><P STYLE=\"margin-bottom: 0in\"><A HREF=\"https://cloud.nimbits.com/\">Sign\n" +
                 "into Nimbits</A> to approve this connection request.  <A HREF=\"http://www.nimbits.com/\">Go to \n" +
                 "nimbits.com</A> to learn more.</P>\n" +
                 "<P STYLE=\"margin-bottom: 0in\">\n" +
@@ -645,7 +644,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
                 "<P STYLE=\"margin-bottom: 0in\">\n" +
                 "</P>\n" +
                 "<BR><P STYLE=\"margin-bottom: 0in\">Nimbits Server, a data historian, is " +
-                "available at <A HREF=\"http://www.nimbits.com/\">app.nimbits.com</A> " +
+                "available at <A HREF=\"http://www.nimbits.com/\">www.nimbits.com</A> " +
                 "and provides a collection of web services, APIs and an interactive " +
                 "portal enabling you to record data on a global cloud computing " +
                 "infrastructure. You can also download and install your own instance " +
@@ -716,27 +715,27 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     }
 
 
-    public void setEntityService(EntityServiceImpl entityService) {
+    public void setEntityService(EntityService entityService) {
         this.entityService = entityService;
     }
 
-    public EntityServiceImpl getEntityService() {
+    public EntityService getEntityService() {
         return entityService;
     }
 
-    public void setFeedService(FeedImpl feedService) {
+    public void setFeedService(Feed feedService) {
         this.feedService = feedService;
     }
 
-    public FeedImpl getFeedService() {
+    public Feed getFeedService() {
         return feedService;
     }
 
-    public void setValueService(ValueServiceImpl valueService) {
+    public void setValueService(ValueService valueService) {
         this.valueService = valueService;
     }
 
-    public ValueServiceImpl getValueService() {
+    public ValueService getValueService() {
         return valueService;
     }
 
@@ -750,27 +749,27 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         return settingsService;
     }
 
-    public void setEmailService(EmailServiceImpl emailService) {
+    public void setEmailService(EmailService emailService) {
         this.emailService = emailService;
     }
 
-    public EmailServiceImpl getEmailService() {
+    public EmailService getEmailService() {
         return emailService;
     }
 
-    public void setUserCache(UserCacheImpl userCache) {
+    public void setUserCache(UserTransactions userCache) {
         this.userCache = userCache;
     }
 
-    public UserCacheImpl getUserCache() {
+    public UserTransactions getUserCache() {
         return userCache;
     }
 
-    public void setQuotaManager(QuotaManagerImpl quotaManager) {
+    public void setQuotaManager(QuotaManager quotaManager) {
         this.quotaManager = quotaManager;
     }
 
-    public QuotaManagerImpl getQuotaManager() {
+    public QuotaManager getQuotaManager() {
         return quotaManager;
     }
 }

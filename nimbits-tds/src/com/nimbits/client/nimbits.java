@@ -226,7 +226,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
         @Override
         public void onSuccess(final String result) {
 
-            Location.replace(result);
+            Location.replace(result.replace("/null", ""));
         }
 
     }
@@ -457,9 +457,25 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
             viewport.setBorders(false);
         }
         private void finishTwitterAuthentication(final Map<SettingType, String> settings, final String oauth_token, final Action action) {
-
+            if (user != null) {
             twitterService.updateUserToken(user, oauth_token,
                     new FinishTwitterAsyncCallback(action, settings));
+            }
+            else {
+                userService.login(GWT.getHostPageBaseURL(),new AsyncCallback<User>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                       FeedbackHelper.showError(caught);
+                    }
+
+                    @Override
+                    public void onSuccess(User result) {
+                        user = result;
+                        twitterService.updateUserToken(user, oauth_token,
+                                new FinishTwitterAsyncCallback(action, settings));
+                    }
+                });
+            }
 
         }
         private void loadEntityDisplay(final String uuid) {

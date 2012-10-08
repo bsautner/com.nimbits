@@ -74,8 +74,7 @@ public class FacebookImpl extends RemoteServiceServlet implements FacebookServic
         final FacebookUser f = GsonFactory.getSimpleInstance().fromJson(jsonEmail, FacebookUser.class);
 
         final HttpServletRequest request = this.getThreadLocalRequest();
-       // final HttpSession session = request.getSession();
-      //  session.setAttribute(Parameters.email.getText(), u.getEmail());
+
 
             u.setFacebookID(f.getId());
             u.setFacebookToken(token);

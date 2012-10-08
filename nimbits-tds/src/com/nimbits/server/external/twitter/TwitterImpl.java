@@ -13,6 +13,8 @@
 
 package com.nimbits.server.external.twitter;
 
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
@@ -21,16 +23,15 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.nimbits.client.common.Utils;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.enums.MemCacheKey;
 import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
+import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.settings.SettingsService;
 import com.nimbits.client.service.twitter.TwitterService;
-import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import twitter4j.Twitter;
@@ -40,8 +41,6 @@ import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 import twitter4j.conf.ConfigurationBuilder;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -53,12 +52,18 @@ import java.util.logging.Logger;
  */
 @Service("twitterService")
 @Transactional
+
 public class TwitterImpl extends RemoteServiceServlet implements
         TwitterService, RequestCallback {
     private static final long serialVersionUID = 1L;
     private static final Logger log = Logger.getLogger(TwitterImpl.class.getName());
-    private EntityServiceImpl entityService;
+    private EntityService entityService;
     private SettingsService settingsService;
+
+
+
+
+
 
     @Override
     public void onResponseReceived(Request request, Response response) {
@@ -78,23 +83,21 @@ public class TwitterImpl extends RemoteServiceServlet implements
         final Twitter twitter = new TwitterFactory().getInstance();
         log.info("Authorising Twitter");
         twitter.setOAuthConsumer(twitter_client_id, twitter_Secret);
+         MemcacheService cache = MemcacheServiceFactory.getMemcacheService();
 
-        String authUrl = null;
+        RequestToken requestToken;
+
         try {
-            final RequestToken requestToken = twitter.getOAuthRequestToken();
+            requestToken = twitter.getOAuthRequestToken();
+            cache.put(MemCacheKey.twitter.getText() + email.getValue(), requestToken);
 
-            authUrl = requestToken.getAuthorizationURL();
-
-            final HttpServletRequest request = this.getThreadLocalRequest();
-            final HttpSession session = request.getSession();
-
-            session.setAttribute(Parameters.rToken.getText(), requestToken);
-            session.setAttribute(Parameters.email.getText(), email);
-
-        } catch (Exception e) {
-            log.severe(e.getMessage());
+            return  requestToken.getAuthorizationURL();
+        } catch (TwitterException e) {
+            throw new NimbitsException(e);
         }
-        return authUrl;
+
+
+
 
 
     }
@@ -105,30 +108,32 @@ public class TwitterImpl extends RemoteServiceServlet implements
         final String twitter_client_id = settingsService.getSetting(SettingType.twitterClientId);
         final String twitter_Secret =settingsService.getSetting(SettingType.twitterSecret);
 
-        final HttpServletRequest request = this.getThreadLocalRequest();
-        final HttpSession session = request.getSession();
-
         final Twitter twitter = new TwitterFactory().getInstance();
         twitter.setOAuthConsumer(twitter_client_id, twitter_Secret);
 
-        final RequestToken requestToken = (RequestToken) session.getAttribute(Parameters.rToken.getText());
-        final CommonIdentifier email = (CommonIdentifier) session.getAttribute(Parameters.email.getText());
 
-        log.info("Twitter: Updating user token " + email.getValue() + "  " + request);
+        // = (RequestToken) session.getAttribute(Parameters.rToken.getText());
+//        final CommonIdentifier email = (CommonIdentifier) session.getAttribute(Parameters.email.getText());
+
+        //  log.info("Twitter: Updating user token " + email.getValue() + "  " + request);
 
         try {
-            AccessToken accessToken = twitter.getOAuthAccessToken(requestToken);
-            List<Entity> result = entityService.getEntityByKey(user, email.getValue(), EntityType.user);
-            if (! result.isEmpty()) {
-                User u = (User) result.get(0);
-                u.setTwitterToken(accessToken.getToken());
-                u.setTwitterTokenSecret(accessToken.getTokenSecret());
-                entityService.addUpdateEntity(u, u);
+            MemcacheService cache = MemcacheServiceFactory.getMemcacheService();
+            log.info("user == null? "  +  (user==null));
+            if (cache.contains(MemCacheKey.twitter.getText() + user.getKey())) {
+                RequestToken requestToken = (RequestToken) cache.get(MemCacheKey.twitter.getText() + user.getKey());
+                AccessToken accessToken = twitter.getOAuthAccessToken(requestToken);
+                List<Entity> result = entityService.getEntityByKey(user, user.getKey(), EntityType.user);
+                if (! result.isEmpty()) {
+                    User u = (User) result.get(0);
+                    u.setTwitterToken(accessToken.getToken());
+                    u.setTwitterTokenSecret(accessToken.getTokenSecret());
+                    entityService.addUpdateEntity(u, u);
+                }
+
+                cache.delete(MemCacheKey.twitter.getText() + user.getKey());
+                sendTweet("Added #Nimbits Data Logger. A free, social and open source data logging service.", accessToken.getToken(), accessToken.getTokenSecret());
             }
-
-
-            sendTweet("Added #Nimbits Data Logger. A free, social and open source data logging service.", accessToken.getToken(), accessToken.getTokenSecret());
-
         } catch (TwitterException e) {
             log.severe(e.getMessage());
         }
@@ -196,11 +201,11 @@ public class TwitterImpl extends RemoteServiceServlet implements
     }
 
 
-    public void setEntityService(EntityServiceImpl entityService) {
+    public void setEntityService(EntityService entityService) {
         this.entityService = entityService;
     }
 
-    public EntityServiceImpl getEntityService() {
+    public EntityService getEntityService() {
         return entityService;
     }
 

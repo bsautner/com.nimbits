@@ -19,7 +19,7 @@
     <application>nimbits-02</application>
     <!--<application>ihealthtechnologies</application>-->
     <version>425</version>
-    <sessions-enabled>true</sessions-enabled>
+    <!--<sessions-enabled>true</sessions-enabled>-->
     <inbound-services>
         <service>mail</service>
         <service>xmpp_message</service>

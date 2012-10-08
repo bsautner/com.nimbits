@@ -29,11 +29,9 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.xmpp.XmppResource;
 import com.nimbits.client.model.xmpp.XmppResourceFactory;
+import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.xmpp.XMPPService;
-
-import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
-
-import com.nimbits.server.transactions.service.user.UserServiceImpl;
+import com.nimbits.server.transactions.service.user.UserServerService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,8 +45,8 @@ public class XmppServiceImpl extends RemoteServiceServlet implements XMPPService
    // private static final Logger log = Logger.getLogger(XmppServiceImpl.class.getName());
 
     private static final long serialVersionUID = 1L;
-    private EntityServiceImpl entityService;
-    private UserServiceImpl userService;
+    private EntityService entityService;
+    private UserServerService userService;
 
     private User getUser() {
         try {
@@ -94,12 +92,12 @@ public class XmppServiceImpl extends RemoteServiceServlet implements XMPPService
     }
 
     @Override
-    public void deleteResource(User u, Entity entity) {
+    public void deleteResource(final User u, final Entity entity) {
       XmppTransactionFactory.getInstance().deleteResource(entity);
     }
 
     @Override
-    public List<XmppResource> getPointXmppResources(User user, Point point) throws NimbitsException {
+    public List<XmppResource> getPointXmppResources(final User user, final Point point) throws NimbitsException {
         return XmppTransactionFactory.getInstance().getPointXmppResources(point);
     }
 
@@ -135,19 +133,19 @@ public class XmppServiceImpl extends RemoteServiceServlet implements XMPPService
 
     }
 
-    public void setEntityService(EntityServiceImpl entityService) {
+    public void setEntityService(final EntityService entityService) {
         this.entityService = entityService;
     }
 
-    public EntityServiceImpl getEntityService() {
+    public EntityService  getEntityService() {
         return entityService;
     }
 
-    public void setUserService(UserServiceImpl userService) {
+    public void setUserService(UserServerService  userService) {
         this.userService = userService;
     }
 
-    public UserServiceImpl getUserService() {
+    public UserServerService getUserService() {
         return userService;
     }
 }

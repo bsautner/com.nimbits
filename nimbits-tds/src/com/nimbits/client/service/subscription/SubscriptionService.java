@@ -32,5 +32,5 @@ public interface SubscriptionService  extends RemoteService {
     void processSubscriptions(final User u, final Point point, final Value v) throws NimbitsException;
 
 
-    boolean okToProcess(Subscription subscription);
+    boolean okToProcess(final Subscription subscription);
 }

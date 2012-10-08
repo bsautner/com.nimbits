@@ -449,6 +449,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
         final com.nimbits.client.model.user.User newUser = UserModelFactory.createUserModel(entity);
         // newUser.setSecret(UUID.randomUUID().toString());
+
         User user =  (User) entityService.addUpdateEntity(newUser);
 
         if (settingsService.getBooleanSetting(SettingType.billingEnabled)) {

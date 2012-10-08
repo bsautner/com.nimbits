@@ -26,7 +26,11 @@ public class FeedbackHelper {
     }
 
     public static void showError(Throwable caught) {
-        final MessageBox box = MessageBox.alert("Error", caught.getMessage(), null);
-        box.show();
+        String message = caught.getMessage();
+        if ( message!=null && ! message.trim().equals("0") && ! message.trim().equals("")) {
+            final MessageBox box = MessageBox.alert("Error", caught.getMessage(), null);
+            box.show();
+        }
+
     }
 }

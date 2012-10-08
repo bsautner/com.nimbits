@@ -20,6 +20,8 @@ import com.extjs.gxt.ui.client.widget.layout.FillLayout;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.constants.Path;
 import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.service.facebook.FacebookService;
@@ -57,20 +59,24 @@ public class FacebookPanel extends LayoutContainer {
 
         String authURL = "https://graph.facebook.com/oauth/authorize" +
                 "?client_id=" + settings.get(SettingType.facebookClientId) +
-                "&redirect_uri=" + "http://apps.facebook.com/nimbits/" +
+                "&redirect_uri=" + Path.PATH_FACEBOOK_REDIRECT +
                 "&scope=user_status,publish_stream,offline_access,email";
 
 
         if (facebookOauthCode == null) {
 
-            l.setText("<P></P>" +
-                    "<P>Nimbits does not run inside of facebook... When you use the nimbits server on <a href = \"http://cloud.nimbits.com\" target=\"_blank\"> http://app.nimbits.com</A>, " +
+            l.setText( Const.HTML_BOOTSTRAP +
+                    "<img src=\"http://www.nimbits.com/images/nimbits_transparent_logo.png\" style=\"float: left\">" +
+                    "<P>You can enable Nimbits to have alerts posted to your news feed.</P>" +
+                    "<P>Nimbits does not run inside of facebook... When you use the nimbits server on <a href = \"https://cloud.nimbits.com\" target=\"_blank\"> https://cloud.nimbits.com</A>, " +
                     "you can configure data points to post to your facebook news feed whenever they are updated or if they go into" +
-                    " an alarm state. </P> <BR><BR>" +
+                    " an alert state based on your subscription settings. Right click on a data point in the nimbits console" +
+                    " to create a subscription that can post to your feed. </P> <BR><BR>" +
                     "<P>In order to have Nimbits post to your facebook News Feed" +
                     " you must add it to your profile. </P><BR><BR><BR>" +
-                    "<center><P><font size =+1> <A href =\"" + authURL + "\" target=\"_top\" >Authorize Nimbits by clicking here.</A></font></p></center>" +
-                    "");
+                    "<center><P><font size =+1> <A href =\"" + authURL + "\" target=\"_top\" >" +
+                    "Authorize Nimbits by clicking here.</A></font></p></center>" +
+                    "</body></html>");
 
         } else {
             FacebookServiceAsync facebookService = GWT.create(FacebookService.class);
@@ -85,8 +91,8 @@ public class FacebookPanel extends LayoutContainer {
 
                 @Override
                 public void onSuccess(EmailAddress result) {
-                    l.setText("<P>You have successfuly added facebook to your Nimbits account. You can now log into <A href =\"http://www.nimbits.com\" target=\"_blank\" >Nimbits Data Logger</A> and configure your data points to relay new values and alerts to facebook.</p>" +
-                            "");
+                    l.setText( Const.HTML_BOOTSTRAP +"<P>You have successfuly added facebook to your Nimbits account. You can now log into <A href =\"http://www.nimbits.com\" target=\"_blank\" >Nimbits Console</A> and configure your data points to relay new values and alerts to facebook.</p>" +
+                            "</body></html>");
 
                     //	l.setText(result);
 

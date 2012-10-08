@@ -19,7 +19,6 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.constants.Path;
-import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.email.EmailAddress;
@@ -35,7 +34,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -58,20 +56,26 @@ public class FacebookImpl extends RemoteServiceServlet implements FacebookServic
 
     @Override
     public EmailAddress facebookLogin(final String code) throws UnsupportedEncodingException, NimbitsException {
-
+         log.info("facebook login with code: " + code);
         final User u =userService.getAppUserUsingGoogleAuth();
 
         final String facebookClientId = settingsService.getSetting(SettingType.facebookClientId);
         final String facebookSecret = settingsService.getSetting(SettingType.facebookSecret);
-        final String redirect_uri = settingsService.getSetting(SettingType.facebookRedirectURL);
-        final String token = getToken(code, facebookClientId, redirect_uri, facebookSecret);
+           final String token = getToken(code, facebookClientId, facebookSecret);
         final String jsonEmail = HttpCommonFactory.getInstance().doGet(Path.PATH_FACEBOOK_ME, urlEncodeToken(token) + "&fields=email,name");
+
+        log.info("facebookClientId" + facebookClientId);
+        log.info("facebookSecret" + facebookSecret);
+
+        log.info("token" + token);
+        log.info("jsonEmail" + jsonEmail);
+
 
         final FacebookUser f = GsonFactory.getSimpleInstance().fromJson(jsonEmail, FacebookUser.class);
 
         final HttpServletRequest request = this.getThreadLocalRequest();
-        final HttpSession session = request.getSession();
-        session.setAttribute(Parameters.email.getText(), u.getEmail());
+       // final HttpSession session = request.getSession();
+      //  session.setAttribute(Parameters.email.getText(), u.getEmail());
 
             u.setFacebookID(f.getId());
             u.setFacebookToken(token);
@@ -92,21 +96,25 @@ public class FacebookImpl extends RemoteServiceServlet implements FacebookServic
 
     }
 
-    private static String getToken(final String code, final String clientID, final String redirectURL, final String secret) {
+    private static String getToken(final String code, final String clientID, final String secret) {
+        log.info("code:" + code);
+        log.info("clientID:" + clientID);
+
+        log.info("secret:" + secret);
 
         String retStr = null;
         try {
             final String encodedCode = URLEncoder.encode(code, Const.CONST_ENCODING);
             final String u1 = "https://graph.facebook.com/oauth/access_token";
             final String params = "client_id=" + clientID + '&' +
-                    "redirect_uri=" + redirectURL + '&' +
+                    "redirect_uri=" +Path.PATH_FACEBOOK_REDIRECT + '&' +
                     "client_secret=" + secret + '&' +
                     "type=user_agent&" +
                     "code=" + encodedCode;
 
             retStr = HttpCommonFactory.getInstance().doGet(u1, params);
             log.info(retStr);
-        } catch (UnsupportedEncodingException e) {
+      } catch (UnsupportedEncodingException e) {
             log.severe(e.getMessage());
         }
         return retStr;

@@ -62,6 +62,8 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
     private static final int INT = 120;
     private static final int INT1 = 512;
+    public static final String LOGO = "http://www.nimbits.com/images/nimbits_transparent_logo.png";
+    private static final String CLOUD_URL = "http://cloud.nimbits.com";
     private UserService userService;
     private ValueService valueService;
     private EntityService entityService;
@@ -146,9 +148,6 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
                         case increase: case decrease:
                             processSubscriptionToIncreaseOrDecrease(point, v, subscription, subscriber);
                             break;
-
-
-
 
                     }
 
@@ -278,13 +277,14 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
         if (entity.getProtectionLevel().equals(ProtectionLevel.everyone)) {
 
             final List<Value> values = valueService.getTopDataSeries(p, 10);
+            log.info("values for fb chart:" + values.size());
             if (values.isEmpty()) {
-                picture.append("http://cloud.nimbits.com/resources/images/logo.png");
+                picture.append(LOGO);
             } else {
 
                 picture.append("http://chart.apis.google.com/chart?chd=t:");
-                for (int x = values.size(); x >= 0; x--) {
-                    Value vx = values.get(x);
+                for (int x = values.size(); x > 0; x--) {
+                    Value vx = values.get(x-1);
                     picture.append(vx.getDoubleValue()).append(',');
                 }
 
@@ -295,12 +295,15 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
 
         } else {
-            picture.append("http://cloud.nimbits.com/resources/images/logo.png");
+            picture.append(LOGO);
         }
 
-        final String link = "http://app.nimbits.com?uuid=" + p.getUUID() + "&email=" + p.getOwner();
+        final String link = CLOUD_URL + "?uuid=" + p.getUUID() + "&email=" + p.getOwner();
 
         final String d = Utils.isEmptyString(entity.getDescription()) ? "" : entity.getDescription();
+        log.info(picture.toString());
+        log.info(link);
+
        facebookService.updateStatus(u.getFacebookToken(), m, picture.toString(), link, "Subscribe to this data feed.",
                "nimbits.com", d);
 

@@ -48,9 +48,13 @@ import com.nimbits.server.orm.*;
 import com.nimbits.server.orm.validation.RecursionValidation;
 import com.nimbits.server.transactions.service.entity.EntityTransactions;
 import com.nimbits.shared.Utils;
+import org.datanucleus.exceptions.NucleusObjectNotFoundException;
 import org.springframework.stereotype.Repository;
 
-import javax.jdo.*;
+import javax.jdo.JDOObjectNotFoundException;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -488,7 +492,12 @@ public class EntityDaoImpl implements  EntityTransactions {
             else {
                 return new ArrayList<Entity>(0);
             }
-        } finally {
+
+        }
+        catch (NucleusObjectNotFoundException exception) {
+            return Collections.emptyList();
+        }
+        finally {
             pm.close();
         }
     }

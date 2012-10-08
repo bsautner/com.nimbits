@@ -316,7 +316,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
         final Entity entity = EntityModelFactory.createEntity(name, "", EntityType.feed,
                 ProtectionLevel.onlyConnection, user.getKey(), user.getKey(), UUID.randomUUID().toString());
         final Point point = PointModelFactory.createPointModel(entity, 0.0, 90, "", 0.0, false, false, false, 0, false, FilterType.fixedHysteresis, 0.1, false, PointType.feed , 0, false, 0.0);
-        return (Point) entityService.addUpdateEntity(point);
+        return (Point) entityService.addUpdateEntity(user, point);
 
 
 

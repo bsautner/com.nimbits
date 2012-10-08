@@ -40,7 +40,7 @@ public class SettingMemCacheImpl implements SettingTransactions {
 
 
     private String SettingCacheKey(final SettingType setting) {
-        return MemCacheKey.setting + setting.getName();
+        return SettingType.serverVersion.getDefaultValue() +  MemCacheKey.setting + setting.getName();
     }
 
     @Override

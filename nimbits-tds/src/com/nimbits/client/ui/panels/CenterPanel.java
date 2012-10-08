@@ -382,7 +382,7 @@ public class CenterPanel extends NavigationEventProvider {
                     sendXMPPInvite();
                     break;
                 case facebook:
-                    Window.Location.replace(Path.PATH_FACEBOOK_APP);
+                    Window.Location.replace(Path.PATH_FACEBOOK_REDIRECT);
                     break;
                 case twitter:
                     twitterAuthorise();

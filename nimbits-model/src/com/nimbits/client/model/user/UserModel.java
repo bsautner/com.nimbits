@@ -91,6 +91,7 @@ public class UserModel extends EntityModel implements Serializable, User {
         this.lastLoggedIn =  new Date();
         this.emailAddress = entity.getName().getValue();
         this.billingEnabled = false;
+
     }
 
 

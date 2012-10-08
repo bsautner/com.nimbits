@@ -194,24 +194,23 @@ public class MainMenuBar extends ToolBar {
         add(button);
     }
     private void addActionMenu() {
-        Button button = new Button("Action");
+        Button button = new Button("Enable External Services");
         Menu menu = new Menu();
 
-
-
-        if (settings.containsKey(SettingType.twitterClientId) && !Utils.isEmptyString(settings.get(SettingType.twitterClientId)) && user != null)
-        {
-            menu.add(actionMenuItem("Enable Facebook",
+        if (settings.containsKey(SettingType.facebookAPIKey) && !Utils.isEmptyString(settings.get(SettingType.facebookAPIKey)))
+         {
+            menu.add(actionMenuItem("Facebook",
                     AbstractImagePrototype.create(Icons.INSTANCE.connection()),
                     Action.facebook));
         }
-        if (settings.containsKey(SettingType.facebookAPIKey) && !Utils.isEmptyString(settings.get(SettingType.facebookAPIKey)))
+        if (settings.containsKey(SettingType.twitterClientId) && !Utils.isEmptyString(settings.get(SettingType.twitterClientId)) && user != null)
+
         {
-            menu.add(actionMenuItem("Enable Twitter",
+            menu.add(actionMenuItem("Twitter",
                     AbstractImagePrototype.create(Icons.INSTANCE.connection()),
                     Action.twitter));
         }
-        menu.add(actionMenuItem("Enable Instant Message (XMPP)",
+        menu.add(actionMenuItem("Instant Message (XMPP)",
                 AbstractImagePrototype.create(Icons.INSTANCE.list_items()),
                 Action.xmpp));
 

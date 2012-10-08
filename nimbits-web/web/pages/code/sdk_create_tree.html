@@ -2,8 +2,9 @@
 <h4 style="margin-top: 10px; margin-bottom: 10px">Create a tree with points and folders with the SDK</h4>
 
 
-<p>Using the java SDK, you can write your own code to script basic functions on your nimbits account.</p>
-<uL>
+<p>Using the java SDK, you can write your own code to script basic functions on your nimbits account. You can download the jar from the link below, or
+if your using Debian / Ubuntu you can follow our docs to download it with apt-get.</p>
+<ul>
 <li><a href="#" onclick="getContent('pages/sdk.html')">Download the Java SDK jar</a></li>
 </ul>
 
@@ -19,9 +20,13 @@ have names, descriptions, and a parent. Your user account is the top level entit
 
  <p>Create a new Java Project and add the nimbits sdk jar to your classpath. Next, try running this example from github:</p>
 
-<uL>
-    <li><a href="#" onclick="getContent('pages/sdk.html')">Download the Java SDK jar</a></li>
+<ul>
+    <li><a href="https://github.com/bsautner/com.nimbits/blob/master/nimbits-util/src/com/nimbits/sample/CreateTreeSample.java">CreateTreeSample.java</a></li>
 </ul>
+<p>
+ This sample will create a folder under your account, and then create a point under that folder. You can use any entity in Nimbits as a parent of another, so points can
+ be placed under other points and so on. This sample can be used to create your points from templates and your own code using java objects.
+ </p>
 
 
 

@@ -31,7 +31,6 @@ public enum SettingType {
     billingEnabled(SettingConstants.SETTING_BILLING_ENABLED, Const.TRUE, true,true),
     admin(SettingConstants.SETTING_ADMIN, Const.TEST_ACCOUNT, false, true),
     connectionsEnabled(SettingConstants.SETTING_ENABLE_CONNECTIONS, Const.TRUE, false, true),
-    facebookRedirectURL(SettingConstants.SETTING_FACEBOOK_REDIRECT_URL, Path.PATH_FACEBOOK_REDIRECT, false, true),
     facebookAPIKey(SettingConstants.SETTING_FACEBOOK_API_KEY, Const.EMPTY, false, true),
     facebookSecret(SettingConstants.SETTING_FACEBOOK_SECRET, Const.EMPTY, false, true),
     wolframKey(SettingConstants.SETTING_WOLFRAM, Const.CONST_UNKNOWN, false, true),
@@ -94,7 +93,7 @@ public enum SettingType {
         return name;
     }
     private static class SettingConstants {
-        static final String CONST_SERVER_VERSION = "3.3.0";
+        static final String CONST_SERVER_VERSION = "3.3.1";
         static final String SETTING_LOCAL_DEV_ACCOUNT = "SETTING_LOCAL_DEV_ACCOUNT";
         static final String SETTING_LOCAL_DEV_KEY = "SETTING_LOCAL_DEV_KEY";
         static final String SETTING_LOCAL_DEV_PATH = "SETTING_LOCAL_DEV_PATH";

@@ -35,6 +35,7 @@ import com.nimbits.server.process.task.TaskFactory;
 import com.nimbits.server.transactions.memcache.entity.EntityCacheImpl;
 import com.nimbits.server.transactions.service.user.UserServiceImpl;
 import com.nimbits.server.transactions.service.value.ValueServiceImpl;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -240,6 +241,15 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
 
     @Override
     public Entity addUpdateEntity(final User user, final Entity entity) throws NimbitsException {
+        if (! entity.getEntityType().equals(EntityType.user)) {
+            if (StringUtils.isEmpty(entity.getOwner())) {
+                throw new NimbitsException("Owner must not be null");
+            }
+            if (! entity.getOwner().equals(user.getKey())) {
+                throw new NimbitsException("You can't create an entity with an owner other than yourself!");
+            }
+        }
+
         if (entity.getEntityType().equals(EntityType.point)) {
             TaskFactory.getInstance().startCoreTask(this.getThreadLocalRequest(), entity, Action.update, ServerInfoImpl.getFullServerURL(getThreadLocalRequest()));
             Location location =   ApiServlet.getGPS(this.getThreadLocalRequest());

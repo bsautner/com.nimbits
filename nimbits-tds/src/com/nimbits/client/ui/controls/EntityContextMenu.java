@@ -14,10 +14,7 @@
 package com.nimbits.client.ui.controls;
 
 import com.extjs.gxt.ui.client.data.ModelData;
-import com.extjs.gxt.ui.client.event.Listener;
-import com.extjs.gxt.ui.client.event.MenuEvent;
-import com.extjs.gxt.ui.client.event.MessageBoxEvent;
-import com.extjs.gxt.ui.client.event.SelectionListener;
+import com.extjs.gxt.ui.client.event.*;
 import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.Window;
 import com.extjs.gxt.ui.client.widget.menu.Menu;
@@ -31,19 +28,24 @@ import com.nimbits.client.constants.UserMessages;
 import com.nimbits.client.constants.Words;
 import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.GxtModel;
 import com.nimbits.client.model.TreeModel;
 import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.entity.EntityServiceAsync;
 import com.nimbits.client.service.xmpp.XMPPService;
 import com.nimbits.client.service.xmpp.XMPPServiceAsync;
+import com.nimbits.client.ui.controls.menu.AddPointMenuItem;
 import com.nimbits.client.ui.helper.FeedbackHelper;
 import com.nimbits.client.ui.icons.Icons;
 import com.nimbits.client.ui.panels.*;
@@ -59,7 +61,75 @@ import java.util.Map;
  * Time: 9:44 AM
  */
 public class EntityContextMenu extends Menu {
+    private final Listener<MessageBoxEvent> createNewPointListener = new NewPointMessageBoxEventListener();
+    private final Listener<MessageBoxEvent> deleteEntityListener = new DeleteMessageBoxEventListener();
+    private final Listener<MessageBoxEvent> copyPointListener  = new CopyPointMessageBoxEventListener();
+    private final Listener<MessageBoxEvent> xmppResourceListener = new XMPPMessageBoxEventListener();
 
+    private class NewPointMessageBoxEventListener implements Listener<MessageBoxEvent> {
+
+        private String newEntityName;
+
+        NewPointMessageBoxEventListener() {
+        }
+
+        @Override
+        public void handleEvent(MessageBoxEvent be) {
+            newEntityName = be.getValue();
+            if (!Utils.isEmptyString(newEntityName)) {
+                final MessageBox box = MessageBox.wait("Progress",
+                        "Creating your data point channel into the cloud", "Creating: " + newEntityName);
+                box.show();
+                EntityServiceAsync service = GWT.create(EntityService.class);
+
+                try {
+                    final ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
+                    currentModel = (TreeModel)selectedModel;
+
+                    final Entity currentEntity =  currentModel.getBaseEntity();
+                    EntityName name = CommonFactoryLocator.getInstance().createName(newEntityName, EntityType.point);
+                    Entity entity = EntityModelFactory.createEntity(name, EntityType.point);
+                    Point p = PointModelFactory.createPointModel(entity, 0.0, 90, "", 0.0,
+                            false, false, false, 0, false, FilterType.fixedHysteresis, 0.1, false,
+                            PointType.basic, 0, false, 0.0);
+                     p.setParent(currentEntity.getKey());
+                    service.addUpdateEntity(p, new NewPointEntityAsyncCallback(box));
+                } catch (NimbitsException caught) {
+                    box.close();
+                    FeedbackHelper.showError(caught);
+
+                }
+
+            }
+        }
+
+
+        private class NewPointEntityAsyncCallback implements AsyncCallback<Entity> {
+            private final MessageBox box;
+
+            NewPointEntityAsyncCallback(MessageBox box) {
+                this.box = box;
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                FeedbackHelper.showError(caught);
+                box.close();
+            }
+
+            @Override
+            public void onSuccess(Entity result) {
+
+                try {
+                    notifyEntityModifiedListener(new GxtModel(result), Action.create);
+                } catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
+                }
+
+                box.close();
+            }
+        }
+    }
     private static final int WIDTH = 600;
     private static final int HEIGHT = 600;
     private EntityTree<ModelData> tree;
@@ -86,6 +156,10 @@ public class EntityContextMenu extends Menu {
     private MenuItem jsonContext;
     private MenuItem exportContext;
     private MenuItem propertyContext;
+
+    private AddPointMenuItem addPointMenuItem;
+
+
     private Map<SettingType, String> settings;
     private final User user;
     private final boolean isDomain;
@@ -106,11 +180,26 @@ public class EntityContextMenu extends Menu {
 
     }
 
+    private class NewPointBaseEventListener implements Listener<BaseEvent> {
+        NewPointBaseEventListener() {
+        }
 
+        @Override
+        public void handleEvent(final BaseEvent be) {
+            final MessageBox box = MessageBox.prompt(
+                    UserMessages.MESSAGE_NEW_POINT,
+                    UserMessages.MESSAGE_NEW_POINT_PROMPT);
+
+            box.addCallback(createNewPointListener);
+        }
+    }
     public EntityContextMenu(final User user, final EntityTree<ModelData> tree, final Map<SettingType, String> settings, final boolean isDomain) {
         super();
         this.isDomain = isDomain;
         propertyContext = propertyContext();
+        addPointMenuItem = new AddPointMenuItem();
+        addPointMenuItem.addListener(Events.OnClick, new NewPointBaseEventListener());
+
         this.user = user;
         entityModifiedListeners = new ArrayList<EntityModifiedListener>(1);
         this.tree = tree;
@@ -128,6 +217,7 @@ public class EntityContextMenu extends Menu {
         keyContext = keyContext();
         exportContext = exportContext();
         jsonContext = jsonContext();
+        add(addPointMenuItem);
         add(propertyContext);
         add(exportContext);
         add(copyContext);
@@ -169,8 +259,9 @@ public class EntityContextMenu extends Menu {
 
         jsonContext.setEnabled(! currentModel.getEntityType().equals(EntityType.user));
         keyContext.setEnabled(currentModel.getEntityType().equals(EntityType.user) || currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.accessKey));
-        exportContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) && isDomain);
+        exportContext.setEnabled(currentModel.getEntityType().equals(EntityType.point));// && isDomain);
         propertyContext.setEnabled(!currentModel.isReadOnly());
+       // addPointMenuItem.setEnabled(!currentModel.isReadOnly() );
         //downloadContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) ||currentModel.getEntityType().equals(EntityType.category));
 
 
@@ -352,11 +443,7 @@ public class EntityContextMenu extends Menu {
         return retObj;
     }
 
-    private final Listener<MessageBoxEvent> deleteEntityListener = new DeleteMessageBoxEventListener();
 
-    private final Listener<MessageBoxEvent> copyPointListener  = new CopyPointMessageBoxEventListener();
-
-    private final Listener<MessageBoxEvent> xmppResourceListener = new XMPPMessageBoxEventListener();
 
     public void showSubscriptionPanel(final Entity entity) {
         final SubscriptionPanel dp = new SubscriptionPanel(user, entity, settings);

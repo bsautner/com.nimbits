@@ -32,13 +32,13 @@ import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
+import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.feed.Feed;
+import com.nimbits.client.service.value.ValueService;
 import com.nimbits.server.admin.common.ServerInfoImpl;
 import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
-import com.nimbits.server.transactions.service.user.UserServiceImpl;
-import com.nimbits.server.transactions.service.value.ValueServiceImpl;
+import com.nimbits.server.transactions.service.user.UserServerService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,9 +62,9 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
     private static final int LENGTH = 200;
     private static final int OFFSET = 500;
     private static final Logger log = Logger.getLogger(FeedImpl.class.getName());
-    private EntityServiceImpl entityService;
-    private UserServiceImpl userService;
-    private ValueServiceImpl valueService;
+    private EntityService entityService;
+    private UserServerService userService;
+    private ValueService valueService;
 
 
     private User getUser() {
@@ -323,27 +323,27 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
     }
 
 
-    public void setEntityService(EntityServiceImpl entityService) {
+    public void setEntityService(EntityService entityService) {
         this.entityService = entityService;
     }
 
-    public EntityServiceImpl getEntityService() {
+    public EntityService getEntityService() {
         return entityService;
     }
 
-    public void setUserService(UserServiceImpl userService) {
+    public void setUserService(UserServerService userService) {
         this.userService = userService;
     }
 
-    public UserServiceImpl getUserService() {
+    public UserServerService getUserService() {
         return userService;
     }
 
-    public void setValueService(ValueServiceImpl valueService) {
+    public void setValueService(ValueService valueService) {
         this.valueService = valueService;
     }
 
-    public ValueServiceImpl getValueService() {
+    public ValueService getValueService() {
         return valueService;
     }
 }

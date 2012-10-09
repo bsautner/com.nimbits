@@ -116,5 +116,12 @@
         <property name="userService" ref="userService" />
     </bean>
 
+    <bean id="feed" class="com.nimbits.server.api.impl.FeedServletImpl">
+        <property name="entityService" ref="entityService" />
+        <property name="userService" ref="userService" />
+        <property name="settingsService" ref="settingsService" />
+        <property name="quotaManager" ref="quotaManager" />
+    </bean>
+
     <!-- END APIS-->
 </beans>

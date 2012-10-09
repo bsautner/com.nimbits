@@ -350,6 +350,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
     }
     @Override
+    @Deprecated
     public Point addPoint(String pointName) throws NimbitsException {
         EntityName name = CommonFactoryLocator.getInstance().createName(pointName, EntityType.point);
         return addPoint(name);

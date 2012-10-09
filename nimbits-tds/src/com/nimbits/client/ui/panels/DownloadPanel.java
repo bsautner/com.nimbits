@@ -155,7 +155,8 @@ public class DownloadPanel extends LayoutContainer {
             @Override
             public void onFailure(Throwable caught) {
                 box.close();
-              FeedbackHelper.showError(caught);
+              FeedbackHelper.showError(new NimbitsException("Unable to export to drive. Export to Google Docs " +
+                      "is only available for Domain users."));
 
             }
 
@@ -177,7 +178,8 @@ public class DownloadPanel extends LayoutContainer {
             @Override
             public void onFailure(Throwable caught) {
                 box.close();
-                FeedbackHelper.showError(caught);
+                FeedbackHelper.showError(new NimbitsException("Unable to export to drive. Export to Google Docs " +
+                        "is only available for Domain users."));
 
             }
 
@@ -205,7 +207,8 @@ public class DownloadPanel extends LayoutContainer {
             @Override
             public void onFailure(Throwable caught) {
                 box.close();
-              FeedbackHelper.showError(caught);
+                FeedbackHelper.showError(new NimbitsException("Unable to export to drive. Export to Google Docs " +
+                        "is only available for Domain users."));
 
             }
 
@@ -216,7 +219,8 @@ public class DownloadPanel extends LayoutContainer {
             }
         });
         } catch (NimbitsException e) {
-            FeedbackHelper.showError(e);
+            FeedbackHelper.showError(new NimbitsException("Unable to export to drive. Export to Google Docs " +
+                    "is only available for Domain users."));
         }
 
     }
@@ -234,7 +238,8 @@ public class DownloadPanel extends LayoutContainer {
                 @Override
                 public void onFailure(Throwable caught) {
                     box.close();
-                    FeedbackHelper.showError(caught);
+                    FeedbackHelper.showError(new NimbitsException("Unable to export to drive. Export to Google Docs " +
+                            "is only available for Domain users."));
 
                 }
 
@@ -261,7 +266,8 @@ public class DownloadPanel extends LayoutContainer {
             @Override
             public void onFailure(Throwable caught) {
                 box.close();
-                FeedbackHelper.showError(caught);
+                FeedbackHelper.showError(new NimbitsException("Unable to export to drive. Export to Google Docs " +
+                        "is only available for Domain users."));
             }
 
             @Override

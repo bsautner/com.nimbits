@@ -33,29 +33,18 @@ public class QuotaManagerImpl implements QuotaManager {
     private String key;
     public static final int FREE_DAILY_QUOTA = 1000;
     public static final double COST_PER_API_CALL = 0.00001;
+
     @Override
     public int getFreeDailyQuota() {
         return FREE_DAILY_QUOTA;
     }
 
-//    public QuotaManagerImpl() { //use email since sometimes we only have the key
-//
-
-//
-//
-//    }
-
     private void initCache(final EmailAddress email) { //use email since sometimes we only have the key
-
+        cache =MemcacheServiceFactory.getMemcacheService(MemCacheKey.quotaNamespace.getText());
         if (email != null) {
-            cache =MemcacheServiceFactory.getMemcacheService(MemCacheKey.quotaNamespace.getText());
+
             key = MemCacheKey.getKey(MemCacheKey.quota, email.getValue());
         }
-        else {
-            cache =MemcacheServiceFactory.getMemcacheService(MemCacheKey.quotaNamespace.getText());
-            key = null;
-        }
-
 
     }
 

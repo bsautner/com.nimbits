@@ -1,17 +1,6 @@
-/*
- * Copyright (c) 2012 Nimbits Inc.
- *
- *    http://www.nimbits.com
- *
- *
- * Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
- *
- * http://www.gnu.org/licenses/gpl.html
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
- */
-
 package com.nimbits.server.api.openid;
+
+
 
 
 import com.google.step2.AuthRequestHelper;
@@ -26,8 +15,6 @@ import org.openid4java.consumer.InMemoryConsumerAssociationStore;
 import org.openid4java.discovery.DiscoveryInformation;
 import org.openid4java.message.AuthRequest;
 import org.openid4java.message.ParameterList;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -41,9 +28,7 @@ import java.io.IOException;
  * Servlet for handling OpenID logins.  Uses the Step2 library from code.google.com and the
  * underlying OpenID4Java library.
  */
-@Service("openId")
-@Transactional
-public class OpenIdServlet extends HttpServlet implements org.springframework.web.HttpRequestHandler {
+public class OpenIdServlet extends HttpServlet {
 
     protected ConsumerHelper consumerHelper;
     protected String realm;
@@ -62,26 +47,71 @@ public class OpenIdServlet extends HttpServlet implements org.springframework.we
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        init();
-
-    }
-
-    @Override
-    public void init() throws ServletException {
-        super.init();
-
-
-
-        returnToPath ="/openid";
-
-        realm = null;
-        homePath =  "/?hd=com";
+        returnToPath = getInitParameter("return_to_path", "/openid");
+        homePath = getInitParameter("home_path", "/?hd=domain");
+        realm = getInitParameter("realm", null);
         ConsumerFactory factory = new ConsumerFactory(
                 new InMemoryConsumerAssociationStore());
         consumerHelper = factory.getConsumerHelper();
     }
 
+    /**
+     * Either initiates a login to a given provider or processes a response from an IDP.
+     * @param req
+     * @param resp
+     * @throws ServletException
+     * @throws IOException
+     */
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        String domain = req.getParameter("hd");
+        if (domain != null) {
+            // User attempting to login with provided domain, build and OpenID request and redirect
+            try {
+                AuthRequest authRequest = startAuthentication(domain, req);
+                String url = authRequest.getDestinationUrl(true);
+                resp.sendRedirect(url);
+            } catch (OpenIDException e) {
+                resp.sendRedirect("?errorString=Error initializing OpenID request: "
+                        + e.getMessage());
+            }
+        } else {
+            // This is a response from the provider, go ahead and validate
+            doPost(req, resp);
+        }
+    }
 
+    /**
+     * Handle the response from the OpenID Provider.
+     *
+     * @param req Current servlet request
+     * @param resp Current servlet response
+     * @throws ServletException if unable to process request
+     * @throws IOException if unable to process request
+     */
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        try {
+            UserInfo user = completeAuthentication(req);
+            req.getSession().setAttribute("user", user);
+            resp.sendRedirect(homePath);
+        } catch (OpenIDException e) {
+            resp.sendRedirect("?errorString=Error processing OpenID response: "
+                    + e.getMessage());
+        }
+    }
+
+    /**
+     * Builds an auth request for a given OpenID provider.
+     *
+     * @param op OpenID Provider URL.  In the context of Google Apps, this can be a naked domain
+     *           name such as "saasycompany.com".  The length of the domain can exceed 100 chars.
+     * @param request Current servlet request
+     * @return Auth request
+     * @throws org.openid4java.OpenIDException if unable to discover the OpenID endpoint
+     */
     AuthRequest startAuthentication(String op, HttpServletRequest request)
             throws OpenIDException {
         IdpIdentifier openId = new IdpIdentifier(op);
@@ -124,7 +154,6 @@ public class OpenIdServlet extends HttpServlet implements org.springframework.we
 
         AuthResponseHelper authResponse = consumerHelper.verify(receivingUrl,
                 openidResp, discovered);
-
         if (authResponse.getAuthResultType() == AuthResponseHelper.ResultType.AUTH_SUCCESS) {
             return onSuccess(authResponse, request);
         }
@@ -174,7 +203,9 @@ public class OpenIdServlet extends HttpServlet implements org.springframework.we
      * @return Return to URL
      */
     String returnTo(HttpServletRequest request) {
-        return baseUrl(request) + request.getContextPath() + returnToPath;
+        return new StringBuffer(baseUrl(request))
+                .append(request.getContextPath()).append(returnToPath)
+                .toString();
     }
 
     /**
@@ -205,7 +236,6 @@ public class OpenIdServlet extends HttpServlet implements org.springframework.we
      * @return User representation
      */
     UserInfo onSuccess(AuthResponseHelper helper, HttpServletRequest request) {
-
         return new UserInfo(helper.getClaimedId().toString(),
                 helper.getAxFetchAttributeValue(Step2.AxSchema.EMAIL),
                 helper.getAxFetchAttributeValue(Step2.AxSchema.FIRST_NAME),
@@ -223,57 +253,16 @@ public class OpenIdServlet extends HttpServlet implements org.springframework.we
     UserInfo onFail(AuthResponseHelper helper, HttpServletRequest request) {
         return null;
     }
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        if (consumerHelper==null) {
-            init();
-        }
 
-
-        String domain = req.getParameter("hd");
-        if (domain != null) {
-            // User attempting to login with provided domain, build and OpenID request and redirect
-            try {
-                AuthRequest authRequest = startAuthentication(domain, req);
-                String url = authRequest.getDestinationUrl(true);
-                resp.sendRedirect(url);
-            } catch (OpenIDException e) {
-                throw new ServletException("Error initializing OpenID request", e);
-            }
-        } else {
-            // This is a response from the provider, go ahead and validate
-            doPost(req, resp);
-        }
+    /**
+     * Small helper for fetching init params with default values
+     *
+     * @param key Parameter to fetch
+     * @param defaultValue Default value to use if not set in web.xml
+     * @return Parameter value or defaultValue
+     */
+    protected String getInitParameter(String key, String defaultValue) {
+        String value = getInitParameter(key);
+        return StringUtils.isBlank(value) ? defaultValue : value;
     }
-
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        try {
-            UserInfo user = completeAuthentication(req);
-            req.getSession().setAttribute("user", user);
-            resp.sendRedirect(homePath);
-        } catch (OpenIDException e) {
-            throw new ServletException("Error processing OpenID response", e);
-        }
-    }
-
-    @Override
-    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        if (isPost(req)) {
-
-            doPost(req, resp);
-        }
-        else {
-            doGet(req, resp);
-        }
-
-    }
-    protected boolean isPost(final HttpServletRequest req) {
-        return req.getMethod().equals("POST");
-    }
-
 }

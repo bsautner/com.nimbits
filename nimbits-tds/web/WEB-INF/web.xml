@@ -20,6 +20,31 @@
     </context-param>
 
 
+
+    <servlet>
+        <servlet-name>OpenIdServlet</servlet-name>
+        <servlet-class>com.nimbits.server.api.openid.OpenIdServlet</servlet-class>
+        <init-param>
+            <param-name>realm</param-name>
+            <param-value/>
+        </init-param>
+        <init-param>
+            <param-name>return_to_path</param-name>
+            <param-value>/openid</param-value>
+        </init-param>
+        <init-param>
+            <param-name>home_path</param-name>
+            <param-value>/</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>OpenIdServlet</servlet-name>
+        <url-pattern>/openid</url-pattern>
+    </servlet-mapping>
+
+
+
     <listener>
         <listener-class>
             org.springframework.web.context.ContextLoaderListener
@@ -42,28 +67,7 @@
 
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>openId</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
 
-        <init-param>
-            <param-name>realm</param-name>
-            <param-value/>
-        </init-param>
-        <init-param>
-            <param-name>return_to_path</param-name>
-            <param-value>/openid</param-value>
-        </init-param>
-        <init-param>
-            <param-name>home_path</param-name>
-            <param-value>/</param-value>
-        </init-param>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>openId</servlet-name>
-        <url-pattern>/openid</url-pattern>
-    </servlet-mapping>
 
     <servlet>
         <servlet-name>SystemServiceServlet</servlet-name>

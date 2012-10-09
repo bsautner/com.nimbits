@@ -13,10 +13,7 @@
 
 package com.nimbits.client.ui.controls;
 
-import com.extjs.gxt.ui.client.event.BaseEvent;
-import com.extjs.gxt.ui.client.event.Events;
-import com.extjs.gxt.ui.client.event.Listener;
-import com.extjs.gxt.ui.client.event.MessageBoxEvent;
+import com.extjs.gxt.ui.client.event.*;
 import com.extjs.gxt.ui.client.widget.Info;
 import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.Window;
@@ -52,6 +49,7 @@ import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.entity.EntityServiceAsync;
 import com.nimbits.client.service.user.UserService;
 import com.nimbits.client.service.user.UserServiceAsync;
+import com.nimbits.client.ui.controls.menu.AddPointMenuItem;
 import com.nimbits.client.ui.helper.FeedbackHelper;
 import com.nimbits.client.ui.icons.Icons;
 import com.nimbits.client.ui.panels.FileUploadPanel;
@@ -89,8 +87,8 @@ public class MainMenuBar extends ToolBar {
 
         addFileMenu();
         if (settings.containsKey(SettingType.billingEnabled)) {
-        addSettingsMenu();
-       }
+            addSettingsMenu();
+        }
         addNavigateMenu();
         addActionMenu();
         addOptionsMenu();
@@ -104,17 +102,17 @@ public class MainMenuBar extends ToolBar {
         //  add(saveButton());
         add(addChartButton());
 
-       // add(connectionButton());
-       // add(pendingConnectionsButton());
+        // add(connectionButton());
+        // add(pendingConnectionsButton());
 
         add(urlMenuItem("Report Issue",
                 AbstractImagePrototype.create(Icons.INSTANCE.bug()),
                 "https://github.com/bsautner/com.nimbits/issues"));
 
         if (! isDomain) {
-        add(actionMenuItem("Logout",
-                AbstractImagePrototype.create(Icons.INSTANCE.deleteFriend()),
-                Action.logout));
+            add(actionMenuItem("Logout",
+                    AbstractImagePrototype.create(Icons.INSTANCE.deleteFriend()),
+                    Action.logout));
         }
 
     }
@@ -122,7 +120,11 @@ public class MainMenuBar extends ToolBar {
     private void addFileMenu() {
         Button fileButton = new Button("File");
         Menu fileMenu = new Menu();
-        fileMenu.add(newDataPoint());
+
+        AddPointMenuItem addPointMenuItem = new AddPointMenuItem();
+        addPointMenuItem.addListener(Events.OnClick, new NewPointBaseEventListener());
+
+        fileMenu.add(addPointMenuItem);
         fileMenu.add(newFolder());
         fileMenu.add(uploadFile());
 
@@ -198,7 +200,7 @@ public class MainMenuBar extends ToolBar {
         Menu menu = new Menu();
 
         if (settings.containsKey(SettingType.facebookAPIKey) && !Utils.isEmptyString(settings.get(SettingType.facebookAPIKey)))
-         {
+        {
             menu.add(actionMenuItem("Facebook",
                     AbstractImagePrototype.create(Icons.INSTANCE.connection()),
                     Action.facebook));
@@ -218,17 +220,7 @@ public class MainMenuBar extends ToolBar {
         add(button);
     }
 
-    private MenuItem newDataPoint() {
-        final MenuItem item = new MenuItem("Data Point");
 
-        item.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.addNew()));
-        item.setToolTip(UserMessages.MESSAGE_NEW_POINT);
-        item.addListener(Events.OnClick, new NewPointBaseEventListener());
-
-        return item;
-
-
-    }
 
     private MenuItem uploadFile() {
         MenuItem item = new MenuItem("Upload File");

@@ -5,10 +5,16 @@ package integration;/*
  */
 
 import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.FilterType;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.value.Value;
 import org.junit.Test;
 
@@ -112,14 +118,17 @@ public class DataLoadingTest {
     public void load2() throws IOException, NimbitsException, InterruptedException {
         final String pointName = ("large" + UUID.randomUUID().toString());
 
-        final Point p = ClientHelper.client().addPoint(pointName);
-        assertNotNull(p);
-        p.setFilterValue(-1);
-        ClientHelper.client().updatePoint(p);
+        Entity entity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone, "bsautner@gmail.com", "bsautner@gmail.com");
+        Point point = PointModelFactory.createPointModel(entity, 0.0, 90, "nn", 0.0, false, false, false, 0, false, FilterType.none, 0.0, false, PointType.basic, 0, false, 0.0);
+        final Entity result = ClientHelper.client().addEntity(point);
+        assertNotNull(result);
+
+       // point.setFilterValue(-1);
+       // ClientHelper.client().updatePoint(p);
         final Random r = new Random();
         double rv;
         Value v;
-        for (int i = 0; i < 1000000; i++) {
+        for (int i = 0; i < 10000; i++) {
             rv = roundDouble(r.nextDouble() * 100);
             try {
                 v = ClientHelper.client().recordValue(pointName, rv, new Date());

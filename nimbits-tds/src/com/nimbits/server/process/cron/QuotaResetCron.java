@@ -15,7 +15,7 @@ package com.nimbits.server.process.cron;
 
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.server.admin.quota.QuotaManagerImpl;
+import com.nimbits.server.admin.quota.QuotaManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +38,7 @@ public class QuotaResetCron  extends HttpServlet implements org.springframework.
 
     private static final long serialVersionUID = 2L;
     private static final Logger log = Logger.getLogger(QuotaResetCron.class.getName());
-    private QuotaManagerImpl quotaManager;
+    private QuotaManager quotaManager;
 
 
     @Override
@@ -63,11 +63,11 @@ public class QuotaResetCron  extends HttpServlet implements org.springframework.
         doGet(request, response);
     }
 
-    public void setQuotaManager(QuotaManagerImpl quotaManager) {
+    public void setQuotaManager(QuotaManager quotaManager) {
         this.quotaManager = quotaManager;
     }
 
-    public QuotaManagerImpl getQuotaManager() {
+    public QuotaManager getQuotaManager() {
         return quotaManager;
     }
 }

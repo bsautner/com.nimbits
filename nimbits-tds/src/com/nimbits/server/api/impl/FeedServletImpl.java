@@ -14,11 +14,11 @@
 package com.nimbits.server.api.impl;
 
 import com.nimbits.client.constants.Const;
+import com.nimbits.server.api.ApiServlet;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -32,7 +32,7 @@ import java.io.PrintWriter;
  */
 @Transactional
 @Service("feed")
-public class FeedServletImpl  extends HttpServlet {
+public class FeedServletImpl  extends ApiServlet implements org.springframework.web.HttpRequestHandler {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -73,4 +73,15 @@ public class FeedServletImpl  extends HttpServlet {
 //
 //        out.print("</body></html>");
 //    }
+
+    @Override
+    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (isPost(req)) {
+
+            doPost(req, resp);
+        }
+        else {
+            doGet(req, resp);
+        }
+    }
 }

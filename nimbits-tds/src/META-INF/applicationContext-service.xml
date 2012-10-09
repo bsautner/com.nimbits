@@ -127,6 +127,6 @@
     <bean id="counterService" class="com.nimbits.server.transactions.service.counter.CounterServiceImpl" />
     <bean id="timespanService" class="com.nimbits.server.time.TimespanServiceImpl" />
 
-    <bean id="openId" class="com.nimbits.server.api.openid.OpenIdServlet" />
+    <!--<bean id="openId" class="com.nimbits.server.api.openid.OpenIdServlet" />-->
     <bean id="spreadsheetApi" class="com.nimbits.server.api.openid.SpreadsheetServlet" />
 </beans>

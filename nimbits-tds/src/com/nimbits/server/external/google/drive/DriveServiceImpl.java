@@ -13,6 +13,8 @@
 
 package com.nimbits.server.external.google.drive;
 
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.gdata.client.Query;
 import com.google.gdata.client.authn.oauth.GoogleOAuthParameters;
 import com.google.gdata.client.authn.oauth.OAuthException;
@@ -38,6 +40,7 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.MemCacheKey;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
@@ -70,6 +73,9 @@ public class DriveServiceImpl extends RemoteServiceServlet implements
         DriveService, RequestCallback {
     private static final int MAX_COLS = 6;
     static final Logger log = Logger.getLogger(DriveServiceImpl.class.getName());
+    private static final String NIMBITS_COM = "nimbits-com";
+    private static final String DOC_ID = "docId";
+    private static final String FILE_NAME = "fileName";
     private UserServerService userService;
     private ValueService valueService;
     private DocsService docService;
@@ -78,7 +84,7 @@ public class DriveServiceImpl extends RemoteServiceServlet implements
     private final static String consumerSecret = "m4S1GkGguCvyFO70bxHuKNzH";
 
 
-
+    private final MemcacheService cache = MemcacheServiceFactory.getMemcacheService();
 
 
     @Override
@@ -91,9 +97,9 @@ public class DriveServiceImpl extends RemoteServiceServlet implements
 
 
 
-        docService = new DocsService("nimbits-com");
-        String consumerKey = "1009209848329.apps.googleusercontent.com";
-        String consumerSecret = "m4S1GkGguCvyFO70bxHuKNzH";
+        docService = new DocsService(NIMBITS_COM);
+//        String consumerKey = "1009209848329.apps.googleusercontent.com";
+//        String consumerSecret = "m4S1GkGguCvyFO70bxHuKNzH";
         GoogleOAuthParameters oauthParameters = new GoogleOAuthParameters();
         oauthParameters.setOAuthConsumerKey(consumerKey);
         oauthParameters.setOAuthConsumerSecret(consumerSecret);
@@ -109,10 +115,10 @@ public class DriveServiceImpl extends RemoteServiceServlet implements
                     new URL("https://docs.google.com/feeds/default/private/full?xoauth_requestor_id="
                             + user.getEmail()),
                     entry);
+            final String key = user.getKey() + MemCacheKey.docService;
+            cache.put(key + DOC_ID, newEntry.getDocId());
+            cache.put(key + FILE_NAME, fileName);
 
-
-            this.getThreadLocalRequest().getSession().setAttribute("docId", newEntry.getDocId());
-            this.getThreadLocalRequest().getSession().setAttribute("fileName", fileName);
             return newEntry.getWorksheetFeedUrl().toString();
         } catch (OAuthException e) {
             throw new NimbitsException(e);
@@ -138,7 +144,7 @@ public class DriveServiceImpl extends RemoteServiceServlet implements
         GoogleOAuthParameters oauthParameters = new GoogleOAuthParameters();
         oauthParameters.setOAuthConsumerKey(consumerKey);
         oauthParameters.setOAuthConsumerSecret(consumerSecret);
-        spreadsheetService = new SpreadsheetService("nimbits-com");
+        spreadsheetService = new SpreadsheetService(NIMBITS_COM);
 
         try {
             spreadsheetService.setOAuthCredentials(oauthParameters, new OAuthHmacSha1Signer());
@@ -187,7 +193,7 @@ public class DriveServiceImpl extends RemoteServiceServlet implements
         GoogleOAuthParameters oauthParameters = new GoogleOAuthParameters();
         oauthParameters.setOAuthConsumerKey(consumerKey);
         oauthParameters.setOAuthConsumerSecret(consumerSecret);
-        spreadsheetService = new SpreadsheetService("nimbits-com");
+        spreadsheetService = new SpreadsheetService(NIMBITS_COM);
 
 
 
@@ -313,13 +319,18 @@ public class DriveServiceImpl extends RemoteServiceServlet implements
         GoogleOAuthParameters oauthParameters = new GoogleOAuthParameters();
         oauthParameters.setOAuthConsumerKey(consumerKey);
         oauthParameters.setOAuthConsumerSecret(consumerSecret);
-        spreadsheetService = new SpreadsheetService("nimbits-com");
+        spreadsheetService = new SpreadsheetService(NIMBITS_COM);
         spreadsheetService.setProtocolVersion(SpreadsheetService.Versions.V3);
 
 
         try {
             spreadsheetService.setOAuthCredentials(oauthParameters, new OAuthHmacSha1Signer());
-            String key = String.valueOf(this.getThreadLocalRequest().getSession().getAttribute("docId"));
+
+            final String cKey = user.getKey() + MemCacheKey.docService;
+            String key= (String) cache.get(cKey + DOC_ID);
+
+
+
             FeedURLFactory urlFactory = FeedURLFactory.getDefault();
             URL cellFeedUrl = urlFactory.getCellFeedUrl(key, "od6", "private", "full");
 

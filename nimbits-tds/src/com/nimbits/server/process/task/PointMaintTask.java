@@ -21,7 +21,7 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
-import com.nimbits.server.admin.common.ServerInfoImpl;
+import com.nimbits.server.admin.common.ServerInfo;
 import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.admin.system.SystemServiceImpl;
 import com.nimbits.server.gson.GsonFactory;
@@ -46,6 +46,8 @@ public class PointMaintTask extends HttpServlet  implements org.springframework.
     private static final Logger log = Logger.getLogger(PointMaintTask.class.getName());
     private SystemServiceImpl systemService;
     private ValueServiceImpl valueService;
+    private TaskImpl taskFactory;
+    private ServerInfo serverInfoService;
 
 
     @Override
@@ -68,12 +70,12 @@ public class PointMaintTask extends HttpServlet  implements org.springframework.
         final Point entity = GsonFactory.getInstance().fromJson(j, PointModel.class);
       //  final User u = UserServiceFactory.getInstance().getUserByKey(entity.getOwner(), AuthLevel.admin);
         if (entity.getExpire() > 0) {
-            TaskFactory.getInstance().startDeleteDataTask(
+            taskFactory.startDeleteDataTask(
                     entity,
                     true, entity.getExpire());
         }
         consolidateBlobs(entity);
-        TaskFactory.getInstance().startCoreTask(null, entity, Action.update, ServerInfoImpl.getFullServerURL(req));
+        taskFactory.startCoreTask(null, entity, Action.update, serverInfoService.getFullServerURL(req));
 
     }
 
@@ -121,6 +123,22 @@ public class PointMaintTask extends HttpServlet  implements org.springframework.
 
     public ValueServiceImpl getValueService() {
         return valueService;
+    }
+
+    public void setTaskFactory(TaskImpl taskFactory) {
+        this.taskFactory = taskFactory;
+    }
+
+    public TaskImpl getTaskFactory() {
+        return taskFactory;
+    }
+
+    public void setServerInfoService(ServerInfo serverInfoService) {
+        this.serverInfoService = serverInfoService;
+    }
+
+    public ServerInfo getServerInfoService() {
+        return serverInfoService;
     }
 }
 

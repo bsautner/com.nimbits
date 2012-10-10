@@ -32,5 +32,8 @@ public interface UserTransactions {
 
     List<User>  getConnectionRequests(final List<String> connections) throws NimbitsException;
 
+    List<User> getCachedAuthenticatedUser(final String cacheKey) throws NimbitsException;
+
+    void cacheAuthenticatedUser(final String cacheKey, final User user) throws NimbitsException;
 
 }

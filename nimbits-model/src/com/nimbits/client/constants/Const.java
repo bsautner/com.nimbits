@@ -33,7 +33,7 @@ public class Const {
     public static final String REGEX_NAMESPACE = "[0-9A-Za-z._-]{0,100}";
     public static final String CONST_AH = "ah";
     public static final String CONST_ENCODING = "UTF-8";
-    public static final int DEFAULT_TIMER_UPDATE_SPEED = 1000;
+    public static final int DEFAULT_TIMER_UPDATE_SPEED = 5000;
     public static final String METHOD_GET = "GET";
     public static final String METHOD_POST = "POST";
     public static final String FORMAT_DATE_TIME = "MM/dd/y HH:mm:ss";
@@ -44,7 +44,7 @@ public class Const {
     public static final int DEFAULT_HTTP_TIMEOUT = 15000;
     public static final String DEFAULT_XMPP_SERVER = "gmail.com";
     public static final String DEFAULT_APPSPOT = "appspot.com";
-    public static final String TEST_ACCOUNT = "nobody@example.com";
+    public static final String TEST_ACCOUNT = "ctcreel@gmail.com";
     public static final String DELIMITER_COMMA = ",";
     public static final String DELIMITER_BAR = "|";
     public static final String HTML_BOOTSTRAP = "<html><head>" +

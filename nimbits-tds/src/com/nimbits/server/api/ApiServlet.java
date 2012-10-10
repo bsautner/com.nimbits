@@ -31,7 +31,7 @@ import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.settings.SettingsService;
 import com.nimbits.client.service.value.ValueService;
 import com.nimbits.server.admin.quota.QuotaManager;
-import com.nimbits.server.api.helper.LocationReportingHelperFactory;
+import com.nimbits.server.api.helper.LocationService;
 import com.nimbits.server.transactions.service.user.UserServerService;
 import org.springframework.stereotype.Service;
 
@@ -83,11 +83,14 @@ public class ApiServlet extends HttpServlet {
     @Resource(name = "quotaManager")
     protected QuotaManager quotaManager;
 
+    @Resource(name = "locationService")
+    protected LocationService locationService;
 
     protected static boolean okToReport(final User u, final Entity c) {
 
         return c.getProtectionLevel().equals(ProtectionLevel.everyone) ||  (u != null && ! u.isRestricted());
     }
+
     protected static boolean okToRead(final User u, final Entity c) {
 
         return (u != null && c.isOwner(u));
@@ -101,10 +104,10 @@ public class ApiServlet extends HttpServlet {
     //    protected static void reportLocation(HttpServletRequest req, Entity entity) {
 //       LocationReportingHelperFactory.getInstance().reportLocation(req, entity);
 //    }
-    protected static void reportLocation(Entity entity, Location location) {
-
-        LocationReportingHelperFactory.getInstance().reportLocation(entity, location);
-    }
+//    protected  void reportLocation(Entity entity, Location location) {
+//
+//       // locationService.reportLocation(entity, location);
+//    }
 
     public void doInit(final HttpServletRequest req, final HttpServletResponse resp, final ExportType type) throws NimbitsException {
 
@@ -227,6 +230,7 @@ public class ApiServlet extends HttpServlet {
            }
        }
     }
+
     private double round(double value) {
        return
                 BigDecimal.valueOf
@@ -234,6 +238,7 @@ public class ApiServlet extends HttpServlet {
                         .setScale(5, RoundingMode.HALF_UP).doubleValue();
 
     }
+
     public static ClientType getClientType() {
         ClientType type;
         if (containsParam(Parameters.client)) {

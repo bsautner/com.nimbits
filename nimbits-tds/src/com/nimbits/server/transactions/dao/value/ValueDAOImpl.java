@@ -32,7 +32,8 @@ import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 import com.nimbits.client.model.valueblobstore.ValueBlobStoreModel;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.orm.ValueBlobStoreEntity;
-import com.nimbits.server.process.task.TaskFactory;
+
+import com.nimbits.server.process.task.TaskImpl;
 import com.nimbits.server.time.TimespanServiceFactory;
 import com.nimbits.server.transactions.service.value.ValueTransactions;
 import org.springframework.stereotype.Repository;
@@ -56,9 +57,10 @@ import java.util.logging.Logger;
 public class ValueDAOImpl implements ValueTransactions {
     private static final int INT = 1024;
     public static final int MAX_VALUES = 1;
+    private static final String NOT_IMPLEMENTED = "Not Implemented";
 
     private final Logger log = Logger.getLogger(ValueDAOImpl.class.getName());
-
+    private TaskImpl taskFactory;
 
 
     public static  List<ValueBlobStore> createValueBlobStores(final Collection<ValueBlobStore> store) {
@@ -372,7 +374,7 @@ public class ValueDAOImpl implements ValueTransactions {
     private void startBlobDeleteTask(List<ValueBlobStore> result) {
         log.info("Deleting " + result.size() + "blobs");
         for (ValueBlobStore st : result) {
-            TaskFactory.getInstance().startDeleteBlobTask(new BlobKey(st.getBlobKey()));
+            taskFactory.startDeleteBlobTask(new BlobKey(st.getBlobKey()));
         }
     }
 
@@ -489,22 +491,22 @@ public class ValueDAOImpl implements ValueTransactions {
 
     @Override
     public void moveValuesFromCacheToStore(final Entity entity) throws NimbitsException {
-        throw new NimbitsException("Not Implemented");
+        throw new NimbitsException(NOT_IMPLEMENTED);
     }
 
     @Override
     public List<Value> getCache(Entity entity, Timespan timespan) throws NimbitsException {
-        throw new NimbitsException("Not Implemented");
+        throw new NimbitsException(NOT_IMPLEMENTED);
     }
 
     @Override
     public List<Value> getBuffer(final Entity entity) throws NimbitsException {
-        throw new NimbitsException("Not Implimented");
+        throw new NimbitsException(NOT_IMPLEMENTED);
     }
 
     @Override
     public Value recordValue(final Entity entity,final Value v) throws NimbitsException {
-        throw new NimbitsException("Not Implimented");
+        throw new NimbitsException(NOT_IMPLEMENTED);
     }
 
     protected static List<Value> readValuesFromFile(final BlobKey blobKey, final long length) throws NimbitsException {
@@ -526,4 +528,11 @@ public class ValueDAOImpl implements ValueTransactions {
 
     }
 
+    public void setTaskFactory(TaskImpl taskFactory) {
+        this.taskFactory = taskFactory;
+    }
+
+    public TaskImpl getTaskFactory() {
+        return taskFactory;
+    }
 }

@@ -40,9 +40,9 @@ public class CreateTreeSample {
     public static void main(String[] args) throws NimbitsException {
 
         //String account = "bsautner@gmail.com";
-        String account = "test@example.com";
-        NimbitsUser user = createNimbitsUser(account, "key");
-        NimbitsClient client = NimbitsClientFactory.getInstance(user, "http://cloud.nimbits.com");
+        String account = "bsautner@gmail.com";
+        NimbitsUser user = createNimbitsUser(account, "key!");
+        NimbitsClient client = NimbitsClientFactory.getInstance(user, "http://ihealthtechnologies.appspot.com/");
 
        if (client.isLoggedIn()) {
            System.out.println("Connected!");

@@ -25,7 +25,8 @@ import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 import com.nimbits.server.admin.logging.LogHelper;
-import com.nimbits.server.process.task.TaskFactory;
+
+import com.nimbits.server.process.task.TaskImpl;
 import com.nimbits.server.transactions.dao.value.ValueDAOImpl;
 
 import com.nimbits.server.transactions.service.value.ValueTransactions;
@@ -54,6 +55,7 @@ public class ValueMemCacheImpl implements ValueTransactions {
 
     static final Logger log = Logger.getLogger(ValueMemCacheImpl.class.getName());
     private ValueDAOImpl valueDao;
+    private TaskImpl taskFactory;
 
 
     public ValueMemCacheImpl() {
@@ -236,7 +238,7 @@ public class ValueMemCacheImpl implements ValueTransactions {
             }
             buffer.put(v.getTimestamp().getTime(), v);
             if (stored.size() > Const.CONST_MAX_CACHED_VALUE_SIZE) {
-                TaskFactory.getInstance().startMoveCachedValuesToStoreTask(entity);
+                taskFactory.startMoveCachedValuesToStoreTask(entity);
             }
 
             if (buffer.contains(currentValueCacheKey)) {
@@ -566,6 +568,14 @@ public class ValueMemCacheImpl implements ValueTransactions {
 
     public ValueDAOImpl getValueDao() {
         return valueDao;
+    }
+
+    public void setTaskFactory(TaskImpl taskFactory) {
+        this.taskFactory = taskFactory;
+    }
+
+    public TaskImpl getTaskFactory() {
+        return taskFactory;
     }
 
 

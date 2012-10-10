@@ -48,7 +48,7 @@ public class DeleteOrphanBlobCron extends HttpServlet implements org.springframe
 //
 //        if  (iterator.hasNext()){
 //            final BlobInfo i = iterator.next();
-//            TaskFactory.getInstance().startDeleteOrphanedBlobTask(i.getBlobKey());
+//            taskFactory.startDeleteOrphanedBlobTask(i.getBlobKey());
 //
 //        }
 

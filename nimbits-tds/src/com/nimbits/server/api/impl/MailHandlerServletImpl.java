@@ -18,7 +18,8 @@ import com.nimbits.client.enums.ExportType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.api.ApiServlet;
-import com.nimbits.server.process.task.TaskFactory;
+
+import com.nimbits.server.process.task.TaskImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,18 +32,20 @@ import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Properties;
 
 @Transactional
-@Service("mail")
-public class MailHandlerServletImpl extends ApiServlet {
+@Service("mailhandler")
+public class MailHandlerServletImpl extends ApiServlet implements org.springframework.web.HttpRequestHandler {
     /**
      *
      */
     private static final long serialVersionUID = 1L;
+    private TaskImpl taskFactory;
 
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp)
@@ -63,7 +66,7 @@ public class MailHandlerServletImpl extends ApiServlet {
             if (a.length > 0) {
                 final InternetAddress aa = (InternetAddress) a[0];
                 final String fromAddress = aa.getAddress();
-                TaskFactory.getInstance().startIncomingMailTask(fromAddress, inContent);
+                taskFactory.startIncomingMailTask(fromAddress, inContent);
 
             }
         } catch (MessagingException e) {
@@ -95,4 +98,23 @@ public class MailHandlerServletImpl extends ApiServlet {
     }
 
 
+    @Override
+    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        if (isPost(req)) {
+
+            doPost(req, resp);
+        }
+        else {
+            doGet(req, resp);
+        }
+    }
+
+    public void setTaskFactory(TaskImpl taskFactory) {
+        this.taskFactory = taskFactory;
+    }
+
+    public TaskImpl getTaskFactory() {
+        return taskFactory;
+    }
 }

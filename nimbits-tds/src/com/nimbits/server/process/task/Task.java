@@ -18,6 +18,8 @@ import com.nimbits.client.enums.Action;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.location.Location;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import org.springframework.stereotype.Component;
@@ -51,4 +53,8 @@ public interface Task {
     void startCoreTask(final HttpServletRequest req, final Entity entity, final Action action, final String instanceURL);
 
     void startCoreLocationTask(final Entity entity, final Location location);
+
+    void startDataDumpTask(final Entity entity, final Timespan timespan);
+
+    void startUploadTask(final User user, final Point entity, final BlobKey blobKey);
 }

@@ -116,7 +116,7 @@ public class DataLoadingTest {
 
     @Test
     public void load2() throws IOException, NimbitsException, InterruptedException {
-        final String pointName = ("large" + UUID.randomUUID().toString());
+        final String pointName = ("blarge" + UUID.randomUUID().toString());
 
         Entity entity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone, "bsautner@gmail.com", "bsautner@gmail.com");
         Point point = PointModelFactory.createPointModel(entity, 0.0, 90, "nn", 0.0, false, false, false, 0, false, FilterType.none, 0.0, false, PointType.basic, 0, false, 0.0);
@@ -128,7 +128,7 @@ public class DataLoadingTest {
         final Random r = new Random();
         double rv;
         Value v;
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 100; i++) {
             rv = roundDouble(r.nextDouble() * 100);
             try {
                 v = ClientHelper.client().recordValue(pointName, rv, new Date());
@@ -140,7 +140,7 @@ public class DataLoadingTest {
 
         }
 
-        ClientHelper.client().deletePoint(pointName);
+        //ClientHelper.client().deletePoint(pointName);
 
     }
 }

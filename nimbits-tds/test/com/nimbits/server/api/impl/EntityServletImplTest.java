@@ -103,7 +103,24 @@ public class EntityServletImplTest extends NimbitsServletTest {
         assertEquals(190, px.getExpire());
 
     }
+    @Test
+    public void testChris1() throws IOException, ServletException {
 
+        req.removeAllParameters();
+
+
+        //  req.addParameter("id", point.getKey());
+        req.addParameter("json", "{\"inferLocation\":true,\"filterType\":4,\"name\":\"Schedule-B2EC1DC4\",\"entityType\":1,\"protectionLevel\":2,\"description\":\"Daily\",\"parent\":\"ctcreel@gmail.com/Medication-B2EC1DC4\",\"owner\":\"ctcreel@gmail.com\"}");
+        req.addParameter("action", "create");
+        req.setMethod("POST");
+        impl.doPost(req, resp);
+        String g1= resp.getContentAsString();
+        assertNotNull(g1);
+        Point px = GsonFactory.getInstance().fromJson(g1, PointModel.class);
+        assertEquals(4, px.getFilterType().getCode());
+
+
+    }
     @Test
     public void testPostCreateIllegalSystemPoint() throws IOException, ServletException, NimbitsException {
         req.removeAllParameters();

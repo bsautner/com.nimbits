@@ -27,8 +27,10 @@ import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.file.File;
 import com.nimbits.client.model.file.FileFactory;
+import com.nimbits.client.model.point.Point;
 import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.process.task.Task;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,6 +54,7 @@ import java.util.Map;
 @Service("blob")
 public class BlobServletImpl extends ApiServlet implements org.springframework.web.HttpRequestHandler {
     private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+    private Task taskFactory;
 
 
     @Override
@@ -79,33 +82,49 @@ public class BlobServletImpl extends ApiServlet implements org.springframework.w
             PrintWriter out = res.getWriter();
 
             com.nimbits.client.model.file.File file = null;
-            if (! uploadType.equals(EntityType.file.name())) {
-                Entity entity = EntityModelFactory.createEntity(diagramName, "", EntityType.file, ProtectionLevel.everyone,
-                        user.getKey(), user.getKey());
-                file = FileFactory.createFile(entity, blobKey.getKeyString());
-
-
-            }
-            else if (entityId != null) {
-
-                List<Entity> result = entityService.getEntityByKey(user, entityId, EntityType.file);
+             //data upload
+            if (uploadType.equals(EntityType.point.name())) {
+                List<Entity> result = entityService.getEntityByKey(user, entityId, EntityType.point);
                 if (! result.isEmpty()) {
-                    file = (File) result.get(0);
+                    Entity point =  result.get(0);
+                    taskFactory.startUploadTask(user, (Point) point, blobKey);
                 }
 
 
 
-
             }
-            if (file != null) {
-                file.setBlobKey(blobKey.getKeyString());
-                Entity response = entityService.addUpdateEntity(user, file);
-                String json = GsonFactory.getInstance().toJson(response);
-                res.setContentType("text/plain");
-                res.setStatus(HttpServletResponse.SC_OK);
-                out.print(json);
-                out.flush();
-                // out.close();
+            else {
+
+
+
+                if (! uploadType.equals(EntityType.file.name())) {
+                    Entity entity = EntityModelFactory.createEntity(diagramName, "", EntityType.file, ProtectionLevel.everyone,
+                            user.getKey(), user.getKey());
+                    file = FileFactory.createFile(entity, blobKey.getKeyString());
+
+
+                }
+                else if (entityId != null) {
+
+                    List<Entity> result = entityService.getEntityByKey(user, entityId, EntityType.file);
+                    if (! result.isEmpty()) {
+                        file = (File) result.get(0);
+                    }
+
+
+
+
+                }
+                if (file != null) {
+                    file.setBlobKey(blobKey.getKeyString());
+                    Entity response = entityService.addUpdateEntity(user, file);
+                    String json = GsonFactory.getInstance().toJson(response);
+                    res.setContentType("text/plain");
+                    res.setStatus(HttpServletResponse.SC_OK);
+                    out.print(json);
+                    out.flush();
+                    // out.close();
+                }
             }
 
         } catch (NimbitsException e) {
@@ -113,6 +132,7 @@ public class BlobServletImpl extends ApiServlet implements org.springframework.w
 
             }
         }
+
 
 
     }
@@ -125,7 +145,25 @@ public class BlobServletImpl extends ApiServlet implements org.springframework.w
 
 
     @Override
-    public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doPost(request, response);
+    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+
+        if (isPost(req)) {
+
+            doPost(req, resp);
+        }
+        else {
+            doGet(req, resp);
+        }
+
+
+    }
+
+    public void setTaskFactory(Task taskFactory) {
+        this.taskFactory = taskFactory;
+    }
+
+    public Task  getTaskFactory() {
+        return taskFactory;
     }
 }

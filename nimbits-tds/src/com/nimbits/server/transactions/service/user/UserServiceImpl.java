@@ -103,6 +103,20 @@ public class UserServiceImpl extends RemoteServiceServlet implements
             session = req.getSession();
 
             emailParam = req.getParameter(Parameters.email.getText());
+            accessKey = req.getParameter(Parameters.secret.getText());
+            if (Utils.isEmptyString(accessKey)) {
+                accessKey = req.getParameter(Parameters.key.getText());
+            }
+            if (! Utils.isEmptyString(accessKey) && !  Utils.isEmptyString(emailParam) ) {
+                String tempUserKey = MemCacheKey.userTempCacheKey + accessKey + emailParam;
+                List<User> cached = userCache.getCachedAuthenticatedUser(tempUserKey);
+                if (! cached.isEmpty()) {
+                    return cached.get(0);
+                }
+            }
+
+
+
             if (session != null) {
                 domainUser = (UserInfo) req.getSession().getAttribute("user");
                 if (domainUser != null) {
@@ -114,10 +128,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
             uuid =  req.getParameter(Parameters.uuid.getText());
 
-            accessKey = req.getParameter(Parameters.secret.getText());
-            if (Utils.isEmptyString(accessKey)) {
-                accessKey = req.getParameter(Parameters.key.getText());
-            }
+
         }
 
         EmailAddress email = Utils.isEmptyString(emailParam) ? null : CommonFactoryLocator.getInstance().createEmailAddress(emailParam);
@@ -224,7 +235,12 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         else {
             throw new NimbitsException("There was no account connected to this request");
         }
-
+        if (! Utils.isEmptyString(accessKey) && !  Utils.isEmptyString(emailParam) ) {
+            String tempUserKey = MemCacheKey.userTempCacheKey + accessKey + emailParam;
+            if (user != null) {
+                userCache.cacheAuthenticatedUser(tempUserKey, user);
+            }
+        }
         return user;
 
     }

@@ -47,7 +47,7 @@ import java.io.PrintWriter;
 import java.util.List;
 
 @Transactional
-@Service("value")
+@Service("entity")
 public class EntityServletImpl extends ApiServlet implements org.springframework.web.HttpRequestHandler {
 
     @Override

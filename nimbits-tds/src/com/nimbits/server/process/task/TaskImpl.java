@@ -22,10 +22,11 @@ import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.location.Location;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.shared.Utils;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -55,17 +56,19 @@ public class TaskImpl implements Task {
     private static final String QUEUE_DELETE_ORPHANS = "orphans";
 
     private static final String DEFAULT = "default";
-    private static final String PATH_CORE_TASK = "/task/core";
-    private static final String PATH_DELETE_ORPHANS_TASK = "/task/orphans";
-    private static final String PATH_POINT_MAINT_TASK = "/task/point";
-    private static final String PATH_UPGRADE_TASK = "/task/upgrade";
-    private static final String PATH_MOVE_TASK = "/task/move";
-    private static final String PATH_TASK_RECORD_VALUE = "/task/valuetask";
+    private static final String PATH_CORE_TASK = "/task/coreTask";
+    private static final String PATH_DELETE_ORPHANS_TASK = "/task/orphanTask";
+    private static final String PATH_POINT_MAINT_TASK = "/task/pointTask";
+    private static final String PATH_MOVE_TASK = "/task/moveTask";
+    private static final String PATH_TASK_RECORD_VALUE = "/task/valueTask";
+    private static final String PATH_TASK_DUMP_TASK= "/task/dumpTask";
+    private static final String PATH_TASK_UPLOAD_TASK= "/task/uploadTask";
     private static final String PATH_TASK_PROCESS_BATCH = "/task/batchTask";
-    private static final String PATH_INCOMING_MAIL_QUEUE = "/task/incommingmail";
+    private static final String PATH_INCOMING_MAIL_QUEUE = "/task/mailTask";
     private static final String PATH_DELETE_DATA_TASK = "/task/deleteTask";
     private static final Logger log = Logger.getLogger(TaskImpl.class.getName());
-
+    private static final String X_APP_ENGINE_CITY_LAT_LONG = "X-AppEngine-CityLatLong";
+    private static final String DUMP = "dump";
 
 
     public TaskImpl() {
@@ -112,33 +115,33 @@ public class TaskImpl implements Task {
     @Override
     public void startCoreTask(final HttpServletRequest req, final Entity entity, final Action action, final String instance) {
 
-        if (entity.getEntityType().isSendUpdatesToCore()) {
-            final Queue queue =  QueueFactory.getQueue( DEFAULT  );
-            entity.setDateCreated(null);
-            String location = "";
-            final String json = GsonFactory.getInstance().toJson(entity);
-            if (req != null) {
-                location = req.getHeader("X-AppEngine-CityLatLong");
-            }
-            if (! Utils.isEmptyString(location)) {
-
-                queue.add(TaskOptions.Builder.withUrl(PATH_CORE_TASK)
-                        .param(Parameters.entity.getText(), json)
-                        .param(Parameters.action.getText(), action.getCode())
-                        .param(Parameters.instance.getText(), instance)
-                        .param(Parameters.location.getText(), location)
-                );
-            }
-            else {
-                queue.add(TaskOptions.Builder.withUrl(PATH_CORE_TASK)
-                        .param(Parameters.entity.getText(), json)
-                        .param(Parameters.action.getText(), action.getCode())
-                        .param(Parameters.instance.getText(), instance)
-
-                );
-            }
-
-        }
+//        if (entity.getEntityType().isSendUpdatesToCore()) {
+//            final Queue queue =  QueueFactory.getQueue( DEFAULT  );
+//            entity.setDateCreated(null);
+//            String location = "";
+//            final String json = GsonFactory.getInstance().toJson(entity);
+//            if (req != null) {
+//                location = req.getHeader(X_APP_ENGINE_CITY_LAT_LONG);
+//            }
+//            if (! Utils.isEmptyString(location)) {
+//
+//                queue.add(TaskOptions.Builder.withUrl(PATH_CORE_TASK)
+//                        .param(Parameters.entity.getText(), json)
+//                        .param(Parameters.action.getText(), action.getCode())
+//                        .param(Parameters.instance.getText(), instance)
+//                        .param(Parameters.location.getText(), location)
+//                );
+//            }
+//            else {
+//                queue.add(TaskOptions.Builder.withUrl(PATH_CORE_TASK)
+//                        .param(Parameters.entity.getText(), json)
+//                        .param(Parameters.action.getText(), action.getCode())
+//                        .param(Parameters.instance.getText(), instance)
+//
+//                );
+//            }
+//
+//        }
     }
 
     @Override
@@ -155,6 +158,32 @@ public class TaskImpl implements Task {
 
             );
         }
+    }
+
+    @Override
+    public void startDataDumpTask(final Entity entity, final Timespan timespan) {
+        final Queue queue =  QueueFactory.getQueue(DUMP);
+        final String json = GsonFactory.getInstance().toJson(entity);
+        final String t = GsonFactory.getInstance().toJson(timespan);
+        queue.add(TaskOptions.Builder.withUrl(PATH_TASK_DUMP_TASK)
+                .param(Parameters.entity.getText(), json)
+                .param(Parameters.sd.getText(),
+                        String.valueOf(timespan.getStart().getTime()))
+                .param(Parameters.ed.getText(),
+                        String.valueOf(timespan.getEnd().getTime()))
+        );
+    }
+
+    @Override
+    public void startUploadTask(final User user, final Point entity, final BlobKey blobKey) {
+        final Queue queue =  QueueFactory.getQueue(DUMP);
+        final String json = GsonFactory.getInstance().toJson(entity);
+        final String userJson = GsonFactory.getInstance().toJson(user);
+        queue.add(TaskOptions.Builder.withUrl(PATH_TASK_UPLOAD_TASK)
+                .param(Parameters.entity.getText(), json)
+                .param(Parameters.user.getText(), userJson)
+                .param(Parameters.blobkey.getText(), blobKey.getKeyString())
+        );
     }
 
     @Override

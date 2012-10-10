@@ -31,14 +31,11 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
+import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.value.ValueService;
-import com.nimbits.server.api.helper.LocationReportingHelperFactory;
-import com.nimbits.server.process.task.TaskFactory;
-
-import com.nimbits.server.transactions.memcache.value.ValueMemCacheImpl;
-import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
-
-import com.nimbits.server.transactions.service.user.UserServiceImpl;
+import com.nimbits.server.api.helper.LocationServiceImpl;
+import com.nimbits.server.process.task.Task;
+import com.nimbits.server.transactions.service.user.UserServerService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,9 +50,11 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
 
 //    static final Logger log = Logger.getLogger(ValueServiceImpl.class.getName());
     private static final long serialVersionUID = 1L;
-    private EntityServiceImpl entityService;
-    private UserServiceImpl userService;
-    private ValueMemCacheImpl valueCache;
+    private EntityService entityService;
+    private UserServerService userService;
+    private ValueTransactions valueCache;
+    private Task taskFactory;
+    private LocationServiceImpl locationService;
 
 
     @Override
@@ -95,7 +94,7 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
 
         final User u = userService.getHttpRequestUser(
                 this.getThreadLocalRequest());
-        LocationReportingHelperFactory.getInstance().reportLocation(point, value.getLocation());
+        locationService.reportLocation(point, value.getLocation());
 //        final Point px = PointServiceFactory.getInstance().getPointByKey(point.getKey());
         //   final Point px = (Point) entityService.getEntityByKey(point.getKey(), PointEntity.class.getName());
         return recordValue(u,point, value);
@@ -169,7 +168,7 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public void moveValuesFromCacheToStore(Entity entity) {
+    public void moveValuesFromCacheToStore(Entity entity) throws NimbitsException {
         valueCache.moveValuesFromCacheToStore(entity);
     }
 
@@ -346,6 +345,11 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
 
     }
 
+    @Override
+    public void createDataDump(Entity entity, Timespan timespan) {
+       taskFactory.startDataDumpTask(entity, timespan);
+    }
+
     private static boolean ignoreByAuthLevel(final User u, final Point point) throws NimbitsException {
 
         if (u.isRestricted()) {
@@ -416,7 +420,7 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
                 retObj = valueCache.recordValue(point, value);
                 final AlertType t = getAlertType(point, retObj);
                 final Value v = ValueFactory.createValueModel(retObj, t);
-                TaskFactory.getInstance().startRecordValueTask(u, point, v);
+                taskFactory.startRecordValueTask(u, point, v);
             }
 
 
@@ -470,27 +474,43 @@ public class ValueServiceImpl extends RemoteServiceServlet implements
         return retVal;
     }
 
-    public void setEntityService(EntityServiceImpl entityService) {
+    public void setEntityService(EntityService  entityService) {
         this.entityService = entityService;
     }
 
-    public EntityServiceImpl getEntityService() {
+    public EntityService  getEntityService() {
         return entityService;
     }
 
-    public void setUserService(UserServiceImpl userService) {
+    public void setUserService(UserServerService userService) {
         this.userService = userService;
     }
 
-    public UserServiceImpl getUserService() {
+    public UserServerService getUserService() {
         return userService;
     }
 
-    public void setValueCache(ValueMemCacheImpl valueCache) {
+    public void setValueCache(ValueTransactions valueCache) {
         this.valueCache = valueCache;
     }
 
-    public ValueMemCacheImpl getValueCache() {
+    public ValueTransactions getValueCache() {
         return valueCache;
+    }
+
+    public void setTaskFactory(Task taskFactory) {
+        this.taskFactory = taskFactory;
+    }
+
+    public Task getTaskFactory() {
+        return taskFactory;
+    }
+
+    public void setLocationService(LocationServiceImpl locationService) {
+        this.locationService = locationService;
+    }
+
+    public LocationServiceImpl getLocationService() {
+        return locationService;
     }
 }

@@ -36,8 +36,8 @@ public enum MemCacheKey {
     subscribedEntity(17, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_SUBSCRIBED_ENTITY),
     entityNameCache(18, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_ENTITY_NAME),
     twitter(19, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_TWITTER),
-    docService(20, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_DOC_SERVICE)
-    ;
+    docService(20, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_DOC_SERVICE),
+    userTempCacheKey(21, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_USER_TEMP_CACHE_KEY);
 
     private static String buildQuotaKey() {
         //use day of month
@@ -120,6 +120,7 @@ public enum MemCacheKey {
         public static final String KEY_ENTITY_NAME = "KEY_ENTITY_NAME";
         public static final String KEY_TWITTER = "KEY_TWITTER";
         public static final String KEY_DOC_SERVICE = "KEY_DOC_SERVICE";
+        public static final String KEY_USER_TEMP_CACHE_KEY = "KEY_USER_TEMP_CACHE_KEY";
 
         private KeyConstants() {
         }

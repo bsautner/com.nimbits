@@ -31,7 +31,7 @@
     </bean>
 
     <bean id="valueDao" class="com.nimbits.server.transactions.dao.value.ValueDAOImpl" scope="singleton">
-
+        <property name="taskFactory" ref="taskFactory"/>
     </bean>
 
 

@@ -27,14 +27,15 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.entity.EntityService;
-import com.nimbits.server.admin.common.ServerInfoImpl;
+import com.nimbits.client.service.value.ValueService;
+import com.nimbits.server.admin.common.ServerInfo;
 import com.nimbits.server.api.ApiServlet;
-import com.nimbits.server.api.helper.LocationReportingHelperFactory;
+
+import com.nimbits.server.api.helper.LocationServiceImpl;
 import com.nimbits.server.io.blob.BlobServiceFactory;
-import com.nimbits.server.process.task.TaskFactory;
-import com.nimbits.server.transactions.memcache.entity.EntityCacheImpl;
-import com.nimbits.server.transactions.service.user.UserServiceImpl;
-import com.nimbits.server.transactions.service.value.ValueServiceImpl;
+
+import com.nimbits.server.process.task.TaskImpl;
+import com.nimbits.server.transactions.service.user.UserServerService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,9 +54,12 @@ import java.util.*;
 public class EntityServiceImpl  extends RemoteServiceServlet implements EntityService {
 
     private static final long serialVersionUID = -6442025194172745189L;
-    private UserServiceImpl userService;
-    private ValueServiceImpl valueService;
-    private EntityCacheImpl entityCache;
+    private UserServerService userService;
+    private ValueService valueService;
+    private EntityTransactions entityCache;
+    private TaskImpl taskFactory;
+    private LocationServiceImpl locationService;
+    private ServerInfo serverInfoService;
 
     private User getUser()  {
 
@@ -81,8 +85,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
         entityCache.removeEntityFromCache(user, deleted);
         for (final Entity e : deleted) {
 
-            TaskFactory.getInstance()
-                    .startCoreTask(getThreadLocalRequest(), e, Action.delete, ServerInfoImpl.getFullServerURL(getThreadLocalRequest()));
+            taskFactory.startCoreTask(getThreadLocalRequest(), e, Action.delete, serverInfoService.getFullServerURL(getThreadLocalRequest()));
 
         }
 
@@ -122,6 +125,9 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
         if (Utils.isEmptyString(entity.getUUID())) {
             entity.setUUID(UUID.randomUUID().toString());
         }
+
+
+
         return addUpdateEntity(u, entity);
 
     }
@@ -250,11 +256,11 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
             }
         }
 
-        if (entity.getEntityType().equals(EntityType.point)) {
-            TaskFactory.getInstance().startCoreTask(this.getThreadLocalRequest(), entity, Action.update, ServerInfoImpl.getFullServerURL(getThreadLocalRequest()));
+
+            taskFactory.startCoreTask(this.getThreadLocalRequest(), entity, Action.update, serverInfoService.getFullServerURL(getThreadLocalRequest()));
             Location location =   ApiServlet.getGPS(this.getThreadLocalRequest());
-            LocationReportingHelperFactory.getInstance().reportLocation( entity, location);
-        }
+            locationService.reportLocation(entity, location);
+
 
 
         return entityCache.addUpdateEntity(user, entity, true);
@@ -277,27 +283,51 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
         }
     }
 
-    public void setUserService(UserServiceImpl userService) {
+    public void setUserService(UserServerService userService) {
         this.userService = userService;
     }
 
-    public UserServiceImpl getUserService() {
+    public UserServerService getUserService() {
         return userService;
     }
 
-    public void setValueService(ValueServiceImpl valueService) {
+    public void setValueService(ValueService valueService) {
         this.valueService = valueService;
     }
 
-    public ValueServiceImpl getValueService() {
+    public ValueService getValueService() {
         return valueService;
     }
 
-    public void setEntityCache(EntityCacheImpl entityCache) {
+    public void setEntityCache(EntityTransactions entityCache) {
         this.entityCache = entityCache;
     }
 
-    public EntityCacheImpl getEntityCache() {
+    public EntityTransactions getEntityCache() {
         return entityCache;
+    }
+
+    public void setTaskFactory(TaskImpl taskFactory) {
+        this.taskFactory = taskFactory;
+    }
+
+    public TaskImpl getTaskFactory() {
+        return taskFactory;
+    }
+
+    public void setLocationService(LocationServiceImpl locationService) {
+        this.locationService = locationService;
+    }
+
+    public LocationServiceImpl getLocationService() {
+        return locationService;
+    }
+
+    public void setServerInfoService(ServerInfo serverInfoService) {
+        this.serverInfoService = serverInfoService;
+    }
+
+    public ServerInfo getServerInfoService() {
+        return serverInfoService;
     }
 }

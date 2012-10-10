@@ -14,7 +14,9 @@
 package com.nimbits.server.communication.email;
 
 import com.nimbits.client.constants.Words;
-import com.nimbits.server.process.task.TaskFactory;
+import com.nimbits.server.process.task.TaskImpl;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -31,15 +33,17 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.Logger;
-
+ @Service("mailhandler")
+ @Transactional
 public class MailHandlerServlet extends HttpServlet {
     /**
      *
      */
     private static final long serialVersionUID = 1L;
     private static final Logger log = Logger.getLogger(MailHandlerServlet.class.getName());
+     private TaskImpl taskFactory;
 
-    @Override
+     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp)
             throws IOException {
 
@@ -61,7 +65,7 @@ public class MailHandlerServlet extends HttpServlet {
             if (a.length > 0) {
                 final InternetAddress aa = (InternetAddress) a[0];
                 final String fromAddress = aa.getAddress();
-                TaskFactory.getInstance().startIncomingMailTask(fromAddress, inContent);
+                taskFactory.startIncomingMailTask(fromAddress, inContent);
 
             }
         } catch (MessagingException e) {
@@ -93,4 +97,11 @@ public class MailHandlerServlet extends HttpServlet {
     }
 
 
-}
+     public void setTaskFactory(TaskImpl taskFactory) {
+         this.taskFactory = taskFactory;
+     }
+
+     public TaskImpl getTaskFactory() {
+         return taskFactory;
+     }
+ }

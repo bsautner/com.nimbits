@@ -13,14 +13,12 @@
 
 package com.nimbits.server.api.helper;
 
-
-public class LocationReportingHelperFactory {
-
-    private static LocationReportingHelper instance;
-
-    public static LocationReportingHelper getInstance() {
-        return new LocationReportingHelperImpl();
-    }
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.location.Location;
 
 
+public interface LocationService {
+    void reportLocation(Entity entity, Location location);
+
+   // void reportLocation(HttpServletRequest threadLocalRequest, Entity point);
 }

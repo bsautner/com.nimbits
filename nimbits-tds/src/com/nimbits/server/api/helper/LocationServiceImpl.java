@@ -19,15 +19,20 @@ import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.nimbits.client.enums.MemCacheKey;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.location.Location;
-import com.nimbits.server.process.task.TaskFactory;
+import com.nimbits.server.process.task.TaskImpl;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.logging.Logger;
-
-public class LocationReportingHelperImpl implements LocationReportingHelper {
+@Service("locationService")
+@Transactional
+public class LocationServiceImpl implements LocationService {
     private final MemcacheService cache;
-    protected final static Logger log = Logger.getLogger(LocationReportingHelperImpl.class.getName());
+    protected final static Logger log = Logger.getLogger(LocationServiceImpl.class.getName());
+    private TaskImpl taskFactory;
 
-    public LocationReportingHelperImpl() {
+    public LocationServiceImpl() {
         cache = MemcacheServiceFactory.getMemcacheService(MemCacheKey.defaultNamespace.name());
     }
 
@@ -37,7 +42,7 @@ public class LocationReportingHelperImpl implements LocationReportingHelper {
 
         if ((! cache.contains(key)) || (cache.contains(key) && ! cache.get(key).equals(location)) ) {
 
-            TaskFactory.getInstance().startCoreLocationTask(entity, location);
+            taskFactory.startCoreLocationTask(entity, location);
             cache.put(key, location);
         }
         else {
@@ -48,6 +53,11 @@ public class LocationReportingHelperImpl implements LocationReportingHelper {
     }
 
 
+    public void setTaskFactory(TaskImpl taskFactory) {
+        this.taskFactory = taskFactory;
+    }
 
-
+    public TaskImpl getTaskFactory() {
+        return taskFactory;
+    }
 }

@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-@Service("incomingMailTask")
+@Service("mailTask")
 @Transactional
 public class IncomingMailTask extends HttpServlet  implements org.springframework.web.HttpRequestHandler{
 

@@ -20,7 +20,7 @@
     <!--<application>nimbits-hrd1</application>-->
     <!--<application>nimbits-02</application>-->
     <!--<application>ihealthtechnologies</application>-->
-    <version>429</version>
+    <version>436</version>
     <sessions-enabled>true</sessions-enabled>
     <inbound-services>
         <service>mail</service>

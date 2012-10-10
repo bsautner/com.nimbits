@@ -78,7 +78,7 @@ public interface ValueService extends RemoteService {
 
 
 
-    void moveValuesFromCacheToStore(Entity entity);
+    void moveValuesFromCacheToStore(Entity entity) throws NimbitsException;
 
     void consolidateDate(Entity entity, Date date) throws NimbitsException;
 
@@ -87,4 +87,6 @@ public interface ValueService extends RemoteService {
     void mergeTimespan(Point point, Timespan ts) throws NimbitsException;
 
     boolean ignoreByFilter(Point point, Value value2) throws NimbitsException;
+
+    void createDataDump(Entity entity, Timespan timespan);
 }

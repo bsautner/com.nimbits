@@ -18,7 +18,8 @@ import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.nimbits.client.enums.MemCacheKey;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.server.process.task.TaskFactory;
+
+import com.nimbits.server.process.task.TaskImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,7 +43,7 @@ public class MoveRecordedValuesToStoreCron extends HttpServlet implements org.sp
      *
      */
     private static final long serialVersionUID = 1L;
-
+    private TaskImpl taskFactory;
 
 
     @Override
@@ -56,7 +57,7 @@ public class MoveRecordedValuesToStoreCron extends HttpServlet implements org.sp
                 final Map<String, Point> points = (Map<String, Point>) cacheShared.get(MemCacheKey.activePoints);
                 cacheShared.delete(MemCacheKey.activePoints); //TODO possible race condition with record value service
                 for (final Point point : points.values()) {
-                      TaskFactory.getInstance().startMoveCachedValuesToStoreTask(point);
+                      taskFactory.startMoveCachedValuesToStoreTask(point);
                 }
             } catch (InvalidValueException e) {
                 cacheShared.clearAll();
@@ -69,5 +70,13 @@ public class MoveRecordedValuesToStoreCron extends HttpServlet implements org.sp
     @Override
     public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
+    }
+
+    public void setTaskFactory(TaskImpl taskFactory) {
+        this.taskFactory = taskFactory;
+    }
+
+    public TaskImpl getTaskFactory() {
+        return taskFactory;
     }
 }

@@ -22,6 +22,10 @@
         <rate>1/s</rate>
     </queue>
     <queue>
+        <name>dump</name>
+        <rate>1/s</rate>
+    </queue>
+    <queue>
         <name>recordvaluequeue</name>
         <rate>30/s</rate>
         <bucket-size>100</bucket-size>

@@ -153,6 +153,16 @@ public class UserDAOImpl implements UserTransactions {
 
     }
 
+    @Override
+    public List<User> getCachedAuthenticatedUser(String cacheKey) throws NimbitsException {
+        throw new NimbitsException("Not Implemented");
+    }
+
+    @Override
+    public void cacheAuthenticatedUser(String cacheKey, User user) throws NimbitsException {
+        throw new NimbitsException("Not Implemented");
+    }
+
 
     public void setEntityService(EntityService entityService) {
         this.entityService = entityService;

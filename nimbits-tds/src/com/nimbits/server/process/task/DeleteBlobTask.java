@@ -35,7 +35,7 @@ import java.util.logging.Logger;
  * Date: 4/23/12
  * Time: 1:30 PM
  */
-@Service("deleteBlobTask")
+@Service("blobTask")
 @Transactional
 public class DeleteBlobTask extends HttpServlet  implements org.springframework.web.HttpRequestHandler{
 

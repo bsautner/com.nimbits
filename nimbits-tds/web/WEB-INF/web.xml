@@ -167,8 +167,27 @@
 
 
 
+<!--task-->
 
+    <servlet>
+        <servlet-name>uploadTask</servlet-name>
 
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>uploadTask</servlet-name>
+        <url-pattern>/task/uploadTask</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>dumpTask</servlet-name>
+
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dumpTask</servlet-name>
+        <url-pattern>/task/dumpTask</url-pattern>
+    </servlet-mapping>
     <servlet>
         <servlet-name>valueTask</servlet-name>
         <!--<servlet-class>com.nimbits.server.process.task.ValueTask</servlet-class>-->
@@ -176,16 +195,16 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>valueTask</servlet-name>
-        <url-pattern>/task/valuetask</url-pattern>
+        <url-pattern>/task/valueTask</url-pattern>
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>deleteBlobTask</servlet-name>
+        <servlet-name>blobTask</servlet-name>
         <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>deleteBlobTask</servlet-name>
-        <url-pattern>/task/orphans</url-pattern>
+        <servlet-name>blobTask</servlet-name>
+        <url-pattern>/task/blobTask</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -194,10 +213,54 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>coreTask</servlet-name>
-        <url-pattern>/task/core</url-pattern>
+        <url-pattern>/task/coreTask</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>batchTask</servlet-name>
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>batchTask</servlet-name>
+        <url-pattern>/task/batchTask</url-pattern>
     </servlet-mapping>
 
 
+    <servlet>
+        <servlet-name>mailTask</servlet-name>
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>mailTask</servlet-name>
+        <url-pattern>/task/mailTask</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>deleteTask</servlet-name>
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>deleteTask</servlet-name>
+        <url-pattern>/task/deleteTask</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>pointTask</servlet-name>
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>pointTask</servlet-name>
+        <url-pattern>/task/pointTask</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>moveTask</servlet-name>
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>moveTask</servlet-name>
+        <url-pattern>/task/moveTask</url-pattern>
+    </servlet-mapping>
 
 
     <!--cron-->
@@ -276,56 +339,7 @@
         <url-pattern>/service/orphans</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>moveTask</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>moveTask</servlet-name>
-        <url-pattern>/task/move</url-pattern>
-    </servlet-mapping>
 
-
-
-
-
-
-
-    <servlet>
-        <servlet-name>batchTask</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>batchTask</servlet-name>
-        <url-pattern>/task/batchTask</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>mailTask</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>mailTask</servlet-name>
-        <url-pattern>/task/incommingmail</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>pointTask</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>pointTask</servlet-name>
-        <url-pattern>/task/point</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>deleteTask</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>deleteTask</servlet-name>
-        <url-pattern>/task/deleteTask</url-pattern>
-    </servlet-mapping>
     <servlet>
         <servlet-name>value</servlet-name>
         <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
@@ -371,8 +385,6 @@
         <servlet-name>point</servlet-name>
         <url-pattern>/service/point</url-pattern>
     </servlet-mapping>
-
-
 
 
 

@@ -61,6 +61,7 @@ import java.util.Map;
  * Time: 9:44 AM
  */
 public class EntityContextMenu extends Menu {
+    private static final String SCHEDULE_A_DATA_DUMP = "Schedule a data dump";
     private final Listener<MessageBoxEvent> createNewPointListener = new NewPointMessageBoxEventListener();
     private final Listener<MessageBoxEvent> deleteEntityListener = new DeleteMessageBoxEventListener();
     private final Listener<MessageBoxEvent> copyPointListener  = new CopyPointMessageBoxEventListener();
@@ -156,7 +157,8 @@ public class EntityContextMenu extends Menu {
     private MenuItem jsonContext;
     private MenuItem exportContext;
     private MenuItem propertyContext;
-
+    private MenuItem dumpContext;
+    private MenuItem uploadContext;
     private AddPointMenuItem addPointMenuItem;
 
 
@@ -216,10 +218,14 @@ public class EntityContextMenu extends Menu {
 
         keyContext = keyContext();
         exportContext = exportContext();
+        dumpContext = dumpContext();
+        uploadContext = uploadContext();
         jsonContext = jsonContext();
         add(addPointMenuItem);
         add(propertyContext);
         add(exportContext);
+        add(dumpContext);
+        add(uploadContext);
         add(copyContext);
         add(deleteContext);
         add(subscribeContext);
@@ -335,6 +341,30 @@ public class EntityContextMenu extends Menu {
         return retObj;
 
     }
+
+    private MenuItem dumpContext() {
+        final MenuItem retObj = new MenuItem();
+
+        retObj.setText(SCHEDULE_A_DATA_DUMP);
+
+        retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.download()));
+        retObj.addSelectionListener(new DumpEventSelectionListener());
+        return retObj;
+
+    }
+
+    private MenuItem uploadContext() {
+        final MenuItem retObj = new MenuItem();
+
+        retObj.setText("Upload Data");
+
+        retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.diagram()));
+        retObj.addSelectionListener(new UploadEventSelectionListener());
+        return retObj;
+
+    }
+
+
     private MenuItem intelligenceContext() {
         final MenuItem retObj = new MenuItem();
 
@@ -399,6 +429,29 @@ public class EntityContextMenu extends Menu {
 
         w.show();
     }
+    public void showDumpPanel(final Entity entity) {
+        DumpPanel dp = new DumpPanel(entity);
+        final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
+        w.setWidth(WIDTH);
+        w.setHeight(350);
+        w.setHeading(SCHEDULE_A_DATA_DUMP);
+        w.add(dp);
+
+
+        w.show();
+    }
+    public void showUploadPanel(final Entity entity) {
+        DataUploadPanel dp = new DataUploadPanel(entity);
+        final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
+        w.setWidth(WIDTH);
+        w.setHeight(350);
+        w.setHeading("Upload Data");
+        w.add(dp);
+
+
+        w.show();
+    }
+
 
     private MenuItem propertyContext() {
         final MenuItem retObj = new MenuItem();
@@ -1017,12 +1070,47 @@ public class EntityContextMenu extends Menu {
             currentModel = (TreeModel) selectedModel;
             final Entity entity =  currentModel.getBaseEntity();
 
-            if (entity.getEntityType().equals(EntityType.accessKey)  ||
-                    entity.getEntityType().equals(EntityType.point)) {
+            if (entity.getEntityType().equals(EntityType.point)) {
                    showDownloadPanel(entity);
             }
 
         }
     }
+
+
+    private class DumpEventSelectionListener extends SelectionListener<MenuEvent> {
+        DumpEventSelectionListener() {
+        }
+
+        @Override
+        public void componentSelected(final MenuEvent ce) {
+            final ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
+            currentModel = (TreeModel) selectedModel;
+            final Entity entity =  currentModel.getBaseEntity();
+
+            if (entity.getEntityType().equals(EntityType.point)) {
+                showDumpPanel(entity);
+            }
+
+        }
+    }
+
+    private class UploadEventSelectionListener extends SelectionListener<MenuEvent> {
+        UploadEventSelectionListener() {
+        }
+
+        @Override
+        public void componentSelected(final MenuEvent ce) {
+            final ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
+            currentModel = (TreeModel) selectedModel;
+            final Entity entity =  currentModel.getBaseEntity();
+
+            if (entity.getEntityType().equals(EntityType.point)) {
+                showUploadPanel(entity);
+            }
+
+        }
+    }
+
 
 }

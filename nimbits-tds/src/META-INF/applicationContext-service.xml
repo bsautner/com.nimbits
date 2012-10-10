@@ -19,13 +19,21 @@
         <property name="entityService" ref="entityService" />
         <property name="userService" ref="userService" />
         <property name="valueCache" ref="valueCache" />
+        <property name="taskFactory" ref="taskFactory" />
+        <property name="locationService" ref="locationService" />
     </bean>
 
+    <bean id="locationService" class="com.nimbits.server.api.helper.LocationServiceImpl">
+        <property name="taskFactory" ref="taskFactory" />
 
+    </bean>
     <bean id="entityService" class="com.nimbits.server.transactions.service.entity.EntityServiceImpl">
         <property name="userService" ref="userService" />
         <property name="valueService" ref="valueService" />
         <property name="entityCache" ref="entityCache" />
+        <property name="taskFactory" ref="taskFactory" />
+        <property name="locationService" ref="locationService" />
+        <property name="serverInfoService" ref="serverInfoService" />
 
     </bean>
     <bean id="userService" class="com.nimbits.server.transactions.service.user.UserServiceImpl">
@@ -47,6 +55,7 @@
 
     <bean id="emailService" class="com.nimbits.server.communication.email.EmailServiceImpl">
         <property name="settingsService" ref="settingsService" />
+        <property name="serverInfoService" ref="serverInfoService" />
     </bean>
 
     <bean id="calculationService" class="com.nimbits.server.transactions.service.calculation.CalculationServiceImpl">
@@ -62,11 +71,14 @@
 
     <bean id="blobService" class="com.nimbits.server.io.blob.BlobServiceImpl">
         <property name="entityService" ref="entityService" />
+        <property name="taskFactory" ref="taskFactory" />
     </bean>
 
     <bean id="pointService" class="com.nimbits.server.transactions.service.point.PointServiceImpl" />
 
+     <bean id="serverInfoService" class="com.nimbits.server.admin.common.ServerInfoImpl">
 
+     </bean>
 
     <bean id="driveService" class="com.nimbits.server.external.google.drive.DriveServiceImpl">
         <property name="userService" ref="userService" />
@@ -94,6 +106,7 @@
         <property name="entityService" ref="entityService" />
         <property name="userService" ref="userService" />
         <property name="valueService" ref="valueService" />
+        <property name="serverInfoService" ref="serverInfoService" />
     </bean>
 
 

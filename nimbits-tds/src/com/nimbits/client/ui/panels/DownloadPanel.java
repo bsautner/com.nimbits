@@ -113,7 +113,7 @@ public class DownloadPanel extends LayoutContainer {
         fileNameField.setFieldLabel("File Name");
         fileNameField.setValue(entity.getName().getValue() + " export");
 
-        timespan = TimespanModelFactory.createTimespan(new Date(), new Date());
+        timespan = TimespanModelFactory.createTimespan(new Date(new Date().getTime() - 80000), new Date());
 
 
         DateTimeFormat fmt = DateTimeFormat.getFormat(Const.FORMAT_DATE_TIME);

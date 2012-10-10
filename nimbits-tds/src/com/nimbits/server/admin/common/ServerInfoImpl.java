@@ -14,6 +14,9 @@
 package com.nimbits.server.admin.common;
 
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.servlet.ServletRequest;
 import java.util.zip.Deflater;
 
@@ -23,13 +26,16 @@ import java.util.zip.Deflater;
  * Date: 12/17/11
  * Time: 9:35 AM
  */
-public class ServerInfoImpl {
+@Service("serverInfo")
+@Transactional
+public class ServerInfoImpl implements ServerInfo {
     private static final String TEST_URL = "http://localhost:8081";
 
     private ServerInfoImpl() {
     }
 
-    public static String getFullServerURL(final ServletRequest req) {
+    @Override
+    public String getFullServerURL(final ServletRequest req) {
         Deflater compressor = new Deflater();
         compressor.setLevel(Deflater.BEST_COMPRESSION);
      try {
@@ -42,7 +48,7 @@ public class ServerInfoImpl {
 
 
     }
-    private  static String getUrl() {
+    private  String getUrl() {
 
         String environment = System.getProperty("com.google.appengine.runtime.environment");
         if (environment.equals("Production")) {

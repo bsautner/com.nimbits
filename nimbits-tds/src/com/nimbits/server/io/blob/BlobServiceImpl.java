@@ -22,8 +22,10 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.nimbits.client.model.file.File;
 import com.nimbits.client.service.blob.BlobService;
+import com.nimbits.server.process.task.Task;
 import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by bsautner
@@ -32,12 +34,14 @@ import org.springframework.stereotype.Service;
  * Time: 6:25 PM
  */
 @Service("blobService")
+@Transactional
 public class BlobServiceImpl  extends RemoteServiceServlet implements
         RequestCallback, BlobService{
 
 
     private final BlobstoreService blobstoreService;
     private EntityServiceImpl entityService;
+    private Task taskFactory;
 
     public BlobServiceImpl() {
         blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
@@ -69,5 +73,13 @@ public class BlobServiceImpl  extends RemoteServiceServlet implements
 
     public EntityServiceImpl getEntityService() {
         return entityService;
+    }
+
+    public void setTaskFactory(Task taskFactory) {
+        this.taskFactory = taskFactory;
+    }
+
+    public Task  getTaskFactory() {
+        return taskFactory;
     }
 }

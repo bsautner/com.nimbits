@@ -28,15 +28,25 @@
         <property name="settingsService" ref="settingsService" />
     </bean>
 
-    <bean id="deleteBlobTask" class="com.nimbits.server.process.task.DeleteBlobTask">
+    <bean id="orphanTask" class="com.nimbits.server.process.task.DeleteBlobTask">
 
     </bean>
 
+    <bean id="dumpTask" class="com.nimbits.server.process.task.DumpTask">
+        <property name="valueService" ref="valueService" />
+        <property name="emailService" ref="emailService" />
+        <property name="commonFactory" ref="commonFactory" />
+        <property name="serverInfoService" ref="serverInfoService" />
+    </bean>
+
+    <bean id="uploadTask" class="com.nimbits.server.process.task.UploadTask">
+        <property name="valueService" ref="valueService" />
+    </bean>
     <bean id="deleteTask" class="com.nimbits.server.process.task.DeleteRecordedValuesTask">
         <property name="valueService" ref="valueService" />
     </bean>
 
-    <bean id="incomingMailTask" class="com.nimbits.server.process.task.IncomingMailTask">
+    <bean id="mailTask" class="com.nimbits.server.process.task.IncomingMailTask">
         <property name="entityService" ref="entityService" />
         <property name="userService" ref="userService" />
         <property name="valueService" ref="valueService" />
@@ -48,6 +58,8 @@
     <bean id="pointTask" class="com.nimbits.server.process.task.PointMaintTask">
         <property name="systemService" ref="systemService" />
         <property name="valueService" ref="valueService" />
+        <property name="taskFactory" ref="taskFactory"/>
+        <property name="serverInfoService" ref="serverInfoService" />
     </bean>
     <bean id="batchTask" class="com.nimbits.server.process.task.ProcessBatchTask">
         <property name="entityService" ref="entityService" />

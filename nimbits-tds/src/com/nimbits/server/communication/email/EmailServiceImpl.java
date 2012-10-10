@@ -24,7 +24,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.service.settings.SettingsService;
-import com.nimbits.server.admin.common.ServerInfoImpl;
+import com.nimbits.server.admin.common.ServerInfo;
 import com.nimbits.server.admin.logging.LogHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +49,7 @@ public class EmailServiceImpl implements EmailService {
     private static final int INT = 128;
     private static final int SECONDS_IN_MINUTE = 60;
     private SettingsService  settingsService;
+    private ServerInfo serverInfoService;
 
 
     private static void send(final Message msg) {
@@ -188,7 +189,7 @@ public class EmailServiceImpl implements EmailService {
         }
 
 
-        message.append("<p></p>").append("<p><a href =\"").append(ServerInfoImpl.getFullServerURL(null)).append("?uuid=").append(point.getUUID()).append("\">Go to Current Status Report</a></p>");
+        message.append("<p></p>").append("<p><a href =\"").append(serverInfoService.getFullServerURL(null)).append("?uuid=").append(point.getUUID()).append("\">Go to Current Status Report</a></p>");
 
         message.append("<P>Subscription Name: " + subscription.getName().getValue() + " </P>");
         message.append("<P>Subscription Description: " + subscription.getDescription() + " </P>");
@@ -224,5 +225,13 @@ public class EmailServiceImpl implements EmailService {
 
     public SettingsService getSettingsService() {
         return settingsService;
+    }
+
+    public void setServerInfoService(ServerInfo serverInfoService) {
+        this.serverInfoService = serverInfoService;
+    }
+
+    public ServerInfo getServerInfoService() {
+        return serverInfoService;
     }
 }

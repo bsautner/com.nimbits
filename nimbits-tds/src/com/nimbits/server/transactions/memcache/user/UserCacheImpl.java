@@ -13,6 +13,9 @@
 
 package com.nimbits.server.transactions.memcache.user;
 
+import com.google.appengine.api.memcache.Expiration;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.connection.ConnectionRequest;
 import com.nimbits.client.model.email.EmailAddress;
@@ -21,6 +24,8 @@ import com.nimbits.server.transactions.dao.user.UserDAOImpl;
 import com.nimbits.server.transactions.service.user.UserTransactions;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -32,6 +37,8 @@ import java.util.List;
 @Component("userCache")
 public class UserCacheImpl implements UserTransactions {
     private UserDAOImpl userDao;
+    MemcacheService cache = MemcacheServiceFactory.getMemcacheService();
+
 
     @Override
     public List<User> getAllUsers(String sortColumn, int count) {
@@ -56,6 +63,27 @@ public class UserCacheImpl implements UserTransactions {
     @Override
     public List<User> getConnectionRequests(List<String> connections) throws NimbitsException {
         return userDao.getConnectionRequests(connections);
+    }
+
+    @Override
+    public List<User> getCachedAuthenticatedUser(String cacheKey) {
+        if (cache.contains(cacheKey))  {
+            User user = (User) cache.get(cacheKey);
+            return Arrays.asList(user);
+        }
+        else {
+            return Collections.emptyList();
+        }
+    }
+
+    @Override
+    public void cacheAuthenticatedUser( final String cacheKey, final User user) {
+       if (cache.contains(cacheKey)) {
+           cache.delete(cacheKey);
+       }
+        cache.put(cacheKey, user, Expiration.byDeltaSeconds(500));
+
+
     }
 
     public void setUserDao(UserDAOImpl userDao) {

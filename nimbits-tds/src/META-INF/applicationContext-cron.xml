@@ -26,10 +26,11 @@
     <bean id="pointCron" class="com.nimbits.server.process.cron.PointCron">
         <property name="entityService" ref="entityService" />
         <property name="userService" ref="userService" />
+        <property name="taskFactory" ref="taskFactory" />
     </bean>
 
     <bean id="moveCron" class="com.nimbits.server.process.cron.MoveRecordedValuesToStoreCron">
-
+        <property name="taskFactory" ref="taskFactory" />
     </bean>
 
     <bean id="quotaCron" class="com.nimbits.server.process.cron.QuotaResetCron">

@@ -18,8 +18,9 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
 import com.nimbits.server.admin.logging.LogHelper;
-import com.nimbits.server.process.task.TaskFactory;
 
+
+import com.nimbits.server.process.task.TaskImpl;
 import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
 import com.nimbits.server.transactions.service.user.UserServiceImpl;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,7 @@ public class PointCron extends HttpServlet implements org.springframework.web.Ht
     private static final Logger log = Logger.getLogger(PointCron.class.getName());
     private UserServiceImpl userService;
     private EntityServiceImpl entityService;
+    private TaskImpl taskFactory;
 
     @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp)
@@ -58,7 +60,7 @@ public class PointCron extends HttpServlet implements org.springframework.web.Ht
                         entityService.getSystemWideEntityMap(admin, EntityType.point);
 
                 for (final Entity en : e.values()) {
-                    TaskFactory.getInstance().startPointMaintTask(en);
+                    taskFactory.startPointMaintTask(en);
                 }
 
             } catch (NimbitsException e1) {
@@ -87,5 +89,13 @@ public class PointCron extends HttpServlet implements org.springframework.web.Ht
 
     public EntityServiceImpl getEntityService() {
         return entityService;
+    }
+
+    public void setTaskFactory(TaskImpl taskFactory) {
+        this.taskFactory = taskFactory;
+    }
+
+    public TaskImpl getTaskFactory() {
+        return taskFactory;
     }
 }

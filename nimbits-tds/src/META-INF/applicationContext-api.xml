@@ -16,6 +16,9 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <!--<bean id="mailhandler" class="com.nimbits.server.communication.email.MailHandlerServlet">-->
+        <!--<property name="taskFactory" ref="taskFactory" />-->
+    <!--</bean>-->
 
     <!--APIS-->
     <bean id="blob" class="com.nimbits.server.api.impl.BlobServletImpl">
@@ -23,7 +26,7 @@
         <property name="userService" ref="userService" />
         <property name="settingsService" ref="settingsService" />
         <property name="quotaManager" ref="quotaManager" />
-
+        <property name="taskFactory" ref="taskFactory" />
     </bean>
 
     <bean id="xmpp" class="com.nimbits.server.api.impl.XMPPReceiverServlet">
@@ -115,7 +118,13 @@
     <bean id="quota" class="com.nimbits.server.admin.quota.QuotaServletImpl">
         <property name="userService" ref="userService" />
     </bean>
-
+    <bean id="mailhandler" class="com.nimbits.server.api.impl.MailHandlerServletImpl">
+        <property name="entityService" ref="entityService" />
+        <property name="userService" ref="userService" />
+        <property name="settingsService" ref="settingsService" />
+        <property name="quotaManager" ref="quotaManager" />
+        <property name="taskFactory" ref="taskFactory" />
+    </bean>
     <bean id="feed" class="com.nimbits.server.api.impl.FeedServletImpl">
         <property name="entityService" ref="entityService" />
         <property name="userService" ref="userService" />

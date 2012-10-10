@@ -49,8 +49,8 @@
         function createPoint() {
 
 
-            $.post("http://app.nimbits.com/service/point",
-                    { email: "bsautner@gmail.com", action: "create", parent: "hello post6", point: "hello post child", key:"69ce042a-8e9e-478d-a07b-0523ee3c63af" },
+            $.post("http://app.nimbits.com/service/entity",
+                    { email: "bsautner@gmail.com", action: "create", json: {"inferLocation":true,"filterType":4,"name":"Schedule-B2EC1DC4","entityType":1,"protectionLevel":2,"description":"Daily","parent":"ctcreel@gmail.com/Medication-B2EC1DC4","owner":"ctcreel@gmail.com"}", point: "hello post child", key:"key!" },
                     function(data){
                         alert(data);
                     }

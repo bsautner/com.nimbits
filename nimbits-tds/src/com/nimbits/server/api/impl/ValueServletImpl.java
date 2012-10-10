@@ -97,7 +97,7 @@ public class ValueServletImpl extends ApiServlet implements org.springframework.
 
                     final Value result = valueService.recordValue(user, point, v);
 
-                    reportLocation(point, location);
+                    //reportLocation(point, location);
 
                     final PrintWriter out = resp.getWriter();
                     final String j = GsonFactory.getInstance().toJson(result);
@@ -217,10 +217,10 @@ public class ValueServletImpl extends ApiServlet implements org.springframework.
 
                 value = valueService.recordValue(u, p, newValue);
                 if (nv.getLocation().isEmpty()) {
-                    reportLocation(p, location);
+                    //reportLocation(p, location);
                 }
                 else {
-                    reportLocation(p,nv.getLocation());
+                  //  reportLocation(p,nv.getLocation());
                 }
             } else {
                 List<Value> values = valueService.getCurrentValue(p);

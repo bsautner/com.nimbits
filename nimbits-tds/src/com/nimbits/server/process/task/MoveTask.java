@@ -14,6 +14,7 @@
 package com.nimbits.server.process.task;
 
 import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.server.gson.GsonFactory;
@@ -48,7 +49,11 @@ public class MoveTask extends HttpServlet   implements org.springframework.web.H
 
         final String pointJson = req.getParameter(Parameters.point.getText());
         final Entity point = GsonFactory.getInstance().fromJson(pointJson, EntityModel.class);
-         valueService.moveValuesFromCacheToStore(point);
+        try {
+            valueService.moveValuesFromCacheToStore(point);
+        } catch (NimbitsException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
 
 
     }

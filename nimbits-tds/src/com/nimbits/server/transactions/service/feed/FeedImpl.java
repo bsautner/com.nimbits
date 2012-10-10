@@ -35,7 +35,8 @@ import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.feed.Feed;
 import com.nimbits.client.service.value.ValueService;
-import com.nimbits.server.admin.common.ServerInfoImpl;
+import com.nimbits.server.admin.common.ServerInfo;
+ 
 import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.transactions.service.user.UserServerService;
@@ -65,6 +66,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
     private EntityService entityService;
     private UserServerService userService;
     private ValueService valueService;
+    private ServerInfo serverInfoService;
 
 
     private User getUser() {
@@ -134,29 +136,29 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
             case error:
                 sb.append(start)
                         .append("src=\"")
-                        .append(ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest()))
+                        .append(serverInfoService.getFullServerURL(this.getThreadLocalRequest()))
                         .append("/resources/images/symbol-error.png\" width=\"35\" height=\"35\">");
 
                 break;
             case system:
                 sb.append(start)
                         .append("src=\"")
-                        .append(ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest()))
+                        .append(serverInfoService.getFullServerURL(this.getThreadLocalRequest()))
                         .append("/resources/images/logo.png\"  width=\"40\" height=\"40\">");
                 break;
             case info:
                 sb.append(start).append("src=\"")
-                        .append(ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest()))
+                        .append(serverInfoService.getFullServerURL(this.getThreadLocalRequest()))
                         .append("/resources/images/info.png\" width=\"35\" height=\"35\">");
                 break;
             case data:
                 sb.append(start).append("src=\"")
-                        .append(ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest()))
+                        .append(serverInfoService.getFullServerURL(this.getThreadLocalRequest()))
                         .append("/resources/images/point_ok.png\" width=\"40\" height=\"40\">");
                 break;
             default:
                 sb.append(start).append("src=\"")
-                        .append(ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest()))
+                        .append(serverInfoService.getFullServerURL(this.getThreadLocalRequest()))
                         .append("/resources/images/logo.png\" width=\"40\" height=\"40\">");
         }
 
@@ -180,7 +182,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
         final StringBuilder sb = new StringBuilder(SIZE);
         if (! (Double.compare(value.getDoubleValue(), Const.CONST_IGNORED_NUMBER_VALUE) == 0)) {
             sb.append("<img style=\"float:left\" src=\"")
-                    .append(ServerInfoImpl.getFullServerURL(this.getThreadLocalRequest()));
+                    .append(serverInfoService.getFullServerURL(this.getThreadLocalRequest()));
 
 
             switch (value.getAlertState()) {
@@ -345,5 +347,13 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
 
     public ValueService getValueService() {
         return valueService;
+    }
+
+    public void setServerInfoService(ServerInfo serverInfoService) {
+        this.serverInfoService = serverInfoService;
+    }
+
+    public ServerInfo getServerInfoService() {
+        return serverInfoService;
     }
 }

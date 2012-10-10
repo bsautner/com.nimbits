@@ -86,4 +86,6 @@ public interface ValueServiceAsync {
     void mergeTimespan(Point point, Timespan ts, AsyncCallback<Void> async);
 
     void ignoreByFilter(Point point, Value value2, AsyncCallback<Boolean> async);
+
+    void createDataDump(Entity entity, Timespan timespan, AsyncCallback<Void> asyncCallback);
 }

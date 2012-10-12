@@ -20,7 +20,7 @@ import com.nimbits.client.constants.UserMessages;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
@@ -109,11 +109,11 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
                             EntityType parentType;
                             log.info("creating point");
                             if (containsParam(Parameters.category)) {
-                                parentName= CommonFactoryLocator.getInstance().createName(getParam(Parameters.category), EntityType.category);
+                                parentName= CommonFactory.createName(getParam(Parameters.category), EntityType.category);
                                 parentType = EntityType.category;
                             }
                             else if (containsParam(Parameters.parent)) {
-                                parentName = CommonFactoryLocator.getInstance().createName(getParam(Parameters.parent), EntityType.point);
+                                parentName = CommonFactory.createName(getParam(Parameters.parent), EntityType.point);
                                 parentType = EntityType.point;
 
                             }
@@ -126,7 +126,7 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
                             }
 
                             if (!Utils.isEmptyString(pointNameParam) && Utils.isEmptyString(getParam(Parameters.json))) {
-                                final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
+                                final EntityName pointName = CommonFactory.createName(pointNameParam, EntityType.point);
                                 String description = getParam(Parameters.description);
                                 final Point point = createPoint(user, pointName, parentName, parentType, description);
                                 final String retJson = gson.toJson(point);
@@ -219,12 +219,12 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
                     processGetRead(sb, startParam, endParam, offsetParam, pointNameParam);
                     break;
                 case validateExists:
-                    EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
+                    EntityName pointName = CommonFactory.createName(pointNameParam, EntityType.point);
                     validateExistence(user, pointName, sb);
                     break;
                 case list:
                     log.info("listing...");
-                    EntityName parentName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
+                    EntityName parentName = CommonFactory.createName(pointNameParam, EntityType.point);
                     List<Entity> result = entityService.getEntityByName(user, parentName, EntityType.point);
                     if (! result.isEmpty())  {
                         List<Entity> children = entityService.getChildren(user, result.get(0), EntityType.point);
@@ -316,7 +316,7 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
 
         }
         else {
-            List<Entity> user =  entityService.getEntityByName(u, CommonFactoryLocator.getInstance().createName(u.getEmail().getValue(), EntityType.user), EntityType.user);
+            List<Entity> user =  entityService.getEntityByName(u, CommonFactory.createName(u.getEmail().getValue(), EntityType.user), EntityType.user);
             if (user.isEmpty()) {
                 throw new NimbitsException("Error getting parent, this entity has no parent, not even a user!");
 
@@ -380,7 +380,7 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
     }
 
     private void deletePoint(final User u, final String pointNameParam) throws NimbitsException {
-        final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
+        final EntityName pointName = CommonFactory.createName(pointNameParam, EntityType.point);
         final List<Entity> entity = entityService.getEntityByName(u, pointName, EntityType.point);
         if (! entity.isEmpty()) {
             entityService.deleteEntity(u, entity.get(0));
@@ -442,12 +442,12 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
 
 
             if (!Utils.isEmptyString(pointNameParam)) {
-                final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
+                final EntityName pointName = CommonFactory.createName(pointNameParam, EntityType.point);
                 final List<Entity> result = entityService.getEntityByName(user, pointName, EntityType.point);
                 return result.isEmpty() ? "Error calling " + "Point Service. " + pointNameParam + " not found" : GsonFactory.getInstance().toJson(result.get(0));
 
             } else if (!Utils.isEmptyString(categoryNameParam)) {
-                final EntityName categoryName = CommonFactoryLocator.getInstance().createName(categoryNameParam, EntityType.category);
+                final EntityName categoryName = CommonFactory.createName(categoryNameParam, EntityType.category);
                 final List<Entity> result = entityService.getEntityByName(user, categoryName, EntityType.category) ;
                 if (result.isEmpty()) {
                     return "Error calling " + "Point Service. " + categoryNameParam + " not found";

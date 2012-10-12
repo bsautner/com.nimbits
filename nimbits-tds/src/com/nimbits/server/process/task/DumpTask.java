@@ -21,7 +21,7 @@ import com.google.appengine.api.files.FileWriteChannel;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.impl.CommonFactoryImpl;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
@@ -58,7 +58,6 @@ public class DumpTask extends HttpServlet implements org.springframework.web.Htt
     private ValueService valueService;
     private static final Logger log = Logger.getLogger(DumpTask.class.getName());
     private EmailServiceImpl emailService;
-    private CommonFactoryImpl commonFactory;
     private ServerInfo serverInfoService;
 
     @Override
@@ -91,7 +90,7 @@ public class DumpTask extends HttpServlet implements org.springframework.web.Htt
             out.close();
             writeChannel.closeFinally();
             final BlobKey key = fileService.getBlobKey(file);
-            final EmailAddress emailAddress = commonFactory.createEmailAddress(entity.getOwner());
+            final EmailAddress emailAddress = CommonFactory.createEmailAddress(entity.getOwner());
 
 
             final String m = serverInfoService.getFullServerURL(request) + "/service/blob?" +Parameters.blobkey.getText() + "=" + key.getKeyString();
@@ -122,13 +121,6 @@ public class DumpTask extends HttpServlet implements org.springframework.web.Htt
         return emailService;
     }
 
-    public void setCommonFactory(CommonFactoryImpl commonFactory) {
-        this.commonFactory = commonFactory;
-    }
-
-    public CommonFactoryImpl getCommonFactory() {
-        return commonFactory;
-    }
 
     public void setServerInfoService(ServerInfo serverInfoService) {
         this.serverInfoService = serverInfoService;

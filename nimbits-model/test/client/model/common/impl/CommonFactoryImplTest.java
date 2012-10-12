@@ -1,11 +1,10 @@
 package client.model.common.impl;
 
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.*;
-import com.nimbits.client.model.entity.*;
-import org.junit.*;
-import static org.junit.Assert.fail;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.impl.CommonFactory;
+import com.nimbits.client.model.entity.EntityName;
+import org.junit.Test;
 
 /**
  * Created by Benjamin Sautner
@@ -18,37 +17,37 @@ public class CommonFactoryImplTest {
 
     @Test(expected = NimbitsException.class)
      public void TestName1() throws NimbitsException {
-         EntityName name = CommonFactoryLocator.getInstance().createName("D%@D", EntityType.point);
+         EntityName name = CommonFactory.createName("D%@D", EntityType.point);
 
 
     }
     @Test(expected = NimbitsException.class)
     public void TestName2() throws NimbitsException {
-        EntityName name = CommonFactoryLocator.getInstance().createName("D\"D", EntityType.point);
+        EntityName name = CommonFactory.createName("D\"D", EntityType.point);
 
 
     }
     @Test(expected = NimbitsException.class)
     public void TestName3() throws NimbitsException {
-        EntityName name = CommonFactoryLocator.getInstance().createName("D?@D", EntityType.point);
+        EntityName name = CommonFactory.createName("D?@D", EntityType.point);
 
 
     }
     @Test(expected = NimbitsException.class)
     public void TestName4() throws NimbitsException {
-        EntityName name = CommonFactoryLocator.getInstance().createName("D+@D", EntityType.point);
+        EntityName name = CommonFactory.createName("D+@D", EntityType.point);
 
 
     }
     @Test(expected = NimbitsException.class)
     public void TestName7() throws NimbitsException {
-        EntityName name = CommonFactoryLocator.getInstance().createName("userNamespaceclazo%inf.uach.cl-gtempaccount.com", EntityType.point);
+        EntityName name = CommonFactory.createName("userNamespaceclazo%inf.uach.cl-gtempaccount.com", EntityType.point);
 
 
     }
     @Test
     public void TestName5() throws NimbitsException {
-        EntityName name = CommonFactoryLocator.getInstance().createName("im ok", EntityType.point);
+        EntityName name = CommonFactory.createName("im ok", EntityType.point);
 
 
 
@@ -56,7 +55,7 @@ public class CommonFactoryImplTest {
     @Test
     public void TestName6() throws NimbitsException {
 
-            EntityName name = CommonFactoryLocator.getInstance().createName("test@exmaple.com", EntityType.point);
+            EntityName name = CommonFactory.createName("test@exmaple.com", EntityType.point);
 
 
     }

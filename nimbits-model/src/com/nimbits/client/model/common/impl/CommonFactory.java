@@ -13,11 +13,10 @@
 
 package com.nimbits.client.model.common.impl;
 
-import com.nimbits.client.common.*;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.common.CommonFactory;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.email.impl.EmailAddressImpl;
 import com.nimbits.client.model.entity.EntityName;
@@ -31,11 +30,10 @@ import com.nimbits.client.model.entity.EntityNameImpl;
  * Date: 8/6/11
  * Time: 11:09 AM
  */
-public class CommonFactoryImpl implements CommonFactory {
+public class CommonFactory {
 
 
-    @Override
-    public EmailAddress createEmailAddress(final String value) throws NimbitsException {
+    public static EmailAddress createEmailAddress(final String value) throws NimbitsException {
        emailTest(value) ;
         if (value == null) {
             throw new NimbitsException("Email can not be null");
@@ -44,7 +42,7 @@ public class CommonFactoryImpl implements CommonFactory {
 
     }
 
-    protected static void emailTest(String value) throws NimbitsException{
+    protected static void emailTest(final String value) throws NimbitsException{
         if (Utils.isEmptyString(value)) {
             throw new NimbitsException("Email was empty");
         }
@@ -57,15 +55,8 @@ public class CommonFactoryImpl implements CommonFactory {
     }
 
 
-    @Override
-    @Deprecated
-    public EntityName createName(final String value) {
 
-        return new EntityNameImpl(value);
-    }
-
-    @Override
-    public EntityName createName(final String name, final EntityType type) throws NimbitsException {
+   public static EntityName createName(final String name, final EntityType type) throws NimbitsException {
         nameTest(name,  type);
         return new EntityNameImpl(name);
     }

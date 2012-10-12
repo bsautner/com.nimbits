@@ -15,7 +15,8 @@
             classpath:/META-INF/applicationContext-cron.xml,
             classpath:/META-INF/applicationContext-dao.xml,
             classpath:/META-INF/applicationContext-service.xml,
-            classpath:/META-INF/applicationContext-task.xml
+            classpath:/META-INF/applicationContext-task.xml,
+            classpath:/META-INF/applicationContext-factory.xml
         </param-value>
     </context-param>
 
@@ -199,12 +200,12 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>blobTask</servlet-name>
+        <servlet-name>deleteBlobTask</servlet-name>
         <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>blobTask</servlet-name>
-        <url-pattern>/task/blobTask</url-pattern>
+        <servlet-name>deleteBlobTask</servlet-name>
+        <url-pattern>/task/deleteBlobTask</url-pattern>
     </servlet-mapping>
 
     <servlet>

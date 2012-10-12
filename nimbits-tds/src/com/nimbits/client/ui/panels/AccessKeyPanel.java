@@ -36,7 +36,7 @@ import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.accesskey.AccessKeyFactory;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
@@ -261,7 +261,7 @@ public class AccessKeyPanel extends NavigationEventProvider {
                     "Creating Access Key", "please wit...");
             box.show();
             try {
-                EntityName newName = CommonFactoryLocator.getInstance().createName(name.getValue(), EntityType.accessKey);
+                EntityName newName = CommonFactory.createName(name.getValue(), EntityType.accessKey);
 
                 if (entity.getEntityType().equals(EntityType.accessKey)) {
 

@@ -14,7 +14,7 @@ package integration;/*
 import com.nimbits.client.NimbitsClient;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.value.Value;
 import org.junit.Test;

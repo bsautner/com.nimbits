@@ -17,8 +17,7 @@ import com.nimbits.client.common.Utils;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactory;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.location.Location;
@@ -73,9 +72,6 @@ public class ApiServlet extends HttpServlet {
 
     @Resource(name= "userService")
     protected UserServerService userService;
-
-    @Resource(name = "commonFactory")
-    protected CommonFactory commonFactory;
 
     @Resource(name = "settingsService")
     protected SettingsService settingsService;
@@ -166,7 +162,7 @@ public class ApiServlet extends HttpServlet {
            if (count > max) {
 
                if (user.isBillingEnabled()) {
-                   final EntityName name = CommonFactoryLocator.getInstance().createName(Const.ACCOUNT_BALANCE, EntityType.point);
+                   final EntityName name = CommonFactory.createName(Const.ACCOUNT_BALANCE, EntityType.point);
                    log.info("billing enabled");
                    final List<Entity> points =  entityService.getEntityByName(user, name, EntityType.point);
                    if (points.isEmpty()) {
@@ -299,10 +295,6 @@ public class ApiServlet extends HttpServlet {
 
     public void setUserService(UserServerService userService) {
         this.userService = userService;
-    }
-
-    public void setCommonFactory(CommonFactory commonFactory) {
-        this.commonFactory = commonFactory;
     }
 
     public void setSettingsService(SettingsService settingsService) {

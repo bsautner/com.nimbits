@@ -19,7 +19,7 @@ import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.calculation.CalculationModelFactory;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.value.Value;
@@ -77,7 +77,7 @@ public class valueTaskTest extends NimbitsServletTest {
     public void testPostWithCalcs() throws NimbitsException {
 
         addAuth();
-        Entity e = EntityModelFactory.createEntity(CommonFactoryLocator.getInstance().createName("calc1", EntityType.point),
+        Entity e = EntityModelFactory.createEntity(CommonFactory.createName("calc1", EntityType.point),
                 "", EntityType.calculation, ProtectionLevel.onlyMe, point.getKey(), user.getKey());
 
         Calculation c = CalculationModelFactory.createCalculation(e, point.getKey(), true, "x+1", pointChild.getKey(), point.getKey(),

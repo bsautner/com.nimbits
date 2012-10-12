@@ -94,7 +94,7 @@ public class UserReportService extends HttpServlet {
             out.println("</table>");
         }
         else {
-          //  EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
+          //  EmailAddress emailAddress = CommonFactory.createEmailAddress(email);
           //  out.println("<h5>" + getOrCreateCounter(emailAddress).getCount() + "</h5>");
 
             out.println();

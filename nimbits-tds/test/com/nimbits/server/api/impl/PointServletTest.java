@@ -20,7 +20,7 @@ import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.category.CategoryModel;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
@@ -28,7 +28,6 @@ import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.service.datapoints.PointService;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.gson.GsonFactory;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,7 +54,8 @@ import static org.junit.Assert.*;
         "classpath:META-INF/applicationContext-cron.xml",
         "classpath:META-INF/applicationContext-dao.xml",
         "classpath:META-INF/applicationContext-service.xml",
-        "classpath:META-INF/applicationContext-task.xml"
+        "classpath:META-INF/applicationContext-task.xml",
+        "classpath:META-INF/applicationContext-factory.xml"
 
 })
 public class PointServletTest extends NimbitsServletTest {
@@ -69,13 +69,13 @@ public class PointServletTest extends NimbitsServletTest {
 
     @Test
     public void createPointTest() throws NimbitsException {
-        EntityName name = CommonFactoryLocator.getInstance().createName("test", EntityType.point);
+        EntityName name = CommonFactory.createName("test", EntityType.point);
 
          Point p = i.createPoint(user, name, null, null, "description sample");
     }
     @Test
     public void createPointDescTest() throws NimbitsException {
-        EntityName name = CommonFactoryLocator.getInstance().createName("test", EntityType.point);
+        EntityName name = CommonFactory.createName("test", EntityType.point);
 
         Point p = i.createPoint(user, name, null, null, "description sample");
 
@@ -93,7 +93,7 @@ public class PointServletTest extends NimbitsServletTest {
         req.addParameter("point", "parentPoint");
         req.setMethod("POST");
         i.handleRequest(req, resp);
-        EntityName name = CommonFactoryLocator.getInstance().createName("parentPoint", EntityType.point);
+        EntityName name = CommonFactory.createName("parentPoint", EntityType.point);
 
         List<Entity> result = entityService.getEntityByName(user, name, EntityType.point);
         assertFalse(result.isEmpty());
@@ -103,7 +103,7 @@ public class PointServletTest extends NimbitsServletTest {
         req.addParameter("point", "child");
         req.addParameter("parent", "parentPoint");
         i.handleRequest(req, resp);
-        EntityName name2 = CommonFactoryLocator.getInstance().createName("child", EntityType.point);
+        EntityName name2 = CommonFactory.createName("child", EntityType.point);
         List<Entity> result2 = entityService.getEntityByName(user, name2, EntityType.point);
         assertFalse(result2.isEmpty());
 

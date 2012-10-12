@@ -80,8 +80,8 @@ public class ValueDAOImpl implements ValueTransactions {
     }
 
     @Override
-    public List<List<Value>> splitUpList(List<Value> original) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public List<List<Value>> splitUpList(List<Value> original) throws NimbitsException {
+       throw new NimbitsException(NOT_IMPLEMENTED);
     }
 
     @Override

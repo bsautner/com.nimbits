@@ -34,7 +34,7 @@ import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.GxtModel;
 import com.nimbits.client.model.TreeModel;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
@@ -78,28 +78,39 @@ public class EntityContextMenu extends Menu {
         public void handleEvent(MessageBoxEvent be) {
             newEntityName = be.getValue();
             if (!Utils.isEmptyString(newEntityName)) {
-                final MessageBox box = MessageBox.wait("Progress",
-                        "Creating your data point channel into the cloud", "Creating: " + newEntityName);
-                box.show();
-                EntityServiceAsync service = GWT.create(EntityService.class);
 
-                try {
+
                     final ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
                     currentModel = (TreeModel)selectedModel;
+                    if (currentModel != null) {
+                        final MessageBox box = MessageBox.wait("Progress",
+                                "Creating your data point channel into the cloud", "Creating: " + newEntityName);
+                        box.show();
+                        EntityServiceAsync service = GWT.create(EntityService.class);
 
-                    final Entity currentEntity =  currentModel.getBaseEntity();
-                    EntityName name = CommonFactoryLocator.getInstance().createName(newEntityName, EntityType.point);
-                    Entity entity = EntityModelFactory.createEntity(name, EntityType.point);
-                    Point p = PointModelFactory.createPointModel(entity, 0.0, 90, "", 0.0,
-                            false, false, false, 0, false, FilterType.fixedHysteresis, 0.1, false,
-                            PointType.basic, 0, false, 0.0);
-                     p.setParent(currentEntity.getKey());
-                    service.addUpdateEntity(p, new NewPointEntityAsyncCallback(box));
-                } catch (NimbitsException caught) {
-                    box.close();
-                    FeedbackHelper.showError(caught);
+                        final Entity currentEntity =  currentModel.getBaseEntity();
+                        try {
+                        EntityName name = CommonFactory.createName(newEntityName, EntityType.point);
+                        Entity entity = EntityModelFactory.createEntity(name, EntityType.point);
+                        Point p = null;
 
-                }
+                            p = PointModelFactory.createPointModel(entity, 0.0, 90, "", 0.0,
+                                    false, false, false, 0, false, FilterType.fixedHysteresis, 0.1, false,
+                                    PointType.basic, 0, false, 0.0);
+                            p.setParent(currentEntity.getKey());
+                            service.addUpdateEntity(p, new NewPointEntityAsyncCallback(box));
+                        } catch (NimbitsException e) {
+                            box.close();
+                            FeedbackHelper.showError(e);
+                        }
+
+
+                    }
+                    else {
+                        FeedbackHelper.showError(new NimbitsException("Please select a parent"));
+                    }
+
+
 
             }
         }
@@ -236,7 +247,7 @@ public class EntityContextMenu extends Menu {
 
         add(jsonContext);
         add(xmppContext);
-     //   add(downloadContext);
+        //   add(downloadContext);
 
 
         if (settings.containsKey(SettingType.wolframKey) && ! Utils.isEmptyString(settings.get(SettingType.wolframKey))) {
@@ -267,7 +278,7 @@ public class EntityContextMenu extends Menu {
         keyContext.setEnabled(currentModel.getEntityType().equals(EntityType.user) || currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.accessKey));
         exportContext.setEnabled(currentModel.getEntityType().equals(EntityType.point));// && isDomain);
         propertyContext.setEnabled(!currentModel.isReadOnly());
-       // addPointMenuItem.setEnabled(!currentModel.isReadOnly() );
+        // addPointMenuItem.setEnabled(!currentModel.isReadOnly() );
         //downloadContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) ||currentModel.getEntityType().equals(EntityType.category));
 
 
@@ -619,7 +630,7 @@ public class EntityContextMenu extends Menu {
                 final XMPPServiceAsync serviceAsync = GWT.create(XMPPService.class);
                 EntityName name = null;
                 try {
-                    name = CommonFactoryLocator.getInstance().createName(newEntityName, EntityType.resource);
+                    name = CommonFactory.createName(newEntityName, EntityType.resource);
                 } catch (NimbitsException caught) {
                     FeedbackHelper.showError(caught);
                 }
@@ -673,7 +684,7 @@ public class EntityContextMenu extends Menu {
                 final EntityServiceAsync service = GWT.create(EntityService.class);
                 EntityName name = null;
                 try {
-                    name = CommonFactoryLocator.getInstance().createName(newEntityName, EntityType.point);
+                    name = CommonFactory.createName(newEntityName, EntityType.point);
                 } catch (NimbitsException caught) {
                     FeedbackHelper.showError(caught);
                 }
@@ -742,13 +753,13 @@ public class EntityContextMenu extends Menu {
         public void componentSelected(final MenuEvent ce) {
             final ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
             final TreeModel model = (TreeModel) selectedModel;
-                final Entity p =  model.getBaseEntity();
-                try {
+            final Entity p =  model.getBaseEntity();
+            try {
 
-                    openUrl(p.getKey(), p.getName().getValue());
-                } catch (NimbitsException e) {
-                    FeedbackHelper.showError(e);
-                }
+                openUrl(p.getKey(), p.getName().getValue());
+            } catch (NimbitsException e) {
+                FeedbackHelper.showError(e);
+            }
 
 
 
@@ -1071,7 +1082,7 @@ public class EntityContextMenu extends Menu {
             final Entity entity =  currentModel.getBaseEntity();
 
             if (entity.getEntityType().equals(EntityType.point)) {
-                   showDownloadPanel(entity);
+                showDownloadPanel(entity);
             }
 
         }

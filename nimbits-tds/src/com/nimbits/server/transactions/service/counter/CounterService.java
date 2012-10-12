@@ -9,13 +9,13 @@ import java.util.Date;
  * Time: 3:16 PM
  */
 public interface CounterService {
-    void createShards(String name);
+    void createShards(final String name);
 
-    void incrementCounter(String name);
+    void incrementCounter(final String name);
 
-    long getCount(String name);
+    long getCount(final String name);
 
-    Date updateDateCounter(String name);
+    Date updateDateCounter(final String name);
 
-    Date getDateCounter(String name);
+    Date getDateCounter(final String name);
 }

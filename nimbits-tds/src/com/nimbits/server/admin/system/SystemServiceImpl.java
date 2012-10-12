@@ -18,7 +18,7 @@ import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
@@ -59,7 +59,7 @@ public class SystemServiceImpl implements SystemService{
             final boolean incrementAsCounter,
             final PointType type) throws NimbitsException {
 
-        EntityName name = CommonFactoryLocator.getInstance().createName(pointName, EntityType.point);
+        EntityName name = CommonFactory.createName(pointName, EntityType.point);
         User admin =userService.getAdmin();
         List<Entity> e = entityService.getEntityByName(admin,
                 name, EntityType.point);

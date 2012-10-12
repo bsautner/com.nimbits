@@ -7,7 +7,7 @@ package integration;/*
 import com.nimbits.client.NimbitsClient;
 import com.nimbits.client.NimbitsClientFactory;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
@@ -64,7 +64,7 @@ class ClientHelper {
         if (instance == null) {
             //  String email = loadFile(accountPath + "/a1", 0);
             //  String password = loadFile(accountPath + "/a1", 1);
-            EmailAddress em = CommonFactoryLocator.getInstance().createEmailAddress(email);
+            EmailAddress em = CommonFactory.createEmailAddress(email);
             NimbitsUser g = new NimbitsUser(em, password);
 
             try {
@@ -99,7 +99,7 @@ class ClientHelper {
 //        if (instance == null) {
 //            String email = loadFile(accountPath + "/a3", 0);
 //            String password = loadFile(accountPath + "/a3", 1);
-//            EmailAddress em = CommonFactoryLocator.getInstance().createEmailAddress(email);
+//            EmailAddress em = CommonFactory.createEmailAddress(email);
 //            NimbitsUser g = new NimbitsUser(em, password);
 //
 //            try {
@@ -117,7 +117,7 @@ class ClientHelper {
 //        if (instance2 == null) {
 //            String email = loadFile(accountPath + "/a2", 0);
 //            String password = loadFile(accountPath + "/a2", 1);
-//            EmailAddress em = (EmailAddress) CommonFactoryLocator.getInstance().createEmailAddress(email);
+//            EmailAddress em = (EmailAddress) CommonFactory.createEmailAddress(email);
 //            GoogleUser g = new GoogleUser(em, password);
 //            System.out.println(email);
 //            try {
@@ -134,7 +134,7 @@ class ClientHelper {
 //        if (instance2 == null) {
 //            String email = loadFile(accountPath + "/a2", 0);
 //            String password = loadFile(accountPath + "/a2", 1);
-//            EmailAddress em = CommonFactoryLocator.getInstance().createEmailAddress(email);
+//            EmailAddress em = CommonFactory.createEmailAddress(email);
 //            GoogleUser g = new GoogleUser(em, password);
 //            System.out.println(email);
 //            try {
@@ -151,7 +151,7 @@ class ClientHelper {
 //        if (instance2 == null) {
 //            String email = loadFile(accountPath + "/a2", 0);
 //            String password = loadFile(accountPath + "/a2", 1);
-//            EmailAddress em = CommonFactoryLocator.getInstance().createEmailAddress(email);
+//            EmailAddress em = CommonFactory.createEmailAddress(email);
 //            GoogleUser g = new GoogleUser(em, password);
 //            System.out.println(email);
 //            try {

@@ -17,20 +17,17 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.calculation.CalculationModelFactory;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.orm.CalcEntity;
-import com.nimbits.server.transactions.service.entity.EntityTransactions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
-import javax.persistence.EntityTransaction;
 import java.util.Arrays;
 import java.util.List;
 
@@ -81,7 +78,7 @@ public class EntityCacheImplTest extends NimbitsServletTest {
 
     @Test
     public void testGetEntityByTrigger() throws Exception {
-        EntityName name = CommonFactoryLocator.getInstance().createName("calc", EntityType.calculation);
+        EntityName name = CommonFactory.createName("calc", EntityType.calculation);
 
         Entity entity = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe, point.getKey(), user.getKey());
 
@@ -102,7 +99,7 @@ public class EntityCacheImplTest extends NimbitsServletTest {
         }
 
 
-        EntityName name2 = CommonFactoryLocator.getInstance().createName("calc2", EntityType.calculation);
+        EntityName name2 = CommonFactory.createName("calc2", EntityType.calculation);
 
         Entity entity2 = EntityModelFactory.createEntity(name2, "", EntityType.calculation, ProtectionLevel.onlyMe, point.getKey(), user.getKey());
 

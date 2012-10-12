@@ -25,7 +25,7 @@ import java.util.List;
 
 public interface ValueTransactions {
 
-    List<List<Value>> splitUpList(List<Value> original);
+    List<List<Value>> splitUpList(List<Value> original) throws NimbitsException;
 
     List<Value> getRecordedValuePrecedingTimestamp(final Entity entity,final Date timestamp) throws NimbitsException;
 

@@ -20,7 +20,7 @@ import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
@@ -52,7 +52,7 @@ public class GxtModel extends BaseTreeModel implements TreeModel {
     }
     public GxtModel(final User user) throws NimbitsException {
         this.key = user.getKey();
-        this.name = CommonFactoryLocator.getInstance().createName(user.getEmail().getValue(), EntityType.user);
+        this.name = CommonFactory.createName(user.getEmail().getValue(), EntityType.user);
         this.alertType = AlertType.OK;
         this.entityType = EntityType.user;
         this.isReadOnly = true;

@@ -15,15 +15,18 @@ package com.nimbits;
 
 import com.nimbits.client.NimbitsClient;
 import com.nimbits.client.NimbitsClientFactory;
-import com.nimbits.client.constants.*;
-import com.nimbits.client.enums.*;
+import com.nimbits.client.constants.Path;
+import com.nimbits.client.constants.Words;
+import com.nimbits.client.enums.Action;
+import com.nimbits.client.enums.AlertType;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.location.Location;
 import com.nimbits.client.model.location.LocationFactory;
-import com.nimbits.client.model.mqtt.MqttHelper;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.console.KeyFile;
@@ -34,7 +37,6 @@ import com.nimbits.user.NimbitsUser;
 import com.nimbits.xmpp.XMPPClient;
 import com.nimbits.xmpp.XMPPClientFactory;
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.paho.client.mqttv3.MqttException;
 import org.jivesoftware.smack.XMPPException;
 
 import java.io.BufferedReader;
@@ -43,7 +45,6 @@ import java.io.InputStreamReader;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by bsautner
@@ -56,7 +57,7 @@ public class MainClass {
     private static NimbitsClient client;
 
 //    private NimbitsClient createClient(String email, String key, String host, String password) throws NimbitsException {
-//        final EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
+//        final EmailAddress emailAddress = CommonFactory.createEmailAddress(email);
 //        final NimbitsClient client = createClient(host, email, key, password);
 //        try {
 //            final boolean loggedIn = checkLoggedIn(client, false);
@@ -194,7 +195,7 @@ public class MainClass {
     }
 
     private static void readValue(final Map<String, String> argsMap, Action action) throws NimbitsException {
-        final EntityName pointName = CommonFactoryLocator.getInstance().createName(argsMap.get(Parameters.point.getText()), EntityType.point);
+        final EntityName pointName = CommonFactory.createName(argsMap.get(Parameters.point.getText()), EntityType.point);
         final Value v = client.getCurrentRecordedValue(pointName);
 
         switch (action) {
@@ -228,7 +229,7 @@ public class MainClass {
         out(verbose, "Recording values");
 
         final Value v = buildValue(argsMap);
-        final EntityName pointName = CommonFactoryLocator.getInstance().createName(argsMap.get(Parameters.point), EntityType.point);
+        final EntityName pointName = CommonFactory.createName(argsMap.get(Parameters.point), EntityType.point);
         final Value result = client.recordValue(pointName, v);
         if (result == null) {
             out(verbose, "An error occurred recording your data");
@@ -253,7 +254,7 @@ public class MainClass {
 
     private static void createClient(final String host, final String email, final String key, final String password) throws NimbitsException {
 
-        EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
+        EmailAddress emailAddress = CommonFactory.createEmailAddress(email);
         if (StringUtils.isNotEmpty(key) && (emailAddress) != null) {
             NimbitsUser n = new NimbitsUser(emailAddress, key);
             client = NimbitsClientFactory.getInstance(n, host);

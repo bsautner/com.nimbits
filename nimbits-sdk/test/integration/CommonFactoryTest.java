@@ -13,7 +13,7 @@ package integration;/*
 
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.EntityName;
 import org.junit.Assert;
@@ -31,12 +31,12 @@ public class CommonFactoryTest {
 
     @Test
     public void testPolyMorphism() throws NimbitsException {
-        EmailAddress emailAddress = (EmailAddress) CommonFactoryLocator.getInstance().createEmailAddress("TEST");
+        EmailAddress emailAddress = (EmailAddress) CommonFactory.createEmailAddress("TEST");
 
         Assert.assertEquals("test", emailAddress.getValue());
         Assert.assertNotSame("TEST", emailAddress.getValue());
 
-        EntityName pointName = CommonFactoryLocator.getInstance().createName("TEST", EntityType.point);
+        EntityName pointName = CommonFactory.createName("TEST", EntityType.point);
 
         Assert.assertEquals("TEST", pointName.getValue());
         Assert.assertNotSame("test", pointName.getValue());

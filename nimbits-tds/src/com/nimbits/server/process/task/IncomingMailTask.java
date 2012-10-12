@@ -17,7 +17,7 @@ import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
@@ -66,7 +66,7 @@ public class IncomingMailTask extends HttpServlet  implements org.springframewor
         final String inContent = req.getParameter(Parameters.inContent.getText());
 
         try {
-            final EmailAddress internetAddress = CommonFactoryLocator.getInstance().createEmailAddress(fromAddress);
+            final EmailAddress internetAddress = CommonFactory.createEmailAddress(fromAddress);
 
 
             log.info("Incoming mail post: " + internetAddress);
@@ -98,7 +98,7 @@ public class IncomingMailTask extends HttpServlet  implements org.springframewor
 
     private void processLine(final User u, final CharSequence s) throws NimbitsException {
         final String emailLine[] = COMPILE.split(s);
-        final EntityName pointName = CommonFactoryLocator.getInstance().createName(emailLine[0], EntityType.point);
+        final EntityName pointName = CommonFactory.createName(emailLine[0], EntityType.point);
 
         List<Entity> e =  entityService.getEntityByName(u, pointName, EntityType.point);
 

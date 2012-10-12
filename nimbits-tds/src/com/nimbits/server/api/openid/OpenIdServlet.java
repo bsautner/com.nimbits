@@ -203,9 +203,7 @@ public class OpenIdServlet extends HttpServlet {
      * @return Return to URL
      */
     String returnTo(HttpServletRequest request) {
-        return new StringBuffer(baseUrl(request))
-                .append(request.getContextPath()).append(returnToPath)
-                .toString();
+        return baseUrl(request) + request.getContextPath() + returnToPath;
     }
 
     /**

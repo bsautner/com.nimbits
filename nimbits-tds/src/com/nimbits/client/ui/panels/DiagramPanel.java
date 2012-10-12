@@ -29,7 +29,7 @@ import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.entity.EntityModelFactory;
@@ -282,12 +282,12 @@ public class DiagramPanel extends LayoutContainer {
         if (!Utils.isEmptyString(action)) {
            // final String[] actions = action.split(",");
             if (!Utils.isEmptyString(pointNameParam)) {
-                EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
+                EntityName pointName = CommonFactory.createName(pointNameParam, EntityType.point);
 
                 addTextPointActions(o, pointName);
             }
             if (!Utils.isEmptyString(diagramNameParam)) {
-                EntityName diagramName = CommonFactoryLocator.getInstance().createName(diagramNameParam, EntityType.file);
+                EntityName diagramName = CommonFactory.createName(diagramNameParam, EntityType.file);
                 if (!diagramsInDiagram.contains(diagramName)) {
                     diagramsInDiagram.add(diagramName);
                 }
@@ -383,7 +383,7 @@ public class DiagramPanel extends LayoutContainer {
 
         if (!Utils.isEmptyString(action)) {
             final String[] actions = action.split(",");
-            final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
+            final EntityName pointName = CommonFactory.createName(pointNameParam, EntityType.point);
             Entity entity = pointEntityMap.get(pointName);
             if (entity != null) {
                 if (!Utils.isEmptyString(pointNameParam) && pointEntityMap.containsKey(pointName)) {
@@ -499,11 +499,11 @@ public class DiagramPanel extends LayoutContainer {
         if (!Utils.isEmptyString(action)) {
            /// final String[] actions = action.split(",");
             if (!Utils.isEmptyString(pointNameParam)) {
-                EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
+                EntityName pointName = CommonFactory.createName(pointNameParam, EntityType.point);
                 addPathPointActions(o, pointName);
             }
             if (!Utils.isEmptyString(diagramNameParam)) {
-                EntityName diagramName = CommonFactoryLocator.getInstance().createName(diagramNameParam, EntityType.file);
+                EntityName diagramName = CommonFactory.createName(diagramNameParam, EntityType.file);
                 if (!diagramsInDiagram.contains(diagramName)) {
                     diagramsInDiagram.add(diagramName);
                 }
@@ -584,7 +584,7 @@ public class DiagramPanel extends LayoutContainer {
 
         if (!Utils.isEmptyString(action)) {
             final String[] actions = action.split(",");
-            final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
+            final EntityName pointName = CommonFactory.createName(pointNameParam, EntityType.point);
             if (!Utils.isEmptyString(pointNameParam) && pointEntityMap.containsKey(pointName)) {
 
                 recordedValueService.getCurrentValue(diagram, new AsyncCallback<List<Value>>() {
@@ -688,11 +688,11 @@ public class DiagramPanel extends LayoutContainer {
         if (!Utils.isEmptyString(action)) {
 //            final String[] actions = action.split(",");
             if (!Utils.isEmptyString(pointNameParam)) {
-                final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
+                final EntityName pointName = CommonFactory.createName(pointNameParam, EntityType.point);
                 addRectPointActions(o, pointName);
             }
             if (!Utils.isEmptyString(diagramNameParam)) {
-                EntityName diagramName = CommonFactoryLocator.getInstance().createName(diagramNameParam, EntityType.file);
+                EntityName diagramName = CommonFactory.createName(diagramNameParam, EntityType.file);
                 if (!diagramsInDiagram.contains(diagramName)) {
                     diagramsInDiagram.add(diagramName);
                 }
@@ -769,7 +769,7 @@ public class DiagramPanel extends LayoutContainer {
 
         if (!Utils.isEmptyString(action)) {
             final String[] actions = action.split(",");
-            final EntityName pointName = CommonFactoryLocator.getInstance().createName(pointNameParam, EntityType.point);
+            final EntityName pointName = CommonFactory.createName(pointNameParam, EntityType.point);
             if (!Utils.isEmptyString(pointNameParam) && pointEntityMap.containsKey(pointName)) {
                 recordedValueService.getCurrentValue(diagram, new AsyncCallback<List<Value>>() {
 

@@ -35,7 +35,7 @@ import java.util.logging.Logger;
  * Date: 4/23/12
  * Time: 1:30 PM
  */
-@Service("blobTask")
+@Service("deleteBlobTask")
 @Transactional
 public class DeleteBlobTask extends HttpServlet  implements org.springframework.web.HttpRequestHandler{
 
@@ -61,8 +61,10 @@ public class DeleteBlobTask extends HttpServlet  implements org.springframework.
 
         if (!Utils.isEmptyString(key)) {
             final BlobKey blobKey = new BlobKey(key);
-            BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+            final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
             blobstoreService.delete(blobKey);
+
+
         }
 
     }

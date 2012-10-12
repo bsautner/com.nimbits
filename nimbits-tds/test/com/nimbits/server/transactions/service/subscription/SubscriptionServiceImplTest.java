@@ -16,7 +16,7 @@ package com.nimbits.server.transactions.service.subscription;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
 import com.nimbits.client.enums.subscription.SubscriptionType;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
@@ -62,7 +62,7 @@ public class SubscriptionServiceImplTest extends NimbitsServletTest {
     public void testOkToProcess() throws Exception {
 
 
-        EntityName name = CommonFactoryLocator.getInstance().createName("sub1", EntityType.subscription);
+        EntityName name = CommonFactory.createName("sub1", EntityType.subscription);
         Entity entity = EntityModelFactory.createEntity(name, EntityType.subscription);
         Subscription s = SubscriptionFactory.createSubscription(entity, point.getKey(), SubscriptionType.newValue,
                 SubscriptionNotifyMethod.email, 2,false, true);
@@ -79,7 +79,7 @@ public class SubscriptionServiceImplTest extends NimbitsServletTest {
     public void testOkToProcess2() throws Exception {
 
 
-        EntityName name = CommonFactoryLocator.getInstance().createName("sub1", EntityType.subscription);
+        EntityName name = CommonFactory.createName("sub1", EntityType.subscription);
         Entity entity = EntityModelFactory.createEntity(name, EntityType.subscription);
         Subscription s = SubscriptionFactory.createSubscription(entity, point.getKey(), SubscriptionType.newValue,
                 SubscriptionNotifyMethod.email, 100,false, true);

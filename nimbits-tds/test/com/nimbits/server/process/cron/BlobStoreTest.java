@@ -21,7 +21,7 @@ import com.nimbits.client.enums.ExportType;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
@@ -29,7 +29,6 @@ import com.nimbits.client.model.file.FileFactory;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.io.blob.BlobStoreFactory;
 import com.nimbits.server.process.task.DeleteBlobTask;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -63,10 +62,10 @@ public class BlobStoreTest extends NimbitsServletTest {
     @Test
     public void deleteOrphansTest() throws NimbitsException, IOException, InterruptedException {
 
-        EntityName name = CommonFactoryLocator.getInstance().createName("gg", EntityType.file);
+        EntityName name = CommonFactory.createName("gg", EntityType.file);
         String key = BlobStoreFactory.getInstance().createFile(name, "some text", ExportType.plain);
 
-        EntityName nameLost = CommonFactoryLocator.getInstance().createName("lost name", EntityType.file);
+        EntityName nameLost = CommonFactory.createName("lost name", EntityType.file);
         String keyLost = BlobStoreFactory.getInstance().createFile(name, "some lost text", ExportType.plain);
 
         assertNotNull(key);

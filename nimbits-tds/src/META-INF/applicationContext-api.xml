@@ -51,7 +51,7 @@
 
     </bean>
     <bean id="value" class="com.nimbits.server.api.impl.ValueServletImpl">
-        <property name="commonFactory" ref="commonFactory" />
+
         <property name="valueService" ref="valueService" />
         <property name="entityService" ref="entityService" />
         <property name="userService" ref="userService" />
@@ -81,7 +81,6 @@
 
     <bean id="point" class="com.nimbits.server.api.impl.PointServletImpl">
         <property name="entityService" ref="entityService" />
-        <property name="commonFactory" ref="commonFactory" />
         <property name="valueService" ref="valueService" />
         <property name="userService" ref="userService" />
         <property name="settingsService" ref="settingsService" />
@@ -91,7 +90,6 @@
 
     <bean id="series" class="com.nimbits.server.api.impl.SeriesServletImpl">
         <property name="timespanService" ref="timespanService" />
-        <property name="commonFactory" ref="commonFactory" />
         <property name="entityService" ref="entityService" />
         <property name="userService" ref="userService" />
         <property name="settingsService" ref="settingsService" />

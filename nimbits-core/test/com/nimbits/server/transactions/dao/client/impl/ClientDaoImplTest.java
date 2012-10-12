@@ -1,10 +1,9 @@
 package com.nimbits.server.transactions.dao.client.impl;
 
 import com.nimbits.client.enums.client.CommunicationType;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.server.transactions.dao.client.ClientDao;
-import com.nimbits.server.transactions.dao.entity.EntityJPATransactions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -33,7 +32,7 @@ public class ClientDaoImplTest {
 
     @Test
     public void testAddClientCommunication() throws Exception {
-        EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress("b@b.com");
+        EmailAddress emailAddress = CommonFactory.createEmailAddress("b@b.com");
         clientDao.addClientCommunication(emailAddress, "111", "company", "name", "hello world", CommunicationType.devRequest);
     }
 }

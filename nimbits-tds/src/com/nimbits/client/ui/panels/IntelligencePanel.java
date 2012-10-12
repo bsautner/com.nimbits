@@ -38,7 +38,7 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
@@ -390,7 +390,7 @@ public class IntelligencePanel extends NavigationEventProvider {
         private Intelligence createUpdate() throws NimbitsException {
             Intelligence update;
 
-            EntityName name = CommonFactoryLocator.getInstance().createName(nameField.getValue(), EntityType.calculation);
+            EntityName name = CommonFactory.createName(nameField.getValue(), EntityType.calculation);
 
        if (entity.getEntityType().equals(EntityType.intelligence)) {
             update = (Intelligence)entity;

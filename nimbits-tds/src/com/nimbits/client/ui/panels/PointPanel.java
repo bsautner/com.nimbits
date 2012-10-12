@@ -196,7 +196,7 @@ public class PointPanel extends LayoutContainer {
 
         if (! readOnlyForm) {
             //General
-            final Point point = (Point)entity;
+            final Point point = entity;
 
 
             point.setDescription(description.getValue());
@@ -278,7 +278,7 @@ public class PointPanel extends LayoutContainer {
 
         simple.add(h);
 
-        final Point point = (Point)entity;
+        final Point point = entity;
 
         high.setFieldLabel("High Value");
         high.setValue(point.getHighAlarm());
@@ -382,7 +382,7 @@ public class PointPanel extends LayoutContainer {
         final TableData tdVerticalPanel = new TableData();
         tdVerticalPanel.setHorizontalAlign(HorizontalAlignment.CENTER);
         tdVerticalPanel.setMargin(5);
-        final Point point = (Point)entity;
+        final Point point = entity;
         compression.setFieldLabel("Compression Filter");
         compression.setReadOnly(this.readOnlyForm);
         hysteresisType = hysteresisTypeCombo(point.getFilterType());

@@ -16,6 +16,7 @@ package com.nimbits.server.transactions.service.counter;
 import com.nimbits.server.transactions.dao.counter.ShardedCounter;
 import com.nimbits.server.transactions.dao.counter.ShardedDate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -27,23 +28,24 @@ import java.util.Date;
  */
 
 @Service("counterService")
+@Transactional
 public class CounterServiceImpl implements CounterService {
 
 
    @Override
-   public void createShards(String name) {
+   public void createShards(final String name) {
 
-       ShardedCounter counter = new ShardedCounter(name);
+       final ShardedCounter counter = new ShardedCounter(name);
        counter.addShards(10);
 
    }
 
    @Override
-   public void incrementCounter(String name) {
+   public void incrementCounter(final String name) {
 
 
 
-       ShardedCounter counter = new ShardedCounter(name);
+       final ShardedCounter counter = new ShardedCounter(name);
 
        counter.increment();
 
@@ -51,13 +53,13 @@ public class CounterServiceImpl implements CounterService {
 
    @Override
    public long getCount(String name) {
-       ShardedCounter counter = new ShardedCounter(name);
+       final ShardedCounter counter = new ShardedCounter(name);
        return counter.getCount();
    }
 
    @Override
-   public Date updateDateCounter(String name) {
-       ShardedDate counter = new ShardedDate(name);
+   public Date updateDateCounter(final String name) {
+       final ShardedDate counter = new ShardedDate(name);
        return counter.update();
 
 
@@ -65,7 +67,7 @@ public class CounterServiceImpl implements CounterService {
 
    @Override
    public Date getDateCounter(String name) {
-       ShardedDate counter = new ShardedDate(name);
+       final ShardedDate counter = new ShardedDate(name);
        return counter.getMostRecent();
 
    }

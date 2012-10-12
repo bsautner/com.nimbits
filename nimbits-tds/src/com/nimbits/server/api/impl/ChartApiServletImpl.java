@@ -22,7 +22,7 @@ import com.nimbits.client.enums.ExportType;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.timespan.Timespan;
@@ -210,12 +210,12 @@ public class ChartApiServletImpl extends ApiServlet implements org.springframewo
     private static List<EntityName> createPointList(final String pointsListParam, final String pointParamName) throws NimbitsException {
         final List<EntityName> pointList = new ArrayList<EntityName>(10);
         if (!Utils.isEmptyString(pointParamName)) {
-            pointList.add(CommonFactoryLocator.getInstance().createName(pointParamName, EntityType.point));
+            pointList.add(CommonFactory.createName(pointParamName, EntityType.point));
         } else if (!Utils.isEmptyString(pointsListParam)) {
             final String[] p1 = COMPILE.split(pointsListParam);
             final List<String> pointsParams = Arrays.asList(p1);
             for (final String pn : pointsParams) {
-                pointList.add(CommonFactoryLocator.getInstance().createName(pn, EntityType.point));
+                pointList.add(CommonFactory.createName(pn, EntityType.point));
             }
         }
         return pointList;

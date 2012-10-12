@@ -53,11 +53,11 @@ public class TaskImpl implements Task {
     private static final String QUEUE_RECORD_VALUE = "recordvaluequeue";
     private static final String QUEUE_PROCESS_BATCH = "processbatchqueue";
     private static final String QUEUE_DELETE_DATA = "deletedata";
-    private static final String QUEUE_DELETE_ORPHANS = "orphans";
+    private static final String QUEUE_DELETE_BLOB= "blob";
 
     private static final String DEFAULT = "default";
     private static final String PATH_CORE_TASK = "/task/coreTask";
-    private static final String PATH_DELETE_ORPHANS_TASK = "/task/orphanTask";
+    private static final String PATH_DELETE_BLOB_TASK = "/task/deleteBlobTask";
     private static final String PATH_POINT_MAINT_TASK = "/task/pointTask";
     private static final String PATH_MOVE_TASK = "/task/moveTask";
     private static final String PATH_TASK_RECORD_VALUE = "/task/valueTask";
@@ -105,9 +105,9 @@ public class TaskImpl implements Task {
     @Override
     public void startDeleteBlobTask(final BlobKey key) {
 
-        final Queue queue =  QueueFactory.getQueue( DEFAULT  );
+        final Queue queue =  QueueFactory.getQueue( QUEUE_DELETE_BLOB  );
 
-        queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_ORPHANS_TASK)
+        queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_BLOB_TASK)
                 .param(Parameters.key.getText(),  key.getKeyString())
         );
     }

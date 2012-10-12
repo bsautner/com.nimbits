@@ -42,10 +42,10 @@
 <pre class="prettyprint">
     //nimbits uses a robust, type safe, factory model.
     private void sample() {
-        EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress("test@example.com");
+        EmailAddress emailAddress = CommonFactory.createEmailAddress("test@example.com");
         NimbitsUser user = UserFactory.createNimbitsUser(emailAddress, "pas$$word");
         NimbitsClient client = NimbitsClientFactory.getInstance(user, "http://mynimbitsserver.domain.com");
-        PointName pointName = CommonFactoryLocator.getInstance().createPointName("MyDataPoint");
+        PointName pointName = CommonFactory.createPointName("MyDataPoint");
         Value currentValue = client.getCurrentRecordedValue(pointName);
 
         System.out.println(currentValue.getValue()); //get the last recorded double value

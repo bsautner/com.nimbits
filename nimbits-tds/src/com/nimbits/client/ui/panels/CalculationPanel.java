@@ -33,7 +33,7 @@ import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.calculation.CalculationModelFactory;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
@@ -324,7 +324,7 @@ public class CalculationPanel extends NavigationEventProvider {
         @Override
         public void componentSelected(ButtonEvent buttonEvent) {
             try {
-                EntityName name = CommonFactoryLocator.getInstance().createName(nameField.getValue(), EntityType.calculation);
+                EntityName name = CommonFactory.createName(nameField.getValue(), EntityType.calculation);
                 final Calculation update = createCalculation(name, xCombo, yCombo, zCombo, targetcombo, enabled, formula);
                 runEquation(update);
             } catch (NimbitsException e) {
@@ -425,7 +425,7 @@ public class CalculationPanel extends NavigationEventProvider {
             box.show();
             final Calculation update;
             try {
-                final EntityName name = CommonFactoryLocator.getInstance().createName(nameField.getValue(), EntityType.calculation);
+                final EntityName name = CommonFactory.createName(nameField.getValue(), EntityType.calculation);
                 update = createCalculation(name, xCombo, yCombo, zCombo, targetcombo, enabled, formula);
             } catch (NimbitsException e) {
                 FeedbackHelper.showError(e);

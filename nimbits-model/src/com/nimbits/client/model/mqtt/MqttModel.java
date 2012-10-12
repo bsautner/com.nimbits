@@ -14,7 +14,7 @@
 package com.nimbits.client.model.mqtt;
 
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 
 import java.io.Serializable;
@@ -45,7 +45,7 @@ public class MqttModel  implements Serializable, Mqtt {
 
     @Override
     public EmailAddress getEmail() throws NimbitsException {
-        return CommonFactoryLocator.getInstance().createEmailAddress(email);
+        return CommonFactory.createEmailAddress(email);
     }
 
     @Override

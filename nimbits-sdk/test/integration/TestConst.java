@@ -12,7 +12,7 @@ package integration;/*
  */
 
 import com.nimbits.client.constants.Const;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+
 import com.nimbits.client.model.email.EmailAddress;
 import org.junit.Test;
 

@@ -16,7 +16,7 @@ package com.nimbits.server.orm;
 import com.nimbits.client.enums.AuthLevel;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.accesskey.AccessKey;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
@@ -156,7 +156,7 @@ public class UserEntity extends EntityStore implements User {
 
     @Override
     public EmailAddress getEmail() throws NimbitsException {
-        return CommonFactoryLocator.getInstance().createEmailAddress(key.getName());
+        return CommonFactory.createEmailAddress(key.getName());
     }
     @Override
     public long getFacebookID() {

@@ -21,7 +21,7 @@ import com.nimbits.client.enums.ExportType;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
@@ -76,9 +76,9 @@ public class BlobServletImpl extends ApiServlet implements org.springframework.w
             String protectionLevelParam = req.getParameter(Parameters.protection.getText());
             final int lastIndex = diagramNameParam.lastIndexOf('\\');
             final String fileName = diagramNameParam.substring(lastIndex + 1);
-            session.setAttribute(Parameters.email.getText(), CommonFactoryLocator.getInstance().createEmailAddress(email));
+            session.setAttribute(Parameters.email.getText(), CommonFactory.createEmailAddress(email));
 
-            final EntityName diagramName = CommonFactoryLocator.getInstance().createName(fileName, EntityType.file);
+            final EntityName diagramName = CommonFactory.createName(fileName, EntityType.file);
             PrintWriter out = res.getWriter();
 
             com.nimbits.client.model.file.File file = null;

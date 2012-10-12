@@ -43,7 +43,7 @@ import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
 import com.nimbits.client.enums.subscription.SubscriptionType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
@@ -396,7 +396,7 @@ public class SubscriptionPanel extends NavigationEventProvider {
                     SubscriptionNotifyMethod subscriptionNotifyMethod = methodCombo.getValue().getMethod();
                     SubscriptionType subscriptionType =  typeCombo.getValue().getMethod();
                     try {
-                        EntityName name = CommonFactoryLocator.getInstance().createName(subscriptionName.getValue(), EntityType.subscription);
+                        EntityName name = CommonFactory.createName(subscriptionName.getValue(), EntityType.subscription);
 
 
                         final Subscription update;

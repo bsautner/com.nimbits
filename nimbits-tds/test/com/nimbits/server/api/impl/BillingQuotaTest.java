@@ -18,7 +18,7 @@ import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactory;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
@@ -41,9 +41,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -59,7 +57,8 @@ import static org.junit.Assert.assertTrue;
         "classpath:META-INF/applicationContext-cron.xml",
         "classpath:META-INF/applicationContext-dao.xml",
         "classpath:META-INF/applicationContext-service.xml",
-        "classpath:META-INF/applicationContext-task.xml"
+        "classpath:META-INF/applicationContext-task.xml",
+        "classpath:META-INF/applicationContext-factory.xml"
 
 })
 public class BillingQuotaTest  extends NimbitsServletTest {
@@ -67,8 +66,6 @@ public class BillingQuotaTest  extends NimbitsServletTest {
     @Resource(name = "value")
     ValueServletImpl valueServlet;
 
-    @Resource(name = "commonFactory")
-    CommonFactory commonFactory;
 
     @Resource(name="valueService")
     ValueService valueService;
@@ -96,7 +93,7 @@ public class BillingQuotaTest  extends NimbitsServletTest {
         User u = (User) sample.get(0);
         assertTrue(u.isBillingEnabled());
 
-        EntityName name = commonFactory.createName(Const.ACCOUNT_BALANCE, EntityType.point);
+        EntityName name = CommonFactory.createName(Const.ACCOUNT_BALANCE, EntityType.point);
         List<Entity> list = entityService.getEntityByName(user,name, EntityType.point );
         assertFalse(list.isEmpty());
         Point accountBalance = (Point) list.get(0);
@@ -137,7 +134,7 @@ public class BillingQuotaTest  extends NimbitsServletTest {
         double startingBalance = 5.00;
 
         entityService.addUpdateEntity(user, user);
-        EntityName name =commonFactory.createName(Const.ACCOUNT_BALANCE, EntityType.point);
+        EntityName name =CommonFactory.createName(Const.ACCOUNT_BALANCE, EntityType.point);
         List<Entity> list = entityService.getEntityByName(user,name, EntityType.point );
         assertFalse(list.isEmpty());
         Point accountBalance = (Point) list.get(0);
@@ -192,7 +189,7 @@ public class BillingQuotaTest  extends NimbitsServletTest {
         double startingBalance = 5.00;
 
         entityService.addUpdateEntity(user, user);
-        EntityName name = commonFactory.createName(Const.ACCOUNT_BALANCE, EntityType.point);
+        EntityName name = CommonFactory.createName(Const.ACCOUNT_BALANCE, EntityType.point);
         List<Entity> list = entityService.getEntityByName(user,name, EntityType.point );
         assertFalse(list.isEmpty());
         Point accountBalance = (Point) list.get(0);
@@ -237,7 +234,7 @@ public class BillingQuotaTest  extends NimbitsServletTest {
         double startingBalance = 5.00;
 
         entityService.addUpdateEntity(user, user);
-        EntityName name = commonFactory.createName(Const.ACCOUNT_BALANCE, EntityType.point);
+        EntityName name = CommonFactory.createName(Const.ACCOUNT_BALANCE, EntityType.point);
         List<Entity> list = entityService.getEntityByName(user,name, EntityType.point );
         assertFalse(list.isEmpty());
         Point accountBalance = (Point) list.get(0);

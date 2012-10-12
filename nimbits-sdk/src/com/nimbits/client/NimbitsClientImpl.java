@@ -23,7 +23,7 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.calculation.Calculation;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
@@ -228,7 +228,7 @@ public class NimbitsClientImpl implements NimbitsClient {
     public Value recordValue(final String name,
                              final double value) throws NimbitsException {
 
-        final EntityName name1 = CommonFactoryLocator.getInstance().createName(name, EntityType.point);
+        final EntityName name1 = CommonFactory.createName(name, EntityType.point);
 
 
         return recordValue(name1, value, new Date());
@@ -253,7 +253,7 @@ public class NimbitsClientImpl implements NimbitsClient {
     @Override
     public Value recordValue(final String name, final double value, final Date timestamp) throws NimbitsException {
 
-        return recordValue(CommonFactoryLocator.getInstance().createName(name, EntityType.point), value, timestamp);
+        return recordValue(CommonFactory.createName(name, EntityType.point), value, timestamp);
     }
 
     public String recordBatch(String params) {
@@ -352,7 +352,7 @@ public class NimbitsClientImpl implements NimbitsClient {
     @Override
     @Deprecated
     public Point addPoint(String pointName) throws NimbitsException {
-        EntityName name = CommonFactoryLocator.getInstance().createName(pointName, EntityType.point);
+        EntityName name = CommonFactory.createName(pointName, EntityType.point);
         return addPoint(name);
     }
 
@@ -387,7 +387,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
     @Override
     public Point getPoint(String pointName) throws NimbitsException {
-        EntityName name = CommonFactoryLocator.getInstance().createName(pointName, EntityType.point);
+        EntityName name = CommonFactory.createName(pointName, EntityType.point);
         return getPoint(name);
     }
 
@@ -516,7 +516,7 @@ public class NimbitsClientImpl implements NimbitsClient {
     }
 
     public List<Value> getSeries(final String name, final int count) throws NimbitsException {
-        EntityName name1 = CommonFactoryLocator.getInstance().createName(name, EntityType.point);
+        EntityName name1 = CommonFactory.createName(name, EntityType.point);
         return getSeries(name1, count);
 
     }

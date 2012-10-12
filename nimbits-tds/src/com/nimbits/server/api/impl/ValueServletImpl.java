@@ -19,6 +19,7 @@ import com.nimbits.client.constants.UserMessages;
 import com.nimbits.client.constants.Words;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.location.Location;
@@ -71,7 +72,7 @@ public class ValueServletImpl extends ApiServlet implements org.springframework.
 
             if (user != null && ! user.isRestricted()) {
 
-                final EntityName pointName = commonFactory.createName(getParam(Parameters.point), EntityType.point);
+                final EntityName pointName = CommonFactory.createName(getParam(Parameters.point), EntityType.point);
                 final List<Entity> points =  entityService.getEntityByName(user, pointName, EntityType.point);
 
                 if (points.isEmpty()) {
@@ -189,7 +190,7 @@ public class ValueServletImpl extends ApiServlet implements org.springframework.
             result = entityService.getEntityByKey(u, uuid, EntityType.point);
         }
         else if (!Utils.isEmptyString(pointNameParam)) {
-            final EntityName pointName =  commonFactory.createName(pointNameParam, EntityType.point);
+            final EntityName pointName =  CommonFactory.createName(pointNameParam, EntityType.point);
 
             result = entityService.getEntityByName(u, pointName, EntityType.point);
         }

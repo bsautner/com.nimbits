@@ -2,7 +2,7 @@ package com.nimbits.client;
 
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
@@ -11,9 +11,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -35,9 +33,9 @@ public class NimbitsClientImplTest {
 
         //  private final static String appscale =  "http://127.0.0.1:8888";
         String url ="http://nimbits1.appspot.com";
-        EmailAddress em = CommonFactoryLocator.getInstance().createEmailAddress(email);
+        EmailAddress em = CommonFactory.createEmailAddress(email);
         NimbitsUser g = new NimbitsUser(em, password);
-        pointName = CommonFactoryLocator.getInstance().createName(p, EntityType.point);
+        pointName = CommonFactory.createName(p, EntityType.point);
         client = NimbitsClientFactory.getInstance(g, url);
 
     }

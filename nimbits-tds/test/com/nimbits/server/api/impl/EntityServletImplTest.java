@@ -20,7 +20,7 @@ import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
 import com.nimbits.client.enums.subscription.SubscriptionType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
@@ -55,7 +55,8 @@ import static org.junit.Assert.assertNotNull;
         "classpath:META-INF/applicationContext-cron.xml",
         "classpath:META-INF/applicationContext-dao.xml",
         "classpath:META-INF/applicationContext-service.xml",
-        "classpath:META-INF/applicationContext-task.xml"
+        "classpath:META-INF/applicationContext-task.xml",
+        "classpath:META-INF/applicationContext-factory.xml"
 
 })
 public class EntityServletImplTest extends NimbitsServletTest {
@@ -251,7 +252,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
         req.removeAllParameters();
         req.addParameter("id", point.getKey());
 
-        EntityName name = CommonFactoryLocator.getInstance().createName("sub1", EntityType.subscription);
+        EntityName name = CommonFactory.createName("sub1", EntityType.subscription);
         Entity se = EntityModelFactory.createEntity(name, "", EntityType.subscription, ProtectionLevel.onlyConnection,
                 point.getKey(), user.getKey());
 

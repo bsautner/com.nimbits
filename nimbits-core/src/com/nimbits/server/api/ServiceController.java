@@ -2,8 +2,7 @@ package com.nimbits.server.api;
 
 import com.nimbits.client.enums.client.CommunicationType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactory;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.mqtt.Mqtt;
 import com.nimbits.client.model.mqtt.MqttModel;
@@ -55,8 +54,7 @@ public class ServiceController {
     @Resource(name="mqttService")
     private MqttService mqttService;
 
-    @Resource(name="commonFactory")
-    private CommonFactory commonFactory;
+
 
 
 
@@ -112,7 +110,7 @@ public class ServiceController {
     {
 
         try {
-            EmailAddress em = CommonFactoryLocator.getInstance().createEmailAddress(email);
+            EmailAddress em = CommonFactory.createEmailAddress(email);
             clientService.addClientCommunication(em, "", company, name, request, CommunicationType.devRequest);
 
             model.addAttribute("TEXT","OK");

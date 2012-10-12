@@ -15,10 +15,10 @@ package com.nimbits.xmpp;
 
 
 import com.nimbits.client.NimbitsClient;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.constants.Const;
-import com.nimbits.client.model.common.*;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
@@ -114,7 +114,7 @@ public class XMPPClientImpl extends Observable implements XMPPClient {
 
 
     public boolean connect(String resourceName) throws NimbitsException {
-        EntityName name = CommonFactoryLocator.getInstance().createName(resourceName, EntityType.resource);
+        EntityName name = CommonFactory.createName(resourceName, EntityType.resource);
         return connect(name);
     }
 

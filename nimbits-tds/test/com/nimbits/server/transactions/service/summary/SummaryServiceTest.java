@@ -16,7 +16,7 @@ package com.nimbits.server.transactions.service.summary;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.SummaryType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactory;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
@@ -65,9 +65,7 @@ public class SummaryServiceTest extends NimbitsServletTest {
     @Resource(name="summaryService")
     SummaryService summaryService;  
     
-    @Resource(name="commonFactory")
-    CommonFactory common;
-   
+
     @Resource(name="entityService")
     EntityService entityService;
 
@@ -77,7 +75,7 @@ public class SummaryServiceTest extends NimbitsServletTest {
     @Test
     public void testProcessGet() throws NimbitsException, InterruptedException {
 
-        EntityName n = common.createName("summary test", EntityType.summary);
+        EntityName n = CommonFactory.createName("summary test", EntityType.summary);
         Entity e = EntityModelFactory.createEntity(n, EntityType.summary);
         Summary summary = SummaryModelFactory.createSummary(e,point.getKey(),
                 pointChild.getKey(),true, SummaryType.average, SUMMARY_INTERVAL_MS, new Date(0));

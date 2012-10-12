@@ -47,7 +47,8 @@ import static org.junit.Assert.*;
         "classpath:META-INF/applicationContext-cron.xml",
         "classpath:META-INF/applicationContext-dao.xml",
         "classpath:META-INF/applicationContext-service.xml",
-        "classpath:META-INF/applicationContext-task.xml"
+        "classpath:META-INF/applicationContext-task.xml",
+        "classpath:META-INF/applicationContext-factory.xml"
 
 })
 public class TimeServletImplTest {

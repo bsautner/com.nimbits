@@ -24,7 +24,7 @@ import com.nimbits.client.common.Utils;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
@@ -162,7 +162,7 @@ public class XMPPReceiverServlet extends ApiServlet implements org.springframewo
     private void createPoint(final String body, final User u) throws NimbitsException {
 
 
-        EntityName pointName = CommonFactoryLocator.getInstance().createName(body.substring(1).trim(), EntityType.point);
+        EntityName pointName = CommonFactory.createName(body.substring(1).trim(), EntityType.point);
         Entity entity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone,
                 u.getKey(), u.getKey(), UUID.randomUUID().toString());
         Point p = PointModelFactory.createPointModel(entity,0.0, 90, "", 0.0, false, false, false, 0, false, FilterType.fixedHysteresis, 0.1, false, PointType.basic, 0, false, 0.0 );
@@ -179,7 +179,7 @@ public class XMPPReceiverServlet extends ApiServlet implements org.springframewo
         String b[] = PATTERN.split(body);
         if (b.length == 2) {
 
-            EntityName pointName = CommonFactoryLocator.getInstance().createName(b[0], EntityType.point);
+            EntityName pointName = CommonFactory.createName(b[0], EntityType.point);
             String sval = b[1];
 
             try {
@@ -201,7 +201,7 @@ public class XMPPReceiverServlet extends ApiServlet implements org.springframewo
 
     private void sendCurrentValue(final String body, final User u) throws NimbitsException {
         if (!Utils.isEmptyString(body) && !body.isEmpty() && body.charAt(body.length() - 1) == '?') {
-            final EntityName pointName = CommonFactoryLocator.getInstance().createName(body.replace("?", ""), EntityType.point);
+            final EntityName pointName = CommonFactory.createName(body.replace("?", ""), EntityType.point);
 
             Entity e = entityService.getEntityByName(u, pointName, EntityType.point).get(0);
             // Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());

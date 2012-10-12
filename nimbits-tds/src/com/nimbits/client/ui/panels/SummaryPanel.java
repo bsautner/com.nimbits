@@ -42,7 +42,7 @@ import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.enums.SummaryType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
@@ -165,7 +165,7 @@ public class SummaryPanel extends NavigationEventProvider {
 
             }
 
-            final EntityName name = CommonFactoryLocator.getInstance().createName(summaryName.getValue(), EntityType.summary);
+            final EntityName name = CommonFactory.createName(summaryName.getValue(), EntityType.summary);
 
 
             // int alertSelected = (subscription == null) ? SubscriptionNotifyMethod.none.getCode() : subscription.getAlertNotifyMethod().getCode();

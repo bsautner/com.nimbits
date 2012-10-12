@@ -155,7 +155,7 @@
         GoogleUser user = UserFactory.createGoogleUser("example@gmail.com", "Pa$$word");
         NimbitsClient client = NimbitsClientFactory.getInstance(user, "http://nimbits1.appspot.com");
         XMPPClient xmpp = XMPPClientFactory.getInstance(client, "nimbits1");
-        PointName pointName = CommonFactoryLocator.getInstance().createPointName("foo");
+        PointName pointName = CommonFactory.createPointName("foo");
         Value value = ValueModelFactory.createValueModel(1.234);
         xmpp.connect();
         xmpp.sendValue(pointName, value);

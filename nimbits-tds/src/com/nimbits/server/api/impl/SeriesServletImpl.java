@@ -18,6 +18,7 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ExportType;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
@@ -92,7 +93,7 @@ public class SeriesServletImpl extends ApiServlet  implements org.springframewor
             } else {
 
 
-                final EntityName pointName = commonFactory.createName(name, EntityType.point);
+                final EntityName pointName = CommonFactory.createName(name, EntityType.point);
                 List<Entity> points = entityService.getEntityByName(user, pointName, EntityType.point);
                 if (! points.isEmpty()) {
                      Point point = (Point) points.get(0);

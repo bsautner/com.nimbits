@@ -100,7 +100,7 @@ public class ValueMemCacheImplTest extends NimbitsServletTest {
 
 
     @Test
-    public void splitListTest() {
+    public void splitListTest() throws NimbitsException {
 
         Random random = new Random();
         int size = 1000007;

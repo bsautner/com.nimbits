@@ -25,10 +25,7 @@ import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 import com.nimbits.server.admin.logging.LogHelper;
-
-import com.nimbits.server.process.task.TaskImpl;
-import com.nimbits.server.transactions.dao.value.ValueDAOImpl;
-
+import com.nimbits.server.process.task.Task;
 import com.nimbits.server.transactions.service.value.ValueTransactions;
 import org.springframework.stereotype.Component;
 
@@ -45,22 +42,15 @@ import java.util.logging.Logger;
 @Component("valueCache")
 public class ValueMemCacheImpl implements ValueTransactions {
 
-
-    private final MemcacheService cacheShared;
-
-
-
-
-
-
     static final Logger log = Logger.getLogger(ValueMemCacheImpl.class.getName());
-    private ValueDAOImpl valueDao;
-    private TaskImpl taskFactory;
+    private ValueTransactions valueDao;
+    private Task taskFactory;
+    private MemcacheService cacheFactory;
 
 
     public ValueMemCacheImpl() {
 
-        cacheShared = MemcacheServiceFactory.getMemcacheService();
+
     }
 
     private MemcacheService getBufferService(final Entity entity) {
@@ -74,54 +64,54 @@ public class ValueMemCacheImpl implements ValueTransactions {
 
     protected void addPointToActiveList(final Entity point) {
         Map<String, Entity> points;
-        if (cacheShared.contains(MemCacheKey.activePoints)) {
+        if (cacheFactory.contains(MemCacheKey.activePoints)) {
             try {
-                points = (Map<String, Entity>) cacheShared.get(MemCacheKey.activePoints);
+                points = (Map<String, Entity>) cacheFactory.get(MemCacheKey.activePoints);
                 if (points == null) { //contains a null map?
                     points = new HashMap<String, Entity>(1);
                     points.put(point.getKey(), point);
-                    cacheShared.delete(MemCacheKey.activePoints);
-                    cacheShared.put(MemCacheKey.activePoints, points);
+                    cacheFactory.delete(MemCacheKey.activePoints);
+                    cacheFactory.put(MemCacheKey.activePoints, points);
                 }
                 else if (! points.containsKey(point.getKey())) {
                     points.put(point.getKey(), point);
-                    cacheShared.delete(MemCacheKey.activePoints);
-                    cacheShared.put(MemCacheKey.activePoints, points);
+                    cacheFactory.delete(MemCacheKey.activePoints);
+                    cacheFactory.put(MemCacheKey.activePoints, points);
 
                 }
             } catch (InvalidValueException e) {
-                cacheShared.clearAll();
+                cacheFactory.clearAll();
                 points = new HashMap<String, Entity>(1);
                 points.put(point.getKey(), point);
-                cacheShared.delete(MemCacheKey.activePoints);
-                cacheShared.put(MemCacheKey.activePoints, points);
+                cacheFactory.delete(MemCacheKey.activePoints);
+                cacheFactory.put(MemCacheKey.activePoints, points);
             }
 
         }
         else {
             points = new HashMap<String, Entity>(1);
             points.put(point.getKey(), point);
-            cacheShared.put(MemCacheKey.activePoints, points);
+            cacheFactory.put(MemCacheKey.activePoints, points);
         }
     }
     protected void removePointFromActiveList(final Entity point) {
         Map<String, Entity> points;
-        if (cacheShared.contains(MemCacheKey.activePoints)) {
+        if (cacheFactory.contains(MemCacheKey.activePoints)) {
             try {
-                points = (Map<String, Entity>) cacheShared.get(MemCacheKey.activePoints);
+                points = (Map<String, Entity>) cacheFactory.get(MemCacheKey.activePoints);
 
                 if (points != null && ! points.containsKey(point.getKey())) {
                     points.remove(point.getKey());
-                    cacheShared.delete(MemCacheKey.activePoints);
-                    cacheShared.put(MemCacheKey.activePoints, points);
+                    cacheFactory.delete(MemCacheKey.activePoints);
+                    cacheFactory.put(MemCacheKey.activePoints, points);
 
                 }
             } catch (InvalidValueException e) {
-                cacheShared.clearAll();
+                cacheFactory.clearAll();
                 points = new HashMap<String, Entity>(1);
                 points.put(point.getKey(), point);
-                cacheShared.delete(MemCacheKey.activePoints);
-                cacheShared.put(MemCacheKey.activePoints, points);
+                cacheFactory.delete(MemCacheKey.activePoints);
+                cacheFactory.put(MemCacheKey.activePoints, points);
             }
 
         }
@@ -562,20 +552,28 @@ public class ValueMemCacheImpl implements ValueTransactions {
         return retObj;
     }
 
-    public void setValueDao(ValueDAOImpl valueDao) {
+    public void setValueDao(ValueTransactions valueDao) {
         this.valueDao = valueDao;
     }
 
-    public ValueDAOImpl getValueDao() {
+    public ValueTransactions getValueDao() {
         return valueDao;
     }
 
-    public void setTaskFactory(TaskImpl taskFactory) {
+    public void setTaskFactory(Task taskFactory) {
         this.taskFactory = taskFactory;
     }
 
-    public TaskImpl getTaskFactory() {
+    public Task getTaskFactory() {
         return taskFactory;
+    }
+
+    public void setCacheFactory(MemcacheService cacheFactory) {
+        this.cacheFactory = cacheFactory;
+    }
+
+    public MemcacheService getCacheFactory() {
+        return cacheFactory;
     }
 
 

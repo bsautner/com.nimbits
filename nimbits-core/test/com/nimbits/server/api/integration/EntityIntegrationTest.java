@@ -3,7 +3,7 @@ package com.nimbits.server.api.integration;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.entity.EntityModelFactory;
@@ -25,7 +25,7 @@ public class EntityIntegrationTest {
  //private final static String TEST_PATH = "http://nimbits.com:8080/core/service/entity";
     @Test
     public void testPost() throws NimbitsException {
-        EntityName name = CommonFactoryLocator.getInstance().createName("foo", EntityType.point);
+        EntityName name = CommonFactory.createName("foo", EntityType.point);
 
         Entity e = EntityModelFactory.createEntity(name, "local unit test", EntityType.point, ProtectionLevel.everyone,
                 "test@example.com", "test@example.com", UUID.randomUUID().toString());
@@ -53,7 +53,7 @@ public class EntityIntegrationTest {
 
     @Test
     public void testPointPost() throws NimbitsException {
-        EntityName name = CommonFactoryLocator.getInstance().createName("foo", EntityType.point);
+        EntityName name = CommonFactory.createName("foo", EntityType.point);
 
         Entity e = EntityModelFactory.createEntity(name, "local unit test", EntityType.point, ProtectionLevel.everyone,
                 "test@example.com", "test@example.com", UUID.randomUUID().toString());

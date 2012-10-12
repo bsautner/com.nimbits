@@ -19,7 +19,7 @@ import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.location.Location;
@@ -205,7 +205,7 @@ public class ProcessBatchTask extends HttpServlet  implements org.springframewor
         Location location = LocationFactory.createLocation(lat, lng);
         final String data = getStringFromMap(m, DX + x);
         final String[] points = (String[]) m.get(P + x);
-        final EntityName pointName = CommonFactoryLocator.getInstance().createName(points[0], EntityType.point);
+        final EntityName pointName = CommonFactory.createName(points[0], EntityType.point);
         final String note =  getStringFromMap(m, N+x);
         final Date timestamp = getDateFromMap(m, x);
         final List<Value> values = geValuesFromMap(m, J + x);

@@ -14,7 +14,7 @@
 package com.nimbits.user;
 
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 
 /**
@@ -30,7 +30,7 @@ public class UserFactory {
 //    }
 
     public static NimbitsUser createNimbitsUser(final String emailAddress, final String secretKey) throws NimbitsException {
-        final EmailAddress emailAddress1 = CommonFactoryLocator.getInstance().createEmailAddress(emailAddress);
+        final EmailAddress emailAddress1 = CommonFactory.createEmailAddress(emailAddress);
         return new NimbitsUser(emailAddress1, secretKey);
     }
     public static NimbitsUser createNimbitsUser(final EmailAddress emailAddress, final String secretKey) throws NimbitsException {
@@ -41,7 +41,7 @@ public class UserFactory {
     }
 
     public static GoogleUser createGoogleUser(final String email, final String googlePassword) throws NimbitsException {
-        final EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
+        final EmailAddress emailAddress = CommonFactory.createEmailAddress(email);
         return new GoogleUser(emailAddress, googlePassword);
 
 

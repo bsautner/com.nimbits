@@ -1,8 +1,8 @@
 package integration;
 
-import com.nimbits.client.enums.*;
+import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import org.junit.Test;
@@ -23,7 +23,7 @@ public class ChartApiTest {
 
     @Test
     public void testChartApi() throws InterruptedException, IOException, NimbitsException {
-        EntityName name = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString(), EntityType.point);
+        EntityName name = CommonFactory.createName(UUID.randomUUID().toString(), EntityType.point);
         Point point = ClientHelper.createSeedPoint(name);
         assertNotNull(point);
         Point result = ClientHelper.client().getPoint(name);

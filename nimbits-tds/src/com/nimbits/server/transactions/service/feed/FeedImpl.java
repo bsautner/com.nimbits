@@ -20,7 +20,7 @@ import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
@@ -36,7 +36,6 @@ import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.feed.Feed;
 import com.nimbits.client.service.value.ValueService;
 import com.nimbits.server.admin.common.ServerInfo;
- 
 import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.transactions.service.user.UserServerService;
@@ -314,7 +313,7 @@ public class FeedImpl extends RemoteServiceServlet implements Feed {
     @Override
     public Point createFeedPoint(final User user) throws NimbitsException {
 
-        final EntityName name = CommonFactoryLocator.getInstance().createName(Const.TEXT_DATA_FEED, EntityType.point);
+        final EntityName name = CommonFactory.createName(Const.TEXT_DATA_FEED, EntityType.point);
         final Entity entity = EntityModelFactory.createEntity(name, "", EntityType.feed,
                 ProtectionLevel.onlyConnection, user.getKey(), user.getKey(), UUID.randomUUID().toString());
         final Point point = PointModelFactory.createPointModel(entity, 0.0, 90, "", 0.0, false, false, false, 0, false, FilterType.fixedHysteresis, 0.1, false, PointType.feed , 0, false, 0.0);

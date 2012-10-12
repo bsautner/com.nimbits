@@ -21,8 +21,7 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.accesskey.AccessKeyFactory;
 import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.common.CommonFactory;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
@@ -70,7 +69,8 @@ import static org.junit.Assert.*;
         "classpath:META-INF/applicationContext-cron.xml",
         "classpath:META-INF/applicationContext-dao.xml",
         "classpath:META-INF/applicationContext-service.xml",
-        "classpath:META-INF/applicationContext-task.xml"
+        "classpath:META-INF/applicationContext-task.xml",
+        "classpath:META-INF/applicationContext-factory.xml"
 
 })
 public class NimbitsServletTest {
@@ -93,11 +93,6 @@ public class NimbitsServletTest {
 
     @Resource(name="systemCron")
     public SystemCron systemCron;
-
-
-    @Resource(name="commonFactory")
-    public CommonFactory commonFactory;
-
 
     public MockHttpServletRequest req;
     public MockHttpServletResponse resp;
@@ -152,12 +147,12 @@ public class NimbitsServletTest {
         settingsService.addSetting(SettingType.admin, email);
         settingsService.addSetting(SettingType.serverIsDiscoverable,true);
 
-       emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
+       emailAddress = CommonFactory.createEmailAddress(email);
 
 
-        pointName = CommonFactoryLocator.getInstance().createName("point", EntityType.point);
-        pointChildName = CommonFactoryLocator.getInstance().createName("pointChild", EntityType.point);
-        groupName = CommonFactoryLocator.getInstance().createName("group1", EntityType.point);
+        pointName = CommonFactory.createName("point", EntityType.point);
+        pointChildName = CommonFactory.createName("pointChild", EntityType.point);
+        groupName = CommonFactory.createName("group1", EntityType.point);
 
 
         User r = userService.createUserRecord(emailAddress);

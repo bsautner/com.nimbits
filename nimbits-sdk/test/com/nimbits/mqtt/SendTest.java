@@ -14,7 +14,7 @@
 package com.nimbits.mqtt;
 
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.value.Value;
@@ -41,8 +41,8 @@ public class SendTest {
 
 
 
-        EntityName name = CommonFactoryLocator.getInstance().createName(pointName, EntityType.point);
-        EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress( account);
+        EntityName name = CommonFactory.createName(pointName, EntityType.point);
+        EmailAddress emailAddress = CommonFactory.createEmailAddress(account);
 
         for (int i = 0; i < 100; i++) {
             Value v = ValueFactory.createValueModel(r.nextDouble());

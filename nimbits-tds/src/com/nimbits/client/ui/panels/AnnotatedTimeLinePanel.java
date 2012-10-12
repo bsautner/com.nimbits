@@ -44,8 +44,8 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.GxtModel;
 import com.nimbits.client.model.TreeModel;
-import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.common.CommonIdentifier;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.timespan.Timespan;
@@ -149,7 +149,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
 
     private void addPointDataToTable(final TreeModel entity, final List<Value> values) throws NimbitsException {
 
-        removePointDataFromTable(CommonFactoryLocator.getInstance().createName(DEFAULT_EMPTY_COL, EntityType.point));
+        removePointDataFromTable(CommonFactory.createName(DEFAULT_EMPTY_COL, EntityType.point));
 
         final int r = dataTable.getNumberOfColumns();
         int currentRow = dataTable.getNumberOfRows();
@@ -448,7 +448,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
         }
         if (points.isEmpty()) {
             try {
-                removePointDataFromTable(CommonFactoryLocator.getInstance().createName(DEFAULT_EMPTY_COL, EntityType.point));
+                removePointDataFromTable(CommonFactory.createName(DEFAULT_EMPTY_COL, EntityType.point));
                 addEmptyDataToTable();
             } catch (NimbitsException e) {
                 FeedbackHelper.showError(e);

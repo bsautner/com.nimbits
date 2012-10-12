@@ -19,7 +19,7 @@ import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.helper.EntityHelper;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
@@ -118,7 +118,7 @@ public class EntityServiceTest extends NimbitsServletTest {
     @Test(expected=NimbitsException.class)
     public void duplicateNameTest() throws NimbitsException {
 
-        EntityName name = CommonFactoryLocator.getInstance().createName("TWICE", EntityType.point);
+        EntityName name = CommonFactory.createName("TWICE", EntityType.point);
         Entity model = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.everyone,
                 user.getKey(), user.getKey());
 
@@ -163,7 +163,7 @@ public class EntityServiceTest extends NimbitsServletTest {
     @Test
     public void duplicateNameGroupsOKTest()  {
         try {
-            EntityName name = CommonFactoryLocator.getInstance().createName("TWICE", EntityType.category);
+            EntityName name = CommonFactory.createName("TWICE", EntityType.category);
             Entity model = EntityModelFactory.createEntity(name, "", EntityType.category, ProtectionLevel.everyone,
                     user.getKey(), user.getKey());
             Entity e = entityService.addUpdateEntity(model);

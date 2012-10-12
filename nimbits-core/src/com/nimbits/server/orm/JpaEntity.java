@@ -1,12 +1,11 @@
 package com.nimbits.server.orm;
 
 
-
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
@@ -122,7 +121,7 @@ public class JpaEntity implements com.nimbits.client.model.entity.Entity {
 
     @Override
     public EntityName getName() throws NimbitsException {
-        return CommonFactoryLocator.getInstance().createName(this.entityName, EntityType.get(this.entityType));
+        return CommonFactory.createName(this.entityName, EntityType.get(this.entityType));
     }
 
     @Override

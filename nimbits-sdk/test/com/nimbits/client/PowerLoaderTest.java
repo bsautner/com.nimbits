@@ -15,11 +15,10 @@ package com.nimbits.client;
 
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.user.NimbitsUser;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Random;
@@ -44,9 +43,9 @@ public class PowerLoaderTest {
         String password = "key";
         String url ="http://localhost:8082";
         String p = "app demo";
-        EmailAddress em = CommonFactoryLocator.getInstance().createEmailAddress(email);
+        EmailAddress em = CommonFactory.createEmailAddress(email);
         NimbitsUser g = new NimbitsUser(em, password);
-        pointName = CommonFactoryLocator.getInstance().createName(p, EntityType.point);
+        pointName = CommonFactory.createName(p, EntityType.point);
         client = NimbitsClientFactory.getInstance(g, url);
 
         Random r = new Random();

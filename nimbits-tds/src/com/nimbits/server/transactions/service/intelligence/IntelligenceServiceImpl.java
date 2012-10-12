@@ -22,7 +22,7 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.intelligence.Intelligence;
@@ -35,7 +35,6 @@ import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.intelligence.IntelligenceService;
 import com.nimbits.client.service.settings.SettingsService;
 import com.nimbits.server.http.HttpCommonFactory;
-
 import com.nimbits.server.transactions.service.user.UserServiceImpl;
 import com.nimbits.server.transactions.service.value.ValueServiceImpl;
 import org.springframework.stereotype.Service;
@@ -261,7 +260,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
                 // System.out.println(k);
                 if (k.contains(".data]") || k.contains(".value]") || k.contains(".note]")) {
                     String p = PATTERN.split(k)[0];
-                    EntityName pointName = CommonFactoryLocator.getInstance().createName(p, EntityType.point);
+                    EntityName pointName = CommonFactory.createName(p, EntityType.point);
                     String a = COMPILE.split(k)[1];
 
                     a = a.substring(0, a.indexOf(']'));

@@ -13,7 +13,7 @@ package integration;/*
 
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.server.gson.GsonFactory;
@@ -50,7 +50,7 @@ public class JsonTest {
     @Test
     public void testM2M() throws IOException, InterruptedException, NimbitsException {
 
-        EntityName pointName = CommonFactoryLocator.getInstance().createName(UUID.randomUUID().toString(), EntityType.point);
+        EntityName pointName = CommonFactory.createName(UUID.randomUUID().toString(), EntityType.point);
 
 
         Point point = ClientHelper.client().addPoint(pointName);

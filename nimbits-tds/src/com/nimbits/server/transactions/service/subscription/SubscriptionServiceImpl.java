@@ -13,6 +13,7 @@
 
 package com.nimbits.server.transactions.service.subscription;
 
+import com.google.appengine.api.datastore.DatastoreTimeoutException;
 import com.google.apphosting.api.ApiProxy;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.nimbits.client.common.Utils;
@@ -29,18 +30,18 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.xmpp.XmppResource;
 import com.nimbits.client.service.entity.EntityService;
+import com.nimbits.client.service.facebook.FacebookService;
+import com.nimbits.client.service.feed.Feed;
 import com.nimbits.client.service.subscription.SubscriptionService;
+import com.nimbits.client.service.twitter.TwitterService;
 import com.nimbits.client.service.user.UserService;
 import com.nimbits.client.service.value.ValueService;
+import com.nimbits.client.service.xmpp.XMPPService;
 import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.communication.email.EmailService;
-import com.nimbits.server.communication.xmpp.XmppServiceImpl;
-import com.nimbits.server.external.facebook.FacebookImpl;
-import com.nimbits.server.external.twitter.TwitterImpl;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.http.HttpCommonFactory;
 import com.nimbits.server.transactions.service.counter.CounterService;
-import com.nimbits.server.transactions.service.feed.FeedImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,10 +69,10 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
     private ValueService valueService;
     private EntityService entityService;
     private EmailService emailService;
-    private FeedImpl feedService;
-    private TwitterImpl twitterService;
-    private FacebookImpl facebookService;
-    private XmppServiceImpl xmppService;
+    private Feed feedService;
+    private TwitterService twitterService;
+    private FacebookService facebookService;
+    private XMPPService xmppService;
     private CounterService counterService;
 
     @Override
@@ -101,9 +102,13 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
             if  (okToProcess(subscription)) {
 
                 log.info("Processing Subscription " + subscription.getName().getValue());
-                counterService.updateDateCounter(subscription.getKey());
+                try {
+                    counterService.updateDateCounter(subscription.getKey());
+                } catch (DatastoreTimeoutException e) {
+                   return;// counterService.createShards(subscription.getKey());
+                }
 
-                entityService.addUpdateEntity(user, subscription);
+                //entityService.addUpdateEntity(user, subscription);
 
                 final List<Entity> subscriptionEntity = entityService.getEntityByKey(user, subscription.getKey(), EntityType.subscription);
 
@@ -168,7 +173,11 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
     }
 
-    private void processSubscriptionToIncreaseOrDecrease(Point point, Value v, Subscription subscription, User subscriber) throws NimbitsException {
+    private void processSubscriptionToIncreaseOrDecrease(
+            final Point point,
+            final Value v,
+            final Subscription subscription,
+            final User subscriber) throws NimbitsException {
         List<Value> prevValue = valueService.getPrevValue(point, new Date(v.getTimestamp().getTime() - 60000));
         if (! prevValue.isEmpty()) {
             if (subscription.getSubscriptionType().equals(SubscriptionType.decrease) && (prevValue.get(0).getDoubleValue() > v.getDoubleValue())) {
@@ -221,9 +230,6 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
 
         ApiProxy.Environment env = ApiProxy.getCurrentEnvironment();
         String host =  String.valueOf(env.getAttributes().get("com.google.appengine.runtime.default_version_hostname"));
-
-
-
         log.info("MQTT appId: " + host);
         Mqtt mqtt = MqttFactory.createMqtt(host, user.getEmail(), entity.getKey(), valueJson);
         String mqttJson = GsonFactory.getInstance().toJson(mqtt);
@@ -342,35 +348,35 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
         return emailService;
     }
 
-    public void setFeedService(FeedImpl feedService) {
+    public void setFeedService(Feed feedService) {
         this.feedService = feedService;
     }
 
-    public FeedImpl getFeedService() {
+    public Feed getFeedService() {
         return feedService;
     }
 
-    public void setTwitterService(TwitterImpl twitterService) {
+    public void setTwitterService(TwitterService twitterService) {
         this.twitterService = twitterService;
     }
 
-    public TwitterImpl getTwitterService() {
+    public TwitterService getTwitterService() {
         return twitterService;
     }
 
-    public void setFacebookService(FacebookImpl facebookService) {
+    public void setFacebookService(FacebookService facebookService) {
         this.facebookService = facebookService;
     }
 
-    public FacebookImpl getFacebookService() {
+    public FacebookService getFacebookService() {
         return facebookService;
     }
 
-    public void setXmppService(XmppServiceImpl xmppService) {
+    public void setXmppService(XMPPService xmppService) {
         this.xmppService = xmppService;
     }
 
-    public XmppServiceImpl getXmppService() {
+    public XMPPService getXmppService() {
         return xmppService;
     }
 

@@ -2,8 +2,7 @@ package com.nimbits.server.transactions.entity;
 
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
@@ -60,13 +59,13 @@ public class EntityDaoImplTest {
 
     @Test
     public void testSearchEntity() throws Exception {
-        EntityName name = CommonFactoryLocator.getInstance().createName("name", EntityType.point);
+        EntityName name = CommonFactory.createName("name", EntityType.point);
         Entity e = EntityModelFactory.createEntity(name, "description",
                 EntityType.point, ProtectionLevel.onlyMe, "b@b.com", "b@b.com", UUID.randomUUID().toString());
 
         entityTransactions.addEntity(e, "http://localhost");
 
-        EntityName name2 = CommonFactoryLocator.getInstance().createName("name 2", EntityType.point);
+        EntityName name2 = CommonFactory.createName("name 2", EntityType.point);
         Entity e2 = EntityModelFactory.createEntity(name2, "description 2",
                 EntityType.point, ProtectionLevel.onlyMe, "b@b.com", "b@b.com", UUID.randomUUID().toString());
 
@@ -79,7 +78,7 @@ public class EntityDaoImplTest {
 
     @Test
     public void testAddEntity() throws Exception {
-        EntityName name = CommonFactoryLocator.getInstance().createName("name", EntityType.point);
+        EntityName name = CommonFactory.createName("name", EntityType.point);
         Entity e = EntityModelFactory.createEntity(name, "description",
                 EntityType.point, ProtectionLevel.onlyMe, "b@b.com", "b@b.com", UUID.randomUUID().toString());
         assertNotNull(e);
@@ -90,7 +89,7 @@ public class EntityDaoImplTest {
     @Test
     public void testAddUpdateEntity() throws Exception {
 
-        EntityName name = CommonFactoryLocator.getInstance().createName("name", EntityType.point);
+        EntityName name = CommonFactory.createName("name", EntityType.point);
         Entity e = EntityModelFactory.createEntity(name, "description",
                 EntityType.point, ProtectionLevel.onlyMe, "b@b.com", "b@b.com", UUID.randomUUID().toString());
         assertNotNull(e);
@@ -105,7 +104,7 @@ public class EntityDaoImplTest {
     public void testAddUpdateEntityGPS() throws Exception {
 
         String uuid = UUID.randomUUID().toString();
-        EntityName name = CommonFactoryLocator.getInstance().createName("name", EntityType.point);
+        EntityName name = CommonFactory.createName("name", EntityType.point);
         Entity e = EntityModelFactory.createEntity(name, "description",
                 EntityType.point, ProtectionLevel.onlyMe, "b@b.com", "b@b.com",uuid );
         assertNotNull(e);
@@ -130,7 +129,7 @@ public class EntityDaoImplTest {
 
     public void testGetEntityByUUID() throws Exception {
         String uuid = UUID.randomUUID().toString();
-        EntityName name = CommonFactoryLocator.getInstance().createName("name", EntityType.point);
+        EntityName name = CommonFactory.createName("name", EntityType.point);
         Entity e = EntityModelFactory.createEntity(name, "description",
                 EntityType.point, ProtectionLevel.onlyMe, "b@b.com", "b@b.com", uuid);
         assertNotNull(e);
@@ -150,7 +149,7 @@ public class EntityDaoImplTest {
     @Test( )
     public void testDeleteEntityByUUID() throws Exception {
         String uuid = UUID.randomUUID().toString();
-        EntityName name = CommonFactoryLocator.getInstance().createName("name", EntityType.point);
+        EntityName name = CommonFactory.createName("name", EntityType.point);
         Entity e = EntityModelFactory.createEntity(name, "description",
                 EntityType.point, ProtectionLevel.onlyMe, "b@b.com", "b@b.com", uuid);
         assertNotNull(e);

@@ -28,14 +28,13 @@
         <property name="settingsService" ref="settingsService" />
     </bean>
 
-    <bean id="orphanTask" class="com.nimbits.server.process.task.DeleteBlobTask">
+    <bean id="deleteBlobTask" class="com.nimbits.server.process.task.DeleteBlobTask">
 
     </bean>
 
     <bean id="dumpTask" class="com.nimbits.server.process.task.DumpTask">
         <property name="valueService" ref="valueService" />
         <property name="emailService" ref="emailService" />
-        <property name="commonFactory" ref="commonFactory" />
         <property name="serverInfoService" ref="serverInfoService" />
     </bean>
 

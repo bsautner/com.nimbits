@@ -60,7 +60,7 @@ public class PointServiceImpl extends RemoteServiceServlet implements
 //                data = ExportHelperFactory.getInstance().exportPointDataToCSVSeparateColumns(points, values);
 //                final Entity entity = points.values().iterator().next();
 //                final EntityName name;
-//                name = entity != null ? entity.getName() : CommonFactoryLocator.getInstance().createName("nimbits_export", EntityType.file);
+//                name = entity != null ? entity.getName() : CommonFactory.createName("nimbits_export", EntityType.file);
 //                return BlobStoreFactory.getInstance().createFile(name, data, exportType);
 
 //            case descriptiveStatistics:

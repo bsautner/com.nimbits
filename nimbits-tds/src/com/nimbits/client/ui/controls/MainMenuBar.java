@@ -13,7 +13,10 @@
 
 package com.nimbits.client.ui.controls;
 
-import com.extjs.gxt.ui.client.event.*;
+import com.extjs.gxt.ui.client.event.BaseEvent;
+import com.extjs.gxt.ui.client.event.Events;
+import com.extjs.gxt.ui.client.event.Listener;
+import com.extjs.gxt.ui.client.event.MessageBoxEvent;
 import com.extjs.gxt.ui.client.widget.Info;
 import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.Window;
@@ -36,7 +39,7 @@ import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.GxtModel;
 import com.nimbits.client.model.TreeModel;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.connection.ConnectionRequest;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
@@ -382,7 +385,7 @@ public class MainMenuBar extends ToolBar {
                 if (!email.isEmpty()) {
                     UserServiceAsync userService = GWT.create(UserService.class);
                     try {
-                        EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(email);
+                        EmailAddress emailAddress = CommonFactory.createEmailAddress(email);
 
                         userService.sendConnectionRequest(emailAddress, new ConnectionRequestAsyncCallback());
                     } catch (NimbitsException e) {
@@ -679,7 +682,7 @@ public class MainMenuBar extends ToolBar {
 
                 try {
 
-                    EntityName name = CommonFactoryLocator.getInstance().createName(newEntityName, EntityType.point);
+                    EntityName name = CommonFactory.createName(newEntityName, EntityType.point);
                     Entity entity = EntityModelFactory.createEntity(name, EntityType.point);
                     Point p = PointModelFactory.createPointModel(entity, 0.0, 90, "", 0.0, false, false, false, 0, false, FilterType.fixedHysteresis, 0.1, false, PointType.basic, 0, false, 0.0);
 
@@ -781,7 +784,7 @@ public class MainMenuBar extends ToolBar {
             if (! Utils.isEmptyString(newEntityName))  {
                 final EntityName categoryName;
                 try {
-                    categoryName = CommonFactoryLocator.getInstance().createName(newEntityName, EntityType.category);
+                    categoryName = CommonFactory.createName(newEntityName, EntityType.category);
                 } catch (NimbitsException e) {
                     FeedbackHelper.showError(e);
                     return;

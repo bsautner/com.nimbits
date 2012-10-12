@@ -18,7 +18,7 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
@@ -26,9 +26,6 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.service.value.ValueService;
 import com.nimbits.server.NimbitsServletTest;
-
-
-
 import junit.framework.Assert;
 import org.junit.Test;
 
@@ -113,7 +110,7 @@ public class RecordedValueServiceImplTest extends NimbitsServletTest {
         double startingBalance = 5.00;
 
         entityService.addUpdateEntity(user, user);
-        EntityName name = CommonFactoryLocator.getInstance().createName(Const.ACCOUNT_BALANCE, EntityType.point);
+        EntityName name = CommonFactory.createName(Const.ACCOUNT_BALANCE, EntityType.point);
         List<Entity> list = entityService.getEntityByName(user,name, EntityType.point );
         assertFalse(list.isEmpty());
         Point accountBalance = (Point) list.get(0);

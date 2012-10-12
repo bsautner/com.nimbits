@@ -6,7 +6,7 @@ import com.google.gson.JsonParser;
 import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
@@ -36,7 +36,7 @@ public class TestXMPP {
 //        XMPPClient x = XMPPClientFactory.getInstance(client, "nimbits-qa");
 //        assertTrue(x.connect());
 //        Value v = ValueFactory.createValueModel(1.23);
-//        EntityName pointName = CommonFactoryLocator.getInstance().createName("foo");
+//        EntityName pointName = CommonFactory.createName("foo");
 //        x.sendValue(pointName, v);
 //
 //        final boolean[] done = {false};
@@ -85,7 +85,7 @@ public class TestXMPP {
 //                "",
 //                data);
 //
-//        EntityName pointName = CommonFactoryLocator.getInstance().createName("foo");
+//        EntityName pointName = CommonFactory.createName("foo");
 //        x.sendValue(pointName, v);
 //
 //        final boolean[] done = {false};
@@ -128,7 +128,7 @@ public class TestXMPP {
     @Test
     public void testGson() throws NimbitsException {
         Value v = ValueFactory.createValueModel(1.23);
-        EntityName pointName = CommonFactoryLocator.getInstance().createName("foo", EntityType.point);
+        EntityName pointName = CommonFactory.createName("foo", EntityType.point);
         Collection collection = new ArrayList();
         collection.add(Action.record);
         collection.add("foo");

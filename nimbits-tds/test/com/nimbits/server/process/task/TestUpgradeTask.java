@@ -48,7 +48,7 @@ public class TestUpgradeTask extends NimbitsServletTest {
 //
 //        for (int i = 0; i < 10; i++) {
 //
-//            EmailAddress em = CommonFactoryLocator.getInstance().createEmailAddress("b" + i + "@test.com");
+//            EmailAddress em = CommonFactory.createEmailAddress("b" + i + "@test.com");
 //            NimbitsUser nimbitsUser = new NimbitsUser(em, UUID.randomUUID().toString());
 //            NimbitsUser r = pm.makePersistent(nimbitsUser);
 //            System.out.println(r.getId());
@@ -103,7 +103,7 @@ public class TestUpgradeTask extends NimbitsServletTest {
 //
 //        UserEntity u;
 //        for (int i = 0; i < 100; i++) {
-//            u = new UserEntity(CommonFactoryLocator.getInstance().createEmailAddress("test" + i + "@example.com"), UUID.randomUUID().toString());
+//            u = new UserEntity(CommonFactory.createEmailAddress("test" + i + "@example.com"), UUID.randomUUID().toString());
 //            u = pm.makePersistent(u);
 //            for (int x = 0; x < 10; x++) {
 //                PointCatagory c = new PointCatagory();
@@ -117,7 +117,7 @@ public class TestUpgradeTask extends NimbitsServletTest {
 //
 //        assertEquals(101, UpgradeTask.doStart());
 //        Thread.sleep(1000);
-//        final Entity userEntity = entityService.getEntityByName(CommonFactoryLocator.getInstance().createName(("test@example.com"), EntityType.user));
+//        final Entity userEntity = entityService.getEntityByName(CommonFactory.createName(("test@example.com"), EntityType.user));
 //        for (int x = 0; x < 10; x++) {
 //            PointCatagory c = new PointCatagory();
 //            c.name = UUID.randomUUID().toString();

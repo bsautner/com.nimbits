@@ -3,7 +3,7 @@ package com.nimbits.client.model.entity;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.user.User;
 
 /**
@@ -60,12 +60,12 @@ public class EntityModelFactory {
                                       final ProtectionLevel protectionLevel,
                                       final String parent,
                                       final String owner) throws NimbitsException {
-        EntityName entityName = CommonFactoryLocator.getInstance().createName(name, entityType);
+        EntityName entityName = CommonFactory.createName(name, entityType);
         return new EntityModel(entityName, description, entityType, protectionLevel,  parent,
                 owner, "");
     }
     public static Entity createEntity(final User user) throws NimbitsException {
-        final EntityName name = CommonFactoryLocator.getInstance().createName(user.getEmail().getValue(), EntityType.user);
+        final EntityName name = CommonFactory.createName(user.getEmail().getValue(), EntityType.user);
 
         return createEntity(name, "", EntityType.user, ProtectionLevel.onlyMe,
                 user.getKey(), user.getKey(),null);

@@ -26,7 +26,7 @@ import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
@@ -68,7 +68,8 @@ import static org.junit.Assert.*;
         "classpath:META-INF/applicationContext-cron.xml",
         "classpath:META-INF/applicationContext-dao.xml",
         "classpath:META-INF/applicationContext-service.xml",
-        "classpath:META-INF/applicationContext-task.xml"
+        "classpath:META-INF/applicationContext-task.xml" ,
+        "classpath:META-INF/applicationContext-factory.xml"
 
 })
 public class ValueDaoImplTest extends NimbitsServletTest {
@@ -167,7 +168,7 @@ public class ValueDaoImplTest extends NimbitsServletTest {
         assertFalse(v.isEmpty());
 
 
-        EntityName name = CommonFactoryLocator.getInstance().createName("f", EntityType.file);
+        EntityName name = CommonFactory.createName("f", EntityType.file);
         com.nimbits.client.model.entity.Entity e = EntityModelFactory.createEntity(name, "", EntityType.file,
                 ProtectionLevel.everyone,user.getKey(), user.getKey() );
 
@@ -321,9 +322,9 @@ public class ValueDaoImplTest extends NimbitsServletTest {
     @Test
     public void testGetRecordedValuePrecedingTimestampMultiplePoints() throws NimbitsException {
         final List<Value> values = loadSomeDataOverDays();
-        EntityName name1 = CommonFactoryLocator.getInstance().createName("1", EntityType.point);
-        EntityName name2 = CommonFactoryLocator.getInstance().createName("1", EntityType.point);
-        EntityName name3 = CommonFactoryLocator.getInstance().createName("1", EntityType.point);
+        EntityName name1 = CommonFactory.createName("1", EntityType.point);
+        EntityName name2 = CommonFactory.createName("1", EntityType.point);
+        EntityName name3 = CommonFactory.createName("1", EntityType.point);
         com.nimbits.client.model.entity.Entity entity1 = EntityModelFactory.createEntity(name1, "", EntityType.point, ProtectionLevel.everyone, "", "");
         com.nimbits.client.model.entity.Entity entity2 = EntityModelFactory.createEntity(name2, "", EntityType.point, ProtectionLevel.everyone, "", "");
         com.nimbits.client.model.entity.Entity entity3 = EntityModelFactory.createEntity(name3, "", EntityType.point, ProtectionLevel.everyone, "", "");

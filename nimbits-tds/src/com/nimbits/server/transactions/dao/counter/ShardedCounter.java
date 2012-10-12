@@ -13,10 +13,11 @@ import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheService.SetPolicy;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import org.springframework.stereotype.Repository;
 
 import java.util.Random;
 
-
+@Repository
 public class ShardedCounter {
 
 

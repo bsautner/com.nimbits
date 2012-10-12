@@ -16,7 +16,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="commonFactory" class="com.nimbits.client.model.common.impl.CommonFactoryImpl"> </bean>
+
     <bean id="entityHelper" class="com.nimbits.client.helper.EntityHelper"> </bean>
 
 

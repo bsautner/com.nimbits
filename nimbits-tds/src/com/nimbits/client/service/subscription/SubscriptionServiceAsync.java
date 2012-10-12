@@ -14,7 +14,6 @@
 package com.nimbits.client.service.subscription;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.user.User;
@@ -23,7 +22,7 @@ import com.nimbits.client.model.value.Value;
 public interface SubscriptionServiceAsync {
     void processSubscriptions(final User user, final Point point, final Value v, AsyncCallback<Void> async);
 
-    void getSubscribedEntity(final Entity entity, AsyncCallback<Entity> async);
+   // void getSubscribedEntity(final Entity entity, AsyncCallback<Entity> async);
 
     void okToProcess(Subscription subscription, AsyncCallback<Boolean> async);
 }

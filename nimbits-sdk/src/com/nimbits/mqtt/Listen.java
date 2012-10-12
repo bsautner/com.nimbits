@@ -19,7 +19,7 @@ import com.nimbits.client.NimbitsClient;
 import com.nimbits.client.NimbitsClientFactory;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.mqtt.MqttHelper;
@@ -28,7 +28,6 @@ import com.nimbits.client.model.value.impl.ValueModel;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.user.NimbitsUser;
 import com.nimbits.user.UserFactory;
-import com.sun.org.apache.bcel.internal.generic.IfInstruction;
 import org.eclipse.paho.client.mqttv3.*;
 
 import java.io.IOException;
@@ -159,7 +158,7 @@ public class Listen implements MqttCallback {
 
         String a[] = topic.getName().split("/");
         if (a.length == 4) {
-            EmailAddress email = CommonFactoryLocator.getInstance().createEmailAddress(a[1]);
+            EmailAddress email = CommonFactory.createEmailAddress(a[1]);
             String accessKey = a[3];
             String id = a[2];
             String appId = a[0];
@@ -168,7 +167,7 @@ public class Listen implements MqttCallback {
             if (client.isLoggedIn()) {
                 String json = new String(message.getPayload());
                 Value v = GsonFactory.getInstance().fromJson(json, ValueModel.class);
-                EntityName name = CommonFactoryLocator.getInstance().createName(id, EntityType.point);
+                EntityName name = CommonFactory.createName(id, EntityType.point);
                 Value vx = client.recordValue(name, v);
                 if (vx == null) {
                     System.out.println("Value received but not recorded");

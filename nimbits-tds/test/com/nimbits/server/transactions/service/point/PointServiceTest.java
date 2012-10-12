@@ -18,7 +18,7 @@ import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.entity.EntityName;
@@ -74,7 +74,7 @@ public class PointServiceTest extends NimbitsServletTest {
     @Test
     public void addPointTest() throws NimbitsException {
 
-        EntityName name = CommonFactoryLocator.getInstance().createName("FOO", EntityType.point);
+        EntityName name = CommonFactory.createName("FOO", EntityType.point);
         Point p =  addPoint(name);
         assertNotNull(p);
         List<Entity> x =  entityService.getEntityByKey(user, p.getKey(), EntityType.point);

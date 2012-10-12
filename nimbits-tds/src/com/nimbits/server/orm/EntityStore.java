@@ -20,8 +20,8 @@ import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.common.CommonIdentifier;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
@@ -86,7 +86,7 @@ public abstract class EntityStore implements Entity {
 
     public EntityStore(final Entity entity) throws NimbitsException {
 
-        final EntityName saferName = CommonFactoryLocator.getInstance().createName(entity.getName().getValue(), entity.getEntityType());
+        final EntityName saferName = CommonFactory.createName(entity.getName().getValue(), entity.getEntityType());
         try {
             final Class cls = Class.forName(entity.getEntityType().getClassName());
 
@@ -107,7 +107,7 @@ public abstract class EntityStore implements Entity {
 
     public EntityStore(final Class<?> cls, final Entity entity) throws NimbitsException {
 
-        final EntityName saferName = CommonFactoryLocator.getInstance().createName(entity.getName().getValue(), entity.getEntityType());
+        final EntityName saferName = CommonFactory.createName(entity.getName().getValue(), entity.getEntityType());
         setKey(cls, entity, saferName);
         this.uuid = entity.getUUID();
         this.name = saferName.getValue();
@@ -134,7 +134,7 @@ public abstract class EntityStore implements Entity {
     @Override
     public EntityName getName() {
         try {
-            return name != null ? CommonFactoryLocator.getInstance().createName(name, EntityType.get(this.entityType)) : null;
+            return name != null ? CommonFactory.createName(name, EntityType.get(this.entityType)) : null;
         } catch (NimbitsException e) {
             return null;
         }
@@ -155,7 +155,7 @@ public abstract class EntityStore implements Entity {
 
     @Override
     public void setName(final EntityName name) throws NimbitsException {
-        final EntityName saferName = CommonFactoryLocator.getInstance().createName(name.getValue(), EntityType.get(this.entityType));
+        final EntityName saferName = CommonFactory.createName(name.getValue(), EntityType.get(this.entityType));
         this.name = saferName.getValue();
     }
 

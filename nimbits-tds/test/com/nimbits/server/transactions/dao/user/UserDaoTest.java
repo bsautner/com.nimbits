@@ -17,13 +17,11 @@ import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestC
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
 import com.nimbits.server.NimbitsServletTest;
-
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -71,7 +69,7 @@ public class UserDaoTest extends NimbitsServletTest {
 
     @Test
     public void createUserTest() throws NimbitsException {
-        EmailAddress e = CommonFactoryLocator.getInstance().createEmailAddress("bob@example.com");
+        EmailAddress e = CommonFactory.createEmailAddress("bob@example.com");
         User u =userService.createUserRecord(e);
         assertNotNull(u);
         assertEquals(e.getValue(), u.getEmail().getValue());

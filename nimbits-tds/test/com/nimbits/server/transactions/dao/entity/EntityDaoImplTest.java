@@ -18,7 +18,7 @@ import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
@@ -64,7 +64,7 @@ public class EntityDaoImplTest extends NimbitsServletTest {
     @Test
     public void addUpdateEntityTest() throws NimbitsException {
 
-        EntityName name = CommonFactoryLocator.getInstance().createName("e534", EntityType.point);
+        EntityName name = CommonFactory.createName("e534", EntityType.point);
 
         Entity entity = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.everyone, user.getKey(), user.getKey());
         // Point result = PointServiceFactory.getInstance().addPoint(user, entity);
@@ -122,7 +122,7 @@ public class EntityDaoImplTest extends NimbitsServletTest {
     @Test
     public void addUpdateAlertsEntityTest3() throws NimbitsException {
 
-        EntityName name = CommonFactoryLocator.getInstance().createName("e534", EntityType.point);
+        EntityName name = CommonFactory.createName("e534", EntityType.point);
 
         Entity entity = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.everyone, user.getKey(), user.getKey());
         // Point result = PointServiceFactory.getInstance().addPoint(user, entity);
@@ -189,7 +189,7 @@ public class EntityDaoImplTest extends NimbitsServletTest {
     @Test
     public void deleteEntityTest() throws NimbitsException {
 
-        final EntityName name = CommonFactoryLocator.getInstance().createName("point to delete", EntityType.point);
+        final EntityName name = CommonFactory.createName("point to delete", EntityType.point);
 
         final Entity entity = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.everyone, user.getKey(),user.getKey());
 
@@ -256,7 +256,7 @@ public class EntityDaoImplTest extends NimbitsServletTest {
     @Test(expected = NimbitsException.class)
     public void testValidation() throws NimbitsException {
 
-        final EntityName name = CommonFactoryLocator.getInstance().createName("should fail#$%#$%%#%#$^#$", EntityType.point);
+        final EntityName name = CommonFactory.createName("should fail#$%#$%%#%#$^#$", EntityType.point);
 
 
         Entity e = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.onlyMe,user.getKey(), user.getKey());

@@ -25,8 +25,8 @@ import com.nimbits.client.enums.subscription.SubscriptionType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.accesskey.AccessKeyFactory;
-import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.common.CommonIdentifier;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.connection.Connection;
 import com.nimbits.client.model.connection.ConnectionFactory;
 import com.nimbits.client.model.connection.ConnectionRequest;
@@ -131,7 +131,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
         }
 
-        EmailAddress email = Utils.isEmptyString(emailParam) ? null : CommonFactoryLocator.getInstance().createEmailAddress(emailParam);
+        EmailAddress email = Utils.isEmptyString(emailParam) ? null : CommonFactory.createEmailAddress(emailParam);
 
         if (email == null && session != null && session.getAttribute(Parameters.email.getText()) != null) {
             email = (EmailAddress) session.getAttribute(Parameters.email.getText());
@@ -140,7 +140,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         try {
             if (googleUserService != null) {
                 if (email == null && googleUserService.getCurrentUser() != null) {
-                    email = CommonFactoryLocator.getInstance().createEmailAddress(googleUserService.getCurrentUser().getEmail());
+                    email = CommonFactory.createEmailAddress(googleUserService.getCurrentUser().getEmail());
                 }
             }
         } catch (NullPointerException e) {
@@ -162,7 +162,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
                 Entity anonEntity = anon.get(0);
                 if (anonEntity.getProtectionLevel().equals(ProtectionLevel.everyone)) {
 
-                    email = CommonFactoryLocator.getInstance().createEmailAddress(anon.get(0).getOwner());
+                    email = CommonFactory.createEmailAddress(anon.get(0).getOwner());
                 }
                 else {
                     throw new NimbitsException("The object you requested was found, but its protection level was set to high to access. Try " +
@@ -259,14 +259,14 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
         if (domainUser != null) {
             log.info("domain user:" + domainUser.getEmail());
-            internetAddress = CommonFactoryLocator.getInstance().createEmailAddress(domainUser.getEmail());
+            internetAddress = CommonFactory.createEmailAddress(domainUser.getEmail());
         }
         else {
 
             final com.google.appengine.api.users.User googleUser = userService.getCurrentUser();
             if (googleUser != null)   {
                 isAdmin= userService.isUserAdmin();
-                internetAddress = CommonFactoryLocator.getInstance().createEmailAddress(googleUser.getEmail());
+                internetAddress = CommonFactory.createEmailAddress(googleUser.getEmail());
             }
         }
 
@@ -302,7 +302,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
         }
         else {
-            final EntityName name = CommonFactoryLocator.getInstance().createName("anon@nimbits.com", EntityType.user);
+            final EntityName name = CommonFactory.createName("anon@nimbits.com", EntityType.user);
             final Entity e = EntityModelFactory.createEntity(name, "", EntityType.user, ProtectionLevel.onlyMe, "", "");
             retObj = UserModelFactory.createUserModel(e);
             retObj.setLoggedIn(false);
@@ -336,7 +336,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     }
 
     private Point getAccountBalancePoint(User user) throws NimbitsException {
-        EntityName name = CommonFactoryLocator.getInstance().createName(Const.ACCOUNT_BALANCE, EntityType.point);
+        EntityName name = CommonFactory.createName(Const.ACCOUNT_BALANCE, EntityType.point);
         List<Entity> account = entityService.getEntityByName(user,
                 name, EntityType.point);
         Point accountBalance;
@@ -414,7 +414,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
                                               final String desc,
                                               final SubscriptionType type,
                                               final int maxRepeat) throws NimbitsException {
-        EntityName name = CommonFactoryLocator.getInstance().createName(entityName, EntityType.subscription);
+        EntityName name = CommonFactory.createName(entityName, EntityType.subscription);
 
         List<Entity> sample = entityService.getEntityByName(user,
                 name, EntityType.subscription);
@@ -436,7 +436,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
             final String desc,
             final SubscriptionType type,
             final int maxRepeat) throws NimbitsException {
-        EntityName entityName = CommonFactoryLocator.getInstance().createName(name, EntityType.subscription);
+        EntityName entityName = CommonFactory.createName(name, EntityType.subscription);
         Entity quotaEntity = EntityModelFactory.createEntity(entityName, desc, EntityType.subscription, ProtectionLevel.onlyMe,
                 accountBalancePoint.getKey(), user.getKey());
         Subscription subscription = SubscriptionFactory.createSubscription(quotaEntity, accountBalancePoint.getKey(),
@@ -451,14 +451,14 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     @Override
     public AccessKey authenticatedKey(final Entity user) throws NimbitsException {
 
-        final EntityName name = CommonFactoryLocator.getInstance().createName("AUTHENTICATED_KEY", EntityType.accessKey);
+        final EntityName name = CommonFactory.createName("AUTHENTICATED_KEY", EntityType.accessKey);
         final Entity en = EntityModelFactory.createEntity(name, "",EntityType.accessKey, ProtectionLevel.onlyMe, user.getKey(), user.getKey());
         return AccessKeyFactory.createAccessKey(en, "AUTHENTICATED_KEY", user.getKey(), AuthLevel.admin);
     }
 
     @Override
     public com.nimbits.client.model.user.User createUserRecord(final EmailAddress internetAddress) throws NimbitsException {
-        final EntityName name = CommonFactoryLocator.getInstance().createName(internetAddress.getValue(), EntityType.user);
+        final EntityName name = CommonFactory.createName(internetAddress.getValue(), EntityType.user);
         final Entity entity =  EntityModelFactory.createEntity(name, "", EntityType.user, ProtectionLevel.onlyMe,
                 name.getValue(), name.getValue(), name.getValue());
 
@@ -480,7 +480,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
     protected Point createAccountBalancePoint(final User user) throws NimbitsException {
 
-        final EntityName name = CommonFactoryLocator.getInstance().createName(Const.ACCOUNT_BALANCE, EntityType.point);
+        final EntityName name = CommonFactory.createName(Const.ACCOUNT_BALANCE, EntityType.point);
         final Entity entity = EntityModelFactory.createEntity(name,  ACCOUNT_BALANCE_DESC, EntityType.point,
                 ProtectionLevel.onlyMe, user.getKey(), user.getKey(), UUID.randomUUID().toString());
 
@@ -505,7 +505,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
     @Override
     public void fundAccount(final User user, final BigDecimal amount) throws NimbitsException {
 
-        final EntityName name = CommonFactoryLocator.getInstance().createName(Const.ACCOUNT_BALANCE, EntityType.point);
+        final EntityName name = CommonFactory.createName(Const.ACCOUNT_BALANCE, EntityType.point);
         final List<Entity> accountPointSample = entityService.getEntityByName(user, name, EntityType.point);
         final Point account;
         if (accountPointSample.isEmpty()) {
@@ -542,7 +542,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         }
         else {
             final User u = new UserModel();
-            u.setName(CommonFactoryLocator.getInstance().createName(adminStr, EntityType.user));
+            u.setName(CommonFactory.createName(adminStr, EntityType.user));
             u.setKey(adminStr);
             u.addAccessKey(createAccessKey(u, AuthLevel.admin));
             u.setParent(adminStr);
@@ -565,7 +565,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         User u = new UserModel();
         try {
             String adminStr = Const.CONST_ANON_EMAIL;
-            u.setName(CommonFactoryLocator.getInstance().createName(adminStr, EntityType.user));
+            u.setName(CommonFactory.createName(adminStr, EntityType.user));
         } catch (NimbitsException e) {
             return u;
         }
@@ -581,7 +581,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
         User retObj = null;
         if (u.getCurrentUser() != null) {
-            final EmailAddress emailAddress = CommonFactoryLocator.getInstance().createEmailAddress(u.getCurrentUser().getEmail());
+            final EmailAddress emailAddress = CommonFactory.createEmailAddress(u.getCurrentUser().getEmail());
             List<Entity> result = entityService.getEntityByKey(getAnonUser(), emailAddress.getValue(), EntityType.user);
             if (! result.isEmpty()) {
                 retObj = (User) result.get(0);
@@ -711,8 +711,8 @@ public class UserServiceImpl extends RemoteServiceServlet implements
             throw new NimbitsException(UserMessages.ERROR_USER_NOT_FOUND);
         } else {
             final User requester = (User) result.get(0);
-            EntityName a = CommonFactoryLocator.getInstance().createName(acceptor.getEmail().getValue(), EntityType.userConnection);
-            EntityName r = CommonFactoryLocator.getInstance().createName(requester.getEmail().getValue(), EntityType.userConnection);
+            EntityName a = CommonFactory.createName(acceptor.getEmail().getValue(), EntityType.userConnection);
+            EntityName r = CommonFactory.createName(requester.getEmail().getValue(), EntityType.userConnection);
             final Entity rConnection = EntityModelFactory.createEntity(a, "", EntityType.userConnection, ProtectionLevel.onlyMe,  requester.getKey(), requester.getKey(), UUID.randomUUID().toString());
             final Entity aConnection = EntityModelFactory.createEntity(r, "", EntityType.userConnection, ProtectionLevel.onlyMe, acceptor.getKey(), acceptor.getKey(), UUID.randomUUID().toString());
             Connection ac = ConnectionFactory.createCreateConnection(aConnection);

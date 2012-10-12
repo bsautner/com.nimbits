@@ -6,8 +6,8 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.accesskey.AccessKey;
-import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.common.CommonIdentifier;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 
@@ -124,7 +124,7 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
 
     @Override
     public EntityName getName() throws NimbitsException {
-        return CommonFactoryLocator.getInstance().createName(name, EntityType.get(entityType));
+        return CommonFactory.createName(name, EntityType.get(entityType));
     }
 
     @Override

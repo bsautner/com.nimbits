@@ -1,7 +1,7 @@
 package com.nimbits.client.model.instance;
 
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
@@ -59,7 +59,7 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
 
     @Override
     public EmailAddress getOwnerEmail() throws NimbitsException {
-        return CommonFactoryLocator.getInstance().createEmailAddress(ownerEmail);
+        return CommonFactory.createEmailAddress(ownerEmail);
     }
 
     @Override

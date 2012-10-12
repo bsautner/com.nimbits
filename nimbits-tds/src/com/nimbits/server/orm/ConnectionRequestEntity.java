@@ -16,8 +16,8 @@ package com.nimbits.server.orm;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.CommonFactoryLocator;
 import com.nimbits.client.model.common.CommonIdentifier;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.connection.ConnectionRequest;
 import com.nimbits.client.model.email.EmailAddress;
 
@@ -96,7 +96,7 @@ public class ConnectionRequestEntity implements ConnectionRequest {
 
     @Override
     public EmailAddress getTargetEmail() throws NimbitsException {
-        return CommonFactoryLocator.getInstance().createEmailAddress(targetEmail);
+        return CommonFactory.createEmailAddress(targetEmail);
     }
 
     @Override
@@ -141,7 +141,7 @@ public class ConnectionRequestEntity implements ConnectionRequest {
 
     @Override
     public EmailAddress getRequestorEmail() throws NimbitsException {
-        return CommonFactoryLocator.getInstance().createEmailAddress(requestorEmail);
+        return CommonFactory.createEmailAddress(requestorEmail);
     }
 
     @Override

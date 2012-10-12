@@ -105,7 +105,7 @@
         GoogleUser user = UserFactory.createGoogleUser("test@example.com", "pa$$word");
         NimbitsClient client = NimbitsClientFactory.getInstance(user, "http://nimbits1.appspot.com");
         XMPPClient xmpp = XMPPClientFactory.getInstance(client, "nimbits1");
-        PointName pointName = CommonFactoryLocator.getInstance().createPointName("food");
+        PointName pointName = CommonFactory.createPointName("food");
         //record 200 grams of salmon were eaten
         Value value = ValueModelFactory.createValueModel(0.0, 0.0, 200, new Date(), 0, "salmon");
         boolean connected =  xmpp.connect();

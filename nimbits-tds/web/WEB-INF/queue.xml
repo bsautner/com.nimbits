@@ -16,10 +16,18 @@
     <queue>
         <name>default</name>
         <rate>10/s</rate>
+        <retry-parameters>
+            <task-retry-limit>3</task-retry-limit>
+
+        </retry-parameters>
     </queue>
     <queue>
-        <name>orphans</name>
+        <name>blob</name>
         <rate>1/s</rate>
+        <retry-parameters>
+            <task-retry-limit>2</task-retry-limit>
+
+        </retry-parameters>
     </queue>
     <queue>
         <name>dump</name>

@@ -48,7 +48,7 @@ public interface Task {
 
     void startMoveCachedValuesToStoreTask(final Entity point);
 
-    void startDeleteBlobTask(final BlobKey key);
+    void startDeleteBlobTask(final BlobKey key );
 
     void startCoreTask(final HttpServletRequest req, final Entity entity, final Action action, final String instanceURL);
 

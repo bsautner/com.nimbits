@@ -30,6 +30,7 @@ import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.admin.quota.QuotaManager;
 import com.nimbits.server.transactions.service.user.UserServerService;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -81,6 +82,7 @@ public class BillingQuotaTest  extends NimbitsServletTest {
 
 
     @Test
+    @Ignore
     public void outOfMoneyTest() throws NimbitsException, IOException {
 
 
@@ -125,6 +127,7 @@ public class BillingQuotaTest  extends NimbitsServletTest {
     }
 
     @Test
+    @Ignore
     public void overDailyBudgetTest() throws NimbitsException, IOException {
 
         settingsService.updateSetting(SettingType.billingEnabled, Const.TRUE);

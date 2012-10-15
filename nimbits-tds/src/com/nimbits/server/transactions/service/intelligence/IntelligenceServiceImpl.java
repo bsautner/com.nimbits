@@ -34,8 +34,8 @@ import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.intelligence.IntelligenceService;
 import com.nimbits.client.service.settings.SettingsService;
+import com.nimbits.server.account.Billing;
 import com.nimbits.server.http.HttpCommonFactory;
-import com.nimbits.server.transactions.service.user.UserServiceImpl;
 import com.nimbits.server.transactions.service.value.ValueServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,24 +68,29 @@ import java.util.regex.Pattern;
 @Service("intelligenceService")
 @Transactional
 public class IntelligenceServiceImpl extends RemoteServiceServlet implements IntelligenceService {
+
+
+
     private static final Logger log = Logger.getLogger(IntelligenceServiceImpl.class.getName());
     private static final int INT = 1014;
-    private static final Pattern COMPILE = Pattern.compile("\\.");
-    private static final Pattern PATTERN = Pattern.compile("\\.");
-    private static final Pattern COMPILE1 = Pattern.compile("\\[");
+    private static final Pattern PERIOD = Pattern.compile("\\.");
+
+    private static final Pattern LEFT_BRACKET = Pattern.compile("\\[");
+    private static final String PLAINTEXT = "plaintext";
+    private static final String POD = "pod";
+    private static final String APPID1 = "appid";
+    private static final String APPID = "&" + APPID1 + "=";
+    private static final String INCLUDEPODID = "includepodid";
+    private static final String RESULT = "Result";
+    private static final String FORMAT = "format";
+    private static final String HTML = "html";
+    private static final String TARGET_POINT_DOES_NOT_EXIST = "Target point does not exist";
     private EntityService entityService;
     private SettingsService settingsService;
-    private UserServiceImpl userService;
     private ValueServiceImpl valueService;
+    private Billing billing;
 
-    private User getUser() {
-        try {
-            return userService.getHttpRequestUser(
-                    this.getThreadLocalRequest());
-        } catch (NimbitsException e) {
-            return null;
-        }
-    }
+
 
     private String key() {
         try {
@@ -105,7 +110,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
             InputSource is = new InputSource();
             is.setCharacterStream(new StringReader(responseXML));
             Document doc = db.parse(is);
-            NodeList nodes = doc.getElementsByTagName("plaintext");
+            NodeList nodes = doc.getElementsByTagName(PLAINTEXT);
             Node node = nodes.item(0);
             retVal = node.getTextContent();
 
@@ -138,7 +143,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
             for (int i = 0; i < x.getLength(); i++) {
                 StringBuilder name = new StringBuilder(x.item(i).getNodeName());
-                if (name.toString().equals("pod")) {
+                if (name.toString().equals(POD)) {
                     name.append(i);
                 }
                 retObj.put(name.toString(), x.item(i).getTextContent());
@@ -165,8 +170,8 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
         final String params;
         try {
             params = Parameters.input.getText() + '=' + URLEncoder.encode(formula, Const.CONST_ENCODING) +
-                    "&appid=" + key() +
-                    "&includepodid=Result";
+                    APPID + key() +
+                    "&" + INCLUDEPODID + "=" + RESULT;
         } catch (UnsupportedEncodingException e) {
             throw new NimbitsException(e.getMessage());
         }
@@ -176,23 +181,24 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
     }
 
-    public String getDataResult(final String query, final String podId) throws NimbitsException {
+    public String getDataResult(final User user, final String query, final String podId) throws NimbitsException {
 
-        return getTextFromResponse(getRawResult(query, podId, false));
+        return getTextFromResponse(getRawResult(user, query, podId, false));
 
     }
 
     @Override
-    public String getRawResult(final String query, final String podId, final boolean htmlOutput) throws NimbitsException {
+    public String getRawResult(final User user, final String query, final String podId, final boolean htmlOutput) throws NimbitsException {
         String params;
+        billing.processBilling(user);
         try {
             params = Parameters.input.getText() + '=' + URLEncoder.encode(query, Const.CONST_ENCODING) +
-                    "&appid=" + key();
+                    "&" + APPID1 + "=" + key();
             if (!Utils.isEmptyString(podId)) {
-                params += "&includepodid=" + podId;
+                params += "&" + INCLUDEPODID + "=" + podId;
             }
             if (htmlOutput) {
-                params += "&format=html";
+                params += "&" + FORMAT + "=" + HTML;
             }
         } catch (UnsupportedEncodingException e) {
             throw new NimbitsException(e.getMessage());
@@ -209,19 +215,19 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
 
     @Override
-    public void processIntelligence(final User u, final Entity point) throws NimbitsException {
-        final List<Entity> list = entityService.getEntityByTrigger(u, point, EntityType.intelligence);
+    public void processIntelligence(final User user, final Entity point) throws NimbitsException {
+        final List<Entity> list = entityService.getEntityByTrigger(user, point, EntityType.intelligence);
 
         for (final Entity entity :  list) {
             Intelligence i = (Intelligence) entity;
             try {
                 // Point target = PointServiceFactory.getInstance().getPointByKey(i.getTarget());
-                final Entity target = entityService.getEntityByKey(u, i.getTarget(), EntityType.point).get(0);
+                final Entity target = entityService.getEntityByKey(user, i.getTarget(), EntityType.point).get(0);
 
                 if (target!= null) {
 
-                    final Value v = processInput(u, i);
-                    valueService.recordValue(u, target, v);
+                    final Value v = processInput(user, i);
+                    valueService.recordValue(user, target, v);
 
                 }
             } catch (NimbitsException e) {
@@ -237,11 +243,19 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
     @Override
     public Value processInput(final User user, final Intelligence update) throws NimbitsException {
-        String processedInput = addDataToInput(getUser(), update.getInput());
-        final Point target = (Point) entityService.getEntityByKey(user, update.getTarget(), EntityType.point).get(0);
+        String processedInput = addDataToInput(user, update.getInput());
+        final List<Entity> sample  = entityService.getEntityByKey(user, update.getTarget(), EntityType.point);
 
-        //  Point target = PointServiceFactory.getInstance().getPointByKey(update.getTarget());
-        return processInput(update, target, processedInput);
+
+
+        if (sample.isEmpty()) {
+            throw new NimbitsException(TARGET_POINT_DOES_NOT_EXIST);
+        }
+        else {
+            return processInput(user, update, (Point) sample.get(0), processedInput);
+        }
+
+
 
     }
 
@@ -254,21 +268,21 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
         if (input.contains(".data") || input.contains(".value") || input.contains(".note")) {
 
-            String[] s = COMPILE1.split(input);
+            String[] s = LEFT_BRACKET.split(input);
 
             for (String k : s) {
                 // System.out.println(k);
                 if (k.contains(".data]") || k.contains(".value]") || k.contains(".note]")) {
-                    String p = PATTERN.split(k)[0];
+                    String p = PERIOD.split(k)[0];
                     EntityName pointName = CommonFactory.createName(p, EntityType.point);
-                    String a = COMPILE.split(k)[1];
+                    String a = PERIOD.split(k)[1];
 
                     a = a.substring(0, a.indexOf(']'));
                     String r = "[" + pointName + '.' + a + ']';
 
 
 
-                    // Entity e = entityService.getEntityByName(u, pointName,EntityType.point);
+                    // Entity e = entityService.getEntityByName(user, pointName,EntityType.point);
                     Entity inputPoint =  entityService.getEntityByName(u, pointName, EntityType.point).get(0);
 
                     // inputPoint= PointServiceFactory.getInstance().getPointByKey(e.getKey());
@@ -303,7 +317,7 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
 
     @Override
-    public Value processInput(final Intelligence intelligence, final Point targetPoint, final String processedInput) throws NimbitsException {
+    public Value processInput(final User user, final Intelligence intelligence, final Point targetPoint, final String processedInput) throws NimbitsException {
 
 
         String podId = intelligence.getNodeId();
@@ -313,16 +327,15 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
             throw new NimbitsException("Intelligence Processing Error, could not find target point");
 
         }
-        final String result = Utils.isEmptyString(podId) ? getRawResult(processedInput, podId, false)
-                : getRawResult(processedInput, Parameters.result.getText(), false);
 
-//                 intelligence.getResultsInPlainText()
-//                ? getDataResult(processedInput, Parameters.result.getText())
-//                :
-//                :
-//                : intelligence.getResultsInPlainText()
-//                ? getDataResult(processedInput, podId)
-//                : getRawResult(processedInput, podId, false);
+        final String result;
+
+        if (intelligence.getResultsInPlainText()) {
+            result = getDataResult(user, processedInput, Parameters.result.getText());
+        }
+        else {
+            result = getRawResult(user, processedInput, podId, false);
+        }
         String data = "";
         Double v = 0.0;
 
@@ -334,7 +347,6 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
 
         }
 
-
         return ValueFactory.createValueModel(LocationFactory.createLocation(), v, new Date(),"",  ValueFactory.createValueData(data), AlertType.OK);
 
 
@@ -344,31 +356,15 @@ public class IntelligenceServiceImpl extends RemoteServiceServlet implements Int
         this.entityService = entityService;
     }
 
-    public EntityService getEntityService() {
-        return entityService;
-    }
-
     public void setSettingsService(SettingsService settingsService) {
         this.settingsService = settingsService;
-    }
-
-    public SettingsService getSettingsService() {
-        return settingsService;
-    }
-
-    public void setUserService(UserServiceImpl userService) {
-        this.userService = userService;
-    }
-
-    public UserServiceImpl getUserService() {
-        return userService;
     }
 
     public void setValueService(ValueServiceImpl valueService) {
         this.valueService = valueService;
     }
 
-    public ValueServiceImpl getValueService() {
-        return valueService;
+    public void setBilling(Billing billing) {
+        this.billing = billing;
     }
 }

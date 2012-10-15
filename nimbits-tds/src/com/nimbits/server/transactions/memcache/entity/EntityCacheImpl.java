@@ -15,7 +15,6 @@ package com.nimbits.server.transactions.memcache.entity;
 
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.memcache.MemcacheService;
-import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.MemCacheKey;
 import com.nimbits.client.exception.NimbitsException;
@@ -37,19 +36,19 @@ import java.util.*;
  * Time: 11:28 AM
  */
 @SuppressWarnings("unchecked")
-
 @Component("entityCache")
 public class EntityCacheImpl implements EntityTransactions,  EntityCache {
 
-    private final MemcacheService cache = MemcacheServiceFactory.getMemcacheService();
+    //private final MemcacheService cache = MemcacheServiceFactory.getMemcacheService();
     private EntityTransactions entityDao;
     private UserServiceImpl userService;
+    private MemcacheService cacheFactory;
 
 
     @Override
     public void removeEntityFromCache(final User user, final List<Entity> entities) throws NimbitsException {
         for (Entity e : entities) {
-            cache.delete(e.getKey());
+            cacheFactory.delete(e.getKey());
         }
 
 
@@ -59,9 +58,9 @@ public class EntityCacheImpl implements EntityTransactions,  EntityCache {
     public List<Entity> getEntityByName(final User user, final EntityName name, final Class<?> cls) throws NimbitsException {
         String key = MemCacheKey.entityNameCache.getText() + user.getKey() + name.getValue() + cls.getName();
 
-        if (cache.contains(key)) {
+        if (cacheFactory.contains(key)) {
             List<Entity> result = new ArrayList<Entity>(1);
-            Entity entity = (Entity) cache.get(key);
+            Entity entity = (Entity) cacheFactory.get(key);
             result.add(entity);
             return result;
 
@@ -72,7 +71,7 @@ public class EntityCacheImpl implements EntityTransactions,  EntityCache {
                 return Collections.emptyList();
             }
             else {
-                cache.put(key, sample.get(0));
+                cacheFactory.put(key, sample.get(0));
                 return sample;
             }
 
@@ -83,7 +82,7 @@ public class EntityCacheImpl implements EntityTransactions,  EntityCache {
     public void removeEntityNameFromCache(final User user, final EntityName name, final String className) {
         try {
             String key = MemCacheKey.entityNameCache.getText() + user.getKey() + name.getValue() + className;
-            cache.delete(key);
+            cacheFactory.delete(key);
         } catch (Exception ignored) {
 
         }
@@ -97,12 +96,12 @@ public class EntityCacheImpl implements EntityTransactions,  EntityCache {
     public List<Entity> getEntityByTrigger(final User user, final Entity entity, final Class<?> cls) throws NimbitsException {
         final String triggerKey =MemCacheKey.getKey(MemCacheKey.triggers, entity.getKey() + cls.getName());
         // final String triggerKey = MemCacheKey.getKey(MemCacheKey.triggers, trigger.getTrigger() + entity.getClass().getName());
-        if (cache.contains(triggerKey)) {
-            List<Entity> triggers =  (List<Entity>) cache.get(triggerKey);
+        if (cacheFactory.contains(triggerKey)) {
+            List<Entity> triggers =  (List<Entity>) cacheFactory.get(triggerKey);
             if (triggers == null) {
-                cache.delete(triggerKey);
+                cacheFactory.delete(triggerKey);
                 List<Entity> result= entityDao.getEntityByTrigger(user, entity, cls);
-                cache.put(triggerKey, result);
+                cacheFactory.put(triggerKey, result);
                 return result;
             }
             else {
@@ -114,7 +113,7 @@ public class EntityCacheImpl implements EntityTransactions,  EntityCache {
         }
         else {
             List<Entity> result= entityDao.getEntityByTrigger(user, entity, cls);
-            cache.put(triggerKey, result);
+            cacheFactory.put(triggerKey, result);
             return result;
         }
 
@@ -132,12 +131,12 @@ public class EntityCacheImpl implements EntityTransactions,  EntityCache {
 
         final String key = MemCacheKey.subscribedEntity + user.getKey() + subscribedEntity.getKey();
         final List<Entity> result;
-        if (cache.contains(key)) {
-            result = (List<Entity>) cache.get(key);
+        if (cacheFactory.contains(key)) {
+            result = (List<Entity>) cacheFactory.get(key);
         }
         else {
             result = entityDao.getSubscriptionsToEntity(user, subscribedEntity);
-            cache.put(key, result);
+            cacheFactory.put(key, result);
         }
 
         return result;
@@ -152,14 +151,14 @@ public class EntityCacheImpl implements EntityTransactions,  EntityCache {
 
     @Override
     public void updateUser(User user) throws NimbitsException {
-        if (cache.contains(user.getKey())) {
-            cache.delete(user.getKey());
+        if (cacheFactory.contains(user.getKey())) {
+            cacheFactory.delete(user.getKey());
             removeEntityNameFromCache(user, user.getName(), user.getEntityType().getClassName());
         }
 
         else {
 
-            cache.put(user.getKey(), user);
+            cacheFactory.put(user.getKey(), user);
         }
     }
 
@@ -170,18 +169,18 @@ public class EntityCacheImpl implements EntityTransactions,  EntityCache {
 
         for (Entity e : entities) {
             removeEntityNameFromCache(user, e.getName(), e.getEntityType().getClassName());
-            cache.put(e.getKey(), e);
+            cacheFactory.put(e.getKey(), e);
         }
 
     }
 
     @Override
     public List<Entity> getEntityFromCache(final User user, final String key) throws NimbitsException {
-        if (cache.contains(key)) {
+        if (cacheFactory.contains(key)) {
             List<Entity> list = new ArrayList<Entity>(1);
-            Entity result = (Entity) cache.get(key);
+            Entity result = (Entity) cacheFactory.get(key);
             if (result == null) {
-                cache.delete(key);
+                cacheFactory.delete(key);
                 return Collections.emptyList();
             }
             else {
@@ -217,14 +216,14 @@ public class EntityCacheImpl implements EntityTransactions,  EntityCache {
         final Entity result =   entityDao.addUpdateEntity(user, entity);
         addEntityToCache(user, Arrays.asList(result));
         if (clearRelatives) {
-            cache.delete(MemCacheKey.userEntityTree);
+            cacheFactory.delete(MemCacheKey.userEntityTree);
             removeTriggersFromCache(entity);
         }
 
         if (entity.getEntityType().equals(EntityType.subscription)) {
             Subscription subscription = (Subscription) entity;
             final String key = MemCacheKey.subscribedEntity + user.getKey() + subscription.getSubscribedEntity();
-            cache.delete(key);
+            cacheFactory.delete(key);
 
         }
         return result;
@@ -238,15 +237,15 @@ public class EntityCacheImpl implements EntityTransactions,  EntityCache {
 
             Trigger trigger = (Trigger)entity;
             final String triggerKey = MemCacheKey.getKey(MemCacheKey.triggers, trigger.getTrigger() + entity.getEntityType().getClassName());
-            cache.delete(triggerKey);
+            cacheFactory.delete(triggerKey);
         }
     }
 
     @Override
     public List<Entity> getEntities(final User user) throws NimbitsException {
         List<Entity> results;
-        if (cache.contains(MemCacheKey.userEntityTree)) {
-            results= (List<Entity>) cache.get(MemCacheKey.userEntityTree);
+        if (cacheFactory.contains(MemCacheKey.userEntityTree)) {
+            results= (List<Entity>) cacheFactory.get(MemCacheKey.userEntityTree);
             for (Entity e: results) {
                 e.setIsCached(true);
             }
@@ -254,7 +253,7 @@ public class EntityCacheImpl implements EntityTransactions,  EntityCache {
         }
         else {
             results = entityDao.getEntities(user);
-            cache.put(MemCacheKey.userEntityTree, results);
+            cacheFactory.put(MemCacheKey.userEntityTree, results);
 
         }
         return results;
@@ -265,11 +264,11 @@ public class EntityCacheImpl implements EntityTransactions,  EntityCache {
         removeEntityFromCache(user, Arrays.asList(entity));
         removeTriggersFromCache(entity);
         removeEntityNameFromCache(user, entity.getName(), entity.getEntityType().getClassName());
-        cache.delete(MemCacheKey.userEntityTree);
+        cacheFactory.delete(MemCacheKey.userEntityTree);
         if (entity.getEntityType().equals(EntityType.subscription)) {
             Subscription subscription = (Subscription) entity;
             final String key = MemCacheKey.subscribedEntity + user.getKey() + subscription.getSubscribedEntity();
-            cache.delete(key);
+            cacheFactory.delete(key);
 
         }
         return entityDao.deleteEntity(user, entity, cls);
@@ -300,6 +299,7 @@ public class EntityCacheImpl implements EntityTransactions,  EntityCache {
         this.entityDao = entityDao;
     }
 
+    @SuppressWarnings("unused")
     public EntityTransactions getEntityDao() {
         return entityDao;
     }
@@ -310,5 +310,13 @@ public class EntityCacheImpl implements EntityTransactions,  EntityCache {
 
     public UserServiceImpl getUserService() {
         return userService;
+    }
+
+    public void setCacheFactory(MemcacheService cacheFactory) {
+        this.cacheFactory = cacheFactory;
+    }
+    @SuppressWarnings("unused")
+    public MemcacheService getCacheFactory() {
+        return cacheFactory;
     }
 }

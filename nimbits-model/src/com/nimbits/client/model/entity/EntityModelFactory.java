@@ -4,6 +4,10 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.impl.CommonFactory;
+import com.nimbits.client.model.trigger.TargetEntity;
+import com.nimbits.client.model.trigger.TargetEntityImpl;
+import com.nimbits.client.model.trigger.TriggerEntity;
+import com.nimbits.client.model.trigger.TriggerEntityImpl;
 import com.nimbits.client.model.user.User;
 
 /**
@@ -110,6 +114,10 @@ public class EntityModelFactory {
                 );
     }
 
-
-
+    public static TriggerEntity createTrigger(final String key) {
+        return  new TriggerEntityImpl(key);
+    }
+    public static TargetEntity createTarget(final String key) {
+        return   new TargetEntityImpl(key);
+    }
 }

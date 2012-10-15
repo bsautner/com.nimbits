@@ -32,7 +32,7 @@
 
 $ch = curl_init();
 
-curl_setopt($ch, CURLOPT_URL,"http://app.nimbits.com/service/currentvalue");
+curl_setopt($ch, CURLOPT_URL,"http://cloud.nimbits.com/service/currentvalue");
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS,
             "email=example@test.com&secret=1312-3432-324231-123&point=testpoint&value=42.0&note=helloworld");

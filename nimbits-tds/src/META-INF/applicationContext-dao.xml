@@ -17,8 +17,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 
-
-
     <bean id="userDao" class="com.nimbits.server.transactions.dao.user.UserDAOImpl" scope="singleton">
         <property name="entityService" ref="entityService" />
         <property name="userService" ref="userService"/>
@@ -38,5 +36,10 @@
     <bean id="settingsDao" class="com.nimbits.server.transactions.dao.settings.SettingsDAOImpl" scope="singleton">
 
     </bean>
+
+    <bean id="shardedDate" class="com.nimbits.server.transactions.dao.counter.ShardedDate" scope="singleton">
+
+    </bean>
+
 
 </beans>

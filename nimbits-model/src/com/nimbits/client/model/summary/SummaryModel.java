@@ -22,8 +22,8 @@ public class SummaryModel extends TriggerModel implements Summary {
 
     public SummaryModel(
             final Entity entity,
-            final String trigger,
-            final String target,
+            final TriggerEntity trigger,
+            final TargetEntity target,
             final boolean enabled,
             final SummaryType summaryType,
             final long summaryIntervalMs,

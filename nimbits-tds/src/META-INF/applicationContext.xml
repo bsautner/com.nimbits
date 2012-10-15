@@ -16,6 +16,14 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <bean id="billing" class="com.nimbits.server.account.BillingImpl">
+        <property name="valueService" ref="valueService" />
+        <property name="entityService" ref="entityService" />
+        <property name="settingsService" ref="settingsService" />
+        <property name="quotaManager" ref="quotaManager" />
+
+    </bean>
+
 
     <bean id="entityHelper" class="com.nimbits.client.helper.EntityHelper"> </bean>
 
@@ -24,6 +32,10 @@
         <property name="entityService" ref="entityService" />
     </bean>
 
-    <bean id="quotaManager" class="com.nimbits.server.admin.quota.QuotaManagerImpl"> </bean>
+    <bean id="quotaManager" class="com.nimbits.server.admin.quota.QuotaManagerImpl">
+        <property name="cacheFactory" ref="cacheFactory" />
+        <property name="timespanService" ref="timespanService" />
+
+    </bean>
 
 </beans>

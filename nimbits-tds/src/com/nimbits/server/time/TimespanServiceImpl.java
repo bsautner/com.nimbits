@@ -40,7 +40,7 @@ public class TimespanServiceImpl extends RemoteServiceServlet implements Timespa
     private static final long serialVersionUID = 1L;
 
     @Override
-    public Date zeroOutDate(final Date date) {
+    public Date zeroOutDateToStart(final Date date) {
         final Calendar c = Calendar.getInstance();
         c.setTime(date);
         c.add(Calendar.MILLISECOND, c.get(Calendar.MILLISECOND) * -1);
@@ -49,6 +49,15 @@ public class TimespanServiceImpl extends RemoteServiceServlet implements Timespa
         c.add(Calendar.HOUR_OF_DAY, c.get(Calendar.HOUR_OF_DAY) * -1);
         return c.getTime();
     }
+
+    @Override
+    public Date zeroOutDateToEnd(final Date date) {
+        final Calendar c = Calendar.getInstance();
+        c.setTime(zeroOutDateToStart(date));
+        c.add(Calendar.DATE, 1);
+        return c.getTime();
+    }
+
 
     @Override
     public Timespan createTimespan(final String start, final String end) throws NimbitsException {

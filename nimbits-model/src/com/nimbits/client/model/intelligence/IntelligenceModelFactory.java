@@ -15,6 +15,8 @@ package com.nimbits.client.model.intelligence;
 
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.trigger.TargetEntity;
+import com.nimbits.client.model.trigger.TriggerEntity;
 
 /**
  * Created by bsautner
@@ -35,11 +37,11 @@ public class IntelligenceModelFactory {
 
     public static Intelligence createIntelligenceModel(final Entity entity,
                                                        final boolean enabled,
-                                                       final String targetPoint,
+                                                       final TargetEntity targetPoint,
                                                        final String input,
                                                        final String nodeId,
                                                        final boolean resultsInPlainText,
-                                                       final String trigger) throws NimbitsException {
+                                                       final TriggerEntity trigger) throws NimbitsException {
 
         return new IntelligenceModel(entity, enabled, targetPoint, input, nodeId, resultsInPlainText, trigger);
 

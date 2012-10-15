@@ -82,7 +82,7 @@ public class EntityCacheImplTest extends NimbitsServletTest {
 
         Entity entity = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe, point.getKey(), user.getKey());
 
-        Calculation c = CalculationModelFactory.createCalculation(entity, point.getKey(), true, "1+1", pointChild.getKey(), "", "", "");
+        Calculation c = CalculationModelFactory.createCalculation(entity, EntityModelFactory.createTrigger(point.getKey()), true, "1+1", EntityModelFactory.createTarget(pointChild.getKey()), "", "", "");
         entityService.addUpdateEntity(user, c);
         List<Entity> triggers = entityTransactions.getEntityByTrigger(user, point, CalcEntity.class);
         assertFalse(triggers.isEmpty());
@@ -103,7 +103,7 @@ public class EntityCacheImplTest extends NimbitsServletTest {
 
         Entity entity2 = EntityModelFactory.createEntity(name2, "", EntityType.calculation, ProtectionLevel.onlyMe, point.getKey(), user.getKey());
 
-        Calculation c2 = CalculationModelFactory.createCalculation(entity2, point.getKey(), true, "1+2", pointChild.getKey(), "", "", "");
+        Calculation c2 = CalculationModelFactory.createCalculation(entity2, EntityModelFactory.createTrigger(point.getKey()), true, "1+2", EntityModelFactory.createTarget(pointChild.getKey()), "", "", "");
         entityService.addUpdateEntity(user, c2);
 
         List<Entity> triggers3 = entityTransactions.getEntityByTrigger(user, point, CalcEntity.class);

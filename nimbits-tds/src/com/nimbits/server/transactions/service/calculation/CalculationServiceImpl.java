@@ -65,7 +65,7 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
                     else {
                         log.info("Solving calc" + c.getFormula());
                         final Value result = solveEquation(u, c);
-                        log.info("result" + result);
+                        log.info("result" + result.getDoubleValue());
                         valueService.recordValue(u, target.get(0), result);
                     }
                 } catch (NimbitsException e1) {
@@ -134,7 +134,7 @@ public class CalculationServiceImpl extends RemoteServiceServlet implements Calc
         }
 
 
-        return ValueFactory.createValueModel(retVal, "CV");
+        return ValueFactory.createValueModel(retVal);
     }
 
     public void setEntityService(EntityService entityService ) {

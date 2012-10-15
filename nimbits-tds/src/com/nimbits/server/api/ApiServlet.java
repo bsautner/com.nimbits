@@ -14,21 +14,19 @@
 package com.nimbits.server.api;
 
 import com.nimbits.client.common.Utils;
-import com.nimbits.client.constants.Const;
-import com.nimbits.client.enums.*;
+import com.nimbits.client.enums.ClientType;
+import com.nimbits.client.enums.ExportType;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.location.Location;
 import com.nimbits.client.model.location.LocationFactory;
-import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.settings.SettingsService;
 import com.nimbits.client.service.value.ValueService;
+import com.nimbits.server.account.Billing;
 import com.nimbits.server.admin.quota.QuotaManager;
 import com.nimbits.server.api.helper.LocationService;
 import com.nimbits.server.transactions.service.user.UserServerService;
@@ -38,10 +36,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -58,14 +53,11 @@ public class ApiServlet extends HttpServlet {
     private static Map<Parameters, String> paramMap;
     protected final static Logger log = Logger.getLogger(ApiServlet.class.getName());
     protected static Location location;
-    private static final String BUDGET_ERROR_BUDGET_EXCEEDED = "Maximum daily budget exceeded. Please increase your daily budget";
-    private static final String BUDGET_ERROR_ZERO_BALANCE = "Your api call balance has been depleted, please fund your account";
-    private static final String BUDGET_INCREASE_ERROR = "Please report this error";
-    private static final String BUDGET_ERROR_NOT_PAID = "You have exceeded the max free api call quota. Please enable billing and fund your account to record more data.";
-    public static final String MISSING_ACCOUNT_BALANCE_DATA_POINT = "MISSING ACCOUNT BALANCE DATA POINT";
 
     @Resource(name="entityService")
     protected EntityService entityService;
+
+
 
     @Resource(name="valueService")
     protected ValueService valueService;
@@ -81,6 +73,9 @@ public class ApiServlet extends HttpServlet {
 
     @Resource(name = "locationService")
     protected LocationService locationService;
+
+    @Resource(name = "billing")
+    protected Billing billing;
 
     protected static boolean okToReport(final User u, final Entity c) {
 
@@ -111,7 +106,7 @@ public class ApiServlet extends HttpServlet {
         getGPS(req);
         if (user != null) {
 
-            processBilling();
+            billing.processBilling(user);
 
 
         }
@@ -155,85 +150,9 @@ public class ApiServlet extends HttpServlet {
         }
     }
 
-    private void processBilling() throws NimbitsException {
-        if (settingsService.getBooleanSetting(SettingType.billingEnabled)) {
-           final int count = quotaManager.incrementCounter(user.getEmail());
-           final int max = quotaManager.getFreeDailyQuota();
-           if (count > max) {
 
-               if (user.isBillingEnabled()) {
-                   final EntityName name = CommonFactory.createName(Const.ACCOUNT_BALANCE, EntityType.point);
-                   log.info("billing enabled");
-                   final List<Entity> points =  entityService.getEntityByName(user, name, EntityType.point);
-                   if (points.isEmpty()) {
-                       log.severe(MISSING_ACCOUNT_BALANCE_DATA_POINT);
-                       throw new NimbitsException(MISSING_ACCOUNT_BALANCE_DATA_POINT);
-                   }
-                   else {
-                       final Point accountBalance = (Point) points.get(0);
-                       final List<Value> currentBalanceList = valueService.getCurrentValue(accountBalance);
-                       if (currentBalanceList.isEmpty()) {
-                           log.severe(BUDGET_ERROR_ZERO_BALANCE);
-                           throw new NimbitsException(BUDGET_ERROR_ZERO_BALANCE);
-                       }
-                       else {
-                           final Value current = currentBalanceList.get(0);
-                           final double spent = BigDecimal.valueOf(valueService.calculateDelta(accountBalance)).setScale(4, RoundingMode.HALF_UP).doubleValue();
-                           if (spent > accountBalance.getDeltaAlarm()) {
-                               log.severe(BUDGET_ERROR_BUDGET_EXCEEDED);
-                               log.severe("current:  " + current.getDoubleValue());
-                               log.severe("spent:  " + spent);
-                               log.severe("budget:  " + accountBalance.getDeltaAlarm());
-                               throw new NimbitsException(BUDGET_ERROR_BUDGET_EXCEEDED);
-                           }
-                           else {
-                               final double currentBalance = round(current.getDoubleValue());
 
-                               final double newValue = round(currentBalance - quotaManager.getCostPerApiCall());
 
-                               if (newValue <= 0.0) {
-                                   log.severe(BUDGET_ERROR_ZERO_BALANCE);
-                                   throw new NimbitsException(BUDGET_ERROR_ZERO_BALANCE);
-                               }
-                               else if (newValue > currentBalance) {
-                                   log.severe(BUDGET_INCREASE_ERROR);
-                                   throw new NimbitsException(BUDGET_INCREASE_ERROR);
-                               }
-                               else if (newValue == currentBalance) {
-                                   //weird
-                                   log.severe("weird equality issue");
-                                   double fixedValue = round(newValue - quotaManager.getCostPerApiCall());
-                                   log.severe("fixed: " + fixedValue);
-                                   log.severe("newValue: " + newValue);
-                                   log.severe("currentBalance: " + currentBalance);
-                                   Value value = ValueFactory.createValueModel(fixedValue);
-                                   valueService.recordValue(user, accountBalance, value);
-                               }
-                               else {
-                                   Value value = ValueFactory.createValueModel(newValue);
-                                   valueService.recordValue(user, accountBalance, value);
-                               }
-                           }
-
-                       }
-                   }
-               }
-               else {
-                   throw new NimbitsException(BUDGET_ERROR_NOT_PAID);
-               }
-//
-
-           }
-       }
-    }
-
-    private double round(double value) {
-       return
-                BigDecimal.valueOf
-                        (value)
-                        .setScale(5, RoundingMode.HALF_UP).doubleValue();
-
-    }
 
     public static ClientType getClientType() {
         ClientType type;
@@ -303,5 +222,9 @@ public class ApiServlet extends HttpServlet {
 
     public void setQuotaManager(QuotaManager quotaManager) {
         this.quotaManager = quotaManager;
+    }
+
+    public void setBilling(Billing billing) {
+        this.billing = billing;
     }
 }

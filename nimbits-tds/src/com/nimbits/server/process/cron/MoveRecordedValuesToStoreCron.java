@@ -15,10 +15,8 @@ package com.nimbits.server.process.cron;
 
 import com.google.appengine.api.memcache.InvalidValueException;
 import com.google.appengine.api.memcache.MemcacheService;
-import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.nimbits.client.enums.MemCacheKey;
 import com.nimbits.client.model.point.Point;
-
 import com.nimbits.server.process.task.TaskImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,8 +40,9 @@ public class MoveRecordedValuesToStoreCron extends HttpServlet implements org.sp
     /**
      *
      */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
     private TaskImpl taskFactory;
+    private MemcacheService cacheFactory;
 
 
     @Override
@@ -51,16 +50,16 @@ public class MoveRecordedValuesToStoreCron extends HttpServlet implements org.sp
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp)
             throws IOException {
 
-        final MemcacheService cacheShared = MemcacheServiceFactory.getMemcacheService();
-        if (cacheShared.contains(MemCacheKey.activePoints)) {
+
+        if (cacheFactory.contains(MemCacheKey.activePoints)) {
             try {
-                final Map<String, Point> points = (Map<String, Point>) cacheShared.get(MemCacheKey.activePoints);
-                cacheShared.delete(MemCacheKey.activePoints); //TODO possible race condition with record value service
+                final Map<String, Point> points = (Map<String, Point>) cacheFactory.get(MemCacheKey.activePoints);
+                cacheFactory.delete(MemCacheKey.activePoints); //TODO possible race condition with record value service
                 for (final Point point : points.values()) {
                       taskFactory.startMoveCachedValuesToStoreTask(point);
                 }
             } catch (InvalidValueException e) {
-                cacheShared.clearAll();
+                cacheFactory.clearAll();
             }
 
         }
@@ -76,7 +75,7 @@ public class MoveRecordedValuesToStoreCron extends HttpServlet implements org.sp
         this.taskFactory = taskFactory;
     }
 
-    public TaskImpl getTaskFactory() {
-        return taskFactory;
+    public void setCacheFactory(MemcacheService cacheFactory) {
+        this.cacheFactory = cacheFactory;
     }
 }

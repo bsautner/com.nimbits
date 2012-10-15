@@ -15,12 +15,10 @@ package com.nimbits.server.transactions.memcache.user;
 
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
-import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.connection.ConnectionRequest;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.user.User;
-import com.nimbits.server.transactions.dao.user.UserDAOImpl;
 import com.nimbits.server.transactions.service.user.UserTransactions;
 import org.springframework.stereotype.Component;
 
@@ -36,8 +34,9 @@ import java.util.List;
  */
 @Component("userCache")
 public class UserCacheImpl implements UserTransactions {
-    private UserDAOImpl userDao;
-    MemcacheService cache = MemcacheServiceFactory.getMemcacheService();
+    private UserTransactions userDao;
+
+    private MemcacheService cacheFactory;
 
 
     @Override
@@ -67,8 +66,8 @@ public class UserCacheImpl implements UserTransactions {
 
     @Override
     public List<User> getCachedAuthenticatedUser(String cacheKey) {
-        if (cache.contains(cacheKey))  {
-            User user = (User) cache.get(cacheKey);
+        if (cacheFactory.contains(cacheKey))  {
+            User user = (User) cacheFactory.get(cacheKey);
             return Arrays.asList(user);
         }
         else {
@@ -78,19 +77,19 @@ public class UserCacheImpl implements UserTransactions {
 
     @Override
     public void cacheAuthenticatedUser( final String cacheKey, final User user) {
-       if (cache.contains(cacheKey)) {
-           cache.delete(cacheKey);
+       if (cacheFactory.contains(cacheKey)) {
+           cacheFactory.delete(cacheKey);
        }
-        cache.put(cacheKey, user, Expiration.byDeltaSeconds(500));
+        cacheFactory.put(cacheKey, user, Expiration.byDeltaSeconds(500));
 
 
     }
 
-    public void setUserDao(UserDAOImpl userDao) {
+    public void setUserDao(UserTransactions userDao) {
         this.userDao = userDao;
     }
 
-    public UserDAOImpl getUserDao() {
-        return userDao;
+    public void setCacheFactory(MemcacheService cacheFactory) {
+        this.cacheFactory = cacheFactory;
     }
 }

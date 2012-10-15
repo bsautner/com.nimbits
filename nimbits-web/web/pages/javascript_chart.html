@@ -75,14 +75,14 @@ chart like this one: </p><iframe src="/pages/chart.html" style="border: 0" scrol
           &lt;html&gt
           &lt;head&gt
               &lt;script type="text/javascript" src="https://www.google.com/jsapi"&gt&lt;/script&gt
-              &lt;script type="text/javascript" src="http://app.nimbits.com/assets/js/nimbits-3.3.0.js"&gt&lt;/script&gt
+              &lt;script type="text/javascript" src="http://cloud.nimbits.com/assets/js/nimbits-3.3.0.js"&gt&lt;/script&gt
               &lt;script type="text/javascript"&gt
                   google.load("visualization", "1", {packages:["corechart"]});
                   google.setOnLoadCallback(start);
 
                   function start() {
                       // drawChart(null);
-                      getPoint(drawChart, 'http://app.nimbits.com', '96c55c29-d60f-42a1-82a9-98d8a76960bd', 10)
+                      getPoint(drawChart, 'http://cloud.nimbits.com', '96c55c29-d60f-42a1-82a9-98d8a76960bd', 10)
                   }
 
                   function drawChart(_point) {

@@ -17,6 +17,7 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 
 import java.util.List;
@@ -25,6 +26,6 @@ import java.util.Map;
 
 public interface ExportHelper {
     String exportPointDataToCSVSeparateColumns(final Map<EntityName, Entity> points, final Map<EntityName, List<Value>> values);
-    String exportPointDataToDescriptiveStatistics(final Map<EntityName, Point> points) throws NimbitsException;
-    String exportPointDataToPossibleContinuation(final Map<EntityName, Point> points) throws NimbitsException;
+    String exportPointDataToDescriptiveStatistics(final User user, final Map<EntityName, Point> points) throws NimbitsException;
+    String exportPointDataToPossibleContinuation(final User user, final Map<EntityName, Point> points) throws NimbitsException;
 }

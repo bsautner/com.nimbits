@@ -25,7 +25,7 @@
 
     <bean id="locationService" class="com.nimbits.server.api.helper.LocationServiceImpl">
         <property name="taskFactory" ref="taskFactory" />
-
+        <property name="cacheFactory" ref="cacheFactory" />
     </bean>
     <bean id="entityService" class="com.nimbits.server.transactions.service.entity.EntityServiceImpl">
         <property name="userService" ref="userService" />
@@ -83,7 +83,7 @@
     <bean id="driveService" class="com.nimbits.server.external.google.drive.DriveServiceImpl">
         <property name="userService" ref="userService" />
         <property name="valueService" ref="valueService" />
-
+        <property name="cacheFactory" ref="cacheFactory" />
     </bean>
 
     <bean id="facebookService" class="com.nimbits.server.external.facebook.FacebookImpl">
@@ -96,11 +96,7 @@
         <property name="userService" ref="userService" />
 
     </bean>
-    <bean id="intelService" class="com.nimbits.server.transactions.service.intelligence.IntelligenceServiceImpl">
-        <property name="entityService" ref="entityService" />
-        <property name="userService" ref="userService" />
-        <property name="valueService" ref="valueService" />
-    </bean>
+
 
     <bean id="feedService" class="com.nimbits.server.transactions.service.feed.FeedImpl">
         <property name="entityService" ref="entityService" />
@@ -113,14 +109,16 @@
     <bean id="twitterService" class="com.nimbits.server.external.twitter.TwitterImpl">
         <property name="entityService" ref="entityService" />
         <property name="settingsService" ref="settingsService" />
+        <property name="cacheFactory" ref="cacheFactory" />
     </bean>
 
 
     <bean id="intelligenceService" class="com.nimbits.server.transactions.service.intelligence.IntelligenceServiceImpl">
         <property name="entityService" ref="entityService" />
+        <property name="valueService" ref="valueService" />
         <property name="settingsService" ref="settingsService" />
+        <property name="billing" ref="billing" />
     </bean>
-
     <bean id="summaryService" class="com.nimbits.server.transactions.service.summary.SummaryServiceImpl">
         <property name="entityService" ref="entityService" />
         <property name="valueService" ref="valueService" />
@@ -137,7 +135,9 @@
         <property name="xmppService" ref="xmppService" />
     </bean>
 
-    <bean id="counterService" class="com.nimbits.server.transactions.service.counter.CounterServiceImpl" />
+    <bean id="counterService" class="com.nimbits.server.transactions.service.counter.CounterServiceImpl">
+        <property name="shardedDate" ref="shardedDate" />
+    </bean>
     <bean id="timespanService" class="com.nimbits.server.time.TimespanServiceImpl" />
 
     <!--<bean id="openId" class="com.nimbits.server.api.openid.OpenIdServlet" />-->

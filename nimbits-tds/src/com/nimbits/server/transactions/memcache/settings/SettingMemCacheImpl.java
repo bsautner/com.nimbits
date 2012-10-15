@@ -14,7 +14,6 @@
 package com.nimbits.server.transactions.memcache.settings;
 
 import com.google.appengine.api.memcache.MemcacheService;
-import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.nimbits.client.enums.MemCacheKey;
 import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.exception.NimbitsException;
@@ -32,8 +31,8 @@ import java.util.Map;
 @SuppressWarnings("unchecked")
 @Component("settingsCache")
 public class SettingMemCacheImpl implements SettingTransactions {
-    private final MemcacheService cache = MemcacheServiceFactory.getMemcacheService();
     private SettingTransactions  settingsDao;
+    private MemcacheService cacheFactory;
 
 
     private String SettingCacheKey(final SettingType setting) {
@@ -49,16 +48,16 @@ public class SettingMemCacheImpl implements SettingTransactions {
 
            // cache = CacheManager.getInstance().getCacheFactory().createCache(Collections.emptyMap());
             final Map<SettingType, String> settings =settingsDao.getSettings();
-            if (cache.contains(MemCacheKey.allSettings)) {
-                cache.delete(MemCacheKey.allSettings);
+            if (cacheFactory.contains(MemCacheKey.allSettings)) {
+                cacheFactory.delete(MemCacheKey.allSettings);
             }
             for (final SettingType setting : settings.keySet()) {
 
                 if (setting != null) {
 
                     builder.append("Removed: ").append(setting.getName()).append("<br />");
-                    if (cache.contains(SettingCacheKey(setting)))   {
-                        cache.delete(SettingCacheKey(setting));
+                    if (cacheFactory.contains(SettingCacheKey(setting)))   {
+                        cacheFactory.delete(SettingCacheKey(setting));
                     }
                 }
 
@@ -76,12 +75,12 @@ public class SettingMemCacheImpl implements SettingTransactions {
     public String getSetting(final SettingType setting) throws NimbitsException {
 
 
-            if (cache.contains(SettingCacheKey(setting))) {
-                return (String) cache.get(SettingCacheKey(setting));
+            if (cacheFactory.contains(SettingCacheKey(setting))) {
+                return (String) cacheFactory.get(SettingCacheKey(setting));
 
             } else {
                 String storedVal = settingsDao.getSetting(setting);
-                cache.put(SettingCacheKey(setting), storedVal);
+                cacheFactory.put(SettingCacheKey(setting), storedVal);
                 return storedVal;
 
             }
@@ -92,12 +91,12 @@ public class SettingMemCacheImpl implements SettingTransactions {
     @Override
     public Map<SettingType, String> getSettings() throws NimbitsException {
 
-               if (cache.contains(MemCacheKey.allSettings)) {
-                return (Map<SettingType, String>) cache.get(MemCacheKey.allSettings);
+               if (cacheFactory.contains(MemCacheKey.allSettings)) {
+                return (Map<SettingType, String>) cacheFactory.get(MemCacheKey.allSettings);
 
             } else {
                 final Map<SettingType, String> settings = settingsDao.getSettings();
-                cache.put(MemCacheKey.allSettings, settings);
+                cacheFactory.put(MemCacheKey.allSettings, settings);
                 return settings;
             }
 
@@ -108,11 +107,11 @@ public class SettingMemCacheImpl implements SettingTransactions {
         settingsDao.addSetting(setting, value);
 
 
-            if (cache.contains(MemCacheKey.allSettings)) {
-                cache.delete(MemCacheKey.allSettings);
+            if (cacheFactory.contains(MemCacheKey.allSettings)) {
+                cacheFactory.delete(MemCacheKey.allSettings);
             }
-            if (cache.contains(SettingCacheKey(setting))) {
-                cache.delete(SettingCacheKey(setting));
+            if (cacheFactory.contains(SettingCacheKey(setting))) {
+                cacheFactory.delete(SettingCacheKey(setting));
             }
 
 
@@ -123,11 +122,11 @@ public class SettingMemCacheImpl implements SettingTransactions {
         settingsDao.updateSetting(setting, newValue);
 
 
-            if (cache.contains(MemCacheKey.allSettings)) {
-                cache.delete(MemCacheKey.allSettings);
+            if (cacheFactory.contains(MemCacheKey.allSettings)) {
+                cacheFactory.delete(MemCacheKey.allSettings);
             }
-            if (cache.contains(SettingCacheKey(setting))) {
-                cache.delete(SettingCacheKey(setting));
+            if (cacheFactory.contains(SettingCacheKey(setting))) {
+                cacheFactory.delete(SettingCacheKey(setting));
             }
 
     }
@@ -137,7 +136,7 @@ public class SettingMemCacheImpl implements SettingTransactions {
         this.settingsDao = settingsDao;
     }
 
-    public SettingTransactions getSettingsDao() {
-        return settingsDao;
+    public void setCacheFactory(MemcacheService cacheFactory) {
+        this.cacheFactory = cacheFactory;
     }
 }

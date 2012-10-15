@@ -36,7 +36,7 @@ while 1:
             "value":value}
 
     # use requests library to post to nimbits
-    r = requests.post("http://app.nimbits.com/service/currentvalue", data=data)
+    r = requests.post("http://cloud.nimbits.com/service/currentvalue", data=data)
 
     # sleep for a minute
     time.sleep(60)

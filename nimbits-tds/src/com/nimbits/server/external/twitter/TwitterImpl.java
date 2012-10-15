@@ -14,7 +14,6 @@
 package com.nimbits.server.external.twitter;
 
 import com.google.appengine.api.memcache.MemcacheService;
-import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
@@ -59,10 +58,7 @@ public class TwitterImpl extends RemoteServiceServlet implements
     private static final Logger log = Logger.getLogger(TwitterImpl.class.getName());
     private EntityService entityService;
     private SettingsService settingsService;
-
-
-
-
+    private MemcacheService cacheFactory;
 
 
     @Override
@@ -83,13 +79,11 @@ public class TwitterImpl extends RemoteServiceServlet implements
         final Twitter twitter = new TwitterFactory().getInstance();
         log.info("Authorising Twitter");
         twitter.setOAuthConsumer(twitter_client_id, twitter_Secret);
-         MemcacheService cache = MemcacheServiceFactory.getMemcacheService();
-
         RequestToken requestToken;
 
         try {
             requestToken = twitter.getOAuthRequestToken();
-            cache.put(MemCacheKey.twitter.getText() + email.getValue(), requestToken);
+            cacheFactory.put(MemCacheKey.twitter.getText() + email.getValue(), requestToken);
 
             return  requestToken.getAuthorizationURL();
         } catch (TwitterException e) {
@@ -118,10 +112,10 @@ public class TwitterImpl extends RemoteServiceServlet implements
         //  log.info("Twitter: Updating user token " + email.getValue() + "  " + request);
 
         try {
-            MemcacheService cache = MemcacheServiceFactory.getMemcacheService();
-            log.info("user == null? "  +  (user==null));
-            if (cache.contains(MemCacheKey.twitter.getText() + user.getKey())) {
-                RequestToken requestToken = (RequestToken) cache.get(MemCacheKey.twitter.getText() + user.getKey());
+
+
+            if (cacheFactory.contains(MemCacheKey.twitter.getText() + user.getKey())) {
+                RequestToken requestToken = (RequestToken) cacheFactory.get(MemCacheKey.twitter.getText() + user.getKey());
                 AccessToken accessToken = twitter.getOAuthAccessToken(requestToken);
                 List<Entity> result = entityService.getEntityByKey(user, user.getKey(), EntityType.user);
                 if (! result.isEmpty()) {
@@ -131,7 +125,7 @@ public class TwitterImpl extends RemoteServiceServlet implements
                     entityService.addUpdateEntity(u, u);
                 }
 
-                cache.delete(MemCacheKey.twitter.getText() + user.getKey());
+                cacheFactory.delete(MemCacheKey.twitter.getText() + user.getKey());
                 sendTweet("Added #Nimbits Data Logger. A free, social and open source data logging service.", accessToken.getToken(), accessToken.getTokenSecret());
             }
         } catch (TwitterException e) {
@@ -205,16 +199,12 @@ public class TwitterImpl extends RemoteServiceServlet implements
         this.entityService = entityService;
     }
 
-    public EntityService getEntityService() {
-        return entityService;
-    }
-
     public void setSettingsService(SettingsService settingsService) {
         this.settingsService = settingsService;
     }
 
-    public SettingsService getSettingsService() {
-        return settingsService;
+    public void setCacheFactory(MemcacheService cacheFactory) {
+        this.cacheFactory = cacheFactory;
     }
 }
 

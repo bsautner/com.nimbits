@@ -31,13 +31,13 @@ import java.util.Map;
 public interface IntelligenceServiceAsync {
 
 
-    void getRawResult(final String query, final String podId, final boolean htmlOutput, AsyncCallback<String> async);
+    void getRawResult(final User user, final String query, final String podId, final boolean htmlOutput, AsyncCallback<String> async);
 
     void getHTMLContent(final String responseXML, AsyncCallback<Map<String, String>> async);
 
     void processIntelligence(User u, Entity point, AsyncCallback<Void> async);
 
-    void processInput(final Intelligence intelligence, final Point targetPoint, final String processedInput, AsyncCallback<Value> async);
+    void processInput(final User user, final Intelligence intelligence, final Point targetPoint, final String processedInput, AsyncCallback<Value> async);
 
     void addDataToInput(User user, Intelligence intelligence, AsyncCallback<String> async);
 

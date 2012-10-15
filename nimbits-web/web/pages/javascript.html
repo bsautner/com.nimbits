@@ -20,7 +20,7 @@
 
 <p>We whipped up a limited javascript library that you can use to get started. The code simply takes a point name, and a count for the number of values
 you'd like to pull down, as well as the URL of the server where the point you're interested in resides.
-    In this example, I'm using the public nimbits cloud on: http://nimbits.appspot.com a.k.a http://app.nimbits.com</p>
+    In this example, I'm using the public nimbits cloud on: http://nimbits-02.appspot.com a.k.a http://cloud.nimbits.com</p>
 
 <p>
    Every Nimbits data point has a unique identifier that makes it identifiable across all of time and space. The UUID is unique to that point even across any number
@@ -36,7 +36,7 @@ you'd like to pull down, as well as the URL of the server where the point you're
 public cloud. If you are running your own instance of Nimbits, you can use that one.</p>
 <pre class="prettyprint">
  &lt;head&gt;
-     &lt;script type="text/javascript" src="http://app.nimbits.com/assets/js/nimbits-3.3.0.js"&gt;&lt;/script&gt;
+     &lt;script type="text/javascript" src="http://cloud.nimbits.com/assets/js/nimbits-3.3.0.js"&gt;&lt;/script&gt;
  &lt;/head&gt;
  </pre>
  <p>
@@ -48,7 +48,7 @@ public cloud. If you are running your own instance of Nimbits, you can use that 
  <pre class="prettyprint">
      &lt;body&gt;
 
-     &lt;a href="#" onclick="getPoint(callback, 'http://app.nimbits.com', '96c55c29-d60f-42a1-82a9-98d8a76960bd', 10)"&gt;hello&lt;/a&gt;
+     &lt;a href="#" onclick="getPoint(callback, 'http://cloud.nimbits.com', '96c55c29-d60f-42a1-82a9-98d8a76960bd', 10)"&gt;hello&lt;/a&gt;
 
      &lt;script type="text/javascript" language="javascript"&gt;
          function callback(point) {

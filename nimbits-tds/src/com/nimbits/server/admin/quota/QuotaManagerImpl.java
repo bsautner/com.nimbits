@@ -13,12 +13,15 @@
 
 package com.nimbits.server.admin.quota;
 
+import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
-import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.nimbits.client.enums.MemCacheKey;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.service.timespan.TimespanService;
 import org.springframework.stereotype.Component;
+
+import java.util.Date;
 
 /**
  * Created by Benjamin Sautner
@@ -29,37 +32,38 @@ import org.springframework.stereotype.Component;
 @Component("quotaManager")
 public class QuotaManagerImpl implements QuotaManager {
 
-    private MemcacheService cache;
-    private String key;
+
+
     public static final int FREE_DAILY_QUOTA = 1000;
     public static final double COST_PER_API_CALL = 0.00001;
+    private MemcacheService cacheFactory;
+    private TimespanService timespanService;
 
     @Override
     public int getFreeDailyQuota() {
         return FREE_DAILY_QUOTA;
     }
 
-    private void initCache(final EmailAddress email) { //use email since sometimes we only have the key
-        cache =MemcacheServiceFactory.getMemcacheService(MemCacheKey.quotaNamespace.getText());
-        if (email != null) {
+    private String getKey(final EmailAddress email) {
+      return  MemCacheKey.getKey(MemCacheKey.quota, email.getValue());
 
-            key = MemCacheKey.getKey(MemCacheKey.quota, email.getValue());
-        }
 
     }
 
     @Override
     public int incrementCounter(final EmailAddress email) throws NimbitsException {
-        initCache(email);
-        if (cache.contains(key))  {
-            int v = (Integer) cache.get(key);
+        Date midnight = timespanService.zeroOutDateToEnd(new Date());
+        if (cacheFactory.contains(getKey(email)))  {
+            int v = (Integer) cacheFactory.get(getKey(email));
             v +=1;
-            cache.put(key, v);
+            cacheFactory.put(getKey(email), v,Expiration.onDate(midnight), MemcacheService.SetPolicy.SET_ALWAYS);
             return v;
 
         }
         else {
-            cache.put(key, 1);
+
+
+            cacheFactory.put(getKey(email), 1, Expiration.onDate(midnight), MemcacheService.SetPolicy.SET_ALWAYS);
             return 1;
         }
 
@@ -70,22 +74,23 @@ public class QuotaManagerImpl implements QuotaManager {
         return COST_PER_API_CALL;
     }
 
-    @Override
-    public void resetCounter(final EmailAddress email) throws NimbitsException {
-        initCache(email);
-        cache.delete(key);
-    }
-    @Override
-    public void resetCounters() throws NimbitsException {
-        initCache(null);
-        cache.clearAll();
-    }
+//    @Override
+//    public void resetCounter(final EmailAddress email) throws NimbitsException {
+//        initCache(email);
+//        cacheFactory.delete(key);
+//    }
+//    @Override
+//    public void resetCounters() throws NimbitsException {
+//        initCache(null);
+//
+//        cache.clearAll();
+//    }
 
     @Override
     public int getCount(final EmailAddress email) throws NimbitsException {
-        initCache(email);
-        if (cache.contains(key))  {
-            return (Integer)cache.get(key);
+
+        if (cacheFactory.contains(getKey(email)))  {
+            return (Integer)cacheFactory.get(getKey(email));
         }
         else {
             return 0;
@@ -93,5 +98,11 @@ public class QuotaManagerImpl implements QuotaManager {
     }
 
 
+    public void setCacheFactory(MemcacheService cacheFactory) {
+        this.cacheFactory = cacheFactory;
+    }
 
+    public void setTimespanService(TimespanService timespanService) {
+        this.timespanService = timespanService;
+    }
 }

@@ -17,12 +17,13 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
     <bean id="userCache" class="com.nimbits.server.transactions.memcache.user.UserCacheImpl">
         <property name="userDao" ref="userDao" />
-
+        <property name="cacheFactory" ref="cacheFactory" />
     </bean>
 
     <bean id="entityCache" class="com.nimbits.server.transactions.memcache.entity.EntityCacheImpl">
         <property name="entityDao" ref="entityDao" />
         <property name="userService" ref="userService" />
+        <property name="cacheFactory" ref="cacheFactory" />
     </bean>
 
     <bean id="valueCache" class="com.nimbits.server.transactions.memcache.value.ValueMemCacheImpl">
@@ -32,6 +33,7 @@
     </bean>
     <bean id="settingsCache" class="com.nimbits.server.transactions.memcache.settings.SettingMemCacheImpl">
         <property name="settingsDao" ref="settingsDao" />
+        <property name="cacheFactory" ref="cacheFactory" />
 
     </bean>
 

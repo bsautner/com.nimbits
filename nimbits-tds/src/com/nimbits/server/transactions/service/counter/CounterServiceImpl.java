@@ -32,7 +32,9 @@ import java.util.Date;
 public class CounterServiceImpl implements CounterService {
 
 
-   @Override
+    private ShardedDate shardedDate;
+
+    @Override
    public void createShards(final String name) {
 
        final ShardedCounter counter = new ShardedCounter(name);
@@ -59,18 +61,21 @@ public class CounterServiceImpl implements CounterService {
 
    @Override
    public Date updateDateCounter(final String name) {
-       final ShardedDate counter = new ShardedDate(name);
-       return counter.update();
+       shardedDate.setName(name);
+       return shardedDate.update();
 
 
    }
 
    @Override
    public Date getDateCounter(String name) {
-       final ShardedDate counter = new ShardedDate(name);
-       return counter.getMostRecent();
+       shardedDate.setName(name);
+       return shardedDate.getMostRecent();
 
    }
 
 
+    public void setShardedDate(ShardedDate shardedDate) {
+        this.shardedDate = shardedDate;
+    }
 }

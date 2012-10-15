@@ -41,10 +41,10 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
 
 
     public CalculationModel(final Entity entity,
-                            final String trigger,
+                            final TriggerEntity trigger,
                             final boolean enabled,
                             final String f,
-                            final String target,
+                            final TargetEntity target,
                             final String x,
                             final String y,
                             final String z) throws NimbitsException {

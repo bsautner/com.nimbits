@@ -14,7 +14,6 @@
 package com.nimbits.server.external.google.drive;
 
 import com.google.appengine.api.memcache.MemcacheService;
-import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.gdata.client.Query;
 import com.google.gdata.client.authn.oauth.GoogleOAuthParameters;
 import com.google.gdata.client.authn.oauth.OAuthException;
@@ -82,9 +81,7 @@ public class DriveServiceImpl extends RemoteServiceServlet implements
 
     private final static String consumerKey = "1009209848329.apps.googleusercontent.com";
     private final static String consumerSecret = "m4S1GkGguCvyFO70bxHuKNzH";
-
-
-    private final MemcacheService cache = MemcacheServiceFactory.getMemcacheService();
+    private MemcacheService cacheFactory;
 
 
     @Override
@@ -116,8 +113,8 @@ public class DriveServiceImpl extends RemoteServiceServlet implements
                             + user.getEmail()),
                     entry);
             final String key = user.getKey() + MemCacheKey.docService;
-            cache.put(key + DOC_ID, newEntry.getDocId());
-            cache.put(key + FILE_NAME, fileName);
+            cacheFactory.put(key + DOC_ID, newEntry.getDocId());
+            cacheFactory.put(key + FILE_NAME, fileName);
 
             return newEntry.getWorksheetFeedUrl().toString();
         } catch (OAuthException e) {
@@ -287,6 +284,10 @@ public class DriveServiceImpl extends RemoteServiceServlet implements
         return docService;
     }
 
+    public void setCacheFactory(MemcacheService cacheFactory) {
+        this.cacheFactory = cacheFactory;
+    }
+
     private static class CellAddress {
         public final int row;
         public final int col;
@@ -327,7 +328,7 @@ public class DriveServiceImpl extends RemoteServiceServlet implements
             spreadsheetService.setOAuthCredentials(oauthParameters, new OAuthHmacSha1Signer());
 
             final String cKey = user.getKey() + MemCacheKey.docService;
-            String key= (String) cache.get(cKey + DOC_ID);
+            String key= (String) cacheFactory.get(cKey + DOC_ID);
 
 
 

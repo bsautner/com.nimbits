@@ -13,10 +13,10 @@
 
 package com.nimbits.client.model.calculation;
 
-import com.nimbits.client.exception.*;
-import com.nimbits.client.model.entity.*;
-
-import java.util.*;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.trigger.TargetEntity;
+import com.nimbits.client.model.trigger.TriggerEntity;
 
 /**
  * Created by bsautner
@@ -33,7 +33,7 @@ public class CalculationModelFactory {
         return new CalculationModel(calculation);
     }
 
-    public static Calculation createCalculation(Entity entity, final String trigger, final boolean enabled, final String f, final String target, final String x, final String y, final String z) throws NimbitsException {
+    public static Calculation createCalculation(Entity entity, final TriggerEntity trigger, final boolean enabled, final String f, final TargetEntity target, final String x, final String y, final String z) throws NimbitsException {
         return new CalculationModel(entity, trigger,  enabled, f, target,  x,y, z);
 
     }

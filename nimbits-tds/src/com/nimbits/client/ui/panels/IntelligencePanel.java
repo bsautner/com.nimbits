@@ -44,16 +44,15 @@ import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.intelligence.Intelligence;
 import com.nimbits.client.model.intelligence.IntelligenceModelFactory;
-import com.nimbits.client.model.trigger.Trigger;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.entity.EntityServiceAsync;
+import com.nimbits.client.service.intelligence.IntelligenceService;
+import com.nimbits.client.service.intelligence.IntelligenceServiceAsync;
 import com.nimbits.client.ui.controls.EntityCombo;
 import com.nimbits.client.ui.helper.FeedbackHelper;
 import com.nimbits.client.ui.icons.Icons;
-
-import static com.google.gwt.user.client.Window.alert;
 
 /**
  * Created by Benjamin Sautner
@@ -98,8 +97,12 @@ public class IntelligencePanel extends NavigationEventProvider {
 
     }
 
-
-
+    TextField<String> nameField;
+    TextArea intelFormula;
+    TextField<String> intelNodeId;
+    CheckBox intelEnabled;
+    CheckBox intelPlainText;
+    EntityCombo intelTargetPoint;
     private void createForm() throws NimbitsException {
 
         final FormPanel simple = new FormPanel();
@@ -109,30 +112,37 @@ public class IntelligencePanel extends NavigationEventProvider {
         simple.setBodyBorder(false);
         simple.setFrame(false);
 
-        final TextArea intelFormula = new TextArea();
+        intelFormula = new TextArea();
 
-        final TextField<String> intelNodeId = new TextField<String>();
+        intelNodeId = new TextField<String>();
 
 
-        final CheckBox intelEnabled = new CheckBox();
-        final CheckBox intelPlainText = new CheckBox();
+        intelEnabled = new CheckBox();
+        intelPlainText = new CheckBox();
 
-        final TextField<String> nameField = new TextField<String>();
+        nameField = new TextField<String>();
         nameField.setFieldLabel("Name");
         String target = null;
 
         if (entity.getEntityType().equals(EntityType.intelligence)) {
-            Trigger intelligence = (Trigger) entity;
+            Intelligence intelligence = (Intelligence) entity;
             nameField.setValue(entity.getName().getValue());
+            intelFormula.setValue(intelligence.getInput());
+            intelEnabled.setValue(intelligence.isEnabled());
+            intelNodeId.setValue(intelligence.getNodeId());
+            intelPlainText.setValue(intelligence.getResultsInPlainText());
             target =  intelligence.getTarget();
         }
         else {
             nameField.setValue(entity.getName().getValue() + " Intelligence");
+            intelEnabled.setValue(false);
+            intelPlainText.setValue(true);
+            intelNodeId.setValue("Result");
         }
 
 
 
-        final EntityCombo intelTargetPoint = new EntityCombo(user, EntityType.point, target, UserMessages.MESSAGE_SELECT_POINT);
+        intelTargetPoint = new EntityCombo(user, EntityType.point, target, UserMessages.MESSAGE_SELECT_POINT);
         intelTargetPoint.setFieldLabel("Target");
 
 
@@ -153,12 +163,17 @@ public class IntelligencePanel extends NavigationEventProvider {
             @Override
             public void componentSelected(ButtonEvent buttonEvent) {
 
-                alert("Intelligence testing is temporarily unavailable");
-//                Intelligence update = createUpdate();
-//
-//                IntelligenceServiceAsync service = GWT.create(IntelligenceService.class);
-//                service.processInput(update, new TestInputValueAsyncCallback());
+                //        alert("Intelligence testing is temporarily unavailable");
+                Intelligence update = null;
+                try {
+                    update = createUpdate();
 
+
+                    IntelligenceServiceAsync service = GWT.create(IntelligenceService.class);
+                    service.processInput(user, update, new TestInputValueAsyncCallback());
+                } catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
+                }
 
             }
         });
@@ -187,23 +202,9 @@ public class IntelligencePanel extends NavigationEventProvider {
         intelEnabled.setLabelSeparator("");
         intelPlainText.setBoxLabel("<i>(Requires a Pod Id)</i>");
         intelPlainText.setFieldLabel("Results in Plain Text");
-        intelPlainText.setValue(true);
 
 
-        if (entity.getEntityType().equals(EntityType.calculation)) {
 
-
-            Intelligence intelligence = (Intelligence)entity;
-
-            intelEnabled.setValue(intelligence.isEnabled());
-            intelPlainText.setValue(intelligence.getResultsInPlainText());
-            intelFormula.setValue(intelligence.getInput());
-            intelNodeId.setValue(intelligence.getNodeId());
-
-        }
-        else {
-            intelEnabled.setValue(false);
-        }
 
         // simple.add(h);
         //    simple.add(btnTestIntel);
@@ -349,7 +350,32 @@ public class IntelligencePanel extends NavigationEventProvider {
             }
         }
     }
+    private Intelligence createUpdate() throws NimbitsException {
+        Intelligence update;
 
+        EntityName name = CommonFactory.createName(nameField.getValue(), EntityType.intelligence);
+
+        if (entity.getEntityType().equals(EntityType.intelligence)) {
+            update = (Intelligence)entity;
+            update.setTarget( intelTargetPoint.getValue().getBaseEntity().getKey());
+            update.setEnabled(intelEnabled.getValue());
+            update.setInput(intelFormula.getValue());
+            update.setNodeId(intelNodeId.getValue());
+        }
+        else {
+            Entity e = EntityModelFactory.createEntity(name,"", EntityType.intelligence, ProtectionLevel.onlyMe,
+                    entity.getKey(), entity.getOwner());
+            update = IntelligenceModelFactory.createIntelligenceModel(
+                    e,
+                    intelEnabled.getValue(),
+                    EntityModelFactory.createTarget(intelTargetPoint.getValue().getId()),
+                    intelFormula.getValue(),
+                    intelNodeId.getValue(),
+                    intelPlainText.getValue(),
+                    EntityModelFactory.createTrigger(entity.getKey()));
+        }
+        return update;
+    }
     private class SubmitButtonEventSelectionListener extends SelectionListener<ButtonEvent> {
         private final TextField<String> nameField;
 
@@ -379,38 +405,38 @@ public class IntelligencePanel extends NavigationEventProvider {
             try {
                 Intelligence update = createUpdate();
 
-            service.addUpdateEntity(update, new UpdateEntityAsyncCallback(box));
+                service.addUpdateEntity(update, new UpdateEntityAsyncCallback(box));
 
             } catch (NimbitsException e) {
                 box.close();
-              FeedbackHelper.showError(e);
+                FeedbackHelper.showError(e);
             }
         }
 
         private Intelligence createUpdate() throws NimbitsException {
             Intelligence update;
 
-            EntityName name = CommonFactory.createName(nameField.getValue(), EntityType.calculation);
+            EntityName name = CommonFactory.createName(nameField.getValue(), EntityType.intelligence);
 
-       if (entity.getEntityType().equals(EntityType.intelligence)) {
-            update = (Intelligence)entity;
-            update.setTarget( intelTargetPoint.getValue().getBaseEntity().getKey());
-            update.setEnabled(intelEnabled.getValue());
-            update.setInput(intelFormula.getValue());
-            update.setNodeId(intelNodeId.getValue());
-        }
-        else {
-            Entity e = EntityModelFactory.createEntity(name,"", EntityType.intelligence, ProtectionLevel.onlyMe,
-                    entity.getKey(), entity.getOwner());
-            update = IntelligenceModelFactory.createIntelligenceModel(
-                    e,
-                    intelEnabled.getValue(),
-                    intelTargetPoint.getValue().getId(),
-                    intelFormula.getValue(),
-                    intelNodeId.getValue(),
-                    intelPlainText.getValue(),
-                    entity.getKey());
-        }
+            if (entity.getEntityType().equals(EntityType.intelligence)) {
+                update = (Intelligence)entity;
+                update.setTarget( intelTargetPoint.getValue().getBaseEntity().getKey());
+                update.setEnabled(intelEnabled.getValue());
+                update.setInput(intelFormula.getValue());
+                update.setNodeId(intelNodeId.getValue());
+            }
+            else {
+                Entity e = EntityModelFactory.createEntity(name,"", EntityType.intelligence, ProtectionLevel.onlyMe,
+                        entity.getKey(), entity.getOwner());
+                update = IntelligenceModelFactory.createIntelligenceModel(
+                        e,
+                        intelEnabled.getValue(),
+                        EntityModelFactory.createTarget(intelTargetPoint.getValue().getId()),
+                        intelFormula.getValue(),
+                        intelNodeId.getValue(),
+                        intelPlainText.getValue(),
+                        EntityModelFactory.createTrigger(entity.getKey()));
+            }
             return update;
         }
     }

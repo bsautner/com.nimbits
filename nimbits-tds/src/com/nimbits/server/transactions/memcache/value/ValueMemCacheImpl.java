@@ -42,16 +42,11 @@ import java.util.logging.Logger;
 @Component("valueCache")
 public class ValueMemCacheImpl implements ValueTransactions {
 
-    static final Logger log = Logger.getLogger(ValueMemCacheImpl.class.getName());
+    private static final Logger log = Logger.getLogger(ValueMemCacheImpl.class.getName());
     private ValueTransactions valueDao;
     private Task taskFactory;
     private MemcacheService cacheFactory;
 
-
-    public ValueMemCacheImpl() {
-
-
-    }
 
     private MemcacheService getBufferService(final Entity entity) {
 
@@ -556,24 +551,13 @@ public class ValueMemCacheImpl implements ValueTransactions {
         this.valueDao = valueDao;
     }
 
-    public ValueTransactions getValueDao() {
-        return valueDao;
-    }
 
     public void setTaskFactory(Task taskFactory) {
         this.taskFactory = taskFactory;
     }
 
-    public Task getTaskFactory() {
-        return taskFactory;
-    }
-
     public void setCacheFactory(MemcacheService cacheFactory) {
         this.cacheFactory = cacheFactory;
-    }
-
-    public MemcacheService getCacheFactory() {
-        return cacheFactory;
     }
 
 

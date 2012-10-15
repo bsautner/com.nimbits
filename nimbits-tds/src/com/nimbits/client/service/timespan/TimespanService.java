@@ -28,7 +28,8 @@ import java.util.Date;
  */
 @RemoteServiceRelativePath("timespanService")
 public interface TimespanService extends RemoteService {
-    Date zeroOutDate(Date date);
+    Date zeroOutDateToStart(Date date);
+    Date zeroOutDateToEnd(Date date);
     Timespan createTimespan(final String start, final String end) throws NimbitsException;
     Timespan createTimespan(final String start, final String end, final int offset) throws NimbitsException;
 }

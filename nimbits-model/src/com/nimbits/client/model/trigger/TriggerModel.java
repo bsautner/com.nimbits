@@ -23,18 +23,19 @@ public class TriggerModel extends EntityModel implements Serializable, Trigger {
     protected TriggerModel() {
     }
 
-    public TriggerModel(Trigger anEntity) throws NimbitsException {
+    public TriggerModel(final Trigger anEntity) throws NimbitsException {
         super(anEntity);
         this.target = anEntity.getTarget();
         this.trigger = anEntity.getTrigger();
         this.enabled = anEntity.isEnabled();
     }
 
-    public TriggerModel(Entity anEntity, String trigger, String target, boolean enabled) throws NimbitsException {
+    public TriggerModel(final Entity anEntity, final TriggerEntity trigger, final TargetEntity target, boolean enabled) throws NimbitsException {
         super(anEntity);
-        this.target = target;
-        this.trigger =trigger;
+        this.target = target.getValue();
+        this.trigger =trigger.getValue();
         this.enabled =enabled;
+
     }
 
     @Override

@@ -11,24 +11,14 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server.admin.quota;
-
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.email.EmailAddress;
+package com.nimbits.client.model;
 
 /**
  * Created with IntelliJ IDEA.
  * User: benjamin
- * Date: 9/18/12
- * Time: 11:25 AM
+ * Date: 10/15/12
+ * Time: 3:17 PM
  */
-public interface QuotaManager {
-    double getCostPerApiCall();
-
-    int getFreeDailyQuota();
-
-    int incrementCounter(final EmailAddress email) throws NimbitsException;
-   // void resetCounter(final EmailAddress email) throws NimbitsException;
-    int getCount(final EmailAddress email) throws NimbitsException;
-   //// void resetCounters() throws NimbitsException;
+public interface EntityKey {
+    String getValue();
 }

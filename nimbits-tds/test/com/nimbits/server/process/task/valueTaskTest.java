@@ -80,7 +80,8 @@ public class valueTaskTest extends NimbitsServletTest {
         Entity e = EntityModelFactory.createEntity(CommonFactory.createName("calc1", EntityType.point),
                 "", EntityType.calculation, ProtectionLevel.onlyMe, point.getKey(), user.getKey());
 
-        Calculation c = CalculationModelFactory.createCalculation(e, point.getKey(), true, "x+1", pointChild.getKey(), point.getKey(),
+        Calculation c = CalculationModelFactory.createCalculation(
+                e, EntityModelFactory.createTrigger(point.getKey()), true, "x+1", EntityModelFactory.createTarget(pointChild.getKey()), (point.getKey()),
                 null, null);
         entityService.addUpdateEntity(c);
         Value v = ValueFactory.createValueModel(1.12);

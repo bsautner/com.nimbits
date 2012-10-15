@@ -72,7 +72,7 @@ public class EntityDaoImpl implements  EntityTransactions {
     private static final int INT = 1024;
     public static final int LIMIT = 1000;
 
-    
+
     private final Logger log = Logger.getLogger(EntityDaoImpl.class.getName());
     private RecursionValidation recursionValidation;
 
@@ -205,7 +205,6 @@ public class EntityDaoImpl implements  EntityTransactions {
             final List<Entity> models = createModels(user, result);
             final Map<EntityName, Entity> retObj = new HashMap<EntityName, Entity>(models.size());
             for (final Entity e : models) {
-
                 retObj.put(e.getName(), e);
             }
             return retObj;
@@ -223,7 +222,7 @@ public class EntityDaoImpl implements  EntityTransactions {
     public List<Entity> getChildren(final User user, Entity entity, final EntityType type) throws NimbitsException {
         final PersistenceManager pm = PMF.get().getPersistenceManager();
         try {
-            final List<Entity> r =  getEntityChildren(pm, user, entity, type);
+            final List<Entity> r =  getEntityChildren(pm, entity, type);
             return createModels(user, r);
         }
         finally {
@@ -415,7 +414,7 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     }
 
-    private static List<Entity> getEntityChildren(final PersistenceManager pm, final User user, final Entity entity) throws NimbitsException {
+    private static List<Entity> getEntityChildren(final PersistenceManager pm, final Entity entity) throws NimbitsException {
         final List<Entity> retObj = new ArrayList<Entity>(INT);
 
 
@@ -430,13 +429,13 @@ public class EntityDaoImpl implements  EntityTransactions {
                 if (!result.isEmpty()) {
                     retObj.addAll(result);
                     for (final Entity e : result) {
-                        List<Entity> children = getEntityChildren(pm, user, e);
+                        List<Entity> children = getEntityChildren(pm, e);
                         retObj.addAll(children);
                     }
                 }
             } catch (ClassNotFoundException e) {
 
-               throw new NimbitsException(e);
+                throw new NimbitsException(e);
             }
 
 
@@ -448,7 +447,7 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     }
 
-    private static List<Entity> getEntityChildren(final PersistenceManager pm, final User user, final Entity entity, final EntityType type) throws NimbitsException {
+    private static List<Entity> getEntityChildren(final PersistenceManager pm, final Entity entity, final EntityType type) throws NimbitsException {
 
         try {
             final Class cls = Class.forName(type.getClassName());
@@ -464,7 +463,7 @@ public class EntityDaoImpl implements  EntityTransactions {
             if (!result.isEmpty()) {
                 retObj.addAll(result);
                 for (final Entity e : result) {
-                    final List<Entity> children = getEntityChildren(pm, user, e);
+                    final List<Entity> children = getEntityChildren(pm,  e);
                     retObj.addAll(children);
                 }
             }
@@ -483,7 +482,7 @@ public class EntityDaoImpl implements  EntityTransactions {
         try {
             final Entity c = (Entity) pm.getObjectById(cls, entity.getKey());
             if (c != null) {
-                final List<Entity> entities = getEntityChildren(pm, user, c);
+                final List<Entity> entities = getEntityChildren(pm, c);
                 entities.add(c);
                 final List<Entity> deleted = createModels(user, entities);
                 pm.deletePersistentAll(entities);
@@ -803,23 +802,23 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     @Override
     public void removeEntityFromCache(User user, List<Entity> entities) throws NimbitsException {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new NimbitsException("Not Implemented");
     }
 
     @Override
     public void addEntityToCache(User user, List<Entity> entity) throws NimbitsException {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new NimbitsException("Not Implemented");
     }
 
     @Override
     public List<Entity> getEntityFromCache(User user, String key) throws NimbitsException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        throw new NimbitsException("Not Implemented");
     }
 
     public void setRecursionValidation(RecursionValidation recursionValidation) {
         this.recursionValidation = recursionValidation;
     }
-
+    @SuppressWarnings("unused")
     public RecursionValidation getRecursionValidation() {
         return recursionValidation;
     }

@@ -231,7 +231,9 @@ public class CalculationPanel extends NavigationEventProvider {
 
             Entity e = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe
                     , entity.getKey(), entity.getOwner());
-            c = CalculationModelFactory.createCalculation(e, entity.getKey(),  enabled.getValue(), formula.getValue(),target,
+
+
+            c = CalculationModelFactory.createCalculation(e, EntityModelFactory.createTrigger(entity.getKey()),  enabled.getValue(), formula.getValue(),EntityModelFactory.createTarget(target),
                     x, y, z);
 
         }

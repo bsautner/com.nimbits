@@ -19,12 +19,12 @@ import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheService.SetPolicy;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.Random;
 
-@Component("shardedDate")
+@Repository("shardedDate")
 public class ShardedDate {
 
 
@@ -62,7 +62,7 @@ public class ShardedDate {
     /**
      * The name of this counter.
      */
-    private final String name;
+    private String name;
 
     /**
      * A random number generating, for distributing writes across shards.
@@ -74,19 +74,20 @@ public class ShardedDate {
      */
     private String kind;
 
-    private final MemcacheService mc = MemcacheServiceFactory
-            .getMemcacheService();
-
-    /**
-     * Constructor which creates a sharded counter using the provided counter
-     * name.
-     *
-     * @param name name of the sharded counter
-     */
-    public ShardedDate(String name) {
+    public void setName(String name) {
         this.name = name;
         kind = CounterShard.KIND_PREFIX + name;
     }
+
+    private final MemcacheService mc = MemcacheServiceFactory
+            .getMemcacheService();
+
+
+    public ShardedDate( ) {
+
+    }
+
+
 
     /**
      * Increase the number of shards for a given sharded counter. Will never

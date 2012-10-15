@@ -33,7 +33,7 @@ public enum SettingType {
     connectionsEnabled(SettingConstants.SETTING_ENABLE_CONNECTIONS, Const.TRUE, false, true),
     facebookAPIKey(SettingConstants.SETTING_FACEBOOK_API_KEY, Const.EMPTY, false, true),
     facebookSecret(SettingConstants.SETTING_FACEBOOK_SECRET, Const.EMPTY, false, true),
-    wolframKey(SettingConstants.SETTING_WOLFRAM, Const.CONST_UNKNOWN, false, true),
+    wolframKey(SettingConstants.SETTING_WOLFRAM,Const.CONST_UNKNOWN, false, true),
     twitterClientId(SettingConstants.SETTING_TWITTER_CLIENT_ID, Const.EMPTY, false, true),
     twitterSecret(SettingConstants.SETTING_TWITTER_SECRET, Const.EMPTY, false, true),
     source(SettingConstants.SETTING_SOURCE,Const.EMPTY,false, false),
@@ -93,7 +93,7 @@ public enum SettingType {
         return name;
     }
     private static class SettingConstants {
-        static final String CONST_SERVER_VERSION = "3.3.1.1";
+        static final String CONST_SERVER_VERSION = "3.3.1.3";
         static final String SETTING_LOCAL_DEV_ACCOUNT = "SETTING_LOCAL_DEV_ACCOUNT";
         static final String SETTING_LOCAL_DEV_KEY = "SETTING_LOCAL_DEV_KEY";
         static final String SETTING_LOCAL_DEV_PATH = "SETTING_LOCAL_DEV_PATH";

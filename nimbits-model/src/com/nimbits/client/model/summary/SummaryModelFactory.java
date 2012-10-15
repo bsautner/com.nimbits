@@ -3,6 +3,8 @@ package com.nimbits.client.model.summary;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.exception.*;
 import com.nimbits.client.model.entity.*;
+import com.nimbits.client.model.trigger.TargetEntity;
+import com.nimbits.client.model.trigger.TriggerEntity;
 
 import java.util.*;
 
@@ -24,8 +26,8 @@ public class SummaryModelFactory {
 
     public static SummaryModel createSummary(
             final Entity e,
-            final String entity,
-            final String target,
+            final TriggerEntity entity,
+            final TargetEntity target,
             final boolean enabled,
             final SummaryType summaryType,
             final long summaryIntervalMs,

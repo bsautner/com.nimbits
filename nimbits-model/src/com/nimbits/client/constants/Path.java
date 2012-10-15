@@ -25,7 +25,7 @@ public class Path {
     public static final String PATH_NIMBITS_CORE_ENTITY_LOCATION_URL = "http://nimbits.com:8080/core/service/Location";
     public static final String PATH_NIMBITS_CORE_MQTT_LOCATION_URL = "http://nimbits.com:8080/core/service/mqtt";
     public static final String PATH_FACEBOOK_ME = "https://graph.facebook.com/me";
-    public static final String PATH_LOGO_IMG = "http://app.nimbits.com/resources/images/logo.png";
+    public static final String PATH_LOGO_IMG = "http://cloud.nimbits.com/resources/images/logo.png";
     public static final String PATH_WOLFRAM_ALPHA = "http://api.wolframalpha.com/v2/query";
 
     public static final String PATH_GOOGLE_CHART_API = "http://chart.apis.google.com/chart";

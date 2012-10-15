@@ -31,10 +31,7 @@
 
     <bean id="moveCron" class="com.nimbits.server.process.cron.MoveRecordedValuesToStoreCron">
         <property name="taskFactory" ref="taskFactory" />
-    </bean>
-
-    <bean id="quotaCron" class="com.nimbits.server.process.cron.QuotaResetCron">
-        <property name="quotaManager" ref="quotaManager" />
+        <property name="cacheFactory" ref="cacheFactory" />
     </bean>
 
     <bean id="sessionCron" class="com.nimbits.server.process.cron.SessionMaint">

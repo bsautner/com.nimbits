@@ -22,21 +22,6 @@
         <timezone>America/New_York</timezone>
     </cron>
 
-    <!--<cron>-->
-        <!--<url>/cron/orphans</url>-->
-        <!--<description>Delete Orphaned Blobs</description>-->
-        <!--<schedule>every day 00:00</schedule>-->
-        <!--<timezone>America/New_York</timezone>-->
-    <!--</cron>-->
-
-
-    <cron>
-        <url>/cron/quotaCron</url>
-        <description>Resets Quotas for all users</description>
-        <schedule>every day 00:00</schedule>
-        <timezone>America/New_York</timezone>
-    </cron>
-
     <cron>
         <url>/cron/moveCron</url>
         <description>Moves recorded values from the memcache to the data store</description>

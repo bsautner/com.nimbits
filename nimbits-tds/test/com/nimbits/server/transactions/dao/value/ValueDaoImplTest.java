@@ -95,7 +95,7 @@ public class ValueDaoImplTest extends NimbitsServletTest {
 
     @Test
     public void testConsolidateDate() throws NimbitsException {
-        Date zero = TimespanServiceFactory.getInstance().zeroOutDate(new Date());
+        Date zero = TimespanServiceFactory.getInstance().zeroOutDateToStart(new Date());
         for (int i = 1; i < 11; i++) {
             List<Value> values = new ArrayList<Value>(3);
             values.add(ValueFactory.createValueModel(1));
@@ -121,7 +121,7 @@ public class ValueDaoImplTest extends NimbitsServletTest {
 
     @Test
     public void testMissingBlobRecovery() throws NimbitsException, FileNotFoundException {
-        Date zero = TimespanServiceFactory.getInstance().zeroOutDate(new Date());
+        Date zero = TimespanServiceFactory.getInstance().zeroOutDateToStart(new Date());
         String key = null;
         final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
         for (int i = 1; i < 11; i++) {
@@ -152,7 +152,7 @@ public class ValueDaoImplTest extends NimbitsServletTest {
 
     @Test
     public void testGetBlobStoreByBlobKey() throws NimbitsException {
-        Date zero = TimespanServiceFactory.getInstance().zeroOutDate(new Date());
+        Date zero = TimespanServiceFactory.getInstance().zeroOutDateToStart(new Date());
         final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 
         List<Value> values = new ArrayList<Value>(3);
@@ -503,10 +503,21 @@ public class ValueDaoImplTest extends NimbitsServletTest {
         Calendar midnightAm = Calendar.getInstance();
         midnightAm.set(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DATE), 0, 0, 0);
         midnightAm.add(Calendar.MILLISECOND, now.get(Calendar.MILLISECOND) * -1);
-        Date zero = TimespanServiceFactory.getInstance().zeroOutDate(now.getTime());
+        Date zero = TimespanServiceFactory.getInstance().zeroOutDateToStart(now.getTime());
         assertEquals(midnightAm.getTime(), zero);
     }
-
+    @Test
+    public void testZeroOutDate2() {
+        Calendar now = Calendar.getInstance();
+        Calendar midnightAm = Calendar.getInstance();
+        midnightAm.set(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DATE), 0, 0, 0);
+        midnightAm.add(Calendar.MILLISECOND, now.get(Calendar.MILLISECOND) * -1);
+        Date zero = TimespanServiceFactory.getInstance().zeroOutDateToStart(now.getTime());
+        Date tonight = TimespanServiceFactory.getInstance().zeroOutDateToEnd(now.getTime());
+        long diff =   tonight.getTime() - zero.getTime() ;
+        assertEquals(86400000, diff); //ms in a day
+        assertEquals(midnightAm.getTime(), zero);
+    }
 
 
 

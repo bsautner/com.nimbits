@@ -24,5 +24,7 @@ public interface TimespanServiceAsync {
 
     void createTimespan(final String start, final String end, final int offset, AsyncCallback<Timespan> async) throws NimbitsException;
 
-    void zeroOutDate(Date date, AsyncCallback<Date> async);
+    void zeroOutDateToStart(Date date, AsyncCallback<Date> async);
+
+    void zeroOutDateToEnd(Date date, AsyncCallback<Date> async);
 }

@@ -27,6 +27,7 @@
         <property name="settingsService" ref="settingsService" />
         <property name="quotaManager" ref="quotaManager" />
         <property name="taskFactory" ref="taskFactory" />
+        <property name="billing" ref="billing" />
     </bean>
 
     <bean id="xmpp" class="com.nimbits.server.api.impl.XMPPReceiverServlet">
@@ -34,7 +35,7 @@
         <property name="userService" ref="userService" />
         <property name="valueService" ref="valueService" />
         <property name="xmppService" ref="xmppService" />
-
+        <property name="billing" ref="billing" />
         <property name="settingsService" ref="settingsService" />
         <property name="quotaManager" ref="quotaManager" />
 
@@ -47,11 +48,11 @@
         <property name="userService" ref="userService" />
         <property name="settingsService" ref="settingsService" />
         <property name="quotaManager" ref="quotaManager" />
-
+        <property name="billing" ref="billing" />
 
     </bean>
     <bean id="value" class="com.nimbits.server.api.impl.ValueServletImpl">
-
+        <property name="billing" ref="billing" />
         <property name="valueService" ref="valueService" />
         <property name="entityService" ref="entityService" />
         <property name="userService" ref="userService" />
@@ -67,7 +68,7 @@
         <property name="userService" ref="userService" />
         <property name="settingsService" ref="settingsService" />
         <property name="quotaManager" ref="quotaManager" />
-
+        <property name="billing" ref="billing" />
     </bean>
 
     <bean id="batch" class="com.nimbits.server.api.impl.BatchServletImpl">
@@ -76,7 +77,7 @@
         <property name="userService" ref="userService" />
         <property name="settingsService" ref="settingsService" />
         <property name="quotaManager" ref="quotaManager" />
-
+        <property name="billing" ref="billing" />
     </bean>
 
     <bean id="point" class="com.nimbits.server.api.impl.PointServletImpl">
@@ -85,7 +86,7 @@
         <property name="userService" ref="userService" />
         <property name="settingsService" ref="settingsService" />
         <property name="quotaManager" ref="quotaManager" />
-
+        <property name="billing" ref="billing" />
     </bean>
 
     <bean id="series" class="com.nimbits.server.api.impl.SeriesServletImpl">
@@ -94,7 +95,7 @@
         <property name="userService" ref="userService" />
         <property name="settingsService" ref="settingsService" />
         <property name="quotaManager" ref="quotaManager" />
-
+        <property name="billing" ref="billing" />
         <property name="valueService" ref="valueService" />
     </bean>
 
@@ -104,6 +105,7 @@
         <property name="userService" ref="userService" />
         <property name="settingsService" ref="settingsService" />
         <property name="quotaManager" ref="quotaManager" />
+        <property name="billing" ref="billing" />
     </bean>
 
     <bean id="auth" class="com.nimbits.server.api.impl.AuthTestServletImpl">
@@ -111,6 +113,7 @@
         <property name="userService" ref="userService" />
         <property name="settingsService" ref="settingsService" />
         <property name="quotaManager" ref="quotaManager" />
+        <property name="billing" ref="billing" />
     </bean>
 
     <bean id="quota" class="com.nimbits.server.admin.quota.QuotaServletImpl">
@@ -122,12 +125,14 @@
         <property name="settingsService" ref="settingsService" />
         <property name="quotaManager" ref="quotaManager" />
         <property name="taskFactory" ref="taskFactory" />
+        <property name="billing" ref="billing" />
     </bean>
     <bean id="feed" class="com.nimbits.server.api.impl.FeedServletImpl">
         <property name="entityService" ref="entityService" />
         <property name="userService" ref="userService" />
         <property name="settingsService" ref="settingsService" />
         <property name="quotaManager" ref="quotaManager" />
+        <property name="billing" ref="billing" />
     </bean>
 
     <!-- END APIS-->

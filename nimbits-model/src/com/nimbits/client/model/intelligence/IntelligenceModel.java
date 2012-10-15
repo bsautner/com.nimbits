@@ -37,12 +37,12 @@ public class IntelligenceModel  extends TriggerModel implements Serializable, In
 
     public IntelligenceModel(final Entity entity,
                              final boolean enabled,
-                             final String target,
+                             final TargetEntity target,
                              final String input,
                              final String nodeId,
                              final boolean resultsInPlainText,
-                             final String trigger) throws NimbitsException {
-        super(entity, target, trigger, enabled);
+                             final TriggerEntity trigger) throws NimbitsException {
+        super(entity, trigger, target, enabled);
         this.input = input;
         this.nodeId = nodeId;
         this.resultsInPlainText = resultsInPlainText;

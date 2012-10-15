@@ -25,7 +25,7 @@
   <!-- Show this link in Google's universal navigation for all users -->
   <Extension id="navLink" type="link">
     <Name>Nimbits</Name>
-    <Url>http://app2.nimbits.com/openid?hd=${DOMAIN_NAME}</Url>
+    <Url>https://cloud.nimbits.com/openid?hd=${DOMAIN_NAME}</Url>
       <Scope ref="docsFeed"/>
       <Scope ref="calendarAPI"/>
       <Scope ref="spreadsheetsFeed"/>
@@ -34,7 +34,7 @@
 
   <!-- Declare our OpenID realm so our app is white listed -->
   <Extension id="realm" type="openIdRealm">
-    <Url>http://app2.nimbits.com</Url>
+    <Url>https://cloud.nimbits.com</Url>
   </Extension>
 
     <Scope id="docsFeed">

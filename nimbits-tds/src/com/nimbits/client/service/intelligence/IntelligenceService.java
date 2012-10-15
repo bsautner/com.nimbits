@@ -30,17 +30,17 @@ import java.util.Map;
  * Date: 10/29/11
  * Time: 11:53 AM
  */
-@RemoteServiceRelativePath("intelService")
+@RemoteServiceRelativePath("intelligenceService")
 public interface IntelligenceService extends RemoteService {
-    String getRawResult(final String query, final String podId, final boolean htmlOutput) throws NimbitsException;
+    String getRawResult(final User user, final String query, final String podId, final boolean htmlOutput) throws NimbitsException;
 
-    Value processInput(final Intelligence intelligence, final Point targetPoint, final String processedInput) throws NimbitsException;
+    Value processInput(final User user, final Intelligence intelligence, final Point targetPoint, final String processedInput) throws NimbitsException;
 
     Map<String, String> getHTMLContent(final String responseXML);
 
     String addDataToInput(final User user, final Intelligence intelligence) throws NimbitsException;
 
-    void processIntelligence(final User u, final Entity point) throws NimbitsException;
+    void processIntelligence(final User user, final Entity point) throws NimbitsException;
 
     Value processInput(final User user, final Intelligence update) throws NimbitsException;
 

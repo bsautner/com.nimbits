@@ -103,13 +103,21 @@ public class TaskImpl implements Task {
     }
 
     @Override
-    public void startDeleteBlobTask(final BlobKey key) {
+    public void startDeleteBlobTask(final BlobKey key ) {
 
-        final Queue queue =  QueueFactory.getQueue( QUEUE_DELETE_BLOB  );
+        try {
+            final Queue queue =  QueueFactory.getQueue( QUEUE_DELETE_BLOB  );
 
-        queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_BLOB_TASK)
-                .param(Parameters.key.getText(),  key.getKeyString())
-        );
+            queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_BLOB_TASK)
+                    .param(Parameters.key.getText(),  key.getKeyString())
+            );
+        } catch (IllegalStateException e) {
+            final Queue queue =  QueueFactory.getQueue( DEFAULT  );
+
+            queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_BLOB_TASK)
+                    .param(Parameters.key.getText(),  key.getKeyString())
+            );
+        }
     }
 
     @Override

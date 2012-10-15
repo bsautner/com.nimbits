@@ -17,6 +17,7 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.service.intelligence.IntelligenceService;
 
@@ -67,7 +68,7 @@ public class ExportHelperImpl implements ExportHelper {
     }
 
     @Override
-    public String exportPointDataToDescriptiveStatistics(final Map<EntityName, Point> points) throws NimbitsException {
+    public String exportPointDataToDescriptiveStatistics(final User user, final Map<EntityName, Point> points) throws NimbitsException {
         final EntityName pointName = points.keySet().iterator().next();
         final Point point = points.get(pointName);
         final StringBuilder sb = new StringBuilder();
@@ -78,11 +79,11 @@ public class ExportHelperImpl implements ExportHelper {
         }
         sb.deleteCharAt(sb.length() - 1);
         sb.append("}");
-        return buildHTML(sb.toString(), pointName.getValue());
+        return buildHTML(user, sb.toString(), pointName.getValue());
     }
 
     @Override
-    public String exportPointDataToPossibleContinuation(final Map<EntityName, Point> points) throws NimbitsException {
+    public String exportPointDataToPossibleContinuation(final User user, final Map<EntityName, Point> points) throws NimbitsException {
         final EntityName pointName = points.keySet().iterator().next();
         final Point point = points.get(pointName);
         final StringBuilder sb = new StringBuilder();
@@ -93,13 +94,13 @@ public class ExportHelperImpl implements ExportHelper {
         }
         sb.append("...}");
 
-        return buildHTML(sb.toString(), pointName.getValue());
+        return buildHTML(user, sb.toString(), pointName.getValue());
 
 
     }
 
-    private String buildHTML(final String request, final String header) throws NimbitsException {
-        final String raw = intelligenceService.getRawResult(request, "", true);
+    private String buildHTML(final User user, final String request, final String header) throws NimbitsException {
+        final String raw = intelligenceService.getRawResult(user, request, "", true);
         final Map<String, String> html = intelligenceService.getHTMLContent(raw);
         final StringBuilder hb = new StringBuilder();
         final String topHTML = addTopHTML(header);

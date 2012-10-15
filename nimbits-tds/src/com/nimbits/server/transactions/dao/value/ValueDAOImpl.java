@@ -371,7 +371,7 @@ public class ValueDAOImpl implements ValueTransactions {
         throw new NimbitsException("not implemented");
     }
 
-    private void startBlobDeleteTask(List<ValueBlobStore> result) {
+    private void startBlobDeleteTask(List<ValueBlobStore> result ) {
         log.info("Deleting " + result.size() + "blobs");
         for (ValueBlobStore st : result) {
             taskFactory.startDeleteBlobTask(new BlobKey(st.getBlobKey()));
@@ -389,7 +389,7 @@ public class ValueDAOImpl implements ValueTransactions {
             for (final Value value : values) {
                 if (valueHealthy(value)) {
                     //zero out the date of the current value we're working with
-                    final Date zero = TimespanServiceFactory.getInstance().zeroOutDate(value.getTimestamp());
+                    final Date zero = TimespanServiceFactory.getInstance().zeroOutDateToStart(value.getTimestamp());
                     if (map.containsKey(zero.getTime())) {
                         //a new value for an existing day
                         map.get(zero.getTime()).add(value);

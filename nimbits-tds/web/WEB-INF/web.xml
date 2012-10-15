@@ -284,15 +284,7 @@
         <servlet-name>pointCron</servlet-name>
         <url-pattern>/cron/pointCron</url-pattern>
     </servlet-mapping>
-    <servlet>
-        <servlet-name>quotaCron</servlet-name>
-        <!--<servlet-class>com.nimbits.server.process.cron.QuotaResetCron</servlet-class>-->
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>quotaCron</servlet-name>
-        <url-pattern>/cron/quotaCron</url-pattern>
-    </servlet-mapping>
+
 
     <servlet>
         <servlet-name>sessionCron</servlet-name>

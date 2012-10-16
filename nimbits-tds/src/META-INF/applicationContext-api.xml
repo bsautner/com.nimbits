@@ -134,6 +134,12 @@
         <property name="quotaManager" ref="quotaManager" />
         <property name="billing" ref="billing" />
     </bean>
-
+    <bean id="userReportService" class="com.nimbits.server.report.UserReportService">
+        <property name="entityService" ref="entityService" />
+        <property name="userService" ref="userService" />
+        <property name="settingsService" ref="settingsService" />
+        <property name="quotaManager" ref="quotaManager" />
+        <property name="billing" ref="billing" />
+    </bean>
     <!-- END APIS-->
 </beans>

@@ -13,20 +13,18 @@
 
 package com.nimbits.server.report;
 
-import com.nimbits.client.common.Utils;
-import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.user.User;
-import com.nimbits.client.service.user.UserService;
-import com.nimbits.server.admin.logging.LogHelper;
+import com.nimbits.server.api.ApiServlet;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServlet;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Benjamin Sautner
@@ -35,31 +33,22 @@ import java.util.List;
  * Time: 4:21 PM
  */
 @Service("userReportService")
-public class UserReportService extends HttpServlet {
+public class UserReportService  extends ApiServlet implements org.springframework.web.HttpRequestHandler {
 
     private static final int INT = 60;
 
-    UserService userService;
+
 
     @Override
     public void doGet(final HttpServletRequest req,final HttpServletResponse resp) throws IOException {
 
-        String c = req.getParameter(Parameters.count.getText());
-        String email = req.getParameter(Parameters.email.getText());
+
         final PrintWriter out = resp.getWriter();
-        try {
-            int count = 100;
-            if (! Utils.isEmptyString(c)) {
-            count = Integer.valueOf(c);
-        }
+        Map<EmailAddress, User> map = quotaManager.getUserStatusGrid();
 
 
-        if (Utils.isEmptyString(email)) {
 
-            final List<User> users =userService.getAllUsers("lastLoggedIn desc", count);
-
-
-            out.println("<p>Total number of users: " + users.size() + "</p>");
+            out.println("<p>Total number of users: " + map.size() + "</p>");
             out.println("<table border = 1>");
             out.println("<TR>");
             out.println("<TD>" + "User" + "</TD>");
@@ -68,7 +57,7 @@ public class UserReportService extends HttpServlet {
             out.println("<TD>" + "API Calls" + "</TD>");
             out.println("</TR>");
 
-            for (final User u : users) {
+            for (final User u : map.values()) {
                 boolean returnedUser = !(u.getLastLoggedIn().getTime() - u.getDateCreated().getTime() > 1000 * INT);
 
                 if (returnedUser) {
@@ -76,34 +65,35 @@ public class UserReportService extends HttpServlet {
                 } else {
                     out.println("<TR  bgcolor=\"#CCCC99\">");
                 }
-
-
-                    out.println("<TD>" + u.getEmail() + "</TD>");
+                try {
+                    out.println("<TD>" + u.getEmail().getValue() + "</TD>");
+                } catch (NimbitsException e) {
+                    out.println(e.getMessage());
+                }
 
                 out.println("<TD>" + u.getLastLoggedIn() + "</TD>");
                 out.println("<TD>" + u.getDateCreated() + "</TD>");
-
-
-
-
-
+                out.println("<TD>" + u.getApiCount() + "</TD>");
                 out.println("</TR>");
 
             }
 
             out.println("</table>");
-        }
-        else {
-          //  EmailAddress emailAddress = CommonFactory.createEmailAddress(email);
-          //  out.println("<h5>" + getOrCreateCounter(emailAddress).getCount() + "</h5>");
-
-            out.println();
-        }
-        } catch (NimbitsException e) {
-            LogHelper.logException(this.getClass(), e);
-        }
-
         out.close();
+
+
     }
 
+    @Override
+    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        if (isPost(req)) {
+
+            doPost(req, resp);
+        }
+        else {
+            doGet(req, resp);
+        }
+
+    }
 }

@@ -15,9 +15,9 @@ public class UserMessages {
     public static final String COPYRIGHT = "Copyright (c) 2010 Nimbits Inc.  Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an \\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.";
     public static final String ERROR_BATCH_SERVICE_JDO = "Batch Service JDOException";
     public static final String MESSAGE_ADD_CATEGORY = "Add a new data point Category";
-    public static final String MESSAGE_DATA_POINT = "Data Point";
+
     public static final String MESSAGE_EMAIL_SUBJECT = "Message from nimbits.com";
-    public static final String MESSAGE_NEW_POINT = "New Data Point";
+
     public static final String MESSAGE_NEW_POINT_PROMPT = "Please enter the name of the new data point.";
     public static final String MESSAGE_NO_ACCOUNT = "No Google OwnerAccount";
     public static final String MESSAGE_SELECT_POINT = "Select a Data Point";

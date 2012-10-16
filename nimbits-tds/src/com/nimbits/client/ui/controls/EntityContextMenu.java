@@ -62,10 +62,17 @@ import java.util.Map;
  */
 public class EntityContextMenu extends Menu {
     private static final String SCHEDULE_A_DATA_DUMP = "Schedule a data dump";
+    private static final String VIEW_REPORT = "View Report";
+    private static final String GET_JSON_STRUCTURE = "Get JSON Structure";
+    private static final String SUBSCRIBE_TO_EVENTS = "Subscribe to Events";
+    private static final String TEXT = "Edit Calculation";
     private final Listener<MessageBoxEvent> createNewPointListener = new NewPointMessageBoxEventListener();
     private final Listener<MessageBoxEvent> deleteEntityListener = new DeleteMessageBoxEventListener();
     private final Listener<MessageBoxEvent> copyPointListener  = new CopyPointMessageBoxEventListener();
     private final Listener<MessageBoxEvent> xmppResourceListener = new XMPPMessageBoxEventListener();
+
+    public static final String MESSAGE_NEW_POINT = "New Data Point";
+
 
     private class NewPointMessageBoxEventListener implements Listener<MessageBoxEvent> {
 
@@ -200,7 +207,7 @@ public class EntityContextMenu extends Menu {
         @Override
         public void handleEvent(final BaseEvent be) {
             final MessageBox box = MessageBox.prompt(
-                    UserMessages.MESSAGE_NEW_POINT,
+                     MESSAGE_NEW_POINT,
                     UserMessages.MESSAGE_NEW_POINT_PROMPT);
 
             box.addCallback(createNewPointListener);
@@ -467,7 +474,7 @@ public class EntityContextMenu extends Menu {
     private MenuItem propertyContext() {
         final MenuItem retObj = new MenuItem();
 
-        retObj.setText("Edit");
+        retObj.setText("Edit Properties");
         retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.edit()));
         retObj.addSelectionListener(new EditMenuEventSelectionListener());
         return retObj;
@@ -475,7 +482,7 @@ public class EntityContextMenu extends Menu {
 
     private MenuItem subscribeContext() {
         final MenuItem retObj = new MenuItem();
-        retObj.setText("Subscribe");
+        retObj.setText("Subscribe To Events");
         retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.plugin()));
         retObj.addSelectionListener(new SubscribeMenuEventSelectionListener());
         return retObj;
@@ -483,7 +490,7 @@ public class EntityContextMenu extends Menu {
 
     private MenuItem copyContext() {
         final MenuItem retObj = new MenuItem();
-        retObj.setText("Copy");
+        retObj.setText("Copy Entity");
         retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.album()));
         retObj.addSelectionListener(new CopyMenuEventSelectionListener());
         return retObj;
@@ -491,7 +498,7 @@ public class EntityContextMenu extends Menu {
 
     private MenuItem reportContext() {
         final MenuItem retObj = new MenuItem();
-        retObj.setText("Report");
+        retObj.setText(VIEW_REPORT);
         retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.form()));
         retObj.addSelectionListener(new ReportMenuEventSelectionListener());
 
@@ -500,7 +507,7 @@ public class EntityContextMenu extends Menu {
 
     private MenuItem jsonContext() {
         final MenuItem retObj = new MenuItem();
-        retObj.setText("Get JSON");
+        retObj.setText(GET_JSON_STRUCTURE);
         retObj.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.json()));
         retObj.addSelectionListener(new JsonMenuEventSelectionListener());
 
@@ -515,7 +522,7 @@ public class EntityContextMenu extends Menu {
         final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
         w.setWidth(WIDTH);
         w.setHeight(HEIGHT);
-        w.setHeading("Subscribe");
+        w.setHeading(SUBSCRIBE_TO_EVENTS);
         w.add(dp);
         dp.addEntityAddedListener(new SubscribeEntityAddedListener(w));
 
@@ -532,7 +539,7 @@ public class EntityContextMenu extends Menu {
             w.setHeading("Calculations triggered when data is recorded to " + entity.getName().getValue());
         }
         else {
-            w.setHeading("Edit Calculation");
+            w.setHeading(TEXT);
 
         }
         w.add(dp);
@@ -987,7 +994,7 @@ public class EntityContextMenu extends Menu {
             final MessageBox box;
             if (currentModel.getEntityType().equals(EntityType.point) && ! currentModel.isReadOnly()) {
                 box= MessageBox.prompt(
-                        UserMessages.MESSAGE_NEW_POINT,
+                        MESSAGE_NEW_POINT,
                         UserMessages.MESSAGE_NEW_POINT_PROMPT);
                 box.addCallback(copyPointListener);
             }

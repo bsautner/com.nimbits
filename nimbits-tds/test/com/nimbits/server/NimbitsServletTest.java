@@ -32,6 +32,7 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.datapoints.PointService;
 import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.settings.SettingsService;
+import com.nimbits.server.admin.quota.QuotaManager;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.process.cron.SystemCron;
 import com.nimbits.server.transactions.service.entity.EntityTransactions;
@@ -93,6 +94,11 @@ public class NimbitsServletTest {
 
     @Resource(name="systemCron")
     public SystemCron systemCron;
+
+
+    @Resource(name="quotaManager")
+    public QuotaManager quotaManager;
+
 
     public MockHttpServletRequest req;
     public MockHttpServletResponse resp;

@@ -69,6 +69,10 @@ public class UserEntity extends EntityStore implements User {
     // A user that can only work with public data
     @NotPersistent
     private List<AccessKey> accessKeys;
+
+    @NotPersistent
+    private Integer apiCount;
+
     /**
      *
      */
@@ -224,5 +228,12 @@ public class UserEntity extends EntityStore implements User {
     public void setBillingEnabled(boolean billingEnabled) {
        this.billingEnabled = billingEnabled;
     }
-
+    @Override
+    public int getApiCount() {
+        return apiCount;
+    }
+    @Override
+    public void setApiCount(int apiCount) {
+        this.apiCount = apiCount;
+    }
 }

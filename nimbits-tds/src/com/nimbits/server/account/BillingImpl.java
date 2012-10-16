@@ -63,6 +63,7 @@ public class BillingImpl implements Billing {
         if (settingsService.getBooleanSetting(SettingType.billingEnabled)) {
             final int count = quotaManager.incrementCounter(user.getEmail());
             final int max = quotaManager.getFreeDailyQuota();
+            quotaManager.updateUserStatusGrid(user, count);
             if (count > max) {
 
                 if (user.isBillingEnabled()) {

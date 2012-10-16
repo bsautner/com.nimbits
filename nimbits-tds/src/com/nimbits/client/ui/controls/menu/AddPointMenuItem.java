@@ -15,7 +15,6 @@ package com.nimbits.client.ui.controls.menu;
 
 import com.extjs.gxt.ui.client.widget.menu.MenuItem;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.nimbits.client.constants.UserMessages;
 import com.nimbits.client.ui.icons.Icons;
 
 /**
@@ -27,11 +26,11 @@ import com.nimbits.client.ui.icons.Icons;
 public class AddPointMenuItem extends MenuItem {
 
 
-    private static final String DATA_POINT = "Data Point";
+    private static final String DATA_POINT = "New Data Point";
 
     public AddPointMenuItem() {
         super(DATA_POINT);
-        super.setToolTip(UserMessages.MESSAGE_NEW_POINT);
+        super.setToolTip(DATA_POINT);
         super.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.addNew()));
 
     }

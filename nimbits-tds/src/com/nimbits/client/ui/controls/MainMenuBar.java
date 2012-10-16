@@ -81,7 +81,7 @@ public class MainMenuBar extends ToolBar {
     private final Listener<BaseEvent> uploadFileListener = new UploadFileBaseEventListener();
     private Collection<EntityModifiedListener> entityModifiedListeners = new ArrayList<EntityModifiedListener>(1);
 
-
+    public static final String MESSAGE_NEW_POINT = "New Data Point";
 
     public MainMenuBar(final User user, final Map<SettingType, String> settings, boolean isDomain) throws NimbitsException {
         this.user = user;
@@ -448,7 +448,7 @@ public class MainMenuBar extends ToolBar {
         @Override
         public void handleEvent(final BaseEvent be) {
             final MessageBox box = MessageBox.prompt(
-                    UserMessages.MESSAGE_NEW_POINT,
+                    MESSAGE_NEW_POINT,
                     UserMessages.MESSAGE_NEW_POINT_PROMPT);
 
             box.addCallback(createNewPointListener);

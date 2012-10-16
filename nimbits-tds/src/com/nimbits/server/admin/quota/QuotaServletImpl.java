@@ -35,7 +35,7 @@ import java.math.BigDecimal;
  * Time: 10:00 AM
  */
 @Transactional
-@Component("quotaService")
+@Component("quota")
 public class QuotaServletImpl extends HttpServlet implements org.springframework.web.HttpRequestHandler  {
 
 

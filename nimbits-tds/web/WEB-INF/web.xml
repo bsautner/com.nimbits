@@ -443,21 +443,21 @@
 
 
     <servlet>
-        <servlet-name>quotaService</servlet-name>
+        <servlet-name>quota</servlet-name>
         <!--<servlet-class>com.nimbits.server.admin.quota.QuotaServletImpl</servlet-class>-->
         <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>quotaService</servlet-name>
+        <servlet-name>quota</servlet-name>
         <url-pattern>/admin/quota</url-pattern>
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>com.nimbits.nimbits UserReportService</servlet-name>
-        <servlet-class>com.nimbits.server.report.UserReportService</servlet-class>
+        <servlet-name>userReportService</servlet-name>
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>com.nimbits.nimbits UserReportService</servlet-name>
+        <servlet-name>userReportService</servlet-name>
         <url-pattern>/admin/user_report</url-pattern>
     </servlet-mapping>
 

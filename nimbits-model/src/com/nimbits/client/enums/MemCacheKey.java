@@ -37,7 +37,10 @@ public enum MemCacheKey {
     entityNameCache(18, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_ENTITY_NAME),
     twitter(19, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_TWITTER),
     docService(20, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_DOC_SERVICE),
-    userTempCacheKey(21, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_USER_TEMP_CACHE_KEY);
+    userTempCacheKey(21, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_USER_TEMP_CACHE_KEY),
+    userReport(22, SettingType.serverVersion.getDefaultValue() + KeyConstants.USER_REPORT_STATUS_GRID_KEY)
+
+    ;
 
     private static String buildQuotaKey() {
         //use day of month
@@ -116,12 +119,12 @@ public enum MemCacheKey {
         static final String KEY_USER = "KEY_USER";
         static final String KEY_USER_ENTITY_TREE = "KEY_USER_ENTITY_TREE";
         static final String KEY_QUOTA_NAMESPACE = "KEY_QUOTA_NAMESPACE";
-        public static final String KEY_SUBSCRIBED_ENTITY = "KEY_SUBSCRIBED_ENTITY";
-        public static final String KEY_ENTITY_NAME = "KEY_ENTITY_NAME";
-        public static final String KEY_TWITTER = "KEY_TWITTER";
-        public static final String KEY_DOC_SERVICE = "KEY_DOC_SERVICE";
-        public static final String KEY_USER_TEMP_CACHE_KEY = "KEY_USER_TEMP_CACHE_KEY";
-
+        static final String KEY_SUBSCRIBED_ENTITY = "KEY_SUBSCRIBED_ENTITY";
+        static final String KEY_ENTITY_NAME = "KEY_ENTITY_NAME";
+        static final String KEY_TWITTER = "KEY_TWITTER";
+        static final String KEY_DOC_SERVICE = "KEY_DOC_SERVICE";
+        static final String KEY_USER_TEMP_CACHE_KEY = "KEY_USER_TEMP_CACHE_KEY";
+        static final String USER_REPORT_STATUS_GRID_KEY = "USER_REPORT_STATUS_GRID_KEY";
         private KeyConstants() {
         }
     }

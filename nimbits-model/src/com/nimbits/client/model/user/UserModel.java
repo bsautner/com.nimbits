@@ -57,6 +57,7 @@ public class UserModel extends EntityModel implements Serializable, User {
 
     private boolean billingEnabled;
 
+    private int apiCount;
 
     /**
      *
@@ -218,5 +219,15 @@ public class UserModel extends EntityModel implements Serializable, User {
     @Override
     public void setBillingEnabled(boolean billingEnabled) {
         this.billingEnabled = billingEnabled;
+    }
+
+    @Override
+    public int getApiCount() {
+        return apiCount;
+    }
+
+    @Override
+    public void setApiCount(int apiCount) {
+        this.apiCount = apiCount;
     }
 }

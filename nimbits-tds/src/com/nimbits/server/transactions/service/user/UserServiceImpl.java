@@ -239,6 +239,8 @@ public class UserServiceImpl extends RemoteServiceServlet implements
             String tempUserKey = MemCacheKey.userTempCacheKey + accessKey + emailParam;
             if (user != null) {
                 userCache.cacheAuthenticatedUser(tempUserKey, user);
+                final int count = quotaManager.getCount(user.getEmail());
+                quotaManager.updateUserStatusGrid(user, count);
             }
         }
         return user;
@@ -296,7 +298,8 @@ public class UserServiceImpl extends RemoteServiceServlet implements
             retObj.setLastLoggedIn(new Date());
             entityService.addUpdateEntity(retObj, retObj);
             retObj.addAccessKey(authenticatedKey(retObj));
-
+            final int count = quotaManager.getCount(retObj.getEmail());
+            quotaManager.updateUserStatusGrid(retObj, count);
 
             // A user has logged in through google auth - this creates the user
 

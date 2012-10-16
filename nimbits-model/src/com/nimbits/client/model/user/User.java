@@ -80,4 +80,8 @@ public interface User extends Entity, Serializable {
     boolean isBillingEnabled();
 
     void setBillingEnabled(boolean billingEnabled);
+
+    int getApiCount();
+
+    void setApiCount(int apiCount);
 }

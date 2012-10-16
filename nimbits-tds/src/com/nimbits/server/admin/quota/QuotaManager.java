@@ -15,6 +15,9 @@ package com.nimbits.server.admin.quota;
 
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.user.User;
+
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -31,4 +34,8 @@ public interface QuotaManager {
    // void resetCounter(final EmailAddress email) throws NimbitsException;
     int getCount(final EmailAddress email) throws NimbitsException;
    //// void resetCounters() throws NimbitsException;
+
+    void updateUserStatusGrid(User user, int count) throws NimbitsException;
+
+    Map<EmailAddress, User> getUserStatusGrid();
 }

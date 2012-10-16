@@ -135,6 +135,23 @@
                             <li><a href="#navs" onclick="popUp('/pages/server_docs/api/jquery_chart2.html')">Add multiple points to a chart</a></li>
                             <li><a href="#navs" onclick="popUp('/pages/code/sdk_create_tree.html')">Create Points and Folders with the SDK</a></li>
                             <li><a href="http://youtu.be/J4ubZl6TrXg" target="_blank">Integrate with Google Apps and Fusion Tables</a></li>
+                            <li><a href="#" onclick="getContent('/pages/google/apps.html')">Nimbits for Google Apps&trade;</a></li>
+                            <li><a href="#" onclick="getContent('/pages/web_service_primer.html')">REST API Web Services</a></li>
+                            <li><a href="#" onclick="getContent('/pages/email_service.html')">Bulk Email</a></li>
+                            <li><a href="#" onclick="getContent('/pages/im_service.html')">Instant Message</a></li>
+                            <li><a href="#" onclick="getContent('/pages/xmpp.html')">XMPP</a></li>
+                            <li><a href="#" onclick="getContent('/pages/javascript.html')">JavaScript</a></li>
+
+                            <li><a href="#navs" onclick="popUp('http://nimbits.blogspot.com/2010/02/connecting-spreadsheets-to-nimbits.html')">Spreadsheets</a></li>
+                            <li><a href="#" onclick="getContent('/pages/arduino/arduino.html')">Arduino</a></li>
+                            <li><a href="#" onclick="getContent('/pages/XMPP_WA.html')">XMPP M2M</a></li>
+                            <li><a href="#" onclick="getContent('/pages/server_docs/gps.html')">GPS</a></li>
+                            <li><a href="#" onclick="getContent('/pages/server_docs/mqtt.html')">MQTT</a></li>
+                            <li><a href="#" onclick="getContent('/pages/server_docs/jquery.html')">JQuery</a></li>
+                            <li><a href="#" onclick="getContent('/pages/python.html')">Python</a></li>
+                            <li><a href="#" onclick="getContent('/pages/curl.html')">cURL</a></li>
+
+
                         </ul>
                     </li>
 
@@ -203,11 +220,14 @@
         </h4>
         <BR>
         <p style="font-size: 12px">
-            Login to Nimbits to create Data Points and record timestamped data into your points through our API. Your data can
+            <a href="#store" onclick="getContent('/pages/login.html')">Login</a> to Nimbits to create Data Points and record timestamped data into your points through our API and Web Portal. Your data can
             consist of numbers, objects, gps, xml, json or anything else. Incoming data can trigger email alerts, calculations,
-            statistics, tweets and more. Build applications on top of the Nimbits platform with Javascript,
+            statistics, tweets and more. The Nimbits platform runs on Google's infrastructure with out of the box scaleability and disaster recovery. You can use out public cloud, or build
+            your own private cloud.  The Nimbits platform can provide a powerful backend service to your web applications.
         </p>
-
+        <p style="font-size: 14px">
+        Go to the public cloud and get started for free! <a href="https://cloud.nimbits.com">https//cloud.nimbits.com</a>
+        </p>
 
     </div>
 
@@ -216,13 +236,7 @@
 
             <div class="row-fluid">
                 <div class="span6">
-                             <!--<span class="help-block">-->
-                      <!--<span class="label label-info">Popular Data Feeds</span> <a href="#" onclick="getContent('pages/server_docs/learn.html')">-->
-                                 <!--Share, connect and subscribe to feeds</a>-->
-                      <!--</span>-->
-                    <!--<iframe src="http://nimbits.com:8080/core/service/location.html" style="width: 400px;height: 325px;">-->
-
-                    <!--</iframe>-->
+                    <img src="/images/screens/menu.png" style="float: left; margin: 5">
 
 
 
@@ -232,10 +246,10 @@
 
                     <div class="span12">
 
-                        <div class="row-fluid" style="margin-top: 20px">
+                        <div class="row-fluid" style="margin-top: 10px">
                             <div class="span12">
                                 <div class="row-fluid">
-                                    <div class="span9">
+
                                         <p>
 
                                             With nimbits, you can give your projects the processing power of <a href="https://developers.google.com/appengine/">Google&trade;</a>,
@@ -244,77 +258,55 @@
                                             and connect to thousands of data feeds from hundreds of online Nimbits Server instances.
 
                                         </p>
-                                    </div>
-                                    <div class="span3">
-                                        <a href="http://summit.oshwa.org/sponsor/">
-                                            <img title="Digi_ally" src="http://summit.oshwa.org/files/2012/05/DIGI_ally.png" alt="" width="146" height="60" style="float: right"/>
-                                        </a>
-                                    </div>
+
+                                        <p><strong>Nimbits is the only cloud based, sensor logging service that is:</strong>
+                                        </p>
+                                        <ul>
+                                            <li>Completely Open Source - soup to nuts.</li>
+                                            <li>Zero Lock In - you can download and upload your data in csv format.</li>
+                                            <li>Connects you to expert knowledge systems like WolframAlpha</li>
+                                            <li>Provides High Performance REST APIs utilising the <a href="http://www.springsource.com">Spring Framework</a> </li>
+                                            <li>Allows you to build your own Nimbits Ecosystem internally or on our Public / Private instances.</li>
+                                            <li>Seamlessly integrated into <a href="#" onclick="getContent('/pages/google/apps.html')">Google Apps&trade; for Domains</a>, providing Single Sign On and Google Docs integration</li>
+                                            <li>Embed live charts of data in your websites with <a href="#" onclick="getContent('/pages/javascript_chart.html')">JavaScript</a>
+                                                and <a href="#" onclick="getContent('/pages/chart_service.html')">Chart APIs</a></li>
+
+
+                                        </ul>
+
+                                    <!--<div class="span3">-->
+                                        <!--<a href="http://summit.oshwa.org/sponsor/">-->
+                                            <!--<img title="Digi_ally" src="http://summit.oshwa.org/files/2012/05/DIGI_ally.png" alt="" width="146" height="60" style="float: right"/>-->
+                                        <!--</a>-->
+                                    <!--</div>-->
 
                                 </div>
+                                <div class="span12"><div id="graphdiv4"></div></div>
+                                <script type="text/javascript">
+                                    g4 = new Dygraph(
+                                            document.getElementById("graphdiv4"),
+                                            "twonormals.csv",
+                                            {
+                                                //  rollPeriod: 7,
+                                                showRoller: false,
+                                                errorBars: true,
+                                                drawXAxis: false,
+                                                drawYAxis: false,
+                                                valueRange: [50,125],
+                                                height:140
+                                                //width:150
 
+                                            }
+                                    );
+                                </script>
 
 
 
                             </div>
                         </div>
-                        <div class="row-fluid" >
-                        <div class="span6"><button class="btn btn-mini btn-success"  onclick="getContent('/pages/google/apps.html')">Nimbits for Google Apps&trade;</button></div>
-                        <div class="span6"><button class="btn btn-mini btn-danger" onclick="getContent('/pages/web_service_primer.html')">REST API Web Services</button> </div>
-                        </div>
-                        <div class="row-fluid" >
-
-                            <div class="span3"><button class="btn btn-mini btn-success"  onclick="getContent('/pages/email_service.html')">Bulk Email</button></div>
-                            <div class="span3"><button class="btn btn-mini btn-success"  onclick="getContent('/pages/im_service.html')">Instant Message</button></div>
-                            <div class="span3"><button class="btn btn-mini btn-success"  onclick="getContent('/pages/xmpp.html')">XMPP</button></div>
-                            <div class="span3"><button class="btn btn-mini btn-success"  onclick="getContent('/pages/javascript.html')">JavaScript</button></div>
-                        </div>
-
-                        <div class="row-fluid" >
-
-                            <div class="span3"><button class="btn btn-mini btn-success"  onclick="popUp('http://nimbits.blogspot.com/2010/02/connecting-spreadsheets-to-nimbits.html')">Spreadsheets</button> </div>
-                            <div class="span3"><button class="btn btn-mini btn-danger"  onclick="getContent('/pages/arduino/arduino.html')">Arduino</button> </div>
-                            <div class="span3"><button class="btn btn-mini btn-success"  onclick="getContent('/pages/XMPP_WA.html')">XMPP M2M</button></div>
-
-                            <div class="span3"><button class="btn btn-mini btn-success"  onclick="getContent('/pages/server_docs/gps.html')">GPS</button></div>
-
-                        </div>
-                        <div class="row-fluid" >
-                            <div class="span3"><button class="btn btn-mini btn-danger"  onclick="getContent('/pages/server_docs/mqtt.html')">MQTT</button></div>
-                            <div class="span3"> <button class="btn btn-mini btn-success"  onclick="getContent('/pages/server_docs/jquery.html')">JQuery</button> </div>
-                            <div class="span3"><button class="btn btn-mini btn-success"  onclick="getContent('/pages/python.html')">Python</button></div>
-                            <div class="span3"><button class="btn btn-mini btn-success"  onclick="getContent('/pages/curl.html')">cURL</button></div>
-
-                        </div>
-                        <div class="row-fluid" style="height: 25px"></div>
 
 
-                        <div class="row-fluid">
-                            <div class="span12">
-                                Embed live charts of data in your websites with <a href="#" onclick="getContent('/pages/javascript_chart.html')">JavaScript</a>
-                                and <a href="#" onclick="getContent('/pages/chart_service.html')">Chart APIs</a>
-                            </div>
-                        </div>
-                        <div class="row-fluid">
-                            <div class="span12"><div id="graphdiv4"></div></div>
-                            <script type="text/javascript">
-                                g4 = new Dygraph(
-                                        document.getElementById("graphdiv4"),
-                                        "twonormals.csv",
-                                        {
-                                            //  rollPeriod: 7,
-                                            showRoller: false,
-                                            errorBars: true,
-                                            drawXAxis: false,
-                                            drawYAxis: false,
-                                            valueRange: [50,125],
-                                            height:140
-                                            //width:150
 
-                                        }
-                                );
-                            </script>
-                        </div>
 
 
                     </div>

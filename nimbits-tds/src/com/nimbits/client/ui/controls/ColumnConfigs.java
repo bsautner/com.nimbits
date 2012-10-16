@@ -22,13 +22,13 @@ import com.extjs.gxt.ui.client.widget.grid.ColumnConfig;
 import com.extjs.gxt.ui.client.widget.treegrid.TreeGridCellRenderer;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.nimbits.client.constants.Const;
-import com.nimbits.client.constants.UserMessages;
 import com.nimbits.client.constants.Words;
 import com.nimbits.client.enums.Parameters;
 
 public class ColumnConfigs {
 
 
+    private static final String ENTITIES = "Entities";
 
     public static ColumnConfig timestampColumn() {
         final DateField dateField = new DateField();
@@ -96,9 +96,9 @@ public class ColumnConfigs {
 //    }
 
     public static ColumnConfig pointNameColumn() {
-        final ColumnConfig nameColumn =  new ColumnConfig(Parameters.name.getText(), UserMessages.MESSAGE_DATA_POINT, 150);
+        final ColumnConfig nameColumn =  new ColumnConfig(Parameters.name.getText(), ENTITIES, 150);
         nameColumn.setId(Parameters.name.getText());
-        nameColumn.setHeader("Objects");
+        nameColumn.setHeader(ENTITIES);
         nameColumn.setAlignment(Style.HorizontalAlignment.LEFT);
         nameColumn.setWidth(225);
         nameColumn.setRenderer(new TreeGridCellRenderer<ModelData>());

@@ -16,7 +16,6 @@ package com.nimbits.server.transactions.memcache.value;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.memcache.InvalidValueException;
 import com.google.appengine.api.memcache.MemcacheService;
-import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.MemCacheKey;
 import com.nimbits.client.exception.NimbitsException;
@@ -38,7 +37,6 @@ import java.util.logging.Logger;
  * Date: 11/27/11
  * Time: 12:40 PM
  */
-@SuppressWarnings("unchecked")
 @Component("valueCache")
 public class ValueMemCacheImpl implements ValueTransactions {
 
@@ -47,15 +45,7 @@ public class ValueMemCacheImpl implements ValueTransactions {
     private Task taskFactory;
     private MemcacheService cacheFactory;
 
-
-    private MemcacheService getBufferService(final Entity entity) {
-
-        final String bufferNamespace =MemCacheKey.getKey(MemCacheKey.valueCache, entity.getKey());
-
-
-        return MemcacheServiceFactory.getMemcacheService(bufferNamespace);
-
-    }
+    //todo lookup and delete before put may not be neccesary
 
     protected void addPointToActiveList(final Entity point) {
         Map<String, Entity> points;
@@ -119,15 +109,15 @@ public class ValueMemCacheImpl implements ValueTransactions {
         final List<Value> result = new ArrayList<Value>(1);
 
         String currentValueCacheKey = MemCacheKey.getKey(MemCacheKey.currentValueCache, entity.getKey());
-        MemcacheService buffer = getBufferService(entity);
+
         try {
-            if (buffer.contains(currentValueCacheKey)) {
-                final Value value = (Value) buffer.get(currentValueCacheKey);
+            if (cacheFactory.contains(currentValueCacheKey)) {
+                final Value value = (Value) cacheFactory.get(currentValueCacheKey);
                 if (value == null) {
-                    buffer.delete(currentValueCacheKey);
+                    cacheFactory.delete(currentValueCacheKey);
                     List<Value> sample = valueDao.getRecordedValuePrecedingTimestamp(entity, timestamp);
                     if (! sample.isEmpty()) {
-                        buffer.put(currentValueCacheKey, sample.get(0));
+                        cacheFactory.put(currentValueCacheKey, sample.get(0));
                         result.addAll(sample);
                     }
 
@@ -153,7 +143,7 @@ public class ValueMemCacheImpl implements ValueTransactions {
                 //TODO - keep a memchach list of known empty points to avoid repeated datastore calls here
                 if (! sample.isEmpty()) {
 
-                    buffer.put(currentValueCacheKey, sample.get(0));
+                    cacheFactory.put(currentValueCacheKey, sample.get(0));
                     result.addAll(sample);
                 }
 
@@ -161,17 +151,17 @@ public class ValueMemCacheImpl implements ValueTransactions {
 
             }
         } catch (InvalidValueException e) {
-            buffer.delete(currentValueCacheKey);
+            cacheFactory.delete(currentValueCacheKey);
             List<Value> sample = valueDao.getRecordedValuePrecedingTimestamp(entity, timestamp);
             if (! sample.isEmpty()) {
-                buffer.put(currentValueCacheKey, sample.get(0));
+                cacheFactory.put(currentValueCacheKey, sample.get(0));
                 result.addAll(sample);
             }
         } catch (ClassCastException e) { //old cache data causing a problem when upgrading.
-            buffer.delete(currentValueCacheKey);
+            cacheFactory.delete(currentValueCacheKey);
             List<Value> sample = valueDao.getRecordedValuePrecedingTimestamp(entity, timestamp);
             if (! sample.isEmpty()) {
-                buffer.put(currentValueCacheKey, sample.get(0));
+                cacheFactory.put(currentValueCacheKey, sample.get(0));
                 result.addAll(sample);
             }
 
@@ -207,38 +197,44 @@ public class ValueMemCacheImpl implements ValueTransactions {
     public Value recordValue(final Entity entity, final Value v)  {
         String bufferedListCacheKey = MemCacheKey.getKey(MemCacheKey.bufferedValueList, entity.getKey());
         String currentValueCacheKey = MemCacheKey.getKey(MemCacheKey.currentValueCache, entity.getKey());
-        MemcacheService buffer = getBufferService(entity);
+
         addPointToActiveList(entity);
         try {
             final List<Long> stored;
-            if (buffer.contains(bufferedListCacheKey)) {
-                stored = (List<Long>) buffer.get(bufferedListCacheKey);
-                stored.add(v.getTimestamp().getTime());
-                buffer.delete(stored);
-                buffer.put(bufferedListCacheKey, stored);
+            if (cacheFactory.contains(bufferedListCacheKey)) {
+                stored = (List<Long>) cacheFactory.get(bufferedListCacheKey);
+                stored.add(v.getTimestamp().getTime() + entity.hashCode()); //TODO timestamped buffered value
+                cacheFactory.delete(stored);
+                cacheFactory.put(bufferedListCacheKey, stored);
             } else {
                 stored = new ArrayList<Long>(10);
-                stored.add(v.getTimestamp().getTime());
-                buffer.put(bufferedListCacheKey, stored);
+                stored.add(v.getTimestamp().getTime() + entity.hashCode());
+                cacheFactory.put(bufferedListCacheKey, stored);
             }
-            buffer.put(v.getTimestamp().getTime(), v);
+
+
+            //TODO STORES VALUE WITH TS
+
+            cacheFactory.put(v.getTimestamp().getTime() + entity.hashCode(), v);
+
+
             if (stored.size() > Const.CONST_MAX_CACHED_VALUE_SIZE) {
                 taskFactory.startMoveCachedValuesToStoreTask(entity);
             }
 
-            if (buffer.contains(currentValueCacheKey)) {
-                final Value mostRecentCache = (Value) buffer.get(currentValueCacheKey);
+            if (cacheFactory.contains(currentValueCacheKey)) {
+                final Value mostRecentCache = (Value) cacheFactory.get(currentValueCacheKey);
 
                 if (mostRecentCache == null || v.getTimestamp().getTime() > mostRecentCache.getTimestamp().getTime()) {
-                    buffer.delete(currentValueCacheKey);
-                    buffer.put(currentValueCacheKey, v);
+                    cacheFactory.delete(currentValueCacheKey);
+                    cacheFactory.put(currentValueCacheKey, v);
                 }
             } else {
-                buffer.put(currentValueCacheKey, v);
+                cacheFactory.put(currentValueCacheKey, v);
             }
         } catch (Exception e) {
-            buffer.delete(currentValueCacheKey);
-            buffer.delete(bufferedListCacheKey);
+            cacheFactory.delete(currentValueCacheKey);
+            cacheFactory.delete(bufferedListCacheKey);
         }
 
         return v;
@@ -288,13 +284,13 @@ public class ValueMemCacheImpl implements ValueTransactions {
     @Override
     public List<Value> getCache(final Entity entity, final Timespan timespan) {
         String bufferedListCacheKey = MemCacheKey.getKey(MemCacheKey.bufferedValueList, entity.getKey());
-        MemcacheService buffer = getBufferService(entity);
+
         List<Value> retObj = null;
-        if (buffer.contains(bufferedListCacheKey)) {
-            final Collection<Long> x = (Collection<Long>) buffer.get(bufferedListCacheKey);
-            final Map<Long, Object> valueMap = buffer.getAll(x);
+        if (cacheFactory.contains(bufferedListCacheKey)) {
+            final Collection<Long> x = (Collection<Long>) cacheFactory.get(bufferedListCacheKey);
+            final Map<Long, Object> valueMap = cacheFactory.getAll(x);
             final ValueComparator bvc = new ValueComparator(valueMap);
-            final Map<Long, Object> sorted_map = new TreeMap(bvc);
+            final Map<Long, Object> sorted_map = new TreeMap<Long, Object>(bvc);
             sorted_map.putAll(valueMap);
             retObj = new ArrayList<Value>(sorted_map.keySet().size());
             for (final Map.Entry<Long, Object> longObjectEntry : sorted_map.entrySet()) {
@@ -331,9 +327,9 @@ public class ValueMemCacheImpl implements ValueTransactions {
     @Override
     public void purgeValues(final Entity entity) throws NimbitsException {
         String bufferedListCacheKey = MemCacheKey.getKey(MemCacheKey.bufferedValueList, entity.getKey());
-        MemcacheService buffer = getBufferService(entity);
-        if (buffer.contains(bufferedListCacheKey)) {
-            buffer.delete(bufferedListCacheKey);
+
+        if (cacheFactory.contains(bufferedListCacheKey)) {
+            cacheFactory.delete(bufferedListCacheKey);
         }
         removePointFromActiveList(entity);
         valueDao.purgeValues(entity);
@@ -385,19 +381,19 @@ public class ValueMemCacheImpl implements ValueTransactions {
         List<Value> stored = getDataSegment(entity, timespan);
         String key = MemCacheKey.preload.getText() + entity.getUUID();
         log.info("Storing " + stored.size());
-        MemcacheService buffer = getBufferService(entity);
+
         List<List<Value>> split = splitUpList(stored);
         log.info("split up into " + split.size() + " pieces");
         int section = 0;
         int count = 0;
         for (List<Value> small : split) {
-            String n = key + section;
-            log.info("Stored key : " + n + "  " + small.size());
+            String smallKey = key + section;
+            log.info("Stored key : " + smallKey + "  " + small.size());
             count += small.size();
-            if (buffer.contains(n)) {
-                buffer.delete(n);
+            if (cacheFactory.contains(smallKey)) {
+                cacheFactory.delete(smallKey);
             }
-            buffer.put(n, small);
+            cacheFactory.put(smallKey, small);
             section += Const.CONST_QUERY_CHUNK_SIZE;
         }
         return count;
@@ -408,17 +404,12 @@ public class ValueMemCacheImpl implements ValueTransactions {
 
     @Override
     public List<Value> getPreload(final Entity entity, final int section) throws NimbitsException {
-        // int c = 0;
-        // List<Value> values = new ArrayList<Value>(Const.CONST_QUERY_CHUNK_SIZE);
 
-
-        //  while (c < count) {
-        MemcacheService buffer = getBufferService(entity);
         String key = MemCacheKey.preload.getText() + entity.getUUID() + section;
         log.info(key);
 
-        if (buffer.contains(key)) {
-            return  (((List<Value>) buffer.get(key)));
+        if (cacheFactory.contains(key)) {
+            return  (((List<Value>) cacheFactory.get(key)));
             //  c += Const.CONST_QUERY_CHUNK_SIZE;
         }
         else {
@@ -435,12 +426,12 @@ public class ValueMemCacheImpl implements ValueTransactions {
     @Override
     public List<Value> getBuffer(final Entity entity) {
         String bufferedListCacheKey = MemCacheKey.getKey(MemCacheKey.bufferedValueList, entity.getKey());
-        MemcacheService buffer = getBufferService(entity);
-        if (buffer.contains(bufferedListCacheKey)) {
-            final Collection<Long> x = (Collection<Long>) buffer.get(bufferedListCacheKey);
-            final Map<Long, Object> valueMap = buffer.getAll(x);
+
+        if (cacheFactory.contains(bufferedListCacheKey)) {
+            final Collection<Long> bufferedValueList = (Collection<Long>) cacheFactory.get(bufferedListCacheKey);
+            final Map<Long, Object> valueMap = cacheFactory.getAll(bufferedValueList);
             final ValueComparator bvc = new ValueComparator(valueMap);
-            final Map<Long, Object> sorted_map = new TreeMap(bvc);
+            final Map<Long, Object> sorted_map = new TreeMap<Long, Object>(bvc);
             sorted_map.putAll(valueMap);
             final List<Value> retObj  = new ArrayList<Value>( sorted_map.keySet().size());
             for (final Map.Entry<Long, Object> longObjectEntry : sorted_map.entrySet()) {
@@ -459,15 +450,15 @@ public class ValueMemCacheImpl implements ValueTransactions {
 
     @Override
     public void moveValuesFromCacheToStore(final Entity entity) {
-        String bufferedListCacheKey = MemCacheKey.getKey(MemCacheKey.bufferedValueList, entity.getKey());
-        MemcacheService buffer = getBufferService(entity);
+        final String bufferedListCacheKey = MemCacheKey.getKey(MemCacheKey.bufferedValueList, entity.getKey());
+
         try {
-            if (buffer.contains(bufferedListCacheKey)) {
-                final Collection<Long> x = (Collection<Long>) buffer.get(bufferedListCacheKey);
+            if (cacheFactory.contains(bufferedListCacheKey)) {
+                final Collection<Long> x = (Collection<Long>) cacheFactory.get(bufferedListCacheKey);
                 if (x != null && !x.isEmpty()) {
-                    buffer.delete(bufferedListCacheKey);
-                    final Map<Long, Object> valueMap = buffer.getAll(x);
-                    buffer.deleteAll(x);
+                    cacheFactory.delete(bufferedListCacheKey);
+                    final Map<Long, Object> valueMap = cacheFactory.getAll(x);
+                    cacheFactory.deleteAll(x);
                     final List<Value> values = new ArrayList<Value>(valueMap.keySet().size());
                     //  int count = values.size();
                     for (final Map.Entry<Long, Object> longObjectEntry : valueMap.entrySet()) {
@@ -477,7 +468,7 @@ public class ValueMemCacheImpl implements ValueTransactions {
                 }
             }
         } catch (Exception e) {
-            buffer.delete(bufferedListCacheKey);
+            cacheFactory.delete(bufferedListCacheKey);
         }
 
 
@@ -492,7 +483,7 @@ public class ValueMemCacheImpl implements ValueTransactions {
 
 
         final ValueComparator bvc = new ValueComparator(valueMap);
-        final Map<Long, Object> sorted_map = new TreeMap(bvc);
+        final Map<Long, Object> sorted_map = new TreeMap<Long, Object>(bvc);
         sorted_map.putAll(valueMap);
         int c = 0;
         final List<Value> retObj = new ArrayList<Value>( sorted_map.keySet().size());
@@ -515,7 +506,7 @@ public class ValueMemCacheImpl implements ValueTransactions {
 
 
         final ValueComparator bvc = new ValueComparator(valueMap);
-        final Map<Long, Object> sorted_map = new TreeMap(bvc);
+        final Map<Long, Object> sorted_map = new TreeMap<Long, Object>(bvc);
         sorted_map.putAll(valueMap);
         final List<Value> retObj = new ArrayList<Value>(sorted_map.keySet().size());
         for (final Map.Entry<Long, Object> longObjectEntry : sorted_map.entrySet()) {
@@ -527,21 +518,23 @@ public class ValueMemCacheImpl implements ValueTransactions {
         return retObj;
     }
 
-    private static List<Value> mergeAndSort(final Collection<Value> first, final Collection<Value> second, final Timespan timespan) {
+    private static <E> List<E> mergeAndSort(final Collection<E> first, final Collection<E> second, final Timespan timespan) {
         first.addAll(second);
-        final Map<Long, Object> valueMap = new TreeMap<Long, Object>();
-        for (final Value v : first) {
-            valueMap.put(v.getTimestamp().getTime(), v);
+        final Map<Long, E> valueMap = new TreeMap<Long, E>();
+        for (final E v : first) {
+            valueMap.put(((Value)v).getTimestamp().getTime(), v);
         }
 
 
         final ValueComparator bvc = new ValueComparator(valueMap);
-        final Map<Long, Object> sorted_map = new TreeMap(bvc);
+        final Map<Long, E> sorted_map = new TreeMap<Long, E>(bvc);
+
         sorted_map.putAll(valueMap);
-        final List<Value> retObj = new ArrayList<Value>(sorted_map.keySet().size());
-        for (final Map.Entry<Long, Object> longObjectEntry : sorted_map.entrySet()) {
-            if (longObjectEntry.getKey() >= timespan.getStart().getTime() - 1000 && longObjectEntry.getKey() <= timespan.getEnd().getTime() + 1000) {
-                retObj.add((Value) longObjectEntry.getValue());
+        final List<E> retObj = new ArrayList<E>(sorted_map.keySet().size());
+        for (final Map.Entry<?, E> longObjectEntry : sorted_map.entrySet()) {
+            long l = (Long)longObjectEntry.getKey();
+            if (l >= timespan.getStart().getTime() - 1000 && l <= timespan.getEnd().getTime() + 1000) {
+                retObj.add(longObjectEntry.getValue());
             }
         }
         return retObj;

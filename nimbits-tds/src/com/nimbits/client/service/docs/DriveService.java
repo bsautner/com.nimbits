@@ -13,6 +13,7 @@
 
 package com.nimbits.client.service.docs;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.nimbits.client.exception.NimbitsException;
@@ -34,4 +35,15 @@ public interface DriveService extends RemoteService {
     void addSpreadsheetHeader(Entity entity, String title) throws NimbitsException;
 
     int dumpValues(Entity entity, int count) throws NimbitsException;
+
+
+    static class App {
+        private static DriveServiceAsync ourInstance = GWT.create(DriveService.class);
+
+        public static synchronized DriveServiceAsync getInstance() {
+            return ourInstance;
+        }
+    }
+
+
 }

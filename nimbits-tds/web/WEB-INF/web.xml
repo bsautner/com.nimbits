@@ -83,18 +83,18 @@
 
 
 
-    <servlet>
-        <servlet-name>SystemServiceServlet</servlet-name>
-        <servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
-        <init-param>
-            <param-name>services</param-name>
-            <param-value/>
-        </init-param>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>SystemServiceServlet</servlet-name>
-        <url-pattern>/_ah/spi/*</url-pattern>
-    </servlet-mapping>
+    <!--<servlet>-->
+        <!--<servlet-name>SystemServiceServlet</servlet-name>-->
+        <!--<servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>-->
+        <!--<init-param>-->
+            <!--<param-name>services</param-name>-->
+            <!--<param-value/>-->
+        <!--</init-param>-->
+    <!--</servlet>-->
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>SystemServiceServlet</servlet-name>-->
+        <!--<url-pattern>/_ah/spi/*</url-pattern>-->
+    <!--</servlet-mapping>-->
 
 
     <servlet-mapping>
@@ -204,7 +204,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>valueTask</servlet-name>
-        <!--<servlet-class>com.nimbits.server.process.task.ValueTask</servlet-class>-->
+        <!--<servlet-class>ValueTask</servlet-class>-->
         <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
     </servlet>
     <servlet-mapping>
@@ -291,7 +291,7 @@
     <servlet>
         <servlet-name>pointCron</servlet-name>
         <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
-        <!--<servlet-class>com.nimbits.server.process.cron.PointCron</servlet-class>-->
+        <!--<servlet-class>PointCron</servlet-class>-->
     </servlet>
     <servlet-mapping>
         <servlet-name>pointCron</servlet-name>
@@ -318,7 +318,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>idleCron</servlet-name>
-        <!--<servlet-class>com.nimbits.server.process.cron.IdlePointCron</servlet-class>-->
+        <!--<servlet-class>IdlePointCron</servlet-class>-->
         <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
     </servlet>
     <servlet-mapping>
@@ -443,7 +443,7 @@
 
     <servlet>
         <servlet-name>batch</servlet-name>
-        <!--<servlet-class>com.nimbits.server.api.impl.BatchServletImpl</servlet-class>-->
+        <!--<servlet-class>BatchServletImpl</servlet-class>-->
         <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
 
     </servlet>
@@ -457,7 +457,7 @@
 
     <servlet>
         <servlet-name>quota</servlet-name>
-        <!--<servlet-class>com.nimbits.server.admin.quota.QuotaServletImpl</servlet-class>-->
+        <!--<servlet-class>QuotaServletImpl</servlet-class>-->
         <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
     </servlet>
     <servlet-mapping>

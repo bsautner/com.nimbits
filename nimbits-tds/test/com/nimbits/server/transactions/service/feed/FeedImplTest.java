@@ -16,7 +16,7 @@ package com.nimbits.server.transactions.service.feed;
 import com.nimbits.client.enums.FeedType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.service.feed.Feed;
+import com.nimbits.client.service.feed.FeedService;
 import com.nimbits.server.NimbitsServletTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,7 +41,7 @@ import static org.junit.Assert.*;
 public class FeedImplTest extends NimbitsServletTest {
 
   @Resource(name="feedService")
-    Feed i;
+  FeedService i;
 
 
     @Test

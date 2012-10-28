@@ -13,6 +13,7 @@
 
 package com.nimbits.client.service.calculation;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.nimbits.client.exception.NimbitsException;
@@ -36,5 +37,11 @@ public interface CalculationService  extends RemoteService {
 
      void processCalculations(final User u, final Entity point, final Value value) throws NimbitsException;
 
+    static class App {
+        private static CalculationServiceAsync ourInstance = GWT.create(CalculationService.class);
 
+        public static synchronized CalculationServiceAsync getInstance() {
+            return ourInstance;
+        }
+    }
 }

@@ -66,7 +66,7 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
     }
     public EntityModel(final Entity anEntity) throws NimbitsException {
         if (anEntity != null) {
-            this.dateCreated = anEntity.getDateCreated();
+            this.dateCreated = new Date(anEntity.getDateCreated().getTime());
             this.key = anEntity.getKey();
             this.name = anEntity.getName().getValue();
             this.description = anEntity.getDescription();
@@ -251,7 +251,7 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
     @Override
     public Date getDateCreated() {
 
-        return dateCreated;
+        return new Date(dateCreated.getTime());
     }
 
     @Override

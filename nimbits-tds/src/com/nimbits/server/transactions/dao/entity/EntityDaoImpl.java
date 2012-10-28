@@ -15,7 +15,6 @@ package com.nimbits.server.transactions.dao.entity;
 
 
 import com.google.appengine.api.blobstore.BlobKey;
-import com.nimbits.PMF;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.accesskey.AccessKey;
@@ -51,10 +50,7 @@ import com.nimbits.shared.Utils;
 import org.datanucleus.exceptions.NucleusObjectNotFoundException;
 import org.springframework.stereotype.Repository;
 
-import javax.jdo.JDOObjectNotFoundException;
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
+import javax.jdo.*;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -65,7 +61,6 @@ import java.util.logging.Logger;
  * Time: 10:46 AM
  */
 
-@SuppressWarnings({"unchecked", "FeatureEnvy"})
 @Repository("entityDao")
 public class EntityDaoImpl implements  EntityTransactions {
 
@@ -75,14 +70,14 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     private final Logger log = Logger.getLogger(EntityDaoImpl.class.getName());
     private RecursionValidation recursionValidation;
-
+    private PersistenceManagerFactory pmf;
 
 
     @Override
     public List<Entity> getSubscriptionsToEntity(final User user, final Entity subscribedEntity) throws NimbitsException {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
         try {
-            final Query q = pm.newQuery(SubscriptionEntity.class);
+            final Query q = pmf.getPersistenceManager().newQuery(SubscriptionEntity.class);
             q.setFilter("subscribedEntity==p && enabled==e");
             q.declareParameters("String p, Boolean e");
             final Collection<Entity> results = (Collection<Entity>) q.execute(subscribedEntity.getKey(), true);
@@ -94,7 +89,7 @@ public class EntityDaoImpl implements  EntityTransactions {
     }
     @Override
     public List<Entity> getIdleEntities(User admin) throws NimbitsException {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
 
         try {
 
@@ -111,7 +106,7 @@ public class EntityDaoImpl implements  EntityTransactions {
     }
     @Override
     public List<Entity> getEntityByBlobKey(final User user, final BlobKey key) throws NimbitsException {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
 
         try {
 
@@ -140,7 +135,7 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     @Override
     public List<Entity> getEntityByTrigger(final User user, final Entity entity, final Class<?> cls) throws NimbitsException {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
         try {
             final Query q = pm.newQuery(cls);
             q.setFilter("trigger == k && enabled == true");
@@ -157,7 +152,7 @@ public class EntityDaoImpl implements  EntityTransactions {
     public Map<String, Entity> getEntityMap(final User user, final EntityType type, final int limit) throws NimbitsException {
 
 
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
         try {
             final Query q1 = pm.newQuery(Class.forName(type.getClassName()));
 
@@ -195,7 +190,7 @@ public class EntityDaoImpl implements  EntityTransactions {
 
 
 
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
 
         try {
             final Query q1 = pm.newQuery(Class.forName(type.getClassName()));
@@ -220,7 +215,7 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     @Override
     public List<Entity> getChildren(final User user, Entity entity, final EntityType type) throws NimbitsException {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
         try {
             final List<Entity> r =  getEntityChildren(pm, entity, type);
             return createModels(user, r);
@@ -242,7 +237,7 @@ public class EntityDaoImpl implements  EntityTransactions {
     @Override
     public Entity addUpdateEntity(final User user, final Entity entity) throws NimbitsException {
 
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
         log.info(entity.toString());
         try {
 
@@ -310,7 +305,7 @@ public class EntityDaoImpl implements  EntityTransactions {
     private Entity addEntity(final User user, final Entity entity, final PersistenceManager pm) throws NimbitsException {
 
         if (entity.getEntityType().isUniqueNameFlag()) {
-            checkDuplicateEntity(user, entity);
+            checkDuplicateEntity(user, Arrays.asList(entity));
 
         }
         final Entity commit = downcastEntity(entity);
@@ -350,7 +345,7 @@ public class EntityDaoImpl implements  EntityTransactions {
     @Override
     public List<Entity> getEntities(final User user) throws NimbitsException {
 
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
 
         final Map<String, Entity> connections = getEntityMap(user, EntityType.userConnection, LIMIT);
         final Collection<String> ownerKeys = new ArrayList<String>(connections.size() + 1);
@@ -477,7 +472,7 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     @Override
     public List<Entity> deleteEntity(final User user, final Entity entity, final Class<?> cls) throws NimbitsException {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
 
         try {
             final Entity c = (Entity) pm.getObjectById(cls, entity.getKey());
@@ -503,7 +498,7 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     @Override
     public List<Entity> getEntitiesBySource(final User user, final Entity source, final Class<?>cls) throws NimbitsException {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
         try {
 
             Query q = pm.newQuery(cls);
@@ -521,7 +516,7 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     @Override
     public List<Entity> getEntityByKey(final User user, final String uuid, final Class<?> cls) throws NimbitsException {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
         final List<Entity> retObj = new ArrayList<Entity>(1);
 
         try {
@@ -543,7 +538,7 @@ public class EntityDaoImpl implements  EntityTransactions {
     }
 
     private List<Entity> getEntityByUUID(final User user, final String uuid, final Class<?> cls) throws NimbitsException {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
         try {
             final Query q1 = pm.newQuery(cls);
             q1.setFilter("uuid==u");
@@ -560,7 +555,7 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     @Override
     public List<Entity> getEntityByName(final User user, final EntityName name,final Class<?> cls) throws NimbitsException {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
 
         try {
             final Query q1 = pm.newQuery(cls);
@@ -595,7 +590,7 @@ public class EntityDaoImpl implements  EntityTransactions {
     public Map<String, Entity> getSystemWideEntityMap(User admin, final EntityType type) throws NimbitsException {
 
 
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
 
         try {
 
@@ -621,50 +616,51 @@ public class EntityDaoImpl implements  EntityTransactions {
     }
 
 
-    private void checkDuplicateEntity(final User user, final Entity entity) throws NimbitsException {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+    private void checkDuplicateEntity(final User user, final List<Entity> entityList) throws NimbitsException {
+        final PersistenceManager pm = pmf.getPersistenceManager();
 
 
         try {
+            for (Entity entity :  entityList)  {
+                
+                if (entity.getEntityType().equals(EntityType.user)) {
+                    final Query q1 = pm.newQuery(Class.forName(entity.getEntityType().getClassName()));
+                    q1.setFilter("name==b && entityType==t");
+                    q1.declareParameters("String b, Integer t");
+                    q1.setRange(0, 1);
+                    final Collection<Entity> c = (Collection<Entity>) q1.execute(
+                            entity.getName().getValue(),
+                            entity.getEntityType().getCode());
+                    if (!c.isEmpty()) {
 
-            if (entity.getEntityType().equals(EntityType.user)) {
-                final Query q1 = pm.newQuery(Class.forName(entity.getEntityType().getClassName()));
-                q1.setFilter("name==b && entityType==t");
-                q1.declareParameters("String b, Integer t");
-                q1.setRange(0, 1);
-                final Collection<Entity> c = (Collection<Entity>) q1.execute(
-                        entity.getName().getValue(),
-                        entity.getEntityType().getCode());
-                if (!c.isEmpty()) {
-
-                    throw new NimbitsException("A User with the email address " + entity.getName().getValue() +
-                            " already exists. Entities of type [" + entity.getEntityType().name() + "] must have a " +
-                            "unique name on your account");
+                        throw new NimbitsException("A User with the email address " + entity.getName().getValue() +
+                                " already exists. Entities of type [" + entity.getEntityType().name() + "] must have a " +
+                                "unique name on your account");
 
 
+                    }
+                }
+                else
+                {
+
+
+                    final Query q1 = pm.newQuery(Class.forName(entity.getEntityType().getClassName()));
+                    q1.setFilter("name==b && owner==o && entityType==t");
+                    q1.declareParameters("String b, String o, Integer t");
+                    q1.setRange(0, 1);
+                    final Collection<Entity> c = (Collection<Entity>) q1.execute(
+                            entity.getName().getValue(),
+                            user.getKey(),
+                            entity.getEntityType().getCode());
+                    if (!c.isEmpty()) {
+
+                        throw new NimbitsException("An Entity with the name " + entity.getName().getValue() +
+                                " already exists. Entities of type [" + entity.getEntityType().name() + "] must have a " +
+                                "unique name on your account");
+
+                    }
                 }
             }
-            else
-            {
-
-
-                final Query q1 = pm.newQuery(Class.forName(entity.getEntityType().getClassName()));
-                q1.setFilter("name==b && owner==o && entityType==t");
-                q1.declareParameters("String b, String o, Integer t");
-                q1.setRange(0, 1);
-                final Collection<Entity> c = (Collection<Entity>) q1.execute(
-                        entity.getName().getValue(),
-                        user.getKey(),
-                        entity.getEntityType().getCode());
-                if (!c.isEmpty()) {
-
-                    throw new NimbitsException("An Entity with the name " + entity.getName().getValue() +
-                            " already exists. Entities of type [" + entity.getEntityType().name() + "] must have a " +
-                            "unique name on your account");
-
-                }
-            }
-
         } catch(javax.jdo.JDOUserException ignored) {
 
 
@@ -818,10 +814,8 @@ public class EntityDaoImpl implements  EntityTransactions {
     public void setRecursionValidation(RecursionValidation recursionValidation) {
         this.recursionValidation = recursionValidation;
     }
-    @SuppressWarnings("unused")
-    public RecursionValidation getRecursionValidation() {
-        return recursionValidation;
+
+    public void setPmf(PersistenceManagerFactory pmf) {
+        this.pmf = pmf;
     }
-
-
 }

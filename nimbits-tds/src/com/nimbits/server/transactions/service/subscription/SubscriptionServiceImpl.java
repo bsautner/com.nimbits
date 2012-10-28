@@ -31,7 +31,7 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.xmpp.XmppResource;
 import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.facebook.FacebookService;
-import com.nimbits.client.service.feed.Feed;
+import com.nimbits.client.service.feed.FeedService;
 import com.nimbits.client.service.subscription.SubscriptionService;
 import com.nimbits.client.service.twitter.TwitterService;
 import com.nimbits.client.service.user.UserService;
@@ -69,7 +69,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
     private ValueService valueService;
     private EntityService entityService;
     private EmailService emailService;
-    private Feed feedService;
+    private FeedService feedServiceService;
     private TwitterService twitterService;
     private FacebookService facebookService;
     private XMPPService xmppService;
@@ -219,7 +219,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
                 doMQTT(user, subscription, point, point, value);
                 break;
             case feed:
-                feedService.postToFeed(user, point, point, value, FeedType.data);
+                feedServiceService.postToFeed(user, point, point, value, FeedType.data);
                 break;
         }
     }
@@ -348,12 +348,12 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements
         return emailService;
     }
 
-    public void setFeedService(Feed feedService) {
-        this.feedService = feedService;
+    public void setFeedServiceService(FeedService feedServiceService) {
+        this.feedServiceService = feedServiceService;
     }
 
-    public Feed getFeedService() {
-        return feedService;
+    public FeedService getFeedServiceService() {
+        return feedServiceService;
     }
 
     public void setTwitterService(TwitterService twitterService) {

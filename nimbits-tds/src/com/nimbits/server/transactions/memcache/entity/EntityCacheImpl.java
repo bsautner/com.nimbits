@@ -299,24 +299,12 @@ public class EntityCacheImpl implements EntityTransactions,  EntityCache {
         this.entityDao = entityDao;
     }
 
-    @SuppressWarnings("unused")
-    public EntityTransactions getEntityDao() {
-        return entityDao;
-    }
-
     public void setUserService(UserServiceImpl userService) {
         this.userService = userService;
-    }
-
-    public UserServiceImpl getUserService() {
-        return userService;
     }
 
     public void setCacheFactory(MemcacheService cacheFactory) {
         this.cacheFactory = cacheFactory;
     }
-    @SuppressWarnings("unused")
-    public MemcacheService getCacheFactory() {
-        return cacheFactory;
-    }
+
 }

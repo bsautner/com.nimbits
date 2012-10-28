@@ -15,22 +15,13 @@ package com.nimbits;
 
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManagerFactory;
+public final class PMF {
+    private static final PersistenceManagerFactory pmfInstance =
+            JDOHelper.getPersistenceManagerFactory("transactions-optional");
 
-public class PMF {
-    private static final String PMF_TRANSACTIONS_OPTIONAL = "transactions-optional";
-
-    private PMF() {
-    }
-
-    private static class PersistenceManagerFactoryHolder {
-        static final PersistenceManagerFactory pmfInstance = JDOHelper.getPersistenceManagerFactory(PMF_TRANSACTIONS_OPTIONAL);
-
-        private PersistenceManagerFactoryHolder() {
-        }
-    }
+    private PMF() {}
 
     public static PersistenceManagerFactory get() {
-        return PersistenceManagerFactoryHolder.pmfInstance;
+        return pmfInstance;
     }
-
 }

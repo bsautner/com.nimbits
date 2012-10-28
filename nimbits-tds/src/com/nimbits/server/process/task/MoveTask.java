@@ -52,7 +52,7 @@ public class MoveTask extends HttpServlet   implements org.springframework.web.H
         try {
             valueService.moveValuesFromCacheToStore(point);
         } catch (NimbitsException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+          log.severe(e.getMessage());
         }
 
 

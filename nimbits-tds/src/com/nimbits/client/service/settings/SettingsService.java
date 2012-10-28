@@ -14,6 +14,7 @@
 package com.nimbits.client.service.settings;
 
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.nimbits.client.enums.SettingType;
@@ -38,4 +39,13 @@ public interface SettingsService extends RemoteService {
 
 
     String reloadCache() throws NimbitsException;
+
+
+    static class App {
+        private static SettingsServiceAsync ourInstance = GWT.create(SettingsService.class);
+
+        public static synchronized SettingsServiceAsync getInstance() {
+            return ourInstance;
+        }
+    }
 }

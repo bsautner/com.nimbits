@@ -13,6 +13,7 @@
 
 package com.nimbits.client.service.blob;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.nimbits.client.model.file.File;
@@ -29,5 +30,11 @@ public interface BlobService extends RemoteService {
     String getBlobStoreUrl(final String url);
     void deleteBlob(final File entity);
 
+    public static class App {
+        private static BlobServiceAsync ourInstance = GWT.create(BlobService.class);
 
+        public static synchronized BlobServiceAsync getInstance() {
+            return ourInstance;
+        }
+    }
 }

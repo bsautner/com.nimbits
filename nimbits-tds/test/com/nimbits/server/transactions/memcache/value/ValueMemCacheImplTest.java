@@ -63,6 +63,21 @@ public class ValueMemCacheImplTest extends NimbitsServletTest {
     @Resource(name = "valueService")
     ValueService valueService;
 
+
+    @Test
+    public void testBuildID() {
+
+        Date now =  new Date();
+
+        long v = pointEntity.hashCode() + now.getTime();
+        long r = v - pointEntity.hashCode();
+        assertEquals(now.getTime(), r);
+        assertNotSame(pointEntity, pointChildEntity);
+        assertNotSame(pointEntity.hashCode(), pointChildEntity.hashCode());
+
+    }
+
+
     @Test
     public void testGetClosest() {
 

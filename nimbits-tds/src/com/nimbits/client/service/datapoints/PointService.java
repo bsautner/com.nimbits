@@ -14,6 +14,7 @@
 package com.nimbits.client.service.datapoints;
 
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.nimbits.client.enums.ExportType;
@@ -34,4 +35,11 @@ public interface PointService extends RemoteService {
    // Entity copyPoint(final User u, final Entity originalEntity, final EntityName newName) throws NimbitsException;
 
 
+    static class App {
+        private static PointServiceAsync ourInstance = GWT.create(PointService.class);
+
+        public static synchronized PointServiceAsync getInstance() {
+            return ourInstance;
+        }
+    }
 }

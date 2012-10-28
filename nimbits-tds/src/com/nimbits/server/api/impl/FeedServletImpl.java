@@ -40,7 +40,7 @@ public class FeedServletImpl  extends ApiServlet implements org.springframework.
 
         PrintWriter out = resp.getWriter();
         out.print(Const.HTML_BOOTSTRAP);
-        out.println("<h2>Nimbits Feed Message</h2>");
+        out.println("<h2>Nimbits FeedService Message</h2>");
         out.println("<p>");
         out.print(req.getParameter("content"));
         out.println("<div class=\"row\">\n" +

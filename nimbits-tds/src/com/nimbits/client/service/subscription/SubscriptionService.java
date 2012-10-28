@@ -13,6 +13,7 @@
 
 package com.nimbits.client.service.subscription;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.nimbits.client.exception.NimbitsException;
@@ -33,4 +34,13 @@ public interface SubscriptionService  extends RemoteService {
 
 
     boolean okToProcess(final Subscription subscription);
+
+    static class App {
+        private static SubscriptionServiceAsync ourInstance = GWT.create(SubscriptionService.class);
+
+        public static synchronized SubscriptionServiceAsync getInstance() {
+            return ourInstance;
+        }
+    }
+
 }

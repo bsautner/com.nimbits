@@ -72,7 +72,7 @@ public class FacebookPanel extends LayoutContainer {
                     "you can configure data points to post to your facebook news feed whenever they are updated or if they go into" +
                     " an alert state based on your subscription settings. Right click on a data point in the nimbits console" +
                     " to create a subscription that can post to your feed. </P> <BR><BR>" +
-                    "<P>In order to have Nimbits post to your facebook News Feed" +
+                    "<P>In order to have Nimbits post to your facebook News FeedService" +
                     " you must add it to your profile. </P><BR><BR><BR>" +
                     "<center><P><font size =+1> <A href =\"" + authURL + "\" target=\"_top\" >" +
                     "Authorize Nimbits by clicking here.</A></font></p></center>" +

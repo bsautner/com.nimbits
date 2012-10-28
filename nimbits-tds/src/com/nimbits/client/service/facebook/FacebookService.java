@@ -13,6 +13,7 @@
 
 package com.nimbits.client.service.facebook;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.nimbits.client.exception.NimbitsException;
@@ -32,4 +33,11 @@ public interface FacebookService extends RemoteService {
 
     String updateStatus(final String token, final String message, final String picture, final String link, final String name, final String captions, final String description);
 
+    static class App {
+        private static FacebookServiceAsync ourInstance = GWT.create(FacebookService.class);
+
+        public static synchronized FacebookServiceAsync getInstance() {
+            return ourInstance;
+        }
+    }
 }

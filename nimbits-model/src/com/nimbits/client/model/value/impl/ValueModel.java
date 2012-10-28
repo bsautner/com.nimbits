@@ -147,6 +147,23 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
 
     }
 
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        temp = lt != +0.0d ? Double.doubleToLongBits(lt) : 0L;
+        result = (int) (temp ^ (temp >>> 32));
+        temp = lg != +0.0d ? Double.doubleToLongBits(lg) : 0L;
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = d != +0.0d ? Double.doubleToLongBits(d) : 0L;
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (int) (t ^ (t >>> 32));
+        result = 31 * result + (n != null ? n.hashCode() : 0);
+        result = 31 * result + (dx != null ? dx.hashCode() : 0);
+        result = 31 * result + st;
+        return result;
+    }
+
     @SuppressWarnings({"InstanceofInterfaces", "CastToConcreteClass", "NonFinalFieldReferenceInEquals"})
     @Override
     public boolean equals(Object o) {

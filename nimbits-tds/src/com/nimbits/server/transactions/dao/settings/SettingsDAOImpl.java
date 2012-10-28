@@ -13,7 +13,6 @@
 
 package com.nimbits.server.transactions.dao.settings;
 
-import com.nimbits.PMF;
 import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.setting.Setting;
@@ -22,6 +21,7 @@ import com.nimbits.server.transactions.service.settings.SettingTransactions;
 import org.springframework.stereotype.Repository;
 
 import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
 import java.util.HashMap;
@@ -34,10 +34,11 @@ import java.util.Map;
 public class SettingsDAOImpl implements SettingTransactions {
 
 
+    private PersistenceManagerFactory pmf;
 
     @Override
     public String getSetting(final SettingType setting) throws NimbitsException {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
         String retVal;
         try {
             final Query q = pm.newQuery(ServerSetting.class, "name == n");
@@ -59,7 +60,7 @@ public class SettingsDAOImpl implements SettingTransactions {
 
     @Override
     public void updateSetting(final SettingType name, final String newValue) {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
         try {
 
             final Query q = pm.newQuery(ServerSetting.class, "name == n");
@@ -89,7 +90,7 @@ public class SettingsDAOImpl implements SettingTransactions {
     @Override
     public Map<SettingType, String> getSettings() {
 
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
         try {
             final Query q = pm.newQuery(ServerSetting.class);
             final Iterable<ServerSetting> l = (Iterable<ServerSetting>) q.execute();
@@ -109,7 +110,7 @@ public class SettingsDAOImpl implements SettingTransactions {
 
     @Override
     public void addSetting(final SettingType name, final String value) {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
         try {
             final Setting s = new ServerSetting(value, name);
             pm.makePersistent(s);
@@ -121,4 +122,7 @@ public class SettingsDAOImpl implements SettingTransactions {
     }
 
 
+    public void setPmf(PersistenceManagerFactory pmf) {
+        this.pmf = pmf;
+    }
 }

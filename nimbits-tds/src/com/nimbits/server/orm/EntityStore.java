@@ -312,7 +312,7 @@ public abstract class EntityStore implements Entity {
 
     @Override
     public Date getDateCreated() {
-        return dateCreated;
+        return new Date(dateCreated.getTime());
     }
 
     @Override

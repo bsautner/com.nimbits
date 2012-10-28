@@ -13,7 +13,6 @@
 
 package com.nimbits.server.transactions.dao.xmpp;
 
-import com.nimbits.PMF;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
@@ -24,6 +23,7 @@ import com.nimbits.server.orm.XmppResourceEntity;
 import org.springframework.stereotype.Repository;
 
 import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,7 +40,8 @@ import java.util.List;
 public class XmppDaoImpl implements XmppTransaction {
 
 
-    
+    private PersistenceManagerFactory pmf;
+
     public XmppDaoImpl() {
 
     }
@@ -49,7 +50,7 @@ public class XmppDaoImpl implements XmppTransaction {
     @Override
     public List<XmppResource> getPointXmppResources(final Point point) throws NimbitsException {
 
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
 
 
         try {
@@ -70,7 +71,7 @@ public class XmppDaoImpl implements XmppTransaction {
 
     @Override
     public void deleteResource(final Entity entity) {
-        final PersistenceManager pm =PMF.get().getPersistenceManager();
+        final PersistenceManager pm =pmf.getPersistenceManager();
 
 
         try {
@@ -86,4 +87,7 @@ public class XmppDaoImpl implements XmppTransaction {
     }
 
 
+    public void setPmf(PersistenceManagerFactory pmf) {
+        this.pmf = pmf;
+    }
 }

@@ -13,7 +13,6 @@
 
 package com.nimbits.server.transactions.dao.user;
 
-import com.nimbits.PMF;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
@@ -30,6 +29,7 @@ import com.nimbits.server.transactions.service.user.UserTransactions;
 import org.springframework.stereotype.Repository;
 
 import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
 import java.util.*;
@@ -45,13 +45,13 @@ public class UserDAOImpl implements UserTransactions {
     public static final String STRING2 = ":p.contains(uuid)";
     private EntityService entityService;
     private UserServerService userService;
-
+    private PersistenceManagerFactory pmf;
 
 
     @Override
     @SuppressWarnings(Const.WARNING_UNCHECKED)
     public List<User> getAllUsers(final String ordering, final int count) {
-         final PersistenceManager pm = PMF.get().getPersistenceManager();
+         final PersistenceManager pm = pmf.getPersistenceManager();
         List<User> retObj = null;
         try {
             final Query q = pm.newQuery(UserEntity.class);
@@ -69,7 +69,7 @@ public class UserDAOImpl implements UserTransactions {
 
     @Override
     public List<ConnectionRequest> getPendingConnectionRequests(final EmailAddress internetAddress) throws NimbitsException {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
         try {
             final Query q = pm.newQuery(ConnectionRequestEntity.class);
             q.setFilter(STRING);
@@ -90,7 +90,7 @@ public class UserDAOImpl implements UserTransactions {
 
     @Override
     public void updateConnectionRequest(final Long key, final User requestor, final User acceptor, final boolean accepted) {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
 
         try {
             final ConnectionRequestEntity c =  pm.getObjectById(ConnectionRequestEntity.class, key);
@@ -114,7 +114,7 @@ public class UserDAOImpl implements UserTransactions {
     public ConnectionRequest makeConnectionRequest(final User u, final EmailAddress emailAddress) throws NimbitsException {
         final ConnectionRequestEntity f = new ConnectionRequestEntity(u.getKey(), u.getEmail(), emailAddress, UUID.randomUUID().toString());
 
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
         try {
             pm.makePersistent(f);
             return  ConnectionRequestModelFactory.CreateConnectionRequestModel(f);
@@ -129,7 +129,7 @@ public class UserDAOImpl implements UserTransactions {
 
     @Override
     public List<User> getConnectionRequests(final List<String> connections) throws NimbitsException {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
         final Query q = pm.newQuery(ConnectionRequestEntity.class, STRING2);
 
 
@@ -182,4 +182,7 @@ public class UserDAOImpl implements UserTransactions {
     }
 
 
+    public void setPmf(PersistenceManagerFactory pmf) {
+        this.pmf = pmf;
+    }
 }

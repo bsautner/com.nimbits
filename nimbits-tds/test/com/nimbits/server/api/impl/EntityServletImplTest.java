@@ -91,8 +91,6 @@ public class EntityServletImplTest extends NimbitsServletTest {
     @Test
     public void testPostCreatePoint() throws IOException, ServletException, NimbitsException {
         req.removeAllParameters();
-
-
       //  req.addParameter("id", point.getKey());
         req.addParameter("json", "{\"highAlarm\":0.0,\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"" + Const.TEST_ACCOUNT + "\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}");
         req.addParameter("action", "create");
@@ -108,10 +106,8 @@ public class EntityServletImplTest extends NimbitsServletTest {
     public void testChris1() throws IOException, ServletException {
 
         req.removeAllParameters();
-
-
         //  req.addParameter("id", point.getKey());
-        req.addParameter("json", "{\"inferLocation\":true,\"filterType\":4,\"name\":\"Schedule-B2EC1DC4\",\"entityType\":1,\"protectionLevel\":2,\"description\":\"Daily\",\"parent\":\"ctcreel@gmail.com/Medication-B2EC1DC4\",\"owner\":\"ctcreel@gmail.com\"}");
+        req.addParameter("json", "{\"inferLocation\":true,\"filterType\":4,\"name\":\"Schedule-B2EC1DC4\",\"entityType\":1,\"protectionLevel\":2,\"description\":\"Daily\",\"parent\":\"ctcreel@gmail.com/Medication-B2EC1DC4\",\"owner\":\"test@example.com\"}");
         req.addParameter("action", "create");
         req.setMethod("POST");
         impl.doPost(req, resp);
@@ -125,15 +121,12 @@ public class EntityServletImplTest extends NimbitsServletTest {
     @Test
     public void testPostCreateIllegalSystemPoint() throws IOException, ServletException, NimbitsException {
         req.removeAllParameters();
-
-
         //  req.addParameter("id", point.getKey());
         req.addParameter("json", "{\"highAlarm\":0.0,\"pointType\":" + PointType.accountBalance.getCode() +",\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":" + EntityType.point.getCode() + ",\"protectionLevel\":2,\"alertType\":0,\"parent\":\"" + Const.TEST_ACCOUNT + "\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}");
         req.addParameter("action", "create");
         req.setMethod("POST");
         impl.handleRequest(req, resp);
         assertEquals(resp.getStatus(), Const.HTTP_STATUS_INTERNAL_SERVER_ERROR);
-
     }
 
     @Test

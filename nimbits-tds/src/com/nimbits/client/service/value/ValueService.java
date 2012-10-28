@@ -13,6 +13,7 @@
 
 package com.nimbits.client.service.value;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.nimbits.client.exception.NimbitsException;
@@ -89,4 +90,14 @@ public interface ValueService extends RemoteService {
     boolean ignoreByFilter(Point point, Value value2) throws NimbitsException;
 
     void createDataDump(Entity entity, Timespan timespan);
+
+
+    static class App {
+        private static ValueServiceAsync ourInstance = GWT.create(ValueService.class);
+
+        public static synchronized ValueServiceAsync getInstance() {
+            return ourInstance;
+        }
+    }
+
 }

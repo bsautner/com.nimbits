@@ -230,4 +230,52 @@ public class UserModel extends EntityModel implements Serializable, User {
     public void setApiCount(int apiCount) {
         this.apiCount = apiCount;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        UserModel userModel = (UserModel) o;
+
+        if (apiCount != userModel.apiCount) return false;
+        if (billingEnabled != userModel.billingEnabled) return false;
+        if (facebookID != userModel.facebookID) return false;
+        if (loggedIn != userModel.loggedIn) return false;
+        if (userAdmin != userModel.userAdmin) return false;
+        if (accessKeys != null ? !accessKeys.equals(userModel.accessKeys) : userModel.accessKeys != null) return false;
+        if (!emailAddress.equals(userModel.emailAddress)) return false;
+        if (facebookToken != null ? !facebookToken.equals(userModel.facebookToken) : userModel.facebookToken != null)
+            return false;
+        if (lastLoggedIn != null ? !lastLoggedIn.equals(userModel.lastLoggedIn) : userModel.lastLoggedIn != null)
+            return false;
+        if (loginUrl != null ? !loginUrl.equals(userModel.loginUrl) : userModel.loginUrl != null) return false;
+        if (logoutUrl != null ? !logoutUrl.equals(userModel.logoutUrl) : userModel.logoutUrl != null) return false;
+        if (twitterToken != null ? !twitterToken.equals(userModel.twitterToken) : userModel.twitterToken != null)
+            return false;
+        if (twitterTokenSecret != null ? !twitterTokenSecret.equals(userModel.twitterTokenSecret) : userModel.twitterTokenSecret != null)
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (lastLoggedIn != null ? lastLoggedIn.hashCode() : 0);
+        result = 31 * result + emailAddress.hashCode();
+        result = 31 * result + (facebookToken != null ? facebookToken.hashCode() : 0);
+        result = 31 * result + (twitterToken != null ? twitterToken.hashCode() : 0);
+        result = 31 * result + (twitterTokenSecret != null ? twitterTokenSecret.hashCode() : 0);
+        result = 31 * result + (int) (facebookID ^ (facebookID >>> 32));
+        result = 31 * result + (accessKeys != null ? accessKeys.hashCode() : 0);
+        result = 31 * result + (loggedIn ? 1 : 0);
+        result = 31 * result + (loginUrl != null ? loginUrl.hashCode() : 0);
+        result = 31 * result + (logoutUrl != null ? logoutUrl.hashCode() : 0);
+        result = 31 * result + (userAdmin ? 1 : 0);
+        result = 31 * result + (billingEnabled ? 1 : 0);
+        result = 31 * result + apiCount;
+        return result;
+    }
 }

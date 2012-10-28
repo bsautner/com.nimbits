@@ -21,7 +21,6 @@ import com.google.appengine.api.files.FileService;
 import com.google.appengine.api.files.FileServiceFactory;
 import com.google.appengine.api.files.FileWriteChannel;
 import com.google.apphosting.api.ApiProxy;
-import com.nimbits.PMF;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
@@ -32,13 +31,13 @@ import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 import com.nimbits.client.model.valueblobstore.ValueBlobStoreModel;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.orm.ValueBlobStoreEntity;
-
 import com.nimbits.server.process.task.TaskImpl;
 import com.nimbits.server.time.TimespanServiceFactory;
 import com.nimbits.server.transactions.service.value.ValueTransactions;
 import org.springframework.stereotype.Repository;
 
 import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -52,7 +51,6 @@ import java.util.logging.Logger;
  * Date: 3/22/12
  * Time: 11:05 AM
  */
-@SuppressWarnings("unchecked")
 @Repository("valueDao")
 public class ValueDAOImpl implements ValueTransactions {
     private static final int INT = 1024;
@@ -61,6 +59,7 @@ public class ValueDAOImpl implements ValueTransactions {
 
     private final Logger log = Logger.getLogger(ValueDAOImpl.class.getName());
     private TaskImpl taskFactory;
+    private PersistenceManagerFactory pmf;
 
 
     public static  List<ValueBlobStore> createValueBlobStores(final Collection<ValueBlobStore> store) {
@@ -101,7 +100,7 @@ public class ValueDAOImpl implements ValueTransactions {
 
     @Override
     public List<Value> getTopDataSeries(final Entity entity, final int maxValues, final Date endDate) throws NimbitsException {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
 
         try {
 
@@ -133,7 +132,7 @@ public class ValueDAOImpl implements ValueTransactions {
     }
     @Override
     public List<ValueBlobStore> getBlobStoreByBlobKey(BlobKey key) throws NimbitsException {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
 
         try {
 
@@ -159,7 +158,7 @@ public class ValueDAOImpl implements ValueTransactions {
     @SuppressWarnings("ObjectAllocationInLoop")
     @Override
     public List<Value> getDataSegment(final Entity entity, final Timespan timespan, final int start, final int end) throws NimbitsException {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
         try {
             final List<Value> retObj = new ArrayList<Value>(end - start);
             final Query q = pm.newQuery(ValueBlobStoreEntity.class);
@@ -184,7 +183,7 @@ public class ValueDAOImpl implements ValueTransactions {
 
     @Override
     public List<ValueBlobStore> getAllStores(final Entity entity) throws NimbitsException {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
 
         try {
 
@@ -207,7 +206,7 @@ public class ValueDAOImpl implements ValueTransactions {
     public void consolidateDate(final Entity entity, final Date timestamp) throws NimbitsException {
 
 
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
         try {
             final Query q = pm.newQuery(ValueBlobStoreEntity.class);
             q.setFilter("timestamp == t && entity == k");
@@ -233,7 +232,7 @@ public class ValueDAOImpl implements ValueTransactions {
     @SuppressWarnings("IOResourceOpenedButNotSafelyClosed")
     @Override
     public ValueBlobStore mergeTimespan(final Entity entity, final Timespan timespan) throws NimbitsException {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
         final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
         final FileService fileService = FileServiceFactory.getFileService();
 
@@ -317,7 +316,7 @@ public class ValueDAOImpl implements ValueTransactions {
 
     @Override
     public void purgeValues(final Entity entity) throws NimbitsException {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
         final Query q = pm.newQuery(ValueBlobStoreEntity.class);
 
         q.setFilter("entity == k");
@@ -338,7 +337,7 @@ public class ValueDAOImpl implements ValueTransactions {
     public void deleteExpiredData(final Entity entity) {
 
 
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
 
         int exp = ((Point)entity).getExpire();
         if (exp > 0) {
@@ -440,7 +439,7 @@ public class ValueDAOImpl implements ValueTransactions {
     }
 
     private ValueBlobStore createBlobStoreEntity(final Entity entity, final Map<Long, Long> maxMap, final Map<Long, Long> minMap, final Long l, final String json, final int retryCount) throws IOException, NimbitsException {
-        final PersistenceManager pm = PMF.get().getPersistenceManager();
+        final PersistenceManager pm = pmf.getPersistenceManager();
         final FileService fileService = FileServiceFactory.getFileService();
         final AppEngineFile file = fileService.createNewBlobFile(Const.CONTENT_TYPE_PLAIN);
         final String path = file.getFullPath();
@@ -534,5 +533,9 @@ public class ValueDAOImpl implements ValueTransactions {
 
     public TaskImpl getTaskFactory() {
         return taskFactory;
+    }
+
+    public void setPmf(PersistenceManagerFactory pmf) {
+        this.pmf = pmf;
     }
 }

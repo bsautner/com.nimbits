@@ -13,6 +13,7 @@
 
 package com.nimbits.client.service.user;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.nimbits.client.enums.AuthLevel;
@@ -33,14 +34,22 @@ public interface UserService extends RemoteService {
     void connectionRequestReply(final EmailAddress targetEmail, final EmailAddress RequestorEmail, final Long key, final boolean accepted) throws NimbitsException;
     User getAppUserUsingGoogleAuth() throws NimbitsException;
    // String getSecret() throws NimbitsException;
-    User getUserByKey(final String key,final  AuthLevel authLevel) throws NimbitsException;
+    User getUserByKey(final String key,final AuthLevel authLevel) throws NimbitsException;
     List<User> getConnectionRequests(final List<String> connections) throws NimbitsException;
     User login(final String requestUri) throws NimbitsException;
     Integer getQuota() throws NimbitsException;
     List<Point> getAccountBalance() throws NimbitsException;
     void updateBilling(final User user,final boolean billingEnabled,final double maxQuota) throws NimbitsException;
 
-    List<User> getAllUsers(String s, int count);
+    List<User> getAllUsers(final String s, int count);
 
-    double processCoupon(String value) throws NimbitsException;
+    double processCoupon(final String value) throws NimbitsException;
+
+    static class App {
+        private static UserServiceAsync ourInstance = GWT.create(UserService.class);
+
+        public static synchronized UserServiceAsync getInstance() {
+            return ourInstance;
+        }
+    }
 }

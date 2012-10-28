@@ -44,8 +44,8 @@ import com.nimbits.client.model.GxtFeedModel;
 import com.nimbits.client.model.TreeModel;
 import com.nimbits.client.model.feed.FeedValue;
 import com.nimbits.client.model.user.User;
-import com.nimbits.client.service.feed.Feed;
-import com.nimbits.client.service.feed.FeedAsync;
+import com.nimbits.client.service.feed.FeedService;
+import com.nimbits.client.service.feed.FeedServiceAsync;
 import com.nimbits.client.ui.controls.EntityCombo;
 import com.nimbits.client.ui.helper.FeedbackHelper;
 import com.nimbits.client.ui.icons.Icons;
@@ -119,7 +119,7 @@ public class FeedPanel  extends LayoutContainer {
             store.removeAll();
         }
         if (store != null) {
-            final FeedAsync service = GWT.create(Feed.class);
+            final FeedServiceAsync service = GWT.create(FeedService.class);
             service.getFeed(10, connectionEntityKey, new UpdateValuesAsyncCallback(store));
         }
     }
@@ -140,7 +140,7 @@ public class FeedPanel  extends LayoutContainer {
         view = new GxtFeedModelListView();
 
 
-        final FeedAsync service = GWT.create(Feed.class);
+        final FeedServiceAsync service = GWT.create(FeedService.class);
 
         service.getFeed(COUNT, connectionEntityKey, new ListAsyncCallback());
 
@@ -167,13 +167,13 @@ public class FeedPanel  extends LayoutContainer {
     }
 
     private ToolBar feedToolbar() {
-        final FeedAsync service = GWT.create(Feed.class);
+        final FeedServiceAsync service = GWT.create(FeedService.class);
         final Button btn = new Button("Refresh");
 
         final ToolBar bar = new ToolBar();
 
         final ButtonGroup group = new ButtonGroup(1);
-        group.setHeading("Feed Options");
+        group.setHeading("FeedService Options");
         group.setHeaderVisible(false);
         group.setBodyBorder(false);
         group.setAutoWidth(true);
@@ -199,7 +199,7 @@ public class FeedPanel  extends LayoutContainer {
 
         group.add(new LabelToolItem("Show:"));
         group.add(feedType);
-        group.add(new LabelToolItem("Switch to connected user's Feed:"));
+        group.add(new LabelToolItem("Switch to connected user's FeedService:"));
 
         group.add(entityCombo);
         group.add(new LabelToolItem("Update Status:"));
@@ -366,10 +366,10 @@ public class FeedPanel  extends LayoutContainer {
 
     private class StatusKeyDownListener extends KeyListener {
         private static final int ENTER_KEY = 13;
-        private final FeedAsync service;
+        private final FeedServiceAsync service;
         private final TextArea status;
 
-        private StatusKeyDownListener(final FeedAsync service, final TextArea status) {
+        private StatusKeyDownListener(final FeedServiceAsync service, final TextArea status) {
             this.service = service;
             this.status = status;
         }

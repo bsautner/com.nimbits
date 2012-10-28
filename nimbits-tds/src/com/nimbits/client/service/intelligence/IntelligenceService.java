@@ -13,6 +13,7 @@
 
 package com.nimbits.client.service.intelligence;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.nimbits.client.exception.NimbitsException;
@@ -44,5 +45,11 @@ public interface IntelligenceService extends RemoteService {
 
     Value processInput(final User user, final Intelligence update) throws NimbitsException;
 
+    static class App {
+        private static IntelligenceServiceAsync ourInstance = GWT.create(IntelligenceService.class);
 
+        public static synchronized IntelligenceServiceAsync getInstance() {
+            return ourInstance;
+        }
+    }
 }

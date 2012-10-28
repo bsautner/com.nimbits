@@ -34,7 +34,7 @@ public class StorageServiceImpl {
     public void test() throws IOException {
         FileService fileService = FileServiceFactory.getFileService();
         GSFileOptions.GSFileOptionsBuilder optionsBuilder = new GSFileOptions.GSFileOptionsBuilder()
-                .setBucket("nimbits")
+                .setBucket("com/nimbits")
                 .setKey("my_object")
                 .setAcl("public-read");
         AppEngineFile writableFile = fileService.createNewGSFile(optionsBuilder.build());

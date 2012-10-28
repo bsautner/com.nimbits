@@ -44,7 +44,8 @@ import com.nimbits.client.model.user.UserModelFactory;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.service.entity.EntityService;
-import com.nimbits.client.service.feed.Feed;
+import com.nimbits.client.service.feed.FeedService;
+import com.nimbits.client.service.feed.FeedService;
 import com.nimbits.client.service.settings.SettingsService;
 import com.nimbits.client.service.user.UserService;
 import com.nimbits.client.service.value.ValueService;
@@ -81,7 +82,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
             " from the Settings Menu. There, you can configure a daily budget and enable or disable billing";
 
     private EntityService entityService;
-    private Feed feedService;
+    private FeedService feedServiceService;
     private ValueService valueService;
     private SettingsService settingsService;
     private EmailService emailService;
@@ -473,7 +474,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         if (settingsService.getBooleanSetting(SettingType.billingEnabled)) {
             createAccountBalancePoint(user);
         }
-        feedService.createFeedPoint(user);
+        feedServiceService.createFeedPoint(user);
 
         return user;
 
@@ -618,7 +619,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
         if (f != null) {
             emailService.sendEmail(email, getConnectionInviteEmail(user.getEmail()));
-            feedService.postToFeed(user, "A connection request has been emailed to " +
+            feedServiceService.postToFeed(user, "A connection request has been emailed to " +
                     email.getValue() + ". If they approve, you will see any data object of theirs that have " +
                     "their permission set to be viewable by the public or connections", FeedType.info);
 
@@ -742,12 +743,12 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         return entityService;
     }
 
-    public void setFeedService(Feed feedService) {
-        this.feedService = feedService;
+    public void setFeedServiceService(FeedService feedServiceService) {
+        this.feedServiceService = feedServiceService;
     }
 
-    public Feed getFeedService() {
-        return feedService;
+    public FeedService getFeedServiceService() {
+        return feedServiceService;
     }
 
     public void setValueService(ValueService valueService) {

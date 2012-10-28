@@ -13,6 +13,7 @@
 
 package com.nimbits.client.service.entity;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.nimbits.client.enums.EntityType;
@@ -73,4 +74,14 @@ public interface EntityService extends RemoteService {
     List<Entity> getChildren(User user, Entity parentEntity, EntityType type) throws NimbitsException;
 
     void updateUser(User user) throws NimbitsException;
+
+
+    static class App {
+        private static EntityServiceAsync ourInstance = GWT.create(EntityService.class);
+
+        public static synchronized EntityServiceAsync getInstance() {
+            return ourInstance;
+        }
+    }
+
 }

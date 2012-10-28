@@ -18,7 +18,6 @@ import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheService.SetPolicy;
-import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -26,6 +25,15 @@ import java.util.Random;
 
 @Repository("shardedDate")
 public class ShardedDate {
+
+
+    private MemcacheService cacheFactory;
+
+
+    public void setCacheFactory(MemcacheService cacheFactory) {
+        this.cacheFactory = cacheFactory;
+    }
+
 
 
     private static final class Counter {
@@ -79,8 +87,7 @@ public class ShardedDate {
         kind = CounterShard.KIND_PREFIX + name;
     }
 
-    private final MemcacheService mc = MemcacheServiceFactory
-            .getMemcacheService();
+
 
 
     public ShardedDate( ) {
@@ -106,7 +113,7 @@ public class ShardedDate {
      * @return Summed total of all shards' counts
      */
     public Date getMostRecent() {
-        Long value = (Long) mc.get(kind);
+        Long value = (Long) cacheFactory.get(kind);
         if (value != null) {
             return new Date(value);
         }
@@ -119,7 +126,7 @@ public class ShardedDate {
                 retVal = option;
             }
         }
-        mc.put(kind, retVal.getTime(), Expiration.byDeltaSeconds(60),
+        cacheFactory.put(kind, retVal.getTime(), Expiration.byDeltaSeconds(60),
                 SetPolicy.ADD_ONLY_IF_NOT_PRESENT);
 
         return retVal;
@@ -138,7 +145,7 @@ public class ShardedDate {
         Key shardKey = KeyFactory.createKey(kind, Long.toString(shardNum));
         Date d = new Date();
         incrementPropertyTx(shardKey, CounterShard.TIME, new Date());
-        mc.increment(kind, 1);
+        cacheFactory.increment(kind, 1);
         return d;
     }
 

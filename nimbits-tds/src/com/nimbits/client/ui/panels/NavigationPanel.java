@@ -364,8 +364,6 @@ public class NavigationPanel extends NavigationEventProvider {
                             case category:
                                 notifyEntityClickedListener(model);
                                 break;
-                            case file:
-                                break;
                             case subscription:
                                 notifyEntityClickedListener(model);
                                 context.showSubscriptionPanel(model.getBaseEntity());

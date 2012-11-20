@@ -21,7 +21,6 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.file.File;
 import com.nimbits.client.model.location.Location;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
@@ -30,10 +29,7 @@ import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.value.ValueService;
 import com.nimbits.server.admin.common.ServerInfo;
 import com.nimbits.server.api.ApiServlet;
-
 import com.nimbits.server.api.helper.LocationServiceImpl;
-import com.nimbits.server.io.blob.BlobServiceFactory;
-
 import com.nimbits.server.process.task.TaskImpl;
 import com.nimbits.server.transactions.service.user.UserServerService;
 import org.apache.commons.lang3.StringUtils;
@@ -89,10 +85,8 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
 
         }
 
-        if  (entity.getEntityType().equals(EntityType.file)) {
-            BlobServiceFactory.getInstance().deleteBlob((File) entity);
-        }
-        else if (entity.getEntityType().equals(EntityType.point)) {
+
+        if (entity.getEntityType().equals(EntityType.point)) {
             valueService.purgeValues(entity);
 
         }
@@ -185,8 +179,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
 
             case category:
                 return null;
-            case file:
-                return null;
+
             case subscription:
                 return null;
             default:

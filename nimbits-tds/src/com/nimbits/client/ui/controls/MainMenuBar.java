@@ -52,7 +52,6 @@ import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.entity.EntityServiceAsync;
 import com.nimbits.client.service.user.UserService;
 import com.nimbits.client.service.user.UserServiceAsync;
-import com.nimbits.client.ui.controls.menu.AddPointMenuItem;
 import com.nimbits.client.ui.helper.FeedbackHelper;
 import com.nimbits.client.ui.icons.Icons;
 import com.nimbits.client.ui.panels.FileUploadPanel;
@@ -88,7 +87,7 @@ public class MainMenuBar extends ToolBar {
         this.settings = settings;
         service = GWT.create(UserService.class);
 
-        addFileMenu();
+
         if (settings.containsKey(SettingType.billingEnabled)) {
             addSettingsMenu();
         }
@@ -120,21 +119,6 @@ public class MainMenuBar extends ToolBar {
 
     }
 
-    private void addFileMenu() {
-        Button fileButton = new Button("File");
-        Menu fileMenu = new Menu();
-
-        AddPointMenuItem addPointMenuItem = new AddPointMenuItem();
-        addPointMenuItem.addListener(Events.OnClick, new NewPointBaseEventListener());
-
-        fileMenu.add(addPointMenuItem);
-        fileMenu.add(newFolder());
-        fileMenu.add(uploadFile());
-
-
-        fileButton.setMenu(fileMenu);
-        add(fileButton);
-    }
 
     private void addSettingsMenu() {
         Button button = new Button("Settings");
@@ -223,19 +207,6 @@ public class MainMenuBar extends ToolBar {
         add(button);
     }
 
-
-
-    private MenuItem uploadFile() {
-        MenuItem item = new MenuItem("Upload File");
-
-        item.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.diagram()));
-
-        item.addListener(Events.OnClick, uploadFileListener);
-
-        return item;
-
-
-    }
 
 
     private MenuItem actionMenuItem(final String text,

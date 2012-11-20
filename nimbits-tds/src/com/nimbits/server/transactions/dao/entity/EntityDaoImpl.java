@@ -14,7 +14,6 @@
 package com.nimbits.server.transactions.dao.entity;
 
 
-import com.google.appengine.api.blobstore.BlobKey;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.accesskey.AccessKey;
@@ -27,8 +26,6 @@ import com.nimbits.client.model.connection.Connection;
 import com.nimbits.client.model.connection.ConnectionFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.file.File;
-import com.nimbits.client.model.file.FileFactory;
 import com.nimbits.client.model.intelligence.Intelligence;
 import com.nimbits.client.model.intelligence.IntelligenceModelFactory;
 import com.nimbits.client.model.point.Point;
@@ -103,27 +100,6 @@ public class EntityDaoImpl implements  EntityTransactions {
         } finally {
             pm.close();
         }
-    }
-    @Override
-    public List<Entity> getEntityByBlobKey(final User user, final BlobKey key) throws NimbitsException {
-        final PersistenceManager pm = pmf.getPersistenceManager();
-
-        try {
-
-            final Query q = pm
-                    .newQuery(FileEntity.class);
-            q.declareImports("import com.google.appengine.api.blobstore.BlobKey");
-            q.setFilter("blobKey == b");
-            q.declareParameters("BlobKey b");
-            q.setRange(0, 1);
-            final Collection<Entity> result = (Collection<Entity>) q.execute(key);
-            return  createModels(user, result);
-        } finally {
-            pm.close();
-        }
-
-
-
     }
 
     @Override
@@ -695,9 +671,6 @@ public class EntityDaoImpl implements  EntityTransactions {
             case category:
                 model = CategoryFactory.createCategory((Category) entity);
                 break;
-            case file:
-                model = FileFactory.createFile((File) entity);
-                break;
             case subscription:
                 model = SubscriptionFactory.createSubscription((Subscription) entity);
                 break;
@@ -758,9 +731,6 @@ public class EntityDaoImpl implements  EntityTransactions {
                 break;
             case category:
                 commit = new CategoryEntity(entity);
-                break;
-            case file:
-                commit = new FileEntity((File) entity);
                 break;
             case subscription:
                 commit = new SubscriptionEntity((Subscription) entity);

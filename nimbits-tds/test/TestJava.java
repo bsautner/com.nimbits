@@ -33,5 +33,52 @@ public class TestJava {
         System.out.println(PointEntity.class.getName());
     }
 
+    @Test
+    public void test2() throws ClassNotFoundException {
+
+       short i;
+       int x;
+
+        x = Integer.MAX_VALUE;
+        i = (short) x;
+        System.out.println(x);
+        System.out.println(i);
+
+
+    }
+    class B {
+        public int x;
+
+    }
+
+
+    @Test
+    public void test3()   {
+
+
+        B a = new B();
+        a.x  = 100;
+
+        B b = new B();
+        b.x  = 10;
+
+        change(a, b);
+        System.out.println(a.x);
+        System.out.println(b.x);
+
+    }
+
+    private void change(B a, B b) {
+
+      a = b;
+      a.x =300;
+
+
+    }
+
+
+
+
+
 
 }

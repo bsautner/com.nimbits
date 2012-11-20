@@ -39,7 +39,6 @@ import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.GxtModel;
 import com.nimbits.client.model.TreeModel;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.file.File;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.entity.EntityServiceAsync;
@@ -49,7 +48,6 @@ import com.nimbits.client.service.twitter.TwitterService;
 import com.nimbits.client.service.twitter.TwitterServiceAsync;
 import com.nimbits.client.service.user.UserService;
 import com.nimbits.client.service.user.UserServiceAsync;
-import com.nimbits.client.ui.helper.EntityOpenHelper;
 import com.nimbits.client.ui.helper.FeedbackHelper;
 import com.nimbits.client.ui.panels.*;
 
@@ -311,7 +309,7 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
 
         @Override
         public void onSuccess(final List<Entity> r) {
-            try {
+
                 if (! r.isEmpty()) {
                     Entity entity = r.get(0);
 
@@ -322,13 +320,6 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
                         case point:
                         case category:
                             Location.replace("report.html?uuid=" + uuid);
-                            break;
-                        case file:
-                            if (EntityOpenHelper.isSVG(entity)) {
-                                loadDiagramView((File) entity);
-                            } else {
-                                EntityOpenHelper.showBlob((File) entity);
-                            }
                             break;
                         case subscription:
                             break;
@@ -342,34 +333,9 @@ public class nimbits extends NavigationEventProvider  implements EntryPoint {
                             break;
                     }
                 }
-            } catch (NimbitsException e) {
-                FeedbackHelper.showError(e);
-            }
-
 
         }
-        private void loadDiagramView(final File diagram) throws NimbitsException {
 
-            viewport = new Viewport();
-            viewport.setLayout(new BorderLayout());
-            viewport.setBorders(false);
-
-            final ContentPanel contentPanel = new ContentPanel(new FillLayout());
-            contentPanel.setHeaderVisible(true);
-            contentPanel.setHeading(Const.HTML_HOME_LINK + " | " + heading + ' '
-                    + diagram.getName());
-            contentPanel.setFrame(false);
-
-
-            final DiagramPanel diagramPanel = new DiagramPanel(user,  diagram, false);
-
-            diagramPanel.setHeight("100%");
-            contentPanel.add(diagramPanel);
-            contentPanel.setLayout(new FillLayout());
-            viewport.add(contentPanel, new BorderLayoutData(LayoutRegion.CENTER));
-            RootPanel.get().add(viewport);
-
-        }
     }
 
     private class FinishTwitterAsyncCallback implements AsyncCallback<Void> {

@@ -13,7 +13,6 @@
 
 package com.nimbits.server.transactions.memcache.entity;
 
-import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.MemCacheKey;
@@ -144,10 +143,6 @@ public class EntityCacheImpl implements EntityTransactions,  EntityCache {
 
 
 
-    @Override
-    public List<Entity> getEntityByBlobKey(final User user, final BlobKey key) throws NimbitsException {
-        return entityDao.getEntityByBlobKey(user, key);
-    }
 
     @Override
     public void updateUser(User user) throws NimbitsException {

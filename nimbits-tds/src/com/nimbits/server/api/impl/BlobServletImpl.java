@@ -19,17 +19,11 @@ import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ExportType;
 import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.file.File;
-import com.nimbits.client.model.file.FileFactory;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.server.api.ApiServlet;
-import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.process.task.Task;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +33,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -66,22 +59,12 @@ public class BlobServletImpl extends ApiServlet implements org.springframework.w
 
             final Map<String,List<BlobKey>> blobs = blobstoreService.getUploads(req);
             final BlobKey blobKey = blobs.get(Parameters.myFile.getText()).get(0);
-//        String diagramDescParam = req.getParameter(Const.PARAM_DESCRIPTION);
             final String entityId = req.getParameter(Parameters.fileId.getText());
             final String uploadType = req.getParameter(Parameters.uploadTypeHiddenField.getText());
             final String email = req.getParameter(Parameters.emailHiddenField.getText());
             final HttpSession session = req.getSession();
-
-            String diagramNameParam = req.getParameter(Parameters.fileName.getText());
-            String protectionLevelParam = req.getParameter(Parameters.protection.getText());
-            final int lastIndex = diagramNameParam.lastIndexOf('\\');
-            final String fileName = diagramNameParam.substring(lastIndex + 1);
             session.setAttribute(Parameters.email.getText(), CommonFactory.createEmailAddress(email));
 
-            final EntityName diagramName = CommonFactory.createName(fileName, EntityType.file);
-            PrintWriter out = res.getWriter();
-
-            com.nimbits.client.model.file.File file = null;
              //data upload
             if (uploadType.equals(EntityType.point.name())) {
                 List<Entity> result = entityService.getEntityByKey(user, entityId, EntityType.point);
@@ -93,39 +76,7 @@ public class BlobServletImpl extends ApiServlet implements org.springframework.w
 
 
             }
-            else {
 
-
-
-                if (! uploadType.equals(EntityType.file.name())) {
-                    Entity entity = EntityModelFactory.createEntity(diagramName, "", EntityType.file, ProtectionLevel.everyone,
-                            user.getKey(), user.getKey());
-                    file = FileFactory.createFile(entity, blobKey.getKeyString());
-
-
-                }
-                else if (entityId != null) {
-
-                    List<Entity> result = entityService.getEntityByKey(user, entityId, EntityType.file);
-                    if (! result.isEmpty()) {
-                        file = (File) result.get(0);
-                    }
-
-
-
-
-                }
-                if (file != null) {
-                    file.setBlobKey(blobKey.getKeyString());
-                    Entity response = entityService.addUpdateEntity(user, file);
-                    String json = GsonFactory.getInstance().toJson(response);
-                    res.setContentType("text/plain");
-                    res.setStatus(HttpServletResponse.SC_OK);
-                    out.print(json);
-                    out.flush();
-                    // out.close();
-                }
-            }
 
         } catch (NimbitsException e) {
             if (user != null) {

@@ -14,11 +14,10 @@
 package com.nimbits.client.service.blob;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.client.model.file.File;
 
 public interface BlobServiceAsync {
 
     void getBlobStoreUrl(String url, AsyncCallback<String> async);
 
-    void deleteBlob(File entity, AsyncCallback<Void> async);
+ //   void deleteBlob(File entity, AsyncCallback<Void> async);
 }

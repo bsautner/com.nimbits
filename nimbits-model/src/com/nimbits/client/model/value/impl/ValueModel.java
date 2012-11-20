@@ -92,6 +92,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
         this.lg =location.getLng();
         this.d = d;
         this.st = alert.getCode();
+
         this.t = timestamp.getTime();
         this.n = note;
         this.dx = data.getContent();

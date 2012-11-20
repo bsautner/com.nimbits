@@ -44,7 +44,7 @@ public class Const {
     public static final int DEFAULT_HTTP_TIMEOUT = 15000;
     public static final String DEFAULT_XMPP_SERVER = "gmail.com";
     public static final String DEFAULT_APPSPOT = "appspot.com";
-    public static final String TEST_ACCOUNT = "example@test.com";
+    public static final String TEST_ACCOUNT = "test@example.com";
     public static final String DELIMITER_COMMA = ",";
     public static final String DELIMITER_BAR = "|";
     public static final String HTML_BOOTSTRAP = "<html><head>" +

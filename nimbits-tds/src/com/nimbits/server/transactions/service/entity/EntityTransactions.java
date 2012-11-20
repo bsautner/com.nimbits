@@ -13,7 +13,6 @@
 
 package com.nimbits.server.transactions.service.entity;
 
-import com.google.appengine.api.blobstore.BlobKey;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.entity.Entity;
@@ -60,7 +59,7 @@ public interface EntityTransactions extends EntityCache {
 
     List<Entity> getSubscriptionsToEntity(final User user, final Entity subscribedEntity) throws NimbitsException;
 
-    List<Entity> getEntityByBlobKey(final User user, final BlobKey key) throws NimbitsException;
+
 
     void updateUser(final User user) throws NimbitsException;
 

@@ -43,7 +43,6 @@ import com.nimbits.client.service.twitter.TwitterServiceAsync;
 import com.nimbits.client.service.xmpp.XMPPService;
 import com.nimbits.client.service.xmpp.XMPPServiceAsync;
 import com.nimbits.client.ui.controls.MainMenuBar;
-import com.nimbits.client.ui.helper.EntityOpenHelper;
 import com.nimbits.client.ui.helper.FeedbackHelper;
 
 import java.util.List;
@@ -213,16 +212,16 @@ public class CenterPanel extends NavigationEventProvider {
     }
 
     public void addEntity(final TreeModel model) {
-        try {
+      //  try {
         switch (model.getEntityType()) {
             case user:
                 break;
             case point: case category:
                 chartEntity(model);
                 break;
-            case file:
-                EntityOpenHelper.showEntity(model.getBaseEntity());
-                break;
+//            case file:
+//                EntityOpenHelper.showEntity(model.getBaseEntity());
+//                break;
             case subscription:
                 displaySubscription(model.getBaseEntity());
                 break;
@@ -232,9 +231,9 @@ public class CenterPanel extends NavigationEventProvider {
                 notifyEntityClickedListener(model);
                 break;
         }
-        } catch (NimbitsException ex) {
-            FeedbackHelper.showError(ex);
-        }
+//        } catch (NimbitsException ex) {
+//            FeedbackHelper.showError(ex);
+//        }
 
     }
 

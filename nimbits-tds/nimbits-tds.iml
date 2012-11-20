@@ -60,8 +60,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="nimbits-model" />
-    <orderEntry type="library" name="gwt-user (2)" level="project" />
-    <orderEntry type="library" scope="TEST" name="appengine-testing" level="project" />
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
@@ -73,7 +71,6 @@
     </orderEntry>
     <orderEntry type="library" name="spring-3.2.0" level="project" />
     <orderEntry type="library" name="twitter4j-appengine" level="project" />
-    <orderEntry type="library" name="vectormatic" level="project" />
     <orderEntry type="library" name="commons-math3-3" level="project" />
     <orderEntry type="library" name="gdata" level="project" />
     <orderEntry type="library" name="openid" level="project" />
@@ -86,33 +83,8 @@
     <orderEntry type="library" name="google-gson-2.2" level="application" />
     <orderEntry type="library" name="AppEngine API" level="project" />
     <orderEntry type="library" name="AppEngine ORM" level="project" />
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../lib/appengine-java-sdk-1.7.2.1/lib/opt/tools/appengine-local-endpoints/v1/appengine-local-endpoints.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../lib/appengine-java-sdk-1.7.2.1/lib/opt/user/appengine-api-labs/v1/appengine-api-labs.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../lib/appengine-java-sdk-1.7.2.1/lib/appengine-tools-api.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
+    <orderEntry type="library" scope="TEST" name="AppEngine Testing" level="project" />
+    <orderEntry type="library" name="gwt 2.5" level="project" />
   </component>
 </module>
 

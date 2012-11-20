@@ -851,9 +851,7 @@ public class EntityContextMenu extends Menu {
                     case summary:
                         showSummaryPanel(entity);
                         break;
-                    case file:
-                        showFilePanel(entity);
-                        break;
+
                 }
             } catch (NimbitsException e) {
                 FeedbackHelper.showError(e);

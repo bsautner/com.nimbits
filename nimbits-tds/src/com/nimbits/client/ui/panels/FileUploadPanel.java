@@ -124,13 +124,6 @@ public class FileUploadPanel extends LayoutContainer {
 
         panel.add(uploadTypeHiddenField);
 
-        if (entity != null && entity.getEntityType().equals(EntityType.file)) {
-            final HiddenField<String> diagramId = new HiddenField<String>();
-            diagramId.setName(Parameters.fileId.getText());
-            diagramId.setValue(entity.getKey());
-            panel.add(diagramId);
-            uploadTypeHiddenField.setValue(entity.getEntityType());
-        }
 
 
         final Button btn = new Button("Reset");

@@ -107,7 +107,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
 
         req.removeAllParameters();
         //  req.addParameter("id", point.getKey());
-        req.addParameter("json", "{\"inferLocation\":true,\"filterType\":4,\"name\":\"Schedule-B2EC1DC4\",\"entityType\":1,\"protectionLevel\":2,\"description\":\"Daily\",\"parent\":\"ctcreel@gmail.com/Medication-B2EC1DC4\",\"owner\":\"test@example.com\"}");
+        req.addParameter("json", "{\"inferLocation\":true,\"filterType\":4,\"name\":\"Schedule-B2EC1DC4\",\"entityType\":1,\"protectionLevel\":2,\"description\":\"Daily\",\"parent\":\"test@example.com/Medication-B2EC1DC4\",\"owner\":\"test@example.com\"}");
         req.addParameter("action", "create");
         req.setMethod("POST");
         impl.doPost(req, resp);

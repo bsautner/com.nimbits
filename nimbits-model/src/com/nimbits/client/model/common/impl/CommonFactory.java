@@ -97,8 +97,6 @@ public class CommonFactory {
                break;
            case category:
                break;
-           case file:
-               break;
            case subscription:
                break;
            case userConnection:

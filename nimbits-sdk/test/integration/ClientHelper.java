@@ -65,8 +65,8 @@ class ClientHelper {
 
 
 
-        email =  "bsautner@gmail.com";
-        url ="http://nimbits1.appspot.com";
+      //  email =  "bsautner@gmail.com";
+      //  url ="http://nimbits1.appspot.com";
 
         password = "key";
 

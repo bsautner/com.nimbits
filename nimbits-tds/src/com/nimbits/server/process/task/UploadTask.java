@@ -45,7 +45,6 @@ import java.nio.channels.Channels;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * Created with IntelliJ IDEA.
@@ -57,7 +56,7 @@ import java.util.logging.Logger;
 @Transactional
 public class UploadTask extends HttpServlet implements org.springframework.web.HttpRequestHandler{
 
-    private static final Logger log = Logger.getLogger(UploadTask.class.getName());
+   // private static final Logger log = Logger.getLogger(UploadTask.class.getName());
     private ValueService valueService;
 
 
@@ -79,25 +78,29 @@ public class UploadTask extends HttpServlet implements org.springframework.web.H
                 new BufferedReader(Channels.newReader(readChannel, "UTF8"));
         String line;
 
-
+        try {
         List<Value> values = new ArrayList<Value>(100);
         while ((line = reader.readLine()) != null) { // while loop begins here
             Value v = processString(line);
+
             if (v != null) {
                 values.add(v);
             }
 
         }
-        readChannel.close();
-        try {
-            valueService.recordValues(user, entity, values);
+
+        valueService.recordValues(user, entity, values);
+
         } catch (NimbitsException e) {
-            log.severe(e.getMessage());
+           response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+           response.setHeader("ERROR", e.getMessage());
+
+        }  finally {
+            readChannel.close();
         }
 
-
     }
-    private Value processString(String line) {
+    private Value processString(String line) throws NimbitsException {
         Date date = null;
         double value = 0;
         String note = null;
@@ -126,6 +129,9 @@ public class UploadTask extends HttpServlet implements org.springframework.web.H
             }
             Location location = LocationFactory.createLocation(lat, lng);
             ValueData valueData = ValueFactory.createValueData(data);
+            if (date == null) {
+                throw new NimbitsException("Uploaded Data Must contain a timestamp in unix epoch format in Milliseconds as the first column in your CSV file." );
+            }
             return ValueFactory.createValueModel(location, value, date, note, valueData, AlertType.OK);
         } catch (NumberFormatException e) {
             return null;

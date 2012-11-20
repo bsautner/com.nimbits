@@ -13,14 +13,12 @@
 
 package com.nimbits.server.io.blob;
 
-import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.nimbits.client.model.file.File;
 import com.nimbits.client.service.blob.BlobService;
 import com.nimbits.server.process.task.Task;
 import com.nimbits.server.transactions.service.entity.EntityServiceImpl;
@@ -52,10 +50,10 @@ public class BlobServiceImpl  extends RemoteServiceServlet implements
         return blobstoreService.createUploadUrl(url);
     }
 
-    @Override
-    public void deleteBlob(final File entity) {
-        blobstoreService.delete(new BlobKey(entity.getBlobKey()));
-    }
+//    @Override
+//    public void deleteBlob(final File entity) {
+//        blobstoreService.delete(new BlobKey(entity.getBlobKey()));
+//    }
 
     @Override
     public void onResponseReceived(final Request request, final Response response) {

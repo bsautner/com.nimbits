@@ -13,31 +13,12 @@
 
 package com.nimbits.server.process.cron;
 
-import com.google.appengine.api.blobstore.BlobInfo;
-import com.google.appengine.api.blobstore.BlobInfoFactory;
 import com.google.appengine.api.blobstore.BlobKey;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ExportType;
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.exception.NimbitsException;
-import com.nimbits.client.model.common.impl.CommonFactory;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.file.FileFactory;
 import com.nimbits.server.NimbitsServletTest;
-import com.nimbits.server.io.blob.BlobStoreFactory;
-import com.nimbits.server.process.task.DeleteBlobTask;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.io.IOException;
-import java.util.Iterator;
-
-import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={
@@ -59,37 +40,38 @@ public class BlobStoreTest extends NimbitsServletTest {
 
     }
 
-    @Test
-    public void deleteOrphansTest() throws NimbitsException, IOException, InterruptedException {
 
-        EntityName name = CommonFactory.createName("gg", EntityType.file);
-        String key = BlobStoreFactory.getInstance().createFile(name, "some text", ExportType.plain);
-
-        EntityName nameLost = CommonFactory.createName("lost name", EntityType.file);
-        String keyLost = BlobStoreFactory.getInstance().createFile(name, "some lost text", ExportType.plain);
-
-        assertNotNull(key);
-        Entity e = EntityModelFactory.createEntity(name, "", EntityType.file, ProtectionLevel.everyone,
-                user.getKey(), user.getKey());
-        com.nimbits.client.model.file.File f = FileFactory.createFile(e, key);
-        Entity result =  entityService.addUpdateEntity(f);
-        assertNotNull(result);
-
-     //   int r = DeleteOrphanBlobCron.processRequest();
-     //   assertEquals(2, r);
-
-
-
-
-        Iterator<BlobInfo> iterator =  new BlobInfoFactory().queryBlobInfos();
-        int count = 0;
-        while (iterator.hasNext()){
-            final BlobInfo i = iterator.next();
-           req.removeAllParameters();
-            req.addParameter(Parameters.key.getText(), i.getBlobKey().getKeyString());
-          DeleteBlobTask.processRequest(req);
-        }
-      //  int r2 = DeleteOrphanBlobCron.processRequest();
+//    @Test
+//    public void deleteOrphansTest() throws NimbitsException, IOException, InterruptedException {
+//
+//        EntityName name = CommonFactory.createName("gg", EntityType.file);
+//        String key = BlobStoreFactory.getInstance().createFile(name, "some text", ExportType.plain);
+//
+//        EntityName nameLost = CommonFactory.createName("lost name", EntityType.file);
+//        String keyLost = BlobStoreFactory.getInstance().createFile(name, "some lost text", ExportType.plain);
+//
+//        assertNotNull(key);
+//        Entity e = EntityModelFactory.createEntity(name, "", EntityType.file, ProtectionLevel.everyone,
+//                user.getKey(), user.getKey());
+//        com.nimbits.client.model.file.File f = FileFactory.createFile(e, key);
+//        Entity result =  entityService.addUpdateEntity(f);
+//        assertNotNull(result);
+//
+//     //   int r = DeleteOrphanBlobCron.processRequest();
+//     //   assertEquals(2, r);
+//
+//
+//
+//
+//        Iterator<BlobInfo> iterator =  new BlobInfoFactory().queryBlobInfos();
+//        int count = 0;
+//        while (iterator.hasNext()){
+//            final BlobInfo i = iterator.next();
+//           req.removeAllParameters();
+//            req.addParameter(Parameters.key.getText(), i.getBlobKey().getKeyString());
+//          DeleteBlobTask.processRequest(req);
+//        }
+//      //  int r2 = DeleteOrphanBlobCron.processRequest();
       //  assertEquals(1, r2);
 
 //       // BlobKey r = BlobStoreFactory.getInstance().deleteOrphans(null);
@@ -99,7 +81,7 @@ public class BlobStoreTest extends NimbitsServletTest {
 //
 //        List<Entity> resultLost =  EntityTransactionFactory.getInstance(user).getEntityByBlobKey(new BlobKey(keyLost));
 //        assertTrue(resultLost.isEmpty());
-    }
+//    }
 
 
 }

@@ -17,6 +17,7 @@ package integration;/*
  * This source code is distributed under GPL v3 without any warranty.
  */
 
+import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.ProtectionLevel;
@@ -131,7 +132,7 @@ public class DataLoadingTest {
     public void load2() throws IOException, NimbitsException, InterruptedException {
         final String pointName = ("blarge" + UUID.randomUUID().toString());
 
-        Entity entity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone, "bsautner@gmail.com", "bsautner@gmail.com");
+        Entity entity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone, Const.TEST_ACCOUNT, Const.TEST_ACCOUNT);
         Point point = PointModelFactory.createPointModel(entity, 0.0, 90, "nn", 0.0, false, false, false, 0, false, FilterType.none, 0.0, false, PointType.basic, 0, false, 0.0);
         final Entity result = ClientHelper.client().addEntity(point);
         assertNotNull(result);
@@ -141,12 +142,12 @@ public class DataLoadingTest {
         final Random r = new Random();
         double rv;
         Value v;
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 2000; i++) {
             rv = roundDouble(r.nextDouble() * 100);
             try {
                 v = ClientHelper.client().recordValue(pointName, rv, new Date());
                 assertNotNull(v);
-                Thread.sleep(1000);
+                Thread.sleep(10);
             } catch (NimbitsException e) {
                 System.out.println(e.getMessage());
             }

@@ -24,7 +24,6 @@ import com.nimbits.client.model.category.CategoryModel;
 import com.nimbits.client.model.connection.ConnectionModel;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
-import com.nimbits.client.model.file.FileModel;
 import com.nimbits.client.model.intelligence.IntelligenceModel;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
@@ -73,8 +72,6 @@ public class EntityServletImpl extends ApiServlet implements org.springframework
                 return PointModel.class;
             case category:
                 return CategoryModel.class;
-            case file:
-                return FileModel.class;
             case subscription:
                 return SubscriptionModel.class;
             case userConnection:

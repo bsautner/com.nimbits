@@ -39,7 +39,7 @@ int getValue(char *ID, char *result, int max_length) {
     Serial.print("Downloading ");
     Serial.println(ID);
     client.print("GET /service/point?email=");
-    client.print("ctcreel@gmail.com");
+    client.print("test@example.com");
     client.print("&key=");
     client.print("6767aa!");
     client.print("&action=list&point=");
@@ -80,7 +80,7 @@ boolean pointExists(char *ID) {
     Serial.print("Searching for ");
     Serial.println(ID);
     client.print("GET /service/point?email=");
-    client.print("ctcreel@gmail.com");
+    client.print("test@example.com");
     client.print("&key=");
     client.print("6767aa!");
     client.print("&action=exists&point=");
@@ -118,7 +118,7 @@ void createPoint(char *pointName, char *parent) {
   strcpy(content,"point=");
   strcat(content, pointName);
   strcat(content, "&email=");
-  strcat(content, "ctcreel@gmail.com");
+  strcat(content, "test@example.com");
   strcat(content,"&key=");
   strcat(content,"6767aa!");
   if (strlen(parent) > 0) {
@@ -165,7 +165,7 @@ void setValue(char *pointName, char *value, char *data, char *timestamp) {
   strcat(content,"&value=");
   strcat(content, value);  
   strcat(content, "&email=");
-  strcat(content,"ctcreel@gmail.com");
+  strcat(content,"test@example.com");
   strcat(content,"&key=");
   strcat(content,"6767aa!");
   if(strlen(data) > 0) {

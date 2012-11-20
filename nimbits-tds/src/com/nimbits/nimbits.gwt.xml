@@ -18,7 +18,7 @@
 
     <entry-point class='com.nimbits.client.nimbits'/>
 
-    <inherits name='org.vectomatic.libgwtsvg'/>
+
     <inherits name="com.google.gwt.resources.Resources"/>
     <inherits name='com.google.gwt.user.User'/>
     <inherits name='com.google.gwt.user.theme.standard.Standard'/>
@@ -27,7 +27,6 @@
     <inherits name="com.google.gwt.json.JSON"/>
     <inherits name='com.extjs.gxt.ui.GXT'/>
     <inherits name="com.nimbits.NimbitsModel"/>
-    <inherits name="org.vectomatic.libgwtsvg"/>
     <inherits name="com.extjs.gxt.themes.Themes"/>
     <inherits name="com.google.gwt.http.HTTP"/>
     <script src="feed.js"></script>

@@ -150,32 +150,32 @@ public class ValueDaoImplTest extends NimbitsServletTest {
 
     }
 
-    @Test
-    public void testGetBlobStoreByBlobKey() throws NimbitsException {
-        Date zero = TimespanServiceFactory.getInstance().zeroOutDateToStart(new Date());
-        final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-
-        List<Value> values = new ArrayList<Value>(3);
-        values.add(ValueFactory.createValueModel(1));
-        values.add(ValueFactory.createValueModel(2));
-        values.add(ValueFactory.createValueModel(3));
-        List<ValueBlobStore> d = valueDao.recordValues(point, values);
-        assertFalse(d.isEmpty());
-
-        String key = d.get(0).getBlobKey();
-
-        List<ValueBlobStore> v =   valueDao.getBlobStoreByBlobKey(new BlobKey(key));
-        assertFalse(v.isEmpty());
-
-
-        EntityName name = CommonFactory.createName("f", EntityType.file);
-        com.nimbits.client.model.entity.Entity e = EntityModelFactory.createEntity(name, "", EntityType.file,
-                ProtectionLevel.everyone,user.getKey(), user.getKey() );
-
-
-
-    }
-
+//    @Test
+//    public void testGetBlobStoreByBlobKey() throws NimbitsException {
+//        Date zero = TimespanServiceFactory.getInstance().zeroOutDateToStart(new Date());
+//        final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+//
+//        List<Value> values = new ArrayList<Value>(3);
+//        values.add(ValueFactory.createValueModel(1));
+//        values.add(ValueFactory.createValueModel(2));
+//        values.add(ValueFactory.createValueModel(3));
+//        List<ValueBlobStore> d = valueDao.recordValues(point, values);
+//        assertFalse(d.isEmpty());
+//
+//        String key = d.get(0).getBlobKey();
+//
+//        List<ValueBlobStore> v =   valueDao.getBlobStoreByBlobKey(new BlobKey(key));
+//        assertFalse(v.isEmpty());
+//
+//
+//        EntityName name = CommonFactory.createName("f", EntityType.file);
+//        com.nimbits.client.model.entity.Entity e = EntityModelFactory.createEntity(name, "", EntityType.file,
+//                ProtectionLevel.everyone,user.getKey(), user.getKey() );
+//
+//
+//
+//    }
+//
 
     @Test
     public void testBlobStore() throws IOException {

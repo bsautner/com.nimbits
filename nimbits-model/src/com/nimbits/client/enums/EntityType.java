@@ -13,7 +13,6 @@ public enum EntityType implements Serializable {
     user(0, false, false, true, true, false,0, "com.nimbits.server.orm.UserEntity"),
     point(1, false, true, true,true, true, 1, "com.nimbits.server.orm.PointEntity"),
     category(2, false,true, false,true,false, 2, "com.nimbits.server.orm.CategoryEntity"),
-    file(4, false,true, false,true, false, 3, "com.nimbits.server.orm.FileEntity"),
     subscription(5, false,false, false,true,false, 4, "com.nimbits.server.orm.SubscriptionEntity"),
     userConnection(6, false,false, true,true,false, 5, "com.nimbits.server.orm.ConnectionEntity"),
     calculation(7, true, true, false,true,false, 6, "com.nimbits.server.orm.CalcEntity"),

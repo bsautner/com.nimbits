@@ -45,7 +45,6 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.feed.FeedService;
-import com.nimbits.client.service.feed.FeedService;
 import com.nimbits.client.service.settings.SettingsService;
 import com.nimbits.client.service.user.UserService;
 import com.nimbits.client.service.value.ValueService;
@@ -281,6 +280,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
 
             if (list.isEmpty()) {
+               // log.severe("new user on" + this.getThreadLocalRequest().getRequestURI());
                 LogHelper.log(this.getClass(), "Created a new user");
                 retObj =  createUserRecord(internetAddress);
                 // sendUserCreatedFeed(u);
@@ -385,27 +385,27 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public double processCoupon(String value) throws NimbitsException {
-        if (value.equals("OHS2012")) {
-            List<Point> sample = getAccountBalance();
-            double dollarValue = 5.00;
-
-            if (! sample.isEmpty()) {
-                Point p = sample.get(0);
-                if (p.getValue() != null && p.getValue().getDoubleValue() > 0.0) {
-                    throw new NimbitsException("Sorry, the coupon you entered can only be used to fund a new account once.");
-
-                }
-
-            }
-            User user = getHttpRequestUser(this.getThreadLocalRequest());
-            updateBilling(user, true, 0.00);
-            fundAccount(user, BigDecimal.valueOf(dollarValue));
-            return dollarValue;
-
-        }
-        else {
+//        if (value.equals("OHS2012")) {
+//            List<Point> sample = getAccountBalance();
+//            double dollarValue = 5.00;
+//
+//            if (! sample.isEmpty()) {
+//                Point p = sample.get(0);
+//                if (p.getValue() != null && p.getValue().getDoubleValue() > 0.0) {
+//                    throw new NimbitsException("Sorry, the coupon you entered can only be used to fund a new account once.");
+//
+//                }
+//
+//            }
+//            User user = getHttpRequestUser(this.getThreadLocalRequest());
+//            updateBilling(user, true, 0.00);
+//            fundAccount(user, BigDecimal.valueOf(dollarValue));
+//            return dollarValue;
+//
+//        }
+//        else {
             throw new NimbitsException("That wasn't a valid coupon code.");
-        }
+      //  }
 
 
 
@@ -727,11 +727,6 @@ public class UserServiceImpl extends RemoteServiceServlet implements
 
         }
 
-
-
-
-
-
     }
 
 
@@ -739,57 +734,28 @@ public class UserServiceImpl extends RemoteServiceServlet implements
         this.entityService = entityService;
     }
 
-    public EntityService getEntityService() {
-        return entityService;
-    }
-
     public void setFeedServiceService(FeedService feedServiceService) {
         this.feedServiceService = feedServiceService;
-    }
-
-    public FeedService getFeedServiceService() {
-        return feedServiceService;
     }
 
     public void setValueService(ValueService valueService) {
         this.valueService = valueService;
     }
 
-    public ValueService getValueService() {
-        return valueService;
-    }
-
-
-
     public void setSettingsService(SettingsService settingsService) {
         this.settingsService = settingsService;
-    }
-
-    public SettingsService getSettingsService() {
-        return settingsService;
     }
 
     public void setEmailService(EmailService emailService) {
         this.emailService = emailService;
     }
 
-    public EmailService getEmailService() {
-        return emailService;
-    }
-
     public void setUserCache(UserTransactions userCache) {
         this.userCache = userCache;
-    }
-
-    public UserTransactions getUserCache() {
-        return userCache;
     }
 
     public void setQuotaManager(QuotaManager quotaManager) {
         this.quotaManager = quotaManager;
     }
 
-    public QuotaManager getQuotaManager() {
-        return quotaManager;
-    }
 }

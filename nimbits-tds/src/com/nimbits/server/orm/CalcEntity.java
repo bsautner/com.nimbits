@@ -133,7 +133,7 @@ public class CalcEntity extends TriggerEntity implements Calculation {
     @Override
     public void validate(User user) throws NimbitsException {
         super.validate(user);
-        if (formula.isEmpty()) {
+        if (formula == null || formula.isEmpty()) {
             throw new NimbitsException("Invalid Formula");
         }
         if (targetVar.equals(trigger)) {

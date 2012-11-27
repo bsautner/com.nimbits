@@ -42,15 +42,13 @@ public interface EntityService extends RemoteService {
 
     List<Entity> deleteEntity(final Entity entity) throws NimbitsException;
 
-
-
     Map<String, Entity> getEntityMap(final User user, final EntityType type, final int limit) throws NimbitsException;
 
     Map<EntityName, Entity> getEntityNameMap(final EntityType type) throws NimbitsException;
 
     Entity copyEntity(final Entity originalEntity, final EntityName newName) throws NimbitsException;
 
-    List<Entity> getChildren(final Entity parentEntity, final EntityType type) throws NimbitsException;
+   // List<Entity> getChildren(final Entity parentEntity, final EntityType type) throws NimbitsException;
 
     List<Entity> findEntityByKey(final User u, final String key) throws NimbitsException;
 
@@ -60,7 +58,7 @@ public interface EntityService extends RemoteService {
 
     List<Entity> deleteEntity(final User u, final Entity entity) throws NimbitsException;
 
-    List<Entity> getEntityChildren(final User u, final Entity c, final EntityType point) throws NimbitsException;
+   // List<Entity> getEntityChildren(final User u, final Entity c, final EntityType point) throws NimbitsException;
 
     List<Entity> getEntityByTrigger(final User user, final Entity entity, final EntityType type) throws NimbitsException;
 
@@ -71,9 +69,9 @@ public interface EntityService extends RemoteService {
     Map<String, Entity> getSystemWideEntityMap(final User u,final EntityType type) throws NimbitsException;
 
 
-    List<Entity> getChildren(User user, Entity parentEntity, EntityType type) throws NimbitsException;
+    List<Entity> getChildren(final User user, final List<Entity> parentEntity) throws NimbitsException;
 
-    void updateUser(User user) throws NimbitsException;
+    void updateUser(final User user) throws NimbitsException;
 
 
     static class App {

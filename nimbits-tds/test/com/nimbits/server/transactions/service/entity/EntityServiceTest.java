@@ -32,7 +32,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
@@ -77,14 +79,14 @@ public class EntityServiceTest extends NimbitsServletTest {
         Entity e = entityService.getEntityByKey(user, point.getKey(), EntityType.point).get(0);
         assertNotNull(e);
         Entity c = entityService.getEntityByKey(user, pointChild.getKey(), EntityType.point).get(0);
-        Entity g = entityService.getEntityByKey(user, group.getKey(), EntityType.point).get(0);
+        List<Entity> g = entityService.getEntityByKey(user, group.getKey(), EntityType.point);
 
         assertNotNull(c);
         assertNotNull(g);
-        final List<Entity> children =  entityService.getChildren(g, EntityType.point);
+        final List<Entity> children =  entityService.getChildren(user, g);
         assertTrue(!children.isEmpty());
 
-        entityService.deleteEntity(g);
+        entityService.deleteEntity(g.get(0));
         assertTrue(entityService.getEntityByKey(user, point.getKey(), EntityType.point).isEmpty());
         assertTrue(entityService.getEntityByKey(user, pointChild.getKey(), EntityType.point).isEmpty());
         assertTrue(entityService.getEntityByKey(user, group.getKey(), EntityType.point).isEmpty());
@@ -219,6 +221,54 @@ public class EntityServiceTest extends NimbitsServletTest {
         }
     }
 
+
+    @Test
+    public void testGetEntityChildren() throws NimbitsException {
+
+        Entity e = point;
+        String[] a = {"a", "b", "c", "d", "e", "f", "g"};
+        for (String anA : a) {
+
+            e = createChild(e, anA);
+
+        }
+        Map<String, Entity> map = entityService.getEntityMap(user, EntityType.point, 1000);
+        List<Entity> sample = new ArrayList<Entity>(1);
+        sample.add(point);
+        List<Entity> result =  entityService.getChildren(user, sample);
+        assertNotNull(result);
+        assertTrue(! result.isEmpty());
+
+
+
+        assertEquals(8, result.size());
+
+
+    }
+
+
+
+    private Entity createChild(Entity parent, String name) throws NimbitsException {
+        EntityName n = CommonFactory.createName(name, EntityType.point);
+        Entity pointChildEntity = EntityModelFactory.createEntity(n, "", EntityType.point, ProtectionLevel.everyone, parent.getKey(), user.getKey(), UUID.randomUUID().toString());
+        Point newChild =  PointModelFactory.createPointModel(
+                pointChildEntity,
+                0.0,
+                90,
+                "",
+                0.0,
+                false,
+                false,
+                false,
+                0,
+                false,
+                FilterType.fixedHysteresis,
+                0.1,
+                false,
+                PointType.basic, 0, false, 0.0 );
+        return   entityService.addUpdateEntity(user, newChild);
+
+    }
 
 
 

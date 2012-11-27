@@ -12,6 +12,8 @@
   -->
 
 <h4 style="margin-top: 10px; margin-bottom: 10px">Building a private Nimbits Cloud on your own Hardware </h4>
+<script type="text/javascript" src="/include/rawfile.js">  </script>
+
 <a href="https://docs.google.com/document/pub?id=1JNcAYGjoCOP5GellZGUQpm1DF47HAhjGKSwoZvcBf20">Hardware Requirements Document</a>
 <p>
     Nimbits Server, a data historian, is built from the ground up to be scalable. This means its processes can be split
@@ -28,9 +30,13 @@
     to compress and summarise averages of your high volume data, and then relay summary values to your App Engine
     instance.
 </p>
+ <P>Building a nimbits server involves setting up a virtual machine environment. This means you can continue to add more virtual machines
+     running across several physical computers as your demand grows. Data and load is seamlessly balanced amongst the instances.
+ </P>
 
-<p>Nimbits leverages an open source technology called <a href="http://code.google.com/p/appscale/">AppScale
-    http://code.google.com/p/appscale </a>
+
+
+<p>Nimbits leverages an open source technology called <a href="http://code.google.com/p/appscale/">AppScale</a>
     to run Nimbits Server locally across any number of virtualized <a href="http://www.ubuntu.com">Ubuntu Linux
         Servers</a></p>
 
@@ -38,45 +44,83 @@
     quote</a> on setting this environment up for you.</p>
 
 
-<h5>Getting Started</h5>
+
+
+<h4>Step 1 - Build a <a href="http://www.linux-kvm.org/page/Main_Page" >KVM</a> Virtual Server Host</h4>
+
+ <p>I have a pretty powerful server next to me for this, but any PC with virtualization capabilities will do. You can determine if your hardware will work using the KVM install process.
+    I installed the Ubuntu Server Operating System and also added a second, very fast and massive hard drive for keeping my Virtual Machine Images in.  I also configure KVM with a network bridge.
+    This makes each virtual machine able to obtain an IP address on my network.
+ </p>
+  <ul>
+      <li> <a href="https://help.ubuntu.com/community/KVM" target="_blank">Setup a KVM virtual environment</a></li>
+      <li><a href="https://help.ubuntu.com/community/KVM/Networking" target="_blank">Creating a bridged network environment </a></li>
+  </ul>
+
+<h4>Step 2 - get the appscale images</h4>
+
+<ul>
+    <li><a href="http://code.google.com/p/appscale/" target="_blank">Getting Started and Deploying Appscale</a> </li>
+</ul>
+Download the prebuilt ubuntu image from the guys at appscale. This saves a lot of time since and leverages their experties so you know you have a good build.
+Appscale can uses one linux machine as the "controller" and a number of others as the "Servers."
+The Contoller needs to have the appscale tools on it, which start the server etc.
+These linux images already have those installed on them as well. So I just download a disk image from them, and make 4 copies to have one contoller and three servers.
+If you want, you can just have one image, and run Nimbits on a single VM.
+<pre class="prettyprint">
+wget http://appscale.cs.ucsb.edu/appscale_files/appscale-1.6.4-kvm.tar.gz
+//Unzip the Archive:
+tar -zxvf appscale-1.6.4-kvm.tar.gz
+//transfer root.img to my server and into my home dir on the server
+ scp root.img benjamin@virt-host:~
+</pre>
+<p>
+The Appscale docs include a very clever way to set the root password on these images by mounting and editing the image.
+I prefer to skip this step and set the root password after I login as "appscale" the first time.
+</p>
+        <p>
+Next, I want to put 4 copies of this img in the directory where I keep my disk images.
+            I actually have a second, very fast hard disk in the server specifically for my virtual drives.
+            I have it mounted under /mnt/img - so i'm copying root.img into it 4 times,
+            each with a name: nimbits-controller.img nimbits-node1.img nimbits-node2.img and so on.
+            Appscale will balance load and recources between these vm machines.
+           </p>
+
+
+
+ <h4>Step 3 - setup the controller</h4>
+<img src="/images/screens/vm1.png" alt="vm" style="float: right;margin: 5px">
+  <p>We're going to use one of the virtual machines as a controller. Each machine will need to be spun up and have an IP Address assigned to it.</p>
+  <p>On my workstation, I installed <A href="http://virt-manager.org/">virt-manager</A> with is a ui to create and control virtual machines.
+  I can now connect to my server and create a virtual machine using the first disk image nimbits-controller.img. Be sure to connect to the server you copied your images
+  to and that the server has been configured to use the location of the images as one of it's KVM repositories.</p>
+
+   <p>
+       Create the controller and the nodes, and with each one login as user "appscale" password "appscale:     </p>
+       <ul>
+    <li>edit /etc/network/interfaces <a href="http://www.howtogeek.com/howto/ubuntu/change-ubuntu-server-from-dhcp-to-a-static-ip-address/">Configure a static IP Address.</a>
+        In my examples i'll be giving my controller an ip of 192.168.1.40 and the three nodes 41-43. One gotcha: The interfaces file may have the
+    wrong ethernet device name in it, do an ifconfig -a to see your ethernet device - e.g eth1 and make sure you configure that in your interfaces file which may have eth0 in it</li>
+    <li>edit /etc/resolv.conf to set your dns servers</li>
+    <li>Set the root password : sudo passwd</li>
+    <li>Change the appscale user's password.</li>
+    <li>remove the DHCP client - sudo apt-get remove dhcp-client</li>
+   </ul>
+
+<h4>Configure Appscale Cloud</h4>
+
+  <p>Follow the process in the <a href="http://code.google.com/p/appscale/wiki/AppScale_Virtualized_Cluster_Deployment">appscale KVM Deployment document</a> to setup your controller and connect it to
+  any of the server nodes you created.</p>
+         <ul>
+             <li>edit ips.yaml to match the IP Addresses of your server and nodes</li>
+             <li>Generate your ssh keys</li>
+         </ul>
+
+
+<h4>Step 4: Installing Nimbits Server </h4>
 
 <p>
-    The first step is to build the AppScale Environment you need. You should be able to follow their instructions to the
-    point where you can load one of their Java based sample apps before trying to deploy nimbits.
-</p> <p>
-    Here are the steps we follow to get going. You can build AppScale servers on any virtual environment - but our steps
-    here detail building a KVM virtual servers on Linux.
-<h5> Initial Steps </h5>
-<UL>
-    <li> Starting with an Ubuntu Linux 11.10 machine, setup a KVM virtual environment: <a
-            href="https://help.ubuntu.com/community/KVM" target="_blank">https://help.ubuntu.com/community/KVM </a></li>
-    <li> Follow the instructions for creating a bridged network environment, so the VMs you setup appear to be on your
-        network.
-        <a href="https://help.ubuntu.com/community/KVM/Networking" target="_blank">https://help.ubuntu.com/community/KVM/Networking </a>
-    </li>
-    <li>Read and follow the instructions on Getting Started and Deploying Appscale:
-        <a href="http://code.google.com/p/appscale/" target="_blank">http://code.google.com/p/appscale/</a></li>
-    <UL>
-        <LI>Follow the instructions for building a KVM Environment.</LI>
-        <LI>Instead of setting up a controller by installing AppScale Tools on my own machine, I simply used another
-            instance of the pre-built image they provide.
-        </LI>
-        <LI>I Highly recommend using the pre-build Ubuntu 9.10 server images they provide, download and setup the image
-            per their instructions, and run one instance to be your controller, and as many
-            other instances as you like to run as the clustered servers.
-        </LI>
-        <LI>Log into each instance, set the root password and edit /etc/network/interfaces to set a static IP for your
-            network and /etc/resolv.conf to match your DNS settings.
-        </LI>
-        <LI>Follow their instructions to install one of the java samples, and prove that it works by browsing to
-            http://controler_ip_address
-        </LI>
-    </UL>
-</UL>
-<h5> Installing Nimbits Server </h5>
-
-<p>
-    On the controller, edit this the <strong>/etc/apt/sources.list</strong> file to add the Nimbits repository to the
+    On the controller, edit <strong>/etc/apt/sources.list</strong> to add the Nimbits repository to the
     bottom:
 </p>
 <pre class="prettyprint">
@@ -98,15 +142,15 @@ sudo apt-get install nimbits
 
 </p>
 Edit the file
-<Strong>/opt/nimbits/appscale/war/WEB-INF/appengine-web.xml</Strong> and change the app id to your Nimbits Instance.
+<Strong>/opt/nimbits/server/war/WEB-INF/appengine-web.xml</Strong> and change the app id to your Nimbits Instance.
 <pre class="prettyprint">
-appscale-run-instances --ips ips.yaml --file /opt/nimbits/appscale
-
-
+appscale-run-instances --ips ips.yaml --file /opt/nimbits/server
  </pre>
-<p>
-    Follow the process to setup an admin email and password, which Nimbits will use for your account.
-</p>
+
+<p>Follow the process to setup an admin email and password, which Nimbits will use for your account.</p>
+<p>You can now navigate to your appscale server using the controller's IP address i.e http://192.168.1.40. Login to appscale and use the link for Nimbits to run your app.</p>
+<p>Before running nimbits for the first time, you must manually run a system maintenance service. Just browse to, for example. http://192.168.1.40/cron/systemCron</p>
+
 
 <h5>Updating</h5>
 <p>If we release a new version of Nimbits Server, you can upgrade your environment by running on the controller:</p>
@@ -118,8 +162,8 @@ appscale-upload-app /opt/nimbits/appscale
 
  </pre>
 
-<p>Please note that Appscale may change the port of the url your app uses when upgrading. Browse to your Conroller's IP
+<p>Please note that Appscale may change the port of the url your app uses when upgrading. Browse to your controller's IP
     to login to AppScale, there you can monitor and control your Nimbits Instance.</p>
 
 
-<script type="text/javascript" src="/include/rawfile.js">  </script>
+

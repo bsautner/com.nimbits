@@ -34,6 +34,8 @@ import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.NimbitsException;
 import com.nimbits.client.model.GxtModel;
 import com.nimbits.client.model.TreeModel;
+import com.nimbits.client.model.category.Category;
+import com.nimbits.client.model.category.CategoryFactory;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
@@ -45,6 +47,7 @@ import com.nimbits.client.service.entity.EntityService;
 import com.nimbits.client.service.entity.EntityServiceAsync;
 import com.nimbits.client.service.xmpp.XMPPService;
 import com.nimbits.client.service.xmpp.XMPPServiceAsync;
+import com.nimbits.client.ui.controls.menu.AddFolderMenuItem;
 import com.nimbits.client.ui.controls.menu.AddPointMenuItem;
 import com.nimbits.client.ui.helper.FeedbackHelper;
 import com.nimbits.client.ui.icons.Icons;
@@ -67,6 +70,7 @@ public class EntityContextMenu extends Menu {
     private static final String SUBSCRIBE_TO_EVENTS = "Subscribe to Events";
     private static final String TEXT = "Edit Calculation";
     private final Listener<MessageBoxEvent> createNewPointListener = new NewPointMessageBoxEventListener();
+    private final Listener<MessageBoxEvent> createNewFolderListener = new NewFolderMessageBoxEventListener();
     private final Listener<MessageBoxEvent> deleteEntityListener = new DeleteMessageBoxEventListener();
     private final Listener<MessageBoxEvent> copyPointListener  = new CopyPointMessageBoxEventListener();
     private final Listener<MessageBoxEvent> xmppResourceListener = new XMPPMessageBoxEventListener();
@@ -149,6 +153,83 @@ public class EntityContextMenu extends Menu {
             }
         }
     }
+
+
+
+    private class NewFolderMessageBoxEventListener implements Listener<MessageBoxEvent> {
+
+        private String newEntityName;
+
+        NewFolderMessageBoxEventListener() {
+        }
+
+        @Override
+        public void handleEvent(MessageBoxEvent be) {
+            newEntityName = be.getValue();
+            if (!Utils.isEmptyString(newEntityName)) {
+
+
+                final ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
+                currentModel = (TreeModel)selectedModel;
+                if (currentModel != null) {
+                    final MessageBox box = MessageBox.wait("Progress",
+                            "Creating your folder", "Creating: " + newEntityName);
+                    box.show();
+                    EntityServiceAsync service = GWT.create(EntityService.class);
+
+                    final Entity currentEntity =  currentModel.getBaseEntity();
+                    try {
+                        EntityName name = CommonFactory.createName(newEntityName, EntityType.category);
+                        Entity entity = EntityModelFactory.createEntity(name, EntityType.category);
+                        Category p = CategoryFactory.createCategory(entity);
+                        p.setParent(currentEntity.getKey());
+                        service.addUpdateEntity(p, new NewFolderEntityAsyncCallback(box));
+                    } catch (NimbitsException e) {
+                        box.close();
+                        FeedbackHelper.showError(e);
+                    }
+
+
+                }
+                else {
+                    FeedbackHelper.showError(new NimbitsException("Please select a parent"));
+                }
+
+
+
+            }
+        }
+
+
+        private class NewFolderEntityAsyncCallback implements AsyncCallback<Entity> {
+            private final MessageBox box;
+
+            NewFolderEntityAsyncCallback(MessageBox box) {
+                this.box = box;
+            }
+
+            @Override
+            public void onFailure(Throwable caught) {
+                FeedbackHelper.showError(caught);
+                box.close();
+            }
+
+            @Override
+            public void onSuccess(Entity result) {
+
+                try {
+                    notifyEntityModifiedListener(new GxtModel(result), Action.create);
+                } catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
+                }
+
+                box.close();
+            }
+        }
+    }
+
+
+
     private static final int WIDTH = 600;
     private static final int HEIGHT = 600;
     private EntityTree<ModelData> tree;
@@ -178,7 +259,7 @@ public class EntityContextMenu extends Menu {
     private MenuItem dumpContext;
     private MenuItem uploadContext;
     private AddPointMenuItem addPointMenuItem;
-
+    private AddFolderMenuItem addFolderMenuItem;
 
     private Map<SettingType, String> settings;
     private final User user;
@@ -213,12 +294,30 @@ public class EntityContextMenu extends Menu {
             box.addCallback(createNewPointListener);
         }
     }
+
+    private class NewFolderBaseEventListener implements Listener<BaseEvent> {
+        NewFolderBaseEventListener() {
+        }
+
+        @Override
+        public void handleEvent(final BaseEvent be) {
+            final MessageBox box = MessageBox.prompt(
+                    "Add a new folder",
+                    UserMessages.MESSAGE_ADD_CATEGORY);
+
+            box.addCallback(createNewFolderListener);
+        }
+    }
+
+
     public EntityContextMenu(final User user, final EntityTree<ModelData> tree, final Map<SettingType, String> settings, final boolean isDomain) {
         super();
         this.isDomain = isDomain;
         propertyContext = propertyContext();
         addPointMenuItem = new AddPointMenuItem();
+        addFolderMenuItem = new AddFolderMenuItem();
         addPointMenuItem.addListener(Events.OnClick, new NewPointBaseEventListener());
+        addFolderMenuItem.addListener(Events.OnClick, new NewFolderBaseEventListener());
 
         this.user = user;
         entityModifiedListeners = new ArrayList<EntityModifiedListener>(1);
@@ -240,6 +339,7 @@ public class EntityContextMenu extends Menu {
         uploadContext = uploadContext();
         jsonContext = jsonContext();
         add(addPointMenuItem);
+        add(addFolderMenuItem);
         add(propertyContext);
         add(exportContext);
         add(dumpContext);

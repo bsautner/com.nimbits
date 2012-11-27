@@ -33,7 +33,7 @@ public interface EntityServiceAsync {
 
     void getEntityNameMap(EntityType type, AsyncCallback<Map<EntityName, Entity>> async);
 
-    void getChildren(Entity parentEntity, EntityType type, AsyncCallback<List<Entity>> async);
+  //  void getChildren(Entity parentEntity, EntityType type, AsyncCallback<List<Entity>> async);
 
     void addUpdateEntity(User user, Entity aConnection, AsyncCallback<Entity> async);
 
@@ -44,8 +44,6 @@ public interface EntityServiceAsync {
     void deleteEntity(User u, Entity entity, AsyncCallback<List<Entity>> async);
 
     void deleteEntity(Entity entity, AsyncCallback<List<Entity>> asyncCallback);
-
-    void getEntityChildren(User u, Entity c, EntityType point, AsyncCallback<List<Entity>> async);
 
     void getEntityMap(User user, EntityType type, final int limit, AsyncCallback<Map<String, Entity>> async);
 
@@ -59,7 +57,7 @@ public interface EntityServiceAsync {
 
     void findEntityByKey(User user, String param, AsyncCallback< List<Entity>> async);
 
-    void getChildren(User user, Entity parentEntity, EntityType type, AsyncCallback<List<Entity>> async);
+    void getChildren(User user,  List<Entity> parents, AsyncCallback<List<Entity>> async);
 
     void updateUser(User user, AsyncCallback<Void> async) throws NimbitsException;
 }

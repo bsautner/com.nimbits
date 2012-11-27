@@ -35,7 +35,7 @@ public interface EntityTransactions extends EntityCache {
 
     Map<EntityName, Entity> getEntityNameMap(User user, final EntityType type) throws NimbitsException;
 
-    List<Entity> getChildren(final User user, Entity entity, final EntityType type) throws NimbitsException;
+    List<Entity> getChildren(final User user, final List<Entity> entity) throws NimbitsException;
 
     Entity addUpdateEntity( final User user, final Entity entity, final boolean clearTree) throws NimbitsException;
 

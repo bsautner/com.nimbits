@@ -93,10 +93,10 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
         return deleted;
     }
 
-    @Override
-    public List<Entity> getEntityChildren(final User user, final Entity entity,final  EntityType type) throws NimbitsException {
-        return entityCache.getChildren(user, entity, type);
-    }
+//    @Override
+//    public List<Entity> getEntityChildren(final User user, final Entity entity,final  EntityType type) throws NimbitsException {
+//        return entityCache.getChildren(user, entity, type);
+//    }
 
 
     @Override
@@ -187,14 +187,14 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
         }
     }
 
-    @Override
-    public List<Entity> getChildren(final Entity parentEntity, final EntityType type) throws NimbitsException {
-        return entityCache.getChildren(getUser(), parentEntity, type);
-    }
+//    @Override
+//    public List<Entity> getChildren(final Entity parentEntity, final EntityType type) throws NimbitsException {
+//        return entityCache.getChildren(getUser(), parentEntity, type);
+//    }
 
     @Override
-    public List<Entity> getChildren(final User user, final Entity parentEntity, final EntityType type) throws NimbitsException {
-        return entityCache.getChildren(user, parentEntity, type);
+    public List<Entity> getChildren(final User user, final  List<Entity> parentEntity) throws NimbitsException {
+        return entityCache.getChildren(user, parentEntity);
     }
 
     @Override

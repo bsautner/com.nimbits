@@ -190,17 +190,18 @@ public class EntityDaoImpl implements  EntityTransactions {
     }
 
     @Override
-    public List<Entity> getChildren(final User user, Entity entity, final EntityType type) throws NimbitsException {
+    public List<Entity> getChildren(final User user,  final List<Entity> parents) throws NimbitsException {
         final PersistenceManager pm = pmf.getPersistenceManager();
         try {
-            final List<Entity> r =  getEntityChildren(pm, entity, type);
+            final List<Entity> r = new ArrayList<Entity>(INT);
+           // for (Entity e : parents) {
+                List<Entity> result = getEntityChildren(pm, parents);
+                r.addAll(result);
+           // }
             return createModels(user, r);
-        }
-        finally {
+        } finally {
             pm.close();
         }
-
-
 
     }
 
@@ -385,23 +386,27 @@ public class EntityDaoImpl implements  EntityTransactions {
 
     }
 
-    private static List<Entity> getEntityChildren(final PersistenceManager pm, final Entity entity) throws NimbitsException {
+    private List<Entity> getEntityChildren(PersistenceManager pm, final List<Entity> parents) throws NimbitsException {
+
+
         final List<Entity> retObj = new ArrayList<Entity>(INT);
 
 
-        for (EntityType type : EntityType.values()) {
-            final Query q1;
+        for (String type : EntityType.classList()) {
+            Query q1;
             try {
-                q1 = pm.newQuery(Class.forName(type.getClassName()));
-
-                q1.setFilter("parent==b");
-                q1.declareParameters("String b");
-                final Collection<Entity> result = (Collection<Entity>) q1.execute(entity.getKey());
-                if (!result.isEmpty()) {
-                    retObj.addAll(result);
-                    for (final Entity e : result) {
-                        List<Entity> children = getEntityChildren(pm, e);
-                        retObj.addAll(children);
+                for (Entity entity : parents) {
+                    q1 = pm.newQuery(Class.forName(type));
+                    // q1 = pm.newQuery(Class.forName(EntityType.point.getClassName()));
+                    q1.setFilter("parent==b");
+                    q1.declareParameters("String b");
+                    final List<Entity> result = (List<Entity>) q1.execute(entity.getKey());
+                    if (!result.isEmpty()) {
+                        retObj.addAll(result);
+                      //  for (final Entity e : result) {
+                            List<Entity> children = getEntityChildren(pm, result);
+                            retObj.addAll(children);
+                        //}
                     }
                 }
             } catch (ClassNotFoundException e) {
@@ -414,37 +419,41 @@ public class EntityDaoImpl implements  EntityTransactions {
         }
 
 
+
         return retObj;
 
     }
 
-    private static List<Entity> getEntityChildren(final PersistenceManager pm, final Entity entity, final EntityType type) throws NimbitsException {
-
-        try {
-            final Class cls = Class.forName(type.getClassName());
-
-            final Query q1 = pm.newQuery(cls);
-            q1.setFilter("parent==b && entityType==t");
-            q1.declareParameters("String b, Integer t");
-            final List<Entity> retObj = new ArrayList<Entity>(INT);
-
-
-
-            final Collection<Entity> result = (Collection<Entity>) q1.execute(entity.getKey(), type.getCode());
-            if (!result.isEmpty()) {
-                retObj.addAll(result);
-                for (final Entity e : result) {
-                    final List<Entity> children = getEntityChildren(pm,  e);
-                    retObj.addAll(children);
-                }
-            }
-
-            return retObj;
-        } catch (ClassNotFoundException e) {
-            throw new NimbitsException(e);
-        }
-
-    }
+//    private List<Entity> getEntityChildren(final Entity entity, final EntityType type) throws NimbitsException {
+//        final PersistenceManager pm = pmf.getPersistenceManager();
+//        try {
+//            final Class cls = Class.forName(type.getClassName());
+//
+//            final Query q1 = pm.newQuery(cls);
+//            q1.setFilter("parent==b && entityType==t");
+//            q1.declareParameters("String b, Integer t");
+//            final List<Entity> retObj = new ArrayList<Entity>(INT);
+//
+//
+//
+//            final Collection<Entity> result = (Collection<Entity>) q1.execute(entity.getKey(), type.getCode());
+//            if (!result.isEmpty()) {
+//                retObj.addAll(result);
+//                for (final Entity e : result) {
+//                    final List<Entity> children = getEntityChildren(e);
+//                    retObj.addAll(children);
+//                }
+//            }
+//
+//            return retObj;
+//        } catch (ClassNotFoundException e) {
+//            throw new NimbitsException(e);
+//        }
+//        finally {
+//            pm.close();
+//        }
+//
+//    }
 
     @Override
     public List<Entity> deleteEntity(final User user, final Entity entity, final Class<?> cls) throws NimbitsException {
@@ -453,7 +462,9 @@ public class EntityDaoImpl implements  EntityTransactions {
         try {
             final Entity c = (Entity) pm.getObjectById(cls, entity.getKey());
             if (c != null) {
-                final List<Entity> entities = getEntityChildren(pm, c);
+                List<Entity> list = new ArrayList<Entity>(1);
+                list.add(c);
+                final List<Entity> entities = getEntityChildren(pm, list);
                 entities.add(c);
                 final List<Entity> deleted = createModels(user, entities);
                 pm.deletePersistentAll(entities);
@@ -598,7 +609,7 @@ public class EntityDaoImpl implements  EntityTransactions {
 
         try {
             for (Entity entity :  entityList)  {
-                
+
                 if (entity.getEntityType().equals(EntityType.user)) {
                     final Query q1 = pm.newQuery(Class.forName(entity.getEntityType().getClassName()));
                     q1.setFilter("name==b && entityType==t");

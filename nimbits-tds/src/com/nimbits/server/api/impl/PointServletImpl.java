@@ -227,7 +227,7 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
                     EntityName parentName = CommonFactory.createName(pointNameParam, EntityType.point);
                     List<Entity> result = entityService.getEntityByName(user, parentName, EntityType.point);
                     if (! result.isEmpty())  {
-                        List<Entity> children = entityService.getChildren(user, result.get(0), EntityType.point);
+                        List<Entity> children = entityService.getChildren(user, result);
                         if (children.isEmpty()) {
                             log.info(parentName.getValue() + " had no children");
                         }
@@ -265,18 +265,19 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
     private void processGetRead(final StringBuilder sb, final String startParam, final String endParam, final String offsetParam, final String pointNameParam) throws NimbitsException {
         if (containsParam(Parameters.uuid)) {
 
-            Entity entity =   entityService.getEntityByKey(user, getParam(Parameters.uuid), EntityType.point).get(0);
-            if (entity == null) {
-                entity=  entityService.getEntityByKey(user, getParam(Parameters.uuid), EntityType.category).get(0);
+            List<Entity> entityList =   entityService.getEntityByKey(user, getParam(Parameters.uuid), EntityType.point);
+            if (entityList.isEmpty()) {
+                entityList =  entityService.getEntityByKey(user, getParam(Parameters.uuid), EntityType.category);
             }
-            if (entity != null) {
+            if (! entityList.isEmpty()) {
+                Entity entity = entityList.get(0);
                 if (entity.getEntityType().equals(EntityType.point)) {
                     sb.append(outputPoint(getParam(Parameters.count), getParam(Parameters.format), startParam, endParam, offsetParam, entity));
                 }
                 else {
                     if (okToReport(user, entity)) {
 
-                        final List<Entity> children = entityService.getEntityChildren(user, entity, EntityType.point);
+                        final List<Entity> children = entityService.getChildren(user, entityList);
                         final List<Point> points = new ArrayList<Point>(children.size());
 
 
@@ -452,7 +453,7 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
                 if (result.isEmpty()) {
                     return "Error calling " + "Point Service. " + categoryNameParam + " not found";
                 } else {
-                    final List<Entity> children = entityService.getEntityChildren(user, result.get(0), EntityType.point);
+                    final List<Entity> children = entityService.getChildren(user, result);
                     return gson.toJson(children, GsonFactory.pointListType);
                 }
 

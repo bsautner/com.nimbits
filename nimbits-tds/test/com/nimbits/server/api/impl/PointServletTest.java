@@ -107,7 +107,7 @@ public class PointServletTest extends NimbitsServletTest {
         List<Entity> result2 = entityService.getEntityByName(user, name2, EntityType.point);
         assertFalse(result2.isEmpty());
 
-        List<Entity> c = entityService.getChildren(result.get(0), EntityType.point);
+        List<Entity> c = entityService.getChildren(user, result);
         assertFalse(c.isEmpty());
         assertEquals(result2.get(0), c.get(0));
 

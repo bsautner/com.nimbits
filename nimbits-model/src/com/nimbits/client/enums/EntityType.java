@@ -30,6 +30,17 @@ public enum EntityType implements Serializable {
             lookup.put(s.code, s);
     }
 
+    public static List<String> classList() {
+        List<String> retObj = new ArrayList<String>(12);
+        for (EntityType e : EntityType.values()) {
+            if (! retObj.contains(e.className)) {
+                retObj.add(e.className);
+            }
+        }
+        return retObj;
+
+    }
+
     private final int code;
     private final boolean uniqueNameFlag;
     private final String className;

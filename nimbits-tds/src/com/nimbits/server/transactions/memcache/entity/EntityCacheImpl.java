@@ -201,8 +201,8 @@ public class EntityCacheImpl implements EntityTransactions,  EntityCache {
     }
 
     @Override
-    public List<Entity> getChildren(final User user, Entity entity, final EntityType type) throws NimbitsException {
-        return  entityDao.getChildren(user, entity, type);
+    public List<Entity> getChildren(final User user,  final List<Entity> entity) throws NimbitsException {
+        return  entityDao.getChildren(user, entity);
     }
 
     @Override

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent" android:background="@android:drawable/toast_frame">
+
+    <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:id="@+id/frameLayout"
+            android:background="@android:drawable/alert_dark_frame"
+        >
+        <include android:layout_width="wrap_content"
+                 android:layout_height="38dp"
+                 layout="@layout/entity_list_item" android:id="@+id/top_level_entity" android:layout_alignParentLeft="true"
+                 android:layout_alignParentTop="true" android:layout_alignParentRight="true"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@id/child_frame"
+        android:layout_below="@+id/frameLayout">
+
+        <ListView
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:id="@+id/entity_list_view" android:layout_centerVertical="true"
+                android:layout_below="@+id/frameLayout" android:layout_alignParentBottom="true"
+                />
+    </FrameLayout>
+
+</RelativeLayout>

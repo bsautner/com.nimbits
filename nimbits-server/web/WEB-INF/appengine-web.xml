@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
+    <threadsafe>true</threadsafe>
+    <application>nimbits-02</application>
+
+    <version>634</version>
+
+    <precompilation-enabled>false</precompilation-enabled>
+
+    <static-files>
+        <include path="/bootstrap/css/**.css" />
+        <include path="/**.css" />
+        <include path="/**.html" />
+        <include path="/**.jsp" />
+        <include path="/**.gif" />
+        <include path="/**.png" />
+        <include path="/**.js" />
+        <include path="/**.ico" />
+    </static-files>
+    <inbound-services>
+        <service>xmpp_message</service>
+        <service>xmpp_presence</service>
+        <service>xmpp_subscribe</service>
+        <service>xmpp_error</service>
+    </inbound-services>
+</appengine-web-app>

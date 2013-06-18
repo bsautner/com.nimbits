@@ -1,0 +1,166 @@
+<!--
+  ~ Copyright (c) 2010 Nimbits Inc.
+  ~
+  ~ http://www.nimbits.com
+  ~
+  ~
+  ~ Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.gnu.org/licenses/gpl.html
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+  -->
+<script type="text/javascript" src="/include/rawfile.js">  </script>
+<h5>
+    Machine 2 Machine Communication over XMPP
+
+</h5>
+
+
+<p>
+    Nimbits is a great tool for storing historical data on the cloud, be they numbers like a temperature, GPS data or
+    data in XML or JSON format. In our tutorials you can
+    learn to connect devices like Arduino or Parallax Stamp with code that can push and pull data from a Nimbit Data
+    Point. Machine 2 Machine (M2M) communication takes this
+    to another level with the following requirements:
+</p>
+<ul>
+    <li>Software and Devices are able to show presence on a network, other devices can see that they are online and
+        available
+    </li>
+    <li>Devices can be anywhere, without the sending party knowing their location or ip address</li>
+    <li>Two or more devices can relay their data in a standard format.</li>
+    <li>The ability to process incoming data with some intelligence, and then relay the result of that process to other
+        devices.
+    </li>
+</ul>
+
+<p>
+    For the last item in the list above, Nimbits uses <a href="www.wolframalpha.com">WolframAlpha</a> a powerful
+    computational knowlage engine (currently in beta)
+    to give you the ability to process incomming point data against the same knowlage engine that used by Apple's SIRI
+    Artificial Intelligence assistant. When data is
+    fed into a Nimbits Data point, it's values as well as any other point's data can automatically query WolframAlpha,
+    store the result in a target point which can then
+    relay that data to listening devices. Any of the examples listed here: <a
+        href="http://www.wolframalpha.com/examples/">http://www.wolframalpha.com/examples/</a>
+    can be added to a Data Point's Intelligence formula and computed using incoming data feeds.
+</p>
+
+<p><a href="#" onclick="getContent('pages/wolfram.html')">Learn more about WolframAlpha integration here</a></p>
+
+<P>
+    You can use Nimbits to give devices presence on the internet. They can report themselves as being "online", set
+    their availability, and receive and send messages containing
+    any type of data.
+    Nimbits uses the <A href="http://xmpp.org/"> XMPP protocol</A>, a standard and open communication technology.
+
+
+</P>
+
+<p>
+    It all works the same way Instant Messaging works between you and countless other users around the globe. The only
+    difference is that devices "Chatting" with each other
+    are communicating using Data Objects instead of just words.
+</p>
+
+<p>
+    You can already talk to Nimbits with an Instant messenger client that supports XMPP, like Google Talk and <a
+        href=www.jabber.org>Jabber</a>.
+    <a href="#" onclick="getContent('pages/im_service.html')">Check out how you can ask Nimbits
+        for current values and create points over an IM Client.</a>
+
+</p>
+
+
+<h5>Getting Starting</h5>
+
+<p>
+    It's a good idea to setup a separate email account for your M2M devices, since you wouldn't want to get constant
+    data packets on your regular email.
+    You can setup your devices and software to monitor a single data point, and you can also further segment your
+    ecosystem using separate Nimbits email accounts.
+    To get going, try <a href="https://cloud.nimbits.com">logging into Nimbits</a> and creating a Data Point.
+    <a href="#" onclick="getContent('pages/im_service.html')">Follow the instructions here</A> to make sure you and your
+    new point can chat over IM. i.e. click the
+    authorise IM Button and accept the initiation to chat with Nimbits.
+
+</p>
+<p>
+    You can write your own Client for Nimbits to do XMPP - Nimbits uses the Google XMPP Service which you can learn more
+    about here:
+    <a href="http://code.google.com/appengine/articles/using_xmpp.html">http://code.google.com/appengine/articles/using_xmpp.html</a>
+    All you need to do is have your code properly authenticate, and open an XMPP Session with Nimbits at
+    nimbits1@appspot.com (or your Nimbits servers' app id)
+</p>
+<p> The first thing you want to do is sign into the Nimbits Server, right click the data point for its properties, and
+    check the property telling Nimbits that
+    when it sends data over XMPP, send this points data in a Machine Readable Context. Essentially, when you chat with a
+    data point over IM, we send you a Human readable
+    text message. When you check this box, the message is sent with JSON formatted data. </p>
+
+<img align="middle" src="images/M2MScreen1.png">
+<P>
+    If you repeat the exercise above, and ask Nimbits to send an IM any time this point is written too, you'll get an IM
+    with a lot of JSON data instead of a Human readable message.
+</P>
+
+<p>
+    The Nimbits SDK does all of this for you. If you <a href="#" onclick="getContent('pages/download.html')">download
+    the Nimbits SDK JAR</a> file and add it to a java projects class path.
+
+    The following code snippet, when ran, will show up as available and online just like you do when you log into a
+    Instant Messenger client. This code snippet uses a Nimbits Server
+    to authenticate with a gmail account, and waits for an IM with data relevant to the Nimbits Points it's listening
+    for. If it is, it can then do stuff with the latest
+    value recorded to that point - be it XML, the number value or whatever.
+
+</p>
+<pre class="prettyprint">
+        public static void main(String[] args) throws Exception, IOException {
+              final GoogleUser user = UserFactory.createGoogleUser("example@gmail.com", "Pa$$word");
+              final NimbitsClient client = NimbitsClientFactory.getInstance(user, "http://nimbits1.appspot.com");
+              final XMPPClient xmpp = XMPPClientFactory.getInstance(client, "nimbits1");
+              final String myPointName = "foo";
+              xmpp.connect();
+              xmpp.addMessageReceivedListeners(new XMPPClientImpl.MessageReceivedListener() {
+                  @Override
+                  public void onMessageReceived(Point receivedDataPoint) {
+                      System.out.println("Received Point: " + receivedDataPoint.getName().getValue());
+                       if (receivedDataPoint.getName().getValue().equals(myPointName)) {
+                              System.out.print("This is my Point! Doing stuff with it");
+                              double currentValue = receivedDataPoint.getValue().getNumberValue();
+                       }
+
+                  }
+              });
+              System.in.read(); //keep the program from exiting.
+
+          }
+
+
+        </pre>
+
+<p>
+    There are, of course, many ways to record new data into a Nimbits Point. This point is configured to send over IM
+    any new data it receives. You can
+    also configure a point to only sent newly recorded data over IM when the value is in an alert state, or if the point
+    is idle and hasn't received a value
+    for a certain amount of time. You can write code to send data over IM just as easily. This code snipped will
+    transmit a new <a href="#" onclick="getContent('/pages/server_docs/value_objects.html')">Value Objects</a> into our "foo" point
+    using XMPP:
+
+</p>
+<pre class="prettyprint">
+        GoogleUser user = UserFactory.createGoogleUser("example@gmail.com", "Pa$$word");
+        NimbitsClient client = NimbitsClientFactory.getInstance(user, "http://nimbits1.appspot.com");
+        XMPPClient xmpp = XMPPClientFactory.getInstance(client, "nimbits1");
+        PointName pointName = CommonFactory.createPointName("foo");
+        Value value = ValueModelFactory.createValueModel(1.234);
+        xmpp.connect();
+        xmpp.sendValue(pointName, value);
+
+        </pre>
+
+
+<script type="text/javascript">prettyPrint()</script>

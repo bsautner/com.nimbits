@@ -1,0 +1,173 @@
+<!--
+  ~ Copyright (c) 2010 Nimbits Inc.
+  ~
+  ~ http://www.nimbits.com
+  ~
+  ~
+  ~ Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.gnu.org/licenses/gpl.html
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+  -->
+
+
+<script type="text/javascript" src="/include/rawfile.js">  </script>
+<h4 style="margin-top: 10px; margin-bottom: 10px">Download Nimbits</h4>
+
+<P>
+    We host a <A href="http://cloud.nimbits.com">public cloud</A>  running an instance of Nimbits server, but Nimbits was designed to allow you to build an ecosystem
+    of highly scaleable, highly available clusters for your data logging needs. It's not always practical to use a public cloud,
+    so we offer you a way to build your own instance of Nimbits for your data collection needs.
+</P>
+        <p>
+    We also provide <a href="#service" onclick="getContent('pages/support.html')">consulting services</a>
+    for helping you build and monitor your system.</p>
+
+    <p>
+    You can download and deploy an entire instance of Nimbits, an Android ready
+    java SDK for connecting software clients, and an <a href="#service" onclick="getContent('pages/arduino/arduino.html')">Arduino library</a> for connecting custom hardware devices directly to the cloud.
+        </p>
+
+
+
+
+<p>
+    Nimbits runs on the Google &trade; App Engine infrastructure, as well as Amazon EC2 and any other cloud provider capable of hosting an Ubuntu Linux
+    KVM based virtual machine. With an enterprise that has many thousands of connected devices it may not be practical to feed all of your
+    data out to the cloud. Many users run an internal cloud on their own hardware with Nimbits consolidating data, and then reporting data upstream
+    to an external cloud.
+
+</p>
+ <P>
+     Nimbits is the only cloud based data historian that is also a fully downloadable package.
+
+ </P>
+
+
+<ul>
+<li><a href="#" onclick="getContent('/pages/source.html')">Source</a></li>
+<li><a href="#" onclick="getContent('/pages/download.html')">Nimbits Server</a></li>
+<li><a href="#" onclick="getContent('/pages/sdk.html')">nimbits_sdk.jar</a></li>
+<li><a href="#" onclick="getContent('/pages/dotnetsdk.html')">.NET SDK</a></li>
+</ul>
+
+    <strong>Quick Start:</strong><br>
+    <a onclick="trackClick('nimbits_server.zip');"
+       href="http://www.nimbits.com/downloads/nimbits_server.zip">Nimbits
+        Server 3.3 zip archive</a>
+    <br>
+    <a href="#" onclick="getContent('pages/server_install.html')">
+        App Engine Installation Instructions</a>
+    <br><a
+        href="https://chrome.google.com/webstore/detail/fmhbpieakkkhcajlpbeffhfihenafhbl" target="_blank">Google Chrome
+    App</a>
+    <br><a href="#" onclick="getContent('pages/debian_sdk.html')">Nimbits SDK From the Debian Repository (apt-get
+    nimbits)</a>
+    <br> <a href="#" onclick="getContent('pages/appscale.html')">Building a private cloud with AppScale</A>
+</p>
+
+<h5>
+    Debian / Ubuntu / Mint Users
+</h5>
+<p>
+<p>
+    Edit the <strong>/etc/apt/sources.list</strong> file to add the Nimbits repository to the bottom:
+</p>
+<pre class="prettyprint">
+deb http://deb.nimbits.net/packages/ ./
+    </pre>
+<p>
+    at a terminal, run the following commands:
+</p><p>
+<pre class="prettyprint">
+sudo apt-get update
+sudo apt-get install nimbits
+</pre>
+<P>
+    Edit the file <Strong>/opt/nimbits/server/war/WEB-INF/appengine-web.xml</Strong> and change the app id to your
+    Nimbits Instance. Note the version Number you will need to
+    set to the current version on the App Engine Console. Then run the following command from the bin directory in your
+    App Engine SDK:
+</P>
+<pre class="prettyprint">
+        ./appcfg.sh update /opt/nimbits/server/war
+
+</pre>
+
+
+<P>
+    Depending on your needs, you can use our hosted nimbits server right now on <a href="http://cloud.nimbits.com">http://cloud.nimbits.com</a>,
+    or deploy your own to
+    <a href="http://code.google.com/appengine/">Google App Engine</a>. You can also build
+    an entire nimbits ecosystem with clusters of virtualized servers inside your companies network that can also then
+    relay data out to your choice of externally hosted
+    clouds. Nimbits Server can run on a laptop, server cluster, Google App Engine or Amazon's EC2 cloud.
+</P>
+
+<p>
+    Nimbits Servers can be interacted with using a <a href="#" onclick="getContent('pages/web_service_primer.html')">collection
+    of REST Web Services</a> where you can do things like record and download data.
+    <a href="#" onclick="getContent('pages/sdk.html')">There is also an SDK</a> for working with your Nimbits
+    Environment, the SDK simplifies using the REST services and handles things like authentication for you.
+    It is a Java program you can include in your development projects or run independently from the command line.
+</p>
+<P>
+    Nimbits server is built on Cloud Computing architecture which makes it highly scalable. You can run Nimbits on a
+    single virtual machine and continue to add virtual machines as your resource needs increase.
+    Nimbits will scale across any number of machines, sharing memory, CPU and I/O resources seamlessly.
+
+</P>
+<p>
+
+    <img src="images/cloud-computing-300x222.jpg" align="right" alt="cloud"/>
+
+<h5>Examples of Nimbits Deployments</h5>
+
+<UL>
+    <LI><strong>Testing: </strong> <a onclick="trackClick('nimbits_server.zip');"
+                                      href="http://www.nimbits.com/downloads/nimbits_server.zip">Just download the
+        Server</a>, The <a href="http://code.google.com/appengine/">Google App Engine SDK</a>-
+        run <strong>[sdk_path]\bin\dev_appserver.sh \[nimbits_download]</strong> and bingo, you have a server running on
+        http://localhost:8080 for testing
+    </LI>
+    <LI><strong>Public Server Free: </strong> Log into <a href="http://cloud.nimbits.com">cloud.nimbits.com</a> and use the
+        public instance <a href="#" onclick="getContent('pages/terms.html')">with some limitations.</a></LI>
+    <LI><strong>Public Server Pro: </strong> <a href="#" onclick="getContent('pages/support.html')">Contact us for a
+        quote</a> to completely support your data demands on cloud.nimbits.com, an App Engine instance we monitor and
+        support.
+    </LI>
+    <LI><strong>Your App Engine Instance: </strong> <a href="http://code.google.com/appengine/">Download the Google
+        SDK</a> and deploy to your App Engine Account.
+        <a href="#" onclick="getContent('pages/server_install.html')">Follow the server install instructions</a> for
+        deploying Nimbits to Your app engine account.
+        <a href="#" onclick="getContent('pages/support.html')">Contact us</a> for pricing to support, maintain or create
+        your own instance for you.
+    </LI>
+    <LI><strong>Private Cloud: </strong> <a href="#" onclick="getContent('pages/appscale.html')">Follow the instructions
+        here</a> to setup an internal cluster of virtualized Ubuntu servers, continue to grow your internal cloud by
+        adding more hardware and VM servers.
+    </LI>
+    <LI><strong>Hybrid: </strong> Create internal private clouds, run single tier for buffering across your topography,
+        relay summarised and compressed data out to App Engine or Amazon EC2
+    </LI>
+</UL>
+
+We are here to help. Let us build any of the above scenarios for you, utilize our expertise and put us on your team. <a
+        href="#" onclick="getContent('pages/support.html')">Contact us.</a>
+
+
+<p>
+    <span class="highlight">Nimbits Server</span> is the data historian and portal server you see when you
+    <a href="http://cloud.nimbits.com" target="_blank">log into the public instance.</a>
+    Nimbits is built to run on <a href="http://code.google.com/appengine/" target="_blank">Google App Engine</a>, so you
+    will need to
+    read the installation instructions that will show you how to deploy this download to your App Engine Account. Once
+    you're up and running, you'll be able to use your personal instance on Nimbits Server.
+</p>
+<hr/>
+
+
+<script type="text/javascript">prettyPrint()</script>
+
+<script type="text/javascript" src="/include/rawfile.js">  </script>

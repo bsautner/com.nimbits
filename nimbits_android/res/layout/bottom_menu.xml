@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<HorizontalScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/horizontalScrollView">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/button_height"
+            android:id="@+id/home_button"
+            android:layout_gravity="center_horizontal|bottom"
+            android:src="@android:drawable/ic_menu_more"/>
+
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:id="@+id/new_entity_button"
+            android:layout_gravity="center"
+            android:src="@android:drawable/ic_menu_add"/>
+
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:id="@+id/settings_button"
+            android:layout_gravity="center_horizontal|top"
+            android:src="@android:drawable/ic_menu_preferences"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:id="@+id/refresh_button"
+            android:src="@android:drawable/stat_notify_sync"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:id="@+id/delete_button"
+            android:layout_gravity="center_horizontal|top"
+            android:src="@android:drawable/ic_menu_delete"
+            android:layout_marginLeft="10dp"/>
+
+    </LinearLayout>
+</HorizontalScrollView>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="nimbits_transparent_logo" type="id">nimbits_transparent_logo</item>
+    <item name="chart_frame" type="id"/>
+    <item name="point_type" type="id">point_type</item>
+    <item name="child_frame" type="id">child_frame</item>
+    <item name="timespan_point_type" type="id">timepan_point_type</item>
+    <item name="status" type="id">status</item>
+    <item name="help_alerts" type="id"/>
+    <item name="alert_high_value" type="id"/>
+    <item name="alert_high_enabled" type="id"/>
+    <item name="alert_low_value" type="id"/>
+    <item name="alert_low_enabled" type="id"/>
+    <item name="alert_idle_value" type="id"/>
+    <item name="alert_idle_enabled" type="id"/>
+    <item name="alert_delta_value" type="id"/>
+    <item name="alert_delta_enabled" type="id"/>
+    <item name="alert_delta_seconds" type="id"/><item name="main_frame" type="id"/>
+    <item name="add_button" type="id" />
+</resources>

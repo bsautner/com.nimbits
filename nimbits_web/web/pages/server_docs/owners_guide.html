@@ -1,0 +1,66 @@
+<h4 style="margin-top: 10px; margin-bottom: 10px" xmlns="http://www.w3.org/1999/html"
+    xmlns="http://www.w3.org/1999/html">Server Owners Guide</h4>
+<script type="text/javascript" src="/include/rawfile.js">  </script>
+<ul>
+    <li class="nav-header"><a href="#" onclick="getContent('/pages/intro.html')">Introduction</a></li>
+    <li class="nav-header"><a href="https://docs.google.com/document/pub?id=1mBrDASQLO4z_4KK86VWj3DNx8krdVxVz6mZdjPl3CME">Product Overview</a></li>
+
+</ul>
+
+<p>
+    This guide is meant to help get you started when you are running your own
+    Instance of Nimbits on Google App Engine&trade;.
+
+
+</p>
+<h5>Upgrading</h5>
+<p>
+    If you are under a support agreement with Nimbits Inc, we occasionally upgrade your instance with the new
+    version of server code. You have complete control over when this new version goes live. Please refer to the
+    <a href="#" onclick="getContent('/pages/server_docs/managed_server.html')">managed server guide</a>.
+
+
+</p>
+<h5>Cost of Ownership</h5>
+
+<p>Running an instance of Nimbits on Google App Engine requires an account with Google where you can set a quota for each day allowing Google to bill you directly
+for resources consumed. </p>
+
+<p>
+    When you consume resources on Google's infrastructure, Google charges will apply.
+    Please see <a href="https://developers.google.com/appengine/docs/billing" target="_blank">Google App Engine Billing and Budgeting. </a>
+</p>
+
+<p>
+    We do everything we can to reduce the cost of processing data in our code. One of the most expensive things you can do in Google App Engine is to repeatedly access
+    the data store. This is why we heavily cache data in memory, buffer incoming data, use advanced techniques such as data sharding and try to only touch the data store using
+    batch operations. Should you notice an operation you are using on the server causing a large consumption of quotas and resources, please contact support asap.
+    <strong>There is an excellent chance that we can identify the cause and significantly reduce the cost of the process you are using.</strong>
+
+</p>
+
+  <p>
+     Out of the box, Nimbits is configured to run fast vs cheap. Some steps you can take to reduce the cost of your instance include the following. Also, if you
+     are using an instance of Nimbits under a support agreement, just contact support to request these options to be set for you.
+  </p>
+     <ul>
+    <li>Disabling Sessions - Sessions data is used rarely. You can test your instance with sessions disabled by changing sessions-enabled in appengine-web.xml to false.
+        You can then also remove the session maintenance cron job from cron.xml
+    </li>
+
+    <li>
+        Idle settings - Nimbits polls points with Idle Alarms set once every 5 minutes. If you don't require that level of monitoring, the setting can be changes in cron.xml
+
+    </li>
+     <li>
+         App Engine settings - log into the <a href="https://appengine.google.com">Admin Console</a> and select <strong>Application Settings</strong>. There, you can manage how many new instances
+         Nimbits will create, the type of memory and CPU those instances have, and other options to reduce performance but also reduce cost. Optionally, you can use these
+         settings to increase Nimbits' performance with an increase to the cost of ownership.
+
+     </li>
+
+     </ul>
+
+
+
+

@@ -1,0 +1,62 @@
+<!--
+  ~ Copyright (c) 2010 Nimbits Inc.
+  ~
+  ~ http://www.nimbits.com
+  ~
+  ~
+  ~ Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.gnu.org/licenses/gpl.html
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+  -->
+<script type="text/javascript" src="/include/rawfile.js">  </script>
+<h5>Nimbits timespans</h5>
+
+<p>
+    In any situation where Nimbits is receiving a text time range - that is a start and end date, submitted as a string,
+    either in the UI or as a request
+    to the Web Service, Nimbits will use the same pattern to try and understand what the timespan being requested should
+    be. So, if you are using the series
+    web service, or the chart on the UI nimbits tries to be flexible with the date format you are entering and it will
+    take a date in a normal
+    month, day, year format or a Unix timestamp, or even relative dates like -1d for the previous day. <img
+        align="right" src="/images/timespan.png">
+</p>
+<p>
+
+    All Times are stored in a nimbits database as UTC time, Nimbits never modifies a time to adjust for time zones etc.
+    Locales and time zones are adjusted on the UI.
+</p>
+<p>
+    A Timespan consists of a start and end. Start is the older date and End is the most recent date.
+    Yesterday would be a start and today would be an end for example.
+</p>
+<p>
+
+    All web services that take a start and end date parameter for get and post request use the
+    format sd=startdate&ed=enddate for a date range.
+</p>
+
+<h5>End Date Options</h5>
+<p>
+    The end date can be any of the global options below, but can also be a special case: *(an asterisk) or now to have
+    the current time.
+    This is useful for requesting the current time on repeated requests.
+</p>
+
+<h5>Start Date Options</h5>
+<p>
+    The end date is interpreted first so the start date can be processed relative to the end date. Start date can be any
+    of the global options below or:
+</p>
+<ul>
+    <li>s60 : 60 seconds before the end date</li>
+    <li>m5 : 5 minutes before the end date</li>
+    <li>h1 : One hour before the end date</li>
+    <li>d4 : 4 days before the end date</li>
+    <li>An absolute time in YYYYMMDDHHMMSS format i.e 20110428120000 for noon on April 28th 2011</li>
+    <li>Unix Epoch Time in Seconds 1304058325</li>
+    <li>Unix Epoch time in Milliseconds 1304058325000</li>
+
+</ul>

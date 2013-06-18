@@ -1,0 +1,56 @@
+<!--
+  ~ Copyright (c) 2010 Nimbits Inc.
+  ~
+  ~ http://www.nimbits.com
+  ~
+  ~
+  ~ Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.gnu.org/licenses/gpl.html
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+  -->
+
+<h3>Nimbits Software Development Kit</h3>
+
+<a href="#dotnet" onclick="getContent('/pages/debian_sdk.html')">How to install the SDK on Debian or Ubuntu Linux</a><br/>
+<a onclick="_gaq.push(['_trackEvent', 'nimbits_sdk.jar', 'download'])"
+   href="http://www.nimbits.com/downloads/nimbits_sdk.jar">Nimbits SDK 3.2 runnable jar</a><br/>
+<a href="#dotnet" onclick="getContent('/pages/dotnetsdk.html')">Using the Nimbits SDK with .Net</a><br/>
+
+<p>
+    You can control a Nimbits Server instance using the <a href="http://code.google.com/p/nimbits-server/wiki/RestApi"
+                                                           target="_blank">REST API Web Services</a>.
+    However, we simplify this even further by providing a <span class="highlight">Java JAR and .net DLL</span> that
+    you can use in your software projects to securely connect to your Nimbits account and create points, record values,
+    read data and more.
+</p>
+
+<p>
+    You can install the Nimbits SDK on a linux system using <span class="highlight">apt-get install nimbits</span>
+    (See the <a href="#" onclick="getContent('pages/debian_sdk.html')">installation guide</a>
+    to learn how to
+    add the Nimbits Repository)
+    The Nimbits SDK can be used on the command line, in scripts, or included in a .net or java program of your own to
+    use Nimbits Server as a backend.
+
+</p>
+
+<p>Coding against your server with the SDK is just this easy - here is an example that connect to a nimbits server with
+    gmail credentials:</p>
+
+<pre class="prettyprint">
+    //nimbits uses a robust, type safe, factory model.
+    private void sample() {
+        EmailAddress emailAddress = CommonFactory.createEmailAddress("test@example.com");
+        NimbitsUser user = UserFactory.createNimbitsUser(emailAddress, "pas$$word");
+        NimbitsClient client = NimbitsClientFactory.getInstance(user, "http://mynimbitsserver.domain.com");
+        PointName pointName = CommonFactory.createPointName("MyDataPoint");
+        Value currentValue = client.getCurrentRecordedValue(pointName);
+
+        System.out.println(currentValue.getValue()); //get the last recorded double value
+        System.out.println(currentValue.getAlertState().name()); //the state of the point - i.e high alert or idle
+
+    }
+</pre>
+<script type="text/javascript" src="/include/rawfile.js">  </script>

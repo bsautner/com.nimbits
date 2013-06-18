@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/image_expand"
+        android:layout_gravity="center_horizontal|top"
+        android:src="@android:drawable/ic_input_add"
+        android:visibility="visible" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/entity_image"
+        android:layout_gravity="center_horizontal|top"
+        android:src="@drawable/greystar"
+        android:layout_margin="10dp"
+        android:layout_toRightOf="@+id/image_expand"
+        android:layout_alignTop="@+id/image_expand"/>
+
+    />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/entity_name"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_toRightOf="@+id/entity_image"
+        android:layout_alignTop="@+id/entity_image"
+        android:minWidth="200dp"/>
+
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:text="..."
+        android:id="@+id/value"
+        android:layout_gravity="center_horizontal|top"
+        android:gravity="right"
+        android:layout_marginRight="5dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/image_expand"
+        android:layout_alignBottom="@+id/entity_image"
+        android:layout_toRightOf="@+id/entity_name"/>
+
+    <TextView
+        android:layout_width="78dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/image_expand"
+        android:layout_alignBottom="@+id/entity_image"
+        android:layout_toRightOf="@+id/value"
+        android:id="@+id/timestamp"
+        android:lines="1"
+        android:singleLine="true"/>
+    android:id="@+id/timestamp"/>
+
+
+</RelativeLayout>

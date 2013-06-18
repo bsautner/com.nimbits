@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <title></title>
+
+    <link href="/assets/css/docs.css" rel="stylesheet">
+    <!-- Le styles -->
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.css">
+    <!--<link href="assets/css/docs.css" rel="stylesheet">-->
+    <link href="/assets/js/google-code-prettify/prettify.css" rel="stylesheet">
+    <link href="/assets/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+    <!-- Le javascript -->
+
+    <!--<script src="http://autobahn.tablesorter.com/jquery.tablesorter.min.js"></script>-->
+    <script type="text/javascript" src="/assets/js/google-code-prettify/prettify.js"></script>
+
+    <!--visit jquery.com to download jquery and add it to the path of your project.-->
+    <script type="text/javascript" src="/assets/js/jquery/jquery-1.7.1.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+
+        google.load("visualization", "1", {packages:["corechart"]});
+        google.setOnLoadCallback(drawChart);
+
+
+        function drawChart() {
+
+            $.get("http://app2.nimbits.com/service/series",
+                    { email: "nimbitstest@gmail.com", name: "sample", key:"myreadkey" },
+                    function(data){
+                        var results = eval(data);
+                        var data = new google.visualization.DataTable();
+                        data.addColumn('datetime', 'Date');
+                        data.addColumn('number', "Point");
+
+                        for (var i=0; i < results.length; i++) {
+                           var value = results[i];
+                           var date = new Date(value.t);
+                           data.addRow([date, value.d]);
+
+
+                       }
+
+                        var options = {
+                            width: 400, height: 240,
+                            title: 'Nimbits Rocks!'
+                        };
+
+                        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+                        chart.draw(data, options);
+
+                    }
+            );
+
+        }
+
+    </script>
+
+</head>
+
+
+<body>
+ <h4 style="margin-bottom: 10px; margin-top: 10px" >Live JQuery Chart Sample</h4>
+<p>
+    This is a complete sample that downloads a list of values from the series web service using a JQuery Get Request and the Google Chart Tool.
+    The series service responds with JSON data, which is easy to turn into an object in Javascript. The anatomy of a json formatted recorded <a href="#" onclick="getContent('/pages/server_docs/value_objects.html')">Value Objects</a> is like this:
+
+
+</p>
+ <p>
+     <a href="https://github.com/bsautner/com.nimbits/blob/master/nimbits-web/web/pages/server_docs/api/jquery_chart.html">View Source</a>
+
+ </p>
+
+      <pre class="prettyprint">
+    {"lt":0.0,"lg":0.0,"d":84.0,"t":1340827070070,"n":"some notes","dx":"some data","st":3}
+    </pre>
+
+
+    <ul>
+        <li>lt: Latitude GPS Coords</li>
+        <li>lg: Longitude GPS Coords</li>
+        <li>d: the number value</li>
+        <li>t: The timestamp, in millisecond unix epoch format</li>
+        <li>n: A note. This would be the annotation in a chart and can be any string</li>
+        <li>dx: Data. Can be any string data, you can store xml or json in this channel</li>
+        <li>st: The alert state of this value as defined <a href="https://github.com/bsautner/com.nimbits/blob/master/nimbits-model/src/com/nimbits/client/enums/AlertType.java">here</a>. </li>
+
+    </ul>
+
+<div id="chart_div">
+
+
+</div>
+
+</body>
+</html>

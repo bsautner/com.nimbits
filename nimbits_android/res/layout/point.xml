@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical"
+    android:layout_width="fill_parent" android:layout_height="fill_parent"
+    android:gravity="fill">
+
+    <include
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        layout="@layout/entity_list_item"
+        android:id="@+id/include"
+        android:layout_gravity="center" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:id="@+id/linearLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true">
+
+        <EditText
+            android:layout_width="188dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/enter_data"
+            android:hint="@string/enter_data"
+            android:focusable="true"
+            android:lines="1"
+            android:layout_centerHorizontal="true"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:typeface="monospace"
+            android:layout_alignParentLeft="true"
+            android:layout_gravity="left"/>
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:id="@+id/progressBar" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:id="@+id/save_button"
+            android:src="@android:drawable/ic_menu_save"
+            android:background="@android:color/transparent"
+            android:focusableInTouchMode="false" />
+
+        <ImageButton
+            android:layout_width="@dimen/button_height"
+            android:layout_height="@dimen/button_height"
+            android:id="@+id/add_button"
+            android:src="@android:drawable/arrow_up_float"
+            android:background="@android:color/transparent"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/enter_data"
+            android:layout_alignParentLeft="false"
+            />
+
+        <ImageButton
+            android:layout_width="@dimen/button_height"
+            android:layout_height="@dimen/button_height"
+            android:id="@+id/subtract_button"
+            android:src="@android:drawable/arrow_down_float"
+            android:background="@android:color/transparent"
+            android:focusableInTouchMode="false"/>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="202dp"
+        android:id="@id/chart_frame"
+        android:longClickable="true"
+        android:layout_alignLeft="@+id/include"
+        android:layout_below="@+id/include">
+
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/include"
+        android:layout_alignRight="@+id/include"
+        android:layout_alignParentTop="true"></LinearLayout>
+
+</RelativeLayout>

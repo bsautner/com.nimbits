@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.nimbits.cloudplatform"
+          android:versionCode="1"
+          android:versionName="1.0-SNAPSHOT">
+    <permission android:name="com.nimbits.cloudplatform.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+    <uses-permission android:name="com.nimbits.cloudplatform.permission.C2D_MESSAGE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.GET_TASKS"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+
+    <uses-sdk
+        android:minSdkVersion="7"
+        android:targetSdkVersion="16"/>
+
+    <application
+        android:icon="@drawable/nimbits_transparent_logo"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.Holo">
+
+
+
+
+
+        <activity
+             android:name="com.nimbits.cloudplatform.startup.StartupActivity"
+
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="com.apphance.android.LAUNCH"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+
+        </activity>
+        <activity
+            android:name=".main.MainActivity"
+            android:label="nimbits.com"
+            android:theme="@android:style/Theme.Black.NoTitleBar"/>
+
+
+        <activity
+            android:launchMode="singleInstance"
+            android:name=".settings.SettingsActivity"
+            android:label="Settings"/>
+        <activity
+            android:launchMode="singleInstance"
+            android:name=".main.NewEntityActivity"
+            android:label="New Nimbits Entity"/>
+
+        <activity
+            android:launchMode="singleInstance"
+            android:name=".settings.PointSettingsActivity"
+            android:label="Point Settings"/>
+        <activity
+            android:launchMode="singleInstance"
+            android:name=".alerts.AlertSettingActivity"
+            android:label="Alert Settings"/>
+        <activity android:name=".main.PointActivity" />
+
+
+    </application>
+
+
+</manifest>
+

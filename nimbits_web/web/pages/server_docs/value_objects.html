@@ -1,0 +1,90 @@
+<h4 style="margin-top: 10px; margin-bottom: 10px" xmlns="http://www.w3.org/1999/html"
+    xmlns="http://www.w3.org/1999/html">Value Object</h4>
+<script type="text/javascript" src="/include/rawfile.js">  </script>
+
+
+<p>
+    Think of a data point in nimbits as a bucket, and we fill it with <a href="#" onclick="getContent('/pages/server_docs/value_objects.html')">Value Objects</a>. As Values go into the bucket, alerts, stats and other
+    events are triggered. Further, there are rules on what can go into the bucket based on the Point's settings like filters that say only values
+    within a certain range can go in.
+
+
+</p>
+
+ <p>
+     A Value Object can consists of the following:
+
+
+
+
+ </p>
+        <ul>
+            <li>
+                Timestamp: saved in UTC format on the cloud
+            </li>
+            <li>
+                Double Value: such as 1.23
+            </li>
+            <li>
+                GPS Coordinates
+            </li>
+            <li>
+                Note: A string note
+            </li>
+            <li>
+                Data: String data, such as xml or JSON
+            </li>
+            <li>
+                State: the alert state, such as high, low or idle.
+            </li>
+
+        </ul>
+
+ <p>
+     To save space in storage and on the wire, we abbreviate the names of the above fields.
+
+
+ </p>
+<ul>
+    <li>
+      ts: Timestamp
+    </li>
+    <li>
+      d: The double value
+    </li>
+    <li>
+       lt, ln: Latitude and Longitude
+    </li>
+    <li>
+       n: Note
+    </li>
+    <li>
+      dx: Data
+    </li>
+    <li>
+      st: State
+    </li>
+
+</ul>
+
+ <p>
+     When Sending and receiving raw Value Object, they will come to you in JSON format.
+</p>
+
+<h4>A single value</h4>
+
+<pre class="prettyprint">
+{"lt":0.0,"lg":0.0,"d":3.14,"t":1342373434789,"n":"some notes","dx":"some data","st":3}
+</pre>
+
+<h4>An array of values</h4>
+<pre class="prettyprint">
+[
+    {"lt":0.0,"lg":0.0,"d":0.2602706311143118,"t":1342373434789,"n":"","dx":"","st":3},
+    {"lt":0.0,"lg":0.0,"d":0.03581511675296145,"t":1342373374789,"n":"","dx":""},
+    {"lt":0.0,"lg":0.0,"d":0.7220644789150683,"t":1342373314789,"n":"","dx":""},
+    {"lt":0.0,"lg":0.0,"d":0.18053588159183231,"t":1342373254789,"n":"","dx":""},
+    {"lt":0.0,"lg":0.0,"d":0.9417681686421047,"t":1342373194789,"n":"","dx":""},
+    {"lt":0.0,"lg":0.0,"d":0.8690989383818832,"t":1342373134789,"n":"","dx":""}
+]
+   </pre>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2012 Nimbits Inc.
+  ~
+  ~    http://www.nimbits.com
+  ~
+  ~
+  ~ Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.gnu.org/licenses/gpl.html
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <bean id="userDao" class="com.nimbits.server.transactions.dao.user.UserDAOImpl" scope="singleton">
+        <property name="entityService" ref="entityService" />
+        <property name="userService" ref="userService"/>
+        <property name="pmf" ref="pmfFactory" />
+
+    </bean>
+
+    <bean id="entityDao" class="com.nimbits.server.transactions.dao.entity.EntityDaoImpl" scope="singleton">
+        <property name="recursionValidation" ref="recursionValidation" />
+        <property name="pmf" ref="pmfFactory" />
+    </bean>
+
+    <bean id="valueDao" class="com.nimbits.server.transactions.dao.value.ValueDAOImpl" scope="singleton">
+        <property name="taskFactory" ref="taskFactory"/>
+        <property name="pmf" ref="pmfFactory" />
+    </bean>
+
+
+    <bean id="xmppDao" class="com.nimbits.server.transactions.dao.xmpp.XmppDaoImpl" scope="singleton">
+          <property name="pmf" ref="pmfFactory" />
+    </bean>
+
+    <bean id="settingsDao" class="com.nimbits.server.transactions.dao.settings.SettingsDAOImpl" scope="singleton">
+        <property name="pmf" ref="pmfFactory" />
+    </bean>
+
+    <bean id="shardedDate" class="com.nimbits.server.transactions.dao.counter.ShardedDate" scope="singleton">
+        <property name="cacheFactory" ref="cacheFactory" />
+
+    </bean>
+
+
+</beans>

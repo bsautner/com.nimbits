@@ -1,0 +1,84 @@
+<!--
+  ~ Copyright (c) 2010 Nimbits Inc.
+  ~
+  ~ http://www.nimbits.com
+  ~
+  ~
+  ~ Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.gnu.org/licenses/gpl.html
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+  -->
+
+<h2>Chart Services</h2>
+<p>
+    <a href="#" onclick="getContent('pages/web_service_primer.html')">Please read the web service primer</A> to
+    understand how to provide proper authentication parameters.
+    For simplicity, authentication parameters are not shown here.
+</p>
+<p>This is an overview of the chart image service, which can generate PNG format images of your data.  You may also be
+interested in reading about creating dynamic, live charts  <a href="#" onclick="getContent('pages/javascript_chart.html')">here</a>.</p>
+<p>
+    Nimbits is integrated into the <a href="http://code.google.com/apis/chart/image/">Google &trade; Image Chart API</a>.
+    It works simply by taking the URL parameters of a chart
+    you would request from Google, and adds your point's data to it. You can use the Chart API to embed Nimbits data
+    into
+    web pages, emails and so on.
+</p>
+
+<p>
+    Before you use Nimbits Charting, try experimenting with making charts using the Chart API itself. There are many
+    tutorials and even a wizard you can use to make charts.
+    <a href="http://code.google.com/apis/chart/image/">http://code.google.com/apis/chart/image/ </a>
+</p>
+
+<p>
+    The Chart API returns an Image in PNG format, generated using parameters in the URL you provide.
+    This example is generated using the url below.<p>
+<table border=0>
+    <tr>
+        <td>
+            <img align="left"
+                 src="http://chart.apis.google.com/chart?cht=s&chd=t:12,87,75,41,23,96,68,71,34,9|98,60,27,34,56,79,58,74,18,76|84,23,69,81,47,94,60,93,64,54&chxt=x,y&chs=200x125&chco=000000,ffff10"/>
+        </td>
+        <td>
+        <pre class="prettyprint">http://chart.apis.google.com/chart?cht=s&chd=t:12,87,75,41,23,96,68,71,34,9|98,60,27,34,56,79,58,74,18,76|84,23,69,81,47,94,60,93,64,54&chxt=x,y&chs=200x125&chco=000000,ffff10
+     </pre>
+        </td>
+    </tr>
+</table>
+<p>
+    Google Chart API adds the chd=t:... which represents the numbers to add to the chart. Simply change the url to
+    nimbits, add point parameters, and remove any chd
+    and Nimbits will add the data for you. The URL above becomes the new URL below.
+
+</p>
+<pre class="prettyprint">http://app.nimbits/com/service/chartapi?point=myPoint&cht=s&chxt=x,y&chs=200x125&chco=000000,ffff10
+     </pre>
+
+
+<p>
+    You can add the following parameters to the chart service request to tell nimbits how to format your chart. </p>
+<ul>
+    <li>point - a single point to add to the chart</li>
+    <li>points - comma delimited list of points i.e point1,point2 for multiple trends</li>
+    <li>count - a fixed number of values to add to the chart, current value and going back in time to the count</li>
+    <li>sd - the start date of a date range to show, in unix epoch milliseconds or a Nimbits timestamp</li>
+    <li>ed - the end date of a date range to show, in unix epoch milliseconds or a Nimbits timestamp</li>
+</ul>
+
+<h4>Example - live data from my temperature probe</h4>
+<table border=0>
+    <tr>
+        <td>
+            <img align="left"
+                 src="http://cloud.nimbits.com/service/chartapi?point=TempF&email=bsautner@gmail.com&cht=lc&chs=200x100&chxt=x,y"/>
+        </td>
+        <td>
+        <pre class="prettyprint">http://cloud.nimbits.com/service/chartapi?point=TempF&email=bsautner@gmail.com&cht=lc&chs=200x100&chxt=x,y
+     </pre>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript" src="/include/rawfile.js">  </script>

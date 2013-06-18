@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Nimbits</string>
+    <string name="New_Point_Category">New Point Category</string>
+    <string name="New_Data_Point">New Data Point</string>
+    <string name="Log_Out">Log Out</string>
+    <string name="Main_Menu">Main Menu</string>
+    <string name="View_Map">View Map</string>
+    <string name="Refresh">Refresh All</string>
+    <string name="AddCategoryText">Please enter the name of the new data point category</string>
+    <string name="Save">Save Entry</string>
+    <string name="View_Chart">View Chart</string>
+    <string name="Exit">Exit</string>
+    <string name="Servers">Servers</string>
+</resources>

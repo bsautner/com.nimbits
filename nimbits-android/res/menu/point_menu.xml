@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+        xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:enabled="true" android:visible="true" android:id="@+id/save_point"
+          android:title="@string/Save"></item>
+    <item android:enabled="true" android:id="@+id/main_menu2" android:title="@string/Main_Menu"
+          android:visible="true"></item>
+    <item android:id="@+id/back_menu" android:title="Back"></item>
+</menu>

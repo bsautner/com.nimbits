@@ -1,0 +1,69 @@
+<!--
+  ~ Copyright (c) 2010 Nimbits Inc.
+  ~
+  ~ http://www.nimbits.com
+  ~
+  ~
+  ~ Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.gnu.org/licenses/gpl.html
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+  -->
+
+<h2>Series Service</h2>
+<p>
+    <a href="#" onclick="getContent('pages/web_service_primer.html')">Please read the web service primer</A> to
+    understand how to provide proper authentication parameters.
+    For simplicity, authentication parameters are not shown here.
+
+</p>
+
+<p><strong>com.nimbits.server.service.SeriesService</strong></p>
+
+
+<p>Returns a series of data for a given point based on a requested limit of values up to 1000 records. The result is a
+    list of JSON <a href="#" onclick="getContent('/pages/server_docs/value_objects.html')">Value Objects</a>. Please see the object definition docs for more.
+</p>
+
+<h4>GET</h4>
+<ul>
+    <li>point - case sensitive name of the data point</li>
+    <li>count -optional defaults to 10, the number of recorded values to return from the most recent back</li>
+    <li>sd - optional the start date of a series. In Unix Epoch milliseconds</li>
+    <li>ed -optional the end date of a series. In Unix Epoch milliseconds</li>
+    <li>seg -the segment of the series to pull . See below</li>
+</ul>
+<p>
+    The Series service will only return 1000 RecordedValue objects or less.
+    So, you have to call this service several times with incremented seg paramaters to download more than 1000 records.
+</p>
+<p>The SDK does this by requesting segments of data for a date range until the result is zero:</p>
+
+<pre class="prettyprint">
+while (true) {
+    params = "seg=" + seg + "&sd=" + startDate.getTime() + "&ed=" + endDate.getTime() +"&point=" + URLEncoder.encode(pointName,"UTF-8");
+    result = doGet(destUrl, params);
+    List<RecordedValue> r = gson.fromJson(result, listType);
+    if (r.size()==0) {
+    break;
+    }
+    else {
+    retObj.addAll(r);
+    }
+    seg +=1000;
+    }
+</pre>
+
+<h4>Sample</h4>
+
+<pre class="prettyprint">http://cloud.nimbits.com/service/series?point=test&count=5</pre>
+
+<p>Returns the last 5 recorded values for the point.
+    JSON data contains GPS, text, and numeric values:</p>
+<pre class="prettyprint">[{"id":1967016,"lat":null,"lng":null,"d":0.0,"timestamp":"2010-08-01T14:47:06 +0000","pointFK":1929017,"note":null},{"id":2115002,"lat":0.0,"lng":0.0,"d":100.0,"timestamp":"2010-08-26T00:04:32 +0000","pointFK":1929017,"note":null},{"id":2219005,"lat":0.0,"lng":0.0,"d":20.0,"timestamp":"2010-09-11T16:14:42 +0000","pointFK":1929017,"note":null},{"id":2241007,"lat":0.0,"lng":0.0,"d":25.0,"timestamp":"2010-09-11T16:16:03 +0000","pointFK":1929017,"note":null},{"id":2356001,"lat":0.0,"lng":0.0,"d":251.0,"timestamp":"2010-09-20T18:07:27 +0000","pointFK":1929017,"note":null} ]
+</pre>
+
+
+
+<script type="text/javascript" src="/include/rawfile.js">  </script>

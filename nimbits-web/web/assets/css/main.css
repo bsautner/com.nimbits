@@ -1,0 +1,107 @@
+/*
+ * Copyright (c) 2010 Nimbits Inc.
+ *
+ * http://www.nimbits.com
+ *
+ *
+ * Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.gnu.org/licenses/gpl.html
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+ */
+body {
+    background: #ffffff;
+}
+
+a {
+    outline: none;
+    border: 0;
+}
+
+.highlight {
+    font-weight: bolder;
+    color: #083772;
+
+}
+
+.info {
+    font-size: inherit;
+
+}
+
+ul#list-nav {
+    list-style: none;
+    margin: 0px;
+    padding: 0;
+    width: 700px;
+    font-size: inherit;
+
+}
+
+ul#list-nav li {
+    display: inline;
+
+}
+
+ul#list-nav li a {
+    text-decoration: none;
+    padding: 0px 0;
+    width: 80px;
+    background: #ffffff;
+    color: #333333;
+    float: right;
+    text-align: center;
+    border-left: 1px solid #fff;
+}
+
+ul#list-nav li a:hover {
+    background: #a2b3a1;
+    color: #000
+}
+
+ul#list-side {
+    list-style: none;
+    margin: 0px;
+    padding: 0;
+    width: 50px;
+    font-size: smaller;
+
+}
+
+ul#list-side  li {
+    display: list-item;
+
+}
+
+ul#list-side  li a {
+    text-decoration: none;
+    padding: 3px 0;
+    width: 120px;
+    background: #ffffff;
+    color: #333333;
+    float: left;
+    text-align: left;
+    border-left: 1px solid #fff;
+}
+
+ul#list-side  li a:hover {
+    background: #a2b3a1;
+    color: #000
+}
+
+table#main {
+    width: 950px;
+    border: 0;
+    align: center;
+}
+
+img#logo {
+    width: 125px;
+    height: 125px
+
+}
+
+td#pointDemoRow {
+
+}

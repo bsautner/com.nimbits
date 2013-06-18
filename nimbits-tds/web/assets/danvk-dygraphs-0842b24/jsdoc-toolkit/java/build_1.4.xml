@@ -1,0 +1,49 @@
+<!--
+  ~ Copyright (c) 2010 Nimbits Inc.
+  ~
+  ~ http://www.nimbits.com
+  ~
+  ~
+  ~ Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.gnu.org/licenses/gpl.html
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+  -->
+
+<project default="clean-build"><!-- use this build script if you are stuck with ant version 1.4 -->
+   <target name="clean">
+        <delete dir="build"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="build/classes"/>
+        <javac
+         srcdir="src" destdir="build/classes"
+         classpath="./classes/js.jar"
+        />
+    </target>
+
+    <target name="jar">
+        <mkdir dir="build/jar"/>
+        <jar jarfile="build/jar/jsrun.jar" basedir="build/classes">
+            <manifest>
+               <attribute name="Main-Class" value="JsRun"/>
+               <attribute name="Class-Path" value="./java/classes/js.jar"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="debugjar">
+        <mkdir dir="build/jar"/>
+        <jar jarfile="build/jar/jsdebug.jar" basedir="build/classes">
+            <manifest>
+               <attribute name="Main-Class" value="JsDebugRun"/>
+               <attribute name="Class-Path" value="./java/classes/js.jar"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="clean-build" depends="clean,compile,jar"/>
+    <target name="clean-debug" depends="clean,compile,debugjar"/>
+</project>

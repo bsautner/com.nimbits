@@ -1,0 +1,106 @@
+<!--
+  ~ Copyright (c) 2010 Nimbits Inc.
+  ~
+  ~ http://www.nimbits.com
+  ~
+  ~
+  ~ Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.gnu.org/licenses/gpl.html
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+  -->
+
+<!-- A local source file that allows dygraph developers to test locally. -->
+<html>
+<head>
+  <!-- Standard Dygraph scripts -->
+  <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7; IE=EmulateIE9">
+  <!--[if IE]>
+  <script type="text/javascript" src="../../excanvas.js"></script>
+  <![endif]-->
+  <script type="text/javascript" src="../../dygraph-dev.js"></script>
+
+  <!-- Scripts for automated tests -->
+  <script type="text/javascript" src="../lib/jquery-1.4.2.js"></script>
+  <script type="text/javascript" src="../lib/Asserts.js"></script>
+  <script type="text/javascript" src="fake-jstestdriver.js"></script>
+  <script type="text/javascript" src="../tests/Proxy.js"></script>
+  <script type="text/javascript" src="../tests/CanvasAssertions.js"></script>
+  <script type="text/javascript" src="../tests/DygraphOps.js"></script>
+  <script type="text/javascript" src="../tests/sanity.js"></script>
+  <script type="text/javascript" src="../tests/simple_drawing.js"></script>
+  <script type="text/javascript" src="../tests/range_tests.js"></script>
+  <script type="text/javascript" src="../tests/axis_labels.js"></script>
+  <script type="text/javascript" src="../tests/multi_csv.js"></script>
+  <script type="text/javascript" src="../tests/to_dom_coords.js"></script>
+  <script type="text/javascript" src="../tests/interaction_model.js"></script>
+  <!--
+  <script type="text/javascript" src="../tests/tickers.js"></script>
+  -->
+  <script type="text/javascript" src="../tests/scrolling_div.js"></script>
+  <script type="text/javascript" src="../tests/custom_bars.js"></script>
+  <script type="text/javascript" src="../tests/css.js"></script>
+  <script type="text/javascript" src="../tests/selection.js"></script>
+  <script type="text/javascript" src="../tests/rolling_average.js"></script>
+  <script type="text/javascript" src="../tests/error_bars.js"></script>
+  <script type="text/javascript" src="../tests/annotations.js"></script>
+  <script type="text/javascript" src="../tests/scientific_notation.js"></script>
+  <script type="text/javascript" src="../tests/update_options.js"></script>
+  <script type="text/javascript" src="../tests/utils_test.js"></script>
+  <script type="text/javascript" src="../tests/multiple_axes.js"></script>
+
+
+  <script type="text/javascript">
+  var tc = null;
+  function processVariables() {
+    var splitVariables = function() { // http://www.idealog.us/2006/06/javascript_to_p.html
+      var query = window.location.search.substring(1);
+      var args = {};
+      var vars = query.split("&");
+      for (var i = 0;i < vars.length; i++) {
+        var pair = vars[i].split("=");
+        args[pair[0]] = pair[1];
+      }
+      return args;
+    }
+
+    var args = splitVariables();
+    var test = args.test;
+    var command = args.command;
+
+    if (args.testCase) {
+      eval("tc = new " + args.testCase + "()");
+      if (args.command) {
+        if (args.command == "runAllTests") {
+          console.log("Running all tests for " + args.testCase);
+          tc.runAllTests();
+        }
+        if (args.command == "runTest") {
+          console.log("Running test " + args.testCase + "." + args.test);
+          tc.runTest(args.test);
+        }
+      }
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id='graph'></div>
+  <p>This file is really nothing more than all the tests coalesced into a single
+  HTML file. To run a test, open a Javascript console and execute, for
+  instance,</p>
+  <code>testDrawSimpleRangePlusOne()</code>
+
+  <p>Alternatively you can use query args: <ul>
+  <li>testCase - for the name of the test case
+  <li>test - for the name of the test (use command=runTest)
+  <li>command - either runTest or runAllTests.
+  </ul>
+  Example: <code>local.html?testCase=ScrollingDivTestCase&test=testNestedDiv_Scrolled&command=runTest</code>
+</body>
+<script>
+processVariables();
+addGlobalTestSymbols();
+</script>
+</html>

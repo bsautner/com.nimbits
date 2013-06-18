@@ -1,0 +1,157 @@
+<!--
+  ~ Copyright (c) 2012 Nimbits Inc.
+  ~
+  ~    http://www.nimbits.com
+  ~
+  ~
+  ~ Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.gnu.org/licenses/gpl.html
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+  -->
+
+<html>
+<head>
+
+    <script type="text/javascript" src="/assets/js/jquery/jquery-1.7.1.js"></script>
+    <script type="text/javascript">
+        var c=0;
+        var t;
+        var timer_is_on=0;
+
+        function timedCount()
+        {
+            var r1=Math.floor(Math.random()*11);
+            var r2=Math.floor(Math.random()*11);
+
+            $.post("http://app2.nimbits.com/service/batch",
+                    { email: "bsautner@gmail.com", p2: "batch monitor 2", v2: r2, p1: "batch monitor 1", v1: r1, key:"key" },
+                    function(data){
+
+                    }
+            );
+            c=c+1;
+
+            t=setTimeout("timedCount()",1000);
+
+        }
+
+        function doTimer()
+        {
+            if (!timer_is_on)
+            {
+                timer_is_on=1;
+                timedCount();
+            }
+        }
+
+        function createPoint() {
+
+
+            $.post("http://cloud.nimbits.com/service/entity",
+                    { email: "test@example.com", action: "create", json: {"inferLocation":true,"filterType":4,"name":"Schedule-B2EC1DC4","entityType":1,"protectionLevel":2,"description":"Daily","parent":"test@example.com/Medication-B2EC1DC4","owner":"ctcreel@gmail.com"}, point: "hello post child", key:"key!" },
+                    function(data){
+                        alert(data);
+                    }
+            );
+
+          }
+        function deletePoint() {
+
+
+            $.post("http://app2.nimbits.com/service/point",
+                    { email: "bsautner@gmail.com", action: "delete",point: "re", key:"69ce042a-8e9e-478d-a07b-0523ee3c63af" },
+                    function(data){
+                        alert(data);
+                    }
+            );
+
+        }
+        function recordValue() {
+
+
+            $.post("http://app2.nimbits.com/service/currentvalue",
+                    { email: "bsautner@gmail.com", key:"key1", point: "foo", value: "78", data: "WT2"},
+                    function(data){
+                        alert(data);
+                    }
+            );
+
+        }
+        function updateEntity() {
+
+
+            $.post("http://cloud.nimbits.com/service/entity",
+                    { email: "bsautner@gmail.com", key:"69ce042a-8e9e-478d-a07b-0523ee3c63af",
+                      action:"update",
+                        json: "{\"highAlarm\":0.0,\"expire\":365,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":false,\"idleAlarmOn\":false,\"idleSeconds\":0,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.0,\"values\":null,\"value\":null,\"name\":\"TempC\",\"key\":\"bsautner@gmail.com/TempC\",\"description\":updated!,\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"68f03378-fec7-48d8-b7dd-89ad9a4bd8f0\",\"owner\":\"bsautner@gmail.com\",\"readOnly\":false,\"uuid\":\"3e1fc1ec-a8b7-4f10-adc5-f41e84547602\",\"dateCreated\":\"2012-05-11T23:18:05 +0000\",\"children\":null}"},
+                    function(data){
+                        alert(data);
+                    }
+            );
+
+        }
+        function createPointEntityService() {
+
+
+            $.post("http://cloud.nimbits.com/service/entity",
+                    { email: "bsautner@gmail.com", key:"69ce042a-8e9e-478d-a07b-0523ee3c63af",
+                        action:"create",
+                        json: "{\"highAlarm\":0.0,\"expire\":90,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":true,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery99907t\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"bsautner@gmail.com\",\"owner\":\"bsautner@gmail.com\"}"},
+                    function(data){
+
+                        alert(data);
+                    }
+
+            );
+
+        }
+
+        function createPointEntityServiceMin() {
+
+
+            $.post("http://cloud.nimbits.com/service/entity",
+                    { email: "bsautner@gmail.com", key:"key1",
+                        action:"create",
+                        json: "{\"filterType\":4,\"name\":\"bug265464\",\"entityType\":1,\"protectionLevel\":2,\"parent\":\"bsautner@gmail.com\",\"owner\":\"bsautner@gmail.com\"}"},
+                    function(data){
+                        alert(data);
+
+                    }
+
+            );
+
+        }
+        function postCoreInstance() {
+
+
+            $.post("http://nimbits.net:8080",
+                    {json: "server={\"id\":0,\"baseUrl\":\"http://localhost:8081\",\"ownerEmail\":\"bsautner@nimbits.com\",\"version\":\"3.2.0.8\",\"ts\":null,\"name\":\"http://localhost:8081\",\"key\":null,\"description\":\"\",\"entityType\":12,\"protectionLevel\":2,\"alertType\":3,\"parent\":\"http://localhost:8081\",\"owner\":\"support@nimbits.com\",\"readOnly\":false,\"uuid\":\"\",\"dateCreated\":\"2012-05-29T13:22:42 +0000\",\"children\":null}&entity={\"name\":\"http://localhost:8081\",\"key\":null,\"description\":\"\",\"entityType\":12,\"protectionLevel\":2,\"alertType\":3,\"parent\":\"http://localhost:8081\",\"owner\":\"support@nimbits.com\",\"readOnly\":false,\"uuid\":\"\",\"dateCreated\":\"2012-05-29T13:22:42 +0000\",\"children\":null}&action=update&url=http://localhost:8082"},
+                    function(data){
+                        alert(data);
+
+                    }
+
+            );
+
+        }
+    </script>
+</head>
+
+<body>
+<form>
+    <input type="button" value="Start" onClick="doTimer();">
+     <span>batch service</span>
+    <input type="button" value="Test Post" onClick="createPoint();">
+    <input type="button" value="Test record" onClick="recordValue();">
+    <input type="button" value="Test Update" onClick="updateEntity();">
+    <input type="button" value="Test Delete" onClick="deletePoint();">
+    <input type="button" value="Test Create Point Entity Service" onClick="createPointEntityService();">
+    <input type="button" value="Test Instance To Core" onClick="postCoreInstance();">
+    <input type="button" value="Test create with min json" onClick="createPointEntityServiceMin();">
+</form>
+
+</body>
+</html>
+

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
+
+    <persistence-unit name="persistenceUnit" transaction-type="RESOURCE_LOCAL">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <class>com.nimbits.server.orm.JpaEntity</class>
+        <class>com.nimbits.server.orm.JpaSearchLog</class>
+        <class>com.nimbits.server.orm.JpaInstance</class>
+        <class>com.nimbits.server.orm.JpaClient</class>
+        <class>com.nimbits.server.orm.JpaClientCommunication</class>
+        <properties>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3307/nimbits_schema"/>
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+            <property name="javax.persistence.jdbc.user" value="root"/>
+            <property name="javax.persistence.jdbc.password" value="Port1234!"/>
+            <!--<property name="eclipselink.logging.level" value="FINE"/>-->
+        </properties>
+    </persistence-unit>
+</persistence>

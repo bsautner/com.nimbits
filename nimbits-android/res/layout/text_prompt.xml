@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/layout_root"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:padding="10dp"
+              android:orientation="vertical">
+ 
+    <TextView android:id="@+id/text"
+              android:layout_width="wrap_content"
+              android:textColor="#FFF"
+              android:text="You can change the URL of the Nimbits Server you're using. The default is the public server on nimbits1.appspot.com" android:layout_height="wrap_content"/>
+ <EditText
+android:id="@+id/new_value"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+android:textSize="18sp"
+android:padding="5px" android:phoneNumber="false" android:paddingTop="10px" android:saveEnabled="true">
+</EditText>
+<TableRow android:id="@+id/TableRow01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="right">
+<Button android:text="Default" android:id="@+id/textPromptDefaultButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="left"></Button>
+<Button android:text="OK" android:id="@+id/textPromptOKButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="right"></Button>
+
+</TableRow>
+</LinearLayout>

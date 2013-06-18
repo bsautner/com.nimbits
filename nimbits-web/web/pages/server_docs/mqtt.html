@@ -1,0 +1,74 @@
+<h4 style="margin-top: 10px; margin-bottom: 10px" xmlns="http://www.w3.org/1999/html"
+    xmlns="http://www.w3.org/1999/html">MQTT</h4>
+<script type="text/javascript" src="/include/rawfile.js">  </script>
+
+
+
+<blockquote>
+            <p align="justify">
+            MQTT stands for MQ Telemetry Transport. It is a publish/subscribe, extremely simple and lightweight messaging protocol, designed for constrained devices and low-bandwidth, high-latency or unreliable networks. The design principles are to minimise network bandwidth and device resource requirements whilst also attempting to ensure reliability and some degree of assurance of delivery. These principles also turn out to make the protocol ideal of the emerging “machine-to-machine” (M2M) or “Internet of Things” world of connected devices, and for mobile applications where bandwidth and battery power are at a premium.
+            </p>
+    <small ><A href="http://mqtt.org/">mqtt.org</a></small>
+        </blockquote>
+
+
+<P>
+  As data flows into a data point, you can configure that point to go into a high or low  <a href="#" onclick="getContent('/pages/server_docs/learn.html')">
+    alert state</a>, or configure an alert to be triggered if a point does not receive value for a specific period of time. If you want to be informed of these
+    events in some way, you can create a subscription to that event. You can subscribe to any public point's events - even those belonging to other users if the
+    protection level is set to public.
+
+</P>
+
+<p>
+   You can  <a href="#" onclick="getContent('/pages/server_docs/learn.html')">subscribe to a point</a> on when it goes high, low or any time it receives a new value.
+   You can then choose how you want to be informed and Nimbits can send you an email, an instant message etc. Here we will discuss how it can also relay the new data value
+   using MQTT protocols as well as feed data into a point using MQTT.
+
+</p>
+
+<h5>Getting started</h5>
+
+ <p>Assuming you have an <a href="http://mqtt.org/software">MQTT based client</a>, such as an Arduino with the MQTT library, you can subscribe to a point using the following parameters: </p>
+  <ul>
+
+      <li><strong>broker URL</strong> mqtt.nimbits.com</li>
+      <li><strong>PORT</strong> 1883</li>
+      <li><strong>URL</strong> tcp://mqtt.nimbits.com:1883</li>
+      <li><strong>Client ID</strong> Your client id must be your email account you use to login to nimbits.</li>
+
+  </ul>
+  <p>The topic you subscribe to for listening for new values is formatted as : [instance id]/[email]/[point name]</p>
+  <p>For example, nimbits1/test@example.com/pointName</p>
+  <p>Since you can specify the instance id, you can relay data to Nimbits instances other than the public cloud. However, please note that the broker mqtt.nimbits.com
+  is still bound by the  <a href="#" onclick="getContent('/pages/terms.html')"> and that for now, all mqtt transmissions on the public cloud are readable my any client.
+          terms of use</a> of the public Nimbits cloud. We can build you your own broker if you are running your own instance of Nimbits. Please <a href="#" onclick="getContent('/pages/server_docs/help.html')">contact support</a> to learn more.</p>
+
+<h5>Payloads</h5>
+<p>
+   The payload is a Nimbits Value in JSON Format. For example:</p>
+<pre class="prettyprint">
+    {"lt":0.0,"lg":0.0,"d":84.0,"t":1340827070070,"n":"some notes","dx":"some data","st":3}
+    </pre>
+
+
+<ul>
+    <li>lt: Latitude GPS Coords</li>
+    <li>lg: Longitude GPS Coords</li>
+    <li>d: the number value</li>
+    <li>t: The timestamp, in millisecond unix epoch format</li>
+    <li>n: A note. This would be the annotation in a chart and can be any string</li>
+    <li>dx: Data. Can be any string data, you can store xml or json in this channel</li>
+    <li>st: The alert state of this value as defined <a href="https://github.com/bsautner/com.nimbits/blob/master/nimbits-model/src/com/nimbits/client/enums/AlertType.java">here</a>. </li>
+
+</ul>
+
+<h5>Recording Data</h5>
+
+ You can use your MQTT code to send data into a nimbits point, using the same payload as above. The only difference is that you include an
+<a href="#" onclick="getContent('pages/server_docs/keys.html')">access key</a> as the last part
+  of the topic - which is your writable topic.
+<p>For example, <strong>nimbits1/test@example.com/pointName/accessKey</strong></p>
+
+<img style="margin: 5px" src="/images/screens/screen_mqtt_sub.png" alt="">
+

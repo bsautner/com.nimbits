@@ -1,0 +1,17 @@
+{
+  "kind": "discovery#directoryItem",
+  "id": "gdata-appsforyourdomain:1.0",
+  "name": "gdata-appsforyourdomain",
+  "version": "1.0",
+  "title": "Apps For Your Domain",
+  "publisher": "Google",
+  "description": "Google Apps provides powerful communication, collaboration, and productivity tools right from the browser. More than 2 million businesses are using Google Apps and 3,000 more sign up each day. With Google's platform, you can extend the functionality of Google Apps, integrate with other systems, or build new applications for your company and other businesses.",
+  "downloadLink": "static/gdata-appsforyourdomain-1.0.zip",
+  "icons": {
+    "x16": "icons/search-16.png"
+  },
+  "tosLink": "http://code.google.com/terms.html",
+  "releaseDate": "2009-11-05",
+  "documentationLink": "http://code.google.com/googleapps/docs/",
+  "preferred": true
+}

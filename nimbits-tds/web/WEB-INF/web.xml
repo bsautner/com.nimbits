@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright (c) 2012 Nimbits Inc.
+  ~
+  ~    http://www.nimbits.com
+  ~
+  ~
+  ~ Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.gnu.org/licenses/gpl.html
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+  -->
+
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+		  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5">
+
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            classpath:/META-INF/applicationContext.xml,
+            classpath:/META-INF/applicationContext-api.xml,
+            classpath:/META-INF/applicationContext-cache.xml,
+            classpath:/META-INF/applicationContext-cron.xml,
+            classpath:/META-INF/applicationContext-dao.xml,
+            classpath:/META-INF/applicationContext-service.xml,
+            classpath:/META-INF/applicationContext-task.xml,
+            classpath:/META-INF/applicationContext-factory.xml
+        </param-value>
+    </context-param>
+
+
+
+    <servlet>
+        <servlet-name>OpenIdServlet</servlet-name>
+        <servlet-class>com.nimbits.server.api.openid.OpenIdServlet</servlet-class>
+        <init-param>
+            <param-name>realm</param-name>
+            <param-value/>
+        </init-param>
+        <init-param>
+            <param-name>return_to_path</param-name>
+            <param-value>/openid</param-value>
+        </init-param>
+        <init-param>
+            <param-name>home_path</param-name>
+            <param-value>/</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>OpenIdServlet</servlet-name>
+        <url-pattern>/openid</url-pattern>
+    </servlet-mapping>
+
+
+
+    <listener>
+        <listener-class>
+            org.springframework.web.context.ContextLoaderListener
+        </listener-class>
+    </listener>
+
+    <servlet>
+
+        <servlet-name>springGwtRemoteServiceServlet</servlet-name>
+
+        <servlet-class>com.nimbits.server.spring.SpringGwtRemoteServiceServlet</servlet-class>
+
+    </servlet>
+
+    <servlet-mapping>
+
+        <servlet-name>springGwtRemoteServiceServlet</servlet-name>
+
+        <url-pattern>/nimbits/*</url-pattern>
+
+    </servlet-mapping>
+
+
+
+    <!--<servlet>-->
+        <!--<servlet-name>SystemServiceServlet</servlet-name>-->
+        <!--<servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>-->
+        <!--<init-param>-->
+            <!--<param-name>services</param-name>-->
+            <!--<param-value/>-->
+        <!--</init-param>-->
+    <!--</servlet>-->
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>SystemServiceServlet</servlet-name>-->
+        <!--<url-pattern>/_ah/spi/*</url-pattern>-->
+    <!--</servlet-mapping>-->
+
+
+    <servlet-mapping>
+        <servlet-name>docServlet</servlet-name>
+        <url-pattern>/doc</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>docServlet</servlet-name>
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+
+        <init-param>
+            <param-name>consumer_key</param-name>
+            <param-value>1009209848329.apps.googleusercontent.com</param-value>
+        </init-param>
+        <init-param>
+            <param-name>consumer_secret</param-name>
+            <param-value>m4S1GkGguCvyFO70bxHuKNzH</param-value>
+        </init-param>
+    </servlet>
+
+
+
+    <servlet>
+        <servlet-name>xmpp</servlet-name>
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>xmpp</servlet-name>
+        <url-pattern>/_ah/xmpp/message/chat/</url-pattern>
+    </servlet-mapping>
+
+
+
+
+
+    <servlet>
+        <servlet-name>entity</servlet-name>
+
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>entity</servlet-name>
+        <url-pattern>/service/entity</url-pattern>
+    </servlet-mapping>
+
+
+
+
+
+    <servlet>
+        <servlet-name>blob</servlet-name>
+
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>blob</servlet-name>
+        <url-pattern>/service/blob</url-pattern>
+    </servlet-mapping>
+
+
+
+    <servlet>
+        <servlet-name>remote_api</servlet-name>
+        <servlet-class>com.google.apphosting.utils.remoteapi.RemoteApiServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>remote_api</servlet-name>
+        <url-pattern>/_ah/remote_api</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>mailhandler</servlet-name>
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>mailhandler</servlet-name>
+        <url-pattern>/_ah/mail/*</url-pattern>
+    </servlet-mapping>
+
+
+
+
+
+<!--task-->
+
+    <servlet>
+        <servlet-name>uploadTask</servlet-name>
+
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>uploadTask</servlet-name>
+        <url-pattern>/task/uploadTask</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>dumpTask</servlet-name>
+
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dumpTask</servlet-name>
+        <url-pattern>/task/dumpTask</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>valueTask</servlet-name>
+        <!--<servlet-class>ValueTask</servlet-class>-->
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>valueTask</servlet-name>
+        <url-pattern>/task/valueTask</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>deleteBlobTask</servlet-name>
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>deleteBlobTask</servlet-name>
+        <url-pattern>/task/deleteBlobTask</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>coreTask</servlet-name>
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>coreTask</servlet-name>
+        <url-pattern>/task/coreTask</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>batchTask</servlet-name>
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>batchTask</servlet-name>
+        <url-pattern>/task/batchTask</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>mailTask</servlet-name>
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>mailTask</servlet-name>
+        <url-pattern>/task/mailTask</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>deleteTask</servlet-name>
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>deleteTask</servlet-name>
+        <url-pattern>/task/deleteTask</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>pointTask</servlet-name>
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>pointTask</servlet-name>
+        <url-pattern>/task/pointTask</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>moveTask</servlet-name>
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>moveTask</servlet-name>
+        <url-pattern>/task/moveTask</url-pattern>
+    </servlet-mapping>
+
+
+    <!--cron-->
+
+    <servlet>
+        <servlet-name>orphansCron</servlet-name>
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>orphansCron</servlet-name>
+        <url-pattern>/cron/orphansCron</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>pointCron</servlet-name>
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <!--<servlet-class>PointCron</servlet-class>-->
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>pointCron</servlet-name>
+        <url-pattern>/cron/pointCron</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>sessionCron</servlet-name>
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>sessionCron</servlet-name>
+        <url-pattern>/cron/sessionCron</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>systemCron</servlet-name>
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>systemCron</servlet-name>
+        <url-pattern>/cron/systemCron</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>idleCron</servlet-name>
+        <!--<servlet-class>IdlePointCron</servlet-class>-->
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>idleCron</servlet-name>
+        <url-pattern>/cron/idleCron</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>moveCron</servlet-name>
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>moveCron</servlet-name>
+        <url-pattern>/cron/moveCron</url-pattern>
+    </servlet-mapping>
+    <!--end cron -->
+
+
+    <servlet>
+        <servlet-name>orphans</servlet-name>
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>orphans</servlet-name>
+        <url-pattern>/service/orphans</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>value</servlet-name>
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>value</servlet-name>
+        <url-pattern>/service/currentvalue</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>value</servlet-name>
+        <url-pattern>/service/value</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>series</servlet-name>
+
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>series</servlet-name>
+        <url-pattern>/service/series</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>feed</servlet-name>
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>feed</servlet-name>
+        <url-pattern>/service/feed</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>point</servlet-name>
+
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>point</servlet-name>
+        <url-pattern>/service/point</url-pattern>
+    </servlet-mapping>
+
+
+
+
+    <servlet>
+        <servlet-name>storage</servlet-name>
+        <servlet-class>com.nimbits.server.io.storage.StorageServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>storage</servlet-name>
+        <url-pattern>/service/storage</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>time</servlet-name>
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>time</servlet-name>
+        <url-pattern>/service/time</url-pattern>
+    </servlet-mapping>
+
+
+
+
+    <servlet>
+        <servlet-name>chart</servlet-name>
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>chart</servlet-name>
+        <url-pattern>/service/char</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>auth</servlet-name>
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>auth</servlet-name>
+        <url-pattern>/service/auth</url-pattern>
+    </servlet-mapping>
+
+
+
+
+    <servlet>
+        <servlet-name>batch</servlet-name>
+        <!--<servlet-class>BatchServletImpl</servlet-class>-->
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+
+    </servlet>
+
+
+    <servlet-mapping>
+        <servlet-name>batch</servlet-name>
+        <url-pattern>/service/batch</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>quota</servlet-name>
+        <!--<servlet-class>QuotaServletImpl</servlet-class>-->
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>quota</servlet-name>
+        <url-pattern>/admin/quota</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>userReportService</servlet-name>
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>userReportService</servlet-name>
+        <url-pattern>/admin/user_report</url-pattern>
+    </servlet-mapping>
+
+
+    <!--<servlet>-->
+        <!--<servlet-name>com.nimbits.nimbits OAuth2Servlet</servlet-name>-->
+        <!--<servlet-class>com.nimbits.server.external.google.OAuth2Servlet</servlet-class>-->
+    <!--</servlet>-->
+
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>com.nimbits.nimbits OAuth2Servlet</servlet-name>-->
+        <!--<url-pattern>/OAuth2Servlet</url-pattern>-->
+    <!--</servlet-mapping>-->
+
+
+    <security-constraint>
+        <web-resource-collection>
+            <url-pattern>/cron/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <security-constraint>
+        <web-resource-collection>
+            <url-pattern>/admin/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+
+    <security-constraint>
+        <web-resource-collection>
+            <url-pattern>/task/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <security-constraint>
+        <web-resource-collection>
+            <url-pattern>/appstats/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+</web-app>

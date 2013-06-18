@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2010 Nimbits Inc.
+  ~
+  ~ http://www.nimbits.com
+  ~
+  ~
+  ~ Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.gnu.org/licenses/gpl.html
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+  -->
+
+<html>
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7; IE=EmulateIE9">
+    <title>no-visibility</title>
+    <!--[if IE]>
+    <script type="text/javascript" src="../excanvas.js"></script>
+    <![endif]-->
+    <!--
+    For production (minified) code, use:
+    <script type="text/javascript" src="dygraph-combined.js"></script>
+    -->
+    <script type="text/javascript" src="../dygraph-dev.js"></script>
+
+    <script type="text/javascript" src="data.js"></script>
+  </head>
+  <body>
+    <h3>No visible series</h3>
+    <p>This test verifies that a chart will still draw without any JS errors
+    when no series are visible.</p>
+    <div id="div_g" style="width:400px; height:200px;"></div>
+    <p>This graph's specified value range should be respected.</p>
+    <div id="div_g2" style="width:400px; height:200px;"></div>
+
+    <script type="text/javascript">
+      g = new Dygraph(
+            document.getElementById("div_g"),
+            NoisyData, {
+              rollPeriod: 7,
+              errorBars: true,
+              visibility: [false, false]
+            }
+          );
+      g2 = new Dygraph(
+            document.getElementById("div_g2"),
+            NoisyData, {
+              rollPeriod: 7,
+              errorBars: true,
+              visibility: [false, false],
+              valueRange: [100, 200]
+            }
+          );
+    </script>
+
+  </body>
+</html>

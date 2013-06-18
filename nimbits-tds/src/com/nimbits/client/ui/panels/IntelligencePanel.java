@@ -1,0 +1,444 @@
+/*
+ * Copyright (c) 2010 Nimbits Inc.
+ *
+ * http://www.nimbits.com
+ *
+ *
+ * Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.gnu.org/licenses/gpl.html
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+ */
+
+package com.nimbits.client.ui.panels;
+
+import com.extjs.gxt.ui.client.event.BaseEvent;
+import com.extjs.gxt.ui.client.event.ButtonEvent;
+import com.extjs.gxt.ui.client.event.Listener;
+import com.extjs.gxt.ui.client.event.SelectionListener;
+import com.extjs.gxt.ui.client.util.Margins;
+import com.extjs.gxt.ui.client.util.Padding;
+import com.extjs.gxt.ui.client.widget.Html;
+import com.extjs.gxt.ui.client.widget.LayoutContainer;
+import com.extjs.gxt.ui.client.widget.MessageBox;
+import com.extjs.gxt.ui.client.widget.VerticalPanel;
+import com.extjs.gxt.ui.client.widget.button.Button;
+import com.extjs.gxt.ui.client.widget.form.*;
+import com.extjs.gxt.ui.client.widget.layout.BoxLayout;
+import com.extjs.gxt.ui.client.widget.layout.FormData;
+import com.extjs.gxt.ui.client.widget.layout.HBoxLayout;
+import com.extjs.gxt.ui.client.widget.layout.HBoxLayoutData;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.nimbits.client.constants.UserMessages;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.exception.NimbitsException;
+import com.nimbits.client.model.common.impl.CommonFactory;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.intelligence.Intelligence;
+import com.nimbits.client.model.intelligence.IntelligenceModelFactory;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.service.entity.EntityService;
+import com.nimbits.client.service.entity.EntityServiceAsync;
+import com.nimbits.client.service.intelligence.IntelligenceService;
+import com.nimbits.client.service.intelligence.IntelligenceServiceAsync;
+import com.nimbits.client.ui.controls.EntityCombo;
+import com.nimbits.client.ui.helper.FeedbackHelper;
+import com.nimbits.client.ui.icons.Icons;
+
+/**
+ * Created by Benjamin Sautner
+ * User: BSautner
+ * Date: 1/17/12
+ * Time: 3:29 PM
+ */
+public class IntelligencePanel extends NavigationEventProvider {
+
+    private static final int WIDTH = 350;
+    private FormData formdata;
+    private VerticalPanel vp;
+    private final Entity entity;
+    private final User user;
+
+
+
+    public IntelligencePanel(final User user, final Entity entity) {
+        this.entity = entity;
+        this.user = user;
+
+
+    }
+    @Override
+    protected void onRender(final Element parent, final int index) {
+        super.onRender(parent, index);
+        // setLayout(new FillLayout());
+        formdata = new FormData("-20");
+        vp = new VerticalPanel();
+        vp.setSpacing(10);
+
+
+        try {
+            createForm();
+            add(vp);
+            doLayout();
+        } catch (NimbitsException e) {
+            FeedbackHelper.showError(e);
+        }
+
+
+
+    }
+
+    TextField<String> nameField;
+    TextArea intelFormula;
+    TextField<String> intelNodeId;
+    CheckBox intelEnabled;
+    CheckBox intelPlainText;
+    EntityCombo intelTargetPoint;
+    private void createForm() throws NimbitsException {
+
+        final FormPanel simple = new FormPanel();
+        simple.setWidth(WIDTH);
+        simple.setFrame(true);
+        simple.setHeaderVisible(false);
+        simple.setBodyBorder(false);
+        simple.setFrame(false);
+
+        intelFormula = new TextArea();
+
+        intelNodeId = new TextField<String>();
+
+
+        intelEnabled = new CheckBox();
+        intelPlainText = new CheckBox();
+
+        nameField = new TextField<String>();
+        nameField.setFieldLabel("Name");
+        String target = null;
+
+        if (entity.getEntityType().equals(EntityType.intelligence)) {
+            Intelligence intelligence = (Intelligence) entity;
+            nameField.setValue(entity.getName().getValue());
+            intelFormula.setValue(intelligence.getInput());
+            intelEnabled.setValue(intelligence.isEnabled());
+            intelNodeId.setValue(intelligence.getNodeId());
+            intelPlainText.setValue(intelligence.getResultsInPlainText());
+            target =  intelligence.getTarget();
+        }
+        else {
+            nameField.setValue(entity.getName().getValue() + " Intelligence");
+            intelEnabled.setValue(false);
+            intelPlainText.setValue(true);
+            intelNodeId.setValue("Result");
+        }
+
+
+
+        intelTargetPoint = new EntityCombo(user, EntityType.point, target, UserMessages.MESSAGE_SELECT_POINT);
+        intelTargetPoint.setFieldLabel("Target");
+
+
+
+
+        Button submit = new Button("Submit");
+        Button cancel = new Button("Cancel");
+        Button test = new Button("Test");
+        test.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.play()));
+
+
+        cancel.addSelectionListener(new CancelButtonEventSelectionListener());
+
+        test.addSelectionListener(new SelectionListener<ButtonEvent>() {
+
+
+
+            @Override
+            public void componentSelected(ButtonEvent buttonEvent) {
+
+                //        alert("Intelligence testing is temporarily unavailable");
+                Intelligence update = null;
+                try {
+                    update = createUpdate();
+
+
+                    IntelligenceServiceAsync service = GWT.create(IntelligenceService.class);
+                    service.processInput(user, update, new TestInputValueAsyncCallback());
+                } catch (NimbitsException e) {
+                    FeedbackHelper.showError(e);
+                }
+
+            }
+        });
+
+
+        submit.addSelectionListener(new SubmitButtonEventSelectionListener(nameField, intelTargetPoint, intelEnabled, intelFormula, intelNodeId, intelPlainText));
+
+
+        Html h = new Html("<p>Whenever the this point receives a new value, a query can be made " +
+                "using the WolframAlpha service using your point's data as part of the query. The " +
+                "result is then stored in the target point. Text and XML results can be stored in the data channel" +
+                "while numeric results can be stored in the number channel. </p>");
+
+
+        Html pn = new Html("<p><b>Name: </b>" + entity.getName().getValue() + "</p>");
+
+
+        intelFormula.setFieldLabel("Input");
+        intelNodeId.setFieldLabel("Pod ID");
+
+
+
+        intelTargetPoint.setFieldLabel("Target Point");
+
+        intelEnabled.setBoxLabel("Enabled");
+        intelEnabled.setLabelSeparator("");
+        intelPlainText.setBoxLabel("<i>(Requires a Pod Id)</i>");
+        intelPlainText.setFieldLabel("Results in Plain Text");
+
+
+
+
+        // simple.add(h);
+        //    simple.add(btnTestIntel);
+        simple.add(nameField, formdata);
+        simple.add(intelFormula, formdata);
+        simple.add(intelNodeId, formdata);
+        simple.add(intelTargetPoint, formdata);
+        simple.add(intelPlainText, formdata);
+        simple.add(intelEnabled, formdata);
+
+
+        vp.add(h);
+        vp.add(pn);
+
+
+
+
+        LayoutContainer c = new LayoutContainer();
+        HBoxLayout layout = new HBoxLayout();
+        layout.setPadding(new Padding(5));
+        layout.setHBoxLayoutAlign(HBoxLayout.HBoxLayoutAlign.MIDDLE);
+        layout.setPack(BoxLayout.BoxLayoutPack.END);
+        c.setLayout(layout);
+        cancel.setWidth(100);
+        submit.setWidth(100);
+        HBoxLayoutData layoutData = new HBoxLayoutData(new Margins(0, 5, 0, 0));
+        c.add(test, layoutData);
+        c.add(cancel, layoutData);
+        c.add(submit, layoutData);
+
+
+
+        vp.add(simple);
+        vp.add(c);
+
+
+
+    }
+
+
+    private static class TagetBaseEventListener implements Listener<BaseEvent> {
+        private final Radio intelTargetRadioNumber;
+        private final TextField<String> intelNodeId;
+        private final CheckBox intelPlainText;
+
+        TagetBaseEventListener(Radio intelTargetRadioNumber, TextField<String> intelNodeId, CheckBox intelPlainText) {
+            this.intelTargetRadioNumber = intelTargetRadioNumber;
+            this.intelNodeId = intelNodeId;
+            this.intelPlainText = intelPlainText;
+        }
+
+        @Override
+        public void handleEvent(BaseEvent be) {
+            if (intelTargetRadioNumber.getValue()) {
+                intelNodeId.setValue(Parameters.result.getText());
+                intelPlainText.setValue(intelTargetRadioNumber.getValue());
+
+            }
+            intelNodeId.setReadOnly(intelTargetRadioNumber.getValue());
+            intelPlainText.setReadOnly(intelTargetRadioNumber.getValue());
+
+
+        }
+    }
+
+    private static class TargetRadioClickBaseEventListener implements Listener<BaseEvent> {
+        private final Radio intelTargetRadioNumber;
+        private final TextField<String> intelNodeId;
+        private final CheckBox intelPlainText;
+
+        TargetRadioClickBaseEventListener(Radio intelTargetRadioNumber, TextField<String> intelNodeId, CheckBox intelPlainText) {
+            this.intelTargetRadioNumber = intelTargetRadioNumber;
+            this.intelNodeId = intelNodeId;
+            this.intelPlainText = intelPlainText;
+        }
+
+        @Override
+        public void handleEvent(BaseEvent be) {
+            if (intelTargetRadioNumber.getValue()) {
+                intelNodeId.setValue(Parameters.result.getText());
+                intelPlainText.setValue(intelTargetRadioNumber.getValue());
+            }
+            intelNodeId.setReadOnly(intelTargetRadioNumber.getValue());
+            intelPlainText.setReadOnly(intelTargetRadioNumber.getValue());
+        }
+    }
+
+    private static class TestInputValueAsyncCallback implements AsyncCallback<Value> {
+        TestInputValueAsyncCallback() {
+        }
+
+        @Override
+        public void onFailure(Throwable caught) {
+            final MessageBox box = MessageBox.alert("Error", caught.getMessage(), null);
+            box.show();
+        }
+
+        @Override
+        public void onSuccess(Value result) {
+            final MessageBox box = MessageBox.alert("Result",
+                    "Value: " + result.getDoubleValue() + "<br>" +
+                            "Data: " + result.getData().getContent(), null);
+            box.show();
+        }
+    }
+
+    private class UpdateEntityAsyncCallback implements AsyncCallback<Entity> {
+        private final MessageBox box;
+
+        UpdateEntityAsyncCallback(MessageBox box) {
+            this.box = box;
+        }
+
+        @Override
+        public void onFailure(Throwable caught) {
+            FeedbackHelper.showError(caught);
+        }
+
+        @Override
+        public void onSuccess(Entity result) {
+            box.close();
+
+            try {
+                notifyEntityAddedListener(result);
+            } catch (NimbitsException e) {
+                FeedbackHelper.showError(e);
+            }
+        }
+    }
+
+    private class CancelButtonEventSelectionListener extends SelectionListener<ButtonEvent> {
+
+
+        CancelButtonEventSelectionListener() {
+        }
+
+        @Override
+        public void componentSelected(ButtonEvent buttonEvent) {
+            try {
+                notifyEntityAddedListener(null);
+            } catch (NimbitsException e) {
+                FeedbackHelper.showError(e);
+            }
+        }
+    }
+    private Intelligence createUpdate() throws NimbitsException {
+        Intelligence update;
+
+        EntityName name = CommonFactory.createName(nameField.getValue(), EntityType.intelligence);
+
+        if (entity.getEntityType().equals(EntityType.intelligence)) {
+            update = (Intelligence)entity;
+            update.setTarget( intelTargetPoint.getValue().getBaseEntity().getKey());
+            update.setEnabled(intelEnabled.getValue());
+            update.setInput(intelFormula.getValue());
+            update.setNodeId(intelNodeId.getValue());
+        }
+        else {
+            Entity e = EntityModelFactory.createEntity(name,"", EntityType.intelligence, ProtectionLevel.onlyMe,
+                    entity.getKey(), entity.getOwner());
+            update = IntelligenceModelFactory.createIntelligenceModel(
+                    e,
+                    intelEnabled.getValue(),
+                    EntityModelFactory.createTarget(intelTargetPoint.getValue().getId()),
+                    intelFormula.getValue(),
+                    intelNodeId.getValue(),
+                    intelPlainText.getValue(),
+                    EntityModelFactory.createTrigger(entity.getKey()));
+        }
+        return update;
+    }
+    private class SubmitButtonEventSelectionListener extends SelectionListener<ButtonEvent> {
+        private final TextField<String> nameField;
+
+        private final EntityCombo intelTargetPoint;
+        private final CheckBox intelEnabled;
+        private final TextArea intelFormula;
+        private final TextField<String> intelNodeId;
+        private final CheckBox intelPlainText;
+
+        SubmitButtonEventSelectionListener(TextField<String> nameField, EntityCombo intelTargetPoint, CheckBox intelEnabled, TextArea intelFormula, TextField<String> intelNodeId, CheckBox intelPlainText) {
+            this.nameField = nameField;
+
+            this.intelTargetPoint = intelTargetPoint;
+            this.intelEnabled = intelEnabled;
+            this.intelFormula = intelFormula;
+            this.intelNodeId = intelNodeId;
+            this.intelPlainText = intelPlainText;
+        }
+
+        @Override
+        public void componentSelected(ButtonEvent buttonEvent) {
+            EntityServiceAsync service = GWT.create(EntityService.class);
+            final MessageBox box = MessageBox.wait("Progress",
+                    "Creating Calculation", "please wait...");
+            box.show();
+
+            try {
+                Intelligence update = createUpdate();
+
+                service.addUpdateEntity(update, new UpdateEntityAsyncCallback(box));
+
+            } catch (NimbitsException e) {
+                box.close();
+                FeedbackHelper.showError(e);
+            }
+        }
+
+        private Intelligence createUpdate() throws NimbitsException {
+            Intelligence update;
+
+            EntityName name = CommonFactory.createName(nameField.getValue(), EntityType.intelligence);
+
+            if (entity.getEntityType().equals(EntityType.intelligence)) {
+                update = (Intelligence)entity;
+                update.setTarget( intelTargetPoint.getValue().getBaseEntity().getKey());
+                update.setEnabled(intelEnabled.getValue());
+                update.setInput(intelFormula.getValue());
+                update.setNodeId(intelNodeId.getValue());
+            }
+            else {
+                Entity e = EntityModelFactory.createEntity(name,"", EntityType.intelligence, ProtectionLevel.onlyMe,
+                        entity.getKey(), entity.getOwner());
+                update = IntelligenceModelFactory.createIntelligenceModel(
+                        e,
+                        intelEnabled.getValue(),
+                        EntityModelFactory.createTarget(intelTargetPoint.getValue().getId()),
+                        intelFormula.getValue(),
+                        intelNodeId.getValue(),
+                        intelPlainText.getValue(),
+                        EntityModelFactory.createTrigger(entity.getKey()));
+            }
+            return update;
+        }
+    }
+}
+

@@ -1,0 +1,92 @@
+<!--
+  ~ Copyright (c) 2010 Nimbits Inc.
+  ~
+  ~ http://www.nimbits.com
+  ~
+  ~
+  ~ Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.gnu.org/licenses/gpl.html
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+  -->
+<h4 style="margin-top: 10px; margin-bottom: 10px">Batch Service</h4>
+<script type="text/javascript" src="/include/rawfile.js">  </script>
+<p>
+    <a href="#" onclick="getContent('pages/web_service_primer.html')">Please read the web service primer</A> to
+    understand how to provide proper authentication parameters.
+    For simplicity, authentication parameters are not shown here.
+
+</p>
+
+
+<p>A highly efficient service for loading many values at once in a single post.
+    Accepts up to 100 new values for points in one post. Simply provide a parameter with an incrementing number for each
+    new value to record. For example, p1=FirstPoint&v1=1.23&p2=SecondPoint&v2=3.14.
+</p>
+
+   <p>
+       This will save the value 1.23 into a point called FirstPoint, and 3.14 into SecondPoint. Both will get the current time
+       as a timestamp.
+
+   </p>
+
+    <p>
+        You can include a timestamp and nimbits will record your value with the stamp you provide. You can also give the same
+        point with many timestamped values, or mix and match. i.e  p1=FirstPoint&v1=1.23&t1=1297655407000&p2=FirstPoint=3.14&t2=1297655408000
+
+
+    </p>
+        <p>
+            This will record the two values into FirstPoint with different timestamps.
+
+        </p>
+
+        <p><span class="label-success">Heads up!</span>
+            There is a new option for loading the batch service using JSON data containing an array of
+            <a href="#" onclick="getContent('/pages/server_docs/value_objects.html')">Value Objects</a></p>
+
+<ul>
+    <li>p(x) - the name of the point</li>
+
+    <li>v(x)  - the new value belonging to p1.</li>
+
+    <li>t(x)  - optional - the timestamp as a long, <a href="http://en.wikipedia.org/wiki/Unix_time" target="_blank">
+
+        unix epoch time</a> <strong>in milliseconds</strong>. Can also be in scientific notation i.e 1.3190148e+12</li>
+    <li>lt(x)  - optional - the latitude of the reading</li>
+    <li>ln(x)  - optional - the longitude of the reading</li>
+    <li>dx(x)  - optional - raw string data to be recorded (i.e json or xml) </li>
+    <li>j(x) - optional - an array of JSON formatted <a href="#" onclick="getContent('/pages/server_docs/value_objects.html')">Value Objects.</a>
+        <br>
+        <span class="label-success">Please Note:</span> using this option will override any other parameters set from the list above. This also
+        is a highly efficient way to slam new data into a point and therefore, compression filters, alerts and other point settings are not
+        processed when data is fed in. The system assumes you have already formatted / filtered your incoming data the way you want it. So, the new
+        data goes directly into the store. Read the <a href="#" onclick="getContent('/pages/server_docs/value_objects.html')">Value Objects</a> document for
+        samples of a value json structure
+
+    </li>
+</ul>
+
+<h4>Sample - records multiple values up to p100 and v100 </h4>
+
+<pre class="prettyprint">
+        /service/batch?p1=point1&v1=2.3&p2=point2&v2=3.24....
+
+        /service/batch?p1=point1&v1=2.3&t1=1297655407000&p2=point2&v2=3.24....
+
+ </pre>
+
+
+
+<h4>JSON Bulk Sample </h4>
+
+<pre class="prettyprint">
+    /service/batch?p1=point1&j1=[
+    {"lt":0.0,"lg":0.0,"d":0.2,"t":1342373434789,"n":"","dx":""},
+    {"lt":0.0,"lg":0.0,"d":0.3,"t":1342373374789,"n":"","dx":""},
+    {"lt":0.0,"lg":0.0,"d":0.4,"t":1342373314789,"n":"","dx":""},
+    {"lt":0.0,"lg":0.0,"d":0.5,"t":1342373254789,"n":"","dx":""},
+    {"lt":0.0,"lg":0.0,"d":0.1,"t":1342373194789,"n":"","dx":""},
+    {"lt":0.0,"lg":0.0,"d":0.2,"t":1342373134789,"n":"","dx":""}]
+</pre>

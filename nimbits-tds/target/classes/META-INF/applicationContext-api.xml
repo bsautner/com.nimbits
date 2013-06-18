@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2012 Nimbits Inc.
+  ~
+  ~    http://www.nimbits.com
+  ~
+  ~
+  ~ Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.gnu.org/licenses/gpl.html
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--<bean id="mailhandler" class="MailHandlerServlet">-->
+        <!--<property name="taskFactory" ref="taskFactory" />-->
+    <!--</bean>-->
+
+    <!--APIS-->
+    <bean id="blob" class="com.nimbits.server.api.impl.BlobServletImpl">
+        <property name="entityService" ref="entityService" />
+        <property name="userService" ref="userService" />
+        <property name="settingsService" ref="settingsService" />
+        <property name="quotaManager" ref="quotaManager" />
+        <property name="taskFactory" ref="taskFactory" />
+        <property name="billing" ref="billing" />
+    </bean>
+
+    <bean id="xmpp" class="com.nimbits.server.api.impl.XMPPReceiverServlet">
+        <property name="entityService" ref="entityService" />
+        <property name="userService" ref="userService" />
+        <property name="valueService" ref="valueService" />
+        <property name="xmppService" ref="xmppService" />
+        <property name="billing" ref="billing" />
+        <property name="settingsService" ref="settingsService" />
+        <property name="quotaManager" ref="quotaManager" />
+
+    </bean>
+
+
+    <bean id="chart" class="com.nimbits.server.api.impl.ChartApiServletImpl">
+        <property name="entityService" ref="entityService" />
+        <property name="valueService" ref="valueService" />
+        <property name="userService" ref="userService" />
+        <property name="settingsService" ref="settingsService" />
+        <property name="quotaManager" ref="quotaManager" />
+        <property name="billing" ref="billing" />
+
+    </bean>
+    <bean id="value" class="com.nimbits.server.api.impl.ValueServletImpl">
+        <property name="billing" ref="billing" />
+        <property name="valueService" ref="valueService" />
+        <property name="entityService" ref="entityService" />
+        <property name="userService" ref="userService" />
+        <property name="settingsService" ref="settingsService" />
+        <property name="quotaManager" ref="quotaManager" />
+
+    </bean>
+
+
+
+    <bean id="entity" class="com.nimbits.server.api.impl.EntityServletImpl">
+        <property name="entityService" ref="entityService" />
+        <property name="userService" ref="userService" />
+        <property name="settingsService" ref="settingsService" />
+        <property name="quotaManager" ref="quotaManager" />
+        <property name="billing" ref="billing" />
+    </bean>
+
+    <bean id="batch" class="com.nimbits.server.api.impl.BatchServletImpl">
+        <property name="taskFactory" ref="taskFactory" />
+        <property name="entityService" ref="entityService" />
+        <property name="userService" ref="userService" />
+        <property name="settingsService" ref="settingsService" />
+        <property name="quotaManager" ref="quotaManager" />
+        <property name="billing" ref="billing" />
+    </bean>
+
+    <bean id="point" class="com.nimbits.server.api.impl.PointServletImpl">
+        <property name="entityService" ref="entityService" />
+        <property name="valueService" ref="valueService" />
+        <property name="userService" ref="userService" />
+        <property name="settingsService" ref="settingsService" />
+        <property name="quotaManager" ref="quotaManager" />
+        <property name="billing" ref="billing" />
+    </bean>
+
+    <bean id="series" class="com.nimbits.server.api.impl.SeriesServletImpl">
+        <property name="timespanService" ref="timespanService" />
+        <property name="entityService" ref="entityService" />
+        <property name="userService" ref="userService" />
+        <property name="settingsService" ref="settingsService" />
+        <property name="quotaManager" ref="quotaManager" />
+        <property name="billing" ref="billing" />
+        <property name="valueService" ref="valueService" />
+    </bean>
+
+
+    <bean id="time" class="com.nimbits.server.api.impl.TimeServletImpl">
+        <property name="entityService" ref="entityService" />
+        <property name="userService" ref="userService" />
+        <property name="settingsService" ref="settingsService" />
+        <property name="quotaManager" ref="quotaManager" />
+        <property name="billing" ref="billing" />
+    </bean>
+
+    <bean id="auth" class="com.nimbits.server.api.impl.AuthTestServletImpl">
+        <property name="entityService" ref="entityService" />
+        <property name="userService" ref="userService" />
+        <property name="settingsService" ref="settingsService" />
+        <property name="quotaManager" ref="quotaManager" />
+        <property name="billing" ref="billing" />
+    </bean>
+
+    <bean id="quota" class="com.nimbits.server.admin.quota.QuotaServletImpl">
+        <property name="userService" ref="userService" />
+    </bean>
+    <bean id="mailhandler" class="com.nimbits.server.api.impl.MailHandlerServletImpl">
+        <property name="entityService" ref="entityService" />
+        <property name="userService" ref="userService" />
+        <property name="settingsService" ref="settingsService" />
+        <property name="quotaManager" ref="quotaManager" />
+        <property name="taskFactory" ref="taskFactory" />
+        <property name="billing" ref="billing" />
+    </bean>
+    <bean id="feed" class="com.nimbits.server.api.impl.FeedServletImpl">
+        <property name="entityService" ref="entityService" />
+        <property name="userService" ref="userService" />
+        <property name="settingsService" ref="settingsService" />
+        <property name="quotaManager" ref="quotaManager" />
+        <property name="billing" ref="billing" />
+    </bean>
+    <bean id="userReportService" class="com.nimbits.server.report.UserReportService">
+        <property name="entityService" ref="entityService" />
+        <property name="userService" ref="userService" />
+        <property name="settingsService" ref="settingsService" />
+        <property name="quotaManager" ref="quotaManager" />
+        <property name="billing" ref="billing" />
+    </bean>
+    <!-- END APIS-->
+</beans>

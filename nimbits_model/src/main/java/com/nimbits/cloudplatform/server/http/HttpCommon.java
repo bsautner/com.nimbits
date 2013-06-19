@@ -24,7 +24,7 @@ import java.net.ProtocolException;
  */
 public interface HttpCommon {
 
-
+    foo
     String doGet(final String postUrl, final String params, final String authCookie) ;
 
     String doPost(final String postUrl, final String params, final String authCookie) throws IOException;

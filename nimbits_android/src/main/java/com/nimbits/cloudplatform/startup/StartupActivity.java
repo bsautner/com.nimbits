@@ -22,6 +22,23 @@ public class StartupActivity extends Activity {
 
 
     private Activity activity;
+    public static final String EXTRA_MESSAGE = "message";
+    public static final String PROPERTY_REG_ID = "registration_id";
+    private static final String PROPERTY_APP_VERSION = "appVersion";
+    private static final String PROPERTY_ON_SERVER_EXPIRATION_TIME =  "onServerExpirationTimeMs";
+    public static final long REGISTRATION_EXPIRY_TIME_MS = 1000 * 3600 * 24 * 7;
+    static final String TAG = "GCM";
+    String SENDER_ID = "Your-Sender-ID";
+
+
+
+//    GoogleCloudMessaging gcm;
+//    AtomicInteger msgId = new AtomicInteger();
+//    SharedPreferences prefs;
+//    Context context;
+
+    String regid;
+
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

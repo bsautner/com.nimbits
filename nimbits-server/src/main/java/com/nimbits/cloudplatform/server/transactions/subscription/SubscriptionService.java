@@ -20,6 +20,7 @@ import com.nimbits.cloudplatform.client.constants.Path;
 import com.nimbits.cloudplatform.client.enums.AlertType;
 import com.nimbits.cloudplatform.client.enums.AuthLevel;
 import com.nimbits.cloudplatform.client.enums.EntityType;
+import com.nimbits.cloudplatform.client.enums.Parameters;
 import com.nimbits.cloudplatform.client.enums.subscription.SubscriptionType;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.mqtt.Mqtt;
@@ -36,8 +37,18 @@ import com.nimbits.cloudplatform.server.transactions.counter.CounterService;
 import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
 import com.nimbits.cloudplatform.server.transactions.user.UserTransaction;
 import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -49,14 +60,11 @@ import java.util.logging.Logger;
  * Time: 3:51 PM
  */
 @Service("subscriptionService")
-
 public class SubscriptionService extends RemoteServiceServlet {
     private static final Logger log = Logger.getLogger(SubscriptionService.class.getName());
-
-    private static final int INT = 120;
-    private static final int INT1 = 512;
-    public static final String LOGO = "http://www.nimbits.com/images/nimbits_transparent_logo.png";
-    private static final String CLOUD_URL = "http://cloud.nimbits.com";
+    public static final String NIMBITS_GCM_URL = "http://nimbits-gcm.appspot.com/sendAll";
+    public static final String METHOD = "POST";
+    public static final String UTF_8 = "UTF-8";
 
 
     public static boolean okToProcess(Subscription subscription) {
@@ -189,8 +197,8 @@ public class SubscriptionService extends RemoteServiceServlet {
             case instantMessage:
                 doXMPP(user, subscription, point, point, value);
                 break;
-
             case cloud:
+                doCloud(user, point, value);
                 break;
         }
     }
@@ -223,9 +231,59 @@ public class SubscriptionService extends RemoteServiceServlet {
 
 
     }
+    private static void doCloud(final User user, final Point point, final Value v)  {
 
 
+        try {
 
+            URL url = new URL(NIMBITS_GCM_URL);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoOutput(true);
+            connection.setRequestMethod(METHOD);
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            point.setValue(v);
+            String json = GsonFactory.getInstance().toJson(point);
+            params.add(new BasicNameValuePair(Parameters.email.getText(), user.getEmail().getValue()));
+            params.add(new BasicNameValuePair(Parameters.json.getText(), json));
+
+            OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+            writer.write(getQuery(params));
+
+            writer.close();
+
+            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+               log.info("cloud message sent");
+            } else {
+                log.severe("cloud message failed with " + connection.getResponseCode());
+            }
+        } catch (MalformedURLException e) {
+             log.severe(e.getMessage());
+        } catch (IOException e) {
+            log.severe(e.getMessage());
+        }
+
+
+    }
+
+    private static String getQuery(final List<NameValuePair> params) throws UnsupportedEncodingException
+    {
+        StringBuilder result = new StringBuilder();
+        boolean first = true;
+
+        for (NameValuePair pair : params)
+        {
+            if (first)
+                first = false;
+            else
+                result.append("&");
+
+            result.append(URLEncoder.encode(pair.getName(), UTF_8));
+            result.append("=");
+            result.append(URLEncoder.encode(pair.getValue(), UTF_8));
+        }
+
+        return result.toString();
+    }
 
 
 

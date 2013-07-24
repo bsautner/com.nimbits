@@ -13,6 +13,7 @@
 
 package com.nimbits.cloudplatform.server.api;
 
+import com.google.appengine.repackaged.com.google.common.base.Flag;
 import com.nimbits.cloudplatform.client.common.Utils;
 import com.nimbits.cloudplatform.client.enums.ClientType;
 import com.nimbits.cloudplatform.client.enums.ExportType;

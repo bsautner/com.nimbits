@@ -49,7 +49,7 @@ public class HttpTransaction {
 
     private static <T> List<T> stringToList(final Type listType, String result) {
 
-        return (List<T>) gson.fromJson(result, listType);
+        return gson.fromJson(result, listType);
 
     }
 

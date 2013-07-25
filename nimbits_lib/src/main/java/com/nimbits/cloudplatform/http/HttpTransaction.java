@@ -54,7 +54,7 @@ public class HttpTransaction {
     }
 
     private static <T, K> T stringToObject(Class<K> clz, String result) {
-        System.out.println("RESULT::" + result);
+
         K entity = gson.fromJson(result, clz);
 
         return (T) entity;

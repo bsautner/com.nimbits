@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import com.nimbits.cloudplatform.Nimbits;
-import com.nimbits.cloudplatform.R;
+import com.nimbits.android.R;
 import com.nimbits.cloudplatform.client.enums.EntityType;
 import com.nimbits.cloudplatform.client.enums.Parameters;
 import com.nimbits.cloudplatform.client.enums.ProtectionLevel;

@@ -18,8 +18,9 @@ package com.nimbits.android;
 import android.content.Context;
 import android.util.Log;
 import com.google.android.gcm.GCMRegistrar;
+import com.nimbits.android.CommonUtilities;
 import com.nimbits.cloudplatform.Nimbits;
-import com.nimbits.cloudplatform.R;
+
 import com.nimbits.cloudplatform.client.enums.Parameters;
 
 import java.io.IOException;

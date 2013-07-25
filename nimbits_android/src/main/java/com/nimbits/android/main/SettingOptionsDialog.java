@@ -6,7 +6,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import com.nimbits.cloudplatform.R;
+import com.nimbits.android.R;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 
 /**

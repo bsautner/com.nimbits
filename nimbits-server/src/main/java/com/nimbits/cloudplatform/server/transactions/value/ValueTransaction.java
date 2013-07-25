@@ -29,6 +29,8 @@ import static java.lang.Math.abs;
  */
 public class ValueTransaction {
     static final Logger log = Logger.getLogger(ValueTransaction.class.getName());
+    public static final String MSG = "Could not record value do to permissions levels being to low for a write operation";
+
     public static List<Value> getTopDataSeries(final Entity entity,
                                                final int maxValues,
                                                final Date endDate) throws Exception {
@@ -44,7 +46,7 @@ public class ValueTransaction {
         final Point point;
 
         if (!entity.getEntityType().recordsData()) {
-            log.severe("attempt to record a value to a non value entity");
+            log.info("attempt to record a value to a non value entity");
             throw new IllegalArgumentException("You can only record data to a Point. Entity Type was: " + entity.getEntityType().getClassName());
 
         }
@@ -56,14 +58,14 @@ public class ValueTransaction {
             if (!points.isEmpty()) {
                 point = (Point) points.get(0);
             } else {
-                log.severe("point not found");
+                log.info("point not found");
                 throw new IllegalArgumentException("Point Not Found");
             }
         }
 
         if (ignoreByAuthLevel(user, point)) {
-            log.info("Could not record value do to permissions levels being to low for a write operation");
-            throw new IllegalArgumentException("Could not record value do to permissions levels being to low for a write operation");
+            log.info(MSG);
+            throw new IllegalArgumentException(MSG);
         } else {
 
             final boolean ignored = false;
@@ -97,7 +99,7 @@ public class ValueTransaction {
                         retObj = ValueMemCache.recordValue(point, value);
                         break;
                     default:
-                        log.severe("point type not found");
+                        log.info("point type not found");
                         throw new IllegalArgumentException("point type not found");
 
                 }

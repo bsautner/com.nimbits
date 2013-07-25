@@ -8,7 +8,7 @@ import android.os.Environment;
 import android.util.Log;
 import com.nimbits.android.AuthenticationManager;
 import com.nimbits.cloudplatform.Nimbits;
-import com.nimbits.cloudplatform.R;
+import com.nimbits.android.R;
 import com.nimbits.cloudplatform.client.constants.Path;
 import com.nimbits.cloudplatform.client.model.simple.SimpleValue;
 import com.nimbits.cloudplatform.client.model.user.User;

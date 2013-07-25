@@ -22,7 +22,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import com.google.android.gcm.GCMBaseIntentService;
-import com.nimbits.cloudplatform.R;
 import com.nimbits.cloudplatform.client.enums.Parameters;
 import com.nimbits.cloudplatform.client.model.point.Point;
 import com.nimbits.cloudplatform.client.model.point.PointModel;
@@ -117,7 +116,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
         Notification notification = new Notification(icon, message, when);
         String title = context.getString(R.string.app_name);
-        Intent notificationIntent = new Intent(context, MainActivity.class);
+        Intent notificationIntent = new Intent(context, HomeActivity.class);
         // set intent so it does not start a new activity
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                 Intent.FLAG_ACTIVITY_SINGLE_TOP);

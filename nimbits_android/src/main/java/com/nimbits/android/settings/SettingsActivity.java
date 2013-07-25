@@ -11,7 +11,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import com.nimbits.cloudplatform.R;
+import com.nimbits.android.R;
 import com.nimbits.android.MainActivity;
 
 /**

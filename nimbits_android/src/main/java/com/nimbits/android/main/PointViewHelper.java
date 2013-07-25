@@ -2,7 +2,7 @@ package com.nimbits.android.main;
 
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.nimbits.cloudplatform.R;
+import com.nimbits.android.R;
 import com.nimbits.cloudplatform.client.model.simple.SimpleValue;
 import com.nimbits.cloudplatform.client.model.value.Value;
 

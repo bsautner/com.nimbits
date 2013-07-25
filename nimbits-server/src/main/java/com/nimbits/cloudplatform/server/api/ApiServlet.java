@@ -74,18 +74,22 @@ public class ApiServlet extends HttpServlet {
 //    }
     protected String getContent(HttpServletRequest req)  {
 
-        BufferedReader reader = null;
+        BufferedReader reader;
         try {
             reader = req.getReader();
+            if (req.getContentLength() > 0) {
+                StringBuilder jb = new StringBuilder(req.getContentLength());
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    jb.append(line);
+                }
 
-            StringBuilder jb = new StringBuilder(req.getContentLength());
-            String line;
-            while ((line = reader.readLine()) != null) {
-                jb.append(line);
+
+                return jb.toString();
             }
-
-
-            return jb.toString();
+            else {
+                return null;
+            }
         } catch (IOException e) {
             return null;
         }
@@ -183,6 +187,7 @@ public class ApiServlet extends HttpServlet {
     }
 
     protected static String getParam(final Parameters param) {
+
         return paramMap.containsKey(param) ? paramMap.get(param) : null;
     }
 

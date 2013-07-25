@@ -6,7 +6,7 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import com.nimbits.cloudplatform.R;
+import com.nimbits.android.R;
 
 /**
  * Empathy Lab

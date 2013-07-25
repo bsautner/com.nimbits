@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.nimbits.cloudplatform"
+          package="com.nimbits.android"
           android:versionCode="1"
           android:versionName="1.0-SNAPSHOT">
 
-    <permission android:name="com.nimbits.cloudplatform.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+    <permission android:name="com.nimbits.android.permission.C2D_MESSAGE" android:protectionLevel="signature" />
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
@@ -21,7 +21,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH"/>
 
 
-    <uses-permission android:name="com.nimbits.cloudplatform.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.nimbits.android.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
 
 
@@ -32,25 +32,18 @@
     <application
         android:icon="@drawable/nimbits_transparent_logo"
         android:label="@string/app_name"
-        android:theme="@android:style/Theme.Holo">
+        >
 
 
-        <activity
-             android:name="com.nimbits.android.startup.StartupActivity"
-
-            android:label="@string/app_name">
+        <activity  android:name="com.nimbits.android.startup.StartupActivity" android:label="@string/app_name">
             <intent-filter>
-
-                <category android:name="android.intent.category.DEFAULT"/>
                 <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
 
-
         </activity>
-        <activity
-            android:name="com.nimbits.android.MainActivity"
-            android:label="nimbits.com"
-            android:theme="@android:style/Theme.Black.NoTitleBar"/>
+
+
         <activity
             android:launchMode="singleInstance"
             android:name="com.nimbits.android.settings.SettingsActivity"
@@ -72,6 +65,13 @@
             android:label="Alert Settings"/>
         <activity android:name="com.nimbits.android.main.PointActivity" />
 
+
+        <activity android:name="com.nimbits.android.HomeActivity"
+                  android:theme="@style/Theme.AppCompat.Light"
+
+            />
+
+
         <receiver
             android:name="com.google.android.gcm.GCMBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
@@ -80,11 +80,11 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <!-- Receives the registration id. -->
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-                <category android:name="com.nimbits.cloudplatform" />
+                <category android:name="com.nimbits.android" />
             </intent-filter>
         </receiver>
 
-        <service android:name="com.nimbits.android.GCMIntentService" />
+        <service android:name=".GCMIntentService" />
 
     </application>
 

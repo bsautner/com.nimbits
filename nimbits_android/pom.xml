@@ -15,6 +15,12 @@
 
     </modules>
     <dependencies>
+        <!--<dependency>-->
+            <!--<groupId>com.google.android</groupId>-->
+            <!--<artifactId>support-v4</artifactId>-->
+            <!--<scope>compile</scope>-->
+            <!--<version>r13</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>nimbits_lib</groupId>
@@ -29,11 +35,12 @@
             <scope>compile</scope>
         </dependency>
 
+
         <dependency>
-            <groupId>com.google.android</groupId>
-            <artifactId>support-v4</artifactId>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>r09</version>
             <scope>compile</scope>
-            <version>r13</version>
         </dependency>
 
         <dependency>
@@ -41,7 +48,7 @@
             <artifactId>achartengine</artifactId>
             <version>1.0.0</version>
             <scope>system</scope>
-            <systemPath>/mnt/devel/dep/aChartEngine/achartengine-1.0.0.jar</systemPath>
+            <systemPath>/mnt/devel/dep/aChartEngine/achartengine-1.1.0.jar</systemPath>
         </dependency>
 
 

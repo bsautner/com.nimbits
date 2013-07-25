@@ -3,7 +3,7 @@ package com.nimbits.android.settings.async;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import com.nimbits.cloudplatform.R;
+import com.nimbits.android.R;
 import com.nimbits.cloudplatform.client.enums.Action;
 import com.nimbits.cloudplatform.client.enums.Parameters;
 import com.nimbits.cloudplatform.client.model.simple.SimpleValue;

@@ -1,3 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<dimen name="button_height">50dp</dimen></resources>
+<dimen name="button_height">50dp</dimen>
+<dimen name="list_item_size">18dp</dimen><dimen name="action_bar">40dp</dimen></resources>

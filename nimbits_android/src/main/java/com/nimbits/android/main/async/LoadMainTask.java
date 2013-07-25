@@ -7,6 +7,7 @@ import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.http.HttpHelper;
 import com.nimbits.cloudplatform.transaction.Transaction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,19 +38,22 @@ public class LoadMainTask extends AsyncTask<Object, Integer, List<Entity>> {
 
     @Override
     protected List<Entity>doInBackground(Object... objects) {
-        Boolean refresh = (Boolean) objects[0];
-        if (refresh) {
-            HttpHelper.flush();
-        }
+
         publishProgress(10);
 
-        List<Entity>response;
+        List<Entity>response =  Transaction.getTree();
 
-            response =  Transaction.getTree();
+        Nimbits.tree = response;
 
-        Nimbits.tree = ((List<Entity>) response);
+        List<Entity> retObj = new ArrayList<Entity>(response.size());
+        for (Entity e : response) {
+            if (e.getEntityType().isAndroidReady()) {
+                retObj.add(e);
+            }
+        }
+
         publishProgress(100);
-        return response;
+        return retObj;
 
     }
 

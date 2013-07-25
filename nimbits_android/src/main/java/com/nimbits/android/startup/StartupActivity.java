@@ -7,10 +7,11 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
+import com.nimbits.android.HomeActivity;
+import com.nimbits.android.R;
 import com.nimbits.android.settings.SettingsActivity;
 import com.nimbits.android.AuthenticationManager;
 import com.nimbits.cloudplatform.Nimbits;
-import com.nimbits.cloudplatform.R;
 import com.nimbits.cloudplatform.client.model.user.User;
 import com.nimbits.android.MainActivity;
 import com.nimbits.android.startup.async.StartupTask;
@@ -43,7 +44,7 @@ public class StartupActivity extends Activity {
             public void onLoginSuccess(List<User> response) {
 
                 Nimbits.session = (response.get(0));
-                Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                Intent intent = new Intent(getBaseContext(), HomeActivity.class);
                 startActivity(intent);
                 finish();
 

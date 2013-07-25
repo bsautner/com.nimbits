@@ -10,7 +10,7 @@ import com.nimbits.android.ToastHelper;
 import com.nimbits.android.main.async.AddUpdateEntityTask;
 import com.nimbits.android.settings.async.PointSettingsTask;
 import com.nimbits.cloudplatform.Nimbits;
-import com.nimbits.cloudplatform.R;
+import com.nimbits.android.R;
 import com.nimbits.cloudplatform.client.enums.FilterType;
 import com.nimbits.cloudplatform.client.enums.Parameters;
 import com.nimbits.cloudplatform.client.enums.point.PointType;
@@ -54,10 +54,10 @@ public class PointSettingsActivity extends Activity {
                         initView();
                         TextView name = (TextView) findViewById(R.id.entity_name);
                         TextView currentValue = (TextView) findViewById((R.id.value));
-                        ImageView expand = (ImageView) findViewById(R.id.image_expand);
+                       // ImageView expand = (ImageView) findViewById(R.id.image_expand);
                         ImageView entityImage = (ImageView) findViewById(R.id.entity_image);
                         currentValue.setVisibility(View.GONE);
-                        expand.setVisibility(View.GONE);
+                       // expand.setVisibility(View.GONE);
 
                         name.setText(point.getName().getValue());
 

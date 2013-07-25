@@ -34,22 +34,14 @@ public class Nimbits {
     public static SimpleValue<String> token;
     public static LoginListener listener;
     public static List<String> authKey;
-    public static Entity currentEntity;
+
 
     static {
        token = SimpleValue.getEmptyInstance();
         authKey = Collections.emptyList();
     }
 
-    public static Entity getParentEntity() {
-        for (Entity e :tree ) {
-            if (Nimbits.currentEntity.getParent().equals(e.getKey())) {
-               return e;
 
-            }
-        }
-       return session;
-    }
     public static void setLoginListener(LoginListener aListener) {
         listener = aListener;
     }

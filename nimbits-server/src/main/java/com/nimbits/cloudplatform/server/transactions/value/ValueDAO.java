@@ -455,9 +455,7 @@ public class ValueDAO {
             //log.info(currentStoreEntity.getEntity() + " " + currentStoreEntity.getKey());
             ValueBlobStore result = createValueBlobStore(currentStoreEntity);
             return result;
-        } catch(Exception ex) {
-            log.severe(ex.getMessage());
-            return null;
+
 
         } finally {
             //log.info("createBlobStoreEntity" + "done");

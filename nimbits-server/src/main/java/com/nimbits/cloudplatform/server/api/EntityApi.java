@@ -34,10 +34,6 @@ public class EntityApi extends ApiServlet implements org.springframework.web.Htt
 
 
         if (isPost(req)) {
-            json = getParam(Parameters.json);
-            if (StringUtils.isEmpty(json)) {
-                json = getContent(req);
-            }
 
             doPost(req, resp);
         } else {
@@ -106,6 +102,12 @@ public class EntityApi extends ApiServlet implements org.springframework.web.Htt
 
 
         doInit(req, resp, ExportType.json);
+        json = getParam(Parameters.json);
+        if (StringUtils.isEmpty(json)) {
+            json = getContent(req);
+        }
+
+
 
         List<Entity> entityList = null;
         Action action = Action.valueOf(getParam(Parameters.action));

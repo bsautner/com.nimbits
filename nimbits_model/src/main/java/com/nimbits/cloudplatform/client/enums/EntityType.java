@@ -12,7 +12,7 @@ import java.util.*;
 public enum EntityType implements Serializable {
     user(0, false, false, false, true, true, false, 0, "com.nimbits.cloudplatform.server.orm.UserEntity"),
     point(1, true, false, true, true, true, true, 1, "com.nimbits.cloudplatform.server.orm.PointEntity"),
-    category(2, false, false, true, false, true, false, 2, "com.nimbits.cloudplatform.server.orm.CategoryEntity"),
+    category(2, true, false, true, false, true, false, 2, "com.nimbits.cloudplatform.server.orm.CategoryEntity"),
     subscription(5, false, false, false, false, true, false, 4, "com.nimbits.cloudplatform.server.orm.SubscriptionEntity"),
     //  userConnection(6, false, false, false, true, false, false, 5, "com.nimbits.cloudplatform.server.orm.EntityStore"),
     calculation(7, false, true, true, false, true, false, 6, "com.nimbits.cloudplatform.server.orm.CalcEntity"),
@@ -103,6 +103,10 @@ public enum EntityType implements Serializable {
 
     public boolean isTrigger() {
         return isTrigger;
+    }
+
+    public boolean isAndroidReady() {
+        return isAndroidReady;
     }
 
     public static CharSequence[] toAndroidOptionArray() {

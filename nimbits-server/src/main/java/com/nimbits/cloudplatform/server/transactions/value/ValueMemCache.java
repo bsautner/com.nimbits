@@ -63,7 +63,7 @@ public class ValueMemCache {
             map.remove(point.getKey());
         }
 
-        if (point != null) {
+        if (point != null && value!=null) {
             point.setValue(value);
             HashMap<String, Point> newMap = new HashMap<String, Point>(map.size() +1);
             newMap.putAll(map);

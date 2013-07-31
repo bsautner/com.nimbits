@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import com.nimbits.cloudplatform.Nimbits;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
+import com.nimbits.cloudplatform.client.model.point.PointModel;
 import com.nimbits.cloudplatform.http.HttpHelper;
 import com.nimbits.cloudplatform.transaction.Transaction;
 
@@ -42,6 +43,7 @@ public class LoadMainTask extends AsyncTask<Object, Integer, List<Entity>> {
         publishProgress(10);
 
         List<Entity>response =  Transaction.getTree();
+        List<Entity> tree = new ArrayList<Entity>(response.size());
 
         Nimbits.tree = response;
 

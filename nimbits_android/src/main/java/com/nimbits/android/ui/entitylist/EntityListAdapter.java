@@ -8,13 +8,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.nimbits.android.main.PointViewHelper;
-import com.nimbits.cloudplatform.Nimbits;
 import com.nimbits.android.R;
+import com.nimbits.android.content.ContentProvider;
+import com.nimbits.android.main.PointViewHelper;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.simple.SimpleValue;
 import com.nimbits.cloudplatform.client.model.value.Value;
-import com.nimbits.android.main.async.LoadValueTask;
 
 import java.util.List;
 
@@ -26,8 +25,11 @@ import java.util.List;
 public class EntityListAdapter extends ArrayAdapter<Entity> {
 
     private List<Entity> items;
-    private EntityListener entityClickedListener;
+    private EntityListener entityListener;
     private Context context;
+
+
+
     public EntityListAdapter(Context context, int textViewResourceId, List<Entity> objects) {
         super(context, textViewResourceId, objects);
     }
@@ -37,7 +39,7 @@ public class EntityListAdapter extends ArrayAdapter<Entity> {
         EntityListAdapter instance = new EntityListAdapter(context, textViewResourceId, objects);
         instance.context = context;
         instance.items = objects;
-        instance.entityClickedListener = entityClickedListener;
+        instance.entityListener = entityClickedListener;
         return instance;
     }
 
@@ -65,9 +67,16 @@ public class EntityListAdapter extends ArrayAdapter<Entity> {
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    entityClickedListener.onEntityClicked(entity);
+                    entityListener.onEntityClicked(entity);
 
 
+                }
+            });
+            v.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    entityListener.newValuePrompt(entity);
+                    return true;
                 }
             });
         }
@@ -102,15 +111,12 @@ public class EntityListAdapter extends ArrayAdapter<Entity> {
                     // entityImage.setImageDrawable(res.getDrawable(R.drawable.led_off));
                     currentValue.setVisibility(View.VISIBLE);
                     timestamp.setVisibility(View.VISIBLE);
-                    if (entity.getParent().equals(Nimbits.session.getKey())) {
+                    Value vx = ContentProvider.getCurrentValue(entity);
 
-                        LoadValueTask.getInstance(new LoadValueTask.LoadValueTaskListener() {
-                            @Override
-                            public void onSuccess(Value response) {
-                                PointViewHelper.setViews(response, currentValue, timestamp, entityImage, SimpleValue.getEmptyInstance());
-                            }
-                        }).execute(entity, context);
-                    }
+
+                    PointViewHelper.setViews(vx, currentValue, timestamp, entityImage, SimpleValue.getEmptyInstance());
+
+
                 case subscription:
                     break;
 
@@ -127,18 +133,8 @@ public class EntityListAdapter extends ArrayAdapter<Entity> {
         return v;
     }
 
-    private boolean isParent(Entity entity) {
-        List<Entity> tree = Nimbits.tree;
-        boolean isParent = false;
-        for (Entity child : tree) {
-            if (child.getParent().equals(entity.getKey())) {
-                isParent = true;
-                break;
-            }
 
-
-        }
-        return isParent;
+    public void setValues(List<Entity> values) {
+        this.items = values;
     }
-
 }

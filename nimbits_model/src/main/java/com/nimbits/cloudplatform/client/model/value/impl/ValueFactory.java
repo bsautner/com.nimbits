@@ -14,6 +14,7 @@
 package com.nimbits.cloudplatform.client.model.value.impl;
 
 
+import com.nimbits.cloudplatform.client.constants.Const;
 import com.nimbits.cloudplatform.client.enums.AlertType;
 import com.nimbits.cloudplatform.client.model.location.Location;
 import com.nimbits.cloudplatform.client.model.location.LocationFactory;
@@ -33,6 +34,35 @@ public class ValueFactory {
     private ValueFactory() {
     }
 
+
+    public static Value createValueFromString(final SimpleValue<String> valueAndNote, final Date timestamp) {
+        double d = 0;
+        String note = null;
+        String sample = valueAndNote.getValue().trim();
+        if (sample != null && !sample.isEmpty()) {
+
+            if (sample.contains(" ")) {
+                String a[] = sample.split(" ");
+                try {
+                    d = Double.parseDouble(a[0]);
+                    note = sample.replace(a[0], "").trim();
+                } catch (NumberFormatException ex) {
+                    note = sample;
+                    d = Const.CONST_IGNORED_NUMBER_VALUE;
+                }
+            } else {
+                try {
+                    d = Double.parseDouble(sample);
+                    note = "";
+                } catch (NumberFormatException ex) {
+                    note = sample;
+                    d = Const.CONST_IGNORED_NUMBER_VALUE;
+                }
+            }
+        }
+
+        return new ValueModel(LocationFactory.createLocation(), d, timestamp, note, ValueDataModel.getInstance(SimpleValue.getInstance("")), AlertType.OK);
+    }
     public static ValueModel createValueModel(final Value v) {
 
         return new ValueModel(v);

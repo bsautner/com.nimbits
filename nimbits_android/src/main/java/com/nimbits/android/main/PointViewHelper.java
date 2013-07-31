@@ -3,6 +3,7 @@ package com.nimbits.android.main;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.nimbits.android.R;
+import com.nimbits.cloudplatform.client.model.point.Point;
 import com.nimbits.cloudplatform.client.model.simple.SimpleValue;
 import com.nimbits.cloudplatform.client.model.value.Value;
 
@@ -19,11 +20,10 @@ public class PointViewHelper {
     public static void setViews(final Value v,
                                 final TextView value,
                                 final TextView timestamp,
-
                                 final ImageView entityImage,
                                 final SimpleValue<String> unit) {
 
-
+      //  Value v = point.getValue();
         value.setText(String.valueOf(v.getDoubleValue()) + " " + unit.getValue());
 
 

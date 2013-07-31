@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import com.nimbits.android.content.ContentProvider;
 import com.nimbits.android.main.async.SeriesTask;
 import com.nimbits.android.ui.entitylist.EntityListAdapter;
@@ -32,13 +33,15 @@ public class ChartFragment extends Fragment {
     private EntityListener listener;
     private View view;
     private EntityListAdapter adapter;
+    private Entity entity;
     FrameLayout chartFrame;
     public ChartFragment() {
     }
 
-    public static final ChartFragment getInstance(Activity activity) {
+    public static final ChartFragment getInstance(Activity activity, Entity entity) {
         ChartFragment instance = new ChartFragment();
         instance.listener = (EntityListener) activity;
+        instance.entity = entity;
         return instance;
     }
 
@@ -47,6 +50,10 @@ public class ChartFragment extends Fragment {
 
         view = inflater.inflate(R.layout.chart_fragment_layout, container, false);
         chartFrame = (FrameLayout) view.findViewById(R.id.chart_frame);
+        TextView title = (TextView) view.findViewById(R.id.textView);
+        title.setText(entity.getName().getValue());
+
+
         Log.v(TAG, "view created " + (adapter == null));
         seriesChart = new SeriesChart();
 

@@ -6,7 +6,7 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="base_url">http://nimbits-02.appspot.com</string>
-    <!--<string name="base_url">http://localhost:8082</string>-->
+    <string name="new_text">New</string>
     <string name="sample_email">test@example.com</string>
     <string name="enter_data">Enter Data</string>
     <string name="dots">...</string>
@@ -44,4 +44,34 @@
         history
     </string>
     <string name="alert_delta_seconds">Seconds of history to look back to</string>
+    <string name="send">send</string>
+    <string name="clear">clear</string>
+
+
+
+
+    <string name="error_config">Please set the %1$s constant and recompile the app.</string>
+    <string name="already_registered">Device is already registered on server.</string>
+    <string name="gcm_registered">From Nimbits:: device successfully registered (regId = %1$s)!</string>
+    <string name="gcm_unregistered">From Nimbits:: device successfully unregistered!</string>
+    <string name="gcm_message">From Nimbits:: you got message!</string>
+    <string name="gcm_error">From Nimbits:: error (%1$s).</string>
+    <string name="gcm_recoverable_error">From Nimbits:: recoverable error (%1$s).</string>
+    <string name="gcm_deleted">From Nimbits:: server deleted %1$d pending messages!</string>
+    <string name="server_registering">Trying (attempt %1$d/%2$d) to register device on Demo Server.</string>
+    <string name="server_registered">From Demo Server: successfully added device!</string>
+    <string name="server_unregistered">From Demo Server: successfully removed device!</string>
+    <string name="server_register_error">Could not register device on Demo Server after %1$d attempts.</string>
+    <string name="server_unregister_error">Could not unregister device on Demo Server (%1$s).</string>
+    <string name="options_register">Register</string>
+    <string name="options_unregister">Unregister</string>
+    <string name="options_clear">Clear</string>
+    <string name="options_exit">Exit</string>
+    <string name="loading">...</string><string name="zero">0</string><string name="sample_text">Sample Text</string>
+    <string name="sample_number">0.0000</string>
+    <string name="sample_date">n/a</string>
+    <string name="enter_name">New Name</string>
+    <string name="new_folder_text">New Folder</string>
+    <string name="new_point_text">New Data Point</string>
+
 </resources>

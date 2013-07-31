@@ -29,7 +29,7 @@ public enum SubscriptionNotifyMethod {
     facebook(1, "dep", false),
     twitter(2, "dep", false),
     instantMessage(3, "Instant Message (XMPP)", true),
-    cloud(5, "Push to Android", true);
+    cloud(5, "Android Notification (GCM)", true);
 
 
     private static final Map<Integer, SubscriptionNotifyMethod> lookup = new HashMap<Integer, SubscriptionNotifyMethod>(5);

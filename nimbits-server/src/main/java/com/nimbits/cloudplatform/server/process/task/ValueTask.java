@@ -67,17 +67,11 @@ public class ValueTask extends HttpServlet implements org.springframework.web.Ht
             EntityServiceImpl.addUpdateEntity(u, Arrays.<Entity>asList(point));
         }
 
-        //triggers
         CalculationTransaction.processCalculations(u, point);
         SummaryService.processSummaries(u, point);
         SubscriptionService.processSubscriptions(u, point, value);
         resp.setStatus(HttpServletResponse.SC_OK);
-//    } catch (Exception e) {
-//        LogHelper.logException(this.getClass(), e);
-//        resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-//        resp.addHeader("ERROR", e.getMessage());
-//
-//    }
+
 }
 
 

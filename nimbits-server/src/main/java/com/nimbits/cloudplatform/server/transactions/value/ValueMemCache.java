@@ -59,16 +59,20 @@ public class ValueMemCache {
         else {
             map = new HashMap<String, Point>();
         }
-        if (map.containsKey(point.getKey())) {
+        if (map != null && point != null && map.containsKey(point.getKey())) {
             map.remove(point.getKey());
         }
-        point.setValue(value);
-        HashMap<String, Point> newMap = new HashMap<String, Point>(map.size() +1);
-        newMap.putAll(map);
 
-        newMap.put(point.getKey(), point);
-        cacheFactory.delete(MemCacheKey.hotPoints);
-        cacheFactory.put(MemCacheKey.hotPoints, newMap);
+        if (point != null) {
+            point.setValue(value);
+            HashMap<String, Point> newMap = new HashMap<String, Point>(map.size() +1);
+            newMap.putAll(map);
+            newMap.put(point.getKey(), point);
+            cacheFactory.delete(MemCacheKey.hotPoints);
+            cacheFactory.put(MemCacheKey.hotPoints, newMap);
+        }
+
+
 
 
     }
@@ -162,46 +166,46 @@ public class ValueMemCache {
 
         String currentValueCacheKey = MemCacheKey.getKey(MemCacheKey.currentValueCache, entity.getKey());
 
- //       try {
-            if (cacheFactory.contains(currentValueCacheKey)) {
-                final Value value = (Value) cacheFactory.get(currentValueCacheKey);
-                if (value == null) {
-                    cacheFactory.delete(currentValueCacheKey);
-                    List<Value> sample = ValueDAO.getRecordedValuePrecedingTimestamp(entity, timestamp);
-                    if (! sample.isEmpty()) {
-                        cacheFactory.put(currentValueCacheKey, sample.get(0));
-                        result.addAll(sample);
-                    }
-
-                } else {
-                    if (timestamp.getTime() >= value.getTimestamp().getTime()) {
-                        result.add(value);
-                    }
-                    else {
-                        List<Value> bufferValues = getBuffer(entity);
-                        List<Value> values = ValueDAO.getRecordedValuePrecedingTimestamp(entity, timestamp);
-                        result.addAll(values);
-                        for (Value v : bufferValues) {
-                            if (v.getTimestamp().getTime() < timestamp.getTime()) {
-                                result.add(v);
-                            }
-                        }
-                    }
-                }
-            } else {
-
-                log.info("getRecordedValuePrecedingTimestamp");
+        //       try {
+        if (cacheFactory.contains(currentValueCacheKey)) {
+            final Value value = (Value) cacheFactory.get(currentValueCacheKey);
+            if (value == null) {
+                cacheFactory.delete(currentValueCacheKey);
                 List<Value> sample = ValueDAO.getRecordedValuePrecedingTimestamp(entity, timestamp);
-                //TODO - keep a memchach list of known empty points to avoid repeated datastore calls here
                 if (! sample.isEmpty()) {
-
                     cacheFactory.put(currentValueCacheKey, sample.get(0));
                     result.addAll(sample);
                 }
 
-
-
+            } else {
+                if (timestamp.getTime() >= value.getTimestamp().getTime()) {
+                    result.add(value);
+                }
+                else {
+                    List<Value> bufferValues = getBuffer(entity);
+                    List<Value> values = ValueDAO.getRecordedValuePrecedingTimestamp(entity, timestamp);
+                    result.addAll(values);
+                    for (Value v : bufferValues) {
+                        if (v.getTimestamp().getTime() < timestamp.getTime()) {
+                            result.add(v);
+                        }
+                    }
+                }
             }
+        } else {
+
+            log.info("getRecordedValuePrecedingTimestamp");
+            List<Value> sample = ValueDAO.getRecordedValuePrecedingTimestamp(entity, timestamp);
+            //TODO - keep a memchach list of known empty points to avoid repeated datastore calls here
+            if (! sample.isEmpty()) {
+
+                cacheFactory.put(currentValueCacheKey, sample.get(0));
+                result.addAll(sample);
+            }
+
+
+
+        }
 //        } catch (InvalidValueException e) {
 //            cacheFactory.delete(currentValueCacheKey);
 //            List<Value> sample = ValueDAO.getRecordedValuePrecedingTimestamp(entity, timestamp);
@@ -251,43 +255,43 @@ public class ValueMemCache {
         String currentValueCacheKey = MemCacheKey.getKey(MemCacheKey.currentValueCache, entity.getKey());
         updateHotPoints(entity, v);
         addPointToActiveList(entity);
-      //  try {
-            final List<Long> stored;
-            if (cacheFactory.contains(bufferedListCacheKey)) {
-                stored = (List<Long>) cacheFactory.get(bufferedListCacheKey);
-                stored.add(v.getTimestamp().getTime() + entity.hashCode()); //TODO timestamped buffered value
-                cacheFactory.delete(stored);
-                cacheFactory.put(bufferedListCacheKey, stored);
-            } else {
-                stored = new ArrayList<Long>(10);
-                stored.add(v.getTimestamp().getTime() + entity.hashCode());
-                cacheFactory.put(bufferedListCacheKey, stored);
-            }
+        //  try {
+        final List<Long> stored;
+        if (cacheFactory.contains(bufferedListCacheKey)) {
+            stored = (List<Long>) cacheFactory.get(bufferedListCacheKey);
+            stored.add(v.getTimestamp().getTime() + entity.hashCode()); //TODO timestamped buffered value
+            cacheFactory.delete(stored);
+            cacheFactory.put(bufferedListCacheKey, stored);
+        } else {
+            stored = new ArrayList<Long>(10);
+            stored.add(v.getTimestamp().getTime() + entity.hashCode());
+            cacheFactory.put(bufferedListCacheKey, stored);
+        }
 
 
-            //TODO STORES VALUE WITH TS
+        //TODO STORES VALUE WITH TS
 
-            cacheFactory.put(v.getTimestamp().getTime() + entity.hashCode(), v);
+        cacheFactory.put(v.getTimestamp().getTime() + entity.hashCode(), v);
 
 
-            if (stored.size() > Const.CONST_MAX_CACHED_VALUE_SIZE) {
-                TaskImpl.startMoveCachedValuesToStoreTask(entity);
-            }
+        if (stored.size() > Const.CONST_MAX_CACHED_VALUE_SIZE) {
+            TaskImpl.startMoveCachedValuesToStoreTask(entity);
+        }
 
-            if (cacheFactory.contains(currentValueCacheKey)) {
-                final Value mostRecentCache = (Value) cacheFactory.get(currentValueCacheKey);
+        if (cacheFactory.contains(currentValueCacheKey)) {
+            final Value mostRecentCache = (Value) cacheFactory.get(currentValueCacheKey);
 
-                if (mostRecentCache == null || v.getTimestamp().getTime() > mostRecentCache.getTimestamp().getTime()) {
-                    cacheFactory.delete(currentValueCacheKey);
-                    cacheFactory.put(currentValueCacheKey, v);
-                }
-            } else {
+            if (mostRecentCache == null || v.getTimestamp().getTime() > mostRecentCache.getTimestamp().getTime()) {
+                cacheFactory.delete(currentValueCacheKey);
                 cacheFactory.put(currentValueCacheKey, v);
             }
-       // } catch (Exception e) {
-       //     cacheFactory.delete(currentValueCacheKey);
-       //     cacheFactory.delete(bufferedListCacheKey);
-       // }
+        } else {
+            cacheFactory.put(currentValueCacheKey, v);
+        }
+        // } catch (Exception e) {
+        //     cacheFactory.delete(currentValueCacheKey);
+        //     cacheFactory.delete(bufferedListCacheKey);
+        // }
 
         return v;
 

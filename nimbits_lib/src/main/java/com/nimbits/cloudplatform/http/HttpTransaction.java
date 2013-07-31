@@ -49,12 +49,12 @@ public class HttpTransaction {
 
     private static <T> List<T> stringToList(final Type listType, String result) {
 
-        return (List<T>) gson.fromJson(result, listType);
+        return gson.fromJson(result, listType);
 
     }
 
     private static <T, K> T stringToObject(Class<K> clz, String result) {
-        System.out.println("RESULT::" + result);
+
         K entity = gson.fromJson(result, clz);
 
         return (T) entity;

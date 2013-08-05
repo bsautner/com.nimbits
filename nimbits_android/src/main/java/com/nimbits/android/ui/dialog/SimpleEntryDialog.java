@@ -58,7 +58,7 @@ public class SimpleEntryDialog extends DialogFragment {
         builder.setTitle(title);
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.new_entity_dialog, null);
+        View view = inflater.inflate(R.layout.simple_text_entry_dialog, null);
         final TextView textView;
         if (view != null) {
             textView = (TextView) view.findViewById(R.id.entity_name);

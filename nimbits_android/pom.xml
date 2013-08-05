@@ -21,7 +21,12 @@
             <!--<scope>compile</scope>-->
             <!--<version>r13</version>-->
         <!--</dependency>-->
-
+        <dependency>
+            <groupId>com.crashlytics.android</groupId>
+            <artifactId>crashlytics</artifactId>
+            <version>0.9.1</version>
+            <scope>compile</scope>
+        </dependency>
         <dependency>
             <groupId>nimbits_lib</groupId>
             <artifactId>nimbits_lib</artifactId>

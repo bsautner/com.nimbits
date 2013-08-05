@@ -315,7 +315,7 @@ public class ValueTransaction {
     }
 
 
-    public static void consolidateDate(Entity entity, Date date) throws Exception {
+    public static void consolidateDate(final Entity entity, final Date date) {
         ValueMemCache.consolidateDate(entity, date);
     }
 

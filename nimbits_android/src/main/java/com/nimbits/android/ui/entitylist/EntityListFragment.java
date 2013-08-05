@@ -38,7 +38,7 @@ public class EntityListFragment extends Fragment implements EntityListener  {
     private View view;
     private Context context;
     private EntityListAdapter adapter;
-    private final static int REFRESH_RATE = 5000;
+
     private static TimerTask updateTask;
 
     public EntityListFragment() {
@@ -71,8 +71,9 @@ public class EntityListFragment extends Fragment implements EntityListener  {
         showEntity(context);
         if (this.timer != null) {
             Log.v(TAG, "onResume restarting timer");
+            timer.cancel();
             this.timer = new Timer();
-            this.timer.scheduleAtFixedRate(updateTask, 0, REFRESH_RATE);
+            this.timer.scheduleAtFixedRate(updateTask, 0, Nimbits.getControl().getTimer());
         }
     }
 
@@ -128,7 +129,9 @@ public class EntityListFragment extends Fragment implements EntityListener  {
 
     @Override
     public void newValuePrompt(Entity entity) {
-        listener.newValuePrompt(entity);
+        if (listener != null) {
+            listener.newValuePrompt(entity);
+        }
     }
 
     public void showEntity(Context context) {

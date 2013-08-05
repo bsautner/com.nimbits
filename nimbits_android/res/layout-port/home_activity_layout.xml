@@ -1,23 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              tools:context="com.nimbits.android.HomeActivity"
-              android:weightSum="1.0">
-
-
-    <ProgressBar
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/progressBar"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentLeft="true"/>
-
-    <LinearLayout
+  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
@@ -29,7 +12,8 @@
             android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:id="@id/main_frame"
-            android:layout_weight=".5">
+            android:layout_weight=".5"
+            android:layout_margin="5dp">
 
 
         </FrameLayout>
@@ -39,7 +23,8 @@
             android:layout_height="0dp"
             android:id="@id/data_frame"
             android:layout_weight=".5"
-            android:layout_alignParentEnd="false">
+            android:layout_alignParentEnd="false"
+            android:layout_margin="5dp">
 
             <WebView
                 android:layout_width="fill_parent"
@@ -48,4 +33,3 @@
                 android:layout_gravity="center"/>
         </FrameLayout>
     </LinearLayout>
-</RelativeLayout>

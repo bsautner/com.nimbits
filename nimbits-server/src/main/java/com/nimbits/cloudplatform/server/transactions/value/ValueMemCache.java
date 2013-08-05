@@ -59,12 +59,18 @@ public class ValueMemCache {
         else {
             map = new HashMap<String, Point>();
         }
+        if (map == null) {
+            map = new HashMap<String, Point>();
+            cacheFactory.delete(MemCacheKey.hotPoints);
+        }
         if (map != null && point != null && map.containsKey(point.getKey())) {
             map.remove(point.getKey());
         }
 
         if (point != null && value!=null) {
             point.setValue(value);
+
+
             HashMap<String, Point> newMap = new HashMap<String, Point>(map.size() +1);
             newMap.putAll(map);
             newMap.put(point.getKey(), point);
@@ -366,7 +372,7 @@ public class ValueMemCache {
     }
 
 
-    public static void consolidateDate(final Entity entity, final Date timestamp) throws Exception {
+    public static void consolidateDate(final Entity entity, final Date timestamp) {
         ValueDAO.consolidateDate(entity, timestamp);
     }
 

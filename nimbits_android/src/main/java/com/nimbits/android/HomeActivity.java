@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import com.google.android.gcm.GCMRegistrar;
 import com.nimbits.android.content.ContentProvider;
 import com.nimbits.android.main.async.PostValueTask;
+import com.nimbits.android.startup.async.LoadControlTask;
 import com.nimbits.android.ui.chart.ChartFragment;
 import com.nimbits.android.ui.dialog.SimpleEntryDialog;
 import com.nimbits.android.ui.entitylist.EntityListFragment;
@@ -41,7 +42,7 @@ import java.util.List;
 
 public class HomeActivity extends ActionBarActivity implements EntityListener {
     public static final String WELCOME = "http://www.nimbits.com/android/welcome.html";
-    private ProgressBar progressBar;
+
     private EntityListFragment entityListFragment;
     private ChartFragment chartFragment;
     AsyncTask<Void, Void, Void> mRegisterTask;
@@ -50,8 +51,7 @@ public class HomeActivity extends ActionBarActivity implements EntityListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_activity_layout);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.VISIBLE);
+
 
         WebView view = (WebView) findViewById(R.id.webView);
         view.loadUrl(WELCOME);
@@ -60,6 +60,8 @@ public class HomeActivity extends ActionBarActivity implements EntityListener {
 
             showEntityFragment();
             startGcm();
+            LoadControlTask loadControlTask = new LoadControlTask();
+            loadControlTask.execute();
         }
 
 
@@ -74,9 +76,6 @@ public class HomeActivity extends ActionBarActivity implements EntityListener {
         if (ContentProvider.getTree().isEmpty()) {
             loadTree();
         }
-//        else {
-//            entityListFragment.showEntity(getApplicationContext());
-//        }
     }
 
     private void loadTree() {
@@ -99,7 +98,7 @@ public class HomeActivity extends ActionBarActivity implements EntityListener {
 
             @Override
             public void onProgress(int progress) {
-                updateProgressBar(progress);
+
             }
 
 
@@ -107,12 +106,7 @@ public class HomeActivity extends ActionBarActivity implements EntityListener {
         task.execute();
     }
 
-    private void updateProgressBar(int progress) {
-        ProgressBar bar = (ProgressBar) findViewById(R.id.progressBar);
-        bar.setMax(100);
-        bar.setProgress(progress);
 
-    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar

@@ -100,15 +100,19 @@ public class ValueServletImpl extends ApiServlet implements org.springframework.
                     }
 
 
-                    final Value result = ValueTransaction.recordValue(user, point, v);
+
 
                     //reportLocation(point, location);
 
                     final PrintWriter out;
                     try {
+                        final Value result = ValueTransaction.recordValue(user, point, v);
                         out = resp.getWriter();
                         final String j = GsonFactory.getInstance().toJson(result);
                         out.print(j);
+                    } catch (IllegalArgumentException ex) {
+                        resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                        return;
                     } catch (IOException e) {
                        resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                         return;

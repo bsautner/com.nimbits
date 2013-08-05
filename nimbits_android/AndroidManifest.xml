@@ -85,7 +85,7 @@
         </receiver>
 
         <service android:name=".GCMIntentService" />
-
+        <meta-data android:name="com.crashlytics.ApiKey" android:value=""/>
     </application>
 
 

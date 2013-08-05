@@ -1,5 +1,6 @@
 package com.nimbits.cloudplatform.client.model.entity;
 
+import com.nimbits.cloudplatform.client.enums.Action;
 import com.nimbits.cloudplatform.client.enums.EntityType;
 import com.nimbits.cloudplatform.client.enums.ProtectionLevel;
 import com.nimbits.cloudplatform.client.model.common.impl.CommonFactory;
@@ -41,7 +42,7 @@ public class EntityModelFactory {
                                       final ProtectionLevel protectionLevel,
                                       final String parentUUID,
                                       final String ownerUUID,
-                                      final String uuid ) {
+                                      final String uuid) {
         return new EntityModel(name, description, entityType, protectionLevel,  parentUUID,
                 ownerUUID, uuid);
     }
@@ -108,7 +109,7 @@ public class EntityModelFactory {
                 EntityType.point,
                 ProtectionLevel.everyone,
                 null,
-                null,null
+                null,null 
 
                 );
     }

@@ -1,10 +1,8 @@
 package com.nimbits.cloudplatform.client.model.entity;
 
+
 import com.nimbits.cloudplatform.client.common.Utils;
-import com.nimbits.cloudplatform.client.enums.AlertType;
-import com.nimbits.cloudplatform.client.enums.AuthLevel;
-import com.nimbits.cloudplatform.client.enums.EntityType;
-import com.nimbits.cloudplatform.client.enums.ProtectionLevel;
+import com.nimbits.cloudplatform.client.enums.*;
 import com.nimbits.cloudplatform.client.model.accesskey.AccessKey;
 import com.nimbits.cloudplatform.client.model.common.CommonIdentifier;
 import com.nimbits.cloudplatform.client.model.common.impl.CommonFactory;
@@ -34,14 +32,13 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
     private String parent;
     private String owner;
     private boolean readOnly = false;
-
     private String uuid;
     private Date dateCreated;
-
-    private static final long serialVersionUID =3455345353L;
+    private static final long serialVersionUID =3455345354L;
     private List<Point> children;
     private String instanceUrl;
     private boolean isCached = false;
+
 
     public EntityModel(final CommonIdentifier name,
                        final String description,
@@ -57,10 +54,8 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
         this.owner = owner;
         this.protectionLevel = protectionLevel.getCode();
         this.alertType = AlertType.OK.getCode();
-
         this.uuid = uuid;
         this.dateCreated = new Date();
-
 
     }
 
@@ -79,6 +74,7 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
             this.alertType = anEntity.getAlertType().getCode();
             this.uuid = anEntity.getUUID();
             this.instanceUrl = anEntity.getInstanceUrl();
+
 
         }
     }
@@ -221,7 +217,6 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
     public void setReadOnly(final boolean readOnly) {
         this.readOnly = readOnly;
     }
-
 
 
 

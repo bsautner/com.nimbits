@@ -16,6 +16,7 @@ import com.nimbits.android.main.async.SeriesTask;
 import com.nimbits.android.ui.entitylist.EntityListAdapter;
 import com.nimbits.android.ui.entitylist.EntityListener;
 import com.nimbits.android.R;
+import com.nimbits.cloudplatform.Nimbits;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.point.Point;
 import com.nimbits.cloudplatform.client.model.value.Value;
@@ -64,11 +65,11 @@ public class ChartFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        getSeries(ContentProvider.currentEntity);
+        getSeries(ContentProvider.currentEntity, Nimbits.getControl().getChartValues());
         Log.v(TAG, "onResume" + (seriesChart == null));
     }
 
-    private void getSeries(final Entity point) {
+    private void getSeries(final Entity point, final int count) {
         SeriesTask.getInstance(new SeriesTask.SeriesTaskListener() {
             @Override
             public void onSuccess(List<Value> response) {
@@ -91,6 +92,6 @@ public class ChartFragment extends Fragment {
 
             }
 
-        }).execute(point, Range.between(0, 10));
+        }).execute(point, Range.between(0, count));
     }
 }

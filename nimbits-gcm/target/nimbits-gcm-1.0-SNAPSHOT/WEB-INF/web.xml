@@ -78,4 +78,18 @@
         <servlet-name>HomeServlet</servlet-name>
         <url-pattern>/home</url-pattern>
     </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>AndroidServlet</servlet-name>
+        <servlet-class>
+            com.nimbits.server.api.AndroidServlet
+        </servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>AndroidServlet</servlet-name>
+        <url-pattern>/android</url-pattern>
+    </servlet-mapping>
 </web-app>

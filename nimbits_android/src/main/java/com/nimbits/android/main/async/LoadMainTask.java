@@ -43,10 +43,7 @@ public class LoadMainTask extends AsyncTask<Object, Integer, List<Entity>> {
         publishProgress(10);
 
         List<Entity>response =  Transaction.getTree();
-        List<Entity> tree = new ArrayList<Entity>(response.size());
-
         Nimbits.tree = response;
-
         List<Entity> retObj = new ArrayList<Entity>(response.size());
         for (Entity e : response) {
             if (e.getEntityType().isAndroidReady()) {

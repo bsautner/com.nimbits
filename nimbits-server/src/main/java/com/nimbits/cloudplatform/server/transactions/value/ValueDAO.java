@@ -93,7 +93,7 @@ public class ValueDAO {
     }
 
 
-    protected static List<Value> getTopDataSeries(final Entity entity, final int maxValues) throws Exception {
+    protected static List<Value> getTopDataSeries(final Entity entity, final int maxValues)  {
         return getTopDataSeries(entity, maxValues, new Date());
 
     }
@@ -197,7 +197,7 @@ public class ValueDAO {
         }
     }
 
-    protected static void consolidateDate(final Entity entity, final Date timestamp) throws Exception {
+    protected static void consolidateDate(final Entity entity, final Date timestamp)  {
 
 
         final PersistenceManager pm = pmf.getPersistenceManager();
@@ -213,7 +213,7 @@ public class ValueDAO {
         }
     }
 
-    private static void mergeResults(final PersistenceManager pm, final Entity entity, final List<ValueBlobStore> result) throws Exception {
+    private static void mergeResults(final PersistenceManager pm, final Entity entity, final List<ValueBlobStore> result)  {
         final List<Value> values = new ArrayList<Value>(Const.CONST_DEFAULT_LIST_SIZE);
         for (final ValueBlobStore store : result) {
             values.addAll(readValuesFromFile(new BlobKey(store.getBlobKey()), store.getLength()));
@@ -358,7 +358,7 @@ public class ValueDAO {
     }
 
 
-    protected static List<ValueBlobStore> recordValues(final Entity entity, final List<Value> values) throws IOException {
+    protected static List<ValueBlobStore> recordValues(final Entity entity, final List<Value> values)  {
         if (!values.isEmpty()) {
 
             final Map<Long, List<Value>> map = new HashMap<Long, List<Value>>(values.size());
@@ -396,9 +396,9 @@ public class ValueDAO {
                 if (!longListEntry.getValue().isEmpty()) {
                     final String json = GsonFactory.getInstance().toJson(longListEntry.getValue());
                     //log.info("ValueDAO: json " + json + "  " + entity.getKey());
-                    ValueBlobStore b = createBlobStoreEntity(entity, maxMap, minMap, longListEntry.getKey(), json );
-                    if (b != null) {
-                        retObj.add(b);
+                    List<ValueBlobStore> b = createBlobStoreEntity(entity, maxMap, minMap, longListEntry.getKey(), json );
+                    if (! b.isEmpty()) {
+                        retObj.addAll(b);
                     }
 
                 }
@@ -416,15 +416,16 @@ public class ValueDAO {
 
     }
 
-    private static ValueBlobStore createBlobStoreEntity(final Entity entity, final Map<Long, Long> maxMap, final Map<Long, Long> minMap, final Long l, final String json ) throws IOException {
+    private static List<ValueBlobStore> createBlobStoreEntity(final Entity entity, final Map<Long, Long> maxMap, final Map<Long, Long> minMap, final Long l, final String json ) {
         final PersistenceManager pm = pmf.getPersistenceManager();
         //log.info("createBlobStoreEntity: json " + json + "  " + entity.getKey());
-        final FileService fileService = FileServiceFactory.getFileService();
-        final AppEngineFile file = fileService.createNewBlobFile(Const.CONTENT_TYPE_PLAIN);
-        final String path = file.getFullPath();
-        final FileWriteChannel writeChannel = fileService.openWriteChannel(file, true);
-        PrintWriter out = new PrintWriter(Channels.newWriter(writeChannel, "UTF8"));
+        final List<ValueBlobStore> retList = new ArrayList<ValueBlobStore>(1);
         try {
+            final FileService fileService = FileServiceFactory.getFileService();
+            final AppEngineFile file = fileService.createNewBlobFile(Const.CONTENT_TYPE_PLAIN);
+            final String path = file.getFullPath();
+            final FileWriteChannel writeChannel = fileService.openWriteChannel(file, true);
+            PrintWriter out = new PrintWriter(Channels.newWriter(writeChannel, "UTF8"));
             // char[] uc = json.toCharArray();
             //log.info("createBlobStoreEntity: path " + path + "  " + entity.getKey());
             out.println(json);
@@ -454,12 +455,20 @@ public class ValueDAO {
             //log.info("createBlobStoreEntity: flush ok " + entity.getKey());
             //log.info(currentStoreEntity.getEntity() + " " + currentStoreEntity.getKey());
             ValueBlobStore result = createValueBlobStore(currentStoreEntity);
-            return result;
+            out.close();
+            if (result != null) {
+                retList.add(result);
+            }
+            return retList;
+        } catch (IOException ex) {
 
+            log.severe(ex.getMessage());
+            ex.printStackTrace();
+            return Collections.emptyList();
 
         } finally {
             //log.info("createBlobStoreEntity" + "done");
-            out.close();
+
             pm.close();
         }
 

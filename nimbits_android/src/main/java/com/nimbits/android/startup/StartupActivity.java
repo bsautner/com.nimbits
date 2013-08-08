@@ -3,14 +3,17 @@ package com.nimbits.android.startup;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
+import com.crashlytics.android.Crashlytics;
 import com.nimbits.android.HomeActivity;
 import com.nimbits.android.R;
 import com.nimbits.android.settings.SettingsActivity;
 import com.nimbits.android.AuthenticationManager;
+import com.nimbits.android.startup.async.LoadControlTask;
 import com.nimbits.cloudplatform.Nimbits;
 import com.nimbits.cloudplatform.client.model.user.User;
 import com.nimbits.android.MainActivity;
@@ -26,13 +29,12 @@ public class StartupActivity extends Activity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Crashlytics.start(this);
         setContentView(R.layout.splash);
         ImageView myImageView = (ImageView) findViewById(R.id.nimbits_transparent_logo);
         Animation myFadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fadein);
         myImageView.startAnimation(myFadeInAnimation);
         activity = this;
-
 
 
 

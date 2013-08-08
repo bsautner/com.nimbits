@@ -13,6 +13,7 @@
 
 package com.nimbits.cloudplatform.server.orm;
 
+import com.nimbits.cloudplatform.client.enums.Action;
 import com.nimbits.cloudplatform.client.enums.AuthLevel;
 import com.nimbits.cloudplatform.client.model.accesskey.AccessKey;
 import com.nimbits.cloudplatform.client.model.common.impl.CommonFactory;
@@ -49,6 +50,8 @@ public class UserEntity extends EntityStore implements User {
     @NotPersistent
     private boolean userAdmin;
 
+    @NotPersistent
+    private String action;
 
     // A user that can only work with public data
     @NotPersistent

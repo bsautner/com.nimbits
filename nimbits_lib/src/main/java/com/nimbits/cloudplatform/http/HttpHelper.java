@@ -77,14 +77,19 @@ public class HttpHelper {
     ) {
         List<T> result;
         String code = buildCode(postUrl, parameters);
-        if (expireMap.containsKey(code) && expireMap.get(code) < expires.getTime()) {
-            expireMap.remove(code);
-            listMap.remove(code);
-            result =  doHttpGet(clz, postUrl, parameters, type, expectList, code);
-        }
-        else if (listMap.containsKey(code)) {
+        if (doCache) {
+            if (expireMap.containsKey(code) && expireMap.get(code) < expires.getTime()) {
+                expireMap.remove(code);
+                listMap.remove(code);
+                result =  doHttpGet(clz, postUrl, parameters, type, expectList, code);
+            }
+            else if (listMap.containsKey(code)) {
 
-            result = (List<T>) listMap.get(code);
+                result = (List<T>) listMap.get(code);
+            }
+            else {
+                result = doHttpGet(clz, postUrl, parameters, type, expectList, code);
+            }
         }
         else {
             result = doHttpGet(clz, postUrl, parameters, type, expectList, code);

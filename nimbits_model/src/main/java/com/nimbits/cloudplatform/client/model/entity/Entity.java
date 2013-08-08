@@ -1,5 +1,6 @@
 package com.nimbits.cloudplatform.client.model.entity;
 
+import com.nimbits.cloudplatform.client.enums.Action;
 import com.nimbits.cloudplatform.client.enums.AlertType;
 import com.nimbits.cloudplatform.client.enums.EntityType;
 import com.nimbits.cloudplatform.client.enums.ProtectionLevel;

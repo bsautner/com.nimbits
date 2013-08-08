@@ -113,6 +113,14 @@
         <url-pattern>/service/v2/value</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>batchApi</servlet-name>
+        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>batchApi</servlet-name>
+        <url-pattern>/service/v2/batch</url-pattern>
+    </servlet-mapping>
     <!--end v2 services-->
     <servlet>
         <servlet-name>OpenIdServlet</servlet-name>

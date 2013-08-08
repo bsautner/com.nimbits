@@ -49,6 +49,7 @@ public class SendAllMessagesServlet extends BaseServlet {
         StringBuilder status = new StringBuilder();
         String email = req.getParameter(Parameters.email.getText());
         String json = req.getParameter(Parameters.json.getText());
+
         List<String> devices = Datastore.getDevices(email);
         if (email != null) {
             status.append(email);

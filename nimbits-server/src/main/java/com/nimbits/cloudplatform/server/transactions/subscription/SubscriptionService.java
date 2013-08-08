@@ -17,10 +17,7 @@ import com.google.appengine.api.datastore.DatastoreTimeoutException;
 import com.google.apphosting.api.ApiProxy;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.nimbits.cloudplatform.client.constants.Path;
-import com.nimbits.cloudplatform.client.enums.AlertType;
-import com.nimbits.cloudplatform.client.enums.AuthLevel;
-import com.nimbits.cloudplatform.client.enums.EntityType;
-import com.nimbits.cloudplatform.client.enums.Parameters;
+import com.nimbits.cloudplatform.client.enums.*;
 import com.nimbits.cloudplatform.client.enums.subscription.SubscriptionType;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.mqtt.Mqtt;
@@ -245,7 +242,7 @@ public class SubscriptionService extends RemoteServiceServlet {
             String json = GsonFactory.getInstance().toJson(point);
             params.add(new BasicNameValuePair(Parameters.email.getText(), user.getEmail().getValue()));
             params.add(new BasicNameValuePair(Parameters.json.getText(), json));
-
+            params.add(new BasicNameValuePair(Parameters.action.getText(), Action.notify.getCode()));
             OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
             writer.write(getQuery(params));
 

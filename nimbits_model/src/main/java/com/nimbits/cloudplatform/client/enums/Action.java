@@ -55,14 +55,16 @@ public enum Action {
     download(ActionConstants.ACTION_DOWNLOAD),
     validateExists(ActionConstants.VALIDATE_EXISTS),
     list(ActionConstants.LIST),
-    listen(ActionConstants.LISTEN);
-
+    listen(ActionConstants.LISTEN),
+    notify(ActionConstants.NOTIFY);
     private static final Map<String, Action> lookup = new HashMap<String, Action>(Action.values().length);
 
     static {
         for (Action s : EnumSet.allOf(Action.class))
             lookup.put(s.code, s);
     }
+
+
 
     private final String code;
 
@@ -117,6 +119,7 @@ public enum Action {
         public static final String VALIDATE_EXISTS = "exists";
         public static final String LIST = "list";
         public static final String LISTEN = "listen";
+        public static final String NOTIFY = "notify";
         private ActionConstants() {
         }
     }

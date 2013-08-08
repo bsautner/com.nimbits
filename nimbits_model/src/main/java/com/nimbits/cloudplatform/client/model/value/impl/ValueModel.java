@@ -50,7 +50,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
 
 
     public static Value getInstance(final SimpleValue<String> valueAndNote, final Date timestamp) {
-        return createValueFromString(valueAndNote, timestamp);
+        return ValueFactory.createValueFromString(valueAndNote, timestamp);
 
     }
     public static Value getInstance(final Value value, final Date timestamp) {
@@ -63,35 +63,9 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
     }
 
 
-    private static Value createValueFromString(final SimpleValue<String> valueAndNote, final Date timestamp) {
-        double d = 0;
-        String note = null;
-        String sample = valueAndNote.getValue().trim();
-        if (sample != null && !sample.isEmpty()) {
-
-            if (sample.contains(" ")) {
-                String a[] = sample.split(" ");
-                try {
-                    d = Double.parseDouble(a[0]);
-                    note = sample.replace(a[0], "").trim();
-                } catch (NumberFormatException ex) {
-                    note = sample;
-                    d = Const.CONST_IGNORED_NUMBER_VALUE;
-                }
-            } else {
-                try {
-                    d = Double.parseDouble(sample);
-                    note = "";
-                } catch (NumberFormatException ex) {
-                    note = sample;
-                    d = Const.CONST_IGNORED_NUMBER_VALUE;
-                }
-            }
-        }
 
 
-        return new ValueModel(LocationFactory.createLocation(), d, timestamp, note, ValueDataModel.getInstance(SimpleValue.getInstance("")), AlertType.OK);
-    }
+
 
 
     @Override

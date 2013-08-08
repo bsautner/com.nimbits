@@ -34,7 +34,6 @@ import java.util.Date;
 import java.util.List;
 
 @Service("pointTask")
-
 public class PointMaintTask extends HttpServlet  implements org.springframework.web.HttpRequestHandler{
 
 
@@ -43,17 +42,13 @@ public class PointMaintTask extends HttpServlet  implements org.springframework.
     @Override
     public void handleRequest(final HttpServletRequest req, final HttpServletResponse resp) {
 
-        try {
             processPost(req);
 
-        } catch (Exception ex) {
-            LogHelper.logException(this.getClass(), ex);
-        }
 
     }
 
 
-    public void processPost(final HttpServletRequest req) throws Exception {
+    public void processPost(final HttpServletRequest req)  {
 
 
         final String j = req.getParameter(Parameters.json.getText());
@@ -71,7 +66,7 @@ public class PointMaintTask extends HttpServlet  implements org.springframework.
 
 
 
-    public void consolidateBlobs(final Entity entity) throws Exception {
+    public void consolidateBlobs(final Entity entity)  {
         final List<ValueBlobStore> stores = ValueTransaction.getAllStores(entity);
         if (! stores.isEmpty()) {
             final Collection<Long> dates = new ArrayList<Long>(stores.size());

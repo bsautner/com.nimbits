@@ -3,6 +3,9 @@ package com.nimbits.cloudplatform.transaction;
 
 import com.google.gson.reflect.TypeToken;
 import com.nimbits.cloudplatform.Nimbits;
+import com.nimbits.cloudplatform.client.android.AndroidControl;
+import com.nimbits.cloudplatform.client.android.AndroidControlImpl;
+import com.nimbits.cloudplatform.client.common.Utils;
 import com.nimbits.cloudplatform.client.enums.Action;
 import com.nimbits.cloudplatform.client.enums.EntityType;
 import com.nimbits.cloudplatform.client.enums.Parameters;
@@ -19,8 +22,15 @@ import com.nimbits.cloudplatform.http.HttpHelper;
 import com.nimbits.cloudplatform.http.UrlContainer;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
 import org.apache.commons.lang3.Range;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -171,4 +181,34 @@ public class Transaction {
     }
 
 
+    public static List<AndroidControl> getControl() {
+        HttpClient client = new DefaultHttpClient();
+        String getURL = "http://nimbits-gcm.appspot.com/android";
+        HttpGet get = new HttpGet(getURL);
+        HttpResponse responseGet = null;
+        List<AndroidControl> result = new ArrayList<AndroidControl>(1);
+
+        try {
+            responseGet = client.execute(get);
+
+        HttpEntity resEntityGet = responseGet.getEntity();
+        if (resEntityGet != null) {
+            // do something with the response
+            String response = EntityUtils.toString(resEntityGet);
+            if (!Utils.isEmptyString(response)) {
+                AndroidControl c = GsonFactory.getInstance().fromJson(response, AndroidControlImpl.class);
+                if (c != null) {
+                    result.add(c);
+                }
+            }
+
+
+        }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+
+
+    }
 }

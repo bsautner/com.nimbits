@@ -4,46 +4,51 @@ import android.app.Activity;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.TextView;
 import com.nimbits.android.content.ContentProvider;
 import com.nimbits.android.R;
-import com.nimbits.cloudplatform.client.enums.EntityType;
-import com.nimbits.cloudplatform.client.model.entity.Entity;
-import com.nimbits.cloudplatform.client.model.entity.EntityName;
+import com.nimbits.android.ui.PointViewBaseFragment;
 
 /**
  * @Author: benjamin
  */
-public class EntityListFragment extends Fragment implements EntityListener {
+public class EntityListFragment extends PointViewBaseFragment {
     private final static  String TAG = "EntityListFragment";
 
     private ListView list;
-    private EntityListener listener;
-    private View view;
+
+
     private Context context;
     private EntityListAdapter adapter;
 
+    @SuppressWarnings("unused")
     public EntityListFragment() {
+        super();
+
     }
 
-    public static final EntityListFragment getInstance(Activity activity) {
+    public EntityListFragment(EntityListener activity) {
+        super(activity);
+    }
+
+    public static EntityListFragment getInstance(Activity activity) {
         Log.v(TAG, "instance created");
-        EntityListFragment instance = new EntityListFragment();
+        EntityListFragment instance = new EntityListFragment((EntityListener) activity);
         instance.listener = (EntityListener) activity;
+
         return instance;
     }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.entity_list, container, false);
+        view = inflater.inflate(R.layout.entity_list_fragment, container, false);
 
         Log.v(TAG, "view created " + (adapter == null));
+
         showEntity(getActivity());
 
         return view;
@@ -53,40 +58,44 @@ public class EntityListFragment extends Fragment implements EntityListener {
     @Override
     public void onResume() {
         super.onResume();
-        Log.v(TAG, "onResume" + (context == null) + " " + (view==null));
         showEntity(context);
+
     }
 
     @Override
-    public void onEntityClicked(Entity entity) {
-        if (listener != null) {
-            listener.onEntityClicked(entity);
-        }
-        ContentProvider.setCurrentEntity(entity);
-        showEntity(context);
+    public void onPause() {
+        super.onPause();
 
 
     }
 
     @Override
-    public void onNewEntity(Entity parent, EntityType type, EntityName name) {
-        listener.onNewEntity(parent, type, name);
+    public void onStop() {
+        super.onStop();
+
+
     }
 
+
+
+    @Override
     public void showEntity(Context context) {
+        super.showEntity(context);
         this.context = context;
         Log.v(TAG, "showEntity" + (context == null));
-        //       if (view == null) {
-        //  view = inflater.inflate(R.layout.entity_list, container, false);
-        adapter = EntityListAdapter.getInstance(context, R.id.listView, ContentProvider.getChildEntities(), this);
+        adapter = new EntityListAdapter(context, R.id.listView, ContentProvider.getChildEntities());
+        adapter.setEntityListener(listener);
         list = (ListView) view.findViewById(R.id.listView);
         list.setAdapter(adapter);
-//        }
-        TextView name = (TextView) view.findViewById(R.id.entity_name);
-        name.setText(ContentProvider.currentEntity.getName().getValue());
 
-        //   if (view != null) {
 
-        // }
     }
+
+
+
+
+
+
+
+
 }

@@ -47,7 +47,7 @@ public class LoadValueTask extends AsyncTask<Object, List<Value>, List<Value>> {
 
         Log.v("nimbits", "getting value");
 
-            response = Transaction.getValue(e);
+        response = Transaction.getValue(e);
 
         Log.v("nimbits", "got a value for " + e.getKey());
         return response;

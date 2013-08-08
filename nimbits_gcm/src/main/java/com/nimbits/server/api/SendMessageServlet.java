@@ -98,6 +98,7 @@ public class SendMessageServlet extends BaseServlet {
         String regId = req.getParameter(PARAMETER_DEVICE);
         String email = req.getParameter(Parameters.email.getText());
         String json = req.getParameter(Parameters.json.getText());
+
         if (regId != null) {
             sendSingleMessage(regId, resp, email, json);
             return;

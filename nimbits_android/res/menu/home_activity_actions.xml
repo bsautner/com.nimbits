@@ -3,14 +3,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/action_new_folder"
 
-          android:showAsAction="always"
-          android:icon="@drawable/add"
+          android:showAsAction="ifRoom"
+          android:icon="@drawable/content_new"
           android:title="@string/new_folder_text"/>
 
     <item android:id="@+id/action_new_point"
 
           android:showAsAction="always"
-          android:icon="@drawable/add"
+          android:icon="@drawable/content_new"
           android:title="@string/new_point_text"/>
+
+    <item android:id="@+id/action_refresh"
+
+          android:showAsAction="always"
+          android:icon="@drawable/ic_action_refresh"
+          android:title="@string/refresh_text"/>
 
 </menu>

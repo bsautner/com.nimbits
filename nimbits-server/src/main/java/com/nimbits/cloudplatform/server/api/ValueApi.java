@@ -50,12 +50,6 @@ public class ValueApi extends ApiServlet implements org.springframework.web.Http
         log.info(json);
 
 
-
-
-
-
-
-
         try {
             final PrintWriter out = resp.getWriter();
 
@@ -66,9 +60,7 @@ public class ValueApi extends ApiServlet implements org.springframework.web.Http
                 json = getContent(req);
             }
             if (user != null && !user.isRestricted()) {
-//                if (user.getEmail().getValue().equals("drproductsadm@gmail.com")) {
-//                    log.severe("new value from drproductsadm@gmail.com::" + json);
-//                }
+
                 List<Entity> entitySample = EntityServiceImpl.getEntityByKey(user, getParam(Parameters.id), EntityType.point);
                 if (entitySample.isEmpty()) {
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -96,6 +88,7 @@ public class ValueApi extends ApiServlet implements org.springframework.web.Http
 
             }
         } catch (Exception e) {
+            log.severe(e.getMessage());
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
         }

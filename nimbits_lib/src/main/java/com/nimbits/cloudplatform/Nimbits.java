@@ -1,6 +1,8 @@
 package com.nimbits.cloudplatform;
 
 import com.nimbits.cloudplatform.auth.GoogleAuthentication;
+import com.nimbits.cloudplatform.client.android.AndroidControl;
+import com.nimbits.cloudplatform.client.android.AndroidControlFactory;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.location.Location;
 import com.nimbits.cloudplatform.client.model.simple.SimpleValue;
@@ -34,13 +36,20 @@ public class Nimbits {
     public static SimpleValue<String> token;
     public static LoginListener listener;
     public static List<String> authKey;
-
+    private static AndroidControl control;
 
     static {
        token = SimpleValue.getEmptyInstance();
         authKey = Collections.emptyList();
     }
 
+    public static AndroidControl getControl() {
+        return control == null ? AndroidControlFactory.getConservativeInstance() : control;
+    }
+
+    public static void setControl(AndroidControl control) {
+        Nimbits.control = control;
+    }
 
     public static void setLoginListener(LoginListener aListener) {
         listener = aListener;

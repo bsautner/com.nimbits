@@ -315,7 +315,7 @@ public class ValueTransaction {
     }
 
 
-    public static void consolidateDate(Entity entity, Date date) throws Exception {
+    public static void consolidateDate(final Entity entity, final Date date) {
         ValueMemCache.consolidateDate(entity, date);
     }
 
@@ -330,7 +330,7 @@ public class ValueTransaction {
 
 
     public static List<Value> getTopDataSeries(final Entity entity,
-                                               final int maxValues) throws Exception {
+                                               final int maxValues) {
 
         return ValueMemCache.getTopDataSeries(entity, maxValues);
 

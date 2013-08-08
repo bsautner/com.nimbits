@@ -59,6 +59,9 @@ public class StartupTask extends AsyncTask<Object, User, List<User>> {
             List<Cookie> authCookie = HttpHelper.getAuthCookie(gaeAppLoginUri, authToken.toString(), base_url);
             Nimbits.cookie = (authCookie.get(0));
             Nimbits.isExternalStorageAvailable = (isExternalStorageAvailable());
+
+
+
             return Transaction.getSession();
         } catch (Exception e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage());

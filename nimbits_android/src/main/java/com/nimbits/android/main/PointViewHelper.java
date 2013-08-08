@@ -1,8 +1,10 @@
 package com.nimbits.android.main;
 
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.nimbits.android.R;
+import com.nimbits.cloudplatform.client.constants.Const;
 import com.nimbits.cloudplatform.client.model.point.Point;
 import com.nimbits.cloudplatform.client.model.simple.SimpleValue;
 import com.nimbits.cloudplatform.client.model.value.Value;
@@ -25,9 +27,14 @@ public class PointViewHelper {
 
       //  Value v = point.getValue();
         value.setText(String.valueOf(v.getDoubleValue()) + " " + unit.getValue());
+        value.setVisibility(View.VISIBLE);
+        timestamp.setVisibility(View.VISIBLE);
 
-
-
+        if (v.getDoubleValue() == Const.CONST_IGNORED_NUMBER_VALUE) {
+            value.setVisibility(View.GONE);
+            timestamp.setVisibility(View.GONE);
+            return;
+        }
 
         Calendar c = Calendar.getInstance();
         c.setTime(v.getTimestamp());

@@ -330,7 +330,7 @@ public class ValueTransaction {
 
 
     public static List<Value> getTopDataSeries(final Entity entity,
-                                               final int maxValues) throws Exception {
+                                               final int maxValues) {
 
         return ValueMemCache.getTopDataSeries(entity, maxValues);
 

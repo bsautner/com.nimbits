@@ -50,12 +50,6 @@ public class ValueApi extends ApiServlet implements org.springframework.web.Http
         log.info(json);
 
 
-
-
-
-
-
-
         try {
             final PrintWriter out = resp.getWriter();
 

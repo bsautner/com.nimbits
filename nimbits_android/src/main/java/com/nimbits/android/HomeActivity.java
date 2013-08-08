@@ -13,19 +13,21 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 import com.google.android.gcm.GCMRegistrar;
 import com.nimbits.android.content.ContentProvider;
 import com.nimbits.android.main.async.PostValueTask;
 import com.nimbits.android.startup.async.LoadControlTask;
+import com.nimbits.android.ui.PointViewBaseFragment;
 import com.nimbits.android.ui.chart.ChartFragment;
 import com.nimbits.android.ui.dialog.SimpleEntryDialog;
 import com.nimbits.android.ui.entitylist.EntityListFragment;
 import com.nimbits.android.main.async.AddUpdateEntityTask;
 import com.nimbits.android.main.async.LoadMainTask;
 import com.nimbits.android.ui.entitylist.EntityListener;
+import com.nimbits.android.ui.point.PointFragment;
 import com.nimbits.cloudplatform.Nimbits;
 import com.nimbits.cloudplatform.client.enums.Action;
 import com.nimbits.cloudplatform.client.enums.EntityType;
@@ -37,19 +39,22 @@ import com.nimbits.cloudplatform.client.model.simple.SimpleValue;
 import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueFactory;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 public class HomeActivity extends ActionBarActivity implements EntityListener {
     public static final String WELCOME = "http://www.nimbits.com/android/welcome.html";
 
-    private EntityListFragment entityListFragment;
+
+    private PointViewBaseFragment entityFragment;
     private ChartFragment chartFragment;
     AsyncTask<Void, Void, Void> mRegisterTask;
 
     private static final String TAG = "HomeActivity";
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.v(TAG, "onCreate");
         setContentView(R.layout.home_activity_layout);
 
 
@@ -57,8 +62,6 @@ public class HomeActivity extends ActionBarActivity implements EntityListener {
         view.loadUrl(WELCOME);
 
         if (savedInstanceState == null) {
-
-            showEntityFragment();
             startGcm();
             LoadControlTask loadControlTask = new LoadControlTask();
             loadControlTask.execute();
@@ -66,17 +69,27 @@ public class HomeActivity extends ActionBarActivity implements EntityListener {
 
 
     }
+    private void showPointFragment() {
+        FrameLayout frame = (FrameLayout) findViewById(R.id.main_frame);
+        frame.removeAllViews();
+        entityFragment =  PointFragment.getInstance(this);
+        entityFragment.setArguments(getIntent().getExtras());
+        getSupportFragmentManager().beginTransaction().add(R.id.main_frame, entityFragment).commit();
 
+
+
+    }
     private void showEntityFragment() {
         FrameLayout frame = (FrameLayout) findViewById(R.id.main_frame);
         frame.removeAllViews();
-        entityListFragment =  EntityListFragment.getInstance(this);
-        entityListFragment.setArguments(getIntent().getExtras());
-        getSupportFragmentManager().beginTransaction().add(R.id.main_frame, entityListFragment).commit();
+        entityFragment =  EntityListFragment.getInstance(this);
+        entityFragment.setArguments(getIntent().getExtras());
+        getSupportFragmentManager().beginTransaction().add(R.id.main_frame, entityFragment).commit();
         if (ContentProvider.getTree().isEmpty()) {
             loadTree();
         }
     }
+
 
     private void loadTree() {
         if (ContentProvider.currentEntity == null) {
@@ -92,7 +105,7 @@ public class HomeActivity extends ActionBarActivity implements EntityListener {
             public void onSuccess(List<Entity> response) {
                 Log.v(TAG, "Loaded " + response.size() + " entities");
                 ContentProvider.setTree(response);
-                entityListFragment.showEntity(getApplicationContext());
+                entityFragment.showEntity(getApplicationContext());
 
             }
 
@@ -124,24 +137,45 @@ public class HomeActivity extends ActionBarActivity implements EntityListener {
                 dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
                 return true;
             case R.id.action_new_point:
-                dialog = new SimpleEntryDialog(ContentProvider.currentEntity, EntityType.point, Action.create, "Create new Folder");
+                dialog = new SimpleEntryDialog(ContentProvider.currentEntity, EntityType.point, Action.create, "Create new data point");
                 dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
+                return true;
+            case R.id.action_refresh:
+                showEntityFragment();
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
     @Override
-    public void onEntityClicked(Entity entity) {
+    public void onEntityClicked(Entity entity, boolean checkChildren) {
+        ContentProvider.setCurrentEntity(entity);
+
+        List<Entity> children;
+
+        if (checkChildren) {
+            children = ContentProvider.getChildEntities();
+        }
+        else {
+            children = Collections.emptyList();
+        }
         switch (entity.getEntityType()) {
 
             case user:
                 break;
             case point:
-                showChartFragment(entity);
+                if (children.isEmpty()) {
+                    Log.v(TAG, "onSingleEntitySelected");
+                    showPointFragment();
+                }
+                else {
+                      entityFragment.showEntity(getApplicationContext());
+                }
+                showChartFragment();
                 break;
             case category:
-
+                entityFragment.showEntity(getApplicationContext());
                 break;
             case subscription:
                 break;
@@ -154,10 +188,15 @@ public class HomeActivity extends ActionBarActivity implements EntityListener {
         }
     }
 
-    private void showChartFragment(Entity entity) {
+    private void showChartFragment() {
+        Log.v(TAG, "showChartFragment");
+        WebView webView = (WebView) findViewById(R.id.webView);
+        if (webView != null) {
+            webView.setVisibility(View.INVISIBLE);
+        }
         FrameLayout frame = (FrameLayout) findViewById(R.id.data_frame);
         frame.removeAllViews();
-        chartFragment =  ChartFragment.getInstance(this, entity);
+        chartFragment =  ChartFragment.getInstance();
         chartFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().add(R.id.data_frame, chartFragment).commit();
         //chartFragment.getSeries(entity);
@@ -191,24 +230,28 @@ public class HomeActivity extends ActionBarActivity implements EntityListener {
 
     @Override
     public void onValueUpdated(Entity entity, Value response) {
-           if (entityListFragment != null) {
-               Log.v(TAG, "Home Activity Updating list on new value");
-               entityListFragment.showEntity(getApplicationContext() );
-           }
+
+        Log.v(TAG, "Home Activity Updating list on new value");
+        entityFragment.showEntity(getApplicationContext() );
+
+
     }
 
     @Override
     public void onNewValue(final Entity entity, final String entry) {
-
+        InputMethodManager inputManager = (InputMethodManager)
+                getApplication().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
         Value value = ValueFactory.createValueFromString(SimpleValue.getInstance(entry), new Date());
         PostValueTask.getInstance(new PostValueTask.PostValueTaskListener() {
             @Override
             public void onSuccess(List<Value> response) throws Exception {
                 Log.v(TAG, "Value Recorded");
-                 if (! response.isEmpty()) {
-                     ContentProvider.updateCurrentValue(entity, response.get(0));
+                if (! response.isEmpty()) {
+                    ContentProvider.updateCurrentValue(entity, response.get(0));
 
-                 }
+                }
             }
 
             @Override
@@ -227,6 +270,8 @@ public class HomeActivity extends ActionBarActivity implements EntityListener {
         dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
 
     }
+
+
 
 
     @Override
@@ -306,8 +351,9 @@ public class HomeActivity extends ActionBarActivity implements EntityListener {
         super.onResume();
         startGcm();
         if (chartFragment != null && ContentProvider.getCurrentEntity().getEntityType().equals(EntityType.point)) {
-            showChartFragment(ContentProvider.getCurrentEntity());
+            showChartFragment();
         }
+        showEntityFragment();
     }
 
 

@@ -93,7 +93,7 @@ public class ValueDAO {
     }
 
 
-    protected static List<Value> getTopDataSeries(final Entity entity, final int maxValues) throws Exception {
+    protected static List<Value> getTopDataSeries(final Entity entity, final int maxValues)  {
         return getTopDataSeries(entity, maxValues, new Date());
 
     }

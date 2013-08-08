@@ -59,7 +59,7 @@ import java.util.logging.Logger;
  */
 @SuppressWarnings("unchecked")
 @Service("batchTask")
-
+@Deprecated
 public class ProcessBatchTask extends HttpServlet implements org.springframework.web.HttpRequestHandler {
     private static final String P = "p";
     private static final String V = "v";

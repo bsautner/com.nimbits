@@ -306,7 +306,7 @@ public class ValueMemCache {
 
 
 
-    public static  List<Value> getTopDataSeries(final Entity entity,final int maxValues) throws Exception {
+    public static  List<Value> getTopDataSeries(final Entity entity,final int maxValues)  {
         //log.info("getting top " + maxValues + " data series for " + entity.getKey());
         final List<Value> cached = getBuffer(entity);
         //log.info("found in buffer:" + cached.size());

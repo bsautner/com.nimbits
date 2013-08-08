@@ -5,7 +5,7 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
 
-    <groupId>nimbits_gcm</groupId>
+    <groupId>com.nimbits</groupId>
     <artifactId>nimbits_gcm</artifactId>
 
     <properties>
@@ -13,14 +13,11 @@
         <appengine.target.version>1.8.2</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    <modules>
-        <module>../nimbits_model</module>
 
-    </modules>
 
     <dependencies>
         <dependency>
-            <groupId>nimbits_model</groupId>
+            <groupId>com.nimbits</groupId>
             <artifactId>nimbits_model</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>

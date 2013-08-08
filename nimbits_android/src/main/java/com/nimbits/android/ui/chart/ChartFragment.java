@@ -30,34 +30,35 @@ import java.util.List;
 public class ChartFragment extends Fragment {
     private final String TAG = "ChartFragment";
     private Chart seriesChart;
-    private ListView list;
-    private EntityListener listener;
+
+
     private View view;
-    private EntityListAdapter adapter;
-    private Entity entity;
+
     FrameLayout chartFrame;
     public ChartFragment() {
     }
 
-    public static final ChartFragment getInstance(Activity activity, Entity entity) {
+    public static final ChartFragment getInstance() {
         ChartFragment instance = new ChartFragment();
-        instance.listener = (EntityListener) activity;
-        instance.entity = entity;
+
         return instance;
     }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
+        if (view == null) {
+            view = inflater.inflate(R.layout.chart_fragment_layout, container, false);
+            chartFrame = (FrameLayout) view.findViewById(R.id.chart_frame);
+            TextView title = (TextView) view.findViewById(R.id.textView);
 
-        view = inflater.inflate(R.layout.chart_fragment_layout, container, false);
-        chartFrame = (FrameLayout) view.findViewById(R.id.chart_frame);
-        TextView title = (TextView) view.findViewById(R.id.textView);
-        title.setText(entity.getName().getValue());
+            if (title != null) {
+                title.setText(ContentProvider.currentEntity.getName().getValue());
+            }
 
 
-        Log.v(TAG, "view created " + (adapter == null));
-        seriesChart = new SeriesChart();
-
+            Log.v(TAG, "view created ");
+            seriesChart = new SeriesChart();
+        }
         return view;
 
     }
@@ -75,9 +76,7 @@ public class ChartFragment extends Fragment {
             public void onSuccess(List<Value> response) {
                 View chart;
                 try {
-                    if (response.isEmpty()) {
-
-                    } else {
+                    if (!response.isEmpty()) {
                         chart = seriesChart.execute(getActivity(), point, response);
                         chart.setLongClickable(true);
 

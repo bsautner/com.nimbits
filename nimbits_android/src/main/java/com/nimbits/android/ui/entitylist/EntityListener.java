@@ -9,9 +9,10 @@ import com.nimbits.cloudplatform.client.model.value.Value;
  * Created by benjamin on 7/24/13.
  */
 public interface EntityListener {
-    void onEntityClicked(final Entity entity);
+    void onEntityClicked(final Entity entity, final boolean checkChildren);
     void onNewEntity(final Entity parent, final EntityType type, final EntityName name);
     void onValueUpdated(final Entity entity, final Value response);
     void onNewValue(final Entity entity, final String entry);
     void newValuePrompt(final Entity entity);
+
 }

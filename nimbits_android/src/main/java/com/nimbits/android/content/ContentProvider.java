@@ -1,6 +1,7 @@
 package com.nimbits.android.content;
 
 import com.nimbits.cloudplatform.Nimbits;
+import com.nimbits.cloudplatform.client.constants.Const;
 import com.nimbits.cloudplatform.client.enums.EntityType;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.point.Point;
@@ -31,11 +32,14 @@ public class ContentProvider {
             currentValueMap.put(point, value);
     }
     public static Value getCurrentValue(Entity point) {
+        if (currentValueMap == null) {
+            return ValueFactory.createValueModel(Const.CONST_IGNORED_NUMBER_VALUE);
+        }
         if (currentValueMap.containsKey(point)) {
             return currentValueMap.get(point);
         }
         else {
-            return ValueFactory.createValueModel(0.00);
+            return ValueFactory.createValueModel(Const.CONST_IGNORED_NUMBER_VALUE);
         }
 
     }

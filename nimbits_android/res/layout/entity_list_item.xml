@@ -3,7 +3,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:orientation="horizontal"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+                android:layout_height="fill_parent"
+                android:id="@id/entity">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -41,7 +42,8 @@
             android:layout_gravity="center"
             android:textAlignment="textStart"
             android:gravity="right"
-            android:textColor="@android:color/black"/>
+            android:textColor="@android:color/black"
+            android:visibility="invisible"/>
 
         <TextView
             android:layout_width="fill_parent"
@@ -51,7 +53,8 @@
             android:id="@id/timestamp"
             android:layout_gravity="right"
             android:gravity="right"
-            android:textColor="@android:color/background_dark"/>
+            android:textColor="@android:color/background_dark"
+            android:visibility="invisible"/>
     </LinearLayout>
 
 

@@ -73,5 +73,7 @@
     <string name="enter_name">New Name</string>
     <string name="new_folder_text">New Folder</string>
     <string name="new_point_text">New Data Point</string>
+    <string name="options_refresh">Refresh</string>
+    <string name="refresh_text">Refresh</string>
 
 </resources>

@@ -71,49 +71,75 @@ public class PointPanel extends LayoutContainer {
     private final TextField<String> unit = new TextField<String>();
     private final Point entity;
     private final FormData formdata;
-    private boolean readOnlyForm;
 
-    private ComboBox<TypeOption> hysteresisType;
 
+    private ComboBox<FilterTypeOption> hysteresisType;
+    private ComboBox<PointTypeOption> pointType;
 
     public PointPanel(final Entity entity)   {
         this.entity = (Point) entity;
-        readOnlyForm = this.entity.isReadOnly() || ! this.entity.getPointType().equals(PointType.basic);
+
         protectionLevelOptions = new ProtectionLevelOptions(entity);
         formdata = new FormData("-20");
         loadForm();
 
 
     }
-    private ComboBox<TypeOption> hysteresisTypeCombo(final FilterType selectedValue) {
-        final ComboBox<TypeOption> combo = new ComboBox<TypeOption>();
+    private ComboBox<FilterTypeOption> hysteresisTypeCombo(final FilterType selectedValue) {
+        final ComboBox<FilterTypeOption> combo = new ComboBox<FilterTypeOption>();
 
-        final List<TypeOption> ops = new ArrayList<TypeOption>(FilterType.values().length);
+        final List<FilterTypeOption> ops = new ArrayList<FilterTypeOption>(FilterType.values().length);
 
         for (final FilterType type : FilterType.values()){
-            ops.add(new TypeOption(type));
+            ops.add(new FilterTypeOption(type));
         }
 
 
 
-        final ListStore<TypeOption> store = new ListStore<TypeOption>();
+        final ListStore<FilterTypeOption> store = new ListStore<FilterTypeOption>();
 
         store.add(ops);
 
         combo.setFieldLabel("Filter type");
-        combo.setReadOnly(readOnlyForm);
+
         combo.setDisplayField(Parameters.name.getText());
         combo.setValueField(Parameters.value.getText());
         combo.setTriggerAction(ComboBox.TriggerAction.ALL);
         combo.setStore(store);
         combo.setForceSelection(true);
-        final TypeOption selected = combo.getStore().findModel(Parameters.value.getText(), selectedValue.getCode());
+        final FilterTypeOption selected = combo.getStore().findModel(Parameters.value.getText(), selectedValue.getCode());
         combo.setValue(selected);
 
         return combo;
 
     }
+    private ComboBox<PointTypeOption> pointTypeCombo(final PointType selectedValue) {
+        final ComboBox<PointTypeOption> combo = new ComboBox<PointTypeOption>();
 
+        final List<PointTypeOption> ops = new ArrayList<PointTypeOption>(PointType.values().length);
+
+        for (final PointType type : PointType.values()){
+            ops.add(new PointTypeOption(type));
+        }
+
+
+
+        final ListStore<PointTypeOption> store = new ListStore<PointTypeOption>();
+
+        store.add(ops);
+
+        combo.setFieldLabel("Point Type");
+        combo.setDisplayField(Parameters.name.getText());
+        combo.setValueField(Parameters.value.getText());
+        combo.setTriggerAction(ComboBox.TriggerAction.ALL);
+        combo.setStore(store);
+        combo.setForceSelection(true);
+        final PointTypeOption selected = combo.getStore().findModel(Parameters.value.getText(), selectedValue.getCode());
+        combo.setValue(selected);
+
+        return combo;
+
+    }
     private void loadForm()  {
 
 
@@ -173,10 +199,7 @@ public class PointPanel extends LayoutContainer {
 
     private Button saveButtonInit() {
         final Button buttonSave = new Button("Save");
-        buttonSave.setEnabled(!entity.isReadOnly());
         buttonSave.setIcon(AbstractImagePrototype.create(Icons.INSTANCE.SaveAll()));
-        buttonSave.setEnabled(! this.readOnlyForm);
-
         buttonSave.addSelectionListener(new SelectionListener<ButtonEvent>() {
             public void componentSelected(ButtonEvent ce) {
 
@@ -194,7 +217,7 @@ public class PointPanel extends LayoutContainer {
                 "Saving your data, please wait...", "Saving...");
         box.show();
 
-        if (! readOnlyForm) {
+      {
             //General
             final Point point = entity;
 
@@ -204,6 +227,7 @@ public class PointPanel extends LayoutContainer {
 
             point.setFilterValue(compression.getValue().doubleValue());
             point.setFilterType(hysteresisType.getValue().type);
+            point.setPointType(pointType.getValue().type);
             point.setExpire(expires.getValue().intValue());
             point.setUnit(unit.getValue());
 
@@ -283,39 +307,37 @@ public class PointPanel extends LayoutContainer {
         high.setFieldLabel("High Value");
         high.setValue(point.getHighAlarm());
         high.setAllowBlank(false);
-        high.setReadOnly(this.readOnlyForm);
-        simple.add(high, formdata);
+               simple.add(high, formdata);
 
 
         he.setBoxLabel("High alert enabled");
         he.setLabelSeparator("");
         he.setValue(point.isHighAlarmOn());
-        he.setReadOnly(this.readOnlyForm);
-        // he.setFieldLabel("Enabled");
+
         simple.add(he, formdata);
 
 
         low.setFieldLabel("Low Value");
         low.setAllowBlank(false);
         low.setValue(point.getLowAlarm());
-        low.setReadOnly(this.readOnlyForm);
+
         simple.add(low, formdata);
 
 
         le.setBoxLabel("Low alert enabled");
         le.setLabelSeparator("");
         le.setValue(point.isLowAlarmOn());
-        le.setReadOnly(this.readOnlyForm);
+
         simple.add(le, formdata);
 
         idleOn.setBoxLabel("Idle alert enabled");
         idleOn.setLabelSeparator("");
-        idleOn.setReadOnly(this.readOnlyForm);
+
         idleOn.setValue(point.isIdleAlarmOn());
 
         idleSeconds.setFieldLabel("Idle Seconds");
         idleSeconds.setValue(point.getIdleSeconds());
-        idleSeconds.setReadOnly(this.readOnlyForm);
+
 
         simple.add(idleSeconds, formdata);
         simple.add(idleOn, formdata);
@@ -323,16 +345,16 @@ public class PointPanel extends LayoutContainer {
 
         deltaOn.setBoxLabel("Delta alert enabled");
         deltaOn.setLabelSeparator("");
-        deltaOn.setReadOnly(this.readOnlyForm);
+
         deltaOn.setValue(point.isDeltaAlarmOn());
 
         deltaSeconds.setFieldLabel("Delta Seconds");
         deltaSeconds.setValue(point.getDeltaSeconds());
-        deltaSeconds.setReadOnly(this.readOnlyForm);
+
 
         deltaAlert.setFieldLabel("Delta Alert Value");
         deltaAlert.setValue(point.getDeltaAlarm());
-        deltaAlert.setReadOnly(this.readOnlyForm);
+
 
         simple.add(deltaAlert, formdata);
         simple.add(deltaSeconds, formdata);
@@ -374,7 +396,7 @@ public class PointPanel extends LayoutContainer {
     private FormPanel generalForm( ) {
 
         final FormPanel simple = form();
-        simple.setReadOnly(this.readOnlyForm);
+
         final VerticalPanel verticalPanel = new VerticalPanel();
         verticalPanel.setSpacing(10);
         //verticalPanel.setHeight(80);
@@ -384,34 +406,36 @@ public class PointPanel extends LayoutContainer {
         tdVerticalPanel.setMargin(5);
         final Point point = entity;
         compression.setFieldLabel("Compression Filter");
-        compression.setReadOnly(this.readOnlyForm);
+
         hysteresisType = hysteresisTypeCombo(point.getFilterType());
 
-        hysteresisType.setReadOnly(this.readOnlyForm);
+
+        pointType = pointTypeCombo(point.getPointType());
+
         compression.setValue(point.getFilterValue());
         compression.setAllowBlank(false);
-        compression.setReadOnly(this.readOnlyForm);
+
         simple.add(compression, formdata);
         simple.add(hysteresisType, formdata);
-
+        simple.add(pointType, formdata);
         inferLocationCheckbox.setFieldLabel("");
         //inferLocationCheckbox.setTitle();
         inferLocationCheckbox.setBoxLabel("Infer GPS Location");
         inferLocationCheckbox.setLabelSeparator("");
         inferLocationCheckbox.setValue(point.inferLocation());
-        inferLocationCheckbox.setReadOnly(this.readOnlyForm);
+
         simple.add(inferLocationCheckbox);
         expires.setFieldLabel("Expires (days)");
         expires.setValue(point.getExpire());
         expires.setAllowBlank(false);
-        expires.setReadOnly(this.readOnlyForm);
+
         simple.add(expires, formdata);
 
 
         unit.setFieldLabel("Unit of Measure");
         unit.setValue(point.getUnit());
         unit.setAllowBlank(true);
-        unit.setReadOnly(this.readOnlyForm);
+
         simple.add(unit, formdata);
 
 
@@ -421,7 +445,7 @@ public class PointPanel extends LayoutContainer {
         description.setPreventScrollbars(true);
         description.setValue(entity.getDescription());
         description.setFieldLabel("Description");
-        description.setReadOnly(this.readOnlyForm);
+
         simple.add(description, formdata);
         description.setSize("400", "100");
 
@@ -439,20 +463,39 @@ public class PointPanel extends LayoutContainer {
     public void addPointUpdatedListeners(PointUpdatedListener listener) {
         pointUpdatedListeners.add(listener);
     }
-    private static class TypeOption extends BaseModelData {
+    private static class FilterTypeOption extends BaseModelData {
         private static final long serialVersionUID = -4464630285165637035L;
         private FilterType type;
-        public TypeOption( ) {
+        public FilterTypeOption() {
 
         }
 
-        public TypeOption(final FilterType value) {
+        public FilterTypeOption(final FilterType value) {
             this.type = value;
             set(Parameters.value.getText(), value.getCode());
             set(Parameters.name.getText(), value.getText());
         }
 
         public FilterType getMethod() {
+            return type;
+        }
+    }
+
+
+    private static class PointTypeOption extends BaseModelData {
+        private static final long serialVersionUID = -4464630285165637035L;
+        private PointType type;
+        public PointTypeOption( ) {
+
+        }
+
+        public PointTypeOption(final PointType value) {
+            this.type = value;
+            set(Parameters.value.getText(), value.getCode());
+            set(Parameters.name.getText(), value.name());
+        }
+
+        public PointType getMethod() {
             return type;
         }
     }

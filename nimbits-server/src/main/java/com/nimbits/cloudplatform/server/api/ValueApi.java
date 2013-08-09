@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
 import java.util.List;
@@ -31,7 +32,7 @@ import java.util.logging.Logger;
 public class ValueApi extends ApiServlet implements org.springframework.web.HttpRequestHandler {
     final Logger log = Logger.getLogger(ValueApi.class.getName());
 
-    public void handleRequest(HttpServletRequest req, HttpServletResponse resp)  {
+    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
         if (isPost(req)) {
             doPost(req, resp);
@@ -42,25 +43,25 @@ public class ValueApi extends ApiServlet implements org.springframework.web.Http
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)   {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
-        log.info("posting value");
+        log.info("posting value 2");
 
-        String json = req.getParameter(Parameters.json.name());
+        doInit(req, resp, ExportType.json);
+        String json;
+        json = getParam(Parameters.json);
+        if (StringUtils.isEmpty(json)) {
+            json = getContent(req);
+        }
         log.info(json);
 
-
-        try {
             final PrintWriter out = resp.getWriter();
-
-
-
             doInit(req, resp, ExportType.json);
             if (StringUtils.isEmpty(json)) {
                 json = getContent(req);
             }
             if (user != null && !user.isRestricted()) {
-
+                log.info(user.getEmail().getValue());
                 List<Entity> entitySample = EntityServiceImpl.getEntityByKey(user, getParam(Parameters.id), EntityType.point);
                 if (entitySample.isEmpty()) {
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -87,11 +88,7 @@ public class ValueApi extends ApiServlet implements org.springframework.web.Http
                 resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 
             }
-        } catch (Exception e) {
-            log.severe(e.getMessage());
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
-        }
 
 
     }

@@ -16,8 +16,10 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -43,7 +45,7 @@ public class ValueApiTest extends NimbitsServletTest {
     }
 
     @Test
-    public void testPostValue()  {
+    public void testPostValue() throws IOException {
         req.removeAllParameters();
         req.setContentType("application/json");
         Value v = ValueFactory.createValueModel(2.345);
@@ -61,7 +63,26 @@ public class ValueApiTest extends NimbitsServletTest {
 
 
     }
+    @Test
+    public void testPostBodyValue() throws IOException {
+        req.removeAllParameters();
+        req.setContentType("application/json");
+        Random r = new Random();
+        Value v = ValueFactory.createValueModel(r.nextDouble());
+        req.addParameter("id", point.getKey());
+        //req.addParameter("json", GsonFactory.getInstance().toJson(v));
+        String json = GsonFactory.getInstance().toJson(v);
+        req.setContent(json.getBytes());
+        req.setMethod("POST");
+        impl.handleRequest(req, resp);
 
+        List<Value> vr = ValueTransaction.getCurrentValue(point);
+        assertFalse(vr.isEmpty());
+        assertEquals(vr.get(0).getDoubleValue(), v.getDoubleValue(), 0.001);
+        assertEquals(resp.getStatus(), 200);
+
+
+    }
     @Test
     public void testPostValueCummulative()     {
 

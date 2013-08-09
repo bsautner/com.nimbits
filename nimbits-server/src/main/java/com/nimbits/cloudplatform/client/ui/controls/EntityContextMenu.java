@@ -776,7 +776,7 @@ public class EntityContextMenu extends Menu {
 
         private void openUrl(final String uuid, final String title) {
             String u = com.google.gwt.user.client.Window.Location.getHref()
-                    + "?uuid=" + uuid
+                    + "report.html?uuid=" + uuid
                     + "&count=10";
             u = u.replace("/#?", "?");
             com.google.gwt.user.client.Window.open(u, title, PARAM_DEFAULT_WINDOW_OPTIONS);

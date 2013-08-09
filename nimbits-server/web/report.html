@@ -276,11 +276,7 @@ function callback(obj) {
     document.getElementById("QR").src = "https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl=" +
             host + "?uuid=" + obj.uuid;
 
-    document.getElementById("s1").innerHTML = host + "/service/point?format=json&uuid=" + uuid;
-    document.getElementById("a1").href =host + "/service/point?format=json&uuid=" + uuid;
 
-    document.getElementById("s2").innerHTML = host + "/service/point?count=100&uuid=" + uuid;
-    document.getElementById("a2").href = host + "/service/point?count=20&uuid=" + uuid;
 
 
 
@@ -301,10 +297,7 @@ function callback(obj) {
 
         document.getElementById("yOption").checked = false;
         document.getElementById("yOption").disabled = true;
-        document.getElementById("s3").innerHTML = host + "/service/currentvalue?uuid=" + uuid;
-        document.getElementById("a3").href =  host + "/service/currentvalue?uuid=" +uuid;
-        document.getElementById("s4").innerHTML = host +  "/service/currentvalue?uuid="  +uuid;
-        document.getElementById("a4").href = host + "/service/currentvalue?format=json&uuid=" + uuid;
+
         labels.push("date");
         labels.push(obj.name);
         pointNames.push(obj.name);
@@ -676,21 +669,7 @@ function setStep() {
             <div class="span1">
                 <p></p>
             </div>
-            <div class="span14">
-                <div class="alert-message block-message warning">
-                    <p>Available Services:</p>
 
-                    <ul>
-                        <LI>Point Service: <a id="a1" href="#" target="_blank"><span id="s1"></span></a></LI>
-                        <LI>Point Service With Data: <a id="a2" href="#" target="_blank"><span id="s2"></span></a></LI>
-                        <LI>Current Number Value: <a id="a3" href="#" target="_blank"><span id="s3"></span></a></LI>
-                        <LI>Current Value as JSON: <a id="a4" href="#" target="_blank"><span id="s4"></span></a></LI>
-                    </ul>
-
-
-                </div>
-
-            </div>
 
         </div>
 

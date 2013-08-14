@@ -10,7 +10,8 @@
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
         android:layout_above="@+id/progressBar"
-        android:weightSum="1.0" >
+        android:weightSum="1.0"
+        android:id="@id/screen">
 
         <FrameLayout
             android:layout_width="0dp"

@@ -1,3 +1,15 @@
+/*
+ * Copyright (c) 2013 Nimbits Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
+ */
+
 package com.nimbits.cloudplatform.client.enums;
 
 import java.io.Serializable;
@@ -14,12 +26,11 @@ public enum EntityType implements Serializable {
     point(1, true, false, true, true, true, true, 1, "com.nimbits.cloudplatform.server.orm.PointEntity"),
     category(2, true, false, true, false, true, false, 2, "com.nimbits.cloudplatform.server.orm.CategoryEntity"),
     subscription(5, false, false, false, false, true, false, 4, "com.nimbits.cloudplatform.server.orm.SubscriptionEntity"),
-    //  userConnection(6, false, false, false, true, false, false, 5, "com.nimbits.cloudplatform.server.orm.EntityStore"),
     calculation(7, false, true, true, false, true, false, 6, "com.nimbits.cloudplatform.server.orm.CalcEntity"),
-
     summary(11, false, true, false, false, true, false, 11, "com.nimbits.cloudplatform.server.orm.SummaryEntity"),
-    // instance(12, false, false, true, false, false, false, 12, "com.nimbits.cloudplatform.server.orm.CategoryEntity"),
     accessKey(13, false, false, false, true, true, false, 13, "com.nimbits.cloudplatform.server.orm.AccessKeyEntity");
+
+    static final long serialVersionUID = 42L;
 
     private static final Map<Integer, EntityType> lookup = new HashMap<Integer, EntityType>(EntityType.values().length);
 

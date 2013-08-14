@@ -1,3 +1,15 @@
+/*
+ * Copyright (c) 2013 Nimbits Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
+ */
+
 package com.nimbits.cloudplatform;
 
 import com.nimbits.cloudplatform.auth.GoogleAuthentication;
@@ -25,12 +37,9 @@ public class Nimbits {
 
 
     public static UrlContainer base;
-    public static boolean isExternalStorageAvailable;
-    public static User session;
+     public static User session;
     public static Cookie cookie;
 
-    public static int availableMemory;
-    public static File cacheDir;
     public static List<Entity> tree;
     public static Location location;
     public static SimpleValue<String> token;

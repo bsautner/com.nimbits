@@ -1,3 +1,15 @@
+/*
+ * Copyright (c) 2013 Nimbits Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
+ */
+
 package com.nimbits.android;
 
 
@@ -19,10 +31,10 @@ public class AuthenticationManager {
     public static void resetToken(final Context context, SimpleValue<String> token) {
 
 
-            final AccountManager mgr = AccountManager.get(context);
-            final Account[] accounts = mgr.getAccountsByType(Parameters.comGoogle.getText());
+        final AccountManager mgr = AccountManager.get(context);
+        final Account[] accounts = mgr.getAccountsByType(Parameters.comGoogle.getText());
 
-            mgr.invalidateAuthToken(Parameters.comGoogle.getText(), token.getValue());
+        mgr.invalidateAuthToken(Parameters.comGoogle.getText(), token.getValue());
 
 
 
@@ -30,42 +42,37 @@ public class AuthenticationManager {
 
     }
 
-    public static SimpleValue<String> getToken(final Context context) throws Exception {
+    public static SimpleValue<String> getToken(final Context context) throws AuthenticatorException, OperationCanceledException, IOException {
 
 
         SimpleValue<String> authToken;
 
-        if (Nimbits.token.isEmpty()) {
+       // if (Nimbits.token.isEmpty()) {
             final AccountManager mgr = AccountManager.get(context);
-            final Account[] accounts = mgr.getAccountsByType(Parameters.comGoogle.getText());
+            final Account[] accounts;
+            if (mgr != null) {
+                accounts = mgr.getAccountsByType(Parameters.comGoogle.getText());
 
-            if (accounts.length > 0) {
-                AccountManagerFuture<Bundle> accountManagerFuture = mgr.getAuthToken(accounts[0], Const.CONST_AH, null, (Activity) context, null, null);
-                try {
-                    final Bundle authTokenBundle = accountManagerFuture.getResult();
 
-                    String result = authTokenBundle.get(AccountManager.KEY_AUTHTOKEN).toString();
-                    authToken = SimpleValue.getInstance(result);
-                    Nimbits.token = (authToken);
-                    mgr.invalidateAuthToken(Parameters.comGoogle.getText(), authToken.getValue());
-                    Log.i(Android.N, "got new token: " + authToken);
-                } catch (OperationCanceledException e) {
-                    throw new  Exception(e);
-                } catch (IOException e) {
-                    throw new  Exception(e);
-                } catch (AuthenticatorException e) {
-                    throw new  Exception(e);
+                if (accounts.length > 0) {
+                    AccountManagerFuture<Bundle> accountManagerFuture = mgr.getAuthToken(accounts[0], Const.CONST_AH, null, (Activity) context, null, null);
+
+                        final Bundle authTokenBundle = accountManagerFuture.getResult();
+
+                        String result = authTokenBundle.get(AccountManager.KEY_AUTHTOKEN).toString();
+                        authToken = SimpleValue.getInstance(result);
+                        Nimbits.token = (authToken);
+                        mgr.invalidateAuthToken(Parameters.comGoogle.getText(), authToken.getValue());
+                        Log.i(Android.N, "got new token: " + authToken);
+
                 }
-            } else {
-                throw new  Exception("Could not find a Google Account on this device");
-
             }
             return Nimbits.token;
-        } else {
-
-            Log.i(Android.N, "using cached token! Hazaah!");
-            return Nimbits.token;
-        }
+//        } else {
+//
+//            Log.i(Android.N, "using cached token! Hazaah!");
+//            return Nimbits.token;
+//        }
 
 
     }

@@ -1,3 +1,15 @@
+/*
+ * Copyright (c) 2013 Nimbits Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
+ */
+
 package com.nimbits.android.ui.entitylist;
 
 import android.app.Activity;
@@ -9,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import com.nimbits.android.content.ContentProvider;
 import com.nimbits.android.R;
 import com.nimbits.android.ui.PointViewBaseFragment;
@@ -17,7 +30,7 @@ import com.nimbits.android.ui.PointViewBaseFragment;
  * @Author: benjamin
  */
 public class EntityListFragment extends PointViewBaseFragment {
-    private final static  String TAG = "EntityListFragment";
+    public final static  String TAG = "EntityListFragment";
 
     private ListView list;
 
@@ -31,17 +44,7 @@ public class EntityListFragment extends PointViewBaseFragment {
 
     }
 
-    public EntityListFragment(EntityListener activity) {
-        super(activity);
-    }
 
-    public static EntityListFragment getInstance(Activity activity) {
-        Log.v(TAG, "instance created");
-        EntityListFragment instance = new EntityListFragment((EntityListener) activity);
-        instance.listener = (EntityListener) activity;
-
-        return instance;
-    }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
@@ -87,6 +90,10 @@ public class EntityListFragment extends PointViewBaseFragment {
         adapter.setEntityListener(listener);
         list = (ListView) view.findViewById(R.id.listView);
         list.setAdapter(adapter);
+        ProgressBar bar = (ProgressBar) view.findViewById(R.id.progressBar);
+        if (bar != null) {
+            bar.setVisibility(View.GONE);
+        }
 
 
     }

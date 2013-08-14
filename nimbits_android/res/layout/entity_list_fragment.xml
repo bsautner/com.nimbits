@@ -15,6 +15,12 @@
         android:layout_height="3dp"
         android:background="@android:color/darker_gray"/>
 
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_gravity="center"/>
+
     <ListView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"

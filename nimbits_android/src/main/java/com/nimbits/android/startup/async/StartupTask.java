@@ -1,11 +1,26 @@
+/*
+ * Copyright (c) 2013 Nimbits Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
+ */
+
 package com.nimbits.android.startup.async;
 
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
+import com.crashlytics.android.Crashlytics;
 import com.nimbits.android.AuthenticationManager;
 import com.nimbits.cloudplatform.Nimbits;
 import com.nimbits.android.R;
@@ -17,6 +32,7 @@ import com.nimbits.cloudplatform.http.UrlContainer;
 import com.nimbits.cloudplatform.transaction.Transaction;
 import org.apache.http.cookie.Cookie;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -36,8 +52,8 @@ public class StartupTask extends AsyncTask<Object, User, List<User>> {
         mListener = listener;
     }
     public static StartupTask getInstance(StartupListener listener) {
-    StartupTask task = new StartupTask();
-      task.setListener(listener);
+        StartupTask task = new StartupTask();
+        task.setListener(listener);
         return task;
     }
 
@@ -48,55 +64,27 @@ public class StartupTask extends AsyncTask<Object, User, List<User>> {
         final String base_url = settings.getString(context.getString(R.string.base_url_setting), context.getString(R.string.base_url));
         final UrlContainer baseUri = UrlContainer.getInstance(base_url);
         final UrlContainer gaeAppLoginUri = UrlContainer.combine(UrlContainer.getInstance(context.getString(R.string.base_url)), UrlContainer.getInstance(Path.PATH_AH_LOGIN));
-        final SimpleValue<String> authToken;
-        try {
-            setMemCache();
 
-            authToken = AuthenticationManager.getToken(context);
-            Nimbits.cacheDir = (context.getCacheDir());
+
+        try {
+            SimpleValue<String> authToken = AuthenticationManager.getToken(context);
             Nimbits.token =(authToken);
             Nimbits.base =(baseUri);
             List<Cookie> authCookie = HttpHelper.getAuthCookie(gaeAppLoginUri, authToken.toString(), base_url);
             Nimbits.cookie = (authCookie.get(0));
-            Nimbits.isExternalStorageAvailable = (isExternalStorageAvailable());
-
-
-
-            return Transaction.getSession();
-        } catch (Exception e) {
-            Log.e(this.getClass().getSimpleName(), e.getMessage());
-            return Collections.emptyList();
-
+        } catch (AuthenticatorException e) {
+            Crashlytics.logException(e);
+        } catch (OperationCanceledException e) {
+            Crashlytics.logException(e);
+        } catch (IOException e) {
+            Crashlytics.logException(e);
         }
-    }
-    private void setMemCache() {
-        final int memClass = ((ActivityManager) context.getSystemService(
-                Context.ACTIVITY_SERVICE)).getMemoryClass();
 
-        // Use 1/8th of the available memory for this memory cache.
-        final int cacheSize = 1024 * 1024 * memClass / 8;
-        Nimbits.availableMemory = (cacheSize);
-    }
-    private static boolean isExternalStorageAvailable() {
+        return Transaction.getSession();
 
-        boolean mExternalStorageAvailable;
-        boolean mExternalStorageWriteable;
-        String state = Environment.getExternalStorageState();
-
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            // We can read and write the media
-            mExternalStorageAvailable = mExternalStorageWriteable = true;
-        } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-            // We can only read the media
-            mExternalStorageAvailable = true;
-            mExternalStorageWriteable = false;
-        } else {
-            // Something else is wrong. It may be one of many other states, but all we need
-            //  to know is we can neither read nor write
-            mExternalStorageAvailable = mExternalStorageWriteable = false;
-        }
-        return mExternalStorageAvailable && mExternalStorageWriteable;
     }
+
+
 
     @Override
     protected void onPostExecute(List<User> response) {

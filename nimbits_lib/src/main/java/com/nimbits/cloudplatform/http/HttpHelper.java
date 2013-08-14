@@ -1,3 +1,15 @@
+/*
+ * Copyright (c) 2013 Nimbits Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
+ */
+
 package com.nimbits.cloudplatform.http;
 
 import com.google.gson.Gson;
@@ -18,14 +30,10 @@ import java.util.Map;
 @SuppressWarnings({"unchecked", "unused"})
 public class HttpHelper {
 
-    private volatile static Map<String, List> listMap;
-    private volatile static Map<String, Long> expireMap;
-    private static int MAX_LIST = 1000;
-    private static Date lastFlushCheck;
+
+
     static {
-        lastFlushCheck = new Date();
-        listMap = new HashMap<String, List>();
-        expireMap = new HashMap<String, Long>();
+
 
     }
 
@@ -34,10 +42,7 @@ public class HttpHelper {
         HttpTransaction.init(authCookie, aGson);
     }
 
-    public static void flush() {
-        listMap.clear();
-        expireMap.clear();
-    }
+
 
     private static String buildCode(final UrlContainer postUrl,
                                     final List<BasicNameValuePair> parameters
@@ -54,46 +59,18 @@ public class HttpHelper {
     }
 
 
+
     public static <T, K> List<T> doGet(final Class<K> clz,
                                        final UrlContainer postUrl,
                                        final List<BasicNameValuePair> parameters,
                                        final Type type,
                                        final boolean expectList
-    ) {
 
-
-        return doGet(clz, postUrl, parameters, type, false, false, expectList, new Date());
-
-
-    }
-    public static <T, K> List<T> doGet(final Class<K> clz,
-                                       final UrlContainer postUrl,
-                                       final List<BasicNameValuePair> parameters,
-                                       final Type type,
-                                       final boolean doCache,
-                                       final boolean doDisk,
-                                       final boolean expectList,
-                                       final Date expires
     ) {
         List<T> result;
         String code = buildCode(postUrl, parameters);
-        if (doCache) {
-            if (expireMap.containsKey(code) && expireMap.get(code) < expires.getTime()) {
-                expireMap.remove(code);
-                listMap.remove(code);
-                result =  doHttpGet(clz, postUrl, parameters, type, expectList, code);
-            }
-            else if (listMap.containsKey(code)) {
+        result = doHttpGet(clz, postUrl, parameters, type, expectList, code);
 
-                result = (List<T>) listMap.get(code);
-            }
-            else {
-                result = doHttpGet(clz, postUrl, parameters, type, expectList, code);
-            }
-        }
-        else {
-            result = doHttpGet(clz, postUrl, parameters, type, expectList, code);
-        }
 
         return result;
 
@@ -102,7 +79,6 @@ public class HttpHelper {
 
     private static <T, K> List<T> doHttpGet(Class<K> clz, UrlContainer postUrl, List<BasicNameValuePair> parameters, Type type, boolean expectList, String code) {
         List<T> response = HttpTransaction.doGet(clz, postUrl, parameters, type, expectList);
-        listMap.put(code, response);
         return response;
     }
 
@@ -112,14 +88,6 @@ public class HttpHelper {
                                          final Type type,
                                          final FlushType flushType,
                                          final boolean expectList) {
-        switch (flushType) {
-
-
-            case none:
-                break;
-            case complete:
-                listMap.clear();
-        }
 
         return HttpTransaction.doPost(clz, postUrl, parameters, type, expectList);
     }

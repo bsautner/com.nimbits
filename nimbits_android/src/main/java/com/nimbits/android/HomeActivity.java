@@ -1,13 +1,25 @@
+/*
+ * Copyright (c) 2013 Nimbits Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
+ */
+
 package com.nimbits.android;
 
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +31,7 @@ import android.widget.FrameLayout;
 import com.google.android.gcm.GCMRegistrar;
 import com.nimbits.android.content.ContentProvider;
 import com.nimbits.android.main.async.PostValueTask;
+import com.nimbits.android.settings.SettingsActivity;
 import com.nimbits.android.startup.async.LoadControlTask;
 import com.nimbits.android.ui.PointViewBaseFragment;
 import com.nimbits.android.ui.chart.ChartFragment;
@@ -43,7 +56,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class HomeActivity extends ActionBarActivity implements EntityListener {
+public class HomeActivity extends Activity implements EntityListener {
     public static final String WELCOME = "http://www.nimbits.com/android/welcome.html";
 
 
@@ -56,45 +69,66 @@ public class HomeActivity extends ActionBarActivity implements EntityListener {
         super.onCreate(savedInstanceState);
         Log.v(TAG, "onCreate");
         setContentView(R.layout.home_activity_layout);
-
-
-        WebView view = (WebView) findViewById(R.id.webView);
-        view.loadUrl(WELCOME);
-
         if (savedInstanceState == null) {
+            WebView view = (WebView) findViewById(R.id.webView);
+            view.loadUrl(WELCOME);
             startGcm();
             LoadControlTask loadControlTask = new LoadControlTask();
             loadControlTask.execute();
+            showEntityFragment();
+            if (chartFragment != null && ContentProvider.getCurrentEntity().getEntityType().equals(EntityType.point)) {
+               showChartFragment();
+            }
         }
+
+    }
+
+    @Override
+    protected void onResume() {
+        Log.v(TAG, "resume");
+        super.onResume();
+        startGcm();
+
 
 
     }
     private void showPointFragment() {
         FrameLayout frame = (FrameLayout) findViewById(R.id.main_frame);
         frame.removeAllViews();
-        entityFragment =  PointFragment.getInstance(this);
+        entityFragment =  new PointFragment();
         entityFragment.setArguments(getIntent().getExtras());
-        getSupportFragmentManager().beginTransaction().add(R.id.main_frame, entityFragment).commit();
-
-
-
+        getFragmentManager().beginTransaction().replace(R.id.main_frame, entityFragment).commit();
     }
+
     private void showEntityFragment() {
         FrameLayout frame = (FrameLayout) findViewById(R.id.main_frame);
         frame.removeAllViews();
-        entityFragment =  EntityListFragment.getInstance(this);
+        entityFragment =  new EntityListFragment();
         entityFragment.setArguments(getIntent().getExtras());
-        getSupportFragmentManager().beginTransaction().add(R.id.main_frame, entityFragment).commit();
+        getFragmentManager().beginTransaction().replace(R.id.main_frame, entityFragment).commit();
         if (ContentProvider.getTree().isEmpty()) {
             loadTree();
         }
     }
+    private void showChartFragment() {
+        Log.v(TAG, "showChartFragment");
+        WebView webView = (WebView) findViewById(R.id.webView);
+        if (webView != null) {
+            webView.setVisibility(View.GONE);
+        }
 
+        FrameLayout frame = (FrameLayout) findViewById(R.id.data_frame);
+        frame.removeAllViews();
+        chartFragment =  new ChartFragment();
+        chartFragment.setArguments(getIntent().getExtras());
+        getFragmentManager().beginTransaction().replace(R.id.data_frame, chartFragment).commit();
+
+        //chartFragment.getSeries(entity);
+    }
 
     private void loadTree() {
         if (ContentProvider.currentEntity == null) {
             ContentProvider.currentEntity = Nimbits.session;
-
         }
 
 
@@ -134,12 +168,16 @@ public class HomeActivity extends ActionBarActivity implements EntityListener {
         switch (item.getItemId()) {
             case R.id.action_new_folder:
                 dialog = new SimpleEntryDialog(ContentProvider.currentEntity, EntityType.category, Action.create, "Create new Folder");
-                dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
+                dialog.show(getFragmentManager(), "NoticeDialogFragment");
                 return true;
             case R.id.action_new_point:
                 dialog = new SimpleEntryDialog(ContentProvider.currentEntity, EntityType.point, Action.create, "Create new data point");
-                dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
+                dialog.show(getFragmentManager(), "NoticeDialogFragment");
                 return true;
+            case R.id.action_expand:
+               // Intent intent = new Intent(getApplicationContext(), ChartActivity.class);
+               // startActivity(intent);
+               // finish();
             case R.id.action_refresh:
                 showEntityFragment();
 
@@ -170,7 +208,9 @@ public class HomeActivity extends ActionBarActivity implements EntityListener {
                     showPointFragment();
                 }
                 else {
-                      entityFragment.showEntity(getApplicationContext());
+                    if (entityFragment != null) {
+                        entityFragment.showEntity(getApplicationContext());
+                    }
                 }
                 showChartFragment();
                 break;
@@ -188,19 +228,7 @@ public class HomeActivity extends ActionBarActivity implements EntityListener {
         }
     }
 
-    private void showChartFragment() {
-        Log.v(TAG, "showChartFragment");
-        WebView webView = (WebView) findViewById(R.id.webView);
-        if (webView != null) {
-            webView.setVisibility(View.INVISIBLE);
-        }
-        FrameLayout frame = (FrameLayout) findViewById(R.id.data_frame);
-        frame.removeAllViews();
-        chartFragment =  ChartFragment.getInstance();
-        chartFragment.setArguments(getIntent().getExtras());
-        getSupportFragmentManager().beginTransaction().add(R.id.data_frame, chartFragment).commit();
-        //chartFragment.getSeries(entity);
-    }
+
 
 
     @Override
@@ -232,7 +260,9 @@ public class HomeActivity extends ActionBarActivity implements EntityListener {
     public void onValueUpdated(Entity entity, Value response) {
 
         Log.v(TAG, "Home Activity Updating list on new value");
-        entityFragment.showEntity(getApplicationContext() );
+        if (entityFragment != null) {
+            entityFragment.showEntity(getApplicationContext() );
+        }
 
 
     }
@@ -267,7 +297,7 @@ public class HomeActivity extends ActionBarActivity implements EntityListener {
         SimpleEntryDialog dialog  = new SimpleEntryDialog(entity, EntityType.category,
                 Action.recordValue, entity.getName().getValue() +
                 ": Enter Value");
-        dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
+        dialog.show(getFragmentManager(), "NoticeDialogFragment");
 
     }
 
@@ -345,16 +375,6 @@ public class HomeActivity extends ActionBarActivity implements EntityListener {
         super.onDestroy();
     }
 
-    @Override
-    protected void onResume() {
-        Log.v(TAG, "resume");
-        super.onResume();
-        startGcm();
-        if (chartFragment != null && ContentProvider.getCurrentEntity().getEntityType().equals(EntityType.point)) {
-            showChartFragment();
-        }
-        showEntityFragment();
-    }
 
 
 

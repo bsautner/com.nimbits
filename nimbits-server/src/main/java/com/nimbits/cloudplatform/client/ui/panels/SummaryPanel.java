@@ -1,14 +1,13 @@
 /*
- * Copyright (c) 2010 Nimbits Inc.
+ * Copyright (c) 2013 Nimbits Inc.
  *
- * http://www.nimbits.com
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
- *
- * http://www.gnu.org/licenses/gpl.html
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
  */
 
 package com.nimbits.cloudplatform.client.ui.panels;
@@ -190,7 +189,10 @@ public class SummaryPanel extends NavigationEventProvider {
             submit.addSelectionListener(new SubmitEventSelectionListener(typeCombo, spinnerField, targetCombo, name));
 
 
-            Html h = new Html("<p>The summation process runs once an hour and can compute a summary value (such as an average) " +
+            Html h = new Html("<p>You are creating a <Strong>Summary Trigger</Strong>. A trigger is a nimbits entity that fires whenever the trigger's point" +
+                    "records new data.  The Trigger does something with the trigger point's data and then stored the result in the Target " +
+                    "Data Point. You should have already create the Target Point.</p>" +
+                    "<p>The summation process runs once an hour and can compute a summary value (such as an average) " +
                     "based on the interval you set here (i.e a setting of 8 will compute an 8 hour average every 8 hours) using the " +
                     "data recorded to the selected data point, storing the result in the select pre-existing target point.</p>");
 
@@ -233,6 +235,7 @@ public class SummaryPanel extends NavigationEventProvider {
     private static class SummaryTypeOption extends BaseModelData {
         SummaryType type;
 
+        @SuppressWarnings("unused")
         SummaryTypeOption() {}
 
         SummaryTypeOption(SummaryType value) {

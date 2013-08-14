@@ -1,14 +1,13 @@
 /*
- * Copyright (c) 2010 Nimbits Inc.
+ * Copyright (c) 2013 Nimbits Inc.
  *
- * http://www.nimbits.com
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
- *
- * http://www.gnu.org/licenses/gpl.html
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
  */
 
 package com.nimbits.cloudplatform.client.ui.controls;
@@ -29,7 +28,6 @@ import com.nimbits.cloudplatform.client.constants.Words;
 import com.nimbits.cloudplatform.client.enums.Action;
 import com.nimbits.cloudplatform.client.enums.EntityType;
 import com.nimbits.cloudplatform.client.enums.FilterType;
-import com.nimbits.cloudplatform.client.enums.SettingType;
 import com.nimbits.cloudplatform.client.enums.point.PointType;
 import com.nimbits.cloudplatform.client.model.GxtModel;
 import com.nimbits.cloudplatform.client.model.TreeModel;
@@ -44,8 +42,6 @@ import com.nimbits.cloudplatform.client.model.point.PointModelFactory;
 import com.nimbits.cloudplatform.client.model.user.User;
 import com.nimbits.cloudplatform.client.service.entity.EntityService;
 import com.nimbits.cloudplatform.client.service.entity.EntityServiceAsync;
-import com.nimbits.cloudplatform.client.service.xmpp.XMPPService;
-import com.nimbits.cloudplatform.client.service.xmpp.XMPPServiceAsync;
 import com.nimbits.cloudplatform.client.ui.controls.menu.AddFolderMenuItem;
 import com.nimbits.cloudplatform.client.ui.controls.menu.AddPointMenuItem;
 import com.nimbits.cloudplatform.client.ui.helper.FeedbackHelper;
@@ -69,6 +65,7 @@ public class EntityContextMenu extends Menu {
     private static final String GET_JSON_STRUCTURE = "Get JSON Structure";
     private static final String SUBSCRIBE_TO_EVENTS = "Subscribe to Events";
     private static final String TEXT = "Edit Calculation";
+    public static final String PLEASE_SELECT_A_PARENT = "Please select a parent. You may not have clicked on the item in the tree you're creating a new point under, if you're a new user, try clicking your email address first.";
     private final Listener<MessageBoxEvent> createNewPointListener = new NewPointMessageBoxEventListener();
     private final Listener<MessageBoxEvent> createNewFolderListener = new NewFolderMessageBoxEventListener();
     private final Listener<MessageBoxEvent> deleteEntityListener = new DeleteMessageBoxEventListener();
@@ -103,9 +100,7 @@ public class EntityContextMenu extends Menu {
                         try {
                         EntityName name = CommonFactory.createName(newEntityName, EntityType.point);
                         Entity entity = EntityModelFactory.createEntity(name, EntityType.point);
-                        Point p = null;
-
-                            p = PointModelFactory.createPointModel(entity, 0.0, 90, "", 0.0,
+                        Point p = PointModelFactory.createPointModel(entity, 0.0, 90, "", 0.0,
                                     false, false, false, 0, false, FilterType.fixedHysteresis, 0.1, false,
                                     PointType.basic, 0, false, 0.0);
                             p.setParent(currentEntity.getKey());
@@ -118,7 +113,7 @@ public class EntityContextMenu extends Menu {
 
                     }
                     else {
-                        FeedbackHelper.showError(new Exception("Please select a parent"));
+                        FeedbackHelper.showError(new Exception(PLEASE_SELECT_A_PARENT));
                     }
 
 
@@ -248,13 +243,9 @@ public class EntityContextMenu extends Menu {
     private MenuItem reportContext;
     private MenuItem copyContext;
     private MenuItem calcContext;
-  //  private MenuItem xmppContext;
     private MenuItem summaryContext;
-
-    private MenuItem intelligenceContext;
     private MenuItem keyContext;
     private MenuItem jsonContext;
-   // private MenuItem exportContext;
     private MenuItem propertyContext;
     private MenuItem dumpContext;
     private MenuItem uploadContext;
@@ -353,13 +344,9 @@ public class EntityContextMenu extends Menu {
         add(summaryContext);
 
         add(jsonContext);
-       // add(xmppContext);
-        //   add(downloadContext);
 
 
-        if (settings.containsKey(SettingType.wolframKey) && ! Utils.isEmptyString(settings.get(SettingType.wolframKey))) {
-            add(intelligenceContext);
-        }
+
 
 
 
@@ -654,32 +641,6 @@ public class EntityContextMenu extends Menu {
 
     }
 
-    private class CreateXMPPEntityAsyncCallback implements AsyncCallback<Entity> {
-        private final MessageBox box;
-
-        CreateXMPPEntityAsyncCallback(final MessageBox box) {
-            this.box = box;
-        }
-
-        @Override
-        public void onFailure(final Throwable caught) {
-            box.close();
-            FeedbackHelper.showError(caught);
-        }
-
-        @Override
-        public void onSuccess(final Entity result) {
-            try {
-                notifyEntityModifiedListener(new GxtModel(result), Action.create);
-            } catch (Exception e) {
-                FeedbackHelper.showError(e);
-            }
-            box.close();
-        }
-    }
-
-
-
     private class CopyEntityAsyncCallback implements AsyncCallback<List<Entity>> {
         private final MessageBox box;
 
@@ -877,17 +838,6 @@ public class EntityContextMenu extends Menu {
             }
         }
 
-        private void showFilePanel(Entity entity)  {
-            final FilePropertyPanel dp = new FilePropertyPanel(entity);
-            final Window w = new Window();
-            w.setWidth(WIDTH);
-            w.setHeight(HEIGHT);
-
-            w.setHeading(entity.getName().getValue() + ' ' + Words.WORD_PROPERTIES);
-
-            w.add(dp);
-            w.show();
-        }
 
         private void createPointPropertyWindow(final Entity entity)  {
             final Window window = new Window();
@@ -942,20 +892,6 @@ public class EntityContextMenu extends Menu {
 
 
 
-    private class IntelligenceEntityAddedListener implements NavigationEventProvider.EntityAddedListener {
-        private final Window w;
-
-        IntelligenceEntityAddedListener(final Window w) {
-            this.w = w;
-        }
-
-        @Override
-        public void onEntityAdded(final List<Entity> entity)  {
-            w.hide();
-            notifyEntityModifiedListener(new GxtModel(entity.get(0)), Action.create);
-
-        }
-    }
 
     private class DeleteMessageBoxEventListener implements Listener<MessageBoxEvent> {
         DeleteMessageBoxEventListener() {

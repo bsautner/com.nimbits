@@ -1,3 +1,15 @@
+/*
+ * Copyright (c) 2013 Nimbits Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
+ */
+
 package com.nimbits.cloudplatform.transaction;
 
 
@@ -43,9 +55,8 @@ public class Transaction {
     private static final UrlContainer SERIES_SERVICE = UrlContainer.getInstance("/service/v2/series");
     private static final UrlContainer TREE_SERVICE = UrlContainer.getInstance("/service/v2/tree");
     private static final UrlContainer ENTITY_SERVICE = UrlContainer.getInstance("/service/v2/entity");
-    private static final Calendar dailyExpire = Calendar.getInstance();
-    public final static Type pointListType = new TypeToken<List<PointModel>>() {
-    }.getType();
+    public static final String HTTP_NIMBITS_GCM_APPSPOT_COM_ANDROID = "http://nimbits-gcm.appspot.com/android";
+
     public final static Type valueListType = new TypeToken<List<ValueModel>>() {
     }.getType();
     public final static Type entityListType = new TypeToken<List<EntityModel>>() {
@@ -53,19 +64,20 @@ public class Transaction {
 
 
     static {
-        dailyExpire.add(Calendar.HOUR, 24);
+
         HttpHelper.init(Nimbits.cookie, GsonFactory.getInstance());
     }
 
+
+
     public static List<User> getSession() {
-        Calendar expire = Calendar.getInstance();
-        expire.add(Calendar.HOUR, 1);
+
         UrlContainer path = UrlContainer.combine(Nimbits.base, SESSION_SERVICE);
 
         return HttpHelper.doGet(UserModel.class,
                 path,
                 new ArrayList<BasicNameValuePair>(0),
-                UserModel.class, true, false, false, expire.getTime());
+                UserModel.class, false);
 
 
     }
@@ -80,7 +92,7 @@ public class Transaction {
         return HttpHelper.doGet(UserModel.class,
                 path,
                 params,
-                UserModel.class, true, false, false, expire.getTime());
+                UserModel.class, false);
 
 
     }
@@ -99,7 +111,7 @@ public class Transaction {
 
         UrlContainer path = UrlContainer.combine(Nimbits.base, TREE_SERVICE);
         return HttpHelper.doGet(EntityModel.class, path, new ArrayList<BasicNameValuePair>(0),
-                entityListType, true, true, true, dailyExpire.getTime());
+                entityListType, true);
 
 
     }
@@ -168,7 +180,7 @@ public class Transaction {
         addAuthenticationParameters(params);
         params.add((new BasicNameValuePair(Parameters.id.getText(), entityId.getValue())));
         params.add((new BasicNameValuePair(Parameters.type.getText(), type.toString())));
-        return HttpHelper.doGet(clz, path, params, EntityModel.class, true, true, false, dailyExpire.getTime());
+        return HttpHelper.doGet(clz, path, params, EntityModel.class, false);
 
 
     }
@@ -183,7 +195,7 @@ public class Transaction {
 
     public static List<AndroidControl> getControl() {
         HttpClient client = new DefaultHttpClient();
-        String getURL = "http://nimbits-gcm.appspot.com/android";
+        String getURL = HTTP_NIMBITS_GCM_APPSPOT_COM_ANDROID;
         HttpGet get = new HttpGet(getURL);
         HttpResponse responseGet = null;
         List<AndroidControl> result = new ArrayList<AndroidControl>(1);

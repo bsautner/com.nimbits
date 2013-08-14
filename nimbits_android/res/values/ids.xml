@@ -19,5 +19,5 @@
     <item name="main_frame" type="id"/>
     <item name="add_button" type="id" />
     <item name="value" type="id"/>
-    <item name="timestamp" type="id"/><item name="data_frame" type="id"/><item name="entity_list_fragment" type="id"/><item name="entity" type="id"/><item name="new_value" type="id"/>
+    <item name="timestamp" type="id"/><item name="data_frame" type="id"/><item name="entity_list_fragment" type="id"/><item name="entity" type="id"/><item name="new_value" type="id"/><item name="screen" type="id"/>
 </resources>

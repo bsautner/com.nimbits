@@ -10,7 +10,33 @@
     <packaging>pom</packaging>
     <name>nimbits-android - Application</name>
 
+
+    <repositories>
+        <repository>
+            <id>achartengine</id>
+            <name>Public AChartEngine repository</name>
+            <url>https://repository-achartengine.forge.cloudbees.com/snapshot/</url>
+        </repository>
+
+        <repository>
+            <id>gcm-server-repository</id>
+            <url>https://raw.github.com/slorber/gcm-server-repository/master/releases/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
+        <dependency>
+            <groupId>com.google.android.gcm</groupId>
+            <artifactId>gcm-client</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+
+
+        <!--<dependency>-->
+            <!--<groupId>com.google.android</groupId>-->
+            <!--<artifactId>support-v4</artifactId>-->
+            <!--<version>r7</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>com.crashlytics.android</groupId>
@@ -42,10 +68,10 @@
         <dependency>
             <groupId>org.achartengine</groupId>
             <artifactId>achartengine</artifactId>
-            <version>1.0.0</version>
-            <scope>system</scope>
-            <systemPath>/mnt/devel/dep/aChartEngine/achartengine-1.1.0.jar</systemPath>
+            <version>1.1.0</version>
+            <scope>compile</scope>
         </dependency>
+
 
 
         <dependency>
@@ -85,7 +111,38 @@
             <version>1.0.5</version>
             <scope>provided</scope>
         </dependency>
+<!--oauth stuff-->
 
+        <dependency>
+            <groupId>com.google.http-client</groupId>
+            <artifactId>google-http-client</artifactId>
+            <version>1.16.0-rc</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>xpp3</artifactId>
+                    <groupId>xpp3</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>httpclient</artifactId>
+                    <groupId>org.apache.httpcomponents</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>junit</artifactId>
+                    <groupId>junit</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>android</artifactId>
+                    <groupId>com.google.android</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.google.http-client</groupId>
+            <artifactId>google-http-client-android</artifactId>
+            <version>1.16.0-rc</version>
+        </dependency>
+
+        <!--end oauth stuff-->
     </dependencies>
     <build>
         <plugins>

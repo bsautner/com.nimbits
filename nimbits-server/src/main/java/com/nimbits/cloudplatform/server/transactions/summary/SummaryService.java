@@ -22,15 +22,18 @@ import com.nimbits.cloudplatform.client.model.timespan.TimespanModelFactory;
 import com.nimbits.cloudplatform.client.model.user.User;
 import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueFactory;
+import com.nimbits.cloudplatform.server.admin.logging.LogHelper;
 import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
 import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 
 /**
@@ -42,20 +45,22 @@ import java.util.List;
 @Service("summaryService")
 
 public class SummaryService   {
-
+    private static final Logger log = Logger.getLogger(SummaryService.class.getName());
 
 
     public static void processSummaries(final User user,final  Point point) {
         final List<Entity> list = EntityServiceImpl.getEntityByTrigger(user, point, EntityType.summary);
 
+        log.info("processing " + list.size() + " summaries");
 
         for (final Entity entity : list) {
             final Date now = new Date();
-            Summary summary = (Summary) entity;
+            final Summary summary = (Summary) entity;
             final long d = new Date().getTime() - summary.getSummaryIntervalMs();
-            if (summary.getLastProcessed().getTime() < d) {
+            log.info(summary.toString());
+            if (summary.getLastProcessed().getTime() + summary.getSummaryIntervalMs() < new Date().getTime()) {
 
-                try {
+
 
                     final List<Entity> results =  EntityServiceImpl.getEntityByKey(user, summary.getTrigger(), EntityType.point);
                     if (! results.isEmpty()) {
@@ -80,6 +85,7 @@ public class SummaryService   {
                                 }
 
                                 final double result = getValue(summary.getSummaryType(), doubles);
+                                log.info("result:: " + result);
                                 value = ValueFactory.createValueModel(result);
                             }
                             else {
@@ -98,18 +104,20 @@ public class SummaryService   {
                         }
 
                     }
+                else {
+                        log.info("ignored source point not found");
+                    }
 
-
-
-
-                } catch (Exception e) {
-                    summary.setEnabled(false);
-                    EntityServiceImpl.addUpdateEntity(user, Arrays.<Entity>asList(summary));
-
-
-
-                }
-
+            }
+            else {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss:S");
+                String sd = sdf.format(summary.getLastProcessed());
+                String ed = sdf.format(new Date(d));
+                String lp = sdf.format(summary.getLastProcessed());
+                String next = sdf.format(new Date( summary.getLastProcessed().getTime() + summary.getSummaryIntervalMs()));
+                log.info("ignored by timespan setting:: " + sd + ">" + ed + "  " + summary.getSummaryIntervalMs());
+                log.info("next:: " + next);
+                log.info("last:: " + lp);
             }
         }
 

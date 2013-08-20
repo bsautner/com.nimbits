@@ -74,7 +74,12 @@ public class ValueServletImpl extends ApiServlet implements org.springframework.
             log.info("recording post");
 
             if (user != null && ! user.isRestricted()) {
-
+                String name = getParam(Parameters.point);
+                if (Utils.isEmptyString(name)) {
+                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    resp.setHeader("Error", "Missing point name - you are using a deprecated service, please use /v2/value - see manual");
+                    return;
+                }
                 final EntityName pointName = CommonFactory.createName(getParam(Parameters.point), EntityType.point);
                 final List<Entity> points =  EntityServiceImpl.getEntityByName(user, pointName, EntityType.point);
 

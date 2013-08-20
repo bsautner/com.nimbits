@@ -52,9 +52,6 @@
 
     </bean>
 
-    <bean id="systemService" class="com.nimbits.cloudplatform.server.admin.system.SystemServiceImpl">
-
-    </bean>
 
     <bean id="blobService" class="com.nimbits.cloudplatform.server.io.blob.BlobServiceImpl">
 

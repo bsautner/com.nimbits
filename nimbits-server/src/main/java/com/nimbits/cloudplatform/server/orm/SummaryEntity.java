@@ -88,6 +88,11 @@ public class SummaryEntity extends TriggerEntity implements Summary {
     }
 
     @Override
+    public boolean isReady() {
+        return false;
+    }
+
+    @Override
     public void update(final Entity update)  {
         super.update(update);
         final Summary summary = (Summary)update;

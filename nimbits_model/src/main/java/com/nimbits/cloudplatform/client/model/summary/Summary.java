@@ -36,5 +36,5 @@ public interface Summary  extends Trigger, Serializable {
 
     void setLastProcessed(final Date date);
 
-
+    boolean isReady();
 }

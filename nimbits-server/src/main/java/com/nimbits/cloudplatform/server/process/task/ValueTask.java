@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
+import java.util.List;
 
 
 @Service("valueTask")
@@ -57,21 +58,34 @@ public class ValueTask extends HttpServlet implements org.springframework.web.Ht
         final User u = GsonFactory.getInstance().fromJson(userJson, UserModel.class);
 
 
-        final Point point = entity instanceof Point
-                ? (Point) entity
-                : (Point) EntityServiceImpl.getEntityByKey(u, entity.getKey(), EntityType.point).get(0);
+        final Point point;
 
-        if (point.isIdleAlarmOn() && point.getIdleAlarmSent()) {
-            point.setIdleAlarmSent(false);
-            EntityServiceImpl.addUpdateEntity(u, Arrays.<Entity>asList(point));
+        if (entity instanceof Point) {
+            point =  (Point) entity;
+        }
+        else {
+            List<Entity> sample =  EntityServiceImpl.getEntityByKey(u, entity.getKey(), EntityType.point);
+            if (sample.isEmpty()) {
+                return;
+            }
+            else {
+                point = (Point) sample.get(0);
+            }
         }
 
-        CalculationTransaction.processCalculations(u, point);
-        SummaryService.processSummaries(u, point);
-        SubscriptionService.processSubscriptions(u, point, value);
-        resp.setStatus(HttpServletResponse.SC_OK);
+        if (point != null) {
+            if (point.isIdleAlarmOn() && point.getIdleAlarmSent()) {
+                point.setIdleAlarmSent(false);
+                EntityServiceImpl.addUpdateEntity(u, Arrays.<Entity>asList(point));
+            }
 
-}
+            CalculationTransaction.processCalculations(u, point);
+            SummaryService.processSummaries(u, point);
+            SubscriptionService.processSubscriptions(u, point, value);
+            resp.setStatus(HttpServletResponse.SC_OK);
+        }
+
+    }
 
 
 }

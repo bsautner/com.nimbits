@@ -4,15 +4,23 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
-    <groupId>nimbits_monitor</groupId>
+    <groupId>com.nimbits</groupId>
     <artifactId>nimbits_monitor</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <modules>
-        <module>../nimbits_model</module>
-    </modules>
     <dependencies>
-
+        <dependency>
+            <groupId>com.nimbits</groupId>
+            <artifactId>nimbits_lib</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.nimbits</groupId>
+            <artifactId>nimbits_model</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>

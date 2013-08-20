@@ -88,5 +88,18 @@ public class SummaryModel extends TriggerModel implements Summary {
         this.lastProcessed = new Date(date.getTime());
     }
 
+    @Override
+    public boolean isReady() {
 
+        return this.lastProcessed.getTime() + summaryIntervalMs < new Date().getTime();
+
+    }
+
+    public void setSummaryType(Integer summaryType) {
+        this.summaryType = summaryType;
+    }
+
+    public void setSummaryIntervalMs(Long summaryIntervalMs) {
+        this.summaryIntervalMs = summaryIntervalMs;
+    }
 }

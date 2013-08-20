@@ -43,6 +43,7 @@ import java.util.logging.Logger;
 public class ValueMemCache {
 
     private static final Logger log = Logger.getLogger(ValueMemCache.class.getName());
+    public static final int SEC = 1000;
 
     private static MemcacheService cacheFactory;
 
@@ -440,7 +441,7 @@ public class ValueMemCache {
 
 
     public static int preloadTimespan(final Entity entity, final Range timespan) throws Exception {
-        List<Value> stored = getDataSegment(entity, timespan, Range.between(0, 1000));
+        List<Value> stored = getDataSegment(entity, timespan, Range.between(0, SEC));
         String key = MemCacheKey.preload.getText() + entity.getUUID();
         //log.info("Storing " + stored.size());
 
@@ -588,7 +589,7 @@ public class ValueMemCache {
         final List<E> retObj = new ArrayList<E>(sorted_map.keySet().size());
         for (final Map.Entry<?, E> longObjectEntry : sorted_map.entrySet()) {
             long l = (Long)longObjectEntry.getKey();
-            if (l >= timespan.getMinimum() - 1000 && l <= timespan.getMaximum() + 1000) {
+            if (l >= timespan.getMinimum() - SEC && l <= timespan.getMaximum() + SEC) {
                 retObj.add(longObjectEntry.getValue());
             }
         }

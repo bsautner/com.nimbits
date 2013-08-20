@@ -82,7 +82,7 @@ public class PointMaintTask extends HttpServlet  implements org.springframework.
                     dates.add(store.getTimestamp().getTime());
                 }
             }
-           // SystemServiceImpl.updateSystemPoint("Fragmented Dates Merges By Point Maint", dupDates.size(), false, PointType.backend);
+
             for (Long l : dupDates) {
                 ValueTransaction.consolidateDate(entity, new Date(l));
 

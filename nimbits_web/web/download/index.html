@@ -28,6 +28,27 @@
             padding-bottom: 40px;
         }
     </style>
+    <script>
+        function updateCounter() {
+
+
+            $.post("http://cloud.nimbits.com/service/v2/value",
+                    { email: "bsautner@gmail.com", key: "downloadkey", id: "bsautner@gmail.com/server_downloads", json:"{\"d\":1.0}" },
+                    function(data){
+
+                    }
+            ).complete(function() {
+                        //alert("pk");
+                        location.href = "http://www.nimbits.com/download/nimbits_server.zip";
+                    })
+            ;
+           //
+            return false;
+
+
+        }
+
+    </script>
 </head>
 <body >
 <div class="container">
@@ -84,7 +105,8 @@
          </p>
      </div>
     <ul>
-        <li>Nimbits Server Download <a href="nimbits_server.zip">nimbits_server.zip</a></li>
+        <li>Nimbits Server Download <a onclick="return updateCounter();" href="#" >nimbits_server.zip</a></li>
+        <!--<li>Nimbits Server Download <a href="#" onclick='updateCounter();'>nimbits_server.zip</a></li>-->
         <li>Installation Instructions</li>
         <UL>
             <LI><a href="https://docs.google.com/document/d/1aOEpfeJOtV-v0diDBAQ9e2hOjXhs0uInA2QE--OS8Pk/view#bookmark=id.9hzlah251w74">Google App Engine</a></LI>

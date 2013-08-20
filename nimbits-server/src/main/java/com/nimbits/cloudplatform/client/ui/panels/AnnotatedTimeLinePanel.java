@@ -29,6 +29,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.google.gwt.visualization.client.AbstractDataTable;
 import com.google.gwt.visualization.client.AbstractDataTable.ColumnType;
 import com.google.gwt.visualization.client.DataTable;
 import com.google.gwt.visualization.client.VisualizationUtils;
@@ -57,8 +58,6 @@ import com.nimbits.cloudplatform.client.ui.icons.Icons;
 import java.util.*;
 @SuppressWarnings("unchecked")
 public class AnnotatedTimeLinePanel extends LayoutContainer {
-    private static final int WIDTH = 500;
-    private static final int HEIGHT = 300;
     private static final int ENTER_KEY = 13;
     private final DateTimeFormat fmt = DateTimeFormat.getFormat(Const.FORMAT_DATE_TIME);
 
@@ -73,9 +72,6 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
     private final List<ChartRemovedListener> chartRemovedListeners;
 
     private Timespan timespan;
-
-
-
     private boolean headerVisible;
     private final String name;
     private boolean selected;
@@ -145,7 +141,9 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
     private void addPointDataToTable(final TreeModel entity, final List<Value> values)  {
 
         removePointDataFromTable(CommonFactory.createName(DEFAULT_EMPTY_COL, EntityType.point));
-
+        if (dataTable == null) {
+            initTable();
+        }
         final int r = dataTable.getNumberOfColumns();
         int currentRow = dataTable.getNumberOfRows();
         int PointColumn = dataTable.getNumberOfColumns();
@@ -208,12 +206,14 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
     }
 
     private void removePointDataFromTable(final CommonIdentifier pointName) {
-        int r = dataTable.getNumberOfColumns();
-        for (int i = 0; i < r; i++) {
-            String s = dataTable.getColumnLabel(i);
-            if (s.equals(pointName.getValue())) {
-                dataTable.removeColumns(i, i + 2);
-                break;
+        if (dataTable != null) {
+            int r = dataTable.getNumberOfColumns();
+            for (int i = 0; i < r; i++) {
+                String s = dataTable.getColumnLabel(i);
+                if (s.equals(pointName.getValue())) {
+                    dataTable.removeColumns(i, i + 2);
+                    break;
+                }
             }
         }
 
@@ -289,8 +289,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
                     mainPanel.remove(line);
                     line = null;
                 }
-                dataTable = DataTable.create();
-                dataTable.addColumn(ColumnType.DATETIME, Words.WORD_DATE);
+                initTable();
                 line = new AnnotatedTimeLine(dataTable, createOptions(), "100%", "100%");
                 mainPanel.removeAll();
                 mainPanel.add(line);
@@ -303,8 +302,7 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
 
                     if (line != null && timespan != null) {
 
-                        dataTable = DataTable.create();
-                        dataTable.addColumn(ColumnType.DATETIME, "Date");
+                        initTable();
 
                         for (Entity entity : points.values()) {
                             addEntityModel(new GxtModel(entity));
@@ -317,6 +315,11 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
 
         VisualizationUtils.loadVisualizationApi(onLoadCallback,
                 AnnotatedTimeLine.PACKAGE);
+    }
+
+    private void initTable() {
+        dataTable = DataTable.create();
+        dataTable.addColumn(ColumnType.DATETIME, Words.WORD_DATE);
     }
 
     private void addEmptyDataToTable() {
@@ -712,12 +715,5 @@ public class AnnotatedTimeLinePanel extends LayoutContainer {
         }
     }
 
-    private class CloseIconButtonEventSelectionListener extends SelectionListener<IconButtonEvent> {
-        boolean isMax;
 
-        @Override
-        public void componentSelected(final IconButtonEvent ce) {
-            notifyChartRemovedListener();
-        }
-    }
 }

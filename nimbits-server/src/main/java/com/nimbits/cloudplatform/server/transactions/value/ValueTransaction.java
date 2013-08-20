@@ -41,12 +41,11 @@ import static java.lang.Math.abs;
  */
 public class ValueTransaction {
     static final Logger log = Logger.getLogger(ValueTransaction.class.getName());
-    public static final String MSG = "Could not record value do to permissions levels being to low for a write operation";
+
 
     public static List<Value> getTopDataSeries(final Entity entity,
                                                final int maxValues,
                                                final Date endDate) throws Exception {
-//        final Point p = (Point) EntityServiceImpl.getEntityByKey(entity.getKey(), PointEntity.class.getName());
         return ValueMemCache.getTopDataSeries(entity, maxValues, endDate);
     }
 
@@ -75,10 +74,8 @@ public class ValueTransaction {
             }
         }
 
-        if (ignoreByAuthLevel(user, point)) {
-            log.info(MSG);
-            throw new IllegalArgumentException(MSG);
-        } else {
+        if (! ignoreByAuthLevel(user, point)) {
+
 
             final boolean ignored = false;
             final boolean ignoredByDate = ignoreDataByExpirationDate(point, value, ignored);
@@ -122,10 +119,14 @@ public class ValueTransaction {
                 return retObj;
             } else {
                 //log.severe("value not recorded");
-                return value;   //spit it back u suppose
+                return value;   //spit it back I suppose
             }
 
 
+        }
+        else {
+            log.info("Access Denied");
+            return value;
         }
     }
 
@@ -151,28 +152,7 @@ public class ValueTransaction {
     }
 
 
-    public static Date getLastRecordedDate(final List<Point> points) throws Exception {
-        Date retVal = null;
 
-        for (final Point p : points) {
-            final List<Value> r = ValueMemCache.getTopDataSeries(p, 1);
-
-            if (!r.isEmpty()) {
-                Value rx = r.get(0);
-                if (retVal == null) {
-                    retVal = rx.getTimestamp();
-                } else if (retVal.getTime() < rx.getTimestamp().getTime()) {
-                    retVal = rx.getTimestamp();
-                }
-            }
-
-        }
-        if (retVal == null) {
-            retVal = new Date();
-        }
-
-        return retVal;
-    }
 
 
     public static List<Value> getDataSegment(Entity entity, Range<Long> timespanRange, Range<Integer> segment) throws Exception {
@@ -218,12 +198,8 @@ public class ValueTransaction {
                     double min =   pv.getDoubleValue() - point.getFilterValue();
                     double max =    pv.getDoubleValue() + point.getFilterValue();
                     double newValue = v.getDoubleValue();
-                    boolean inrange = newValue <= max
+                    return newValue <= max
                             && newValue >= min;
-                    return inrange;
-                            //&& v.getNote().equals(pv.getNote())
-                            //&& v.getLocation().equals(pv.getLocation())
-                          //  && v.getData().equals(pv.getData());
 
                 case percentageHysteresis:
                     if (point.getFilterValue() > 0) {
@@ -331,15 +307,9 @@ public class ValueTransaction {
         ValueMemCache.consolidateDate(entity, date);
     }
 
-
-    public static List<Value> getPreload(Entity entity, int section)  {
-        return ValueMemCache.getPreload(entity, section);
-    }
-
-    public static void mergeTimespan(Point point, Timespan ts) throws Exception {
+     public static void mergeTimespan(Point point, Timespan ts) throws Exception {
         ValueMemCache.mergeTimespan(point, ts);
     }
-
 
     public static List<Value> getTopDataSeries(final Entity entity,
                                                final int maxValues) {
@@ -348,11 +318,11 @@ public class ValueTransaction {
 
     }
 
-    public static List<Value> getDataSegment(final Entity entity, final Timespan timespan, final int start, final int end) throws Exception {
+    public static List<Value> getDataSegment(final Entity entity, final Timespan timespan, final int start, final int end)   {
         return ValueMemCache.getDataSegment(entity, Range.between(timespan.getStart().getTime(), timespan.getEnd().getTime()), Range.between(start, end));
     }
 
-    public static List<Value> getDataSegment(final Entity entity, final Timespan timespan) throws Exception {
+    public static List<Value> getDataSegment(final Entity entity, final Timespan timespan)   {
         return ValueMemCache.getDataSegment(entity, Range.between(timespan.getStart().getTime(), timespan.getEnd().getTime()), Range.between(0, 1000));
     }
 

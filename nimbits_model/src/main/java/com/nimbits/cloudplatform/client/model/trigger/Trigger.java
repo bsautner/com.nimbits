@@ -23,6 +23,7 @@ import java.io.*;
  * Time: 12:22 PM
  */
 public interface Trigger extends Entity, Serializable {
+
     String getTarget();
 
     String getTrigger();
@@ -30,7 +31,6 @@ public interface Trigger extends Entity, Serializable {
     boolean isEnabled();
 
     void setEnabled(boolean enabled);
-
 
     void setTarget(String target);
 

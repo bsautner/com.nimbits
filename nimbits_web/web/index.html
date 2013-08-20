@@ -33,11 +33,10 @@
     <script>
         function updateCounter() {
 
-
             $.post("http://cloud.nimbits.com/service/v2/value",
                     { email: "bsautner@gmail.com", key: "counterkey", id: "bsautner@gmail.com/counter", json:"{\"d\":1.0}" },
                     function(data){
-                        ///alert(data);
+                     //  alert(data);
                     }
             );
 

@@ -21,6 +21,7 @@ import com.google.appengine.api.files.FileServiceFactory;
 import com.google.appengine.api.files.FileWriteChannel;
 import com.google.gson.reflect.TypeToken;
 import com.nimbits.cloudplatform.PMF;
+import com.nimbits.cloudplatform.client.common.Utils;
 import com.nimbits.cloudplatform.client.constants.Const;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.point.Point;
@@ -53,7 +54,6 @@ import java.util.logging.Logger;
  * Time: 11:05 AM
  */
 @Repository("valueDao")
-@SuppressWarnings("unchecked")    //TODO
 public class ValueDAO {
     private static final int INT = 1024;
     private static final int TOP = 1;
@@ -475,20 +475,30 @@ public class ValueDAO {
 
 
     protected static List<Value> readValuesFromFile(final BlobKey blobKey, final long length)  {
-
-        Type valueListType = new TypeToken<List<ValueModel>>() {
+        //TODO Delete file
+        final Type valueListType = new TypeToken<List<ValueModel>>() {
         }.getType();
-
+        List<Value> models;
 
         try {
             BlobstoreService blobStoreService = BlobstoreServiceFactory.getBlobstoreService();
 
             String segment = new String(blobStoreService.fetchData(blobKey, 0, length));
-            final List<Value> models = GsonFactory.getInstance().fromJson(segment, valueListType);
-            Collections.sort(models);
+            if (!Utils.isEmptyString(segment)) {
+                models = GsonFactory.getInstance().fromJson(segment, valueListType);
+                if (models != null) {
+                    Collections.sort(models);
+                }
+                else {
+                    models = Collections.emptyList();
+                }
+            }
+            else {
+                models = Collections.emptyList();
+            }
             return models;
         } catch (IllegalArgumentException ex) {
-            return new ArrayList<Value>(0);
+            return Collections.emptyList();
         }
 
     }

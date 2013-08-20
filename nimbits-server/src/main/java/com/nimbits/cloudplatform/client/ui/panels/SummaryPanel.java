@@ -23,10 +23,7 @@ import com.extjs.gxt.ui.client.widget.LayoutContainer;
 import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.VerticalPanel;
 import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.form.ComboBox;
-import com.extjs.gxt.ui.client.widget.form.FormPanel;
-import com.extjs.gxt.ui.client.widget.form.SpinnerField;
-import com.extjs.gxt.ui.client.widget.form.TextField;
+import com.extjs.gxt.ui.client.widget.form.*;
 import com.extjs.gxt.ui.client.widget.layout.BoxLayout;
 import com.extjs.gxt.ui.client.widget.layout.FormData;
 import com.extjs.gxt.ui.client.widget.layout.HBoxLayout;
@@ -135,6 +132,9 @@ public class SummaryPanel extends NavigationEventProvider {
         simple.setHeaderVisible(false);
         simple.setBodyBorder(false);
         simple.setFrame(false);
+        CheckBox enabled = new CheckBox();
+        enabled.setBoxLabel("Enabled");
+        enabled.setLabelSeparator("");
 
         final TextField<String> summaryName = new TextField<String>();
         summaryName.setFieldLabel("Summary Name");
@@ -153,6 +153,7 @@ public class SummaryPanel extends NavigationEventProvider {
             if (entity.getEntityType().equals(EntityType.summary)) {
                 Summary summary = (Summary)entity;
                 summaryName.setValue(entity.getName().getValue());
+                enabled.setValue(((Summary) entity).isEnabled());
                 type = summary.getSummaryType();
                 spinnerField.setValue(summary.getSummaryIntervalSeconds());
                 target = summary.getTarget();
@@ -161,6 +162,7 @@ public class SummaryPanel extends NavigationEventProvider {
                 summaryName.setValue(entity.getName().getValue() + " Summary");
                 type = SummaryType.average;
                 spinnerField.setValue(SECONDS_IN_HOUR);
+                enabled.setValue(true);
 
             }
 
@@ -186,13 +188,13 @@ public class SummaryPanel extends NavigationEventProvider {
             Button cancel = new Button("Cancel");
             cancel.addSelectionListener(new CancelButtonEventSelectionListener());
 
-            submit.addSelectionListener(new SubmitEventSelectionListener(typeCombo, spinnerField, targetCombo, name));
+            submit.addSelectionListener(new SubmitEventSelectionListener(typeCombo, spinnerField, targetCombo, name, enabled));
 
 
             Html h = new Html("<p>You are creating a <Strong>Summary Trigger</Strong>. A trigger is a nimbits entity that fires whenever the trigger's point" +
                     "records new data.  The Trigger does something with the trigger point's data and then stored the result in the Target " +
-                    "Data Point. You should have already create the Target Point.</p>" +
-                    "<p>The summation process runs once an hour and can compute a summary value (such as an average) " +
+                    "Data Point. You should have already create the Target Point.</p><BR>" +
+                    "<p>The summation process runs every time a new value is recorded and can compute a summary value (such as an average) " +
                     "based on the interval you set here (i.e a setting of 8 will compute an 8 hour average every 8 hours) using the " +
                     "data recorded to the selected data point, storing the result in the select pre-existing target point.</p>");
 
@@ -210,6 +212,7 @@ public class SummaryPanel extends NavigationEventProvider {
 
             simple.add(spinnerField, formdata);
             simple.add(targetCombo, formdata);
+            simple.add(enabled, formdata);
             LayoutContainer c = new LayoutContainer();
             HBoxLayout layout = new HBoxLayout();
             layout.setPadding(new Padding(5));
@@ -283,12 +286,13 @@ public class SummaryPanel extends NavigationEventProvider {
         private final SpinnerField spinnerField;
         private final EntityCombo targetCombo;
         private final EntityName name;
-
-        SubmitEventSelectionListener(ComboBox<SummaryTypeOption> typeCombo, SpinnerField spinnerField, EntityCombo targetCombo, EntityName name) {
+        private final CheckBox enabled;
+        SubmitEventSelectionListener(ComboBox<SummaryTypeOption> typeCombo, SpinnerField spinnerField, EntityCombo targetCombo, EntityName name, CheckBox enabled) {
             this.typeCombo = typeCombo;
             this.spinnerField = spinnerField;
             this.targetCombo = targetCombo;
             this.name = name;
+            this.enabled = enabled;
         }
 
         @Override
@@ -308,7 +312,7 @@ public class SummaryPanel extends NavigationEventProvider {
                    Trigger summary = (Trigger) entity;
                     entity.setName(name);
                     update = SummaryModelFactory.createSummary(entity,
-                            EntityModelFactory.createTrigger(summary.getTrigger()), EntityModelFactory.createTarget(summary.getTarget()), true, summaryType,
+                            EntityModelFactory.createTrigger(summary.getTrigger()), EntityModelFactory.createTarget(summary.getTarget()), enabled.getValue(), summaryType,
                             spinnerField.getValue().intValue() * 1000, new Date());
                     service.addUpdateEntityRpc(Arrays.<Entity>asList(update), new UpdateEntityAsyncCallback(box));
                 } catch (Exception e) {
@@ -320,7 +324,7 @@ public class SummaryPanel extends NavigationEventProvider {
                 try {
                     Entity en = EntityModelFactory.createEntity(name, "", EntityType.summary, ProtectionLevel.onlyMe, entity.getKey(), entity.getOwner());
                     update = SummaryModelFactory.createSummary(en,
-                            EntityModelFactory.createTrigger(entity.getKey()), EntityModelFactory.createTarget(targetCombo.getValue().getId()),true, summaryType,
+                            EntityModelFactory.createTrigger(entity.getKey()), EntityModelFactory.createTarget(targetCombo.getValue().getId()),enabled.getValue(), summaryType,
                             spinnerField.getValue().intValue() * 1000, new Date());
 
 

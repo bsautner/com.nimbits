@@ -15,15 +15,14 @@ package com.nimbits.android.ui.dialog;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
-import com.nimbits.android.ui.entitylist.EntityListener;
 import com.nimbits.android.R;
+import com.nimbits.android.ui.entitylist.EntityListener;
 import com.nimbits.cloudplatform.client.enums.Action;
 import com.nimbits.cloudplatform.client.enums.EntityType;
 import com.nimbits.cloudplatform.client.model.common.impl.CommonFactory;

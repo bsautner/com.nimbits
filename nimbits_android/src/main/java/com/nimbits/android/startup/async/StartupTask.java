@@ -14,16 +14,13 @@ package com.nimbits.android.startup.async;
 
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Environment;
-import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.nimbits.android.AuthenticationManager;
-import com.nimbits.cloudplatform.Nimbits;
 import com.nimbits.android.R;
+import com.nimbits.cloudplatform.Nimbits;
 import com.nimbits.cloudplatform.client.constants.Path;
 import com.nimbits.cloudplatform.client.model.simple.SimpleValue;
 import com.nimbits.cloudplatform.client.model.user.User;
@@ -33,7 +30,6 @@ import com.nimbits.cloudplatform.transaction.Transaction;
 import org.apache.http.cookie.Cookie;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 

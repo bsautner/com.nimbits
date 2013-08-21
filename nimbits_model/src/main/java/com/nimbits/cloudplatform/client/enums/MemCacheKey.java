@@ -36,15 +36,12 @@ public enum MemCacheKey {
     defaultNamespace(5, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_DEFAULT_NAMESPACE),
     entityMap(6, SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_ENTITY_MAP),
     userPointNamespace(7, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_USER_POINT_NAMESPACE),
-    location(8, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_LOCATION),
-    quota(9, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_QUOTA),
     preload(10, SettingType.serverVersion.getDefaultValue() + KeyConstants.PRE_LOAD),
     allUsers(11, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_ALL_USERS),
     users(12, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_USER),
     triggers(13,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_TRIGGERS),
     bufferedValueList(14,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_BUFFERED_VALUE_LIST),
     userEntityTree(15,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_USER_ENTITY_TREE),
-    quotaNamespace(16, buildQuotaKey()),
     subscribedEntity(17, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_SUBSCRIBED_ENTITY),
     entityNameCache(18, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_ENTITY_NAME),
     docService(20, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_DOC_SERVICE),
@@ -53,10 +50,7 @@ public enum MemCacheKey {
 
     ;
 
-    private static String buildQuotaKey() {
-        //use day of month
-        return SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_QUOTA_NAMESPACE;
-    }
+
 
     private static final Map<Integer, MemCacheKey> lookup = new HashMap<Integer, MemCacheKey>(MemCacheKey.values().length);
     private final int code;
@@ -73,10 +67,6 @@ public enum MemCacheKey {
     public static String getKey(final MemCacheKey memCacheKey, final String uniqueIdentifier) {
         return memCacheKey.getText() + getSafeNamespaceKey(uniqueIdentifier);
 
-    }
-
-    public static int getHoldTime() {
-        return HOLD_TIME;
     }
 
     private MemCacheKey(final int code, final String text) {
@@ -126,11 +116,8 @@ public enum MemCacheKey {
         static final String KEY_TRIGGERS = "KEY_TRIGGERS";
         static final String KEY_CURRENT_VALUE = "KEY_CURRENT_VALUE";
         static final String PRE_LOAD = "PRE_LOAD";
-        static final String KEY_LOCATION = "KEY_GPS_LOCATION";
-        static final String KEY_QUOTA = "KEY_QUOTA";
         static final String KEY_USER = "KEY_USER";
         static final String KEY_USER_ENTITY_TREE = "KEY_USER_ENTITY_TREE";
-        static final String KEY_QUOTA_NAMESPACE = "KEY_QUOTA_NAMESPACE";
         static final String KEY_SUBSCRIBED_ENTITY = "KEY_SUBSCRIBED_ENTITY";
         static final String KEY_ENTITY_NAME = "KEY_ENTITY_NAME";
         static final String KEY_DOC_SERVICE = "KEY_DOC_SERVICE";

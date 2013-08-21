@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.nimbits.android.R;
 import com.nimbits.cloudplatform.client.constants.Const;
-import com.nimbits.cloudplatform.client.model.point.Point;
 import com.nimbits.cloudplatform.client.model.simple.SimpleValue;
 import com.nimbits.cloudplatform.client.model.value.Value;
 

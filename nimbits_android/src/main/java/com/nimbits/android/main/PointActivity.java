@@ -16,22 +16,14 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.widget.*;
-import com.nimbits.android.ui.chart.Chart;
 import com.nimbits.android.R;
-import com.nimbits.android.ui.chart.SeriesChart;
+import com.nimbits.android.settings.async.LocalSettingsTask;
 import com.nimbits.cloudplatform.client.enums.Action;
 import com.nimbits.cloudplatform.client.enums.Parameters;
 import com.nimbits.cloudplatform.client.model.point.Point;
 import com.nimbits.cloudplatform.client.model.simple.SimpleValue;
-import com.nimbits.cloudplatform.client.model.value.Value;
-import com.nimbits.android.main.async.SeriesTask;
-import com.nimbits.android.settings.async.LocalSettingsTask;
-import org.apache.commons.lang3.Range;
-
-import java.util.List;
 
 /**
  * @Author: benjamin

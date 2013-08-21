@@ -44,17 +44,10 @@ import java.util.logging.Logger;
 @Component("TaskImpl")
 public class TaskImpl   {
 
-    private static final String TASK_MOVE = "move";
     private static final String IN_CONTENT = "inContent";
-
-    private static final String QUEUE_INCOMING_MAIL = "incommingmail";
-    private static final String QUEUE_RECORD_VALUE = "recordvaluequeue";
-    private static final String QUEUE_PROCESS_BATCH = "processbatchqueue";
-    private static final String QUEUE_DELETE_DATA = "deletedata";
     private static final String QUEUE_DELETE_BLOB= "blob";
 
     private static final String DEFAULT = "default";
-    private static final String PATH_CORE_TASK = "/task/coreTask";
     private static final String PATH_DELETE_BLOB_TASK = "/task/deleteBlobTask";
     private static final String PATH_POINT_MAINT_TASK = "/task/pointTask";
     private static final String PATH_MOVE_TASK = "/task/moveTask";
@@ -65,7 +58,6 @@ public class TaskImpl   {
     private static final String PATH_INCOMING_MAIL_QUEUE = "/task/mailTask";
     private static final String PATH_DELETE_DATA_TASK = "/task/deleteTask";
     private static final Logger log = Logger.getLogger(TaskImpl.class.getName());
-    private static final String X_APP_ENGINE_CITY_LAT_LONG = "X-AppEngine-CityLatLong";
     private static final String DUMP = "dump";
 
 
@@ -118,59 +110,12 @@ public class TaskImpl   {
         }
     }
 
-    
-    public static  void startCoreTask(final HttpServletRequest req, final Entity entity, final Action action, final String instance) {
 
-//        if (entity.getEntityType().isSendUpdatesToCore()) {
-//            final Queue queue =  QueueFactory.getQueue( DEFAULT  );
-//            entity.setDateCreated(null);
-//            String location = "";
-//            final String json = GsonFactory.getInstance().toJson(entity);
-//            if (req != null) {
-//                location = req.getHeader(X_APP_ENGINE_CITY_LAT_LONG);
-//            }
-//            if (! Utils.isEmptyString(location)) {
-//
-//                queue.add(TaskOptions.Builder.withUrl(PATH_CORE_TASK)
-//                        .param(Parameters.entity.getText(), json)
-//                        .param(Parameters.action.getText(), action.getCode())
-//                        .param(Parameters.instance.getText(), instance)
-//                        .param(Parameters.location.getText(), location)
-//                );
-//            }
-//            else {
-//                queue.add(TaskOptions.Builder.withUrl(PATH_CORE_TASK)
-//                        .param(Parameters.entity.getText(), json)
-//                        .param(Parameters.action.getText(), action.getCode())
-//                        .param(Parameters.instance.getText(), instance)
-//
-//                );
-//            }
-//
-//        }
-    }
-
-    
-    public static  void startCoreLocationTask(final Entity entity, final Location location) {
-
-        if (entity.getEntityType().isSendUpdatesToCore()) {
-            final Queue queue =  QueueFactory.getQueue( DEFAULT  );
-            entity.setDateCreated(null);
-
-            final String json = GsonFactory.getInstance().toJson(entity);
-            queue.add(TaskOptions.Builder.withUrl(PATH_CORE_TASK)
-                    .param(Parameters.entity.getText(), json)
-                    .param(Parameters.location.getText(), location.toString())
-
-            );
-        }
-    }
 
     
     public static  void startDataDumpTask(final Entity entity, final Timespan timespan) {
         final Queue queue =  QueueFactory.getQueue(DUMP);
         final String json = GsonFactory.getInstance().toJson(entity);
-        final String t = GsonFactory.getInstance().toJson(timespan);
         queue.add(TaskOptions.Builder.withUrl(PATH_TASK_DUMP_TASK)
                 .param(Parameters.entity.getText(), json)
                 .param(Parameters.sd.getText(),
@@ -264,19 +209,6 @@ public class TaskImpl   {
                 .param(Parameters.json.getText(), json));
 
     }
-
-
-
-//    
-//    public void startEntityMaintTask(final User user, ) {
-//        final String json = gson.toJson(user);
-//
-//        final Queue queue =  QueueFactory.getQueue(overrideQueue ? DEFAULT : Const.TASK_CATEGORY_MAINT);
-//
-//        queue.add(TaskOptions.Builder.withUrl(Const.PATH_CATEGORY_MAINT_TASK)
-//                .param(Const.PARAM_USER, json));
-//
-//    }
 
 
 

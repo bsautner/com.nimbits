@@ -12,14 +12,11 @@
 
 package com.nimbits.cloudplatform.server.process.task;
 
-import com.nimbits.cloudplatform.client.enums.Action;
 import com.nimbits.cloudplatform.client.enums.Parameters;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.point.Point;
 import com.nimbits.cloudplatform.client.model.point.PointModel;
 import com.nimbits.cloudplatform.client.model.valueblobstore.ValueBlobStore;
-import com.nimbits.cloudplatform.server.admin.common.ServerInfo;
-import com.nimbits.cloudplatform.server.admin.logging.LogHelper;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
 import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
 import org.springframework.stereotype.Service;
@@ -32,6 +29,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * consolidated data from cache into blobstore
+ */
 @Service("pointTask")
 public class PointMaintTask extends HttpServlet  implements org.springframework.web.HttpRequestHandler{
 
@@ -52,15 +52,12 @@ public class PointMaintTask extends HttpServlet  implements org.springframework.
 
         final String j = req.getParameter(Parameters.json.getText());
         final Point entity = GsonFactory.getInstance().fromJson(j, PointModel.class);
-      //  final User u = UserServiceFactory.getInstance().getUserByKey(entity.getOwner(), AuthLevel.admin);
         if (entity.getExpire() > 0) {
             TaskImpl.startDeleteDataTask(
                     entity,
                     true, entity.getExpire());
         }
         consolidateBlobs(entity);
-        TaskImpl.startCoreTask(null, entity, Action.update, ServerInfo.getFullServerURL(req));
-
     }
 
 

@@ -22,8 +22,6 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.nimbits.android.AuthenticationManager;
 import com.nimbits.android.HomeActivity;
-
-
 import com.nimbits.android.R;
 import com.nimbits.android.settings.SettingsActivity;
 import com.nimbits.android.startup.async.StartupTask;

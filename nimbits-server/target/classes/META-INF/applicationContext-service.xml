@@ -24,10 +24,6 @@
 
     </bean>
 
-    <bean id="locationService" class="com.nimbits.cloudplatform.server.api.helper.LocationService">
-     
-
-    </bean>
     <bean id="entityService" class="com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl">
 
 

@@ -13,15 +13,11 @@
 package com.nimbits.android.startup.async;
 
 import android.os.AsyncTask;
-import android.util.Log;
 import com.nimbits.cloudplatform.Nimbits;
 import com.nimbits.cloudplatform.client.android.AndroidControl;
 import com.nimbits.cloudplatform.client.android.AndroidControlFactory;
-import com.nimbits.cloudplatform.client.android.AndroidControlImpl;
-import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.transaction.Transaction;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

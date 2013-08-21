@@ -15,7 +15,6 @@ package com.nimbits.android.ui.chart;
 import android.content.Context;
 import android.view.View;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
-import com.nimbits.cloudplatform.client.model.point.Point;
 import com.nimbits.cloudplatform.client.model.value.Value;
 
 import java.util.List;

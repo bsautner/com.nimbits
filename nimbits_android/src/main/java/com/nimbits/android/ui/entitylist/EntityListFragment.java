@@ -12,8 +12,6 @@
 
 package com.nimbits.android.ui.entitylist;
 
-import android.app.Activity;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,8 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import com.nimbits.android.content.ContentProvider;
 import com.nimbits.android.R;
+import com.nimbits.android.content.ContentProvider;
 import com.nimbits.android.ui.PointViewBaseFragment;
 
 /**

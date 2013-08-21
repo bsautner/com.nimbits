@@ -23,7 +23,6 @@ import com.nimbits.android.content.ContentProvider;
 import com.nimbits.android.main.async.delete.DeleteEntityDialogFragment;
 import com.nimbits.android.ui.entitylist.EntityListFragment;
 import com.nimbits.cloudplatform.Nimbits;
-import com.nimbits.android.R;
 import com.nimbits.cloudplatform.client.enums.EntityType;
 
 import java.util.Timer;

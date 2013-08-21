@@ -12,7 +12,7 @@
 package com.nimbits.android;
 
 import android.content.Context;
-import android.content.Intent;import java.lang.String;
+import android.content.Intent;
 
 /**
  * Helper class providing methods and constants common to other classes in the

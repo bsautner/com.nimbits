@@ -16,7 +16,6 @@ import com.nimbits.cloudplatform.Nimbits;
 import com.nimbits.cloudplatform.client.constants.Const;
 import com.nimbits.cloudplatform.client.enums.EntityType;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
-import com.nimbits.cloudplatform.client.model.point.Point;
 import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueFactory;
 

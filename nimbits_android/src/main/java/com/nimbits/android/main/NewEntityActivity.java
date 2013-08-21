@@ -20,8 +20,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import com.nimbits.cloudplatform.Nimbits;
 import com.nimbits.android.R;
+import com.nimbits.android.settings.PointSettingsActivity;
+import com.nimbits.cloudplatform.Nimbits;
 import com.nimbits.cloudplatform.client.enums.EntityType;
 import com.nimbits.cloudplatform.client.enums.Parameters;
 import com.nimbits.cloudplatform.client.enums.ProtectionLevel;
@@ -29,7 +30,6 @@ import com.nimbits.cloudplatform.client.model.common.impl.CommonFactory;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.entity.EntityModelFactory;
 import com.nimbits.cloudplatform.client.model.entity.EntityName;
-import com.nimbits.android.settings.PointSettingsActivity;
 
 
 /**

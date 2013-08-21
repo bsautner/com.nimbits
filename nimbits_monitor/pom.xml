@@ -3,24 +3,34 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
     <groupId>com.nimbits</groupId>
     <artifactId>nimbits_monitor</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <!--<modules>-->
+        <!--<module>../nimbits_model</module>-->
+        <!--<module>../nimbits_lib</module>-->
+
+    <!--</modules>-->
+
+    <properties>
+        <maven.compiler.plugin.version>2.3.2</maven.compiler.plugin.version>
+        <jre.source.version>1.7</jre.source.version>
+        <jre.target.version>1.7</jre.target.version>
+    </properties>
 
     <dependencies>
         <dependency>
             <groupId>com.nimbits</groupId>
             <artifactId>nimbits_lib</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
+
+            </dependency>
         <dependency>
             <groupId>com.nimbits</groupId>
             <artifactId>nimbits_model</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
+           </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
@@ -54,4 +64,39 @@
 
 
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin.version}</version>
+                <configuration>
+                    <source>${jre.source.version}</source>
+                    <target>${jre.target.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.nimbits.cloudplatform.Program</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

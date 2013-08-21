@@ -18,11 +18,12 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
 import android.widget.*;
+import com.nimbits.android.HomeActivity;
+import com.nimbits.android.R;
 import com.nimbits.android.ToastHelper;
 import com.nimbits.android.main.async.AddUpdateEntityTask;
 import com.nimbits.android.settings.async.PointSettingsTask;
 import com.nimbits.cloudplatform.Nimbits;
-import com.nimbits.android.R;
 import com.nimbits.cloudplatform.client.enums.FilterType;
 import com.nimbits.cloudplatform.client.enums.Parameters;
 import com.nimbits.cloudplatform.client.enums.point.PointType;
@@ -30,7 +31,6 @@ import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.point.Point;
 import com.nimbits.cloudplatform.client.model.point.PointModel;
 import com.nimbits.cloudplatform.client.model.point.PointModelFactory;
-import com.nimbits.android.MainActivity;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
@@ -142,7 +142,7 @@ public class PointSettingsActivity extends Activity {
                         if (response.isEmpty()) {
                             ToastHelper.show(getApplicationContext(), "something went wrong...");
                         } else {
-                            Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                            Intent intent = new Intent(getBaseContext(), HomeActivity.class);
                             intent.putExtra(Parameters.entity.getText(), (Serializable) response.get(0));
                             Nimbits.tree.add((Entity) response.get(0));
                             intent.putExtra(Parameters.refresh.getText(), true);
@@ -163,13 +163,4 @@ public class PointSettingsActivity extends Activity {
         });
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent intent = new Intent(getBaseContext(), MainActivity.class);
-        intent.putExtra(Parameters.entity.getText(), entity);
-        intent.putExtra(Parameters.refresh.getText(), true);
-        startActivity(intent);
-        finish();
-    }
 }

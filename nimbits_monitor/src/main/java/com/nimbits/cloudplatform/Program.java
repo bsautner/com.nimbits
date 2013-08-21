@@ -13,7 +13,7 @@ import java.util.Random;
  * Time: 11:31 AM
  */
 public class Program {
-    private static final String base = "http://cloud.nimbits.com";
+    private static final String base = "http://653.nimbits-02.appspot.com";
     private static final String email = "bsautner@gmail.com";
     private final static String key = "key";
     // private final static String point = "P2";
@@ -58,7 +58,7 @@ public class Program {
     public static void testSummary() {
         String p1 = "summary_test";
         Value v = ValueHelper.recordValue(p1, 1.0);
-        System.out.println(v.getDoubleValue());
+        System.out.println("Returned: " + v.getDoubleValue());
 
     }
 

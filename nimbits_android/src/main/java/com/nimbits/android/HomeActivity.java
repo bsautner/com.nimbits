@@ -14,10 +14,8 @@ package com.nimbits.android;
 
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.*;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,15 +28,14 @@ import android.webkit.WebView;
 import android.widget.FrameLayout;
 import com.google.android.gcm.GCMRegistrar;
 import com.nimbits.android.content.ContentProvider;
+import com.nimbits.android.main.async.AddUpdateEntityTask;
+import com.nimbits.android.main.async.LoadMainTask;
 import com.nimbits.android.main.async.PostValueTask;
-import com.nimbits.android.settings.SettingsActivity;
 import com.nimbits.android.startup.async.LoadControlTask;
 import com.nimbits.android.ui.PointViewBaseFragment;
 import com.nimbits.android.ui.chart.ChartFragment;
 import com.nimbits.android.ui.dialog.SimpleEntryDialog;
 import com.nimbits.android.ui.entitylist.EntityListFragment;
-import com.nimbits.android.main.async.AddUpdateEntityTask;
-import com.nimbits.android.main.async.LoadMainTask;
 import com.nimbits.android.ui.entitylist.EntityListener;
 import com.nimbits.android.ui.point.PointFragment;
 import com.nimbits.cloudplatform.Nimbits;
@@ -175,9 +172,13 @@ public class HomeActivity extends Activity implements EntityListener {
                 dialog.show(getFragmentManager(), "NoticeDialogFragment");
                 return true;
             case R.id.action_expand:
-               // Intent intent = new Intent(getApplicationContext(), ChartActivity.class);
-               // startActivity(intent);
-               // finish();
+               if (ContentProvider.currentEntity != null && ContentProvider.currentEntity.getEntityType().equals(EntityType.point)) {
+                   String uuid = ContentProvider.currentEntity.getUUID();
+                   final SharedPreferences settings =  getSharedPreferences(getString(R.string.app_name), 0);
+                   final String base_url = settings.getString(getString(R.string.base_url_setting), getString(R.string.base_url));
+                   Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(base_url + "/report.html?uuid=" + uuid));
+                   startActivity(browserIntent);
+               }
             case R.id.action_refresh:
                 showEntityFragment();
 

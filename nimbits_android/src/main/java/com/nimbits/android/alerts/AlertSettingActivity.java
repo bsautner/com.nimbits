@@ -28,7 +28,6 @@ import com.nimbits.cloudplatform.client.enums.Parameters;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.point.Point;
 import com.nimbits.cloudplatform.client.model.point.PointModel;
-import com.nimbits.android.MainActivity;
 
 import java.util.List;
 
@@ -142,14 +141,6 @@ public class AlertSettingActivity extends Activity {
         });
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent intent = new Intent(getBaseContext(), MainActivity.class);
-        intent.putExtra(Parameters.entity.getText(), entity);
-        intent.putExtra(Parameters.refresh.getText(), true);
-        startActivity(intent);
-        finish();
-    }
+
 
 }

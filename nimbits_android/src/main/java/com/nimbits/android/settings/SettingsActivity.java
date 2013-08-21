@@ -23,8 +23,8 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import com.nimbits.android.HomeActivity;
 import com.nimbits.android.R;
-import com.nimbits.android.MainActivity;
 
 /**
  * Author: Benjamin Sautner
@@ -82,7 +82,7 @@ public class SettingsActivity extends Activity {
 
 
         finish();
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
         startActivity(intent);
     }
 

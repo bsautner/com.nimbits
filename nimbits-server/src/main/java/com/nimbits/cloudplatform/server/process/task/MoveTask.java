@@ -31,13 +31,9 @@ import java.util.logging.Logger;
  * Time: 3:55 PM
  */
 @Service("moveTask")
-public class MoveTask extends HttpServlet   implements org.springframework.web.HttpRequestHandler
+public class MoveTask extends HttpServlet implements org.springframework.web.HttpRequestHandler
 
 {
-
-    private static final Logger log = Logger.getLogger(MoveTask.class.getName());
-
-
 
     @Override
     public void handleRequest(final HttpServletRequest req, final HttpServletResponse resp) {
@@ -45,7 +41,6 @@ public class MoveTask extends HttpServlet   implements org.springframework.web.H
         final String pointJson = req.getParameter(Parameters.point.getText());
         final Entity point = GsonFactory.getInstance().fromJson(pointJson, EntityModel.class);
         ValueTransaction.moveValuesFromCacheToStore(point);
-
 
 
     }

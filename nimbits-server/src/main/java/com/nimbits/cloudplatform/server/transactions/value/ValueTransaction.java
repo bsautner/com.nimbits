@@ -29,6 +29,7 @@ import com.nimbits.cloudplatform.server.process.task.TaskImpl;
 import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
 import org.apache.commons.lang3.Range;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -303,11 +304,11 @@ public class ValueTransaction {
     }
 
 
-    public static void consolidateDate(final Entity entity, final Date date) {
+    public static void consolidateDate(final Entity entity, final Date date) throws IOException {
         ValueMemCache.consolidateDate(entity, date);
     }
 
-     public static void mergeTimespan(Point point, Timespan ts) throws Exception {
+     public static void mergeTimespan(Point point, Timespan ts) throws IOException {
         ValueMemCache.mergeTimespan(point, ts);
     }
 

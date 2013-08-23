@@ -29,6 +29,7 @@ import com.nimbits.cloudplatform.server.process.task.TaskImpl;
 import org.apache.commons.lang3.Range;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -372,7 +373,7 @@ public class ValueMemCache {
     }
 
 
-    public static void consolidateDate(final Entity entity, final Date timestamp) {
+    public static void consolidateDate(final Entity entity, final Date timestamp) throws IOException {
         ValueDAO.consolidateDate(entity, timestamp);
     }
 
@@ -382,7 +383,7 @@ public class ValueMemCache {
     }
 
 
-    public static ValueBlobStore mergeTimespan(final Entity entity, final Timespan timespan) throws Exception {
+    public static ValueBlobStore mergeTimespan(final Entity entity, final Timespan timespan) throws IOException {
         return ValueDAO.mergeTimespan(entity, timespan);
 
     }

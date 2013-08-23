@@ -67,17 +67,23 @@ public class HomeActivity extends Activity implements EntityListener {
         Log.v(TAG, "onCreate");
         setContentView(R.layout.home_activity_layout);
         if (savedInstanceState == null) {
-            WebView view = (WebView) findViewById(R.id.webView);
-            view.loadUrl(WELCOME);
+            loadWelcome();
             startGcm();
             LoadControlTask loadControlTask = new LoadControlTask();
             loadControlTask.execute();
             showEntityFragment();
             if (chartFragment != null && ContentProvider.getCurrentEntity().getEntityType().equals(EntityType.point)) {
-               showChartFragment();
+                showChartFragment();
             }
         }
 
+    }
+
+    private void loadWelcome() {
+        WebView view = (WebView) findViewById(R.id.webView);
+        if (view != null) {
+            view.loadUrl(WELCOME);
+        }
     }
 
     @Override
@@ -172,16 +178,16 @@ public class HomeActivity extends Activity implements EntityListener {
                 dialog.show(getFragmentManager(), "NoticeDialogFragment");
                 return true;
             case R.id.action_expand:
-               if (ContentProvider.currentEntity != null && ContentProvider.currentEntity.getEntityType().equals(EntityType.point)) {
-                   String uuid = ContentProvider.currentEntity.getUUID();
-                   final SharedPreferences settings =  getSharedPreferences(getString(R.string.app_name), 0);
-                   final String base_url = settings.getString(getString(R.string.base_url_setting), getString(R.string.base_url));
-                   Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(base_url + "/report.html?uuid=" + uuid));
-                   startActivity(browserIntent);
-               }
+                if (ContentProvider.currentEntity != null && ContentProvider.currentEntity.getEntityType().equals(EntityType.point)) {
+                    String uuid = ContentProvider.currentEntity.getUUID();
+                    final SharedPreferences settings =  getSharedPreferences(getString(R.string.app_name), 0);
+                    final String base_url = settings.getString(getString(R.string.base_url_setting), getString(R.string.base_url));
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(base_url + "/report.html?uuid=" + uuid));
+                    startActivity(browserIntent);
+                }
             case R.id.action_refresh:
                 showEntityFragment();
-
+                loadWelcome();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

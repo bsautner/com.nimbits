@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -39,7 +40,7 @@ public class PointMaintTask extends HttpServlet  implements org.springframework.
 
 
     @Override
-    public void handleRequest(final HttpServletRequest req, final HttpServletResponse resp) {
+    public void handleRequest(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
 
             processPost(req);
 
@@ -47,7 +48,7 @@ public class PointMaintTask extends HttpServlet  implements org.springframework.
     }
 
 
-    public void processPost(final HttpServletRequest req)  {
+    public void processPost(final HttpServletRequest req) throws IOException {
 
 
         final String j = req.getParameter(Parameters.json.getText());
@@ -62,7 +63,7 @@ public class PointMaintTask extends HttpServlet  implements org.springframework.
 
 
 
-    public void consolidateBlobs(final Entity entity)  {
+    public void consolidateBlobs(final Entity entity) throws IOException {
         final List<ValueBlobStore> stores = ValueTransaction.getAllStores(entity);
         if (! stores.isEmpty()) {
             final Collection<Long> dates = new ArrayList<Long>(stores.size());

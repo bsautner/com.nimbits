@@ -88,7 +88,7 @@ public class PointHelper {
         SimpleValue<String> id = SimpleValue.getInstance(Nimbits.session.getOwner() + "/" + name);
         List<Point> sample;
 
-            sample = Transaction.getEntity(id, EntityType.point, PointModel.class);
+        sample = Transaction.getEntity(id, EntityType.point, PointModel.class);
 
         if (sample.isEmpty()) {
             throw new IllegalStateException("Point Not Found");

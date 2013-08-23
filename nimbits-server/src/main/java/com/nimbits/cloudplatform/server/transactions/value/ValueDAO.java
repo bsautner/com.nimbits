@@ -30,6 +30,7 @@ import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueModel;
 import com.nimbits.cloudplatform.client.model.valueblobstore.ValueBlobStore;
 import com.nimbits.cloudplatform.client.model.valueblobstore.ValueBlobStoreModel;
+import com.nimbits.cloudplatform.server.admin.logging.LogHelper;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
 import com.nimbits.cloudplatform.server.orm.ValueBlobStoreEntity;
 import com.nimbits.cloudplatform.server.process.task.TaskImpl;
@@ -196,7 +197,7 @@ public class ValueDAO {
         }
     }
 
-    protected static void consolidateDate(final Entity entity, final Date timestamp)  {
+    protected static void consolidateDate(final Entity entity, final Date timestamp) throws IOException {
 
 
         final PersistenceManager pm = pmf.getPersistenceManager();
@@ -212,7 +213,7 @@ public class ValueDAO {
         }
     }
 
-    private static void mergeResults(final PersistenceManager pm, final Entity entity, final List<ValueBlobStore> result)  {
+    private static void mergeResults(final PersistenceManager pm, final Entity entity, final List<ValueBlobStore> result) throws IOException {
         final List<Value> values = new ArrayList<Value>(Const.CONST_DEFAULT_LIST_SIZE);
         for (final ValueBlobStore store : result) {
             values.addAll(readValuesFromFile(new BlobKey(store.getBlobKey()), store.getLength()));
@@ -223,7 +224,7 @@ public class ValueDAO {
     }
 
 
-    protected static ValueBlobStore mergeTimespan(final Entity entity, final Timespan timespan) throws Exception {
+    protected static ValueBlobStore mergeTimespan(final Entity entity, final Timespan timespan) throws IOException {
         final PersistenceManager pm = pmf.getPersistenceManager();
         final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
         final FileService fileService = FileServiceFactory.getFileService();
@@ -294,8 +295,6 @@ public class ValueDAO {
             pm.flush();
             return createValueBlobStore(currentStoreEntity);
 
-        } catch (IOException e) {
-            throw new Exception(e);
         } finally {
             if (out != null) {
                 out.close();
@@ -357,7 +356,7 @@ public class ValueDAO {
     }
 
 
-    protected static List<ValueBlobStore> recordValues(final Entity entity, final List<Value> values)  {
+    protected static List<ValueBlobStore> recordValues(final Entity entity, final List<Value> values) throws IOException {
         if (!values.isEmpty()) {
 
             final Map<Long, List<Value>> map = new HashMap<Long, List<Value>>(values.size());
@@ -415,9 +414,9 @@ public class ValueDAO {
 
     }
 
-    private static List<ValueBlobStore> createBlobStoreEntity(final Entity entity, final Map<Long, Long> maxMap, final Map<Long, Long> minMap, final Long l, final String json ) {
+    private static List<ValueBlobStore> createBlobStoreEntity(final Entity entity, final Map<Long, Long> maxMap, final Map<Long, Long> minMap, final Long l, final String json ) throws IOException {
         final PersistenceManager pm = pmf.getPersistenceManager();
-        //log.info("createBlobStoreEntity: json " + json + "  " + entity.getKey());
+
         final List<ValueBlobStore> retList = new ArrayList<ValueBlobStore>(1);
         try {
             final FileService fileService = FileServiceFactory.getFileService();
@@ -459,14 +458,10 @@ public class ValueDAO {
                 retList.add(result);
             }
             return retList;
-        } catch (IOException ex) {
 
-            log.severe(ex.getMessage());
-            ex.printStackTrace();
-            return Collections.emptyList();
 
         } finally {
-            //log.info("createBlobStoreEntity" + "done");
+
 
             pm.close();
         }

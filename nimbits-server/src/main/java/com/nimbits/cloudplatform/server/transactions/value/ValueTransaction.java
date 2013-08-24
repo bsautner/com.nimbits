@@ -156,7 +156,7 @@ public class ValueTransaction {
 
 
 
-    public static List<Value> getDataSegment(Entity entity, Range<Long> timespanRange, Range<Integer> segment) throws Exception {
+    public static List<Value> getDataSegment(Entity entity, Range<Long> timespanRange, Range<Integer> segment) {
         return ValueMemCache.getDataSegment(entity, timespanRange, segment);
     }
 

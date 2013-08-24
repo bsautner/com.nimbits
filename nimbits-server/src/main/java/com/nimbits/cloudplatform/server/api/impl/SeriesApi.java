@@ -61,7 +61,7 @@ public class SeriesApi extends ApiServlet implements org.springframework.web.Htt
         }.getType();
 
 
-        try {
+
             doInit(req, resp, ExportType.json);
 
 
@@ -120,11 +120,7 @@ public class SeriesApi extends ApiServlet implements org.springframework.web.Htt
 
 
             }
-        } catch (Exception e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            LogHelper.logException(this.getClass(), e);
-        }
+
 
 
     }

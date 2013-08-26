@@ -58,10 +58,19 @@ public class UserTransaction {
             session = req.getSession();
 
             emailParam = req.getParameter(Parameters.email.getText());
+            if (Utils.isEmptyString(emailParam)) {
+                emailParam = req.getHeader(Parameters.email.getText());
+
+            }
             accessKey = req.getParameter(Parameters.secret.getText());
             if (Utils.isEmptyString(accessKey)) {
                 accessKey = req.getParameter(Parameters.key.getText());
             }
+            if (Utils.isEmptyString(accessKey)) {
+                accessKey = req.getHeader(Parameters.key.getText());
+
+            }
+
             if (!Utils.isEmptyString(accessKey) && !Utils.isEmptyString(emailParam)) {
                 String tempUserKey = MemCacheKey.userTempCacheKey + accessKey + emailParam;
                 List<User> cached = UserCache.getCachedAuthenticatedUser(tempUserKey);

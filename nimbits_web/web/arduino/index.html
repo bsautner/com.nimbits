@@ -11,17 +11,17 @@
   ~
   ~ Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
   -->
-
+<html>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title></title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
-
+    <link href="../assets/js/google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
     <link href="../assets/css/bootstrap.css" rel="stylesheet" media="screen">
-
-
+    <script type="text/javascript" src="../assets/js/google-code-prettify/prettify.js"></script>
+    <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js?lang=css&skin=default"></script>
     <style type="text/css">
         body {
             padding-top: 60px;
@@ -63,24 +63,85 @@
 
         <div>
             <p>
-               Using sensors, such as those on the Arduino Platform, you can record data out to the cloud by using xmpp, http or smtp protocols.
-                For low powered devices, you can use more basic protocals like mqtt and use a middle tier server of your own to relay data out to Nimbits.
+                Using sensors, such as those on the <a href="http://www.arduino.cc">Arduino Platform</a>, you can record data out to the cloud by using xmpp, http or smtp protocols.
+                For low powered devices, you can use more basic protocols like mqtt and use a middle tier server of your own to relay data out to Nimbits.
 
             </p>
             <p>
                 We provide a basic Arduino Library, which you can use out of the box, or use it as a sample to write your own. This library uses
                 HTTP Posts and Gets to push and pull data from the Nimbits REST API.  When you import Nimbit.h into your Arduino project,
             </p>
+            <p>
+                Download the latest version of <strong>Nimbits.h</strong> and <strong>Nimbits.cpp</strong> from the <a href="https://github.com/bsautner/com.nimbits/tree/release/nimbits_arduino">
+                Git Repository
+            </a>
+                and copy them into your Arduino Project Folder (same folder as your .ino file)
+
+            </p>
+            <P>
+                Read More about using the Nimbits Library for Arduino in the user manual. This simple example records a random number to a data point.
+            </P>
+            <p><strong>How to use this example</strong></p>
+            <ul>
+                <li>Use an Arduino Board with an Ethernet Shield</li>
+                <li>Replace the MAC Address below with the one on the sticker on your ethernet shield</li>
+                <li>Sign into Nimbits Web Console and create a data point and a read write access key - see the user manual on how to do this</li>
+                <li>If you're running your own instance, replace the instance below with your app id</li>
+            </ul>
         </div>
-        <ul>
-
-        <div><p style="text-align: center; font-size: x-small; color: #aaaaaa;">&copy; copyright 2011 Nimbits Inc - all
-            rights reserved.</p></div>
+        <strong>Record a random number to a data point every 5 seconds:</strong>
+        <pre class="prettyprint lang-cc" id="Cpp_lang">
 
 
+            #include "Nimbits.h"
 
-        <script src="../assets/js/bootstrap.min.js"></script>
-        <script src="../assets/js/jquery.js"></script>
+            #include &lt;Client.h&gt;
+            #include &lt;Ethernet.h&gt;
+            #include &lt;SPI.h&gt;
+            #include &lt;PString.h&gt;
+            #include &lt;stdlib.h&gt;
+
+            //nimbits settings, set the instance name (nimbits-02 is the public cloud on https://cloud.nimbits.com) the email of the account owner, and a read write key they have created.
+            String instance = "nimbits-02";
+            char owner[] = "example@gmail.com";
+            String readWriteKey = "your key";
+            byte mac[] = {0x90, 0xA2, 0xDA, 0x00, 0x54, 0x39}; //this ethernet shield's MAC address
+
+            Nimbits nimbits(instance, owner, readWriteKey);
+
+            void setup() {
+            Serial.begin(9600); //initialize serial communication for debugging
+            if (Ethernet.begin(mac) == 0) {
+            Serial.println("DHCP Failed!");
+            while(true);
+            }
+            randomSeed(analogRead(0));
+            Serial.println("Online");
+            delay(1000);
+            }
+
+            void loop() {
+            delay(5000);
+            //note the entity id of a data point is always: your_email/point_name
+            nimbits.recordValue(random(300),"","example@gmail.com/lab_temp");
+            }
+
+
+        </pre>
+    </div>
+
+
+
+
+
+</div>
+<div><p style="text-align: center; font-size: x-small; color: #aaaaaa;">&copy; copyright 2011 Nimbits Inc - all
+    rights reserved.</p></div>
+
+
+
+<script src="../assets/js/bootstrap.min.js"></script>
+<script src="../assets/js/jquery.js"></script>
 
 </body>
 </html>

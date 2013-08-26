@@ -31,7 +31,7 @@ import static junit.framework.Assert.assertFalse;
  */
 public class ValueApiTest extends NimbitsServletTest {
 
-    @Resource(name = "valueApi")
+
     ValueApi impl;
 
 
@@ -42,6 +42,7 @@ public class ValueApiTest extends NimbitsServletTest {
     public void setup() {
         req1 = new MockHttpServletRequest();
         resp1 = new MockHttpServletResponse();
+        impl = new ValueApi();
     }
 
     @Test
@@ -49,12 +50,12 @@ public class ValueApiTest extends NimbitsServletTest {
         req.removeAllParameters();
         req.setContentType("application/json");
         Value v = ValueFactory.createValueModel(2.345);
-        req.addParameter("id", point.getKey());
+        req.addHeader("id", point.getKey());
         //req.addParameter("json", GsonFactory.getInstance().toJson(v));
         String json = GsonFactory.getInstance().toJson(v);
         req.setContent(json.getBytes());
         req.setMethod("POST");
-        impl.handleRequest(req, resp);
+        impl.doPost(req, resp);
 
         List<Value> vr = ValueTransaction.getCurrentValue(point);
         assertFalse(vr.isEmpty());
@@ -69,12 +70,12 @@ public class ValueApiTest extends NimbitsServletTest {
         req.setContentType("application/json");
         Random r = new Random();
         Value v = ValueFactory.createValueModel(r.nextDouble());
-        req.addParameter("id", point.getKey());
+        req.addHeader("id", point.getKey());
         //req.addParameter("json", GsonFactory.getInstance().toJson(v));
         String json = GsonFactory.getInstance().toJson(v);
         req.setContent(json.getBytes());
         req.setMethod("POST");
-        impl.handleRequest(req, resp);
+        impl.doPost(req, resp);
 
         List<Value> vr = ValueTransaction.getCurrentValue(point);
         assertFalse(vr.isEmpty());

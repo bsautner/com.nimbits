@@ -28,9 +28,7 @@
 
     </bean>
 
-    <bean id="valueApi" class="com.nimbits.cloudplatform.server.api.ValueApi">
 
-    </bean>
     <bean id="batchApi" class="com.nimbits.cloudplatform.server.api.BatchApi">
 
     </bean>

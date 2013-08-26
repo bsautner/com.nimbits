@@ -12,6 +12,7 @@
 
 package com.nimbits.cloudplatform.client.enums;
 
+
 import com.nimbits.cloudplatform.client.constants.Const;
 
 import java.util.Date;

@@ -106,7 +106,7 @@
 
     <servlet>
         <servlet-name>valueApi</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.cloudplatform.server.api.ValueApi</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>valueApi</servlet-name>

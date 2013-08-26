@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+
+<!--
+  ~ Copyright (c) 2013 Nimbits Inc.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
+  -->
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link href="../assets/js/google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
+    <link href="../assets/css/bootstrap.css" rel="stylesheet" media="screen">
+    <script type="text/javascript" src="../assets/js/google-code-prettify/prettify.js"></script>
+    <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js?lang=css&skin=default"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script src="../assets/js/jquery.js"></script>
+    <script type="text/javascript">
+        google.load("visualization", "1", {packages:["corechart"]});
+        google.setOnLoadCallback(drawChart);
+        function drawChart() {
+            var chartData = new google.visualization.DataTable();
+            chartData.addColumn('datetime', 'Date');
+            chartData.addColumn('number', "hits");
+            var accessKey = "key";
+            var email = "bsautner@gmail.com";
+            var path = "http://cloud.nimbits.com/service/v2/series";
+            var options = {
+                width: 400, height: 240,
+                title: 'nimbits.com hit counter powered by nimbits'
+            };
+           var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+           $.get(path,
+                    { email: email, id: "bsautner@gmail.com/counter", key:accessKey },
+                   function(data){
+
+                       var results = eval(data);
+                       for (var i=0; i < results.length; i++) {
+                            var value = results[i];
+                            var date = new Date(value.t);
+                            chartData.addRow([date, value.d]); //add the timestamp to column 0, the value to the corresponding column
+                        }
+                        chart.draw(chartData, options);
+
+                   }
+           );
+
+
+
+        }
+    </script>
+    <style type="text/css">
+        body {
+            padding-top: 60px;
+            padding-bottom: 40px;
+        }
+    </style>
+
+</head>
+<body >
+<div class="container">
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container-fluid">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+
+
+                <div class="nav-collapse">
+                    <ul class="nav">
+
+                        <li><a href="http://www.nimbits.com">nimbits.com</a></li>
+
+
+
+
+                    </ul>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <h4>Getting Started</h4>
+
+        <div>
+          <p>You can create dynamic websites using javascript that can post and pull data to and from nimbits data points using the Chart Library from Google</p>
+         <ul>
+          <li>Get Started using the <a href="https://google-developers.appspot.com/chart/interactive/docs/quick_start">Google Chart Library</a></li>
+          <li>Nimbits Manual: Read up on the json structure of a value, this sample used the Value.d field for the decimal value, and Value.t which is the timestamp</li>
+          <li>Nimbits Manual: Read up on access keys, this sample uses a read write access key</li>
+          <li>Nimbits Console: Log into Nimbits to create a data point, in this case the point's name is counter</li>
+          <li>Download the <a href="http://jquery.com/">jquery</a> library</li>
+         </ul>
+
+        </div>
+        <strong>Create a Dynamic Chart with Live Nimbits Data</strong>
+
+        <div id="chart_div"></div>
+
+        <Strong>This jquery sample posts a value to a data point to populate this counter.</Strong>
+        <br>This can be called on clicks, page loads or anything else you want to track
+        <pre class="prettyprint">
+             &lt;script&gt;
+                 function updateCounter() {
+
+                     $.post("http://cloud.nimbits.com/service/v2/value",
+                             { email: "example@gmail.com", key: "read/write access key", id: "example@gmail.com/counter", json:"{\"d\":1.0}" },
+                             function(data){
+
+                             }
+                     );
+
+                 }
+
+             &lt;/script&gt;
+
+        </pre>
+
+        <pre class="prettyprint">
+              /**
+                 Read the nimbits manual on how to create an access key, create a data point and populate it with some data.
+              **/
+              &lt;script type="text/javascript"&gt;
+                  google.load("visualization", "1", {packages:["corechart"]});
+                  google.setOnLoadCallback(drawChart);
+                  function drawChart() {
+                      var chartData = new google.visualization.DataTable();
+                      chartData.addColumn('datetime', 'Date');
+                      chartData.addColumn('number', "hits");
+                      var accessKey = "your key";
+                      var email = "example@gmail.com";
+                      var path = "http://cloud.nimbits.com/service/v2/series";
+                      var options = {
+                          width: 400, height: 240,
+                          title: 'nimbits.com hit counter powered by nimbits'
+                      };
+                      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+                      $.get(path,
+                              { email: email, id: "example@gmail.com/counter", key:accessKey },
+                              function(data){
+
+                                  var results = eval(data);
+                                  for (var i=0; i < results.length; i++) {
+                                      var value = results[i];
+                                      var date = new Date(value.t);
+                                      chartData.addRow([date, value.d]);
+                                  }
+                                  chart.draw(chartData, options);
+
+                              }
+                      );
+
+
+
+                  }
+              &lt;/script&gt;
+
+
+        </pre>
+    </div>
+
+
+
+
+
+</div>
+<div><p style="text-align: center; font-size: x-small; color: #aaaaaa;">&copy; copyright 2011 Nimbits Inc - all
+    rights reserved.</p></div>
+
+
+
+<script src="../assets/js/bootstrap.min.js"></script>
+<script src="../assets/js/jquery.js"></script>
+
+</body>
+</html>

@@ -12,24 +12,30 @@
 
 package com.nimbits.cloudplatform.server.api;
 
+import com.nimbits.cloudplatform.client.common.Utils;
 import com.nimbits.cloudplatform.client.enums.EntityType;
 import com.nimbits.cloudplatform.client.enums.ExportType;
 import com.nimbits.cloudplatform.client.enums.Parameters;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
+import com.nimbits.cloudplatform.client.model.user.User;
 import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueModel;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
 import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
+import com.nimbits.cloudplatform.server.transactions.user.UserTransaction;
 import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -37,69 +43,78 @@ import java.util.logging.Logger;
  * Date: 12/28/12
  * Time: 4:11 PM
  */
-//TODO accept JSON in body instead of param
 
-
-@Service("valueApi")
-public class ValueApi extends ApiServlet implements org.springframework.web.HttpRequestHandler {
+public class ValueApi extends HttpServlet {
     final Logger log = Logger.getLogger(ValueApi.class.getName());
 
-    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected String getContent(HttpServletRequest req)  {
 
-        if (isPost(req)) {
-            doPost(req, resp);
-        } else {
-            doGet(req, resp);
-        }
-
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-
-        log.info("posting value 2");
-
-        doInit(req, resp, ExportType.json);
-        String json;
-        json = getParam(Parameters.json);
-        if (StringUtils.isEmpty(json)) {
-            json = getContent(req);
-        }
-        log.info(json);
-
-            final PrintWriter out = resp.getWriter();
-            doInit(req, resp, ExportType.json);
-            if (StringUtils.isEmpty(json)) {
-                json = getContent(req);
-            }
-            if (user != null && !user.isRestricted()) {
-                log.info(user.getEmail().getValue());
-                List<Entity> entitySample = EntityServiceImpl.getEntityByKey(user, getParam(Parameters.id), EntityType.point);
-                if (entitySample.isEmpty()) {
-                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                } else {
-
-                    Value value = GsonFactory.getInstance().fromJson(json, ValueModel.class);
-                    if (value.getTimestamp().getTime() == 0) {
-                        value = ValueModel.getInstance(value, new Date());
-                    }
-                    Value recorded = ValueTransaction.recordValue(user, entitySample.get(0), value);
-                    // log.info("redorded" + " " + value.getDoubleValue());
-                    resp.setStatus(HttpServletResponse.SC_OK);
-                    String respString = GsonFactory.getInstance().toJson(recorded, ValueModel.class);
-                    out.print(respString);
-                    // log.info(respString);
-                    out.close();
-
+        BufferedReader reader;
+        try {
+            reader = req.getReader();
+            if (req.getContentLength() > 0) {
+                StringBuilder jb = new StringBuilder(req.getContentLength());
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    jb.append(line);
                 }
 
 
+                return jb.toString();
+            }
+            else {
+                return null;
+            }
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
+
+        addHeaders(resp);
+
+
+        String json = req.getParameter(Parameters.json.getText());
+        String id = req.getParameter(Parameters.id.getText());
+        final User user = UserTransaction.getHttpRequestUser(req);
+        final PrintWriter out = resp.getWriter();
+
+        if (Utils.isEmptyString(json)) {
+             json = getContent(req);
+             id = req.getHeader(Parameters.id.getText());
+
+        }
+
+
+        if (user != null && !user.isRestricted() && ! Utils.isEmptyString(id) && ! Utils.isEmptyString(json)) {
+            log.info(user.getEmail().getValue());
+            List<Entity> entitySample = EntityServiceImpl.getEntityByKey(user, id, EntityType.point);
+            if (entitySample.isEmpty()) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             } else {
-                // out.print(Words.WORD_FALSE);
-                resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+
+                Value value = GsonFactory.getInstance().fromJson(json, ValueModel.class);
+                if (value.getTimestamp().getTime() == 0) {
+                    value = ValueModel.getInstance(value, new Date());
+                }
+                Value recorded = ValueTransaction.recordValue(user, entitySample.get(0), value);
+                resp.setStatus(HttpServletResponse.SC_OK);
+                String respString = GsonFactory.getInstance().toJson(recorded, ValueModel.class);
+                out.print(respString);
+                out.close();
 
             }
+
+
+        } else {
+            // out.print(Words.WORD_FALSE);
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+
+        }
 
 
 
@@ -112,16 +127,16 @@ public class ValueApi extends ApiServlet implements org.springframework.web.Http
                       final HttpServletResponse resp)  {
 
 
-
+        addHeaders(resp);
 
         try {
             final PrintWriter out = resp.getWriter();
-            doInit(req, resp, ExportType.json);
-
-
+           // doInit(req, resp, ExportType.json);
+            final User user = UserTransaction.getHttpRequestUser(req);
+            final String id = req.getParameter(Parameters.id.getText());
             if (user != null && !user.isRestricted()) {
 
-                List<Entity> entitySample = EntityServiceImpl.getEntityByKey(user, getParam(Parameters.id), EntityType.point);
+                List<Entity> entitySample = EntityServiceImpl.getEntityByKey(user, id, EntityType.point);
                 if (entitySample.isEmpty()) {
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 } else {
@@ -153,6 +168,12 @@ public class ValueApi extends ApiServlet implements org.springframework.web.Http
         }
 
 
+    }
+
+    private void addHeaders(HttpServletResponse resp) {
+        resp.addHeader("Cache-Control", "no-cache");
+        resp.addHeader("Access-Control-Allow-Origin", "*");
+        resp.addHeader("Content-Type", "application/json");
     }
 
 }

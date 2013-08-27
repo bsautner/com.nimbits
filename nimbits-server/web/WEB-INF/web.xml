@@ -122,27 +122,7 @@
         <url-pattern>/service/v2/batch</url-pattern>
     </servlet-mapping>
     <!--end v2 services-->
-    <servlet>
-        <servlet-name>OpenIdServlet</servlet-name>
-        <servlet-class>com.nimbits.cloudplatform.server.api.openid.OpenIdServlet</servlet-class>
-        <init-param>
-            <param-name>realm</param-name>
-            <param-value/>
-        </init-param>
-        <init-param>
-            <param-name>return_to_path</param-name>
-            <param-value>/openid</param-value>
-        </init-param>
-        <init-param>
-            <param-name>home_path</param-name>
-            <param-value>/</param-value>
-        </init-param>
-    </servlet>
 
-    <servlet-mapping>
-        <servlet-name>OpenIdServlet</servlet-name>
-        <url-pattern>/openid</url-pattern>
-    </servlet-mapping>
 
 
     <listener>
@@ -447,7 +427,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>chart</servlet-name>
-        <url-pattern>/service/char</url-pattern>
+        <url-pattern>/service/chart</url-pattern>
     </servlet-mapping>
 
 
@@ -494,10 +474,9 @@
         <servlet-name>com.nimbits.cloudplatform.nimbits UserService</servlet-name>
         <servlet-class>com.nimbits.cloudplatform.server.transactions.user.UserRpcServiceImpl</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>com.nimbits.cloudplatform.nimbits CalculationService</servlet-name>
-        <servlet-class>com.nimbits.cloudplatform.server.transactions.calculation.CalculationServiceImpl</servlet-class>
-    </servlet>
+
+
+
     <servlet>
         <servlet-name>com.nimbits.cloudplatform.nimbits EntityService</servlet-name>
         <servlet-class>com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl</servlet-class>
@@ -524,10 +503,7 @@
         <servlet-name>com.nimbits.cloudplatform.nimbits UserService</servlet-name>
         <url-pattern>/nimbits/userService</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>com.nimbits.cloudplatform.nimbits CalculationService</servlet-name>
-        <url-pattern>/nimbits/calculationService</url-pattern>
-    </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>com.nimbits.cloudplatform.nimbits EntityService</servlet-name>
         <url-pattern>/nimbits/entityService</url-pattern>

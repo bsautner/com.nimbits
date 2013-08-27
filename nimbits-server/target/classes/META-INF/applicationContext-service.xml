@@ -44,11 +44,6 @@
 
     </bean>
 
-    <bean id="calculationService" class="com.nimbits.cloudplatform.server.transactions.calculation.CalculationServiceImpl">
-
-    </bean>
-
-
     <bean id="blobService" class="com.nimbits.cloudplatform.server.io.blob.BlobServiceImpl">
 
      

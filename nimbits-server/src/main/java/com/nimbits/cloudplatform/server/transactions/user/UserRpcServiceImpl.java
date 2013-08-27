@@ -25,7 +25,6 @@ import com.nimbits.cloudplatform.client.model.user.User;
 import com.nimbits.cloudplatform.client.model.user.UserModelFactory;
 import com.nimbits.cloudplatform.client.service.user.UserService;
 import com.nimbits.cloudplatform.server.admin.logging.LogHelper;
-import com.nimbits.cloudplatform.server.api.openid.UserInfo;
 import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -46,22 +45,18 @@ public class UserRpcServiceImpl extends RemoteServiceServlet implements UserServ
         final User retObj;
         EmailAddress internetAddress = null;
         boolean isAdmin = false;
-        UserInfo domainUser = null;
-        if (this.getThreadLocalRequest() != null) {
-            domainUser = (UserInfo) this.getThreadLocalRequest().getSession().getAttribute("user");
-        }
+       // UserInfo domainUser = null;
+
         final com.google.appengine.api.users.UserService userService = UserServiceFactory.getUserService();
 
-        if (domainUser != null) {
-            internetAddress = CommonFactory.createEmailAddress(domainUser.getEmail());
-        } else {
+
 
             final com.google.appengine.api.users.User googleUser = userService.getCurrentUser();
             if (googleUser != null) {
                 isAdmin = userService.isUserAdmin();
                 internetAddress = CommonFactory.createEmailAddress(googleUser.getEmail());
             }
-        }
+
 
         if (internetAddress != null) {
 

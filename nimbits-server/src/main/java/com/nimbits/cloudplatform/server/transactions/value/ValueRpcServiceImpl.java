@@ -13,7 +13,9 @@
 package com.nimbits.cloudplatform.server.transactions.value;
 
 
+import com.google.gdata.data.introspection.Collection;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.cloudplatform.client.model.calculation.Calculation;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.point.Point;
 import com.nimbits.cloudplatform.client.model.timespan.Timespan;
@@ -21,17 +23,21 @@ import com.nimbits.cloudplatform.client.model.user.User;
 import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.client.service.value.ValueService;
 import com.nimbits.cloudplatform.server.process.task.TaskImpl;
+import com.nimbits.cloudplatform.server.transactions.calculation.CalculationTransaction;
 import com.nimbits.cloudplatform.server.transactions.user.UserHelper;
 import org.apache.commons.lang3.Range;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service("valueService")
 public class ValueRpcServiceImpl extends RemoteServiceServlet implements ValueService {
+    @Override
+    public List<Value> solveEquationRpc(final User user, final Calculation calculation)  {
+        List<Value> response =  CalculationTransaction.solveEquation(user, calculation);
 
+        return new ArrayList<Value>(response);
+    }
 
     @Override
     public int preloadTimespanRpc(Entity entity, Timespan timespan) throws Exception {

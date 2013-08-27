@@ -3,7 +3,7 @@
     <threadsafe>true</threadsafe>
     <application>nimbits-02</application>
 
-    <version>655</version>
+    <version>656</version>
     <automatic-scaling>
         <max-idle-instances>975</max-idle-instances>
     </automatic-scaling>

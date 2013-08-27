@@ -15,9 +15,11 @@ package com.nimbits.cloudplatform.client.service.value;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.nimbits.cloudplatform.client.model.calculation.Calculation;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.point.Point;
 import com.nimbits.cloudplatform.client.model.timespan.Timespan;
+import com.nimbits.cloudplatform.client.model.user.User;
 import com.nimbits.cloudplatform.client.model.value.Value;
 
 import java.util.Date;
@@ -26,7 +28,7 @@ import java.util.Map;
 
 @RemoteServiceRelativePath("valueService")
 public interface ValueService extends RemoteService {
-
+    List<Value> solveEquationRpc(final User u, final Calculation calculation) throws Exception;
 
     int preloadTimespanRpc(final Entity entity, final Timespan timespan) throws Exception;
 

@@ -13,9 +13,11 @@
 package com.nimbits.cloudplatform.client.service.value;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.nimbits.cloudplatform.client.model.calculation.Calculation;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.point.Point;
 import com.nimbits.cloudplatform.client.model.timespan.Timespan;
+import com.nimbits.cloudplatform.client.model.user.User;
 import com.nimbits.cloudplatform.client.model.value.Value;
 
 import java.util.Date;
@@ -23,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface ValueServiceAsync {
+    void solveEquationRpc(final User u, final Calculation calculation, final AsyncCallback<List<Value>> async);
 
     void recordValueRpc(final Entity point, final Value value, final AsyncCallback<Value> asyncCallback) ;
     void getCacheRpc(final Entity entity, AsyncCallback<List<Value>> async);

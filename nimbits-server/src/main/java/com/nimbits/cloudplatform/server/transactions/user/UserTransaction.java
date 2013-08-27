@@ -27,7 +27,6 @@ import com.nimbits.cloudplatform.client.model.user.User;
 import com.nimbits.cloudplatform.client.model.user.UserModel;
 import com.nimbits.cloudplatform.client.model.user.UserModelFactory;
 import com.nimbits.cloudplatform.server.admin.logging.LogHelper;
-import com.nimbits.cloudplatform.server.api.openid.UserInfo;
 import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
 import com.nimbits.cloudplatform.server.transactions.settings.SettingsServiceImpl;
 
@@ -53,7 +52,7 @@ public class UserTransaction {
         final com.google.appengine.api.users.UserService googleUserService = UserServiceFactory.getUserService();
         String accessKey = null;
         String uuid = null;
-        UserInfo domainUser = null;
+
         if (req != null) {
             session = req.getSession();
 
@@ -80,14 +79,14 @@ public class UserTransaction {
             }
 
 
-            if (session != null) {
-                domainUser = (UserInfo) req.getSession().getAttribute("user");
-                if (domainUser != null) {
-
-                    emailParam = domainUser.getEmail();
-
-                }
-            }
+//            if (session != null) {
+//                domainUser = (UserInfo) req.getSession().getAttribute("user");
+//                if (domainUser != null) {
+//
+//                    emailParam = domainUser.getEmail();
+//
+//                }
+//            }
 
             uuid = req.getParameter(Parameters.uuid.getText());
 
@@ -148,9 +147,9 @@ public class UserTransaction {
                     if (googleUserService.getCurrentUser() != null && googleUserService.getCurrentUser().getEmail().equalsIgnoreCase(email.getValue())) {
                         user = createUserRecord(email);
                         user.addAccessKey(authenticatedKey(user));
-                    } else if (domainUser != null) {
-                        user = createUserRecord(email);
-                        user.addAccessKey(authenticatedKey(user));
+                   // } else if (domainUser != null) {
+                   //     user = createUserRecord(email);
+                   //     user.addAccessKey(authenticatedKey(user));
                     } else if (googleUserService.getCurrentUser() != null && !googleUserService.getCurrentUser().getEmail().equalsIgnoreCase(email.getValue())) {
                         throw new SecurityException("While the current user is authenticated, the email provided does not match " +
                                 "the authenticated user, so the system is confused and cannot authenticate the request. " +
@@ -188,9 +187,9 @@ public class UserTransaction {
                         }
                     }
                 }
-                if (domainUser != null) {
-                    user.addAccessKey(authenticatedKey(user)); //they are logged in from google apps
-                }
+              //  if (domainUser != null) {
+               //     user.addAccessKey(authenticatedKey(user)); //they are logged in from google apps
+              //  }
 
             }
         } else {

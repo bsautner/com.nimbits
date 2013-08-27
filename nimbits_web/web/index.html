@@ -39,6 +39,25 @@
                         //  alert(data);
                     }
             );
+            $.get("http://cloud.nimbits.com/service/v2/value",
+                    { email: "bsautner@gmail.com", key: "key", id: "bsautner@gmail.com/lab_temp"}).done(
+                    function(data){
+                        var r = eval(data);
+                        var s = r.d + "C";
+
+                        document.getElementById("temp").innerHTML = s;
+                    }
+            );
+            $.get("http://cloud.nimbits.com/service/v2/value",
+                    { email: "bsautner@gmail.com", key: "key", id: "bsautner@gmail.com/lab_humidity"}).done(
+                    function(data){
+                        var r = eval(data);
+                        var s = r.d + "%";
+
+                        document.getElementById("hum").innerHTML = s ;
+                    }
+            );
+
 
         }
 
@@ -49,19 +68,27 @@
         google.load("visualization", "1", {packages:["corechart"]});
         google.setOnLoadCallback(drawChart);
         function drawChart() {
+
+            loadChart("counter", "hits");
+
+
+        }
+
+        function loadChart(point, label) {
+
             var chartData = new google.visualization.DataTable();
             chartData.addColumn('datetime', 'Date');
-            chartData.addColumn('number', "hits");
+            chartData.addColumn('number', label);
             var accessKey = "key";
             var email = "bsautner@gmail.com";
             var path = "http://cloud.nimbits.com/service/v2/series";
             var options = {
                 width: 400, height: 240,
-                title: 'nimbits.com hit counter powered by nimbits'
+                title: point
             };
             var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
             $.get(path,
-                    { email: email, id: "bsautner@gmail.com/counter", key:accessKey },
+                    { email: email, id: "bsautner@gmail.com/" + point, key:accessKey },
                     function(data){
 
                         var results = eval(data);
@@ -78,6 +105,7 @@
 
 
         }
+
     </script>
     <style type="text/css">
         body {
@@ -190,8 +218,13 @@
                         New easy to use samples for connecting Arduino Devices to Nimbits using the <a href="arduino/index.html">Nimbits Arduino Library</a>
                     </li>
                     <li>
-                        New samples showing how to build dynamic web sites with <a href="javascript/index.html">javascript and Nimbits</a>
+                        New samples showing how to build dynamic web sites with <a href="javascript/index.html">javascript and Nimbits</a> and add live data like this <a href="https://docs.google.com/document/d/1aOEpfeJOtV-v0diDBAQ9e2hOjXhs0uInA2QE--OS8Pk/preview?sle=true#heading=h.bk9ey55rg2t">web site hit counter</a>.
                     </li>
+
+                    <li>The current weather in our lab in Philadelphia is <span id="temp" class="badge badge-success" onclick="loadChart('lab_temp', 'C');">22.5C</span>,
+                        with <span id="hum" class="badge badge-success" onclick="loadChart('lab_humidity', '%');">38%</span> Humidity.
+                        <a href ="https://docs.google.com/document/d/1aOEpfeJOtV-v0diDBAQ9e2hOjXhs0uInA2QE--OS8Pk/view#heading=h.fpoos6xz8yki">
+                            Learn how you can do this with Arduino.</a> </li>
                 </ul>
 
             </div>

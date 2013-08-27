@@ -38,10 +38,10 @@ import com.nimbits.cloudplatform.client.model.entity.EntityName;
 import com.nimbits.cloudplatform.client.model.trigger.Trigger;
 import com.nimbits.cloudplatform.client.model.user.User;
 import com.nimbits.cloudplatform.client.model.value.Value;
-import com.nimbits.cloudplatform.client.service.calculation.CalculationService;
-import com.nimbits.cloudplatform.client.service.calculation.CalculationServiceAsync;
 import com.nimbits.cloudplatform.client.service.entity.EntityService;
 import com.nimbits.cloudplatform.client.service.entity.EntityServiceAsync;
+import com.nimbits.cloudplatform.client.service.value.ValueService;
+import com.nimbits.cloudplatform.client.service.value.ValueServiceAsync;
 import com.nimbits.cloudplatform.client.ui.controls.EntityCombo;
 import com.nimbits.cloudplatform.client.ui.helper.FeedbackHelper;
 import com.nimbits.cloudplatform.client.ui.icons.Icons;
@@ -169,14 +169,6 @@ public class CalculationPanel extends NavigationEventProvider {
                 "value of 10, the value of 15 will be recorded into BAR</p>");
 
         vp.add(h);
-
-
-
-
-
-
-
-
 
         vp.add(pn);
         simple.add(nameField, formdata);
@@ -343,7 +335,7 @@ public class CalculationPanel extends NavigationEventProvider {
 
 
             simple.setHideOnButtonClick(true);
-            final CalculationServiceAsync service = GWT.create(CalculationService.class);
+            final ValueServiceAsync service = GWT.create(ValueService.class);
             service.solveEquationRpc(user, calculation1, new GetValueAsyncCallback(simple));
 
         }

@@ -562,7 +562,7 @@ public class EntityContextMenu extends Menu {
 
 
     public void showSubscriptionPanel(final Entity entity) {
-        final SubscriptionPanel dp = new SubscriptionPanel(user, entity, settings);
+        final SubscriptionPanel dp = new SubscriptionPanel(user, entity);
 
         final com.extjs.gxt.ui.client.widget.Window w = new com.extjs.gxt.ui.client.widget.Window();
         w.setWidth(WIDTH);

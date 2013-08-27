@@ -37,7 +37,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.nimbits.cloudplatform.client.enums.EntityType;
 import com.nimbits.cloudplatform.client.enums.Parameters;
 import com.nimbits.cloudplatform.client.enums.ProtectionLevel;
-import com.nimbits.cloudplatform.client.enums.SettingType;
 import com.nimbits.cloudplatform.client.enums.subscription.SubscriptionNotifyMethod;
 import com.nimbits.cloudplatform.client.enums.subscription.SubscriptionType;
 import com.nimbits.cloudplatform.client.model.common.impl.CommonFactory;
@@ -54,7 +53,6 @@ import com.nimbits.cloudplatform.client.ui.helper.FeedbackHelper;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Benjamin Sautner
@@ -71,13 +69,12 @@ public class SubscriptionPanel extends NavigationEventProvider {
     private FormData formdata;
     private VerticalPanel vp;
     private final Entity entity;
-    private final Map<String, String> settings;
+
 
     private User user;
 
-    public SubscriptionPanel(final User user, final Entity entity, final Map<String, String> settings) {
+    public SubscriptionPanel(final User user, final Entity entity) {
         this.entity = entity;
-        this.settings = settings;
         this.user = user;
 
 

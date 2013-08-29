@@ -153,17 +153,17 @@ public class ValueDAO {
     }
 
 
-    protected static List<Value> getDataSegment(final Entity entity, final Range<Long> timespan, Range<Integer> range) {
+    protected static List<Value> getDataSegment(final Entity entity, final Range<Long> timespan ) {
         final PersistenceManager pm = pmf.getPersistenceManager();
         try {
-            final List<Value> retObj = new ArrayList<Value>(range.getMaximum() - range.getMinimum());
+            final List<Value> retObj = new ArrayList<Value>();
             final Query q = pm.newQuery(ValueBlobStoreEntity.class);
             q.setFilter("entity == k && minTimestamp <= et && minTimestamp >= st ");
             q.declareParameters("String k, Long et, Long st");
             q.setOrdering("minTimestamp desc");
-            q.setRange(range.getMinimum(), range.getMaximum());
+
             final Iterable<ValueBlobStore> result = (Iterable<ValueBlobStore>) q.execute(entity.getKey(), timespan.getMaximum(), timespan.getMinimum());
-            for (final ValueBlobStore e : result) {
+            for (final ValueBlobStore e : result) {    //todo break out of loop when range is met
                 List<Value> values = readValuesFromFile(new BlobKey(e.getBlobKey()), e.getLength());
                 for (final Value vx : values) {
                     if (vx.getTimestamp().getTime() <= timespan.getMaximum() && vx.getTimestamp().getTime() >= timespan.getMinimum()) {

@@ -332,13 +332,27 @@ public class ValueMemCache {
     }
 
 
-    public static List<Value> getDataSegment(final Entity entity,final Range<Long> timespan , final Range<Integer> range)  {
-        final List<Value> stored = ValueDAO.getDataSegment(entity, timespan, range);
+    public static List<Value> getDataSegment(final Entity entity, final Range<Long> timespan, final Range<Integer> range)  {
+        final List<Value> stored = ValueDAO.getDataSegment(entity, timespan);
         final List<Value> cached = getBuffer(entity);
-        return mergeAndSort(stored, cached, timespan);
+        List<Value> allData =  mergeAndSort(stored, cached, timespan);   //todo cache result
+        List<Value> result = new ArrayList<Value>();
+        int max = range.getMaximum() > allData.size() ? allData.size() : range.getMaximum();
+        for (int i = range.getMinimum(); i < max; i++) {
+            result.add(allData.get(i));
+        }
+        return result;
+
     }
 
+    public static List<Value> getSeries(final Entity entity, final Range<Long> timespan)  {
+        final List<Value> stored = ValueDAO.getDataSegment(entity, timespan);
+        final List<Value> cached = getBuffer(entity);
+        List<Value> allData =  mergeAndSort(stored, cached, timespan);   //todo cache result
 
+        return allData;
+
+    }
 
 
     public static List<ValueBlobStore> recordValues(final Entity entity,final List<Value> values) throws Exception {

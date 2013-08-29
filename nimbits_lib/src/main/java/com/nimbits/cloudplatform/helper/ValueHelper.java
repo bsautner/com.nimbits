@@ -18,6 +18,7 @@ import com.nimbits.cloudplatform.client.model.value.impl.ValueFactory;
 import com.nimbits.cloudplatform.transaction.Transaction;
 import org.apache.commons.lang3.Range;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,17 +30,21 @@ public class ValueHelper {
 
     public static Value recordValue(String name, double value)  {
         Value vx = ValueFactory.createValueModel(value);
+        return doRecordValue(name, vx);
+
+    }
+
+    private static Value doRecordValue(String name, Value vx) {
         Point point = PointHelper.getPoint(name);
 
-            List<Value> response = Transaction.postValue(point, vx);
-            if (response.isEmpty()) {
-                throw new RuntimeException("Record Value Failed");
+        List<Value> response = Transaction.postValue(point, vx);
+        if (response.isEmpty()) {
+            throw new RuntimeException("Record Value Failed");
 
-            }
-            else {
-                return response.get(0);
-            }
-
+        }
+        else {
+            return response.get(0);
+        }
     }
 
     public static List<Value> getSeries(String name, int count)   {
@@ -49,4 +54,8 @@ public class ValueHelper {
 
     }
 
+    public static Value recordValue(String name, double v, Date time) {
+        Value vx = ValueFactory.createValueModel(v, time);
+        return doRecordValue(name, vx);
+    }
 }

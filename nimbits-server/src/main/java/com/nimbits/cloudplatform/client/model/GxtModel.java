@@ -42,7 +42,7 @@ public class GxtModel extends BaseTreeModel implements TreeModel {
     private boolean isReadOnly;
     private boolean isDirty;
     private Entity baseEntity;
-
+    private String uuid;
     protected GxtModel(){}
 
     public GxtModel(final Entity entity)  {
@@ -150,6 +150,10 @@ public class GxtModel extends BaseTreeModel implements TreeModel {
     public void update(Entity entity)  {
        setEntityValues(entity);
     }
+    @Override
+    public String getUuid() {
+        return uuid;
+    }
 
     private void setEntityValues(Entity entity)  {
         this.key = entity.getKey();
@@ -157,7 +161,7 @@ public class GxtModel extends BaseTreeModel implements TreeModel {
         this.alertType = entity.getAlertType();
         this.entityType = entity.getEntityType();
         this.isReadOnly = entity.isReadOnly();
-
+        this.uuid = entity.getUUID();
 
 
         this.baseEntity = entity;

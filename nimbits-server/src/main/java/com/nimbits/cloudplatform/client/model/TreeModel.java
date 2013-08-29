@@ -56,4 +56,6 @@ public interface TreeModel extends com.extjs.gxt.ui.client.data.TreeModel, Seria
     Entity getBaseEntity();
 
     void update(Entity entity) ;
+
+    String getUuid();
 }

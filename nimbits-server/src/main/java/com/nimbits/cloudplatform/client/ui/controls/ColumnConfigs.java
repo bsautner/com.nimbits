@@ -66,7 +66,7 @@ public class ColumnConfigs {
         final ColumnConfig columnData = new ColumnConfig();
         columnData.setId(Parameters.data.getText());
         columnData.setHeader(Words.WORD_DATA);
-        columnData.setWidth(250);
+         columnData.setWidth(800);
 
         final TextField<String> dataText = new TextField<String>();
         dataText.setAllowBlank(true);

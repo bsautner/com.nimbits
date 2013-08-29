@@ -17,6 +17,7 @@ import com.nimbits.cloudplatform.client.model.user.User;
 import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.helper.ValueHelper;
 
+import java.util.Calendar;
 import java.util.Random;
 
 /**
@@ -25,8 +26,8 @@ import java.util.Random;
  * Time: 11:31 AM
  */
 public class Program {
-    private static final String base = "http://653.nimbits-02.appspot.com";
-    private static final String email = "bsautner@gmail.com";
+    private static final String base = "http://localhost:8080";
+    private static final String email = "test@example.com";
     private final static String key = "key";
     // private final static String point = "P2";
 
@@ -36,29 +37,38 @@ public class Program {
             public void loginSuccess(User session) {
                 System.out.println("Logged in With Key");
 
+                Random r = new Random();
+                 for (int i = -5000; i < 0; i++) {
+
+                     Calendar c = Calendar.getInstance();
+                     c.add(Calendar.MINUTE, i);
+
+                     ValueHelper.recordValue("t5", i, c.getTime());
+                     System.out.println(i);
+
+                 }
 
 
-
-                //     Random r = new Random();
-                while (true) {
-
-//                    Value v = null;
+//                //     Random r = new Random();
+//                while (true) {
+//
+////                    Value v = null;
+////                    try {
+////                        v = ValueHelper.recordValue(point, r.nextDouble());
+////                    } catch (Exception e) {
+////                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+////                    }
+////                    System.out.println(v.getDoubleValue());
 //                    try {
-//                        v = ValueHelper.recordValue(point, r.nextDouble());
-//                    } catch (Exception e) {
-//                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+//                        testSummary();
+//                        Thread.sleep(1000);
+//                    } catch (RuntimeException e) {
+//
+//                    } catch (InterruptedException e) {
+//
 //                    }
-//                    System.out.println(v.getDoubleValue());
-                    try {
-                        testSummary();
-                        Thread.sleep(1000);
-                    } catch (RuntimeException e) {
-
-                    } catch (InterruptedException e) {
-
-                    }
-
-                }
+//
+//                }
             }
 
             @Override

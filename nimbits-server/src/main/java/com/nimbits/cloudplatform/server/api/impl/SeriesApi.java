@@ -15,26 +15,24 @@ package com.nimbits.cloudplatform.server.api.impl;
 
 import com.google.gson.reflect.TypeToken;
 import com.nimbits.cloudplatform.client.common.Utils;
-import com.nimbits.cloudplatform.client.enums.EntityType;
-import com.nimbits.cloudplatform.client.enums.ExportType;
 import com.nimbits.cloudplatform.client.enums.Parameters;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
+import com.nimbits.cloudplatform.client.model.user.User;
 import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueModel;
-import com.nimbits.cloudplatform.server.admin.logging.LogHelper;
-import com.nimbits.cloudplatform.server.api.ApiServlet;
+import com.nimbits.cloudplatform.server.api.ApiBase;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
+import com.nimbits.cloudplatform.server.transactions.user.UserTransaction;
 import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
 import org.apache.commons.lang3.Range;
-import org.springframework.stereotype.Service;
+import org.apache.commons.lang3.StringUtils;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -43,83 +41,96 @@ import java.util.List;
  * Time: 11:04 AM
  */
 
-@Service("seriesApi")
-public class SeriesApi extends ApiServlet implements org.springframework.web.HttpRequestHandler {
+public class SeriesApi extends ApiBase {
     public static final int LIMIT = 1000;
+    public static final int DEFAULT_COUNT = 1000;
+    public static final String CSV = "csv";
 
-    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-
-        doGet(req, resp);
-
-    }
-
+    @Override
     public void doGet(final HttpServletRequest req,
                       final HttpServletResponse resp) throws IOException {
 
-        Type valueListType = new TypeToken<List<ValueModel>>() {
-        }.getType();
+        final Type valueListType = new TypeToken<List<ValueModel>>() { }.getType();
+
+        final User user = UserTransaction.getHttpRequestUser(req);
+        final String startDate = req.getParameter(Parameters.sd.getText());
+        final String endDate = req.getParameter(Parameters.ed.getText());
+        String format = req.getParameter(Parameters.format.getText());
+        String segStr = req.getParameter(Parameters.seg.getText());
+        final Range<Long> timespanRange;
+        if (StringUtils.isEmpty(format)) {
+            format = "json";
+        }
+        addHeaders(resp);
+
+        if (!Utils.isEmptyString(startDate) && !Utils.isEmptyString(endDate)) {
+            long sd = Long.valueOf(startDate);
+            long ed = Long.valueOf(endDate);
+            timespanRange = Range.between(sd, ed);
+        } else {
+            timespanRange = null;
+        }
 
 
+        int count = Utils.isEmptyString(req.getParameter(Parameters.count.getText())) ? DEFAULT_COUNT : Integer.valueOf(req.getParameter(Parameters.count.getText()));
 
-            doInit(req, resp, ExportType.json);
+        if (count > LIMIT) {
+            count = LIMIT;
+        }
 
+        //
+        if (user != null && !user.isRestricted()) {
 
-            final String startDate = req.getParameter(Parameters.sd.getText());
-            final String endDate = req.getParameter(Parameters.ed.getText());
-            String segStr = req.getParameter(Parameters.seg.getText());
+            List<Entity> entitySample = getEntity(user, req, resp);
 
-            final Range<Long> timespanRange;
+            if (entitySample.isEmpty()) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
 
-            if (!Utils.isEmptyString(startDate) && !Utils.isEmptyString(endDate)) {
-                long sd = Long.valueOf(startDate);
-                long ed = Long.valueOf(endDate);
-                timespanRange = Range.between(sd, ed);
-            } else {
-                timespanRange = null;
             }
+            else {
+                List<Value> valueSample;
+                final PrintWriter out = resp.getWriter();
+                if (timespanRange != null && Utils.isEmptyString(segStr) ) {
+                    valueSample = ValueTransaction.getSeries(entitySample.get(0), timespanRange);
 
-
-            int count = Utils.isEmptyString(getParam(Parameters.count)) ? 10 : Integer.valueOf(getParam(Parameters.count));
-
-            if (count > LIMIT) {
-                count = LIMIT;
-            }
-            if (Utils.isEmptyString(segStr)) {
-                segStr = "0";
-            }
-            List<Value> sample;
-            if (user != null && !user.isRestricted()) {
-
-
-                List<Entity> entitySample = EntityServiceImpl.getEntityByKey(user, getParam(Parameters.id), EntityType.point);
-                if (entitySample.isEmpty()) {
-                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
                 }
-                if (entitySample.isEmpty()) {
-                    resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                else if (!Utils.isEmptyString(segStr) && timespanRange != null) {
+                    int seg = Integer.valueOf(segStr);
+                    Range segment = Range.between(seg, seg + LIMIT);
+
+                    valueSample = ValueTransaction.getDataSegment(entitySample.get(0), timespanRange, segment);
 
                 } else {
-                    final PrintWriter out = resp.getWriter();
-                    if (!Utils.isEmptyString(segStr) && timespanRange != null) {
-                        int seg = Integer.valueOf(segStr);
-                        Range segment = Range.between(seg, seg + LIMIT);
-                        sample = ValueTransaction.getDataSegment(entitySample.get(0), timespanRange, segment);
-
-                    } else {
-                        sample = ValueTransaction.getTopDataSeries(entitySample.get(0), count);
-                    }
-                    String json = GsonFactory.getInstance().toJson(sample, valueListType);
-                    out.print(json);
-                    out.close();
-                    resp.setStatus(HttpServletResponse.SC_OK);
-                    out.close();
+                    valueSample = ValueTransaction.getTopDataSeries(entitySample.get(0), count);
                 }
 
+                if (format.equals(CSV))  {
+                    SimpleDateFormat tsFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                    StringBuilder builder = new StringBuilder();
+                    builder
+                            .append(entitySample.get(0).getName().getValue())
+                            .append("," + "Y1\n");
+                    for (Value v : valueSample) {
+                        builder.append(tsFormat.format(v.getTimestamp()))
+                                .append(",").append(v.getDoubleValue()).append("\n");
 
+                    }
+                    out.print(builder.toString());
+
+                }
+                else {
+                    String json = GsonFactory.getInstance().toJson(valueSample, valueListType);
+                    out.print(json);
+                }
+
+                out.close();
+                resp.setStatus(HttpServletResponse.SC_OK);
+                out.close();
             }
+
+
+        }
 
 
 

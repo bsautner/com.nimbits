@@ -356,7 +356,22 @@ public class NavigationPanel extends NavigationEventProvider {
                 }
             }
         }
+        private static final String PARAM_DEFAULT_WINDOW_OPTIONS = "menubar=no," +
+                "Location=false," +
+                "resizable=yes," +
+                "scrollbars=yes," +
+                "width=980px," +
+                "height=800," +
+                "status=no," +
+                "dependent=true";
+        private void openUrl(final String uuid, final String title) {
+            String u = com.google.gwt.user.client.Window.Location.getHref()
+                    + "report.html?uuid=" + uuid;
 
+            u = u.replace("/#?", "?");
+            u = u.replace("https", "http");
+            com.google.gwt.user.client.Window.open(u, title, PARAM_DEFAULT_WINDOW_OPTIONS);
+        }
         private class TreeDoubleClickGridEventListener implements Listener<TreeGridEvent<ModelData>> {
             TreeDoubleClickGridEventListener() {
             }
@@ -374,6 +389,7 @@ public class NavigationPanel extends NavigationEventProvider {
                                 break;
                             case point:
                                 notifyEntityClickedListener(model);
+                                openUrl(model.getUuid(), model.getName().getValue());
                                 break;
                             case category:
                                 notifyEntityClickedListener(model);

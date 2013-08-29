@@ -441,8 +441,6 @@ public class EntityDao {
                 final Entity result = (Entity) pm.getObjectById(cls, uuid);
                 final List<Entity> r = createModel(user, result);
                 retObj.addAll(r);
-
-
             }
             return retObj;
         } catch (JDOObjectNotFoundException ex) {
@@ -453,7 +451,7 @@ public class EntityDao {
         }
     }
 
-    private static List<Entity> getEntityByUUID(final User user, final String uuid, final Class<?> cls)  {
+    protected static List<Entity> getEntityByUUID(final User user, final String uuid, final Class<?> cls)  {
         final PersistenceManager pm = pmf.getPersistenceManager();
         try {
             final Query q1 = pm.newQuery(cls);
@@ -470,7 +468,7 @@ public class EntityDao {
     }
 
 
-    protected static List<Entity> getEntityByName(final User user, final EntityName name, final Class<?> cls) throws Exception {
+    protected static List<Entity> getEntityByName(final User user, final EntityName name, final Class<?> cls) {
         final PersistenceManager pm = pmf.getPersistenceManager();
 
         try {

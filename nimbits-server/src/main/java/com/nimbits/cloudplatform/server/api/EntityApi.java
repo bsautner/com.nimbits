@@ -12,18 +12,22 @@
 
 package com.nimbits.cloudplatform.server.api;
 
+import com.nimbits.cloudplatform.client.common.Utils;
 import com.nimbits.cloudplatform.client.enums.Action;
 import com.nimbits.cloudplatform.client.enums.EntityType;
 import com.nimbits.cloudplatform.client.enums.ExportType;
 import com.nimbits.cloudplatform.client.enums.Parameters;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.entity.EntityModel;
+import com.nimbits.cloudplatform.client.model.user.User;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
 import com.nimbits.cloudplatform.server.transactions.entity.EntityHelper;
 import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
+import com.nimbits.cloudplatform.server.transactions.user.UserTransaction;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -31,90 +35,57 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 
-@Service("entityApi")
-public class EntityApi extends ApiServlet implements org.springframework.web.HttpRequestHandler {
 
+public class EntityApi extends ApiBase {
+    final Logger log = Logger.getLogger(EntityApi.class.getName());
     //TODO - update, delete, create all handled with post with json in message body
 
     public static final String SERVER_RESPONSE = "SERVER_RESPONSE";
     public static final String ENTITY_ALREADY_EXISTS = "Entity already exists";
     public static final String CREATING_ENTITY = "Creating Entity";
     private String json;
-    public void handleRequest(HttpServletRequest req, HttpServletResponse resp)  {
-
-
-        if (isPost(req)) {
-
-            doPost(req, resp);
-        } else {
-            doGet(req, resp);
-        }
-
-    }
+    private User user;
 
     @Override
     public void doGet(final HttpServletRequest req,
-                      final HttpServletResponse resp)   {
+                      final HttpServletResponse resp) throws IOException {
 
+        final PrintWriter out = resp.getWriter();
+        user = UserTransaction.getHttpRequestUser(req);
+        addHeaders(resp);
 
+        if (user != null && !user.isRestricted()) {
 
-
-        try {
-            final PrintWriter out = resp.getWriter();
-
-            doInit(req, resp, ExportType.json);
-
-
-
-            if (user != null && !user.isRestricted()) {
-
-                try {
-                    EntityType entityType = EntityType.valueOf(getParam(Parameters.type));
-
-                    List<Entity> sample = EntityServiceImpl.getEntityByKey(user, getParam(Parameters.id), entityType);
-                    if (sample.isEmpty()) {
-                        resp.addHeader("error details", "entity not found");
-                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-
-                    } else {
-                        Entity e = sample.get(0);
-                        String outJson = GsonFactory.getInstance().toJson(e);
-                        out.print(outJson);
-
-                        resp.setStatus(HttpServletResponse.SC_OK);
-                    }
-                } catch (Exception e) {
-                    resp.addHeader("error details", e.getMessage());
-                    resp.addHeader("ERROR", e.getMessage());
-                }
-
-
-            } else {
-                // out.print(Words.WORD_FALSE);
-                resp.addHeader("error details", "you're not logged in and didn't supply a valid key");
-                resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-
+            List<Entity> sample = getEntity(user, req, resp);
+            if (! sample.isEmpty()) {
+                String outJson = GsonFactory.getInstance().toJson(sample.get(0));
+                out.print(outJson);
+                log.info(outJson);
+                resp.setStatus(HttpServletResponse.SC_OK);
             }
-
-            out.close();
-        } catch (Exception e) {
-            resp.addHeader("error details", e.getMessage());
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-
+        } else {
+            resp.addHeader("error details", "you're not logged in and didn't supply a valid key");
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }
+
+        out.close();
+
 
     }
 
 
+
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)  {
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
 
-        doInit(req, resp, ExportType.json);
-        json = getParam(Parameters.json);
+        final User user = UserTransaction.getHttpRequestUser(req);
+        addHeaders(resp);
+        json = req.getParameter(Parameters.json.getText());
         if (StringUtils.isEmpty(json)) {
             json = getContent(req);
         }
@@ -122,13 +93,13 @@ public class EntityApi extends ApiServlet implements org.springframework.web.Htt
 
 
         List<Entity> entityList = null;
-        Action action = Action.valueOf(getParam(Parameters.action));
+        Action action = Action.valueOf(req.getParameter(Parameters.action.getText()));
         if (action != null && user != null && !user.isRestricted()) {
 
             switch (action) {
 
                 case delete:
-                    deleteEntity(resp);
+                    deleteEntity(resp, req);
                     break;
                 case create:
                     entityList = createEntity(resp);
@@ -137,7 +108,14 @@ public class EntityApi extends ApiServlet implements org.springframework.web.Htt
                     entityList = updateEntity(resp);
                     break;
                 case createmissing:
-                    entityList = addMissingEntity(resp);
+                    try {
+                      entityList = addMissingEntity(resp);
+                    }
+                    catch (IllegalArgumentException ex) {
+                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                        resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                        resp.setHeader("ERROR_DETAILS", ex.getMessage());
+                    }
 
             }
             if (entityList != null && ! entityList.isEmpty()) {
@@ -173,7 +151,7 @@ public class EntityApi extends ApiServlet implements org.springframework.web.Htt
                     resp.setStatus(HttpServletResponse.SC_CONFLICT);
                     resp.addHeader("error details", "The entity you're trying to create already exists");
                     return Collections.emptyList();
-                   // throw new IllegalArgumentException("The entity you're trying to create already exists");
+                    // throw new IllegalArgumentException("The entity you're trying to create already exists");
                 } else {
 
                     resp.setStatus(HttpServletResponse.SC_OK);
@@ -247,21 +225,17 @@ public class EntityApi extends ApiServlet implements org.springframework.web.Htt
 
 
         if (!StringUtils.isEmpty(json)) {
+            log.info(json);
             Entity sampleEntity = GsonFactory.getInstance().fromJson(json, EntityModel.class);
 
             if (sampleEntity != null && !StringUtils.isEmpty(sampleEntity.getName().getValue())) {
-                log.info("user:" + (user == null));
-                log.info("json:" + json);
-                log.info("sampleEntity.getName():" + sampleEntity.getName().getValue());
-                log.info("ampleEntity.getEntityType():" + sampleEntity.getEntityType());
+
                 List<Entity> sample = EntityServiceImpl.getEntityByName(user, sampleEntity.getName(), sampleEntity.getEntityType());
                 if (!sample.isEmpty()) {
-                    log.info("found" + json);
                     resp.addHeader(SERVER_RESPONSE, ENTITY_ALREADY_EXISTS);
                     resp.setStatus(HttpServletResponse.SC_OK);
                     return sample;
                 } else {
-                    log.info("did not found" + json);
                     resp.addHeader(SERVER_RESPONSE, CREATING_ENTITY);
                     return addUpdateUpscaledEntity();
                     //return EntityServiceImpl.addUpdateSingleEntity(user, sampleEntity);
@@ -281,11 +255,11 @@ public class EntityApi extends ApiServlet implements org.springframework.web.Htt
         }
 
     }
-    private void deleteEntity(HttpServletResponse resp)  {
+    private void deleteEntity(HttpServletResponse resp, final HttpServletRequest req)  {
 
 
-        EntityType entityType = EntityType.valueOf(getParam(Parameters.type));
-        List<Entity> sample = EntityServiceImpl.getEntityByKey(user, getParam(Parameters.id), entityType);
+        EntityType entityType = EntityType.valueOf(req.getParameter(Parameters.type.getText()));
+        List<Entity> sample = EntityServiceImpl.getEntityByKey(user, req.getParameter(Parameters.id.getText()), entityType);
 
         if (sample.isEmpty()) {
             resp.addHeader("error details", "entity not found");
@@ -300,4 +274,6 @@ public class EntityApi extends ApiServlet implements org.springframework.web.Htt
 
         }
     }
+
+
 }

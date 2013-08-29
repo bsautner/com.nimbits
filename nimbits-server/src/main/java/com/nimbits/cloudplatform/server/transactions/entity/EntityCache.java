@@ -70,8 +70,8 @@ public class EntityCache<T> {
     }
 
 
-    protected static List<Entity> getEntityByName(final User user, final EntityName name, final Class<?> cls) throws Exception {
-        try {
+    protected static List<Entity> getEntityByName(final User user, final EntityName name, final Class<?> cls)  {
+
             String key = MemCacheKey.entityNameCache.getText() + user.getKey() + name.getValue() + cls.getName();
 
             if (cacheFactory.contains(key)) {
@@ -90,11 +90,7 @@ public class EntityCache<T> {
                 }
 
             }
-        } catch (NullPointerException e) {
-            throw new Exception(e);
 
-
-        }
 
 
     }
@@ -291,7 +287,19 @@ public class EntityCache<T> {
         }
 
     }
+    protected static List<Entity> getEntityByUUID(final User user, final String uuid, final Class<?> cls)   {
 
+        final List<Entity> cached = getEntityFromCache(uuid);
+        if (!cached.isEmpty()) {
+            return cached;
+        } else {
+            List<Entity> stored = EntityDao.getEntityByUUID(user, uuid, cls);
+
+            addEntityToCache(user, stored);
+            return stored;
+        }
+
+    }
 
     protected static Map<String, Entity> getSystemWideEntityMap(final User user, final EntityType type) throws Exception {
         return EntityDao.getSystemWideEntityMap(user, type);

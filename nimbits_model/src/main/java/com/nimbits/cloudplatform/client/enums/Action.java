@@ -45,7 +45,6 @@ public enum Action {
     expand(ActionConstants.ACTION_EXPAND),
     logout(ActionConstants.ACTION_LOGOUT),
     xmpp(ActionConstants.ACTION_XMPP),
-    addChart(ActionConstants.ACTION_ADD_CHART),
     save(ActionConstants.ACTION_SAVE),
     alert(ActionConstants.ACTION_ALERT),
     idle(ActionConstants.ACTION_IDLE),

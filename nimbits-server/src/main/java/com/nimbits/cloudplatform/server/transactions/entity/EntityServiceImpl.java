@@ -218,12 +218,16 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
 
     public static List<Entity> getEntityByName(final User user, final EntityName name, final EntityType type)  {
 
+
         try {
             return EntityCache.getEntityByName(user, name, Class.forName(type.getClassName()));
-        } catch (Exception e) {
-
-            throw new IllegalArgumentException(e);
+        } catch (ClassNotFoundException e) {
+            return Collections.emptyList();
         }
+        catch (NullPointerException e) {
+            return Collections.emptyList();
+        }
+
 
     }
 
@@ -235,7 +239,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
             cls = Class.forName(type.getClassName());
             return EntityCache.getEntityByTrigger(user, trigger, cls);
         } catch (ClassNotFoundException e) {
-           return Collections.emptyList();
+            return Collections.emptyList();
         }
 
 
@@ -299,5 +303,19 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
 
     }
 
+    public static List<Entity> getEntityByUUID(final User user, final String uuid, final EntityType type)   {
+        try {
+            if (user != null) {
+                return EntityCache.getEntityByUUID(user, uuid, Class.forName(type.getClassName()));
+            }
+            else {
 
+                return EntityCache.getEntityByUUID( UserHelper.getUser(), uuid, Class.forName(type.getClassName()));
+            }
+        } catch (ClassNotFoundException ex) {
+            throw new IllegalArgumentException(ex);
+        }
+
+
+    }
 }

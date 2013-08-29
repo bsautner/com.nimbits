@@ -159,7 +159,9 @@ public class ValueTransaction {
     public static List<Value> getDataSegment(Entity entity, Range<Long> timespanRange, Range<Integer> segment) {
         return ValueMemCache.getDataSegment(entity, timespanRange, segment);
     }
-
+    public static List<Value> getSeries(Entity entity, Range<Long> timespanRange) {
+        return ValueMemCache.getSeries(entity, timespanRange);
+    }
     private static boolean ignoreByAuthLevel(final User u, final Point point)  {
 
         if (u.isRestricted()) {

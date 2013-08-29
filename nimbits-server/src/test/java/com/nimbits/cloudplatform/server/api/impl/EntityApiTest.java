@@ -35,8 +35,8 @@ import static org.junit.Assert.*;
  */
 public class EntityApiTest extends NimbitsServletTest {
 
-    @Resource(name = "entityApi")
-    EntityApi impl;
+
+    EntityApi impl = new EntityApi();
 
 
     public MockHttpServletRequest req1;
@@ -57,7 +57,7 @@ public class EntityApiTest extends NimbitsServletTest {
         req.addParameter("action", "delete");
         req.addParameter("type", "point");
         req.setMethod("POST");
-        impl.handleRequest(req, resp);
+        impl.doPost(req, resp);
 
         List<Entity> r = EntityServiceImpl.getEntityByKey(user, point.getKey(), EntityType.point);
         assertTrue(r.isEmpty());
@@ -74,7 +74,7 @@ public class EntityApiTest extends NimbitsServletTest {
         req.addParameter("action", "create");
         req.addParameter("json", pointJson);
         req.setMethod("POST");
-        impl.handleRequest(req, resp);
+        impl.doPost(req, resp);
 
         assertEquals(HttpServletResponse.SC_CONFLICT, resp.getStatus());
 //        List<Entity> r =  EntityServiceImpl.getEntityByKey(user, point.getKey(), EntityType.point);
@@ -102,7 +102,7 @@ public class EntityApiTest extends NimbitsServletTest {
         req.addParameter("action", Action.createmissing.getCode());
         req.addParameter("json", j);
         req.setMethod("POST");
-        impl.handleRequest(req, resp);
+        impl.doPost(req, resp);
         String re = resp.getContentAsString();
         Entity ex = GsonFactory.getInstance().fromJson(re, CategoryModel.class);
         assertNotNull(ex);
@@ -114,7 +114,7 @@ public class EntityApiTest extends NimbitsServletTest {
         req2.addParameter("action", Action.createmissing.getCode());
         req2.addParameter("json", j);
         req2.setMethod("POST");
-        impl.handleRequest(req2, resp2);
+        impl.doPost(req2, resp2);
         assertEquals(resp2.getHeader(EntityApi.SERVER_RESPONSE), EntityApi.ENTITY_ALREADY_EXISTS);
 
 //        List<Entity> r =  EntityServiceImpl.getEntityByKey(user, point.getKey(), EntityType.point);
@@ -130,7 +130,7 @@ public class EntityApiTest extends NimbitsServletTest {
         req.addParameter("action", "create");
         req.addParameter("json", pointJson);
         req.setMethod("POST");
-        impl.handleRequest(req, resp);
+        impl.doPost(req, resp);
         assertEquals(HttpServletResponse.SC_OK, resp.getStatus());
 
 
@@ -149,7 +149,7 @@ public class EntityApiTest extends NimbitsServletTest {
         req.addParameter("action", "update");
         req.addParameter("json", pointJson);
         req.setMethod("POST");
-        impl.handleRequest(req, resp);
+        impl.doPost(req, resp);
         assertEquals(HttpServletResponse.SC_OK, resp.getStatus());
         List<Entity> sample = EntityServiceImpl.getEntityByKey(user, point.getKey(), EntityType.point);
         assertFalse(sample.isEmpty());

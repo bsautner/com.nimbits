@@ -44,31 +44,10 @@ import java.util.logging.Logger;
  * Time: 4:11 PM
  */
 
-public class ValueApi extends HttpServlet {
+public class ValueApi extends ApiBase {
     final Logger log = Logger.getLogger(ValueApi.class.getName());
 
-    protected String getContent(HttpServletRequest req)  {
 
-        BufferedReader reader;
-        try {
-            reader = req.getReader();
-            if (req.getContentLength() > 0) {
-                StringBuilder jb = new StringBuilder(req.getContentLength());
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    jb.append(line);
-                }
-
-
-                return jb.toString();
-            }
-            else {
-                return null;
-            }
-        } catch (IOException e) {
-            return null;
-        }
-    }
 
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -78,20 +57,29 @@ public class ValueApi extends HttpServlet {
 
 
         String json = req.getParameter(Parameters.json.getText());
-        String id = req.getParameter(Parameters.id.getText());
-        final User user = UserTransaction.getHttpRequestUser(req);
+
+        User user = null;
+
+        try {
+            user = UserTransaction.getHttpRequestUser(req);
+        }
+        catch (SecurityException ex) {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+
+        }
         final PrintWriter out = resp.getWriter();
 
         if (Utils.isEmptyString(json)) {
-             json = getContent(req);
-             id = req.getHeader(Parameters.id.getText());
+            json = getContent(req);
+
 
         }
 
 
-        if (user != null && !user.isRestricted() && ! Utils.isEmptyString(id) && ! Utils.isEmptyString(json)) {
-            log.info(user.getEmail().getValue());
-            List<Entity> entitySample = EntityServiceImpl.getEntityByKey(user, id, EntityType.point);
+        if (user != null && !user.isRestricted() && ! Utils.isEmptyString(json)) {
+            List<Entity> entitySample = getEntity(user, req, resp);
+
             if (entitySample.isEmpty()) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             } else {
@@ -131,12 +119,12 @@ public class ValueApi extends HttpServlet {
 
         try {
             final PrintWriter out = resp.getWriter();
-           // doInit(req, resp, ExportType.json);
+            // doInit(req, resp, ExportType.json);
             final User user = UserTransaction.getHttpRequestUser(req);
             final String id = req.getParameter(Parameters.id.getText());
             if (user != null && !user.isRestricted()) {
 
-                List<Entity> entitySample = EntityServiceImpl.getEntityByKey(user, id, EntityType.point);
+                List<Entity> entitySample = getEntity(user, req, resp);
                 if (entitySample.isEmpty()) {
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 } else {
@@ -170,10 +158,6 @@ public class ValueApi extends HttpServlet {
 
     }
 
-    private void addHeaders(HttpServletResponse resp) {
-        resp.addHeader("Cache-Control", "no-cache");
-        resp.addHeader("Access-Control-Allow-Origin", "*");
-        resp.addHeader("Content-Type", "application/json");
-    }
+
 
 }

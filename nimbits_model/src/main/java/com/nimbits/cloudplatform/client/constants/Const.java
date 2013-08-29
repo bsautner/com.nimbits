@@ -23,11 +23,11 @@ public class Const {
     public static final String TRUE = "1";
     public static final String FALSE = "0";
     public static final String EMPTY = "";
-
+    public static final int MAX_VALUES = 1000;
     public static final String CONTENT_TYPE_JSON = "application/json";
     public static final String CONST_SERVER_NAME = "Nimbits Cloud Platform";
     public static final String FILE_TYPE_SVG = ".svg";
-    public static final int DEFAULT_FEED_LENGTH = 250;
+
     public static final String TEXT_DATA_FEED = "Data Feed Channel";
     public static final String REGEX_NAMESPACE = "[0-9A-Za-z._-]{0,100}";
     public static final String CONST_AH = "ah";

@@ -60,7 +60,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>entityApi</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.cloudplatform.server.api.EntityApi</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>entityApi</servlet-name>
@@ -96,7 +96,7 @@
 
     <servlet>
         <servlet-name>seriesApi</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.cloudplatform.server.api.impl.SeriesApi</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>seriesApi</servlet-name>

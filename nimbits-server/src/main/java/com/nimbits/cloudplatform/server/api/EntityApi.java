@@ -12,22 +12,18 @@
 
 package com.nimbits.cloudplatform.server.api;
 
-import com.nimbits.cloudplatform.client.common.Utils;
 import com.nimbits.cloudplatform.client.enums.Action;
 import com.nimbits.cloudplatform.client.enums.EntityType;
-import com.nimbits.cloudplatform.client.enums.ExportType;
 import com.nimbits.cloudplatform.client.enums.Parameters;
+import com.nimbits.cloudplatform.client.enums.ProtectionLevel;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.entity.EntityModel;
-import com.nimbits.cloudplatform.client.model.user.User;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
 import com.nimbits.cloudplatform.server.transactions.entity.EntityHelper;
 import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.user.UserTransaction;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServlet;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -40,6 +36,8 @@ import java.util.logging.Logger;
 
 
 public class EntityApi extends ApiBase {
+
+
     final Logger log = Logger.getLogger(EntityApi.class.getName());
     //TODO - update, delete, create all handled with post with json in message body
 
@@ -47,54 +45,46 @@ public class EntityApi extends ApiBase {
     public static final String ENTITY_ALREADY_EXISTS = "Entity already exists";
     public static final String CREATING_ENTITY = "Creating Entity";
     private String json;
-    private User user;
+
+
 
     @Override
     public void doGet(final HttpServletRequest req,
-                      final HttpServletResponse resp) throws IOException {
-
+                      final HttpServletResponse resp) throws IOException, ServletException {
+        //super.doGet(req, resp);
         final PrintWriter out = resp.getWriter();
-        user = UserTransaction.getHttpRequestUser(req);
-        addHeaders(resp);
+        setup(req, resp);
 
-        if (user != null && !user.isRestricted()) {
+        if (user != null) {
 
             List<Entity> sample = getEntity(user, req, resp);
             if (! sample.isEmpty()) {
-                String outJson = GsonFactory.getInstance().toJson(sample.get(0));
-                out.print(outJson);
-                log.info(outJson);
-                resp.setStatus(HttpServletResponse.SC_OK);
+
+                    String outJson = GsonFactory.getInstance().toJson(sample.get(0));
+                    out.print(outJson);
+                    log.info(outJson);
+                    resp.setStatus(HttpServletResponse.SC_OK);
+                    out.close();
+                }
             }
-        } else {
-            resp.addHeader("error details", "you're not logged in and didn't supply a valid key");
-            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }
 
-        out.close();
-
-
-    }
 
 
 
     @Override
-    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 
+        setup(req, resp);
 
-        final User user = UserTransaction.getHttpRequestUser(req);
-        addHeaders(resp);
         json = req.getParameter(Parameters.json.getText());
         if (StringUtils.isEmpty(json)) {
             json = getContent(req);
         }
 
-
-
         List<Entity> entityList = null;
         Action action = Action.valueOf(req.getParameter(Parameters.action.getText()));
-        if (action != null && user != null && !user.isRestricted()) {
+        if (action != null && user != null) {
 
             switch (action) {
 
@@ -109,7 +99,7 @@ public class EntityApi extends ApiBase {
                     break;
                 case createmissing:
                     try {
-                      entityList = addMissingEntity(resp);
+                        entityList = addMissingEntity(resp);
                     }
                     catch (IllegalArgumentException ex) {
                         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -120,7 +110,7 @@ public class EntityApi extends ApiBase {
             }
             if (entityList != null && ! entityList.isEmpty()) {
                 final PrintWriter out;
-                try {
+
                     out = resp.getWriter();
 
                     String outJson = GsonFactory.getInstance().toJson(entityList.get(0));
@@ -128,10 +118,7 @@ public class EntityApi extends ApiBase {
 
                     //resp.setStatus(HttpServletResponse.SC_OK);
                     out.close();
-                } catch (IOException e) {
 
-                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                }
             }
 
 

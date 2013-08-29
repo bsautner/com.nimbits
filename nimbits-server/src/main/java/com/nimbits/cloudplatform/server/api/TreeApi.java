@@ -10,7 +10,7 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.cloudplatform.server.api.impl;
+package com.nimbits.cloudplatform.server.api;
 
 import com.google.gson.reflect.TypeToken;
 import com.nimbits.cloudplatform.client.enums.ExportType;
@@ -29,7 +29,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.util.List;
 
-@Service("treeApi")
+
 public class TreeApi extends ApiServlet implements org.springframework.web.HttpRequestHandler {
 
 

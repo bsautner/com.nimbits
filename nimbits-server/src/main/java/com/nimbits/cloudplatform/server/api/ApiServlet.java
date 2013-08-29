@@ -39,6 +39,7 @@ import java.util.logging.Logger;
  * Date: 3/20/12
  * Time: 12:58 PM
  */
+@Deprecated
 @Service("apiServlet")
 public class ApiServlet extends HttpServlet {
 

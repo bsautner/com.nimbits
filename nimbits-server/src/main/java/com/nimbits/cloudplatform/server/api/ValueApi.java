@@ -27,6 +27,7 @@ import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,43 +46,26 @@ import java.util.logging.Logger;
  */
 
 public class ValueApi extends ApiBase {
-    final Logger log = Logger.getLogger(ValueApi.class.getName());
+
+    public static final String ENTITY_NOT_FOUND = "Entity Not Found";
+    public static final String MESSAGE = "The data point does not have any values recorded to it yet";
+    final static Logger log = Logger.getLogger(ValueApi.class.getName());
 
 
 
     @Override
-    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-
-
-        addHeaders(resp);
-
-
-        String json = req.getParameter(Parameters.json.getText());
-
-        User user = null;
-
-        try {
-            user = UserTransaction.getHttpRequestUser(req);
-        }
-        catch (SecurityException ex) {
-            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-
-        }
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+       setup(req, resp);
         final PrintWriter out = resp.getWriter();
-
+        String json = req.getParameter(Parameters.json.getText());
         if (Utils.isEmptyString(json)) {
             json = getContent(req);
-
-
         }
-
-
-        if (user != null && !user.isRestricted() && ! Utils.isEmptyString(json)) {
+        if (user != null && ! Utils.isEmptyString(json)) {
             List<Entity> entitySample = getEntity(user, req, resp);
 
             if (entitySample.isEmpty()) {
-                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+               sendError(resp, HttpServletResponse.SC_BAD_REQUEST, ENTITY_NOT_FOUND);
             } else {
 
                 Value value = GsonFactory.getInstance().fromJson(json, ValueModel.class);
@@ -93,18 +77,8 @@ public class ValueApi extends ApiBase {
                 String respString = GsonFactory.getInstance().toJson(recorded, ValueModel.class);
                 out.print(respString);
                 out.close();
-
             }
-
-
-        } else {
-            // out.print(Words.WORD_FALSE);
-            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-
         }
-
-
 
     }
 
@@ -112,48 +86,34 @@ public class ValueApi extends ApiBase {
 
     @Override
     public void doGet(final HttpServletRequest req,
-                      final HttpServletResponse resp)  {
+                      final HttpServletResponse resp) throws ServletException, IOException {
 
 
-        addHeaders(resp);
+        setup(req, resp);
 
-        try {
-            final PrintWriter out = resp.getWriter();
-            // doInit(req, resp, ExportType.json);
-            final User user = UserTransaction.getHttpRequestUser(req);
-            final String id = req.getParameter(Parameters.id.getText());
-            if (user != null && !user.isRestricted()) {
 
-                List<Entity> entitySample = getEntity(user, req, resp);
-                if (entitySample.isEmpty()) {
-                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+
+
+        if (user != null) {
+
+            List<Entity> entitySample = getEntity(user, req, resp);
+
+                List<Value> sample = ValueTransaction.getCurrentValue(entitySample.get(0));
+                if (sample.isEmpty()) {
+                    sendError(resp, HttpServletResponse.SC_NO_CONTENT, MESSAGE);
                 } else {
-                    List<Value> sample = ValueTransaction.getCurrentValue(entitySample.get(0));
-                    if (sample.isEmpty()) {
-                        resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
-                    } else {
-                        String json = GsonFactory.getInstance().toJson(sample.get(0), ValueModel.class);
-                        out.print(json);
-                        resp.setStatus(HttpServletResponse.SC_OK);
-                    }
-
-
+                    final PrintWriter out = resp.getWriter();
+                    String json = GsonFactory.getInstance().toJson(sample.get(0), ValueModel.class);
+                    out.print(json);
+                    resp.setStatus(HttpServletResponse.SC_OK);
+                    out.close();
                 }
 
 
-            } else {
-                // out.print(Words.WORD_FALSE);
-                resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-
-            }
-            out.close();
-        } catch (Exception e) {
-            resp.addHeader("ERROR", e.getMessage());
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-
 
         }
+
+
 
 
     }

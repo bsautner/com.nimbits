@@ -25,7 +25,7 @@ import java.util.*;
  * Created by benjamin on 7/25/13.
  */
 public class ContentProvider {
-
+    //todo move to application class singlton
     public static List<Entity> tree;
     public static Entity currentEntity;
     public static Map<Entity, Value> currentValueMap;

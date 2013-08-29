@@ -26,8 +26,10 @@ import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -44,78 +46,55 @@ import java.util.logging.Logger;
 
 
 @Service("batchApi")
-public class BatchApi extends ApiServlet implements org.springframework.web.HttpRequestHandler {
+public class BatchApi extends ApiBase {
     final Logger log = Logger.getLogger(BatchApi.class.getName());
     public final static Type listType = new TypeToken<Map<String, List<ValueModel>>>() {
     }.getType();
-    public void handleRequest(HttpServletRequest req, HttpServletResponse resp)  {
 
-        if (isPost(req)) {
-            doPost(req, resp);
-        } else {
-            doGet(req, resp);
-        }
-
-    }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)   {
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         log.info("posting value");
 
         String json = req.getParameter(Parameters.json.name());
         log.info(json);
+        setup(req, resp);
+
+        final PrintWriter out = resp.getWriter();
 
 
-        try {
-            final PrintWriter out = resp.getWriter();
+        if (StringUtils.isEmpty(json)) {
+            json = getContent(req);
+        }
+        if (user != null && !user.isRestricted()) {
 
 
+            HashMap<String, List<Value>> map  = GsonFactory.getInstance().fromJson(json, listType);
+            for (String id : map.keySet()) {
 
-            doInit(req, resp, ExportType.json);
-            if (StringUtils.isEmpty(json)) {
-                json = getContent(req);
-            }
-            if (user != null && !user.isRestricted()) {
-
-
-                    HashMap<String, List<Value>> map  = GsonFactory.getInstance().fromJson(json, listType);
-                    for (String id : map.keySet()) {
-
-                        List<Entity> entitySample = EntityServiceImpl.getEntityByKey(user, id, EntityType.point);
-                        if (! entitySample.isEmpty()) {
-                             List<Value> valueList = map.get(id);
-                             double c = 0;
-                             for (Value v : valueList) {
-                                 ValueTransaction.recordValue(user, entitySample.get(0), v);
-                                 c += v.getDoubleValue();
-                             }
-                             System.out.println(c);
-
-                        }
-
+                List<Entity> entitySample = EntityServiceImpl.getEntityByKey(user, id, EntityType.point);
+                if (! entitySample.isEmpty()) {
+                    List<Value> valueList = map.get(id);
+                    double c = 0;
+                    for (Value v : valueList) {
+                        ValueTransaction.recordValue(user, entitySample.get(0), v);
+                        c += v.getDoubleValue();
                     }
+                    System.out.println(c);
 
-                   // Value recorded = ValueTransaction.recordValue(user, entitySample.get(0), value);
-                    // log.info("redorded" + " " + value.getDoubleValue());
-                    resp.setStatus(HttpServletResponse.SC_OK);
-                    //String respString = GsonFactory.getInstance().toJson(recorded, ValueModel.class);
-                   // out.print(respString);
-                    // log.info(respString);
-                    out.close();
-
-
-            } else {
-                // out.print(Words.WORD_FALSE);
-                resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                }
 
             }
-        } catch (Exception e) {
-            log.severe(e.getMessage());
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+
+
+            resp.setStatus(HttpServletResponse.SC_OK);
+
+            out.close();
+
 
         }
+
 
 
     }
@@ -130,7 +109,7 @@ public class BatchApi extends ApiServlet implements org.springframework.web.Http
 
 
 
-                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
 
 

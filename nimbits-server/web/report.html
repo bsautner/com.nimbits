@@ -27,6 +27,7 @@
                 changeMonth: true,
                 changeYear: true
 
+
             });
             $( "#to" ).datepicker({
                 showOtherMonths: true,
@@ -74,7 +75,11 @@ $(document).ready(function () {
     getPoint();
 });
 
-
+$.ajaxSetup({
+    error: function(xhr, status, error) {
+        alert("An AJAX error occured: " + status + "\nError: " + error + "\nError detail: " + xhr.responseText);
+    }
+});
 function set(_element, _val) {
     document.getElementById(_element).value = _val;
 
@@ -84,7 +89,9 @@ function set(_element, _val) {
 function getPoint() {
 
     $.get(server + "/service/v2/entity",
-            { uuid: uuid}).done(
+            { uuid: uuid})
+            .fail(function() {updateProgress("The server returned an error loading this data point, the point may no longer exist.")})
+            .done(
             function(data){
 
                 var obj = eval(data);
@@ -123,19 +130,23 @@ function updateGraph(url) {
                     //showRangeSelector: true,
                     connectSeparated: true,
                    // customBars: true,
-                    animatedZooms:true
+                    animatedZooms:true,
+                    drawCallback: function(g) {
+                        updateProgress("Done");
+                        document.getElementById("update").disabled = false;
+                    }
                 });
     }
     else {
 
         graph.updateOptions( { 'file': url } );
     }
-    updateProgress("loaded values");
+
 }
 
 function getSeries() {
     updateProgress("Loading data please wait...");
-
+    document.getElementById("update").disabled = true;
     var sd = new Date(document.getElementById("from").value).getTime();
     var ed =  new Date(document.getElementById("to").value).getTime();
 
@@ -167,7 +178,7 @@ function getCurrentValue(point) {
 
 
             }
-    );
+    ).fail(function() {updateProgress("The server returned an error loading the current value of this point")});
 }
 
 function updateProgress(text) {

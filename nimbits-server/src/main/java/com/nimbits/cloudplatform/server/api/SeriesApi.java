@@ -10,7 +10,7 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.cloudplatform.server.api.impl;
+package com.nimbits.cloudplatform.server.api;
 
 
 import com.google.gson.reflect.TypeToken;
@@ -27,6 +27,7 @@ import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
 import org.apache.commons.lang3.Range;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -45,23 +46,25 @@ public class SeriesApi extends ApiBase {
     public static final int LIMIT = 1000;
     public static final int DEFAULT_COUNT = 1000;
     public static final String CSV = "csv";
+    public static final String JSON = "json";
+    public static final String ENTITY_NOT_FOUND = "Entity not found";
 
     @Override
     public void doGet(final HttpServletRequest req,
-                      final HttpServletResponse resp) throws IOException {
-
+                      final HttpServletResponse resp) throws IOException, ServletException {
+        setup(req, resp);
         final Type valueListType = new TypeToken<List<ValueModel>>() { }.getType();
 
-        final User user = UserTransaction.getHttpRequestUser(req);
+
         final String startDate = req.getParameter(Parameters.sd.getText());
         final String endDate = req.getParameter(Parameters.ed.getText());
         String format = req.getParameter(Parameters.format.getText());
         String segStr = req.getParameter(Parameters.seg.getText());
         final Range<Long> timespanRange;
         if (StringUtils.isEmpty(format)) {
-            format = "json";
+            format = JSON;
         }
-        addHeaders(resp);
+
 
         if (!Utils.isEmptyString(startDate) && !Utils.isEmptyString(endDate)) {
             long sd = Long.valueOf(startDate);
@@ -79,58 +82,53 @@ public class SeriesApi extends ApiBase {
         }
 
         //
-        if (user != null && !user.isRestricted()) {
+        if (user != null) {
 
             List<Entity> entitySample = getEntity(user, req, resp);
 
-            if (entitySample.isEmpty()) {
-                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+
+            List<Value> valueSample;
+            final PrintWriter out = resp.getWriter();
+            if (timespanRange != null && Utils.isEmptyString(segStr) ) {
+                valueSample = ValueTransaction.getSeries(entitySample.get(0), timespanRange);
+
+            }
+            else if (!Utils.isEmptyString(segStr) && timespanRange != null) {
+                int seg = Integer.valueOf(segStr);
+                Range segment = Range.between(seg, seg + LIMIT);
+
+                valueSample = ValueTransaction.getDataSegment(entitySample.get(0), timespanRange, segment);
+
+            } else {
+                valueSample = ValueTransaction.getTopDataSeries(entitySample.get(0), count);
+            }
+
+            if (format.equals(CSV))  {
+                SimpleDateFormat tsFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                StringBuilder builder = new StringBuilder();
+                builder
+                        .append(entitySample.get(0).getName().getValue())
+                        .append("," + "Y1\n");
+                for (Value v : valueSample) {
+                    builder.append(tsFormat.format(v.getTimestamp()))
+                            .append(",").append(v.getDoubleValue()).append("\n");
+
+                }
+                out.print(builder.toString());
 
             }
             else {
-                List<Value> valueSample;
-                final PrintWriter out = resp.getWriter();
-                if (timespanRange != null && Utils.isEmptyString(segStr) ) {
-                    valueSample = ValueTransaction.getSeries(entitySample.get(0), timespanRange);
-
-                }
-                else if (!Utils.isEmptyString(segStr) && timespanRange != null) {
-                    int seg = Integer.valueOf(segStr);
-                    Range segment = Range.between(seg, seg + LIMIT);
-
-                    valueSample = ValueTransaction.getDataSegment(entitySample.get(0), timespanRange, segment);
-
-                } else {
-                    valueSample = ValueTransaction.getTopDataSeries(entitySample.get(0), count);
-                }
-
-                if (format.equals(CSV))  {
-                    SimpleDateFormat tsFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                    StringBuilder builder = new StringBuilder();
-                    builder
-                            .append(entitySample.get(0).getName().getValue())
-                            .append("," + "Y1\n");
-                    for (Value v : valueSample) {
-                        builder.append(tsFormat.format(v.getTimestamp()))
-                                .append(",").append(v.getDoubleValue()).append("\n");
-
-                    }
-                    out.print(builder.toString());
-
-                }
-                else {
-                    String json = GsonFactory.getInstance().toJson(valueSample, valueListType);
-                    out.print(json);
-                }
-
-                out.close();
-                resp.setStatus(HttpServletResponse.SC_OK);
-                out.close();
+                String json = GsonFactory.getInstance().toJson(valueSample, valueListType);
+                out.print(json);
             }
 
-
+            out.close();
+            resp.setStatus(HttpServletResponse.SC_OK);
+            out.close();
         }
+
+
+
 
 
 

@@ -16,6 +16,8 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -46,7 +48,7 @@ public class ValueApiTest extends NimbitsServletTest {
     }
 
     @Test
-    public void testPostValue() throws IOException {
+    public void testPostValue() throws IOException, ServletException {
         req.removeAllParameters();
         req.setContentType("application/json");
         Value v = ValueFactory.createValueModel(2.345);
@@ -56,7 +58,7 @@ public class ValueApiTest extends NimbitsServletTest {
         req.setContent(json.getBytes());
         req.setMethod("POST");
         impl.doPost(req, resp);
-
+        assertEquals(HttpServletResponse.SC_OK, resp.getStatus());
         List<Value> vr = ValueTransaction.getCurrentValue(point);
         assertFalse(vr.isEmpty());
         assertEquals(vr.get(0), v);
@@ -65,7 +67,7 @@ public class ValueApiTest extends NimbitsServletTest {
 
     }
     @Test
-    public void testPostBodyValue() throws IOException {
+    public void testPostBodyValue() throws IOException, ServletException {
         req.removeAllParameters();
         req.setContentType("application/json");
         Random r = new Random();

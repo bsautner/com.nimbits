@@ -36,7 +36,7 @@
     <!--v2 services-->
     <servlet>
         <servlet-name>hotApi</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.cloudplatform.server.api.HotApi</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>hotApi</servlet-name>
@@ -44,7 +44,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>searchApi</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.cloudplatform.server.api.SearchApi</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>searchApi</servlet-name>
@@ -52,7 +52,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>sessionApi</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.cloudplatform.server.api.SessionApi</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>sessionApi</servlet-name>
@@ -69,7 +69,7 @@
 
     <servlet>
         <servlet-name>timeApi</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.cloudplatform.server.api.TimeApi</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>timeApi</servlet-name>
@@ -78,7 +78,7 @@
 
     <servlet>
         <servlet-name>versionApi</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.cloudplatform.server.api.impl.VersionApi</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>versionApi</servlet-name>
@@ -87,7 +87,7 @@
 
     <servlet>
         <servlet-name>treeApi</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.cloudplatform.server.api.TreeApi</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>treeApi</servlet-name>
@@ -96,7 +96,7 @@
 
     <servlet>
         <servlet-name>seriesApi</servlet-name>
-        <servlet-class>com.nimbits.cloudplatform.server.api.impl.SeriesApi</servlet-class>
+        <servlet-class>com.nimbits.cloudplatform.server.api.SeriesApi</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>seriesApi</servlet-name>
@@ -110,12 +110,12 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>valueApi</servlet-name>
-        <url-pattern>/service/v2/value</url-pattern>
+        <url-pattern>/service/v2/value/*</url-pattern>
     </servlet-mapping>
 
     <servlet>
         <servlet-name>batchApi</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.cloudplatform.server.api.BatchApi</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>batchApi</servlet-name>
@@ -130,26 +130,6 @@
             org.springframework.web.context.ContextLoaderListener
         </listener-class>
     </listener>
-
-
-    <servlet-mapping>
-        <servlet-name>docServlet</servlet-name>
-        <url-pattern>/doc</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>docServlet</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
-
-        <init-param>
-            <param-name>consumer_key</param-name>
-            <param-value>1009209848329.apps.googleusercontent.com</param-value>
-        </init-param>
-        <init-param>
-            <param-name>consumer_secret</param-name>
-            <param-value>m4S1GkGguCvyFO70bxHuKNzH</param-value>
-        </init-param>
-    </servlet>
 
 
     <servlet>

@@ -6,12 +6,10 @@ import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueFactory;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueModel;
 import com.nimbits.cloudplatform.server.NimbitsServletTest;
-import com.nimbits.cloudplatform.server.api.impl.SeriesApi;
-import com.nimbits.cloudplatform.server.api.impl.ValueServletImpl;
+import com.nimbits.cloudplatform.server.api.SeriesApi;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
 import org.junit.Test;
 
-import javax.annotation.Resource;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,11 +26,9 @@ import static junit.framework.Assert.assertFalse;
  * Time: 1:26 PM
  */
 public class SeriesApiTest extends NimbitsServletTest {
-    @Resource(name = "value")
-    ValueServletImpl valueServlet;
 
-    @Resource(name = "seriesApi")
-    SeriesApi api;
+
+    SeriesApi api = new SeriesApi();
 
 
     @Test

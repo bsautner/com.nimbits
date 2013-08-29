@@ -240,20 +240,9 @@ public class EntityCache<T> {
 
     protected static List<Entity> getEntities(final User user) {
         List<Entity> results;
-        //String treeKey = MemCacheKey.userEntityTree.getText() + user.getKey();
-//
-//      //  if (cacheFactory.contains(treeKey)) {
-//            results= (List<Entity>) cacheFactory.get(treeKey);
-//            for (Entity e: results) {
-//                e.setIsCached(true);
-//            }
-//
-//        }
-//        else {
-        results = EntityDao.getEntities(user);
-        // cacheFactory.put(treeKey, results);
 
-        /// }
+        results = EntityDao.getEntities(user);
+
         return results;
     }
 

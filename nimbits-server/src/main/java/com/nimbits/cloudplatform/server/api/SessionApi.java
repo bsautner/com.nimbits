@@ -12,34 +12,35 @@
 
 package com.nimbits.cloudplatform.server.api;
 
+import com.nimbits.cloudplatform.client.model.user.UserModel;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
-import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Date;
-
-/**
- * Author: Benjamin Sautner
- * Date: 2/2/13
- * Time: 12:08 PM
- */
 
 
-public class TimeApi  extends ApiBase {
 
+public class SessionApi extends ApiBase {
 
     @Override
-    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        final PrintWriter out = resp.getWriter();
+    public void doGet(final HttpServletRequest req,
+                      final HttpServletResponse resp) throws IOException, ServletException {
 
-        Long time = new Date().getTime();
-        String reponse = GsonFactory.getInstance().toJson(time);
-        out.print(reponse);
-        out.close();
+        final PrintWriter out = resp.getWriter();
+        setup(req, resp);
+
+
+        if (user != null && !user.isRestricted()) {
+            String json = GsonFactory.getInstance().toJson(user, UserModel.class);
+            out.print(json);
+            resp.setStatus(HttpServletResponse.SC_OK);
+            out.close();
+        }
+
+
 
     }
 }

@@ -16,22 +16,13 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
     <!--v2-->
-    <bean id="sessionApi" class="com.nimbits.cloudplatform.server.api.impl.SessionApi">
 
-    </bean>
 
-    <bean id="timeApi" class="com.nimbits.cloudplatform.server.api.TimeApi"/>
     <bean id="versionApi" class="com.nimbits.cloudplatform.server.api.impl.VersionApi"/>
     <bean id="searchApi" class="com.nimbits.cloudplatform.server.api.SearchApi"/>
     <bean id="hotApi" class="com.nimbits.cloudplatform.server.api.HotApi"/>
-    <bean id="treeApi" class="com.nimbits.cloudplatform.server.api.impl.TreeApi">
-
-    </bean>
 
 
-    <bean id="batchApi" class="com.nimbits.cloudplatform.server.api.BatchApi">
-
-    </bean>
 
 
 

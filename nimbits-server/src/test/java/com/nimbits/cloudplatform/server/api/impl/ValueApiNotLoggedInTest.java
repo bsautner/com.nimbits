@@ -10,6 +10,7 @@ import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
 import org.junit.Test;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class ValueApiNotLoggedInTest extends NimbitsServletNotLoggedInTest {
 
 
     @Test
-    public void testPostValue() throws IOException {
+    public void testPostValue() throws IOException, ServletException {
 
         UserTransaction.createUserRecord(CommonFactory.createEmailAddress("test@example.com"));
 
@@ -40,7 +41,7 @@ public class ValueApiNotLoggedInTest extends NimbitsServletNotLoggedInTest {
         impl.doPost(req, resp);
 
 
-        assertEquals(resp.getStatus(), 401);
+        assertEquals(resp.getStatus(), 400);
 
 
     }

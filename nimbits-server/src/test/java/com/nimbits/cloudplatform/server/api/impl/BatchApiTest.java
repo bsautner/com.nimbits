@@ -17,6 +17,8 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletException;
+import java.io.IOException;
 import java.util.*;
 
 import static junit.framework.Assert.assertEquals;
@@ -30,8 +32,8 @@ import static junit.framework.Assert.assertFalse;
 public class BatchApiTest extends NimbitsServletTest {
 
     public static final int EXPECTED = 5;
-    @Resource(name = "batchApi")
-    BatchApi impl;
+
+    BatchApi impl = new BatchApi();
 
 
     public MockHttpServletRequest req1;
@@ -44,7 +46,7 @@ public class BatchApiTest extends NimbitsServletTest {
     }
 
     @Test
-    public void testPostValue() throws InterruptedException {
+    public void testPostValue() throws InterruptedException, ServletException, IOException {
         req.removeAllParameters();
         req.setContentType("application/json");
         Random r = new Random();
@@ -80,7 +82,7 @@ public class BatchApiTest extends NimbitsServletTest {
         String json = GsonFactory.getInstance().toJson(map);
         req.setContent(json.getBytes());
         req.setMethod("POST");
-        impl.handleRequest(req, resp);
+        impl.doPost(req, resp);
 
         List<Value> vx = ValueTransaction.getTopDataSeries(point, 5);
         assertEquals(EXPECTED, vx.size());

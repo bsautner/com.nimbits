@@ -28,10 +28,11 @@ import java.io.PrintWriter;
 import java.util.Set;
 
 @Service("hotApi")
-public class HotApi extends ApiServlet implements org.springframework.web.HttpRequestHandler {
+public class HotApi extends ApiBase {
 
 
-    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    @Override
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         final PrintWriter out = resp.getWriter();
 
 

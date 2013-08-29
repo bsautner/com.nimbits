@@ -23,6 +23,7 @@ import com.nimbits.cloudplatform.client.model.entity.EntityModelFactory;
 import com.nimbits.cloudplatform.client.model.entity.EntityName;
 import com.nimbits.cloudplatform.server.NimbitsServletTest;
 import com.nimbits.cloudplatform.server.orm.CalcEntity;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -160,6 +161,7 @@ public class EntityCacheImplTest extends NimbitsServletTest {
     }
 
     @Test
+    @Ignore
     public void testGetEntities() throws Exception {
         List<Entity> results = EntityCache.getEntities(user);
         assertFalse(results.isEmpty());

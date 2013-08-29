@@ -67,7 +67,7 @@ public class ValueServletImpl extends ApiServlet implements org.springframework.
 
 
     @Override
-    protected  void doPost(final HttpServletRequest req, final HttpServletResponse resp)   {
+    protected  void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
 
             doInit(req, resp, ExportType.plain);
 
@@ -84,7 +84,7 @@ public class ValueServletImpl extends ApiServlet implements org.springframework.
                 final List<Entity> points =  EntityServiceImpl.getEntityByName(user, pointName, EntityType.point);
 
                 if (points.isEmpty()) {
-                    throw new IllegalArgumentException(new Exception(UserMessages.ERROR_POINT_NOT_FOUND));
+                    resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Point Not Found");;
 
                 } else {
                     final Value v;

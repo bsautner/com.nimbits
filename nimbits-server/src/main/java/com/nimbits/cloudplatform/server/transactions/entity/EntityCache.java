@@ -194,7 +194,7 @@ public class EntityCache<T> {
     }
 
 
-    protected static List<Entity> getChildren(final User user, final List<Entity> entity) throws Exception {
+    protected static List<Entity> getChildren(final User user, final List<Entity> entity)  {
         return EntityDao.getChildren(user, entity);
     }
 
@@ -279,7 +279,7 @@ public class EntityCache<T> {
     protected static List<Entity> getEntityByUUID(final User user, final String uuid, final Class<?> cls)   {
 
         final List<Entity> cached = getEntityFromCache(uuid);
-        if (!cached.isEmpty()) {
+        if (cached != null && !cached.isEmpty() ) {
             return cached;
         } else {
             List<Entity> stored = EntityDao.getEntityByUUID(user, uuid, cls);

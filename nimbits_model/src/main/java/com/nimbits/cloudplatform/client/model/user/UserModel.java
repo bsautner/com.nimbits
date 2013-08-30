@@ -25,10 +25,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
-//import com.google.appengine.api.users.User;
-
-
 public class UserModel extends EntityModel implements Serializable, User {
 
     private Date lastLoggedIn;
@@ -45,11 +41,11 @@ public class UserModel extends EntityModel implements Serializable, User {
 
     private boolean userAdmin;
 
-
+    private String sessionId;
     /**
      *
      */
-    private static final long serialVersionUID = 2L;
+    private static final long serialVersionUID = 3L;
 
     @SuppressWarnings("unused")
     public UserModel() {
@@ -161,6 +157,13 @@ public class UserModel extends EntityModel implements Serializable, User {
         return CommonFactory.createEmailAddress(emailAddress);
     }
 
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
 
     @Override
     public boolean equals(Object o) {

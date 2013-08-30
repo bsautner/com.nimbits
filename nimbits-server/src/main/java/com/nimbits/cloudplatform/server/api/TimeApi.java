@@ -33,13 +33,12 @@ public class TimeApi  extends ApiBase {
 
 
     @Override
-    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        final PrintWriter out = resp.getWriter();
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
+
 
         Long time = new Date().getTime();
-        String reponse = GsonFactory.getInstance().toJson(time);
-        out.print(reponse);
-        out.close();
+        String json = GsonFactory.getInstance().toJson(time);
+        completeResponse(resp, json);
 
     }
 }

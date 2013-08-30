@@ -727,22 +727,12 @@ public class EntityContextMenu extends Menu {
             final TreeModel model = (TreeModel) selectedModel;
             if (model.getEntityType().equals(EntityType.point) || model.getEntityType().equals(EntityType.category)) {
                 final Entity p =  model.getBaseEntity();
-                openUrl(p.getUUID(), p.getName().getValue());
 
+                ReportHelper.openUrl(user, p.getUUID(), p.getName().getValue(), model.getEntityType());
             }
 
-
-
         }
 
-        private void openUrl(final String uuid, final String title) {
-            String u = com.google.gwt.user.client.Window.Location.getHref()
-                    + "report.html?uuid=" + uuid;
-
-            u = u.replace("/#?", "?");
-            u = u.replace("https", "http");
-            com.google.gwt.user.client.Window.open(u, title, PARAM_DEFAULT_WINDOW_OPTIONS);
-        }
     }
     private class JsonMenuEventSelectionListener extends SelectionListener<MenuEvent> {
         JsonMenuEventSelectionListener() {

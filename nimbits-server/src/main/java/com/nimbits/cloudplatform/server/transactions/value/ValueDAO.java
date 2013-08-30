@@ -110,10 +110,10 @@ public class ValueDAO {
             q.setFilter("minTimestamp <= t && entity == k");
             q.declareParameters("String k, Long t");
             q.setOrdering("minTimestamp desc");
-
             q.setRange(0, maxValues);
+
             final List<ValueBlobStoreEntity> result = (List<ValueBlobStoreEntity>) q.execute(entity.getKey(), endDate.getTime());
-            log.info("getTopDataSeries " + entity.getKey() + " " + result.size());
+
             for (final ValueBlobStoreEntity e : result) {
                 List<Value> values = readValuesFromFile(new BlobKey(e.getBlobKey()), e.getLength());
                 //log.info("extracted " + entity.getKey() + " " + values.size());

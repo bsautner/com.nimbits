@@ -28,6 +28,7 @@ import com.nimbits.cloudplatform.server.admin.logging.LogHelper;
 import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -39,13 +40,17 @@ import java.util.List;
  */
 @Service("userService")
 public class UserRpcServiceImpl extends RemoteServiceServlet implements UserService {
+
+    public static final String ANON_NIMBITS_COM = "anon@nimbits.com";
+
     @Override
     public User loginRpc(final String requestUri) throws Exception {
 
         final User retObj;
         EmailAddress internetAddress = null;
         boolean isAdmin = false;
-       // UserInfo domainUser = null;
+
+
 
         final com.google.appengine.api.users.UserService userService = UserServiceFactory.getUserService();
 
@@ -66,11 +71,9 @@ public class UserRpcServiceImpl extends RemoteServiceServlet implements UserServ
 
 
             if (list.isEmpty()) {
-                // log.severe("new user on" + this.getThreadLocalRequest().getRequestURI());
-                LogHelper.log(this.getClass(), "Created a new user");
+
                 retObj = UserTransaction.createUserRecord(internetAddress);
-                // sendUserCreatedFeed(u);
-                // sendWelcomeFeed(u);
+
             } else {
                 retObj = (User) list.get(0);
             }
@@ -87,12 +90,19 @@ public class UserRpcServiceImpl extends RemoteServiceServlet implements UserServ
 
 
         } else {
-            final EntityName name = CommonFactory.createName("anon@nimbits.com", EntityType.user);
+            final EntityName name = CommonFactory.createName(ANON_NIMBITS_COM, EntityType.user);
             final Entity e = EntityModelFactory.createEntity(name, "", EntityType.user, ProtectionLevel.onlyMe, "", "");
             retObj = UserModelFactory.createUserModel(e);
             retObj.setLoggedIn(false);
             retObj.setLoginUrl(userService.createLoginURL(requestUri));
         }
+
+        HttpSession session = getThreadLocalRequest().getSession();
+        if (session != null) {
+            retObj.setSessionId(session.getId());
+            UserCache.cacheAuthenticatedUser(session.getId(), retObj);
+        }
+
         return retObj;
     }
 

@@ -15,22 +15,17 @@ package com.nimbits.cloudplatform.server.api;
 
 import com.google.gson.reflect.TypeToken;
 import com.nimbits.cloudplatform.client.enums.EntityType;
-import com.nimbits.cloudplatform.client.enums.ExportType;
-import com.nimbits.cloudplatform.client.enums.Parameters;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueModel;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
 import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
 import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +40,7 @@ import java.util.logging.Logger;
 //TODO accept JSON in body instead of param
 
 
-@Service("batchApi")
+
 public class BatchApi extends ApiBase {
     final Logger log = Logger.getLogger(BatchApi.class.getName());
     public final static Type listType = new TypeToken<Map<String, List<ValueModel>>>() {
@@ -53,20 +48,12 @@ public class BatchApi extends ApiBase {
 
 
     @Override
-    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        log.info("posting value");
-
-        String json = req.getParameter(Parameters.json.name());
-        log.info(json);
-        setup(req, resp);
-
-        final PrintWriter out = resp.getWriter();
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
 
 
-        if (StringUtils.isEmpty(json)) {
-            json = getContent(req);
-        }
+        setup(req, resp, true);
+
+
         if (user != null && !user.isRestricted()) {
 
 
@@ -76,12 +63,12 @@ public class BatchApi extends ApiBase {
                 List<Entity> entitySample = EntityServiceImpl.getEntityByKey(user, id, EntityType.point);
                 if (! entitySample.isEmpty()) {
                     List<Value> valueList = map.get(id);
-                    double c = 0;
+
                     for (Value v : valueList) {
                         ValueTransaction.recordValue(user, entitySample.get(0), v);
-                        c += v.getDoubleValue();
+
                     }
-                    System.out.println(c);
+
 
                 }
 
@@ -90,7 +77,7 @@ public class BatchApi extends ApiBase {
 
             resp.setStatus(HttpServletResponse.SC_OK);
 
-            out.close();
+
 
 
         }

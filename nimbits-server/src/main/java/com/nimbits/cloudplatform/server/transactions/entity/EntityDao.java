@@ -170,14 +170,14 @@ public class EntityDao {
 
 
 
-    protected static List<Entity> getChildren(final User user, final List<Entity> parents) throws Exception {
+    protected static List<Entity> getChildren(final User user, final List<Entity> parents)   {
         final PersistenceManager pm = pmf.getPersistenceManager();
         try {
             final List<Entity> r = new ArrayList<Entity>(INT);
-            // for (Entity e : parents) {
+
             List<Entity> result = getEntityChildren(pm, parents);
             r.addAll(result);
-            // }
+
             return createModels(user, r);
         } finally {
             pm.close();
@@ -638,7 +638,6 @@ public class EntityDao {
                 final boolean isOwner = model.isOwner(user);
                 model.setReadOnly(!isOwner);
                 retObj.add(model);
-                log.info(model.getName() + " converted ok");
             } else {
                 log.info("did not return an entity because user " + user.getKey() + " could not read " + model.toString());
             }

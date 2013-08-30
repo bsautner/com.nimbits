@@ -41,6 +41,7 @@ import com.nimbits.cloudplatform.client.service.value.ValueService;
 import com.nimbits.cloudplatform.client.service.value.ValueServiceAsync;
 import com.nimbits.cloudplatform.client.ui.controls.EntityContextMenu;
 import com.nimbits.cloudplatform.client.ui.controls.EntityTree;
+import com.nimbits.cloudplatform.client.ui.controls.ReportHelper;
 import com.nimbits.cloudplatform.client.ui.helper.FeedbackHelper;
 
 import java.util.*;
@@ -356,22 +357,8 @@ public class NavigationPanel extends NavigationEventProvider {
                 }
             }
         }
-        private static final String PARAM_DEFAULT_WINDOW_OPTIONS = "menubar=no," +
-                "Location=false," +
-                "resizable=yes," +
-                "scrollbars=yes," +
-                "width=980px," +
-                "height=800," +
-                "status=no," +
-                "dependent=true";
-        private void openUrl(final String uuid, final String title) {
-            String u = com.google.gwt.user.client.Window.Location.getHref()
-                    + "report.html?uuid=" + uuid;
 
-            u = u.replace("/#?", "?");
-            u = u.replace("https", "http");
-            com.google.gwt.user.client.Window.open(u, title, PARAM_DEFAULT_WINDOW_OPTIONS);
-        }
+
         private class TreeDoubleClickGridEventListener implements Listener<TreeGridEvent<ModelData>> {
             TreeDoubleClickGridEventListener() {
             }
@@ -389,9 +376,10 @@ public class NavigationPanel extends NavigationEventProvider {
                                 break;
                             case point:
                                 notifyEntityClickedListener(model);
-                                openUrl(model.getUuid(), model.getName().getValue());
+                                ReportHelper.openUrl(user, model.getUuid(), model.getName().getValue(), model.getBaseEntity().getEntityType());
                                 break;
                             case category:
+                                ReportHelper.openUrl(user, model.getUuid(), model.getName().getValue(), model.getBaseEntity().getEntityType());
                                 notifyEntityClickedListener(model);
                                 break;
                             case subscription:

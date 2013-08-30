@@ -36,7 +36,6 @@ public interface User extends Entity, Serializable {
 
     EmailAddress getEmail();
 
-
     boolean isRestricted();
 
     void addAccessKey(AccessKey key);
@@ -59,5 +58,7 @@ public interface User extends Entity, Serializable {
 
     void setUserAdmin(boolean userAdmin);
 
+    void setSessionId(String sessionId);
 
+    String getSessionId();
 }

@@ -201,7 +201,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
 //    }
 
 
-    public static List<Entity> getChildren(final User user, final  List<Entity> parentEntity) throws Exception {
+    public static List<Entity> getChildren(final User user, final  List<Entity> parentEntity)   {
         return EntityCache.getChildren(user, parentEntity);
     }
 
@@ -306,6 +306,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
     public static List<Entity> getEntityByUUID(final User user, final String uuid, final EntityType type)   {
         try {
             if (user != null) {
+
                 return EntityCache.getEntityByUUID(user, uuid, Class.forName(type.getClassName()));
             }
             else {

@@ -173,5 +173,15 @@ public class UserEntity extends EntityStore implements User {
         this.userAdmin = userAdmin;
     }
 
+    @Override
+    public void setSessionId(String sessionId) {
+
+    }
+
+    @Override
+    public String getSessionId() {
+        return null;
+    }
+
 
 }

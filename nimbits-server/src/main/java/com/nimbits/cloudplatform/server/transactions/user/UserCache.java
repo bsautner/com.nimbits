@@ -54,7 +54,7 @@ public class UserCache {
        if (cacheFactory.contains(cacheKey)) {
            cacheFactory.delete(cacheKey);
        }
-        cacheFactory.put(cacheKey, user, Expiration.byDeltaSeconds(500));
+        cacheFactory.put(cacheKey, user, Expiration.byDeltaSeconds(3200));
 
 
     }

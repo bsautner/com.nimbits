@@ -44,18 +44,16 @@ import java.util.List;
  * Time: 3:56 PM
 
  */
-@Service("searchApi")
-public class SearchApi extends ApiServlet implements org.springframework.web.HttpRequestHandler {
+
+public class SearchApi extends ApiBase   {
+
+    @Override
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException  {
 
 
-    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        final PrintWriter out = resp.getWriter();
-
-
-        try {
-            doInit(req, resp, ExportType.json);
+            setup(req, resp, false);
             String search = req.getParameter(Parameters.search.name());
-            String t =getParam(Parameters.type);
+            String t =req.getParameter(Parameters.type.getText());
             int tr = Integer.valueOf(t);
             EntityType type = EntityType.get(tr);
             List<Entity> result;
@@ -65,7 +63,7 @@ public class SearchApi extends ApiServlet implements org.springframework.web.Htt
                 Iterator iterator = results.iterator();
                 result = new ArrayList<Entity>(results.getNumberReturned());
                 while (iterator.hasNext()) {
-                    try {
+
                         ScoredDocument doc = (ScoredDocument) iterator.next();
                         String owner = doc.getOnlyField(Parameters.owner.name()).getText();
                         EntityName name = CommonFactory.createName(doc.getOnlyField(Parameters.name.name()).getText(), type);
@@ -76,9 +74,7 @@ public class SearchApi extends ApiServlet implements org.springframework.web.Htt
 
                             ));
                         }
-                    }catch (IllegalArgumentException ex) {
 
-                    }
 
 
 
@@ -88,17 +84,8 @@ public class SearchApi extends ApiServlet implements org.springframework.web.Htt
                 result = Collections.emptyList();
             }
             String json = GsonFactory.getInstance().toJson(result);
-            out.print(json);
+            completeResponse(resp, json);
 
-
-        } catch (Exception e) {
-            resp.addHeader("error details", e.getMessage());
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
-        finally {
-            out.close();
-        }
 
 
 

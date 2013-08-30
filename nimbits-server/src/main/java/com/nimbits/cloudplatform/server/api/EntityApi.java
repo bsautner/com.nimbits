@@ -15,7 +15,6 @@ package com.nimbits.cloudplatform.server.api;
 import com.nimbits.cloudplatform.client.enums.Action;
 import com.nimbits.cloudplatform.client.enums.EntityType;
 import com.nimbits.cloudplatform.client.enums.Parameters;
-import com.nimbits.cloudplatform.client.enums.ProtectionLevel;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.entity.EntityModel;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
@@ -26,8 +25,6 @@ import org.apache.commons.lang3.StringUtils;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -44,43 +41,37 @@ public class EntityApi extends ApiBase {
     public static final String SERVER_RESPONSE = "SERVER_RESPONSE";
     public static final String ENTITY_ALREADY_EXISTS = "Entity already exists";
     public static final String CREATING_ENTITY = "Creating Entity";
-    private String json;
+
 
 
 
     @Override
     public void doGet(final HttpServletRequest req,
-                      final HttpServletResponse resp) throws IOException, ServletException {
-        //super.doGet(req, resp);
-        final PrintWriter out = resp.getWriter();
-        setup(req, resp);
+                      final HttpServletResponse resp) throws ServletException {
+
+
+        setup(req, resp, false);
 
         if (user != null) {
 
             List<Entity> sample = getEntity(user, req, resp);
             if (! sample.isEmpty()) {
 
-                    String outJson = GsonFactory.getInstance().toJson(sample.get(0));
-                    out.print(outJson);
-                    log.info(outJson);
-                    resp.setStatus(HttpServletResponse.SC_OK);
-                    out.close();
-                }
+                String outJson = GsonFactory.getInstance().toJson(sample.get(0));
+                completeResponse(resp, outJson);
             }
         }
+    }
 
 
 
 
     @Override
-    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
 
-        setup(req, resp);
+        setup(req, resp, true);
 
-        json = req.getParameter(Parameters.json.getText());
-        if (StringUtils.isEmpty(json)) {
-            json = getContent(req);
-        }
+
 
         List<Entity> entityList = null;
         Action action = Action.valueOf(req.getParameter(Parameters.action.getText()));
@@ -102,22 +93,18 @@ public class EntityApi extends ApiBase {
                         entityList = addMissingEntity(resp);
                     }
                     catch (IllegalArgumentException ex) {
-                        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                        resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
-                        resp.setHeader("ERROR_DETAILS", ex.getMessage());
+                        sendError(resp, HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
+
                     }
 
             }
             if (entityList != null && ! entityList.isEmpty()) {
-                final PrintWriter out;
 
-                    out = resp.getWriter();
 
-                    String outJson = GsonFactory.getInstance().toJson(entityList.get(0));
-                    out.print(outJson);
 
-                    //resp.setStatus(HttpServletResponse.SC_OK);
-                    out.close();
+
+                String outJson = GsonFactory.getInstance().toJson(entityList.get(0));
+                completeResponse(resp, outJson);
 
             }
 

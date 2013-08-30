@@ -32,8 +32,8 @@ public class HotApi extends ApiBase {
 
 
     @Override
-    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        final PrintWriter out = resp.getWriter();
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
+      
 
 
         try {
@@ -41,17 +41,17 @@ public class HotApi extends ApiBase {
             resp.setContentType("text/html; charset=UTF-8");
             Set<Point> retSet = ValueMemCache.getHotlist();
             //  String json = GsonFactory.getInstance().toJson(retSet);
+            StringBuilder sb = new StringBuilder();
+            sb.append("<HTML>");
+            sb.append("<HEAD>");
 
-            out.println("<HTML>");
-            out.println("<HEAD>");
+            sb.append("<link rel=\"stylesheet\" href=\"http://cloud.nimbits.com/bootstrap/css/bootstrap.css\">");
+            sb.append("<meta http-equiv=\"refresh\" content=\"60\">");
+            sb.append("</HEAD>");
 
-            out.println("<link rel=\"stylesheet\" href=\"http://cloud.nimbits.com/bootstrap/css/bootstrap.css\">");
-            out.println("<meta http-equiv=\"refresh\" content=\"60\">");
-            out.println("</HEAD>");
-
-            out.println("<P class=\"text-info\">Active data points on the public cloud:</p>");
+            sb.append("<P class=\"text-info\">Active data points on the public cloud:</p>");
             
-            out.println("<table class=\"table table-condensed\" style=\"font-size : 77%\">");
+            sb.append("<table class=\"table table-condensed\" style=\"font-size : 77%\">");
 
             for (Point p : retSet) {
                 String status = "primary";
@@ -76,7 +76,7 @@ public class HotApi extends ApiBase {
                         badge="success";
                         break;
                 }
-                out.println("<TR><TD><P class=\"text-" + status + "\">" +
+                sb.append("<TR><TD><P class=\"text-" + status + "\">" +
                         p.getName().getValue()
                         + "</p></TD><TD>" +
                         "<a href=\"http://cloud.nimbits.com/report.html?uuid="+ p.getUUID() + "\" class=\"badge badge-" + badge +"\" "
@@ -86,13 +86,14 @@ public class HotApi extends ApiBase {
                                 "</TD></TR>");
             }
             // out.print(json);
-            out.println("</table>");
+            sb.append("</table>");
 
 
-            out.println("</HTML>");
+            sb.append("</HTML>");
+            completeResponse(resp, sb.toString());
         }
         finally {
-            out.close();
+
         }
 
 

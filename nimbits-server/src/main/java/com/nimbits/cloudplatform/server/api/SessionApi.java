@@ -18,6 +18,7 @@ import com.nimbits.cloudplatform.server.gson.GsonFactory;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -27,17 +28,20 @@ public class SessionApi extends ApiBase {
 
     @Override
     public void doGet(final HttpServletRequest req,
-                      final HttpServletResponse resp) throws IOException, ServletException {
+                      final HttpServletResponse resp) throws ServletException {
 
-        final PrintWriter out = resp.getWriter();
-        setup(req, resp);
+
+        setup(req, resp, false);
 
 
         if (user != null && !user.isRestricted()) {
+            HttpSession session = req.getSession();
+            user.setSessionId(session.getId());
             String json = GsonFactory.getInstance().toJson(user, UserModel.class);
-            out.print(json);
-            resp.setStatus(HttpServletResponse.SC_OK);
-            out.close();
+            completeResponse(resp, json);
+        }
+        else {
+            sendError(resp, HttpServletResponse.SC_UNAUTHORIZED, "");
         }
 
 

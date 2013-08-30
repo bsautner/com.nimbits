@@ -47,26 +47,18 @@ import java.util.logging.Logger;
 
 public class ValueApi extends ApiBase {
 
-    public static final String ENTITY_NOT_FOUND = "Entity Not Found";
-    public static final String MESSAGE = "The data point does not have any values recorded to it yet";
-    final static Logger log = Logger.getLogger(ValueApi.class.getName());
 
+    public static final String MESSAGE = "The data point does not have any values recorded to it yet";
 
 
     @Override
-    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-       setup(req, resp);
-        final PrintWriter out = resp.getWriter();
-        String json = req.getParameter(Parameters.json.getText());
-        if (Utils.isEmptyString(json)) {
-            json = getContent(req);
-        }
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
+       setup(req, resp, true);
+
+
         if (user != null && ! Utils.isEmptyString(json)) {
             List<Entity> entitySample = getEntity(user, req, resp);
 
-            if (entitySample.isEmpty()) {
-               sendError(resp, HttpServletResponse.SC_BAD_REQUEST, ENTITY_NOT_FOUND);
-            } else {
 
                 Value value = GsonFactory.getInstance().fromJson(json, ValueModel.class);
                 if (value.getTimestamp().getTime() == 0) {
@@ -75,10 +67,9 @@ public class ValueApi extends ApiBase {
                 Value recorded = ValueTransaction.recordValue(user, entitySample.get(0), value);
                 resp.setStatus(HttpServletResponse.SC_OK);
                 String respString = GsonFactory.getInstance().toJson(recorded, ValueModel.class);
-                out.print(respString);
-                out.close();
+                completeResponse(resp, respString);
+
             }
-        }
 
     }
 
@@ -86,13 +77,10 @@ public class ValueApi extends ApiBase {
 
     @Override
     public void doGet(final HttpServletRequest req,
-                      final HttpServletResponse resp) throws ServletException, IOException {
+                      final HttpServletResponse resp) throws ServletException {
 
 
-        setup(req, resp);
-
-
-
+        setup(req, resp, false);
 
         if (user != null) {
 
@@ -102,11 +90,9 @@ public class ValueApi extends ApiBase {
                 if (sample.isEmpty()) {
                     sendError(resp, HttpServletResponse.SC_NO_CONTENT, MESSAGE);
                 } else {
-                    final PrintWriter out = resp.getWriter();
+
                     String json = GsonFactory.getInstance().toJson(sample.get(0), ValueModel.class);
-                    out.print(json);
-                    resp.setStatus(HttpServletResponse.SC_OK);
-                    out.close();
+                    completeResponse(resp, json);
                 }
 
 

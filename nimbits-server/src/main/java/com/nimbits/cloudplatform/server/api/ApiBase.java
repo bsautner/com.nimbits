@@ -18,6 +18,7 @@ import com.nimbits.cloudplatform.client.enums.Parameters;
 import com.nimbits.cloudplatform.client.enums.ProtectionLevel;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.user.User;
+import com.nimbits.cloudplatform.server.gson.GsonFactory;
 import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
 import com.nimbits.cloudplatform.server.transactions.user.UserTransaction;
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
@@ -40,16 +42,46 @@ public class ApiBase extends HttpServlet {
             "authenticate using OUTH or Google Client Login";
     public static final String MESSAGE_CRED = "You did not provide credentials that can read that point, and the point is not public.";
     protected User user;
+    protected String json;
     final static Logger log = Logger.getLogger(EntityApi.class.getName());
 
 
 
-    protected void setup(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void setup(HttpServletRequest req, HttpServletResponse resp, boolean readBody) throws ServletException  {
 
         getUser(req, resp);
         addHeaders(resp);
+        if (readBody) {
+            readJson(req);
+        }
     }
 
+    protected void completeResponse(HttpServletResponse resp, String respString) {
+        PrintWriter out = null;
+
+        try {
+
+            out = resp.getWriter();
+            out.print(respString);
+
+            resp.setStatus(HttpServletResponse.SC_OK);
+        } catch (IOException e) {
+           sendError(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+        finally {
+           if (out != null) {
+               out.close();
+           }
+        }
+
+
+    }
+    protected void readJson(HttpServletRequest req) {
+        json = req.getParameter(Parameters.json.getText());
+        if (Utils.isEmptyString(json)) {
+            json = getContent(req);
+        }
+    }
 
 
     protected String getContent(final HttpServletRequest req)  {
@@ -74,7 +106,7 @@ public class ApiBase extends HttpServlet {
             return null;
         }
     }
-    protected void getUser(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
+    protected void getUser(final HttpServletRequest req, final HttpServletResponse resp) {
         try {
             user = UserTransaction.getHttpRequestUser(req);
         }
@@ -91,16 +123,23 @@ public class ApiBase extends HttpServlet {
         String id = req.getParameter(Parameters.id.getText());
         String uuid = req.getParameter(Parameters.uuid.getText());
         String type = req.getParameter(Parameters.type.getText());
+        StringBuilder response = new StringBuilder();
         if (! StringUtils.isEmpty(type)) {
-            entityType = EntityType.valueOf(type);
+            int t = Integer.valueOf(type);
+            entityType = EntityType.get(t);
+            if (entityType == null) {
+                entityType = EntityType.point;
+            }
         }
         else {
             entityType = EntityType.point;
         }
         if (!Utils.isEmptyString(id)) {
+            response.append(" used id");
             sample = EntityServiceImpl.getEntityByKey(user, id, entityType);
         }
-        else  if (!Utils.isEmptyString(uuid)) {
+        else if (!Utils.isEmptyString(uuid)) {
+            response.append(" used uuid");
             sample = EntityServiceImpl.getEntityByUUID(user, uuid, entityType);
         }
         else {
@@ -109,7 +148,17 @@ public class ApiBase extends HttpServlet {
         }
         if (sample != null) {
             if (sample.isEmpty()) {
-                sendError(resp, HttpServletResponse.SC_BAD_REQUEST, ENTITY_NOT_FOUND);
+
+                response.append(ENTITY_NOT_FOUND);
+                if (user == null) {
+                    response.append(" User was null");
+                }
+                else {
+                    response.append(GsonFactory.getInstance().toJson(user));
+                }
+                response.append(" uuid = ").append(uuid);
+                response.append(" id = ").append(id);
+                sendError(resp, HttpServletResponse.SC_BAD_REQUEST, response.toString());
 
                 return Collections.emptyList();
 
@@ -119,7 +168,7 @@ public class ApiBase extends HttpServlet {
                     return Collections.emptyList();
                 }
                 else {
-                return sample;
+                    return sample;
                 }
 
             }

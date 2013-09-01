@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2012 Nimbits Inc.
+  ~
+  ~    http://www.nimbits.com
+  ~
+  ~
+  ~ Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.gnu.org/licenses/gpl.html
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="userService" class="com.nimbits.cloudplatform.server.transactions.user.UserRpcServiceImpl">
+
+    </bean>
+
+    <bean id="valueService" class="com.nimbits.cloudplatform.server.transactions.value.ValueRpcServiceImpl">
+
+    </bean>
+
+    <bean id="entityService" class="com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl">
+
+
+    </bean>
+
+
+    <bean id="searchService" class="com.nimbits.cloudplatform.server.transactions.search.EntitySearchService">
+
+
+    </bean>
+
+
+    <bean id="settingsService" class="com.nimbits.cloudplatform.server.transactions.settings.SettingsServiceImpl">
+    </bean>
+
+
+    <bean id="emailService" class="com.nimbits.cloudplatform.server.communication.email.EmailService">
+
+    </bean>
+
+    <bean id="blobService" class="com.nimbits.cloudplatform.server.io.blob.BlobServiceImpl">
+
+     
+    </bean>
+
+
+     <bean id="serverInfoService" class="com.nimbits.cloudplatform.server.admin.common.ServerInfo">
+
+     </bean>
+
+
+    <bean id="xmppService" class="com.nimbits.cloudplatform.server.communication.xmpp.XmppServiceImpl">
+
+
+    </bean>
+
+    <bean id="summaryService" class="com.nimbits.cloudplatform.server.transactions.summary.SummaryService">
+
+    </bean>
+
+    <bean id="subscriptionService" class="com.nimbits.cloudplatform.server.transactions.subscription.SubscriptionService">
+
+    </bean>
+
+    <bean id="shardedDate" class="com.nimbits.cloudplatform.server.transactions.counter.ShardedDate"/>
+
+    <bean id="counterService" class="com.nimbits.cloudplatform.server.transactions.counter.CounterService">
+
+    </bean>
+    <bean id="timespanService" class="com.nimbits.cloudplatform.server.time.TimespanService" />
+
+
+</beans>

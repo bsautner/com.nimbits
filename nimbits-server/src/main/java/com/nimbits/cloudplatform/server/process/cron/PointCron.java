@@ -18,9 +18,8 @@ import com.nimbits.cloudplatform.client.model.user.User;
 import com.nimbits.cloudplatform.server.admin.logging.LogHelper;
 import com.nimbits.cloudplatform.server.process.task.TaskImpl;
 import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.user.UserTransaction;
+import com.nimbits.cloudplatform.server.transactions.user.UserTransactionFactory;
 import org.springframework.stereotype.Service;
-
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -36,7 +35,8 @@ public class PointCron extends HttpServlet implements org.springframework.web.Ht
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp)
             throws IOException {
             try {
-                final User admin =UserTransaction.getAdmin();
+
+                final User admin = UserTransactionFactory.getInstance().getAdmin();
                 final Map<String,Entity> e =
                         EntityServiceImpl.getSystemWideEntityMap(admin, EntityType.point);
 

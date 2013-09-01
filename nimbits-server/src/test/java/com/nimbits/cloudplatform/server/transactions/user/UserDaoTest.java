@@ -72,7 +72,7 @@ public class UserDaoTest extends NimbitsServletTest {
     @Test
     public void createUserTest() throws Exception {
         EmailAddress e = CommonFactory.createEmailAddress("bob@example.com");
-        User u = UserTransaction.createUserRecord(e);
+        User u = UserTransactionFactory.getInstance().createUserRecord(e);
         assertNotNull(u);
         assertEquals(e.getValue(), u.getEmail().getValue());
             List<Entity> result = EntityServiceImpl.getEntityByKey(u, e.getValue(), EntityType.user);

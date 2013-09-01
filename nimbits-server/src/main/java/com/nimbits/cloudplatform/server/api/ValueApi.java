@@ -13,31 +13,17 @@
 package com.nimbits.cloudplatform.server.api;
 
 import com.nimbits.cloudplatform.client.common.Utils;
-import com.nimbits.cloudplatform.client.enums.EntityType;
-import com.nimbits.cloudplatform.client.enums.ExportType;
-import com.nimbits.cloudplatform.client.enums.Parameters;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
-import com.nimbits.cloudplatform.client.model.user.User;
 import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueModel;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.user.UserTransaction;
 import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * Author: Benjamin Sautner

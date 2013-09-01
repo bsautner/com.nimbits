@@ -40,7 +40,7 @@ import com.nimbits.cloudplatform.server.communication.xmpp.XmppServiceImpl;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
 import com.nimbits.cloudplatform.server.json.JsonHelper;
 import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.user.UserTransaction;
+import com.nimbits.cloudplatform.server.transactions.user.UserTransactionFactory;
 import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
 import org.springframework.stereotype.Service;
 
@@ -80,10 +80,10 @@ public class XMPPReceiverServlet extends ApiServlet implements org.springframewo
             final String email = j[0].toLowerCase();
 
             log.severe("XMPP Message recieved " + email + ":   " + body);
-            List<Entity> result = EntityServiceImpl.getEntityByKey(UserTransaction.getAdmin(), email, EntityType.user);
+            List<Entity> result = EntityServiceImpl.getEntityByKey(UserTransactionFactory.getInstance().getAdmin(), email, EntityType.user);
             if (! result.isEmpty()) {
                 u =  (User) result.get(0);
-                u.addAccessKey(UserTransaction.authenticatedKey(u));
+                u.addAccessKey(UserTransactionFactory.getInstance().authenticatedKey(u));
 
                 if (body.toLowerCase().trim().equals("ls")) {
                     //sendPointList(u);

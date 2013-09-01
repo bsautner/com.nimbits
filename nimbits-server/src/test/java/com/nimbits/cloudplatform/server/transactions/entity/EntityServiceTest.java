@@ -96,7 +96,7 @@ public class EntityServiceTest extends NimbitsServletTest {
     public void findEntityByKeyTest() throws Exception {
         helper.setEnvIsLoggedIn(false);
 
-        user = null;
+        //user = null;
         req.removeAllParameters();
 
         List<Entity> r = EntityServiceImpl.findEntityByKey(user, point.getKey());

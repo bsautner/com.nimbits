@@ -12,32 +12,13 @@
 
 package com.nimbits.cloudplatform.server.transactions.user;
 
-import com.nimbits.cloudplatform.client.model.user.User;
-import com.nimbits.cloudplatform.server.admin.logging.LogHelper;
-
-import javax.servlet.http.HttpServletRequest;
-
 /**
- * Author: Benjamin Sautner
- * Date: 1/1/13
- * Time: 6:50 PM
+ * Created by benjamin on 9/1/13.
  */
-public class UserHelper {
+public class UserTransactionFactory {
 
-    public static final ThreadLocal req = new ThreadLocal();
-
-    public static void init(HttpServletRequest s){
-        req.set(s);
-    }
-    public static HttpServletRequest get(){
-        return (HttpServletRequest)req.get();
+    public static UserTransaction getInstance() {
+        return new UserTransactionImpl();
     }
 
-    public static User getUser()  {
-
-
-            return UserTransactionFactory.getInstance().getHttpRequestUser(get());
-
-
-    }
 }

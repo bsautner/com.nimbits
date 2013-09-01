@@ -15,19 +15,11 @@ package com.nimbits.cloudplatform.server.api;
 
 import com.google.gson.reflect.TypeToken;
 import com.nimbits.cloudplatform.client.common.Utils;
-import com.nimbits.cloudplatform.client.enums.EntityType;
 import com.nimbits.cloudplatform.client.enums.Parameters;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
-import com.nimbits.cloudplatform.client.model.point.Point;
-import com.nimbits.cloudplatform.client.model.user.User;
 import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueModel;
-import com.nimbits.cloudplatform.client.service.entity.EntityService;
-import com.nimbits.cloudplatform.server.api.ApiBase;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityTransactions;
-import com.nimbits.cloudplatform.server.transactions.user.UserTransaction;
 import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
 import org.apache.commons.lang3.Range;
 import org.apache.commons.lang3.StringUtils;
@@ -35,11 +27,8 @@ import org.apache.commons.lang3.StringUtils;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -113,18 +102,12 @@ public class SeriesApi extends ApiBase {
             String json;
             if (format.equals(CSV))  {
 
-                Entity entity = entitySample.get(0);
-
-                List<Entity> children = EntityServiceImpl.getChildren(user, entitySample);
-                if (entity.getEntityType().equals(EntityType.point)) {
-                    children.add(entity);
-                }
                 SimpleDateFormat tsFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                StringBuilder builder = new StringBuilder();
-                builder.append(entitySample.get(0).getName().getValue());
-                for (Entity e : children) {
-                    builder.append(",").append(e.getName().getValue()).append("\n");
-                }
+                                 StringBuilder builder = new StringBuilder();
+                                   builder
+                                                 .append(entitySample.get(0).getName().getValue())
+                                                  .append("," + "Y1\n");
+
 
 
                 Collections.sort(valueSample, new Comparator<Value>() {
@@ -140,7 +123,6 @@ public class SeriesApi extends ApiBase {
                 for (Value v : valueSample) {
                     builder.append(tsFormat.format(v.getTimestamp()))
                             .append(",").append(v.getDoubleValue()).append("\n");
-
                 }
                 json = (builder.toString());
 

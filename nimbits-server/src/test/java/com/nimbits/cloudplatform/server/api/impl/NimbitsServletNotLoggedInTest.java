@@ -16,25 +16,7 @@ package com.nimbits.cloudplatform.server.api.impl;
 
 import com.google.appengine.tools.development.testing.*;
 import com.nimbits.cloudplatform.client.constants.Const;
-import com.nimbits.cloudplatform.client.enums.*;
-import com.nimbits.cloudplatform.client.enums.point.PointType;
-import com.nimbits.cloudplatform.client.model.accesskey.AccessKey;
-import com.nimbits.cloudplatform.client.model.accesskey.AccessKeyFactory;
-import com.nimbits.cloudplatform.client.model.category.Category;
-import com.nimbits.cloudplatform.client.model.common.impl.CommonFactory;
-import com.nimbits.cloudplatform.client.model.email.EmailAddress;
-import com.nimbits.cloudplatform.client.model.entity.Entity;
-import com.nimbits.cloudplatform.client.model.entity.EntityModelFactory;
-import com.nimbits.cloudplatform.client.model.entity.EntityName;
-import com.nimbits.cloudplatform.client.model.point.Point;
-import com.nimbits.cloudplatform.client.model.point.PointModelFactory;
-import com.nimbits.cloudplatform.client.model.user.User;
-import com.nimbits.cloudplatform.server.gson.GsonFactory;
 import com.nimbits.cloudplatform.server.process.cron.SystemCron;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.settings.SettingsServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.user.UserTransaction;
-import com.nimbits.cloudplatform.server.transactions.value.ValueDAO;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,9 +28,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 import static org.junit.Assert.*;
 

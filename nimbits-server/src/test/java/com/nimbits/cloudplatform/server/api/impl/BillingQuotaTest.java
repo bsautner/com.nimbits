@@ -64,7 +64,7 @@ public class BillingQuotaTest  extends NimbitsServletTest {
 ////        accountBalance.setDeltaAlarm(1.50);
 ////        accountBalance.setDeltaAlarmOn(true);
 ////        EntityServiceImpl.addUpdateSingleEntity(user, accountBalance);
-////        UserTransaction.fundAccount(user, BigDecimal.valueOf(0.01));
+////        UserTransactionImpl.fundAccount(user, BigDecimal.valueOf(0.01));
 ////        req.setMethod("GET");
 ////        double calls = (0.02 /  QuotaManager.getCostPerApiCall());
 ////        double paid =   (0.01 /  QuotaManager.getCostPerApiCall());
@@ -108,7 +108,7 @@ public class BillingQuotaTest  extends NimbitsServletTest {
 //
 //        EntityServiceImpl.addUpdateSingleEntity(user, accountBalance);
 //
-//        UserTransaction.fundAccount(user, BigDecimal.valueOf(startingBalance));
+//        UserTransactionImpl.fundAccount(user, BigDecimal.valueOf(startingBalance));
 //
 //        List<Value> sample = ValueTransaction.getCurrentValue(accountBalance);
 //        assertFalse(sample.isEmpty());
@@ -163,7 +163,7 @@ public class BillingQuotaTest  extends NimbitsServletTest {
 //
 //        EntityServiceImpl.addUpdateSingleEntity(user, accountBalance);
 //
-//       UserTransaction.fundAccount(user, BigDecimal.valueOf(startingBalance));
+//       UserTransactionImpl.fundAccount(user, BigDecimal.valueOf(startingBalance));
 //
 //
 //
@@ -208,7 +208,7 @@ public class BillingQuotaTest  extends NimbitsServletTest {
 //
 //        EntityServiceImpl.addUpdateSingleEntity(user, accountBalance);
 //
-//        UserTransaction.fundAccount(user, BigDecimal.valueOf(startingBalance));
+//        UserTransactionImpl.fundAccount(user, BigDecimal.valueOf(startingBalance));
 //
 //        List<Value> sample = ValueTransaction.getCurrentValue(accountBalance);
 //        assertFalse(sample.isEmpty());

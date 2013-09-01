@@ -15,10 +15,7 @@ package com.nimbits.cloudplatform.server.transactions.value;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
-import com.google.appengine.api.files.AppEngineFile;
-import com.google.appengine.api.files.FileService;
-import com.google.appengine.api.files.FileServiceFactory;
-import com.google.appengine.api.files.FileWriteChannel;
+import com.google.appengine.api.files.*;
 import com.google.gson.reflect.TypeToken;
 import com.nimbits.cloudplatform.PMF;
 import com.nimbits.cloudplatform.client.common.Utils;
@@ -41,6 +38,7 @@ import org.springframework.stereotype.Repository;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
@@ -356,7 +354,7 @@ public class ValueDAO {
     }
 
 
-    protected static List<ValueBlobStore> recordValues(final Entity entity, final List<Value> values) throws IOException {
+    protected static List<ValueBlobStore> recordValues(final Entity entity, final List<Value> values)  {
         if (!values.isEmpty()) {
 
             final Map<Long, List<Value>> map = new HashMap<Long, List<Value>>(values.size());
@@ -414,7 +412,7 @@ public class ValueDAO {
 
     }
 
-    private static List<ValueBlobStore> createBlobStoreEntity(final Entity entity, final Map<Long, Long> maxMap, final Map<Long, Long> minMap, final Long l, final String json ) throws IOException {
+    private static List<ValueBlobStore> createBlobStoreEntity(final Entity entity, final Map<Long, Long> maxMap, final Map<Long, Long> minMap, final Long l, final String json )  {
         final PersistenceManager pm = pmf.getPersistenceManager();
 
         final List<ValueBlobStore> retList = new ArrayList<ValueBlobStore>(1);
@@ -460,6 +458,19 @@ public class ValueDAO {
             return retList;
 
 
+        } catch (FinalizationException e) {
+            log.severe(e.getMessage());
+            return Collections.emptyList();
+
+        } catch (FileNotFoundException e) {
+            log.severe(e.getMessage());
+            return Collections.emptyList();
+        } catch (LockException e) {
+            log.severe(e.getMessage());
+            return Collections.emptyList();
+        } catch (IOException e) {
+            log.severe(e.getMessage());
+            return Collections.emptyList();
         } finally {
 
 

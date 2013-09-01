@@ -266,9 +266,16 @@ public class ValueMemCache {
         final List<Long> stored;
         if (cacheFactory.contains(bufferedListCacheKey)) {
             stored = (List<Long>) cacheFactory.get(bufferedListCacheKey);
-            stored.add(v.getTimestamp().getTime() + entity.hashCode()); //TODO timestamped buffered value
-            cacheFactory.delete(stored);
-            cacheFactory.put(bufferedListCacheKey, stored);
+            if (stored == null) {
+                //fixes npe
+                cacheFactory.delete(bufferedListCacheKey);
+
+            }
+            else {
+                stored.add(v.getTimestamp().getTime() + entity.hashCode()); //TODO timestamped buffered value
+                cacheFactory.delete(stored);
+                cacheFactory.put(bufferedListCacheKey, stored);
+            }
         } else {
             stored = new ArrayList<Long>(10);
             stored.add(v.getTimestamp().getTime() + entity.hashCode());
@@ -320,7 +327,7 @@ public class ValueMemCache {
     //gets the most recent values for a entity up to a max count. If  count is in the buffer, just return them otherwise
     //get more values from the store.
 
-    public static List<Value> getTopDataSeries(final Entity entity, final int maxValues, final Date endDate) throws Exception {
+    public static List<Value> getTopDataSeries(final Entity entity, final int maxValues, final Date endDate)  {
         final List<Value> cached = getBuffer(entity);
         if (cached != null && cached.size() > maxValues) {
             return cached;
@@ -355,7 +362,7 @@ public class ValueMemCache {
     }
 
 
-    public static List<ValueBlobStore> recordValues(final Entity entity,final List<Value> values) throws Exception {
+    public static List<ValueBlobStore> recordValues(final Entity entity,final List<Value> values)  {
         return ValueDAO.recordValues(entity, values);
     }
 

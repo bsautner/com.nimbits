@@ -20,7 +20,7 @@ import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.user.User;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
 import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.user.UserTransaction;
+import com.nimbits.cloudplatform.server.transactions.user.UserTransactionFactory;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.ServletException;
@@ -31,6 +31,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -48,8 +49,27 @@ public class ApiBase extends HttpServlet {
 
 
     protected void setup(HttpServletRequest req, HttpServletResponse resp, boolean readBody) throws ServletException  {
+        log.info("api setup");
+        Enumeration h = req.getHeaderNames();
+        while (h.hasMoreElements()) {
+            String header = (String) h.nextElement();
+
+            log.info(header + "=" + req.getHeader(header));
+        }
+        log.info(req.getQueryString());
+
+        Enumeration q = req.getParameterNames();
+        while (q.hasMoreElements()) {
+            String header = (String) q.nextElement();
+
+            log.info(header + "=" + req.getParameter(header));
+        }
+        log.info(req.getQueryString());
 
         getUser(req, resp);
+        if (user != null) {
+            log.info(user.getEmail().getValue());
+        }
         addHeaders(resp);
         if (readBody) {
             readJson(req);
@@ -108,7 +128,7 @@ public class ApiBase extends HttpServlet {
     }
     protected void getUser(final HttpServletRequest req, final HttpServletResponse resp) {
         try {
-            user = UserTransaction.getHttpRequestUser(req);
+            user = UserTransactionFactory.getInstance().getHttpRequestUser(req);
         }
         catch (SecurityException ex) {
             user = null;
@@ -125,9 +145,13 @@ public class ApiBase extends HttpServlet {
         String type = req.getParameter(Parameters.type.getText());
         StringBuilder response = new StringBuilder();
         if (! StringUtils.isEmpty(type)) {
-            int t = Integer.valueOf(type);
-            entityType = EntityType.get(t);
-            if (entityType == null) {
+            try {
+                int t = Integer.valueOf(type);
+                entityType = EntityType.get(t);
+                if (entityType == null) {
+                    entityType = EntityType.point;
+                }
+            } catch (NumberFormatException e) {
                 entityType = EntityType.point;
             }
         }

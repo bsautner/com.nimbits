@@ -21,7 +21,7 @@ import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.location.Location;
 import com.nimbits.cloudplatform.client.model.location.LocationFactory;
 import com.nimbits.cloudplatform.client.model.user.User;
-import com.nimbits.cloudplatform.server.transactions.user.UserTransaction;
+import com.nimbits.cloudplatform.server.transactions.user.UserTransactionFactory;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServlet;
@@ -89,7 +89,7 @@ public class ApiServlet extends HttpServlet {
     public void doInit(final HttpServletRequest req, final HttpServletResponse resp, final ExportType type)   {
         // log.info(req.getQueryString());
 
-        user = UserTransaction.getHttpRequestUser(req);
+        user = UserTransactionFactory.getInstance().getHttpRequestUser(req);
 
         getGPS(req);
         buildParamMap(req);

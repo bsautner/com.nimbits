@@ -31,7 +31,7 @@ import com.nimbits.cloudplatform.server.gson.GsonFactory;
 import com.nimbits.cloudplatform.server.http.HttpCommonFactory;
 import com.nimbits.cloudplatform.server.transactions.counter.CounterService;
 import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.user.UserTransaction;
+import com.nimbits.cloudplatform.server.transactions.user.UserTransactionFactory;
 import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -100,7 +100,7 @@ public class SubscriptionService extends RemoteServiceServlet {
 
                 if (!subscriptionEntity.isEmpty()) {
 
-                    final List<User> subscriberList = UserTransaction.getUserByKey(subscriptionEntity.get(0).getOwner(), AuthLevel.readWriteAll);
+                    final List<User> subscriberList = UserTransactionFactory.getInstance().getUserByKey(subscriptionEntity.get(0).getOwner(), AuthLevel.readWriteAll);
                     final AlertType alert = v.getAlertState();
                     if (! subscriberList.isEmpty()) {
                         User subscriber = subscriberList.get(0);

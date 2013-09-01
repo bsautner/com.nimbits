@@ -19,7 +19,7 @@ import com.nimbits.cloudplatform.client.model.user.User;
 
 @RemoteServiceRelativePath("userService")
 public interface UserService extends RemoteService {
-    User loginRpc(final String requestUri) throws Exception;
+    User loginRpc(final String requestUri);
 
 
 

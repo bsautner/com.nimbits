@@ -52,10 +52,10 @@ public class ValueApiTest extends NimbitsServletTest {
         req.removeAllParameters();
         req.setContentType("application/json");
         Value v = ValueFactory.createValueModel(2.345);
-        req.addHeader("id", point.getKey());
-        //req.addParameter("json", GsonFactory.getInstance().toJson(v));
-        String json = GsonFactory.getInstance().toJson(v);
-        req.setContent(json.getBytes());
+        req.addParameter("id", point.getKey());
+        req.addParameter("json", GsonFactory.getInstance().toJson(v));
+
+
         req.setMethod("POST");
         impl.doPost(req, resp);
         assertEquals(HttpServletResponse.SC_OK, resp.getStatus());

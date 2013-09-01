@@ -76,6 +76,16 @@
         <url-pattern>/service/v2/time</url-pattern>
     </servlet-mapping>
 
+
+    <servlet>
+        <servlet-name>fixApi</servlet-name>
+        <servlet-class>com.nimbits.cloudplatform.server.api.FixApi</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>fixApi</servlet-name>
+        <url-pattern>/service/v2/fix</url-pattern>
+    </servlet-mapping>
+
     <servlet>
         <servlet-name>versionApi</servlet-name>
         <servlet-class>com.nimbits.cloudplatform.server.api.impl.VersionApi</servlet-class>

@@ -44,7 +44,7 @@ public class UserRpcServiceImpl extends RemoteServiceServlet implements UserServ
     public static final String ANON_NIMBITS_COM = "anon@nimbits.com";
 
     @Override
-    public User loginRpc(final String requestUri) throws Exception {
+    public User loginRpc(final String requestUri) {
 
         final User retObj;
         EmailAddress internetAddress = null;
@@ -67,12 +67,12 @@ public class UserRpcServiceImpl extends RemoteServiceServlet implements UserServ
 
             final List<Entity> list = EntityServiceImpl
                     .getEntityByKey(
-                            UserTransaction.getAnonUser(), internetAddress.getValue(), EntityType.user);
+            UserTransactionFactory.getInstance().getAnonUser(), internetAddress.getValue(), EntityType.user);
 
 
             if (list.isEmpty()) {
 
-                retObj = UserTransaction.createUserRecord(internetAddress);
+                retObj = UserTransactionFactory.getInstance().createUserRecord(internetAddress);
 
             } else {
                 retObj = (User) list.get(0);
@@ -86,7 +86,7 @@ public class UserRpcServiceImpl extends RemoteServiceServlet implements UserServ
 
             retObj.setLastLoggedIn(new Date());
             EntityServiceImpl.addUpdateEntity(retObj, Arrays.<Entity>asList(retObj));
-            retObj.addAccessKey(UserTransaction.authenticatedKey(retObj));
+            retObj.addAccessKey(UserTransactionFactory.getInstance().authenticatedKey(retObj));
 
 
         } else {

@@ -23,7 +23,7 @@ import com.nimbits.cloudplatform.client.model.user.User;
 import com.nimbits.cloudplatform.client.service.entity.EntityService;
 import com.nimbits.cloudplatform.server.transactions.search.EntitySearchService;
 import com.nimbits.cloudplatform.server.transactions.user.UserHelper;
-import com.nimbits.cloudplatform.server.transactions.user.UserTransaction;
+import com.nimbits.cloudplatform.server.transactions.user.UserTransactionFactory;
 import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
 import org.springframework.stereotype.Service;
 
@@ -253,7 +253,7 @@ public class EntityServiceImpl  extends RemoteServiceServlet implements EntitySe
 
 
     public static List<Entity> getIdleEntities() throws Exception {
-        return EntityCache.getIdleEntities(UserTransaction.getAdmin());
+        return EntityCache.getIdleEntities(UserTransactionFactory.getInstance().getAdmin());
     }
 
 

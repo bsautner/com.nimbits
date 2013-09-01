@@ -115,7 +115,7 @@ public class ValueBlobStoreEntity  implements ValueBlobStore {
 
     @Override
     public String getBlobKey() {
-        return blobkey.getKeyString();
+        return blobkey == null ? "" : blobkey.getKeyString();
     }
 
     @Override

@@ -46,7 +46,7 @@ public class ValueTransaction {
 
     public static List<Value> getTopDataSeries(final Entity entity,
                                                final int maxValues,
-                                               final Date endDate) throws Exception {
+                                               final Date endDate)  {
         return ValueMemCache.getTopDataSeries(entity, maxValues, endDate);
     }
 
@@ -262,7 +262,7 @@ public class ValueTransaction {
 
     }
 
-    public static Map<String, Entity> getCurrentValues(final Map<String, Point> entities) throws Exception {
+    public static Map<String, Entity> getCurrentValues(final Map<String, Point> entities) {
         final Map<String, Entity> retObj = new HashMap<String, Entity>(entities.size());
         for (final Point p : entities.values()) {
 
@@ -294,7 +294,7 @@ public class ValueTransaction {
     }
 
 
-    public static void recordValues(User user, Point point, List<Value> values) throws Exception {
+    public static void recordValues(User user, Point point, List<Value> values)  {
         if (point.getOwner().equals(user.getKey())) {
             ValueMemCache.recordValues(point, values);
         }
@@ -332,7 +332,7 @@ public class ValueTransaction {
 
     public static Value recordValue(final User u,
                                     final EntityName pointName,
-                                    final Value value) throws Exception {
+                                    final Value value)  {
 
 
         final List<Entity> e = EntityServiceImpl.getEntityByName(u, pointName, EntityType.point);

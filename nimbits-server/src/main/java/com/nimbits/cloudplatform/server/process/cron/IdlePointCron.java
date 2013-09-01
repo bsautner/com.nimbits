@@ -23,7 +23,7 @@ import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueFactory;
 import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
 import com.nimbits.cloudplatform.server.transactions.subscription.SubscriptionService;
-import com.nimbits.cloudplatform.server.transactions.user.UserTransaction;
+import com.nimbits.cloudplatform.server.transactions.user.UserTransactionFactory;
 import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
 import org.springframework.stereotype.Service;
 
@@ -80,7 +80,7 @@ public class IdlePointCron extends HttpServlet implements org.springframework.we
         final Calendar c = Calendar.getInstance();
         c.add(Calendar.SECOND, p.getIdleSeconds() * -1);
         boolean retVal = false;
-        final List<Entity> result = EntityServiceImpl.getEntityByKey(UserTransaction.getAdmin(),
+        final List<Entity> result = EntityServiceImpl.getEntityByKey(UserTransactionFactory.getInstance().getAdmin(),
                 p.getOwner(), EntityType.user);
         if (!result.isEmpty()) {
             final User u = (User) result.get(0);

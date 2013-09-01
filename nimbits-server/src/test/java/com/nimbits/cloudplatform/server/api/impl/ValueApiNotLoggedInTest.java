@@ -5,14 +5,11 @@ import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueFactory;
 import com.nimbits.cloudplatform.server.api.ValueApi;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
-import com.nimbits.cloudplatform.server.transactions.user.UserTransaction;
-import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
+import com.nimbits.cloudplatform.server.transactions.user.UserTransactionFactory;
 import org.junit.Test;
 
-import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import java.io.IOException;
-import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -27,7 +24,7 @@ public class ValueApiNotLoggedInTest extends NimbitsServletNotLoggedInTest {
     @Test
     public void testPostValue() throws IOException, ServletException {
 
-        UserTransaction.createUserRecord(CommonFactory.createEmailAddress("test@example.com"));
+        UserTransactionFactory.getInstance().createUserRecord(CommonFactory.createEmailAddress("test@example.com"));
 
         ValueApi impl = new ValueApi();
         req.removeAllParameters();

@@ -33,7 +33,7 @@ import com.nimbits.cloudplatform.server.gson.GsonFactory;
 import com.nimbits.cloudplatform.server.process.cron.SystemCron;
 import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
 import com.nimbits.cloudplatform.server.transactions.settings.SettingsServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.user.UserTransaction;
+import com.nimbits.cloudplatform.server.transactions.user.UserTransactionFactory;
 import com.nimbits.cloudplatform.server.transactions.value.ValueDAO;
 import org.junit.After;
 import org.junit.Before;
@@ -135,7 +135,7 @@ public class NimbitsServletTest {
         groupName = CommonFactory.createName("group1", EntityType.point);
 
 
-        User r = UserTransaction.createUserRecord(emailAddress);
+        User r = UserTransactionFactory.getInstance().createUserRecord(emailAddress);
         assertNotNull(r);
 
 

@@ -38,12 +38,12 @@ public class Program {
                 System.out.println("Logged in With Key");
 
                 Random r = new Random();
-                 for (int i = -5000; i < 0; i++) {
+                 for (int i = -10; i < 0; i++) {
 
                      Calendar c = Calendar.getInstance();
                      c.add(Calendar.MINUTE, i);
 
-                     ValueHelper.recordValue("t5", i, c.getTime());
+                     ValueHelper.recordValue("dd", i, c.getTime());
                      System.out.println(i);
 
                  }

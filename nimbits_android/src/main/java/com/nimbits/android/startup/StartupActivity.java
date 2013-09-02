@@ -23,6 +23,7 @@ import com.crashlytics.android.Crashlytics;
 import com.nimbits.android.AuthenticationManager;
 import com.nimbits.android.HomeActivity;
 import com.nimbits.android.R;
+import com.nimbits.android.server.HttpService;
 import com.nimbits.android.settings.SettingsActivity;
 import com.nimbits.android.startup.async.StartupTask;
 import com.nimbits.cloudplatform.Nimbits;
@@ -44,6 +45,8 @@ public class StartupActivity extends Activity {
         Animation myFadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fadein);
         myImageView.startAnimation(myFadeInAnimation);
         activity = this;
+
+        startService(new Intent(this, HttpService.class));
 
         StartupTask.getInstance(new StartupTask.StartupListener() {
             @Override
@@ -70,9 +73,6 @@ public class StartupActivity extends Activity {
                 finish();
             }
         }).execute(activity);;
-
-
-
     }
 
 }

@@ -114,10 +114,10 @@ public class EntityServletImpl extends ApiServlet implements org.springframework
                         String json = getParam(Parameters.json);
                         String json2 = getParam(Parameters.json);
                         if (!Utils.isEmptyString(json)) {
-                            log.info(json);
+
                             Entity entity = GsonFactory.getInstance().fromJson(json, EntityModel.class);
                             Class cls =  EntityHelper.getClass(entity.getEntityType());
-                            log.info(cls.getName());
+
 
                             Object up = GsonFactory.getInstance().fromJson(json2, cls);
                             List<Entity> r = null;

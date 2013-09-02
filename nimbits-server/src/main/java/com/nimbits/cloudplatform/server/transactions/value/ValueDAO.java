@@ -352,7 +352,23 @@ public class ValueDAO {
             TaskImpl.startDeleteBlobTask(new BlobKey(st.getBlobKey()));
         }
     }
+    private static Date zeroOutDateToStart(final Date date) {
+        final Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.MILLISECOND, c.get(Calendar.MILLISECOND) * -1);
+        c.add(Calendar.SECOND, c.get(Calendar.SECOND) * -1);
+        c.add(Calendar.MINUTE, c.get(Calendar.MINUTE) * -1);
+        c.add(Calendar.HOUR_OF_DAY, c.get(Calendar.HOUR_OF_DAY) * -1);
+        return c.getTime();
+    }
 
+
+    private static Date zeroOutDateToEnd(final Date date) {
+        final Calendar c = Calendar.getInstance();
+        c.setTime(zeroOutDateToStart(date));
+        c.add(Calendar.DATE, 1);
+        return c.getTime();
+    }
 
     protected static List<ValueBlobStore> recordValues(final Entity entity, final List<Value> values)  {
         if (!values.isEmpty()) {
@@ -364,7 +380,7 @@ public class ValueDAO {
             for (final Value value : values) {
                 if (valueHealthy(value)) {
                     //zero out the date of the current value we're working with
-                    final Date zero = TimespanServiceFactory.getInstance().zeroOutDateToStart(value.getTimestamp());
+                    final Date zero =  zeroOutDateToStart(value.getTimestamp());
                     if (map.containsKey(zero.getTime())) {
                         //a new value for an existing day
                         map.get(zero.getTime()).add(value);

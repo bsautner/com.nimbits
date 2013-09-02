@@ -113,7 +113,7 @@ public class PointServletTest extends NimbitsServletTest {
     }
 
     @Test
-    public void testGet() {
+    public void testGet() throws Exception {
 
         req.addParameter(Parameters.uuid.getText(), group.getKey());
 

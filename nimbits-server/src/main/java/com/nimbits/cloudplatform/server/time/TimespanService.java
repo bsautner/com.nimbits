@@ -32,7 +32,7 @@ import java.util.GregorianCalendar;
  * Time: 7:55 PM
  */
 @Service("timespanService")
-
+@Deprecated
 public class TimespanService extends RemoteServiceServlet   {
     private static final long serialVersionUID = 1L;
 

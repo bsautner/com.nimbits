@@ -45,7 +45,7 @@ public class ApiServlet extends HttpServlet {
 
     protected static User user;
     private static Map<Parameters, String> paramMap;
-    protected final static Logger log = Logger.getLogger(ApiServlet.class.getName());
+
     protected static Location location;
     private static final String POST = "POST";
 
@@ -132,7 +132,7 @@ public class ApiServlet extends HttpServlet {
             String v =  req.getParameter(s.getText());
             if (! Utils.isEmptyString(v)) {
                 paramMap.put(s,v);
-                log.info(s.name() + "=" + v);
+
             }
 
         }

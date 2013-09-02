@@ -104,7 +104,7 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
                         case create:
                             EntityName parentName = null;
                             EntityType parentType;
-                            log.info("creating point");
+
                             if (containsParam(Parameters.category)) {
                                 parentName = CommonFactory.createName(getParam(Parameters.category), EntityType.category);
                                 parentType = EntityType.category;
@@ -115,10 +115,8 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
                             } else {
                                 parentType = EntityType.user;
                             }
-                            log.info(parentType.name());
-                            if (parentName != null) {
-                                log.info(parentName.getValue());
-                            }
+
+
 
                             if (!Utils.isEmptyString(pointNameParam) && Utils.isEmptyString(getParam(Parameters.json))) {
                                 final EntityName pointName = CommonFactory.createName(pointNameParam, EntityType.point);
@@ -163,12 +161,14 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
 
             out.print(processGet(req, resp));
         } catch (IOException e) {
-            LogHelper.logException(this.getClass(), e);
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
 
-    private void validateExistence(final User user, final EntityName name, final StringBuilder sb) throws Exception {
+    private void validateExistence(final User user, final EntityName name, final StringBuilder sb)  {
 
         List<Entity> result = EntityServiceImpl.getEntityByName(user, name, EntityType.point);
 
@@ -183,10 +183,9 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
 
     }
 
-    public String processGet(final HttpServletRequest req, final HttpServletResponse resp) {
+    public String processGet(final HttpServletRequest req, final HttpServletResponse resp) throws Exception {
 
         StringBuilder sb = new StringBuilder(INT);
-        try {
 
 
             doInit(req, resp, ExportType.plain);
@@ -205,8 +204,7 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
                 sb.append(Const.CONST_ARDUINO_DATA_SEPARATOR);
             }
 
-            log.info(pointNameParam);
-            log.info(action.getCode());
+
             switch (action) {
                 case read:
                     processGetRead(sb, startParam, endParam, offsetParam, pointNameParam);
@@ -216,14 +214,12 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
                     validateExistence(user, pointName, sb);
                     break;
                 case list:
-                    log.info("listing...");
+
                     EntityName parentName = CommonFactory.createName(pointNameParam, EntityType.point);
                     List<Entity> result = EntityServiceImpl.getEntityByName(user, parentName, EntityType.point);
                     if (!result.isEmpty()) {
                         List<Entity> children = EntityServiceImpl.getChildren(user, result);
-                        if (children.isEmpty()) {
-                            log.info(parentName.getValue() + " had no children");
-                        }
+
                         for (Entity e : children) {
                             if (okToReport(user, e)) {
 
@@ -236,20 +232,16 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
                         }
 
                     } else {
-                        log.info("couldn't find " + parentName.getValue());
+
                     }
-                    log.info(sb.toString());
+
                     break;
             }
             if (getClientType().equals(ClientType.arduino)) {
                 sb.append(Const.CONST_ARDUINO_DATA_SEPARATOR);
             }
 
-        } catch (Exception e) {
-            resp.setStatus(Const.HTTP_STATUS_INTERNAL_SERVER_ERROR);
-            log.warning(e.getMessage());
 
-        }
         resp.setStatus(Const.HTTP_STATUS_OK);
         return sb.toString();
     }
@@ -323,10 +315,10 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
         if (parentName != null) {
             final Entity category = getParentWithParam(parentName, parentType, u);
             parent = category.getKey();
-            log.info("parent: " + parent);
+
         } else {
             parent = u.getKey();
-            log.info("parent was null");
+
         }
 
         final Entity entity = EntityModelFactory.createEntity(pointName, description, EntityType.point, ProtectionLevel.everyone,
@@ -423,7 +415,7 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
 
     }
 
-    protected String getPointObjects(final String categoryNameParam, final String pointNameParam) throws Exception {
+    protected String getPointObjects(final String categoryNameParam, final String pointNameParam)  {
 
         if (user != null) {
             Type pointListType = new TypeToken<List<PointModel>>() {

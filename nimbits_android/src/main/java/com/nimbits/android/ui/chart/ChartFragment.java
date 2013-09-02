@@ -19,47 +19,67 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.nimbits.android.R;
+import com.nimbits.android.ToastHelper;
 import com.nimbits.android.content.ContentProvider;
 import com.nimbits.android.main.async.SeriesTask;
-import com.nimbits.cloudplatform.Nimbits;
-import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.value.Value;
 import org.apache.commons.lang3.Range;
 
+import java.util.Date;
 import java.util.List;
 
-/**
- * Created by benjamin on 7/25/13.
- */
-public class ChartFragment extends Fragment {
+
+@SuppressWarnings("unused")
+public class ChartFragment extends Fragment implements SeriesTask.SeriesTaskListener{
     private final String TAG = "ChartFragment";
     private Chart seriesChart;
 
 
     private View view;
-
+    private Range<Date> range;
+    private SeriesTask.SeriesTaskListener listener;
     FrameLayout chartFrame;
+
     public ChartFragment() {
     }
 
+    public ChartFragment(SeriesTask.SeriesTaskListener listener, Range<Date> range) {
+        this.listener = listener;
+        this.range = range;
+    }
+
+    public ChartFragment(SeriesTask.SeriesTaskListener listener) {
+        this.listener = listener;
+        this.range = null;
+    }
 
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         if (view == null) {
             view = inflater.inflate(R.layout.chart_fragment_layout, container, false);
-            chartFrame = (FrameLayout) view.findViewById(R.id.chart_frame);
-            TextView title = (TextView) view.findViewById(R.id.textView);
+            if (view != null) {
+                chartFrame = (FrameLayout) view.findViewById(R.id.chart_frame);
+                ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+                progressBar.setVisibility(View.VISIBLE);
+                TextView title = (TextView) view.findViewById(R.id.textView);
+                if (ContentProvider.currentEntity != null) {
+                    if (title != null) {
+                        title.setText(ContentProvider.currentEntity.getName().getValue());
+                    }
 
-            if (title != null) {
-                title.setText(ContentProvider.currentEntity.getName().getValue());
+
+                    Log.v(TAG, "view created ");
+                    seriesChart = new SeriesChart();
+                }
+                else {
+                    ToastHelper.show(getActivity(), "No Entity Selected");
+                }
             }
 
-
-            Log.v(TAG, "view created ");
-            seriesChart = new SeriesChart();
         }
         return view;
 
@@ -68,31 +88,30 @@ public class ChartFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        getSeries(ContentProvider.currentEntity, Nimbits.getControl().getChartValues());
+        SeriesTask.getInstance(this, range).execute();
         Log.v(TAG, "onResume" + (seriesChart == null));
     }
 
-    private void getSeries(final Entity point, final int count) {
-        SeriesTask.getInstance(new SeriesTask.SeriesTaskListener() {
-            @Override
-            public void onSuccess(List<Value> response) {
-                View chart;
-                try {
-                    if (!response.isEmpty()) {
-                        chart = seriesChart.execute(getActivity(), point, response);
-                        chart.setLongClickable(true);
-
-                        chartFrame.removeAllViews();
-                        chartFrame.addView(chart);
-                    }
-                } catch (Exception e) {
-                    Log.e(this.getClass().getSimpleName(), e.getMessage());
 
 
-                }
+    @Override
+    public void onSuccess(List<Value> response)  {
+        View chart;
+        ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
+        if (!response.isEmpty()) {
+            try {
+                chart = seriesChart.execute(getActivity(), ContentProvider.currentEntity, response);
 
+                chart.setLongClickable(true);
+
+                chartFrame.removeAllViews();
+                chartFrame.addView(chart);
+                listener.onSuccess(response);
+            } catch (Exception e) {
+                ToastHelper.show(getActivity(), e.getMessage());
             }
+        }
 
-        }).execute(point, Range.between(0, count));
     }
 }

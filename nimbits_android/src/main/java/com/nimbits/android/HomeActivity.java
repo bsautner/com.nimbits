@@ -15,7 +15,6 @@ package com.nimbits.android;
 
 import android.app.Activity;
 import android.content.*;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,9 +30,11 @@ import com.nimbits.android.content.ContentProvider;
 import com.nimbits.android.main.async.AddUpdateEntityTask;
 import com.nimbits.android.main.async.LoadMainTask;
 import com.nimbits.android.main.async.PostValueTask;
+import com.nimbits.android.main.async.SeriesTask;
 import com.nimbits.android.startup.async.LoadControlTask;
 import com.nimbits.android.ui.PointViewBaseFragment;
 import com.nimbits.android.ui.chart.ChartFragment;
+import com.nimbits.android.ui.chart.ChartViewActivity;
 import com.nimbits.android.ui.dialog.SimpleEntryDialog;
 import com.nimbits.android.ui.entitylist.EntityListFragment;
 import com.nimbits.android.ui.entitylist.EntityListener;
@@ -53,7 +54,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class HomeActivity extends Activity implements EntityListener {
+public class HomeActivity extends Activity implements EntityListener, SeriesTask.SeriesTaskListener {
     public static final String WELCOME = "http://www.nimbits.com/android/welcome.html";
 
 
@@ -122,7 +123,7 @@ public class HomeActivity extends Activity implements EntityListener {
 
         FrameLayout frame = (FrameLayout) findViewById(R.id.data_frame);
         frame.removeAllViews();
-        chartFragment =  new ChartFragment();
+        chartFragment =  new ChartFragment(this);
         chartFragment.setArguments(getIntent().getExtras());
         getFragmentManager().beginTransaction().replace(R.id.data_frame, chartFragment).commit();
 
@@ -182,8 +183,13 @@ public class HomeActivity extends Activity implements EntityListener {
                     String uuid = ContentProvider.currentEntity.getUUID();
                     final SharedPreferences settings =  getSharedPreferences(getString(R.string.app_name), 0);
                     final String base_url = settings.getString(getString(R.string.base_url_setting), getString(R.string.base_url));
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(base_url + "/report.html?uuid=" + uuid));
-                    startActivity(browserIntent);
+                   // Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(base_url + "/report.html?uuid=" + uuid));
+                    Intent intent = new Intent(getApplicationContext(), ChartViewActivity.class);
+                    Bundle b = new Bundle();
+
+                    intent.putExtras(b);
+                    startActivity(intent);
+                  //  finish();
                 }
             case R.id.action_refresh:
                 showEntityFragment();
@@ -205,6 +211,7 @@ public class HomeActivity extends Activity implements EntityListener {
         else {
             children = Collections.emptyList();
         }
+
         switch (entity.getEntityType()) {
 
             case user:
@@ -215,14 +222,13 @@ public class HomeActivity extends Activity implements EntityListener {
                     showPointFragment();
                 }
                 else {
-                    if (entityFragment != null) {
-                        entityFragment.showEntity(getApplicationContext());
-                    }
+                    showEntity();
                 }
                 showChartFragment();
                 break;
             case category:
-                entityFragment.showEntity(getApplicationContext());
+
+                showEntity();
                 break;
             case subscription:
                 break;
@@ -235,7 +241,11 @@ public class HomeActivity extends Activity implements EntityListener {
         }
     }
 
-
+    private void showEntity() {
+        if (entityFragment != null) {
+            entityFragment.showEntity(getApplicationContext());
+        }
+    }
 
 
     @Override
@@ -267,9 +277,7 @@ public class HomeActivity extends Activity implements EntityListener {
     public void onValueUpdated(Entity entity, Value response) {
 
         Log.v(TAG, "Home Activity Updating list on new value");
-        if (entityFragment != null) {
-            entityFragment.showEntity(getApplicationContext() );
-        }
+        showEntity();
 
 
     }
@@ -393,6 +401,11 @@ public class HomeActivity extends Activity implements EntityListener {
                     //mDisplay.append(newMessage + "\n");
                 }
             };
+
+    @Override
+    public void onSuccess(List<Value> response) {
+
+    }
 
     //end gcm stuff
 }

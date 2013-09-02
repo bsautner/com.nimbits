@@ -107,9 +107,34 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
 
     }
 
-
     @Override
     public void update(Entity update) {
       throw new RuntimeException("Not Implemented");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        CalculationModel that = (CalculationModel) o;
+
+        if (!formula.equals(that.formula)) return false;
+        if (x != null ? !x.equals(that.x) : that.x != null) return false;
+        if (y != null ? !y.equals(that.y) : that.y != null) return false;
+        if (z != null ? !z.equals(that.z) : that.z != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + formula.hashCode();
+        result = 31 * result + (x != null ? x.hashCode() : 0);
+        result = 31 * result + (y != null ? y.hashCode() : 0);
+        result = 31 * result + (z != null ? z.hashCode() : 0);
+        return result;
     }
 }

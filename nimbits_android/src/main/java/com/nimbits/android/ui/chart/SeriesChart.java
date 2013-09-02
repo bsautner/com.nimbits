@@ -24,9 +24,7 @@ import org.achartengine.chart.PointStyle;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Author: Benjamin Sautner
@@ -99,15 +97,24 @@ public class SeriesChart extends AbstractChart {
         end = valuesResponse.get(0).getTimestamp().getTime();
         start = valuesResponse.get(valuesResponse.size() - 1).getTimestamp().getTime();
 
+        Collections.sort(valuesResponse, new Comparator<Value>() {
+            @Override
+            public int compare(Value lhs, Value rhs) {
+                return Double.compare(lhs.getDoubleValue(), rhs.getDoubleValue());
+            }
+        });
+        double min = valuesResponse.get(0).getDoubleValue();
+        double max = valuesResponse.get(valuesResponse.size() -1).getDoubleValue();
+
 
         renderer.setXLabels(10);
         renderer.setYLabels(10);
         renderer.setShowGrid(true);
         renderer.setXLabelsAlign(Paint.Align.CENTER);
         renderer.setYLabelsAlign(Paint.Align.RIGHT);
-        setChartSettings(renderer, "", "", "", start, end, -5, 30, Color.LTGRAY, Color.LTGRAY);
+        setChartSettings(renderer, "", "", "", start, end, min, max, Color.LTGRAY, Color.LTGRAY);
         return ChartFactory.getTimeChartView(context, buildDateDataset(titles, dateCollection, valueCollection),
-                renderer, "h:mm:ss a");
+                renderer, "MM/DD/YY h:mm:ss a");
 
     }
 

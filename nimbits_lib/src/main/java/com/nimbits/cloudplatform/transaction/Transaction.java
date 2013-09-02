@@ -46,6 +46,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class Transaction {
@@ -68,6 +69,7 @@ public class Transaction {
         HttpHelper.init(Nimbits.cookie, GsonFactory.getInstance());
     }
 
+    public static final int LONG = 1000;
 
 
     public static List<User> getSession() {
@@ -129,18 +131,28 @@ public class Transaction {
 
     }
 
-    public static List<Value> getSeries(final Entity entity, final Range<Integer> range) {
+    public static List<Value> getSeries(final Entity entity) {
         UrlContainer path = UrlContainer.combine(Nimbits.base, SERIES_SERVICE);
         List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(2);
         addAuthenticationParameters(params);
         params.add((new BasicNameValuePair(Parameters.id.getText(), entity.getKey())));
-        params.add((new BasicNameValuePair(Parameters.count.getText(), String.valueOf(range.getMaximum()))));
+        params.add((new BasicNameValuePair(Parameters.count.getText(), String.valueOf(LONG))));
 
         List<Value> sample = HttpHelper.doGet(ValueModel.class, path, params, valueListType, true);
         return sample;
 
     }
+    public static List<Value> getSeries(final Entity entity, final Range<Date> range) {
+        UrlContainer path = UrlContainer.combine(Nimbits.base, SERIES_SERVICE);
+        List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(3);
+        addAuthenticationParameters(params);
+        params.add((new BasicNameValuePair(Parameters.id.getText(), entity.getKey())));
+        params.add((new BasicNameValuePair(Parameters.sd.getText(), String.valueOf(range.getMinimum().getTime()))));
+        params.add((new BasicNameValuePair(Parameters.ed.getText(), String.valueOf(range.getMaximum().getTime()))));
+        List<Value> sample =  HttpHelper.doGet(ValueModel.class, path, params, valueListType, true);
+        return sample;
 
+    }
     public static void deleteEntity(final Entity entity) {
 
         UrlContainer path = UrlContainer.combine(Nimbits.base, ENTITY_SERVICE);

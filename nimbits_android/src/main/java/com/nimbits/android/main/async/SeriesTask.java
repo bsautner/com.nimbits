@@ -13,11 +13,13 @@
 package com.nimbits.android.main.async;
 
 import android.os.AsyncTask;
+import com.nimbits.android.content.ContentProvider;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.transaction.Transaction;
 import org.apache.commons.lang3.Range;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,7 +30,7 @@ import java.util.List;
 public class SeriesTask extends AsyncTask<Object, List<Value>, List<Value>> {
 
     public static SeriesTaskListener mListener;
-
+    private Range<Date> range;
     private SeriesTask() {
 
     }
@@ -36,6 +38,14 @@ public class SeriesTask extends AsyncTask<Object, List<Value>, List<Value>> {
     public static SeriesTask getInstance(SeriesTaskListener listener) {
         SeriesTask instance = new SeriesTask();
         instance.setListener(listener);
+        instance.range = null;
+        return instance;
+
+    }
+    public static SeriesTask getInstance(SeriesTaskListener listener, Range<Date> range) {
+        SeriesTask instance = new SeriesTask();
+        instance.setListener(listener);
+        instance.range = range;
         return instance;
 
     }
@@ -56,10 +66,18 @@ public class SeriesTask extends AsyncTask<Object, List<Value>, List<Value>> {
     @Override
     protected List<Value> doInBackground(Object... objects) {
 
-        Entity entity = (Entity) objects[0];
-        Range<Integer> range = (Range<Integer>) objects[1];
 
-            return Transaction.getSeries(entity, range);
+        List<Value> result;
+        if (this.range == null) {
+            result =  Transaction.getSeries(ContentProvider.getCurrentEntity());
+        }
+        else {
+
+            result =  Transaction.getSeries(ContentProvider.getCurrentEntity(), range);
+        }
+        return result;
+
+
 
 
 

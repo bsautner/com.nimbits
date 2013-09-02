@@ -19,12 +19,14 @@ import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.user.User;
 import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueFactory;
+import com.nimbits.cloudplatform.server.api.EntityApi;
 import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
 import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Author: Benjamin Sautner
@@ -32,6 +34,7 @@ import java.util.List;
  * Time: 7:19 PM
  */
 public class CalculationTransaction {
+    final static Logger log = Logger.getLogger(CalculationTransaction.class.getName());
     public static void processCalculations(final User u, final Entity point)   {
 
         final List<Entity> calculations = EntityServiceImpl.getEntityByTrigger(u, point, EntityType.calculation);
@@ -65,7 +68,13 @@ public class CalculationTransaction {
 
 
     public  static List<Value> solveEquation(final User user, final Calculation calculation)  {
-
+        log.info("solve equation");
+        log.info("user null" + (user == null));
+        log.info(calculation.getFormula());
+        if (user != null) {
+            log.info(user.toString());
+        }
+        log.info(calculation.toString());
         final MathEvaluator m = new MathEvaluatorImpl(calculation.getFormula());
 
 

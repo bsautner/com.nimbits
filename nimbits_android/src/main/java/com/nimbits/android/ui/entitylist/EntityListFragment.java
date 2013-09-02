@@ -47,7 +47,8 @@ public class EntityListFragment extends PointViewBaseFragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.entity_list_fragment, container, false);
-
+        ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+         progressBar.setVisibility(View.VISIBLE);
         Log.v(TAG, "view created " + (adapter == null));
 
         showEntity(getActivity());
@@ -90,7 +91,7 @@ public class EntityListFragment extends PointViewBaseFragment {
         list.setAdapter(adapter);
         ProgressBar bar = (ProgressBar) view.findViewById(R.id.progressBar);
         if (bar != null) {
-            bar.setVisibility(View.GONE);
+           bar.setVisibility(View.GONE);
         }
 
 

@@ -47,10 +47,10 @@ public class ValueHelper {
         }
     }
 
-    public static List<Value> getSeries(String name, int count)   {
+    public static List<Value> getSeries(String name)   {
         Point point = PointHelper.getPoint(name);
 
-            return Transaction.getSeries(point, Range.between(0, count));
+            return Transaction.getSeries(point);
 
     }
 

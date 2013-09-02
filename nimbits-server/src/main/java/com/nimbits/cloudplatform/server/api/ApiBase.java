@@ -56,7 +56,6 @@ public class ApiBase extends HttpServlet {
 
             log.info(header + "=" + req.getHeader(header));
         }
-        log.info(req.getQueryString());
 
         Enumeration q = req.getParameterNames();
         while (q.hasMoreElements()) {

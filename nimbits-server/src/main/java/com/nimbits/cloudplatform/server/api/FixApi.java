@@ -12,9 +12,29 @@
 
 package com.nimbits.cloudplatform.server.api;
 
+import com.nimbits.cloudplatform.client.enums.AuthLevel;
+import com.nimbits.cloudplatform.client.enums.EntityType;
+import com.nimbits.cloudplatform.client.enums.FilterType;
+import com.nimbits.cloudplatform.client.enums.ProtectionLevel;
+import com.nimbits.cloudplatform.client.enums.point.PointType;
+import com.nimbits.cloudplatform.client.model.common.impl.CommonFactory;
+import com.nimbits.cloudplatform.client.model.entity.Entity;
+import com.nimbits.cloudplatform.client.model.entity.EntityModelFactory;
+import com.nimbits.cloudplatform.client.model.entity.EntityName;
+import com.nimbits.cloudplatform.client.model.point.Point;
+import com.nimbits.cloudplatform.client.model.point.PointModelFactory;
+import com.nimbits.cloudplatform.client.model.user.User;
+import com.nimbits.cloudplatform.server.gson.GsonFactory;
+import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
+import com.nimbits.cloudplatform.server.transactions.entity.EntityTransactions;
+import com.nimbits.cloudplatform.server.transactions.user.UserTransaction;
+import com.nimbits.cloudplatform.server.transactions.user.UserTransactionFactory;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Author: Benjamin Sautner
@@ -29,7 +49,23 @@ public class FixApi extends ApiBase {
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
 
+        StringBuilder sb = new StringBuilder();
+        List<User> user = UserTransactionFactory.getInstance().getUserByKey("pchsimmonds@gmail.com", AuthLevel.admin);
+        if (user.isEmpty()) {
+            sb.append("user not found");
+        }
+         else {
+            sb.append("got user<br />");
+            EntityName name = CommonFactory.createName("Temperature", EntityType.point);
+            Entity entity = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.everyone, user.get(0).getKey(),user.get(0).getKey() );
+            Point point = PointModelFactory.createPointModel(entity, 0.0, 90, "", 0.0, false, false, false, 0, false, FilterType.none, 0.0, false, PointType.basic,0, false, 0.0);
 
+            EntityServiceImpl.addUpdateEntity(user.get(0), point);
+            sb.append("created entity<br />");
+        }
+
+
+        completeResponse(resp, user.toString());
 
     }
 }

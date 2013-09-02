@@ -288,7 +288,7 @@ public class ValueMemCache {
         cacheFactory.put(v.getTimestamp().getTime() + entity.hashCode(), v);
 
 
-        if (stored.size() > Const.CONST_MAX_CACHED_VALUE_SIZE) {
+        if (stored != null && stored.size() > Const.CONST_MAX_CACHED_VALUE_SIZE) {
             TaskImpl.startMoveCachedValuesToStoreTask(entity);
         }
 
@@ -302,10 +302,7 @@ public class ValueMemCache {
         } else {
             cacheFactory.put(currentValueCacheKey, v);
         }
-        // } catch (Exception e) {
-        //     cacheFactory.delete(currentValueCacheKey);
-        //     cacheFactory.delete(bufferedListCacheKey);
-        // }
+
 
         return v;
 

@@ -199,18 +199,7 @@ public class SubscriptionService extends RemoteServiceServlet {
         }
     }
 
-    private static void doMQTT(User user, Subscription subscription, Entity entity, Point point, Value value) {
 
-        String valueJson = GsonFactory.getInstance().toJson(value);
-
-        ApiProxy.Environment env = ApiProxy.getCurrentEnvironment();
-        String host = String.valueOf(env.getAttributes().get("com.google.appengine.runtime.default_version_hostname"));
-        log.info("MQTT appId: " + host);
-        Mqtt mqtt = MqttFactory.createMqtt(host, user.getEmail(), entity.getKey(), valueJson);
-        String mqttJson = GsonFactory.getInstance().toJson(mqtt);
-        String params = "data=" + mqttJson;
-        HttpCommonFactory.getInstance().doPost(Path.PATH_NIMBITS_CORE_MQTT_LOCATION_URL, params);
-    }
 
     private static void doXMPP(final User u, final Subscription subscription, final Entity entity, final Point point, final Value v)  {
         final String message;

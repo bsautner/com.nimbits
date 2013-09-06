@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:layout_alignParentLeft="true"
+              android:layout_above="@+id/progressBar"
+              android:weightSum="1.0"
+              android:orientation="vertical"
+              android:id="@id/screen">
+
+    <FrameLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_above="@+id/progressBar"
-        android:weightSum="1.0"
-        android:orientation="vertical"
-        android:id="@id/screen">
+        android:layout_height="0dp"
+        android:id="@id/main_frame"
+        android:layout_weight=".5"
+        android:layout_margin="5dp">
 
-        <FrameLayout
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:id="@id/data_frame"
+        android:layout_weight=".5"
+        android:layout_alignParentEnd="false"
+        android:layout_margin="5dp">
+
+        <WebView
             android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:id="@id/main_frame"
-            android:layout_weight=".5"
-            android:layout_margin="5dp">
-
-
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:id="@id/data_frame"
-            android:layout_weight=".5"
-            android:layout_alignParentEnd="false"
-            android:layout_margin="5dp">
-
-            <WebView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/webView"
-                android:layout_gravity="center"/>
-        </FrameLayout>
-    </LinearLayout>
+            android:layout_height="fill_parent"
+            android:id="@+id/webView"
+            android:layout_gravity="center"/>
+    </FrameLayout>
+</LinearLayout>

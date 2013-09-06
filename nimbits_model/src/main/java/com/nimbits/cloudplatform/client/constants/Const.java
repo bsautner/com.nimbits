@@ -20,6 +20,8 @@ package com.nimbits.cloudplatform.client.constants;
  */
 public class Const {
 
+    public static final String API_KEY_ID = "com.nimbits.ApiKey";
+
     public static final String TRUE = "1";
     public static final String FALSE = "0";
     public static final String EMPTY = "";

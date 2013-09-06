@@ -66,7 +66,7 @@ public class Transaction {
 
     static {
 
-        HttpHelper.init(Nimbits.cookie, GsonFactory.getInstance());
+        HttpHelper.init(GsonFactory.getInstance());
     }
 
     public static final int LONG = 1000;

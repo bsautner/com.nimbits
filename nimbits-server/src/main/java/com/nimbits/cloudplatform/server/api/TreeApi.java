@@ -41,7 +41,7 @@ public class TreeApi extends ApiBase {
         setup(req, resp, false);
 
 
-        if (user != null && !user.isRestricted()) {
+        if (user != null && ! user.isRestricted()) {
 
             final List<Entity> sample = EntityServiceImpl.getEntities(user);
 

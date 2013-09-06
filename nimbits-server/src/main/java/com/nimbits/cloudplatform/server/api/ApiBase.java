@@ -12,7 +12,9 @@
 
 package com.nimbits.cloudplatform.server.api;
 
+import com.google.appengine.api.utils.SystemProperty;
 import com.nimbits.cloudplatform.client.common.Utils;
+import com.nimbits.cloudplatform.client.constants.Const;
 import com.nimbits.cloudplatform.client.enums.EntityType;
 import com.nimbits.cloudplatform.client.enums.Parameters;
 import com.nimbits.cloudplatform.client.enums.ProtectionLevel;
@@ -23,16 +25,16 @@ import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
 import com.nimbits.cloudplatform.server.transactions.user.UserTransactionFactory;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 
@@ -40,11 +42,12 @@ public class ApiBase extends HttpServlet {
     public static final String ENTITY_NOT_FOUND = "Entity not found";
     public static final String YOU_MUST_SUPPLY_AN_ENTITY_ID_OR_UUID = "You must supply an entity id or uuid";
     public static final String MESSAGE = "You must supply a valid email and secret key combo as a query string parameter, or " +
-            "authenticate using OUTH or Google Client Login";
+            " a valid API KEY";
     public static final String MESSAGE_CRED = "You did not provide credentials that can read that point, and the point is not public.";
     protected User user;
     protected String json;
     final static Logger log = Logger.getLogger(EntityApi.class.getName());
+
 
 
 
@@ -60,12 +63,17 @@ public class ApiBase extends HttpServlet {
         Enumeration q = req.getParameterNames();
         while (q.hasMoreElements()) {
             String header = (String) q.nextElement();
-
             log.info(header + "=" + req.getParameter(header));
         }
         log.info(req.getQueryString());
+        try {
+            getUser(req, resp);
+        }
+        catch (IllegalArgumentException rx) {
 
-        getUser(req, resp);
+            sendError(resp, HttpServletResponse.SC_BAD_REQUEST, rx.getMessage());
+
+        }
         if (user != null) {
             log.info(user.getEmail().getValue());
         }
@@ -85,12 +93,12 @@ public class ApiBase extends HttpServlet {
 
             resp.setStatus(HttpServletResponse.SC_OK);
         } catch (IOException e) {
-           sendError(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+            sendError(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
         }
         finally {
-           if (out != null) {
-               out.close();
-           }
+            if (out != null) {
+                out.close();
+            }
         }
 
 

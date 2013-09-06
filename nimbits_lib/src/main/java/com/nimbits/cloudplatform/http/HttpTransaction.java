@@ -13,6 +13,8 @@
 package com.nimbits.cloudplatform.http;
 
 import com.google.gson.Gson;
+import com.nimbits.cloudplatform.Nimbits;
+import com.nimbits.cloudplatform.client.enums.Parameters;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -41,21 +43,21 @@ import java.util.*;
 public class HttpTransaction {
 
     private static final int INT_OK = 200;
-    private static final String EQUALS = "=";
     private static final String PARAM_DELIM = "?";
     private static final String PARAM_ACSID = "ACSID";
     private static final String APPLICATION_JSON = "application/json";
     private static final String ACCEPT = "Accept";
     private static final String CONTENT_TYPE = "Content-type";
     private static final String CONST_ENCODING = "UTF-8";
-    private static final String WORD_COOKIE = "Cookie";
-    private static Cookie cookie;
+
+
     private static Gson gson;
 
-    public static void init(Cookie authCookie, Gson aGson) {
+    public static void init( Gson aGson) {
+
 
         gson = aGson;
-        cookie = authCookie;
+
 
     }
 
@@ -87,7 +89,10 @@ public class HttpTransaction {
             params.add(v);
 
         }
+        if (! StringUtils.isEmpty(Nimbits.email)) {
 
+            params.add(new BasicNameValuePair(Parameters.email.getText(), Nimbits.email));
+        }
 
         String paramString = URLEncodedUtils.format(params, CONST_ENCODING);
         String path = postUrl.getUrl() + PARAM_DELIM + paramString;
@@ -96,9 +101,9 @@ public class HttpTransaction {
         try {
             http.addHeader(ACCEPT, APPLICATION_JSON);
             http.addHeader(CONTENT_TYPE, APPLICATION_JSON);
-            if (cookie != null) {
-                String cookieParam = cookie.getName() + EQUALS + cookie.getValue();
-                http.addHeader(WORD_COOKIE, cookieParam);
+            if (Nimbits.getApiKey() != null) {
+
+                http.addHeader(Parameters.apikey.getText(),Nimbits.getApiKey());
             }
             HttpResponse response = HttpClientFactory.getInstance().execute(http);
             HttpEntity entity = response.getEntity();
@@ -111,21 +116,15 @@ public class HttpTransaction {
                     result = (reader.readLine());
                     inputStream.close();
                 }
-            } else {
-
-                // throw new HttpException("Server Responded with status " + response.getStatusLine().getStatusCode() );
-
             }
 
-        } catch (ClientProtocolException e) {
+        } catch (Exception e) {
+
             return Collections.emptyList();
-        } catch (IOException e) {
-            return Collections.emptyList();
-        } catch (RuntimeException e) {
-            return Collections.emptyList();
+
         } finally {
-            http.abort();
-            HttpClientFactory.getInstance().getConnectionManager().closeExpiredConnections();
+          //  http.abort();
+          ///  HttpClientFactory.getInstance().getConnectionManager().closeExpiredConnections();
         }
 
 
@@ -142,9 +141,8 @@ public class HttpTransaction {
         HttpPost http = new HttpPost(postUrl.getUrl());
         try {
             addParameters(parameters, http);
-            if (cookie != null) {
-                String cookieParam = cookie.getName() + EQUALS + cookie.getValue();
-                http.addHeader(WORD_COOKIE, cookieParam);
+            if (Nimbits.getApiKey() != null) {
+                http.addHeader(Parameters.apikey.getText(),Nimbits.getApiKey());
             }
             HttpResponse response = HttpClientFactory.getInstance().execute(http);
 
@@ -171,6 +169,10 @@ public class HttpTransaction {
         for (BasicNameValuePair value : parameters) {
             nameValuePairs.add(value);
         }
+        if (! StringUtils.isEmpty(Nimbits.email)) {
+
+            nameValuePairs.add(new BasicNameValuePair(Parameters.email.getText(), Nimbits.email));
+        }
         httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
     }
 
@@ -189,48 +191,5 @@ public class HttpTransaction {
         }
     }
 
-    public static List<Cookie> getAuthCookie(final UrlContainer gaeAppLoginUrl,
-                                             final String authToken,
-                                             final String baseUrl) {
-        final DefaultHttpClient httpClient = new DefaultHttpClient();
-        Cookie retObj = null;
-        final String cookieUrl;
-
-        try {
-            cookieUrl =
-                    gaeAppLoginUrl.getUrl() + "?continue="
-                            + URLEncoder.encode(baseUrl, CONST_ENCODING)
-                            + "&auth="
-                            + URLEncoder.encode(authToken, CONST_ENCODING);
-        } catch (UnsupportedEncodingException e) {
-            return Collections.emptyList();
-        }
-
-        final HttpGet httpget = new HttpGet(cookieUrl);
-        final HttpResponse response;
-        try {
-            response = httpClient.execute(httpget);
-        } catch (IOException e) {
-            return Collections.emptyList();
-        }
-
-        if (response.getStatusLine().getStatusCode() == HttpURLConnection.HTTP_OK ||
-                response.getStatusLine().getStatusCode() == HttpURLConnection.HTTP_NO_CONTENT) {
-
-            for (final Cookie cookie : httpClient.getCookieStore().getCookies()) {
-                if (cookie.getName().equals(PARAM_ACSID)) {
-                    retObj = cookie;
-                    break;
-                }
-
-            }
-        }
-
-        httpClient.getParams().setBooleanParameter(ClientPNames.HANDLE_REDIRECTS, true);
-
-
-        return Arrays.asList(retObj);
-
-    }
 
 }

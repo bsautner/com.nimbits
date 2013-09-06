@@ -30,8 +30,11 @@ import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
 import com.nimbits.cloudplatform.server.transactions.settings.SettingsServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 
+
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -39,25 +42,17 @@ import java.util.Map;
 
 
 public class UserTransactionImpl implements UserTransaction {
-    public static final String ERROR1 = "While the current user is authenticated, the email provided does not match " +
-            "the authenticated user, so the system is confused and cannot authenticate the request. " +
-            "Please report this error.";
-    public static final String ERROR2 = "the email that was provided but could not be found. Please log into nimbits with an account " +
-            " registered with google at least once.";
-    public static final String ERROR3 = "Google User Service Unavailable";
+    public static final String ERROR1 = "Could not authenticate your request.";
+
     public static final String AUTHENTICATED_KEY = "AUTHENTICATED_KEY";
     public static final int LIMIT = 1000;
     protected EmailAddress email;
 
     private com.google.appengine.api.users.UserService googleUserService;
-    private User user;
+
     @Override
     public EmailAddress getEmail() {
         return email;
-    }
-    @Override
-    public User getUser() {
-        return user;
     }
 
     public UserTransactionImpl() {
@@ -92,8 +87,11 @@ public class UserTransactionImpl implements UserTransaction {
 
         processAnonRequestWithUUID(req);
 
-        if (email != null) {
 
+
+
+        if (email != null) {
+            User user;
             final List<Entity> result = EntityServiceImpl.getEntityByKey(
                     getAdmin(), //avoid infinite recursion
                     email.getValue(), EntityType.user);
@@ -101,44 +99,36 @@ public class UserTransactionImpl implements UserTransaction {
 
             if (result.isEmpty()) {
 
-                if (googleUserService != null) {
-                    if (googleUserService.getCurrentUser() != null && googleUserService.getCurrentUser().getEmail().equalsIgnoreCase(email.getValue())) {
-                        this.user = createUserRecord(email);
-                        this.user.addAccessKey(authenticatedKey(user));
-                        //putUserInSession(req, user);
-                        return user;
-                    } else if (googleUserService.getCurrentUser() != null && !googleUserService.getCurrentUser().getEmail().equalsIgnoreCase(email.getValue())) {
-                        throw new SecurityException(ERROR1);
-                    } else if (googleUserService.getCurrentUser() == null) {
-                        throw new SecurityException(ERROR2);
-                    } else {
-                        throw new SecurityException(ERROR3);
-                    }
 
+                if (trustedRequest(req)) {
+                    user = createUserRecord(email);
+                    user.addAccessKey(authenticatedKey(user));
+
+                    return user;
+
+                } else {
+                    throw new SecurityException(ERROR1);
                 }
-                else {
-                    throw new SecurityException(ERROR3);
-                }
+
+
 
 
             } else {
-                this.user = (User) result.get(0);
+                 user = (User) result.get(0);
 
-                addAccessKeysToUser(req, this.user);
+                addAccessKeysToUser(req,  user);
 
-                if (this.user.isRestricted()) {
+                if ( user.isRestricted() && trustedRequest(req)) {
 
-                    if (googleUserService != null) {
-                        if (googleUserService.getCurrentUser() != null
-                                && googleUserService.getCurrentUser().getEmail().equalsIgnoreCase(user.getEmail().getValue())) {
-                            this.user.addAccessKey(authenticatedKey(user)); //they are logged in
-                        }
-                    }
+                     user.addAccessKey(authenticatedKey(user)); //they are logged in
                 }
-                // putUserInSession(req, user);
-                return this.user;
+
+
             }
-        } else {
+
+            return  user;
+        }
+        else {
             throw new SecurityException("There was no account connected to this request");
         }
 
@@ -146,6 +136,23 @@ public class UserTransactionImpl implements UserTransaction {
 
     }
 
+    private boolean trustedRequest(final HttpServletRequest request) {
+        return (googleUserService != null && (googleUserService.getCurrentUser() != null && googleUserService.getCurrentUser().getEmail().equalsIgnoreCase(email.getValue())))
+                || validApiKey(request);
+    }
+    private boolean validApiKey(final HttpServletRequest request) {
+
+        String apiKey = System.getProperty(Const.API_KEY_ID);
+        String providedApiKey = request.getHeader(Parameters.apikey.getText());
+        if (StringUtils.isNotEmpty(apiKey) && StringUtils.isNotEmpty(providedApiKey)) {
+            if (apiKey.equals(providedApiKey)) {
+                return true;
+            }
+
+        }
+        return false;
+
+    }
     @Override
     public void getEmailFromRequest(HttpServletRequest req) {
         if (req != null) {
@@ -226,22 +233,7 @@ public class UserTransactionImpl implements UserTransaction {
     }
 
 
-    protected void getUserFromCacheBySessionId(HttpServletRequest req) {
-        if (req != null) {
-            HttpSession session = req.getSession();
-            String sessionId;
-            sessionId = req.getParameter(Parameters.session.getText());
-            if (StringUtils.isEmpty(sessionId)) {
-                sessionId = session.getId();
 
-            }
-            List<User> sample = UserCache.getCachedAuthenticatedUser(sessionId);
-            if (! sample.isEmpty()) {
-                this.user =  sample.get(0);
-                this.user.setSessionId(sessionId);
-            }
-        }
-    }
 
     protected void addAccessKeysToUser(HttpServletRequest req, User user) {
         if (req != null && user != null) {

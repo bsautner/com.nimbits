@@ -15,7 +15,10 @@ package com.nimbits.cloudplatform.server.transactions.value;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
-import com.google.appengine.api.files.*;
+import com.google.appengine.api.files.AppEngineFile;
+import com.google.appengine.api.files.FileService;
+import com.google.appengine.api.files.FileServiceFactory;
+import com.google.appengine.api.files.FileWriteChannel;
 import com.google.gson.reflect.TypeToken;
 import com.nimbits.cloudplatform.PMF;
 import com.nimbits.cloudplatform.client.common.Utils;
@@ -27,18 +30,14 @@ import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueModel;
 import com.nimbits.cloudplatform.client.model.valueblobstore.ValueBlobStore;
 import com.nimbits.cloudplatform.client.model.valueblobstore.ValueBlobStoreModel;
-import com.nimbits.cloudplatform.server.admin.logging.LogHelper;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
 import com.nimbits.cloudplatform.server.orm.ValueBlobStoreEntity;
 import com.nimbits.cloudplatform.server.process.task.TaskImpl;
-import com.nimbits.cloudplatform.server.time.TimespanServiceFactory;
 import org.apache.commons.lang3.Range;
-import org.springframework.stereotype.Repository;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
@@ -52,7 +51,7 @@ import java.util.logging.Logger;
  * Date: 3/22/12
  * Time: 11:05 AM
  */
-@Repository("valueDao")
+
 public class ValueDAO {
     private static final int INT = 1024;
     private static final int TOP = 1;
@@ -402,12 +401,12 @@ public class ValueDAO {
                     }
                 }
             }
-            //log.info("ValueDAO: map " + map.size() + "  " + entity.getKey());
+
             final List<ValueBlobStore> retObj = new ArrayList<ValueBlobStore>(map.size());
             for (final Map.Entry<Long, List<Value>> longListEntry : map.entrySet()) {
                 if (!longListEntry.getValue().isEmpty()) {
                     final String json = GsonFactory.getInstance().toJson(longListEntry.getValue());
-                    //log.info("ValueDAO: json " + json + "  " + entity.getKey());
+
                     List<ValueBlobStore> b = createBlobStoreEntity(entity, maxMap, minMap, longListEntry.getKey(), json );
                     if (! b.isEmpty()) {
                         retObj.addAll(b);
@@ -474,18 +473,18 @@ public class ValueDAO {
             return retList;
 
 
-        } catch (FinalizationException e) {
-            log.severe(e.getMessage());
-            return Collections.emptyList();
+//        } catch (FinalizationException e) {
+//            log.severe(e.getMessage());
+//            return Collections.emptyList();
 
-        } catch (FileNotFoundException e) {
-            log.severe(e.getMessage());
-            return Collections.emptyList();
-        } catch (LockException e) {
-            log.severe(e.getMessage());
-            return Collections.emptyList();
+//        } catch (FileNotFoundException e) {
+//            log.severe(e.getMessage());
+//            return Collections.emptyList();
+//        } catch (LockException e) {
+//            log.severe(e.getMessage());
+//            return Collections.emptyList();
         } catch (IOException e) {
-            log.severe(e.getMessage());
+            log.severe("IO Exception" + e.getMessage());
             return Collections.emptyList();
         } finally {
 

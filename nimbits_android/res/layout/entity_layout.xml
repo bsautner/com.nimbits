@@ -26,57 +26,57 @@
 
     </LinearLayout>
 
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/entity_name"
-            android:hint="@string/name"
-            android:lines="1"
-            android:longClickable="false"
-            android:maxLines="1"/>
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/entity_name"
+        android:hint="@string/name"
+        android:lines="1"
+        android:longClickable="false"
+        android:maxLines="1"/>
 
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/entity_desc"
-            android:lines="3"
-            android:maxLines="3"
-            android:hint="Description"/>
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/entity_desc"
+        android:lines="3"
+        android:maxLines="3"
+        android:hint="Description"/>
 
-        <TextView
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Protection Level (for access without keys)"
+        android:id="@+id/textView"
+        android:layout_gravity="left|center_vertical"/>
+
+    <RadioGroup
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:gravity="left">
+
+        <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Protection Level (for access without keys)"
-            android:id="@+id/textView"
+            android:text="Protected: Only I can read and write"
+            android:id="@+id/radio_protected"
+            android:layout_gravity="left|center_vertical"
+            />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Shared: I can R/W, I can approve who can read"
+            android:id="@+id/radio_connection"
             android:layout_gravity="left|center_vertical"/>
 
-        <RadioGroup
-            android:layout_width="fill_parent"
+        <RadioButton
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:gravity="left">
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Protected: Only I can read and write"
-                android:id="@+id/radio_protected"
-                android:layout_gravity="left|center_vertical"
-                />
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Shared: I can R/W, I can approve who can read"
-                android:id="@+id/radio_connection"
-                android:layout_gravity="left|center_vertical"/>
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Public: Anyone can read"
-                android:id="@+id/radio_public"
-                android:layout_gravity="left|center_vertical"
-                android:checked="true"/>
-        </RadioGroup>
-    </LinearLayout>
+            android:text="Public: Anyone can read"
+            android:id="@+id/radio_public"
+            android:layout_gravity="left|center_vertical"
+            android:checked="true"/>
+    </RadioGroup>
+</LinearLayout>

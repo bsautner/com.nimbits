@@ -38,6 +38,7 @@ public class TimeApi  extends ApiBase {
 
         Long time = new Date().getTime();
         String json = GsonFactory.getInstance().toJson(time);
+
         completeResponse(resp, json);
 
     }

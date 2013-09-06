@@ -19,6 +19,7 @@ import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.user.User;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -26,8 +27,6 @@ import java.util.List;
  */
 public interface UserTransaction {
     EmailAddress getEmail();
-
-    User getUser();
 
     User getHttpRequestUser(HttpServletRequest req);
 

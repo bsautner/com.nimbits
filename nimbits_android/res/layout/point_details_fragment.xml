@@ -9,11 +9,13 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         layout="@layout/entity_list_item"
-         />
+        />
+
     <View
         android:layout_width="fill_parent"
         android:layout_height="3dp"
         android:background="@android:color/darker_gray"/>
+
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

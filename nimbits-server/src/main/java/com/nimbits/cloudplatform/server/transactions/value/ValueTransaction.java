@@ -301,7 +301,7 @@ public class ValueTransaction {
     }
 
 
-    public static void moveValuesFromCacheToStore(Entity entity)  {
+    public static void moveValuesFromCacheToStore(final Entity entity)  {
         ValueMemCache.moveValuesFromCacheToStore(entity);
     }
 

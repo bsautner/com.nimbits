@@ -39,13 +39,13 @@ public class ValueApi extends ApiBase {
 
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
-       setup(req, resp, true);
+        setup(req, resp, true);
 
 
         if (user != null && ! Utils.isEmptyString(json)) {
             List<Entity> entitySample = getEntity(user, req, resp);
 
-
+            try {
                 Value value = GsonFactory.getInstance().fromJson(json, ValueModel.class);
                 if (value.getTimestamp().getTime() == 0) {
                     value = ValueModel.getInstance(value, new Date());
@@ -54,8 +54,11 @@ public class ValueApi extends ApiBase {
                 resp.setStatus(HttpServletResponse.SC_OK);
                 String respString = GsonFactory.getInstance().toJson(recorded, ValueModel.class);
                 completeResponse(resp, respString);
-
             }
+            catch (NumberFormatException ex) {
+                sendError(resp, HttpServletResponse.SC_BAD_REQUEST, "You provided a decimal value in an unsupported format " + json);
+            }
+        }
 
     }
 
@@ -72,14 +75,14 @@ public class ValueApi extends ApiBase {
 
             List<Entity> entitySample = getEntity(user, req, resp);
 
-                List<Value> sample = ValueTransaction.getCurrentValue(entitySample.get(0));
-                if (sample.isEmpty()) {
-                    sendError(resp, HttpServletResponse.SC_NO_CONTENT, MESSAGE);
-                } else {
+            List<Value> sample = ValueTransaction.getCurrentValue(entitySample.get(0));
+            if (sample.isEmpty()) {
+                sendError(resp, HttpServletResponse.SC_NO_CONTENT, MESSAGE);
+            } else {
 
-                    String json = GsonFactory.getInstance().toJson(sample.get(0), ValueModel.class);
-                    completeResponse(resp, json);
-                }
+                String json = GsonFactory.getInstance().toJson(sample.get(0), ValueModel.class);
+                completeResponse(resp, json);
+            }
 
 
 

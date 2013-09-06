@@ -15,7 +15,10 @@ package com.nimbits.cloudplatform.server.transactions.user;
 import com.nimbits.cloudplatform.server.NimbitsServletTest;
 import org.junit.Test;
 
+import java.io.IOException;
+
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 
 /**
  * Created by benjamin on 9/1/13.
@@ -25,10 +28,12 @@ public class UserTransactionImplTest extends NimbitsServletTest{
     public void testGetHttpRequestUser() throws Exception {
         UserTransaction t = UserTransactionFactory.getInstance();
         t.getHttpRequestUser(req);
-        assertEquals(user.getEmail(), t.getUser().getEmail());
+        assertEquals(user.getEmail(), t.getHttpRequestUser(req).getEmail());
 
 
     }
+
+
 
     @Test
     public void testGetEmailFromRequest() throws Exception {

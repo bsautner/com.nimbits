@@ -2,8 +2,9 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent" android:background="@android:drawable/toast_frame">
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="@android:drawable/toast_frame">
 
     <FrameLayout
         android:layout_width="fill_parent"
@@ -12,11 +13,13 @@
         >
 
         <ListView
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:id="@+id/entity_list_view" android:layout_centerVertical="true"
-                android:layout_below="@+id/frameLayout" android:layout_alignParentBottom="true"
-                />
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:id="@+id/entity_list_view"
+            android:layout_centerVertical="true"
+            android:layout_below="@+id/frameLayout"
+            android:layout_alignParentBottom="true"
+            />
     </FrameLayout>
 
 </RelativeLayout>

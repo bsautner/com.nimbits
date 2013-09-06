@@ -10,27 +10,27 @@
     android:weightSum="1.0"
     android:id="@id/screen">
 
-        <FrameLayout
-            android:layout_width="0dp"
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:id="@id/main_frame"
+        android:layout_weight=".5"
+        android:layout_margin="5dp">
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:id="@id/data_frame"
+        android:layout_weight=".5"
+        android:layout_alignParentEnd="false"
+        android:layout_margin="5dp">
+
+        <WebView
+            android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:id="@id/main_frame"
-            android:layout_weight=".5"
-            android:layout_margin="5dp">
-
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:id="@id/data_frame"
-            android:layout_weight=".5"
-            android:layout_alignParentEnd="false"
-            android:layout_margin="5dp">
-
-            <WebView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/webView"
-                android:layout_gravity="center"/>
-        </FrameLayout>
-    </LinearLayout>
+            android:id="@+id/webView"
+            android:layout_gravity="center"/>
+    </FrameLayout>
+</LinearLayout>

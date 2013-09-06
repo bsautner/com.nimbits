@@ -530,8 +530,7 @@ public class ValueMemCache {
 
     public static void moveValuesFromCacheToStore(final Entity entity) {
         final String bufferedListCacheKey = MemCacheKey.getKey(MemCacheKey.bufferedValueList, entity.getKey());
-        //log.info("moveValuesFromCacheToStore moving: " + entity.getKey());
-        try {
+
             if (cacheFactory.contains(bufferedListCacheKey)) {
                 final Collection<Long> x = (Collection<Long>) cacheFactory.get(bufferedListCacheKey);
                 if (x != null && ! x.isEmpty()) {
@@ -539,16 +538,13 @@ public class ValueMemCache {
                     final Map<Long, Object> valueMap = cacheFactory.getAll(x);
                     cacheFactory.deleteAll(x);
                     final List<Value> values = new ArrayList<Value>(valueMap.keySet().size());
-                    //  int count = values.size();
                     for (final Map.Entry<Long, Object> longObjectEntry : valueMap.entrySet()) {
                         values.add((Value) longObjectEntry.getValue());
                     }
                     ValueDAO.recordValues(entity, values);
                 }
             }
-        } catch (Exception e) {
-            cacheFactory.delete(bufferedListCacheKey);
-        }
+
 
 
     }

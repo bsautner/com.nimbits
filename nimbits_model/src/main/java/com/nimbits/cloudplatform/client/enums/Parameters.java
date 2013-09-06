@@ -23,7 +23,7 @@ import java.util.Map;
  * Time: 2:18 PM
  */
 public enum Parameters {
-
+    apikey(ParamConstants.PARAM_API_KEY),
     action(ParamConstants.PARAM_ACTION),
     autoscale(ParamConstants.PARAM_AUTO_SCALE),
     blobkey(ParamConstants.PARAM_BLOB_KEY),
@@ -138,7 +138,7 @@ public enum Parameters {
     }
 
     private static class ParamConstants {
-
+        private static final String PARAM_API_KEY = "apikey";
         private static final String PARAM_ACTION = "action";
         private static final String PARAM_AUTO_SCALE = "autoscale";
         private static final String PARAM_BLOB_KEY = "blob-key";

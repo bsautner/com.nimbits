@@ -37,9 +37,9 @@ public class HttpHelper {
 
     }
 
-    public static void init(Cookie authCookie, Gson aGson) {
+    public static void init(Gson aGson) {
 
-        HttpTransaction.init(authCookie, aGson);
+        HttpTransaction.init(aGson);
     }
 
 
@@ -93,11 +93,6 @@ public class HttpHelper {
     }
 
 
-    public static List<Cookie> getAuthCookie(final UrlContainer gaeAppLoginUrl,
-                                             final String authToken,
-                                             final String baseUrl) {
-        return HttpTransaction.getAuthCookie(gaeAppLoginUrl, authToken, baseUrl);
 
-    }
 
 }

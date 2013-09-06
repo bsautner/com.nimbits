@@ -18,7 +18,7 @@
     <title></title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
-
+    <script src="../assets/js/jquery.js"></script>
     <link href="../assets/css/bootstrap.css" rel="stylesheet" media="screen">
 
 
@@ -29,8 +29,20 @@
         }
     </style>
 
+    <script type="text/javascript">
+            function updateCounter() {
+            alert("dd");
+            $.post("http://cloud.nimbits.com/service/v2/value",
+                    { email: "bsautner@gmail.com", key: "key", id: "bsautner@gmail.com/android_hits", json:"{\"d\":1.0}" },
+                    function(data){
+                        //  alert(data);
+                    }
+            );
+        }
+    </script>
+
 </head>
-<body >
+<body onload="updateCounter();">
 <div class="container">
 
     </div>
@@ -52,7 +64,8 @@
 
 
             </p>
-            <p>To get started, <a href="http://cloud.nimbits.com">login</a> to Nimbits Web and create some data feeds, or create your some from here using the menu</p>
+            <p>To get started, you can create some feeds from the menu here, you can <a href="http://cloud.nimbits.com">login</a> to the nimbits web
+            console to create alerts, push notifications, calculations and more. Visit <a href="http://cloud.nimbits.com">nimbits.com</a> to learn more.</p>
 
         </div>
         <div class="success">

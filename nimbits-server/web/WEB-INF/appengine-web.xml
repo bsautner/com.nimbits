@@ -11,7 +11,7 @@
 
     <!--You can edit these properties to customise your instance. Set the API KEY below to access the API from other apps.-->
     <system-properties>
-       <property name="com.nimbits.ApiKey" value="ggdfg54t3456gsdfgjjdhsr6y5476udfhasergt5yrth"/>
+       <property name="com.nimbits.ApiKey" value=""/>
     </system-properties>
     <static-files>
         <include path="/bootstrap/css/**.css" />

@@ -28,6 +28,7 @@ import com.nimbits.cloudplatform.client.model.value.Value;
  * Date: 11/17/11
  * Time: 12:13 PM
  */
+@Deprecated
 public enum GsonFactory {
     instance;
 

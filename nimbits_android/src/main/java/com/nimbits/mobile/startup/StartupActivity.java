@@ -31,9 +31,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
-import com.nimbits.mobile.HomeActivity;
 import com.nimbits.mobile.R;
-import com.nimbits.mobile.server.HttpService;
+import com.nimbits.mobile.server.BufferService;
+import com.nimbits.mobile.server.ServerActivity;
 import com.nimbits.mobile.startup.async.StartupTask;
 import com.nimbits.cloudplatform.Nimbits;
 import com.nimbits.cloudplatform.client.constants.Const;
@@ -74,7 +74,7 @@ public class StartupActivity extends Activity implements LoaderManager.LoaderCal
         final SharedPreferences settings = getSharedPreferences(getString(R.string.app_name), 0);
         final String base_url = settings.getString(getString(R.string.base_url_setting), getString(R.string.base_url));
         Nimbits.base = UrlContainer.getInstance(base_url);
-        startService(new Intent(this, HttpService.class));
+        startService(new Intent(this, BufferService.class));
         getLoaderManager().initLoader(0, null, this);
 
 
@@ -143,7 +143,7 @@ public class StartupActivity extends Activity implements LoaderManager.LoaderCal
                 @Override
                 public void onLoginSuccess(List<User> response) {
                     Nimbits.session = (response.get(0));
-                    Intent intent = new Intent(getBaseContext(), HomeActivity.class);
+                    Intent intent = new Intent(getBaseContext(), ServerActivity.class);
                     startActivity(intent);
                     finish();
                 }

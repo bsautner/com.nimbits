@@ -1,5 +1,7 @@
 package com.nimbits.mobile.server;
 
+import android.util.Log;
+
 import java.io.*;
 import java.net.*;
 import java.nio.ByteBuffer;
@@ -135,6 +137,7 @@ public abstract class NanoHTTPD {
                             });
                         }
                     } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 } while (!myServerSocket.isClosed());
             }
@@ -566,6 +569,7 @@ public abstract class NanoHTTPD {
                 outputStream.flush();
                 safeClose(data);
             } catch (IOException ioe) {
+                Log.e(HttpServer.TAG, ioe.getMessage());
                 // Couldn't write? No can do.
             }
         }
@@ -1087,7 +1091,7 @@ public abstract class NanoHTTPD {
                     dest.write(src.slice());
                     path = tempFile.getName();
                 } catch (Exception e) { // Catch exception if any
-                    System.err.println("Error: " + e.getMessage());
+                    Log.e(HttpServer.TAG, e.getMessage());
                 } finally {
                     safeClose(fileOutputStream);
                 }
@@ -1100,7 +1104,7 @@ public abstract class NanoHTTPD {
                 TempFile tempFile = tempFileManager.createTempFile();
                 return new RandomAccessFile(tempFile.getName(), "rw");
             } catch (Exception e) {
-                System.err.println("Error: " + e.getMessage());
+                Log.e(HttpServer.TAG, e.getMessage());
             }
             return null;
         }
@@ -1187,6 +1191,7 @@ public abstract class NanoHTTPD {
             try {
                 serverSocket.close();
             } catch (IOException e) {
+                Log.e(HttpServer.TAG, e.getMessage());
             }
         }
     }
@@ -1196,6 +1201,7 @@ public abstract class NanoHTTPD {
             try {
                 socket.close();
             } catch (IOException e) {
+                Log.e(HttpServer.TAG, e.getMessage());
             }
         }
     }
@@ -1205,6 +1211,7 @@ public abstract class NanoHTTPD {
             try {
                 closeable.close();
             } catch (IOException e) {
+                Log.e(HttpServer.TAG, e.getMessage());
             }
         }
     }

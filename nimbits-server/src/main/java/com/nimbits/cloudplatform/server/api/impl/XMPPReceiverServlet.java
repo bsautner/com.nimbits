@@ -79,7 +79,7 @@ public class XMPPReceiverServlet extends ApiServlet implements org.springframewo
             final String j[] = COMPILE.split(fromJid.getId());
             final String email = j[0].toLowerCase();
 
-            log.severe("XMPP Message recieved " + email + ":   " + body);
+            log.info("XMPP Message recieved " + email + ":   " + body);
             List<Entity> result = EntityServiceImpl.getEntityByKey(UserTransactionFactory.getInstance().getAdmin(), email, EntityType.user);
             if (! result.isEmpty()) {
                 u =  (User) result.get(0);

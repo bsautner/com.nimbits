@@ -31,6 +31,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
+import com.nimbits.mobile.HomeActivity;
 import com.nimbits.mobile.R;
 import com.nimbits.mobile.server.BufferService;
 import com.nimbits.mobile.server.ServerActivity;
@@ -143,7 +144,7 @@ public class StartupActivity extends Activity implements LoaderManager.LoaderCal
                 @Override
                 public void onLoginSuccess(List<User> response) {
                     Nimbits.session = (response.get(0));
-                    Intent intent = new Intent(getBaseContext(), ServerActivity.class);
+                    Intent intent = new Intent(getBaseContext(), HomeActivity.class);
                     startActivity(intent);
                     finish();
                 }

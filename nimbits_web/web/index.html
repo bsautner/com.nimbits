@@ -84,7 +84,7 @@
             var path = "http://cloud.nimbits.com/service/v2/series";
             var options = {
                 width: 400, height: 240,
-                title: point
+                title: point  + " demo - live data from the cloud"
             };
             var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
             $.get(path,
@@ -158,6 +158,7 @@
             <table border="0">
                 <TR>
                     <TD>
+
                         <img id="logo" src="assets/img/logohigh512.png" style="width: 125px; height: 125px" alt="logo"
                                 />
                     </TD>
@@ -178,7 +179,9 @@
 
         <div class="row-fluid">
             <div class="span4">
-                <img src="assets/img/s1.png" class="img-polaroid">
+
+                <span class="label label-default" style="width: 100%; margin-bottom: 3px"> Nimbits Android App On <a href="https://play.google.com/store/apps/details?id=com.nimbits.mobile">Google Play!</a></span>  <br />
+                <a href="https://play.google.com/store/apps/details?id=com.nimbits.mobile"><img src="assets/img/device1.png" class="img-polaroid"> </a>
 
             </div>
             <div class="span8">
@@ -198,6 +201,12 @@
                     Use Nimbits Server as a backend to your applications, <a href="javascript/index.html">generating charts with javascript</a> using
                     the public cloud, or <a href="download/index.html">download</a> and build your own private cloud.</p>
 
+                <p>
+                    The Nimbits Android App allows you to view, enter and chart data as well as create and manage data points on the cloud.
+                    Download it for free from <a href="https://play.google.com/store/apps/details?id=com.nimbits.mobile">Google Play!</a>
+
+                </p>
+
 
             </div>
 
@@ -214,6 +223,7 @@
             <div class="span6">
                 <span class="label label-success">What's New!</span>
                 <ul>
+                    <li>Nimbits is at Oracle's JavaOne Conference in San Fransisco. Feel free to <a href="mailto:support@nimbits.com"> email us</a> if you want to meetup! </li>
                     <li>
                         New easy to use samples for connecting Arduino Devices to Nimbits using the <a href="arduino/index.html">Nimbits Arduino Library</a>
                     </li>

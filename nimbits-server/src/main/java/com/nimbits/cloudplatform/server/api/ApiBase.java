@@ -12,29 +12,27 @@
 
 package com.nimbits.cloudplatform.server.api;
 
-import com.google.appengine.api.utils.SystemProperty;
 import com.nimbits.cloudplatform.client.common.Utils;
-import com.nimbits.cloudplatform.client.constants.Const;
 import com.nimbits.cloudplatform.client.enums.EntityType;
 import com.nimbits.cloudplatform.client.enums.Parameters;
 import com.nimbits.cloudplatform.client.enums.ProtectionLevel;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.user.User;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.user.UserTransactionFactory;
+import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceFactory;
+import com.nimbits.cloudplatform.server.transactions.entity.service.EntityService;
+import com.nimbits.cloudplatform.server.transactions.user.UserServiceFactory;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 
@@ -47,25 +45,12 @@ public class ApiBase extends HttpServlet {
     protected User user;
     protected String json;
     final static Logger log = Logger.getLogger(EntityApi.class.getName());
-
+    final EntityService entityService = EntityServiceFactory.getInstance();
 
 
 
     protected void setup(HttpServletRequest req, HttpServletResponse resp, boolean readBody) throws ServletException  {
-        log.info("api setup");
-        Enumeration h = req.getHeaderNames();
-        while (h.hasMoreElements()) {
-            String header = (String) h.nextElement();
 
-            log.info(header + "=" + req.getHeader(header));
-        }
-
-        Enumeration q = req.getParameterNames();
-        while (q.hasMoreElements()) {
-            String header = (String) q.nextElement();
-            log.info(header + "=" + req.getParameter(header));
-        }
-        log.info(req.getQueryString());
         try {
             getUser(req, resp);
         }
@@ -135,7 +120,7 @@ public class ApiBase extends HttpServlet {
     }
     protected void getUser(final HttpServletRequest req, final HttpServletResponse resp) {
         try {
-            user = UserTransactionFactory.getInstance().getHttpRequestUser(req);
+            user = UserServiceFactory.getInstance().getHttpRequestUser(req);
         }
         catch (SecurityException ex) {
             user = null;
@@ -167,11 +152,11 @@ public class ApiBase extends HttpServlet {
         }
         if (!Utils.isEmptyString(id)) {
             response.append(" used id");
-            sample = EntityServiceImpl.getEntityByKey(user, id, entityType);
+            sample = entityService.getEntityByKey(user, id, entityType);
         }
         else if (!Utils.isEmptyString(uuid)) {
             response.append(" used uuid");
-            sample = EntityServiceImpl.getEntityByUUID(user, uuid, entityType);
+            sample = entityService.getEntityByUUID(user, uuid, entityType);
         }
         else {
             sendError(resp, HttpServletResponse.SC_BAD_REQUEST, YOU_MUST_SUPPLY_AN_ENTITY_ID_OR_UUID);

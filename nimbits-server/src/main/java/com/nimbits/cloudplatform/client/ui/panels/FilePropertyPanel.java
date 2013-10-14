@@ -26,7 +26,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.service.blob.BlobService;
-import com.nimbits.cloudplatform.client.service.entity.EntityServiceAsync;
+import com.nimbits.cloudplatform.client.service.entity.EntityServiceRpcAsync;
 import com.nimbits.cloudplatform.client.ui.controls.EntityPanel;
 import com.nimbits.cloudplatform.client.ui.icons.Icons;
 
@@ -152,7 +152,7 @@ public class FilePropertyPanel extends NavigationEventProvider {
 
     private void saveFile() {
 
-        final EntityServiceAsync serviceAsync = GWT.create(BlobService.class);
+        final EntityServiceRpcAsync serviceAsync = GWT.create(BlobService.class);
         entity.setProtectionLevel(simple.getProtectionLevel());
 
         serviceAsync.addUpdateEntityRpc(Arrays.<Entity>asList(entity), new AsyncCallback<List<Entity>>() {

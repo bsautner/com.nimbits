@@ -13,6 +13,7 @@
 
 package com.nimbits.cloudplatform.server.transactions.entity;
 
+import com.nimbits.cloudplatform.PMF;
 import com.nimbits.cloudplatform.client.enums.EntityType;
 import com.nimbits.cloudplatform.client.enums.ProtectionLevel;
 import com.nimbits.cloudplatform.client.model.calculation.Calculation;
@@ -23,6 +24,9 @@ import com.nimbits.cloudplatform.client.model.entity.EntityModelFactory;
 import com.nimbits.cloudplatform.client.model.entity.EntityName;
 import com.nimbits.cloudplatform.server.NimbitsServletTest;
 import com.nimbits.cloudplatform.server.orm.CalcEntity;
+import com.nimbits.cloudplatform.server.transactions.cache.CacheFactory;
+import com.nimbits.cloudplatform.server.transactions.entity.cache.EntityCache;
+import com.nimbits.cloudplatform.server.transactions.entity.service.EntityService;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,17 +58,17 @@ import static org.junit.Assert.assertTrue;
 })
 public class EntityCacheImplTest extends NimbitsServletTest {
 
-
-
+    EntityCache cache = EntityServiceFactory.getCacheInstance(PMF.get(), CacheFactory.getInstance());
+    EntityService service = EntityServiceFactory.getInstance();
     @Test
     public void testRemoveEntityFromCache() throws Exception {
-      
-        EntityCache.addEntityToCache(user, Arrays.asList((Entity) point));
 
-        List<Entity> e = EntityCache.getEntityFromCache(point.getKey());
+        cache.addEntityToCache(user, Arrays.asList((Entity) point));
+
+        List<Entity> e = cache.getEntityFromCache(point.getKey());
         assertFalse(e.isEmpty());
-        EntityCache.removeEntityFromCache(Arrays.asList((Entity)point));
-        List<Entity> e2 = EntityCache.getEntityFromCache(point.getKey());
+        cache.removeEntityFromCache(Arrays.asList((Entity) point));
+        List<Entity> e2 = cache.getEntityFromCache(point.getKey());
         assertTrue(e2.isEmpty());
     }
 
@@ -85,15 +89,15 @@ public class EntityCacheImplTest extends NimbitsServletTest {
         Entity entity = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe, point.getKey(), user.getKey());
 
         Calculation c = CalculationModelFactory.createCalculation(entity, EntityModelFactory.createTrigger(point.getKey()), true, "1+1", EntityModelFactory.createTarget(pointChild.getKey()), "", "", "");
-        EntityServiceImpl.addUpdateEntity(user, c);
-        List<Entity> triggers = EntityCache.getEntityByTrigger(user, point, CalcEntity.class);
+        service.addUpdateEntity(user, c);
+        List<Entity> triggers = cache.getEntityByTrigger(user, point, CalcEntity.class);
         assertFalse(triggers.isEmpty());
 
         for (Entity e : triggers) {
             assertFalse(e.isCached());
         }
 
-        List<Entity> triggers2 = EntityServiceImpl.getEntityByTrigger(user, point, EntityType.calculation);
+        List<Entity> triggers2 = service.getEntityByTrigger(user, point, EntityType.calculation);
         assertFalse(triggers2.isEmpty());
 
         for (Entity e : triggers2) {
@@ -106,16 +110,16 @@ public class EntityCacheImplTest extends NimbitsServletTest {
         Entity entity2 = EntityModelFactory.createEntity(name2, "", EntityType.calculation, ProtectionLevel.onlyMe, point.getKey(), user.getKey());
 
         Calculation c2 = CalculationModelFactory.createCalculation(entity2, EntityModelFactory.createTrigger(point.getKey()), true, "1+2", EntityModelFactory.createTarget(pointChild.getKey()), "", "", "");
-        EntityServiceImpl.addUpdateEntity(user, c2);
+        service.addUpdateEntity(user, c2);
 
-        List<Entity> triggers3 = EntityCache.getEntityByTrigger(user, point, CalcEntity.class);
+        List<Entity> triggers3 = cache.getEntityByTrigger(user, point, CalcEntity.class);
         assertFalse(triggers3.isEmpty());
 
         for (Entity e : triggers3) {
             assertFalse(e.isCached());
         }
 
-        List<Entity> triggers4 = EntityCache.getEntityByTrigger(user, point, CalcEntity.class);
+        List<Entity> triggers4 = cache.getEntityByTrigger(user, point, CalcEntity.class);
         assertFalse(triggers4.isEmpty());
 
         for (Entity e : triggers4) {
@@ -163,30 +167,30 @@ public class EntityCacheImplTest extends NimbitsServletTest {
     @Test
     @Ignore
     public void testGetEntities() throws Exception {
-        List<Entity> results = EntityCache.getEntities(user);
+        List<Entity> results = cache.getEntities(user);
         assertFalse(results.isEmpty());
         for (Entity e: results) {
             assertFalse(e.isCached());
 
         }
 
-        List<Entity> results2 = EntityCache.getEntities(user);
+        List<Entity> results2 = cache.getEntities(user);
         assertFalse(results2.isEmpty());
         for (Entity e: results2) {
             assertTrue(e.isCached());
 
         }
         point.setExpire(50);
-        EntityCache.addUpdateEntity(user, Arrays.asList((Entity)point), true);
+        cache.addUpdateEntity(user, Arrays.asList((Entity) point), true);
 
-        List<Entity> results3 = EntityCache.getEntities(user);
+        List<Entity> results3 = cache.getEntities(user);
         assertFalse(results3.isEmpty());
         for (Entity e: results3) {
             assertFalse(e.isCached());
 
         }
 
-        List<Entity> results4 = EntityCache.getEntities(user);
+        List<Entity> results4 = cache.getEntities(user);
         assertFalse(results4.isEmpty());
         for (Entity e: results4) {
             assertTrue(e.isCached());

@@ -30,7 +30,7 @@ public class XmppServiceImpl extends RemoteServiceServlet implements XMPPService
 
     private static final long serialVersionUID = 1L;
 
-    public static void sendMessage(final String msgBody, final EmailAddress email) {
+    public  void sendMessage(final String msgBody, final EmailAddress email) {
 
 
         final JID jid = new JID(email.getValue());

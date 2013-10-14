@@ -16,7 +16,7 @@ import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.nimbits.cloudplatform.client.service.blob.BlobService;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
+import com.nimbits.cloudplatform.server.transactions.entity.service.EntityService;
 import org.springframework.stereotype.Service;
 
 
@@ -32,7 +32,7 @@ public class BlobServiceImpl  extends RemoteServiceServlet implements BlobServic
 
 
     private final BlobstoreService blobstoreService;
-    private EntityServiceImpl entityService;
+    private EntityService entityService;
 
 
     public BlobServiceImpl() {

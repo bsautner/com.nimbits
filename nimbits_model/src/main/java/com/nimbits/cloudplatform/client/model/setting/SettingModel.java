@@ -30,6 +30,9 @@ public class SettingModel implements Setting {
         this.value = setting.getValue();
     }
 
+    public SettingModel() {
+    }
+
     @Override
     public SettingType getSetting() {
         return SettingType.get(this.name);

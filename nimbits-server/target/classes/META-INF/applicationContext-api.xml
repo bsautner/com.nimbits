@@ -20,11 +20,6 @@
 
     <bean id="versionApi" class="com.nimbits.cloudplatform.server.api.impl.VersionApi"/>
     <bean id="searchApi" class="com.nimbits.cloudplatform.server.api.SearchApi"/>
-    <bean id="hotApi" class="com.nimbits.cloudplatform.server.api.HotApi"/>
-
-
-
-
 
     <!--v1 APIS-->
     <bean id="blob" class="com.nimbits.cloudplatform.server.api.impl.BlobServletImpl">

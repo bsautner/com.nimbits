@@ -13,17 +13,14 @@
 package com.nimbits.cloudplatform.server.api;
 
 import com.google.gson.reflect.TypeToken;
-import com.nimbits.cloudplatform.client.enums.ExportType;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.entity.EntityModel;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
+import com.nimbits.cloudplatform.server.transactions.entity.service.EntityService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -43,7 +40,7 @@ public class TreeApi extends ApiBase {
 
         if (user != null && ! user.isRestricted()) {
 
-            final List<Entity> sample = EntityServiceImpl.getEntities(user);
+            final List<Entity> sample = entityService.getEntities(user);
 
             final String json = GsonFactory.getInstance().toJson(sample, entityListType);
             completeResponse(resp, json);

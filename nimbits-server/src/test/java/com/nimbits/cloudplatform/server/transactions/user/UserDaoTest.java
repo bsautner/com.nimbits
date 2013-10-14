@@ -21,7 +21,7 @@ import com.nimbits.cloudplatform.client.model.email.EmailAddress;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.user.User;
 import com.nimbits.cloudplatform.server.NimbitsServletTest;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
+import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -72,10 +72,10 @@ public class UserDaoTest extends NimbitsServletTest {
     @Test
     public void createUserTest() throws Exception {
         EmailAddress e = CommonFactory.createEmailAddress("bob@example.com");
-        User u = UserTransactionFactory.getInstance().createUserRecord(e);
+        User u = UserServiceFactory.getInstance().createUserRecord(e);
         assertNotNull(u);
         assertEquals(e.getValue(), u.getEmail().getValue());
-            List<Entity> result = EntityServiceImpl.getEntityByKey(u, e.getValue(), EntityType.user);
+            List<Entity> result = EntityServiceFactory.getInstance().getEntityByKey(u, e.getValue(), EntityType.user);
             assertFalse(result.isEmpty());
 
 

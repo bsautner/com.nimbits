@@ -26,12 +26,9 @@ import com.nimbits.cloudplatform.client.model.entity.EntityName;
 import com.nimbits.cloudplatform.client.model.point.Point;
 import com.nimbits.cloudplatform.client.model.point.PointModelFactory;
 import com.nimbits.cloudplatform.server.NimbitsServletTest;
+import com.nimbits.cloudplatform.server.transactions.entity.service.EntityService;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -42,26 +39,14 @@ import static org.junit.Assert.*;
  * Date: 3/29/12
  * Time: 2:27 PM
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={
-        "classpath:META-INF/applicationContext.xml",
-        "classpath:META-INF/applicationContext-api.xml",
-        "classpath:META-INF/applicationContext-cache.xml",
-        "classpath:META-INF/applicationContext-cron.xml",
-        "classpath:META-INF/applicationContext-dao.xml",
-        "classpath:META-INF/applicationContext-service.xml",
-        "classpath:META-INF/applicationContext-task.xml"
 
-})
 public class EntityServiceTest extends NimbitsServletTest {
-
-    @Resource(name="entityHelper")
-    private EntityHelper entityHelper;
+    private final EntityService service = EntityServiceFactory.getInstance();
 
     @Test
     public void addUpdateEntity() throws Exception {
-        Point p = entityHelper.createPointWithName(UUID.randomUUID().toString());
-        Point r = (Point) EntityServiceImpl.addUpdateSingleEntity(p);
+        Point p = new EntityHelper().createPointWithName(UUID.randomUUID().toString());
+        Point r = (Point) service.addUpdateSingleEntity(p);
         assertNotNull(p);
         assertNotNull(r);
 
@@ -71,22 +56,22 @@ public class EntityServiceTest extends NimbitsServletTest {
     @Test
     public void deleteEntityTest() throws Exception {
 
-        final List<Entity> entities =  EntityServiceImpl.getEntities(user);
+        final List<Entity> entities =  service.getEntities(user);
         assertTrue(!entities.isEmpty());
-        Entity e = EntityServiceImpl.getEntityByKey(user, point.getKey(), EntityType.point).get(0);
+        Entity e = service.getEntityByKey(user, point.getKey(), EntityType.point).get(0);
         assertNotNull(e);
-        Entity c = EntityServiceImpl.getEntityByKey(user, pointChild.getKey(), EntityType.point).get(0);
-        List<Entity> g = EntityServiceImpl.getEntityByKey(user, group.getKey(), EntityType.point);
+        Entity c = service.getEntityByKey(user, pointChild.getKey(), EntityType.point).get(0);
+        List<Entity> g = service.getEntityByKey(user, group.getKey(), EntityType.point);
 
         assertNotNull(c);
         assertNotNull(g);
-        final List<Entity> children =  EntityServiceImpl.getChildren(user, g);
+        final List<Entity> children =  service.getChildren(user, g);
         assertTrue(!children.isEmpty());
 
-        EntityServiceImpl.deleteEntity(user, g );
-        assertTrue(EntityServiceImpl.getEntityByKey(user, point.getKey(), EntityType.point).isEmpty());
-        assertTrue(EntityServiceImpl.getEntityByKey(user, pointChild.getKey(), EntityType.point).isEmpty());
-        assertTrue(EntityServiceImpl.getEntityByKey(user, group.getKey(), EntityType.point).isEmpty());
+        service.deleteEntity(user, g);
+        assertTrue(service.getEntityByKey(user, point.getKey(), EntityType.point).isEmpty());
+        assertTrue(service.getEntityByKey(user, pointChild.getKey(), EntityType.point).isEmpty());
+        assertTrue(service.getEntityByKey(user, group.getKey(), EntityType.point).isEmpty());
 
 
 
@@ -99,16 +84,16 @@ public class EntityServiceTest extends NimbitsServletTest {
         //user = null;
         req.removeAllParameters();
 
-        List<Entity> r = EntityServiceImpl.findEntityByKey(user, point.getKey());
+        List<Entity> r = service.findEntityByKey(user, point.getKey());
         assertFalse(r.isEmpty());
 //TODO can't seem to logout to test readonly        assertTrue(r.get(0).isReadOnly());
-        List<Entity> r2 = EntityServiceImpl.findEntityByKey(user, point.getUUID());
+        List<Entity> r2 = service.findEntityByKey(user, point.getUUID());
         assertFalse(r2.isEmpty());
   //      assertTrue(r2.get(0).isReadOnly());
-        List<Entity> r3 = EntityServiceImpl.findEntityByKey(user, group.getUUID());
+        List<Entity> r3 = service.findEntityByKey(user, group.getUUID());
         assertFalse(r3.isEmpty());
   //      assertTrue(r3.get(0).isReadOnly());
-        List<Entity> r4 = EntityServiceImpl.findEntityByKey(user, group.getKey());
+        List<Entity> r4 = service.findEntityByKey(user, group.getKey());
         assertFalse(r4.isEmpty());
   //      assertTrue(r4.get(0).isReadOnly());
 
@@ -121,10 +106,10 @@ public class EntityServiceTest extends NimbitsServletTest {
         Entity model = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.everyone,
                 user.getKey(), user.getKey());
 
-        //  Entity e = EntityServiceImpl.addUpdateSingleEntity(model);
+        //  Entity e = serviceImpl.addUpdateSingleEntity(model);
         Entity model2 = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.everyone,
                 user.getKey(), user.getKey());
-        ///Entity e2 = EntityServiceImpl.addUpdateSingleEntity(model2);
+        ///Entity e2 = serviceImpl.addUpdateSingleEntity(model2);
         Point p1 =   PointModelFactory.createPointModel(
                 model,
                 0.0,
@@ -140,7 +125,7 @@ public class EntityServiceTest extends NimbitsServletTest {
                 0.1,
                 false,
                 PointType.basic, 0, false, 0.0);
-        EntityServiceImpl.addUpdateSingleEntity(p1);
+        service.addUpdateSingleEntity(p1);
         Point p2 =   PointModelFactory.createPointModel(
                 model2,
                 0.0,
@@ -156,7 +141,7 @@ public class EntityServiceTest extends NimbitsServletTest {
                 0.1,
                 false,
                 PointType.basic , 0, false, 0.0);
-        EntityServiceImpl.addUpdateSingleEntity(p2);
+        service.addUpdateSingleEntity(p2);
 
     }
     @Test
@@ -165,11 +150,11 @@ public class EntityServiceTest extends NimbitsServletTest {
             EntityName name = CommonFactory.createName("TWICE", EntityType.category);
             Entity model = EntityModelFactory.createEntity(name, "", EntityType.category, ProtectionLevel.everyone,
                     user.getKey(), user.getKey());
-            Entity e = EntityServiceImpl.addUpdateSingleEntity(model);
+            Entity e = service.addUpdateSingleEntity(model);
             Entity model2 = EntityModelFactory.createEntity(name, "", EntityType.category, ProtectionLevel.everyone,
                     user.getKey(), user.getKey());
 
-            Entity e2 = EntityServiceImpl.addUpdateSingleEntity(model2);
+            Entity e2 = service.addUpdateSingleEntity(model2);
         } catch (Exception e1) {
             fail();
         }
@@ -180,7 +165,7 @@ public class EntityServiceTest extends NimbitsServletTest {
     @Test
     public void getEntitiesTest() throws Exception {
 
-        List<Entity> entities =  EntityServiceImpl.getEntities(user);
+        List<Entity> entities =  service.getEntities(user);
         assertTrue(!entities.isEmpty());
         int last = 0;
         for (Entity e : entities) {
@@ -191,7 +176,7 @@ public class EntityServiceTest extends NimbitsServletTest {
 
     @Test
     public void getEntityByNameTest() throws Exception {
-        Point  r = (Point) EntityServiceImpl.getEntityByName(user, pointName, EntityType.point).get(0);
+        Point  r = (Point) service.getEntityByName(user, pointName, EntityType.point).get(0);
         assertNotNull(r);
 
     }
@@ -199,7 +184,7 @@ public class EntityServiceTest extends NimbitsServletTest {
     @Test
     public void readOnlyTest() throws Exception {
 
-        List<Entity> r =EntityServiceImpl.getEntities(user);
+        List<Entity> r = service.getEntities(user);
         for (Entity e : r) {
             assertTrue(e.isReadOnly() != e.getOwner().equals(user.getKey()));
         }
@@ -208,7 +193,7 @@ public class EntityServiceTest extends NimbitsServletTest {
 
     @Test
     public void testEntitySecurity() throws Exception {
-        List<Entity> r =EntityServiceImpl.getEntities(user);
+        List<Entity> r = service.getEntities(user);
         for (Entity e : r) {
 
             if (user.getKey().equals(e.getOwner())) {
@@ -229,10 +214,10 @@ public class EntityServiceTest extends NimbitsServletTest {
             e = createChild(e, anA);
 
         }
-        Map<String, Entity> map = EntityServiceImpl.getEntityModelMap(user, EntityType.point, 1000);
+        Map<String, Entity> map = service.getEntityModelMap(user, EntityType.point, 1000);
         List<Entity> sample = new ArrayList<Entity>(1);
         sample.add(point);
-        List<Entity> result =  EntityServiceImpl.getChildren(user, sample);
+        List<Entity> result =  service.getChildren(user, sample);
         assertNotNull(result);
         assertTrue(! result.isEmpty());
 
@@ -263,7 +248,7 @@ public class EntityServiceTest extends NimbitsServletTest {
                 0.1,
                 false,
                 PointType.basic, 0, false, 0.0 );
-        return   EntityServiceImpl.addUpdateEntity(user, Arrays.<Entity>asList(newChild)).get(0);
+        return   service.addUpdateEntity(user, Arrays.<Entity>asList(newChild)).get(0);
 
     }
 

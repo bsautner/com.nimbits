@@ -18,7 +18,6 @@ import com.nimbits.cloudplatform.client.model.timespan.Timespan;
 import com.nimbits.cloudplatform.client.model.timespan.TimespanModelFactory;
 import org.springframework.stereotype.Service;
 
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

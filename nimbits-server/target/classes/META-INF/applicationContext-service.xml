@@ -16,16 +16,11 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="userService" class="com.nimbits.cloudplatform.server.transactions.user.UserRpcServiceImpl">
+    <bean id="userService" class="com.nimbits.cloudplatform.server.transactions.user.service.UserRpcServiceImpl">
 
     </bean>
 
-    <bean id="valueService" class="com.nimbits.cloudplatform.server.transactions.value.ValueRpcServiceImpl">
-
-    </bean>
-
-    <bean id="entityService" class="com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl">
-
+    <bean id="valueService" class="com.nimbits.cloudplatform.server.transactions.value.service.ValueServiceRpc">
 
     </bean>
 
@@ -34,11 +29,6 @@
 
 
     </bean>
-
-
-    <bean id="settingsService" class="com.nimbits.cloudplatform.server.transactions.settings.SettingsServiceImpl">
-    </bean>
-
 
     <bean id="emailService" class="com.nimbits.cloudplatform.server.communication.email.EmailService">
 

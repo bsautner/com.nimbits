@@ -16,7 +16,6 @@ import com.nimbits.cloudplatform.client.constants.Words;
 import com.nimbits.cloudplatform.server.process.task.TaskImpl;
 import org.springframework.stereotype.Service;
 
-
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.mail.Address;

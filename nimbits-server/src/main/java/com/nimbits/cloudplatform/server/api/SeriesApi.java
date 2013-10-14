@@ -20,7 +20,7 @@ import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueModel;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
-import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
+import com.nimbits.cloudplatform.server.transactions.value.ValueServiceFactory;
 import org.apache.commons.lang3.Range;
 import org.apache.commons.lang3.StringUtils;
 
@@ -87,17 +87,17 @@ public class SeriesApi extends ApiBase {
             List<Value> valueSample;
 
             if (timespanRange != null && Utils.isEmptyString(segStr) ) {
-                valueSample = ValueTransaction.getSeries(entitySample.get(0), timespanRange);
+                valueSample = ValueServiceFactory.getInstance().getSeries(entitySample.get(0), timespanRange);
 
             }
             else if (!Utils.isEmptyString(segStr) && timespanRange != null) {
                 int seg = Integer.valueOf(segStr);
                 Range segment = Range.between(seg, seg + LIMIT);
 
-                valueSample = ValueTransaction.getDataSegment(entitySample.get(0), timespanRange, segment);
+                valueSample = ValueServiceFactory.getInstance().getDataSegment(entitySample.get(0), timespanRange, segment);
 
             } else {
-                valueSample = ValueTransaction.getTopDataSeries(entitySample.get(0), count);
+                valueSample = ValueServiceFactory.getInstance().getTopDataSeries(entitySample.get(0), count);
             }
             String json;
             if (format.equals(CSV))  {

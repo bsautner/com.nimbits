@@ -17,7 +17,7 @@ import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueModel;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
-import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
+import com.nimbits.cloudplatform.server.transactions.value.ValueServiceFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -50,7 +50,7 @@ public class ValueApi extends ApiBase {
                 if (value.getTimestamp().getTime() == 0) {
                     value = ValueModel.getInstance(value, new Date());
                 }
-                Value recorded = ValueTransaction.recordValue(user, entitySample.get(0), value);
+                Value recorded = ValueServiceFactory.getInstance().recordValue(user, entitySample.get(0), value);
                 resp.setStatus(HttpServletResponse.SC_OK);
                 String respString = GsonFactory.getInstance().toJson(recorded, ValueModel.class);
                 completeResponse(resp, respString);
@@ -75,7 +75,7 @@ public class ValueApi extends ApiBase {
 
             List<Entity> entitySample = getEntity(user, req, resp);
 
-            List<Value> sample = ValueTransaction.getCurrentValue(entitySample.get(0));
+            List<Value> sample = ValueServiceFactory.getInstance().getCurrentValue(entitySample.get(0));
             if (sample.isEmpty()) {
                 sendError(resp, HttpServletResponse.SC_NO_CONTENT, MESSAGE);
             } else {

@@ -38,10 +38,10 @@ import com.nimbits.cloudplatform.client.model.entity.EntityName;
 import com.nimbits.cloudplatform.client.model.trigger.Trigger;
 import com.nimbits.cloudplatform.client.model.user.User;
 import com.nimbits.cloudplatform.client.model.value.Value;
-import com.nimbits.cloudplatform.client.service.entity.EntityService;
-import com.nimbits.cloudplatform.client.service.entity.EntityServiceAsync;
-import com.nimbits.cloudplatform.client.service.value.ValueService;
-import com.nimbits.cloudplatform.client.service.value.ValueServiceAsync;
+import com.nimbits.cloudplatform.client.service.entity.EntityServiceRpc;
+import com.nimbits.cloudplatform.client.service.entity.EntityServiceRpcAsync;
+import com.nimbits.cloudplatform.client.service.value.ValueServiceRpc;
+import com.nimbits.cloudplatform.client.service.value.ValueServiceRpcAsync;
 import com.nimbits.cloudplatform.client.ui.controls.EntityCombo;
 import com.nimbits.cloudplatform.client.ui.helper.FeedbackHelper;
 import com.nimbits.cloudplatform.client.ui.icons.Icons;
@@ -335,7 +335,7 @@ public class CalculationPanel extends NavigationEventProvider {
 
 
             simple.setHideOnButtonClick(true);
-            final ValueServiceAsync service = GWT.create(ValueService.class);
+            final ValueServiceRpcAsync service = GWT.create(ValueServiceRpc.class);
             service.solveEquationRpc(user, calculation1, new GetValueAsyncCallback(simple));
 
         }
@@ -419,7 +419,7 @@ public class CalculationPanel extends NavigationEventProvider {
 
         @Override
         public void componentSelected(ButtonEvent buttonEvent) {
-            final EntityServiceAsync service = GWT.create(EntityService.class);
+            final EntityServiceRpcAsync service = GWT.create(EntityServiceRpc.class);
             final MessageBox box = MessageBox.wait("Progress",
                     "Creating Calculation", "please wait...");
             box.show();

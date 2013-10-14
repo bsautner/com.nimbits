@@ -17,15 +17,13 @@ import com.nimbits.cloudplatform.client.enums.SummaryType;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.point.Point;
 import com.nimbits.cloudplatform.client.model.summary.Summary;
-import com.nimbits.cloudplatform.client.model.timespan.Timespan;
-import com.nimbits.cloudplatform.client.model.timespan.TimespanModelFactory;
 import com.nimbits.cloudplatform.client.model.user.User;
 import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueFactory;
-import com.nimbits.cloudplatform.server.admin.logging.LogHelper;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
-
+import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceFactory;
+import com.nimbits.cloudplatform.server.transactions.entity.service.EntityService;
+import com.nimbits.cloudplatform.server.transactions.value.ValueServiceFactory;
+import org.apache.commons.lang3.Range;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.springframework.stereotype.Service;
 
@@ -46,10 +44,10 @@ import java.util.logging.Logger;
 
 public class SummaryService   {
     private static final Logger log = Logger.getLogger(SummaryService.class.getName());
-
+    private final static  EntityService entityService = EntityServiceFactory.getInstance();
 
     public static void processSummaries(final User user,final  Point point) {
-        final List<Entity> list = EntityServiceImpl.getEntityByTrigger(user, point, EntityType.summary);
+        final List<Entity> list = entityService.getEntityByTrigger(user, point, EntityType.summary);
 
         log.info("processing " + list.size() + " summaries");
 
@@ -62,22 +60,22 @@ public class SummaryService   {
 
 
 
-                    final List<Entity> results =  EntityServiceImpl.getEntityByKey(user, summary.getTrigger(), EntityType.point);
+                    final List<Entity> results =  entityService.getEntityByKey(user, summary.getTrigger(), EntityType.point);
                     if (! results.isEmpty()) {
                         final Entity source = results.get(0);
-                        final Timespan span = TimespanModelFactory.createTimespan(new Date(now.getTime() - summary.getSummaryIntervalMs()), now);
+                        final Range<Date> span = Range.between(new Date(now.getTime() - summary.getSummaryIntervalMs()), now);
 
 
                         final Value value;
                         if (summary.getSummaryType().equals(SummaryType.delta)) {
                             Point pointSource = ((Point)source);
                             pointSource.setDeltaSeconds(summary.getSummaryIntervalSeconds());
-                            double delta = ValueTransaction.calculateDelta(pointSource);
+                            double delta = ValueServiceFactory.getInstance().calculateDelta(pointSource);
                             value = ValueFactory.createValueModel(delta);
 
                         }
                         else {
-                            final List<Value> values = ValueTransaction.getDataSegment(source, span);
+                            final List<Value> values = ValueServiceFactory.getInstance().getDataSegment(source, span);
                             if (!values.isEmpty()) {
                                 final double[] doubles = new double[values.size()];
                                 for (int i = 0; i< values.size(); i++) {
@@ -94,12 +92,12 @@ public class SummaryService   {
                         }
 
 
-                        final List<Entity> targetResults =  EntityServiceImpl.getEntityByKey(user, summary.getTarget(), EntityType.point);
+                        final List<Entity> targetResults =  entityService.getEntityByKey(user, summary.getTarget(), EntityType.point);
                         if (! targetResults.isEmpty()) {
                             final Entity target = targetResults.get(0);
-                            ValueTransaction.recordValue(user, target, value);
+                            ValueServiceFactory.getInstance().recordValue(user, target, value);
                             summary.setLastProcessed(new Date());
-                            EntityServiceImpl.addUpdateEntity(user, Arrays.<Entity>asList(summary));
+                            entityService.addUpdateEntity(user, Arrays.<Entity>asList(summary));
 
                         }
 

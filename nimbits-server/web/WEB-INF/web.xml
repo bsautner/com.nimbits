@@ -34,14 +34,7 @@
     </context-param>
 
     <!--v2 services-->
-    <servlet>
-        <servlet-name>hotApi</servlet-name>
-        <servlet-class>com.nimbits.cloudplatform.server.api.HotApi</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>hotApi</servlet-name>
-        <url-pattern>/service/v2/hot</url-pattern>
-    </servlet-mapping>
+
     <servlet>
         <servlet-name>searchApi</servlet-name>
         <servlet-class>com.nimbits.cloudplatform.server.api.SearchApi</servlet-class>
@@ -462,14 +455,14 @@
     </servlet>
     <servlet>
         <servlet-name>com.nimbits.cloudplatform.nimbits UserService</servlet-name>
-        <servlet-class>com.nimbits.cloudplatform.server.transactions.user.UserRpcServiceImpl</servlet-class>
+        <servlet-class>com.nimbits.cloudplatform.server.transactions.user.service.UserRpcServiceImpl</servlet-class>
     </servlet>
 
 
 
     <servlet>
         <servlet-name>com.nimbits.cloudplatform.nimbits EntityService</servlet-name>
-        <servlet-class>com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl</servlet-class>
+        <servlet-class>com.nimbits.cloudplatform.server.transactions.entity.service.EntityServiceRpcImpl</servlet-class>
     </servlet>
 
 
@@ -479,7 +472,7 @@
     </servlet>
     <servlet>
         <servlet-name>com.nimbits.cloudplatform.nimbits ValueService</servlet-name>
-        <servlet-class>com.nimbits.cloudplatform.server.transactions.value.ValueRpcServiceImpl</servlet-class>
+        <servlet-class>com.nimbits.cloudplatform.server.transactions.value.service.ValueServiceRpc</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>com.nimbits.cloudplatform.nimbits XmppService</servlet-name>

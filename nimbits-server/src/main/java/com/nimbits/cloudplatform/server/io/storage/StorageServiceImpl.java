@@ -16,7 +16,7 @@ import com.google.appengine.api.files.AppEngineFile;
 import com.google.appengine.api.files.FileService;
 import com.google.appengine.api.files.FileServiceFactory;
 import com.google.appengine.api.files.GSFileOptions;
-import com.nimbits.cloudplatform.server.transactions.user.UserTransaction;
+import com.nimbits.cloudplatform.server.transactions.user.service.UserService;
 
 import java.io.IOException;
 
@@ -28,7 +28,7 @@ import java.io.IOException;
  */
 public class StorageServiceImpl {
 
-    private UserTransaction userService;
+    private UserService userService;
 
     public void test() throws IOException {
         FileService fileService = FileServiceFactory.getFileService();
@@ -42,11 +42,11 @@ public class StorageServiceImpl {
     }
 
 
-    public void setUserService(UserTransaction userService) {
+    public void setUserService(UserService userService) {
         this.userService = userService;
     }
 
-    public UserTransaction getUserService() {
+    public UserService getUserService() {
         return userService;
     }
 }

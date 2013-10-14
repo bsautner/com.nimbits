@@ -14,7 +14,8 @@ package com.nimbits.cloudplatform.server.process.cron;
 
 import com.nimbits.cloudplatform.client.model.point.Point;
 import com.nimbits.cloudplatform.server.process.task.TaskImpl;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
+import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceFactory;
+import com.nimbits.cloudplatform.server.transactions.entity.service.EntityService;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
@@ -41,13 +42,13 @@ public class MoveRecordedValuesToStoreCron extends HttpServlet implements org.sp
 
     protected final static Logger log = Logger.getLogger(MoveRecordedValuesToStoreCron.class.getName());
 
-
+    private final EntityService service = EntityServiceFactory.getInstance();
     @Override
     @SuppressWarnings("unchecked")
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp)
             throws IOException {
 
-        final Map<String, Point> points = EntityServiceImpl.getActivePoints();
+        final Map<String, Point> points = service.getActivePoints();
 
         for (final Point point : points.values()) {
             log.info("cron task moving " + point.getKey());

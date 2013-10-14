@@ -76,7 +76,7 @@ public class TimeServletImplTest {
         String r = resp.getContentAsString();
         assertNotNull(r);
         long l = Long.valueOf(r);
-        assertEquals(new Date().getTime(), l);//fails if things are slow
+        assertEquals(new Date().getTime() / 1000, l / 1000);//fails if things are slow
 
 
 

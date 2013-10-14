@@ -23,11 +23,11 @@ import com.nimbits.cloudplatform.client.model.summary.Summary;
 import com.nimbits.cloudplatform.client.model.summary.SummaryModelFactory;
 import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueFactory;
-import com.nimbits.cloudplatform.client.service.entity.EntityService;
-import com.nimbits.cloudplatform.client.service.value.ValueService;
+import com.nimbits.cloudplatform.client.service.value.ValueServiceRpc;
 import com.nimbits.cloudplatform.server.NimbitsServletTest;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
+import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceFactory;
+import com.nimbits.cloudplatform.server.transactions.entity.service.EntityService;
+import com.nimbits.cloudplatform.server.transactions.value.ValueServiceFactory;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,6 +57,7 @@ import java.util.Random;
 
 })
 public class SummaryServiceTest extends NimbitsServletTest {
+    EntityService entityService = EntityServiceFactory.getInstance();
     private static final int SUMMARY_INTERVAL_MS = 60000;
     private static final double DELTA = 0.001;
     private static final int INT = 50;
@@ -64,13 +65,9 @@ public class SummaryServiceTest extends NimbitsServletTest {
 
     @Resource(name="summaryService")
     SummaryService summaryService;  
-    
-
-    @Resource(name="entityService")
-    EntityService entityService;
 
     @Resource(name="valueService")
-    ValueService valueService;
+    ValueServiceRpc valueService = new com.nimbits.cloudplatform.server.transactions.value.service.ValueServiceRpc();
     
     @Test
     public void testProcessGet() throws Exception {
@@ -80,9 +77,9 @@ public class SummaryServiceTest extends NimbitsServletTest {
         Summary summary = SummaryModelFactory.createSummary(e,EntityModelFactory.createTrigger(point.getKey()),
                 EntityModelFactory.createTarget(pointChild.getKey()),true, SummaryType.average, SUMMARY_INTERVAL_MS, new Date(0));
         point.setFilterValue(0.0);
-        EntityServiceImpl.addUpdateSingleEntity(point);
-        EntityServiceImpl.addUpdateSingleEntity(summary);
-        final List<Entity> r = EntityServiceImpl.getEntityByTrigger(user, point, EntityType.summary);
+        entityService.addUpdateSingleEntity(point);
+        entityService.addUpdateSingleEntity(summary);
+        final List<Entity> r = entityService.getEntityByTrigger(user, point, EntityType.summary);
 
 
         Assert.assertFalse(r.isEmpty());
@@ -93,7 +90,7 @@ public class SummaryServiceTest extends NimbitsServletTest {
         for (int i = 0; i < c; i++){
             double dx = rand.nextDouble() * 100;
             Value value = ValueFactory.createValueModel(dx);
-            Value vr = ValueTransaction.recordValue(user, point, value);
+            Value vr = ValueServiceFactory.getInstance().recordValue(user, point, value);
             Assert.assertNotNull(vr);
             Thread.sleep(INT);
             d[i] = dx;
@@ -102,7 +99,7 @@ public class SummaryServiceTest extends NimbitsServletTest {
 
         SummaryService.processSummaries(user,  point);
 
-        List<Value> result = ValueTransaction.getCurrentValue(pointChild);
+        List<Value> result = ValueServiceFactory.getInstance().getCurrentValue(pointChild);
         Thread.sleep(100);
         Assert.assertNotNull(result);
         Assert.assertEquals(com, result.get(0).getDoubleValue(), DELTA);

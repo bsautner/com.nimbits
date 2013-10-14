@@ -22,8 +22,8 @@ import com.nimbits.cloudplatform.client.model.GxtModel;
 import com.nimbits.cloudplatform.client.model.TreeModel;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.user.User;
-import com.nimbits.cloudplatform.client.service.entity.EntityService;
-import com.nimbits.cloudplatform.client.service.entity.EntityServiceAsync;
+import com.nimbits.cloudplatform.client.service.entity.EntityServiceRpc;
+import com.nimbits.cloudplatform.client.service.entity.EntityServiceRpcAsync;
 import com.nimbits.cloudplatform.client.ui.helper.FeedbackHelper;
 
 import java.util.Map;
@@ -37,7 +37,7 @@ public class EntityCombo extends ComboBox<TreeModel> {
                        final String emptyText) {
 
         final ListStore<TreeModel> cbStore = new ListStore<TreeModel>();
-        final EntityServiceAsync service = GWT.create(EntityService.class);
+        final EntityServiceRpcAsync service = GWT.create(EntityServiceRpc.class);
         setEmptyText(emptyText);
         setStore(cbStore);
         setDisplayField(Parameters.name.getText());

@@ -46,8 +46,8 @@ import com.nimbits.cloudplatform.client.model.entity.EntityName;
 import com.nimbits.cloudplatform.client.model.subscription.Subscription;
 import com.nimbits.cloudplatform.client.model.subscription.SubscriptionFactory;
 import com.nimbits.cloudplatform.client.model.user.User;
-import com.nimbits.cloudplatform.client.service.entity.EntityService;
-import com.nimbits.cloudplatform.client.service.entity.EntityServiceAsync;
+import com.nimbits.cloudplatform.client.service.entity.EntityServiceRpc;
+import com.nimbits.cloudplatform.client.service.entity.EntityServiceRpcAsync;
 import com.nimbits.cloudplatform.client.ui.helper.FeedbackHelper;
 
 import java.util.ArrayList;
@@ -415,7 +415,7 @@ public class SubscriptionPanel extends NavigationEventProvider {
                             enabled.getValue());
                 }
 
-                EntityServiceAsync service = GWT.create(EntityService.class);
+                EntityServiceRpcAsync service = GWT.create(EntityServiceRpc.class);
                 service.addUpdateEntityRpc(Arrays.<Entity>asList(update), new UpdateEntityAsyncCallback(box));
 
 

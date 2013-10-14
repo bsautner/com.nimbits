@@ -14,7 +14,6 @@ package com.nimbits.cloudplatform.server.process.cron;
 
 import org.springframework.stereotype.Service;
 
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

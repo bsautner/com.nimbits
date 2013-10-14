@@ -21,7 +21,6 @@ import com.nimbits.cloudplatform.server.api.ApiServlet;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
 import org.springframework.stereotype.Service;
 
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

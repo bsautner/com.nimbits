@@ -21,7 +21,7 @@ import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.location.Location;
 import com.nimbits.cloudplatform.client.model.location.LocationFactory;
 import com.nimbits.cloudplatform.client.model.user.User;
-import com.nimbits.cloudplatform.server.transactions.user.UserTransactionFactory;
+import com.nimbits.cloudplatform.server.transactions.user.UserServiceFactory;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServlet;
@@ -31,7 +31,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * Created by Benjamin Sautner
@@ -89,7 +88,7 @@ public class ApiServlet extends HttpServlet {
     public void doInit(final HttpServletRequest req, final HttpServletResponse resp, final ExportType type)   {
         // log.info(req.getQueryString());
 
-        user = UserTransactionFactory.getInstance().getHttpRequestUser(req);
+        user = UserServiceFactory.getInstance().getHttpRequestUser(req);
 
         getGPS(req);
         buildParamMap(req);

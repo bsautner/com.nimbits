@@ -19,7 +19,6 @@ import com.nimbits.cloudplatform.server.api.ApiServlet;
 import com.nimbits.cloudplatform.server.process.task.TaskImpl;
 import org.springframework.stereotype.Service;
 
-
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.mail.Address;

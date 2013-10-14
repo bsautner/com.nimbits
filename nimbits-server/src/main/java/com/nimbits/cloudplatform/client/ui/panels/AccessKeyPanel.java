@@ -38,8 +38,8 @@ import com.nimbits.cloudplatform.client.model.common.impl.CommonFactory;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.entity.EntityModelFactory;
 import com.nimbits.cloudplatform.client.model.entity.EntityName;
-import com.nimbits.cloudplatform.client.service.entity.EntityService;
-import com.nimbits.cloudplatform.client.service.entity.EntityServiceAsync;
+import com.nimbits.cloudplatform.client.service.entity.EntityServiceRpc;
+import com.nimbits.cloudplatform.client.service.entity.EntityServiceRpcAsync;
 import com.nimbits.cloudplatform.client.ui.helper.FeedbackHelper;
 
 import java.util.ArrayList;
@@ -255,7 +255,7 @@ public class AccessKeyPanel extends NavigationEventProvider {
 
         @Override
         public void componentSelected(ButtonEvent buttonEvent) {
-            EntityServiceAsync service = GWT.create(EntityService.class);
+            EntityServiceRpcAsync service = GWT.create(EntityServiceRpc.class);
             final MessageBox box = MessageBox.wait("Progress",
                     "Creating Access Key", "please wit...");
             box.show();

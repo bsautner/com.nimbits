@@ -32,10 +32,10 @@ import com.nimbits.cloudplatform.client.model.value.impl.ValueFactory;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueModel;
 import com.nimbits.cloudplatform.server.api.ApiServlet;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
+import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceFactory;
+import com.nimbits.cloudplatform.server.transactions.entity.service.EntityService;
+import com.nimbits.cloudplatform.server.transactions.value.ValueServiceFactory;
 import org.springframework.stereotype.Service;
-
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -51,7 +51,7 @@ import java.util.logging.Logger;
 @Deprecated
 public class ValueServletImpl extends ApiServlet implements org.springframework.web.HttpRequestHandler {
     final private static Logger log = Logger.getLogger(ValueServletImpl.class.getName());
-
+    private final EntityService service = EntityServiceFactory.getInstance();
     @Override
     public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -81,7 +81,7 @@ public class ValueServletImpl extends ApiServlet implements org.springframework.
                     return;
                 }
                 final EntityName pointName = CommonFactory.createName(getParam(Parameters.point), EntityType.point);
-                final List<Entity> points =  EntityServiceImpl.getEntityByName(user, pointName, EntityType.point);
+                final List<Entity> points =  service.getEntityByName(user, pointName, EntityType.point);
 
                 if (points.isEmpty()) {
                     resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Point Not Found");;
@@ -110,7 +110,7 @@ public class ValueServletImpl extends ApiServlet implements org.springframework.
 
                     final PrintWriter out;
                     try {
-                        final Value result = ValueTransaction.recordValue(user, point, v);
+                        final Value result = ValueServiceFactory.getInstance().recordValue(user, point, v);
                         out = resp.getWriter();
                         final String j = GsonFactory.getInstance().toJson(result);
                         out.print(j);
@@ -197,12 +197,12 @@ public class ValueServletImpl extends ApiServlet implements org.springframework.
 
         final List<Entity> result;
         if (!Utils.isEmptyString(uuid)) {
-            result = EntityServiceImpl.getEntityByKey(u, uuid, EntityType.point);
+            result = service.getEntityByKey(u, uuid, EntityType.point);
         }
         else if (!Utils.isEmptyString(pointNameParam)) {
             final EntityName pointName =  CommonFactory.createName(pointNameParam, EntityType.point);
 
-            result = EntityServiceImpl.getEntityByName(u, pointName, EntityType.point);
+            result = service.getEntityByName(u, pointName, EntityType.point);
         }
         else {
             throw new Exception(UserMessages.ERROR_POINT_NOT_FOUND);
@@ -226,7 +226,7 @@ public class ValueServletImpl extends ApiServlet implements org.springframework.
                         nv.getTimestamp(),nv.getNote(),  nv.getData(), AlertType.OK);
 
 
-                value = ValueTransaction.recordValue(u, p, newValue);
+                value = ValueServiceFactory.getInstance().recordValue(u, p, newValue);
                 if (nv.getLocation().isEmpty()) {
                     //reportLocation(p, location);
                 }
@@ -234,7 +234,7 @@ public class ValueServletImpl extends ApiServlet implements org.springframework.
                   //  reportLocation(p,nv.getLocation());
                 }
             } else {
-                List<Value> values = ValueTransaction.getCurrentValue(p);
+                List<Value> values = ValueServiceFactory.getInstance().getCurrentValue(p);
                 if (! values.isEmpty()) {
                     value = values.get(0);
                 }

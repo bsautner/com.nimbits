@@ -13,11 +13,7 @@
     <properties>
         <gwt.version>2.5.1</gwt.version>
         <gxt.version>2.2.5</gxt.version>
-
     </properties>
-
-
-
 
     <dependencies>
         <dependency>
@@ -32,6 +28,8 @@
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+
+
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>

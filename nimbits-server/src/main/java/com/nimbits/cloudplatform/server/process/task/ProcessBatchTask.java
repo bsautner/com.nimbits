@@ -34,9 +34,10 @@ import com.nimbits.cloudplatform.client.model.value.impl.ValueFactory;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueModel;
 import com.nimbits.cloudplatform.server.admin.logging.LogHelper;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.value.ValueRpcServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
+import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceFactory;
+import com.nimbits.cloudplatform.server.transactions.entity.service.EntityService;
+import com.nimbits.cloudplatform.server.transactions.value.ValueServiceFactory;
+import com.nimbits.cloudplatform.server.transactions.value.service.ValueServiceRpc;
 import com.nimbits.cloudplatform.shared.Utils;
 import org.springframework.stereotype.Service;
 
@@ -73,9 +74,9 @@ public class ProcessBatchTask extends HttpServlet implements org.springframework
 
     private Map<Long, BatchValue> timestampValueMap;
     private List<Long> timestamps;
-    private EntityServiceImpl entityService;
-    private ValueRpcServiceImpl valueService;
-
+    private EntityService entityService;
+    private ValueServiceRpc valueService;
+    private final EntityService service = EntityServiceFactory.getInstance();
 
     @Override
     public void handleRequest(final HttpServletRequest req, final HttpServletResponse resp) {
@@ -130,7 +131,7 @@ public class ProcessBatchTask extends HttpServlet implements org.springframework
 
                     } else {
 
-                        final List<Entity> pointTmp = EntityServiceImpl.getEntityByName(u, b.getPointName(), EntityType.point);
+                        final List<Entity> pointTmp = service.getEntityByName(u, b.getPointName(), EntityType.point);
 
                         if (!pointTmp.isEmpty()) {
                             point = (Point) pointTmp.get(0);
@@ -145,9 +146,9 @@ public class ProcessBatchTask extends HttpServlet implements org.springframework
                         if (b.getValues().isEmpty()) {
                             final ValueData data = ValueDataModel.getInstance(SimpleValue.getInstance(b.getData()));
                             final Value v = ValueFactory.createValueModel(b.getLocation(), b.getValue(), b.getTimestamp(), b.getNote(), data, AlertType.OK);
-                            ValueTransaction.recordValue(b.getU(), point, v);
+                            ValueServiceFactory.getInstance().recordValue(b.getU(), point, v);
                         } else {
-                            ValueTransaction.recordValues(b.getU(), point, b.getValues());
+                            ValueServiceFactory.getInstance().recordValues(b.getU(), point, b.getValues());
                         }
 
                         //  reportLocation(req, point);
@@ -267,19 +268,19 @@ public class ProcessBatchTask extends HttpServlet implements org.springframework
 
     }
 
-    public void setEntityService(EntityServiceImpl entityService) {
+    public void setEntityService(EntityService entityService) {
         this.entityService = entityService;
     }
 
-    public EntityServiceImpl getEntityService() {
+    public EntityService getEntityService() {
         return entityService;
     }
 
-    public void setValueService(ValueRpcServiceImpl valueService) {
+    public void setValueService(ValueServiceRpc valueService) {
         this.valueService = valueService;
     }
 
-    public ValueRpcServiceImpl getValueService() {
+    public ValueServiceRpc getValueService() {
         return valueService;
     }
 

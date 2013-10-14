@@ -252,8 +252,8 @@ public class ValueDaoImplTest extends NimbitsServletTest {
 
         try {
 
-            ValueDAO.recordValues(point, values);
-            List<Value> result = ValueDAO.getTopDataSeries(point, 10);
+            valueDao.recordValues(point, values);
+            List<Value> result = valueDao.getTopDataSeries(point, 10);
             assertEquals(10, result.size());
         } catch (Exception e) {
             e.printStackTrace();
@@ -272,7 +272,7 @@ public class ValueDaoImplTest extends NimbitsServletTest {
             Calendar c = Calendar.getInstance();
             c.add(Calendar.DATE, -10);
 
-            List<Value> result = ValueTransaction.getDataSegment(point, Range.between(c.getTimeInMillis(), new Date().getTime()), Range.between(0, 10));
+            List<Value> result = ValueServiceFactory.getInstance().getDataSegment(point, Range.between(c.getTimeInMillis(), new Date().getTime()), Range.between(0, 10));
                        //valueDao.getTopDataSeries(point, 10);
             assertEquals(10, result.size());
         } catch (Exception e) {

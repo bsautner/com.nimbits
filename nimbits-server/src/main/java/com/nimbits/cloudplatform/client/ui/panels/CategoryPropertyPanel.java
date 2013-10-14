@@ -32,8 +32,8 @@ import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.nimbits.cloudplatform.client.enums.Parameters;
 import com.nimbits.cloudplatform.client.enums.ProtectionLevel;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
-import com.nimbits.cloudplatform.client.service.entity.EntityService;
-import com.nimbits.cloudplatform.client.service.entity.EntityServiceAsync;
+import com.nimbits.cloudplatform.client.service.entity.EntityServiceRpc;
+import com.nimbits.cloudplatform.client.service.entity.EntityServiceRpcAsync;
 import com.nimbits.cloudplatform.client.ui.icons.Icons;
 
 import java.util.Arrays;
@@ -164,7 +164,7 @@ public class CategoryPropertyPanel extends NavigationEventProvider {
 
     private void save() {
 
-        final EntityServiceAsync service = GWT.create(EntityService.class);
+        final EntityServiceRpcAsync service = GWT.create(EntityServiceRpc.class);
         if (radioProtection0.getValue()) {
             entity.setProtectionLevel(ProtectionLevel.onlyMe);
         } else if (radioProtection1.getValue()) {

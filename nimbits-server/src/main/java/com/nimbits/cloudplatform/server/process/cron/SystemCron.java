@@ -14,9 +14,8 @@ package com.nimbits.cloudplatform.server.process.cron;
 
 import com.nimbits.cloudplatform.client.constants.Const;
 import com.nimbits.cloudplatform.client.enums.SettingType;
-import com.nimbits.cloudplatform.server.transactions.settings.SettingsServiceImpl;
+import com.nimbits.cloudplatform.server.transactions.settings.SettingFactory;
 import org.springframework.stereotype.Service;
-
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -49,7 +48,7 @@ public class SystemCron extends HttpServlet implements org.springframework.web.H
                 out = resp.getWriter();
             }
             println(Const.HTML_BOOTSTRAP);
-            println("<P>" + SettingsServiceImpl.reloadCache() + "</P>");
+          //  println("<P>" + SettingFactory.getServiceInstance().reloadCache() + "</P>");
             if (req != null) {
                 println("<p>This Servers URL: " + req.getLocalName() + "</p>");
             }
@@ -89,10 +88,10 @@ public class SystemCron extends HttpServlet implements org.springframework.web.H
     private void processSetting(final SettingType setting) {
 
         try {
-            final String currentValue = SettingsServiceImpl.getSetting(setting.getName());
+            final String currentValue = SettingFactory.getServiceInstance().getSetting(setting.getName());
 
             if (setting.isUpdate()) {
-                SettingsServiceImpl.updateSetting(setting.getName(), setting.getDefaultValue());
+                SettingFactory.getServiceInstance().updateSetting(setting.getName(), setting.getDefaultValue());
 
                 println("<p>" + setting.getName() + " updated to " + setting.getDefaultValue() +
                         " (was " + currentValue + ")</p>");
@@ -102,7 +101,7 @@ public class SystemCron extends HttpServlet implements org.springframework.web.H
         } catch (Exception e) {
             if (setting.isCreate()) {
                 try {
-                    SettingsServiceImpl.addSetting(setting.getName(), setting.getDefaultValue());
+                    SettingFactory.getServiceInstance().addSetting(setting.getName(), setting.getDefaultValue());
                     println("<p>Added setting: " + setting.getName() + " new value : " +  setting.getDefaultValue() + "</p>");
                 } catch (Exception e1) {
                     println(e.getMessage());

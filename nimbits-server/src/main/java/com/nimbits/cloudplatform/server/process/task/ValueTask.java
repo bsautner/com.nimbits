@@ -24,7 +24,8 @@ import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueModel;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
 import com.nimbits.cloudplatform.server.transactions.calculation.CalculationTransaction;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
+import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceFactory;
+import com.nimbits.cloudplatform.server.transactions.entity.service.EntityService;
 import com.nimbits.cloudplatform.server.transactions.subscription.SubscriptionService;
 import com.nimbits.cloudplatform.server.transactions.summary.SummaryService;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,7 @@ public class ValueTask extends HttpServlet implements org.springframework.web.Ht
 
     private static final long serialVersionUID = 2L;
 
-
+    private final EntityService entityService = EntityServiceFactory.getInstance();
 
     @Override
     public void handleRequest(final HttpServletRequest req, final HttpServletResponse resp) {
@@ -64,7 +65,7 @@ public class ValueTask extends HttpServlet implements org.springframework.web.Ht
             point =  (Point) entity;
         }
         else {
-            List<Entity> sample =  EntityServiceImpl.getEntityByKey(u, entity.getKey(), EntityType.point);
+            List<Entity> sample =  entityService.getEntityByKey(u, entity.getKey(), EntityType.point);
             if (sample.isEmpty()) {
                 return;
             }
@@ -76,7 +77,7 @@ public class ValueTask extends HttpServlet implements org.springframework.web.Ht
         if (point != null) {
             if (point.isIdleAlarmOn() && point.getIdleAlarmSent()) {
                 point.setIdleAlarmSent(false);
-                EntityServiceImpl.addUpdateEntity(u, Arrays.<Entity>asList(point));
+                entityService.addUpdateEntity(u, Arrays.<Entity>asList(point));
             }
 
             CalculationTransaction.processCalculations(u, point);

@@ -20,15 +20,14 @@ import com.nimbits.cloudplatform.client.model.common.impl.CommonFactory;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.entity.EntityName;
 import com.nimbits.cloudplatform.client.model.point.Point;
-import com.nimbits.cloudplatform.client.model.timespan.Timespan;
-import com.nimbits.cloudplatform.client.model.timespan.TimespanServiceClientImpl;
 import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.server.api.ApiServlet;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
+import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceFactory;
+import com.nimbits.cloudplatform.server.transactions.entity.service.EntityService;
+import com.nimbits.cloudplatform.server.transactions.value.ValueServiceFactory;
+import org.apache.commons.lang3.Range;
 import org.springframework.stereotype.Service;
-
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -44,7 +43,7 @@ public class SeriesServletImpl extends ApiServlet  implements org.springframewor
 
     private static final long serialVersionUID = 1L;
     public static final int LIMIT = 1000;
-
+    private final EntityService service = EntityServiceFactory.getInstance();
 
     @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp) {
@@ -58,11 +57,11 @@ public class SeriesServletImpl extends ApiServlet  implements org.springframewor
             final String endDate = req.getParameter(Parameters.ed.getText());
 
 
-            Timespan timespan = null;
+            Range timespan = null;
 
             if (!Utils.isEmptyString(startDate) && !Utils.isEmptyString(endDate)) {
                 try {
-                    timespan = TimespanServiceClientImpl.createTimespan(startDate, endDate);
+                    timespan = Range.between(startDate, endDate);
                 } catch (Exception e) {
                     timespan = null;
                 }
@@ -93,7 +92,7 @@ public class SeriesServletImpl extends ApiServlet  implements org.springframewor
 
 
                 final EntityName pointName = CommonFactory.createName(name, EntityType.point);
-                List<Entity> points = EntityServiceImpl.getEntityByName(user, pointName, EntityType.point);
+                List<Entity> points = service.getEntityByName(user, pointName, EntityType.point);
                 if (! points.isEmpty()) {
                      Point point = (Point) points.get(0);
 
@@ -107,11 +106,11 @@ public class SeriesServletImpl extends ApiServlet  implements org.springframewor
 
                             int seg = Integer.valueOf(segStr);
 
-                            values = ValueTransaction.getDataSegment(point, timespan, seg, seg + 1000);
+                            values = ValueServiceFactory.getInstance().getDataSegment(point, timespan, seg, seg + 1000);
 
                         } else {
 
-                            values = ValueTransaction.getTopDataSeries(point, count);
+                            values = ValueServiceFactory.getInstance().getTopDataSeries(point, count);
 
                         }
 

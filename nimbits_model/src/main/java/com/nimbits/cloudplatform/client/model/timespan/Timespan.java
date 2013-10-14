@@ -21,6 +21,7 @@ import java.util.Date;
  * Date: 4/25/11
  * Time: 7:03 PM
  */
+@Deprecated
 public interface Timespan extends Serializable {
 
     Date getStart();

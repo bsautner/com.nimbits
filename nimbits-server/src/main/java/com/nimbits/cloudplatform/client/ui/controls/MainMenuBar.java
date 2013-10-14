@@ -33,7 +33,6 @@ import com.nimbits.cloudplatform.client.constants.UserMessages;
 import com.nimbits.cloudplatform.client.enums.Action;
 import com.nimbits.cloudplatform.client.enums.EntityType;
 import com.nimbits.cloudplatform.client.enums.FilterType;
-import com.nimbits.cloudplatform.client.enums.SettingType;
 import com.nimbits.cloudplatform.client.enums.point.PointType;
 import com.nimbits.cloudplatform.client.model.GxtModel;
 import com.nimbits.cloudplatform.client.model.TreeModel;
@@ -44,15 +43,16 @@ import com.nimbits.cloudplatform.client.model.entity.EntityName;
 import com.nimbits.cloudplatform.client.model.point.Point;
 import com.nimbits.cloudplatform.client.model.point.PointModelFactory;
 import com.nimbits.cloudplatform.client.model.user.User;
-import com.nimbits.cloudplatform.client.service.entity.EntityService;
-import com.nimbits.cloudplatform.client.service.entity.EntityServiceAsync;
-import com.nimbits.cloudplatform.client.service.user.UserService;
-import com.nimbits.cloudplatform.client.service.user.UserServiceAsync;
+import com.nimbits.cloudplatform.client.service.entity.EntityServiceRpc;
+import com.nimbits.cloudplatform.client.service.entity.EntityServiceRpcAsync;
 import com.nimbits.cloudplatform.client.ui.helper.FeedbackHelper;
 import com.nimbits.cloudplatform.client.ui.icons.Icons;
 import com.nimbits.cloudplatform.client.ui.panels.FileUploadPanel;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by Benjamin Sautner
@@ -357,7 +357,7 @@ public class MainMenuBar extends ToolBar {
                 final MessageBox box = MessageBox.wait("Progress",
                         "Creating your data point channel into the cloud", "Creating: " + newEntityName);
                 box.show();
-                EntityServiceAsync service = GWT.create(EntityService.class);
+                EntityServiceRpcAsync service = GWT.create(EntityServiceRpc.class);
 
                 try {
 
@@ -422,7 +422,7 @@ public class MainMenuBar extends ToolBar {
                     return;
                 }
 
-                final EntityServiceAsync service = GWT.create(EntityService.class);
+                final EntityServiceRpcAsync service = GWT.create(EntityServiceRpc.class);
                 Entity entity = EntityModelFactory.createEntity(categoryName, EntityType.category);
 
                 service.addUpdateEntityRpc(Arrays.<Entity>asList(entity),

@@ -40,8 +40,8 @@ import com.nimbits.cloudplatform.client.model.entity.EntityName;
 import com.nimbits.cloudplatform.client.model.point.Point;
 import com.nimbits.cloudplatform.client.model.point.PointModelFactory;
 import com.nimbits.cloudplatform.client.model.user.User;
-import com.nimbits.cloudplatform.client.service.entity.EntityService;
-import com.nimbits.cloudplatform.client.service.entity.EntityServiceAsync;
+import com.nimbits.cloudplatform.client.service.entity.EntityServiceRpc;
+import com.nimbits.cloudplatform.client.service.entity.EntityServiceRpcAsync;
 import com.nimbits.cloudplatform.client.ui.controls.menu.AddFolderMenuItem;
 import com.nimbits.cloudplatform.client.ui.controls.menu.AddPointMenuItem;
 import com.nimbits.cloudplatform.client.ui.helper.FeedbackHelper;
@@ -94,7 +94,7 @@ public class EntityContextMenu extends Menu {
                         final MessageBox box = MessageBox.wait("Progress",
                                 "Creating your data point channel into the cloud", "Creating: " + newEntityName);
                         box.show();
-                        EntityServiceAsync service = GWT.create(EntityService.class);
+                        EntityServiceRpcAsync service = GWT.create(EntityServiceRpc.class);
 
                         final Entity currentEntity =  currentModel.getBaseEntity();
                         try {
@@ -170,7 +170,7 @@ public class EntityContextMenu extends Menu {
                     final MessageBox box = MessageBox.wait("Progress",
                             "Creating your folder", "Creating: " + newEntityName);
                     box.show();
-                    EntityServiceAsync service = GWT.create(EntityService.class);
+                    EntityServiceRpcAsync service = GWT.create(EntityServiceRpc.class);
 
                     final Entity currentEntity =  currentModel.getBaseEntity();
                     try {
@@ -682,7 +682,7 @@ public class EntityContextMenu extends Menu {
                 final MessageBox box = MessageBox.wait("Progress",
                         "Creating your data point channel into the cloud", "Creating: " + newEntityName);
                 box.show();
-                final EntityServiceAsync service = GWT.create(EntityService.class);
+                final EntityServiceRpcAsync service = GWT.create(EntityServiceRpc.class);
                 EntityName name = null;
                 try {
                     name = CommonFactory.createName(newEntityName, EntityType.point);
@@ -891,7 +891,7 @@ public class EntityContextMenu extends Menu {
         @Override
         public void handleEvent(MessageBoxEvent ce) {
             final com.extjs.gxt.ui.client.widget.button.Button btn = ce.getButtonClicked();
-            final EntityServiceAsync service = GWT.create(EntityService.class);
+            final EntityServiceRpcAsync service = GWT.create(EntityServiceRpc.class);
 
             if (btn.getText().equals(Words.WORD_YES)) {
                 final Entity entityToDelete = currentModel.getBaseEntity();

@@ -15,7 +15,7 @@ package com.nimbits.cloudplatform.server.api.impl;
 import com.nimbits.cloudplatform.client.enums.SettingType;
 import com.nimbits.cloudplatform.server.api.ApiBase;
 import com.nimbits.cloudplatform.server.api.ValueApi;
-import com.nimbits.cloudplatform.server.transactions.settings.SettingsServiceImpl;
+import com.nimbits.cloudplatform.server.transactions.settings.SettingFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +37,7 @@ final Logger log = Logger.getLogger(ValueApi.class.getName());
 
             PrintWriter out = resp.getWriter();
 
-            out.print(SettingsServiceImpl.getSetting(SettingType.serverVersion.getName()));
+            out.print(SettingFactory.getServiceInstance().getSetting(SettingType.serverVersion.getName()));
             out.close();
 
         }

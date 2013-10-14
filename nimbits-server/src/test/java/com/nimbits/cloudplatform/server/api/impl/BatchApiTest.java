@@ -1,28 +1,21 @@
 package com.nimbits.cloudplatform.server.api.impl;
 
-import com.nimbits.cloudplatform.client.enums.FilterType;
-import com.nimbits.cloudplatform.client.enums.point.PointType;
-import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueFactory;
 import com.nimbits.cloudplatform.server.NimbitsServletTest;
 import com.nimbits.cloudplatform.server.api.BatchApi;
-import com.nimbits.cloudplatform.server.api.ValueApi;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
+import com.nimbits.cloudplatform.server.transactions.value.ValueServiceFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.*;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
 
 /**
  * Author: Benjamin Sautner
@@ -84,7 +77,7 @@ public class BatchApiTest extends NimbitsServletTest {
         req.setMethod("POST");
         impl.doPost(req, resp);
 
-        List<Value> vx = ValueTransaction.getTopDataSeries(point, 5);
+        List<Value> vx = ValueServiceFactory.getInstance().getTopDataSeries(point, 5);
         assertEquals(EXPECTED, vx.size());
 
         double r1 = 0;
@@ -95,7 +88,7 @@ public class BatchApiTest extends NimbitsServletTest {
         }
         assertEquals(c1, r1, .001);
 
-        List<Value> vx2 = ValueTransaction.getTopDataSeries(pointChild, 5);
+        List<Value> vx2 = ValueServiceFactory.getInstance().getTopDataSeries(pointChild, 5);
         assertEquals(EXPECTED, vx2.size());
 
         for (Value value : vx2) {

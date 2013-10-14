@@ -39,11 +39,11 @@ import com.nimbits.cloudplatform.server.api.ApiServlet;
 import com.nimbits.cloudplatform.server.communication.xmpp.XmppServiceImpl;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
 import com.nimbits.cloudplatform.server.json.JsonHelper;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.user.UserTransactionFactory;
-import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
+import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceFactory;
+import com.nimbits.cloudplatform.server.transactions.entity.service.EntityService;
+import com.nimbits.cloudplatform.server.transactions.user.UserServiceFactory;
+import com.nimbits.cloudplatform.server.transactions.value.ValueServiceFactory;
 import org.springframework.stereotype.Service;
-
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -60,7 +60,7 @@ import java.util.regex.Pattern;
 @Service("xmpp")
 
 public class XMPPReceiverServlet extends ApiServlet implements org.springframework.web.HttpRequestHandler {
-
+    private final EntityService service = EntityServiceFactory.getInstance();
     private static final Logger log = Logger.getLogger(XMPPReceiverServlet.class.getName());
     private static final Pattern COMPILE = Pattern.compile("/");
     private static final Pattern PATTERN = Pattern.compile("=");
@@ -80,10 +80,10 @@ public class XMPPReceiverServlet extends ApiServlet implements org.springframewo
             final String email = j[0].toLowerCase();
 
             log.info("XMPP Message recieved " + email + ":   " + body);
-            List<Entity> result = EntityServiceImpl.getEntityByKey(UserTransactionFactory.getInstance().getAdmin(), email, EntityType.user);
+            List<Entity> result = service.getEntityByKey(UserServiceFactory.getInstance().getAdmin(), email, EntityType.user);
             if (! result.isEmpty()) {
                 u =  (User) result.get(0);
-                u.addAccessKey(UserTransactionFactory.getInstance().authenticatedKey(u));
+                u.addAccessKey(UserServiceFactory.getInstance().authenticatedKey(u));
 
                 if (body.toLowerCase().trim().equals("ls")) {
                     //sendPointList(u);
@@ -140,11 +140,11 @@ public class XMPPReceiverServlet extends ApiServlet implements org.springframewo
         switch (action) {
             case record:
                 //  Point point = PointServiceFactory.getInstance().getPointByKey(p.getKey());
-                Point point = (Point) EntityServiceImpl.getEntityByKey(u, p.getKey(), EntityType.point).get(0);
+                Point point = (Point) service.getEntityByKey(u, p.getKey(), EntityType.point).get(0);
 
                 if (point != null) {
 
-                    final Value v = ValueTransaction.recordValue(u, point, p.getValue());
+                    final Value v = ValueServiceFactory.getInstance().recordValue(u, point, p.getValue());
                     point.setValue(v);
                     String result = gson.toJson(point);
                     xmppService.sendMessage(result, u.getEmail());
@@ -171,7 +171,7 @@ public class XMPPReceiverServlet extends ApiServlet implements org.springframewo
                 u.getKey(), u.getKey(), UUID.randomUUID().toString());
         Point p = PointModelFactory.createPointModel(entity,0.0, 90, "", 0.0, false, false, false, 0, false, FilterType.fixedHysteresis, 0.1, false, PointType.basic, 0, false, 0.0 );
 
-        EntityServiceImpl.addUpdateEntity(u, Arrays.<Entity>asList(p));
+        service.addUpdateEntity(u, Arrays.<Entity>asList(p));
         //PointServiceFactory.getInstance().addPoint(u, entity);
         xmppService.sendMessage(pointName.getValue() + " created", u.getEmail());
 
@@ -192,7 +192,7 @@ public class XMPPReceiverServlet extends ApiServlet implements org.springframewo
 
                 if (u != null) {
                     Value value = ValueFactory.createValueModel(LocationFactory.createLocation(), v, new Date(), "", ValueDataModel.getInstance(SimpleValue.getInstance("")), AlertType.OK);
-                    ValueTransaction.recordValue(u, pointName, value);
+                    ValueServiceFactory.getInstance().recordValue(u, pointName, value);
                 }
             } catch (NumberFormatException ignored) {
 
@@ -209,11 +209,11 @@ public class XMPPReceiverServlet extends ApiServlet implements org.springframewo
         if (!Utils.isEmptyString(body) && !body.isEmpty() && body.charAt(body.length() - 1) == '?') {
             final EntityName pointName = CommonFactory.createName(body.replace("?", ""), EntityType.point);
 
-            Entity e = EntityServiceImpl.getEntityByName(u, pointName, EntityType.point).get(0);
+            Entity e = service.getEntityByName(u, pointName, EntityType.point).get(0);
             // Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
-            Entity point = EntityServiceImpl.getEntityByKey(u, e.getKey(), EntityType.point).get(0);
+            Entity point = service.getEntityByKey(u, e.getKey(), EntityType.point).get(0);
 
-            final List<Value> sample = ValueTransaction.getPrevValue(point, new Date());
+            final List<Value> sample = ValueServiceFactory.getInstance().getPrevValue(point, new Date());
             if (! sample.isEmpty()) {
                 Value v = sample.get(0);
                 String t = "";

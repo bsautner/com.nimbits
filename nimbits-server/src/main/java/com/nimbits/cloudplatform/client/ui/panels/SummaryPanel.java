@@ -45,8 +45,8 @@ import com.nimbits.cloudplatform.client.model.summary.Summary;
 import com.nimbits.cloudplatform.client.model.summary.SummaryModelFactory;
 import com.nimbits.cloudplatform.client.model.trigger.Trigger;
 import com.nimbits.cloudplatform.client.model.user.User;
-import com.nimbits.cloudplatform.client.service.entity.EntityService;
-import com.nimbits.cloudplatform.client.service.entity.EntityServiceAsync;
+import com.nimbits.cloudplatform.client.service.entity.EntityServiceRpc;
+import com.nimbits.cloudplatform.client.service.entity.EntityServiceRpcAsync;
 import com.nimbits.cloudplatform.client.ui.controls.EntityCombo;
 import com.nimbits.cloudplatform.client.ui.helper.FeedbackHelper;
 
@@ -297,7 +297,7 @@ public class SummaryPanel extends NavigationEventProvider {
 
         @Override
         public void componentSelected(ButtonEvent buttonEvent) {
-            EntityServiceAsync service = GWT.create(EntityService.class);
+            EntityServiceRpcAsync service = GWT.create(EntityServiceRpc.class);
             final MessageBox box = MessageBox.wait("Progress",
                     "Create Summary", "please wit...");
             box.show();

@@ -1,6 +1,5 @@
 package com.nimbits.cloudplatform.server.api;
 
-import com.nimbits.cloudplatform.client.constants.Const;
 import com.nimbits.cloudplatform.client.enums.Parameters;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +27,7 @@ public class SessionApiTest {
     @Test
     public void testDoGet() throws Exception {
          req1.addParameter("email", "test@example.com");
-         req1.addHeader(Parameters.apikey.getText(), System.getProperty(Const.API_KEY_ID));
+         req1.addHeader(Parameters.apikey.getText(), "some key");
          impl.doGet(req1, resp1);
          assertEquals(HttpServletResponse.SC_OK, resp1.getStatus());
 

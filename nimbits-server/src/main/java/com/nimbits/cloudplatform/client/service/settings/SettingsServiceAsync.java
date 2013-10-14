@@ -13,14 +13,21 @@
 package com.nimbits.cloudplatform.client.service.settings;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.cloudplatform.client.enums.SettingType;
 
 import java.util.Map;
 
 public interface SettingsServiceAsync {
 
-
-
     void getSettingsRpc(final AsyncCallback<Map<String, String>> asyncCallback);
+
+    void getSettings(AsyncCallback<Map<String, String>> async);
+
+    void getSetting(String paramName, AsyncCallback<String> async);
+
+    void updateSetting(String setting, String newValue, AsyncCallback<Void> async);
+
+    void addSetting(String setting, String value, AsyncCallback<Void> async);
+
+    void addSetting(String setting, boolean defaultValue, AsyncCallback<Void> async);
 
 }

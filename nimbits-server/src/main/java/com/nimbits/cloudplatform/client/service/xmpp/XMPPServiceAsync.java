@@ -13,8 +13,6 @@
 package com.nimbits.cloudplatform.client.service.xmpp;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.cloudplatform.client.model.entity.Entity;
-import com.nimbits.cloudplatform.client.model.entity.EntityName;
 
 public interface XMPPServiceAsync {
 

@@ -11,21 +11,12 @@
         android:id="@id/nimbits_transparent_logo"
         android:src="@drawable/logo"
         android:layout_gravity="center"
-        android:layout_alignRight="@+id/progressBar"
-        android:layout_centerVertical="true"/>
-
-    <ProgressBar
-        android:layout_width="226dp"
-        android:layout_height="218dp"
-        android:layout_gravity="center"
-        android:id="@+id/progressBar"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"/>
+        android:contentDescription="@string/nimbits_logo"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Authenticating..."
+        android:text="@string/authenticating"
         android:id="@+id/textView"
         android:layout_gravity="left|bottom"/>
 

@@ -19,7 +19,7 @@ import com.nimbits.cloudplatform.client.enums.Parameters;
 import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueFactory;
 import com.nimbits.cloudplatform.server.NimbitsServletTest;
-import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
+import com.nimbits.cloudplatform.server.transactions.value.ValueServiceFactory;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -67,7 +67,7 @@ public class ValueServletImplTest extends NimbitsServletTest {
         ValueServletImpl i = new ValueServletImpl();
         i.handleRequest(req, resp);
 
-        List<Value> v = ValueTransaction.getCurrentValue(point);
+        List<Value> v = ValueServiceFactory.getInstance().getCurrentValue(point);
         assertNotNull(v);
         assertFalse(v.isEmpty());
         assertEquals(5.0, v.get(0).getDoubleValue(), 0.001);

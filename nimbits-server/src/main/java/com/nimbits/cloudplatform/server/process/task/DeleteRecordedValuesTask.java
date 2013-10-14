@@ -17,10 +17,9 @@ import com.nimbits.cloudplatform.client.enums.Parameters;
 import com.nimbits.cloudplatform.client.model.point.Point;
 import com.nimbits.cloudplatform.client.model.point.PointModel;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
-import com.nimbits.cloudplatform.server.transactions.value.ValueRpcServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
+import com.nimbits.cloudplatform.server.transactions.value.ValueServiceFactory;
+import com.nimbits.cloudplatform.server.transactions.value.service.ValueServiceRpc;
 import org.springframework.stereotype.Service;
-
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -33,7 +32,7 @@ public class DeleteRecordedValuesTask extends HttpServlet  implements org.spring
 //    private static final Logger log = Logger.getLogger(UpdatePointStatsTask.class.getName());
 
     private static final long serialVersionUID = 1L;
-    private ValueRpcServiceImpl valueService;
+    private ValueServiceRpc valueService;
 
     @Override
     public void handleRequest(final HttpServletRequest req, final HttpServletResponse resp) {
@@ -53,16 +52,16 @@ public class DeleteRecordedValuesTask extends HttpServlet  implements org.spring
 
      //TODO - delete blobs
     private void deleteData(final Point point)  {
-        ValueTransaction.deleteExpiredData(point);
+        ValueServiceFactory.getInstance().deleteExpiredData(point);
 
 
     }
 
-    public void setValueService(ValueRpcServiceImpl valueService) {
+    public void setValueService(ValueServiceRpc valueService) {
         this.valueService = valueService;
     }
 
-    public ValueRpcServiceImpl getValueService() {
+    public ValueServiceRpc getValueService() {
         return valueService;
     }
 }

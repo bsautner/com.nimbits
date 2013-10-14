@@ -25,7 +25,10 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.nimbits.cloudplatform.client.common.Utils;
 import com.nimbits.cloudplatform.client.constants.Const;
-import com.nimbits.cloudplatform.client.enums.*;
+import com.nimbits.cloudplatform.client.enums.Action;
+import com.nimbits.cloudplatform.client.enums.AlertType;
+import com.nimbits.cloudplatform.client.enums.EntityType;
+import com.nimbits.cloudplatform.client.enums.Parameters;
 import com.nimbits.cloudplatform.client.model.GxtModel;
 import com.nimbits.cloudplatform.client.model.TreeModel;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
@@ -35,10 +38,10 @@ import com.nimbits.cloudplatform.client.model.user.User;
 import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueFactory;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueModel;
-import com.nimbits.cloudplatform.client.service.entity.EntityService;
-import com.nimbits.cloudplatform.client.service.entity.EntityServiceAsync;
-import com.nimbits.cloudplatform.client.service.value.ValueService;
-import com.nimbits.cloudplatform.client.service.value.ValueServiceAsync;
+import com.nimbits.cloudplatform.client.service.entity.EntityServiceRpc;
+import com.nimbits.cloudplatform.client.service.entity.EntityServiceRpcAsync;
+import com.nimbits.cloudplatform.client.service.value.ValueServiceRpc;
+import com.nimbits.cloudplatform.client.service.value.ValueServiceRpcAsync;
 import com.nimbits.cloudplatform.client.ui.controls.EntityContextMenu;
 import com.nimbits.cloudplatform.client.ui.controls.EntityTree;
 import com.nimbits.cloudplatform.client.ui.controls.ReportHelper;
@@ -58,8 +61,8 @@ public class NavigationPanel extends NavigationEventProvider {
     private final User user;
     private boolean saveWithCurrentTime = true;
     private final static int valueColumnIndex = 1;
-    private final ValueServiceAsync valueService;
-    private final EntityServiceAsync entityService;
+    private final ValueServiceRpcAsync valueService;
+    private final EntityServiceRpcAsync entityService;
 
 
     public NavigationPanel(final User user,
@@ -70,8 +73,8 @@ public class NavigationPanel extends NavigationEventProvider {
         this.settings = settings;
         this.user = user;
         this.tree = new EntityTree<ModelData>();
-        this.valueService = GWT.create(ValueService.class);
-        this.entityService = GWT.create(EntityService.class);
+        this.valueService = GWT.create(ValueServiceRpc.class);
+        this.entityService = GWT.create(EntityServiceRpc.class);
         setBorders(false);
         setScrollMode(Scroll.AUTO);
 

@@ -1,16 +1,9 @@
 package com.nimbits.cloudplatform.server.api;
 
-import com.nimbits.cloudplatform.client.constants.Const;
-import com.nimbits.cloudplatform.client.enums.Parameters;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-
-import javax.servlet.http.HttpServletResponse;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by benjamin on 9/3/13.

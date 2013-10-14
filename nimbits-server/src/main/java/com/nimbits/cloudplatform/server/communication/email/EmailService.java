@@ -23,9 +23,8 @@ import com.nimbits.cloudplatform.client.model.subscription.Subscription;
 import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.server.admin.common.ServerInfo;
 import com.nimbits.cloudplatform.server.admin.logging.LogHelper;
-import com.nimbits.cloudplatform.server.transactions.settings.SettingsServiceImpl;
+import com.nimbits.cloudplatform.server.transactions.settings.SettingFactory;
 import org.springframework.stereotype.Service;
-
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -138,7 +137,7 @@ public class EmailService {
     private static InternetAddress getFromEmail() throws UnsupportedEncodingException {
         final String fromEmail;
         try {
-            fromEmail = SettingsServiceImpl.getSetting(SettingType.admin.getName());
+            fromEmail = SettingFactory.getServiceInstance().getSetting(SettingType.admin.getName());
             return new InternetAddress(fromEmail, Words.WORD_NIMBITS);
         } catch (Exception e) {
           return  new InternetAddress(Const.TEST_ACCOUNT, Words.WORD_NIMBITS);

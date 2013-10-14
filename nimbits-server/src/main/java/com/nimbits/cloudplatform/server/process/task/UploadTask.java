@@ -31,9 +31,8 @@ import com.nimbits.cloudplatform.client.model.value.ValueData;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueDataModel;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueFactory;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
-import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
+import com.nimbits.cloudplatform.server.transactions.value.ValueServiceFactory;
 import org.springframework.stereotype.Service;
-
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -88,7 +87,7 @@ public class UploadTask extends HttpServlet implements org.springframework.web.H
 
         }
 
-        ValueTransaction.recordValues(user, entity, values);
+            ValueServiceFactory.getInstance().recordValues(user, entity, values);
 
         } catch (Exception e) {
            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

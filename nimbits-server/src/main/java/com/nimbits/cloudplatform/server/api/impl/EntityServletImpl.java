@@ -21,7 +21,8 @@ import com.nimbits.cloudplatform.server.admin.logging.LogHelper;
 import com.nimbits.cloudplatform.server.api.ApiServlet;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
 import com.nimbits.cloudplatform.server.transactions.entity.EntityHelper;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
+import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceFactory;
+import com.nimbits.cloudplatform.server.transactions.entity.service.EntityService;
 import com.nimbits.cloudplatform.shared.Utils;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +37,7 @@ import java.util.List;
 
 @Service("entity")
 public class EntityServletImpl extends ApiServlet implements org.springframework.web.HttpRequestHandler {
-
+    private final EntityService service = EntityServiceFactory.getInstance();
     @Override
     public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -69,7 +70,7 @@ public class EntityServletImpl extends ApiServlet implements org.springframework
 
 
             if (user != null && containsParam(Parameters.id)) {
-                List<Entity> e = EntityServiceImpl.findEntityByKey(user, getParam(Parameters.id));
+                List<Entity> e = service.findEntityByKey(user, getParam(Parameters.id));
 
                 if (! e.isEmpty() ) {
                     if (okToRead(user, e.get(0))) {
@@ -127,14 +128,14 @@ public class EntityServletImpl extends ApiServlet implements org.springframework
                             switch (action) {
                                 case create:
 
-                                    r =  EntityServiceImpl.addUpdateEntity(user, entities);
+                                    r =  service.addUpdateEntity(user, entities);
 
                                     break;
                                 case delete:
-                                    EntityServiceImpl.deleteEntity(user, entities) ;
+                                    service.deleteEntity(user, entities) ;
                                     break;
                                 case update:
-                                    r =  EntityServiceImpl.addUpdateEntity(user, entities);
+                                    r =  service.addUpdateEntity(user, entities);
                                     break;
                                 default:
                                     break;

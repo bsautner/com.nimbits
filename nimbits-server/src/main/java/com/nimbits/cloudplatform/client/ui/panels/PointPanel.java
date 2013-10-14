@@ -34,8 +34,8 @@ import com.nimbits.cloudplatform.client.enums.Parameters;
 import com.nimbits.cloudplatform.client.enums.point.PointType;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.point.Point;
-import com.nimbits.cloudplatform.client.service.entity.EntityService;
-import com.nimbits.cloudplatform.client.service.entity.EntityServiceAsync;
+import com.nimbits.cloudplatform.client.service.entity.EntityServiceRpc;
+import com.nimbits.cloudplatform.client.service.entity.EntityServiceRpcAsync;
 import com.nimbits.cloudplatform.client.ui.controls.ProtectionLevelOptions;
 import com.nimbits.cloudplatform.client.ui.helper.FeedbackHelper;
 import com.nimbits.cloudplatform.client.ui.icons.Icons;
@@ -250,7 +250,7 @@ public class PointPanel extends LayoutContainer {
 
 
 
-            final EntityServiceAsync service = GWT.create(EntityService.class);
+            final EntityServiceRpcAsync service = GWT.create(EntityServiceRpc.class);
             // PointServiceAsync service = GWT.create(PointService.class);
             service.addUpdateEntityRpc(Arrays.<Entity>asList(point), new AsyncCallback<List<Entity>>() {
                 @Override

@@ -12,30 +12,9 @@
 
 package com.nimbits.cloudplatform.server.api;
 
-import com.google.appengine.api.search.Results;
-import com.google.appengine.api.search.ScoredDocument;
-import com.nimbits.cloudplatform.client.common.Utils;
-import com.nimbits.cloudplatform.client.enums.EntityType;
-import com.nimbits.cloudplatform.client.enums.ExportType;
-import com.nimbits.cloudplatform.client.enums.Parameters;
-import com.nimbits.cloudplatform.client.enums.ProtectionLevel;
-import com.nimbits.cloudplatform.client.model.common.impl.CommonFactory;
-import com.nimbits.cloudplatform.client.model.entity.Entity;
-import com.nimbits.cloudplatform.client.model.entity.EntityModelFactory;
-import com.nimbits.cloudplatform.client.model.entity.EntityName;
-import com.nimbits.cloudplatform.server.gson.GsonFactory;
-import com.nimbits.cloudplatform.server.transactions.search.EntitySearchService;
-import org.springframework.stereotype.Service;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.

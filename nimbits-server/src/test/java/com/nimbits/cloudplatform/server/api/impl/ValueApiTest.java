@@ -8,14 +8,13 @@ import com.nimbits.cloudplatform.client.model.value.impl.ValueFactory;
 import com.nimbits.cloudplatform.server.NimbitsServletTest;
 import com.nimbits.cloudplatform.server.api.ValueApi;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
+import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceFactory;
+import com.nimbits.cloudplatform.server.transactions.value.ValueServiceFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -59,7 +58,7 @@ public class ValueApiTest extends NimbitsServletTest {
         req.setMethod("POST");
         impl.doPost(req, resp);
         assertEquals(HttpServletResponse.SC_OK, resp.getStatus());
-        List<Value> vr = ValueTransaction.getCurrentValue(point);
+        List<Value> vr = ValueServiceFactory.getInstance().getCurrentValue(point);
         assertFalse(vr.isEmpty());
         assertEquals(vr.get(0), v);
         assertEquals(resp.getStatus(), 200);
@@ -79,7 +78,7 @@ public class ValueApiTest extends NimbitsServletTest {
         req.setMethod("POST");
         impl.doPost(req, resp);
 
-        List<Value> vr = ValueTransaction.getCurrentValue(point);
+        List<Value> vr = ValueServiceFactory.getInstance().getCurrentValue(point);
         assertFalse(vr.isEmpty());
         assertEquals(vr.get(0).getDoubleValue(), v.getDoubleValue(), 0.001);
         assertEquals(resp.getStatus(), 200);
@@ -91,14 +90,14 @@ public class ValueApiTest extends NimbitsServletTest {
 
         point.setPointType(PointType.cumulative);
         point.setFilterType(FilterType.none);
-        EntityServiceImpl.addUpdateEntity(Arrays.<Entity>asList(pointChild));
+        EntityServiceFactory.getInstance().addUpdateEntity(Arrays.<Entity>asList(pointChild));
         Value v = ValueFactory.createValueModel(1);
         for (int i = 0; i < 3; i++) {
-            ValueTransaction.recordValue(user, point, v);
+            ValueServiceFactory.getInstance().recordValue(user, point, v);
             // Thread.sleep(1500);
 
         }
-        List<Value> vr = ValueTransaction.getCurrentValue(point);
+        List<Value> vr = ValueServiceFactory.getInstance().getCurrentValue(point);
         assertFalse(vr.isEmpty());
         assertEquals(3.0, vr.get(0).getDoubleValue());
 

@@ -13,42 +13,19 @@
 
 package com.nimbits.cloudplatform.server.transactions.settings;
 
-import com.nimbits.cloudplatform.client.enums.SettingType;
 import com.nimbits.cloudplatform.server.NimbitsServletTest;
 import com.nimbits.cloudplatform.server.process.cron.SystemCron;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
-import java.io.IOException;
 import java.util.Map;
 
 import static org.junit.Assert.assertTrue;
 
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 3/30/12
- * Time: 8:09 PM
- */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={
-        "classpath:META-INF/applicationContext.xml",
-        "classpath:META-INF/applicationContext-api.xml",
-        "classpath:META-INF/applicationContext-cache.xml",
-        "classpath:META-INF/applicationContext-cron.xml",
-        "classpath:META-INF/applicationContext-dao.xml",
-        "classpath:META-INF/applicationContext-service.xml",
-        "classpath:META-INF/applicationContext-task.xml"
-
-})
 public class SettingDaoImplTest extends NimbitsServletTest {
 
-    @Resource(name="systemCron")
-    SystemCron systemCron;
+
+    SystemCron systemCron = new SystemCron();
 
     @Test
     public void getSettingsTest() throws  Exception {
@@ -56,7 +33,7 @@ public class SettingDaoImplTest extends NimbitsServletTest {
 
         systemCron.doGet(req, resp);
         Thread.sleep(2000);
-        Map<String, String> settings = SettingsServiceImpl.getSettings();
+        Map<String, String> settings = SettingFactory.getServiceInstance().getSettings();
         assertTrue(settings.size() > 0);
 
     }

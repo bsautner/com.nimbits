@@ -25,8 +25,8 @@ import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueFactory;
 import com.nimbits.cloudplatform.server.NimbitsServletTest;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
+import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceFactory;
+import com.nimbits.cloudplatform.server.transactions.value.ValueServiceFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -80,10 +80,10 @@ public class valueTaskTest extends NimbitsServletTest {
         Calculation c = CalculationModelFactory.createCalculation(
                 e, EntityModelFactory.createTrigger(point.getKey()), true, "x+1", EntityModelFactory.createTarget(pointChild.getKey()), (point.getKey()),
                 null, null);
-        EntityServiceImpl.addUpdateEntity(Arrays.<Entity>asList(c));
+        EntityServiceFactory.getInstance().addUpdateEntity(Arrays.<Entity>asList(c));
         Value v = ValueFactory.createValueModel(1.12);
-        ValueTransaction.recordValue(user, point, v);
-        List<Value> vr = ValueTransaction.getCurrentValue(point);
+        ValueServiceFactory.getInstance().recordValue(user, point, v);
+        List<Value> vr = ValueServiceFactory.getInstance().getCurrentValue(point);
         assertFalse(vr.isEmpty());
         assertEquals(v.getDoubleValue(), vr.get(0).getDoubleValue(), 0.001);
         String vj = GsonFactory.getInstance().toJson(vr.get(0));
@@ -91,7 +91,7 @@ public class valueTaskTest extends NimbitsServletTest {
 
         valueTask.handleRequest(req, resp);
 
-        List<Value> vx = ValueTransaction.getCurrentValue(pointChild);
+        List<Value> vx = ValueServiceFactory.getInstance().getCurrentValue(pointChild);
         assertEquals(vx.get(0).getDoubleValue(), v.getDoubleValue() + 1, 0.001);
 
 

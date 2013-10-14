@@ -33,8 +33,8 @@ import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.timespan.Timespan;
 import com.nimbits.cloudplatform.client.model.timespan.TimespanModelFactory;
 import com.nimbits.cloudplatform.client.model.timespan.TimespanServiceClientImpl;
-import com.nimbits.cloudplatform.client.service.value.ValueService;
-import com.nimbits.cloudplatform.client.service.value.ValueServiceAsync;
+import com.nimbits.cloudplatform.client.service.value.ValueServiceRpc;
+import com.nimbits.cloudplatform.client.service.value.ValueServiceRpcAsync;
 import com.nimbits.cloudplatform.client.ui.helper.FeedbackHelper;
 
 import java.util.Date;
@@ -146,7 +146,7 @@ public class DumpPanel extends LayoutContainer {
     private void createDoc() throws Exception {
         final MessageBox box = new MessageBox().wait("Exporting to Drive", "Scheduling Task Please Wait", "Dumping Data");
         box.show();
-        final ValueServiceAsync service = GWT.create(ValueService.class);
+        final ValueServiceRpcAsync service = GWT.create(ValueServiceRpc.class);
         timespan = TimespanServiceClientImpl.createTimespan(startDateSelector.getValue(), endDateSelector.getValue());
 
         service.createDataDumpRpc(entity, timespan, new AsyncCallback<Void>() {

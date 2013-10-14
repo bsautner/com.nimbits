@@ -13,20 +13,16 @@
 
 package com.nimbits.cloudplatform.server.transactions.value;
 
-import com.google.appengine.api.memcache.MemcacheService;
-import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import com.nimbits.cloudplatform.PMF;
 import com.nimbits.cloudplatform.client.constants.Const;
-import com.nimbits.cloudplatform.client.enums.MemCacheKey;
 import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueFactory;
-import com.nimbits.cloudplatform.client.service.value.ValueService;
 import com.nimbits.cloudplatform.server.NimbitsServletTest;
+import com.nimbits.cloudplatform.server.transactions.cache.CacheFactory;
+import com.nimbits.cloudplatform.server.transactions.value.dao.ValueCache;
+import com.nimbits.cloudplatform.server.transactions.value.service.ValueService;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -39,29 +35,12 @@ import static org.junit.Assert.*;
  * Date: 4/5/12
  * Time: 1:49 PM
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={
-        "classpath:META-INF/applicationContext.xml",
-        "classpath:META-INF/applicationContext-api.xml",
-        "classpath:META-INF/applicationContext-cache.xml",
-        "classpath:META-INF/applicationContext-cron.xml",
-        "classpath:META-INF/applicationContext-dao.xml",
-        "classpath:META-INF/applicationContext-service.xml",
-        "classpath:META-INF/applicationContext-task.xml"
 
-})
 public class ValueMemCacheImplTest extends NimbitsServletTest {
 
     private static final double D = 1.23;
     private static final double DELTA = 0.001;
-    private MemcacheService buffer;
-
-
-
-
-    @Resource(name = "valueService")
-    ValueService valueService;
-
+    private final ValueService valueService = ValueServiceFactory.getInstance();
 
     @Test
     public void testBuildID() {
@@ -90,23 +69,23 @@ public class ValueMemCacheImplTest extends NimbitsServletTest {
             c.add(Calendar.MINUTE, r.nextInt(100) * -1);
             Value value;
             if (x != randomSpot) { //random spot put now
-            value = ValueFactory.createValueModel(r.nextDouble(), c.getTime());
+                value = ValueFactory.createValueModel(r.nextDouble(), c.getTime());
 
             }
             else {
-             value = ValueFactory.createValueModel(r.nextDouble(),now);
+                value = ValueFactory.createValueModel(r.nextDouble(),now);
 
             }
-           values.add(value);
+            values.add(value);
         }
 
 
-        List<Value> result = ValueMemCache.getClosestMatchToTimestamp(values, now);
+        List<Value> result = valueService.getClosestMatchToTimestamp(values, now);
         assertFalse(result.isEmpty());
         assertEquals(result.get(0).getTimestamp(),now );
 
         Value sample = values.get(r.nextInt(99));
-        List<Value> result2 = ValueMemCache.getClosestMatchToTimestamp(values, new Date(sample.getTimestamp().getTime() + 1000));
+        List<Value> result2 = valueService.getClosestMatchToTimestamp(values, new Date(sample.getTimestamp().getTime() + 1000));
         assertFalse(result2.isEmpty());
         assertEquals(sample.getTimestamp() , result2.get(0).getTimestamp());
 
@@ -123,13 +102,13 @@ public class ValueMemCacheImplTest extends NimbitsServletTest {
 
         List<Value> list = new ArrayList<Value>(size);
         for (int i = 0; i < size; i ++) {
-             double v = random.nextDouble();
-             sum += v;
-             list.add(ValueFactory.createValueModel(v));
+            double v = random.nextDouble();
+            sum += v;
+            list.add(ValueFactory.createValueModel(v));
 
         }
         assertEquals(list.size(), size);
-        List<List<Value>> split = ValueMemCache.splitUpList(list);
+        List<List<Value>> split = valueService.splitUpList(list);
         int expectedSize = list.size() / Const.CONST_QUERY_CHUNK_SIZE;
         if ( list.size()  % Const.CONST_QUERY_CHUNK_SIZE > 0) {
             expectedSize++;
@@ -143,41 +122,61 @@ public class ValueMemCacheImplTest extends NimbitsServletTest {
 
     }
 
-    @Test
-    public void testSafeNamespace1() {
-        String sample = "ValueMemCacheImplnoguchi@-~!@##$%^^&*()_--.tatsu-gmail.com-テスト2";
 
-        String safe = MemCacheKey.getSafeNamespaceKey(sample);
-
-      //  final String bufferNamespace = com.nimbits.cloudplatform.server.transactions.memcache.value.ValueMemCacheImpl+ safe;
-
-        String currentValueMemCacheImplKey = MemCacheKey.currentValueCache + safe;
-         buffer = MemcacheServiceFactory.getMemcacheService();
-
-    }
 
     @Test
-    public void testGetPrevValue() throws Exception, InterruptedException {
+    public void testGetPrevValue() throws InterruptedException {
 
         Value v = ValueFactory.createValueModel(D);
-       ValueTransaction.recordValue(user, point, v);
+        ValueServiceFactory.getInstance().recordValue(user, point, v);
         Thread.sleep(1000);
-        List<Value> vr = ValueMemCache.getRecordedValuePrecedingTimestamp(point, new Date());
-        List<Value> dv = ValueMemCache.getRecordedValuePrecedingTimestamp(pointChild, new Date());
+        List<Value> vr = valueService.getRecordedValuePrecedingTimestamp(point, new Date());
+        List<Value> dv = valueService.getRecordedValuePrecedingTimestamp(pointChild, new Date());
         assertTrue(dv.isEmpty());
 
 
         assertNotNull(vr);
         assertFalse(vr.isEmpty());
         assertEquals(v.getDoubleValue(), vr.get(0).getDoubleValue(), DELTA);
-        List<Value> vz = ValueMemCache.getBuffer(point);
-        assertEquals(vz.size(), 1);
-        ValueMemCache.moveValuesFromCacheToStore(point);
-        vz = ValueMemCache.getBuffer(point);
-        assertEquals(vz.size(), 0);
-        dv = valueDao.getRecordedValuePrecedingTimestamp(point, new Date());
+        List<Value> vz = valueService.getBuffer(point);
+        assertEquals(1, vz.size());
+        valueService.moveValuesFromCacheToStore(point);
+        vz = valueService.getBuffer(point);
+        assertEquals(0, vz.size());
+        dv = valueService.getRecordedValuePrecedingTimestamp(point, new Date());
         assertEquals(v.getDoubleValue(), dv.get(0).getDoubleValue(), DELTA);
 
     }
+
+    @Test
+    public void testAddToBuffer() throws InterruptedException {
+        ValueCache cache = ValueServiceFactory.getCacheInstance(PMF.get(), CacheFactory.getInstance());
+        Value v = ValueFactory.createValueModel(3.4);
+        cache.addValueToBuffer(point, v);
+        List<Value> buffer = cache.getValueBuffer(point);
+
+        assertFalse(buffer.isEmpty());
+        Value v1 = ValueFactory.createValueModel(3.4);
+        cache.addValueToBuffer(point, v1);
+        Thread.sleep(100);
+        assertEquals(2, cache.getValueBuffer(point).size());
+        Value v2 = ValueFactory.createValueModel(3.4);
+        cache.addValueToBuffer(point, v2);
+        Thread.sleep(100);
+        assertEquals(3, cache.getValueBuffer(point).size());
+        Value v3 = ValueFactory.createValueModel(3.4);
+        cache.addValueToBuffer(point, v3);
+        assertEquals(4, cache.getValueBuffer(point).size());
+        Thread.sleep(100);
+
+        List<Value> buffer1 =cache.getValueBuffer(point);
+        Collections.sort(buffer1);
+        Value top = buffer1.get(0);
+        Value bottom = buffer1.get(3);
+        assertTrue(top.getTimestamp().getTime() > bottom.getTimestamp().getTime());
+
+
+    }
+
 
 }

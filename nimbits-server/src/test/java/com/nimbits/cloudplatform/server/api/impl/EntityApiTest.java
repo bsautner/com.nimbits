@@ -12,13 +12,12 @@ import com.nimbits.cloudplatform.client.model.point.Point;
 import com.nimbits.cloudplatform.server.NimbitsServletTest;
 import com.nimbits.cloudplatform.server.api.EntityApi;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
+import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -59,7 +58,7 @@ public class EntityApiTest extends NimbitsServletTest {
         req.setMethod("POST");
         impl.doPost(req, resp);
 
-        List<Entity> r = EntityServiceImpl.getEntityByKey(user, point.getKey(), EntityType.point);
+        List<Entity> r = EntityServiceFactory.getInstance().getEntityByKey(user, point.getKey(), EntityType.point);
         assertTrue(r.isEmpty());
 
 
@@ -126,7 +125,7 @@ public class EntityApiTest extends NimbitsServletTest {
     public void testPostCreatePoint() throws IOException, ServletException, Exception {
         req.removeAllParameters();
         String pointJson = GsonFactory.getInstance().toJson(point);
-        EntityServiceImpl.deleteEntity(user, Arrays.<Entity>asList(point));
+        EntityServiceFactory.getInstance().deleteEntity(user, Arrays.<Entity>asList(point));
         req.addParameter("action", "create");
         req.addParameter("json", pointJson);
         req.setMethod("POST");
@@ -151,7 +150,7 @@ public class EntityApiTest extends NimbitsServletTest {
         req.setMethod("POST");
         impl.doPost(req, resp);
         assertEquals(HttpServletResponse.SC_OK, resp.getStatus());
-        List<Entity> sample = EntityServiceImpl.getEntityByKey(user, point.getKey(), EntityType.point);
+        List<Entity> sample = EntityServiceFactory.getInstance().getEntityByKey(user, point.getKey(), EntityType.point);
         assertFalse(sample.isEmpty());
         Point p = (Point) sample.get(0);
         assertEquals("foo", p.getUnit());

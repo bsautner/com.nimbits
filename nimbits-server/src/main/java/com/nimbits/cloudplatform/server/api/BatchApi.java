@@ -19,13 +19,11 @@ import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueModel;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
+import com.nimbits.cloudplatform.server.transactions.value.ValueServiceFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
@@ -60,12 +58,12 @@ public class BatchApi extends ApiBase {
             HashMap<String, List<Value>> map  = GsonFactory.getInstance().fromJson(json, listType);
             for (String id : map.keySet()) {
 
-                List<Entity> entitySample = EntityServiceImpl.getEntityByKey(user, id, EntityType.point);
+                List<Entity> entitySample = entityService.getEntityByKey(user, id, EntityType.point);
                 if (! entitySample.isEmpty()) {
                     List<Value> valueList = map.get(id);
 
                     for (Value v : valueList) {
-                        ValueTransaction.recordValue(user, entitySample.get(0), v);
+                        ValueServiceFactory.getInstance().recordValue(user, entitySample.get(0), v);
 
                     }
 

@@ -16,10 +16,10 @@ package com.nimbits.cloudplatform.server.transactions.point;
 import com.nimbits.cloudplatform.client.enums.EntityType;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.point.Point;
-import com.nimbits.cloudplatform.client.service.value.ValueService;
+import com.nimbits.cloudplatform.client.service.value.ValueServiceRpc;
 import com.nimbits.cloudplatform.server.NimbitsServletTest;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
+import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceFactory;
+import com.nimbits.cloudplatform.server.transactions.value.ValueServiceFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -52,16 +52,16 @@ public class PointDaoImplTest extends NimbitsServletTest {
 
 
     @Resource(name = "valueService")
-    ValueService valueService;
+    ValueServiceRpc valueService;
 
     @Test
     public void getPointsTest() throws Exception {
 
         Map<String, Point> e = new HashMap<String, Point>(2);
 
-        e.put(point.getKey(), (Point) EntityServiceImpl.getEntityByKey(user, point.getKey(), EntityType.point).get(0));
-        e.put(pointChild.getKey(), (Point) EntityServiceImpl.getEntityByKey(user, pointChild.getKey(), EntityType.point).get(0));
-        Map<String, Entity> result = ValueTransaction.getCurrentValues(e);
+        e.put(point.getKey(), (Point) EntityServiceFactory.getInstance().getEntityByKey(user, point.getKey(), EntityType.point).get(0));
+        e.put(pointChild.getKey(), (Point) EntityServiceFactory.getInstance().getEntityByKey(user, pointChild.getKey(), EntityType.point).get(0));
+        Map<String, Entity> result = ValueServiceFactory.getInstance().getCurrentValues(e);
         assertEquals(2, result.size());
 
 

@@ -13,7 +13,6 @@
 package com.nimbits.cloudplatform.server.transactions.user;
 
 import com.nimbits.cloudplatform.client.model.user.User;
-import com.nimbits.cloudplatform.server.admin.logging.LogHelper;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -36,7 +35,7 @@ public class UserHelper {
     public static User getUser()  {
 
 
-            return UserTransactionFactory.getInstance().getHttpRequestUser(get());
+            return UserServiceFactory.getInstance().getHttpRequestUser(get());
 
 
     }

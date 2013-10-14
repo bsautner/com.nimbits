@@ -18,15 +18,14 @@ import com.google.appengine.api.blobstore.BlobInfoFactory;
 import com.nimbits.cloudplatform.client.enums.EntityType;
 import com.nimbits.cloudplatform.client.enums.Parameters;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
-import com.nimbits.cloudplatform.client.model.timespan.Timespan;
-import com.nimbits.cloudplatform.client.model.timespan.TimespanModelFactory;
 import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueFactory;
 import com.nimbits.cloudplatform.client.model.valueblobstore.ValueBlobStore;
 import com.nimbits.cloudplatform.server.NimbitsServletTest;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
+import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceFactory;
+import com.nimbits.cloudplatform.server.transactions.value.ValueServiceFactory;
+import org.apache.commons.lang3.Range;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -64,7 +63,7 @@ public class PointMaintTaskTest extends NimbitsServletTest {
     @Test
     public void testGet() throws Exception {
 
-        final Map<String,Entity> e = EntityServiceImpl.getSystemWideEntityMap(user, EntityType.point);
+        final Map<String,Entity> e = EntityServiceFactory.getInstance().getSystemWideEntityMap(user, EntityType.point);
         assertTrue(!e.isEmpty());
 
         for (final Entity en : e.values()) {
@@ -94,21 +93,20 @@ public class PointMaintTaskTest extends NimbitsServletTest {
     public void testConsolidateBlobs() throws InterruptedException, Exception {
 
       Random r = new Random();
-      int t = 0;
       int runs = 100;
       double sum = 0;
-        long lt = 0;
+      long lt = 0;
       for (int i = 0; i < runs; i++) {
           List<Value> values = new ArrayList<Value>(1);
-          double v = r.nextDouble() * 100;
-          Value mt = ValueFactory.createValueModel(v);
+          //double v = r.nextDouble() * 100;
+          Value mt = ValueFactory.createValueModel(i);
           values.add(mt);
           assertFalse(lt == mt.getTimestamp().getTime());
 
           lt = mt.getTimestamp().getTime();
           Thread.sleep(25);
-          ValueTransaction.recordValues(user, point, values);
-          sum += v;
+          ValueServiceFactory.getInstance().recordValues(user, point, values);
+          sum += i;
       }
         Iterator<BlobInfo> iterator = new BlobInfoFactory().queryBlobInfos();
         assertTrue(iterator.hasNext());
@@ -130,9 +128,9 @@ public class PointMaintTaskTest extends NimbitsServletTest {
             count2 ++;
 
         }
-//        assertEquals(1, count2);  //prove all data was consolidated into one file
+        assertEquals(1, count2);  //prove all data was consolidated into one file
 
-        List<Value> fResults = ValueTransaction.getTopDataSeries(point, runs);
+        List<Value> fResults = ValueServiceFactory.getInstance().getTopDataSeries(point, runs);
         assertEquals(runs, fResults.size());
         double result = 0.0;
 
@@ -167,7 +165,7 @@ public class PointMaintTaskTest extends NimbitsServletTest {
 
             lt = mt.getTimestamp().getTime();
             c.add(Calendar.SECOND, 1);
-            ValueTransaction.recordValues(user, point, values);
+            ValueServiceFactory.getInstance().recordValues(user, point, values);
             sum += v;
         }
 
@@ -183,7 +181,7 @@ public class PointMaintTaskTest extends NimbitsServletTest {
 
             lt = mt.getTimestamp().getTime();
 
-            ValueTransaction.recordValues(user, point, values);
+            ValueServiceFactory.getInstance().recordValues(user, point, values);
             sum += v;
             mostRecent = v;
         }
@@ -210,8 +208,8 @@ public class PointMaintTaskTest extends NimbitsServletTest {
 
         }
 //        assertEquals(2, count2);  //prove all data was consolidated into one file
-        Timespan ts = TimespanModelFactory.createTimespan(sd, c.getTime());
-        List<Value> fResults = ValueTransaction.getDataSegment(point, ts);
+        Range ts = Range.between(sd, c.getTime());
+        List<Value> fResults = ValueServiceFactory.getInstance().getDataSegment(point, ts);
         assertEquals(runs << 1, fResults.size());
         double result = 0.0;
 
@@ -220,11 +218,11 @@ public class PointMaintTaskTest extends NimbitsServletTest {
         }
         assertEquals(sum, result, DELTA);    //proves no data was lost
 
-        List<ValueBlobStore> stores = ValueTransaction.getAllStores(point);
+        List<ValueBlobStore> stores = ValueServiceFactory.getInstance().getAllStores(point);
 
 
 
-        ValueTransaction.mergeTimespan(point, ts);
+        ValueServiceFactory.getInstance().mergeTimespan(point, ts);
 
         Iterator<BlobInfo> iterator4 = new BlobInfoFactory().queryBlobInfos();
         assertTrue(iterator4.hasNext());
@@ -235,13 +233,13 @@ public class PointMaintTaskTest extends NimbitsServletTest {
 
         }
 //        assertEquals(1, count4);  //prove all data was consolidated into one file
-        List<Value> postResults = ValueTransaction.getDataSegment(point, ts);
+        List<Value> postResults = ValueServiceFactory.getInstance().getDataSegment(point, ts);
         double ss = 0;
         for (Value p : postResults) {
                   ss+= p.getDoubleValue();
         }
         assertEquals(sum, ss,DELTA);
-        List<Value> current = ValueTransaction.getCurrentValue(point);
+        List<Value> current = ValueServiceFactory.getInstance().getCurrentValue(point);
         assertEquals(c.getTime().getTime(), current.get(0).getTimestamp().getTime());
         assertEquals(mostRecent, current.get(0).getDoubleValue(), DELTA);
     }

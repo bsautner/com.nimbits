@@ -12,7 +12,6 @@
 
 package com.nimbits.cloudplatform.server.orm;
 
-import com.nimbits.cloudplatform.client.enums.Action;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.trigger.Trigger;
 import com.nimbits.cloudplatform.client.model.user.User;

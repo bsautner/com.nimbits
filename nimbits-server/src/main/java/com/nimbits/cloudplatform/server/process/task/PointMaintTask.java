@@ -18,7 +18,7 @@ import com.nimbits.cloudplatform.client.model.point.Point;
 import com.nimbits.cloudplatform.client.model.point.PointModel;
 import com.nimbits.cloudplatform.client.model.valueblobstore.ValueBlobStore;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
-import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
+import com.nimbits.cloudplatform.server.transactions.value.ValueServiceFactory;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServlet;
@@ -64,7 +64,7 @@ public class PointMaintTask extends HttpServlet  implements org.springframework.
 
 
     public void consolidateBlobs(final Entity entity) throws IOException {
-        final List<ValueBlobStore> stores = ValueTransaction.getAllStores(entity);
+        final List<ValueBlobStore> stores = ValueServiceFactory.getInstance().getAllStores(entity);
         if (! stores.isEmpty()) {
             final Collection<Long> dates = new ArrayList<Long>(stores.size());
             final Collection<Long> dupDates = new ArrayList<Long>(stores.size());
@@ -82,7 +82,7 @@ public class PointMaintTask extends HttpServlet  implements org.springframework.
             }
 
             for (Long l : dupDates) {
-                ValueTransaction.consolidateDate(entity, new Date(l));
+                ValueServiceFactory.getInstance().consolidateDate(entity, new Date(l));
 
             }
         }

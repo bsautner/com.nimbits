@@ -23,7 +23,8 @@ import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.point.Point;
 import com.nimbits.cloudplatform.server.api.ApiServlet;
 import com.nimbits.cloudplatform.server.process.task.TaskImpl;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
+import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceFactory;
+import com.nimbits.cloudplatform.server.transactions.entity.service.EntityService;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
@@ -46,7 +47,7 @@ import java.util.Map;
 public class BlobServletImpl extends ApiServlet implements org.springframework.web.HttpRequestHandler {
     private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 
-
+    private final EntityService service = EntityServiceFactory.getInstance();
 
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
@@ -65,7 +66,7 @@ public class BlobServletImpl extends ApiServlet implements org.springframework.w
 
              //data upload
             if (uploadType.equals(EntityType.point.name())) {
-                List<Entity> result = EntityServiceImpl.getEntityByKey(user, entityId, EntityType.point);
+                List<Entity> result = service.getEntityByKey(user, entityId, EntityType.point);
                 if (! result.isEmpty()) {
                     Entity point =  result.get(0);
                     TaskImpl.startUploadTask(user, (Point) point, blobKey);

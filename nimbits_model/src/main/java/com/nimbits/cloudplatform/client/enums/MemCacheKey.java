@@ -29,7 +29,6 @@ public enum MemCacheKey {
     activePoints(0, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_ACTIVE_POINTS),
     hotPoints(0, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_HOT_POINTS),
     valueCache(1,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_VALUE),
-    currentValueCache(1,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_CURRENT_VALUE),
     allSettings(2, SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_ALL_SETTINGS),
     setting(3,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_SETTING),
     userNamespace(4, SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_USER_NAMESPACE),
@@ -40,7 +39,6 @@ public enum MemCacheKey {
     allUsers(11, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_ALL_USERS),
     users(12, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_USER),
     triggers(13,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_TRIGGERS),
-    bufferedValueList(14,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_BUFFERED_VALUE_LIST),
     userEntityTree(15,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_USER_ENTITY_TREE),
     subscribedEntity(17, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_SUBSCRIBED_ENTITY),
     entityNameCache(18, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_ENTITY_NAME),
@@ -55,19 +53,13 @@ public enum MemCacheKey {
     private static final Map<Integer, MemCacheKey> lookup = new HashMap<Integer, MemCacheKey>(MemCacheKey.values().length);
     private final int code;
     private final String text;
-    private final static String LEGAL_CHARS = "[0-9A-Za-z._-]{0,100}";
-    private final static String SAFE_REPLACEMENT = "_";
-    private final static int HOLD_TIME = 10000;
 
     static {
         for (MemCacheKey s : EnumSet.allOf(MemCacheKey.class))
             lookup.put(s.code, s);
     }
 
-    public static String getKey(final MemCacheKey memCacheKey, final String uniqueIdentifier) {
-        return memCacheKey.getText() + getSafeNamespaceKey(uniqueIdentifier);
 
-    }
 
     private MemCacheKey(final int code, final String text) {
         this.code = code;
@@ -87,19 +79,7 @@ public enum MemCacheKey {
     }
 
 
-    public static String getSafeNamespaceKey(final String key) {
 
-        final StringBuilder sb = new StringBuilder(key.length());
-        for (char c : key.toCharArray()) {
-            if (String.valueOf(c).matches(LEGAL_CHARS)) {
-                sb.append(c);
-            }
-            else {
-                sb.append(SAFE_REPLACEMENT);
-            }
-        }
-        return sb.toString();
-    }
 
     private static class KeyConstants {
         static final String KEY_ALL_SETTINGS = "KEY_ALL_SETTINGS";
@@ -112,9 +92,7 @@ public enum MemCacheKey {
         static final String KEY_ACTIVE_POINTS = "KEY_ACTIVE_POINTS";
         static final String KEY_HOT_POINTS = "KEY_HOT_POINTS";
         static final String KEY_VALUE = "KEY_VALUE";
-        static final String KEY_BUFFERED_VALUE_LIST = "KEY_BUFFERED_VALUE_LIST";
         static final String KEY_TRIGGERS = "KEY_TRIGGERS";
-        static final String KEY_CURRENT_VALUE = "KEY_CURRENT_VALUE";
         static final String PRE_LOAD = "PRE_LOAD";
         static final String KEY_USER = "KEY_USER";
         static final String KEY_USER_ENTITY_TREE = "KEY_USER_ENTITY_TREE";

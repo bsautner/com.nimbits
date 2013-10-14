@@ -20,7 +20,6 @@ import com.nimbits.cloudplatform.server.admin.logging.LogHelper;
 import com.nimbits.cloudplatform.shared.Utils;
 import org.springframework.stereotype.Service;
 
-
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

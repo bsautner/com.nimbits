@@ -15,50 +15,54 @@ package com.nimbits.cloudplatform.server.transactions.settings;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.nimbits.cloudplatform.client.constants.Const;
-import com.nimbits.cloudplatform.client.enums.SettingType;
 import com.nimbits.cloudplatform.client.service.settings.SettingsService;
-import com.nimbits.cloudplatform.shared.Utils;
-import org.springframework.stereotype.Service;
+import com.nimbits.cloudplatform.server.transactions.datastore.NimbitsStore;
+import com.nimbits.cloudplatform.server.transactions.datastore.StoreFactory;
+import net.sf.jsr107cache.CacheException;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Service("settingsService")
+import static com.nimbits.cloudplatform.server.transactions.settings.SettingFactory.getCacheInstance;
+
+
 public class SettingsServiceImpl extends RemoteServiceServlet implements SettingsService {
+    private Settings settingsCache;
+
+    {
+        try {
+            NimbitsStore store = StoreFactory.getInstance();
+            settingsCache = getCacheInstance(store);
+
+        } catch (CacheException e) {
+            settingsCache = null; //TODO getEmptyInstance();
+        }
+    }
+
     @Override
     public HashMap<String, String> getSettingsRpc() {
-        return SettingsCache.getSettings();
+        return settingsCache.getSettings();
+    }
+    @Override
+    public Map<String, String> getSettings() {
+        return settingsCache.getSettings();
+    }
+    @Override
+    public String getSetting(final String paramName)  {
+        return settingsCache.getSetting(paramName);
     }
 
-    public static Map<String, String> getSettings() {
-        return SettingsCache.getSettings();
+    @Override
+    public void updateSetting(final String setting, final String newValue) {
+        settingsCache.updateSetting(setting, newValue);
     }
-
-
-    public static String getSetting(final String paramName)  {
-        return SettingsCache.getSetting(paramName);
+    @Override
+    public void addSetting(final String setting, final String value) {
+        settingsCache.addSetting(setting, value);
     }
-
-    public static void updateSetting(final String setting, final String newValue) {
-        SettingsCache.updateSetting(setting, newValue);
-    }
-
-    public static void addSetting(final String setting, final String value) {
-        SettingsCache.addSetting(setting, value);
-    }
-
-
-    public static void addSetting(String setting, boolean defaultValue) {
+    @Override
+    public void addSetting(String setting, boolean defaultValue) {
         addSetting(setting, defaultValue ? Const.TRUE : Const.FALSE);
     }
-
-
-    public static String reloadCache() {
-        return SettingsCache.reloadCache();
-    }
-
-
-
-
 
 }

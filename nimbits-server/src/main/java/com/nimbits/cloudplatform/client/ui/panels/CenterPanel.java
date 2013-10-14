@@ -13,14 +13,12 @@
 package com.nimbits.cloudplatform.client.ui.panels;
 
 import com.extjs.gxt.ui.client.Style;
-import com.extjs.gxt.ui.client.event.BaseEvent;
-import com.extjs.gxt.ui.client.event.Events;
-import com.extjs.gxt.ui.client.event.Listener;
-import com.extjs.gxt.ui.client.util.Margins;
 import com.extjs.gxt.ui.client.util.Padding;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
-import com.extjs.gxt.ui.client.widget.LayoutContainer;
-import com.extjs.gxt.ui.client.widget.layout.*;
+import com.extjs.gxt.ui.client.widget.layout.FillLayout;
+import com.extjs.gxt.ui.client.widget.layout.FlowData;
+import com.extjs.gxt.ui.client.widget.layout.HBoxLayout;
+import com.extjs.gxt.ui.client.widget.layout.RowLayout;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
@@ -28,13 +26,12 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.nimbits.cloudplatform.client.constants.Path;
 import com.nimbits.cloudplatform.client.enums.Action;
 import com.nimbits.cloudplatform.client.enums.EntityType;
-import com.nimbits.cloudplatform.client.enums.SettingType;
 import com.nimbits.cloudplatform.client.model.GxtModel;
 import com.nimbits.cloudplatform.client.model.TreeModel;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.user.User;
-import com.nimbits.cloudplatform.client.service.entity.EntityService;
-import com.nimbits.cloudplatform.client.service.entity.EntityServiceAsync;
+import com.nimbits.cloudplatform.client.service.entity.EntityServiceRpc;
+import com.nimbits.cloudplatform.client.service.entity.EntityServiceRpcAsync;
 import com.nimbits.cloudplatform.client.service.xmpp.XMPPService;
 import com.nimbits.cloudplatform.client.service.xmpp.XMPPServiceAsync;
 import com.nimbits.cloudplatform.client.ui.controls.MainMenuBar;
@@ -165,7 +162,7 @@ public class CenterPanel extends NavigationEventProvider {
     }
 
     private void displaySubscription(final Entity entity) {
-        EntityServiceAsync service = GWT.create(EntityService.class);
+        EntityServiceRpcAsync service = GWT.create(EntityServiceRpc.class);
         service.getEntityByKeyRpc(user, entity.getKey(), EntityType.subscription, new GetSubscribedEntityAsyncCallback());
     }
 

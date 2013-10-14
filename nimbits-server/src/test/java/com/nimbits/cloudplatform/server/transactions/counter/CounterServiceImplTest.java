@@ -23,6 +23,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.annotation.Resource;
 import java.util.Date;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
@@ -68,7 +69,7 @@ public class CounterServiceImplTest extends NimbitsServletTest {
 
         }
         assertNotNull(t);
-        Assert.assertEquals(counterService.getDateCounter("foo").getTime(), t.getTime());
+        assertEquals(counterService.getDateCounter("foo").getTime(), t.getTime());
 
 
     }

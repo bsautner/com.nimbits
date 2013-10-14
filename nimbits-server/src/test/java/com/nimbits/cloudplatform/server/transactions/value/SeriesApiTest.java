@@ -44,7 +44,7 @@ public class SeriesApiTest extends NimbitsServletTest {
 
 
         List<Value> values = loadSomeDataOverDays();
-        ValueDAO.recordValues(point, values);
+        valueDao.recordValues(point, values);
 
         api.doGet(req, resp);
         assertEquals(200, resp.getStatus());

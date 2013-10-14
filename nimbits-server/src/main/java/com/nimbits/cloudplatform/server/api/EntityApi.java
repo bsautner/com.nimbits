@@ -19,7 +19,6 @@ import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.entity.EntityModel;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
 import com.nimbits.cloudplatform.server.transactions.entity.EntityHelper;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.ServletException;
@@ -120,7 +119,7 @@ public class EntityApi extends ApiBase {
             Entity sampleEntity = GsonFactory.getInstance().fromJson(json, EntityModel.class);
 
             if (sampleEntity != null && !StringUtils.isEmpty(sampleEntity.getKey())) {
-                List<Entity> sample = EntityServiceImpl.getEntityByKey(user, sampleEntity.getKey(), sampleEntity.getEntityType());
+                List<Entity> sample = entityService.getEntityByKey(user, sampleEntity.getKey(), sampleEntity.getEntityType());
                 if (!sample.isEmpty()) {
                     resp.setStatus(HttpServletResponse.SC_CONFLICT);
                     resp.addHeader("error details", "The entity you're trying to create already exists");
@@ -157,7 +156,7 @@ public class EntityApi extends ApiBase {
         List<Entity> list = new ArrayList<Entity>(1);
         list.add((Entity) up);
 
-        return EntityServiceImpl.addUpdateEntity(user, list);
+        return entityService.addUpdateEntity(user, list);
     }
 
     private List<Entity> updateEntity(HttpServletResponse resp)  {
@@ -169,7 +168,7 @@ public class EntityApi extends ApiBase {
 
             if (sampleEntity != null && !StringUtils.isEmpty(sampleEntity.getKey())) {
 
-                List<Entity> sample = EntityServiceImpl.getEntityByKey(user, sampleEntity.getKey(), sampleEntity.getEntityType());
+                List<Entity> sample = entityService.getEntityByKey(user, sampleEntity.getKey(), sampleEntity.getEntityType());
                 if (!sample.isEmpty()) {
 
                     resp.setStatus(HttpServletResponse.SC_OK);
@@ -204,7 +203,7 @@ public class EntityApi extends ApiBase {
 
             if (sampleEntity != null && !StringUtils.isEmpty(sampleEntity.getName().getValue())) {
 
-                List<Entity> sample = EntityServiceImpl.getEntityByName(user, sampleEntity.getName(), sampleEntity.getEntityType());
+                List<Entity> sample = entityService.getEntityByName(user, sampleEntity.getName(), sampleEntity.getEntityType());
                 if (!sample.isEmpty()) {
                     resp.addHeader(SERVER_RESPONSE, ENTITY_ALREADY_EXISTS);
                     resp.setStatus(HttpServletResponse.SC_OK);
@@ -212,7 +211,7 @@ public class EntityApi extends ApiBase {
                 } else {
                     resp.addHeader(SERVER_RESPONSE, CREATING_ENTITY);
                     return addUpdateUpscaledEntity();
-                    //return EntityServiceImpl.addUpdateSingleEntity(user, sampleEntity);
+                    //return entityServiceImpl.addUpdateSingleEntity(user, sampleEntity);
 
                 }
 
@@ -233,7 +232,7 @@ public class EntityApi extends ApiBase {
 
 
         EntityType entityType = EntityType.valueOf(req.getParameter(Parameters.type.getText()));
-        List<Entity> sample = EntityServiceImpl.getEntityByKey(user, req.getParameter(Parameters.id.getText()), entityType);
+        List<Entity> sample = entityService.getEntityByKey(user, req.getParameter(Parameters.id.getText()), entityType);
 
         if (sample.isEmpty()) {
             resp.addHeader("error details", "entity not found");
@@ -242,7 +241,7 @@ public class EntityApi extends ApiBase {
         } else {
             Entity e = sample.get(0);
 
-            EntityServiceImpl.deleteEntity(user, sample);
+            entityService.deleteEntity(user, sample);
             resp.setStatus(HttpServletResponse.SC_OK);
 
 

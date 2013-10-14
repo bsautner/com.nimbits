@@ -24,7 +24,7 @@ import com.nimbits.cloudplatform.client.model.subscription.Subscription;
 import com.nimbits.cloudplatform.client.model.subscription.SubscriptionFactory;
 import com.nimbits.cloudplatform.server.NimbitsServletTest;
 import com.nimbits.cloudplatform.server.transactions.counter.CounterService;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
+import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -56,7 +56,7 @@ public class SubscriptionServiceImplTest extends NimbitsServletTest {
         Entity entity = EntityModelFactory.createEntity(name, EntityType.subscription);
         Subscription s = SubscriptionFactory.createSubscription(entity, point.getKey(), SubscriptionType.newValue,
                 SubscriptionNotifyMethod.email, 2,false, true);
-        Subscription result = (Subscription) EntityServiceImpl.addUpdateSingleEntity(s);
+        Subscription result = (Subscription) EntityServiceFactory.getInstance().addUpdateSingleEntity(s);
         Thread.sleep(3000);
         assertTrue(SubscriptionService.okToProcess(result));
 
@@ -73,7 +73,7 @@ public class SubscriptionServiceImplTest extends NimbitsServletTest {
         Entity entity = EntityModelFactory.createEntity(name, EntityType.subscription);
         Subscription s = SubscriptionFactory.createSubscription(entity, point.getKey(), SubscriptionType.newValue,
                 SubscriptionNotifyMethod.email, 100,false, true);
-        Subscription result = (Subscription) EntityServiceImpl.addUpdateSingleEntity(s);
+        Subscription result = (Subscription) EntityServiceFactory.getInstance().addUpdateSingleEntity(s);
         CounterService.updateDateCounter(result.getKey());
 
         assertFalse(SubscriptionService.okToProcess(result));

@@ -23,12 +23,10 @@ import com.nimbits.cloudplatform.client.model.entity.EntityModel;
 import com.nimbits.cloudplatform.client.model.entity.EntityName;
 import com.nimbits.cloudplatform.client.model.point.Point;
 import com.nimbits.cloudplatform.client.model.point.PointModelFactory;
-import com.nimbits.cloudplatform.client.service.entity.EntityService;
 import com.nimbits.cloudplatform.server.NimbitsServletTest;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
+import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceFactory;
 import org.junit.Test;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.UUID;
 
@@ -43,8 +41,7 @@ import static org.junit.Assert.assertNotNull;
  */
 public class PointServiceTest extends NimbitsServletTest {
 
-    @Resource(name="entityService")
-    EntityService entityService;
+
 
     private Point addPoint(EntityName name) throws Exception {
         Entity e =  new EntityModel(name,
@@ -69,7 +66,7 @@ public class PointServiceTest extends NimbitsServletTest {
                 0.1,
                 false,
                 PointType.basic, 0, false, 0.0 );
-        return (Point) EntityServiceImpl.addUpdateEntity(user, p).get(0);
+        return (Point) EntityServiceFactory.getInstance().addUpdateEntity(user, p).get(0);
     }
     @Test
     public void addPointTest() throws Exception {
@@ -77,7 +74,7 @@ public class PointServiceTest extends NimbitsServletTest {
         EntityName name = CommonFactory.createName("FOO", EntityType.point);
         Point p =  addPoint(name);
         assertNotNull(p);
-        List<Entity> x =  EntityServiceImpl.getEntityByKey(user, p.getKey(), EntityType.point);
+        List<Entity> x =  EntityServiceFactory.getInstance().getEntityByKey(user, p.getKey(), EntityType.point);
         assertNotNull(x);
         assertFalse(x.isEmpty());
 

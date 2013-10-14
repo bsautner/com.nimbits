@@ -23,16 +23,14 @@ import com.nimbits.cloudplatform.client.model.common.impl.CommonFactory;
 import com.nimbits.cloudplatform.client.model.email.EmailAddress;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.entity.EntityModel;
-import com.nimbits.cloudplatform.client.model.timespan.Timespan;
-import com.nimbits.cloudplatform.client.model.timespan.TimespanModelFactory;
 import com.nimbits.cloudplatform.client.model.value.Value;
-import com.nimbits.cloudplatform.client.service.value.ValueService;
+import com.nimbits.cloudplatform.client.service.value.ValueServiceRpc;
 import com.nimbits.cloudplatform.server.admin.common.ServerInfo;
 import com.nimbits.cloudplatform.server.communication.email.EmailService;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
-import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
+import com.nimbits.cloudplatform.server.transactions.value.ValueServiceFactory;
+import org.apache.commons.lang3.Range;
 import org.springframework.stereotype.Service;
-
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -54,7 +52,7 @@ import java.util.logging.Logger;
 @Service("dumpTask")
 
 public class DumpTask extends HttpServlet implements org.springframework.web.HttpRequestHandler{
-    private ValueService valueService;
+    private ValueServiceRpc valueService;
     private static final Logger log = Logger.getLogger(DumpTask.class.getName());
     private EmailService emailService;
     private ServerInfo serverInfoService;
@@ -71,10 +69,10 @@ public class DumpTask extends HttpServlet implements org.springframework.web.Htt
         final long el = Long.valueOf(ed);
 
 
-        final Timespan timespan = TimespanModelFactory.createTimespan(new Date(sl), new Date(el));
+        final Range timespan = Range.between(new Date(sl), new Date(el));
 
         try {
-            final List<Value> values = ValueTransaction.getDataSegment(entity, timespan);
+            final List<Value> values = ValueServiceFactory.getInstance().getDataSegment(entity, timespan);
 
             final FileService fileService = FileServiceFactory.getFileService();
             final AppEngineFile file = fileService.createNewBlobFile(Const.CONTENT_TYPE_PLAIN);
@@ -104,11 +102,11 @@ public class DumpTask extends HttpServlet implements org.springframework.web.Htt
 
     }
 
-    public void setValueService(ValueService valueService) {
+    public void setValueService(ValueServiceRpc valueService) {
         this.valueService = valueService;
     }
 
-    public ValueService getValueService() {
+    public ValueServiceRpc getValueService() {
         return valueService;
     }
 

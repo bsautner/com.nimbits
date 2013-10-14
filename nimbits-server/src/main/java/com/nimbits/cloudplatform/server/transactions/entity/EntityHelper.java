@@ -19,7 +19,6 @@ import com.nimbits.cloudplatform.client.model.calculation.Calculation;
 import com.nimbits.cloudplatform.client.model.calculation.CalculationModel;
 import com.nimbits.cloudplatform.client.model.category.CategoryModel;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
-
 import com.nimbits.cloudplatform.client.model.point.Point;
 import com.nimbits.cloudplatform.client.model.point.PointModel;
 import com.nimbits.cloudplatform.client.model.subscription.Subscription;
@@ -27,7 +26,6 @@ import com.nimbits.cloudplatform.client.model.subscription.SubscriptionModel;
 import com.nimbits.cloudplatform.client.model.summary.Summary;
 import com.nimbits.cloudplatform.client.model.summary.SummaryModel;
 import com.nimbits.cloudplatform.client.model.user.UserModel;
-
 import com.nimbits.cloudplatform.server.orm.*;
 
 /**

@@ -25,12 +25,12 @@ import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueDataModel;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueFactory;
 import com.nimbits.cloudplatform.server.admin.logging.LogHelper;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.user.UserTransaction;
-import com.nimbits.cloudplatform.server.transactions.value.ValueRpcServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
+import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceFactory;
+import com.nimbits.cloudplatform.server.transactions.entity.service.EntityService;
+import com.nimbits.cloudplatform.server.transactions.user.service.UserService;
+import com.nimbits.cloudplatform.server.transactions.value.ValueServiceFactory;
+import com.nimbits.cloudplatform.server.transactions.value.service.ValueServiceRpc;
 import org.springframework.stereotype.Service;
-
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -54,11 +54,11 @@ public class IncomingMailTask extends HttpServlet  implements org.springframewor
     private static final Pattern PATTERN = Pattern.compile("\n");
     private static final Pattern COMPILE1 = Pattern.compile("\r");
     private static final Pattern COMPILE2 = Pattern.compile(";");
-    private EntityServiceImpl entityService;
-    private UserTransaction userService;
-    private ValueRpcServiceImpl valueService;
+    private EntityService entityService;
+    private UserService userService;
+    private ValueServiceRpc valueService;
 
-
+    private final EntityService service = EntityServiceFactory.getInstance();
     @Override
     public void handleRequest(final HttpServletRequest req, final HttpServletResponse resp) {
 
@@ -71,7 +71,7 @@ public class IncomingMailTask extends HttpServlet  implements org.springframewor
 
             log.info("Incoming mail post: " + internetAddress);
             //u = UserTransactionFactory.getInstance().getNimbitsUser(internetAddress);
-            List<Entity> result = EntityServiceImpl.getEntityByKey(userService.getAdmin(), internetAddress.getValue(), EntityType.user);
+            List<Entity> result = service.getEntityByKey(userService.getAdmin(), internetAddress.getValue(), EntityType.user);
 
             final String content = COMPILE1.matcher(PATTERN.matcher(inContent).replaceAll("")).replaceAll("");
             final String Data[] = COMPILE2.split(content);
@@ -100,7 +100,7 @@ public class IncomingMailTask extends HttpServlet  implements org.springframewor
         final String emailLine[] = COMPILE.split(s);
         final EntityName pointName = CommonFactory.createName(emailLine[0], EntityType.point);
 
-        List<Entity> e =  EntityServiceImpl.getEntityByName(u, pointName, EntityType.point);
+        List<Entity> e = service.getEntityByName(u, pointName, EntityType.point);
 
 
         if (! e.isEmpty()) {
@@ -138,7 +138,7 @@ public class IncomingMailTask extends HttpServlet  implements org.springframewor
             String note = k.length == 4 ? k[3].trim() : "";
             final Value value = ValueFactory.createValueModel(LocationFactory.createLocation(), v, new Date(timestamp), note, ValueDataModel.getEmptyInstance(), AlertType.OK);
             try {
-                ValueTransaction.recordValue(u, point, value);
+                ValueServiceFactory.getInstance().recordValue(u, point, value);
             } catch (Exception e) {
                 log.severe(e.getMessage());
 
@@ -148,27 +148,27 @@ public class IncomingMailTask extends HttpServlet  implements org.springframewor
 
     }
 
-    public void setEntityService(EntityServiceImpl entityService) {
+    public void setEntityService(EntityService entityService) {
         this.entityService = entityService;
     }
 
-    public EntityServiceImpl getEntityService() {
+    public EntityService getEntityService() {
         return entityService;
     }
 
-    public void setUserService(UserTransaction userService) {
+    public void setUserService(UserService userService) {
         this.userService = userService;
     }
 
-    public UserTransaction getUserService() {
+    public UserService getUserService() {
         return userService;
     }
 
-    public void setValueService(ValueRpcServiceImpl valueService) {
+    public void setValueService(ValueServiceRpc valueService) {
         this.valueService = valueService;
     }
 
-    public ValueRpcServiceImpl getValueService() {
+    public ValueServiceRpc getValueService() {
         return valueService;
     }
 }

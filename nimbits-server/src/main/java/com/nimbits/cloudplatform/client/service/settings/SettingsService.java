@@ -16,7 +16,6 @@ package com.nimbits.cloudplatform.client.service.settings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.nimbits.cloudplatform.client.enums.SettingType;
 
 import java.util.Map;
 
@@ -26,7 +25,15 @@ public interface SettingsService extends RemoteService {
 
     Map<String, String> getSettingsRpc() ;
 
+    Map<String, String> getSettings();
 
+    String getSetting(String paramName);
+
+    void updateSetting(String setting, String newValue);
+
+    void addSetting(String setting, String value);
+
+    void addSetting(String setting, boolean defaultValue);
 
     static class App {
         private static SettingsServiceAsync ourInstance = GWT.create(SettingsService.class);

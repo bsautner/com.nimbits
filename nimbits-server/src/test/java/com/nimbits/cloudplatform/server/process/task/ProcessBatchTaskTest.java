@@ -21,8 +21,8 @@ import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueFactory;
 import com.nimbits.cloudplatform.server.NimbitsServletTest;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
+import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceFactory;
+import com.nimbits.cloudplatform.server.transactions.value.ValueServiceFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -67,8 +67,8 @@ public class ProcessBatchTaskTest extends NimbitsServletTest {
         req.addParameter("v2", String.valueOf(v2));
         batchTask.handleRequest(req, resp);
         Thread.sleep(1000);
-        List<Value> rv1 = ValueTransaction.getCurrentValue(point);
-        List<Value> rv2 = ValueTransaction.getCurrentValue(pointChild);
+        List<Value> rv1 = ValueServiceFactory.getInstance().getCurrentValue(point);
+        List<Value> rv2 = ValueServiceFactory.getInstance().getCurrentValue(pointChild);
         assertNotNull(rv1);
         assertEquals(rv1.get(0).getDoubleValue(), v1, DELTA);
         assertNotNull(rv2);
@@ -92,8 +92,8 @@ public class ProcessBatchTaskTest extends NimbitsServletTest {
         req.addParameter("ln2",String.valueOf(ln));
 
         batchTask.handleRequest(req, resp);
-        List<Value> rv1 = ValueTransaction.getCurrentValue(point);
-        List<Value> rv2 = ValueTransaction.getCurrentValue(pointChild);
+        List<Value> rv1 = ValueServiceFactory.getInstance().getCurrentValue(point);
+        List<Value> rv2 = ValueServiceFactory.getInstance().getCurrentValue(pointChild);
         assertNotNull(rv1);
         assertEquals(rv1.get(0).getDoubleValue(), v1, DELTA);
         assertEquals(lt, rv1.get(0).getLocation().getLat(), DELTA);
@@ -128,7 +128,7 @@ public class ProcessBatchTaskTest extends NimbitsServletTest {
         req.addParameter("p1", pointName.getValue());
         req.addParameter("j1", json);
         batchTask.handleRequest(req, resp);
-        List<Value> v = ValueTransaction.getTopDataSeries(point, runs);
+        List<Value> v = ValueServiceFactory.getInstance().getTopDataSeries(point, runs);
         assertEquals(runs, v.size());
         double newTotal = 0.0;
         for (Value vx : v) {
@@ -161,7 +161,7 @@ public class ProcessBatchTaskTest extends NimbitsServletTest {
 
         batchTask.handleRequest(req, resp);
 
-        List<Value> rv1 = ValueTransaction.getCurrentValue(point);
+        List<Value> rv1 = ValueServiceFactory.getInstance().getCurrentValue(point);
 
         assertNotNull(rv1);
         assertEquals(rv1.get(0).getDoubleValue(), v1, DELTA);
@@ -174,8 +174,8 @@ public class ProcessBatchTaskTest extends NimbitsServletTest {
     public void TestCompressionWithBatch() throws Exception {
         addAuth();
         point.setFilterValue(2.0);
-        EntityServiceImpl.addUpdateEntity(Arrays.<Entity>asList(point));
-        Point r = (Point) EntityServiceImpl.getEntityByKey(user, point.getKey(), EntityType.point).get(0);
+        EntityServiceFactory.getInstance().addUpdateEntity(Arrays.<Entity>asList(point));
+        Point r = (Point) EntityServiceFactory.getInstance().getEntityByKey(user, point.getKey(), EntityType.point).get(0);
         assertNotNull(r);
         assertEquals(2.0,r.getFilterValue(),  DELTA);
 
@@ -195,7 +195,7 @@ public class ProcessBatchTaskTest extends NimbitsServletTest {
         double retVal = 0.0;
 
         Thread.sleep(100);
-        List<Value> v = ValueTransaction.getTopDataSeries(point, 10);// ClientHelper.client().getSeries(name, 10);
+        List<Value> v = ValueServiceFactory.getInstance().getTopDataSeries(point, 10);// ClientHelper.client().getSeries(name, 10);
         assertFalse(v.isEmpty());
         for (Value x : v) {
             retVal += x.getDoubleValue();
@@ -212,8 +212,8 @@ public class ProcessBatchTaskTest extends NimbitsServletTest {
 
         addAuth();
         point.setFilterValue(2.0);
-        EntityServiceImpl.addUpdateEntity(Arrays.<Entity>asList(point));
-        Point r = (Point) EntityServiceImpl.getEntityByKey(user, point.getKey(), EntityType.point).get(0);
+        EntityServiceFactory.getInstance().addUpdateEntity(Arrays.<Entity>asList(point));
+        Point r = (Point) EntityServiceFactory.getInstance().getEntityByKey(user, point.getKey(), EntityType.point).get(0);
         assertNotNull(r);
         assertEquals(2.0,r.getFilterValue(),  DELTA);
 
@@ -238,7 +238,7 @@ public class ProcessBatchTaskTest extends NimbitsServletTest {
         double retVal = 0.0;
 
         Thread.sleep(100);
-        List<Value> v = ValueTransaction.getTopDataSeries(point, 10);// ClientHelper.client().getSeries(name, 10);
+        List<Value> v = ValueServiceFactory.getInstance().getTopDataSeries(point, 10);// ClientHelper.client().getSeries(name, 10);
         assertFalse(v.isEmpty());
         for (Value x : v) {
             retVal += x.getDoubleValue();
@@ -270,8 +270,8 @@ public class ProcessBatchTaskTest extends NimbitsServletTest {
 
         batchTask.handleRequest(req, resp);
 
-        List<Value> rv1 = ValueTransaction.getCurrentValue(point);
-        List<Value> rv2 = ValueTransaction.getCurrentValue(pointChild);
+        List<Value> rv1 = ValueServiceFactory.getInstance().getCurrentValue(point);
+        List<Value> rv2 = ValueServiceFactory.getInstance().getCurrentValue(pointChild);
         assertNotNull(rv1);
         assertEquals(rv1.get(0).getDoubleValue(), v1, DELTA);
 

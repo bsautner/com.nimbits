@@ -19,15 +19,14 @@ import com.nimbits.cloudplatform.client.model.point.Point;
 import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueFactory;
 import com.nimbits.cloudplatform.server.NimbitsServletTest;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
+import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceFactory;
+import com.nimbits.cloudplatform.server.transactions.value.ValueServiceFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
-
 import java.util.Arrays;
 
 import static org.junit.Assert.*;
@@ -62,7 +61,7 @@ public class IdlePointCronTest extends NimbitsServletTest {
         point.setIdleSeconds(1);
         point.setIdleAlarmOn(true);
         try {
-          EntityServiceImpl.addUpdateEntity(user, Arrays.<Entity>asList(point));
+            EntityServiceFactory.getInstance().addUpdateEntity(user, Arrays.<Entity>asList(point));
            final int c =  idleCron.processGet();
            assertEquals(1, c);
         } catch (Exception e) {
@@ -79,22 +78,22 @@ public class IdlePointCronTest extends NimbitsServletTest {
 
         point.setIdleAlarmOn(true);
         point.setIdleSeconds(1);
-        EntityServiceImpl.addUpdateEntity(user, Arrays.<Entity>asList(point));
+        EntityServiceFactory.getInstance().addUpdateEntity(user, Arrays.<Entity>asList(point));
         Value vx = ValueFactory.createValueModel(1.2);
-        ValueTransaction.recordValue(user, point, vx);
+        ValueServiceFactory.getInstance().recordValue(user, point, vx);
         Thread.sleep(2000);
         assertTrue(idleCron.checkIdle(point));
-        Point up = (Point) EntityServiceImpl.getEntityByKey(user, point.getKey(), EntityType.point).get(0);
+        Point up = (Point) EntityServiceFactory.getInstance().getEntityByKey(user, point.getKey(), EntityType.point).get(0);
         assertTrue(up.getIdleAlarmSent());
         Value vx2 = ValueFactory.createValueModel(21.2);
-        ValueTransaction.recordValue(user, up, vx2);
+        ValueServiceFactory.getInstance().recordValue(user, up, vx2);
         assertFalse(idleCron.checkIdle(up));
         Thread.sleep(2000);
-        Point up2 = (Point) EntityServiceImpl.getEntityByKey(user, point.getKey(), EntityType.point).get(0);
+        Point up2 = (Point) EntityServiceFactory.getInstance().getEntityByKey(user, point.getKey(), EntityType.point).get(0);
 
         up2.setIdleAlarmSent(false); //should have been done by the record value task which unit tests don't start
 
-        EntityServiceImpl.addUpdateEntity(user, Arrays.<Entity>asList(up2));
+        EntityServiceFactory.getInstance().addUpdateEntity(user, Arrays.<Entity>asList(up2));
         assertFalse(up2.getIdleAlarmSent());
         assertTrue(idleCron.checkIdle(up2));
     }

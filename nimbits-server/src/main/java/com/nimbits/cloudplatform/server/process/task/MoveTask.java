@@ -16,13 +16,12 @@ import com.nimbits.cloudplatform.client.enums.Parameters;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.entity.EntityModel;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
-import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
+import com.nimbits.cloudplatform.server.transactions.value.ValueServiceFactory;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.logging.Logger;
 
 /**
  * Created by Benjamin Sautner
@@ -40,7 +39,7 @@ public class MoveTask extends HttpServlet implements org.springframework.web.Htt
 
         final String pointJson = req.getParameter(Parameters.point.getText());
         final Entity point = GsonFactory.getInstance().fromJson(pointJson, EntityModel.class);
-        ValueTransaction.moveValuesFromCacheToStore(point);
+        ValueServiceFactory.getInstance().moveValuesFromCacheToStore(point);
 
 
     }

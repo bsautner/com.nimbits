@@ -14,7 +14,6 @@ package com.nimbits.cloudplatform.server.transactions.counter;
 
 import org.springframework.stereotype.Service;
 
-
 import java.util.Date;
 
 /**

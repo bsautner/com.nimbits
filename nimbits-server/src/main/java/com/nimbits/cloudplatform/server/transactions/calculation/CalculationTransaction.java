@@ -19,9 +19,9 @@ import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.user.User;
 import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.client.model.value.impl.ValueFactory;
-import com.nimbits.cloudplatform.server.api.EntityApi;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
+import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceFactory;
+import com.nimbits.cloudplatform.server.transactions.entity.service.EntityService;
+import com.nimbits.cloudplatform.server.transactions.value.ValueServiceFactory;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,14 +35,15 @@ import java.util.logging.Logger;
  */
 public class CalculationTransaction {
     final static Logger log = Logger.getLogger(CalculationTransaction.class.getName());
+    private final static  EntityService entityService = EntityServiceFactory.getInstance();
     public static void processCalculations(final User u, final Entity point)   {
 
-        final List<Entity> calculations = EntityServiceImpl.getEntityByTrigger(u, point, EntityType.calculation);
+        final List<Entity> calculations = entityService.getEntityByTrigger(u, point, EntityType.calculation);
         for (final Entity entity : calculations) {
             Calculation c = (Calculation)entity;
 
 
-            final List<Entity> target =   EntityServiceImpl.getEntityByKey(u, c.getTarget(), EntityType.point);
+            final List<Entity> target =   entityService.getEntityByKey(u, c.getTarget(), EntityType.point);
             if (target.isEmpty()) {
 
                 // disableCalc(u, c);
@@ -52,7 +53,7 @@ public class CalculationTransaction {
                 final List<Value> result = solveEquation(u, c);
                 if (! result.isEmpty())  {
 
-                    ValueTransaction.recordValue(u, target.get(0), result.get(0));
+                    ValueServiceFactory.getInstance().recordValue(u, target.get(0), result.get(0));
                 }
             }
 
@@ -80,11 +81,11 @@ public class CalculationTransaction {
 
         if (!Utils.isEmptyString(calculation.getX()) && calculation.getFormula().contains("x")) {
 
-            final Entity p =  EntityServiceImpl.getEntityByKey(user, calculation.getX(), EntityType.point).get(0);
+            final Entity p =  entityService.getEntityByKey(user, calculation.getX(), EntityType.point).get(0);
 
             if (p != null) {
 
-                final List<Value> val = ValueTransaction.getCurrentValue(p);
+                final List<Value> val = ValueServiceFactory.getInstance().getCurrentValue(p);
 
                 final double d = val.isEmpty() ? 0.0 : val.get(0).getDoubleValue();
 
@@ -93,20 +94,20 @@ public class CalculationTransaction {
 
         }
         if (!Utils.isEmptyString(calculation.getY()) && calculation.getFormula().contains("y")) {
-            final Entity p = EntityServiceImpl.getEntityByKey(user, calculation.getY(), EntityType.point).get(0);
+            final Entity p = entityService.getEntityByKey(user, calculation.getY(), EntityType.point).get(0);
 
             if (p != null) {
-                final List<Value> val = ValueTransaction.getCurrentValue(p);
+                final List<Value> val = ValueServiceFactory.getInstance().getCurrentValue(p);
                 final double d = val.isEmpty() ? 0.0 : val.get(0).getDoubleValue();
                 m.addVariable("y", d);
             }
 
         }
         if (!Utils.isEmptyString(calculation.getZ()) && calculation.getFormula().contains("z")) {
-            final Entity p = EntityServiceImpl.getEntityByKey(user, calculation.getZ(), EntityType.point).get(0);
+            final Entity p = entityService.getEntityByKey(user, calculation.getZ(), EntityType.point).get(0);
 
             if (p != null) {
-                final List<Value> val = ValueTransaction.getCurrentValue(p);
+                final List<Value> val = ValueServiceFactory.getInstance().getCurrentValue(p);
                 final double d = val.isEmpty() ? 0.0 : val.get(0).getDoubleValue();
                 m.addVariable("z", d);
             }

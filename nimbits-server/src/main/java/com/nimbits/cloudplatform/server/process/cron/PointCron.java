@@ -17,8 +17,9 @@ import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.user.User;
 import com.nimbits.cloudplatform.server.admin.logging.LogHelper;
 import com.nimbits.cloudplatform.server.process.task.TaskImpl;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.user.UserTransactionFactory;
+import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceFactory;
+import com.nimbits.cloudplatform.server.transactions.entity.service.EntityService;
+import com.nimbits.cloudplatform.server.transactions.user.UserServiceFactory;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
@@ -30,15 +31,15 @@ import java.util.Map;
 @Service("pointCron")
 
 public class PointCron extends HttpServlet implements org.springframework.web.HttpRequestHandler {
-
+    private final EntityService service = EntityServiceFactory.getInstance();
     @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp)
             throws IOException {
             try {
 
-                final User admin = UserTransactionFactory.getInstance().getAdmin();
+                final User admin = UserServiceFactory.getInstance().getAdmin();
                 final Map<String,Entity> e =
-                        EntityServiceImpl.getSystemWideEntityMap(admin, EntityType.point);
+                        service.getSystemWideEntityMap(admin, EntityType.point);
 
                 for (final Entity en : e.values()) {
                     TaskImpl.startPointMaintTask(en);

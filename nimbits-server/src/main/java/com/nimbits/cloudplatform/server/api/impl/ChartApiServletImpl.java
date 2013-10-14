@@ -30,10 +30,11 @@ import com.nimbits.cloudplatform.server.admin.logging.LogHelper;
 import com.nimbits.cloudplatform.server.api.ApiServlet;
 import com.nimbits.cloudplatform.server.time.TimespanService;
 import com.nimbits.cloudplatform.server.time.TimespanServiceFactory;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
+import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceFactory;
+import com.nimbits.cloudplatform.server.transactions.entity.service.EntityService;
+import com.nimbits.cloudplatform.server.transactions.value.ValueServiceFactory;
+import org.apache.commons.lang3.Range;
 import org.springframework.stereotype.Service;
-
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -48,6 +49,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -64,7 +66,7 @@ public class ChartApiServletImpl extends ApiServlet implements org.springframewo
     private static final String chartDateCode = "&chd=t:";
     private static final int INT = 512;
     private static final Pattern COMPILE = Pattern.compile(",");
-
+    private final EntityService service = EntityServiceFactory.getInstance();
 
     @Override
     public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -142,7 +144,7 @@ public class ChartApiServletImpl extends ApiServlet implements org.springframewo
             for (final EntityName pointName : pointList) {
 
 
-                final List<Entity> list = EntityServiceImpl.getEntityByName(u, pointName, EntityType.point);
+                final List<Entity> list =service.getEntityByName(u, pointName, EntityType.point);
                 if (list.isEmpty()) {
                     log.info("Couldn't find a point in the chart request.");
                 } else {
@@ -153,8 +155,8 @@ public class ChartApiServletImpl extends ApiServlet implements org.springframewo
 
                         final List<Value> values = timespan != null ?
 
-                                ValueTransaction.getDataSegment(p, timespan) :
-                                ValueTransaction.getTopDataSeries(p, valueCount);
+                                ValueServiceFactory.getInstance().getDataSegment(p, Range.between(new Date(), new Date())) :
+                                ValueServiceFactory.getInstance().getTopDataSeries(p, valueCount);
 
 
                         for (final Value v : values) {

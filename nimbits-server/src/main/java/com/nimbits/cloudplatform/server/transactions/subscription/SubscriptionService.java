@@ -13,14 +13,10 @@
 package com.nimbits.cloudplatform.server.transactions.subscription;
 
 import com.google.appengine.api.datastore.DatastoreTimeoutException;
-import com.google.apphosting.api.ApiProxy;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.nimbits.cloudplatform.client.constants.Path;
 import com.nimbits.cloudplatform.client.enums.*;
 import com.nimbits.cloudplatform.client.enums.subscription.SubscriptionType;
 import com.nimbits.cloudplatform.client.model.entity.Entity;
-import com.nimbits.cloudplatform.client.model.mqtt.Mqtt;
-import com.nimbits.cloudplatform.client.model.mqtt.MqttFactory;
 import com.nimbits.cloudplatform.client.model.point.Point;
 import com.nimbits.cloudplatform.client.model.subscription.Subscription;
 import com.nimbits.cloudplatform.client.model.user.User;
@@ -28,11 +24,11 @@ import com.nimbits.cloudplatform.client.model.value.Value;
 import com.nimbits.cloudplatform.server.communication.email.EmailService;
 import com.nimbits.cloudplatform.server.communication.xmpp.XmppServiceImpl;
 import com.nimbits.cloudplatform.server.gson.GsonFactory;
-import com.nimbits.cloudplatform.server.http.HttpCommonFactory;
 import com.nimbits.cloudplatform.server.transactions.counter.CounterService;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
-import com.nimbits.cloudplatform.server.transactions.user.UserTransactionFactory;
-import com.nimbits.cloudplatform.server.transactions.value.ValueTransaction;
+import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceFactory;
+import com.nimbits.cloudplatform.server.transactions.entity.service.EntityService;
+import com.nimbits.cloudplatform.server.transactions.user.UserServiceFactory;
+import com.nimbits.cloudplatform.server.transactions.value.ValueServiceFactory;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.springframework.stereotype.Service;
@@ -61,7 +57,7 @@ public class SubscriptionService extends RemoteServiceServlet {
     public static final String NIMBITS_GCM_URL = "http://nimbits-gcm.appspot.com/sendAll";
     public static final String METHOD = "POST";
     public static final String UTF_8 = "UTF-8";
-
+    private final static  EntityService entityService = EntityServiceFactory.getInstance();
 
     public static boolean okToProcess(Subscription subscription) {
 
@@ -79,7 +75,7 @@ public class SubscriptionService extends RemoteServiceServlet {
 
     public static void processSubscriptions(final User user, final Point point, final Value v)  {
 
-        final List<Entity> subscriptions = EntityServiceImpl.getSubscriptionsToEntity(user, point);
+        final List<Entity> subscriptions =entityService.getSubscriptionsToEntity(user, point);
         log.info("processing " + subscriptions.size() + " subscriptions");
         for (final Entity entity : subscriptions) {
 
@@ -96,11 +92,11 @@ public class SubscriptionService extends RemoteServiceServlet {
 
                 //EntityServiceImpl.addUpdateSingleEntity(user, subscription);
 
-                final List<Entity> subscriptionEntity = EntityServiceImpl.getEntityByKey(user, subscription.getKey(), EntityType.subscription);
+                final List<Entity> subscriptionEntity = entityService.getEntityByKey(user, subscription.getKey(), EntityType.subscription);
 
                 if (!subscriptionEntity.isEmpty()) {
 
-                    final List<User> subscriberList = UserTransactionFactory.getInstance().getUserByKey(subscriptionEntity.get(0).getOwner(), AuthLevel.readWriteAll);
+                    final List<User> subscriberList = UserServiceFactory.getInstance().getUserByKey(subscriptionEntity.get(0).getOwner(), AuthLevel.readWriteAll);
                     final AlertType alert = v.getAlertState();
                     if (! subscriberList.isEmpty()) {
                         User subscriber = subscriberList.get(0);
@@ -133,7 +129,7 @@ public class SubscriptionService extends RemoteServiceServlet {
                             case changed:
                                 break;
                             case deltaAlert:
-                                if (ValueTransaction.calculateDelta(point) > point.getDeltaAlarm()) {
+                                if (ValueServiceFactory.getInstance().calculateDelta(point) > point.getDeltaAlarm()) {
                                     sendNotification(subscriber, subscription, point, v);
                                 }
                                 break;
@@ -164,7 +160,7 @@ public class SubscriptionService extends RemoteServiceServlet {
             final Value v,
             final Subscription subscription,
             final User subscriber) {
-        List<Value> prevValue = ValueTransaction.getPrevValue(point, new Date(v.getTimestamp().getTime() - 60000));
+        List<Value> prevValue = ValueServiceFactory.getInstance().getPrevValue(point, new Date(v.getTimestamp().getTime() - 60000));
         if (!prevValue.isEmpty()) {
             if (subscription.getSubscriptionType().equals(SubscriptionType.decrease) && (prevValue.get(0).getDoubleValue() > v.getDoubleValue())) {
                 sendNotification(subscriber, subscription, point, v);
@@ -212,7 +208,7 @@ public class SubscriptionService extends RemoteServiceServlet {
                     + "] updated to new value: " + v.getDoubleValue();
         }
 
-        XmppServiceImpl.sendMessage(message, u.getEmail());
+        new XmppServiceImpl().sendMessage(message, u.getEmail());
 
 
     }

@@ -27,7 +27,6 @@ public class ServerSetting implements Setting {
     private Long id;
 
 
-
     private ServerSetting() {
     }
 
@@ -38,6 +37,7 @@ public class ServerSetting implements Setting {
 
     @Persistent
     private String name;
+
     @Persistent
     private String value;
 

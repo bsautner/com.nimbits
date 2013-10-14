@@ -17,7 +17,8 @@ import com.nimbits.cloudplatform.client.model.entity.Entity;
 import com.nimbits.cloudplatform.client.model.trigger.Trigger;
 import com.nimbits.cloudplatform.client.model.user.User;
 import com.nimbits.cloudplatform.server.orm.TriggerEntity;
-import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceImpl;
+import com.nimbits.cloudplatform.server.transactions.entity.EntityServiceFactory;
+import com.nimbits.cloudplatform.server.transactions.entity.service.EntityService;
 import com.nimbits.cloudplatform.shared.Utils;
 import org.springframework.stereotype.Component;
 
@@ -38,9 +39,9 @@ public class RecursionValidation {
     private static final int MAX_RECURSION = 10;
     private static final int INT = 1024;
     private static final Logger log = Logger.getLogger(RecursionValidation.class.getName());
+    final EntityService entityService = EntityServiceFactory.getInstance();
 
-
-    public static void validate(final User user, final Trigger entity)  {
+    public void validate(final User user, final Trigger entity)  {
 
         if (Utils.isEmptyString(entity.getTarget())) {
             throw new IllegalArgumentException("Missing target");
@@ -49,7 +50,7 @@ public class RecursionValidation {
             throw new IllegalArgumentException("Missing trigger");
         }
 
-        List<Entity> userList = EntityServiceImpl.getEntityByKey(user, entity.getOwner(), EntityType.user);
+        List<Entity> userList = entityService.getEntityByKey(user, entity.getOwner(), EntityType.user);
 
         if (userList.isEmpty()){
             throw new IllegalArgumentException("Could not locate the owner of this trigger with the key provided!");
@@ -62,7 +63,7 @@ public class RecursionValidation {
 
 
     }
-    private static void validateAgainstExisting(List<Entity> user, Trigger entity)  {
+    private void validateAgainstExisting(List<Entity> user, Trigger entity)  {
 
         Map<String, String> map = new HashMap<String, String>(INT);
         map.put(entity.getTrigger(), entity.getTarget());
@@ -77,7 +78,7 @@ public class RecursionValidation {
                 }
 
                 if (cls.getSuperclass().equals(TriggerEntity.class)) {
-                    Map<String, Entity> all = EntityServiceImpl.getEntityModelMap(
+                    Map<String, Entity> all = entityService.getEntityModelMap(
                             (User) user.get(0),
                             type,
                             1000);

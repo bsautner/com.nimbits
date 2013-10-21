@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+		  http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+           version="3.0">
+
+    <listener>
+        <listener-class>com.nimbits.server.ApplicationListener</listener-class>
+    </listener>
+
+    <servlet>
+        <servlet-name>timeApi</servlet-name>
+        <servlet-class>com.nimbits.server.api.TimeApi</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>timeApi</servlet-name>
+        <url-pattern>/service/v2/time</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>valueApi</servlet-name>
+        <servlet-class>com.nimbits.server.api.ValueApi</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>valueApi</servlet-name>
+        <url-pattern>/service/v2/value</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>treeApi</servlet-name>
+        <servlet-class>com.nimbits.server.api.TreeApi</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>treeApi</servlet-name>
+        <url-pattern>/service/v2/tree</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>entityApi</servlet-name>
+        <servlet-class>com.nimbits.server.api.EntityApi</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>entityApi</servlet-name>
+        <url-pattern>/service/v2/entity</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>sessionApi</servlet-name>
+        <servlet-class>com.nimbits.server.api.SessionApi</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>sessionApi</servlet-name>
+        <url-pattern>/service/v2/session</url-pattern>
+    </servlet-mapping>
+
+
+</web-app>

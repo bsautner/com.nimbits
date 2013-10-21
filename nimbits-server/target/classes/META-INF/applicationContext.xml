@@ -17,7 +17,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 
-    <bean id="entityHelper" class="com.nimbits.cloudplatform.client.helper.EntityHelper"></bean>
+    <bean id="entityHelper" class="com.nimbits.client.helper.EntityHelper"></bean>
 
 
 </beans>

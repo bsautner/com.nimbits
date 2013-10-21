@@ -15,24 +15,7 @@ package com.nimbits.mobile.server;
 import android.app.Service;
 import android.content.Intent;
 import android.os.*;
-import android.os.Process;
 import android.util.Log;
-import com.google.gson.*;
-import com.nimbits.cloudplatform.client.model.value.Value;
-import com.nimbits.cloudplatform.client.model.value.ValueContainer;
-import com.nimbits.cloudplatform.client.model.value.impl.ValueContainerModel;
-import com.nimbits.cloudplatform.client.model.value.impl.ValueFactory;
-import com.nimbits.cloudplatform.client.model.value.impl.ValueModel;
-import com.nimbits.cloudplatform.server.gson.GsonFactory;
-import com.nimbits.cloudplatform.server.gson.GsonFactory2;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.Date;
-import java.util.Map;
-import java.util.UUID;
 
 public class BufferService extends Service {
 

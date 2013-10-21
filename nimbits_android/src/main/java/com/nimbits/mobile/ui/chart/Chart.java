@@ -14,8 +14,8 @@ package com.nimbits.mobile.ui.chart;
 
 import android.content.Context;
 import android.view.View;
-import com.nimbits.cloudplatform.client.model.entity.Entity;
-import com.nimbits.cloudplatform.client.model.value.Value;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.value.Value;
 
 import java.util.List;
 
@@ -56,6 +56,6 @@ public interface Chart {
      * @param entity
      * @param valuesResponse @return the built intent
      */
-    View execute(Context context, Entity entity, List<Value> valuesResponse) throws Exception;
+    View execute(Context context, Entity entity, List<Value> valuesResponse);
 
 }

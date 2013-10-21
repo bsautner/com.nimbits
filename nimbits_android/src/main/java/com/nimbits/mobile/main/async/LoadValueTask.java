@@ -14,9 +14,11 @@ package com.nimbits.mobile.main.async;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import com.nimbits.cloudplatform.client.model.entity.Entity;
-import com.nimbits.cloudplatform.client.model.value.Value;
-import com.nimbits.cloudplatform.transaction.Transaction;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.mobile.application.SessionSingleton;
+import com.nimbits.transaction.Transaction;
+import com.nimbits.transaction.TransactionFactory;
 
 import java.util.List;
 
@@ -28,6 +30,7 @@ import java.util.List;
 public class LoadValueTask extends AsyncTask<Object, List<Value>, List<Value>> {
 
     public LoadValueTaskListener mListener;
+    private Transaction transactions = TransactionFactory.getInstance(SessionSingleton.getInstance().getServer(), SessionSingleton.getInstance().getEmail());
 
     private LoadValueTask() {
 
@@ -59,7 +62,7 @@ public class LoadValueTask extends AsyncTask<Object, List<Value>, List<Value>> {
 
         Log.v("nimbits", "getting value");
 
-        response = Transaction.getValue(e);
+        response =transactions.getValue(e);
 
         Log.v("nimbits", "got a value for " + e.getKey());
         return response;

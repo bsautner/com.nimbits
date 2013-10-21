@@ -28,5 +28,11 @@
         android:showAsAction="always"
         android:icon="@drawable/av_full_screen"
         android:title="@string/refresh_text"/>
+    <item
+            android:id="@+id/action_instance"
+
+            android:showAsAction="ifRoom"
+            android:icon="@android:drawable/ic_menu_directions"
+            android:title="@string/instance_text"/>
 
 </menu>

@@ -13,13 +13,12 @@
 package com.nimbits.mobile.server;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import com.nimbits.cloudplatform.client.model.value.ValueContainer;
+import com.nimbits.client.model.value.ValueContainer;
 import com.nimbits.mobile.R;
 
 import java.util.List;

@@ -25,4 +25,5 @@
     <item name="entity" type="id"/>
     <item name="new_value" type="id"/>
     <item name="screen" type="id"/>
+    <item name="action_new_instance" type="id"/>
 </resources>

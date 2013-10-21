@@ -13,7 +13,7 @@
 package com.nimbits.server.orm;
 
 import com.google.appengine.api.datastore.Key;
-import com.nimbits.cloudplatform.client.model.device.Device;
+import com.nimbits.client.model.device.Device;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;

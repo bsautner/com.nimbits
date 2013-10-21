@@ -77,5 +77,9 @@
     <string name="refresh_text">Refresh</string>
     <string name="authenticating">Authenticating...</string>
     <string name="nimbits_logo">nimbits logo</string>
+    <string name="instance_text">Server URL</string>
+    <string name="connect">Connect</string>
+    <string name="add_instance">Add Instance</string>
+    <string name="delete"/>
 
 </resources>

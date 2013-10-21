@@ -14,8 +14,8 @@ package com.nimbits.mobile;
 import android.content.Context;
 import android.util.Log;
 import com.google.android.gcm.GCMRegistrar;
-import com.nimbits.cloudplatform.Nimbits;
-import com.nimbits.cloudplatform.client.enums.Parameters;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.mobile.application.SessionSingleton;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -46,7 +46,7 @@ public final class ServerUtilities {
         String serverUrl = CommonUtilities.SERVER_URL + "/register";
         Map<String, String> params = new HashMap<String, String>();
         params.put("regId", regId);
-        params.put(Parameters.email.getText(), Nimbits.session.getEmail().getValue());
+        params.put(Parameters.email.getText(), SessionSingleton.getInstance().getEmail());
         long backoff = BACKOFF_MILLI_SECONDS + random.nextInt(1000);
         // Once GCM returns a registration id, we need to register it in the
         // demo server. As the server might be down, we will retry it a couple

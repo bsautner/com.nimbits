@@ -16,23 +16,19 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="idleCron" class="com.nimbits.cloudplatform.server.process.cron.IdlePointCron">
+    <bean id="idleCron" class="com.nimbits.server.process.cron.IdlePointCron">
 
     </bean>
 
-    <bean id="pointCron" class="com.nimbits.cloudplatform.server.process.cron.PointCron">
+    <bean id="pointCron" class="com.nimbits.server.process.cron.PointCron">
 
      </bean>
 
-    <bean id="moveCron" class="com.nimbits.cloudplatform.server.process.cron.MoveRecordedValuesToStoreCron">
+    <bean id="moveCron" class="com.nimbits.server.process.cron.MoveRecordedValuesToStoreCron">
 
     </bean>
 
-    <bean id="sessionCron" class="com.nimbits.cloudplatform.server.process.cron.SessionMaint">
-
-    </bean>
-
-    <bean id="systemCron" class="com.nimbits.cloudplatform.server.process.cron.SystemCron">
+    <bean id="sessionCron" class="com.nimbits.server.process.cron.SessionMaint">
 
     </bean>
 

@@ -40,4 +40,8 @@
             android:text="enabled"
             android:id="@+id/high_enabled"/>
     </LinearLayout>
+    <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView" android:src="@android:drawable/ic_menu_directions"/>
 </LinearLayout>

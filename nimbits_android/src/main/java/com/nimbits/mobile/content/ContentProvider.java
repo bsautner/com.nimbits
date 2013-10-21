@@ -12,12 +12,12 @@
 
 package com.nimbits.mobile.content;
 
-import com.nimbits.cloudplatform.Nimbits;
-import com.nimbits.cloudplatform.client.constants.Const;
-import com.nimbits.cloudplatform.client.enums.EntityType;
-import com.nimbits.cloudplatform.client.model.entity.Entity;
-import com.nimbits.cloudplatform.client.model.value.Value;
-import com.nimbits.cloudplatform.client.model.value.impl.ValueFactory;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.impl.ValueFactory;
+import com.nimbits.mobile.application.SessionSingleton;
 
 import java.util.*;
 
@@ -27,7 +27,7 @@ import java.util.*;
 public class ContentProvider {
     //todo move to application class singlton
     public static List<Entity> tree;
-    public static Entity currentEntity;
+
     public static Map<Entity, Value> currentValueMap;
 
 
@@ -57,33 +57,27 @@ public class ContentProvider {
 
     }
 
-    public static Entity getCurrentEntity() {
-        return currentEntity == null ? Nimbits.session : currentEntity;
-    }
 
-    public static void setCurrentEntity(Entity currentEntity) {
-        ContentProvider.currentEntity = currentEntity;
-    }
 
     public static void setCurrentEntityToParent() {
-        ContentProvider.setCurrentEntity(getParentEntity());
+        SessionSingleton.getInstance().setCurrentEntity(getParentEntity());
     }
 
     public static Entity getParentEntity() {
         for (Entity e : tree) {
-            if (ContentProvider.currentEntity.getParent().equals(e.getKey())) {
+            if (SessionSingleton.getInstance().getCurrentEntity().getParent().equals(e.getKey())) {
                 return e;
 
             }
         }
-        return Nimbits.session;
+        return SessionSingleton.getInstance().getSession();
     }
 
     public static List<Entity> getChildEntities() {
         List<Entity> current = new ArrayList<Entity>();
         if (tree != null) {
             for (Entity entity : tree) {
-                if (entity.getParent().equals(currentEntity.getKey()) && !entity.getEntityType().equals(EntityType.user) && entity.getEntityType().isTreeGridItem()) {
+                if (entity.getParent().equals(SessionSingleton.getInstance().getCurrentEntity().getKey()) && !entity.getEntityType().equals(EntityType.user) && entity.getEntityType().isTreeGridItem()) {
 
                     current.add(entity);
                 }

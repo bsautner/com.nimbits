@@ -15,10 +15,10 @@ package com.nimbits.mobile.server;
 import android.content.Intent;
 import android.os.Environment;
 import android.util.Log;
-import com.nimbits.cloudplatform.client.model.value.ValueContainer;
-import com.nimbits.cloudplatform.client.model.value.impl.ValueContainerModel;
-import com.nimbits.cloudplatform.client.model.value.impl.ValueFactory;
-import com.nimbits.cloudplatform.server.gson.GsonFactory2;
+import com.nimbits.client.model.value.ValueContainer;
+import com.nimbits.client.model.value.impl.ValueContainerModel;
+import com.nimbits.client.model.value.impl.ValueFactory;
+import com.nimbits.server.gson.GsonFactory2;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -85,7 +85,7 @@ public class HttpServer extends NanoHTTPD {
                 Log.e(TAG, ex.getMessage());
             }
             Intent intent = new Intent();
-            intent.setAction(IncomingValueBroadCastReciever.ACTION);
+            intent.setAction(IncomingValueBroadCastReceiver.ACTION);
             // Bundle bundle = new Bundle();
             // bundle.putSerializable("DATA", valueContainer);
             // sendBroadcast(intent);

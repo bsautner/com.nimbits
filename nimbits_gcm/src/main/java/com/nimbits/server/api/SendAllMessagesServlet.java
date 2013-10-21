@@ -15,7 +15,7 @@ import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
-import com.nimbits.cloudplatform.client.enums.Parameters;
+import com.nimbits.client.enums.Parameters;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

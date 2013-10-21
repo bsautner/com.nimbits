@@ -8,7 +8,7 @@
     android:layout_alignParentLeft="true"
     android:layout_above="@+id/progressBar"
     android:weightSum="1.0"
-    android:id="@id/screen">
+    android:id="@id/screen" android:background="@android:color/background_light">
 
     <FrameLayout
         android:layout_width="0dp"
@@ -25,12 +25,7 @@
         android:id="@id/data_frame"
         android:layout_weight=".5"
         android:layout_alignParentEnd="false"
-        android:layout_margin="5dp">
 
-        <WebView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/webView"
-            android:layout_gravity="center"/>
+        android:layout_margin="5dp" android:background="@drawable/flow_land">
     </FrameLayout>
 </LinearLayout>

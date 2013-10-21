@@ -21,7 +21,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import com.nimbits.mobile.R;
-import com.nimbits.mobile.content.ContentProvider;
+import com.nimbits.mobile.application.SessionSingleton;
 import com.nimbits.mobile.ui.PointViewBaseFragment;
 import com.nimbits.mobile.ui.entitylist.EntityListener;
 
@@ -48,7 +48,7 @@ public class PointFragment extends PointViewBaseFragment {
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         Log.v(TAG, "onCreateView");
         view = inflater.inflate(R.layout.point_details_fragment, container, false);
-        showEntity(getActivity());
+        showEntity();
 
         ImageButton saveButton = (ImageButton) view.findViewById(R.id.save_button);
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -57,7 +57,7 @@ public class PointFragment extends PointViewBaseFragment {
                 EditText editText = (EditText) view.findViewById(R.id.new_value);
                 if (editText != null && editText.getEditableText() != null) {
                     String value = editText.getEditableText().toString();
-                    listener.onNewValue(ContentProvider.getCurrentEntity(), value);
+                    listener.onNewValue(SessionSingleton.getInstance().getCurrentEntity(), value);
                     editText.getEditableText().clear();
                 }
 

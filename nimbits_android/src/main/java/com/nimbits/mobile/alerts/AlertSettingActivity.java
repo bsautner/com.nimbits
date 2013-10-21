@@ -24,10 +24,10 @@ import com.nimbits.mobile.R;
 import com.nimbits.mobile.ToastHelper;
 import com.nimbits.mobile.main.async.AddUpdateEntityTask;
 import com.nimbits.mobile.settings.async.PointSettingsTask;
-import com.nimbits.cloudplatform.client.enums.Parameters;
-import com.nimbits.cloudplatform.client.model.entity.Entity;
-import com.nimbits.cloudplatform.client.model.point.Point;
-import com.nimbits.cloudplatform.client.model.point.PointModel;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModel;
 
 import java.util.List;
 

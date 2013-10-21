@@ -13,9 +13,11 @@
 package com.nimbits.mobile.main.async;
 
 import android.os.AsyncTask;
-import com.nimbits.cloudplatform.client.model.entity.Entity;
-import com.nimbits.cloudplatform.client.model.simple.SimpleValue;
-import com.nimbits.cloudplatform.transaction.Transaction;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.simple.SimpleValue;
+import com.nimbits.mobile.application.SessionSingleton;
+import com.nimbits.transaction.Transaction;
+import com.nimbits.transaction.TransactionFactory;
 
 import java.util.List;
 
@@ -25,6 +27,7 @@ import java.util.List;
  * Time: 2:12 PM
  */
 public class LoadEntityTask<T> extends AsyncTask<Object, List<T>, List<T>> {
+    private Transaction transactions = TransactionFactory.getInstance(SessionSingleton.getInstance().getServer(), SessionSingleton.getInstance().getEmail());
 
     private LoadEntityTask() {
 
@@ -54,7 +57,7 @@ public class LoadEntityTask<T> extends AsyncTask<Object, List<T>, List<T>> {
         Entity entity = (Entity) objects[0];
         Class clz = (Class) objects[1];
 
-        response = (List<T>) Transaction.getEntity(SimpleValue.getInstance(entity.getKey())
+        response = (List<T>) transactions.getEntity(SimpleValue.getInstance(entity.getKey())
                 , entity.getEntityType(), clz);
 
         return response;

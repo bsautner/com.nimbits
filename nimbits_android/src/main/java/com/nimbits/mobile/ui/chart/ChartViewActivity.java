@@ -18,16 +18,15 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import com.nimbits.client.model.value.Value;
 import com.nimbits.mobile.R;
 import com.nimbits.mobile.main.async.SeriesTask;
 import com.nimbits.mobile.ui.time.DatePickerFragment;
-import com.nimbits.cloudplatform.client.model.value.Value;
-import org.apache.commons.lang3.Range;
+import com.google.common.collect.Range;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -62,10 +61,10 @@ public class ChartViewActivity extends Activity implements SeriesTask.SeriesTask
 
     private void showChartFragment() {
         Log.v(TAG, "showChartFragment");
-        WebView webView = (WebView) findViewById(R.id.webView);
-        if (webView != null) {
-            webView.setVisibility(View.GONE);
-        }
+//        WebView webView = (WebView) findViewById(R.id.webView);
+//        if (webView != null) {
+//            webView.setVisibility(View.GONE);
+//        }
 
         FrameLayout frame = (FrameLayout) findViewById(R.id.chart_frame);
         frame.removeAllViews();
@@ -87,9 +86,9 @@ public class ChartViewActivity extends Activity implements SeriesTask.SeriesTask
                 String s = dateFormat.format(calendar.getTime());
                 t.setText(s);
                 if (view.getId() == R.id.sd) {
-                    range = Range.between(calendar.getTime(), range == null ? new Date() : range.getMaximum());
+                    range = Range.closed(calendar.getTime(), range == null ? new Date() : range.upperEndpoint());
                 } else if (view.getId() == R.id.ed) {
-                    range = Range.between(range == null ? new Date() : range.getMinimum(), calendar.getTime());
+                    range = Range.closed(range == null ? new Date() : range.lowerEndpoint(), calendar.getTime());
                 }
 
             }
@@ -103,7 +102,7 @@ public class ChartViewActivity extends Activity implements SeriesTask.SeriesTask
         if (!response.isEmpty()) {
             ed = response.get(0).getTimestamp();
             sd = response.get(response.size() - 1).getTimestamp();
-            range = Range.between(sd, ed);
+            range = Range.closed(sd, ed);
             DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getApplicationContext());
 
             EditText sdText = (EditText) findViewById(R.id.sd);

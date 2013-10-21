@@ -12,20 +12,14 @@
 
 package com.nimbits.server.dao;
 
-import com.nimbits.cloudplatform.client.enums.EntityType;
-import com.nimbits.cloudplatform.client.model.device.Device;
-import com.nimbits.cloudplatform.client.model.device.DeviceImpl;
-import com.nimbits.cloudplatform.client.model.email.EmailAddress;
-import com.nimbits.cloudplatform.client.model.entity.Entity;
-import com.nimbits.cloudplatform.client.model.trigger.Trigger;
-import com.nimbits.cloudplatform.client.model.user.User;
-import com.nimbits.cloudplatform.shared.Utils;
+import com.nimbits.client.model.device.Device;
+import com.nimbits.client.model.device.DeviceImpl;
+import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.server.orm.DeviceEntity;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
-import javax.jdo.Transaction;
 import java.util.*;
 
 /**

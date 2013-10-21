@@ -12,7 +12,7 @@
 
 package com.nimbits.mobile.main;
 
-import com.nimbits.cloudplatform.client.enums.EntityType;
+import com.nimbits.client.enums.EntityType;
 
 import java.util.*;
 

@@ -23,11 +23,11 @@ import android.view.View;
 import android.widget.TextView;
 import com.nimbits.mobile.R;
 import com.nimbits.mobile.ui.entitylist.EntityListener;
-import com.nimbits.cloudplatform.client.enums.Action;
-import com.nimbits.cloudplatform.client.enums.EntityType;
-import com.nimbits.cloudplatform.client.model.common.impl.CommonFactory;
-import com.nimbits.cloudplatform.client.model.entity.Entity;
-import com.nimbits.cloudplatform.client.model.entity.EntityName;
+import com.nimbits.client.enums.Action;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.model.common.impl.CommonFactory;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
 
 /**
  * Created by benjamin on 7/24/13.
@@ -82,13 +82,16 @@ public class SimpleEntryDialog extends DialogFragment {
                     if (textView != null && textView.getEditableText() != null) {
                         String entry = textView.getEditableText().toString();
 
+                        switch (action) {
+                            case create:
+                                EntityName name = CommonFactory.createName(entry, type);
+                                mListener.onNewEntity(entity, type, name);
+                                break;
+                            case recordValue:
+                                mListener.onNewValue(entity, entry);
 
-                        if (action.equals(Action.create)) {
-                            EntityName name = CommonFactory.createName(entry, type);
-                            mListener.onNewEntity(entity, type, name);
-                        } else if (action.equals(Action.recordValue)) {
-                            mListener.onNewValue(entity, entry);
                         }
+
                     }
 
                 }

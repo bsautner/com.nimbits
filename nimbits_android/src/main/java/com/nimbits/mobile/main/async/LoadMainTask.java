@@ -12,13 +12,17 @@
 
 package com.nimbits.mobile.main.async;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import com.nimbits.cloudplatform.Nimbits;
-import com.nimbits.cloudplatform.client.model.entity.Entity;
-import com.nimbits.cloudplatform.transaction.Transaction;
+import com.nimbits.client.model.Server;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.mobile.application.SessionSingleton;
+import com.nimbits.mobile.dao.ApplicationDaoFactory;
+import com.nimbits.transaction.TransactionImpl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -30,7 +34,7 @@ public class LoadMainTask extends AsyncTask<Object, Integer, List<Entity>> {
 
 
     private LoadListener mListener;
-
+    private final Context context;
     public interface LoadListener {
         public void onSuccess(List<Entity> response);
 
@@ -42,8 +46,8 @@ public class LoadMainTask extends AsyncTask<Object, Integer, List<Entity>> {
         mListener = listener;
     }
 
-    public LoadMainTask() {
-
+    public LoadMainTask(final Context contex) {
+       this.context = contex;
     }
 
 
@@ -51,9 +55,22 @@ public class LoadMainTask extends AsyncTask<Object, Integer, List<Entity>> {
     protected List<Entity> doInBackground(Object... objects) {
 
         publishProgress(10);
+        Server url = SessionSingleton.getInstance().getServer() ;
 
-        List<Entity> response = Transaction.getTree();
-        Nimbits.tree = response;
+        List<Entity> response;
+
+        response = ApplicationDaoFactory.getInstance(context).getTree(SessionSingleton.getInstance().getServer().getId());
+        if (response.isEmpty()) {
+            response = new TransactionImpl(url, SessionSingleton.getInstance().getEmail()).getTree();
+            if (! response.isEmpty()) {
+                ApplicationDaoFactory.getInstance(context).storeTree(SessionSingleton.getInstance().getServer().getId(), response);
+            }
+            else {
+                response = Collections.emptyList();
+            }
+        }
+
+
         List<Entity> retObj = new ArrayList<Entity>(response.size());
         for (Entity e : response) {
             if (e.getEntityType().isAndroidReady()) {

@@ -16,37 +16,35 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="valueTask"  class="com.nimbits.cloudplatform.server.process.task.ValueTask">
+
+
+
+    <bean id="deleteBlobTask" class="com.nimbits.server.process.task.DeleteBlobTask">
 
     </bean>
 
-
-    <bean id="deleteBlobTask" class="com.nimbits.cloudplatform.server.process.task.DeleteBlobTask">
-
-    </bean>
-
-    <bean id="dumpTask" class="com.nimbits.cloudplatform.server.process.task.DumpTask">
+    <bean id="dumpTask" class="com.nimbits.server.process.task.DumpTask">
 
     </bean>
 
-    <bean id="uploadTask" class="com.nimbits.cloudplatform.server.process.task.UploadTask">
+    <bean id="uploadTask" class="com.nimbits.server.process.task.UploadTask">
 
     </bean>
-    <bean id="deleteTask" class="com.nimbits.cloudplatform.server.process.task.DeleteRecordedValuesTask">
-
-    </bean>
-
-    <bean id="mailTask" class="com.nimbits.cloudplatform.server.process.task.IncomingMailTask">
+    <bean id="deleteTask" class="com.nimbits.server.process.task.DeleteRecordedValuesTask">
 
     </bean>
 
-    <bean id="moveTask" class="com.nimbits.cloudplatform.server.process.task.MoveTask">
+    <bean id="mailTask" class="com.nimbits.server.process.task.IncomingMailTask">
 
     </bean>
-    <bean id="pointTask" class="com.nimbits.cloudplatform.server.process.task.PointMaintTask">
+
+    <bean id="moveTask" class="com.nimbits.server.process.task.MoveTask">
 
     </bean>
-    <bean id="batchTask" class="com.nimbits.cloudplatform.server.process.task.ProcessBatchTask">
+    <bean id="pointTask" class="com.nimbits.server.process.task.PointMaintTask">
+
+    </bean>
+    <bean id="batchTask" class="com.nimbits.server.process.task.ProcessBatchTask">
 
     </bean>
 </beans>

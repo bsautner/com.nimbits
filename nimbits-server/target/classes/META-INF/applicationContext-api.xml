@@ -18,57 +18,57 @@
     <!--v2-->
 
 
-    <bean id="versionApi" class="com.nimbits.cloudplatform.server.api.impl.VersionApi"/>
-    <bean id="searchApi" class="com.nimbits.cloudplatform.server.api.SearchApi"/>
+    <bean id="versionApi" class="com.nimbits.server.api.impl.VersionApi"/>
+    <bean id="searchApi" class="com.nimbits.server.api.SearchApi"/>
 
     <!--v1 APIS-->
-    <bean id="blob" class="com.nimbits.cloudplatform.server.api.impl.BlobServletImpl">
+    <bean id="blob" class="com.nimbits.server.api.impl.BlobServletImpl">
 
     </bean>
 
-    <bean id="xmpp" class="com.nimbits.cloudplatform.server.api.impl.XMPPReceiverServlet">
-
-
-    </bean>
-
-
-    <bean id="chart" class="com.nimbits.cloudplatform.server.api.impl.ChartApiServletImpl">
-
-
-    </bean>
-    <bean id="value" class="com.nimbits.cloudplatform.server.api.impl.ValueServletImpl">
+    <bean id="xmpp" class="com.nimbits.server.api.impl.XMPPReceiverServlet">
 
 
     </bean>
 
 
-    <bean id="entity" class="com.nimbits.cloudplatform.server.api.impl.EntityServletImpl">
+    <bean id="chart" class="com.nimbits.server.api.impl.ChartApiServletImpl">
+
 
     </bean>
+    <bean id="value" class="com.nimbits.server.api.impl.ValueServletImpl">
 
-    <bean id="batch" class="com.nimbits.cloudplatform.server.api.impl.BatchServletImpl">
-
-    </bean>
-
-    <bean id="point" class="com.nimbits.cloudplatform.server.api.impl.PointServletImpl">
-
-    </bean>
-
-    <bean id="series" class="com.nimbits.cloudplatform.server.api.impl.SeriesServletImpl">
 
     </bean>
 
 
-    <bean id="time" class="com.nimbits.cloudplatform.server.api.impl.TimeServletImpl">
+    <bean id="entity" class="com.nimbits.server.api.impl.EntityServletImpl">
 
     </bean>
 
-    <bean id="auth" class="com.nimbits.cloudplatform.server.api.impl.AuthTestServletImpl">
+    <bean id="batch" class="com.nimbits.server.api.impl.BatchServletImpl">
+
+    </bean>
+
+    <bean id="point" class="com.nimbits.server.api.impl.PointServletImpl">
+
+    </bean>
+
+    <bean id="series" class="com.nimbits.server.api.impl.SeriesServletImpl">
 
     </bean>
 
 
-    <bean id="mailhandler" class="com.nimbits.cloudplatform.server.api.impl.MailHandlerServletImpl">
+    <bean id="time" class="com.nimbits.server.api.impl.TimeServletImpl">
+
+    </bean>
+
+    <bean id="auth" class="com.nimbits.server.api.impl.AuthTestServletImpl">
+
+    </bean>
+
+
+    <bean id="mailhandler" class="com.nimbits.server.api.impl.MailHandlerServletImpl">
 
     </bean>
 

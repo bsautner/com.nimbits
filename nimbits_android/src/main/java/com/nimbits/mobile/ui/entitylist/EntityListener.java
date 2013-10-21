@@ -12,10 +12,10 @@
 
 package com.nimbits.mobile.ui.entitylist;
 
-import com.nimbits.cloudplatform.client.enums.EntityType;
-import com.nimbits.cloudplatform.client.model.entity.Entity;
-import com.nimbits.cloudplatform.client.model.entity.EntityName;
-import com.nimbits.cloudplatform.client.model.value.Value;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.value.Value;
 
 /**
  * Created by benjamin on 7/24/13.
@@ -30,5 +30,7 @@ public interface EntityListener {
     void onNewValue(final Entity entity, final String entry);
 
     void newValuePrompt(final Entity entity);
+
+
 
 }

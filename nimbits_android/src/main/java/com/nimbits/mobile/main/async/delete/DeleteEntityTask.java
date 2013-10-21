@@ -13,8 +13,10 @@
 package com.nimbits.mobile.main.async.delete;
 
 import android.os.AsyncTask;
-import com.nimbits.cloudplatform.client.model.entity.Entity;
-import com.nimbits.cloudplatform.transaction.Transaction;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.mobile.application.SessionSingleton;
+import com.nimbits.transaction.Transaction;
+import com.nimbits.transaction.TransactionFactory;
 
 /**
  * Author: Benjamin Sautner
@@ -24,6 +26,7 @@ import com.nimbits.cloudplatform.transaction.Transaction;
 public class DeleteEntityTask extends AsyncTask<Object, Void, Void> {
 
     public static DeleteEntityTaskListener mListener;
+    private Transaction transactions = TransactionFactory.getInstance(SessionSingleton.getInstance().getServer(), SessionSingleton.getInstance().getEmail());
 
     private DeleteEntityTask() {
 
@@ -50,7 +53,7 @@ public class DeleteEntityTask extends AsyncTask<Object, Void, Void> {
     protected Void doInBackground(Object... objects) {
         Entity e = (Entity) objects[0];
 
-        Transaction.deleteEntity(e);
+        transactions.deleteEntity(e);
 
 
         return null;

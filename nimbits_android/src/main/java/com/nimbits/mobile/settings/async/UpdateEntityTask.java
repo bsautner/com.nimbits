@@ -13,8 +13,10 @@
 package com.nimbits.mobile.settings.async;
 
 import android.os.AsyncTask;
-import com.nimbits.cloudplatform.client.model.entity.Entity;
-import com.nimbits.cloudplatform.transaction.Transaction;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.mobile.application.SessionSingleton;
+import com.nimbits.transaction.Transaction;
+import com.nimbits.transaction.TransactionFactory;
 
 import java.util.List;
 
@@ -24,6 +26,7 @@ import java.util.List;
  * Time: 12:36 PM
  */
 public class UpdateEntityTask<T> extends AsyncTask<Object, List<T>, List<T>> {
+    private Transaction transactions = TransactionFactory.getInstance(SessionSingleton.getInstance().getServer(), SessionSingleton.getInstance().getEmail());
 
     private UpdateEntityTask() {
 
@@ -58,7 +61,7 @@ public class UpdateEntityTask<T> extends AsyncTask<Object, List<T>, List<T>> {
         Entity e = (Entity) objects[0];
         Class clz = (Class) objects[1];
 
-        response = (List<T>) Transaction.updateEntity(e, clz);
+        response = (List<T>)transactions.updateEntity(e, clz);
 
         return response;
 

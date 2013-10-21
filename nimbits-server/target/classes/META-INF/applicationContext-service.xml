@@ -16,54 +16,18 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="userService" class="com.nimbits.cloudplatform.server.transactions.user.service.UserRpcServiceImpl">
+    <bean id="userService" class="com.nimbits.server.transactions.user.UserRpcServiceImpl">
 
     </bean>
 
-    <bean id="valueService" class="com.nimbits.cloudplatform.server.transactions.value.service.ValueServiceRpc">
+    <bean id="valueService" class="com.nimbits.server.transactions.ValueServiceRpc">
 
     </bean>
 
 
-    <bean id="searchService" class="com.nimbits.cloudplatform.server.transactions.search.EntitySearchService">
 
 
-    </bean>
 
-    <bean id="emailService" class="com.nimbits.cloudplatform.server.communication.email.EmailService">
-
-    </bean>
-
-    <bean id="blobService" class="com.nimbits.cloudplatform.server.io.blob.BlobServiceImpl">
-
-     
-    </bean>
-
-
-     <bean id="serverInfoService" class="com.nimbits.cloudplatform.server.admin.common.ServerInfo">
-
-     </bean>
-
-
-    <bean id="xmppService" class="com.nimbits.cloudplatform.server.communication.xmpp.XmppServiceImpl">
-
-
-    </bean>
-
-    <bean id="summaryService" class="com.nimbits.cloudplatform.server.transactions.summary.SummaryService">
-
-    </bean>
-
-    <bean id="subscriptionService" class="com.nimbits.cloudplatform.server.transactions.subscription.SubscriptionService">
-
-    </bean>
-
-    <bean id="shardedDate" class="com.nimbits.cloudplatform.server.transactions.counter.ShardedDate"/>
-
-    <bean id="counterService" class="com.nimbits.cloudplatform.server.transactions.counter.CounterService">
-
-    </bean>
-    <bean id="timespanService" class="com.nimbits.cloudplatform.server.time.TimespanService" />
 
 
 </beans>

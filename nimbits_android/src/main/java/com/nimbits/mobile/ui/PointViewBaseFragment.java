@@ -14,23 +14,22 @@ package com.nimbits.mobile.ui;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.simple.SimpleValue;
+import com.nimbits.client.model.value.Value;
 import com.nimbits.mobile.R;
+import com.nimbits.mobile.application.SessionSingleton;
 import com.nimbits.mobile.content.ContentProvider;
 import com.nimbits.mobile.main.PointViewHelper;
 import com.nimbits.mobile.main.async.LoadValueTask;
 import com.nimbits.mobile.ui.entitylist.EntityListener;
-import com.nimbits.cloudplatform.Nimbits;
-import com.nimbits.cloudplatform.client.enums.EntityType;
-import com.nimbits.cloudplatform.client.model.entity.Entity;
-import com.nimbits.cloudplatform.client.model.simple.SimpleValue;
-import com.nimbits.cloudplatform.client.model.value.Value;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +69,7 @@ public class PointViewBaseFragment extends Fragment {
             TimerTask updateTask;
             updateTask = new UpdateValuesTask(this.listener);
             this.timer = new Timer();
-            this.timer.scheduleAtFixedRate(updateTask, 0, Nimbits.getControl().getTimer());
+           // this.timer.scheduleAtFixedRate(updateTask, 0, Nimbits.getControl().getTimer());
 
         }
     }
@@ -128,8 +127,8 @@ public class PointViewBaseFragment extends Fragment {
             Log.v(TAG, "timer tick");
             List<Entity> children = ContentProvider.getChildEntities();
             List<Entity> refresh = new ArrayList<Entity>(children.size() + 1);
-            if (ContentProvider.getCurrentEntity().getEntityType().equals(EntityType.point)) {
-                refresh.add(ContentProvider.getCurrentEntity());
+            if (SessionSingleton.getInstance().getCurrentEntity().getEntityType().equals(EntityType.point)) {
+                refresh.add(SessionSingleton.getInstance().getCurrentEntity());
             }
             for (Entity e : children) {
                 if (e.getEntityType().equals(EntityType.point)) {
@@ -154,20 +153,20 @@ public class PointViewBaseFragment extends Fragment {
         }
     }
 
-    public void showEntity(Context context) {
+    public void showEntity( ) {
         TextView name = (TextView) view.findViewById(R.id.entity_name);
-        name.setText(ContentProvider.currentEntity.getName().getValue());
+        name.setText(SessionSingleton.getInstance().getCurrentEntity().getName().getValue());
         final TextView currentValue = (TextView) view.findViewById((R.id.value));
         final TextView timestamp = (TextView) view.findViewById((R.id.timestamp));
         final ImageView entityImage = (ImageView) view.findViewById(R.id.entity_image);
         currentValue.setVisibility(View.VISIBLE);
         timestamp.setVisibility(View.VISIBLE);
-        PointViewHelper.setViews(ContentProvider.getCurrentValue(ContentProvider.currentEntity), currentValue, timestamp, entityImage, SimpleValue.getEmptyInstance());
+        PointViewHelper.setViews(ContentProvider.getCurrentValue(SessionSingleton.getInstance().getCurrentEntity()), currentValue, timestamp, entityImage, SimpleValue.getEmptyInstance());
         LinearLayout mainView = (LinearLayout) view.findViewById(R.id.entity);
         mainView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onEntityClicked(ContentProvider.getCurrentEntity(), false);
+                listener.onEntityClicked(SessionSingleton.getInstance().getCurrentEntity(), false);
             }
         });
     }

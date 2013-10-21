@@ -45,16 +45,10 @@ public class EntityListFragment extends PointViewBaseFragment {
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
+        Log.v(TAG, "onCreateView");
         view = inflater.inflate(R.layout.entity_list_fragment, container, false);
-        ProgressBar progressBar = null;
-        if (view != null) {
-            progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-            progressBar.setVisibility(View.VISIBLE);
-        }
 
-        Log.v(TAG, "view created " + (adapter == null));
 
-        showEntity(getActivity());
 
         return view;
 
@@ -63,12 +57,15 @@ public class EntityListFragment extends PointViewBaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        showEntity(context);
+        Log.v(TAG, "onResume" + (context == null));
+        showEntity();
+
 
     }
 
     @Override
     public void onPause() {
+        Log.v(TAG, "onPause");
         super.onPause();
 
 
@@ -76,6 +73,7 @@ public class EntityListFragment extends PointViewBaseFragment {
 
     @Override
     public void onStop() {
+        Log.v(TAG, "onStop");
         super.onStop();
 
 
@@ -83,17 +81,18 @@ public class EntityListFragment extends PointViewBaseFragment {
 
 
     @Override
-    public void showEntity(Context context) {
-        super.showEntity(context);
-        this.context = context;
+    public void showEntity( ) {
+
+        this.context = getActivity();
+        super.showEntity();
         Log.v(TAG, "showEntity" + (context == null));
         adapter = new EntityListAdapter(context, R.id.listView, ContentProvider.getChildEntities());
         adapter.setEntityListener(listener);
         list = (ListView) view.findViewById(R.id.listView);
         list.setAdapter(adapter);
-        ProgressBar bar = (ProgressBar) view.findViewById(R.id.progressBar);
-        if (bar != null) {
-            bar.setVisibility(View.GONE);
+        ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        if (progressBar != null) {
+            progressBar.setVisibility(View.GONE);
         }
 
 

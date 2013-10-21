@@ -13,8 +13,10 @@
 package com.nimbits.mobile.startup.async;
 
 import android.os.AsyncTask;
-import com.nimbits.cloudplatform.client.model.user.User;
-import com.nimbits.cloudplatform.transaction.Transaction;
+import com.nimbits.client.model.Server;
+import com.nimbits.client.model.user.User;
+import com.nimbits.mobile.application.SessionSingleton;
+import com.nimbits.transaction.TransactionImpl;
 
 import java.util.List;
 
@@ -43,8 +45,8 @@ public class StartupTask extends AsyncTask<Object, User, List<User>> {
     @Override
     protected List<User> doInBackground(Object... o) {
 
-
-        return Transaction.getSession();
+        Server server = SessionSingleton.getInstance().getServer();
+        return new TransactionImpl(server, SessionSingleton.getInstance().getEmail()).getSession();
 
     }
 

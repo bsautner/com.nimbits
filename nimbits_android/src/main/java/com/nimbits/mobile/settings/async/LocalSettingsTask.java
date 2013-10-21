@@ -16,9 +16,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import com.nimbits.mobile.R;
-import com.nimbits.cloudplatform.client.enums.Action;
-import com.nimbits.cloudplatform.client.enums.Parameters;
-import com.nimbits.cloudplatform.client.model.simple.SimpleValue;
+import com.nimbits.client.enums.Action;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.model.simple.SimpleValue;
 
 /**
  * Author: Benjamin Sautner

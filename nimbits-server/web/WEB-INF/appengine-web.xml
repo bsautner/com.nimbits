@@ -3,15 +3,13 @@
     <threadsafe>true</threadsafe>
     <application>nimbits-02</application>
 
-    <version>685</version>
-    <automatic-scaling>
-        <max-idle-instances>975</max-idle-instances>
-    </automatic-scaling>
+    <version>711</version>
+
     <precompilation-enabled>false</precompilation-enabled>
 
     <!--You can edit these properties to customise your instance. Set the API KEY below to access the API from other apps.-->
     <system-properties>
-       <property name="com.nimbits.ApiKey" value="add your key here for api access"/>
+       <property name="com.nimbits.ApiKey" value="ggdfg54t3456gsdfgjjdhsr6y5476udfhasergt5yrth"/>
     </system-properties>
     <static-files>
         <include path="/bootstrap/css/**.css" />

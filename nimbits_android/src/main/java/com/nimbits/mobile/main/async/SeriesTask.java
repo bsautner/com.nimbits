@@ -13,10 +13,11 @@
 package com.nimbits.mobile.main.async;
 
 import android.os.AsyncTask;
-import com.nimbits.mobile.content.ContentProvider;
-import com.nimbits.cloudplatform.client.model.value.Value;
-import com.nimbits.cloudplatform.transaction.Transaction;
-import org.apache.commons.lang3.Range;
+import com.google.common.collect.Range;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.mobile.application.SessionSingleton;
+import com.nimbits.transaction.Transaction;
+import com.nimbits.transaction.TransactionFactory;
 
 import java.util.Date;
 import java.util.List;
@@ -30,8 +31,10 @@ public class SeriesTask extends AsyncTask<Object, List<Value>, List<Value>> {
 
     public static SeriesTaskListener mListener;
     private Range<Date> range;
+    private Transaction transactions = TransactionFactory.getInstance(SessionSingleton.getInstance().getServer(), SessionSingleton.getInstance().getEmail());
 
     private SeriesTask() {
+
 
     }
 
@@ -70,10 +73,10 @@ public class SeriesTask extends AsyncTask<Object, List<Value>, List<Value>> {
 
         List<Value> result;
         if (this.range == null) {
-            result = Transaction.getSeries(ContentProvider.getCurrentEntity());
+            result =transactions.getSeries(SessionSingleton.getInstance().getCurrentEntity());
         } else {
 
-            result = Transaction.getSeries(ContentProvider.getCurrentEntity(), range);
+            result = transactions.getSeries(SessionSingleton.getInstance().getCurrentEntity(), range);
         }
         return result;
 

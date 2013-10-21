@@ -20,9 +20,9 @@ import android.util.Log;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.google.gson.JsonSyntaxException;
-import com.nimbits.cloudplatform.client.model.value.ValueContainer;
-import com.nimbits.cloudplatform.client.model.value.impl.ValueContainerModel;
-import com.nimbits.cloudplatform.server.gson.GsonFactory2;
+import com.nimbits.client.model.value.ValueContainer;
+import com.nimbits.client.model.value.impl.ValueContainerModel;
+import com.nimbits.server.gson.GsonFactory2;
 import com.nimbits.mobile.R;
 
 import java.io.BufferedReader;
@@ -36,7 +36,7 @@ import java.util.List;
 public class ServerActivity extends Activity {
     private static final int PORT = 8080;
     public static final String TAG = "BufferService";
-    private IncomingValueBroadCastReciever reciever;
+    private IncomingValueBroadCastReceiver reciever;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,8 +96,8 @@ public class ServerActivity extends Activity {
 
         list.setAdapter(adapter);
         if (reciever == null) {
-            IntentFilter filter = new IntentFilter(IncomingValueBroadCastReciever.ACTION);
-            reciever = new IncomingValueBroadCastReciever();
+            IntentFilter filter = new IntentFilter(IncomingValueBroadCastReceiver.ACTION);
+            reciever = new IncomingValueBroadCastReceiver();
             this.registerReceiver(reciever, filter);
 
         }

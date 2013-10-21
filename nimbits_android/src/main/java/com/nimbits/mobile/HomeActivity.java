@@ -14,7 +14,10 @@ package com.nimbits.mobile;
 
 
 import android.app.Activity;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,9 +26,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.WebView;
 import android.widget.FrameLayout;
 import com.google.android.gcm.GCMRegistrar;
+import com.nimbits.client.enums.Action;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModel;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.simple.SimpleValue;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.impl.ValueFactory;
+import com.nimbits.mobile.application.SessionSingleton;
 import com.nimbits.mobile.content.ContentProvider;
 import com.nimbits.mobile.main.async.AddUpdateEntityTask;
 import com.nimbits.mobile.main.async.LoadMainTask;
@@ -38,24 +50,15 @@ import com.nimbits.mobile.ui.chart.ChartViewActivity;
 import com.nimbits.mobile.ui.dialog.SimpleEntryDialog;
 import com.nimbits.mobile.ui.entitylist.EntityListFragment;
 import com.nimbits.mobile.ui.entitylist.EntityListener;
+import com.nimbits.mobile.ui.instance.InstanceManager;
 import com.nimbits.mobile.ui.point.PointFragment;
-import com.nimbits.cloudplatform.Nimbits;
-import com.nimbits.cloudplatform.client.enums.Action;
-import com.nimbits.cloudplatform.client.enums.EntityType;
-import com.nimbits.cloudplatform.client.model.entity.Entity;
-import com.nimbits.cloudplatform.client.model.entity.EntityModel;
-import com.nimbits.cloudplatform.client.model.entity.EntityModelFactory;
-import com.nimbits.cloudplatform.client.model.entity.EntityName;
-import com.nimbits.cloudplatform.client.model.simple.SimpleValue;
-import com.nimbits.cloudplatform.client.model.value.Value;
-import com.nimbits.cloudplatform.client.model.value.impl.ValueFactory;
 
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 public class HomeActivity extends Activity implements EntityListener, SeriesTask.SeriesTaskListener {
-    public static final String WELCOME = "http://www.nimbits.com/android/welcome.html";
+
 
 
     private PointViewBaseFragment entityFragment;
@@ -69,32 +72,25 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
         Log.v(TAG, "onCreate");
         setContentView(R.layout.home_activity_layout);
         if (savedInstanceState == null) {
-            loadWelcome();
+
             startGcm();
             LoadControlTask loadControlTask = new LoadControlTask();
             loadControlTask.execute();
             showEntityFragment();
-            if (chartFragment != null && ContentProvider.getCurrentEntity().getEntityType().equals(EntityType.point)) {
-                showChartFragment();
-            }
+
         }
 
     }
 
-    private void loadWelcome() {
-        WebView webview = (WebView) findViewById(R.id.webView);
-        webview.getSettings().setJavaScriptEnabled(true);
-        if (webview != null) {
-            webview.loadUrl(WELCOME);
-        }
-    }
 
     @Override
     protected void onResume() {
         Log.v(TAG, "resume");
         super.onResume();
         startGcm();
-
+        if (chartFragment != null && SessionSingleton.getInstance().getCurrentEntity().getEntityType().equals(EntityType.point)) {
+            showChartFragment();
+        }
 
     }
 
@@ -108,7 +104,7 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
 
     private void showEntityFragment() {
         FrameLayout frame = (FrameLayout) findViewById(R.id.main_frame);
-        frame.removeAllViews();
+         frame.removeAllViews();
         entityFragment = new EntityListFragment();
         entityFragment.setArguments(getIntent().getExtras());
         getFragmentManager().beginTransaction().replace(R.id.main_frame, entityFragment).commit();
@@ -119,13 +115,10 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
 
     private void showChartFragment() {
         Log.v(TAG, "showChartFragment");
-        WebView webView = (WebView) findViewById(R.id.webView);
-        if (webView != null) {
-            webView.setVisibility(View.GONE);
-        }
 
         FrameLayout frame = (FrameLayout) findViewById(R.id.data_frame);
         frame.removeAllViews();
+        frame.setBackground(getResources().getDrawable(android.R.drawable.toast_frame));
         chartFragment = new ChartFragment(this);
         chartFragment.setArguments(getIntent().getExtras());
         getFragmentManager().beginTransaction().replace(R.id.data_frame, chartFragment).commit();
@@ -134,19 +127,19 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
     }
 
     private void loadTree() {
-        if (ContentProvider.currentEntity == null) {
-            ContentProvider.currentEntity = Nimbits.session;
+        if (SessionSingleton.getInstance().getCurrentEntity() == null) {
+            SessionSingleton.getInstance().setCurrentEntity(SessionSingleton.getInstance().getSession());
         }
 
 
-        final LoadMainTask task = new LoadMainTask();
+        final LoadMainTask task = new LoadMainTask(this);
         task.setListener(new LoadMainTask.LoadListener() {
 
             @Override
             public void onSuccess(List<Entity> response) {
                 Log.v(TAG, "Loaded " + response.size() + " entities");
                 ContentProvider.setTree(response);
-                entityFragment.showEntity(getApplicationContext());
+                entityFragment.showEntity( );
 
             }
 
@@ -171,23 +164,22 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle presses on the action bar items
+
         SimpleEntryDialog dialog;
         switch (item.getItemId()) {
             case R.id.action_new_folder:
-                dialog = new SimpleEntryDialog(ContentProvider.currentEntity, EntityType.category, Action.create, "Create new Folder");
+                dialog = new SimpleEntryDialog(SessionSingleton.getInstance().getCurrentEntity(), EntityType.category, Action.create, "Create new Folder");
                 dialog.show(getFragmentManager(), "NoticeDialogFragment");
                 return true;
             case R.id.action_new_point:
-                dialog = new SimpleEntryDialog(ContentProvider.currentEntity, EntityType.point, Action.create, "Create new data point");
+                dialog = new SimpleEntryDialog(SessionSingleton.getInstance().getCurrentEntity(), EntityType.point, Action.create, "Create new data point");
                 dialog.show(getFragmentManager(), "NoticeDialogFragment");
                 return true;
             case R.id.action_expand:
-                if (ContentProvider.currentEntity != null && ContentProvider.currentEntity.getEntityType().equals(EntityType.point)) {
-                    String uuid = ContentProvider.currentEntity.getUUID();
-                    final SharedPreferences settings = getSharedPreferences(getString(R.string.app_name), 0);
-                    final String base_url = settings.getString(getString(R.string.base_url_setting), getString(R.string.base_url));
-                    // Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(base_url + "/report.html?uuid=" + uuid));
+                if (SessionSingleton.getInstance().getCurrentEntity() != null && SessionSingleton.getInstance().getCurrentEntity().getEntityType().equals(EntityType.point)) {
+                    String uuid = SessionSingleton.getInstance().getCurrentEntity().getUUID();
+
+
                     Intent intent = new Intent(getApplicationContext(), ChartViewActivity.class);
                     Bundle b = new Bundle();
 
@@ -197,7 +189,16 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
                 }
             case R.id.action_refresh:
                 showEntityFragment();
-                loadWelcome();
+
+                return true;
+            case R.id.action_instance:
+
+                Intent intent = new Intent(getApplicationContext(), InstanceManager.class);
+                Bundle b = new Bundle();
+
+                intent.putExtras(b);
+                startActivity(intent);
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -206,7 +207,7 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
 
     @Override
     public void onEntityClicked(Entity entity, boolean checkChildren) {
-        ContentProvider.setCurrentEntity(entity);
+        SessionSingleton.getInstance().setCurrentEntity(entity);
 
         List<Entity> children;
 
@@ -246,7 +247,7 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
 
     private void showEntity() {
         if (entityFragment != null) {
-            entityFragment.showEntity(getApplicationContext());
+            entityFragment.showEntity( );
         }
     }
 
@@ -254,7 +255,7 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
     @Override
     public void onNewEntity(Entity parent, EntityType type, EntityName name) {
         Entity entity = EntityModelFactory.createEntity(name, type);
-        entity.setOwner(Nimbits.session.getOwner());
+        entity.setOwner(SessionSingleton.getInstance().getEmail());
         entity.setParent(parent.getKey());
 
         AddUpdateEntityTask.getInstance(new AddUpdateEntityTask.AddUpdateEntityTaskListener() {
@@ -323,6 +324,8 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
     }
 
 
+
+
     @Override
     public void onBackPressed() {
         goBack();
@@ -330,7 +333,7 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
     }
 
     private void goBack() {
-        if (ContentProvider.getCurrentEntity().getEntityType().equals(EntityType.user)) {
+        if (SessionSingleton.getInstance().getCurrentEntity().getEntityType().equals(EntityType.user)) {
             finish();
         } else {
             ContentProvider.setCurrentEntityToParent();

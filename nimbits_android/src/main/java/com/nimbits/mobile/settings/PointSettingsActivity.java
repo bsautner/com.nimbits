@@ -18,19 +18,18 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
 import android.widget.*;
+import com.nimbits.client.enums.FilterType;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.enums.point.PointType;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModel;
+import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.mobile.HomeActivity;
 import com.nimbits.mobile.R;
 import com.nimbits.mobile.ToastHelper;
 import com.nimbits.mobile.main.async.AddUpdateEntityTask;
 import com.nimbits.mobile.settings.async.PointSettingsTask;
-import com.nimbits.cloudplatform.Nimbits;
-import com.nimbits.cloudplatform.client.enums.FilterType;
-import com.nimbits.cloudplatform.client.enums.Parameters;
-import com.nimbits.cloudplatform.client.enums.point.PointType;
-import com.nimbits.cloudplatform.client.model.entity.Entity;
-import com.nimbits.cloudplatform.client.model.point.Point;
-import com.nimbits.cloudplatform.client.model.point.PointModel;
-import com.nimbits.cloudplatform.client.model.point.PointModelFactory;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
@@ -144,7 +143,7 @@ public class PointSettingsActivity extends Activity {
                         } else {
                             Intent intent = new Intent(getBaseContext(), HomeActivity.class);
                             intent.putExtra(Parameters.entity.getText(), (Serializable) response.get(0));
-                            Nimbits.tree.add((Entity) response.get(0));
+
                             intent.putExtra(Parameters.refresh.getText(), true);
                             startActivity(intent);
                             finish();

@@ -19,7 +19,6 @@ import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
-import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -29,17 +28,15 @@ import android.provider.ContactsContract;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.model.user.User;
 import com.nimbits.mobile.HomeActivity;
 import com.nimbits.mobile.R;
-import com.nimbits.mobile.server.BufferService;
-import com.nimbits.mobile.server.ServerActivity;
+import com.nimbits.mobile.application.NimbitsApplication;
+import com.nimbits.mobile.application.SessionSingleton;
 import com.nimbits.mobile.startup.async.StartupTask;
-import com.nimbits.cloudplatform.Nimbits;
-import com.nimbits.cloudplatform.client.constants.Const;
-import com.nimbits.cloudplatform.client.model.user.User;
-import com.nimbits.cloudplatform.http.UrlContainer;
+import com.nimbits.mobile.ui.instance.InstanceManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +57,7 @@ public class StartupActivity extends Activity implements LoaderManager.LoaderCal
             myImageView.startAnimation(myFadeInAnimation);
         }
         activity = this;
+        NimbitsApplication app = (NimbitsApplication) getApplication();
 
         try {
             ApplicationInfo ai = getApplication().getPackageManager().getApplicationInfo(getApplication().getPackageName(), PackageManager.GET_META_DATA);
@@ -67,19 +65,22 @@ public class StartupActivity extends Activity implements LoaderManager.LoaderCal
             if (ai.metaData != null) {
                 apiKey = (String) ai.metaData.get(Const.API_KEY_ID);
             }
-            Nimbits.setApiKey(apiKey);
+            SessionSingleton.getInstance().setApiKey(apiKey);
+
         } catch (PackageManager.NameNotFoundException e) {
             Crashlytics.logException(e);
             finish();
         }
-        final SharedPreferences settings = getSharedPreferences(getString(R.string.app_name), 0);
-        final String base_url = settings.getString(getString(R.string.base_url_setting), getString(R.string.base_url));
-        Nimbits.base = UrlContainer.getInstance(base_url);
-        startService(new Intent(this, BufferService.class));
+
+
+
+      //  startService(new Intent(this, BufferService.class));
         getLoaderManager().initLoader(0, null, this);
 
 
     }
+
+
 
 
     @Override
@@ -139,11 +140,11 @@ public class StartupActivity extends Activity implements LoaderManager.LoaderCal
 
 
         if (!emails.isEmpty()) {
-            Nimbits.email = emails.get(0);
+            SessionSingleton.getInstance().setEmail(emails.get(0));
             StartupTask.getInstance(new StartupTask.StartupListener() {
                 @Override
                 public void onLoginSuccess(List<User> response) {
-                    Nimbits.session = (response.get(0));
+                    SessionSingleton.getInstance().setSession(response.get(0));
                     Intent intent = new Intent(getBaseContext(), HomeActivity.class);
                     startActivity(intent);
                     finish();
@@ -162,14 +163,11 @@ public class StartupActivity extends Activity implements LoaderManager.LoaderCal
     }
 
     private void fail() {
-        Crashlytics.log("Login Failed");
-        CharSequence text = "There was a problem authenticating to Nimbits with the Google Account on this phone. " +
-                "You may need to setup your account first, or set your Base URL to an active instance. " +
-                "Please visit nimbits.com and login to the public cloud first.";
-        int duration = Toast.LENGTH_LONG;
-        Toast toast = Toast.makeText(activity, text, duration);
-        toast.show();
-        finish();
+        Intent intent = new Intent(getApplicationContext(), InstanceManager.class);
+        Bundle b = new Bundle();
+
+        intent.putExtras(b);
+        startActivity(intent);
     }
 
     @Override

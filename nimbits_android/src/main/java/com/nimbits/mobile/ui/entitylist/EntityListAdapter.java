@@ -23,9 +23,9 @@ import android.widget.TextView;
 import com.nimbits.mobile.R;
 import com.nimbits.mobile.content.ContentProvider;
 import com.nimbits.mobile.main.PointViewHelper;
-import com.nimbits.cloudplatform.client.model.entity.Entity;
-import com.nimbits.cloudplatform.client.model.simple.SimpleValue;
-import com.nimbits.cloudplatform.client.model.value.Value;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.simple.SimpleValue;
+import com.nimbits.client.model.value.Value;
 
 import java.util.List;
 

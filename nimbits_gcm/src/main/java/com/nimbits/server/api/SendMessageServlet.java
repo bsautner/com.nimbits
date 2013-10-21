@@ -13,7 +13,7 @@ package com.nimbits.server.api;
 
 
 
-import com.nimbits.cloudplatform.client.enums.Parameters;
+import com.nimbits.client.enums.Parameters;
 import com.nimbits.server.gcm.*;
 
 import javax.servlet.ServletConfig;

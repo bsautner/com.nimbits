@@ -21,12 +21,12 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import com.google.common.collect.Range;
+import com.nimbits.client.model.value.Value;
 import com.nimbits.mobile.R;
 import com.nimbits.mobile.ToastHelper;
-import com.nimbits.mobile.content.ContentProvider;
+import com.nimbits.mobile.application.SessionSingleton;
 import com.nimbits.mobile.main.async.SeriesTask;
-import com.nimbits.cloudplatform.client.model.value.Value;
-import org.apache.commons.lang3.Range;
 
 import java.util.Date;
 import java.util.List;
@@ -66,9 +66,9 @@ public class ChartFragment extends Fragment implements SeriesTask.SeriesTaskList
                 ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
                 progressBar.setVisibility(View.VISIBLE);
                 TextView title = (TextView) view.findViewById(R.id.textView);
-                if (ContentProvider.currentEntity != null) {
+                if (SessionSingleton.getInstance().getCurrentEntity() != null) {
                     if (title != null) {
-                        title.setText(ContentProvider.currentEntity.getName().getValue());
+                        title.setText(SessionSingleton.getInstance().getCurrentEntity().getName().getValue());
                     }
 
 
@@ -100,17 +100,17 @@ public class ChartFragment extends Fragment implements SeriesTask.SeriesTaskList
             progressBar.setVisibility(View.INVISIBLE);
         }
         if (!response.isEmpty()) {
-            try {
-                chart = seriesChart.execute(getActivity(), ContentProvider.currentEntity, response);
 
-                chart.setLongClickable(true);
+            chart = seriesChart.execute(getActivity(), SessionSingleton.getInstance().getCurrentEntity(), response);
 
-                chartFrame.removeAllViews();
-                chartFrame.addView(chart);
+            chart.setLongClickable(true);
+
+            chartFrame.removeAllViews();
+            chartFrame.addView(chart);
+            if (listener != null) {
                 listener.onSuccess(response);
-            } catch (Exception e) {
-                ToastHelper.show(getActivity(), e.getMessage());
             }
+
         }
 
     }

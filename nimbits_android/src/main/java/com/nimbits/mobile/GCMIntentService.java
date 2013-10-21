@@ -18,10 +18,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import com.google.android.gcm.GCMBaseIntentService;
-import com.nimbits.cloudplatform.client.enums.Parameters;
-import com.nimbits.cloudplatform.client.model.point.Point;
-import com.nimbits.cloudplatform.client.model.point.PointModel;
-import com.nimbits.cloudplatform.server.gson.GsonFactory;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModel;
+import com.nimbits.server.gson.GsonFactory;
 
 import static com.nimbits.mobile.CommonUtilities.SENDER_ID;
 import static com.nimbits.mobile.CommonUtilities.displayMessage;

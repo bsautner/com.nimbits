@@ -19,7 +19,7 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import com.nimbits.mobile.R;
-import com.nimbits.cloudplatform.client.model.entity.Entity;
+import com.nimbits.client.model.entity.Entity;
 
 /**
  * Author: Benjamin Sautner

@@ -13,9 +13,11 @@
 package com.nimbits.mobile.main.async;
 
 import android.os.AsyncTask;
-import com.nimbits.cloudplatform.client.model.entity.Entity;
-import com.nimbits.cloudplatform.client.model.value.Value;
-import com.nimbits.cloudplatform.transaction.Transaction;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.mobile.application.SessionSingleton;
+import com.nimbits.transaction.Transaction;
+import com.nimbits.transaction.TransactionFactory;
 
 import java.util.List;
 
@@ -29,8 +31,10 @@ import java.util.List;
 public class PostValueTask extends AsyncTask<Object, List<Value>, List<Value>> {
 
     public static PostValueTaskListener mListener;
+    private Transaction transactions = TransactionFactory.getInstance(SessionSingleton.getInstance().getServer(), SessionSingleton.getInstance().getEmail());
 
     private PostValueTask() {
+
 
     }
 
@@ -60,7 +64,7 @@ public class PostValueTask extends AsyncTask<Object, List<Value>, List<Value>> {
         Entity entity = (Entity) objects[0];
         Value value = (Value) objects[1];
 
-        response = Transaction.postValue(entity, value);
+        response = transactions.postValue(entity, value);
 
         return response;
 

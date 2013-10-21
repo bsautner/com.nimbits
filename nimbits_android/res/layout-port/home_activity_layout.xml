@@ -7,14 +7,14 @@
               android:layout_above="@+id/progressBar"
               android:weightSum="1.0"
               android:orientation="vertical"
-              android:id="@id/screen">
+              android:id="@id/screen" android:background="@android:color/background_light">
 
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:id="@id/main_frame"
         android:layout_weight=".5"
-        android:layout_margin="5dp">
+        android:layout_margin="5dp" android:background="@android:color/background_light">
 
 
     </FrameLayout>
@@ -25,12 +25,7 @@
         android:id="@id/data_frame"
         android:layout_weight=".5"
         android:layout_alignParentEnd="false"
-        android:layout_margin="5dp">
+        android:background="@drawable/flow">
 
-        <WebView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/webView"
-            android:layout_gravity="center"/>
     </FrameLayout>
 </LinearLayout>

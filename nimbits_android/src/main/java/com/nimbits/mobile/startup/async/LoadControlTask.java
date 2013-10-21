@@ -13,10 +13,12 @@
 package com.nimbits.mobile.startup.async;
 
 import android.os.AsyncTask;
-import com.nimbits.cloudplatform.Nimbits;
-import com.nimbits.cloudplatform.client.android.AndroidControl;
-import com.nimbits.cloudplatform.client.android.AndroidControlFactory;
-import com.nimbits.cloudplatform.transaction.Transaction;
+import com.nimbits.Nimbits;
+import com.nimbits.client.android.AndroidControl;
+import com.nimbits.client.android.AndroidControlFactory;
+import com.nimbits.mobile.application.SessionSingleton;
+import com.nimbits.transaction.Transaction;
+import com.nimbits.transaction.TransactionFactory;
 
 import java.util.List;
 
@@ -26,6 +28,7 @@ import java.util.List;
  * Time: 8:26 AM
  */
 public class LoadControlTask extends AsyncTask<Object, Integer, AndroidControl> {
+    private Transaction transactions = TransactionFactory.getInstance(SessionSingleton.getInstance().getServer(), SessionSingleton.getInstance().getEmail());
 
     public LoadControlTask() {
 
@@ -34,7 +37,7 @@ public class LoadControlTask extends AsyncTask<Object, Integer, AndroidControl> 
     @Override
     protected AndroidControl doInBackground(Object... objects) {
 
-        List<AndroidControl> control = Transaction.getControl();
+        List<AndroidControl> control = transactions.getControl();
         if (control.isEmpty()) {
             Nimbits.setControl(AndroidControlFactory.getConservativeInstance()); //load highly conservative values since something is wrong.
         } else {

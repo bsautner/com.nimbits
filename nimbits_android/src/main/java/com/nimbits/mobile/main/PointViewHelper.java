@@ -16,9 +16,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.nimbits.mobile.R;
-import com.nimbits.cloudplatform.client.constants.Const;
-import com.nimbits.cloudplatform.client.model.simple.SimpleValue;
-import com.nimbits.cloudplatform.client.model.value.Value;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.model.simple.SimpleValue;
+import com.nimbits.client.model.value.Value;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

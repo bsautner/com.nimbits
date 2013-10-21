@@ -13,9 +13,11 @@
 package com.nimbits.mobile.settings.async;
 
 import android.os.AsyncTask;
-import com.nimbits.cloudplatform.client.model.entity.Entity;
-import com.nimbits.cloudplatform.client.model.point.Point;
-import com.nimbits.cloudplatform.helper.PointHelper;
+import com.nimbits.client.model.Server;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.helper.PointHelper;
+import com.nimbits.mobile.application.SessionSingleton;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -57,7 +59,9 @@ public class PointSettingsTask extends AsyncTask<Object, List<Point>, List<Point
 
         Entity e = (Entity) objects[0];
         try {
-            return Arrays.asList(PointHelper.getPoint(e.getName().getValue()));
+            Server url = SessionSingleton.getInstance().getServer();
+            String email = SessionSingleton.getInstance().getEmail();
+            return Arrays.asList(new PointHelper(url, email).getPoint(e.getName().getValue()));
 
         } catch (Exception e1) {
             return Collections.emptyList();

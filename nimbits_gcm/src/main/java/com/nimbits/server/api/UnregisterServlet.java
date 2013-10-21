@@ -11,7 +11,7 @@
  */
 package com.nimbits.server.api;
 
-import com.nimbits.cloudplatform.client.enums.Parameters;
+import com.nimbits.client.enums.Parameters;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

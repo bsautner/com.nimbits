@@ -12,10 +12,9 @@
 
 package com.nimbits.server.api;
 
-import com.nimbits.cloudplatform.client.android.AndroidControl;
-import com.nimbits.cloudplatform.client.android.AndroidControlFactory;
-import com.nimbits.cloudplatform.client.android.AndroidControlImpl;
-import com.nimbits.cloudplatform.server.gson.GsonFactory;
+import com.nimbits.client.android.AndroidControl;
+import com.nimbits.client.android.AndroidControlFactory;
+import com.nimbits.server.gson.GsonFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

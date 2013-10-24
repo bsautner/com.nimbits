@@ -14,46 +14,44 @@ package com.nimbits.mobile.ui;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.simple.SimpleValue;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.mobile.R;
 import com.nimbits.mobile.application.SessionSingleton;
-import com.nimbits.mobile.content.ContentProvider;
-import com.nimbits.mobile.main.PointViewHelper;
+import com.nimbits.mobile.dao.ApplicationDao;
+import com.nimbits.mobile.dao.ApplicationDaoFactory;
+import com.nimbits.mobile.dao.orm.TreeTable;
 import com.nimbits.mobile.main.async.LoadValueTask;
 import com.nimbits.mobile.ui.entitylist.EntityListener;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
-/**
- * Created by benjamin on 8/8/13.
- */
+
 public class PointViewBaseFragment extends Fragment {
-    private final static String TAG = "PointViewBaseFragment";
+    private final static String TAG = "BaseEntityFragment";
     private Timer timer;
+
 
     protected View view;
     protected EntityListener listener;
-
-    public PointViewBaseFragment() {
-    }
-
-    public void setListener(EntityListener listener) {
+    protected ApplicationDao dao;
+    public PointViewBaseFragment(EntityListener listener) {
         this.listener = listener;
+
     }
+    public PointViewBaseFragment( ) {
 
 
+    }
     @Override
     public void onStart() {
         Log.v(TAG, "onStart");
@@ -64,19 +62,15 @@ public class PointViewBaseFragment extends Fragment {
     public void onResume() {
         Log.v(TAG, "onResume");
         super.onResume();
-        if (this.timer != null) {
-            timer.cancel();
-            TimerTask updateTask;
-            updateTask = new UpdateValuesTask(this.listener);
-            this.timer = new Timer();
-           // this.timer.scheduleAtFixedRate(updateTask, 0, Nimbits.getControl().getTimer());
-
-        }
+        showTitle();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.v(TAG, "onCreate");
         super.onCreate(savedInstanceState);
+
+
 
     }
 
@@ -94,7 +88,7 @@ public class PointViewBaseFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         listener = (EntityListener) activity;
-        this.timer = new Timer();
+
 
     }
 
@@ -112,62 +106,140 @@ public class PointViewBaseFragment extends Fragment {
     public void onDestroy() {
         Log.v(TAG, "onDestroy");
         super.onDestroy();
+
     }
 
+    public void showTitle() {
+        this.dao = ApplicationDaoFactory.getInstance();
+        this.timer = new Timer();
+        Entity entity = SessionSingleton.getInstance().getCurrentEntity();
+        final TextView currentValue = (TextView) view.findViewById((R.id.value));
+        final TextView timestamp = (TextView) view.findViewById((R.id.timestamp));
+        final ImageView entityImage = (ImageView) view.findViewById(R.id.entity_image);
+        if (entity.getEntityType().equals(EntityType.point)) {
+            Value value = dao.getValue(SessionSingleton.getInstance().getCurrentEntityPK());
+            setImage(entityImage, entity.getEntityType(), value.getAlertState());
+
+        }
+        else {
+            setImage(entityImage, entity.getEntityType(), AlertType.OK);
+            currentValue.setVisibility(View.GONE);
+            timestamp.setVisibility(View.GONE);
+        }
+
+        TextView name = (TextView) view.findViewById(R.id.entity_name);
+
+        name.setText(entity.getName().getValue());
+
+
+
+        this.timer.cancel();
+        this.timer = new Timer();
+        TimerTask updateTask;
+        updateTask = new UpdateValuesTask(this.listener, dao, entity);
+        this.timer.scheduleAtFixedRate(updateTask, 0, SessionSingleton.getInstance().getControl().getTimer());
+
+    }
+    protected void setImage(ImageView view, EntityType type, AlertType state) {
+        view.setVisibility(View.VISIBLE);
+        switch (type) {
+
+            case calculation:
+
+                view.setImageDrawable(getResources().getDrawable(R.drawable.calc));
+                break;
+            case category:
+                view.setImageDrawable(getResources().getDrawable(R.drawable.folder));
+                break;
+            case user:
+                view.setVisibility(View.GONE);
+                break;
+            case point:
+
+                switch (state) {
+
+                    case LowAlert:
+                        view.setImageResource(R.drawable.bluestar);
+                        break;
+                    case HighAlert:
+                        view.setImageResource(R.drawable.redstar);
+                        break;
+                    case IdleAlert:
+                        view.setImageResource(R.drawable.yellowstar);
+                        break;
+                    case OK:
+                        view.setImageResource(R.drawable.greenstar);
+                        break;
+                }
+                break;
+        }
+    }
+    public void refreshData() {
+        showTitle();
+    }
 
     static class UpdateValuesTask extends TimerTask {
         EntityListener listener;
 
-        UpdateValuesTask(EntityListener listener) {
+        ApplicationDao dao;
+        Entity entity;
+        UpdateValuesTask(EntityListener listener, ApplicationDao dao, Entity entity) {
             this.listener = listener;
+
+            this.entity = entity;
+            this.dao = dao;
         }
 
 
         public void run() {
-            Log.v(TAG, "timer tick");
-            List<Entity> children = ContentProvider.getChildEntities();
-            List<Entity> refresh = new ArrayList<Entity>(children.size() + 1);
-            if (SessionSingleton.getInstance().getCurrentEntity().getEntityType().equals(EntityType.point)) {
-                refresh.add(SessionSingleton.getInstance().getCurrentEntity());
-            }
-            for (Entity e : children) {
-                if (e.getEntityType().equals(EntityType.point)) {
-                    refresh.add(e);
-                }
-            }
 
-//            refresh.add(ContentProvider.getCurrentEntity());
-            for (final Entity entity : refresh) {
-                Log.v(TAG, entity.getName().getValue());
-                LoadValueTask.getInstance(new LoadValueTask.LoadValueTaskListener() {
-                    @Override
-                    public void onSuccess(Value response) {
-                        ContentProvider.updateCurrentValue(entity, response);
+            Entity e = SessionSingleton.getInstance().getCurrentEntity();
+            Cursor cursor = null;
+            try {
+                cursor = dao.getChildren(e);
+                long id;
+                int type;
+                Map<Long, Entity> list = new HashMap<Long, Entity>(cursor.getCount());
+                while (cursor.moveToNext()) {
 
-                        listener.onValueUpdated(entity, response);
+                    id = cursor.getLong(cursor.getColumnIndex(TreeTable.getId()));
+                    type =  cursor.getInt(cursor.getColumnIndex(TreeTable.getType()));
+                    EntityType entityType = EntityType.get(type);
+                    if (entityType != null && entityType.recordsData()) {
+                        e = dao.getEntity(id);
+                        list.put(id, e);
                     }
-                }).execute(entity);
+
+
+                    //  Log.v(TAG, cursor.getString(0));
+
+                }
+                if (entity.getEntityType().recordsData()) {
+                    list.put(SessionSingleton.getInstance().getCurrentEntityPK(), entity);
+                }
+                Log.v(TAG, "timer tick: " + list.size());
+                final Random r = new Random();
+                for (final long l : list.keySet()) {
+                    final Entity em = list.get(l);
+                    LoadValueTask.getInstance(new LoadValueTask.LoadValueTaskListener() {
+                        @Override
+                        public void onSuccess(Value response) {
+                            Log.v(TAG, response.toString());
+
+                            dao.updateValue(l, ValueFactory.createValueModel(r.nextDouble()));
+                            listener.onValueUpdated(entity.getKey(), response);
+                        }
+                    }).execute(em);
+                }
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
             }
 
 
         }
     }
 
-    public void showEntity( ) {
-        TextView name = (TextView) view.findViewById(R.id.entity_name);
-        name.setText(SessionSingleton.getInstance().getCurrentEntity().getName().getValue());
-        final TextView currentValue = (TextView) view.findViewById((R.id.value));
-        final TextView timestamp = (TextView) view.findViewById((R.id.timestamp));
-        final ImageView entityImage = (ImageView) view.findViewById(R.id.entity_image);
-        currentValue.setVisibility(View.VISIBLE);
-        timestamp.setVisibility(View.VISIBLE);
-        PointViewHelper.setViews(ContentProvider.getCurrentValue(SessionSingleton.getInstance().getCurrentEntity()), currentValue, timestamp, entityImage, SimpleValue.getEmptyInstance());
-        LinearLayout mainView = (LinearLayout) view.findViewById(R.id.entity);
-        mainView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.onEntityClicked(SessionSingleton.getInstance().getCurrentEntity(), false);
-            }
-        });
-    }
+
 }

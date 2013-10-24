@@ -25,10 +25,8 @@
             classpath:/META-INF/applicationContext.xml,
             classpath:/META-INF/applicationContext-api.xml,
             classpath:/META-INF/applicationContext-cache.xml,
-            classpath:/META-INF/applicationContext-cron.xml,
             classpath:/META-INF/applicationContext-dao.xml,
             classpath:/META-INF/applicationContext-service.xml,
-            classpath:/META-INF/applicationContext-task.xml,
             classpath:/META-INF/applicationContext-factory.xml
         </param-value>
     </context-param>
@@ -187,7 +185,7 @@
     <servlet>
         <servlet-name>uploadTask</servlet-name>
 
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.server.process.task.UploadTask</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>uploadTask</servlet-name>
@@ -197,7 +195,7 @@
     <servlet>
         <servlet-name>dumpTask</servlet-name>
 
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.server.process.task.DumpTask</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>dumpTask</servlet-name>
@@ -215,7 +213,7 @@
 
     <servlet>
         <servlet-name>deleteBlobTask</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.server.process.task.DeleteBlobTask</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>deleteBlobTask</servlet-name>
@@ -226,7 +224,7 @@
 
     <servlet>
         <servlet-name>batchTask</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.server.process.task.ProcessBatchTask</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>batchTask</servlet-name>
@@ -236,7 +234,7 @@
 
     <servlet>
         <servlet-name>mailTask</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.server.process.task.IncomingMailTask</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>mailTask</servlet-name>
@@ -245,7 +243,7 @@
 
     <servlet>
         <servlet-name>deleteTask</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.server.process.task.DeleteRecordedValuesTask</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>deleteTask</servlet-name>
@@ -254,7 +252,7 @@
 
     <servlet>
         <servlet-name>pointTask</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.server.process.task.PointMaintTask</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>pointTask</servlet-name>
@@ -263,7 +261,7 @@
 
     <servlet>
         <servlet-name>moveTask</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.server.process.task.MoveTask</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>moveTask</servlet-name>
@@ -275,7 +273,7 @@
 
     <servlet>
         <servlet-name>orphansCron</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.server.process.cron.DeleteOrphanBlobCron</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>orphansCron</servlet-name>
@@ -284,7 +282,7 @@
 
     <servlet>
         <servlet-name>pointCron</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.server.process.cron.PointCron</servlet-class>
         <!--<servlet-class>PointCron</servlet-class>-->
     </servlet>
     <servlet-mapping>
@@ -295,7 +293,7 @@
 
     <servlet>
         <servlet-name>sessionCron</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.server.process.cron.SessionMaint</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>sessionCron</servlet-name>
@@ -306,7 +304,7 @@
     <servlet>
         <servlet-name>idleCron</servlet-name>
         <!--<servlet-class>IdlePointCron</servlet-class>-->
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.server.process.cron.IdlePointCron</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>idleCron</servlet-name>
@@ -314,7 +312,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>moveCron</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.server.process.cron.MoveRecordedValuesToStoreCron</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>moveCron</servlet-name>

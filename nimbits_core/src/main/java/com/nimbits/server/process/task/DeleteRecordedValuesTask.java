@@ -13,39 +13,43 @@
 package com.nimbits.server.process.task;
 
 import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModel;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModel;
 import com.nimbits.server.api.ApiBase;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.transaction.value.ValueServiceFactory;
 import com.nimbits.server.transaction.value.service.ValueService;
-import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * Created by Benjamin Sautner
- * User: BSautner
- * Date: 12/20/11
- * Time: 3:55 PM
- */
-@Service("moveTask")
-public class MoveTask extends ApiBase implements org.springframework.web.HttpRequestHandler
 
-{
+
+public class DeleteRecordedValuesTask extends ApiBase {
+
+//    private static final Logger log = Logger.getLogger(UpdatePointStatsTask.class.getName());
+
+    private static final long serialVersionUID = 1L;
+
     private ValueService valueService;
     @Override
-    public void handleRequest(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException {
+    public void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException {
         setup(req, resp, false);
         valueService = ValueServiceFactory.getInstance(engine, taskService);
+        final String pointJson = req.getParameter(Parameters.json.getText());
+        Point point = GsonFactory.getInstance().fromJson(pointJson, PointModel.class);
 
-        final String pointJson = req.getParameter(Parameters.point.getText());
-        final Entity point = GsonFactory.getInstance().fromJson(pointJson, EntityModel.class);
-       valueService.moveValuesFromCacheToStore(point);
+        deleteData(point);
+
+    }
+
+    //TODO - delete blobs
+    private void deleteData(final Point point)  {
+        valueService.deleteExpiredData(point);
 
 
     }
+
 
 }

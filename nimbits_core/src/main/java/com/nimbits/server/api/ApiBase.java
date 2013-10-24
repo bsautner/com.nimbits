@@ -60,7 +60,7 @@ public class ApiBase extends HttpServlet {
     }
 
     protected void setup(HttpServletRequest req, HttpServletResponse resp, boolean readBody)   {
-        setupPmf();
+        setupEngine();
         entityService = EntityServiceFactory.getInstance(engine);
 
         try {
@@ -77,7 +77,7 @@ public class ApiBase extends HttpServlet {
         }
     }
 
-    private void setupPmf() {
+    private void setupEngine() {
         engine = (NimbitsEngine) getServletContext().getAttribute("engine");
         taskService = (TaskService) getServletContext().getAttribute("task");
         pmf = engine.getPmf();

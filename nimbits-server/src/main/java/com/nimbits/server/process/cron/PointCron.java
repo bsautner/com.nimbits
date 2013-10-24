@@ -17,7 +17,6 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
 import com.nimbits.server.api.ApiBase;
 import com.nimbits.server.transaction.user.AuthenticationServiceFactory;
-import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -25,8 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 
-@Service("pointCron")
-public class PointCron extends ApiBase implements org.springframework.web.HttpRequestHandler {
+public class PointCron extends ApiBase  {
 
     @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp)
@@ -45,7 +43,7 @@ public class PointCron extends ApiBase implements org.springframework.web.HttpRe
 
 
     @Override
-    public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
     }
 

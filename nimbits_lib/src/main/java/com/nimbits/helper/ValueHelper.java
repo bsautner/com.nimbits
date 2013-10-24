@@ -56,7 +56,7 @@ public class ValueHelper {
     public List<Value> getSeries(String name)   {
         Point point = new PointHelper(server, email).getPoint(name);
 
-            return new TransactionImpl(server, email).getSeries(point);
+            return new TransactionImpl(server, email).getSeries(point.getKey());
 
     }
 

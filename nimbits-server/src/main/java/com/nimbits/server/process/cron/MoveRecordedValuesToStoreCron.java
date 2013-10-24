@@ -14,7 +14,6 @@ package com.nimbits.server.process.cron;
 
 import com.nimbits.client.model.point.Point;
 import com.nimbits.server.api.ApiBase;
-import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -23,15 +22,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Logger;
 
-/**
- * Created by Benjamin Sautner
- * User: BSautner
- * Date: 12/20/11
- * Time: 5:24 PM
- */
-@Service("moveCron")
 
-public class MoveRecordedValuesToStoreCron extends ApiBase implements org.springframework.web.HttpRequestHandler{
+public class MoveRecordedValuesToStoreCron extends ApiBase  {
     /**
      *
      */
@@ -43,18 +35,18 @@ public class MoveRecordedValuesToStoreCron extends ApiBase implements org.spring
     @SuppressWarnings("unchecked")
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp)
             throws IOException {
-
+        setup(req, resp, false);
         final Map<String, Point> points = entityService.getActivePoints();
 
         for (final Point point : points.values()) {
             log.info("cron task moving " + point.getKey());
-             taskService.startMoveCachedValuesToStoreTask(point);
+            taskService.startMoveCachedValuesToStoreTask(point);
         }
 
     }
 
     @Override
-    public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
     }
 

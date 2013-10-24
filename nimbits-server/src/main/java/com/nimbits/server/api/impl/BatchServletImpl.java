@@ -41,23 +41,16 @@ public class BatchServletImpl extends ApiServlet implements org.springframework.
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
 
 
-
-        try {
             doInit(req, resp, ExportType.plain);
 
 
             taskService.startProcessBatchTask(user, req, resp);
 
-            resp.flushBuffer();
+
             resp.setContentLength(0);
             resp.setStatus(HttpServletResponse.SC_OK);
-        } catch (IOException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            resp.addHeader("ERROR", e.getMessage());
-        } catch (Exception e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            resp.addHeader("ERROR", e.getMessage());
-        }
+
+
 
     }
 

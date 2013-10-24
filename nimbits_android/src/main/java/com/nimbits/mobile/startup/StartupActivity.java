@@ -29,7 +29,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import com.crashlytics.android.Crashlytics;
-import com.nimbits.client.constants.Const;
 import com.nimbits.client.model.user.User;
 import com.nimbits.mobile.HomeActivity;
 import com.nimbits.mobile.R;
@@ -58,23 +57,15 @@ public class StartupActivity extends Activity implements LoaderManager.LoaderCal
         }
         activity = this;
         NimbitsApplication app = (NimbitsApplication) getApplication();
-
         try {
-            ApplicationInfo ai = getApplication().getPackageManager().getApplicationInfo(getApplication().getPackageName(), PackageManager.GET_META_DATA);
-            String apiKey = null;
-            if (ai.metaData != null) {
-                apiKey = (String) ai.metaData.get(Const.API_KEY_ID);
-            }
-            SessionSingleton.getInstance().setApiKey(apiKey);
+            ApplicationInfo ai = app.getPackageManager().getApplicationInfo(app.getPackageName(), PackageManager.GET_META_DATA);
+            SessionSingleton.getInstance().setAppInfo(ai);
 
         } catch (PackageManager.NameNotFoundException e) {
             Crashlytics.logException(e);
             finish();
         }
 
-
-
-      //  startService(new Intent(this, BufferService.class));
         getLoaderManager().initLoader(0, null, this);
 
 

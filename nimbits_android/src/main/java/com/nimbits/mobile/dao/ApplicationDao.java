@@ -12,8 +12,10 @@
 
 package com.nimbits.mobile.dao;
 
+import android.database.Cursor;
 import com.nimbits.client.model.Server;
 import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.value.Value;
 
 import java.util.List;
 
@@ -23,11 +25,24 @@ import java.util.List;
 public interface ApplicationDao {
     Server getServer();
 
+    int getCount(long id);
+
     void setDefaultInstanceUrl(long id);
 
-    List<Entity> getTree(long id);
+    int storeTree(long id, List<Entity> entities, boolean refresh);
 
-    void storeTree(long id, List<Entity> entities);
+    Cursor getChildren(Entity entity);
+
+    Entity getEntity(long id);
+
+    Entity getParent(long id);
+
+    long getIdByName(String name);
+
+    long getParentId(long id);
+
+    void updateValue(long id, Value value);
 
 
+    Value getValue(long currentEntity);
 }

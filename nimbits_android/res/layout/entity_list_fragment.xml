@@ -21,18 +21,13 @@
             android:background="@android:color/darker_gray"/>
         <ListView
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/listView"
             android:clickable="true"
             android:focusable="true"
             android:focusableInTouchMode="true"/>
+
     </LinearLayout>
-    <ProgressBar
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/progressBar" android:layout_gravity="center_horizontal|center_vertical"
-            android:visibility="visible"/>
 
 
 </FrameLayout>

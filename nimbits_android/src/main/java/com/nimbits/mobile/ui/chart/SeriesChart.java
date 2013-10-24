@@ -16,7 +16,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.View;
-import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.value.Value;
 import org.achartengine.ChartFactory;
 import org.achartengine.chart.PointStyle;
@@ -62,8 +61,8 @@ public class SeriesChart extends AbstractChart {
      * @param entity
      * @param valuesResponse @return the built intent
      */
-    public View execute(Context context, Entity entity, List<Value> valuesResponse) {
-        String[] titles = new String[]{entity.getName().getValue()};
+    public View execute(Context context, String entity, List<Value> valuesResponse) {
+        String[] titles = new String[]{entity};
 
         List<Date[]> dateCollection = new ArrayList<Date[]>();
         List<double[]> valueCollection = new ArrayList<double[]>();
@@ -84,8 +83,8 @@ public class SeriesChart extends AbstractChart {
         PointStyle[] styles = new PointStyle[]{PointStyle.CIRCLE};
         XYMultipleSeriesRenderer renderer = buildRenderer(colors, styles);
 
-        renderer.setBackgroundColor(android.R.color.transparent);
-        renderer.setMarginsColor(android.R.color.transparent);
+        renderer.setBackgroundColor(context.getResources().getColor(android.R.color.transparent));
+        renderer.setMarginsColor(context.getResources().getColor(android.R.color.transparent));
         int length = renderer.getSeriesRendererCount();
         for (int i = 0; i < length; i++) {
             ((XYSeriesRenderer) renderer.getSeriesRendererAt(i)).setFillPoints(true);

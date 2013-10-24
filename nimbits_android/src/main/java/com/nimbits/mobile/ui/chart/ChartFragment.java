@@ -22,10 +22,12 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.google.common.collect.Range;
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.mobile.R;
-import com.nimbits.mobile.ToastHelper;
 import com.nimbits.mobile.application.SessionSingleton;
+import com.nimbits.mobile.dao.ApplicationDao;
+import com.nimbits.mobile.dao.ApplicationDaoFactory;
 import com.nimbits.mobile.main.async.SeriesTask;
 
 import java.util.Date;
@@ -34,7 +36,8 @@ import java.util.List;
 
 @SuppressWarnings("unused")
 public class ChartFragment extends Fragment implements SeriesTask.SeriesTaskListener {
-    private final String TAG = "ChartFragment";
+    public static final String TAG = "ChartFragment";
+
     private Chart seriesChart;
 
 
@@ -66,17 +69,10 @@ public class ChartFragment extends Fragment implements SeriesTask.SeriesTaskList
                 ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
                 progressBar.setVisibility(View.VISIBLE);
                 TextView title = (TextView) view.findViewById(R.id.textView);
-                if (SessionSingleton.getInstance().getCurrentEntity() != null) {
-                    if (title != null) {
-                        title.setText(SessionSingleton.getInstance().getCurrentEntity().getName().getValue());
-                    }
 
+                 Log.v(TAG, "view created ");
+                 seriesChart = new SeriesChart();
 
-                    Log.v(TAG, "view created ");
-                    seriesChart = new SeriesChart();
-                } else {
-                    ToastHelper.show(getActivity(), "No Entity Selected");
-                }
             }
 
         }
@@ -100,8 +96,10 @@ public class ChartFragment extends Fragment implements SeriesTask.SeriesTaskList
             progressBar.setVisibility(View.INVISIBLE);
         }
         if (!response.isEmpty()) {
+            ApplicationDao dao = ApplicationDaoFactory.getInstance();
 
-            chart = seriesChart.execute(getActivity(), SessionSingleton.getInstance().getCurrentEntity(), response);
+            Entity e = SessionSingleton.getInstance().getCurrentEntity();
+            chart = seriesChart.execute(getActivity(), e.getKey(), response);
 
             chart.setLongClickable(true);
 

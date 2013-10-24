@@ -48,7 +48,6 @@ import static org.junit.Assert.assertFalse;
         "classpath:META-INF/applicationContext-cron.xml",
         "classpath:META-INF/applicationContext-dao.xml",
         "classpath:META-INF/applicationContext-service.xml",
-        "classpath:META-INF/applicationContext-task.xml"
 
 })
 public class EntityCacheImplTest extends NimbitsServletTest {

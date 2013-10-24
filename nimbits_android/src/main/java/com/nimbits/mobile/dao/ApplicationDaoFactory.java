@@ -12,15 +12,13 @@
 
 package com.nimbits.mobile.dao;
 
-import android.content.Context;
-
 /**
  * Created by benjamin on 10/20/13.
  */
 public class ApplicationDaoFactory {
 
-    public static ApplicationDao getInstance(Context context) {
-        return new ApplicationDaoImpl(context);
+    public static ApplicationDao getInstance() {
+        return new ApplicationDaoImpl();
     }
 
 

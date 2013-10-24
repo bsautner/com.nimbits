@@ -21,6 +21,7 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.location.Location;
 import com.nimbits.client.model.location.LocationFactory;
 import com.nimbits.client.model.user.User;
+import com.nimbits.server.ApplicationListener;
 import com.nimbits.server.NimbitsEngine;
 import com.nimbits.server.process.task.TaskService;
 import com.nimbits.server.transaction.entity.EntityServiceFactory;
@@ -96,8 +97,20 @@ public class ApiServlet extends HttpServlet {
 
     public void doInit(final HttpServletRequest req, final HttpServletResponse resp, final ExportType type)   {
 
-        engine = (NimbitsEngine) getServletContext().getAttribute("engine");
-        taskService = (TaskService) getServletContext().getAttribute("task");
+        try {
+            engine = (NimbitsEngine) getServletContext().getAttribute("engine");
+            taskService = (TaskService) getServletContext().getAttribute("task");
+        } catch (Exception e) {
+            engine = null;
+            taskService = null;
+        }
+
+        if (engine == null) {
+            engine = ApplicationListener.createEngine();
+            taskService = ApplicationListener.getTaskService(engine);
+
+        }
+
 
         entityService = EntityServiceFactory.getInstance(engine);
         user = AuthenticationServiceFactory.getInstance(engine).getHttpRequestUser(req);

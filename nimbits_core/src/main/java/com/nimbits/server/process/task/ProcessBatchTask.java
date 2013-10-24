@@ -32,20 +32,17 @@ import com.nimbits.client.model.value.ValueData;
 import com.nimbits.client.model.value.impl.ValueDataModel;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.model.value.impl.ValueModel;
-import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.api.ApiBase;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.transaction.entity.service.EntityService;
 import com.nimbits.server.transaction.value.ValueServiceFactory;
 import com.nimbits.server.transaction.value.service.ValueService;
 import com.nimbits.shared.Utils;
-import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.*;
@@ -57,10 +54,9 @@ import java.util.logging.Logger;
  * Date: 9/28/11
  * Time: 1:39 PM
  */
-@SuppressWarnings("unchecked")
-@Service("batchTask")
+
 @Deprecated
-public class ProcessBatchTask extends ApiBase implements org.springframework.web.HttpRequestHandler {
+public class ProcessBatchTask extends ApiBase  {
     private static final String P = "p";
     private static final String V = "v";
     private static final String T = "t";
@@ -79,20 +75,15 @@ public class ProcessBatchTask extends ApiBase implements org.springframework.web
 
 
     @Override
-    public void handleRequest(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException {
+    public void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException {
         setup(req, resp, false);
         valueService = ValueServiceFactory.getInstance(engine, taskService);
-        try {
-            processBatch(req, resp);
-        } catch (IOException e) {
-            LogHelper.logException(ProcessBatchTask.class, e);
-        } catch (Exception e) {
-            log.info(e.getMessage());
-        }
+        processBatch(req, resp);
+
 
     }
 
-    protected void processBatch(final HttpServletRequest req, final ServletResponse resp) throws IOException, Exception {
+    protected void processBatch(final HttpServletRequest req, final ServletResponse resp)  {
 
 
         final String userJson = req.getParameter(Parameters.pointUser.getText());
@@ -161,7 +152,7 @@ public class ProcessBatchTask extends ApiBase implements org.springframework.web
             }
         }
 
-        resp.flushBuffer();
+      //  resp.flushBuffer();
         resp.setContentLength(0);
     }
 

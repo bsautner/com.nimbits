@@ -18,7 +18,7 @@ import java.util.zip.Deflater;
 
 
 public class ServerInfo {
-    private static final String TEST_URL = "http://localhost:8081";
+    private static final String TEST_URL = "http://localhost:8080";
 
     private ServerInfo() {
     }

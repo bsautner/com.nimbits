@@ -27,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import com.google.android.gcm.GCMRegistrar;
 import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.EntityType;
@@ -38,32 +39,27 @@ import com.nimbits.client.model.simple.SimpleValue;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.mobile.application.SessionSingleton;
-import com.nimbits.mobile.content.ContentProvider;
 import com.nimbits.mobile.main.async.AddUpdateEntityTask;
-import com.nimbits.mobile.main.async.LoadMainTask;
+import com.nimbits.mobile.main.async.DownloadTreeTask;
 import com.nimbits.mobile.main.async.PostValueTask;
 import com.nimbits.mobile.main.async.SeriesTask;
 import com.nimbits.mobile.startup.async.LoadControlTask;
-import com.nimbits.mobile.ui.PointViewBaseFragment;
 import com.nimbits.mobile.ui.chart.ChartFragment;
-import com.nimbits.mobile.ui.chart.ChartViewActivity;
 import com.nimbits.mobile.ui.dialog.SimpleEntryDialog;
 import com.nimbits.mobile.ui.entitylist.EntityListFragment;
 import com.nimbits.mobile.ui.entitylist.EntityListener;
 import com.nimbits.mobile.ui.instance.InstanceManager;
-import com.nimbits.mobile.ui.point.PointFragment;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class HomeActivity extends Activity implements EntityListener, SeriesTask.SeriesTaskListener {
+public class HomeActivity extends Activity implements EntityListener, SeriesTask.SeriesTaskListener  {
 
 
 
-    private PointViewBaseFragment entityFragment;
+    private EntityListFragment entityFragment;
     private ChartFragment chartFragment;
-    AsyncTask<Void, Void, Void> mRegisterTask;
+    private AsyncTask<Void, Void, Void> mRegisterTask;
 
     private static final String TAG = "HomeActivity";
 
@@ -71,13 +67,31 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
         super.onCreate(savedInstanceState);
         Log.v(TAG, "onCreate");
         setContentView(R.layout.home_activity_layout);
-        if (savedInstanceState == null) {
 
+
+
+
+        if (savedInstanceState == null) {
+            Log.v(TAG, "onCreate first time");
             startGcm();
             LoadControlTask loadControlTask = new LoadControlTask();
             loadControlTask.execute();
             showEntityFragment();
+            int c = SessionSingleton.getInstance().getDao().getCount(SessionSingleton.getInstance().getServer().getId());
+            Log.v(TAG, "Entries in store: " + c );
+            if (c == 0) {
+                refresh();
+            }
+            else {
+                ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+                progressBar.setVisibility(View.GONE);
+                //entityFragment.show();
+            }
 
+        }
+        else {
+            ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+            progressBar.setVisibility(View.GONE);
         }
 
     }
@@ -88,31 +102,54 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
         Log.v(TAG, "resume");
         super.onResume();
         startGcm();
-        if (chartFragment != null && SessionSingleton.getInstance().getCurrentEntity().getEntityType().equals(EntityType.point)) {
-            showChartFragment();
-        }
+
+
+//        if (chartFragment != null && SessionSingleton.getInstance().getCurrentEntityPK().getEntityType().equals(EntityType.point)) {
+//            showChartFragment();
+//        }
 
     }
 
     private void showPointFragment() {
         FrameLayout frame = (FrameLayout) findViewById(R.id.main_frame);
         frame.removeAllViews();
-        entityFragment = new PointFragment();
+        entityFragment = new EntityListFragment(this);
         entityFragment.setArguments(getIntent().getExtras());
         getFragmentManager().beginTransaction().replace(R.id.main_frame, entityFragment).commit();
     }
 
     private void showEntityFragment() {
-        FrameLayout frame = (FrameLayout) findViewById(R.id.main_frame);
-         frame.removeAllViews();
-        entityFragment = new EntityListFragment();
+        // FrameLayout frame = (FrameLayout) findViewById(R.id.main_frame);
+        entityFragment = new EntityListFragment(this);
         entityFragment.setArguments(getIntent().getExtras());
-        getFragmentManager().beginTransaction().replace(R.id.main_frame, entityFragment).commit();
-        if (ContentProvider.getTree().isEmpty()) {
-            loadTree();
-        }
-    }
 
+        getFragmentManager().beginTransaction().replace(R.id.main_frame, entityFragment, EntityListFragment.TAG).commit();
+
+    }
+    private void refresh() {
+
+        final DownloadTreeTask task = new DownloadTreeTask(this);
+        task.setListener(new DownloadTreeTask.LoadListener() {
+
+
+            @Override
+            public void onSuccess(int results) {
+                Log.v(TAG, "downloaded : " + results);
+                ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+                progressBar.setVisibility(View.GONE);
+                // entityFragment.refresh();
+
+
+            }
+
+            @Override
+            public void onProgress(int progress) {
+
+            }
+        });
+        task.execute();
+
+    }
     private void showChartFragment() {
         Log.v(TAG, "showChartFragment");
 
@@ -121,36 +158,9 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
         frame.setBackground(getResources().getDrawable(android.R.drawable.toast_frame));
         chartFragment = new ChartFragment(this);
         chartFragment.setArguments(getIntent().getExtras());
-        getFragmentManager().beginTransaction().replace(R.id.data_frame, chartFragment).commit();
+        getFragmentManager().beginTransaction().replace(R.id.data_frame, chartFragment, ChartFragment.TAG).commit();
 
         //chartFragment.getSeries(entity);
-    }
-
-    private void loadTree() {
-        if (SessionSingleton.getInstance().getCurrentEntity() == null) {
-            SessionSingleton.getInstance().setCurrentEntity(SessionSingleton.getInstance().getSession());
-        }
-
-
-        final LoadMainTask task = new LoadMainTask(this);
-        task.setListener(new LoadMainTask.LoadListener() {
-
-            @Override
-            public void onSuccess(List<Entity> response) {
-                Log.v(TAG, "Loaded " + response.size() + " entities");
-                ContentProvider.setTree(response);
-                entityFragment.showEntity( );
-
-            }
-
-            @Override
-            public void onProgress(int progress) {
-
-            }
-
-
-        });
-        task.execute();
     }
 
 
@@ -164,31 +174,32 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Entity entity = SessionSingleton.getInstance().getCurrentEntity();
 
         SimpleEntryDialog dialog;
         switch (item.getItemId()) {
             case R.id.action_new_folder:
-                dialog = new SimpleEntryDialog(SessionSingleton.getInstance().getCurrentEntity(), EntityType.category, Action.create, "Create new Folder");
+                dialog = new SimpleEntryDialog(entity.getKey(), EntityType.category, Action.create, "Create new Folder");
                 dialog.show(getFragmentManager(), "NoticeDialogFragment");
                 return true;
             case R.id.action_new_point:
-                dialog = new SimpleEntryDialog(SessionSingleton.getInstance().getCurrentEntity(), EntityType.point, Action.create, "Create new data point");
+                dialog = new SimpleEntryDialog(entity.getKey(), EntityType.point, Action.create, "Create new data point");
                 dialog.show(getFragmentManager(), "NoticeDialogFragment");
                 return true;
             case R.id.action_expand:
-                if (SessionSingleton.getInstance().getCurrentEntity() != null && SessionSingleton.getInstance().getCurrentEntity().getEntityType().equals(EntityType.point)) {
-                    String uuid = SessionSingleton.getInstance().getCurrentEntity().getUUID();
-
-
-                    Intent intent = new Intent(getApplicationContext(), ChartViewActivity.class);
-                    Bundle b = new Bundle();
-
-                    intent.putExtras(b);
-                    startActivity(intent);
-                    //  finish();
-                }
+//                if (SessionSingleton.getInstance().getCurrentEntityPK() != null && SessionSingleton.getInstance().getCurrentEntityPK().getEntityType().equals(EntityType.point)) {
+//
+//
+//                    Intent intent = new Intent(getApplicationContext(), ChartViewActivity.class);
+//                    Bundle b = new Bundle();
+//
+//                    intent.putExtras(b);
+//                    startActivity(intent);
+//                    //  finish();
+//                }
+                return true;
             case R.id.action_refresh:
-                showEntityFragment();
+                refresh();
 
                 return true;
             case R.id.action_instance:
@@ -206,57 +217,56 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
     }
 
     @Override
-    public void onEntityClicked(Entity entity, boolean checkChildren) {
-        SessionSingleton.getInstance().setCurrentEntity(entity);
+    public void onEntityClicked(Entity entity) {
 
-        List<Entity> children;
-
-        if (checkChildren) {
-            children = ContentProvider.getChildEntities();
-        } else {
-            children = Collections.emptyList();
+        if (entity.getEntityType().equals(EntityType.point)) {
+            showChartFragment();
         }
 
-        switch (entity.getEntityType()) {
+        // SessionSingleton.getInstance().setCurrentEntity(entity);
 
-            case user:
-                break;
-            case point:
-                if (children.isEmpty()) {
-                    Log.v(TAG, "onSingleEntitySelected");
-                    showPointFragment();
-                } else {
-                    showEntity();
-                }
-                showChartFragment();
-                break;
-            case category:
-
-                showEntity();
-                break;
-            case subscription:
-                break;
-            case calculation:
-                break;
-            case summary:
-                break;
-            case accessKey:
-                break;
-        }
-    }
-
-    private void showEntity() {
-        if (entityFragment != null) {
-            entityFragment.showEntity( );
-        }
+//        List<Entity> children;
+//
+////        if (checkChildren) {
+////            children = SessionSingleton.getInstance().getChildEntities();
+////        } else {
+//          children = Collections.emptyList();
+////        }
+//
+//        switch (entity.getEntityType()) {
+//
+//            case user:
+//                break;
+//            case point:
+//                if (children.isEmpty()) {
+//                    Log.v(TAG, "onSingleEntitySelected");
+//                    showPointFragment();
+//                } else {
+//                    //showEntity();
+//                }
+//                showChartFragment();
+//                break;
+//            case category:
+//
+//              //  showEntity();
+//                break;
+//            case subscription:
+//                break;
+//            case calculation:
+//                break;
+//            case summary:
+//                break;
+//            case accessKey:
+//                break;
+//        }
     }
 
 
     @Override
-    public void onNewEntity(Entity parent, EntityType type, EntityName name) {
+    public void onNewEntity(String parent, EntityType type, EntityName name) {
         Entity entity = EntityModelFactory.createEntity(name, type);
         entity.setOwner(SessionSingleton.getInstance().getEmail());
-        entity.setParent(parent.getKey());
+        entity.setParent(parent );
 
         AddUpdateEntityTask.getInstance(new AddUpdateEntityTask.AddUpdateEntityTaskListener() {
 
@@ -265,8 +275,11 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
                 if (response.isEmpty()) {
                     ToastHelper.show(getApplicationContext(), "something went wrong...");
                 } else {
-                    ContentProvider.addEntities(response);
-                    showEntityFragment();
+                    SessionSingleton.getInstance().getDao().storeTree(SessionSingleton.getInstance().getServer().getId(), response, false);
+                    getEntityFragment().refreshData();
+                    // entityFragment.refresh();
+                    //  SessionSingleton.getInstance().addEntities(response);
+                    // showEntityFragment();
                 }
             }
 
@@ -278,16 +291,18 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
     }
 
     @Override
-    public void onValueUpdated(Entity entity, Value response) {
+    public void onValueUpdated(String entity, Value response) {
 
         Log.v(TAG, "Home Activity Updating list on new value");
-        showEntity();
+        if (entityFragment != null) {
+            entityFragment.refreshData();
+        }
 
 
     }
 
     @Override
-    public void onNewValue(final Entity entity, final String entry) {
+    public void onNewValue(final String entity, final String entry) {
         InputMethodManager inputManager = (InputMethodManager)
                 getApplication().getSystemService(Context.INPUT_METHOD_SERVICE);
         View focus = this.getCurrentFocus();
@@ -301,7 +316,7 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
             public void onSuccess(List<Value> response) throws Exception {
                 Log.v(TAG, "Value Recorded");
                 if (!response.isEmpty()) {
-                    ContentProvider.updateCurrentValue(entity, response.get(0));
+                    //  SessionSingleton.getInstance().updateCurrentValue(entity, response.get(0));
 
                 }
             }
@@ -315,33 +330,38 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
     }
 
     @Override
-    public void newValuePrompt(Entity entity) {
-        SimpleEntryDialog dialog = new SimpleEntryDialog(entity, EntityType.category,
-                Action.recordValue, entity.getName().getValue() +
-                ": Enter Value");
-        dialog.show(getFragmentManager(), "NoticeDialogFragment");
+    public void newValuePrompt(String entity) {
+//        SimpleEntryDialog dialog = new SimpleEntryDialog(entity, EntityType.category,
+//                Action.recordValue, entity.getName().getValue() +
+//                ": Enter Value");
+//        dialog.show(getFragmentManager(), "NoticeDialogFragment");
 
     }
 
+    private EntityListFragment getEntityFragment() {
+        if (this.entityFragment == null) {
 
+            this.entityFragment = (EntityListFragment) getFragmentManager().findFragmentByTag(EntityListFragment.TAG);
+        }
+        return this.entityFragment;
+    }
 
 
     @Override
     public void onBackPressed() {
-        goBack();
+        Entity e = SessionSingleton.getInstance().getCurrentEntity();
 
-    }
-
-    private void goBack() {
-        if (SessionSingleton.getInstance().getCurrentEntity().getEntityType().equals(EntityType.user)) {
+        if (e.getEntityType().equals(EntityType.user)) {
             finish();
         } else {
-            ContentProvider.setCurrentEntityToParent();
-            showEntityFragment();
+            long id = SessionSingleton.getInstance().getDao().getParentId(SessionSingleton.getInstance().getCurrentEntityPK());
+            SessionSingleton.getInstance().setCurrentEntity(id);
+            getEntityFragment().show();
         }
 
 
     }
+
 
     private void startGcm() {
 
@@ -397,6 +417,7 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
         } catch (IllegalArgumentException ex) {
 
         }
+
         super.onDestroy();
     }
 
@@ -415,5 +436,4 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
 
     }
 
-    //end gcm stuff
 }

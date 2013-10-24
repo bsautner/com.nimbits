@@ -29,11 +29,11 @@ import java.io.IOException;
 
     @Service("coreReportInstanceCron")
 
-    public class CoreReportInstanceCron extends HttpServlet implements org.springframework.web.HttpRequestHandler{
+    public class CoreReportInstanceCron extends HttpServlet  {
 
 
     @Override
-    public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 
 

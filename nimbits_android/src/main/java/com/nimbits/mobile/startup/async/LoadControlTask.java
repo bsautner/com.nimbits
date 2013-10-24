@@ -13,7 +13,6 @@
 package com.nimbits.mobile.startup.async;
 
 import android.os.AsyncTask;
-import com.nimbits.Nimbits;
 import com.nimbits.client.android.AndroidControl;
 import com.nimbits.client.android.AndroidControlFactory;
 import com.nimbits.mobile.application.SessionSingleton;
@@ -39,11 +38,11 @@ public class LoadControlTask extends AsyncTask<Object, Integer, AndroidControl> 
 
         List<AndroidControl> control = transactions.getControl();
         if (control.isEmpty()) {
-            Nimbits.setControl(AndroidControlFactory.getConservativeInstance()); //load highly conservative values since something is wrong.
+            SessionSingleton.getInstance().setControl(AndroidControlFactory.getConservativeInstance()); //load highly conservative values since something is wrong.
         } else {
-            Nimbits.setControl(control.get(0));
+            SessionSingleton.getInstance().setControl(control.get(0));
         }
-        return Nimbits.getControl();
+        return SessionSingleton.getInstance().getControl();
 
     }
 

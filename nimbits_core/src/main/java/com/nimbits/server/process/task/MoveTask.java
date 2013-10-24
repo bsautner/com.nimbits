@@ -13,55 +13,32 @@
 package com.nimbits.server.process.task;
 
 import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointModel;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.server.api.ApiBase;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.transaction.value.ValueServiceFactory;
 import com.nimbits.server.transaction.value.service.ValueService;
-import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
-/**
- * consolidated data from cache into blobstore
- */
-@Service("pointTask")
-public class PointMaintTask extends ApiBase implements org.springframework.web.HttpRequestHandler{
 
 
+public class MoveTask extends ApiBase
+
+{
     private ValueService valueService;
-
     @Override
-    public void handleRequest(final HttpServletRequest req, final HttpServletResponse resp) throws IOException, ServletException {
+    public void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException {
         setup(req, resp, false);
-        valueService  = ValueServiceFactory.getInstance(engine, taskService);
-        processPost(req);
+        valueService = ValueServiceFactory.getInstance(engine, taskService);
+
+        final String pointJson = req.getParameter(Parameters.point.getText());
+        final Entity point = GsonFactory.getInstance().fromJson(pointJson, EntityModel.class);
+        valueService.moveValuesFromCacheToStore(point);
 
 
     }
-
-
-    public void processPost(final HttpServletRequest req) throws IOException {
-
-
-        final String j = req.getParameter(Parameters.json.getText());
-        final Point entity = GsonFactory.getInstance().fromJson(j, PointModel.class);
-        if (entity.getExpire() > 0) {
-            taskService.startDeleteDataTask(
-                    entity,
-                    true, entity.getExpire());
-        }
-        valueService.consolidateBlobs(entity);
-    }
-
-
-
-
-
 
 }
-

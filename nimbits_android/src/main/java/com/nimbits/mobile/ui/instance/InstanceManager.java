@@ -35,6 +35,7 @@ import com.nimbits.mobile.application.NimbitsApplication;
 import com.nimbits.mobile.application.SessionSingleton;
 import com.nimbits.mobile.dao.ApplicationDaoFactory;
 import com.nimbits.mobile.dao.DBOpenHelper;
+import com.nimbits.mobile.dao.orm.InstanceTable;
 import com.nimbits.mobile.startup.async.StartupTask;
 import com.nimbits.mobile.ui.dialog.SimpleEntryDialog;
 import com.nimbits.mobile.ui.entitylist.EntityListener;
@@ -49,9 +50,9 @@ public class InstanceManager extends ListActivity implements EntityListener{
     public static final String TAG = "InstanceManager";
     private ListView listView;
     private ListAdapter adapter;
-    Cursor cursor;
-    NimbitsApplication app;
-    private boolean changedInstance;
+    private Cursor cursor;
+    private NimbitsApplication app;
+
 
     private final DBOpenHelper db = new DBOpenHelper(InstanceManager.this);
     public void onCreate(Bundle savedInstanceState) {
@@ -68,7 +69,7 @@ public class InstanceManager extends ListActivity implements EntityListener{
         cursor.moveToFirst();
         while (! cursor.isAfterLast()) {
 
-            if (cursor.getLong(cursor.getColumnIndex(DBOpenHelper.IS_DEFAULT)) == 1) {
+            if (cursor.getLong(cursor.getColumnIndex(InstanceTable.getIsDefault())) == 1) {
                   listView.setItemChecked(cursor.getPosition(), true);
             }
             cursor.moveToNext();
@@ -78,7 +79,7 @@ public class InstanceManager extends ListActivity implements EntityListener{
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 cursor.moveToPosition(position);
               //  final String url = cursor.getString(cursor.getColumnIndex(DBOpenHelper.KEY_URL));
-                ApplicationDaoFactory.getInstance(getApplicationContext()).setDefaultInstanceUrl(id);
+                ApplicationDaoFactory.getInstance().setDefaultInstanceUrl(id);
                 StartupTask.getInstance(new StartupTask.StartupListener() {
                     @Override
                     public void onLoginSuccess(List<User> response) {
@@ -104,14 +105,14 @@ public class InstanceManager extends ListActivity implements EntityListener{
 
 
     private void setCursor() {
-        cursor = db.getReadableDatabase().query(DBOpenHelper.INSTANCES_TABLE_NAME, new String[] {DBOpenHelper.ID, DBOpenHelper.KEY_URL,DBOpenHelper.IS_DEFAULT},null, null ,null, null, null, null );
+        cursor = db.getReadableDatabase().query(InstanceTable.getInstancesTableName(), new String[] {InstanceTable.getId(), InstanceTable.getUrl(),InstanceTable.getIsDefault()},null, null ,null, null, null, null );
 
 
         adapter = new SimpleCursorAdapter(this,
                 android.R.layout.simple_list_item_single_choice,
                 cursor,
 
-                new String[] {DBOpenHelper.KEY_URL},
+                new String[] {InstanceTable.getUrl()},
 
                 new int[] {android.R.id.text1}, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         setListAdapter(adapter);
@@ -129,6 +130,10 @@ public class InstanceManager extends ListActivity implements EntityListener{
 
         SimpleEntryDialog dialog;
         long ids[] = listView.getCheckedItemIds();
+
+        Entity entity = SessionSingleton.getInstance().getCurrentEntity();
+
+
         final long id;
         if (ids.length > 0) {
             id = ids[0];
@@ -139,12 +144,12 @@ public class InstanceManager extends ListActivity implements EntityListener{
         switch (item.getItemId()) {
 
             case R.id.action_instance:
-                dialog = new SimpleEntryDialog(SessionSingleton.getInstance().getCurrentEntity(), EntityType.server, Action.create, "Connect To a new Nimbits Instance");
+                dialog = new SimpleEntryDialog(entity.getKey(), EntityType.server, Action.create, "Connect To a new Nimbits Instance");
                 dialog.show(getFragmentManager(), "NoticeDialogFragment");
                 return true;
             case R.id.action_delete:
 
-                db.getWritableDatabase().execSQL("delete from " + DBOpenHelper.INSTANCES_TABLE_NAME + " where (" + DBOpenHelper.ID + " = " + id  + ")");
+                db.getWritableDatabase().execSQL("delete from " + InstanceTable.getInstancesTableName() + " where (" + InstanceTable.getId() + " = " + id  + ")");
                 setCursor();
                 return true;
 
@@ -153,36 +158,37 @@ public class InstanceManager extends ListActivity implements EntityListener{
         }
     }
 
+
     @Override
-    public void onEntityClicked(Entity entity, boolean checkChildren) {
+    public void onEntityClicked(Entity entity) {
 
     }
 
     @Override
-    public void onNewEntity(Entity parent, EntityType type, EntityName name) {
+    public void onNewEntity(String parent, EntityType type, EntityName name) {
         Log.v(TAG, "new instance");
         String n = name.getValue();
         n = n.replace("http://", "").replace("https://", "");
         if (! StringUtils.isEmpty(n)) {
 
-            db.getWritableDatabase().execSQL("insert into " + DBOpenHelper.INSTANCES_TABLE_NAME + " (" + DBOpenHelper.KEY_URL + ", " + DBOpenHelper.IS_DEFAULT + "," + DBOpenHelper.KEY_NAME + ") " +
+            db.getWritableDatabase().execSQL("insert into " + InstanceTable.getInstancesTableName() + " (" + InstanceTable.getUrl() + ", " + InstanceTable.getIsDefault() + "," + InstanceTable.getName() + ") " +
                     "VALUES ('" + n + "', '1','Not Set')");
             setCursor();
         }
     }
 
     @Override
-    public void onValueUpdated(Entity entity, Value response) {
+    public void onValueUpdated(String entity, Value response) {
 
     }
 
     @Override
-    public void onNewValue(Entity entity, String entry) {
+    public void onNewValue(String entity, String entry) {
 
     }
 
     @Override
-    public void newValuePrompt(Entity entity) {
+    public void newValuePrompt(String entity) {
 
     }
 

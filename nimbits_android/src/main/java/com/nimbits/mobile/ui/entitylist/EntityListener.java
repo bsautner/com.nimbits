@@ -21,15 +21,15 @@ import com.nimbits.client.model.value.Value;
  * Created by benjamin on 7/24/13.
  */
 public interface EntityListener {
-    void onEntityClicked(final Entity entity, final boolean checkChildren);
+    void onEntityClicked(Entity entity);
 
-    void onNewEntity(final Entity parent, final EntityType type, final EntityName name);
+    void onNewEntity(final String parent, final EntityType type, final EntityName name);
 
-    void onValueUpdated(final Entity entity, final Value response);
+    void onValueUpdated(final String entity, final Value response);
 
-    void onNewValue(final Entity entity, final String entry);
+    void onNewValue(final String entity, final String entry);
 
-    void newValuePrompt(final Entity entity);
+    void newValuePrompt(final String entity);
 
 
 

@@ -33,7 +33,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
         "classpath:META-INF/applicationContext-cron.xml",
         "classpath:META-INF/applicationContext-dao.xml",
         "classpath:META-INF/applicationContext-service.xml",
-        "classpath:META-INF/applicationContext-task.xml",
         "classpath:META-INF/applicationContext-factory.xml"
 
 })

@@ -143,4 +143,8 @@ public class ValueFactory {
     public static Value createValueModel(Value value, Date date) {
         return ValueModel.getInstance(value, date);
     }
+
+    public static Value createValueModel(Double d, Date date, AlertType alertType) {
+        return new ValueModel(LocationFactory.createLocation(), d, date, "", ValueDataModel.getInstance(SimpleValue.getInstance("")), alertType);
+    }
 }

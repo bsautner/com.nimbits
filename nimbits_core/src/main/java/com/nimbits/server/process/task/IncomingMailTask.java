@@ -24,13 +24,11 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueDataModel;
 import com.nimbits.client.model.value.impl.ValueFactory;
-import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.api.ApiBase;
 import com.nimbits.server.transaction.entity.service.EntityService;
 import com.nimbits.server.transaction.user.service.UserService;
 import com.nimbits.server.transaction.value.ValueServiceFactory;
 import com.nimbits.server.transaction.value.service.ValueService;
-import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -40,9 +38,8 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-@Service("mailTask")
 
-public class IncomingMailTask extends ApiBase implements org.springframework.web.HttpRequestHandler{
+public class IncomingMailTask extends ApiBase {
 
     /**
      *
@@ -59,44 +56,41 @@ public class IncomingMailTask extends ApiBase implements org.springframework.web
     private ValueService valueService;
 
     @Override
-    public void handleRequest(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException {
+    public void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException {
         setup(req, resp, false);
         valueService = ValueServiceFactory.getInstance(engine, taskService);
         final String fromAddress = req.getParameter(Parameters.fromAddress.getText());
         final String inContent = req.getParameter(Parameters.inContent.getText());
 
-        try {
-            final EmailAddress internetAddress = CommonFactory.createEmailAddress(fromAddress);
+        final EmailAddress internetAddress = CommonFactory.createEmailAddress(fromAddress);
 
 
-            log.info("Incoming mail post: " + internetAddress);
-            //u = UserTransactionFactory.getInstance().getNimbitsUser(internetAddress);
-            List<Entity> result = entityService.getEntityByKey(userService.getAdmin(), internetAddress.getValue(), EntityType.user);
+        log.info("Incoming mail post: " + internetAddress);
+        //u = UserTransactionFactory.getInstance().getNimbitsUser(internetAddress);
+        List<Entity> result = entityService.getEntityByKey(userService.getAdmin(), internetAddress.getValue(), EntityType.user);
 
-            final String content = COMPILE1.matcher(PATTERN.matcher(inContent).replaceAll("")).replaceAll("");
-            final String Data[] = COMPILE2.split(content);
-            log.info("Incoming mail post: " + inContent);
+        final String content = COMPILE1.matcher(PATTERN.matcher(inContent).replaceAll("")).replaceAll("");
+        final String Data[] = COMPILE2.split(content);
+        log.info("Incoming mail post: " + inContent);
 
-            if (result.isEmpty()) {
-                log.severe("Null user for incoming mail:" + fromAddress);
+        if (result.isEmpty()) {
+            log.severe("Null user for incoming mail:" + fromAddress);
 
-            } else {
-                final User u = (User) result.get(0);
-                u.addAccessKey(userService.authenticatedKey(u));
-                if (Data.length > 0) {
-                    for (String s : Data) {
-                        processLine(u, s);
-                    }
+        } else {
+            final User u = (User) result.get(0);
+            u.addAccessKey(userService.authenticatedKey(u));
+            if (Data.length > 0) {
+                for (String s : Data) {
+                    processLine(u, s);
                 }
             }
-        } catch (Exception e) {
-            LogHelper.logException(this.getClass(), e);
         }
+
 
 
     }
 
-    private void processLine(final User u, final CharSequence s) throws Exception {
+    private void processLine(final User u, final CharSequence s)   {
         final String emailLine[] = COMPILE.split(s);
         final EntityName pointName = CommonFactory.createName(emailLine[0], EntityType.point);
 
@@ -109,8 +103,8 @@ public class IncomingMailTask extends ApiBase implements org.springframework.web
     }
 
     private void sendValue(final User u,
-                                  final Entity point,
-                                  final String k[])  {
+                           final Entity point,
+                           final String k[])  {
 
 
         if (k != null && k.length > 1) {

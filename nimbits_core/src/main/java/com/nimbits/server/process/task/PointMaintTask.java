@@ -12,7 +12,6 @@
 
 package com.nimbits.server.process.task;
 
-import com.google.gwt.core.client.GWT;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
@@ -20,44 +19,45 @@ import com.nimbits.server.api.ApiBase;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.transaction.value.ValueServiceFactory;
 import com.nimbits.server.transaction.value.service.ValueService;
-import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
-@Service("deleteTask")
 
-public class DeleteRecordedValuesTask extends ApiBase implements org.springframework.web.HttpRequestHandler{
+public class PointMaintTask extends ApiBase {
 
-//    private static final Logger log = Logger.getLogger(UpdatePointStatsTask.class.getName());
-
-    private static final long serialVersionUID = 1L;
 
     private ValueService valueService;
+
     @Override
-    public void handleRequest(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException {
+    public void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException, ServletException {
         setup(req, resp, false);
-        valueService = ValueServiceFactory.getInstance(engine, taskService);
-        final String pointJson = req.getParameter(Parameters.json.getText());
-        Point point = GsonFactory.getInstance().fromJson(pointJson, PointModel.class);
+        valueService  = ValueServiceFactory.getInstance(engine, taskService);
+        processPost(req);
 
 
-        try {
+    }
 
-                deleteData(point);
 
-        } catch (NumberFormatException e) {
-            GWT.log(e.getMessage());
+    public void processPost(final HttpServletRequest req) throws IOException {
+
+
+        final String j = req.getParameter(Parameters.json.getText());
+        final Point entity = GsonFactory.getInstance().fromJson(j, PointModel.class);
+        if (entity.getExpire() > 0) {
+            taskService.startDeleteDataTask(
+                    entity,
+                    true, entity.getExpire());
         }
+        valueService.consolidateBlobs(entity);
     }
 
-     //TODO - delete blobs
-    private void deleteData(final Point point)  {
-        valueService.deleteExpiredData(point);
 
 
-    }
+
 
 
 }
+

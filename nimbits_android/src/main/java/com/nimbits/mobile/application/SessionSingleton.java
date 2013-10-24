@@ -13,14 +13,18 @@
 package com.nimbits.mobile.application;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.database.sqlite.SQLiteDatabase;
+import com.nimbits.client.android.AndroidControl;
+import com.nimbits.client.android.AndroidControlFactory;
 import com.nimbits.client.model.Server;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
+import com.nimbits.mobile.dao.ApplicationDao;
 import com.nimbits.mobile.dao.ApplicationDaoFactory;
+import com.nimbits.mobile.dao.DBOpenHelper;
 
-/**
- * Created by benjamin on 10/20/13.
- */
+
 public class SessionSingleton {
 
     private static SessionSingleton instance;
@@ -29,16 +33,20 @@ public class SessionSingleton {
     private Server server;
     private Context context;
     private String email;
-    private String apiKey;
-    private Entity currentEntity;
-    public static void initInstance(Context context)
-    {
+    private long currentEntity;
+    private static AndroidControl control;
+    private ApplicationInfo appInfo;
+    private SQLiteDatabase db;
+    private Entity entity;
+    private ApplicationDao dao;
+    public static void initInstance(Context context)  {
         if (instance == null)
         {
 
             instance = new SessionSingleton();
             instance.context = context;
-
+            instance.db = new DBOpenHelper(context).getWritableDatabase();
+            instance.dao = ApplicationDaoFactory.getInstance();
         }
     }
 
@@ -48,9 +56,17 @@ public class SessionSingleton {
         return instance;
     }
 
-    private SessionSingleton()
-    {
+    private SessionSingleton() {
 
+    }
+
+    public long getCurrentEntityPK() {
+        return currentEntity;
+    }
+
+    public void setCurrentEntity(long currentEntity) {
+        this.currentEntity = currentEntity;
+        this.entity = dao.getEntity(currentEntity);
     }
 
     public static void setInstance(SessionSingleton instance) {
@@ -63,12 +79,12 @@ public class SessionSingleton {
 
     public void setSession(User session) {
         this.session = session;
-        currentEntity = session;
+
     }
 
     public Server getServer() {
         if (server ==null) {
-            server = ApplicationDaoFactory.getInstance(context).getServer();
+            server = ApplicationDaoFactory.getInstance().getServer();
         }
         return server;
     }
@@ -79,28 +95,43 @@ public class SessionSingleton {
 
     }
 
-    public void setApiKey(String apiKey) {
-        this.apiKey = apiKey;
-    }
-
-    public String getApiKey() {
-        return apiKey;
-    }
-
-    public void setEmail(String email) {
+     public void setEmail(String email) {
         this.email = email;
     }
 
     public void setServer() {
-        server = ApplicationDaoFactory.getInstance(context).getServer();
+        server = ApplicationDaoFactory.getInstance().getServer();
 
+    }
+
+
+
+
+    public AndroidControl getControl() {
+        return control == null ? AndroidControlFactory.getConservativeInstance() : control;
+    }
+
+    public void setControl(AndroidControl control) {
+        SessionSingleton.control = control;
+    }
+
+    public void setAppInfo(ApplicationInfo appInfo) {
+        this.appInfo = appInfo;
+    }
+
+    public ApplicationInfo getAppInfo() {
+        return appInfo;
+    }
+
+    public SQLiteDatabase getDb() {
+        return db;
+    }
+
+    public ApplicationDao getDao() {
+        return dao;
     }
 
     public Entity getCurrentEntity() {
-        return this.currentEntity == null ? this.session : this.currentEntity;
-    }
-
-    public void setCurrentEntity(Entity currentEntity) {
-        this.currentEntity = currentEntity;
+        return entity == null ? session : entity;
     }
 }

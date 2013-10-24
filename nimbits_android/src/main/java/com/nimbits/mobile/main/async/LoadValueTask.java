@@ -29,6 +29,7 @@ import java.util.List;
  */
 public class LoadValueTask extends AsyncTask<Object, List<Value>, List<Value>> {
 
+    public static final String TAG = "LoadValueTask";
     public LoadValueTaskListener mListener;
     private Transaction transactions = TransactionFactory.getInstance(SessionSingleton.getInstance().getServer(), SessionSingleton.getInstance().getEmail());
 
@@ -60,11 +61,13 @@ public class LoadValueTask extends AsyncTask<Object, List<Value>, List<Value>> {
         List<Value> response;
         Entity e = (Entity) objects[0];
 
-        Log.v("nimbits", "getting value");
+        Log.v(TAG, "getting value");
 
         response =transactions.getValue(e);
 
-        Log.v("nimbits", "got a value for " + e.getKey());
+        Log.v(TAG, "got a value for " + e.getKey());
+        Log.v(TAG, "got a value for " + response.isEmpty());
+
         return response;
 
 

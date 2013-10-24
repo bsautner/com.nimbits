@@ -34,7 +34,6 @@ import com.nimbits.server.api.ApiBase;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.transaction.value.ValueServiceFactory;
 import com.nimbits.server.transaction.value.service.ValueService;
-import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -46,22 +45,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- * User: benjamin
- * Date: 10/9/12
- * Time: 3:50 PM
- */
-@Service("uploadTask")
 
-public class UploadTask extends ApiBase implements org.springframework.web.HttpRequestHandler{
+public class UploadTask extends ApiBase {
 
     private ValueService valueService;
 
 
     @Override
-    public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-         setup(request, response, false);
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        setup(request, response, false);
         valueService = ValueServiceFactory.getInstance(engine, taskService);
         final String key = request.getParameter(Parameters.blobkey.getText());
         final String json = request.getParameter(Parameters.entity.getText());
@@ -79,21 +71,21 @@ public class UploadTask extends ApiBase implements org.springframework.web.HttpR
         String line;
 
         try {
-        List<Value> values = new ArrayList<Value>(100);
-        while ((line = reader.readLine()) != null) { // while loop begins here
-            Value v = processString(line);
+            List<Value> values = new ArrayList<Value>(100);
+            while ((line = reader.readLine()) != null) { // while loop begins here
+                Value v = processString(line);
 
-            if (v != null) {
-                values.add(v);
+                if (v != null) {
+                    values.add(v);
+                }
+
             }
-
-        }
 
             valueService.recordValues(user, entity, values);
 
         } catch (Exception e) {
-           response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-           response.setHeader("ERROR", e.getMessage());
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.setHeader("ERROR", e.getMessage());
 
         }  finally {
             readChannel.close();

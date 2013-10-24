@@ -21,8 +21,6 @@ import com.nimbits.mobile.application.SessionSingleton;
 import com.nimbits.mobile.dao.ApplicationDaoFactory;
 import com.nimbits.transaction.TransactionImpl;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -30,13 +28,13 @@ import java.util.List;
  * Date: 1/12/13
  * Time: 8:26 AM
  */
-public class LoadMainTask extends AsyncTask<Object, Integer, List<Entity>> {
+public class DownloadTreeTask extends AsyncTask<Object, Integer, Integer> {
 
 
     private LoadListener mListener;
     private final Context context;
     public interface LoadListener {
-        public void onSuccess(List<Entity> response);
+        public void onSuccess(int results);
 
         public void onProgress(int progress);
 
@@ -46,45 +44,32 @@ public class LoadMainTask extends AsyncTask<Object, Integer, List<Entity>> {
         mListener = listener;
     }
 
-    public LoadMainTask(final Context contex) {
-       this.context = contex;
+    public DownloadTreeTask(final Context context) {
+        this.context = context;
+
     }
 
 
     @Override
-    protected List<Entity> doInBackground(Object... objects) {
+    protected Integer doInBackground(Object... objects) {
 
         publishProgress(10);
         Server url = SessionSingleton.getInstance().getServer() ;
 
         List<Entity> response;
 
-        response = ApplicationDaoFactory.getInstance(context).getTree(SessionSingleton.getInstance().getServer().getId());
-        if (response.isEmpty()) {
-            response = new TransactionImpl(url, SessionSingleton.getInstance().getEmail()).getTree();
-            if (! response.isEmpty()) {
-                ApplicationDaoFactory.getInstance(context).storeTree(SessionSingleton.getInstance().getServer().getId(), response);
-            }
-            else {
-                response = Collections.emptyList();
-            }
-        }
+        // response = ApplicationDaoFactory.getInstance(context).getTree(SessionSingleton.getInstance().getServer().getId());
+        // if (response.isEmpty()) {
+        response = new TransactionImpl(url, SessionSingleton.getInstance().getEmail()).getTree();
+        int result = ApplicationDaoFactory.getInstance().storeTree(SessionSingleton.getInstance().getServer().getId(), response, true);
 
-
-        List<Entity> retObj = new ArrayList<Entity>(response.size());
-        for (Entity e : response) {
-            if (e.getEntityType().isAndroidReady()) {
-                retObj.add(e);
-            }
-        }
 
         publishProgress(100);
-        return retObj;
-
+        return result;
     }
 
     @Override
-    protected void onPostExecute(List<Entity> ts) {
+    protected void onPostExecute(Integer ts) {
         super.onPostExecute(ts);
         mListener.onSuccess(ts);
     }

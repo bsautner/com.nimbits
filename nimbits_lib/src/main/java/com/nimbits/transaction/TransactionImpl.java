@@ -145,11 +145,11 @@ public class TransactionImpl implements Transaction {
     }
 
     @Override
-    public List<Value> getSeries(final Entity entity) {
+    public List<Value> getSeries(final String entity) {
         UrlContainer path = UrlContainer.combine(instanceUrl, SERIES_SERVICE);
         List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(2);
         addAuthenticationParameters(params);
-        params.add((new BasicNameValuePair(Parameters.id.getText(), entity.getKey())));
+        params.add((new BasicNameValuePair(Parameters.id.getText(), entity)));
         params.add((new BasicNameValuePair(Parameters.count.getText(), String.valueOf(LONG))));
 
         List<Value> sample = helper.doGet(ValueModel.class, path, params, valueListType, true);
@@ -157,11 +157,11 @@ public class TransactionImpl implements Transaction {
 
     }
     @Override
-    public List<Value> getSeries(final Entity entity, final Range<Date> range) {
+    public List<Value> getSeries(final String entity, final Range<Date> range) {
         UrlContainer path = UrlContainer.combine(instanceUrl, SERIES_SERVICE);
         List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(3);
         addAuthenticationParameters(params);
-        params.add((new BasicNameValuePair(Parameters.id.getText(), entity.getKey())));
+        params.add((new BasicNameValuePair(Parameters.id.getText(), entity)));
         params.add((new BasicNameValuePair(Parameters.sd.getText(), String.valueOf(range.lowerEndpoint().getTime()))));
         params.add((new BasicNameValuePair(Parameters.ed.getText(), String.valueOf(range.upperEndpoint().getTime()))));
         List<Value> sample =  helper.doGet(ValueModel.class, path, params, valueListType, true);

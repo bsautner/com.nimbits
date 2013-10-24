@@ -39,9 +39,9 @@ public interface Transaction {
 
     List<Value> postValue(Entity entity, Value value);
 
-    List<Value> getSeries(Entity entity);
+    List<Value> getSeries(String entity);
 
-    List<Value> getSeries(Entity entity, Range<Date> range);
+    List<Value> getSeries(String entity, Range<Date> range);
 
     void deleteEntity(Entity entity);
 

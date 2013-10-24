@@ -21,7 +21,6 @@ import com.nimbits.server.api.ApiBase;
 import com.nimbits.server.transaction.user.AuthenticationServiceFactory;
 import com.nimbits.server.transaction.value.ValueServiceFactory;
 import com.nimbits.server.transaction.value.service.ValueService;
-import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -30,10 +29,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
-
-@Service("idleCron")
-
-public class IdlePointCron extends ApiBase implements org.springframework.web.HttpRequestHandler {
+public class IdlePointCron extends ApiBase  {
     /**
      *
      */
@@ -77,7 +73,7 @@ public class IdlePointCron extends ApiBase implements org.springframework.web.Ht
 
 
     @Override
-    public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
     }
 

@@ -28,10 +28,10 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.server.ServerInfo;
 import com.nimbits.server.api.ApiBase;
 import com.nimbits.server.communication.email.EmailService;
+import com.nimbits.server.communication.email.EmailServiceFactory;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.transaction.value.ValueServiceFactory;
 import com.nimbits.server.transaction.value.service.ValueService;
-import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -41,23 +41,16 @@ import java.io.PrintWriter;
 import java.nio.channels.Channels;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
 
-/**
- * Created with IntelliJ IDEA.
- * User: benjamin
- * Date: 10/9/12
- * Time: 3:50 PM
- */
-@Service("dumpTask")
-public class DumpTask extends ApiBase implements org.springframework.web.HttpRequestHandler{
 
-    private static final Logger log = Logger.getLogger(DumpTask.class.getName());
-    private EmailService emailService;
-    private ServerInfo serverInfoService;
+public class DumpTask extends ApiBase {
+
+
+    //private EmailService emailService;
+    //private ServerInfo serverInfoService;
     private ValueService valueService;
     @Override
-    public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         setup(request, response, false);
         valueService = ValueServiceFactory.getInstance(engine, taskService);
@@ -71,7 +64,7 @@ public class DumpTask extends ApiBase implements org.springframework.web.HttpReq
 
         final Range timespan = Range.closed(new Date(sl), new Date(el));
 
-        try {
+
             final List<Value> values = valueService.getDataSegment(entity, timespan);
 
             final FileService fileService = FileServiceFactory.getFileService();
@@ -90,34 +83,15 @@ public class DumpTask extends ApiBase implements org.springframework.web.HttpReq
             final EmailAddress emailAddress = CommonFactory.createEmailAddress(entity.getOwner());
 
 
-            final String m = serverInfoService.getFullServerURL(request) + "/service/blob?" +Parameters.blobkey.getText() + "=" + key.getKeyString();
+            final String m = ServerInfo.getFullServerURL(request) + "/service/blob?" +Parameters.blobkey.getText() + "=" + key.getKeyString();
 
 
-
+            EmailService emailService = EmailServiceFactory.getServiceInstance(engine);
             emailService.sendEmail(emailAddress,m, "Your extracted data for " + entity.getName().getValue() + " is ready");
-        } catch (Exception e) {
-            log.severe(e.getMessage());
-        }
+
 
 
     }
 
 
-
-    public void setEmailService(EmailService emailService) {
-        this.emailService = emailService;
-    }
-
-    public EmailService getEmailService() {
-        return emailService;
-    }
-
-
-    public void setServerInfoService(ServerInfo serverInfoService) {
-        this.serverInfoService = serverInfoService;
-    }
-
-    public ServerInfo getServerInfoService() {
-        return serverInfoService;
-    }
 }

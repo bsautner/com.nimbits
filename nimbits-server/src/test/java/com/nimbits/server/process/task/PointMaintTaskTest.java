@@ -50,7 +50,7 @@ public class PointMaintTaskTest extends NimbitsServletTest {
             final String j = GsonFactory.getInstance().toJson(en);
             req.setParameter(Parameters.json.getText(), j);
             assertNotNull(req.getParameter(Parameters.json.getText()));
-            pointTask.handleRequest(req, resp);
+            pointTask.doPost(req, resp);
             //pointTask.processPost(req);
 
         }

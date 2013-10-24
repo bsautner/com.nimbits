@@ -47,6 +47,7 @@ public enum AlertType {
     }
 
     public static AlertType get(int code) {
+
         return lookup.get(code);
     }
 

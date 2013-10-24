@@ -14,8 +14,11 @@ package com.nimbits.mobile.main.async;
 
 import android.os.AsyncTask;
 import com.google.common.collect.Range;
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.mobile.application.SessionSingleton;
+import com.nimbits.mobile.dao.ApplicationDao;
+import com.nimbits.mobile.dao.ApplicationDaoFactory;
 import com.nimbits.transaction.Transaction;
 import com.nimbits.transaction.TransactionFactory;
 
@@ -69,14 +72,17 @@ public class SeriesTask extends AsyncTask<Object, List<Value>, List<Value>> {
 
     @Override
     protected List<Value> doInBackground(Object... objects) {
+        ApplicationDao dao = ApplicationDaoFactory.getInstance();
 
+        Entity e = SessionSingleton.getInstance().getCurrentEntity();
 
-        List<Value> result;
+        List<Value> result = null;
         if (this.range == null) {
-            result =transactions.getSeries(SessionSingleton.getInstance().getCurrentEntity());
+
+            result =transactions.getSeries(e.getKey());
         } else {
 
-            result = transactions.getSeries(SessionSingleton.getInstance().getCurrentEntity(), range);
+            result = transactions.getSeries(e.getKey(), range);
         }
         return result;
 

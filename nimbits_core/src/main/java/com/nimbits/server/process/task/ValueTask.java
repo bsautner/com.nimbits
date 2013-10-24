@@ -62,8 +62,6 @@ public class ValueTask extends ApiBase {
         final User u = GsonFactory.getInstance().fromJson(userJson, UserModel.class);
 
         setup(req, resp, false);
-
-
         final Point point;
 
         if (entity instanceof Point) {

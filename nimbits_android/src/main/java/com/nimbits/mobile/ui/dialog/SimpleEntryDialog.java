@@ -33,13 +33,13 @@ import com.nimbits.client.model.entity.EntityName;
  * Created by benjamin on 7/24/13.
  */
 public class SimpleEntryDialog extends DialogFragment {
-    final private Entity entity;
+    final private String entity;
     private EntityListener mListener;
     final private EntityType type;
     private final Action action;
     private final String title;
 
-    public SimpleEntryDialog(Entity entity, EntityType type, Action action, String title) {
+    public SimpleEntryDialog(String entity, EntityType type, Action action, String title) {
         this.type = type;
         this.entity = entity;
         this.action = action;
